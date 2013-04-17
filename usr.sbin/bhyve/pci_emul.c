@@ -251,13 +251,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
-name|pci_hole_startaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|uint64_t
 name|pci_emul_iobase
 decl_stmt|;
@@ -4498,6 +4491,9 @@ name|slotinfo
 modifier|*
 name|si
 decl_stmt|;
+name|size_t
+name|lowmem
+decl_stmt|;
 name|int
 name|slot
 decl_stmt|,
@@ -4506,20 +4502,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|pci_hole_startaddr
-operator|=
-name|vm_get_lowmem_limit
-argument_list|(
-name|ctx
-argument_list|)
-expr_stmt|;
 name|pci_emul_iobase
 operator|=
 name|PCI_EMUL_IOBASE
 expr_stmt|;
 name|pci_emul_membase32
 operator|=
-name|pci_hole_startaddr
+name|vm_get_lowmem_limit
+argument_list|(
+name|ctx
+argument_list|)
 expr_stmt|;
 name|pci_emul_membase64
 operator|=
@@ -4654,7 +4646,26 @@ name|li_generic
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Setup the PCI hole to return 0xff's when accessed in a region 	 * with no devices 	 */
+comment|/* 	 * The guest physical memory map looks like the following: 	 * [0,		    lowmem)		guest system memory 	 * [lowmem,	    lowmem_limit)	memory hole (may be absent) 	 * [lowmem_limit,   4GB)		PCI hole (32-bit BAR allocation) 	 * [4GB,	    4GB + highmem) 	 * 	 * Accesses to memory addresses that are not allocated to system 	 * memory or PCI devices return 0xff's. 	 */
+name|error
+operator|=
+name|vm_get_memory_seg
+argument_list|(
+name|ctx
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|lowmem
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -4685,7 +4696,7 @@ name|memp
 operator|.
 name|base
 operator|=
-name|pci_hole_startaddr
+name|lowmem
 expr_stmt|;
 name|memp
 operator|.
@@ -4701,7 +4712,7 @@ operator|*
 literal|1024
 operator|)
 operator|-
-name|pci_hole_startaddr
+name|lowmem
 expr_stmt|;
 name|memp
 operator|.
