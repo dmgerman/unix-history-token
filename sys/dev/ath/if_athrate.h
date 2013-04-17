@@ -153,12 +153,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATH_RC_LDPC_FLAG
+name|ATH_RC_TS_FLAG
 value|0x40
 end_define
 
 begin_comment
-comment|/* enable STBC */
+comment|/* triple-stream rate */
 end_comment
 
 begin_struct
@@ -177,9 +177,12 @@ name|uint8_t
 name|tries
 decl_stmt|;
 name|uint8_t
+name|tx_power_cap
+decl_stmt|;
+name|uint16_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|max4msframelen
 decl_stmt|;
 block|}
