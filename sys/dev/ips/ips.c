@@ -2901,8 +2901,6 @@ name|dmatag
 decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
-init|=
-name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -2975,9 +2973,9 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-goto|goto
-name|exit
-goto|;
+return|return
+name|error
+return|;
 block|}
 if|if
 condition|(
@@ -3160,6 +3158,14 @@ literal|0
 return|;
 name|exit
 label|:
+if|if
+condition|(
+name|sc
+operator|->
+name|copper_queue
+operator|!=
+name|NULL
+condition|)
 name|bus_dmamem_free
 argument_list|(
 name|dmatag
