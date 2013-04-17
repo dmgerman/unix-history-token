@@ -11672,7 +11672,7 @@ condition|)
 block|{
 comment|/* 			 * MCH RECORDING , hight 16 slots. On 5.1 cards first 4 slots 			 * are used as outputs and already filled with data 			 */
 comment|/* 			 * XXX On Live! cards stream does not begin at zero offset. 			 * It can be HW, driver or sound buffering problem. 			 * Use sync substream (offset 0x3E) to let userland find 			 * correct data. 			 */
-comment|/* 			 * Substream map (in byte offsets, each substream is 2 bytes): 			 *	0x00..0x1E - outputs 			 *	0x20..0x3E - FX, inputs ans sync stream 			 */
+comment|/* 			 * Substream map (in byte offsets, each substream is 2 bytes): 			 *	0x00..0x1E - outputs 			 *	0x20..0x3E - FX, inputs and sync stream 			 */
 comment|/* First 2 channels (offset 0x20,0x22) are empty */
 for|for
 control|(
