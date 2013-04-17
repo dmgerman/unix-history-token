@@ -348,9 +348,9 @@ name|SYSINIT
 argument_list|(
 name|counter
 argument_list|,
-name|SI_SUB_KMEM
+name|SI_SUB_CPU
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FOURTH
 argument_list|,
 name|counter_startup
 argument_list|,
