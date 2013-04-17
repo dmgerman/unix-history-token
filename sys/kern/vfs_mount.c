@@ -1048,7 +1048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If a mount option is specified several times,  * (with or without the "no" prefix) only keep  * the last occurence of it.  */
+comment|/*  * If a mount option is specified several times,  * (with or without the "no" prefix) only keep  * the last occurrence of it.  */
 end_comment
 
 begin_function

@@ -1871,7 +1871,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Indicates the start of an NPE Image, in new NPE Image Library format.  * 2 consecutive occurances indicates the end of the NPE Image Library  */
+comment|/*  * Indicates the start of an NPE Image, in new NPE Image Library format.  * 2 consecutive occurrences indicates the end of the NPE Image Library  */
 end_comment
 
 begin_define

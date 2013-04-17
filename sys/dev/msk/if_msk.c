@@ -18449,7 +18449,7 @@ block|{
 name|uint32_t
 name|v32
 decl_stmt|;
-comment|/* 		 * On PCI Express bus bridges are called root complexes (RC). 		 * PCI Express errors are recognized by the root complex too, 		 * which requests the system to handle the problem. After 		 * error occurence it may be that no access to the adapter 		 * may be performed any longer. 		 */
+comment|/* 		 * On PCI Express bus bridges are called root complexes (RC). 		 * PCI Express errors are recognized by the root complex too, 		 * which requests the system to handle the problem. After 		 * error occurrence it may be that no access to the adapter 		 * may be performed any longer. 		 */
 name|v32
 operator|=
 name|CSR_PCI_READ_4

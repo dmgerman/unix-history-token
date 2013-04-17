@@ -2614,7 +2614,7 @@ modifier|*
 name|little
 parameter_list|)
 block|{
-comment|/* Get the first occurrance of the word ``little'' in ``big'' */
+comment|/* Get the first occurrence of the word ``little'' in ``big'' */
 name|char
 modifier|*
 name|pos

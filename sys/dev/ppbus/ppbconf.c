@@ -566,7 +566,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * search_token()  *  * Search the first occurence of a token within a string  */
+comment|/*  * search_token()  *  * Search the first occurrence of a token within a string  */
 end_comment
 
 begin_function
