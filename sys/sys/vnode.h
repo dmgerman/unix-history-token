@@ -2912,6 +2912,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|vn_dir_dd_ino
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|vn_commname
 parameter_list|(
