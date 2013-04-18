@@ -3201,11 +3201,6 @@ name|SIGCANCEL
 argument_list|)
 condition|)
 block|{
-name|stdout_debug
-argument_list|(
-literal|"remove SIGCANCEL\n"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
