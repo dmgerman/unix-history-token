@@ -658,6 +658,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|clip_head
+argument_list|,
+name|clip_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|tom_data
@@ -719,13 +729,13 @@ name|struct
 name|mtx
 name|clip_table_lock
 decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|clip_entry
-argument_list|)
+name|struct
+name|clip_head
 name|clip_table
-expr_stmt|;
+decl_stmt|;
+name|int
+name|clip_gen
+decl_stmt|;
 block|}
 struct|;
 end_struct
