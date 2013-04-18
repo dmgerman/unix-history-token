@@ -1609,6 +1609,32 @@ name|GDB_OSABI_FREEBSD_ELF
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|check_note
+argument_list|(
+name|abfd
+argument_list|,
+name|sect
+argument_list|,
+name|note
+argument_list|,
+literal|"FreeBSD"
+argument_list|,
+literal|4
+argument_list|,
+name|NT_FREEBSD_NOINIT_TAG
+argument_list|)
+condition|)
+block|{
+comment|/* There is no need to check the version yet.  */
+operator|*
+name|osabi
+operator|=
+name|GDB_OSABI_FREEBSD_ELF
+expr_stmt|;
+return|return;
+block|}
 return|return;
 block|}
 comment|/* .note.netbsd.ident notes, used by NetBSD.  */

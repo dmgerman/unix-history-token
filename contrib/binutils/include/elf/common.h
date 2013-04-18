@@ -2866,6 +2866,13 @@ begin_define
 define|#
 directive|define
 name|NT_FREEBSD_TAG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_NOINIT_TAG
 value|2
 end_define
 
