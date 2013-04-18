@@ -1220,6 +1220,12 @@ comment|/* Invalidate Processor Context ID */
 literal|"\013INVPCID"
 comment|/* Restricted Transactional Memory */
 literal|"\014RTM"
+comment|/* Enhanced NRBG */
+literal|"\022RDSEED"
+comment|/* ADCX + ADOX */
+literal|"\023ADX"
+comment|/* Supervisor Mode Access Prevention */
+literal|"\024SMAP"
 argument_list|)
 expr_stmt|;
 block|}
