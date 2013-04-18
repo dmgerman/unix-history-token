@@ -389,6 +389,14 @@ literal|"NEC uPD720200 USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x10421b21
+case|:
+return|return
+operator|(
+literal|"ASMedia ASM1042 USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x1e318086
 case|:
 return|return
