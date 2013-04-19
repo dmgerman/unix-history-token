@@ -866,20 +866,12 @@ parameter_list|)
 function_decl|;
 define|#
 directive|define
-name|DBUF_IS_METADATA
-parameter_list|(
-name|_db
-parameter_list|)
-define|\
-value|(dbuf_is_metadata(_db))
-define|#
-directive|define
 name|DBUF_GET_BUFC_TYPE
 parameter_list|(
 name|_db
 parameter_list|)
 define|\
-value|(DBUF_IS_METADATA(_db) ? ARC_BUFC_METADATA : ARC_BUFC_DATA)
+value|(dbuf_is_metadata(_db) ? ARC_BUFC_METADATA : ARC_BUFC_DATA)
 define|#
 directive|define
 name|DBUF_IS_CACHEABLE
@@ -887,7 +879,7 @@ parameter_list|(
 name|_db
 parameter_list|)
 define|\
-value|((_db)->db_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(DBUF_IS_METADATA(_db)&&					\ 	((_db)->db_objset->os_primary_cache == ZFS_CACHE_METADATA)))
+value|((_db)->db_objset->os_primary_cache == ZFS_CACHE_ALL ||		\ 	(dbuf_is_metadata(_db)&&					\ 	((_db)->db_objset->os_primary_cache == ZFS_CACHE_METADATA)))
 define|#
 directive|define
 name|DBUF_IS_L2CACHEABLE
@@ -895,7 +887,7 @@ parameter_list|(
 name|_db
 parameter_list|)
 define|\
-value|((_db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(DBUF_IS_METADATA(_db)&&					\ 	((_db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
+value|((_db)->db_objset->os_secondary_cache == ZFS_CACHE_ALL ||	\ 	(dbuf_is_metadata(_db)&&					\ 	((_db)->db_objset->os_secondary_cache == ZFS_CACHE_METADATA)))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG

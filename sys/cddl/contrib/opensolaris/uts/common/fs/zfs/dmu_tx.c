@@ -162,6 +162,8 @@ expr_stmt|;
 if|if
 condition|(
 name|dd
+operator|!=
+name|NULL
 condition|)
 name|tx
 operator|->
@@ -708,7 +710,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|err
@@ -1783,7 +1788,10 @@ name|DMU_MAX_ACCESS
 condition|)
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4279,7 +4287,7 @@ name|dmu_tx_t
 modifier|*
 name|tx
 parameter_list|,
-name|uint64_t
+name|txg_how_t
 name|txg_how
 parameter_list|)
 block|{
@@ -4363,12 +4371,18 @@ name|TXG_WAIT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4488,7 +4502,10 @@ name|txh
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4580,24 +4597,6 @@ operator|->
 name|txh_fudge
 expr_stmt|;
 block|}
-comment|/* 	 * NB: This check must be after we've held the dnodes, so that 	 * the dmu_tx_unassign() logic will work properly 	 */
-if|if
-condition|(
-name|txg_how
-operator|>=
-name|TXG_INITIAL
-operator|&&
-name|txg_how
-operator|!=
-name|tx
-operator|->
-name|tx_txg
-condition|)
-return|return
-operator|(
-name|ERESTART
-operator|)
-return|;
 comment|/* 	 * If a snapshot has been taken since we made our estimates, 	 * assume that we won't be able to free or overwrite anything. 	 */
 if|if
 condition|(
@@ -4945,7 +4944,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assign tx to a transaction group.  txg_how can be one of:  *  * (1)	TXG_WAIT.  If the current open txg is full, waits until there's  *	a new one.  This should be used when you're not holding locks.  *	If will only fail if we're truly out of space (or over quota).  *  * (2)	TXG_NOWAIT.  If we can't assign into the current open txg without  *	blocking, returns immediately with ERESTART.  This should be used  *	whenever you're holding locks.  On an ERESTART error, the caller  *	should drop locks, do a dmu_tx_wait(tx), and try again.  *  * (3)	A specific txg.  Use this if you need to ensure that multiple  *	transactions all sync in the same txg.  Like TXG_NOWAIT, it  *	returns ERESTART if it can't assign you into the requested txg.  */
+comment|/*  * Assign tx to a transaction group.  txg_how can be one of:  *  * (1)	TXG_WAIT.  If the current open txg is full, waits until there's  *	a new one.  This should be used when you're not holding locks.  *	It will only fail if we're truly out of space (or over quota).  *  * (2)	TXG_NOWAIT.  If we can't assign into the current open txg without  *	blocking, returns immediately with ERESTART.  This should be used  *	whenever you're holding locks.  On an ERESTART error, the caller  *	should drop locks, do a dmu_tx_wait(tx), and try again.  */
 end_comment
 
 begin_function
@@ -4956,7 +4955,7 @@ name|dmu_tx_t
 modifier|*
 name|tx
 parameter_list|,
-name|uint64_t
+name|txg_how_t
 name|txg_how
 parameter_list|)
 block|{
@@ -4975,14 +4974,34 @@ expr_stmt|;
 name|ASSERT
 argument_list|(
 name|txg_how
-operator|!=
-literal|0
+operator|==
+name|TXG_WAIT
+operator|||
+name|txg_how
+operator|==
+name|TXG_NOWAIT
 argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
 operator|!
 name|dsl_pool_sync_context
+argument_list|(
+name|tx
+operator|->
+name|tx_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* If we might wait, we must not hold the config lock. */
+name|ASSERT
+argument_list|(
+name|txg_how
+operator|!=
+name|TXG_WAIT
+operator|||
+operator|!
+name|dsl_pool_config_held
 argument_list|(
 name|tx
 operator|->
@@ -5074,6 +5093,17 @@ operator|->
 name|tx_txg
 operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_pool_config_held
+argument_list|(
+name|tx
+operator|->
+name|tx_pool
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It's possible that the pool has become active after this thread 	 * has tried to obtain a tx. If that's the case then his 	 * tx_lasttried_txg would not have been assigned. 	 */
@@ -5760,6 +5790,35 @@ operator|(
 name|tx
 operator|->
 name|tx_txg
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|dsl_pool_t
+modifier|*
+name|dmu_tx_pool
+parameter_list|(
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+block|{
+name|ASSERT
+argument_list|(
+name|tx
+operator|->
+name|tx_pool
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|tx
+operator|->
+name|tx_pool
 operator|)
 return|;
 block|}

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1513,7 +1513,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 if|if
@@ -2340,7 +2343,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3076,7 +3082,10 @@ name|SPA_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 name|VERIFY
@@ -3217,7 +3226,10 @@ name|SPA_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 name|buf_space
@@ -4162,7 +4174,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|bail
@@ -4313,7 +4328,10 @@ expr_stmt|;
 else|else
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -4975,7 +4993,7 @@ argument_list|(
 operator|&
 name|os
 operator|->
-name|os_lock
+name|os_user_ptr_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -5000,7 +5018,7 @@ argument_list|(
 operator|&
 name|os
 operator|->
-name|os_lock
+name|os_user_ptr_lock
 argument_list|)
 expr_stmt|;
 name|tb
@@ -5083,7 +5101,7 @@ argument_list|(
 operator|&
 name|os
 operator|->
-name|os_lock
+name|os_user_ptr_lock
 argument_list|)
 expr_stmt|;
 name|avl_create
@@ -5272,7 +5290,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|fail

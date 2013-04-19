@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -8456,7 +8456,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|arc_buf_remove_ref
 parameter_list|(
 name|arc_buf_t
@@ -8485,7 +8485,7 @@ argument_list|(
 name|hdr
 argument_list|)
 decl_stmt|;
-name|int
+name|boolean_t
 name|no_callback
 init|=
 operator|(
@@ -9697,7 +9697,7 @@ argument_list|,
 name|missed
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have just evicted some date into the ghost state, make 	 * sure we also adjust the ghost state size if necessary. 	 */
+comment|/* 	 * We have just evicted some data into the ghost state, make 	 * sure we also adjust the ghost state size if necessary. 	 */
 if|if
 condition|(
 name|arc_no_grow
@@ -13087,8 +13087,6 @@ name|buf
 argument_list|,
 name|arg
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -13139,8 +13137,6 @@ name|buf
 argument_list|,
 name|arg
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -17368,7 +17364,10 @@ literal|4
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 comment|/* Note: reserve is inflated, so we deflate */
@@ -17405,7 +17404,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17481,7 +17483,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17563,7 +17568,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17599,7 +17607,10 @@ name|arc_c
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOMEM
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Don't count loaned bufs as in flight dirty data to prevent long 	 * network delays from blocking transactions that are ready to be 	 * assigned to a txg. 	 */
@@ -17698,7 +17709,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -20113,7 +20127,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 block|}
 if|if

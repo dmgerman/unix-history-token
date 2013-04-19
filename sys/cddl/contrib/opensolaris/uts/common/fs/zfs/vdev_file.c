@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -164,7 +164,10 @@ name|VDEV_AUX_BAD_LABEL
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -328,6 +331,9 @@ operator|!=
 name|VREG
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 operator|(
 name|void
 operator|)
@@ -351,6 +357,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vd
 operator|->
 name|vdev_stat
@@ -359,6 +367,9 @@ name|vs_aux
 operator|=
 name|VDEV_AUX_OPEN_FAILED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|kmem_free
 argument_list|(
 name|vd
@@ -377,14 +388,20 @@ name|vdev_tsd
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 block|}
 endif|#
 directive|endif
+comment|/* _KERNEL */
 name|skip_open
 label|:
 comment|/* 	 * Determine the physical size of the file. 	 */
@@ -650,7 +667,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -712,7 +732,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 block|}
 return|return
