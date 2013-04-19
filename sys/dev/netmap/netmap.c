@@ -1618,41 +1618,11 @@ begin_comment
 comment|/*------------- memory allocator -----------------*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETMAP_MEM2
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"netmap_mem2.c"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !NETMAP_MEM2 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"netmap_mem1.c"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NETMAP_MEM2 */
-end_comment
 
 begin_comment
 comment|/*------------ end of memory allocator ----------*/
@@ -2408,11 +2378,6 @@ name|priv
 operator|->
 name|np_ifp
 decl_stmt|;
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-decl_stmt|;
 name|NMA_LOCK
 argument_list|()
 expr_stmt|;
@@ -2421,13 +2386,16 @@ condition|(
 name|ifp
 condition|)
 block|{
+name|struct
+name|netmap_adapter
+modifier|*
 name|na
-operator|=
+init|=
 name|NA
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|na
 operator|->
 name|nm_lock
@@ -2460,6 +2428,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* might also destroy *na */
 block|}
 if|if
 condition|(
