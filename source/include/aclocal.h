@@ -1160,65 +1160,6 @@ name|)
 end_pragma
 
 begin_comment
-comment|/* Data block used during object validation */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_predefined_data
-block|{
-name|char
-modifier|*
-name|Pathname
-decl_stmt|;
-specifier|const
-name|ACPI_PREDEFINED_INFO
-modifier|*
-name|Predefined
-decl_stmt|;
-name|union
-name|acpi_operand_object
-modifier|*
-name|ParentPackage
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-decl_stmt|;
-name|UINT32
-name|Flags
-decl_stmt|;
-name|UINT32
-name|ReturnBtype
-decl_stmt|;
-name|UINT8
-name|NodeFlags
-decl_stmt|;
-block|}
-name|ACPI_PREDEFINED_DATA
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Defines for Flags field above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_OBJECT_REPAIRED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OBJECT_WRAPPED
-value|2
-end_define
-
-begin_comment
 comment|/* Return object auto-repair info */
 end_comment
 

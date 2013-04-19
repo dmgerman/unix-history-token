@@ -197,6 +197,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AeInstallOneEcHandler
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AeInstallEcHandlers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -269,7 +302,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We will override some of the default region handlers, especially the  * SystemMemory handler, which must be implemented locally. Do not override  * the PCI_Config handler since we would like to exercise the default handler  * code. These handlers are installed "early" - before any _REG methods  * are executed - since they are special in the sense that tha ACPI spec  * declares that they must "always be available". Cannot override the  * DataTable region handler either -- needed for test execution.  */
+comment|/*  * We will override some of the default region handlers, especially the  * SystemMemory handler, which must be implemented locally. Do not override  * the PCI_Config handler since we would like to exercise the default handler  * code. These handlers are installed "early" - before any _REG methods  * are executed - since they are special in the sense that the ACPI spec  * declares that they must "always be available". Cannot override the  * DataTable region handler either -- needed for test execution.  */
 end_comment
 
 begin_decl_stmt
@@ -287,7 +320,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We will install handlers for some of the various address space IDs.  * Test one user-defined address space (used by aslts.)  */
+comment|/*  * We will install handlers for some of the various address space IDs.  * Test one user-defined address space (used by aslts).  */
 end_comment
 
 begin_define
@@ -311,17 +344,17 @@ name|SpaceIdList
 index|[]
 init|=
 block|{
-name|ACPI_ADR_SPACE_EC
-block|,
 name|ACPI_ADR_SPACE_SMBUS
 block|,
-name|ACPI_ADR_SPACE_GSBUS
-block|,
-name|ACPI_ADR_SPACE_GPIO
+name|ACPI_ADR_SPACE_CMOS
 block|,
 name|ACPI_ADR_SPACE_PCI_BAR_TARGET
 block|,
 name|ACPI_ADR_SPACE_IPMI
+block|,
+name|ACPI_ADR_SPACE_GPIO
+block|,
+name|ACPI_ADR_SPACE_GSBUS
 block|,
 name|ACPI_ADR_SPACE_FIXED_HARDWARE
 block|,
@@ -1420,6 +1453,109 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AeInstallEcHandlers, AeInstallOneEcHandler  *  * PARAMETERS:  ACPI_WALK_NAMESPACE callback  *  * RETURN:      Status  *  * DESCRIPTION: Walk entire namespace, install a handler for every EC  *              device found.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AeInstallOneEcHandler
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Install the handler for this EC device */
+name|Status
+operator|=
+name|AcpiInstallAddressSpaceHandler
+argument_list|(
+name|ObjHandle
+argument_list|,
+name|ACPI_ADR_SPACE_EC
+argument_list|,
+name|AeRegionHandler
+argument_list|,
+name|AeRegionInit
+argument_list|,
+operator|&
+name|AeMyContext
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Could not install an OpRegion handler for EC device (%p)"
+operator|,
+name|ObjHandle
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AeInstallEcHandlers
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Find all Embedded Controller devices */
+name|AcpiGetDevices
+argument_list|(
+literal|"PNP0C09"
+argument_list|,
+name|AeInstallOneEcHandler
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AeInstallLateHandlers  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install handlers for the AcpiExec utility.  *  *****************************************************************************/
 end_comment
 
@@ -1501,7 +1637,11 @@ name|AccessLength
 operator|=
 literal|0xA5
 expr_stmt|;
-comment|/*      * Install handlers for some of the "device driver" address spaces      * such as EC, SMBus, etc.      */
+comment|/*      * We will install a handler for each EC device, directly under the EC      * device definition. This is unlike the other handlers which we install      * at the root node.      */
+name|AeInstallEcHandlers
+argument_list|()
+expr_stmt|;
+comment|/*      * Install handlers for some of the "device driver" address spaces      * such as SMBus, etc.      */
 for|for
 control|(
 name|i

@@ -2639,12 +2639,6 @@ argument_list|)
 expr_stmt|;
 name|NewCache
 operator|->
-name|LinkOffset
-operator|=
-literal|8
-expr_stmt|;
-name|NewCache
-operator|->
 name|ListName
 operator|=
 name|CacheName

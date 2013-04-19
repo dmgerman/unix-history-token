@@ -1126,7 +1126,7 @@ block|}
 comment|/*      * Evaluate the \_Sx namespace object containing the register values      * for this state      */
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1175,7 +1175,7 @@ literal|"No Sleep State object returned from [%s]"
 operator|,
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1409,7 +1409,7 @@ literal|"While evaluating Sleep State [%s]"
 operator|,
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|)
 argument_list|)
 expr_stmt|;

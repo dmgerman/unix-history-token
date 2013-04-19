@@ -927,6 +927,7 @@ name|_CRTDBG_REPORT_FLAG
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*  * Debugging memory corruption issues with windows:  * Add #include<crtdbg.h> to accommon.h  * Add _ASSERTE(_CrtCheckMemory()); where needed to test memory integrity  */
 endif|#
 directive|endif
 name|printf
@@ -1389,6 +1390,11 @@ goto|goto
 name|EnterDebugger
 goto|;
 block|}
+comment|/*          * Install handlers for "device driver" space IDs (EC,SMBus, etc.)          * and fixed event handlers          */
+name|AeInstallLateHandlers
+argument_list|()
+expr_stmt|;
+comment|/* Finish the ACPICA initialization */
 name|Status
 operator|=
 name|AcpiInitializeObjects
@@ -1418,10 +1424,6 @@ goto|goto
 name|EnterDebugger
 goto|;
 block|}
-comment|/*          * Install handlers for "device driver" space IDs (EC,SMBus, etc.)          * and fixed event handlers          */
-name|AeInstallLateHandlers
-argument_list|()
-expr_stmt|;
 name|AeMiscellaneousTests
 argument_list|()
 expr_stmt|;

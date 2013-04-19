@@ -433,7 +433,7 @@ name|Info
 operator|.
 name|EvaluateInfo
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|METHOD_NAME__INI
 expr_stmt|;
@@ -1284,7 +1284,7 @@ name|DeviceNode
 expr_stmt|;
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|METHOD_NAME__INI
 expr_stmt|;
@@ -1341,7 +1341,7 @@ name|AcpiNsGetExternalPathname
 argument_list|(
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 argument_list|)
 decl_stmt|;
 name|ACPI_EXCEPTION

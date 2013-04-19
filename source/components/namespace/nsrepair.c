@@ -198,16 +198,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSimpleRepair  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ExpectedBtypes      - Object types expected  *              PackageIndex        - Index of object within parent package (if  *                                    applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                    otherwise)  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair/convert a return object of a type that was  *              not expected.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSimpleRepair  *  * PARAMETERS:  Info                - Method execution information block  *              ExpectedBtypes      - Object types expected  *              PackageIndex        - Index of object within parent package (if  *                                    applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                    otherwise)  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair/convert a return object of a type that was  *              not expected.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiNsSimpleRepair
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|UINT32
 name|ExpectedBtypes
@@ -252,11 +252,11 @@ name|Predefined
 operator|=
 name|AcpiNsMatchSimpleRepair
 argument_list|(
-name|Data
+name|Info
 operator|->
 name|Node
 argument_list|,
-name|Data
+name|Info
 operator|->
 name|ReturnBtype
 argument_list|,
@@ -279,9 +279,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|ACPI_WARN_ALWAYS
 operator|,
@@ -341,7 +341,7 @@ block|}
 comment|/*      * Do not perform simple object repair unless the return type is not      * expected.      */
 if|if
 condition|(
-name|Data
+name|Info
 operator|->
 name|ReturnBtype
 operator|&
@@ -381,9 +381,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|ACPI_WARN_ALWAYS
 operator|,
@@ -500,7 +500,7 @@ name|Status
 operator|=
 name|AcpiNsWrapWithPackage
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObject
 argument_list|,
@@ -523,9 +523,9 @@ operator|=
 name|NewObject
 expr_stmt|;
 comment|/* New Package object */
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
@@ -557,9 +557,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator|&
 name|ACPI_OBJECT_WRAPPED
 operator|)
@@ -604,9 +604,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Converted %s to expected %s at Package index %u\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -632,9 +632,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Converted %s to expected %s\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -660,9 +660,9 @@ name|ReturnObjectPtr
 operator|=
 name|NewObject
 expr_stmt|;
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
@@ -775,16 +775,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRepairNullElement  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ExpectedBtypes      - Object types expected  *              PackageIndex        - Index of object within parent package (if  *                                    applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                    otherwise)  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair a NULL element of a returned Package object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRepairNullElement  *  * PARAMETERS:  Info                - Method execution information block  *              ExpectedBtypes      - Object types expected  *              PackageIndex        - Index of object within parent package (if  *                                    applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                    otherwise)  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair a NULL element of a returned Package object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiNsRepairNullElement
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|UINT32
 name|ExpectedBtypes
@@ -908,7 +908,7 @@ name|Common
 operator|.
 name|ReferenceCount
 operator|=
-name|Data
+name|Info
 operator|->
 name|ParentPackage
 operator|->
@@ -923,9 +923,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Converted NULL package element to expected %s at index %u\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -941,9 +941,9 @@ name|ReturnObjectPtr
 operator|=
 name|NewObject
 expr_stmt|;
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
@@ -956,16 +956,16 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRemoveNullElements  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              PackageType         - An AcpiReturnPackageTypes value  *              ObjDesc             - A Package object  *  * RETURN:      None.  *  * DESCRIPTION: Remove all NULL package elements from packages that contain  *              a variable number of sub-packages. For these types of  *              packages, NULL elements can be safely removed.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRemoveNullElements  *  * PARAMETERS:  Info                - Method execution information block  *              PackageType         - An AcpiReturnPackageTypes value  *              ObjDesc             - A Package object  *  * RETURN:      None.  *  * DESCRIPTION: Remove all NULL package elements from packages that contain  *              a variable number of sub-packages. For these types of  *              packages, NULL elements can be safely removed.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiNsRemoveNullElements
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|UINT8
 name|PackageType
@@ -1120,9 +1120,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Found and removed %u NULL elements\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 operator|(
 name|Count
@@ -1151,16 +1151,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsWrapWithPackage  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              OriginalObject      - Pointer to the object to repair.  *              ObjDescPtr          - The new package object is returned here  *  * RETURN:      Status, new object in *ObjDescPtr  *  * DESCRIPTION: Repair a common problem with objects that are defined to  *              return a variable-length Package of sub-objects. If there is  *              only one sub-object, some BIOS code mistakenly simply declares  *              the single object instead of a Package with one sub-object.  *              This function attempts to repair this error by wrapping a  *              Package object around the original object, creating the  *              correct and expected Package with one sub-object.  *  *              Names that can be repaired in this manner include:  *              _ALR, _CSD, _HPX, _MLS, _PLD, _PRT, _PSS, _TRT, _TSS,  *              _BCL, _DOD, _FIX, _Sx  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsWrapWithPackage  *  * PARAMETERS:  Info                - Method execution information block  *              OriginalObject      - Pointer to the object to repair.  *              ObjDescPtr          - The new package object is returned here  *  * RETURN:      Status, new object in *ObjDescPtr  *  * DESCRIPTION: Repair a common problem with objects that are defined to  *              return a variable-length Package of sub-objects. If there is  *              only one sub-object, some BIOS code mistakenly simply declares  *              the single object instead of a Package with one sub-object.  *              This function attempts to repair this error by wrapping a  *              Package object around the original object, creating the  *              correct and expected Package with one sub-object.  *  *              Names that can be repaired in this manner include:  *              _ALR, _CSD, _HPX, _MLS, _PLD, _PRT, _PSS, _TRT, _TSS,  *              _BCL, _DOD, _FIX, _Sx  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiNsWrapWithPackage
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1219,9 +1219,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Wrapped %s with expected Package object\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -1236,9 +1236,9 @@ name|ObjDescPtr
 operator|=
 name|PkgObjDesc
 expr_stmt|;
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 operator||

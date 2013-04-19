@@ -57,9 +57,9 @@ modifier|*
 name|ACPI_REPAIR_FUNCTION
 function_decl|)
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -111,9 +111,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_ALR
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -128,9 +128,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_CID
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -145,9 +145,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_FDE
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -162,9 +162,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_HID
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -179,9 +179,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_PSS
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -196,9 +196,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_TSS
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -213,9 +213,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckSortedList
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -372,16 +372,16 @@ value|(ACPI_FDE_FIELD_COUNT * sizeof (UINT32))
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsComplexRepairs  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              Node                - Namespace node for the method/object  *              ValidateStatus      - Original status of earlier validation  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful. If name is not  *              matched, ValidateStatus is returned.  *  * DESCRIPTION: Attempt to repair/convert a return object of a type that was  *              not expected.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsComplexRepairs  *  * PARAMETERS:  Info                - Method execution information block  *              Node                - Namespace node for the method/object  *              ValidateStatus      - Original status of earlier validation  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful. If name is not  *              matched, ValidateStatus is returned.  *  * DESCRIPTION: Attempt to repair/convert a return object of a type that was  *              not expected.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiNsComplexRepairs
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -430,7 +430,7 @@ name|Predefined
 operator|->
 name|RepairFunction
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObjectPtr
 argument_list|)
@@ -512,7 +512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_ALR  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _ALR object. If necessary, sort the object list  *              ascending by the ambient illuminance values.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_ALR  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _ALR object. If necessary, sort the object list  *              ascending by the ambient illuminance values.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -520,9 +520,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_ALR
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -544,7 +544,7 @@ name|Status
 operator|=
 name|AcpiNsCheckSortedList
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObject
 argument_list|,
@@ -566,7 +566,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_FDE  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _FDE and _GTM objects. The expected return  *              value is a Buffer of 5 DWORDs. This function repairs a common  *              problem where the return value is a Buffer of BYTEs, not  *              DWORDs.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_FDE  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _FDE and _GTM objects. The expected return  *              value is a Buffer of 5 DWORDs. This function repairs a common  *              problem where the return value is a Buffer of BYTEs, not  *              DWORDs.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -574,9 +574,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_FDE
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -658,11 +658,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -763,9 +763,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s Expanded Byte Buffer to expected DWord Buffer\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -788,9 +788,9 @@ name|ReturnObjectPtr
 operator|=
 name|BufferObject
 expr_stmt|;
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
@@ -803,7 +803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_CID  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _CID object. If a string, ensure that all  *              letters are uppercase and that there is no leading asterisk.  *              If a Package, ensure same for all string elements.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_CID  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _CID object. If a string, ensure that all  *              letters are uppercase and that there is no leading asterisk.  *              If a Package, ensure same for all string elements.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -811,9 +811,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_CID
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -862,7 +862,7 @@ name|Status
 operator|=
 name|AcpiNsRepair_HID
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObjectPtr
 argument_list|)
@@ -935,7 +935,7 @@ name|Status
 operator|=
 name|AcpiNsRepair_HID
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ElementPtr
 argument_list|)
@@ -994,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_HID  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _HID object. If a string, ensure that all  *              letters are uppercase and that there is no leading asterisk.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_HID  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _HID object. If a string, ensure that all  *              letters are uppercase and that there is no leading asterisk.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1002,9 +1002,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_HID
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1070,11 +1070,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -1083,9 +1083,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Return AE_OK anyway, let driver handle it */
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
@@ -1153,9 +1153,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Removed invalid leading asterisk\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1213,7 +1213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_TSS  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _TSS object. If necessary, sort the object list  *              descending by the power dissipation values.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_TSS  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _TSS object. If necessary, sort the object list  *              descending by the power dissipation values.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1221,9 +1221,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_TSS
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1250,7 +1250,7 @@ name|Status
 operator|=
 name|AcpiNsGetNode
 argument_list|(
-name|Data
+name|Info
 operator|->
 name|Node
 argument_list|,
@@ -1280,7 +1280,7 @@ name|Status
 operator|=
 name|AcpiNsCheckSortedList
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObject
 argument_list|,
@@ -1302,7 +1302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_PSS  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _PSS object. If necessary, sort the object list  *              by the CPU frequencies. Check that the power dissipation values  *              are all proportional to CPU frequency (i.e., sorting by  *              frequency should be the same as sorting by power.)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_PSS  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _PSS object. If necessary, sort the object list  *              by the CPU frequencies. Check that the power dissipation values  *              are all proportional to CPU frequency (i.e., sorting by  *              frequency should be the same as sorting by power.)  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1310,9 +1310,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsRepair_PSS
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1358,7 +1358,7 @@ name|Status
 operator|=
 name|AcpiNsCheckSortedList
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObject
 argument_list|,
@@ -1458,11 +1458,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -1501,7 +1501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsCheckSortedList  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObject        - Pointer to the top-level returned object  *              ExpectedCount       - Minimum length of each sub-package  *              SortIndex           - Sub-package entry to sort on  *              SortDirection       - Ascending or descending  *              SortKeyName         - Name of the SortIndex field  *  * RETURN:      Status. AE_OK if the list is valid and is sorted correctly or  *              has been repaired by sorting the list.  *  * DESCRIPTION: Check if the package list is valid and sorted correctly by the  *              SortIndex. If not, then sort the list.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsCheckSortedList  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObject        - Pointer to the top-level returned object  *              ExpectedCount       - Minimum length of each sub-package  *              SortIndex           - Sub-package entry to sort on  *              SortDirection       - Ascending or descending  *              SortKeyName         - Name of the SortIndex field  *  * RETURN:      Status. AE_OK if the list is valid and is sorted correctly or  *              has been repaired by sorting the list.  *  * DESCRIPTION: Check if the package list is valid and sorted correctly by the  *              SortIndex. If not, then sort the list.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1509,9 +1509,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckSortedList
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1769,9 +1769,9 @@ argument_list|,
 name|SortDirection
 argument_list|)
 expr_stmt|;
-name|Data
+name|Info
 operator|->
-name|Flags
+name|ReturnFlags
 operator||=
 name|ACPI_OBJECT_REPAIRED
 expr_stmt|;
@@ -1782,9 +1782,9 @@ name|ACPI_DB_REPAIR
 operator|,
 literal|"%s: Repaired unsorted list - now sorted by %s\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|SortKeyName
 operator|)

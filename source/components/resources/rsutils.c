@@ -1386,7 +1386,7 @@ name|Node
 expr_stmt|;
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|METHOD_NAME__SRS
 expr_stmt|;

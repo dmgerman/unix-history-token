@@ -1070,6 +1070,12 @@ name|char
 modifier|*
 name|Pathname
 decl_stmt|;
+name|char
+name|StringBuffer
+index|[
+literal|48
+index|]
+decl_stmt|;
 name|Predefined
 operator|=
 name|AcpiUtMatchPredefinedMethod
@@ -1131,27 +1137,33 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|AcpiOsPrintf
+name|AcpiUtGetExpectedReturnTypes
 argument_list|(
-literal|"%-32s arg %X ret %2.2X"
-argument_list|,
-name|Pathname
-argument_list|,
-operator|(
-name|Predefined
-operator|->
-name|Info
-operator|.
-name|ArgumentList
-operator|&
-name|METHOD_ARG_MASK
-operator|)
+name|StringBuffer
 argument_list|,
 name|Predefined
 operator|->
 name|Info
 operator|.
 name|ExpectedBtypes
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%-32s Arguments %X, Return Types: %s"
+argument_list|,
+name|Pathname
+argument_list|,
+name|METHOD_GET_ARG_COUNT
+argument_list|(
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|ArgumentList
+argument_list|)
+argument_list|,
+name|StringBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,7 +1173,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" PkgType %2.2X ObjType %2.2X Count %2.2X"
+literal|" (PkgType %2.2X, ObjType %2.2X, Count %2.2X)"
 argument_list|,
 name|Package
 operator|->
@@ -1188,13 +1200,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|AcpiNsCheckParameterCount
+comment|/* Check that the declared argument count matches the ACPI spec */
+name|AcpiNsCheckAcpiCompliance
 argument_list|(
 name|Pathname
 argument_list|,
 name|Node
-argument_list|,
-name|ACPI_UINT32_MAX
 argument_list|,
 name|Predefined
 argument_list|)

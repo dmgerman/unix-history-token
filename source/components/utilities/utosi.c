@@ -818,7 +818,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiUtDeleteObjectDesc
+name|AcpiUtRemoveReference
 argument_list|(
 name|ReturnDesc
 argument_list|)

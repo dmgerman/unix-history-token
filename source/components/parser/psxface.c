@@ -252,7 +252,7 @@ name|AcpiGbl_TraceMethodName
 operator|!=
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 operator|->
 name|Name
 operator|.
@@ -362,7 +362,7 @@ name|AcpiGbl_TraceMethodName
 operator|!=
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 operator|->
 name|Name
 operator|.
@@ -458,7 +458,7 @@ operator|||
 operator|!
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -474,7 +474,7 @@ name|AcpiDsBeginMethodExecution
 argument_list|(
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 argument_list|,
 name|Info
 operator|->
@@ -521,7 +521,7 @@ literal|"**** Begin Method Parse/Execute [%4.4s] **** Node=%p Obj=%p\n"
 operator|,
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 operator|->
 name|Name
 operator|.
@@ -529,7 +529,7 @@ name|Ascii
 operator|,
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 operator|,
 name|Info
 operator|->
@@ -607,7 +607,7 @@ name|Op
 argument_list|,
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 argument_list|,
 name|Info
 operator|->
