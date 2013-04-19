@@ -275,8 +275,18 @@ index|]
 decl_stmt|;
 comment|/* number of elements */
 name|u_int8_t
-name|reserved0
+name|flags
 decl_stmt|;
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_DVCID
+value|0x01
+comment|/* report device serial number */
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_CURDATA
+value|0x02
+comment|/* allow motion during command */
 name|u_int8_t
 name|len
 index|[
@@ -482,6 +492,65 @@ end_struct
 
 begin_struct
 struct|struct
+name|read_element_status_device_id
+block|{
+name|u_int8_t
+name|prot_code_set
+decl_stmt|;
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_CODE_SET
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)& 0x0F)
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_PROTOCOL_ID
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)>> 4)
+name|u_int8_t
+name|piv_assoc_designator_type
+decl_stmt|;
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_PIV_SET
+value|0x80
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_ASSOCIATION
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)>> 4)
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_DESIGNATOR_TYPE
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)& 0x0F)
+name|u_int8_t
+name|reserved2
+decl_stmt|;
+name|u_int8_t
+name|designator_length
+decl_stmt|;
+name|u_int8_t
+name|designator
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* Allocate max length */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|read_element_status_descriptor
 block|{
 name|u_int8_t
@@ -543,7 +612,10 @@ decl_stmt|;
 name|u_int8_t
 name|sense_qual
 decl_stmt|;
-comment|/* 	 * dt_scsi_flags and dt_scsi_addr are valid only on data transport 	 * elements.  These bytes are undefined for all other element types. 	 */
+union|union
+block|{
+struct|struct
+block|{
 name|u_int8_t
 name|dt_scsi_flags
 decl_stmt|;
@@ -569,6 +641,19 @@ decl_stmt|;
 name|u_int8_t
 name|reserved1
 decl_stmt|;
+block|}
+name|scsi_2
+struct|;
+comment|/* reserved and obsolete (as of SCSI-3) fields */
+name|u_int8_t
+name|reserved_or_obsolete
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|dt_or_obsolete
+union|;
 name|u_int8_t
 name|flags2
 decl_stmt|;
@@ -580,6 +665,14 @@ define|#
 directive|define
 name|READ_ELEMENT_STATUS_SVALID
 value|0x80
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_ED
+value|0x80
+define|#
+directive|define
+name|READ_ELEMENT_STATUS_MEDIA_TYPE_MASK
+value|0x07
 name|u_int8_t
 name|ssea
 index|[
@@ -587,17 +680,55 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* source storage element address */
+union|union
+block|{
 name|struct
 name|volume_tag
 name|pvoltag
 decl_stmt|;
-comment|/* omitted if PVOLTAG == 0 */
 name|struct
 name|volume_tag
-name|avoltag
+name|voltag
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* omitted if AVOLTAG == 0 */
-comment|/* Other data may follow */
+name|struct
+name|read_element_status_device_id
+name|devid
+decl_stmt|;
+struct|struct
+block|{
+name|struct
+name|volume_tag
+name|pvoltag
+decl_stmt|;
+name|struct
+name|read_element_status_device_id
+name|devid
+decl_stmt|;
+block|}
+name|pvol_and_devid
+struct|;
+struct|struct
+block|{
+name|struct
+name|volume_tag
+name|voltag
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|read_element_status_device_id
+name|devid
+decl_stmt|;
+block|}
+name|vol_tags_and_devid
+struct|;
+block|}
+name|voltag_devid
+union|;
 block|}
 struct|;
 end_struct
@@ -1211,6 +1342,12 @@ name|voltag
 parameter_list|,
 name|u_int32_t
 name|sea
+parameter_list|,
+name|int
+name|curdata
+parameter_list|,
+name|int
+name|dvcid
 parameter_list|,
 name|u_int32_t
 name|count

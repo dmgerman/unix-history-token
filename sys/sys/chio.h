@@ -391,7 +391,12 @@ comment|/* ces_scsi_id is valid */
 name|CES_LUN_VALID
 init|=
 literal|0x200
+block|,
 comment|/* ces_scsi_lun is valid */
+name|CES_PIV
+init|=
+literal|0x400
+comment|/* ces_protocol_id is valid */
 block|}
 name|ces_status_flags
 typedef|;
@@ -449,6 +454,176 @@ name|u_int8_t
 name|ces_scsi_lun
 decl_stmt|;
 comment|/* SCSI lun of element */
+comment|/* 	 * Data members for SMC3 and later versions 	 */
+name|u_int8_t
+name|ces_medium_type
+decl_stmt|;
+define|#
+directive|define
+name|CES_MEDIUM_TYPE_UNKNOWN
+value|0
+comment|/* Medium type unspecified */
+define|#
+directive|define
+name|CES_MEDIUM_TYPE_DATA
+value|1
+comment|/* Data medium */
+define|#
+directive|define
+name|CES_MEDIUM_TYPE_CLEANING
+value|2
+comment|/* Cleaning medium */
+define|#
+directive|define
+name|CES_MEDIUM_TYPE_DIAGNOSTIC
+value|3
+comment|/* Diagnostic medium */
+define|#
+directive|define
+name|CES_MEDIUM_TYPE_WORM
+value|4
+comment|/* WORM medium */
+define|#
+directive|define
+name|CES_MEDIUM_TYPE_MICROCODE
+value|5
+comment|/* Microcode image medium */
+name|u_int8_t
+name|ces_protocol_id
+decl_stmt|;
+define|#
+directive|define
+name|CES_PROTOCOL_ID_FCP_4
+value|0
+comment|/* Fiber channel */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_SPI_5
+value|1
+comment|/* Parallel SCSI */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_SSA_S3P
+value|2
+comment|/* SSA */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_SBP_3
+value|3
+comment|/* IEEE 1394 */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_SRP
+value|4
+comment|/* SCSI Remote DMA */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_ISCSI
+value|5
+comment|/* iSCSI */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_SPL
+value|6
+comment|/* SAS */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_ADT_2
+value|7
+comment|/* Automation/Drive Interface */
+define|#
+directive|define
+name|CES_PROTOCOL_ID_ACS_2
+value|8
+comment|/* ATA */
+name|u_int8_t
+name|ces_assoc
+decl_stmt|;
+define|#
+directive|define
+name|CES_ASSOC_LOGICAL_UNIT
+value|0
+define|#
+directive|define
+name|CES_ASSOC_TARGET_PORT
+value|1
+define|#
+directive|define
+name|CES_ASSOC_TARGET_DEVICE
+value|2
+name|u_int8_t
+name|ces_designator_type
+decl_stmt|;
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_VENDOR_SPECIFIC
+value|0
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_T10_VENDOR_ID
+value|1
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_EUI_64
+value|2
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_NAA
+value|3
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_TARGET_PORT_ID
+value|4
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_TARGET_PORT_GRP
+value|5
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_LOGICAL_UNIT_GRP
+value|6
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_MD5_LOGICAL_UNIT_ID
+value|7
+define|#
+directive|define
+name|CES_DESIGNATOR_TYPE_SCSI_NAME_STRING
+value|8
+name|u_int8_t
+name|ces_code_set
+decl_stmt|;
+define|#
+directive|define
+name|CES_CODE_SET_RESERVED
+value|0
+define|#
+directive|define
+name|CES_CODE_SET_BINARY
+value|1
+define|#
+directive|define
+name|CES_CODE_SET_ASCII
+value|2
+define|#
+directive|define
+name|CES_CODE_SET_UTF_8
+value|3
+name|u_int8_t
+name|ces_designator_length
+decl_stmt|;
+define|#
+directive|define
+name|CES_MAX_DESIGNATOR_LENGTH
+value|(1<< 8)
+name|u_int8_t
+name|ces_designator
+index|[
+name|CES_MAX_DESIGNATOR_LENGTH
+operator|+
+literal|1
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -587,7 +762,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIOGSTATUS
+name|OCHIOGSTATUS
 value|_IOW('c', 0x08, struct changer_element_status_request)
 end_define
 
@@ -596,6 +771,13 @@ define|#
 directive|define
 name|CHIOSETVOLTAG
 value|_IOW('c', 0x09, struct changer_set_voltag_request)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIOGSTATUS
+value|_IOW('c', 0x0A, struct changer_element_status_request)
 end_define
 
 begin_endif
