@@ -3732,6 +3732,25 @@ operator|->
 name|sc_txchainmask
 argument_list|)
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"Chainmasks: TX=0x%x; RX=0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|sc_txchainmask
+argument_list|,
+name|sc
+operator|->
+name|sc_rxchainmask
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_txstream
