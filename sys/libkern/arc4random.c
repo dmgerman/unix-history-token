@@ -87,6 +87,14 @@ value|(256 / 8)
 end_define
 
 begin_decl_stmt
+name|int
+name|arc4rand_iniseed_state
+init|=
+name|ARC4_ENTR_NONE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_int8_t
 name|arc4_i
@@ -549,6 +557,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|arc4rand_iniseed_state
+argument_list|,
+name|ARC4_ENTR_HAVE
+argument_list|,
+name|ARC4_ENTR_SEED
+argument_list|)
+operator|||
 name|reseed
 operator|||
 operator|(
