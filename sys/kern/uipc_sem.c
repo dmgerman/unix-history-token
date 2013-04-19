@@ -4206,16 +4206,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|ERESTART
-condition|)
-name|error
-operator|=
-name|EINTR
-expr_stmt|;
 name|DP
 argument_list|(
 operator|(
