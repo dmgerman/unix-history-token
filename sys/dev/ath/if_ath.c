@@ -6644,6 +6644,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_RESET
+argument_list|,
+literal|"%s: TX chainmask is now 0x%x, RX is now 0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|sc_cur_txchainmask
+argument_list|,
+name|sc
+operator|->
+name|sc_cur_rxchainmask
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
