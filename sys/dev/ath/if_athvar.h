@@ -2774,23 +2774,23 @@ modifier|*
 name|sc_eepromdata
 decl_stmt|;
 comment|/* Local eeprom data, if AR9100 */
-name|int
+name|uint32_t
 name|sc_txchainmask
 decl_stmt|;
 comment|/* hardware TX chainmask */
-name|int
+name|uint32_t
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* hardware RX chainmask */
-name|int
+name|uint32_t
 name|sc_cur_txchainmask
 decl_stmt|;
 comment|/* currently configured TX chainmask */
-name|int
+name|uint32_t
 name|sc_cur_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
-name|int
+name|uint32_t
 name|sc_rts_aggr_limit
 decl_stmt|;
 comment|/* TX limit on RTS aggregates */

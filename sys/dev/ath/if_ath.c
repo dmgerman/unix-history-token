@@ -3585,7 +3585,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|int
+name|uint32_t
 name|rxs
 decl_stmt|,
 name|txs
