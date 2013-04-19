@@ -147,14 +147,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_ERROR
-value|"ACPI BIOS Bug: Error: "
+value|"ACPI BIOS Error (bug): "
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_MSG_BIOS_WARNING
-value|"ACPI BIOS Bug: Warning: "
+value|"ACPI BIOS Warning (bug): "
 end_define
 
 begin_comment
@@ -669,7 +669,7 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 name|ACPI_MSG_WARNING
-literal|"For %s: "
+literal|"%s: "
 argument_list|,
 name|Pathname
 argument_list|)
@@ -746,7 +746,84 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 name|ACPI_MSG_INFO
-literal|"For %s: "
+literal|"%s: "
+argument_list|,
+name|Pathname
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ArgList
+argument_list|,
+name|Format
+argument_list|)
+expr_stmt|;
+name|AcpiOsVprintf
+argument_list|(
+name|Format
+argument_list|,
+name|ArgList
+argument_list|)
+expr_stmt|;
+name|ACPI_MSG_SUFFIX
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ArgList
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtPredefinedBiosError  *  * PARAMETERS:  ModuleName      - Caller's module name (for error output)  *              LineNumber      - Caller's line number (for error output)  *              Pathname        - Full pathname to the node  *              NodeFlags       - From Namespace node for the method/object  *              Format          - Printf format string + additional args  *  * RETURN:      None  *  * DESCRIPTION: BIOS error message for predefined names. Messages  *              are only emitted the first time a problem with a particular  *              method/object is detected. This prevents a flood of  *              messages for methods that are repeatedly evaluated.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|ACPI_INTERNAL_VAR_XFACE
+name|AcpiUtPredefinedBiosError
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|char
+modifier|*
+name|Pathname
+parameter_list|,
+name|UINT8
+name|NodeFlags
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Format
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ArgList
+decl_stmt|;
+comment|/*      * Warning messages for this method/object will be disabled after the      * first time a validation fails or an object is successfully repaired.      */
+if|if
+condition|(
+name|NodeFlags
+operator|&
+name|ANOBJ_EVALUATED
+condition|)
+block|{
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_MSG_BIOS_ERROR
+literal|"%s: "
 argument_list|,
 name|Pathname
 argument_list|)
