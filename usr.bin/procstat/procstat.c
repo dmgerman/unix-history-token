@@ -235,6 +235,8 @@ name|kflag
 condition|)
 name|procstat_kstack
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|,
 name|kflag
