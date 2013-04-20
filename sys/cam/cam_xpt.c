@@ -3930,6 +3930,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CAM_BOOT_DELAY
+comment|/* 	 * Override this value at compile time to assist our users 	 * who don't use loader to boot a kernel. 	 */
+name|xsoftc
+operator|.
+name|boot_delay
+operator|=
+name|CAM_BOOT_DELAY
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The xpt layer is, itself, the equivelent of a SIM. 	 * Allow 16 ccbs in the ccb pool for it.  This should 	 * give decent parallelism when we probe busses and 	 * perform other XPT functions. 	 */
 name|devq
 operator|=
