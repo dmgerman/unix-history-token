@@ -241,6 +241,8 @@ name|lflag
 condition|)
 name|procstat_rlimit
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|)
 expr_stmt|;
