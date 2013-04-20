@@ -24,6 +24,8 @@ block|,
 name|PSC_TYPE_FILES
 block|,
 name|PSC_TYPE_VMMAP
+block|,
+name|PSC_TYPE_GROUPS
 block|, }
 enum|;
 end_enum
