@@ -261,6 +261,8 @@ name|tflag
 condition|)
 name|procstat_threads
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|)
 expr_stmt|;
