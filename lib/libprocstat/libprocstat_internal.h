@@ -34,6 +34,14 @@ name|void
 modifier|*
 name|files
 decl_stmt|;
+name|void
+modifier|*
+name|argv
+decl_stmt|;
+name|void
+modifier|*
+name|envv
+decl_stmt|;
 name|struct
 name|procstat_core
 modifier|*

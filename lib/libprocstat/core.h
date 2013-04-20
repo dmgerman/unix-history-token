@@ -32,6 +32,12 @@ block|,
 name|PSC_TYPE_RLIMIT
 block|,
 name|PSC_TYPE_OSREL
+block|,
+name|PSC_TYPE_PSSTRINGS
+block|,
+name|PSC_TYPE_ARGV
+block|,
+name|PSC_TYPE_ENVV
 block|, }
 enum|;
 end_enum
