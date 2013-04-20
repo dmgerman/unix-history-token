@@ -38,6 +38,8 @@ block|,
 name|PSC_TYPE_ARGV
 block|,
 name|PSC_TYPE_ENVV
+block|,
+name|PSC_TYPE_AUXV
 block|, }
 enum|;
 end_enum
