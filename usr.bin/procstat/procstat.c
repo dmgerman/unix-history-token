@@ -273,6 +273,8 @@ name|vflag
 condition|)
 name|procstat_vm
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|)
 expr_stmt|;
