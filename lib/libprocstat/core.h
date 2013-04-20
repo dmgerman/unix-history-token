@@ -30,6 +30,8 @@ block|,
 name|PSC_TYPE_UMASK
 block|,
 name|PSC_TYPE_RLIMIT
+block|,
+name|PSC_TYPE_OSREL
 block|, }
 enum|;
 end_enum

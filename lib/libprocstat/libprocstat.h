@@ -843,6 +843,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|procstat_getosrel
+parameter_list|(
+name|struct
+name|procstat
+modifier|*
+name|procstat
+parameter_list|,
+name|struct
+name|kinfo_proc
+modifier|*
+name|kp
+parameter_list|,
+name|int
+modifier|*
+name|osrelp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|procstat_getpathname
 parameter_list|(
 name|struct
