@@ -88,6 +88,11 @@ name|void
 name|procstat_bin
 parameter_list|(
 name|struct
+name|procstat
+modifier|*
+name|prstat
+parameter_list|,
+name|struct
 name|kinfo_proc
 modifier|*
 name|kipp

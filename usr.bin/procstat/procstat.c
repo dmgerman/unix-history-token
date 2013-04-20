@@ -163,6 +163,8 @@ name|bflag
 condition|)
 name|procstat_bin
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|)
 expr_stmt|;
