@@ -175,6 +175,8 @@ name|cflag
 condition|)
 name|procstat_args
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|)
 expr_stmt|;
@@ -185,6 +187,8 @@ name|eflag
 condition|)
 name|procstat_env
 argument_list|(
+name|prstat
+argument_list|,
 name|kipp
 argument_list|)
 expr_stmt|;
