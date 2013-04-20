@@ -4594,26 +4594,14 @@ name|devid
 operator|->
 name|designator_length
 expr_stmt|;
-comment|/* 			 * Make sure we are always NUL terminated.  The 			 * buffer should be sized for the maximum 			 * designator length plus 1, but this will make sure 			 * there is always a NUL at the end.  This won't 			 * matter for the binary code set, since the user 			 * will only pay attention to the length field. 			 */
+comment|/* 			 * Make sure we are always NUL terminated.  The 			 * This won't matter for the binary code set, 			 * since the user will only pay attention to the 			 * length field. 			 */
 name|ces
 operator|->
 name|ces_designator
 index|[
-name|MIN
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ces
-operator|->
-name|ces_designator
-argument_list|)
-operator|-
-literal|1
-argument_list|,
 name|devid
 operator|->
 name|designator_length
-argument_list|)
 index|]
 operator|=
 literal|'\0'
