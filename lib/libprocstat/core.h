@@ -28,6 +28,8 @@ block|,
 name|PSC_TYPE_GROUPS
 block|,
 name|PSC_TYPE_UMASK
+block|,
+name|PSC_TYPE_RLIMIT
 block|, }
 enum|;
 end_enum
