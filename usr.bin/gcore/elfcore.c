@@ -3579,9 +3579,6 @@ name|arg
 argument_list|,
 name|KERN_PROC_GROUPS
 argument_list|,
-operator|(
-name|int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|gid_t
