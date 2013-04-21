@@ -10040,6 +10040,17 @@ index|[
 name|cindex
 index|]
 argument_list|,
+operator|(
+name|tid
+operator|->
+name|tx_buf
+index|[
+name|cindex
+index|]
+operator|!=
+name|NULL
+operator|)
+condition|?
 name|SEQNO
 argument_list|(
 name|tid
@@ -10053,6 +10064,9 @@ name|bf_state
 operator|.
 name|bfs_seqno
 argument_list|)
+else|:
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
