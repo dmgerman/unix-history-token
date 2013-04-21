@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: alias.c,v 8.219 2006/10/24 18:04:09 ca Exp $"
+literal|"@(#)$Id: alias.c,v 8.220 2013/03/12 15:24:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2593,8 +2593,8 @@ argument_list|(
 name|line
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|int
@@ -2657,8 +2657,8 @@ argument_list|,
 name|p
 argument_list|)
 argument_list|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 break|break;
 name|LineNumber
@@ -3072,8 +3072,8 @@ operator|-
 name|line
 operator|)
 argument_list|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 break|break;
 name|LineNumber

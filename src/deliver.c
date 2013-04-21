@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.1027 2012/12/19 02:49:21 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1028 2013/01/02 18:57:42 ca Exp $"
 argument_list|)
 end_macro
 
@@ -25019,6 +25019,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"client"
 argument_list|)
 expr_stmt|;
@@ -25117,6 +25119,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"client"
 argument_list|)
 expr_stmt|;
@@ -25256,6 +25260,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"client"
 argument_list|)
 expr_stmt|;

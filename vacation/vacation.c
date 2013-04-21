@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.146 2009/08/07 21:28:39 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 8.147 2013/03/12 15:24:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2066,6 +2066,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
+operator|>=
+literal|0
 operator|&&
 operator|*
 name|buf
@@ -3739,6 +3741,8 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -4196,6 +4200,8 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
+operator|>=
+literal|0
 condition|)
 operator|(
 name|void

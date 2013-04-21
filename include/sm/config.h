@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.47 2004/10/26 21:41:07 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.48 2013/03/22 22:48:57 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ file|"sm_os.h"
 end_include
 
 begin_comment
-comment|/* **  SM_CONF_STDBOOL_H is 1 if<stdbool.h> exists */
+comment|/* **  SM_CONF_STDBOOL_H is 1 if<stdbool.h> exists ** **  Note, unlike gcc, clang doesn't apply full prototypes to K&R definitions. */
 end_comment
 
 begin_ifndef
@@ -38,6 +38,12 @@ end_ifndef
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
 name|defined
 argument_list|(
 name|__STDC_VERSION__
@@ -61,7 +67,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* defined(__STDC_VERSION__)&& __STDC_VERSION__>= 199901L */
+comment|/* !defined(__clang__)&& defined(__STDC_VERSION__)&& __STDC_VERSION__>= 199901L */
 end_comment
 
 begin_define
@@ -77,7 +83,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__STDC_VERSION__)&& __STDC_VERSION__>= 199901L */
+comment|/* !defined(__clang__)&& defined(__STDC_VERSION__)&& __STDC_VERSION__>= 199901L */
 end_comment
 
 begin_endif
