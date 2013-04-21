@@ -7708,13 +7708,16 @@ name|phdr
 operator|->
 name|p_flags
 operator|=
-literal|0
+name|PF_R
 expr_stmt|;
 name|phdr
 operator|->
 name|p_align
 operator|=
-literal|0
+sizeof|sizeof
+argument_list|(
+name|Elf32_Size
+argument_list|)
 expr_stmt|;
 name|phdr
 operator|++
@@ -7871,7 +7874,7 @@ name|n_namesz
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Elf_Size
+name|Elf32_Size
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7910,7 +7913,7 @@ name|n_descsz
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Elf_Size
+name|Elf32_Size
 argument_list|)
 argument_list|)
 expr_stmt|;
