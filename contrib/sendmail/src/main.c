@@ -64,7 +64,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.981 2012/06/14 23:54:02 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.983 2013/03/12 15:24:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -8702,8 +8702,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|testmodeline
 argument_list|(
@@ -8877,8 +8877,36 @@ comment|/* basic TLS initialization */
 name|tls_ok
 operator|=
 name|init_tls_library
-argument_list|()
+argument_list|(
+name|FipsMode
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tls_ok
+operator|&&
+name|FipsMode
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"ERROR: FIPSMode failed to initialize\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
