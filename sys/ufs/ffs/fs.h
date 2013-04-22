@@ -815,9 +815,13 @@ name|fs_providersize
 decl_stmt|;
 comment|/* size of underlying GEOM provider */
 name|int64_t
+name|fs_metaspace
+decl_stmt|;
+comment|/* size of area reserved for metadata */
+name|int64_t
 name|fs_sparecon64
 index|[
-literal|15
+literal|14
 index|]
 decl_stmt|;
 comment|/* old rotation block list head */
@@ -1543,6 +1547,38 @@ name|c
 parameter_list|)
 value|(((ufs2_daddr_t)(fs)->fs_fpg) * (c))
 end_define
+
+begin_define
+define|#
+directive|define
+name|cgdata
+parameter_list|(
+name|fs
+parameter_list|,
+name|c
+parameter_list|)
+value|(cgdmin(fs, c) + (fs)->fs_metaspace)
+end_define
+
+begin_comment
+comment|/* data zone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cgmeta
+parameter_list|(
+name|fs
+parameter_list|,
+name|c
+parameter_list|)
+value|(cgdmin(fs, c))
+end_define
+
+begin_comment
+comment|/* meta data */
+end_comment
 
 begin_define
 define|#
