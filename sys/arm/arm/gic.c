@@ -658,6 +658,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Set priority mask register. */
+name|gic_c_write_4
+argument_list|(
+name|GICC_PMR
+argument_list|,
+literal|0xff
+argument_list|)
+expr_stmt|;
 comment|/* Enable interrupt distribution */
 name|gic_d_write_4
 argument_list|(
@@ -996,6 +1004,14 @@ argument_list|(
 name|GICC_CTLR
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Set priority mask register. */
+name|gic_c_write_4
+argument_list|(
+name|GICC_PMR
+argument_list|,
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Enable interrupt distribution */
