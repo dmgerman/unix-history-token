@@ -140,7 +140,7 @@ name|int
 name|es_port
 decl_stmt|;
 name|int
-name|es_vlangroup
+name|es_pvid
 decl_stmt|;
 union|union
 block|{

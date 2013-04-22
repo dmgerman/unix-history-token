@@ -552,7 +552,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|set_port_vlangroup
+name|set_port_vid
 parameter_list|(
 name|struct
 name|cfg
@@ -592,26 +592,16 @@ operator|<
 literal|0
 operator|||
 name|v
-operator|>=
-name|cfg
-operator|->
-name|info
-operator|.
-name|es_nvlangroups
+operator|>
+name|IEEE802DOT1Q_VID_MAX
 condition|)
 name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"vlangroup must be between 0 and %d"
+literal|"pvid must be between 0 and %d"
 argument_list|,
-name|cfg
-operator|->
-name|info
-operator|.
-name|es_nvlangroups
-operator|-
-literal|1
+name|IEEE802DOT1Q_VID_MAX
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -658,7 +648,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|.
-name|es_vlangroup
+name|es_pvid
 operator|=
 name|v
 expr_stmt|;
@@ -1784,11 +1774,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tvlangroup: %d\n"
+literal|"\tpvid: %d\n"
 argument_list|,
 name|p
 operator|.
-name|es_vlangroup
+name|es_pvid
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3038,11 +3028,11 @@ block|{
 block|{
 name|MODE_PORT
 block|,
-literal|"vlangroup"
+literal|"pvid"
 block|,
 literal|1
 block|,
-name|set_port_vlangroup
+name|set_port_vid
 block|}
 block|,
 block|{
