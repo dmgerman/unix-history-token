@@ -1210,6 +1210,36 @@ parameter_list|)
 value|(*(volatile uint32_t *) (va))
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|readq
+parameter_list|(
+name|a
+parameter_list|)
+value|(*(volatile uint64_t *)(a))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1245,6 +1275,38 @@ name|d
 parameter_list|)
 value|(*(volatile uint32_t *) (va) = (d))
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|writeq
+parameter_list|(
+name|va
+parameter_list|,
+name|d
+parameter_list|)
+value|(*(volatile uint64_t *) (va) = (d))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
