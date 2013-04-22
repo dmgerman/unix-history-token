@@ -4591,6 +4591,21 @@ operator|&
 name|UMA_ZONE_PCPU
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|mp_ncpus
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"%s: ncpus %d\n"
+operator|,
+name|__func__
+operator|,
+name|mp_ncpus
+operator|)
+argument_list|)
+expr_stmt|;
 name|keg
 operator|->
 name|uk_slabsize
