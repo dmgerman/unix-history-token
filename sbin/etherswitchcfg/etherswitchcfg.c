@@ -614,6 +614,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|.
 name|es_port
