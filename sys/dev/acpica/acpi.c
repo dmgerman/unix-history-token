@@ -10662,7 +10662,7 @@ name|rp
 operator|->
 name|Length
 operator|=
-literal|0
+name|ACPI_RS_SIZE_MIN
 expr_stmt|;
 block|}
 if|if
@@ -10897,7 +10897,7 @@ name|rp
 operator|->
 name|Length
 operator|=
-literal|0
+name|ACPI_RS_SIZE_MIN
 expr_stmt|;
 return|return
 operator|(
