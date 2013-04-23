@@ -60585,6 +60585,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|paddr
+operator|=
+literal|0
+expr_stmt|;
 name|m
 operator|=
 name|m_getcl
