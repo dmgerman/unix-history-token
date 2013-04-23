@@ -3188,6 +3188,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* 	 * NOTE: At this point the control transfer process is gone 	 * and "xhci_configure_msg" is no longer called. Consequently 	 * waiting for the configuration messages to complete is not 	 * needed. 	 */
 name|usb_bus_mem_free_all
 argument_list|(
 operator|&
