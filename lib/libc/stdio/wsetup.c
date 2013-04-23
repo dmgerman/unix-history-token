@@ -83,12 +83,10 @@ begin_function
 name|int
 name|__swsetup
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* make sure stdio is set up */
 if|if

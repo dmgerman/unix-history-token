@@ -101,12 +101,10 @@ begin_function
 name|int
 name|fpurge
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

@@ -91,12 +91,10 @@ begin_function
 name|void
 name|clearerr
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|FLOCKFILE
 argument_list|(

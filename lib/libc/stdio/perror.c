@@ -121,13 +121,11 @@ begin_function
 name|void
 name|perror
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|msgbuf

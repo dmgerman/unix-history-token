@@ -108,12 +108,10 @@ name|char
 modifier|*
 name|gets
 parameter_list|(
-name|buf
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c

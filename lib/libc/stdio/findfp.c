@@ -341,11 +341,9 @@ name|glue
 modifier|*
 name|moreglue
 parameter_list|(
-name|n
-parameter_list|)
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|glue

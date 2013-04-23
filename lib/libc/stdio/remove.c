@@ -79,13 +79,11 @@ begin_function
 name|int
 name|remove
 parameter_list|(
-name|file
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat

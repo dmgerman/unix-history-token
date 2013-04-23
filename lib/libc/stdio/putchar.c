@@ -101,11 +101,9 @@ begin_function
 name|int
 name|putchar
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

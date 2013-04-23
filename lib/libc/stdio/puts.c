@@ -101,13 +101,11 @@ begin_function
 name|int
 name|puts
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 specifier|const
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

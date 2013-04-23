@@ -75,24 +75,20 @@ directive|include
 file|"glue.h"
 end_include
 
-begin_function_decl
+begin_function
 name|int
 name|_fwalk
+parameter_list|(
+name|int
 function_decl|(
+modifier|*
 name|function
 function_decl|)
-name|int
-argument_list|(
-argument|*function
-argument_list|)
 parameter_list|(
 name|FILE
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -190,7 +186,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

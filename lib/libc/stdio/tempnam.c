@@ -120,21 +120,16 @@ name|char
 modifier|*
 name|tempnam
 parameter_list|(
-name|dir
-parameter_list|,
-name|pfx
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|dir
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|pfx
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|sverrno
@@ -395,7 +390,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

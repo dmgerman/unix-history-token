@@ -96,12 +96,10 @@ name|char
 modifier|*
 name|tmpnam
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|u_long
