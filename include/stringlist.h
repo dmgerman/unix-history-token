@@ -100,6 +100,7 @@ parameter_list|(
 name|StringList
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
