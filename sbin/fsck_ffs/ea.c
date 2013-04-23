@@ -198,6 +198,8 @@ literal|0
 index|]
 argument_list|,
 name|blksiz
+argument_list|,
+name|BT_EXTATTR
 argument_list|)
 expr_stmt|;
 name|cp

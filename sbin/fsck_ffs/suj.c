@@ -707,7 +707,7 @@ name|a
 decl_stmt|;
 name|a
 operator|=
-name|malloc
+name|Malloc
 argument_list|(
 name|n
 argument_list|)
@@ -831,7 +831,7 @@ condition|)
 return|return;
 name|disk
 operator|=
-name|malloc
+name|Malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
