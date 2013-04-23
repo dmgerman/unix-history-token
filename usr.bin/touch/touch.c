@@ -140,9 +140,11 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|stime_arg1
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -154,9 +156,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|stime_arg2
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -170,9 +174,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|stime_darg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -184,9 +190,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|stime_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -198,9 +206,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|timeoffset
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -208,6 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -341,6 +352,9 @@ index|]
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
@@ -473,9 +487,6 @@ name|tv
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|usage
 argument_list|(
@@ -951,9 +962,11 @@ value|((ar)[0] - '0') * 10 + ((ar)[1] - '0'); (ar) += 2;
 end_define
 
 begin_function
+specifier|static
 name|void
 name|stime_arg1
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -1256,6 +1269,26 @@ operator|==
 operator|-
 literal|1
 condition|)
+goto|goto
+name|terr
+goto|;
+name|tvp
+index|[
+literal|0
+index|]
+operator|.
+name|tv_usec
+operator|=
+name|tvp
+index|[
+literal|1
+index|]
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+return|return;
 name|terr
 label|:
 name|errx
@@ -1265,29 +1298,15 @@ argument_list|,
 literal|"out of range or illegal time specification: [[CC]YY]MMDDhhmm[.SS]"
 argument_list|)
 expr_stmt|;
-name|tvp
-index|[
-literal|0
-index|]
-operator|.
-name|tv_usec
-operator|=
-name|tvp
-index|[
-literal|1
-index|]
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stime_arg2
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -1479,9 +1498,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stime_darg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -1754,6 +1775,7 @@ begin_function
 name|int
 name|timeoffset
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -1864,9 +1886,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stime_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1926,6 +1950,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
