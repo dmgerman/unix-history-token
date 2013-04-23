@@ -294,6 +294,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|metaspace
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* space held for metadata blocks */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|opt
 decl_stmt|;
 end_decl_stmt
