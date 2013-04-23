@@ -222,6 +222,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1954,6 +1955,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|myname
