@@ -1538,11 +1538,6 @@ if|if
 condition|(
 operator|*
 name|state
-operator|<
-literal|0
-operator|||
-operator|*
-name|state
 operator|>
 literal|1
 condition|)
@@ -1759,11 +1754,6 @@ if|if
 condition|(
 operator|*
 name|brightness
-operator|<
-literal|0
-operator|||
-operator|*
-name|brightness
 operator|>
 name|HCI_LCD_BRIGHTNESS_MAX
 condition|)
@@ -1846,11 +1836,6 @@ if|if
 condition|(
 operator|*
 name|backlight
-operator|<
-literal|0
-operator|||
-operator|*
-name|backlight
 operator|>
 literal|1
 condition|)
@@ -1910,11 +1895,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|*
-name|speed
-operator|<
-literal|0
-operator|||
 operator|*
 name|speed
 operator|>
