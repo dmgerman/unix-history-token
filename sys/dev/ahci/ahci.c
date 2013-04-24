@@ -10495,8 +10495,6 @@ decl_stmt|;
 name|uint32_t
 name|istatus
 decl_stmt|,
-name|sstatus
-decl_stmt|,
 name|cstatus
 decl_stmt|,
 name|serr
@@ -10557,7 +10555,15 @@ name|istatus
 argument_list|)
 expr_stmt|;
 comment|/* Read command statuses. */
-name|sstatus
+if|if
+condition|(
+name|ch
+operator|->
+name|numtslots
+operator|!=
+literal|0
+condition|)
+name|cstatus
 operator|=
 name|ATA_INL
 argument_list|(
@@ -10568,8 +10574,23 @@ argument_list|,
 name|AHCI_P_SACT
 argument_list|)
 expr_stmt|;
+else|else
 name|cstatus
 operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|numrslots
+operator|!=
+name|ch
+operator|->
+name|numtslots
+condition|)
+name|cstatus
+operator||=
 name|ATA_INL
 argument_list|(
 name|ch
@@ -10579,6 +10600,7 @@ argument_list|,
 name|AHCI_P_CI
 argument_list|)
 expr_stmt|;
+comment|/* Read SNTF in one of possible ways. */
 if|if
 condition|(
 name|istatus
@@ -10929,11 +10951,7 @@ name|ch
 operator|->
 name|rslots
 operator|&
-operator|(
 name|cstatus
-operator||
-name|sstatus
-operator|)
 expr_stmt|;
 block|}
 else|else
@@ -10960,11 +10978,7 @@ operator|->
 name|rslots
 operator|&
 operator|~
-operator|(
 name|cstatus
-operator||
-name|sstatus
-operator|)
 expr_stmt|;
 for|for
 control|(
