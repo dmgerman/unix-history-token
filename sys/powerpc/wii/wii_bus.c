@@ -683,7 +683,7 @@ name|WIIPIC_REG_ADDR
 argument_list|,
 name|WIIPIC_REG_LEN
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|cdev
