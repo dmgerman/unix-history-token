@@ -219,13 +219,6 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_decl_stmt
-name|struct
-name|in6_addr
-name|zeroin6_addr
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|in6_pcbbind

@@ -1884,14 +1884,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|in6_addr
-name|zeroin6_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_char
 name|inet6ctlerrmap
 index|[]
