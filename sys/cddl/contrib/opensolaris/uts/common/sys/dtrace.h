@@ -1084,28 +1084,36 @@ name|DIF_SUBR_INET_NTOA6
 value|43
 define|#
 directive|define
-name|DIF_SUBR_MEMREF
+name|DIF_SUBR_TOUPPER
 value|44
 define|#
 directive|define
-name|DIF_SUBR_TYPEREF
+name|DIF_SUBR_TOLOWER
 value|45
 define|#
 directive|define
-name|DIF_SUBR_SX_SHARED_HELD
+name|DIF_SUBR_MEMREF
 value|46
 define|#
 directive|define
-name|DIF_SUBR_SX_EXCLUSIVE_HELD
+name|DIF_SUBR_TYPEREF
 value|47
 define|#
 directive|define
-name|DIF_SUBR_SX_ISEXCLUSIVE
+name|DIF_SUBR_SX_SHARED_HELD
 value|48
 define|#
 directive|define
+name|DIF_SUBR_SX_EXCLUSIVE_HELD
+value|49
+define|#
+directive|define
+name|DIF_SUBR_SX_ISEXCLUSIVE
+value|50
+define|#
+directive|define
 name|DIF_SUBR_MAX
-value|48
+value|50
 comment|/* max subroutine value */
 typedef|typedef
 name|uint32_t
@@ -1549,14 +1557,24 @@ value|5
 comment|/* library-controlled action */
 define|#
 directive|define
-name|DTRACEACT_PRINTM
+name|DTRACEACT_TRACEMEM
 value|6
-comment|/* printm() action */
+comment|/* tracemem() action */
+define|#
+directive|define
+name|DTRACEACT_TRACEMEM_DYNSIZE
+value|7
+comment|/* dynamic tracemem() size */
+define|#
+directive|define
+name|DTRACEACT_PRINTM
+value|8
+comment|/* printm() action (BSD) */
 define|#
 directive|define
 name|DTRACEACT_PRINTT
-value|7
-comment|/* printt() action */
+value|9
+comment|/* printt() action (BSD) */
 define|#
 directive|define
 name|DTRACEACT_PROC
