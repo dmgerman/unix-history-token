@@ -10338,17 +10338,6 @@ name|temp
 operator|/=
 literal|2
 expr_stmt|;
-comment|/* bias */
-name|temp
-operator|+=
-operator|(
-name|sample_rate
-operator|+
-literal|1999
-operator|)
-operator|/
-literal|2000
-expr_stmt|;
 comment|/* compare */
 name|DPRINTF
 argument_list|(
