@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.371 2013/02/17 23:16:57 dtucker Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.373 2013/02/22 22:09:01 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2372,6 +2372,8 @@ literal|0
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+name|SSHCONF_USERCONF
 argument_list|)
 operator|!=
 literal|0
@@ -2718,7 +2720,7 @@ argument_list|,
 operator|&
 name|options
 argument_list|,
-literal|0
+name|SSHCONF_USERCONF
 argument_list|)
 condition|)
 name|fatal
@@ -2783,7 +2785,9 @@ argument_list|,
 operator|&
 name|options
 argument_list|,
-literal|1
+name|SSHCONF_CHECKPERM
+operator||
+name|SSHCONF_USERCONF
 argument_list|)
 expr_stmt|;
 comment|/* Read systemwide configuration file after user config. */
@@ -7103,6 +7107,20 @@ condition|(
 name|n_ids
 operator|>=
 name|SSH_MAX_IDENTITY_FILES
+operator|||
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|identity_files
+index|[
+name|i
+index|]
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|xfree
