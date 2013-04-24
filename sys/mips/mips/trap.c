@@ -1399,7 +1399,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t0
+name|a4
 expr_stmt|;
 name|sa
 operator|->
@@ -1410,7 +1410,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t1
+name|a5
 expr_stmt|;
 name|sa
 operator|->
@@ -1421,7 +1421,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t2
+name|a6
 expr_stmt|;
 name|sa
 operator|->
@@ -1432,7 +1432,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t3
+name|a7
 expr_stmt|;
 name|nsaved
 operator|+=
@@ -1536,7 +1536,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t0
+name|a4
 expr_stmt|;
 name|sa
 operator|->
@@ -1547,7 +1547,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t1
+name|a5
 expr_stmt|;
 name|sa
 operator|->
@@ -1558,7 +1558,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t2
+name|a6
 expr_stmt|;
 name|sa
 operator|->
@@ -1569,7 +1569,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t3
+name|a7
 expr_stmt|;
 name|nsaved
 operator|+=
