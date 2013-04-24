@@ -9630,7 +9630,6 @@ goto|goto
 name|next_ep
 goto|;
 block|}
-comment|/* we only accumulate one format at different sample rates */
 if|if
 condition|(
 name|chan
@@ -9638,7 +9637,11 @@ operator|->
 name|num_alt
 operator|>
 literal|1
-operator|&&
+condition|)
+block|{
+comment|/* we only accumulate one format at different sample rates */
+if|if
+condition|(
 name|chan
 operator|->
 name|pcm_format
@@ -9662,6 +9665,40 @@ expr_stmt|;
 goto|goto
 name|next_ep
 goto|;
+block|}
+comment|/* ignore if duplicate sample rate entry */
+if|if
+condition|(
+name|rate
+operator|==
+name|chan
+operator|->
+name|usb_alt
+index|[
+name|chan
+operator|->
+name|num_alt
+operator|-
+literal|2
+index|]
+operator|.
+name|sample_rate
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Duplicate sample rate detected\n"
+argument_list|)
+expr_stmt|;
+name|chan
+operator|->
+name|num_alt
+operator|--
+expr_stmt|;
+goto|goto
+name|next_ep
+goto|;
+block|}
 block|}
 name|chan
 operator|->
