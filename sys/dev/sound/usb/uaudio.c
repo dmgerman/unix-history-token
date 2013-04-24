@@ -8829,6 +8829,21 @@ name|v2
 operator|->
 name|bSubslotSize
 expr_stmt|;
+comment|/* Map 4-byte aligned 24-bit samples into 32-bit */
+if|if
+condition|(
+name|bBitResolution
+operator|==
+literal|24
+operator|&&
+name|bSubslotSize
+operator|==
+literal|4
+condition|)
+name|bBitResolution
+operator|=
+literal|32
+expr_stmt|;
 if|if
 condition|(
 name|bBitResolution
