@@ -249,6 +249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|convert
 parameter_list|(
@@ -259,6 +260,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|number
 parameter_list|(
@@ -271,6 +273,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pfract
 parameter_list|(
@@ -280,15 +283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|toobig
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|int
 name|unit
 parameter_list|(
@@ -301,6 +296,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -310,6 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lflag
 decl_stmt|;
@@ -512,6 +509,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|convert
 parameter_list|(
@@ -869,6 +867,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|unit
 parameter_list|(
@@ -1049,6 +1048,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|number
 parameter_list|(
@@ -1262,6 +1262,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pfract
 parameter_list|(
@@ -1343,6 +1344,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()

@@ -1122,6 +1122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|show
 argument_list|(
@@ -1145,6 +1146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ttyout
 parameter_list|(
@@ -1156,6 +1158,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sighandler
 parameter_list|(
@@ -1280,6 +1283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|spkr
 decl_stmt|,
@@ -1288,6 +1292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|otty
@@ -1297,6 +1302,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|olflags
 decl_stmt|;
@@ -1309,6 +1315,7 @@ name|SPEAKER
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|tone_t
 name|sound
 decl_stmt|;
@@ -2132,6 +2139,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|morse
 parameter_list|(
@@ -2311,6 +2319,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show
 parameter_list|(
@@ -2393,6 +2402,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|play
 parameter_list|(
@@ -2596,6 +2606,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ttyout
 parameter_list|(
@@ -2785,6 +2796,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sighandler
 parameter_list|(
