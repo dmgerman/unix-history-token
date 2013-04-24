@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Arnold.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -75,6 +75,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
@@ -87,25 +99,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<locale.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -123,19 +135,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<regex.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -154,21 +160,14 @@ begin_define
 define|#
 directive|define
 name|TRUE
-value|1
+value|true
 end_define
 
 begin_define
 define|#
 directive|define
 name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|bool
-value|short
+value|false
 end_define
 
 begin_define
@@ -298,10 +297,12 @@ name|FILE
 modifier|*
 name|inf
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -347,6 +348,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Found_one
 decl_stmt|;
@@ -357,6 +359,7 @@ comment|/* did we find a match? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Find_files
 init|=
@@ -369,6 +372,7 @@ comment|/* just find a list of proper fortune files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Fortunes_only
 init|=
@@ -381,6 +385,7 @@ comment|/* check only "fortunes" files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Wait
 init|=
@@ -393,6 +398,7 @@ comment|/* wait desired after fortune */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Short_only
 init|=
@@ -405,6 +411,7 @@ comment|/* short fortune desired */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Long_only
 init|=
@@ -417,6 +424,7 @@ comment|/* long fortune desired */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Offend
 init|=
@@ -429,6 +437,7 @@ comment|/* offensive fortunes only */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|All_forts
 init|=
@@ -441,6 +450,7 @@ comment|/* any fortune allowed */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Equal_probs
 init|=
@@ -453,6 +463,7 @@ comment|/* scatter un-allocted prob equally */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Match
 init|=
@@ -464,6 +475,19 @@ begin_comment
 comment|/* dump fortunes matching a pattern */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|WriteToDisk
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use files on disk to save state */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -471,10 +495,11 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
-name|bool
+specifier|static
+name|int
 name|Debug
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -488,6 +513,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|Fortbuf
@@ -501,6 +527,7 @@ comment|/* fortune buffer for -m */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Fort_len
 init|=
@@ -509,6 +536,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|Seekpts
 index|[
@@ -522,6 +550,7 @@ comment|/* seek pointers to fortunes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILEDESC
 modifier|*
 name|File_list
@@ -541,6 +570,7 @@ comment|/* Tail of file list */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILEDESC
 modifier|*
 name|Fortfile
@@ -552,6 +582,7 @@ comment|/* Fortune file to use */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|STRFILE
 name|Noprob_tbl
 decl_stmt|;
@@ -562,6 +593,8 @@ comment|/* sum of data for all no prob files */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|Fortune_path
@@ -569,6 +602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -577,6 +611,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|add_dir
 parameter_list|(
@@ -586,36 +621,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
 name|int
 name|add_file
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
+specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILEDESC
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|FILEDESC
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|FILEDESC
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|all_forts
 parameter_list|(
@@ -629,10 +665,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|copy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -642,6 +680,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|display
 parameter_list|(
@@ -652,6 +691,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_free
 parameter_list|(
@@ -662,6 +702,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 modifier|*
 name|do_malloc
@@ -672,6 +713,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|form_file_list
 parameter_list|(
@@ -685,6 +727,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|fortlen
 parameter_list|(
@@ -694,6 +737,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_fort
 parameter_list|(
@@ -703,6 +747,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_pos
 parameter_list|(
@@ -713,6 +758,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_tbl
 parameter_list|(
@@ -723,6 +769,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -736,6 +783,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getpath
 parameter_list|(
@@ -745,6 +793,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|init_prob
 parameter_list|(
@@ -754,9 +803,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|is_dir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -764,9 +815,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|is_fortfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -784,9 +837,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|is_off_name
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -794,6 +849,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|max
 parameter_list|(
@@ -805,6 +861,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|FILEDESC
 modifier|*
 name|new_fp
@@ -815,10 +872,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|off_name
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -826,6 +885,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|open_dat
 parameter_list|(
@@ -836,6 +896,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|open_fp
 parameter_list|(
@@ -846,6 +907,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|FILEDESC
 modifier|*
 name|pick_child
@@ -857,6 +919,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_file_list
 parameter_list|(
@@ -866,6 +929,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_list
 parameter_list|(
@@ -878,6 +942,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sum_noprobs
 parameter_list|(
@@ -888,6 +953,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sum_tbl
 parameter_list|(
@@ -901,6 +967,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -910,6 +977,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|zero_tbl
 parameter_list|(
@@ -920,6 +988,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|conv_pat
@@ -931,6 +1000,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|find_matches
 parameter_list|(
@@ -940,6 +1010,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|matches_in_list
 parameter_list|(
@@ -950,6 +1021,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|maxlen_in_list
 parameter_list|(
@@ -970,28 +1042,31 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
-name|ac
-decl_stmt|;
+name|argc
+parameter_list|,
 name|char
 modifier|*
-name|av
+name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
 name|int
 name|fd
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"FORTUNE_SAVESTATE"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|WriteToDisk
+operator|=
+name|true
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1007,9 +1082,9 @@ argument_list|()
 expr_stmt|;
 name|getargs
 argument_list|(
-name|ac
+name|argc
 argument_list|,
-name|av
+name|argv
 argument_list|)
 expr_stmt|;
 if|if
@@ -1059,9 +1134,11 @@ argument_list|(
 name|Fortfile
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1093,13 +1170,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOCK_EX
-comment|/* 	 * if we can, we exclusive lock, but since it isn't very 	 * important, we just punt if we don't have easy locking 	 * available. 	 */
-operator|(
-name|void
-operator|)
+comment|/* 		 * if we can, we exclusive lock, but since it isn't very 		 * important, we just punt if we don't have easy locking 		 * available. 		 */
 name|flock
 argument_list|(
 name|fd
@@ -1107,9 +1178,6 @@ argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOCK_EX */
 name|write
 argument_list|(
 name|fd
@@ -1136,9 +1204,6 @@ name|Fortfile
 operator|->
 name|was_pos_file
 condition|)
-operator|(
-name|void
-operator|)
 name|chmod
 argument_list|(
 name|Fortfile
@@ -1148,12 +1213,6 @@ argument_list|,
 literal|0666
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCK_EX
-operator|(
-name|void
-operator|)
 name|flock
 argument_list|(
 name|fd
@@ -1161,12 +1220,7 @@ argument_list|,
 name|LOCK_UN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOCK_EX */
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
+block|}
 if|if
 condition|(
 name|Wait
@@ -1206,20 +1260,18 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|display
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1240,9 +1292,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fseeko
 argument_list|(
 name|fp
@@ -1254,7 +1303,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 for|for
@@ -1432,9 +1481,12 @@ comment|/*  * fortlen:  *	Return the length of the fortune.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fortlen
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|nchar
@@ -1486,9 +1538,6 @@ argument_list|(
 name|Fortfile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fseeko
 argument_list|(
 name|Fortfile
@@ -1500,7 +1549,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|nchar
@@ -1546,7 +1595,9 @@ operator|=
 name|nchar
 expr_stmt|;
 return|return
+operator|(
 name|nchar
+operator|)
 return|;
 block|}
 end_function
@@ -1556,21 +1607,18 @@ comment|/*  *	This routine evaluates the arguments on the command line  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getargs
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|int
 name|ignore_case
@@ -1578,15 +1626,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|pat
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|int
 name|ch
@@ -1869,21 +1908,18 @@ comment|/*  * form_file_list:  *	Form the file list from the file specifications
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|form_file_list
 parameter_list|(
-name|files
-parameter_list|,
-name|file_cnt
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|files
-decl_stmt|;
+parameter_list|,
 name|int
 name|file_cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1972,9 +2008,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 else|else
@@ -2032,9 +2070,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -2135,7 +2175,9 @@ literal|"percentages must be<= 100\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -2154,7 +2196,9 @@ literal|"percentages must be integers\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 comment|/* 			 * If the number isn't followed by a '%', then 			 * it was not a percentage, just the first part 			 * of a file name which starts with digits. 			 */
@@ -2204,7 +2248,9 @@ literal|"percentages must precede files\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|sp
@@ -2280,7 +2326,9 @@ name|Fortune_path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -2307,12 +2355,16 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -2322,51 +2374,37 @@ comment|/*  * add_file:  *	Add a file to the file list.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|add_file
 parameter_list|(
-name|percent
-parameter_list|,
-name|file
-parameter_list|,
-name|dir
-parameter_list|,
-name|head
-parameter_list|,
-name|tail
-parameter_list|,
-name|parent
-parameter_list|)
 name|int
 name|percent
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|dir
-decl_stmt|;
+parameter_list|,
 name|FILEDESC
 modifier|*
 modifier|*
 name|head
-decl_stmt|,
-decl|*
+parameter_list|,
+name|FILEDESC
+modifier|*
 modifier|*
 name|tail
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|FILEDESC
 modifier|*
 name|parent
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|FILEDESC
 modifier|*
@@ -2375,9 +2413,14 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
+decl_stmt|;
+name|char
+modifier|*
+name|tpath
 decl_stmt|,
 modifier|*
 name|offensive
@@ -2399,6 +2442,10 @@ name|path
 operator|=
 name|file
 expr_stmt|;
+name|tpath
+operator|=
+name|NULL
+expr_stmt|;
 name|was_malloc
 operator|=
 name|FALSE
@@ -2406,7 +2453,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|path
+name|tpath
 operator|=
 name|do_malloc
 argument_list|(
@@ -2429,16 +2476,13 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strcat
 argument_list|(
 name|strcat
 argument_list|(
 name|strcpy
 argument_list|(
-name|path
+name|tpath
 argument_list|,
 name|dir
 argument_list|)
@@ -2448,6 +2492,10 @@ argument_list|)
 argument_list|,
 name|file
 argument_list|)
+expr_stmt|;
+name|path
+operator|=
+name|tpath
 expr_stmt|;
 name|was_malloc
 operator|=
@@ -2476,11 +2524,13 @@ name|was_malloc
 condition|)
 name|free
 argument_list|(
-name|path
+name|tpath
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 comment|/* don't recurse */
 block|}
@@ -2528,7 +2578,7 @@ name|was_malloc
 condition|)
 name|free
 argument_list|(
-name|path
+name|tpath
 argument_list|)
 expr_stmt|;
 name|path
@@ -2589,7 +2639,7 @@ name|open
 argument_list|(
 name|path
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -2612,7 +2662,7 @@ name|was_malloc
 condition|)
 name|free
 argument_list|(
-name|path
+name|tpath
 argument_list|)
 expr_stmt|;
 name|path
@@ -2722,9 +2772,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 		if (parent == NULL) 			perror(path); 		*/
@@ -2734,11 +2786,13 @@ name|was_malloc
 condition|)
 name|free
 argument_list|(
-name|path
+name|tpath
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|DPRINTF
@@ -2850,7 +2904,7 @@ name|was_malloc
 condition|)
 name|free
 argument_list|(
-name|path
+name|tpath
 argument_list|)
 expr_stmt|;
 name|do_free
@@ -2869,10 +2923,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|fp
 argument_list|)
 expr_stmt|;
@@ -2882,7 +2932,9 @@ name|offensive
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 comment|/* 	 * If the user said -a, we need to make this node a pointer to 	 * both files, if there are two.  We don't need to do this if 	 * we are scanning a directory, since the scan will pick up the 	 * -o file anyway. 	 */
@@ -2978,9 +3030,10 @@ operator|=
 name|fp
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
 name|fp
 operator|->
 name|was_pos_file
@@ -2998,24 +3051,26 @@ operator|>=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * new_fp:  *	Return a pointer to an initialized new FILEDESC.  */
 end_comment
 
 begin_function
+specifier|static
 name|FILEDESC
 modifier|*
 name|new_fp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILEDESC
 modifier|*
@@ -3023,15 +3078,13 @@ name|fp
 decl_stmt|;
 name|fp
 operator|=
-operator|(
-name|FILEDESC
-operator|*
-operator|)
 name|do_malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|fp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fp
@@ -3109,7 +3162,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|fp
+operator|)
 return|;
 block|}
 end_function
@@ -3119,16 +3174,16 @@ comment|/*  * off_name:  *	Return a pointer to the offensive version of a file o
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|off_name
 parameter_list|(
-name|file
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3155,12 +3210,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|strcat
 argument_list|(
 name|new
 argument_list|,
 literal|"-o"
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -3170,15 +3227,15 @@ comment|/*  * is_off_name:  *	Is the file an offensive-style name?  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_off_name
 parameter_list|(
-name|file
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -3223,21 +3280,18 @@ comment|/*  * all_forts:  *	Modify a FILEDESC element to be the parent of two ch
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|all_forts
 parameter_list|(
-name|fp
-parameter_list|,
-name|offensive
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|offensive
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3253,7 +3307,6 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-specifier|auto
 name|char
 modifier|*
 name|datfile
@@ -3297,7 +3350,7 @@ name|open
 argument_list|(
 name|offensive
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -3417,7 +3470,7 @@ condition|(
 operator|(
 name|sp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|offensive
 argument_list|,
@@ -3457,11 +3510,12 @@ name|obscene
 operator|->
 name|read_tbl
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
 name|obscene
 operator|->
 name|was_pos_file
@@ -3479,9 +3533,6 @@ operator|>=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 block|}
 end_function
 
@@ -3490,15 +3541,14 @@ comment|/*  * add_dir:  *	Add the contents of an entire directory.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|add_dir
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|DIR
 modifier|*
@@ -3509,12 +3559,10 @@ name|dirent
 modifier|*
 name|dirent
 decl_stmt|;
-specifier|auto
 name|FILEDESC
 modifier|*
 name|tailp
 decl_stmt|;
-specifier|auto
 name|char
 modifier|*
 name|name
@@ -3560,7 +3608,9 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 name|tailp
@@ -3683,11 +3733,15 @@ name|path
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -3697,18 +3751,17 @@ comment|/*  * is_dir:  *	Return TRUE if the file is a directory, FALSE otherwise
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_dir
 parameter_list|(
-name|file
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|auto
-type|struct
+name|struct
 name|stat
 name|sbuf
 decl_stmt|;
@@ -3725,7 +3778,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 return|return
 operator|(
@@ -3748,42 +3803,33 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_fortfile
 parameter_list|(
-name|file
-parameter_list|,
-name|datp
-parameter_list|,
-name|posp
-parameter_list|,
-name|check_for_offend
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 modifier|*
 name|datp
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 modifier|*
 name|posp
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|check_for_offend
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sp
@@ -3793,6 +3839,7 @@ modifier|*
 name|datfile
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|suflist
@@ -3895,7 +3942,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -3904,7 +3953,7 @@ condition|(
 operator|(
 name|sp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,
@@ -3942,7 +3991,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -3973,7 +4024,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -3981,7 +4034,7 @@ condition|(
 operator|(
 name|sp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|sp
 argument_list|,
@@ -4040,7 +4093,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 block|}
@@ -4125,7 +4180,9 @@ name|datfile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
 if|if
@@ -4152,9 +4209,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
+block|{
 operator|*
 name|posp
 operator|=
@@ -4177,9 +4236,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* +4 for ".dat" */
-operator|(
-name|void
-operator|)
 name|strcat
 argument_list|(
 operator|*
@@ -4188,16 +4244,15 @@ argument_list|,
 literal|".pos"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+block|{
 operator|*
 name|posp
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
+block|}
 block|}
 name|DPRINTF
 argument_list|(
@@ -4211,32 +4266,32 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * copy:  *	Return a malloc()'ed copy of the string  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|copy
 parameter_list|(
-name|str
-parameter_list|,
-name|len
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4276,7 +4331,9 @@ operator|++
 condition|)
 do|;
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -4286,16 +4343,15 @@ comment|/*  * do_malloc:  *	Do a malloc, checking for NULL return.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|do_malloc
 parameter_list|(
-name|size
-parameter_list|)
 name|unsigned
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -4332,7 +4388,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -4342,15 +4400,14 @@ comment|/*  * do_free:  *	Free malloc'ed space, if any.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_free
 parameter_list|(
-name|ptr
-parameter_list|)
 name|void
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4371,9 +4428,12 @@ comment|/*  * init_prob:  *	Initialize the fortune probabilities.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|init_prob
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILEDESC
 modifier|*
@@ -4691,9 +4751,12 @@ comment|/*  * get_fort:  *	Get the fortune data file's seek pointer for the next
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_fort
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILEDESC
 modifier|*
@@ -4878,6 +4941,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|choice
 operator|>=
 name|fp
@@ -4995,9 +5062,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|lseek
 argument_list|(
 name|fp
@@ -5024,7 +5088,7 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|read
@@ -5073,16 +5137,15 @@ comment|/*  * pick_child  *	Pick a child from a chosen parent.  */
 end_comment
 
 begin_function
+specifier|static
 name|FILEDESC
 modifier|*
 name|pick_child
 parameter_list|(
-name|parent
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|parent
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILEDESC
 modifier|*
@@ -5156,7 +5219,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|fp
+operator|)
 return|;
 block|}
 else|else
@@ -5204,6 +5269,9 @@ name|parent
 operator|->
 name|child
 init|;
+operator|(
+name|unsigned
+operator|)
 name|choice
 operator|>=
 name|fp
@@ -5273,7 +5341,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|fp
+operator|)
 return|;
 block|}
 block|}
@@ -5284,15 +5354,14 @@ comment|/*  * sum_noprobs:  *	Sum up all the noprob probabilities, starting with
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sum_noprobs
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|bool
@@ -5349,18 +5418,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|max
 parameter_list|(
-name|i
-parameter_list|,
-name|j
-parameter_list|)
 name|int
 name|i
-decl_stmt|,
+parameter_list|,
+name|int
 name|j
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -5381,15 +5448,14 @@ comment|/*  * open_fp:  *	Assocatiate a FILE * with the given FILEDESC.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|open_fp
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5438,15 +5504,14 @@ comment|/*  * open_dat:  *	Open up the dat file if we need to.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|open_dat
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5467,7 +5532,7 @@ name|fp
 operator|->
 name|datfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -5495,25 +5560,18 @@ comment|/*  * get_pos:  *	Get the position from the pos file, if there is one.  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_pos
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
 name|int
 name|fd
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 name|assert
 argument_list|(
 name|fp
@@ -5530,9 +5588,11 @@ operator|==
 name|POS_UNKNOWN
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
+if|if
+condition|(
+name|WriteToDisk
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -5544,7 +5604,7 @@ name|fp
 operator|->
 name|posfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -5612,16 +5672,13 @@ name|fd
 operator|>=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
 name|fp
 operator|->
 name|pos
@@ -5635,9 +5692,6 @@ operator|.
 name|str_numstr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* OK_TO_WRITE_DISK */
 block|}
 if|if
 condition|(
@@ -5694,17 +5748,15 @@ comment|/*  * get_tbl:  *	Get the tbl data file the datfile.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_tbl
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|auto
 name|int
 name|fd
 decl_stmt|;
@@ -5739,7 +5791,7 @@ name|fp
 operator|->
 name|datfile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -5939,15 +5991,14 @@ comment|/*  * zero_tbl:  *	Zero out the fields we care about in a tbl structure.
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|zero_tbl
 parameter_list|(
-name|tp
-parameter_list|)
 name|STRFILE
 modifier|*
 name|tp
-decl_stmt|;
+parameter_list|)
 block|{
 name|tp
 operator|->
@@ -5976,23 +6027,18 @@ comment|/*  * sum_tbl:  *	Merge the tbl data of t2 into t1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sum_tbl
 parameter_list|(
-name|t1
-parameter_list|,
-name|t2
-parameter_list|)
 name|STRFILE
 modifier|*
 name|t1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|STRFILE
+modifier|*
 name|t2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|t1
 operator|->
@@ -6039,7 +6085,7 @@ operator|->
 name|str_shortlen
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -6056,9 +6102,12 @@ comment|/*  * print_file_list:  *	Print out the file list  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_file_list
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|print_list
 argument_list|(
@@ -6075,20 +6124,17 @@ comment|/*  * print_list:  *	Print out the actual list, recursively.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_list
 parameter_list|(
-name|list
-parameter_list|,
-name|lev
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|list
-decl_stmt|;
+parameter_list|,
 name|int
 name|lev
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -6224,16 +6270,15 @@ comment|/*  * conv_pat:  *	Convert the pattern to an ignore-case equivalent.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|conv_pat
 parameter_list|(
-name|orig
-parameter_list|)
 name|char
 modifier|*
 name|orig
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6438,7 +6483,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
+operator|(
 name|new
+operator|)
 return|;
 block|}
 end_function
@@ -6448,9 +6495,12 @@ comment|/*  * find_matches:  *	Find all the fortunes which match the pattern we'
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|find_matches
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|Fort_len
 operator|=
@@ -6496,9 +6546,10 @@ name|File_list
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|Found_one
+operator|)
 return|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -6507,15 +6558,14 @@ comment|/*  * maxlen_in_list  *	Return the maximum fortune len in the file list.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|maxlen_in_list
 parameter_list|(
-name|list
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|list
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILEDESC
 modifier|*
@@ -6591,6 +6641,10 @@ name|tbl
 operator|.
 name|str_longlen
 operator|>
+operator|(
+name|unsigned
+name|int
+operator|)
 name|maxlen
 condition|)
 name|maxlen
@@ -6604,7 +6658,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|maxlen
+operator|)
 return|;
 block|}
 end_function
@@ -6614,15 +6670,14 @@ comment|/*  * matches_in_list  *	Print out the matches from the files in the lis
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|matches_in_list
 parameter_list|(
-name|list
-parameter_list|)
 name|FILEDESC
 modifier|*
 name|list
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6958,9 +7013,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -7031,6 +7089,7 @@ comment|/*  * getpath  * 	Set up file search patch from environment var FORTUNE_
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getpath
 parameter_list|(
@@ -7224,7 +7283,10 @@ index|[
 literal|0
 index|]
 operator|=
+name|strdup
+argument_list|(
 name|FORTDIR
+argument_list|)
 expr_stmt|;
 block|}
 block|}
