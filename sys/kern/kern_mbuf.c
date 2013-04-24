@@ -231,12 +231,12 @@ name|PAGE_SIZE
 argument_list|,
 name|vm_map_max
 argument_list|(
-name|kernel_map
+name|kmem_map
 argument_list|)
 operator|-
 name|vm_map_min
 argument_list|(
-name|kernel_map
+name|kmem_map
 argument_list|)
 argument_list|)
 expr_stmt|;
