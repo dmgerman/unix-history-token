@@ -13757,7 +13757,16 @@ operator|->
 name|maxio
 operator|=
 operator|(
+name|min
+argument_list|(
 name|CISS_MAX_SG_ELEMENTS
+argument_list|,
+name|sc
+operator|->
+name|ciss_cfg
+operator|->
+name|max_sg_length
+argument_list|)
 operator|-
 literal|1
 operator|)
