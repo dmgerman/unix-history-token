@@ -458,6 +458,12 @@ name|sockaddr_in
 modifier|*
 name|dst
 decl_stmt|;
+specifier|const
+name|struct
+name|sockaddr_in
+modifier|*
+name|gw
+decl_stmt|;
 name|struct
 name|in_ifaddr
 modifier|*
@@ -748,8 +754,8 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
-name|again
-label|:
+name|gw
+operator|=
 name|dst
 operator|=
 operator|(
@@ -762,6 +768,8 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
+name|again
+label|:
 name|ia
 operator|=
 name|NULL
@@ -1273,7 +1281,7 @@ name|rt_flags
 operator|&
 name|RTF_GATEWAY
 condition|)
-name|dst
+name|gw
 operator|=
 operator|(
 expr|struct
@@ -1307,7 +1315,7 @@ name|isbroadcast
 operator|=
 name|in_broadcast
 argument_list|(
-name|dst
+name|gw
 operator|->
 name|sin_addr
 argument_list|,
@@ -1428,19 +1436,6 @@ operator|->
 name|m_flags
 operator||=
 name|M_MCAST
-expr_stmt|;
-comment|/* 		 * IP destination address is multicast.  Make sure "dst" 		 * still points to the address in "ro".  (It may have been 		 * changed to point to a gateway address, above.) 		 */
-name|dst
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ro
-operator|->
-name|ro_dst
 expr_stmt|;
 comment|/* 		 * See if the caller provided any multicast options 		 */
 if|if
@@ -2297,18 +2292,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|dst
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ro
-operator|->
-name|ro_dst
-expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -2716,7 +2699,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-name|dst
+name|gw
 argument_list|,
 name|ro
 argument_list|)
@@ -2867,7 +2850,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-name|dst
+name|gw
 argument_list|,
 name|ro
 argument_list|)
