@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001, 2004, 2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2001, 2004, 2010, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sm_gethost.c,v 8.29 2010/07/27 01:09:31 ca Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.30 2013/02/22 22:43:33 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -446,12 +446,21 @@ comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204
 if|#
 directive|if
 name|NETINET6
+ifndef|#
+directive|ifndef
+name|SM_IPNODEBYNAME_FLAGS
+comment|/* For IPv4-mapped addresses, use: AI_DEFAULT|AI_ALL */
+define|#
+directive|define
+name|SM_IPNODEBYNAME_FLAGS
+value|AI_ADDRCONFIG
+endif|#
+directive|endif
+comment|/* SM_IPNODEBYNAME_FLAGS */
 name|int
 name|flags
 init|=
-name|AI_DEFAULT
-operator||
-name|AI_ALL
+name|SM_IPNODEBYNAME_FLAGS
 decl_stmt|;
 name|int
 name|err

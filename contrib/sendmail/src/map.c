@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.709 2012/04/20 18:47:09 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.711 2013/03/12 15:24:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -12972,6 +12972,28 @@ directive|include
 file|<rpcsvc/nislib.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NIS_TABLE_OBJ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NIS_TABLE_OBJ
+value|TABLE_OBJ
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NIS_TABLE_OBJ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13336,7 +13358,7 @@ name|zo_data
 operator|.
 name|zo_type
 operator|!=
-name|TABLE_OBJ
+name|NIS_TABLE_OBJ
 operator|)
 condition|)
 block|{
@@ -25161,8 +25183,8 @@ argument_list|(
 name|linebuf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|char
@@ -25521,8 +25543,8 @@ argument_list|(
 name|linebuf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|char
