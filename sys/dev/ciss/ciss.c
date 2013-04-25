@@ -15441,7 +15441,7 @@ name|vendor
 argument_list|,
 literal|"COMPAQ"
 argument_list|,
-literal|8
+name|SID_VENDOR_SIZE
 argument_list|)
 expr_stmt|;
 name|padstr
@@ -15459,7 +15459,7 @@ operator|->
 name|fault_tolerance
 argument_list|)
 argument_list|,
-literal|8
+name|SID_PRODUCT_SIZE
 argument_list|)
 expr_stmt|;
 name|padstr
@@ -15477,7 +15477,7 @@ operator|->
 name|status
 argument_list|)
 argument_list|,
-literal|16
+name|SID_REVISION_SIZE
 argument_list|)
 expr_stmt|;
 block|}
