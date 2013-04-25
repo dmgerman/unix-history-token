@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1096 2012/11/16 20:25:03 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1101 2013/03/15 17:54:12 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -670,12 +670,43 @@ operator|!
 name|TLS_NO_RSA
 end_if
 
+begin_if
+if|#
+directive|if
+name|_FFR_FIPSMODE
+end_if
+
+begin_define
+define|#
+directive|define
+name|RSA_KEYLENGTH
+value|1024
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_FIPSMODE  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RSA_KEYLENGTH
 value|512
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_FIPSMODE  */
+end_comment
 
 begin_endif
 endif|#
@@ -12025,7 +12056,8 @@ name|init_tls_library
 name|__P
 argument_list|(
 operator|(
-name|void
+name|bool
+name|_fipsmode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12155,6 +12187,8 @@ name|tlslogerr
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 specifier|const
 name|char
 operator|*
@@ -14188,6 +14222,13 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+name|FipsMode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|bool
 name|GrabTo
 decl_stmt|;
 end_decl_stmt
@@ -14337,6 +14378,32 @@ end_decl_stmt
 
 begin_comment
 comment|/*  .... but only if we want a quick abort */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|RejectNUL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reject NUL input byte? */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_REJECT_NUL_BYTE */
 end_comment
 
 begin_if
@@ -18585,6 +18652,21 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|isatom
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

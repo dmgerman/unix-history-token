@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1176 2012/12/07 03:59:54 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1182 2013/04/05 17:39:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4170,8 +4170,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 specifier|register
@@ -12403,8 +12403,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -13578,8 +13578,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 specifier|register
@@ -16960,12 +16960,21 @@ decl_stmt|;
 if|#
 directive|if
 name|NETINET6
+ifndef|#
+directive|ifndef
+name|SM_IPNODEBYNAME_FLAGS
+comment|/* For IPv4-mapped addresses, use: AI_DEFAULT|AI_ALL */
+define|#
+directive|define
+name|SM_IPNODEBYNAME_FLAGS
+value|AI_ADDRCONFIG
+endif|#
+directive|endif
+comment|/* SM_IPNODEBYNAME_FLAGS */
 name|int
 name|flags
 init|=
-name|AI_DEFAULT
-operator||
-name|AI_ALL
+name|SM_IPNODEBYNAME_FLAGS
 decl_stmt|;
 name|int
 name|err
@@ -23361,6 +23370,64 @@ directive|endif
 comment|/* SECUREWARE */
 if|#
 directive|if
+name|SFS_TYPE
+operator|==
+name|SFS_4ARGS
+literal|"SFS_4ARGS"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_MOUNT
+literal|"SFS_MOUNT"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_NONE
+literal|"SFS_NONE"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_NT
+literal|"SFS_NT"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_STATFS
+literal|"SFS_STATFS"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_STATVFS
+literal|"SFS_STATVFS"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_USTAT
+literal|"SFS_USTAT"
+block|,
+elif|#
+directive|elif
+name|SFS_TYPE
+operator|==
+name|SFS_VFS
+literal|"SFS_VFS"
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
 name|SHARE_V1
 literal|"SHARE_V1"
 block|,
@@ -23717,6 +23784,15 @@ directive|endif
 comment|/* _FFR_GETHBN_ExFILE */
 if|#
 directive|if
+name|_FFR_FIPSMODE
+comment|/* FIPSMode (if supported by OpenSSL library) */
+literal|"_FFR_FIPSMODE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_FIPSMODE */
+if|#
+directive|if
 name|_FFR_FIX_DASHT
 comment|/* 	**  If using -t, force not sending to argv recipients, even 	**  if they are mentioned in the headers. 	*/
 literal|"_FFR_FIX_DASHT"
@@ -24032,6 +24108,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_REDIRECTEMPTY */
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+comment|/* reject NUL bytes in body */
+literal|"_FFR_REJECT_NUL_BYTE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 if|#
 directive|if
 name|_FFR_RESET_MACRO_GLOBALS
