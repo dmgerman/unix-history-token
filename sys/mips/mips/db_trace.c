@@ -1936,7 +1936,7 @@ name|ctx
 operator|->
 name|pcb_context
 index|[
-name|PREG_SP
+name|PCB_REG_SP
 index|]
 expr_stmt|;
 name|pc
@@ -1948,7 +1948,7 @@ name|ctx
 operator|->
 name|pcb_context
 index|[
-name|PREG_PC
+name|PCB_REG_PC
 index|]
 expr_stmt|;
 name|ra
@@ -1960,7 +1960,7 @@ name|ctx
 operator|->
 name|pcb_context
 index|[
-name|PREG_RA
+name|PCB_REG_RA
 index|]
 expr_stmt|;
 block|}
