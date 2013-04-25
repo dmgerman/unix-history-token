@@ -19,46 +19,8 @@ directive|define
 name|_MACHINE_PCB_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
 begin_comment
-comment|/*  * MIPS process control block  */
-end_comment
-
-begin_struct
-struct|struct
-name|pcb
-block|{
-name|struct
-name|trapframe
-name|pcb_regs
-decl_stmt|;
-comment|/* saved CPU and registers */
-name|__register_t
-name|pcb_context
-index|[
-literal|14
-index|]
-decl_stmt|;
-comment|/* kernel context for resume */
-name|void
-modifier|*
-name|pcb_onfault
-decl_stmt|;
-comment|/* for copyin/copyout faults */
-name|register_t
-name|pcb_tpc
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* these match the regnum's in regnum.h  * used by switch.S  */
+comment|/*  * used by switch.S  */
 end_comment
 
 begin_define
@@ -159,6 +121,50 @@ name|PCB_REG_PC
 value|13
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_comment
+comment|/*  * MIPS process control block  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcb
+block|{
+name|struct
+name|trapframe
+name|pcb_regs
+decl_stmt|;
+comment|/* saved CPU and registers */
+name|__register_t
+name|pcb_context
+index|[
+literal|14
+index|]
+decl_stmt|;
+comment|/* kernel context for resume */
+name|void
+modifier|*
+name|pcb_onfault
+decl_stmt|;
+comment|/* for copyin/copyout faults */
+name|register_t
+name|pcb_tpc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -204,6 +210,11 @@ argument_list|)
 name|__returns_twice
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
