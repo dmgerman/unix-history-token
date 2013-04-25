@@ -727,6 +727,8 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
+name|again
+label|:
 name|dst
 operator|=
 operator|(
@@ -739,8 +741,6 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-name|again
-label|:
 name|ia
 operator|=
 name|NULL
