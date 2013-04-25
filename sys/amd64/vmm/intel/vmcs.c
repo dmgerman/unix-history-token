@@ -562,6 +562,9 @@ modifier|*
 name|vmcs
 parameter_list|,
 name|int
+name|running
+parameter_list|,
+name|int
 name|ident
 parameter_list|,
 name|uint64_t
@@ -611,6 +614,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMPTRLD
 argument_list|(
 name|vmcs
@@ -625,6 +633,11 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMCLEAR
 argument_list|(
 name|vmcs
@@ -646,6 +659,9 @@ name|struct
 name|vmcs
 modifier|*
 name|vmcs
+parameter_list|,
+name|int
+name|running
 parameter_list|,
 name|int
 name|ident
@@ -704,6 +720,11 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMPTRLD
 argument_list|(
 name|vmcs
@@ -718,6 +739,11 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|running
+condition|)
 name|VMCLEAR
 argument_list|(
 name|vmcs

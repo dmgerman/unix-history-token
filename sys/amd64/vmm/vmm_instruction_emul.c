@@ -113,6 +113,20 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_enum
+enum|enum
+name|cpu_mode
+block|{
+name|CPU_MODE_COMPATIBILITY
+block|,
+comment|/* IA-32E mode (CS.L = 0) */
+name|CPU_MODE_64BIT
+block|,
+comment|/* IA-32E mode (CS.L = 1) */
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/* struct vie_op.op_type */
 end_comment
@@ -419,41 +433,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|vie_valid_register
-parameter_list|(
-name|enum
-name|vm_reg_name
-name|reg
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* 	 * XXX 	 * The operand register in which we store the result of the 	 * read must be a GPR that we can modify even if the vcpu 	 * is "running". All the GPRs qualify except for %rsp. 	 * 	 * This is a limitation of the vm_set_register() API 	 * and can be fixed if necessary. 	 */
-if|if
-condition|(
-name|reg
-operator|==
-name|VM_REG_GUEST_RSP
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|vie_read_register
 parameter_list|(
 name|void
@@ -475,19 +454,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|vie_valid_register
-argument_list|(
-name|reg
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|error
 operator|=
 name|vm_get_register
@@ -592,19 +558,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|vie_valid_register
-argument_list|(
-name|reg
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|error
 operator|=
 name|vm_get_register
@@ -663,19 +616,6 @@ decl_stmt|;
 name|uint64_t
 name|origval
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|vie_valid_register
-argument_list|(
-name|reg
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 switch|switch
 condition|(
 name|size
@@ -2140,10 +2080,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXX assuming 32-bit or 64-bit guest  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2158,6 +2094,15 @@ block|{
 name|uint8_t
 name|x
 decl_stmt|;
+name|enum
+name|cpu_mode
+name|cpu_mode
+decl_stmt|;
+comment|/* 	 * XXX assuming that guest is in IA-32E 64-bit mode 	 */
+name|cpu_mode
+operator|=
+name|CPU_MODE_64BIT
+expr_stmt|;
 if|if
 condition|(
 name|vie_peek
@@ -2359,13 +2304,26 @@ name|disp_bytes
 operator|=
 literal|4
 expr_stmt|;
+comment|/* 			 * Table 2-7. RIP-Relative Addressing 			 * 			 * In 64-bit mode mod=00 r/m=101 implies [rip] + disp32 			 * whereas in compatibility mode it just implies disp32. 			 */
+if|if
+condition|(
+name|cpu_mode
+operator|==
+name|CPU_MODE_64BIT
+condition|)
+name|vie
+operator|->
+name|base_register
+operator|=
+name|VM_REG_GUEST_RIP
+expr_stmt|;
+else|else
 name|vie
 operator|->
 name|base_register
 operator|=
 name|VM_REG_LAST
 expr_stmt|;
-comment|/* no base */
 block|}
 break|break;
 block|}
@@ -3045,6 +3003,21 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 		 * RIP-relative addressing starts from the following 		 * instruction 		 */
+if|if
+condition|(
+name|vie
+operator|->
+name|base_register
+operator|==
+name|VM_REG_GUEST_RIP
+condition|)
+name|base
+operator|+=
+name|vie
+operator|->
+name|num_valid
+expr_stmt|;
 block|}
 name|idx
 operator|=

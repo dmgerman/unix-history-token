@@ -153,11 +153,14 @@ modifier|*
 name|vmcs
 parameter_list|,
 name|int
+name|running
+parameter_list|,
+name|int
 name|ident
 parameter_list|,
 name|uint64_t
 modifier|*
-name|retval
+name|rv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -170,6 +173,9 @@ name|struct
 name|vmcs
 modifier|*
 name|vmcs
+parameter_list|,
+name|int
+name|running
 parameter_list|,
 name|int
 name|ident
