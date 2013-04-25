@@ -749,6 +749,8 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
+name|again
+label|:
 name|dst
 operator|=
 operator|(
@@ -761,8 +763,6 @@ name|ro
 operator|->
 name|ro_dst
 expr_stmt|;
-name|again
-label|:
 comment|/* 	 * If there is a cached route, 	 * check that it is to the same destination 	 * and is still up.  If not, free it and try again. 	 * The address family should also be checked in case of sharing the 	 * cache with IPv6. 	 */
 name|rte
 operator|=
