@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: rmail.c,v 8.61 2001/09/18 21:45:29 gshapiro Exp $"
+literal|"@(#)$Id: rmail.c,v 8.62 2013/03/12 15:24:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -465,8 +465,8 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|err
 argument_list|(
@@ -1735,8 +1735,8 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 do|;
 if|if

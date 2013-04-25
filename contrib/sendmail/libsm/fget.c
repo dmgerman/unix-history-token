@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2001, 2013 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: fget.c,v 1.24 2001/09/11 04:04:48 gshapiro Exp $"
+literal|"@(#)$Id: fget.c,v 1.25 2013/03/12 15:24:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -47,12 +47,11 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/* **  SM_IO_FGETS -- get a string from a file ** **  Read at most n-1 characters from the given file. **  Stop when a newline has been read, or the count ('n') runs out. ** **	Parameters: **		fp -- the file to read from **		timeout -- time to complete reading the string in milliseconds **		buf -- buffer to place read string in **		n -- size of 'buf' ** **	Returns: **		success: returns value of 'buf' **		failure: NULL (no characters were read) **		timeout: NULL and errno set to EAGAIN ** **	Side Effects: **		may move the file pointer */
+comment|/* **  SM_IO_FGETS -- get a string from a file ** **  Read at most n-1 characters from the given file. **  Stop when a newline has been read, or the count ('n') runs out. ** **	Parameters: **		fp -- the file to read from **		timeout -- time to complete reading the string in milliseconds **		buf -- buffer to place read string in **		n -- size of 'buf' ** **	Returns: **		success: number of characters **		failure: -1 **		timeout: -1 and errno set to EAGAIN ** **	Side Effects: **		may move the file pointer */
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|int
 name|sm_io_fgets
 parameter_list|(
 name|fp
@@ -80,16 +79,15 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
+decl_stmt|,
+name|r
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 modifier|*
@@ -113,7 +111,8 @@ literal|0
 condition|)
 comment|/* sanity check */
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|s
 operator|=
@@ -123,6 +122,10 @@ name|n
 operator|--
 expr_stmt|;
 comment|/* leave space for NUL */
+name|r
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|n
@@ -165,7 +168,8 @@ operator|==
 name|buf
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 break|break;
 block|}
@@ -227,6 +231,10 @@ name|t
 operator|-
 name|p
 expr_stmt|;
+name|r
+operator|+=
+name|len
+expr_stmt|;
 name|fp
 operator|->
 name|f_r
@@ -267,7 +275,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|buf
+name|r
 return|;
 block|}
 name|fp
@@ -306,6 +314,10 @@ name|s
 operator|+=
 name|len
 expr_stmt|;
+name|r
+operator|+=
+name|len
+expr_stmt|;
 name|n
 operator|-=
 name|len
@@ -317,7 +329,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|buf
+name|r
 return|;
 block|}
 end_function
