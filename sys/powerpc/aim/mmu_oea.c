@@ -11903,10 +11903,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* TODO: Run this on minbar, single calls, to check addresses, offsets, and  * sizes.  It should be doing more than just single pages.  */
-end_comment
-
 begin_function
 name|struct
 name|pmap_md
