@@ -198,12 +198,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|check
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -215,6 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|check2
 parameter_list|(
@@ -226,6 +230,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|checkdot
 parameter_list|(
@@ -237,6 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|checkslash
 parameter_list|(
@@ -248,6 +254,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rm_file
 parameter_list|(
@@ -259,9 +266,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rm_overwrite
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -273,6 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rm_tree
 parameter_list|(
@@ -295,6 +305,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -658,6 +669,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rm_tree
 parameter_list|(
@@ -1783,6 +1795,7 @@ begin_function
 name|int
 name|rm_overwrite
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -2154,13 +2167,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|check
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2204,7 +2220,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.	Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
 if|if
 condition|(
 operator|!
@@ -2427,6 +2443,7 @@ value|((a)[0] == '/'&& (a)[1] == '\0')
 end_define
 
 begin_function
+specifier|static
 name|void
 name|checkslash
 parameter_list|(
@@ -2525,6 +2542,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|check2
 parameter_list|(
@@ -2814,6 +2832,7 @@ value|((a)[0] == '.'&& (!(a)[1] || ((a)[1] == '.'&& !(a)[2])))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|checkdot
 parameter_list|(
@@ -2939,6 +2958,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
