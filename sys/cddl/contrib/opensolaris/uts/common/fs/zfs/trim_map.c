@@ -170,7 +170,7 @@ end_typedef
 begin_decl_stmt
 specifier|extern
 name|boolean_t
-name|zfs_notrim
+name|zfs_trim_enabled
 decl_stmt|;
 end_decl_stmt
 
@@ -675,7 +675,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 condition|)
 return|return;
 name|tm
@@ -848,7 +849,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 condition|)
 return|return;
 name|tm
@@ -1844,7 +1846,8 @@ name|vdev_trimmap
 decl_stmt|;
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 operator|||
 name|vd
 operator|->
@@ -1935,7 +1938,8 @@ name|end
 decl_stmt|;
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 operator|||
 name|vd
 operator|->
@@ -2152,7 +2156,8 @@ decl_stmt|;
 comment|/* 	 * Don't check for vdev_notrim, since the write could have 	 * started before vdev_notrim was set. 	 */
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 operator|||
 name|tm
 operator|==
@@ -3107,7 +3112,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 condition|)
 return|return;
 name|mutex_init
@@ -3192,7 +3198,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 condition|)
 return|return;
 if|if
@@ -3293,7 +3300,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|zfs_notrim
+operator|!
+name|zfs_trim_enabled
 condition|)
 return|return;
 if|if

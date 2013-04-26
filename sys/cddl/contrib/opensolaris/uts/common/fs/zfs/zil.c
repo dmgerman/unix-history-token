@@ -195,19 +195,27 @@ end_expr_stmt
 
 begin_decl_stmt
 name|boolean_t
-name|zfs_notrim
+name|zfs_trim_enabled
 init|=
 name|B_TRUE
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs_trim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"vfs.zfs.trim_disable"
+literal|"vfs.zfs.trim.enabled"
 argument_list|,
 operator|&
-name|zfs_notrim
+name|zfs_trim_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -215,20 +223,20 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_zfs
+name|_vfs_zfs_trim
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|trim_disable
+name|enabled
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|zfs_notrim
+name|zfs_trim_enabled
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable trim"
+literal|"Enable ZFS TRIM"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

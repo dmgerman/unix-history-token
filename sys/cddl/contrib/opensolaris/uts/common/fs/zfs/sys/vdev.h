@@ -87,7 +87,7 @@ name|zfs_nocacheflush
 decl_stmt|;
 specifier|extern
 name|boolean_t
-name|zfs_notrim
+name|zfs_trim_enabled
 decl_stmt|;
 specifier|extern
 name|int

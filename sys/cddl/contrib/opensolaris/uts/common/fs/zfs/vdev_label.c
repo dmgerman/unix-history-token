@@ -2754,8 +2754,7 @@ block|}
 comment|/* 	 * TRIM the whole thing so that we start with a clean slate. 	 * It's just an optimization, so we don't care if it fails. 	 * Don't TRIM if removing so that we don't interfere with zpool 	 * disaster recovery. 	 */
 if|if
 condition|(
-operator|!
-name|zfs_notrim
+name|zfs_trim_enabled
 operator|&&
 name|vdev_trim_on_init
 operator|&&
