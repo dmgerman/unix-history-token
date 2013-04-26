@@ -1424,6 +1424,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rm_file
 parameter_list|(
@@ -1792,6 +1793,7 @@ comment|/*  * rm_overwrite --  *	Overwrite the file 3 times with varying bit pat
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rm_overwrite
 parameter_list|(
