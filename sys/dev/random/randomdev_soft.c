@@ -1603,6 +1603,19 @@ name|random_systat
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|arc4rand_iniseed_state
+argument_list|,
+name|ARC4_ENTR_NONE
+argument_list|,
+name|ARC4_ENTR_HAVE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

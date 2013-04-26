@@ -528,6 +528,46 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|ARC4_ENTR_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* Don't have entropy yet. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARC4_ENTR_HAVE
+value|1
+end_define
+
+begin_comment
+comment|/* Have entropy. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARC4_ENTR_SEED
+value|2
+end_define
+
+begin_comment
+comment|/* Reseeding. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|arc4rand_iniseed_state
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Prototypes for non-quad routines. */
 end_comment
