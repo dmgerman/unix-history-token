@@ -13760,6 +13760,8 @@ operator|(
 name|min
 argument_list|(
 name|CISS_MAX_SG_ELEMENTS
+operator|-
+literal|1
 argument_list|,
 name|sc
 operator|->
@@ -13767,8 +13769,6 @@ name|ciss_cfg
 operator|->
 name|max_sg_length
 argument_list|)
-operator|-
-literal|1
 operator|)
 operator|*
 name|PAGE_SIZE
