@@ -2695,6 +2695,7 @@ argument_list|,
 name|m
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
@@ -2846,6 +2847,7 @@ argument_list|,
 name|m
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*

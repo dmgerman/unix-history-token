@@ -131,6 +131,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -176,6 +177,7 @@ begin_function_decl
 name|int
 name|at_broadcast
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -232,6 +234,7 @@ name|at_ifaddr
 modifier|*
 name|at_ifawithnet
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -245,6 +248,7 @@ name|at_ifaddr
 modifier|*
 name|at_ifawithnet_locked
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*

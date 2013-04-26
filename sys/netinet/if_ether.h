@@ -45,7 +45,7 @@ comment|/* struct in_addr *ipaddr; */
 define|\
 comment|/* u_char enaddr[ETHER_ADDR_LEN];	   */
 define|\
-value|{ \ 	(enaddr)[0] = 0x01; \ 	(enaddr)[1] = 0x00; \ 	(enaddr)[2] = 0x5e; \ 	(enaddr)[3] = ((u_char *)ipaddr)[1]& 0x7f; \ 	(enaddr)[4] = ((u_char *)ipaddr)[2]; \ 	(enaddr)[5] = ((u_char *)ipaddr)[3]; \ }
+value|{ \ 	(enaddr)[0] = 0x01; \ 	(enaddr)[1] = 0x00; \ 	(enaddr)[2] = 0x5e; \ 	(enaddr)[3] = ((const u_char *)ipaddr)[1]& 0x7f; \ 	(enaddr)[4] = ((const u_char *)ipaddr)[2]; \ 	(enaddr)[5] = ((const u_char *)ipaddr)[3]; \ }
 end_define
 
 begin_comment
@@ -66,7 +66,7 @@ comment|/* struct	in6_addr *ip6addr; */
 define|\
 comment|/* u_char	enaddr[ETHER_ADDR_LEN]; */
 define|\
-value|{                                                                       \ 	(enaddr)[0] = 0x33;						\ 	(enaddr)[1] = 0x33;						\ 	(enaddr)[2] = ((u_char *)ip6addr)[12];				\ 	(enaddr)[3] = ((u_char *)ip6addr)[13];				\ 	(enaddr)[4] = ((u_char *)ip6addr)[14];				\ 	(enaddr)[5] = ((u_char *)ip6addr)[15];				\ }
+value|{                                                                       \ 	(enaddr)[0] = 0x33;						\ 	(enaddr)[1] = 0x33;						\ 	(enaddr)[2] = ((const u_char *)ip6addr)[12];			\ 	(enaddr)[3] = ((const u_char *)ip6addr)[13];			\ 	(enaddr)[4] = ((const u_char *)ip6addr)[14];			\ 	(enaddr)[5] = ((const u_char *)ip6addr)[15];			\ }
 end_define
 
 begin_comment
@@ -286,6 +286,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -312,10 +313,12 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*

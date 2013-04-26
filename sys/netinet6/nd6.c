@@ -290,7 +290,7 @@ name|SIN6
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct sockaddr_in6 *)s)
+value|((const struct sockaddr_in6 *)(s))
 end_define
 
 begin_comment
@@ -8070,6 +8070,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*

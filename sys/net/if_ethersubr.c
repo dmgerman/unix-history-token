@@ -326,6 +326,7 @@ modifier|*
 modifier|*
 name|mp
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -811,6 +812,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1302,13 +1304,10 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 operator|(
 operator|(
-operator|(
+specifier|const
 expr|struct
 name|sockaddr_ipx
 operator|*
@@ -1319,11 +1318,7 @@ operator|->
 name|sipx_addr
 operator|.
 name|x_host
-operator|)
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|edst
 argument_list|,
 sizeof|sizeof
@@ -1355,6 +1350,7 @@ operator|=
 name|at_ifawithnet
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sockaddr_at
 operator|*
@@ -1381,6 +1377,7 @@ argument_list|,
 name|m
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|sockaddr_at
 operator|*
@@ -1545,6 +1542,13 @@ comment|/* NETATALK */
 case|case
 name|pseudo_AF_HDRCMPLT
 case|:
+block|{
+specifier|const
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|hdrcmplt
 operator|=
 literal|1
@@ -1552,6 +1556,7 @@ expr_stmt|;
 name|eh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ether_header
 operator|*
@@ -1589,6 +1594,7 @@ comment|/* if this is for us, don't do it */
 name|eh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ether_header
 operator|*
@@ -1621,6 +1627,7 @@ operator|->
 name|ether_type
 expr_stmt|;
 break|break;
+block|}
 default|default:
 name|if_printf
 argument_list|(

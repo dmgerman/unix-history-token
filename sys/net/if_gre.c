@@ -382,6 +382,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -389,7 +390,6 @@ parameter_list|,
 name|struct
 name|route
 modifier|*
-name|ro
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1071,6 +1071,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1508,7 +1509,6 @@ name|sa_family
 operator|==
 name|AF_UNSPEC
 condition|)
-block|{
 name|bcopy
 argument_list|(
 name|dst
@@ -1524,13 +1524,13 @@ name|af
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|af
+operator|=
 name|dst
 operator|->
 name|sa_family
-operator|=
-name|af
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bpf_peers_present
@@ -1540,13 +1540,6 @@ operator|->
 name|if_bpf
 argument_list|)
 condition|)
-block|{
-name|af
-operator|=
-name|dst
-operator|->
-name|sa_family
-expr_stmt|;
 name|bpf_mtap2
 argument_list|(
 name|ifp
@@ -1564,7 +1557,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|m
 operator|->
 name|m_flags
@@ -1587,9 +1579,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|dst
-operator|->
-name|sa_family
+name|af
 operator|==
 name|AF_INET
 condition|)
@@ -2039,9 +2029,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|dst
-operator|->
-name|sa_family
+name|af
 condition|)
 block|{
 case|case

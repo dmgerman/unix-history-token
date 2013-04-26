@@ -231,6 +231,7 @@ name|aarptab
 modifier|*
 name|aarptnew
 parameter_list|(
+specifier|const
 name|struct
 name|at_addr
 modifier|*

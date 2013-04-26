@@ -312,7 +312,7 @@ name|SIN
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct sockaddr_in *)s)
+value|((const struct sockaddr_in *)(s))
 end_define
 
 begin_define
@@ -322,7 +322,7 @@ name|SIPX
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct sockaddr_ipx *)s)
+value|((const struct sockaddr_ipx *)(s))
 end_define
 
 begin_comment
@@ -343,6 +343,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -730,6 +731,13 @@ directive|endif
 case|case
 name|AF_UNSPEC
 case|:
+block|{
+specifier|const
+name|struct
+name|arc_header
+modifier|*
+name|ah
+decl_stmt|;
 name|loop_copy
 operator|=
 operator|-
@@ -738,6 +746,7 @@ expr_stmt|;
 name|ah
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|arc_header
 operator|*
@@ -810,6 +819,7 @@ endif|#
 directive|endif
 block|}
 break|break;
+block|}
 default|default:
 name|if_printf
 argument_list|(

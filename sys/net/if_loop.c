@@ -362,6 +362,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -871,6 +872,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1014,7 +1016,6 @@ name|sa_family
 operator|==
 name|AF_UNSPEC
 condition|)
-block|{
 name|bcopy
 argument_list|(
 name|dst
@@ -1030,22 +1031,20 @@ name|af
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|af
+operator|=
 name|dst
 operator|->
 name|sa_family
-operator|=
-name|af
 expr_stmt|;
-block|}
 if|#
 directive|if
 literal|1
 comment|/* XXX */
 switch|switch
 condition|(
-name|dst
-operator|->
-name|sa_family
+name|af
 condition|)
 block|{
 case|case
@@ -1137,9 +1136,7 @@ name|printf
 argument_list|(
 literal|"looutput: af=%d unexpected\n"
 argument_list|,
-name|dst
-operator|->
-name|sa_family
+name|af
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1163,9 +1160,7 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
-name|dst
-operator|->
-name|sa_family
+name|af
 argument_list|,
 literal|0
 argument_list|)

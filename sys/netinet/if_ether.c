@@ -201,7 +201,7 @@ name|SIN
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct sockaddr_in *)s)
+value|((const struct sockaddr_in *)(s))
 end_define
 
 begin_define
@@ -967,11 +967,13 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
 name|sip
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
@@ -1298,14 +1300,8 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|enaddr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ar_sha
 argument_list|(
 name|ah
@@ -1318,14 +1314,8 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|sip
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ar_spa
 argument_list|(
 name|ah
@@ -1338,14 +1328,8 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|tip
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ar_tpa
 argument_list|(
 name|ah
@@ -1422,6 +1406,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
