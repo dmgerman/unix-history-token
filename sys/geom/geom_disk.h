@@ -248,6 +248,9 @@ decl_stmt|;
 name|u_int
 name|d_maxsize
 decl_stmt|;
+name|off_t
+name|d_delmaxsize
+decl_stmt|;
 name|u_int
 name|d_stripeoffset
 decl_stmt|;
