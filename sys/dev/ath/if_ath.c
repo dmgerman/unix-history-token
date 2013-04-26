@@ -18817,6 +18817,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -18946,6 +18952,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATH_DEBUG */
+end_comment
+
 begin_comment
 comment|/*  * Drain the transmit queues and reclaim resources.  */
 end_comment
@@ -19023,6 +19038,9 @@ name|i
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -19044,6 +19062,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ATH_DEBUG */
 if|if
 condition|(
 name|reset_type
