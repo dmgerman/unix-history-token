@@ -177,6 +177,8 @@ name|int
 name|rflag
 decl_stmt|,
 name|Iflag
+decl_stmt|,
+name|xflag
 decl_stmt|;
 end_decl_stmt
 
@@ -420,6 +422,8 @@ name|Pflag
 operator|=
 name|rflag
 operator|=
+name|xflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -433,7 +437,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dfiIPRrvW"
+literal|"dfiIPRrvWx"
 argument_list|)
 operator|)
 operator|!=
@@ -517,6 +521,14 @@ case|case
 literal|'W'
 case|:
 name|Wflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
 operator|=
 literal|1
 expr_stmt|;
@@ -713,6 +725,14 @@ condition|)
 name|flags
 operator||=
 name|FTS_WHITEOUT
+expr_stmt|;
+if|if
+condition|(
+name|xflag
+condition|)
+name|flags
+operator||=
+name|FTS_XDEV
 expr_stmt|;
 if|if
 condition|(
@@ -2934,7 +2954,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rm [-f | -i] [-dIPRrvW] file ..."
+literal|"usage: rm [-f | -i] [-dIPRrvWx] file ..."
 argument_list|,
 literal|"       unlink file"
 argument_list|)
