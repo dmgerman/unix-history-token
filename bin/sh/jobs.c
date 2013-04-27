@@ -2123,13 +2123,24 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|SHOWJOBS_DEFAULT
+operator|||
+name|mode
+operator|==
+name|SHOWJOBS_VERBOSE
+condition|)
+block|{
 name|jp
 operator|->
 name|changed
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Hack: discard jobs for which $! has not been referenced 		 * in interactive mode when they terminate. 		 */
+comment|/* Hack: discard jobs for which $! has not been 			 * referenced in interactive mode when they terminate. 			 */
 if|if
 condition|(
 name|jp
@@ -2157,6 +2168,7 @@ argument_list|(
 name|jp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
