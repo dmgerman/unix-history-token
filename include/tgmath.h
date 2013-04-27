@@ -34,6 +34,7 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__STDC_VERSION__
@@ -42,6 +43,13 @@ operator|&&
 name|__STDC_VERSION__
 operator|>=
 literal|201112L
+operator|)
+operator|||
+expr|\
+name|__has_extension
+argument_list|(
+name|c_generic_selections
+argument_list|)
 end_if
 
 begin_define
