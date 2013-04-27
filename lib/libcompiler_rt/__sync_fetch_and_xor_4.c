@@ -14,7 +14,7 @@ begin_define
 define|#
 directive|define
 name|TYPE
-value|uint32_t
+value|int32_t
 end_define
 
 begin_define
