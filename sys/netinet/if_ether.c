@@ -2703,7 +2703,9 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|drop
+goto|;
 block|}
 if|if
 condition|(
@@ -2742,7 +2744,9 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|drop
+goto|;
 block|}
 name|op
 operator|=
