@@ -12700,7 +12700,7 @@ name|shutdown_kproc
 argument_list|,
 name|hptdaemonproc
 argument_list|,
-name|SHUTDOWN_PRI_FIRST
+name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 else|#
@@ -12713,7 +12713,7 @@ name|kproc_shutdown
 argument_list|,
 name|hptdaemonproc
 argument_list|,
-name|SHUTDOWN_PRI_FIRST
+name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 endif|#
