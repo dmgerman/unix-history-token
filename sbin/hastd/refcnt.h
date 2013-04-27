@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdatomic.h>
+file|<machine/atomic.h>
 end_include
 
 begin_include
@@ -29,7 +29,8 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|atomic_uint
+name|unsigned
+name|int
 name|refcnt_t
 typedef|;
 end_typedef
@@ -49,12 +50,10 @@ name|int
 name|v
 parameter_list|)
 block|{
-name|atomic_init
-argument_list|(
+operator|*
 name|count
-argument_list|,
+operator|=
 name|v
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -70,13 +69,11 @@ modifier|*
 name|count
 parameter_list|)
 block|{
-name|atomic_fetch_add_explicit
+name|atomic_add_acq_int
 argument_list|(
 name|count
 argument_list|,
 literal|1
-argument_list|,
-name|memory_order_acquire
 argument_list|)
 expr_stmt|;
 block|}
@@ -101,10 +98,11 @@ decl_stmt|;
 comment|/* XXX: Should this have a rel membar? */
 name|old
 operator|=
-name|atomic_fetch_sub
+name|atomic_fetchadd_int
 argument_list|(
 name|count
 argument_list|,
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
