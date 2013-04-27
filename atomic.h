@@ -48,9 +48,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__has_feature
+name|__has_builtin
 argument_list|(
-name|cxx_atomic
+name|__c11_atomic_exchange
 argument_list|)
 end_if
 
@@ -64,7 +64,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|__atomic_exchange(addr, val, __ATOMIC_ACQ_REL)
+value|__c11_atomic_exchange((_Atomic(__typeof__(val))*)addr, val, __ATOMIC_ACQ_REL)
 end_define
 
 begin_elif
@@ -115,9 +115,9 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__has_feature
+name|__has_builtin
 argument_list|(
-name|cxx_atomic
+name|__c11_atomic_load
 argument_list|)
 end_if
 
@@ -129,7 +129,7 @@ parameter_list|(
 name|addr
 parameter_list|)
 define|\
-value|__atomic_load(addr, __ATOMIC_ACQUIRE)
+value|__c11_atomic_load((_Atomic(__typeof__(*addr))*)addr, __ATOMIC_ACQUIRE)
 end_define
 
 begin_else
