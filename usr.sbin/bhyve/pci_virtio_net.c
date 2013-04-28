@@ -443,9 +443,6 @@ name|int
 name|vsc_rx_ready
 decl_stmt|;
 name|int
-name|vsc_rxpend
-decl_stmt|;
-name|int
 name|tx_in_progress
 decl_stmt|;
 name|int
@@ -1025,30 +1022,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Need to wait for host notification to read 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|vsc_rxpend
-operator|==
-literal|0
-condition|)
-block|{
-name|WPRINTF
-argument_list|(
-operator|(
-literal|"vtnet: no rx descriptors !\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|vsc_rxpend
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* 		 * Drop the packet and try later 		 */
 operator|(
 name|void
@@ -1402,33 +1375,6 @@ operator|->
 name|vsc_rx_ready
 operator|=
 literal|1
-expr_stmt|;
-block|}
-comment|/* 	 * If the rx queue was empty, attempt to receive a 	 * packet that was previously blocked due to no rx bufs 	 * available 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|vsc_rxpend
-condition|)
-block|{
-name|WPRINTF
-argument_list|(
-operator|(
-literal|"vtnet: rx resumed\n\r"
-operator|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|vsc_rxpend
-operator|=
-literal|0
-expr_stmt|;
-name|pci_vtnet_tap_rx
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 block|}
 block|}
