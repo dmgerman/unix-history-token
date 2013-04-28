@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -61,6 +55,18 @@ begin_include
 include|#
 directive|include
 file|"ar9300/ar9300paprd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ar9300/ar9300_stub.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ar9300/ar9300_stub_funcs.h"
 end_include
 
 begin_comment
@@ -133,6 +139,20 @@ directive|include
 file|"ar9300/ar9300_aphrodite10.ini"
 end_include
 
+begin_comment
+comment|/* Include various freebsd specific HAL methods */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"ar9300/ar9300_freebsd.h"
+end_include
+
+begin_comment
+comment|/* XXX duplicate in ar9300_radio.c ? */
+end_comment
+
 begin_function_decl
 specifier|static
 name|HAL_BOOL
@@ -143,12 +163,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chans
-parameter_list|,
-name|u_int32_t
-name|nchans
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -213,25 +231,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|ar9300_get_cal_intervals
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_CALIBRATION_TIMER
-modifier|*
-modifier|*
-name|timerp
-parameter_list|,
-name|HAL_CAL_QUERY
-name|query
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int ar9300_get_cal_intervals(struct ath_hal *ah, HAL_CALIBRATION_TIMER **timerp,     HAL_CAL_QUERY query);
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -306,34 +316,32 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|HAL_CALIBRATION_TIMER
-name|ar9300_cals
-index|[]
-init|=
-block|{
-block|{
-name|IQ_MISMATCH_CAL
-block|,
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static HAL_CALIBRATION_TIMER ar9300_cals[] =                           { {IQ_MISMATCH_CAL,
 comment|/* Cal type */
-literal|1200000
-block|,
+end_comment
+
+begin_comment
+unit|1200000,
 comment|/* Cal interval */
-literal|0
+end_comment
+
+begin_comment
+unit|0
 comment|/* Cal timestamp */
-block|}
-block|,
-block|{
-name|TEMP_COMP_CAL
-block|,
-literal|5000
-block|,
-literal|0
-block|}
-block|,                           }
-decl_stmt|;
-end_decl_stmt
+end_comment
+
+begin_endif
+unit|},                           {TEMP_COMP_CAL,                              5000,                              0                             },                           };
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -629,948 +637,1618 @@ begin_comment
 comment|/* ATH_PCIE_ERROR_MONITOR */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* WIN32 does not support C99 */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|ath_hal_private
-name|ar9300hal
-init|=
-block|{
-block|{
-name|ar9300_get_rate_table
-block|,
+begin_comment
+unit|static const struct ath_hal_private ar9300hal = {     {         ar9300_get_rate_table,
 comment|/* ah_get_rate_table */
-name|ar9300_detach
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_detach,
 comment|/* ah_detach */
+end_comment
+
+begin_comment
 comment|/* Reset Functions */
-name|ar9300_reset
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_reset,
 comment|/* ah_reset */
-name|ar9300_phy_disable
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_phy_disable,
 comment|/* ah_phy_disable */
-name|ar9300_disable
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_disable,
 comment|/* ah_disable */
-name|ar9300_config_pci_power_save
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_config_pci_power_save,
 comment|/* ah_config_pci_power_save */
-name|ar9300_set_pcu_config
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_pcu_config,
 comment|/* ah_set_pcu_config */
-name|ar9300_calibration
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_calibration,
 comment|/* ah_per_calibration */
-name|ar9300_reset_cal_valid
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_reset_cal_valid,
 comment|/* ah_reset_cal_valid */
-name|ar9300_set_tx_power_limit
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_tx_power_limit,
 comment|/* ah_set_tx_power_limit */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_ANT_DIV_COMB
-name|ar9300_ant_ctrl_set_lna_div_use_bt_ant
-block|,
+end_if
+
+begin_comment
+unit|ar9300_ant_ctrl_set_lna_div_use_bt_ant,
 comment|/* ah_ant_ctrl_set_lna_div_use_bt_ant */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ATH_ANT_DIV_COMB */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|ATH_SUPPORT_DFS
-name|ar9300_radar_wait
-block|,
+end_ifdef
+
+begin_comment
+unit|ar9300_radar_wait,
 comment|/* ah_radar_wait */
+end_comment
+
+begin_comment
 comment|/* New DFS functions */
-name|ar9300_check_dfs
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_check_dfs,
 comment|/* ah_ar_check_dfs */
-name|ar9300_dfs_found
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_dfs_found,
 comment|/* ah_ar_dfs_found */
-name|ar9300_enable_dfs
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_enable_dfs,
 comment|/* ah_ar_enable_dfs */
-name|ar9300_get_dfs_thresh
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_dfs_thresh,
 comment|/* ah_ar_get_dfs_thresh */
-name|ar9300_get_dfs_radars
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_dfs_radars,
 comment|/* ah_ar_get_dfs_radars */
-name|ar9300_adjust_difs
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_adjust_difs,
 comment|/* ah_adjust_difs */
-name|ar9300_dfs_config_fft
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_dfs_config_fft,
 comment|/* ah_dfs_config_fft */
-name|ar9300_dfs_cac_war
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_dfs_cac_war,
 comment|/* ah_dfs_cac_war */
-name|ar9300_cac_tx_quiet
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_cac_tx_quiet,
 comment|/* ah_cac_tx_quiet */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-name|ar9300_get_extension_channel
-block|,
+end_endif
+
+begin_comment
+unit|ar9300_get_extension_channel,
 comment|/* ah_get_extension_channel */
-name|ar9300_is_fast_clock_enabled
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_fast_clock_enabled,
 comment|/* ah_is_fast_clock_enabled */
+end_comment
+
+begin_comment
 comment|/* Transmit functions */
-name|ar9300_update_tx_trig_level
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_update_tx_trig_level,
 comment|/* ah_update_tx_trig_level */
-name|ar9300_get_tx_trig_level
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tx_trig_level,
 comment|/* ah_get_tx_trig_level */
-name|ar9300_setup_tx_queue
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_setup_tx_queue,
 comment|/* ah_setup_tx_queue */
-name|ar9300_set_tx_queue_props
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_tx_queue_props,
 comment|/* ah_set_tx_queue_props */
-name|ar9300_get_tx_queue_props
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tx_queue_props,
 comment|/* ah_get_tx_queue_props */
-name|ar9300_release_tx_queue
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_release_tx_queue,
 comment|/* ah_release_tx_queue */
-name|ar9300_reset_tx_queue
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_reset_tx_queue,
 comment|/* ah_reset_tx_queue */
-name|ar9300_get_tx_dp
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tx_dp,
 comment|/* ah_get_tx_dp */
-name|ar9300_set_tx_dp
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_tx_dp,
 comment|/* ah_set_tx_dp */
-name|ar9300_num_tx_pending
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_num_tx_pending,
 comment|/* ah_num_tx_pending */
-name|ar9300_start_tx_dma
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_start_tx_dma,
 comment|/* ah_start_tx_dma */
-name|ar9300_stop_tx_dma
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_tx_dma,
 comment|/* ah_stop_tx_dma */
-name|ar9300_stop_tx_dma_indv_que
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_tx_dma_indv_que,
 comment|/* ah_stop_tx_dma_indv_que */
-name|ar9300_abort_tx_dma
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_abort_tx_dma,
 comment|/* ah_abort_tx_dma */
-name|ar9300_fill_tx_desc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_fill_tx_desc,
 comment|/* ah_fill_tx_desc */
-name|ar9300_set_desc_link
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_desc_link,
 comment|/* ah_set_desc_link */
-name|ar9300_get_desc_link_ptr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_desc_link_ptr,
 comment|/* ah_get_desc_link_ptr */
-name|ar9300_clear_tx_desc_status
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_clear_tx_desc_status,
 comment|/* ah_clear_tx_desc_status */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|ATH_SWRETRY
-name|ar9300_clear_dest_mask
-block|,
+end_ifdef
+
+begin_comment
+unit|ar9300_clear_dest_mask,
 comment|/* ah_clear_dest_mask */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-name|ar9300_proc_tx_desc
-block|,
+end_endif
+
+begin_comment
+unit|ar9300_proc_tx_desc,
 comment|/* ah_proc_tx_desc */
-name|ar9300_get_raw_tx_desc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_raw_tx_desc,
 comment|/* ah_get_raw_tx_desc */
-name|ar9300_get_tx_rate_code
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tx_rate_code,
 comment|/* ah_get_tx_rate_code */
-name|AH_NULL
-block|,
+end_comment
+
+begin_comment
+unit|AH_NULL,
 comment|/* ah_get_tx_intr_queue */
-name|ar9300_tx_req_intr_desc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_tx_req_intr_desc,
 comment|/* ah_req_tx_intr_desc */
-name|ar9300_calc_tx_airtime
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_calc_tx_airtime,
 comment|/* ah_calc_tx_airtime */
-name|ar9300_setup_tx_status_ring
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_setup_tx_status_ring,
 comment|/* ah_setup_tx_status_ring */
+end_comment
+
+begin_comment
 comment|/* RX Functions */
-name|ar9300_get_rx_dp
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_rx_dp,
 comment|/* ah_get_rx_dp */
-name|ar9300_set_rx_dp
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_rx_dp,
 comment|/* ah_set_rx_dp */
-name|ar9300_enable_receive
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_enable_receive,
 comment|/* ah_enable_receive */
-name|ar9300_stop_dma_receive
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_dma_receive,
 comment|/* ah_stop_dma_receive */
-name|ar9300_start_pcu_receive
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_start_pcu_receive,
 comment|/* ah_start_pcu_receive */
-name|ar9300_stop_pcu_receive
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_pcu_receive,
 comment|/* ah_stop_pcu_receive */
-name|ar9300_set_multicast_filter
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_multicast_filter,
 comment|/* ah_set_multicast_filter */
-name|ar9300_get_rx_filter
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_rx_filter,
 comment|/* ah_get_rx_filter */
-name|ar9300_set_rx_filter
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_rx_filter,
 comment|/* ah_set_rx_filter */
-name|ar9300_set_rx_sel_evm
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_rx_sel_evm,
 comment|/* ah_set_rx_sel_evm */
-name|ar9300_set_rx_abort
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_rx_abort,
 comment|/* ah_set_rx_abort */
-name|AH_NULL
-block|,
+end_comment
+
+begin_comment
+unit|AH_NULL,
 comment|/* ah_setup_rx_desc */
-name|ar9300_proc_rx_desc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_proc_rx_desc,
 comment|/* ah_proc_rx_desc */
-name|ar9300_get_rx_key_idx
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_rx_key_idx,
 comment|/* ah_get_rx_key_idx */
-name|ar9300_proc_rx_desc_fast
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_proc_rx_desc_fast,
 comment|/* ah_proc_rx_desc_fast */
-name|ar9300_ani_ar_poll
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ani_ar_poll,
 comment|/* ah_rx_monitor */
-name|ar9300_process_mib_intr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_process_mib_intr,
 comment|/* ah_proc_mib_event */
+end_comment
+
+begin_comment
 comment|/* Misc Functions */
-name|ar9300_get_capability
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_capability,
 comment|/* ah_get_capability */
-name|ar9300_set_capability
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_capability,
 comment|/* ah_set_capability */
-name|ar9300_get_diag_state
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_diag_state,
 comment|/* ah_get_diag_state */
-name|ar9300_get_mac_address
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_mac_address,
 comment|/* ah_get_mac_address */
-name|ar9300_set_mac_address
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_mac_address,
 comment|/* ah_set_mac_address */
-name|ar9300_get_bss_id_mask
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_bss_id_mask,
 comment|/* ah_get_bss_id_mask */
-name|ar9300_set_bss_id_mask
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_bss_id_mask,
 comment|/* ah_set_bss_id_mask */
-name|ar9300_set_regulatory_domain
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_regulatory_domain,
 comment|/* ah_set_regulatory_domain */
-name|ar9300_set_led_state
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_led_state,
 comment|/* ah_set_led_state */
-name|ar9300_set_power_led_state
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_power_led_state,
 comment|/* ah_setpowerledstate */
-name|ar9300_set_network_led_state
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_network_led_state,
 comment|/* ah_setnetworkledstate */
-name|ar9300_write_associd
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_write_associd,
 comment|/* ah_write_associd */
-name|ar9300_force_tsf_sync
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_force_tsf_sync,
 comment|/* ah_force_tsf_sync */
-name|ar9300_gpio_cfg_input
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_cfg_input,
 comment|/* ah_gpio_cfg_input */
-name|ar9300_gpio_cfg_output
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_cfg_output,
 comment|/* ah_gpio_cfg_output */
-name|ar9300_gpio_cfg_output_led_off
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_cfg_output_led_off,
 comment|/* ah_gpio_cfg_output_led_off */
-name|ar9300_gpio_get
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_get,
 comment|/* ah_gpio_get */
-name|ar9300_gpio_set
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_set,
 comment|/* ah_gpio_set */
-name|ar9300_gpio_get_intr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_get_intr,
 comment|/* ah_gpio_get_intr */
-name|ar9300_gpio_set_intr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_set_intr,
 comment|/* ah_gpio_set_intr */
-name|ar9300_gpio_get_polarity
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_get_polarity,
 comment|/* ah_gpio_get_polarity */
-name|ar9300_gpio_set_polarity
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_set_polarity,
 comment|/* ah_gpio_set_polarity */
-name|ar9300_gpio_get_mask
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_get_mask,
 comment|/* ah_gpio_get_mask */
-name|ar9300_gpio_set_mask
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_gpio_set_mask,
 comment|/* ah_gpio_set_mask */
-name|ar9300_get_tsf32
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tsf32,
 comment|/* ah_get_tsf32 */
-name|ar9300_get_tsf64
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tsf64,
 comment|/* ah_get_tsf64 */
-name|ar9300_get_tsf2_32
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tsf2_32,
 comment|/* ah_get_tsf2_32 */
-name|ar9300_reset_tsf
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_reset_tsf,
 comment|/* ah_reset_tsf */
-name|ar9300_detect_card_present
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_detect_card_present,
 comment|/* ah_detect_card_present */
-name|ar9300_update_mib_mac_stats
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_update_mib_mac_stats,
 comment|/* ah_update_mib_mac_stats */
-name|ar9300_get_mib_mac_stats
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_mib_mac_stats,
 comment|/* ah_get_mib_mac_stats */
-name|ar9300_get_rfgain
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_rfgain,
 comment|/* ah_get_rf_gain */
-name|ar9300_get_def_antenna
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_def_antenna,
 comment|/* ah_get_def_antenna */
-name|ar9300_set_def_antenna
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_def_antenna,
 comment|/* ah_set_def_antenna */
-name|ar9300_set_slot_time
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_slot_time,
 comment|/* ah_set_slot_time */
-name|ar9300_set_ack_timeout
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_ack_timeout,
 comment|/* ah_set_ack_timeout */
-name|ar9300_get_ack_timeout
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_ack_timeout,
 comment|/* ah_get_ack_timeout */
-name|ar9300_set_coverage_class
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_coverage_class,
 comment|/* ah_set_coverage_class */
-name|ar9300_set_quiet
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_quiet,
 comment|/* ah_set_quiet */
-name|ar9300_set_antenna_switch
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_antenna_switch,
 comment|/* ah_set_antenna_switch */
-name|ar9300_get_desc_info
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_desc_info,
 comment|/* ah_get_desc_info */
-name|ar9300_select_ant_config
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_select_ant_config,
 comment|/* ah_select_ant_config */
-name|ar9300_ant_ctrl_common_get
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ant_ctrl_common_get,
 comment|/* ah_ant_ctrl_common_get */
-name|ar9300_enable_tpc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_enable_tpc,
 comment|/* ah_enable_tpc */
-name|AH_NULL
-block|,
+end_comment
+
+begin_comment
+unit|AH_NULL,
 comment|/* ah_olpc_temp_compensation */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_SUPPORT_CRDC
-name|ar9300_chain_rssi_diff_compensation
-block|,
+end_if
+
+begin_comment
+unit|ar9300_chain_rssi_diff_compensation,
 comment|/*ah_chain_rssi_diff_compensation*/
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-name|ar9300_disable_phy_restart
-block|,
+end_endif
+
+begin_comment
+unit|ar9300_disable_phy_restart,
 comment|/* ah_disable_phy_restart */
-name|ar9300_enable_keysearch_always
-block|,
-name|ar9300_interference_is_present
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_enable_keysearch_always,         ar9300_interference_is_present,
 comment|/* ah_interference_is_present */
-name|ar9300_disp_tpc_tables
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_disp_tpc_tables,
 comment|/* ah_disp_tpc_tables */
-name|ar9300_get_tpc_tables
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_tpc_tables,
 comment|/* ah_get_tpc_tables */
+end_comment
+
+begin_comment
 comment|/* Key Cache Functions */
-name|ar9300_get_key_cache_size
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_key_cache_size,
 comment|/* ah_get_key_cache_size */
-name|ar9300_reset_key_cache_entry
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_reset_key_cache_entry,
 comment|/* ah_reset_key_cache_entry */
-name|ar9300_is_key_cache_entry_valid
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_key_cache_entry_valid,
 comment|/* ah_is_key_cache_entry_valid */
-name|ar9300_set_key_cache_entry
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_key_cache_entry,
 comment|/* ah_set_key_cache_entry */
-name|ar9300_set_key_cache_entry_mac
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_key_cache_entry_mac,
 comment|/* ah_set_key_cache_entry_mac */
-name|ar9300_print_keycache
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_print_keycache,
 comment|/* ah_print_key_cache */
+end_comment
+
+begin_comment
 comment|/* Power Management Functions */
-name|ar9300_set_power_mode
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_power_mode,
 comment|/* ah_set_power_mode */
-name|ar9300_set_sm_power_mode
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_sm_power_mode,
 comment|/* ah_set_sm_ps_mode */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_WOW
-name|ar9300_wow_apply_pattern
-block|,
+end_if
+
+begin_comment
+unit|ar9300_wow_apply_pattern,
 comment|/* ah_wow_apply_pattern */
-name|ar9300_wow_enable
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wow_enable,
 comment|/* ah_wow_enable */
-name|ar9300_wow_wake_up
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wow_wake_up,
 comment|/* ah_wow_wake_up */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_WOW_OFFLOAD
-name|ar9300_wowoffload_prep
-block|,
+end_if
+
+begin_comment
+unit|ar9300_wowoffload_prep,
 comment|/* ah_wow_offload_prep */
-name|ar9300_wowoffload_post
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_post,
 comment|/* ah_wow_offload_post */
-name|ar9300_wowoffload_download_rekey_data
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_download_rekey_data,
 comment|/* ah_wow_offload_download_rekey_data */
-name|ar9300_wowoffload_retrieve_data
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_retrieve_data,
 comment|/* ah_wow_offload_retrieve_data */
-name|ar9300_wowoffload_download_acer_magic
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_download_acer_magic,
 comment|/* ah_wow_offload_download_acer_magic */
-name|ar9300_wowoffload_download_acer_swka
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_download_acer_swka,
 comment|/* ah_wow_offload_download_acer_swka */
-name|ar9300_wowoffload_download_arp_info
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_download_arp_info,
 comment|/* ah_wow_offload_download_arp_info */
-name|ar9300_wowoffload_download_ns_info
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_wowoffload_download_ns_info,
 comment|/* ah_wow_offload_download_ns_info */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ATH_WOW_OFFLOAD */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Get Channel Noise */
-name|ath_hal_get_chan_noise
-block|,
+end_comment
+
+begin_comment
+unit|ath_hal_get_chan_noise,
 comment|/* ah_get_chan_noise */
-name|ar9300_chain_noise_floor
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_chain_noise_floor,
 comment|/* ah_get_chain_noise_floor */
+end_comment
+
+begin_comment
 comment|/* Beacon Functions */
-name|ar9300_beacon_init
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_beacon_init,
 comment|/* ah_beacon_init */
-name|ar9300_set_sta_beacon_timers
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_sta_beacon_timers,
 comment|/* ah_set_station_beacon_timers */
+end_comment
+
+begin_comment
 comment|/* Interrupt Functions */
-name|ar9300_is_interrupt_pending
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_interrupt_pending,
 comment|/* ah_is_interrupt_pending */
-name|ar9300_get_pending_interrupts
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_pending_interrupts,
 comment|/* ah_get_pending_interrupts */
-name|ar9300_get_interrupts
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_interrupts,
 comment|/* ah_get_interrupts */
-name|ar9300_set_interrupts
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_interrupts,
 comment|/* ah_set_interrupts */
-name|ar9300_set_intr_mitigation_timer
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_intr_mitigation_timer,
 comment|/* ah_set_intr_mitigation_timer */
-name|ar9300_get_intr_mitigation_timer
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_intr_mitigation_timer,
 comment|/* ah_get_intr_mitigation_timer */
-name|ar9300ForceVCS
-block|,
-name|ar9300SetDfs3StreamFix
-block|,
-name|ar9300Get3StreamSignature
-block|,
+end_comment
+
+begin_comment
+unit|ar9300ForceVCS,         ar9300SetDfs3StreamFix,         ar9300Get3StreamSignature,
 comment|/* 11n specific functions (NOT applicable to ar9300) */
-name|ar9300_set_11n_tx_desc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_tx_desc,
 comment|/* ah_set_11n_tx_desc */
+end_comment
+
+begin_comment
 comment|/* Update rxchain */
-name|ar9300_set_rx_chainmask
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_rx_chainmask,
 comment|/*ah_set_rx_chainmask*/
+end_comment
+
+begin_comment
 comment|/*Updating locationing register */
-name|ar9300_update_loc_ctl_reg
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_update_loc_ctl_reg,
 comment|/*ah_update_loc_ctl_reg*/
+end_comment
+
+begin_comment
 comment|/* Start PAPRD functions  */
-name|ar9300_set_paprd_tx_desc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_paprd_tx_desc,
 comment|/* ah_set_paprd_tx_desc */
-name|ar9300_paprd_init_table
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_paprd_init_table,
 comment|/* ah_paprd_init_table */
-name|ar9300_paprd_setup_gain_table
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_paprd_setup_gain_table,
 comment|/* ah_paprd_setup_gain_table */
-name|ar9300_paprd_create_curve
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_paprd_create_curve,
 comment|/* ah_paprd_create_curve */
-name|ar9300_paprd_is_done
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_paprd_is_done,
 comment|/* ah_paprd_is_done */
-name|ar9300_enable_paprd
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_enable_paprd,
 comment|/* ah_PAPRDEnable */
-name|ar9300_populate_paprd_single_table
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_populate_paprd_single_table,
 comment|/* ah_paprd_populate_table */
-name|ar9300_is_tx_done
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_tx_done,
 comment|/* ah_is_tx_done */
-name|ar9300_paprd_dec_tx_pwr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_paprd_dec_tx_pwr,
 comment|/* ah_paprd_dec_tx_pwr*/
-name|ar9300_paprd_thermal_send
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_paprd_thermal_send,
 comment|/* ah_paprd_thermal_send */
+end_comment
+
+begin_comment
 comment|/* End PAPRD functions */
-name|ar9300_set_11n_rate_scenario
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_rate_scenario,
 comment|/* ah_set_11n_rate_scenario */
-name|ar9300_set_11n_aggr_first
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_aggr_first,
 comment|/* ah_set_11n_aggr_first */
-name|ar9300_set_11n_aggr_middle
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_aggr_middle,
 comment|/* ah_set_11n_aggr_middle */
-name|ar9300_set_11n_aggr_last
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_aggr_last,
 comment|/* ah_set_11n_aggr_last */
-name|ar9300_clr_11n_aggr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_clr_11n_aggr,
 comment|/* ah_clr_11n_aggr */
-name|ar9300_set_11n_rifs_burst_middle
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_rifs_burst_middle,
 comment|/* ah_set_11n_rifs_burst_middle */
-name|ar9300_set_11n_rifs_burst_last
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_rifs_burst_last,
 comment|/* ah_set_11n_rifs_burst_last */
-name|ar9300_clr_11n_rifs_burst
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_clr_11n_rifs_burst,
 comment|/* ah_clr_11n_rifs_burst */
-name|ar9300_set_11n_aggr_rifs_burst
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_aggr_rifs_burst,
 comment|/* ah_set_11n_aggr_rifs_burst */
-name|ar9300_set_11n_rx_rifs
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_rx_rifs,
 comment|/* ah_set_11n_rx_rifs */
-name|ar9300_set_smart_antenna
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_smart_antenna,
 comment|/* ah_setSmartAntenna */
-name|ar9300_detect_bb_hang
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_detect_bb_hang,
 comment|/* ah_detect_bb_hang */
-name|ar9300_detect_mac_hang
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_detect_mac_hang,
 comment|/* ah_detect_mac_hang */
-name|ar9300_set_immunity
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_immunity,
 comment|/* ah_immunity */
-name|ar9300_get_hw_hangs
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_hw_hangs,
 comment|/* ah_get_hang_types */
-name|ar9300_set_11n_burst_duration
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_burst_duration,
 comment|/* ah_set_11n_burst_duration */
-name|ar9300_set_11n_virtual_more_frag
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_virtual_more_frag,
 comment|/* ah_set_11n_virtual_more_frag */
-name|ar9300_get_11n_ext_busy
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_11n_ext_busy,
 comment|/* ah_get_11n_ext_busy */
-name|ar9300_set_11n_mac2040
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_mac2040,
 comment|/* ah_set_11n_mac2040 */
-name|ar9300_get_11n_rx_clear
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_11n_rx_clear,
 comment|/* ah_get_11n_rx_clear */
-name|ar9300_set_11n_rx_clear
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_11n_rx_clear,
 comment|/* ah_set_11n_rx_clear */
-name|ar9300_get_mib_cycle_counts_pct
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_mib_cycle_counts_pct,
 comment|/* ah_get_mib_cycle_counts_pct */
-name|ar9300_dma_reg_dump
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_dma_reg_dump,
 comment|/* ah_dma_reg_dump */
+end_comment
+
+begin_comment
 comment|/* force_ppm specific functions */
-name|ar9300_ppm_get_rssi_dump
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ppm_get_rssi_dump,
 comment|/* ah_ppm_get_rssi_dump */
-name|ar9300_ppm_arm_trigger
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ppm_arm_trigger,
 comment|/* ah_ppm_arm_trigger */
-name|ar9300_ppm_get_trigger
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ppm_get_trigger,
 comment|/* ah_ppm_get_trigger */
-name|ar9300_ppm_force
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ppm_force,
 comment|/* ah_ppm_force */
-name|ar9300_ppm_un_force
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ppm_un_force,
 comment|/* ah_ppm_un_force */
-name|ar9300_ppm_get_force_state
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ppm_get_force_state,
 comment|/* ah_ppm_get_force_state */
-name|ar9300_get_spur_info
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_spur_info,
 comment|/* ah_get_spur_info */
-name|ar9300_set_spur_info
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_spur_info,
 comment|/* ah_get_spur_info */
-name|ar9300_get_min_cca_pwr
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_min_cca_pwr,
 comment|/* ah_ar_get_noise_floor_val */
-name|ar9300_green_ap_ps_on_off
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_green_ap_ps_on_off,
 comment|/* ah_set_rx_green_ap_ps_on_off */
-name|ar9300_is_single_ant_power_save_possible
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_single_ant_power_save_possible,
 comment|/* ah_is_single_ant_power_save_possible */
+end_comment
+
+begin_comment
 comment|/* radio measurement specific functions */
-name|ar9300_get_mib_cycle_counts
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_mib_cycle_counts,
 comment|/* ah_get_mib_cycle_counts */
-name|ar9300_get_vow_stats
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_vow_stats,
 comment|/* ah_get_vow_stats */
-name|ar9300_clear_mib_counters
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_clear_mib_counters,
 comment|/* ah_clear_mib_counters */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_GEN_RANDOMNESS
-name|ar9300_get_rssi_chain0
-block|,
+end_if
+
+begin_comment
+unit|ar9300_get_rssi_chain0,
 comment|/* ah_get_rssi_chain0 */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|ATH_BT_COEX
+end_ifdef
+
+begin_comment
 comment|/* Bluetooth Coexistence functions */
-name|ar9300_set_bt_coex_info
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_bt_coex_info,
 comment|/* ah_set_bt_coex_info */
-name|ar9300_bt_coex_config
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_config,
 comment|/* ah_bt_coex_config */
-name|ar9300_bt_coex_set_qcu_thresh
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_set_qcu_thresh,
 comment|/* ah_bt_coex_set_qcu_thresh */
-name|ar9300_bt_coex_set_weights
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_set_weights,
 comment|/* ah_bt_coex_set_weights */
-name|ar9300_bt_coex_setup_bmiss_thresh
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_setup_bmiss_thresh,
 comment|/* ah_bt_coex_set_bmiss_thresh */
-name|ar9300_bt_coex_set_parameter
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_set_parameter,
 comment|/* ah_bt_coex_set_parameter */
-name|ar9300_bt_coex_disable
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_disable,
 comment|/* ah_bt_coex_disable */
-name|ar9300_bt_coex_enable
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_bt_coex_enable,
 comment|/* ah_bt_coex_enable */
-name|ar9300_get_bt_active_gpio
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_bt_active_gpio,
 comment|/* ah_bt_coex_info*/
-name|ar9300_get_wlan_active_gpio
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_wlan_active_gpio,
 comment|/* ah__coex_wlan_info*/
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Generic Timer functions */
-name|ar9300_alloc_generic_timer
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_alloc_generic_timer,
 comment|/* ah_gentimer_alloc */
-name|ar9300_free_generic_timer
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_free_generic_timer,
 comment|/* ah_gentimer_free */
-name|ar9300_start_generic_timer
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_start_generic_timer,
 comment|/* ah_gentimer_start */
-name|ar9300_stop_generic_timer
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_generic_timer,
 comment|/* ah_gentimer_stop */
-name|ar9300_get_gen_timer_interrupts
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_gen_timer_interrupts,
 comment|/* ah_gentimer_get_intr */
-name|ar9300_set_dcs_mode
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_dcs_mode,
 comment|/* ah_set_dcs_mode */
-name|ar9300_get_dcs_mode
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_dcs_mode,
 comment|/* ah_get_dcs_mode */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_ANT_DIV_COMB
-name|ar9300_ant_div_comb_get_config
-block|,
+end_if
+
+begin_comment
+unit|ar9300_ant_div_comb_get_config,
 comment|/* ah_get_ant_dvi_comb_conf */
-name|ar9300_ant_div_comb_set_config
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_ant_div_comb_set_config,
 comment|/* ah_set_ant_dvi_comb_conf */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-name|ar9300_get_bb_panic_info
-block|,
+end_endif
+
+begin_comment
+unit|ar9300_get_bb_panic_info,
 comment|/* ah_get_bb_panic_info */
-name|ar9300_handle_radar_bb_panic
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_handle_radar_bb_panic,
 comment|/* ah_handle_radar_bb_panic */
-name|ar9300_set_hal_reset_reason
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_hal_reset_reason,
 comment|/* ah_set_hal_reset_reason */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_PCIE_ERROR_MONITOR
-name|ar9300_start_pcie_error_monitor
-block|,
+end_if
+
+begin_comment
+unit|ar9300_start_pcie_error_monitor,
 comment|/* ah_start_pcie_error_monitor */
-name|ar9300_read_pcie_error_monitor
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_read_pcie_error_monitor,
 comment|/* ah_read_pcie_error_monitor*/
-name|ar9300_stop_pcie_error_monitor
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_pcie_error_monitor,
 comment|/* ah_stop_pcie_error_monitor*/
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ATH_PCIE_ERROR_MONITOR */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_SUPPORT_SPECTRAL
+end_if
+
+begin_comment
 comment|/* Spectral scan */
-name|ar9300_configure_spectral_scan
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_configure_spectral_scan,
 comment|/* ah_ar_configure_spectral */
-name|ar9300_get_spectral_params
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_spectral_params,
 comment|/* ah_ar_get_spectral_config */
-name|ar9300_start_spectral_scan
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_start_spectral_scan,
 comment|/* ah_ar_start_spectral_scan */
-name|ar9300_stop_spectral_scan
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_stop_spectral_scan,
 comment|/* ah_ar_stop_spectral_scan */
-name|ar9300_is_spectral_enabled
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_spectral_enabled,
 comment|/* ah_ar_is_spectral_enabled */
-name|ar9300_is_spectral_active
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_spectral_active,
 comment|/* ah_ar_is_spectral_active */
-name|ar9300_get_ctl_chan_nf
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_ctl_chan_nf,
 comment|/* ah_ar_get_ctl_nf */
-name|ar9300_get_ext_chan_nf
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_ext_chan_nf,
 comment|/* ah_ar_get_ext_nf */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  ATH_SUPPORT_SPECTRAL */
-name|ar9300_promisc_mode
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_promisc_mode,
 comment|/* ah_promisc_mode */
-name|ar9300_read_pktlog_reg
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_read_pktlog_reg,
 comment|/* ah_read_pktlog_reg */
-name|ar9300_write_pktlog_reg
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_write_pktlog_reg,
 comment|/* ah_write_pktlog_reg */
-name|ar9300_set_proxy_sta
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_proxy_sta,
 comment|/* ah_set_proxy_sta */
-name|ar9300_get_cal_intervals
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_cal_intervals,
 comment|/* ah_get_cal_intervals */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_TRAFFIC_FAST_RECOVER
-name|ar9300_get_pll3_sqsum_dvc
-block|,
+end_if
+
+begin_comment
+unit|ar9300_get_pll3_sqsum_dvc,
 comment|/* ah_get_pll3_sqsum_dvc */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|ATH_SUPPORT_HTC
-name|AH_NULL
-block|,
+end_ifdef
+
+begin_endif
+unit|AH_NULL,
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|ATH_TX99_DIAG
+end_ifdef
+
+begin_comment
 comment|/* Tx99 functions */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|ATH_SUPPORT_HTC
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
+end_ifdef
+
+begin_else
+unit|AH_NULL,         AH_NULL,         AH_NULL,         AH_NULL,         AH_NULL,         AH_NULL,         AH_NULL,
 else|#
 directive|else
-name|AH_NULL
-block|,
-name|AH_NULL
-block|,
-name|ar9300TX99TgtChannelPwrUpdate
-block|,
+end_else
+
+begin_comment
+unit|AH_NULL,         AH_NULL,         ar9300TX99TgtChannelPwrUpdate,
 comment|/* ah_tx99channelpwrupdate */
-name|ar9300TX99TgtStart
-block|,
+end_comment
+
+begin_comment
+unit|ar9300TX99TgtStart,
 comment|/* ah_tx99start */
-name|ar9300TX99TgtStop
-block|,
+end_comment
+
+begin_comment
+unit|ar9300TX99TgtStop,
 comment|/* ah_tx99stop */
-name|ar9300TX99TgtChainmskSetup
-block|,
+end_comment
+
+begin_comment
+unit|ar9300TX99TgtChainmskSetup,
 comment|/* ah_tx99_chainmsk_setup */
-name|ar9300TX99SetSingleCarrier
-block|,
+end_comment
+
+begin_comment
+unit|ar9300TX99SetSingleCarrier,
 comment|/* ah_tx99_set_single_carrier */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
-name|ar9300_chk_rssi_update_tx_pwr
-block|,
-name|ar9300_is_skip_paprd_by_greentx
-block|,
+end_endif
+
+begin_comment
+unit|ar9300_chk_rssi_update_tx_pwr,         ar9300_is_skip_paprd_by_greentx,
 comment|/* ah_is_skip_paprd_by_greentx */
-name|ar9300_hwgreentx_set_pal_spare
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_hwgreentx_set_pal_spare,
 comment|/* ah_hwgreentx_set_pal_spare */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|ATH_SUPPORT_MCI
+end_if
+
+begin_comment
 comment|/* MCI Coexistence Functions */
-name|ar9300_mci_setup
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_mci_setup,
 comment|/* ah_mci_setup */
-name|ar9300_mci_send_message
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_mci_send_message,
 comment|/* ah_mci_send_message */
-name|ar9300_mci_get_interrupt
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_mci_get_interrupt,
 comment|/* ah_mci_get_interrupt */
-name|ar9300_mci_state
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_mci_state,
 comment|/* ah_mci_state */
-name|ar9300_mci_detach
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_mci_detach,
 comment|/* ah_mci_detach */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-name|ar9300_reset_hw_beacon_proc_crc
-block|,
+end_endif
+
+begin_comment
+unit|ar9300_reset_hw_beacon_proc_crc,
 comment|/* ah_reset_hw_beacon_proc_crc */
-name|ar9300_get_hw_beacon_rssi
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_hw_beacon_rssi,
 comment|/* ah_get_hw_beacon_rssi */
-name|ar9300_set_hw_beacon_rssi_threshold
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_hw_beacon_rssi_threshold,
 comment|/*ah_set_hw_beacon_rssi_threshold*/
-name|ar9300_reset_hw_beacon_rssi
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_reset_hw_beacon_rssi,
 comment|/* ah_reset_hw_beacon_rssi */
-name|ar9300_mat_enable
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_mat_enable,
 comment|/* ah_mat_enable */
-name|ar9300_dump_keycache
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_dump_keycache,
 comment|/* ah_dump_keycache */
-name|ar9300_is_ani_noise_spur
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_is_ani_noise_spur,
 comment|/* ah_is_ani_noise_spur */
-name|ar9300_set_hw_beacon_proc
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_set_hw_beacon_proc,
 comment|/* ah_set_hw_beacon_proc */
-block|}
-block|,
-name|ar9300_get_channel_edges
-block|,
+end_comment
+
+begin_comment
+unit|},      ar9300_get_channel_edges,
 comment|/* ah_get_channel_edges */
-name|ar9300_get_wireless_modes
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_wireless_modes,
 comment|/* ah_get_wireless_modes */
-name|ar9300_eeprom_read_word
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_eeprom_read_word,
 comment|/* ah_eeprom_read */
-name|AH_NULL
-block|,
-name|ar9300_eeprom_dump_support
-block|,
+end_comment
+
+begin_comment
+unit|AH_NULL,     ar9300_eeprom_dump_support,
 comment|/* ah_eeprom_dump */
-name|ar9300_get_chip_power_limits
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_chip_power_limits,
 comment|/* ah_get_chip_power_limits */
-name|ar9300_get_nf_adjust
-block|,
+end_comment
+
+begin_comment
+unit|ar9300_get_nf_adjust,
 comment|/* ah_get_nf_adjust */
+end_comment
+
+begin_comment
 comment|/* rest is zero'd by compiler */
-block|}
-decl_stmt|;
-end_decl_stmt
+end_comment
+
+begin_endif
+unit|};
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Read MAC version/revision information from Chip registers and initialize  * local data structures.  */
@@ -1638,7 +2316,7 @@ argument_list|)
 operator|->
 name|ah_devid
 operator|==
-name|AR9300_DEVID_AR955X
+name|AR9300_DEVID_QCA955X
 condition|)
 block|{
 comment|/* XXX: AR_SREV register in Scorpion reads 0 */
@@ -1826,7 +2504,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_is_pci_express
+name|ah_ispcie
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -1838,7 +2516,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_is_pci_express
+name|ah_ispcie
 operator|=
 operator|(
 name|val
@@ -1867,9 +2545,6 @@ parameter_list|(
 name|u_int16_t
 name|devid
 parameter_list|,
-name|HAL_ADAPTER_HANDLE
-name|osdev
-parameter_list|,
 name|HAL_SOFTC
 name|sc
 parameter_list|,
@@ -1879,16 +2554,9 @@ parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
 parameter_list|,
-name|HAL_BUS_TYPE
-name|bustype
-parameter_list|,
-name|asf_amem_instance_handle
-name|amem_handle
-parameter_list|,
-name|struct
-name|hal_reg_parm
+name|uint16_t
 modifier|*
-name|hal_conf_parm
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -1922,19 +2590,13 @@ name|ar9300_new_state
 argument_list|(
 name|devid
 argument_list|,
-name|osdev
-argument_list|,
 name|sc
 argument_list|,
 name|st
 argument_list|,
 name|sh
 argument_list|,
-name|bustype
-argument_list|,
-name|amem_handle
-argument_list|,
-name|hal_conf_parm
+name|eepromdata
 argument_list|,
 name|status
 argument_list|)
@@ -1957,8 +2619,6 @@ name|ahp
 operator|->
 name|ah_priv
 operator|.
-name|priv
-operator|.
 name|h
 expr_stmt|;
 name|ar9300_init_offsets
@@ -1975,14 +2635,37 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-name|AH_PRIVATE
+comment|//    AH_PRIVATE(ah)->ah_bustype = bustype;
+comment|/* FreeBSD: to make OTP work for now, provide this.. */
+name|AH9300
 argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_bustype
+name|ah_cal_mem
 operator|=
-name|bustype
+name|ath_hal_malloc
+argument_list|(
+name|HOST_CALDATA_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* XXX FreeBSD: enable RX mitigation */
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ath_hal_intr_mitigation_rx
+operator|=
+literal|1
+expr_stmt|;
+comment|/*      * XXX what's this do? Check in the qcamain driver code      * as to what it does.      */
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ath_hal_ext_atten_margin_cfg
+operator|=
+literal|0
 expr_stmt|;
 comment|/* interrupt mitigation */
 ifdef|#
@@ -1990,7 +2673,7 @@ directive|ifdef
 name|AR5416_INT_MITIGATION
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -2015,7 +2698,7 @@ name|ah_intr_mitigation_rx
 operator|=
 name|AH_TRUE
 expr_stmt|;
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -2046,7 +2729,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AR5416_INT_MITIGATION
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -2061,7 +2744,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -2196,24 +2879,12 @@ name|ah
 argument_list|)
 condition|)
 block|{
-name|ah
-operator|->
-name|ah_bt_coex_set_weights
-operator|=
-name|ar9300_mci_bt_coex_set_weights
-expr_stmt|;
-name|ah
-operator|->
-name|ah_bt_coex_disable
-operator|=
-name|ar9300_mci_bt_coex_disable
-expr_stmt|;
-name|ah
-operator|->
-name|ah_bt_coex_enable
-operator|=
-name|ar9300_mci_bt_coex_enable
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ah->ah_bt_coex_set_weights = ar9300_mci_bt_coex_set_weights;         ah->ah_bt_coex_disable = ar9300_mci_bt_coex_disable;         ah->ah_bt_coex_enable = ar9300_mci_bt_coex_enable;
+endif|#
+directive|endif
 name|ahp
 operator|->
 name|ah_mci_ready
@@ -2614,11 +3285,11 @@ name|bad
 goto|;
 block|}
 comment|/* No serialization of Register Accesses needed. */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_serialize_reg_mode
+name|ah_serialise_reg_war
 operator|=
 name|SER_REG_MODE_OFF
 expr_stmt|;
@@ -2628,15 +3299,15 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_RESET
 argument_list|,
-literal|"%s: ath_hal_serialize_reg_mode is %d\n"
+literal|"%s: ah_serialise_reg_war is %d\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_serialize_reg_mode
+name|ah_serialise_reg_war
 argument_list|)
 expr_stmt|;
 comment|/*      * Add mac revision check when needed.      * - Osprey 1.0 and 2.0 no longer supported.      */
@@ -2732,9 +3403,12 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ahpriv
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
 operator|->
-name|ah_phy_rev
+name|ah_phyRev
 operator|=
 name|OS_REG_READ
 argument_list|(
@@ -3064,7 +3738,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3421,7 +4095,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3802,7 +4476,7 @@ expr_stmt|;
 comment|/* Load PCIE SERDES settings from INI */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3812,7 +4486,7 @@ block|{
 comment|/* Pci-e Clock Request = 1 */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3824,7 +4498,7 @@ block|{
 comment|/* Sleep Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3874,7 +4548,7 @@ block|}
 comment|/* Awake Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3968,7 +4642,7 @@ block|{
 comment|/* Pci-e Clock Request = 0 */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3980,7 +4654,7 @@ block|{
 comment|/* Sleep Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4030,7 +4704,7 @@ block|}
 comment|/* Awake Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4120,7 +4794,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* pcie ps setting will honor registry setting, default is 0 */
-comment|//ahpriv->ah_config.ath_hal_pciePowerSaveEnable = 0;
+comment|//ah->ah_config.ath_hal_pciePowerSaveEnable = 0;
 block|}
 elseif|else
 if|if
@@ -4419,7 +5093,7 @@ expr_stmt|;
 comment|/* Load PCIE SERDES settings from INI */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4429,7 +5103,7 @@ block|{
 comment|/* Pci-e Clock Request = 1 */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4441,7 +5115,7 @@ block|{
 comment|/* Sleep Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4491,7 +5165,7 @@ block|}
 comment|/* Awake Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4585,7 +5259,7 @@ block|{
 comment|/* Pci-e Clock Request = 0 */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4597,7 +5271,7 @@ block|{
 comment|/* Sleep Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4647,7 +5321,7 @@ block|}
 comment|/* Awake Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4737,7 +5411,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* pcie ps setting will honor registry setting, default is 0 */
-comment|/*ahpriv->ah_config.ath_hal_pcie_power_save_enable = 0;*/
+comment|/*ah->ah_config.ath_hal_pcie_power_save_enable = 0;*/
 if|#
 directive|if
 literal|0
@@ -5023,7 +5697,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5380,7 +6054,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|/*ath_hal_pciePowerSaveEnable should be 2 for OWL/Condor and 0 for merlin */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5674,7 +6348,7 @@ expr_stmt|;
 comment|/* Load PCIE SERDES settings from INI */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5726,7 +6400,7 @@ block|}
 else|else
 block|{
 comment|/*              * Since Jupiter 1.0 and 2.0 share the same device id and will be              * installed with same INF, but Jupiter 1.0 has issue with PLL OFF.              *              * Force Jupiter 1.0 to use ON/ON setting.              */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5737,7 +6411,7 @@ expr_stmt|;
 comment|/* Pci-e Clock Request = 0 */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5749,7 +6423,7 @@ block|{
 comment|/* Awake -> Sleep Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5799,7 +6473,7 @@ block|}
 comment|/* Sleep -> Awake Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -5889,7 +6563,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/*           * ath_hal_pcie_power_save_enable should be 2 for OWL/Condor and           * 0 for merlin           */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6239,7 +6913,7 @@ expr_stmt|;
 comment|/* Load PCIE SERDES settings from INI */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6293,7 +6967,7 @@ block|{
 comment|/* Pci-e Clock Request = 0 */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6305,7 +6979,7 @@ block|{
 comment|/* Awake -> Sleep Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6355,7 +7029,7 @@ block|}
 comment|/* Sleep -> Awake Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6445,7 +7119,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/*           * ath_hal_pcie_power_save_enable should be 2 for OWL/Condor and           * 0 for merlin           */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6713,7 +7387,7 @@ comment|//    ar956XModes_lowest_ob_db_tx_gain_table_aphrodite_1p0,
 comment|//    ARRAY_LENGTH(ar956XModes_lowest_ob_db_tx_gain_table_aphrodite_1p0),
 comment|//    5);
 comment|/*           * ath_hal_pcie_power_save_enable should be 2 for OWL/Condor and           * 0 for merlin           */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7047,7 +7721,7 @@ comment|/* Load PCIE SERDES settings from INI */
 comment|/*D3 Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7056,7 +7730,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7068,7 +7742,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7143,7 +7817,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7155,7 +7829,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7229,7 +7903,7 @@ block|}
 comment|/*D0 Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7238,7 +7912,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7250,7 +7924,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7325,7 +7999,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7337,7 +8011,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7408,7 +8082,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7752,7 +8426,7 @@ comment|/* Load PCIE SERDES settings from INI */
 comment|/*D3 Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7761,7 +8435,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7773,7 +8447,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7873,7 +8547,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7885,7 +8559,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7984,7 +8658,7 @@ block|}
 comment|/*D0 Setting */
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7993,7 +8667,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8005,7 +8679,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8080,7 +8754,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8092,7 +8766,7 @@ block|{
 comment|//registry control
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8163,7 +8837,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8175,7 +8849,7 @@ ifdef|#
 directive|ifdef
 name|ATH_BUS_PM
 comment|/*Use HAL to config PCI powersave by writing into the SerDes Registers */
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8317,7 +8991,7 @@ if|if
 condition|(
 name|ahpriv
 operator|->
-name|ah_is_pci_express
+name|ah_ispcie
 condition|)
 block|{
 name|ar9300_config_pci_power_save
@@ -8338,6 +9012,15 @@ name|ah
 argument_list|)
 expr_stmt|;
 block|}
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"%s: calling ar9300_hw_attach\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ecode
 operator|=
 name|ar9300_hw_attach
@@ -8489,7 +9172,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * Set the cur_trig_level to a value that works all modes - 11a/b/g or 11n      * with aggregation enabled or disabled.      */
-name|ahpriv
+name|ahp
 operator|->
 name|ah_tx_trig_level
 operator|=
@@ -8507,7 +9190,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8515,7 +9198,7 @@ name|nominal
 operator|=
 name|AR_PHY_CCA_NOM_VAL_HORNET_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8523,7 +9206,7 @@ name|max
 operator|=
 name|AR_PHY_CCA_MAX_GOOD_VAL_OSPREY_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8531,7 +9214,7 @@ name|min
 operator|=
 name|AR_PHY_CCA_MIN_GOOD_VAL_OSPREY_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8539,7 +9222,7 @@ name|nominal
 operator|=
 name|AR_PHY_CCA_NOM_VAL_OSPREY_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8547,7 +9230,7 @@ name|max
 operator|=
 name|AR_PHY_CCA_MAX_GOOD_VAL_OSPREY_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8555,7 +9238,7 @@ name|min
 operator|=
 name|AR_PHY_CCA_MIN_GOOD_VAL_OSPREY_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_cw_int_delta
 operator|=
@@ -8576,7 +9259,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8584,7 +9267,7 @@ name|nominal
 operator|=
 name|AR_PHY_CCA_NOM_VAL_JUPITER_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8592,7 +9275,7 @@ name|max
 operator|=
 name|AR_PHY_CCA_MAX_GOOD_VAL_OSPREY_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8600,7 +9283,7 @@ name|min
 operator|=
 name|AR_PHY_CCA_MIN_GOOD_VAL_JUPITER_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8608,7 +9291,7 @@ name|nominal
 operator|=
 name|AR_PHY_CCA_NOM_VAL_JUPITER_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8616,7 +9299,7 @@ name|max
 operator|=
 name|AR_PHY_CCA_MAX_GOOD_VAL_OSPREY_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8624,7 +9307,7 @@ name|min
 operator|=
 name|AR_PHY_CCA_MIN_GOOD_VAL_JUPITER_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_cw_int_delta
 operator|=
@@ -8633,7 +9316,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8641,7 +9324,7 @@ name|nominal
 operator|=
 name|AR_PHY_CCA_NOM_VAL_OSPREY_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8649,7 +9332,7 @@ name|max
 operator|=
 name|AR_PHY_CCA_MAX_GOOD_VAL_OSPREY_2GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_2GHz
 operator|.
@@ -8675,7 +9358,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8686,7 +9369,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8695,7 +9378,7 @@ operator|=
 name|AR_PHY_CCA_NOM_VAL_OSPREY_5GHZ
 expr_stmt|;
 block|}
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8703,7 +9386,7 @@ name|max
 operator|=
 name|AR_PHY_CCA_MAX_GOOD_VAL_OSPREY_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_5GHz
 operator|.
@@ -8711,7 +9394,7 @@ name|min
 operator|=
 name|AR_PHY_CCA_MIN_GOOD_VAL_OSPREY_5GHZ
 expr_stmt|;
-name|ahpriv
+name|ahp
 operator|->
 name|nf_cw_int_delta
 operator|=
@@ -8727,7 +9410,7 @@ name|ah
 argument_list|)
 condition|)
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|ah_bb_panic_timeout_ms
 operator|=
@@ -8736,7 +9419,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ahpriv
+name|ahp
 operator|->
 name|ah_bb_panic_timeout_ms
 operator|=
@@ -8873,10 +9556,7 @@ argument_list|)
 expr_stmt|;
 name|HALASSERT
 argument_list|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_magic
 operator|==
@@ -8923,15 +9603,37 @@ argument_list|,
 name|AH_TRUE
 argument_list|)
 expr_stmt|;
-name|ath_hal_hdprintf_deregister
+comment|//    ath_hal_hdprintf_deregister(ah);
+if|if
+condition|(
+name|AH9300
 argument_list|(
 name|ah
 argument_list|)
+operator|->
+name|ah_cal_mem
+condition|)
+name|ath_hal_free
+argument_list|(
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_mem
+argument_list|)
+expr_stmt|;
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_mem
+operator|=
+name|AH_NULL
 expr_stmt|;
 name|ath_hal_free
 argument_list|(
-name|ah
-argument_list|,
 name|ah
 argument_list|)
 expr_stmt|;
@@ -8947,9 +9649,6 @@ parameter_list|(
 name|u_int16_t
 name|devid
 parameter_list|,
-name|HAL_ADAPTER_HANDLE
-name|osdev
-parameter_list|,
 name|HAL_SOFTC
 name|sc
 parameter_list|,
@@ -8959,16 +9658,9 @@ parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
 parameter_list|,
-name|HAL_BUS_TYPE
-name|bustype
-parameter_list|,
-name|asf_amem_instance_handle
-name|amem_handle
-parameter_list|,
-name|struct
-name|hal_reg_parm
+name|uint16_t
 modifier|*
-name|hal_conf_parm
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -9010,17 +9702,13 @@ decl_stmt|;
 comment|/* NB: memory is returned zero'd */
 name|ahp
 operator|=
-name|amalloc_adv
+name|ath_hal_malloc
 argument_list|(
-name|amem_handle
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ath_hal_9300
 argument_list|)
-argument_list|,
-name|adf_os_mem_zero_outline
 argument_list|)
 expr_stmt|;
 if|if
@@ -9057,83 +9745,78 @@ name|ahp
 operator|->
 name|ah_priv
 operator|.
-name|priv
-operator|.
 name|h
 expr_stmt|;
 comment|/* set initial values */
+comment|/* stub everything first */
+name|ar9300_set_stub_functions
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+comment|/* setup the FreeBSD HAL methods */
+name|ar9300_attach_freebsd_ops
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+comment|/* These are private to this particular file, so .. */
+name|ah
+operator|->
+name|ah_disablePCIE
+operator|=
+name|ar9300_disable_pcie_phy
+expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_getNfAdjust
+operator|=
+name|ar9300_get_nf_adjust
+expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_getChipPowerLimits
+operator|=
+name|ar9300_get_chip_power_limits
+expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Attach Osprey structure as default hal structure */
-name|OS_MEMCPY
-argument_list|(
-operator|&
-name|ahp
-operator|->
-name|ah_priv
-operator|.
-name|priv
-argument_list|,
-operator|&
-name|ar9300hal
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ahp
-operator|->
-name|ah_priv
-operator|.
-name|priv
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
+block|OS_MEMCPY(&ahp->ah_priv.priv,&ar9300hal, sizeof(ahp->ah_priv.priv));
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+block|AH_PRIVATE(ah)->amem_handle = amem_handle;     AH_PRIVATE(ah)->ah_osdev = osdev;
+endif|#
+directive|endif
 name|ah
-argument_list|)
-operator|->
-name|amem_handle
-operator|=
-name|amem_handle
-expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_osdev
-operator|=
-name|osdev
-expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
 operator|->
 name|ah_sc
 operator|=
 name|sc
 expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_st
 operator|=
 name|st
 expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_sh
 operator|=
 name|sh
 expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_magic
 operator|=
@@ -9158,24 +9841,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*     ** Initialize factory defaults in the private space     */
-name|ath_hal_factory_defaults
-argument_list|(
-name|AH_PRIVATE
+comment|//    ath_hal_factory_defaults(AH_PRIVATE(ah), hal_conf_parm);
+name|ar9300_config_defaults_freebsd
 argument_list|(
 name|ah
 argument_list|)
-argument_list|,
-name|hal_conf_parm
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hal_conf_parm
-operator|->
-name|calInFlash
-condition|)
-block|{
+comment|/* XXX FreeBSD: cal is always in EEPROM */
+if|#
+directive|if
+literal|0
+block|if (!hal_conf_parm->calInFlash) {         AH_PRIVATE(ah)->ah_flags |= AH_USE_EEPROM;     }
+endif|#
+directive|endif
 name|AH_PRIVATE
 argument_list|(
 name|ah
@@ -9185,19 +9863,27 @@ name|ah_flags
 operator||=
 name|AH_USE_EEPROM
 expr_stmt|;
-block|}
 if|#
 directive|if
 literal|0
 block|if (ar9300_eep_data_in_flash(ah)) {         ahp->ah_priv.priv.ah_eeprom_read  = ar9300_flash_read;         ahp->ah_priv.priv.ah_eeprom_dump  = AH_NULL;     } else {         ahp->ah_priv.priv.ah_eeprom_read  = ar9300_eeprom_read_word;     }
 endif|#
 directive|endif
+comment|/* XXX FreeBSD - for now, just supports EEPROM reading */
+name|ahp
+operator|->
+name|ah_priv
+operator|.
+name|ah_eepromRead
+operator|=
+name|ar9300_eeprom_read_word
+expr_stmt|;
 name|AH_PRIVATE
 argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_power_limit
+name|ah_powerLimit
 operator|=
 name|MAX_RATE_POWER
 expr_stmt|;
@@ -9206,7 +9892,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_tp_scale
+name|ah_tpScale
 operator|=
 name|HAL_TP_SCALE_MAX
 expr_stmt|;
@@ -9222,10 +9908,7 @@ name|ahp
 operator|->
 name|ah_diversity_control
 operator|=
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -9235,10 +9918,7 @@ name|ahp
 operator|->
 name|ah_antenna_switch_swap
 operator|=
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -9452,7 +10132,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_REG_IO
+name|HAL_DEBUG_REGIO
 argument_list|,
 literal|"%s: address test failed addr: "
 literal|"0x%08x - wr:0x%08x != rd:0x%08x\n"
@@ -9521,7 +10201,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_REG_IO
+name|HAL_DEBUG_REGIO
 argument_list|,
 literal|"%s: address test failed addr: "
 literal|"0x%08x - wr:0x%08x != rd:0x%08x\n"
@@ -9615,7 +10295,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|CHANNEL_5GHZ
+name|IEEE80211_CHAN_5GHZ
 condition|)
 block|{
 operator|*
@@ -9623,14 +10303,14 @@ name|low
 operator|=
 name|p_cap
 operator|->
-name|hal_low_5ghz_chan
+name|halLow5GhzChan
 expr_stmt|;
 operator|*
 name|high
 operator|=
 name|p_cap
 operator|->
-name|hal_high_5ghz_chan
+name|halHigh5GhzChan
 expr_stmt|;
 return|return
 name|AH_TRUE
@@ -9641,7 +10321,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|CHANNEL_2GHZ
+name|IEEE80211_CHAN_2GHZ
 operator|)
 condition|)
 block|{
@@ -9650,14 +10330,14 @@ name|low
 operator|=
 name|p_cap
 operator|->
-name|hal_low_2ghz_chan
+name|halLow2GhzChan
 expr_stmt|;
 operator|*
 name|high
 operator|=
 name|p_cap
 operator|->
-name|hal_high_2ghz_chan
+name|halHigh2GhzChan
 expr_stmt|;
 return|return
 name|AH_TRUE
@@ -9687,7 +10367,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_current_rd
+name|ah_currentRD
 operator|=
 name|regdmn
 expr_stmt|;
@@ -9780,13 +10460,20 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_current_rd
+name|ah_currentRD
 operator|=
 name|eeval
 expr_stmt|;
+comment|/* Always enable fast clock; leave it up to EEPROM and channel */
 name|p_cap
 operator|->
-name|halintr_mitigation
+name|halSupportsFastClock5GHz
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|p_cap
+operator|->
+name|halIntrMitigation
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -9804,7 +10491,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_current_rd_ext
+name|ah_currentRDext
 operator|=
 name|eeval
 operator||
@@ -9823,7 +10510,7 @@ expr_stmt|;
 comment|/* Construct wireless mode from EEPROM */
 name|p_cap
 operator|->
-name|hal_wireless_modes
+name|halWirelessModes
 operator|=
 literal|0
 expr_stmt|;
@@ -9836,6 +10523,15 @@ argument_list|,
 name|EEP_OP_MODE
 argument_list|)
 expr_stmt|;
+comment|/*      * XXX FreeBSD specific: for now, set ath_hal_ht_enable to 1,      * or we won't have 11n support.      */
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ath_hal_ht_enable
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|eeval
@@ -9845,14 +10541,14 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_wireless_modes
+name|halWirelessModes
 operator||=
 name|HAL_MODE_11A
 operator||
 operator|(
 operator|(
 operator|!
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -9898,7 +10594,7 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_wireless_modes
+name|halWirelessModes
 operator||=
 name|HAL_MODE_11B
 operator||
@@ -9907,7 +10603,7 @@ operator||
 operator|(
 operator|(
 operator|!
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -9947,7 +10643,7 @@ block|}
 comment|/* Get chainamsks from eeprom */
 name|p_cap
 operator|->
-name|hal_tx_chain_mask
+name|halTxChainMask
 operator|=
 name|ar9300_eeprom_get
 argument_list|(
@@ -9958,13 +10654,44 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rx_chain_mask
+name|halRxChainMask
 operator|=
 name|ar9300_eeprom_get
 argument_list|(
 name|ahp
 argument_list|,
 name|EEP_RX_MASK
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|owl_get_ntxchains
+parameter_list|(
+name|_txchainmask
+parameter_list|)
+define|\
+value|(((_txchainmask>> 2)& 1) + ((_txchainmask>> 1)& 1) + (_txchainmask& 1))
+comment|/* FreeBSD: Update number of TX/RX streams */
+name|p_cap
+operator|->
+name|halTxStreams
+operator|=
+name|owl_get_ntxchains
+argument_list|(
+name|p_cap
+operator|->
+name|halTxChainMask
+argument_list|)
+expr_stmt|;
+name|p_cap
+operator|->
+name|halRxStreams
+operator|=
+name|owl_get_ntxchains
+argument_list|(
+name|p_cap
+operator|->
+name|halRxChainMask
 argument_list|)
 expr_stmt|;
 comment|/*      * This being a newer chip supports TKIP non-splitmic mode.      *      */
@@ -9976,121 +10703,122 @@ name|AR_PCU_MIC_NEW_LOC_ENA
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_low_2ghz_chan
+name|halTkipMicTxRxKeySupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|p_cap
+operator|->
+name|halLow2GhzChan
 operator|=
 literal|2312
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_high_2ghz_chan
+name|halHigh2GhzChan
 operator|=
 literal|2732
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_low_5ghz_chan
+name|halLow5GhzChan
 operator|=
 literal|4920
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_high_5ghz_chan
+name|halHigh5GhzChan
 operator|=
 literal|6100
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_cipher_ckip_support
+name|halCipherCkipSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_cipher_tkip_support
+name|halCipherTkipSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_cipher_aes_ccm_support
+name|halCipherAesCcmSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_mic_ckip_support
+name|halMicCkipSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_mic_tkip_support
+name|halMicTkipSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_mic_aes_ccm_support
+name|halMicAesCcmSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_chan_spread_support
+name|halChanSpreadSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_sleep_after_beacon_broken
+name|halSleepAfterBeaconBroken
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_burst_support
+name|halBurstSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_chap_tuning_support
+name|halChapTuningSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_turbo_prime_support
+name|halTurboPrimeSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_fast_frames_support
+name|halFastFramesSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_turbo_g_support
+name|halTurboGSupport
 operator|=
 name|p_cap
 operator|->
-name|hal_wireless_modes
+name|halWirelessModes
 operator|&
 name|HAL_MODE_108G
 expr_stmt|;
+comment|//    p_cap->hal_xr_support = AH_FALSE;
 name|p_cap
 operator|->
-name|hal_xr_support
+name|halHTSupport
 operator|=
-name|AH_FALSE
-expr_stmt|;
-name|p_cap
-operator|->
-name|hal_ht_support
-operator|=
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -10102,45 +10830,52 @@ name|AH_FALSE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_gtt_support
+name|halGTTSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_ps_poll_broken
+name|halPSPollBroken
 operator|=
 name|AH_TRUE
 expr_stmt|;
 comment|/* XXX fixed in later revs? */
 name|p_cap
 operator|->
-name|hal_ht20_sgi_support
+name|halNumMRRetries
+operator|=
+literal|4
+expr_stmt|;
+comment|/* Hardware supports 4 MRR */
+name|p_cap
+operator|->
+name|halHTSGI20Support
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_veol_support
+name|halVEOLSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_bss_id_mask_support
+name|halBssIdMaskSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 comment|/* Bug 26802, fixed in later revs? */
 name|p_cap
 operator|->
-name|hal_mcast_key_srch_support
+name|halMcastKeySrchSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_tsf_add_support
+name|halTsfAddSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10153,7 +10888,7 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|=
 name|MS
 argument_list|(
@@ -10167,7 +10902,7 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|=
 name|HAL_NUM_TX_QUEUES
 expr_stmt|;
@@ -10181,7 +10916,7 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_key_cache_size
+name|halKeyCacheSize
 operator|=
 literal|1
 operator|<<
@@ -10197,32 +10932,22 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_key_cache_size
+name|halKeyCacheSize
 operator|=
 name|AR_KEYTABLE_SIZE
 expr_stmt|;
 block|}
 name|p_cap
 operator|->
-name|hal_fast_cc_support
+name|halFastCCSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|//    p_cap->hal_num_mr_retries = 4;
+comment|//    ahp->hal_tx_trig_level_max = MAX_TX_FIFO_THRESHOLD;
 name|p_cap
 operator|->
-name|hal_num_mr_retries
-operator|=
-literal|4
-expr_stmt|;
-name|p_cap
-operator|->
-name|hal_tx_trig_level_max
-operator|=
-name|MAX_TX_FIFO_THRESHOLD
-expr_stmt|;
-name|p_cap
-operator|->
-name|hal_num_gpio_pins
+name|halNumGpioPins
 operator|=
 name|AR9382_MAX_GPIO_PIN_NUM
 expr_stmt|;
@@ -10230,18 +10955,18 @@ if|#
 directive|if
 literal|0
 comment|/* XXX Verify support in Osprey */
-block|if (AR_SREV_MERLIN_10_OR_LATER(ah)) {         p_cap->hal_wow_support = AH_TRUE;         p_cap->hal_wow_match_pattern_exact = AH_TRUE;         if (AR_SREV_MERLIN(ah)) {             p_cap->hal_wow_pattern_match_dword = AH_TRUE;         }     } else {         p_cap->hal_wow_support = AH_FALSE;         p_cap->hal_wow_match_pattern_exact = AH_FALSE;     }
+block|if (AR_SREV_MERLIN_10_OR_LATER(ah)) {         p_cap->halWowSupport = AH_TRUE;         p_cap->hal_wow_match_pattern_exact = AH_TRUE;         if (AR_SREV_MERLIN(ah)) {             p_cap->hal_wow_pattern_match_dword = AH_TRUE;         }     } else {         p_cap->halWowSupport = AH_FALSE;         p_cap->hal_wow_match_pattern_exact = AH_FALSE;     }
 endif|#
 directive|endif
 name|p_cap
 operator|->
-name|hal_wow_support
+name|halWowSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_wow_match_pattern_exact
+name|halWowMatchPatternExact
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10255,40 +10980,47 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_wow_match_pattern_exact
+name|halWowMatchPatternExact
 operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
 name|p_cap
 operator|->
-name|hal_cst_support
+name|halCSTSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rifs_rx_support
+name|halRifsRxSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rifs_tx_support
+name|halRifsTxSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+define|#
+directive|define
+name|IEEE80211_AMPDU_LIMIT_MAX
+value|(65536)
 name|p_cap
 operator|->
-name|hal_rts_aggr_limit
+name|halRtsAggrLimit
 operator|=
 name|IEEE80211_AMPDU_LIMIT_MAX
 expr_stmt|;
+undef|#
+directive|undef
+name|IEEE80211_AMPDU_LIMIT_MAX
 name|p_cap
 operator|->
-name|hal_mfp_support
+name|halMfpSupport
 operator|=
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -10296,33 +11028,33 @@ name|ath_hal_mfp_support
 expr_stmt|;
 name|p_cap
 operator|->
-name|halforce_ppm_support
+name|halForcePpmSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_hw_beacon_proc_support
+name|halHwBeaconProcSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 comment|/* ar9300 - has the HW UAPSD trigger support,      * but it has the following limitations      * The power state change from the following      * frames are not put in High priority queue.      *     i) Mgmt frames      *     ii) NoN QoS frames      *     iii) QoS frames form the access categories for which      *          UAPSD is not enabled.      * so we can not enable this feature currently.      * could be enabled, if these limitations are fixed      * in later versions of ar9300 chips      */
 name|p_cap
 operator|->
-name|hal_hw_uapsd_trig
+name|halHasUapsdSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* Number of buffers that can be help in a single TxD */
 name|p_cap
 operator|->
-name|hal_num_tx_maps
+name|halNumTxMaps
 operator|=
 literal|4
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_tx_desc_len
+name|halTxDescLen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -10332,7 +11064,7 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_tx_status_len
+name|halTxStatusLen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -10342,7 +11074,7 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rx_status_len
+name|halRxStatusLen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -10352,26 +11084,26 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rx_hp_depth
+name|halRxHpFifoDepth
 operator|=
 name|HAL_HP_RXFIFO_DEPTH
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rx_lp_depth
+name|halRxLpFifoDepth
 operator|=
 name|HAL_LP_RXFIFO_DEPTH
 expr_stmt|;
 comment|/* Enable extension channel DFS support */
 name|p_cap
 operator|->
-name|hal_use_combined_radar_rssi
+name|halUseCombinedRadarRssi
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_ext_chan_dfs_support
+name|halExtChanDfsSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10380,7 +11112,7 @@ directive|if
 name|ATH_SUPPORT_SPECTRAL
 name|p_cap
 operator|->
-name|hal_spectral_scan
+name|halSpectralScanSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10441,7 +11173,7 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_rf_silent_support
+name|halRfSilentSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10449,7 +11181,7 @@ block|}
 comment|/* XXX */
 name|p_cap
 operator|->
-name|hal_wps_push_button
+name|halWpsPushButtonSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -10458,13 +11190,13 @@ directive|ifdef
 name|ATH_BT_COEX
 name|p_cap
 operator|->
-name|hal_bt_coex_support
+name|halBtCoexSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_bt_coex_aspm_war
+name|halBtCoexApsmWar
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -10472,7 +11204,7 @@ endif|#
 directive|endif
 name|p_cap
 operator|->
-name|hal_gen_timer_support
+name|halGenTimerSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10533,7 +11265,7 @@ directive|if
 name|ATH_SUPPORT_MCI
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -10544,7 +11276,7 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_mci_support
+name|halMciSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -10555,7 +11287,7 @@ directive|endif
 block|{
 name|p_cap
 operator|->
-name|hal_mci_support
+name|halMciSupport
 operator|=
 operator|(
 name|ahp
@@ -10582,7 +11314,7 @@ name|__func__
 argument_list|,
 name|p_cap
 operator|->
-name|hal_mci_support
+name|halMciSupport
 argument_list|)
 expr_stmt|;
 block|}
@@ -10590,7 +11322,7 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_mci_support
+name|halMciSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -10605,7 +11337,7 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_radio_retention_support
+name|halRadioRetentionSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10614,33 +11346,28 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_radio_retention_support
+name|halRadioRetentionSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
 block|}
 name|p_cap
 operator|->
-name|hal_auto_sleep_support
+name|halAutoSleepSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_mbssid_aggr_support
+name|halMbssidAggrSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|//    p_cap->hal_proxy_sta_support = AH_TRUE;
+comment|/* XXX Mark it true after it is verfied as fixed */
 name|p_cap
 operator|->
-name|hal_proxy_sta_support
-operator|=
-name|AH_TRUE
-expr_stmt|;
-comment|/* XXX Mark it AH_TRUE after it is verfied as fixed */
-name|p_cap
-operator|->
-name|hal4kb_split_trans_support
+name|hal4kbSplitTransSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -10652,7 +11379,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_current_rd_ext
+name|ah_currentRDext
 operator|&
 operator|(
 literal|1
@@ -10664,7 +11391,7 @@ block|{
 comment|/*          * If REG_EXT_JAPAN_MIDBAND is set, turn on U1 EVEN, U2, and MIDBAND.          */
 name|p_cap
 operator|->
-name|hal_reg_cap
+name|halRegCap
 operator|=
 name|AR_EEPROM_EEREGCAP_EN_KK_NEW_11A
 operator||
@@ -10679,7 +11406,7 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_reg_cap
+name|halRegCap
 operator|=
 name|AR_EEPROM_EEREGCAP_EN_KK_NEW_11A
 operator||
@@ -10689,13 +11416,13 @@ block|}
 comment|/* For AR9300 and above, midband channels are always supported */
 name|p_cap
 operator|->
-name|hal_reg_cap
+name|halRegCap
 operator||=
 name|AR_EEPROM_EEREGCAP_EN_FCC_MIDBAND
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_num_ant_cfg_5ghz
+name|halNumAntCfg5GHz
 operator|=
 name|ar9300_eeprom_get_num_ant_config
 argument_list|(
@@ -10706,7 +11433,7 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_num_ant_cfg_2ghz
+name|halNumAntCfg2GHz
 operator|=
 name|ar9300_eeprom_get_num_ant_config
 argument_list|(
@@ -10718,7 +11445,7 @@ expr_stmt|;
 comment|/* STBC supported */
 name|p_cap
 operator|->
-name|hal_rx_stbc_support
+name|halRxStbcSupport
 operator|=
 literal|1
 expr_stmt|;
@@ -10743,7 +11470,7 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_tx_stbc_support
+name|halTxStbcSupport
 operator|=
 literal|0
 expr_stmt|;
@@ -10752,83 +11479,59 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_tx_stbc_support
+name|halTxStbcSupport
 operator|=
 literal|1
 expr_stmt|;
 block|}
 name|p_cap
 operator|->
-name|hal_enhanced_dma_support
+name|halEnhancedDmaSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATH_SUPPORT_DFS
 name|p_cap
 operator|->
-name|hal_enhanced_dfs_support
+name|halEnhancedDfsSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      *  EV61133 (missing interrupts due to AR_ISR_RAC).      *  Fixed in Osprey 2.0.      */
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* XXX FreeBSD won't support TKIP and WEP aggregation */
+if|#
+directive|if
+literal|0
+block|p_cap->hal_wep_tkip_aggr_support = AH_TRUE;     p_cap->hal_wep_tkip_aggr_num_tx_delim = 10;
+comment|/* TBD */
+block|p_cap->hal_wep_tkip_aggr_num_rx_delim = 10;
+comment|/* TBD */
+block|p_cap->hal_wep_tkip_max_ht_rate = 15;
+comment|/* TBD */
+endif|#
+directive|endif
+comment|/*      * XXX FreeBSD won't need these; but eventually add them      * and add the WARs - AGGR extra delim WAR is useful to know      * about.      */
+if|#
+directive|if
+literal|0
+block|p_cap->hal_cfend_fix_support = AH_FALSE;     p_cap->hal_aggr_extra_delim_war = AH_FALSE;
+endif|#
+directive|endif
 name|p_cap
 operator|->
-name|hal_wep_tkip_aggr_support
+name|halHasLongRxDescTsf
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|//    p_cap->hal_rx_desc_timestamp_bits = 32;
 name|p_cap
 operator|->
-name|hal_wep_tkip_aggr_num_tx_delim
-operator|=
-literal|10
-expr_stmt|;
-comment|/* TBD */
-name|p_cap
-operator|->
-name|hal_wep_tkip_aggr_num_rx_delim
-operator|=
-literal|10
-expr_stmt|;
-comment|/* TBD */
-name|p_cap
-operator|->
-name|hal_wep_tkip_max_ht_rate
-operator|=
-literal|15
-expr_stmt|;
-comment|/* TBD */
-name|p_cap
-operator|->
-name|hal_cfend_fix_support
-operator|=
-name|AH_FALSE
-expr_stmt|;
-name|p_cap
-operator|->
-name|hal_aggr_extra_delim_war
-operator|=
-name|AH_FALSE
-expr_stmt|;
-name|p_cap
-operator|->
-name|hal_rx_desc_timestamp_bits
-operator|=
-literal|32
-expr_stmt|;
-name|p_cap
-operator|->
-name|hal_rx_tx_abort_support
+name|halRxTxAbortSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
@@ -10847,7 +11550,7 @@ expr_stmt|;
 comment|/* Transmit Beamforming supported, fill capabilities */
 name|p_cap
 operator|->
-name|hal_paprd_enabled
+name|halPaprdEnabled
 operator|=
 name|ar9300_eeprom_get
 argument_list|(
@@ -10858,7 +11561,7 @@ argument_list|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_chan_half_rate
+name|halChanHalfRate
 operator|=
 operator|!
 operator|(
@@ -10871,7 +11574,7 @@ operator|)
 expr_stmt|;
 name|p_cap
 operator|->
-name|hal_chan_quarter_rate
+name|halChanQuarterRate
 operator|=
 operator|!
 operator|(
@@ -10898,7 +11601,7 @@ block|{
 comment|/* There is no AR_ENT_OTP_49GHZ_DISABLE feature in Jupiter, now the bit is used to disable BT. */
 name|p_cap
 operator|->
-name|hal49Ghz
+name|hal49GhzSupport
 operator|=
 literal|1
 expr_stmt|;
@@ -10907,7 +11610,7 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal49Ghz
+name|hal49GhzSupport
 operator|=
 operator|!
 operator|(
@@ -10941,7 +11644,7 @@ comment|/* LDPC supported */
 comment|/* Poseidon doesn't support LDPC, or it will cause receiver CRC Error */
 name|p_cap
 operator|->
-name|hal_ldpc_support
+name|halLDPCSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
@@ -10983,15 +11686,18 @@ else|else
 block|{
 name|p_cap
 operator|->
-name|hal_ldpc_support
+name|halLDPCSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
+comment|/* XXX is this a flag, or a chainmask number? */
 name|p_cap
 operator|->
-name|hal_enable_apm
+name|halApmEnable
 operator|=
+operator|!
+operator|!
 name|ar9300_eeprom_get
 argument_list|(
 name|ahp
@@ -11048,18 +11754,18 @@ condition|)
 block|{
 name|p_cap
 operator|->
-name|hal_ant_div_comb_support
+name|halAntDivCombSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
 name|p_cap
 operator|->
-name|hal_ant_div_comb_support_org
+name|halAntDivCombSupportOrg
 operator|=
 name|p_cap
 operator|->
-name|hal_ant_div_comb_support
+name|halAntDivCombSupport
 expr_stmt|;
 block|}
 block|}
@@ -11170,6 +11876,22 @@ name|AR_KEYTABLE_SIZE
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static HAL_BOOL ar9300_get_chip_power_limits(struct ath_hal *ah, HAL_CHANNEL *chans,     u_int32_t nchans) {     struct ath_hal_9300 *ahp = AH9300(ah);      return ahp->ah_rf_hal.get_chip_power_lim(ah, chans, nchans); }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX FreeBSD */
+end_comment
+
 begin_function
 specifier|static
 name|HAL_BOOL
@@ -11180,37 +11902,26 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chans
-parameter_list|,
-name|u_int32_t
-name|nchans
+name|chan
 parameter_list|)
 block|{
-name|struct
-name|ath_hal_9300
-modifier|*
-name|ahp
-init|=
-name|AH9300
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
-return|return
-name|ahp
+name|chan
 operator|->
-name|ah_rf_hal
-operator|.
-name|get_chip_power_lim
-argument_list|(
-name|ah
-argument_list|,
-name|chans
-argument_list|,
-name|nchans
-argument_list|)
+name|ic_maxpower
+operator|=
+name|AR9300_MAX_RATE_POWER
+expr_stmt|;
+name|chan
+operator|->
+name|ic_minpower
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|AH_TRUE
 return|;
 block|}
 end_function
@@ -11255,7 +11966,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_is_pci_express
+name|ah_ispcie
 operator|!=
 name|AH_TRUE
 condition|)
@@ -11274,10 +11985,7 @@ block|{
 name|u_int32_t
 name|val
 init|=
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -11316,10 +12024,7 @@ block|}
 comment|/* Do not touch SERDES registers */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -11355,10 +12060,7 @@ expr_stmt|;
 comment|/*          * Set PCIE workaround config only if requested, else use the reset          * value of this register.          */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -11376,10 +12078,7 @@ argument_list|,
 name|AR_WA
 argument_list|)
 argument_list|,
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -11411,10 +12110,7 @@ block|}
 comment|/* Configure PCIE after Ini init. SERDES values now come from ini file */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -11727,7 +12423,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_REG_IO
+name|HAL_DEBUG_REGIO
 argument_list|,
 literal|"%s: hardware self-test failed\n"
 argument_list|,
@@ -11738,11 +12434,31 @@ return|return
 name|HAL_ESELFTEST
 return|;
 block|}
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"%s: calling ar9300_eeprom_attach\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ecode
 operator|=
 name|ar9300_eeprom_attach
 argument_list|(
 name|ah
+argument_list|)
+expr_stmt|;
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"%s: ar9300_eeprom_attach returned %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ecode
 argument_list|)
 expr_stmt|;
 if|if
@@ -12107,24 +12823,18 @@ block|}
 block|}
 end_function
 
-begin_function
-name|int
-name|ar9300_get_cal_intervals
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_CALIBRATION_TIMER
-modifier|*
-modifier|*
-name|timerp
-parameter_list|,
-name|HAL_CAL_QUERY
-name|query
-parameter_list|)
-block|{
+begin_comment
+comment|/* XXX FreeBSD: I'm not sure how to implement this.. */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+unit|int ar9300_get_cal_intervals(struct ath_hal *ah, HAL_CALIBRATION_TIMER **timerp,     HAL_CAL_QUERY query) {
 define|#
 directive|define
 name|AR9300_IS_CHAIN_RX_IQCAL_INVALID
@@ -12135,6 +12845,9 @@ name|_reg
 parameter_list|)
 define|\
 value|((OS_REG_READ((_ah), _reg)& 0x3fff) == 0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|AR9300_IS_RX_IQCAL_DISABLED
@@ -12143,182 +12856,17 @@ name|_ah
 parameter_list|)
 define|\
 value|(!(OS_REG_READ((_ah), AR_PHY_RX_IQCAL_CORR_B0)& \     AR_PHY_RX_IQCAL_CORR_IQCORR_ENABLE))
+end_define
+
+begin_comment
 comment|/* Avoid comilation warnings. Variables are not used when EMULATION. */
-name|struct
-name|ath_hal_9300
-modifier|*
-name|ahp
-init|=
-name|AH9300
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
-name|u_int8_t
-name|rxchainmask
-init|=
-name|ahp
-operator|->
-name|ah_rx_chainmask
-decl_stmt|,
-name|i
-decl_stmt|;
-name|int
-name|rx_iqcal_invalid
-init|=
-literal|0
-decl_stmt|,
-name|num_chains
-init|=
-literal|0
-decl_stmt|;
-specifier|static
-specifier|const
-name|u_int32_t
-name|offset_array
-index|[
-literal|3
-index|]
-init|=
-block|{
-name|AR_PHY_RX_IQCAL_CORR_B0
-block|,
-name|AR_PHY_RX_IQCAL_CORR_B1
-block|,
-name|AR_PHY_RX_IQCAL_CORR_B2
-block|}
-decl_stmt|;
-operator|*
-name|timerp
-operator|=
-name|ar9300_cals
-expr_stmt|;
-switch|switch
-condition|(
-name|query
-condition|)
-block|{
-case|case
-name|HAL_QUERY_CALS
-case|:
-return|return
-name|AR9300_NUM_CAL_TYPES
-return|;
-case|case
-name|HAL_QUERY_RERUN_CALS
-case|:
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|AR9300_MAX_CHAINS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|rxchainmask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-condition|)
-block|{
-name|num_chains
-operator|++
-expr_stmt|;
-block|}
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num_chains
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|AR_SREV_POSEIDON
-argument_list|(
-name|ah
-argument_list|)
-operator|||
-name|AR_SREV_APHRODITE
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-block|{
-name|HALASSERT
-argument_list|(
-name|num_chains
-operator|==
-literal|0x1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|AR9300_IS_CHAIN_RX_IQCAL_INVALID
-argument_list|(
-name|ah
-argument_list|,
-name|offset_array
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-block|{
-name|rx_iqcal_invalid
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|AR9300_IS_RX_IQCAL_DISABLED
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-block|{
-name|rx_iqcal_invalid
-operator|=
-literal|1
-expr_stmt|;
-block|}
-return|return
-name|rx_iqcal_invalid
-return|;
-default|default:
-name|HALASSERT
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-literal|0
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|struct ath_hal_9300 *ahp = AH9300(ah);     u_int8_t rxchainmask = ahp->ah_rx_chainmask, i;     int rx_iqcal_invalid = 0, num_chains = 0;     static const u_int32_t offset_array[3] = {         AR_PHY_RX_IQCAL_CORR_B0,         AR_PHY_RX_IQCAL_CORR_B1,         AR_PHY_RX_IQCAL_CORR_B2};      *timerp = ar9300_cals;      switch (query) {     case HAL_QUERY_CALS:         return AR9300_NUM_CAL_TYPES;     case HAL_QUERY_RERUN_CALS:         for (i = 0; i< AR9300_MAX_CHAINS; i++) {             if (rxchainmask& (1<< i)) {                 num_chains++;             }         }         for (i = 0; i< num_chains; i++) {             if (AR_SREV_POSEIDON(ah) || AR_SREV_APHRODITE(ah)) {                 HALASSERT(num_chains == 0x1);             }             if (AR9300_IS_CHAIN_RX_IQCAL_INVALID(ah, offset_array[i])) {                 rx_iqcal_invalid = 1;             }         }         if (AR9300_IS_RX_IQCAL_DISABLED(ah)) {             rx_iqcal_invalid = 1;         }          return rx_iqcal_invalid;     default:         HALASSERT(0);     }     return 0; }
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -13120,16 +13668,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ahpriv
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//struct ath_hal_private *ahpriv = AH_PRIVATE(ah);
 name|u_int32_t
 name|xlan_gpio_cfg
 decl_stmt|;
@@ -13310,9 +13849,10 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* XXX FreeBSD: this needs to be revisited!! */
 name|xlan_gpio_cfg
 operator|=
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -13348,13 +13888,14 @@ name|i
 operator|)
 condition|)
 block|{
-name|ath_hal_gpio_cfg_output
+comment|/*                          * XXX FreeBSD: definitely make sure this                          * results in the correct value being written                          * to the hardware, or weird crap is very likely                          * to occur!                          */
+name|ath_hal_gpioCfgOutput
 argument_list|(
 name|ah
 argument_list|,
 name|i
 argument_list|,
-name|HAL_GPIO_OUTPUT_MUX_AS_PCIE_ATTENTION_LED
+name|HAL_GPIO_OUTPUT_MUX_PCIE_ATTENTION_LED
 argument_list|)
 expr_stmt|;
 block|}
@@ -16734,14 +17275,105 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ar9300_probe
+parameter_list|(
+name|uint16_t
+name|vendorid
+parameter_list|,
+name|uint16_t
+name|devid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vendorid
+operator|!=
+name|ATHEROS_VENDOR_ID
+condition|)
+return|return
+name|AH_NULL
+return|;
+switch|switch
+condition|(
+name|devid
+condition|)
+block|{
+case|case
+name|AR9300_DEVID_AR9380_PCIE
+case|:
+comment|/* PCIE (Osprey) */
+return|return
+literal|"Atheros AR938x"
+return|;
+case|case
+name|AR9300_DEVID_AR9340
+case|:
+comment|/* Wasp */
+return|return
+literal|"Atheros AR934x"
+return|;
+case|case
+name|AR9300_DEVID_AR9485_PCIE
+case|:
+comment|/* Poseidon */
+return|return
+literal|"Atheros AR9485"
+return|;
+case|case
+name|AR9300_DEVID_AR9580_PCIE
+case|:
+comment|/* Peacock */
+return|return
+literal|"Atheros AR9580"
+return|;
+case|case
+name|AR9300_DEVID_AR946X_PCIE
+case|:
+comment|/* AR9462, AR9463, AR9482 */
+return|return
+literal|"Atheros AR946x/AR948x"
+return|;
+case|case
+name|AR9300_DEVID_AR9330
+case|:
+comment|/* Hornet */
+return|return
+literal|"Atheros AR933x"
+return|;
+case|case
+name|AR9300_DEVID_QCA955X
+case|:
+comment|/* Scorpion */
+return|return
+literal|"Qualcomm Atheros QCA955x"
+return|;
+default|default:
+return|return
+name|AH_NULL
+return|;
+block|}
+return|return
+name|AH_NULL
+return|;
+block|}
+end_function
 
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
+begin_expr_stmt
+name|AH_CHIP
+argument_list|(
+name|AR9300
+argument_list|,
+name|ar9300_probe
+argument_list|,
+name|ar9300_attach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

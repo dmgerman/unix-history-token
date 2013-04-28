@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -774,15 +768,6 @@ name|ah_intr_gen_timer_thresh
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

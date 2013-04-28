@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -47,6 +41,16 @@ parameter_list|(
 name|_tu
 parameter_list|)
 value|((_tu)<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONE_EIGHTH_TU_TO_USEC
+parameter_list|(
+name|_tu8
+parameter_list|)
+value|((_tu8)<< 7)
 end_define
 
 begin_function_decl
@@ -88,16 +92,6 @@ name|HAL_OPMODE
 name|opmode
 parameter_list|)
 block|{
-name|struct
-name|ath_hal_private
-modifier|*
-name|ap
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
 name|u_int32_t
 name|beacon_period_usec
 decl_stmt|;
@@ -153,11 +147,11 @@ argument_list|(
 name|next_beacon
 argument_list|)
 operator|-
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_dma_beacon_response_time
+name|ah_dma_beacon_response_time
 operator|)
 argument_list|)
 expr_stmt|;
@@ -173,11 +167,11 @@ argument_list|(
 name|next_beacon
 argument_list|)
 operator|-
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_sw_beacon_response_time
+name|ah_sw_beacon_response_time
 operator|)
 argument_list|)
 expr_stmt|;
@@ -624,7 +618,7 @@ if|if
 condition|(
 name|p_cap
 operator|->
-name|hal_auto_sleep_support
+name|halAutoSleepSupport
 condition|)
 block|{
 name|beacontimeout
@@ -732,15 +726,6 @@ directive|undef
 name|SLEEP_SLOP
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -574,6 +568,23 @@ goto|goto
 name|end
 goto|;
 block|}
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_INTERRUPT
+argument_list|,
+literal|"%s: isr=0x%x, sync_cause=0x%x, async_cause=0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|isr
+argument_list|,
+name|sync_cause
+argument_list|,
+name|async_cause
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|isr
@@ -700,7 +711,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 condition|)
 block|{
 comment|/*                  * EV61133 (missing interrupts due to ISR_RAC):                  * If not using ISR_RAC, clear interrupts by writing to ISR_S2.                  * This avoids a race condition where a new BCNMISC interrupt                  * could come in between reading the ISR and clearing the                  * interrupt via the primary ISR.  We therefore clear the                  * interrupt via the secondary, which avoids this race.                  */
@@ -725,7 +736,7 @@ if|if
 condition|(
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 condition|)
 block|{
 name|isr
@@ -870,7 +881,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 condition|)
 block|{
 name|u_int32_t
@@ -957,7 +968,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX Verify if this is fixed for Osprey */
-block|if (!p_cap->hal_auto_sleep_support) {             u_int32_t isr5 = OS_REG_READ(ah, AR_ISR_S5_S);             if (isr5& AR_ISR_S5_TIM_TIMER) {                 *masked |= HAL_INT_TIM_TIMER;             }         }
+block|if (!p_cap->halAutoSleepSupport) {             u_int32_t isr5 = OS_REG_READ(ah, AR_ISR_S5_S);             if (isr5& AR_ISR_S5_TIM_TIMER) {                 *masked |= HAL_INT_TIM_TIMER;             }         }
 endif|#
 directive|endif
 if|if
@@ -974,7 +985,7 @@ if|if
 condition|(
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 condition|)
 block|{
 comment|/* Use secondary shadow registers if using ISR_RAC */
@@ -1063,7 +1074,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 condition|)
 block|{
 comment|/*                  * EV61133 (missing interrupts due to ISR_RAC):                  * If not using ISR_RAC, clear interrupts by writing to ISR_S5.                  * This avoids a race condition where a new interrupt                  * could come in between reading the ISR and clearing the                  * interrupt via the primary ISR.  We therefore clear the                  * interrupt via the secondary, which avoids this race.                  */
@@ -1093,7 +1104,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_isr_rac_support
+name|halIsrRacSupport
 condition|)
 block|{
 comment|/*              * EV61133 (missing interrupts due to ISR_RAC):              * If not using ISR_RAC, clear the interrupts we've read by              * writing back ones in these locations to the primary ISR              * (except for interrupts that have a secondary isr register -              * see above).              */
@@ -1225,7 +1236,7 @@ operator|)
 operator|&&
 name|p_cap
 operator|->
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|u_int32_t
@@ -1865,10 +1876,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -2022,56 +2030,20 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|OS_ATOMIC_READ
-argument_list|(
-operator|&
-name|ahp
-operator|->
-name|ah_ier_ref_count
-argument_list|)
-operator|==
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_UNMASKABLE
-argument_list|,
-literal|"%s: WARNING: ah_ier_ref_count is 0 "
-literal|"and attempting to enable IER\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
+block|if (OS_ATOMIC_READ(&ahp->ah_ier_ref_count) == 0) {                 HALDEBUG(ah, HAL_DEBUG_UNMASKABLE,                     "%s: WARNING: ah_ier_ref_count is 0 "                     "and attempting to enable IER\n",                     __func__);             }
 endif|#
 directive|endif
-if|if
-condition|(
-name|OS_ATOMIC_READ
-argument_list|(
-operator|&
-name|ahp
-operator|->
-name|ah_ier_ref_count
-argument_list|)
-operator|>
+endif|#
+directive|endif
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|OS_ATOMIC_DEC
-argument_list|(
-operator|&
-name|ahp
-operator|->
-name|ah_ier_ref_count
-argument_list|)
-expr_stmt|;
-block|}
+block|if (OS_ATOMIC_READ(&ahp->ah_ier_ref_count)> 0) {                 OS_ATOMIC_DEC(&ahp->ah_ier_ref_count);             }
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2239,7 +2211,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_auto_sleep_support
+name|halAutoSleepSupport
 condition|)
 block|{
 name|mask
@@ -2480,7 +2452,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_auto_sleep_support
+name|halAutoSleepSupport
 condition|)
 block|{
 if|if
@@ -2662,10 +2634,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -3075,15 +3044,6 @@ name|val
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

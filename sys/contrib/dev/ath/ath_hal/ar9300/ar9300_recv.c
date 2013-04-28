@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -229,7 +223,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AH_PRIVATE
+name|AH9300
 argument_list|(
 name|ah
 argument_list|)
@@ -273,8 +267,6 @@ argument_list|,
 name|AR_OBS_BUS_1_RX_STATE
 argument_list|,
 literal|0
-argument_list|,
-name|AH_WAIT_TIMEOUT
 argument_list|)
 expr_stmt|;
 comment|/* Wait for Rx state to return to 0 */
@@ -437,8 +429,6 @@ argument_list|,
 name|AR_DMADBG_RX_STATE
 argument_list|,
 literal|0
-argument_list|,
-name|AH_WAIT_TIMEOUT
 argument_list|)
 expr_stmt|;
 comment|/* wait for Rx DMA state machine to become idle */
@@ -1324,15 +1314,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

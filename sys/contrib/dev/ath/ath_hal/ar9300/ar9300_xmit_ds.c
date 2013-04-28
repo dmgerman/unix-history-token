@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -214,7 +208,7 @@ name|void
 modifier|*
 name|ds
 parameter_list|,
-name|dma_addr_t
+name|HAL_DMA_ADDR
 modifier|*
 name|buf_addr
 parameter_list|,
@@ -933,7 +927,7 @@ switch|switch
 condition|(
 name|ts
 operator|->
-name|ts_rateindex
+name|ts_finaltsi
 condition|)
 block|{
 case|case
@@ -941,7 +935,7 @@ literal|0
 case|:
 name|ts
 operator|->
-name|ts_ratecode
+name|ts_rate
 operator|=
 name|MS
 argument_list|(
@@ -958,7 +952,7 @@ literal|1
 case|:
 name|ts
 operator|->
-name|ts_ratecode
+name|ts_rate
 operator|=
 name|MS
 argument_list|(
@@ -975,7 +969,7 @@ literal|2
 case|:
 name|ts
 operator|->
-name|ts_ratecode
+name|ts_rate
 operator|=
 name|MS
 argument_list|(
@@ -992,7 +986,7 @@ literal|3
 case|:
 name|ts
 operator|->
-name|ts_ratecode
+name|ts_rate
 operator|=
 name|MS
 argument_list|(
@@ -1011,7 +1005,7 @@ name|ah
 argument_list|,
 name|ts
 operator|->
-name|ts_ratecode
+name|ts_rate
 argument_list|)
 expr_stmt|;
 block|}
@@ -1155,6 +1149,13 @@ return|return
 name|HAL_EINPROGRESS
 return|;
 block|}
+comment|/*      * Sanity check      */
+if|#
+directive|if
+literal|0
+block|ath_hal_printf(ah,         "CHH: tail=%d\n", ahp->ts_tail);     ath_hal_printf(ah,         "CHH: ds_info 0x%x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n",         ads->ds_info,         ads->status1,         ads->status2,         ads->status3,         ads->status4,         ads->status5,         ads->status6,         ads->status7,         ads->status8);
+endif|#
+directive|endif
 comment|/* Increment the tail to point to the next status element. */
 name|ahp
 operator|->
@@ -1177,13 +1178,6 @@ literal|1
 operator|)
 expr_stmt|;
 comment|/*     ** For big endian systems, ds_info is not swapped as the other     ** registers are.  Ensure we use the bswap32 version (which is     ** defined to "nothing" in little endian systems     */
-comment|/*      * Sanity check      */
-if|#
-directive|if
-literal|0
-block|ath_hal_printf(ah,         "CHH: ds_info 0x%x  status1: 0x%x  status8: 0x%x\n",         ads->ds_info, ads->status1, ads->status8);
-endif|#
-directive|endif
 name|dsinfo
 operator|=
 name|ads
@@ -1252,7 +1246,7 @@ block|}
 comment|/* Update software copies of the HW status */
 name|ts
 operator|->
-name|queue_id
+name|ts_queue_id
 operator|=
 name|MS
 argument_list|(
@@ -1263,7 +1257,7 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|desc_id
+name|ts_desc_id
 operator|=
 name|MS
 argument_list|(
@@ -1473,7 +1467,7 @@ name|HAL_TX_BA
 expr_stmt|;
 name|ts
 operator|->
-name|ba_low
+name|ts_ba_low
 operator|=
 name|ads
 operator|->
@@ -1481,7 +1475,7 @@ name|status5
 expr_stmt|;
 name|ts
 operator|->
-name|ba_high
+name|ts_ba_high
 operator|=
 name|ads
 operator|->
@@ -1491,7 +1485,7 @@ block|}
 comment|/*      * Extract the transmit rate.      */
 name|ts
 operator|->
-name|ts_rateindex
+name|ts_finaltsi
 operator|=
 name|MS
 argument_list|(
@@ -1517,7 +1511,10 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_rssi_ctl0
+name|ts_rssi_ctl
+index|[
+literal|0
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -1530,7 +1527,10 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_rssi_ctl1
+name|ts_rssi_ctl
+index|[
+literal|1
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -1543,7 +1543,10 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_rssi_ctl2
+name|ts_rssi_ctl
+index|[
+literal|2
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -1556,7 +1559,10 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_rssi_ext0
+name|ts_rssi_ext
+index|[
+literal|0
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -1569,7 +1575,10 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_rssi_ext1
+name|ts_rssi_ext
+index|[
+literal|1
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -1582,7 +1591,10 @@ argument_list|)
 expr_stmt|;
 name|ts
 operator|->
-name|ts_rssi_ext2
+name|ts_rssi_ext
+index|[
+literal|2
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -1641,7 +1653,7 @@ expr_stmt|;
 comment|/* extract TID from block ack */
 name|ts
 operator|->
-name|tid
+name|ts_tid
 operator|=
 name|MS
 argument_list|(
@@ -1760,7 +1772,7 @@ switch|switch
 condition|(
 name|ts
 operator|->
-name|ts_rateindex
+name|ts_finaltsi
 condition|)
 block|{
 case|case
@@ -2878,7 +2890,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -2920,14 +2932,14 @@ index|[
 literal|0
 index|]
 operator|.
-name|rate_index
+name|RateIndex
 argument_list|,
 name|series
 index|[
 literal|0
 index|]
 operator|.
-name|ch_sel
+name|ChSel
 argument_list|,
 name|tx_mode
 argument_list|)
@@ -3139,7 +3151,7 @@ name|AR_not_sounding
 expr_stmt|;
 if|if
 condition|(
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -3181,14 +3193,14 @@ index|[
 literal|1
 index|]
 operator|.
-name|rate_index
+name|RateIndex
 argument_list|,
 name|series
 index|[
 literal|1
 index|]
 operator|.
-name|ch_sel
+name|ChSel
 argument_list|,
 name|tx_mode
 argument_list|)
@@ -3259,14 +3271,14 @@ index|[
 literal|2
 index|]
 operator|.
-name|rate_index
+name|RateIndex
 argument_list|,
 name|series
 index|[
 literal|2
 index|]
 operator|.
-name|ch_sel
+name|ChSel
 argument_list|,
 name|tx_mode
 argument_list|)
@@ -3337,14 +3349,14 @@ index|[
 literal|3
 index|]
 operator|.
-name|rate_index
+name|RateIndex
 argument_list|,
 name|series
 index|[
 literal|3
 index|]
 operator|.
-name|ch_sel
+name|ChSel
 argument_list|,
 name|tx_mode
 argument_list|)
@@ -3516,12 +3528,16 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
 name|u_int
 name|aggr_len
+parameter_list|,
+name|u_int
+name|num_delims
 parameter_list|)
 block|{
 name|struct
@@ -3554,12 +3570,31 @@ expr_stmt|;
 name|ads
 operator|->
 name|ds_ctl17
+operator|&=
+operator|~
+name|AR_pad_delim
+expr_stmt|;
+comment|/* XXX should use a stack variable! */
+name|ads
+operator|->
+name|ds_ctl17
 operator||=
 name|SM
 argument_list|(
 name|aggr_len
 argument_list|,
 name|AR_aggr_len
+argument_list|)
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl17
+operator||=
+name|SM
+argument_list|(
+name|num_delims
+argument_list|,
+name|AR_pad_delim
 argument_list|)
 expr_stmt|;
 block|}
@@ -3574,7 +3609,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
@@ -3645,7 +3681,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|)
@@ -3692,7 +3729,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|)
@@ -3731,7 +3769,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
@@ -3932,7 +3971,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
@@ -4063,15 +4103,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

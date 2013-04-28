@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -86,11 +80,11 @@ begin_comment
 comment|/*  * Configure GPIO Output Mux control  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|UMAC_SUPPORT_SMARTANTENNA
-end_ifdef
+end_if
 
 begin_function
 specifier|static
@@ -409,7 +403,7 @@ parameter_list|,
 name|u_int32_t
 name|gpio
 parameter_list|,
-name|HAL_GPIO_OUTPUT_MUX_TYPE
+name|HAL_GPIO_MUX_TYPE
 name|hal_signal_type
 parameter_list|)
 block|{
@@ -506,7 +500,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 argument_list|)
 expr_stmt|;
 if|if
@@ -537,6 +531,9 @@ block|}
 comment|/* Convert HAL signal type definitions to hardware-specific values. */
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|hal_signal_type
 operator|<
 name|ARRAY_LENGTH
@@ -681,8 +678,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|UMAC_SUPPORT_SMARTANTENNA
 name|ar9340_soc_gpio_cfg_output_mux
 argument_list|(
@@ -765,7 +762,7 @@ parameter_list|,
 name|u_int32_t
 name|gpio
 parameter_list|,
-name|HAL_GPIO_OUTPUT_MUX_TYPE
+name|HAL_GPIO_MUX_TYPE
 name|halSignalType
 parameter_list|)
 block|{
@@ -867,6 +864,9 @@ expr_stmt|;
 comment|/* Convert HAL signal type definitions to hardware-specific values. */
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|halSignalType
 operator|<
 name|ARRAY_LENGTH
@@ -1046,7 +1046,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 argument_list|)
 expr_stmt|;
 if|if
@@ -1165,7 +1165,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 argument_list|)
 expr_stmt|;
 if|if
@@ -1257,7 +1257,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 argument_list|)
 expr_stmt|;
 if|if
@@ -1524,7 +1524,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 argument_list|)
 expr_stmt|;
 if|if
@@ -1565,7 +1565,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 operator|)
 operator|-
 literal|1
@@ -1900,7 +1900,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_num_gpio_pins
+name|halNumGpioPins
 operator|)
 operator|-
 literal|1
@@ -2597,15 +2597,6 @@ end_endif
 
 begin_comment
 comment|/*AH_DEBUG*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
 end_comment
 
 end_unit

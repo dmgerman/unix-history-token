@@ -18,6 +18,83 @@ end_define
 begin_include
 include|#
 directive|include
+file|"ar9300_freebsd_inc.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|AH_BIG_ENDIAN
+value|4321
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_LITTLE_ENDIAN
+value|1234
+end_define
+
+begin_if
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|AH_BYTE_ORDER
+value|AH_BIG_ENDIAN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AH_BYTE_ORDER
+value|AH_LITTLE_ENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX doesn't belong here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_EEPROM_MODAL_SPURS
+value|5
+end_define
+
+begin_comment
+comment|/*  * (a) this should be N(a),  * (b) FreeBSD does define nitems,  * (c) it doesn't have an AH_ prefix, sigh.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARRAY_LENGTH
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof(a) / sizeof((a)[0]))
+end_define
+
+begin_include
+include|#
+directive|include
 file|"ah_internal.h"
 end_include
 
@@ -42,12 +119,6 @@ end_include
 begin_comment
 comment|/* For Eeprom definitions */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"asf_amem.h"
-end_include
 
 begin_define
 define|#
@@ -364,7 +435,8 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -379,12 +451,10 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
-name|chans
-parameter_list|,
-name|u_int32_t
-name|nchancs
+name|chan
 parameter_list|)
 function_decl|;
 block|}
@@ -450,9 +520,11 @@ begin_struct
 struct|struct
 name|ar9300_ani_state
 block|{
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 name|c
 decl_stmt|;
+comment|/* XXX ew? */
 name|HAL_BOOL
 name|must_restore
 decl_stmt|;
@@ -896,7 +968,8 @@ begin_struct
 struct|struct
 name|ar9300_radar_state
 block|{
-name|HAL_CHANNEL_INTERNAL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|rs_chan
 decl_stmt|;
@@ -1412,6 +1485,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ar9300NfLimits
+block|{
+name|int16_t
+name|max
+decl_stmt|;
+name|int16_t
+name|min
+decl_stmt|;
+name|int16_t
+name|nominal
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1428,7 +1518,7 @@ struct|struct
 name|ath_hal_9300
 block|{
 name|struct
-name|ath_hal_private_tables
+name|ath_hal_private
 name|ah_priv
 decl_stmt|;
 comment|/* base class */
@@ -2003,6 +2093,21 @@ decl_stmt|;
 name|hal_hw_hangs_t
 name|ah_hang_wars
 decl_stmt|;
+comment|/*      * Keytable type table      */
+define|#
+directive|define
+name|AR_KEYTABLE_SIZE
+value|128
+comment|/* XXX! */
+name|uint8_t
+name|ah_keytype
+index|[
+name|AR_KEYTABLE_SIZE
+index|]
+decl_stmt|;
+undef|#
+directive|undef
+name|AR_KEYTABLE_SIZE
 comment|/*      * Support for ar9300 multiple INIs      */
 name|struct
 name|ar9300_ini_array
@@ -2652,6 +2757,76 @@ directive|endif
 name|HAL_BOOL
 name|ah_reduced_self_gen_mask
 decl_stmt|;
+comment|/* Local additions for FreeBSD */
+comment|/*      * These fields are in the top level HAL in the atheros      * codebase; here we place them in the AR9300 HAL and      * access them via accessor methods if the driver requires them.      */
+name|u_int32_t
+name|ah_ob_db1
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int32_t
+name|ah_db2
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int32_t
+name|ah_bb_panic_timeout_ms
+decl_stmt|;
+name|u_int32_t
+name|ah_bb_panic_last_status
+decl_stmt|;
+name|u_int32_t
+name|ah_tx_trig_level
+decl_stmt|;
+name|u_int16_t
+name|ath_hal_spur_chans
+index|[
+name|AR_EEPROM_MODAL_SPURS
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int16_t
+name|nf_cw_int_delta
+decl_stmt|;
+comment|/* diff btwn nominal NF and CW interf threshold */
+name|int
+name|ah_phyrestart_disabled
+decl_stmt|;
+name|HAL_RSSI_TX_POWER
+name|green_tx_status
+decl_stmt|;
+name|int
+name|green_ap_ps_on
+decl_stmt|;
+name|int
+name|ah_enable_keysearch_always
+decl_stmt|;
+name|int
+name|ah_fccaifs
+decl_stmt|;
+name|int
+name|ah_reset_reason
+decl_stmt|;
+name|int
+name|ah_dcs_enable
+decl_stmt|;
+name|struct
+name|ar9300NfLimits
+name|nf_2GHz
+decl_stmt|;
+name|struct
+name|ar9300NfLimits
+name|nf_5GHz
+decl_stmt|;
+name|struct
+name|ar9300NfLimits
+modifier|*
+name|nfp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2688,24 +2863,11 @@ define|\
 value|(!(AH_PRIVATE(_ah)->ah_flags& AH_USE_EEPROM))
 end_define
 
-begin_define
-define|#
-directive|define
-name|IS_5GHZ_FAST_CLOCK_EN
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_c
-parameter_list|)
-define|\
-value|(IS_CHAN_5GHZ(_c)&& \         ((AH_PRIVATE(_ah))->ah_config.ath_hal_fastClockEnable))
-end_define
-
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notyet
-end_if
+end_ifdef
 
 begin_comment
 comment|// Need these additional conditions for IS_5GHZ_FAST_CLOCK_EN when we have valid eeprom contents.
@@ -2864,36 +3026,6 @@ end_endif
 begin_comment
 comment|/* AH_ASSERT */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ar9300_detach
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ar9300_get_desc_info
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_DESC_INFO
-modifier|*
-name|desc_info
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Green Tx, Based on different RSSI of Received Beacon thresholds,   * using different tx power by modified register tx power related values.  * The thresholds are decided by system team.  */
@@ -3743,9 +3875,6 @@ parameter_list|(
 name|u_int16_t
 name|devid
 parameter_list|,
-name|HAL_ADAPTER_HANDLE
-name|osdev
-parameter_list|,
 name|HAL_SOFTC
 name|sc
 parameter_list|,
@@ -3755,16 +3884,9 @@ parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
 parameter_list|,
-name|HAL_BUS_TYPE
-name|bustype
-parameter_list|,
-name|asf_amem_instance_handle
-name|amem_handle
-parameter_list|,
-name|struct
-name|hal_reg_parm
+name|uint16_t
 modifier|*
-name|hal_conf_parm
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -3783,9 +3905,6 @@ parameter_list|(
 name|u_int16_t
 name|devid
 parameter_list|,
-name|HAL_ADAPTER_HANDLE
-name|osdev
-parameter_list|,
 name|HAL_SOFTC
 name|sc
 parameter_list|,
@@ -3795,16 +3914,9 @@ parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
 parameter_list|,
-name|HAL_BUS_TYPE
-name|bustype
-parameter_list|,
-name|asf_amem_instance_handle
-name|amem_handle
-parameter_list|,
-name|struct
-name|hal_reg_parm
+name|uint16_t
 modifier|*
-name|hal_conf_parm
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*
@@ -4074,6 +4186,26 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ar9300_check_chan
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|HAL_BOOL
 name|ar9300_set_key_cache_entry_mac
 parameter_list|(
@@ -4219,22 +4351,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|u_int32_t
-name|ar9300_ant_ctrl_common_get
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|,
-name|HAL_BOOL
-name|is_2ghz
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|HAL_BOOL
 name|ar9300_set_regulatory_domain
 parameter_list|(
@@ -4290,7 +4406,7 @@ parameter_list|,
 name|u_int32_t
 name|gpio
 parameter_list|,
-name|HAL_GPIO_OUTPUT_MUX_TYPE
+name|HAL_GPIO_MUX_TYPE
 name|signalType
 parameter_list|)
 function_decl|;
@@ -4308,7 +4424,7 @@ parameter_list|,
 name|u_int32_t
 name|gpio
 parameter_list|,
-name|HAL_GPIO_OUTPUT_MUX_TYPE
+name|HAL_GPIO_MUX_TYPE
 name|signalType
 parameter_list|)
 function_decl|;
@@ -4599,18 +4715,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|u_int32_t
-name|ar9300_ppm_get_force_state
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|ar9300_set_dcs_mode
 parameter_list|(
@@ -4859,7 +4963,9 @@ parameter_list|,
 name|HAL_ANT_SETTING
 name|settings
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -5057,7 +5163,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int8_t
+name|uint32_t
 name|ar9300_get_11n_ext_busy
 parameter_list|(
 name|struct
@@ -5272,7 +5378,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|HAL_BOOL
+name|bool
 name|ar9300_wow_enable
 parameter_list|(
 name|struct
@@ -5658,7 +5764,8 @@ parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -5700,7 +5807,8 @@ parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -5742,7 +5850,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -5830,7 +5939,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5846,7 +5956,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -5880,7 +5991,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -6024,7 +6137,8 @@ name|int16_t
 modifier|*
 name|nf_buf
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -6119,7 +6233,9 @@ parameter_list|,
 name|u_int
 name|mode
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -6146,6 +6262,30 @@ parameter_list|,
 name|u_int8_t
 name|powerPerRate
 index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_STATUS
+name|ath_hal_get_rate_power_limit_from_eeprom
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int16_t
+name|freq
+parameter_list|,
+name|int8_t
+modifier|*
+name|max_rate_power
+parameter_list|,
+name|int8_t
+modifier|*
+name|min_rate_power
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6292,7 +6432,9 @@ specifier|const
 name|HAL_NODE_STATS
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 name|HAL_ANISTATS
@@ -6435,18 +6577,14 @@ parameter_list|,
 name|HAL_BOOL
 name|enable
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
 
 begin_comment
 comment|/* BB Panic Watchdog declarations */
@@ -6525,11 +6663,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|extern
 name|void
@@ -6550,12 +6683,6 @@ begin_comment
 comment|/* DFS declarations */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ATH_SUPPORT_DFS
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|void
@@ -6566,7 +6693,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -6583,7 +6711,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -6637,7 +6766,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -6744,14 +6874,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|extern
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|ar9300_get_extension_channel
 parameter_list|(
@@ -7092,7 +7218,8 @@ parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -7135,7 +7262,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -7156,7 +7285,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -7173,7 +7304,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -7637,6 +7770,19 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|HAL_BOOL
+name|ar9300_is_ani_noise_spur
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|ar9300_reset_hw_beacon_proc_crc
 parameter_list|(
@@ -7702,19 +7848,6 @@ name|ah
 parameter_list|,
 name|HAL_BOOL
 name|on
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|HAL_BOOL
-name|ar9300_is_ani_noise_spur
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7800,14 +7933,14 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|HAL_BOOL
 name|ar9300_get_mib_cycle_counts
 parameter_list|(
 name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_COUNTERS
+name|HAL_SURVEY_SAMPLE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7899,7 +8032,9 @@ name|ar9300_eeprom_t
 modifier|*
 name|p_eep_data
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -7927,7 +8062,8 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7961,7 +8097,9 @@ name|struct
 name|ath_hal
 modifier|*
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -8113,7 +8251,9 @@ name|ath_hal_9300
 modifier|*
 name|ahp
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -9135,7 +9275,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|c
 parameter_list|,

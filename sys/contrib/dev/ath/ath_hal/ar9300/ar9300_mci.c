@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -91,115 +85,8 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|DBG
-name|char
-name|s
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|p
-init|=
-name|s
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|p_data
-init|=
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|pl
-decl_stmt|;
-if|if
-condition|(
-name|send
-condition|)
-block|{
-name|p
-operator|+=
-name|snprintf
-argument_list|(
-name|s
-argument_list|,
-literal|60
-argument_list|,
-literal|"(MCI)>>>>> Hdr: %02X, Len: %d, Payload:"
-argument_list|,
-name|hdr
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|p
-operator|+=
-name|snprintf
-argument_list|(
-name|s
-argument_list|,
-literal|60
-argument_list|,
-literal|"(MCI)<<<<< Hdr: %02X, Len: %d, Payload:"
-argument_list|,
-name|hdr
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-block|}
-for|for
-control|(
-name|i
-operator|=
 literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|p
-operator|+=
-name|snprintf
-argument_list|(
-name|p
-argument_list|,
-literal|60
-argument_list|,
-literal|" %02x"
-argument_list|,
-operator|*
-operator|(
-name|p_data
-operator|+
-name|i
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_BT_COEX
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
+block|char s[128];     char *p = s;     int i;     u_int8_t *p_data = (u_int8_t *) pl;          if (send) {         p += snprintf(s, 60,                       "(MCI)>>>>> Hdr: %02X, Len: %d, Payload:", hdr, len);     }     else {         p += snprintf(s, 60,                       "(MCI)<<<<< Hdr: %02X, Len: %d, Payload:", hdr, len);     }     for ( i=0; i<len; i++)     {         p += snprintf(p, 60, " %02x", *(p_data + i));     }     HALDEBUG(ah, HAL_DEBUG_BT_COEX, "%s\n", s);
 comment|/*     for ( i=0; i<(len + 3)/4; i++)     {         HALDEBUG(ah, HAL_DEBUG_BT_COEX, "(MCI)   0x%08x\n", *(pl + i));     } */
 endif|#
 directive|endif
@@ -220,16 +107,7 @@ name|HAL_BOOL
 name|enable
 parameter_list|)
 block|{
-name|struct
-name|ath_hal_9300
-modifier|*
-name|ahp
-init|=
-name|AH9300
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//    struct ath_hal_9300 *ahp = AH9300(ah);
 name|u_int32_t
 name|thresh
 decl_stmt|;
@@ -264,10 +142,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -281,10 +156,7 @@ name|thresh
 operator|=
 name|MS
 argument_list|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -493,9 +365,8 @@ parameter_list|)
 block|{
 name|int
 name|data
-decl_stmt|,
-name|loop
 decl_stmt|;
+comment|//, loop;
 while|while
 condition|(
 name|time_out
@@ -1526,16 +1397,7 @@ name|u_int32_t
 name|bt_flags
 parameter_list|)
 block|{
-name|struct
-name|ath_hal_9300
-modifier|*
-name|ahp
-init|=
-name|AH9300
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//    struct ath_hal_9300 *ahp = AH9300(ah);
 name|u_int32_t
 name|pld
 index|[
@@ -2080,10 +1942,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -2356,10 +2215,7 @@ comment|/*      * Set up the observation bus in order to monitor MCI bus      * 
 comment|/*     OS_REG_WRITE(ah, AR_GPIO_INTR_POL, 0x00420000);     OS_REG_WRITE(ah, AR_GPIO_OE_OUT, 0x000000ff); // 4050     OS_REG_WRITE(ah, AR_GPIO_OUTPUT_MUX1, 0x000bdab4); // 4068     OS_REG_WRITE(ah, AR_OBS, 0x0000004b); // 4088     OS_REG_WRITE(ah, AR_DIAG_SW, 0x080c0000);     OS_REG_WRITE(ah, AR_MACMISC, 0x0001a000);     OS_REG_WRITE(ah, AR_PHY_TEST, 0x00080000); // a360     OS_REG_WRITE(ah, AR_PHY_TEST_CTL_STATUS, 0xe0000000); // a364     */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -2408,10 +2264,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -2469,10 +2322,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -4143,16 +3993,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ahpriv
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//    struct ath_hal_private *ahpriv = AH_PRIVATE(ah);
 name|u_int32_t
 name|regval
 decl_stmt|;
@@ -4366,10 +4207,7 @@ operator|)
 operator|&&
 operator|!
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -4455,7 +4293,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4475,7 +4313,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4541,7 +4379,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -4660,10 +4498,7 @@ name|regval
 operator|=
 name|MS
 argument_list|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -6034,7 +5869,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 operator|&&
 name|ahp
 operator|->
@@ -6937,10 +6772,7 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -7294,9 +7126,9 @@ operator|!=
 literal|0
 operator|)
 condition|?
-name|true
+name|AH_TRUE
 else|:
-name|false
+name|AH_FALSE
 expr_stmt|;
 block|}
 break|break;
@@ -7464,10 +7296,7 @@ case|:
 name|value
 operator|=
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -7487,10 +7316,7 @@ case|:
 name|value
 operator|=
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -7511,10 +7337,7 @@ name|value
 operator|=
 operator|(
 operator|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -7604,16 +7427,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ahpriv
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//    struct ath_hal_private *ahpriv = AH_PRIVATE(ah);
 name|u_int32_t
 name|tx_priority
 init|=
@@ -7790,10 +7604,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -7973,10 +7784,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -8126,10 +7934,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -8422,15 +8227,6 @@ end_endif
 
 begin_comment
 comment|/* ATH_SUPPORT_MCI */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
 end_comment
 
 end_unit

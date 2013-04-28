@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -241,7 +235,10 @@ argument_list|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_rssi_ctl0
+name|rs_rssi_ctl
+index|[
+literal|0
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -254,7 +251,10 @@ argument_list|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_rssi_ctl1
+name|rs_rssi_ctl
+index|[
+literal|1
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -267,7 +267,10 @@ argument_list|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_rssi_ctl2
+name|rs_rssi_ctl
+index|[
+literal|2
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -280,7 +283,10 @@ argument_list|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_rssi_ext0
+name|rs_rssi_ext
+index|[
+literal|0
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -293,7 +299,10 @@ argument_list|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_rssi_ext1
+name|rs_rssi_ext
+index|[
+literal|1
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -306,7 +315,10 @@ argument_list|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_rssi_ext2
+name|rs_rssi_ext
+index|[
+literal|2
+index|]
 operator|=
 name|MS
 argument_list|(
@@ -430,7 +442,7 @@ operator|)
 expr_stmt|;
 name|rxs
 operator|->
-name|rs_isapsd
+name|rs_flags
 operator|=
 operator|(
 name|rxsp
@@ -440,14 +452,14 @@ operator|&
 name|AR_apsd_trig
 operator|)
 condition|?
-literal|1
+name|HAL_RX_IS_APSD
 else|:
 literal|0
 expr_stmt|;
 name|rxs
 operator|->
 name|rs_flags
-operator|=
+operator||=
 operator|(
 name|rxsp
 operator|->
@@ -479,7 +491,7 @@ expr_stmt|;
 comment|/* Copy EVM information */
 name|rxs
 operator|->
-name|evm0
+name|rs_evm0
 operator|=
 name|rxsp
 operator|->
@@ -487,7 +499,7 @@ name|status6
 expr_stmt|;
 name|rxs
 operator|->
-name|evm1
+name|rs_evm1
 operator|=
 name|rxsp
 operator|->
@@ -495,7 +507,7 @@ name|status7
 expr_stmt|;
 name|rxs
 operator|->
-name|evm2
+name|rs_evm2
 operator|=
 name|rxsp
 operator|->
@@ -503,7 +515,7 @@ name|status8
 expr_stmt|;
 name|rxs
 operator|->
-name|evm3
+name|rs_evm3
 operator|=
 name|rxsp
 operator|->
@@ -511,7 +523,7 @@ name|status9
 expr_stmt|;
 name|rxs
 operator|->
-name|evm4
+name|rs_evm4
 operator|=
 operator|(
 name|rxsp
@@ -859,11 +871,6 @@ name|HAL_ENOTSUPP
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

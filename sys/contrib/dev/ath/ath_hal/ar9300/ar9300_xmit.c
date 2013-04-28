@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -57,6 +51,26 @@ directive|include
 file|"ar9300/ar9300desc.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|TU_TO_USEC
+parameter_list|(
+name|_tu
+parameter_list|)
+value|((_tu)<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ONE_EIGHTH_TU_TO_USEC
+parameter_list|(
+name|_tu8
+parameter_list|)
+value|((_tu8)<< 7)
+end_define
+
 begin_comment
 comment|/*  * Update Tx FIFO trigger level.  *  * Set b_inc_trig_level to TRUE to increase the trigger level.  * Set b_inc_trig_level to FALSE to decrease the trigger level.  *  * Returns TRUE if the trigger level was updated  */
 end_comment
@@ -96,7 +110,7 @@ name|omask
 decl_stmt|;
 if|if
 condition|(
-name|AH_PRIVATE
+name|AH9300
 argument_list|(
 name|ah
 argument_list|)
@@ -221,7 +235,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AH_PRIVATE
+name|AH9300
 argument_list|(
 name|ah
 argument_list|)
@@ -256,7 +270,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|AH_PRIVATE
+name|AH9300
 argument_list|(
 name|ah
 argument_list|)
@@ -317,7 +331,7 @@ name|q
 operator|>=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 condition|)
 block|{
 name|HALDEBUG
@@ -338,7 +352,7 @@ name|AH_FALSE
 return|;
 block|}
 return|return
-name|ath_hal_set_tx_q_props
+name|ath_hal_setTxQProps
 argument_list|(
 name|ah
 argument_list|,
@@ -405,7 +419,7 @@ name|q
 operator|>=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 condition|)
 block|{
 name|HALDEBUG
@@ -426,7 +440,7 @@ name|AH_FALSE
 return|;
 block|}
 return|return
-name|ath_hal_get_tx_q_props
+name|ath_hal_getTxQProps
 argument_list|(
 name|ah
 argument_list|,
@@ -531,7 +545,7 @@ name|q
 operator|=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|-
 name|AH_TX_QUEUE_MINUS_OFFSET_BEACON
 expr_stmt|;
@@ -544,7 +558,7 @@ name|q
 operator|=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|-
 name|AH_TX_QUEUE_MINUS_OFFSET_CAB
 expr_stmt|;
@@ -556,7 +570,7 @@ name|q
 operator|=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|-
 name|AH_TX_QUEUE_MINUS_OFFSET_UAPSD
 expr_stmt|;
@@ -568,7 +582,7 @@ name|q
 operator|=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|-
 name|AH_TX_QUEUE_MINUS_OFFSET_PAPRD
 expr_stmt|;
@@ -587,7 +601,7 @@ name|q
 operator|<
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|-
 name|AH_TX_QUEUE_MINUS_OFFSET_PAPRD
 condition|;
@@ -618,7 +632,7 @@ name|q
 operator|==
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 operator|-
 literal|3
 condition|)
@@ -737,13 +751,13 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|=
-name|TXQ_FLAG_TXOKINT_ENABLE
+name|HAL_TXQ_TXOKINT_ENABLE
 operator||
-name|TXQ_FLAG_TXERRINT_ENABLE
+name|HAL_TXQ_TXERRINT_ENABLE
 operator||
-name|TXQ_FLAG_TXDESCINT_ENABLE
+name|HAL_TXQ_TXDESCINT_ENABLE
 operator||
-name|TXQ_FLAG_TXURNINT_ENABLE
+name|HAL_TXQ_TXURNINT_ENABLE
 expr_stmt|;
 name|qi
 operator|->
@@ -778,7 +792,7 @@ name|INIT_LG_RETRY
 expr_stmt|;
 name|qi
 operator|->
-name|tqi_phys_comp_buf
+name|tqi_physCompBuf
 operator|=
 literal|0
 expr_stmt|;
@@ -787,11 +801,11 @@ else|else
 block|{
 name|qi
 operator|->
-name|tqi_phys_comp_buf
+name|tqi_physCompBuf
 operator|=
 name|q_info
 operator|->
-name|tqi_comp_buf
+name|tqi_compBuf
 expr_stmt|;
 operator|(
 name|void
@@ -986,7 +1000,7 @@ name|q
 operator|>=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 condition|)
 block|{
 name|HALDEBUG
@@ -1145,16 +1159,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ap
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//    struct ath_hal_private  *ap   = AH_PRIVATE(ah);
 name|HAL_CAPABILITIES
 modifier|*
 name|p_cap
@@ -1167,7 +1172,9 @@ argument_list|)
 operator|->
 name|ah_caps
 decl_stmt|;
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -1195,7 +1202,7 @@ name|q
 operator|>=
 name|p_cap
 operator|->
-name|hal_total_queues
+name|halTotalQueues
 condition|)
 block|{
 name|HALDEBUG
@@ -1279,7 +1286,7 @@ if|if
 condition|(
 name|chan
 operator|&&
-name|IS_CHAN_B
+name|IEEE80211_IS_CHAN_B
 argument_list|(
 name|chan
 argument_list|)
@@ -1338,7 +1345,10 @@ literal|3
 operator|||
 operator|(
 operator|!
+name|AH9300
+argument_list|(
 name|ah
+argument_list|)
 operator|->
 name|ah_fccaifs
 operator|)
@@ -1492,7 +1502,7 @@ if|if
 condition|(
 name|qi
 operator|->
-name|tqi_cbr_period
+name|tqi_cbrPeriod
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -1508,7 +1518,7 @@ name|SM
 argument_list|(
 name|qi
 operator|->
-name|tqi_cbr_period
+name|tqi_cbrPeriod
 argument_list|,
 name|AR_Q_CBRCFG_INTERVAL
 argument_list|)
@@ -1517,7 +1527,7 @@ name|SM
 argument_list|(
 name|qi
 operator|->
-name|tqi_cbr_overflow_limit
+name|tqi_cbrOverflowLimit
 argument_list|,
 name|AR_Q_CBRCFG_OVF_THRESH
 argument_list|)
@@ -1547,7 +1557,7 @@ operator||
 operator|(
 name|qi
 operator|->
-name|tqi_cbr_overflow_limit
+name|tqi_cbrOverflowLimit
 condition|?
 name|AR_Q_MISC_CBR_EXP_CNTR_LIMIT_EN
 else|:
@@ -1560,7 +1570,7 @@ if|if
 condition|(
 name|qi
 operator|->
-name|tqi_ready_time
+name|tqi_readyTime
 operator|&&
 operator|(
 name|qi
@@ -1584,7 +1594,7 @@ name|SM
 argument_list|(
 name|qi
 operator|->
-name|tqi_ready_time
+name|tqi_readyTime
 argument_list|,
 name|AR_Q_RDYTIMECFG_DURATION
 argument_list|)
@@ -1606,7 +1616,7 @@ name|SM
 argument_list|(
 name|qi
 operator|->
-name|tqi_burst_time
+name|tqi_burstTime
 argument_list|,
 name|AR_D_CHNTIME_DUR
 argument_list|)
@@ -1614,7 +1624,7 @@ operator||
 operator|(
 name|qi
 operator|->
-name|tqi_burst_time
+name|tqi_burstTime
 condition|?
 name|AR_D_CHNTIME_EN
 else|:
@@ -1626,14 +1636,14 @@ if|if
 condition|(
 name|qi
 operator|->
-name|tqi_burst_time
+name|tqi_burstTime
 operator|&&
 operator|(
 name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_RDYTIME_EXP_POLICY_ENABLE
+name|HAL_TXQ_RDYTIME_EXP_POLICY_ENABLE
 operator|)
 condition|)
 block|{
@@ -1666,7 +1676,7 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_BACKOFF_DISABLE
+name|HAL_TXQ_BACKOFF_DISABLE
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -1698,7 +1708,7 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_FRAG_BURST_BACKOFF_ENABLE
+name|HAL_TXQ_FRAG_BURST_BACKOFF_ENABLE
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -1876,28 +1886,28 @@ name|TU_TO_USEC
 argument_list|(
 name|qi
 operator|->
-name|tqi_ready_time
+name|tqi_readyTime
 argument_list|)
 operator|-
 operator|(
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_sw_beacon_response_time
+name|ah_sw_beacon_response_time
 operator|-
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_dma_beacon_response_time
+name|ah_dma_beacon_response_time
 operator|)
 operator|-
-name|ap
+name|ah
 operator|->
 name|ah_config
 operator|.
-name|ath_hal_additional_swba_backoff
+name|ah_additional_swba_backoff
 expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
@@ -2005,7 +2015,7 @@ if|if
 condition|(
 name|qi
 operator|->
-name|tqi_int_flags
+name|tqi_intFlags
 operator|&
 name|HAL_TXQ_USE_LOCKOUT_BKOFF_DIS
 condition|)
@@ -2058,7 +2068,7 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_TXOKINT_ENABLE
+name|HAL_TXQ_TXOKINT_ENABLE
 condition|)
 block|{
 name|ahp
@@ -2092,7 +2102,7 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_TXERRINT_ENABLE
+name|HAL_TXQ_TXERRINT_ENABLE
 condition|)
 block|{
 name|ahp
@@ -2126,7 +2136,7 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_TXEOLINT_ENABLE
+name|HAL_TXQ_TXEOLINT_ENABLE
 condition|)
 block|{
 name|ahp
@@ -2160,7 +2170,7 @@ name|qi
 operator|->
 name|tqi_qflags
 operator|&
-name|TXQ_FLAG_TXURNINT_ENABLE
+name|HAL_TXQ_TXURNINT_ENABLE
 condition|)
 block|{
 name|ahp
@@ -2229,7 +2239,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_total_queues
+name|halTotalQueues
 argument_list|)
 expr_stmt|;
 return|return
@@ -2277,7 +2287,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_total_queues
+name|halTotalQueues
 argument_list|)
 expr_stmt|;
 name|HALASSERT
@@ -2376,7 +2386,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_total_queues
+name|halTotalQueues
 argument_list|)
 expr_stmt|;
 name|npend
@@ -3563,15 +3573,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

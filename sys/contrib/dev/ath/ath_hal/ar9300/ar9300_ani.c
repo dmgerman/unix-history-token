@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,11 +27,9 @@ directive|include
 file|"ah_desc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ah_pktlog.h"
-end_include
+begin_comment
+comment|//#include "ah_pktlog.h"
+end_comment
 
 begin_include
 include|#
@@ -90,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|HAL_ANI_DEBUG
-value|0
+value|1
 end_define
 
 begin_comment
@@ -149,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|HAL_ANI_USE_OFDM_WEAK_SIG
-value|true
+value|AH_TRUE
 end_define
 
 begin_define
@@ -877,7 +869,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -914,6 +908,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* XXX this doesn't distinguish between 20/40 channels */
 if|if
 condition|(
 name|ahp
@@ -925,11 +920,11 @@ index|]
 operator|.
 name|c
 operator|.
-name|channel
+name|ic_freq
 operator|==
 name|chan
 operator|->
-name|channel
+name|ic_freq
 condition|)
 block|{
 return|return
@@ -947,7 +942,7 @@ index|]
 operator|.
 name|c
 operator|.
-name|channel
+name|ic_freq
 operator|==
 literal|0
 condition|)
@@ -961,11 +956,11 @@ index|]
 operator|.
 name|c
 operator|.
-name|channel
+name|ic_freq
 operator|=
 name|chan
 operator|->
-name|channel
+name|ic_freq
 expr_stmt|;
 name|ahp
 operator|->
@@ -976,11 +971,11 @@ index|]
 operator|.
 name|c
 operator|.
-name|channel_flags
+name|ic_flags
 operator|=
 name|chan
 operator|->
-name|channel_flags
+name|ic_flags
 expr_stmt|;
 return|return
 name|i
@@ -1367,10 +1362,7 @@ name|HAL_ANI_PERIOD
 expr_stmt|;
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -1470,7 +1462,9 @@ name|ar9300_ani_state
 modifier|*
 name|ani_state
 decl_stmt|;
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -1552,11 +1546,11 @@ name|ah_opmode
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|chan
 operator|->
-name|channel_flags
+name|ic_flags
 argument_list|,
 name|macmode
 argument_list|)
@@ -2276,7 +2270,9 @@ name|ahp
 operator|->
 name|ah_curani
 decl_stmt|;
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -2655,7 +2651,7 @@ name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 operator|!
 name|ani_state
@@ -2873,7 +2869,7 @@ name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|ani_state
 operator|->
@@ -2905,7 +2901,7 @@ name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|ani_state
 operator|->
@@ -3136,7 +3132,7 @@ name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|ani_state
 operator|->
@@ -3168,7 +3164,7 @@ name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|ani_state
 operator|->
@@ -3296,7 +3292,7 @@ name|__func__
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 operator|!
 name|ani_state
@@ -4056,7 +4052,9 @@ name|ar9300_ani_state
 modifier|*
 name|ani_state
 decl_stmt|;
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -4066,6 +4064,17 @@ name|ah
 argument_list|)
 operator|->
 name|ah_curchan
+decl_stmt|;
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ichan
+init|=
+name|ath_hal_checkchannel
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
 decl_stmt|;
 name|int
 name|index
@@ -4151,7 +4160,7 @@ if|if
 condition|(
 name|IS_CHAN_2GHZ
 argument_list|(
-name|chan
+name|ichan
 argument_list|)
 condition|)
 block|{
@@ -4246,11 +4255,11 @@ name|ah_opmode
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|chan
 operator|->
-name|channel_flags
+name|ic_flags
 argument_list|,
 name|is_scanning
 argument_list|,
@@ -4374,11 +4383,11 @@ name|ah_opmode
 argument_list|,
 name|chan
 operator|->
-name|channel
+name|ic_freq
 argument_list|,
 name|chan
 operator|->
-name|channel_flags
+name|ic_flags
 argument_list|,
 name|is_scanning
 argument_list|,
@@ -4747,6 +4756,10 @@ begin_comment
 comment|/* convert HW counter values to ms using mode specifix clock rate */
 end_comment
 
+begin_comment
+comment|//#define CLOCK_RATE(_ah)  (ath_hal_chan_2_clock_rate_mhz(_ah) * 1000)
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4754,7 +4767,7 @@ name|CLOCK_RATE
 parameter_list|(
 name|_ah
 parameter_list|)
-value|(ath_hal_chan_2_clock_rate_mhz(_ah) * 1000)
+value|(ath_hal_mac_clks(ah, 1000))
 end_define
 
 begin_comment
@@ -4999,7 +5012,9 @@ name|HAL_NODE_STATS
 modifier|*
 name|stats
 parameter_list|,
-name|HAL_CHANNEL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -5672,15 +5687,6 @@ name|phy_noise_spur
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

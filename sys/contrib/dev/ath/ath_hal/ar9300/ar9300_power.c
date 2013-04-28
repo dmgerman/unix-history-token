@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -3000,7 +2994,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_auto_sleep_support
+name|halAutoSleepSupport
 condition|)
 block|{
 comment|/* Set wake_on_interrupt bit; clear force_wake bit */
@@ -3159,9 +3153,15 @@ argument_list|)
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|AH_DEBUG
+argument_list|)
 operator|||
+name|defined
+argument_list|(
 name|AH_PRINT_FILTER
+argument_list|)
 specifier|static
 specifier|const
 name|char
@@ -3245,7 +3245,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -3276,7 +3276,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 if|if
@@ -3361,7 +3361,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -3405,7 +3405,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -4962,7 +4962,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -5096,7 +5096,7 @@ name|u_int32_t
 name|wa_reg_val
 decl_stmt|;
 comment|/*          * We need to untie the internal POR (power-on-reset) to the external          * PCI-E reset. We also need to tie the PCI-E Phy reset to the PCI-E          * reset.          */
-name|HALDEBUG
+name|HAL_DEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -6360,7 +6360,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -6473,7 +6473,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_mci_support
+name|halMciSupport
 condition|)
 block|{
 name|OS_REG_WRITE
@@ -7045,15 +7045,6 @@ end_endif
 
 begin_comment
 comment|/* ATH_WOW */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
 end_comment
 
 end_unit

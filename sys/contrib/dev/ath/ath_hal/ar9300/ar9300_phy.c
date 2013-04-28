@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -1207,7 +1201,7 @@ block|,
 comment|/* Hardware workaround - remove rates 6, 9 from rate ctrl */
 comment|/*   6 Mb */
 block|{
-name|AH_FALSE
+name|AH_TRUE
 block|,
 name|OFDM
 block|,
@@ -1224,7 +1218,7 @@ block|}
 block|,
 comment|/*   9 Mb */
 block|{
-name|AH_FALSE
+name|AH_TRUE
 block|,
 name|OFDM
 block|,
@@ -1345,325 +1339,95 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|HAL_RATE_TABLE
-name|ar9300_xr_table
-init|=
-block|{
-literal|13
-block|,
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|HAL_RATE_TABLE ar9300_xr_table = {     13,
 comment|/* number of rates */
-block|{
-literal|0
-block|}
-block|,
-block|{
+end_comment
+
+begin_comment
+unit|{ 0 },     {
 comment|/*                                                 short     ctrl */
+end_comment
+
+begin_comment
 comment|/*            valid          rate_code Preamble    dot11Rate Rate */
+end_comment
+
+begin_comment
 comment|/* 0.25 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|XR
-block|,
-literal|250
-block|,
-literal|0x03
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|1
-operator|)
-block|,
-literal|0
-block|,
-literal|612
-block|,
-literal|612
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE,   XR,   250, 0x03,   0x00, (0x80 |  1),   0, 612, 612 },
 comment|/*  0.5 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|XR
-block|,
-literal|500
-block|,
-literal|0x07
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|1
-operator|)
-block|,
-literal|0
-block|,
-literal|457
-block|,
-literal|457
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE,   XR,   500, 0x07,   0x00, (0x80 |  1),   0, 457, 457 },
 comment|/*    1 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|XR
-block|,
-literal|1000
-block|,
-literal|0x02
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|2
-operator|)
-block|,
-literal|1
-block|,
-literal|228
-block|,
-literal|228
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE,   XR,  1000, 0x02,   0x00, (0x80 |  2),   1, 228, 228 },
 comment|/*    2 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|XR
-block|,
-literal|2000
-block|,
-literal|0x06
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|4
-operator|)
-block|,
-literal|2
-block|,
-literal|160
-block|,
-literal|160
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE,   XR,  2000, 0x06,   0x00, (0x80 |  4),   2, 160, 160 },
 comment|/*    3 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|XR
-block|,
-literal|3000
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|6
-operator|)
-block|,
-literal|3
-block|,
-literal|140
-block|,
-literal|140
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE,   XR,  3000, 0x01,   0x00, (0x80 |  6),   3, 140, 140 },
 comment|/*    6 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|6000
-block|,
-literal|0x0b
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|12
-operator|)
-block|,
-literal|4
-block|,
-literal|60
-block|,
-literal|60
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM,  6000, 0x0b,   0x00, (0x80 | 12),   4, 60,  60  },
 comment|/*    9 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|9000
-block|,
-literal|0x0f
-block|,
-literal|0x00
-block|,
-literal|18
-block|,
-literal|4
-block|,
-literal|60
-block|,
-literal|60
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM,  9000, 0x0f,   0x00,          18,   4, 60,  60  },
 comment|/*   12 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|12000
-block|,
-literal|0x0a
-block|,
-literal|0x00
-block|,
-operator|(
-literal|0x80
-operator||
-literal|24
-operator|)
-block|,
-literal|6
-block|,
-literal|48
-block|,
-literal|48
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM, 12000, 0x0a,   0x00, (0x80 | 24),   6, 48,  48  },
 comment|/*   18 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|18000
-block|,
-literal|0x0e
-block|,
-literal|0x00
-block|,
-literal|36
-block|,
-literal|6
-block|,
-literal|48
-block|,
-literal|48
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM, 18000, 0x0e,   0x00,          36,   6, 48,  48  },
 comment|/*   24 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|24000
-block|,
-literal|0x09
-block|,
-literal|0x00
-block|,
-literal|48
-block|,
-literal|8
-block|,
-literal|44
-block|,
-literal|44
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM, 24000, 0x09,   0x00,          48,   8, 44,  44  },
 comment|/*   36 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|36000
-block|,
-literal|0x0d
-block|,
-literal|0x00
-block|,
-literal|72
-block|,
-literal|8
-block|,
-literal|44
-block|,
-literal|44
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM, 36000, 0x0d,   0x00,          72,   8, 44,  44  },
 comment|/*   48 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|48000
-block|,
-literal|0x08
-block|,
-literal|0x00
-block|,
-literal|96
-block|,
-literal|8
-block|,
-literal|44
-block|,
-literal|44
-block|}
-block|,
+end_comment
+
+begin_comment
+unit|{AH_TRUE, OFDM, 48000, 0x08,   0x00,          96,   8, 44,  44  },
 comment|/*   54 Mb */
-block|{
-name|AH_TRUE
-block|,
-name|OFDM
-block|,
-literal|54000
-block|,
-literal|0x0c
-block|,
-literal|0x00
-block|,
-literal|108
-block|,
-literal|8
-block|,
-literal|44
-block|,
-literal|44
-block|}
-block|,     }
-block|, }
-decl_stmt|;
-end_decl_stmt
+end_comment
+
+begin_endif
+unit|{AH_TRUE, OFDM, 54000, 0x0c,   0x00,         108,   8, 44,  44  },     }, };
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3046,7 +2810,7 @@ if|if
 condition|(
 name|p_cap
 operator|->
-name|hal_chan_half_rate
+name|halChanHalfRate
 condition|)
 block|{
 name|rt
@@ -3066,7 +2830,7 @@ if|if
 condition|(
 name|p_cap
 operator|->
-name|hal_chan_quarter_rate
+name|halChanQuarterRate
 condition|)
 block|{
 name|rt
@@ -3109,15 +2873,12 @@ operator|&
 name|ar9300_turbo_table
 expr_stmt|;
 break|break;
-case|case
-name|HAL_MODE_XR
-case|:
-name|rt
-operator|=
-operator|&
-name|ar9300_xr_table
-expr_stmt|;
-break|break;
+if|#
+directive|if
+literal|0
+block|case HAL_MODE_XR:         rt =&ar9300_xr_table;         break;
+endif|#
+directive|endif
 case|case
 name|HAL_MODE_11NG_HT20
 case|:
@@ -3799,7 +3560,9 @@ parameter_list|,
 name|u_int
 name|mode
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3819,7 +3582,7 @@ decl_stmt|;
 name|HAL_BOOL
 name|is40
 init|=
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -3925,9 +3688,12 @@ if|if
 condition|(
 name|is_reg_dmn_fcc
 argument_list|(
+name|ath_hal_getctl
+argument_list|(
+name|ah
+argument_list|,
 name|chan
-operator|->
-name|conformance_test_limit
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -4067,9 +3833,12 @@ if|if
 condition|(
 name|is_reg_dmn_fcc
 argument_list|(
+name|ath_hal_getctl
+argument_list|(
+name|ah
+argument_list|,
 name|chan
-operator|->
-name|conformance_test_limit
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -6342,7 +6111,9 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -6377,10 +6148,7 @@ comment|/* Check whether TPC is enabled */
 if|if
 condition|(
 operator|!
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -6491,7 +6259,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 argument_list|,
 name|rt
 operator|->
@@ -6606,7 +6374,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 operator|<
 name|AR9300_MCS0_RATE_CODE
 operator|)
@@ -6619,7 +6387,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 operator|>
 name|AR9300_MCS23_RATE_CODE
 operator|)
@@ -6635,7 +6403,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 argument_list|)
 operator|==
 name|AH_TRUE
@@ -6659,7 +6427,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 argument_list|,
 name|rt
 operator|->
@@ -6787,7 +6555,9 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 init|=
@@ -6831,10 +6601,7 @@ comment|/* Check whether TPC is enabled */
 if|if
 condition|(
 operator|!
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -6854,6 +6621,11 @@ return|;
 block|}
 name|rt
 operator|=
+operator|(
+specifier|const
+name|HAL_RATE_TABLE
+operator|*
+operator|)
 name|ar9300_get_rate_table
 argument_list|(
 name|ah
@@ -6876,8 +6648,6 @@ operator|*
 operator|)
 name|ath_hal_malloc
 argument_list|(
-name|ah
-argument_list|,
 literal|1
 operator|+
 name|rt
@@ -6996,7 +6766,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 expr_stmt|;
 name|table
 index|[
@@ -7036,7 +6806,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 operator|<=
 literal|0x87
 condition|?
@@ -7062,7 +6832,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 operator|<=
 literal|0x8f
 condition|?
@@ -7196,7 +6966,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 operator|<
 name|AR9300_MCS0_RATE_CODE
 operator|)
@@ -7209,7 +6979,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 operator|>
 name|AR9300_MCS23_RATE_CODE
 operator|)
@@ -7225,7 +6995,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rate_code
+name|rateCode
 argument_list|)
 operator|==
 name|AH_TRUE
@@ -7295,10 +7065,7 @@ block|{
 comment|/*      * Used for AR9300 series chip only      */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_magic
 operator|==
@@ -7403,15 +7170,6 @@ name|HAL_OK
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

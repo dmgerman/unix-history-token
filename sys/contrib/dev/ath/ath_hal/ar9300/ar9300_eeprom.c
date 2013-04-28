@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -181,7 +175,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|u_int16_t
+name|int
 name|spur_chan
 parameter_list|,
 name|HAL_BOOL
@@ -871,8 +865,6 @@ operator||
 name|AR_EEPROM_STATUS_DATA_PROT_ACCESS
 argument_list|,
 literal|0
-argument_list|,
-name|AH_WAIT_TIMEOUT
 argument_list|)
 condition|)
 block|{
@@ -1145,16 +1137,20 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-name|struct
-name|ath_hal_9300
-modifier|*
-name|ahp
-init|=
-name|AH9300
+comment|/* XXX disable flash remapping for now (ie, SoC support) */
+name|ath_hal_printf
 argument_list|(
 name|ah
+argument_list|,
+literal|"%s: unimplemented for now\n"
+argument_list|,
+name|__func__
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|struct ath_hal_9300 *ahp = AH9300(ah);
 if|#
 directive|if
 name|defined
@@ -1166,71 +1162,15 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-name|ahp
-operator|->
-name|ah_cal_mem
-operator|=
-name|OS_REMAP
-argument_list|(
-name|ah
-argument_list|,
-name|AR9300_EEPROM_START_ADDR
-argument_list|,
-name|AR9300_EEPROM_MAX
-argument_list|)
-expr_stmt|;
+block|ahp->ah_cal_mem = OS_REMAP(ah, AR9300_EEPROM_START_ADDR, AR9300_EEPROM_MAX);
 else|#
 directive|else
-name|ahp
-operator|->
-name|ah_cal_mem
-operator|=
-name|OS_REMAP
-argument_list|(
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_st
-argument_list|)
-argument_list|,
-operator|(
-name|AR9300_EEPROM_MAX
-operator|+
-name|AR9300_FLASH_CAL_START_OFFSET
-operator|)
-argument_list|)
-expr_stmt|;
+block|ahp->ah_cal_mem = OS_REMAP((uintptr_t)(AH_PRIVATE(ah)->ah_st),         (AR9300_EEPROM_MAX + AR9300_FLASH_CAL_START_OFFSET));
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|ahp
-operator|->
-name|ah_cal_mem
-condition|)
-block|{
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_EEPROM
-argument_list|,
-literal|"%s: cannot remap eeprom region \n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-name|HAL_EIO
-return|;
-block|}
+block|if (!ahp->ah_cal_mem) {         HALDEBUG(ah, HAL_DEBUG_EEPROM,             "%s: cannot remap eeprom region \n", __func__);         return HAL_EIO;     }
+endif|#
+directive|endif
 return|return
 name|HAL_OK
 return|;
@@ -1333,17 +1273,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNUSED
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|HAL_STATUS
 name|ar9300_eeprom_attach
@@ -1437,7 +1366,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_eeprom_get_spur_chan
+name|ah_getSpurChan
 operator|=
 name|ar9300_eeprom_get_spur_chan
 expr_stmt|;
@@ -1687,8 +1616,8 @@ condition|(
 name|param
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NOTYET
 case|case
 name|EEP_NFTHRESH_5
@@ -1828,8 +1757,8 @@ name|p_base
 operator|->
 name|rf_silent
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NOTYET
 case|case
 name|EEP_OB_5
@@ -1911,8 +1840,8 @@ name|txrx_mask
 operator|&
 literal|0xf
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NOTYET
 case|case
 name|EEP_FSTCLK_5G
@@ -3679,7 +3608,9 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -3694,7 +3625,7 @@ decl_stmt|;
 comment|/* Set the target power values for self generated frames (ACK,RTS/CTS) to      * be within limits. This is just a safety measure.With per packet TPC mode      * enabled the target power value used with self generated frames will be      * MIN( TPC reg, BB_powertx_rate register)      */
 if|if
 condition|(
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -6825,7 +6756,7 @@ condition|)
 block|{
 name|xlan_gpio_cfg
 operator|=
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -6861,13 +6792,13 @@ name|i
 operator|)
 condition|)
 block|{
-name|ath_hal_gpio_cfg_output
+name|ath_hal_gpioCfgOutput
 argument_list|(
 name|ah
 argument_list|,
 name|i
 argument_list|,
-name|HAL_GPIO_OUTPUT_MUX_AS_PCIE_ATTENTION_LED
+name|HAL_GPIO_OUTPUT_MUX_PCIE_ATTENTION_LED
 argument_list|)
 expr_stmt|;
 block|}
@@ -7087,7 +7018,7 @@ name|AR_SWITCH_TABLE_COM2_ALL
 expr_stmt|;
 name|value
 operator||=
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -7416,7 +7347,7 @@ if|if
 condition|(
 name|pcap
 operator|->
-name|hal_ant_div_comb_support
+name|halAntDivCombSupport
 condition|)
 block|{
 comment|/* If support DivComb, set MAIN to LNA1, ALT to LNA2 at beginning */
@@ -7649,7 +7580,7 @@ name|AR_PHY_SWITCH_COM_2
 argument_list|,
 name|AR_SWITCH_TABLE_COM2_ALL
 argument_list|,
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8061,16 +7992,7 @@ block|{
 name|u_int32_t
 name|value
 decl_stmt|;
-name|struct
-name|ath_hal_private
-modifier|*
-name|ahpriv
-init|=
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+comment|//    struct ath_hal_private *ahpriv = AH_PRIVATE(ah);
 comment|/* Test value. if 0 then attenuation is unused. Don't load anything. */
 name|value
 operator|=
@@ -8114,7 +8036,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|ahpriv
+name|ah
 operator|->
 name|ah_config
 operator|.
@@ -8878,6 +8800,16 @@ name|int
 name|frequency
 parameter_list|)
 block|{
+name|struct
+name|ath_hal_9300
+modifier|*
+name|ahp
+init|=
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
+decl_stmt|;
 name|int
 name|ichain
 decl_stmt|,
@@ -9619,13 +9551,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+comment|/* GreenTx isn't currently supported */
 comment|/* GreenTx */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -9641,10 +9571,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Get calibrated OLPC gain delta value for GreenTx */
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
+name|ahp
 operator|->
 name|ah_db2
 index|[
@@ -10839,7 +10766,9 @@ name|ar9300_eeprom_t
 modifier|*
 name|p_eep_data
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -11030,6 +10959,22 @@ name|twice_max_edge_power
 init|=
 name|AR9300_MAX_RATE_POWER
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_DEBUG
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ichan
+init|=
+name|ath_hal_checkchannel
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 name|tx_chainmask
 operator|=
 name|chainmask
@@ -11052,7 +10997,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -11122,7 +11067,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_tp_scale
+name|ah_tpScale
 operator|!=
 name|HAL_TP_SCALE_MAX
 condition|)
@@ -11138,7 +11083,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_tp_scale
+name|ah_tpScale
 operator|)
 index|]
 operator|*
@@ -11247,7 +11192,7 @@ expr_stmt|;
 comment|/* Get target powers from EEPROM - our baseline for TX Power */
 if|if
 condition|(
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -11270,7 +11215,7 @@ name|ctl_modes_for11g
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -11305,7 +11250,7 @@ name|ctl_modes_for11a
 expr_stmt|;
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -11424,7 +11369,7 @@ expr_stmt|;
 comment|/* walk through each CTL index stored in EEPROM */
 if|if
 condition|(
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -11498,13 +11443,16 @@ index|[
 name|i
 index|]
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|,
+name|ath_hal_getctl
+argument_list|(
+name|ah
+argument_list|,
 name|chan
-operator|->
-name|conformance_test_limit
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*               * compare test group from regulatory channel list              * with test mode from p_ctl_mode list              */
@@ -11579,7 +11527,7 @@ name|freq
 argument_list|,
 name|i
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -11598,7 +11546,7 @@ name|i
 argument_list|,
 name|freq
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -12380,7 +12328,9 @@ name|ar9300_eeprom_t
 modifier|*
 name|p_eep_data
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -12466,6 +12416,17 @@ name|int
 name|paprd_scale_factor
 init|=
 literal|5
+decl_stmt|;
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ichan
+init|=
+name|ath_hal_checkchannel
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -12597,7 +12558,7 @@ name|__func__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|,
@@ -12614,7 +12575,7 @@ name|ar9300_set_target_power_from_eeprom
 argument_list|(
 name|ah
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|,
@@ -12633,7 +12594,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -12641,7 +12602,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -12692,7 +12653,7 @@ else|else
 block|{
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -12745,12 +12706,12 @@ name|paprd_scale_factor
 argument_list|,
 name|p_eep_data
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|)
@@ -12773,7 +12734,7 @@ expr_stmt|;
 comment|/* PAPRD is not done yet, Scale down the EEP power */
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -12802,7 +12763,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|chan
+name|ichan
 operator|->
 name|paprd_table_write_done
 condition|)
@@ -12856,7 +12817,7 @@ name|__func__
 argument_list|,
 name|__LINE__
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|,
@@ -12927,9 +12888,12 @@ name|ahp
 operator|->
 name|reg_dmn
 operator|=
+name|ath_hal_getctl
+argument_list|(
+name|ah
+argument_list|,
 name|chan
-operator|->
-name|conformance_test_limit
+argument_list|)
 expr_stmt|;
 comment|/*      * Always use CDD/direct per rate power table for register based approach.      * For FCC, CDD calculations should factor in the array gain, hence       * this adjust call. ETSI and MKK does not have this requirement.      */
 if|if
@@ -12942,6 +12906,17 @@ name|reg_dmn
 argument_list|)
 condition|)
 block|{
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_CALIBRATE
+argument_list|,
+literal|"%s: FCC regdomain, calling reg_txpower_cdd\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ar9300_adjust_reg_txpower_cdd
 argument_list|(
 name|ah
@@ -13054,7 +13029,7 @@ literal|"%s: Chan %d After tmp_paprd_rate_mask = 0x%08x\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|,
@@ -13094,10 +13069,7 @@ expr_stmt|;
 comment|/* GreenTx or Paprd */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -13110,7 +13082,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_paprd_enabled
+name|halPaprdEnabled
 condition|)
 block|{
 if|if
@@ -13138,10 +13110,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Get defautl tx related register setting for GreenTx */
 comment|/* Record OB/DB */
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
+name|ahp
 operator|->
 name|ah_ob_db1
 index|[
@@ -13156,10 +13125,7 @@ name|AR_PHY_65NM_CH0_TXRF2
 argument_list|)
 expr_stmt|;
 comment|/* Record TPC settting */
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
+name|ahp
 operator|->
 name|ah_ob_db1
 index|[
@@ -13174,10 +13140,7 @@ name|AR_TPC
 argument_list|)
 expr_stmt|;
 comment|/* Record BB_powertx_rate9 setting */
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
+name|ahp
 operator|->
 name|ah_ob_db1
 index|[
@@ -13201,7 +13164,7 @@ expr_stmt|;
 comment|/* legacy */
 if|if
 condition|(
-name|IS_CHAN_HT40
+name|IEEE80211_IS_CHAN_HT40
 argument_list|(
 name|chan
 argument_list|)
@@ -13216,7 +13179,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|IS_CHAN_HT20
+name|IEEE80211_IS_CHAN_HT20
 argument_list|(
 name|chan
 argument_list|)
@@ -13367,7 +13330,7 @@ argument_list|(
 name|ah
 argument_list|)
 operator|->
-name|ah_max_power_level
+name|ah_maxPowerLevel
 operator|=
 operator|(
 name|int8_t
@@ -13378,7 +13341,7 @@ name|ar9300_calibration_apply
 argument_list|(
 name|ah
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|)
@@ -13389,10 +13352,7 @@ name|ABS
 comment|/* Handle per packet TPC initializations */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
@@ -13487,7 +13447,7 @@ name|HAL_DEBUG_POWER_MGMT
 argument_list|,
 literal|" Channel = %d Chainmask = %d, Upper Limit = [%2d.%1d dBm]\n"
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|,
@@ -13605,7 +13565,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
@@ -13624,11 +13585,11 @@ directive|if
 literal|0
 block|MODAL_EEPDEF_HEADER *p_modal;     struct ath_hal_9300 *ahp = AH9300(ah);     ar9300_eeprom_t *eep =&ahp->ah_eeprom.def;     u_int8_t biaslevel;      if (AH_PRIVATE(ah)->ah_macVersion != AR_SREV_VERSION_SOWL) {         return;     }      HALASSERT(owl_get_eepdef_ver(ahp) == AR9300_EEP_VER);
 comment|/* Xpa bias levels in eeprom are valid from rev 14.7 */
-block|if (owl_get_eepdef_rev(ahp)< AR9300_EEP_MINOR_VER_7) {         return;     }      if (ahp->ah_emu_eeprom) {         return;     }      p_modal =&(eep->modal_header[IS_CHAN_2GHZ(chan)]);      if (p_modal->xpa_bias_lvl != 0xff) {         biaslevel = p_modal->xpa_bias_lvl;     } else {
+block|if (owl_get_eepdef_rev(ahp)< AR9300_EEP_MINOR_VER_7) {         return;     }      if (ahp->ah_emu_eeprom) {         return;     }      p_modal =&(eep->modal_header[IEEE80211_IS_CHAN_2GHZ(chan)]);      if (p_modal->xpa_bias_lvl != 0xff) {         biaslevel = p_modal->xpa_bias_lvl;     } else {
 comment|/* Use freqeuncy specific xpa bias level */
-block|u_int16_t reset_freq_bin, freq_bin, freq_count = 0;         CHAN_CENTERS centers;          ar9300_get_channel_centers(ah, chan,&centers);          reset_freq_bin = FREQ2FBIN(centers.synth_center, IS_CHAN_2GHZ(chan));         freq_bin = p_modal->xpa_bias_lvl_freq[0]& 0xff;         biaslevel = (u_int8_t)(p_modal->xpa_bias_lvl_freq[0]>> 14);          freq_count++;          while (freq_count< 3) {             if (p_modal->xpa_bias_lvl_freq[freq_count] == 0x0) {                 break;             }              freq_bin = p_modal->xpa_bias_lvl_freq[freq_count]& 0xff;             if (reset_freq_bin>= freq_bin) {                 biaslevel =                     (u_int8_t)(p_modal->xpa_bias_lvl_freq[freq_count]>> 14);             } else {                 break;             }             freq_count++;         }     }
+block|u_int16_t reset_freq_bin, freq_bin, freq_count = 0;         CHAN_CENTERS centers;          ar9300_get_channel_centers(ah, chan,&centers);          reset_freq_bin = FREQ2FBIN(centers.synth_center, IEEE80211_IS_CHAN_2GHZ(chan));         freq_bin = p_modal->xpa_bias_lvl_freq[0]& 0xff;         biaslevel = (u_int8_t)(p_modal->xpa_bias_lvl_freq[0]>> 14);          freq_count++;          while (freq_count< 3) {             if (p_modal->xpa_bias_lvl_freq[freq_count] == 0x0) {                 break;             }              freq_bin = p_modal->xpa_bias_lvl_freq[freq_count]& 0xff;             if (reset_freq_bin>= freq_bin) {                 biaslevel =                     (u_int8_t)(p_modal->xpa_bias_lvl_freq[freq_count]>> 14);             } else {                 break;             }             freq_count++;         }     }
 comment|/* Apply bias level to the ADDAC values in the INI array */
-block|if (IS_CHAN_2GHZ(chan)) {         INI_RA(&ahp->ah_ini_addac, 7, 1) =             (INI_RA(&ahp->ah_ini_addac, 7, 1)& (~0x18)) | biaslevel<< 3;     } else {         INI_RA(&ahp->ah_ini_addac, 6, 1) =             (INI_RA(&ahp->ah_ini_addac, 6, 1)& (~0xc0)) | biaslevel<< 6;     }
+block|if (IEEE80211_IS_CHAN_2GHZ(chan)) {         INI_RA(&ahp->ah_ini_addac, 7, 1) =             (INI_RA(&ahp->ah_ini_addac, 7, 1)& (~0x18)) | biaslevel<< 3;     } else {         INI_RA(&ahp->ah_ini_addac, 6, 1) =             (INI_RA(&ahp->ah_ini_addac, 6, 1)& (~0xc0)) | biaslevel<< 6;     }
 endif|#
 directive|endif
 block|}
@@ -13709,7 +13670,9 @@ name|ath_hal_9300
 modifier|*
 name|ahp
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|,
@@ -13724,7 +13687,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|ar9300_eeprom_t  *eep =&ahp->ah_eeprom.def;     MODAL_EEPDEF_HEADER *p_modal =&(eep->modal_header[IS_CHAN_2GHZ(chan)]);     BASE_EEPDEF_HEADER  *p_base  =&eep->base_eep_header;      switch (index) {     case 0:         *config = p_modal->ant_ctrl_common& 0xFFFF;         return HAL_OK;     case 1:         if (p_base->version>= 0x0E0D) {             if (p_modal->use_ant1) {                 *config = ((p_modal->ant_ctrl_common& 0xFFFF0000)>> 16);                 return HAL_OK;             }         }         break;     default:         break;     }
+block|ar9300_eeprom_t  *eep =&ahp->ah_eeprom.def;     MODAL_EEPDEF_HEADER *p_modal =&(eep->modal_header[IEEE80211_IS_CHAN_2GHZ(chan)]);     BASE_EEPDEF_HEADER  *p_base  =&eep->base_eep_header;      switch (index) {     case 0:         *config = p_modal->ant_ctrl_common& 0xFFFF;         return HAL_OK;     case 1:         if (p_base->version>= 0x0E0D) {             if (p_modal->use_ant1) {                 *config = ((p_modal->ant_ctrl_common& 0xFFFF0000)>> 16);                 return HAL_OK;             }         }         break;     default:         break;     }
 endif|#
 directive|endif
 return|return
@@ -13844,7 +13807,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|u_int16_t
+name|int
 name|i
 parameter_list|,
 name|HAL_BOOL
@@ -14129,16 +14092,6 @@ name|u_int16_t
 modifier|*
 name|svalue
 decl_stmt|;
-name|struct
-name|ath_hal_9300
-modifier|*
-name|ahp
-init|=
-name|AH9300
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -14215,13 +14168,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ahp
-operator|->
-name|ah_priv
-operator|.
-name|priv
-operator|.
-name|ah_eeprom_read
+name|ath_hal_eepromRead
 argument_list|(
 name|ah
 argument_list|,
@@ -14838,18 +14785,6 @@ end_function
 begin_comment
 comment|/*  * returns size of the physical otp in bytes.  * 1024 and 2048 are normal sizes.   * 0 means there is no eeprom.   */
 end_comment
-
-begin_function_decl
-name|int32_t
-name|ar9300_otp_size
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|int32_t
@@ -16229,57 +16164,20 @@ return|return
 operator|-
 literal|1
 return|;
+if|#
+directive|if
+literal|0
 comment|/* check if LMAC sent DRAM address is valid */
-if|if
-condition|(
-operator|!
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_st
-argument_list|)
-condition|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
+block|if (!(uintptr_t)(AH_PRIVATE(ah)->ah_st)) {         return -1;     }
+endif|#
+directive|endif
 comment|/* When calibration data is from host, Host will copy the         compressed data to the predefined DRAM location saved at ah->ah_st */
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"Restoring Cal data from DRAM\n"
-argument_list|)
-expr_stmt|;
-name|ahp
-operator|->
-name|ah_cal_mem
-operator|=
-name|OS_REMAP
-argument_list|(
-call|(
-name|uintptr_t
-call|)
-argument_list|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_st
-argument_list|)
-argument_list|,
-name|HOST_CALDATA_SIZE
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ath_hal_printf(ah, "Restoring Cal data from DRAM\n");     ahp->ah_cal_mem = OS_REMAP((uintptr_t)(AH_PRIVATE(ah)->ah_st),  							HOST_CALDATA_SIZE);
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -16615,6 +16513,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"Restoring Cal data from DRAM\n"
+argument_list|)
+expr_stmt|;
 name|AH9300
 argument_list|(
 name|ah
@@ -16706,6 +16611,13 @@ literal|0
 condition|)
 block|{
 comment|/*          * need to look at highest eeprom address as well as at          * base_address=0x3ff where we used to write the data          */
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"Restoring Cal data from EEPROM\n"
+argument_list|)
+expr_stmt|;
 name|AH9300
 argument_list|(
 name|ah
@@ -16905,6 +16817,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"Restoring Cal data from Flash\n"
+argument_list|)
+expr_stmt|;
 name|AH9300
 argument_list|(
 name|ah
@@ -16996,6 +16915,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"Restoring Cal data from OTP\n"
+argument_list|)
+expr_stmt|;
 name|AH9300
 argument_list|(
 name|ah
@@ -18798,16 +18724,29 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|HAL_CHANNEL_INTERNAL
+specifier|const
+name|struct
+name|ieee80211_channel
 modifier|*
 name|chan
 parameter_list|)
 block|{
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+name|ichan
+init|=
+name|ath_hal_checkchannel
+argument_list|(
+name|ah
+argument_list|,
+name|chan
+argument_list|)
+decl_stmt|;
 name|ar9300_xpa_bias_level_apply
 argument_list|(
 name|ah
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -18817,7 +18756,7 @@ name|ar9300_xpa_timing_control_apply
 argument_list|(
 name|ah
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -18827,7 +18766,7 @@ name|ar9300_ant_ctrl_apply
 argument_list|(
 name|ah
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -18842,7 +18781,7 @@ name|ar9300_x_lNA_bias_strength_apply
 argument_list|(
 name|ah
 argument_list|,
-name|IS_CHAN_2GHZ
+name|IEEE80211_IS_CHAN_2GHZ
 argument_list|(
 name|chan
 argument_list|)
@@ -18876,7 +18815,7 @@ name|ar9300_attenuation_apply
 argument_list|(
 name|ah
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|)
@@ -18885,7 +18824,7 @@ name|ar9300_quick_drop_apply
 argument_list|(
 name|ah
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|)
@@ -18914,7 +18853,7 @@ name|ar9300_tx_end_to_xpab_off_apply
 argument_list|(
 name|ah
 argument_list|,
-name|chan
+name|ichan
 operator|->
 name|channel
 argument_list|)
@@ -19477,15 +19416,6 @@ name|AH_TRUE
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 

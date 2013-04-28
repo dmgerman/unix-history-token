@@ -19,6 +19,23 @@ directive|define
 name|_ATH_AR9300_DESC_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ar9300_freebsd_inc.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Osprey Status Descriptor. */
 end_comment
@@ -2366,7 +2383,7 @@ parameter_list|,
 name|_index
 parameter_list|)
 define|\
-value|((_series)[_index].RateFlags& HAL_RATESERIES_2040 ? AR_2040_##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_HALFGI ? AR_gi##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_STBC ? AR_stbc##_index : 0) \         |SM((_series)[_index].ch_sel, AR_chain_sel##_index)
+value|((_series)[_index].RateFlags& HAL_RATESERIES_2040 ? AR_2040_##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_HALFGI ? AR_gi##_index : 0) \         |((_series)[_index].RateFlags& HAL_RATESERIES_STBC ? AR_stbc##_index : 0) \         |SM((_series)[_index].ChSel, AR_chain_sel##_index)
 end_define
 
 begin_define
@@ -2435,6 +2452,12 @@ name|_r
 parameter_list|)
 value|((1<<(_r))& VALID_TX_RATES)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/* TX common functions */
@@ -2726,7 +2749,7 @@ name|void
 modifier|*
 name|ds
 parameter_list|,
-name|dma_addr_t
+name|HAL_DMA_ADDR
 modifier|*
 name|buf_addr
 parameter_list|,
@@ -3122,12 +3145,16 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
 name|u_int
 name|aggr_len
+parameter_list|,
+name|u_int
+name|num_delims
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3142,7 +3169,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
@@ -3162,7 +3190,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|)
@@ -3179,7 +3208,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|)
@@ -3196,7 +3226,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
@@ -3284,7 +3315,8 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|void
+name|struct
+name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
@@ -3489,7 +3521,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|bool
+name|HAL_BOOL
 name|ar9300_set_rx_abort
 parameter_list|(
 name|struct
@@ -3652,6 +3684,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _ATH_AR9300_DESC_H_ */
+end_comment
 
 end_unit
 

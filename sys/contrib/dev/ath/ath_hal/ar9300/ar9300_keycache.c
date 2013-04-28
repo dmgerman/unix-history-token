@@ -9,12 +9,6 @@ directive|include
 file|"opt_ah.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AH_SUPPORT_AR9300
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -62,6 +56,39 @@ value|(AH9300(ah)->ah_sta_id1_defaults& AR_STA_ID1_CRPT_MIC_ENABLE)
 end_define
 
 begin_comment
+comment|/*  * This isn't the keytable type; this is actually something separate  * for the TX descriptor.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|keyType
+index|[]
+init|=
+block|{
+literal|1
+block|,
+comment|/* HAL_CIPHER_WEP */
+literal|0
+block|,
+comment|/* HAL_CIPHER_AES_OCB */
+literal|2
+block|,
+comment|/* HAL_CIPHER_AES_CCM */
+literal|0
+block|,
+comment|/* HAL_CIPHER_CKIP */
+literal|3
+block|,
+comment|/* HAL_CIPHER_TKIP */
+literal|0
+comment|/* HAL_CIPHER_CLR */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Return the size of the hardware key cache.  */
 end_comment
 
@@ -83,7 +110,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_key_cache_size
+name|halKeyCacheSize
 return|;
 block|}
 end_function
@@ -116,7 +143,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_key_cache_size
+name|halKeyCacheSize
 condition|)
 block|{
 name|u_int32_t
@@ -191,7 +218,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_key_cache_size
+name|halKeyCacheSize
 condition|)
 block|{
 name|HALDEBUG
@@ -211,6 +238,18 @@ return|return
 name|AH_FALSE
 return|;
 block|}
+name|ahp
+operator|->
+name|ah_keytype
+index|[
+name|entry
+index|]
+operator|=
+name|keyType
+index|[
+name|HAL_CIPHER_CLR
+index|]
+expr_stmt|;
 name|key_type
 operator|=
 name|OS_REG_READ
@@ -351,7 +390,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_key_cache_size
+name|halKeyCacheSize
 argument_list|)
 expr_stmt|;
 name|OS_REG_WRITE
@@ -540,7 +579,7 @@ argument_list|)
 operator|->
 name|ah_caps
 operator|.
-name|hal_key_cache_size
+name|halKeyCacheSize
 condition|)
 block|{
 name|HALDEBUG
@@ -813,7 +852,7 @@ name|entry
 operator|>=
 name|p_cap
 operator|->
-name|hal_key_cache_size
+name|halKeyCacheSize
 condition|)
 block|{
 name|HALDEBUG
@@ -882,7 +921,7 @@ condition|(
 operator|!
 name|p_cap
 operator|->
-name|hal_cipher_aes_ccm_support
+name|halCipherAesCcmSupport
 condition|)
 block|{
 name|HALDEBUG
@@ -933,7 +972,7 @@ literal|64
 operator|>=
 name|p_cap
 operator|->
-name|hal_key_cache_size
+name|halKeyCacheSize
 condition|)
 block|{
 name|HALDEBUG
@@ -1209,7 +1248,7 @@ condition|(
 operator|!
 name|mac
 operator|||
-name|adf_os_mem_cmp
+name|OS_MEMCMP
 argument_list|(
 name|mac
 argument_list|,
@@ -1759,6 +1798,45 @@ name|mac
 argument_list|)
 expr_stmt|;
 block|}
+name|ahp
+operator|->
+name|ah_keytype
+index|[
+name|entry
+index|]
+operator|=
+name|keyType
+index|[
+name|k
+operator|->
+name|kv_type
+index|]
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_KEYCACHE
+argument_list|,
+literal|"%s: entry=%d, k->kv_type=%d,"
+literal|"keyType=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|entry
+argument_list|,
+name|k
+operator|->
+name|kv_type
+argument_list|,
+name|keyType
+index|[
+name|k
+operator|->
+name|kv_type
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AH_PRIVATE
@@ -2000,15 +2078,6 @@ directive|undef
 name|AH_KEY_REG_SIZE
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AH_SUPPORT_AR9300 */
-end_comment
 
 end_unit
 
