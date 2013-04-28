@@ -12517,6 +12517,7 @@ operator|==
 name|CAM_REQ_CMP
 condition|)
 block|{
+comment|/* 			 * Disable queue sorting for non-rotational media 			 * by default. 			 */
 if|if
 condition|(
 name|scsi_2btoul
@@ -12761,7 +12762,7 @@ name|ATA_DSM_BLK_RANGES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Disable queue sorting for non-rotatational media 			 * by default 			 */
+comment|/* 			 * Disable queue sorting for non-rotational media 			 * by default. 			 */
 if|if
 condition|(
 name|ata_params

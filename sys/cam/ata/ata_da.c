@@ -5114,7 +5114,7 @@ operator|->
 name|write_cache
 argument_list|)
 expr_stmt|;
-comment|/* Disable queue sorting for non-rotatational media by default */
+comment|/* Disable queue sorting for non-rotational media by default. */
 if|if
 condition|(
 name|cgd
