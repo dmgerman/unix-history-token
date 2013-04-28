@@ -434,17 +434,6 @@ name|LZ4_ARCH64
 value|1
 end_define
 
-begin_comment
-comment|/*  * Illumos: On amd64 we have 20k of stack and 24k on sun4u and sun4v, so we  * can spend 16k on the algorithm  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STACKLIMIT
-value|12
-end_define
-
 begin_else
 else|#
 directive|else
@@ -457,21 +446,21 @@ name|LZ4_ARCH64
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Illumos: On i386 we only have 12k of stack, so in order to maintain the  * same COMPRESSIONLEVEL we have to use heap allocation. Performance will  * suck, but alas, it's ZFS on 32-bit we're talking about, so...  */
+comment|/*  * Limits the amount of stack space that the algorithm may consume to hold  * the compression lookup table. The value `9' here means we'll never use  * more than 2k of stack (see above for a description of COMPRESSIONLEVEL).  * If more memory is needed, it is allocated from the heap.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|STACKLIMIT
-value|11
+value|9
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Little Endian or Big Endian?  * Note: overwrite the below #define if you know your architecture endianess.  */
@@ -599,14 +588,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Illumos: we can't use GCC's __builtin_ctz family of builtins in the  * kernel  */
+comment|/* #define	LZ4_FORCE_SW_BITCOUNT */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LZ4_FORCE_SW_BITCOUNT
-end_define
 
 begin_comment
 comment|/*  * Compiler Options  */
