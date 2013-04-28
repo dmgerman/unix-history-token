@@ -2819,19 +2819,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|object
-operator|->
-name|type
-operator|==
-name|OBJT_VNODE
-argument_list|,
-operator|(
-literal|"Not a vnode object"
-operator|)
-argument_list|)
-expr_stmt|;
+comment|/* 	 * The OBJ_MIGHTBEDIRTY flag is only set for OBJT_VNODE 	 * objects.  The check below prevents the function from 	 * operating on non-vnode objects. 	 */
 if|if
 condition|(
 operator|(
