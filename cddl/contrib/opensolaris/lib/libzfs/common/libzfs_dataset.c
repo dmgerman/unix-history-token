@@ -19533,6 +19533,12 @@ name|ret
 operator|=
 name|ENOENT
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|enoent_ok
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -19571,6 +19577,7 @@ argument_list|,
 name|errbuf
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret
