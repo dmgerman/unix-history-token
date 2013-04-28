@@ -220,9 +220,13 @@ expr_stmt|;
 block|}
 name|sgp
 struct|;
-comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
+comment|/* 		 * Swap pager 		 * 		 *	swp_tmpfs - back-pointer to the tmpfs vnode, 		 *		     if any, which uses the vm object 		 *		     as backing store.  The handle 		 *		     cannot be reused for linking, 		 *		     because the vnode can be 		 *		     reclaimed and recreated, making 		 *		     the handle changed and hash-chain 		 *		     invalid. 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
 block|{
+name|void
+modifier|*
+name|swp_tmpfs
+decl_stmt|;
 name|int
 name|swp_bcount
 decl_stmt|;
@@ -357,6 +361,13 @@ end_define
 begin_comment
 comment|/* disconnect from vnode wanted */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_TMPFS
+value|0x8000
+end_define
 
 begin_define
 define|#
