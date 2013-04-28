@@ -15545,7 +15545,7 @@ name|inq
 operator|->
 name|vendor
 argument_list|,
-literal|"COMPAQ"
+literal|"HP"
 argument_list|,
 name|SID_VENDOR_SIZE
 argument_list|)
