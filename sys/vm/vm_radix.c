@@ -2559,17 +2559,6 @@ name|rn_clev
 argument_list|)
 expr_stmt|;
 name|index
-operator|=
-name|vm_radix_trimkey
-argument_list|(
-name|index
-argument_list|,
-name|rnode
-operator|->
-name|rn_clev
-argument_list|)
-expr_stmt|;
-name|index
 operator||=
 name|inc
 operator|-
