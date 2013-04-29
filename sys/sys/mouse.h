@@ -618,6 +618,13 @@ name|MOUSE_MODEL_SYNAPTICS
 value|13
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_TRACKPOINT
+value|14
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
