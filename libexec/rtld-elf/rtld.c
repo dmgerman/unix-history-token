@@ -4626,6 +4626,11 @@ operator|,
 name|resp
 operator|=
 name|res
+operator|,
+operator|*
+name|resp
+operator|=
+literal|'\0'
 init|;
 condition|;
 control|)
@@ -4677,6 +4682,11 @@ expr_stmt|;
 name|resp
 operator|+=
 name|subst_len
+expr_stmt|;
+operator|*
+name|resp
+operator|=
+literal|'\0'
 expr_stmt|;
 name|p
 operator|=
