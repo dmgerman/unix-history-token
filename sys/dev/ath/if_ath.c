@@ -18643,7 +18643,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RESET
 argument_list|,
-literal|"%s: tx queue [%u] %p, flags 0x%08x, link %p\n"
+literal|"%s: tx queue [%u] %p, active=%d, hwpending=%d, flags 0x%08x, link %p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18658,6 +18658,34 @@ operator|(
 name|uintptr_t
 operator|)
 name|ath_hal_gettxbuf
+argument_list|(
+name|ah
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|!
+operator|!
+name|ath_hal_txqenabled
+argument_list|(
+name|ah
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|)
+argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ath_hal_numtxpending
 argument_list|(
 name|ah
 argument_list|,
@@ -18870,11 +18898,6 @@ name|ATH_DEBUG_RESET
 operator|)
 condition|)
 return|return;
-name|ATH_TX_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
