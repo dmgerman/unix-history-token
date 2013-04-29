@@ -1388,9 +1388,12 @@ literal|0
 condition|)
 block|{
 comment|/* Restart from the beginning */
-name|last_file_format
-operator|=
 name|i
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|last_file_format
 operator|=
 literal|0
 expr_stmt|;
