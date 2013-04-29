@@ -11549,12 +11549,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLD_MODULE
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -11643,15 +11637,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KLD_MODULE */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -11712,23 +11697,6 @@ operator|==
 name|MOD_UNLOAD
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-name|printf
-argument_list|(
-literal|"dummynet statically compiled, cannot unload\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-else|#
-directive|else
 name|ip_dn_destroy
 argument_list|(
 literal|1
@@ -11738,8 +11706,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
 block|}
 else|else
 return|return
