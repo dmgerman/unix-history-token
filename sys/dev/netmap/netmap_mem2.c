@@ -28,6 +28,14 @@ directive|ifdef
 name|linux
 end_ifdef
 
+begin_comment
+comment|// XXX a mtx would suffice here 20130415 lr
+end_comment
+
+begin_comment
+comment|// #define NMA_LOCK_T		safe_spinlock_t
+end_comment
+
 begin_define
 define|#
 directive|define
