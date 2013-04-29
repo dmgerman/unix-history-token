@@ -4108,10 +4108,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_noroute
-operator|++
+argument_list|)
 expr_stmt|;
 name|V_ipsec6stat
 operator|.

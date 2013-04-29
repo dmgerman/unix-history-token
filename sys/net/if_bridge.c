@@ -15139,10 +15139,10 @@ name|NULL
 condition|)
 block|{
 comment|/* XXXJRT new stat, please */
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -15204,10 +15204,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_toosmall
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -15245,10 +15245,10 @@ operator|!=
 name|IPV6_VERSION
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badvers
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
