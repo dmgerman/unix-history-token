@@ -9385,6 +9385,7 @@ name|hba
 operator|->
 name|ctlcfg_dmat
 condition|)
+block|{
 name|bus_dmamem_free
 argument_list|(
 name|hba
@@ -9407,6 +9408,7 @@ operator|->
 name|ctlcfg_dmat
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|-
 literal|1
