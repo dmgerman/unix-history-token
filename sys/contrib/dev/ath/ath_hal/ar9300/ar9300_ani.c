@@ -3391,10 +3391,7 @@ block|}
 comment|/* if we're turning off ANI, reset regs back to INI settings */
 if|if
 condition|(
-name|AH_PRIVATE
-argument_list|(
 name|ah
-argument_list|)
 operator|->
 name|ah_config
 operator|.
