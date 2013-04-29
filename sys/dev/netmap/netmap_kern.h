@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_kern.h 11829 2012-09-26 04:06:34Z luigi $  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
+comment|/*  * $FreeBSD$  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
 end_comment
 
 begin_ifndef
@@ -279,6 +279,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* end - platform-specific code */
+end_comment
 
 begin_define
 define|#

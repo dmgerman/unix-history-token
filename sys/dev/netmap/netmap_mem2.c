@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2012-2013 Matteo Landi, Luigi Rizzo, Giuseppe Lettie
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_mem2.c 11881 2012-10-18 23:24:15Z luigi $  *  * (New) memory allocator for netmap  */
+comment|/*  * $FreeBSD$  *  * (New) memory allocator for netmap  */
 end_comment
 
 begin_comment

@@ -324,6 +324,10 @@ directive|include
 file|<dev/netmap/netmap_kern.h>
 end_include
 
+begin_comment
+comment|/* XXX the following variables must be deprecated and included in nm_mem */
+end_comment
+
 begin_decl_stmt
 name|u_int
 name|netmap_total_buffers

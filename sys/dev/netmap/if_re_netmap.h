@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Luigi Rizzo. All rights reserved.  *  * Redistr
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_re_netmap.h 10609 2012-02-22 19:44:58Z luigi $  *  * netmap support for "re"  * For details on netmap support please see ixgbe_netmap.h  */
+comment|/*  * $FreeBSD$  *  * netmap support for "re"  * For details on netmap support please see ixgbe_netmap.h  */
 end_comment
 
 begin_include

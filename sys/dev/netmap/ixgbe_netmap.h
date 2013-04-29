@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: ixgbe_netmap.h 10627 2012-02-23 19:37:15Z luigi $  *  * netmap modifications for ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions  * that are used by a single driver. To avoid replication of  * code we just #include it near the beginning of the  * standard driver.  */
+comment|/*  * $FreeBSD$  *  * netmap modifications for ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions  * that are used by a single driver. To avoid replication of  * code we just #include it near the beginning of the  * standard driver.  */
 end_comment
 
 begin_include
