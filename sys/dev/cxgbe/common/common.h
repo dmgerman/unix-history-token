@@ -1901,7 +1901,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
 name|int
 name|t4_flash_cfg_addr
 parameter_list|(

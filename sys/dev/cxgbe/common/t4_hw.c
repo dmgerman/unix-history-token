@@ -469,21 +469,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|pcie_fw
 operator|&
 name|F_PCIE_FW_ERR
-operator|)
 condition|)
-name|CH_ERR
-argument_list|(
-name|adap
-argument_list|,
-literal|"Firmware error report called with no error\n"
-argument_list|)
-expr_stmt|;
-else|else
 name|CH_ERR
 argument_list|(
 name|adap
@@ -2011,6 +2000,13 @@ name|VPD_INFO_FLD_HDR_SIZE
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHELSIO_VPD_UNIQUE_ID
+value|0x82
+end_define
+
 begin_comment
 comment|/**  *	t4_seeprom_read - read a serial EEPROM location  *	@adapter: adapter to read  *	@addr: EEPROM virtual address  *	@data: where to store the read data  *  *	Read a 32-bit word from a location in serial EEPROM using the card's PCI  *	VPD capability.  Note that this function must be called with a virtual  *	address.  */
 end_comment
@@ -2651,7 +2647,7 @@ operator|=
 operator|*
 name|vpd
 operator|==
-literal|0x82
+name|CHELSIO_VPD_UNIQUE_ID
 condition|?
 name|VPD_BASE
 else|:
@@ -2876,6 +2872,17 @@ operator|->
 name|sn
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+name|vpd
+index|[
+name|pn
+operator|-
+name|VPD_INFO_FLD_HDR_SIZE
+operator|+
+literal|2
+index|]
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|p
@@ -2904,6 +2911,17 @@ name|p
 operator|->
 name|pn
 argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|vpd
+index|[
+name|na
+operator|-
+name|VPD_INFO_FLD_HDR_SIZE
+operator|+
+literal|2
+index|]
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -4278,11 +4296,10 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	t4_flash_cfg_addr - return the address of the flash configuration file  *	@adapter: the adapter  *  *	Return the address within the flash where the Firmware Configuration  *	File is stored.  */
+comment|/**  *	t4_flash_cfg_addr - return the address of the flash configuration file  *	@adapter: the adapter  *  *	Return the address within the flash where the Firmware Configuration  *	File is stored, or an error if the device FLASH is too small to contain  *	a Firmware Configuration File.  */
 end_comment
 
 begin_function
-name|unsigned
 name|int
 name|t4_flash_cfg_addr
 parameter_list|(
@@ -4292,6 +4309,7 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
+comment|/* 	 * If the device FLASH isn't large enough to hold a Firmware 	 * Configuration File, return an error. 	 */
 if|if
 condition|(
 name|adapter
@@ -4299,13 +4317,15 @@ operator|->
 name|params
 operator|.
 name|sf_size
-operator|==
-literal|0x100000
+operator|<
+name|FLASH_CFG_START
+operator|+
+name|FLASH_CFG_MAX_SIZE
 condition|)
 return|return
-name|FLASH_FPGA_CFG_START
+operator|-
+name|ENOSPC
 return|;
-else|else
 return|return
 name|FLASH_CFG_START
 return|;
@@ -4341,6 +4361,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|n
+decl_stmt|,
+name|cfg_addr
 decl_stmt|;
 name|unsigned
 name|int
@@ -4366,12 +4388,25 @@ name|params
 operator|.
 name|sf_nsec
 decl_stmt|;
-name|addr
+name|cfg_addr
 operator|=
 name|t4_flash_cfg_addr
 argument_list|(
 name|adap
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cfg_addr
+operator|<
+literal|0
+condition|)
+return|return
+name|cfg_addr
+return|;
+name|addr
+operator|=
+name|cfg_addr
 expr_stmt|;
 name|flash_cfg_start_sec
 operator|=
@@ -7781,7 +7816,7 @@ begin_define
 define|#
 directive|define
 name|ADVERT_MASK
-value|(FW_PORT_CAP_SPEED_100M | FW_PORT_CAP_SPEED_1G |\ 		     FW_PORT_CAP_SPEED_10G | FW_PORT_CAP_ANEG)
+value|(FW_PORT_CAP_SPEED_100M | FW_PORT_CAP_SPEED_1G |\ 		     FW_PORT_CAP_SPEED_10G | FW_PORT_CAP_SPEED_40G | \ 		     FW_PORT_CAP_SPEED_100G | FW_PORT_CAP_ANEG)
 end_define
 
 begin_comment
@@ -11269,6 +11304,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|is_t4
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+block|{
 name|addr
 operator|=
 name|A_MC_INT_CAUSE
@@ -11277,6 +11320,18 @@ name|cnt_addr
 operator|=
 name|A_MC_ECC_STATUS
 expr_stmt|;
+block|}
+else|else
+block|{
+name|addr
+operator|=
+name|A_MC_P_INT_CAUSE
+expr_stmt|;
+name|cnt_addr
+operator|=
+name|A_MC_P_ECC_STATUS
+expr_stmt|;
+block|}
 block|}
 name|v
 operator|=
@@ -11821,7 +11876,7 @@ block|{
 block|{
 name|F_FATALPERR
 block|,
-literal|"T4 fatal parity error"
+literal|"Fatal parity error"
 block|,
 operator|-
 literal|1
@@ -11845,6 +11900,40 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+specifier|static
+name|struct
+name|intr_info
+name|t5_pl_intr_info
+index|[]
+init|=
+block|{
+block|{
+name|F_PL_BUSPERR
+block|,
+literal|"PL bus parity error"
+block|,
+operator|-
+literal|1
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|F_FATALPERR
+block|,
+literal|"Fatal parity error"
+block|,
+operator|-
+literal|1
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
 if|if
 condition|(
 name|t4_handle_intr_status
@@ -11853,7 +11942,14 @@ name|adap
 argument_list|,
 name|A_PL_PL_INT_CAUSE
 argument_list|,
+name|is_t4
+argument_list|(
+name|adap
+argument_list|)
+condition|?
 name|pl_intr_info
+else|:
+name|t5_pl_intr_info
 argument_list|)
 condition|)
 name|t4_fatal_err
@@ -12380,8 +12476,6 @@ name|A_PCIE_NONFAT_ERR
 block|,
 name|A_PCIE_INT_CAUSE
 block|,
-name|A_MC_INT_CAUSE
-block|,
 name|A_MA_INT_WRAP_STATUS
 block|,
 name|A_MA_PARITY_ERROR_STATUS
@@ -12458,6 +12552,22 @@ name|cause_reg
 index|[
 name|i
 index|]
+argument_list|,
+literal|0xffffffff
+argument_list|)
+expr_stmt|;
+name|t4_write_reg
+argument_list|(
+name|adapter
+argument_list|,
+name|is_t4
+argument_list|(
+name|adapter
+argument_list|)
+condition|?
+name|A_MC_INT_CAUSE
+else|:
+name|A_MC_P_INT_CAUSE
 argument_list|,
 literal|0xffffffff
 argument_list|)
@@ -21620,6 +21730,9 @@ operator|,
 name|p
 operator|+=
 literal|2
+operator|,
+name|params
+operator|++
 control|)
 operator|*
 name|p
@@ -21628,7 +21741,6 @@ name|htonl
 argument_list|(
 operator|*
 name|params
-operator|++
 argument_list|)
 expr_stmt|;
 name|ret
@@ -21835,8 +21947,10 @@ name|htonl
 argument_list|(
 operator|*
 name|params
-operator|++
 argument_list|)
+expr_stmt|;
+name|params
+operator|++
 expr_stmt|;
 operator|*
 name|p
@@ -21846,8 +21960,10 @@ name|htonl
 argument_list|(
 operator|*
 name|val
-operator|++
 argument_list|)
+expr_stmt|;
+name|val
+operator|++
 expr_stmt|;
 block|}
 return|return
@@ -24685,6 +24801,20 @@ name|speed
 operator|=
 name|SPEED_10000
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|stat
+operator|&
+name|V_FW_PORT_CMD_LSPEED
+argument_list|(
+name|FW_PORT_CAP_SPEED_40G
+argument_list|)
+condition|)
+name|speed
+operator|=
+name|SPEED_40000
+expr_stmt|;
 name|for_each_port
 argument_list|(
 argument|adap
@@ -24757,6 +24887,21 @@ operator|->
 name|fc
 operator|=
 name|fc
+expr_stmt|;
+name|lc
+operator|->
+name|supported
+operator|=
+name|ntohs
+argument_list|(
+name|p
+operator|->
+name|u
+operator|.
+name|info
+operator|.
+name|pcap
+argument_list|)
 expr_stmt|;
 name|t4_os_link_changed
 argument_list|(
