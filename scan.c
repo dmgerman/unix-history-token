@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|YY_FLEX_SUBMINOR_VERSION
-value|35
+value|36
 end_define
 
 begin_if
@@ -255,15 +255,6 @@ name|flex_uint32_t
 typedef|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! C99 */
-end_comment
-
 begin_comment
 comment|/* Limits of integral types. */
 end_comment
@@ -429,6 +420,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! C99 */
+end_comment
 
 begin_endif
 endif|#
@@ -675,9 +675,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YY_TYPEDEF_YY_SIZE_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|YY_TYPEDEF_YY_SIZE_T
+end_define
+
+begin_typedef
+typedef|typedef
+name|size_t
+name|yy_size_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
-name|int
+name|yy_size_t
 name|yyleng
 decl_stmt|;
 end_decl_stmt
@@ -755,30 +779,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|YY_TYPEDEF_YY_SIZE_T
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|YY_TYPEDEF_YY_SIZE_T
-end_define
-
-begin_typedef
-typedef|typedef
-name|size_t
-name|yy_size_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|YY_STRUCT_YY_BUFFER_STATE
 end_ifndef
 
@@ -811,7 +811,7 @@ name|yy_size_t
 name|yy_buf_size
 decl_stmt|;
 comment|/* Number of characters read into yy_ch_buf, not including EOB 	 * characters. 	 */
-name|int
+name|yy_size_t
 name|yy_n_chars
 decl_stmt|;
 comment|/* Whether we "own" the buffer - i.e., we know we created it, 	 * and can realloc() it to grow it, and should free() it to 	 * delete it. 	 */
@@ -946,7 +946,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|yy_size_t
 name|yy_n_chars
 decl_stmt|;
 end_decl_stmt
@@ -956,7 +956,7 @@ comment|/* number of characters read into yy_ch_buf */
 end_comment
 
 begin_decl_stmt
-name|int
+name|yy_size_t
 name|yyleng
 decl_stmt|;
 end_decl_stmt
@@ -1167,7 +1167,7 @@ name|char
 modifier|*
 name|bytes
 parameter_list|,
-name|int
+name|yy_size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -28275,7 +28275,7 @@ end_define
 begin_line
 line|#
 directive|line
-number|1977
+number|1978
 file|"scan.c"
 end_line
 
@@ -28590,7 +28590,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|yy_size_t
 name|yyget_leng
 parameter_list|(
 name|void
@@ -28881,7 +28881,7 @@ begin_define
 define|#
 directive|define
 name|ECHO
-value|fwrite( yytext, yyleng, 1, yyout )
+value|do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)
 end_define
 
 begin_endif
@@ -28911,7 +28911,7 @@ parameter_list|,
 name|max_size
 parameter_list|)
 define|\
-value|if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \ 		{ \ 		int c = '*'; \ 		int n; \ 		for ( n = 0; n< max_size&& \ 			     (c = getc( yyin )) != EOF&& c != '\n'; ++n ) \ 			buf[n] = (char) c; \ 		if ( c == '\n' ) \ 			buf[n++] = (char) c; \ 		if ( c == EOF&& ferror( yyin ) ) \ 			YY_FATAL_ERROR( "input in flex scanner failed" ); \ 		result = n; \ 		} \ 	else \ 		{ \ 		errno=0; \ 		while ( (result = fread(buf, 1, max_size, yyin))==0&& ferror(yyin)) \ 			{ \ 			if( errno != EINTR) \ 				{ \ 				YY_FATAL_ERROR( "input in flex scanner failed" ); \ 				break; \ 				} \ 			errno=0; \ 			clearerr(yyin); \ 			} \ 		}\ \  #endif
+value|if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \ 		{ \ 		int c = '*'; \ 		size_t n; \ 		for ( n = 0; n< max_size&& \ 			     (c = getc( yyin )) != EOF&& c != '\n'; ++n ) \ 			buf[n] = (char) c; \ 		if ( c == '\n' ) \ 			buf[n++] = (char) c; \ 		if ( c == EOF&& ferror( yyin ) ) \ 			YY_FATAL_ERROR( "input in flex scanner failed" ); \ 		result = n; \ 		} \ 	else \ 		{ \ 		errno=0; \ 		while ( (result = fread(buf, 1, max_size, yyin))==0&& ferror(yyin)) \ 			{ \ 			if( errno != EINTR) \ 				{ \ 				YY_FATAL_ERROR( "input in flex scanner failed" ); \ 				break; \ 				} \ 			errno=0; \ 			clearerr(yyin); \ 			} \ 		}\ \  #endif
 end_define
 
 begin_comment
@@ -29154,7 +29154,7 @@ index|]
 decl_stmt|;
 line|#
 directive|line
-number|2204
+number|2205
 file|"scan.c"
 if|if
 condition|(
@@ -29890,7 +29890,7 @@ name|synerr
 argument_list|(
 name|_
 argument_list|(
-literal|"Input line too long\n"
+literal|"Definition name too long\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -30480,12 +30480,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|synerr
+name|format_synerr
 argument_list|(
 name|_
 argument_list|(
-literal|"Input line too long\n"
+literal|"Definition value for {%s} too long\n"
 argument_list|)
+argument_list|,
+name|nmstr
 argument_list|)
 expr_stmt|;
 name|FLEX_EXIT
@@ -31874,7 +31876,7 @@ name|synerr
 argument_list|(
 name|_
 argument_list|(
-literal|"Input line too long\n"
+literal|"Option line too long\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -34245,7 +34247,7 @@ line|#
 directive|line
 number|886
 file|"scan.l"
-name|ACTION_ECHO_QEND
+name|ACTION_ECHO_QSTART
 decl_stmt|;
 name|YY_BREAK
 case|case
@@ -34358,7 +34360,7 @@ line|#
 directive|line
 number|909
 file|"scan.l"
-name|ACTION_ECHO_QEND
+name|ACTION_ECHO_QSTART
 decl_stmt|;
 name|YY_BREAK
 case|case
@@ -34794,7 +34796,7 @@ decl_stmt|;
 name|YY_BREAK
 line|#
 directive|line
-number|4111
+number|4112
 file|"scan.c"
 case|case
 name|YY_STATE_EOF
@@ -35349,7 +35351,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-name|int
+name|yy_size_t
 name|num_to_read
 init|=
 name|YY_CURRENT_BUFFER_LVALUE
@@ -35401,9 +35403,6 @@ operator|(
 name|yy_n_chars
 operator|)
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|num_to_read
 argument_list|)
 expr_stmt|;
@@ -35901,7 +35900,7 @@ block|{
 comment|/* need to shift things up to make room */
 comment|/* +2 for EOB chars. */
 specifier|register
-name|int
+name|yy_size_t
 name|number_to_move
 init|=
 operator|(
@@ -36117,7 +36116,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* need more input */
-name|int
+name|yy_size_t
 name|offset
 init|=
 operator|(
@@ -36582,31 +36581,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|int
-name|isatty
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __cplusplus */
-end_comment
-
 begin_comment
 comment|/* Initializes or reinitializes a buffer.  * This function is sometimes called more than once on the same buffer,  * such as during a yyrestart() or at EOF.  */
 end_comment
@@ -36924,7 +36898,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|yy_size_t
 name|num_to_alloc
 decl_stmt|;
 if|if
@@ -37281,7 +37255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** Setup the input buffer state to scan the given bytes. The next call to yylex() will  * scan from a @e copy of @a bytes.  * @param bytes the byte buffer to scan  * @param len the number of bytes in the buffer pointed to by @a bytes.  *   * @return the newly allocated buffer state object.  */
+comment|/** Setup the input buffer state to scan the given bytes. The next call to yylex() will  * scan from a @e copy of @a bytes.  * @param yybytes the byte buffer to scan  * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.  *   * @return the newly allocated buffer state object.  */
 end_comment
 
 begin_function
@@ -37293,7 +37267,7 @@ name|char
 modifier|*
 name|yybytes
 parameter_list|,
-name|int
+name|yy_size_t
 name|_yybytes_len
 parameter_list|)
 block|{
@@ -37693,7 +37667,7 @@ comment|/** Get the length of the current token.  *   */
 end_comment
 
 begin_function
-name|int
+name|yy_size_t
 name|yyget_leng
 parameter_list|(
 name|void

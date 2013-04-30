@@ -155,15 +155,6 @@ name|flex_uint32_t
 typedef|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! C99 */
-end_comment
-
 begin_comment
 comment|/* Limits of integral types. */
 end_comment
@@ -329,6 +320,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! C99 */
+end_comment
 
 begin_endif
 endif|#

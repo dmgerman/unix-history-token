@@ -7012,7 +7012,7 @@ argument_list|)
 expr_stmt|;
 name|outn
 argument_list|(
-literal|"\t\tint n; \\"
+literal|"\t\tsize_t n; \\"
 argument_list|)
 expr_stmt|;
 name|outn

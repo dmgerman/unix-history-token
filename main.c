@@ -302,8 +302,6 @@ decl_stmt|,
 name|dataline
 decl_stmt|,
 name|linenum
-decl_stmt|,
-name|out_linenum
 decl_stmt|;
 end_decl_stmt
 
@@ -2380,6 +2378,19 @@ argument_list|)
 argument_list|)
 operator|+
 literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|str
+condition|)
+name|flexfatal
+argument_list|(
+name|_
+argument_list|(
+literal|"allocation of macro definition failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -5256,8 +5267,6 @@ name|bol_needed
 operator|=
 name|false
 expr_stmt|;
-name|out_linenum
-operator|=
 name|linenum
 operator|=
 name|sectnum
@@ -5644,13 +5653,21 @@ condition|(
 operator|!
 name|C_plus_plus
 condition|)
-block|{
+if|if
+condition|(
+name|reentrant
+condition|)
 name|outn
 argument_list|(
-literal|"\n#define yywrap(n) 1"
+literal|"\n#define yywrap(yyscanner) 1"
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|outn
+argument_list|(
+literal|"\n#define yywrap() 1"
+argument_list|)
+expr_stmt|;
 name|outn
 argument_list|(
 literal|"#define YY_SKIP_YYWRAP"

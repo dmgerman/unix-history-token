@@ -156,6 +156,19 @@ name|filter
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|f
+condition|)
+name|flexerror
+argument_list|(
+name|_
+argument_list|(
+literal|"flex_alloc failed (f) in filter_create_ext"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|f
@@ -248,6 +261,21 @@ name|max_args
 operator|+
 literal|1
 operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|f
+operator|->
+name|argv
+condition|)
+name|flexerror
+argument_list|(
+name|_
+argument_list|(
+literal|"flex_alloc failed (f->argv) in filter_create_ext"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|f
@@ -418,6 +446,19 @@ name|filter
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|f
+condition|)
+name|flexerror
+argument_list|(
+name|_
+argument_list|(
+literal|"flex_alloc failed in filter_create_int"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|f
@@ -516,6 +557,19 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
+specifier|const
+name|int
+name|readsz
+init|=
+literal|512
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
 comment|/* Tricky recursion, since we want to begin the chain 	 * at the END. Why? Because we need all the forked processes 	 * to be children of the main flex process. 	 */
 if|if
 condition|(
@@ -596,6 +650,11 @@ name|pipes
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|clearerr
+argument_list|(
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if
@@ -706,12 +765,19 @@ name|argv
 operator|)
 argument_list|)
 expr_stmt|;
-name|flexfatal
+name|lerrsf_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"exec failed"
+literal|"exec of %s failed"
 argument_list|)
+argument_list|,
+name|chain
+operator|->
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1121,6 +1187,19 @@ argument_list|(
 name|readsz
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+name|flexerror
+argument_list|(
+name|_
+argument_list|(
+literal|"flex_alloc failed in filter_tee_header"
+argument_list|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -1376,6 +1455,19 @@ operator|)
 name|flex_alloc
 argument_list|(
 name|readsz
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+name|flexerror
+argument_list|(
+name|_
+argument_list|(
+literal|"flex_alloc failed in filter_fix_linedirs"
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while

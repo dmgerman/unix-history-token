@@ -191,7 +191,7 @@ literal|"#define YY_FLEX_MAJOR_VERSION 2"
 block|,
 literal|"#define YY_FLEX_MINOR_VERSION 5"
 block|,
-literal|"#define YY_FLEX_SUBMINOR_VERSION 35"
+literal|"#define YY_FLEX_SUBMINOR_VERSION 37"
 block|,
 literal|"#if YY_FLEX_SUBMINOR_VERSION> 0"
 block|,
@@ -499,8 +499,6 @@ literal|"typedef unsigned short int flex_uint16_t;"
 block|,
 literal|"typedef unsigned int flex_uint32_t;"
 block|,
-literal|"#endif /* ! C99 */"
-block|,
 literal|""
 block|,
 literal|"/* Limits of integral types. */"
@@ -561,6 +559,8 @@ literal|"#endif"
 block|,
 literal|""
 block|,
+literal|"#endif /* ! C99 */"
+block|,
 literal|""
 block|,
 literal|"#endif /* ! FLEXINT_H */"
@@ -580,6 +580,8 @@ block|,
 literal|"#include<errno.h>"
 block|,
 literal|"#include<cstdlib>"
+block|,
+literal|"#include<cstdio>"
 block|,
 literal|"#include<cstring>"
 block|,
@@ -721,6 +723,10 @@ literal|"%# Declare yyguts variable"
 block|,
 literal|"m4_define( [[M4_YY_DECL_GUTS_VAR]], [[struct yyguts_t * yyg = (struct yyguts_t*)yyscanner]])"
 block|,
+literal|"%# Perform a noop access on yyguts to prevent unused variable complains"
+block|,
+literal|"m4_define( [[M4_YY_NOOP_GUTS_VAR]], [[(void)yyg]])"
+block|,
 literal|"%# For use wherever a Global is accessed or assigned."
 block|,
 literal|"m4_define( [[YY_G]], [[yyg->$1]])"
@@ -834,6 +840,8 @@ block|,
 literal|"%# Define these macros to be no-ops."
 block|,
 literal|"m4_define( [[M4_YY_DECL_GUTS_VAR]], [[m4_dnl]])"
+block|,
+literal|"m4_define( [[M4_YY_NOOP_GUTS_VAR]], [[m4_dnl]])"
 block|,
 literal|"m4_define( [[YY_G]], [[($1)]])"
 block|,
@@ -1063,9 +1071,19 @@ literal|"#endif"
 block|,
 literal|""
 block|,
+literal|"#ifndef YY_TYPEDEF_YY_SIZE_T"
+block|,
+literal|"#define YY_TYPEDEF_YY_SIZE_T"
+block|,
+literal|"typedef size_t yy_size_t;"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
 literal|"%if-not-reentrant"
 block|,
-literal|"extern int yyleng;"
+literal|"extern yy_size_t yyleng;"
 block|,
 literal|"%endif"
 block|,
@@ -1189,16 +1207,6 @@ literal|"]])"
 block|,
 literal|""
 block|,
-literal|"#ifndef YY_TYPEDEF_YY_SIZE_T"
-block|,
-literal|"#define YY_TYPEDEF_YY_SIZE_T"
-block|,
-literal|"typedef size_t yy_size_t;"
-block|,
-literal|"#endif"
-block|,
-literal|""
-block|,
 literal|"#ifndef YY_STRUCT_YY_BUFFER_STATE"
 block|,
 literal|"#define YY_STRUCT_YY_BUFFER_STATE"
@@ -1247,7 +1255,7 @@ literal|"	 * characters."
 block|,
 literal|"	 */"
 block|,
-literal|"	int yy_n_chars;"
+literal|"	yy_size_t yy_n_chars;"
 block|,
 literal|""
 block|,
@@ -1425,9 +1433,9 @@ literal|"/* yy_hold_char holds the character lost when yytext is formed. */"
 block|,
 literal|"static char yy_hold_char;"
 block|,
-literal|"static int yy_n_chars;		/* number of characters read into yy_ch_buf */"
+literal|"static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */"
 block|,
-literal|"int yyleng;"
+literal|"yy_size_t yyleng;"
 block|,
 literal|""
 block|,
@@ -1499,7 +1507,7 @@ literal|"YY_BUFFER_STATE yy_scan_buffer M4_YY_PARAMS( char *base, yy_size_t size
 block|,
 literal|"YY_BUFFER_STATE yy_scan_string M4_YY_PARAMS( yyconst char *yy_str M4_YY_PROTO_LAST_ARG );"
 block|,
-literal|"YY_BUFFER_STATE yy_scan_bytes M4_YY_PARAMS( yyconst char *bytes, int len M4_YY_PROTO_LAST_ARG );"
+literal|"YY_BUFFER_STATE yy_scan_bytes M4_YY_PARAMS( yyconst char *bytes, yy_size_t len M4_YY_PROTO_LAST_ARG );"
 block|,
 literal|""
 block|,
@@ -1751,9 +1759,9 @@ literal|"    YY_BUFFER_STATE * yy_buffer_stack; /**< Stack as an array. */"
 block|,
 literal|"    char yy_hold_char;"
 block|,
-literal|"    int yy_n_chars;"
+literal|"    yy_size_t yy_n_chars;"
 block|,
-literal|"    int yyleng_r;"
+literal|"    yy_size_t yyleng_r;"
 block|,
 literal|"    char *yy_c_buf_p;"
 block|,
@@ -2027,7 +2035,7 @@ literal|"m4_ifdef( [[M4_YY_NO_GET_LENG]],,"
 block|,
 literal|"[["
 block|,
-literal|"int yyget_leng M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );"
+literal|"yy_size_t yyget_leng M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );"
 block|,
 literal|"]])"
 block|,
@@ -2058,6 +2066,38 @@ block|,
 literal|"[["
 block|,
 literal|"void yyset_lineno M4_YY_PARAMS( int line_number M4_YY_PROTO_LAST_ARG );"
+block|,
+literal|"]])"
+block|,
+literal|""
+block|,
+literal|"m4_ifdef( [[M4_YY_REENTRANT]],"
+block|,
+literal|"[["
+block|,
+literal|"m4_ifdef( [[M4_YY_NO_GET_COLUMN]],,"
+block|,
+literal|"[["
+block|,
+literal|"int yyget_column  M4_YY_PARAMS( M4_YY_PROTO_ONLY_ARG );"
+block|,
+literal|"]])"
+block|,
+literal|"]])"
+block|,
+literal|""
+block|,
+literal|"m4_ifdef( [[M4_YY_REENTRANT]],"
+block|,
+literal|"[["
+block|,
+literal|"m4_ifdef( [[M4_YY_NO_SET_COLUMN]],,"
+block|,
+literal|"[["
+block|,
+literal|"void yyset_column M4_YY_PARAMS( int column_no M4_YY_PROTO_LAST_ARG );"
+block|,
+literal|"]])"
 block|,
 literal|"]])"
 block|,
@@ -2293,7 +2333,7 @@ literal|" * we now use fwrite()."
 block|,
 literal|" */"
 block|,
-literal|"#define ECHO fwrite( yytext, yyleng, 1, yyout )"
+literal|"#define ECHO do { if (fwrite( yytext, yyleng, 1, yyout )) {} } while (0)"
 block|,
 literal|"%endif"
 block|,
@@ -3692,7 +3732,7 @@ literal|"	else"
 block|,
 literal|"		{"
 block|,
-literal|"			int num_to_read ="
+literal|"			yy_size_t num_to_read ="
 block|,
 literal|"			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;"
 block|,
@@ -3716,7 +3756,7 @@ literal|"[["
 block|,
 literal|"			/* just a shorter name for the current buffer */"
 block|,
-literal|"			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;"
+literal|"			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;"
 block|,
 literal|""
 block|,
@@ -3730,7 +3770,7 @@ literal|"			if ( b->yy_is_our_buffer )"
 block|,
 literal|"				{"
 block|,
-literal|"				int new_size = b->yy_buf_size * 2;"
+literal|"				yy_size_t new_size = b->yy_buf_size * 2;"
 block|,
 literal|""
 block|,
@@ -3794,7 +3834,7 @@ literal|"		/* Read in more data. */"
 block|,
 literal|"		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),"
 block|,
-literal|"			YY_G(yy_n_chars), (size_t) num_to_read );"
+literal|"			YY_G(yy_n_chars), num_to_read );"
 block|,
 literal|""
 block|,
@@ -3962,6 +4002,8 @@ literal|"%% [17.0] code to find the next state, and perhaps do backing up, goes 
 block|,
 literal|""
 block|,
+literal|"	M4_YY_NOOP_GUTS_VAR();"
+block|,
 literal|"	return yy_is_jam ? 0 : yy_current_state;"
 block|,
 literal|"}"
@@ -4010,7 +4052,7 @@ literal|"		{ /* need to shift things up to make room */"
 block|,
 literal|"		/* +2 for EOB chars. */"
 block|,
-literal|"		register int number_to_move = YY_G(yy_n_chars) + 2;"
+literal|"		register yy_size_t number_to_move = YY_G(yy_n_chars) + 2;"
 block|,
 literal|"		register char *dest =&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf["
 block|,
@@ -4142,7 +4184,7 @@ literal|"		else"
 block|,
 literal|"			{ /* need more input */"
 block|,
-literal|"			int offset = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);"
+literal|"			yy_size_t offset = YY_G(yy_c_buf_p) - YY_G(yytext_ptr);"
 block|,
 literal|"			++YY_G(yy_c_buf_p);"
 block|,
@@ -4534,44 +4576,6 @@ literal|""
 block|,
 literal|""
 block|,
-literal|"%if-c-only"
-block|,
-literal|"m4_ifdef( [[M4_YY_ALWAYS_INTERACTIVE]],,"
-block|,
-literal|"[["
-block|,
-literal|"    m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],,"
-block|,
-literal|"    [["
-block|,
-literal|"#ifndef __cplusplus"
-block|,
-literal|"extern int isatty M4_YY_PARAMS( int );"
-block|,
-literal|"#endif /* __cplusplus */"
-block|,
-literal|"    ]])"
-block|,
-literal|"]])"
-block|,
-literal|"%endif"
-block|,
-literal|""
-block|,
-literal|"%if-c++-only"
-block|,
-literal|"m4_ifdef( [[M4_YY_NEVER_INTERACTIVE]],,"
-block|,
-literal|"[["
-block|,
-literal|"extern \"C\" int isatty M4_YY_PARAMS( int );"
-block|,
-literal|"]])"
-block|,
-literal|"%endif"
-block|,
-literal|""
-block|,
 literal|"/* Initializes or reinitializes a buffer."
 block|,
 literal|" * This function is sometimes called more than once on the same buffer,"
@@ -4900,7 +4904,7 @@ literal|"%endif"
 block|,
 literal|"{"
 block|,
-literal|"	int num_to_alloc;"
+literal|"	yy_size_t num_to_alloc;"
 block|,
 literal|"    M4_YY_DECL_GUTS_VAR();"
 block|,
@@ -5130,9 +5134,9 @@ literal|"/** Setup the input buffer state to scan the given bytes. The next call
 block|,
 literal|" * scan from a @e copy of @a bytes."
 block|,
-literal|" * @param bytes the byte buffer to scan"
+literal|" * @param yybytes the byte buffer to scan"
 block|,
-literal|" * @param len the number of bytes in the buffer pointed to by @a bytes."
+literal|" * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes."
 block|,
 literal|" * M4_YY_DOC_PARAM"
 block|,
@@ -5140,7 +5144,7 @@ literal|" * @return the newly allocated buffer state object."
 block|,
 literal|" */"
 block|,
-literal|"YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, int ,_yybytes_len)"
+literal|"YY_BUFFER_STATE yy_scan_bytes  YYFARGS2( yyconst char *,yybytes, yy_size_t ,_yybytes_len)"
 block|,
 literal|"{"
 block|,
@@ -5592,7 +5596,7 @@ literal|" * M4_YY_DOC_PARAM"
 block|,
 literal|" */"
 block|,
-literal|"int yyget_leng  YYFARGS0(void)"
+literal|"yy_size_t yyget_leng  YYFARGS0(void)"
 block|,
 literal|"{"
 block|,
@@ -5688,7 +5692,7 @@ literal|"        /* lineno is only valid if an input buffer exists. */"
 block|,
 literal|"        if (! YY_CURRENT_BUFFER )"
 block|,
-literal|"           yy_fatal_error( \"yyset_lineno called with no buffer\" M4_YY_CALL_LAST_ARG); "
+literal|"           YY_FATAL_ERROR( \"yyset_lineno called with no buffer\" );"
 block|,
 literal|"    ]])"
 block|,
@@ -5732,7 +5736,7 @@ literal|"        /* column is only valid if an input buffer exists. */"
 block|,
 literal|"        if (! YY_CURRENT_BUFFER )"
 block|,
-literal|"           yy_fatal_error( \"yyset_column called with no buffer\" M4_YY_CALL_LAST_ARG); "
+literal|"           YY_FATAL_ERROR( \"yyset_column called with no buffer\" );"
 block|,
 literal|"    ]])"
 block|,
@@ -6663,7 +6667,7 @@ literal|""
 block|,
 literal|"    if (th->th_magic != YYTBL_MAGIC){"
 block|,
-literal|"        yy_fatal_error(\"bad magic number\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"        YY_FATAL_ERROR( \"bad magic number\" );   /* TODO: not fatal. */"
 block|,
 literal|"        return -1;"
 block|,
@@ -6685,7 +6689,7 @@ literal|"    /* Sanity check on header size. Greater than 1k suggests some funny
 block|,
 literal|"    if (th->th_hsize< 16 || th->th_hsize> 1024){"
 block|,
-literal|"        yy_fatal_error(\"insane header size detected\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"        YY_FATAL_ERROR( \"insane header size detected\" );   /* TODO: not fatal. */"
 block|,
 literal|"        return -1;"
 block|,
@@ -6815,7 +6819,7 @@ literal|""
 block|,
 literal|"    if ((dmap = yytbl_dmap_lookup (dmap, td.td_id M4_YY_CALL_LAST_ARG)) == NULL){"
 block|,
-literal|"        yy_fatal_error(\"table id not found in map.\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"        YY_FATAL_ERROR( \"table id not found in map.\" );   /* TODO: not fatal. */"
 block|,
 literal|"        return -1;"
 block|,
@@ -6949,7 +6953,7 @@ literal|"                break;"
 block|,
 literal|"            default: "
 block|,
-literal|"                yy_fatal_error(\"invalid td_flags\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"                YY_FATAL_ERROR( \"invalid td_flags\" );   /* TODO: not fatal. */"
 block|,
 literal|"                return -1;"
 block|,
@@ -6989,7 +6993,7 @@ literal|"                    if (M4_YY_TABLES_VERIFY){"
 block|,
 literal|"                        if( ((flex_int32_t *) v)[0] != (flex_int32_t) t32)"
 block|,
-literal|"                           yy_fatal_error(\"tables verification failed at YYTD_STRUCT flex_int32_t\" M4_YY_CALL_LAST_ARG);"
+literal|"                           YY_FATAL_ERROR( \"tables verification failed at YYTD_STRUCT flex_int32_t\" );"
 block|,
 literal|"                    }else"
 block|,
@@ -7003,7 +7007,7 @@ literal|"                    if (M4_YY_TABLES_VERIFY ){"
 block|,
 literal|"                        if(((flex_int16_t *) v)[0] != (flex_int16_t) t32)"
 block|,
-literal|"                        yy_fatal_error(\"tables verification failed at YYTD_STRUCT flex_int16_t\" M4_YY_CALL_LAST_ARG);"
+literal|"                        YY_FATAL_ERROR( \"tables verification failed at YYTD_STRUCT flex_int16_t\" );"
 block|,
 literal|"                    }else"
 block|,
@@ -7017,7 +7021,7 @@ literal|"                    if (M4_YY_TABLES_VERIFY ){"
 block|,
 literal|"                         if( ((flex_int8_t *) v)[0] != (flex_int8_t) t32)"
 block|,
-literal|"                        yy_fatal_error(\"tables verification failed at YYTD_STRUCT flex_int8_t\" M4_YY_CALL_LAST_ARG);"
+literal|"                        YY_FATAL_ERROR( \"tables verification failed at YYTD_STRUCT flex_int8_t\" );"
 block|,
 literal|"                    }else"
 block|,
@@ -7027,7 +7031,7 @@ literal|"                    break;"
 block|,
 literal|"                default:"
 block|,
-literal|"                    yy_fatal_error(\"invalid dmap->dm_sz for struct\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"                    YY_FATAL_ERROR( \"invalid dmap->dm_sz for struct\" );   /* TODO: not fatal. */"
 block|,
 literal|"                    return -1;"
 block|,
@@ -7055,7 +7059,7 @@ literal|""
 block|,
 literal|"                if (!transdmap){"
 block|,
-literal|"                    yy_fatal_error(\"transition table not found\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"                    YY_FATAL_ERROR( \"transition table not found\" );   /* TODO: not fatal. */"
 block|,
 literal|"                    return -1;"
 block|,
@@ -7077,7 +7081,7 @@ literal|"                if(M4_YY_TABLES_VERIFY ){"
 block|,
 literal|"                    if( ((struct yy_trans_info **) p)[0] != v)"
 block|,
-literal|"                        yy_fatal_error(\"tables verification failed at YYTD_PTRANS\" M4_YY_CALL_LAST_ARG);"
+literal|"                        YY_FATAL_ERROR( \"tables verification failed at YYTD_PTRANS\" );"
 block|,
 literal|"                }else"
 block|,
@@ -7103,7 +7107,7 @@ literal|"                    if(M4_YY_TABLES_VERIFY ){"
 block|,
 literal|"                        if( ((flex_int32_t *) p)[0] != (flex_int32_t) t32)"
 block|,
-literal|"                        yy_fatal_error(\"tables verification failed at flex_int32_t\" M4_YY_CALL_LAST_ARG);"
+literal|"                        YY_FATAL_ERROR( \"tables verification failed at flex_int32_t\" );"
 block|,
 literal|"                    }else"
 block|,
@@ -7119,7 +7123,7 @@ literal|"                    if(M4_YY_TABLES_VERIFY ){"
 block|,
 literal|"                        if( ((flex_int16_t *) p)[0] != (flex_int16_t) t32)"
 block|,
-literal|"                        yy_fatal_error(\"tables verification failed at flex_int16_t\" M4_YY_CALL_LAST_ARG);"
+literal|"                        YY_FATAL_ERROR( \"tables verification failed at flex_int16_t\" );"
 block|,
 literal|"                    }else"
 block|,
@@ -7135,7 +7139,7 @@ literal|"                    if(M4_YY_TABLES_VERIFY ){"
 block|,
 literal|"                        if( ((flex_int8_t *) p)[0] != (flex_int8_t) t32)"
 block|,
-literal|"                        yy_fatal_error(\"tables verification failed at flex_int8_t\" M4_YY_CALL_LAST_ARG);"
+literal|"                        YY_FATAL_ERROR( \"tables verification failed at flex_int8_t\" );"
 block|,
 literal|"                    }else"
 block|,
@@ -7147,7 +7151,7 @@ literal|"                    break;"
 block|,
 literal|"                default:"
 block|,
-literal|"                    yy_fatal_error(\"invalid dmap->dm_sz for plain int\" /*TODO: not fatal.*/ M4_YY_CALL_LAST_ARG);"
+literal|"                    YY_FATAL_ERROR( \"invalid dmap->dm_sz for plain int\" );   /* TODO: not fatal. */"
 block|,
 literal|"                    return -1;"
 block|,

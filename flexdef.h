@@ -419,11 +419,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_REGEX_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<regex.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1441,7 +1452,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables used in the flex input routines:  * datapos - characters on current output line  * dataline - number of contiguous lines of data in current data  * 	statement.  Used to generate readable -f output  * linenum - current input line number  * out_linenum - current output line number  * skelfile - the skeleton file  * skel - compiled-in skeleton array  * skel_ind - index into "skel" array, if skelfile is nil  * yyin - input file  * backing_up_file - file to summarize backing-up states to  * infilename - name of input file  * outfilename - name of output file  * headerfilename - name of the .h file to generate  * did_outfilename - whether outfilename was explicitly set  * prefix - the prefix used for externally visible names ("yy" by default)  * yyclass - yyFlexLexer subclass to use for YY_DECL  * do_stdinit - whether to initialize yyin/yyout to stdin/stdout  * use_stdout - the -t flag  * input_files - array holding names of input files  * num_input_files - size of input_files array  * program_name - name with which program was invoked  *  * action_array - array to hold the rule actions  * action_size - size of action_array  * defs1_offset - index where the user's section 1 definitions start  *	in action_array  * prolog_offset - index where the prolog starts in action_array  * action_offset - index where the non-prolog starts in action_array  * action_index - index where the next action should go, with respect  * 	to "action_array"  */
+comment|/* Variables used in the flex input routines:  * datapos - characters on current output line  * dataline - number of contiguous lines of data in current data  * 	statement.  Used to generate readable -f output  * linenum - current input line number  * skelfile - the skeleton file  * skel - compiled-in skeleton array  * skel_ind - index into "skel" array, if skelfile is nil  * yyin - input file  * backing_up_file - file to summarize backing-up states to  * infilename - name of input file  * outfilename - name of output file  * headerfilename - name of the .h file to generate  * did_outfilename - whether outfilename was explicitly set  * prefix - the prefix used for externally visible names ("yy" by default)  * yyclass - yyFlexLexer subclass to use for YY_DECL  * do_stdinit - whether to initialize yyin/yyout to stdin/stdout  * use_stdout - the -t flag  * input_files - array holding names of input files  * num_input_files - size of input_files array  * program_name - name with which program was invoked  *  * action_array - array to hold the rule actions  * action_size - size of action_array  * defs1_offset - index where the user's section 1 definitions start  *	in action_array  * prolog_offset - index where the prolog starts in action_array  * action_offset - index where the non-prolog starts in action_array  * action_index - index where the next action should go, with respect  * 	to "action_array"  */
 end_comment
 
 begin_decl_stmt
@@ -1452,8 +1463,6 @@ decl_stmt|,
 name|dataline
 decl_stmt|,
 name|linenum
-decl_stmt|,
-name|out_linenum
 decl_stmt|;
 end_decl_stmt
 
@@ -3137,20 +3146,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Bubble sort an integer array. */
+comment|/* Compare two integers for use by qsort. */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|bubble
+name|int
+name|intcmp
 name|PROTO
 argument_list|(
 operator|(
-name|int
-index|[]
+specifier|const
+name|void
+operator|*
 operator|,
-name|int
+specifier|const
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3233,22 +3245,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Shell sort a character array. */
+comment|/* Compare two characters for use by qsort with '\0' sorting last. */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|cshell
+name|int
+name|cclcmp
 name|PROTO
 argument_list|(
 operator|(
-name|Char
-index|[]
+specifier|const
+name|void
+operator|*
 operator|,
-name|int
-operator|,
-name|int
+specifier|const
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3649,21 +3662,6 @@ operator|*
 operator|,
 name|unsigned
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|out_line_count
-name|PROTO
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

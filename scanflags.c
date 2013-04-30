@@ -240,6 +240,27 @@ literal|32
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|_sf_stk
+condition|)
+name|lerrsf_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Unable to allocate %ld of stack"
+argument_list|)
+argument_list|,
+operator|(
+name|long
+operator|)
+sizeof|sizeof
+argument_list|(
+name|scanflags_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|_sf_stk
 index|[
 name|_sf_top_ix
