@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|AJU_TTYNAME
-value|"ttyu"
+value|"ttyj"
 end_define
 
 begin_comment
