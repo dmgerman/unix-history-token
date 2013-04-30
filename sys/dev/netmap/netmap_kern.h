@@ -590,8 +590,12 @@ modifier|*
 name|rxd
 parameter_list|)
 function_decl|;
+comment|/* 	 * Bridge support: 	 * 	 * bdg_port is the port number used in the bridge; 	 * na_bdg_refcount is a refcount used for bridge ports, 	 *	when it goes to 0 we can detach+free this port 	 *	(a bridge port is always attached if it exists; 	 *	it is not always registered) 	 */
 name|int
 name|bdg_port
+decl_stmt|;
+name|int
+name|na_bdg_refcount
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -600,10 +604,6 @@ name|struct
 name|net_device_ops
 name|nm_ndo
 decl_stmt|;
-name|int
-name|if_refcount
-decl_stmt|;
-comment|// XXX additions for bridge
 endif|#
 directive|endif
 comment|/* linux */
@@ -669,6 +669,32 @@ directive|endif
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* How to handle locking support in netmap_rx_irq/netmap_tx_irq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_LOCKED_ENTER
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* already locked on enter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_LOCKED_EXIT
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* keep locked on exit */
+end_comment
 
 begin_comment
 comment|/*  * The following are support routines used by individual drivers to  * support netmap operation.  *  * netmap_attach() initializes a struct netmap_adapter, allocating the  * 	struct netmap_ring's and the struct selinfo.  *  * netmap_detach() frees the memory allocated by netmap_attach().  *  * netmap_start() replaces the if_transmit routine of the interface,  *	and is used to intercept packets coming from the stack.  *  * netmap_load_map/netmap_reload_map are helper routines to set/reset  *	the dmamap for a packet buffer  *  * netmap_reset() is a helper routine to be called in the driver  *	when reinitializing a ring.  */
@@ -776,6 +802,10 @@ directive|define
 name|NETMAP_BUF_SIZE
 value|netmap_buf_size
 end_define
+
+begin_comment
+comment|// XXX remove
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1356,7 +1386,7 @@ comment|/* virtual address. */
 name|vm_paddr_t
 name|paddr
 decl_stmt|;
-comment|/* phisical address. */
+comment|/* physical address. */
 block|}
 struct|;
 end_struct
@@ -1543,13 +1573,6 @@ name|_q
 parameter_list|)
 value|netmap_rx_irq(_n, _q, NULL)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|netmap_copy
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

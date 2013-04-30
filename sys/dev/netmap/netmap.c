@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011-2012 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -526,18 +526,6 @@ begin_comment
 comment|/* force transparent mode */
 end_comment
 
-begin_decl_stmt
-name|int
-name|netmap_copy
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* debugging, copy content */
-end_comment
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -593,27 +581,6 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|netmap_fwd
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_dev_netmap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|copy
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|netmap_copy
 argument_list|,
 literal|0
 argument_list|,
@@ -744,21 +711,21 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ADD_BDG_REF
+name|refcount_acquire
 parameter_list|(
-name|ifp
+name|_a
 parameter_list|)
-value|(NA(ifp)->if_refcount++)
+value|atomic_add(1, (atomic_t *)_a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DROP_BDG_REF
+name|refcount_release
 parameter_list|(
-name|ifp
+name|_a
 parameter_list|)
-value|(NA(ifp)->if_refcount--<= 1)
+value|atomic_dec_and_test((atomic_t *)_a)
 end_define
 
 begin_else
@@ -769,26 +736,6 @@ end_else
 begin_comment
 comment|/* !linux */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ADD_BDG_REF
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp)->if_refcount++
-end_define
-
-begin_define
-define|#
-directive|define
-name|DROP_BDG_REF
-parameter_list|(
-name|ifp
-parameter_list|)
-value|refcount_release(&(ifp)->if_refcount)
-end_define
 
 begin_ifdef
 ifdef|#
@@ -835,6 +782,30 @@ end_endif
 begin_comment
 comment|/* !linux */
 end_comment
+
+begin_comment
+comment|/*    * These are used to handle reference counters for bridge ports.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ADD_BDG_REF
+parameter_list|(
+name|ifp
+parameter_list|)
+value|refcount_acquire(&NA(ifp)->na_bdg_refcount)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DROP_BDG_REF
+parameter_list|(
+name|ifp
+parameter_list|)
+value|refcount_release(&NA(ifp)->na_bdg_refcount)
+end_define
 
 begin_function_decl
 specifier|static
@@ -910,7 +881,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Interfaces for a bridge are all in ports[].  * The array has fixed size, an empty entry does not terminate  * the search.  */
+comment|/*  * Interfaces for a bridge are all in bdg_ports[].  * The array has fixed size, an empty entry does not terminate  * the search. But lookups only occur on attach/detach so we  * don't mind if they are slow.  *  * The bridge is non blocking on the transmit ports.  *  * bdg_lock protects accesses to the bdg_ports array.  */
 end_comment
 
 begin_struct
@@ -7776,21 +7747,34 @@ directive|ifdef
 name|linux
 if|if
 condition|(
+operator|!
 name|ifp
 operator|->
 name|netdev_ops
 condition|)
 block|{
-name|ND
+name|D
 argument_list|(
-literal|"netdev_ops %p"
-argument_list|,
-name|ifp
-operator|->
-name|netdev_ops
+literal|"ouch, we cannot override netdev_ops"
 argument_list|)
 expr_stmt|;
-comment|/* prepare a clone of the netdev ops */
+goto|goto
+name|fail
+goto|;
+block|}
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|>=
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|28
+argument_list|)
+comment|/* if needed, prepare a clone of the entire netdev ops */
 name|na
 operator|->
 name|nm_ndo
@@ -7800,7 +7784,9 @@ name|ifp
 operator|->
 name|netdev_ops
 expr_stmt|;
-block|}
+endif|#
+directive|endif
+comment|/* 2.6.28 and above */
 name|na
 operator|->
 name|nm_ndo
@@ -7811,6 +7797,7 @@ name|linux_netmap_start
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* linux */
 name|D
 argument_list|(
 literal|"success for %s"
@@ -7834,6 +7821,11 @@ argument_list|,
 name|ifp
 argument_list|,
 name|na
+argument_list|)
+expr_stmt|;
+name|netmap_detach
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 return|return
@@ -8034,6 +8026,36 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|NETMAP_BUF_SIZE
+condition|)
+block|{
+comment|/* too long for us */
+name|D
+argument_list|(
+literal|"%s from_host, drop packet size %d> %d"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|,
+name|len
+argument_list|,
+name|NETMAP_BUF_SIZE
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 name|na
 operator|->
 name|nm_lock
@@ -8071,31 +8093,6 @@ goto|goto
 name|done
 goto|;
 comment|/* no space */
-block|}
-if|if
-condition|(
-name|len
-operator|>
-name|NETMAP_BUF_SIZE
-condition|)
-block|{
-name|D
-argument_list|(
-literal|"%s from_host, drop packet size %d> %d"
-argument_list|,
-name|ifp
-operator|->
-name|if_xname
-argument_list|,
-name|len
-argument_list|,
-name|NETMAP_BUF_SIZE
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-comment|/* too long for us */
 block|}
 comment|/* compute the insert position */
 name|i
@@ -8482,7 +8479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Default functions to handle rx/tx interrupts  * we have 4 cases:  * 1 ring, single lock:  *	lock(core); wake(i=0); unlock(core)  * N rings, single lock:  *	lock(core); wake(i); wake(N+1) unlock(core)  * 1 ring, separate locks: (i=0)  *	lock(i); wake(i); unlock(i)  * N rings, separate locks:  *	lock(i); wake(i); unlock(i); lock(core) wake(N+1) unlock(core)  * work_done is non-null on the RX path.  */
+comment|/*  * Default functions to handle rx/tx interrupts  * we have 4 cases:  * 1 ring, single lock:  *	lock(core); wake(i=0); unlock(core)  * N rings, single lock:  *	lock(core); wake(i); wake(N+1) unlock(core)  * 1 ring, separate locks: (i=0)  *	lock(i); wake(i); unlock(i)  * N rings, separate locks:  *	lock(i); wake(i); unlock(i); lock(core) wake(N+1) unlock(core)  * work_done is non-null on the RX path.  *  * The 'q' argument also includes flag to tell whether the queue is  * already locked on enter, and whether it should remain locked on exit.  * This helps adapting to different defaults in drivers and OSes.  */
 end_comment
 
 begin_function
@@ -8516,6 +8513,13 @@ name|NM_SELINFO_T
 modifier|*
 name|main_wq
 decl_stmt|;
+name|int
+name|locktype
+decl_stmt|,
+name|unlocktype
+decl_stmt|,
+name|lock
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -8530,6 +8534,22 @@ condition|)
 return|return
 literal|0
 return|;
+name|lock
+operator|=
+name|q
+operator|&
+operator|(
+name|NETMAP_LOCKED_ENTER
+operator||
+name|NETMAP_LOCKED_EXIT
+operator|)
+expr_stmt|;
+name|q
+operator|=
+name|q
+operator|&
+name|NETMAP_RING_MASK
+expr_stmt|;
 name|ND
 argument_list|(
 literal|5
@@ -8587,7 +8607,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|// regular queue
+comment|// not a physical queue
 name|r
 operator|=
 name|na
@@ -8619,10 +8639,18 @@ name|rx_si
 else|:
 name|NULL
 expr_stmt|;
+name|locktype
+operator|=
+name|NETMAP_RX_LOCK
+expr_stmt|;
+name|unlocktype
+operator|=
+name|NETMAP_RX_UNLOCK
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* tx path */
+comment|/* TX path */
 if|if
 condition|(
 name|q
@@ -8634,7 +8662,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|// regular queue
+comment|// not a physical queue
 name|r
 operator|=
 name|na
@@ -8666,6 +8694,14 @@ operator|&
 name|q
 expr_stmt|;
 comment|/* dummy */
+name|locktype
+operator|=
+name|NETMAP_TX_LOCK
+expr_stmt|;
+name|unlocktype
+operator|=
+name|NETMAP_TX_UNLOCK
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8674,12 +8710,24 @@ operator|->
 name|separate_locks
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
+if|if
+condition|(
+operator|!
+operator|(
+name|lock
 operator|&
-name|r
+name|NETMAP_LOCKED_ENTER
+operator|)
+condition|)
+name|na
 operator|->
-name|q_lock
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|locktype
+argument_list|,
+name|q
 argument_list|)
 expr_stmt|;
 name|selwakeuppri
@@ -8692,12 +8740,15 @@ argument_list|,
 name|PI_NET
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|r
+name|na
 operator|->
-name|q_lock
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|unlocktype
+argument_list|,
+name|q
 argument_list|)
 expr_stmt|;
 if|if
@@ -8705,12 +8756,15 @@ condition|(
 name|main_wq
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
 name|na
 operator|->
-name|core_lock
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|NETMAP_CORE_LOCK
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|selwakeuppri
@@ -8720,24 +8774,57 @@ argument_list|,
 name|PI_NET
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
 name|na
 operator|->
-name|core_lock
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|NETMAP_CORE_UNLOCK
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* lock the queue again if requested */
+if|if
+condition|(
+name|lock
+operator|&
+name|NETMAP_LOCKED_EXIT
+condition|)
+name|na
+operator|->
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|locktype
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-name|mtx_lock
-argument_list|(
+if|if
+condition|(
+operator|!
+operator|(
+name|lock
 operator|&
+name|NETMAP_LOCKED_ENTER
+operator|)
+condition|)
 name|na
 operator|->
-name|core_lock
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|NETMAP_CORE_LOCK
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|selwakeuppri
@@ -8761,12 +8848,24 @@ argument_list|,
 name|PI_NET
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
+if|if
+condition|(
+operator|!
+operator|(
+name|lock
 operator|&
+name|NETMAP_LOCKED_EXIT
+operator|)
+condition|)
 name|na
 operator|->
-name|core_lock
+name|nm_lock
+argument_list|(
+name|ifp
+argument_list|,
+name|NETMAP_CORE_UNLOCK
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8814,6 +8913,26 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|LINUX_VERSION_CODE
+operator|<
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|28
+argument_list|)
+name|int
+name|events
+init|=
+name|POLLIN
+operator||
+name|POLLOUT
+decl_stmt|;
+comment|/* XXX maybe... */
+elif|#
+directive|elif
 name|LINUX_VERSION_CODE
 operator|<
 name|KERNEL_VERSION
@@ -8994,7 +9113,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-comment|/* 		 * In each pool memory is allocated in clusters 		 * of size _clustsize, each containing clustentries 		 * entries. For each object k we already store the 		 * vtophys mapping in lut[k] so we use that, scanning 		 * the lut[] array in steps of clustentries, 		 * and we map each cluster (not individual pages, 		 * it would be overkill). 		 */
+comment|/* 		 * In each pool memory is allocated in clusters 		 * of size _clustsize, each containing clustentries 		 * entries. For each object k we already store the 		 * vtophys mapping in lut[k] so we use that, scanning 		 * the lut[] array in steps of clustentries, 		 * and we map each cluster (not individual pages, 		 * it would be overkill -- XXX slow ? 20130415). 		 */
 comment|/* 		 * We interpret vm_pgoff as an offset into the whole 		 * netmap memory, as if all clusters where contiguous. 		 */
 for|for
 control|(
