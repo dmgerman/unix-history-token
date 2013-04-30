@@ -2822,6 +2822,13 @@ literal|"Chelsio T520-CX"
 block|}
 block|,
 block|{
+literal|0x5410
+block|,
+literal|"Chelsio T580-LP-CR"
+block|}
+block|,
+comment|/* 2 x 40G */
+block|{
 literal|0x5411
 block|,
 literal|"Chelsio T520-LL-CR"
@@ -2900,12 +2907,6 @@ block|{
 literal|0x540f
 block|,
 literal|"Chelsio Amsterdam"
-block|}
-block|,
-block|{
-literal|0x5410
-block|,
-literal|"Chelsio T580-LP-CR"
 block|}
 block|,
 block|{
