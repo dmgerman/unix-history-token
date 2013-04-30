@@ -158,6 +158,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|cfi
+argument_list|,
+name|simplebus
+argument_list|,
+name|cfi_fdt_driver
+argument_list|,
+name|cfi_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
