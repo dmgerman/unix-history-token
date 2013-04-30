@@ -6069,6 +6069,8 @@ name|IAP_F_ALLCPUSCORE2
 operator||
 name|IAP_F_I7
 operator||
+name|IAP_F_WM
+operator||
 name|IAP_F_SB
 operator||
 name|IAP_F_IB
@@ -6093,6 +6095,8 @@ operator||
 name|IAP_F_ALLCPUSCORE2
 operator||
 name|IAP_F_I7
+operator||
+name|IAP_F_WM
 operator||
 name|IAP_F_SB
 operator||
@@ -11200,6 +11204,8 @@ argument_list|,
 name|IAP_F_FM
 operator||
 name|IAP_F_ALLCPUSCORE2
+operator||
+name|IAP_F_WM
 operator||
 name|IAP_F_SB
 operator||
