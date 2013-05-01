@@ -3429,34 +3429,28 @@ operator|==
 name|EOF
 condition|)
 break|break;
-comment|/*  		 * If '\0' is present in the middle of the configuration 		 * string, this means something very weird is happening. 		 * Make such case very visible.  However, some architectures 		 * pad the length of the section with NULs to a multiple of 		 * sh_addralign, allow a NUL in that part of the section. 		 */
 if|if
 condition|(
 name|r
 operator|==
 literal|'\0'
-operator|&&
-operator|(
-name|size
-operator|-
-name|i
-operator|)
-operator|<
-name|align
 condition|)
-break|break;
+block|{
 name|assert
 argument_list|(
-name|r
-operator|!=
-literal|'\0'
+name|i
+operator|==
+name|size
+operator|-
+literal|1
 operator|&&
 operator|(
-literal|"Char present in the configuration "
-literal|"string mustn't be equal to 0"
+literal|"\\0 found in the middle of a file"
 operator|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|fputc
 argument_list|(
 name|r
