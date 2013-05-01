@@ -4854,7 +4854,7 @@ name|resultsize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|HAL_EEPROM
+name|ar9300_eeprom_t
 argument_list|)
 expr_stmt|;
 return|return
