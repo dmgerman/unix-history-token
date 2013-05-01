@@ -5047,13 +5047,15 @@ expr_stmt|;
 return|return
 name|AH_TRUE
 return|;
-case|case
-name|HAL_DIAG_TXCONT
-case|:
+if|#
+directive|if
+literal|0
+block|case HAL_DIAG_TXCONT:
 comment|/*AR9300_CONTTXMODE(ah, (struct ath_desc *)args, argsize );*/
-return|return
-name|AH_TRUE
-return|;
+block|return AH_TRUE;
+endif|#
+directive|endif
+comment|/* 0 */
 endif|#
 directive|endif
 comment|/* AH_PRIVATE_DIAG */
