@@ -587,13 +587,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|use_xsaveopt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|use_xsave
 decl_stmt|;
@@ -880,10 +873,6 @@ index|]
 operator||=
 literal|0x10
 expr_stmt|;
-name|use_xsaveopt
-operator|=
-literal|1
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1150,7 +1139,7 @@ expr_stmt|;
 comment|/* 	 * Create a table describing the layout of the CPU Extended 	 * Save Area. 	 */
 if|if
 condition|(
-name|use_xsaveopt
+name|use_xsave
 condition|)
 block|{
 name|max_ext_n
@@ -2227,6 +2216,8 @@ name|int
 name|max_ext_n
 decl_stmt|,
 name|i
+decl_stmt|,
+name|owned
 decl_stmt|;
 name|pcb
 operator|=
@@ -2309,26 +2300,27 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
+name|owned
+operator|=
 name|_MC_FPOWNED_FPU
-operator|)
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
+name|owned
+operator|=
+name|_MC_FPOWNED_PCB
+expr_stmt|;
+block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|use_xsaveopt
+name|use_xsave
 condition|)
 block|{
-comment|/* 			 * Handle partially saved state. 			 */
+comment|/* 		 * Handle partially saved state. 		 */
 name|sa
 operator|=
 operator|(
@@ -2444,10 +2436,9 @@ block|}
 block|}
 return|return
 operator|(
-name|_MC_FPOWNED_PCB
+name|owned
 operator|)
 return|;
-block|}
 block|}
 end_function
 
