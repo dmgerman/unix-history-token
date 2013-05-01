@@ -290,6 +290,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|ELF_NOTE_ROUNDSIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|OLD_EI_BRAND
 value|8
 end_define
@@ -962,10 +969,7 @@ name|note
 operator|->
 name|n_namesz
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Addr
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1093,10 +1097,7 @@ name|note
 operator|->
 name|n_namesz
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Addr
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|)
 expr_stmt|;
 name|desc
@@ -8143,10 +8144,7 @@ name|phdr
 operator|->
 name|p_align
 operator|=
-sizeof|sizeof
-argument_list|(
-name|Elf32_Size
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 expr_stmt|;
 name|phdr
 operator|++
@@ -8301,10 +8299,7 @@ name|roundup2
 argument_list|(
 literal|8
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Size
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|)
 operator|+
 comment|/* note name ("FreeBSD") */
@@ -8312,10 +8307,7 @@ name|roundup2
 argument_list|(
 name|size
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Size
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|)
 expr_stmt|;
 comment|/* note description */
@@ -8441,10 +8433,7 @@ name|sb
 argument_list|,
 name|old_len
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Size
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -8488,10 +8477,7 @@ name|sb
 argument_list|,
 name|old_len
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Size
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -11098,10 +11084,7 @@ name|note
 operator|->
 name|n_namesz
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Addr
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|)
 operator|+
 name|roundup2
@@ -11110,10 +11093,7 @@ name|note
 operator|->
 name|n_descsz
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Elf32_Addr
-argument_list|)
+name|ELF_NOTE_ROUNDSIZE
 argument_list|)
 operator|)
 expr_stmt|;
