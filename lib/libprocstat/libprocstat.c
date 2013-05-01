@@ -11719,15 +11719,23 @@ block|{
 case|case
 name|PROCSTAT_KVM
 case|:
-name|warnx
-argument_list|(
-literal|"kvm method is not supported"
-argument_list|)
+comment|/* XXX: Return empty string. */
+if|if
+condition|(
+name|maxlen
+operator|>
+literal|0
+condition|)
+name|pathname
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 case|case
