@@ -129,23 +129,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NO_REG_DEFS
-value|1
-end_define
-
-begin_comment
-comment|/* Prevent asm.h from including regdef.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/asm.h>
-end_include
-
 begin_include
 include|#
 directive|include

@@ -29,15 +29,6 @@ begin_comment
 comment|/* for API selection */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ASSEMBLER__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -484,15 +475,6 @@ end_endif
 
 begin_comment
 comment|/* __mips_n32 || __mips_n64 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ASSEMBLER__ */
 end_comment
 
 begin_endif

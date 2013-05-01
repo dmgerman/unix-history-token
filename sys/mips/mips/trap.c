@@ -55,17 +55,6 @@ directive|include
 file|"opt_kdtrace.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NO_REG_DEFS
-value|1
-end_define
-
-begin_comment
-comment|/* Prevent asm.h from including regdef.h */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -281,12 +270,6 @@ directive|include
 file|<machine/tls.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/asm.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -426,6 +409,215 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|lbu_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lbu %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lb_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lb %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lwl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lwl %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lwr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lwr %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ldl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("ldl %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ldr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("ldr %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sb_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("sb %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|swl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("swl %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|swr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("swr %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sdl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("sdl %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sdr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("sdr %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
 
 begin_function_decl
 specifier|static
