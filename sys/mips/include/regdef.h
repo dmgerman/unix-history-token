@@ -1,41 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001, Juniper Networks, Inc.  * All rights reserved.  * Truman Joe, February 2001.  *  * regdef.h -- MIPS register definitions.  *  *	JNPR: regdef.h,v 1.3 2006/08/07 05:38:57 katta  * $FreeBSD$  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MACHINE_REGDEF_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_MACHINE_REGDEF_H_
-end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/cdefs.h>
-end_include
-
-begin_comment
-comment|/* For API selection */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ASSEMBLER__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* General purpose CPU register names */
+comment|/*  * Copyright (c) 1992, 1993  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell. This file is derived from the MIPS RISC  * Architecture book by Gerry Kane.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *      @(#)regdef.h    8.1 (Berkeley) 06/10/93  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -46,7 +11,7 @@ value|$0
 end_define
 
 begin_comment
-comment|/* wired zero */
+comment|/* always zero */
 end_comment
 
 begin_define
@@ -110,85 +75,6 @@ name|a3
 value|$7
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|a4
-value|$8
-end_define
-
-begin_define
-define|#
-directive|define
-name|a5
-value|$9
-end_define
-
-begin_define
-define|#
-directive|define
-name|a6
-value|$10
-end_define
-
-begin_define
-define|#
-directive|define
-name|a7
-value|$11
-end_define
-
-begin_define
-define|#
-directive|define
-name|t0
-value|$12
-end_define
-
-begin_comment
-comment|/* Temp regs, not saved accross subroutine calls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|t1
-value|$13
-end_define
-
-begin_define
-define|#
-directive|define
-name|t2
-value|$14
-end_define
-
-begin_define
-define|#
-directive|define
-name|t3
-value|$15
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -197,7 +83,7 @@ value|$8
 end_define
 
 begin_comment
-comment|/* caller saved */
+comment|/* temp registers (not saved across subroutine calls) */
 end_comment
 
 begin_define
@@ -228,10 +114,6 @@ name|t4
 value|$12
 end_define
 
-begin_comment
-comment|/* caller saved - 32 bit env arg reg 64 bit */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -253,11 +135,6 @@ name|t7
 value|$15
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -266,7 +143,7 @@ value|$16
 end_define
 
 begin_comment
-comment|/* callee saved */
+comment|/* saved across subroutine calls (callee saved) */
 end_comment
 
 begin_define
@@ -326,7 +203,7 @@ value|$24
 end_define
 
 begin_comment
-comment|/* code generator */
+comment|/* two more temp registers */
 end_comment
 
 begin_define
@@ -379,23 +256,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|fp
-value|$30
-end_define
-
-begin_comment
-comment|/* frame pointer */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|s8
 value|$30
 end_define
 
 begin_comment
-comment|/* callee saved */
+comment|/* one more callee saved */
 end_comment
 
 begin_define
@@ -407,112 +273,6 @@ end_define
 
 begin_comment
 comment|/* return address */
-end_comment
-
-begin_comment
-comment|/*  * These are temp registers whose names can be used in either the old  * or new ABI, although they map to different physical registers.  In  * the old ABI, they map to t4-t7, and in the new ABI, they map to a4-a7.  *  * Because they overlap with the last 4 arg regs in the new ABI, ta0-ta3  * should be used only when we need more than t0-t3.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ta0
-value|$8
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta1
-value|$9
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta2
-value|$10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta3
-value|$11
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ta0
-value|$12
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta1
-value|$13
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta2
-value|$14
-end_define
-
-begin_define
-define|#
-directive|define
-name|ta3
-value|$15
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __mips_n32 || __mips_n64 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ASSEMBLER__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_MACHINE_REGDEF_H_ */
 end_comment
 
 end_unit
