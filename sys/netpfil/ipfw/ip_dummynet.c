@@ -3378,6 +3378,7 @@ name|fs
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|fs
 argument_list|)
 argument_list|)

@@ -18324,7 +18324,6 @@ name|suggestaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|suggestaddr
 argument_list|)
 argument_list|)
