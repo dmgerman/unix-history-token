@@ -2980,6 +2980,26 @@ end_if
 
 begin_function_decl
 name|int
+name|accept4
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|__restrict
+parameter_list|,
+name|socklen_t
+modifier|*
+name|__restrict
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|bindat
 parameter_list|(
 name|int
