@@ -3152,7 +3152,7 @@ name|char_map
 argument_list|,
 name|useecs
 condition|?
-literal|"yy_ec[YY_SC_TO_UI(*yy_cp)]"
+literal|"yy_ec[YY_SC_TO_UI(*yy_cp)] "
 else|:
 literal|"YY_SC_TO_UI(*yy_cp)"
 argument_list|)
@@ -7306,7 +7306,7 @@ argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"int yyl;"
+literal|"yy_size_t yyl;"
 argument_list|)
 expr_stmt|;
 name|do_indent

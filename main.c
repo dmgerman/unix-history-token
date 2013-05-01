@@ -1226,6 +1226,10 @@ expr_stmt|;
 name|readin
 argument_list|()
 expr_stmt|;
+name|skelout
+argument_list|()
+expr_stmt|;
+comment|/* %% [1.5] DFA */
 name|ntod
 argument_list|()
 expr_stmt|;
@@ -1440,13 +1444,6 @@ argument_list|(
 literal|"Can't use --reentrant or --bison-bridge with -l option"
 argument_list|)
 argument_list|)
-expr_stmt|;
-comment|/* Don't rely on detecting use of yymore() and REJECT, 		 * just assume they'll be used. 		 */
-name|yymore_really_used
-operator|=
-name|reject_really_used
-operator|=
-name|true
 expr_stmt|;
 name|yytext_is_array
 operator|=

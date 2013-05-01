@@ -3452,6 +3452,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Like lerrsf, but also exit after displaying message. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|lerrsf_fatal
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Spit out a "#line" statement. */
 end_comment
 
