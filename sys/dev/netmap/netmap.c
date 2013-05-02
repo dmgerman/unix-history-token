@@ -784,7 +784,7 @@ comment|/* !linux */
 end_comment
 
 begin_comment
-comment|/*    * These are used to handle reference counters for bridge ports.  */
+comment|/*  * These are used to handle reference counters for bridge ports.  */
 end_comment
 
 begin_define
