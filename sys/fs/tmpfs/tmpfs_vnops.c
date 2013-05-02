@@ -2223,6 +2223,14 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Requeue to maintain LRU ordering. */
+if|if
+condition|(
+name|m
+operator|->
+name|queue
+operator|!=
+name|PQ_NONE
+condition|)
 name|vm_page_requeue
 argument_list|(
 name|m
@@ -2774,6 +2782,14 @@ name|tpg
 argument_list|)
 expr_stmt|;
 comment|/* Requeue to maintain LRU ordering. */
+if|if
+condition|(
+name|tpg
+operator|->
+name|queue
+operator|!=
+name|PQ_NONE
+condition|)
 name|vm_page_requeue
 argument_list|(
 name|tpg
