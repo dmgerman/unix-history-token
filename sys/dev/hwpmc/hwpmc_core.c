@@ -15443,6 +15443,11 @@ operator|(
 name|EPERM
 operator|)
 return|;
+name|map
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: silent GCC warning */
 name|arch
 operator|=
 name|iap_is_event_architectural
