@@ -266,6 +266,24 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Return the number of management ports supported on this board.  *  * @return Number of ports  */
+end_comment
+
+begin_function
+name|int
+name|cvmx_mgmt_port_num_ports
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|__cvmx_mgmt_port_num_ports
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Called to initialize a management port for use. Multiple calls  * to this function across applications is safe.  *  * @param port   Port to initialize  *  * @return CVMX_MGMT_PORT_SUCCESS or an error code  */
 end_comment
 
