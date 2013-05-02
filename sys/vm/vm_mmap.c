@@ -5342,7 +5342,7 @@ name|obj
 operator|->
 name|handle
 expr_stmt|;
-comment|/* 			 * Bypass filesystems obey the mpsafety of the 			 * underlying fs. 			 */
+comment|/* 			 * Bypass filesystems obey the mpsafety of the 			 * underlying fs.  Tmpfs never bypasses. 			 */
 name|error
 operator|=
 name|vget
