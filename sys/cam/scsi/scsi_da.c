@@ -13083,15 +13083,11 @@ expr_stmt|;
 comment|/* Probe in progress; don't interfere. */
 if|if
 condition|(
-operator|(
 name|softc
 operator|->
-name|flags
-operator|&
-name|DA_FLAG_PROBED
-operator|)
-operator|==
-literal|0
+name|state
+operator|!=
+name|DA_STATE_NORMAL
 condition|)
 return|return;
 name|status
