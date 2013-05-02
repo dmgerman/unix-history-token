@@ -17352,6 +17352,13 @@ comment|/* Scorpion */
 return|return
 literal|"Qualcomm Atheros QCA955x"
 return|;
+case|case
+name|AR9300_DEVID_QCA9565
+case|:
+comment|/* Aphrodite */
+return|return
+literal|"Qualcomm Atheros AR9565"
+return|;
 default|default:
 return|return
 name|AH_NULL

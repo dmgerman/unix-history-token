@@ -515,6 +515,13 @@ case|:
 return|return
 literal|"9485"
 return|;
+case|case
+name|AR_SREV_VERSION_QCA9565
+case|:
+comment|/* XXX should say QCA, not AR */
+return|return
+literal|"9565"
+return|;
 block|}
 return|return
 literal|"????"

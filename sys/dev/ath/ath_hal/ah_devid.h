@@ -562,6 +562,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9300_DEVID_QCA9565
+value|0x0036
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR9300_DEVID_QCA955X
 value|0x0039
 end_define
