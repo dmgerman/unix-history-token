@@ -1138,6 +1138,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* For regular files, the call below is nop. */
 name|vnode_create_vobject
 argument_list|(
 name|vp
@@ -6578,6 +6579,12 @@ operator|->
 name|tn_reg
 operator|.
 name|tn_aobj
+argument_list|)
+expr_stmt|;
+else|else
+name|vnode_destroy_vobject
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|vp
