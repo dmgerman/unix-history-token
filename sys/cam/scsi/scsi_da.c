@@ -408,7 +408,7 @@ name|DA_DELETE_ZERO
 block|,
 name|DA_DELETE_MIN
 init|=
-name|DA_DELETE_UNMAP
+name|DA_DELETE_ATA_TRIM
 block|,
 name|DA_DELETE_MAX
 init|=
@@ -431,9 +431,9 @@ literal|"NONE"
 block|,
 literal|"DISABLE"
 block|,
-literal|"UNMAP"
-block|,
 literal|"ATA_TRIM"
+block|,
+literal|"UNMAP"
 block|,
 literal|"WS16"
 block|,
@@ -457,9 +457,9 @@ literal|"NONE"
 block|,
 literal|"DISABLED"
 block|,
-literal|"UNMAP"
-block|,
 literal|"ATA TRIM"
+block|,
+literal|"UNMAP"
 block|,
 literal|"WRITE SAME(16) with UNMAP"
 block|,
