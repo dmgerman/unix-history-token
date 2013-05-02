@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/octeon-sdk/cvmx-mgmt-port.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/cavium/octeon_irq.h>
 end_include
 
