@@ -4878,6 +4878,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * ATA Information VPD Page based on  * T10/2126-D Revision 04  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVPD_ATA_INFORMATION
+value|0x89
+end_define
+
+begin_comment
 comment|/*  * Block Device Characteristics VPD Page based on  * T10/1799-D Revision 31  */
 end_comment
 
