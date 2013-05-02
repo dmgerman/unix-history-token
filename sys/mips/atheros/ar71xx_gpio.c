@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar933xreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gpio_if.h"
 end_include
 
@@ -573,6 +579,20 @@ operator|*
 name|maxpin
 operator|=
 name|AR724X_GPIO_PINS
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|AR71XX_SOC_AR9330
+case|:
+case|case
+name|AR71XX_SOC_AR9331
+case|:
+operator|*
+name|maxpin
+operator|=
+name|AR933X_GPIO_COUNT
 operator|-
 literal|1
 expr_stmt|;
