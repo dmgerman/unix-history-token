@@ -551,13 +551,35 @@ begin_comment
 comment|/* This variable is global to allow easy access to it: */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_TEMPLATE
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|usb_template
 init|=
-literal|0
+name|USB_TEMPLATE
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|usb_template
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|TUNABLE_INT
