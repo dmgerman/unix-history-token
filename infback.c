@@ -762,6 +762,7 @@ name|FAR
 modifier|*
 name|state
 decl_stmt|;
+name|z_const
 name|unsigned
 name|char
 name|FAR

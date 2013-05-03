@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.7 Copyright 1995-2012 Mark Adler "
+literal|" inflate 1.2.8 Copyright 1995-2013 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -335,9 +335,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|78
+literal|72
 block|,
-literal|68
+literal|78
 block|}
 decl_stmt|;
 specifier|static
@@ -946,7 +946,7 @@ operator|==
 name|LENS
 operator|&&
 name|used
-operator|>=
+operator|>
 name|ENOUGH_LENS
 operator|)
 operator|||
@@ -956,7 +956,7 @@ operator|==
 name|DISTS
 operator|&&
 name|used
-operator|>=
+operator|>
 name|ENOUGH_DISTS
 operator|)
 condition|)
@@ -1318,7 +1318,7 @@ operator|==
 name|LENS
 operator|&&
 name|used
-operator|>=
+operator|>
 name|ENOUGH_LENS
 operator|)
 operator|||
@@ -1328,7 +1328,7 @@ operator|==
 name|DISTS
 operator|&&
 name|used
-operator|>=
+operator|>
 name|ENOUGH_DISTS
 operator|)
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2008, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2008, 2010, 2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -114,6 +114,7 @@ name|FAR
 modifier|*
 name|state
 decl_stmt|;
+name|z_const
 name|unsigned
 name|char
 name|FAR
@@ -121,13 +122,14 @@ modifier|*
 name|in
 decl_stmt|;
 comment|/* local strm->next_in */
+name|z_const
 name|unsigned
 name|char
 name|FAR
 modifier|*
 name|last
 decl_stmt|;
-comment|/* while in< last, enough input available */
+comment|/* have enough input while in< last */
 name|unsigned
 name|char
 name|FAR

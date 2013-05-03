@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzguts.h -- zlib internal header definitions for gz* operations  * Copyright (C) 2004, 2005, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzguts.h -- zlib internal header definitions for gz* operations  * Copyright (C) 2004, 2005, 2010, 2011, 2012, 2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_ifdef
@@ -175,6 +175,45 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|WINAPI_FAMILY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|open
+value|_open
+end_define
+
+begin_define
+define|#
+directive|define
+name|read
+value|_read
+end_define
+
+begin_define
+define|#
+directive|define
+name|write
+value|_write
+end_define
+
+begin_define
+define|#
+directive|define
+name|close
+value|_close
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|NO_DEFLATE
 end_ifdef
 
@@ -321,7 +360,7 @@ name|MSDOS
 end_ifdef
 
 begin_comment
-comment|/* vsnprintf may exist on some MS-DOS compilers (DJGPP?),  but for now we just assume it doesn't. */
+comment|/* vsnprintf may exist on some MS-DOS compilers (DJGPP?),    but for now we just assume it doesn't. */
 end_comment
 
 begin_define
@@ -488,6 +527,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unlike snprintf (which is required in C99, yet still not supported by    Microsoft more than a decade later!), _snprintf does not guarantee null    termination of the result -- however this is only used in gzlib.c where    the result is assured to fit in the space provided */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|snprintf
+value|_snprintf
+end_define
 
 begin_endif
 endif|#
@@ -760,7 +821,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* default i/o buffer size -- double this for output when reading */
+comment|/* default i/o buffer size -- double this for output when reading (this and    twice this must be able to fit in an unsigned type) */
 end_comment
 
 begin_define
