@@ -4537,7 +4537,7 @@ name|usb_config_descriptor
 modifier|*
 name|cdesc
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|len
 decl_stmt|;
 name|usb_error_t
@@ -4575,13 +4575,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 return|return
 operator|(
 name|err
 operator|)
 return|;
-block|}
 comment|/* get full descriptor */
 name|len
 operator|=
@@ -4596,6 +4594,9 @@ if|if
 condition|(
 name|len
 operator|<
+operator|(
+name|uint32_t
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -4609,6 +4610,24 @@ operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|len
+operator|>
+name|USB_CONFIG_MAX
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Configuration descriptor was truncated\n"
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|USB_CONFIG_MAX
+expr_stmt|;
 block|}
 name|cdesc
 operator|=
@@ -4627,13 +4646,11 @@ name|cdesc
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|USB_ERR_NOMEM
 operator|)
 return|;
-block|}
 name|err
 operator|=
 name|usbd_req_get_desc

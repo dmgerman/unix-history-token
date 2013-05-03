@@ -121,6 +121,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_FIXED_ENDPOINT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_FIXED_IFACE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td
@@ -248,6 +262,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_CONFIG_MAX
+value|65535
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_IFACE_MAX
 value|32
 end_define
@@ -261,6 +286,17 @@ define|#
 directive|define
 name|USB_FIFO_MAX
 value|128
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_EP_UNITS
+value|32
 end_define
 
 begin_comment
