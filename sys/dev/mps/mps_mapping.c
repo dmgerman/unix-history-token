@@ -1385,6 +1385,14 @@ name|start_idx
 operator|=
 literal|0
 expr_stmt|;
+name|start_idx_ir
+operator|=
+literal|0
+expr_stmt|;
+name|end_idx_ir
+operator|=
+literal|0
+expr_stmt|;
 name|end_idx
 operator|=
 name|sc
