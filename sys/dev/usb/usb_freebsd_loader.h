@@ -135,6 +135,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_FIXED_CONFIG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_FIXED_PORT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td
@@ -308,6 +322,17 @@ define|#
 directive|define
 name|USB_MAX_EP_STREAMS
 value|8
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_PORTS
+value|255
 end_define
 
 begin_comment

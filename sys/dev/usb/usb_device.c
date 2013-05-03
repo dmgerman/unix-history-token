@@ -1995,13 +1995,13 @@ name|usb_mode
 operator|!=
 name|USB_MODE_DEVICE
 condition|)
-name|free
+name|usbd_free_config_desc
 argument_list|(
+name|udev
+argument_list|,
 name|udev
 operator|->
 name|cdesc
-argument_list|,
-name|M_USB
 argument_list|)
 expr_stmt|;
 name|udev
@@ -2186,8 +2186,6 @@ name|NULL
 argument_list|,
 operator|&
 name|cdp
-argument_list|,
-name|M_USB
 argument_list|,
 name|index
 argument_list|)
