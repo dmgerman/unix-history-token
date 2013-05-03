@@ -251,6 +251,17 @@ value|20
 end_define
 
 begin_comment
+comment|/* Feature flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_F_NOTIFY_ON_EMPTY
+value|(1<< 24)
+end_define
+
+begin_comment
 comment|/* From section 2.3, "Virtqueue Configuration", of the virtio specification */
 end_comment
 
