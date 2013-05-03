@@ -72,13 +72,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_DDP
-value|M_PROTO1
-end_define
-
-begin_define
-define|#
-directive|define
 name|USE_DDP_RX_FLOW_CONTROL
 end_define
 
@@ -1501,6 +1494,17 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|get_ddp_mbuf
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
