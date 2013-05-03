@@ -10926,9 +10926,13 @@ block|{
 name|rc
 operator|=
 operator|-
-name|t4_load_fw
+name|t4_fw_upgrade
 argument_list|(
 name|sc
+argument_list|,
+name|sc
+operator|->
+name|mbox
 argument_list|,
 name|fw
 operator|->
@@ -10937,6 +10941,8 @@ argument_list|,
 name|fw
 operator|->
 name|datasize
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
