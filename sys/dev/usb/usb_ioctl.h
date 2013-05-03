@@ -365,6 +365,39 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|USB_DEVICE_PORT_PATH_MAX
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|usb_device_port_path
+block|{
+name|uint8_t
+name|udp_bus
+decl_stmt|;
+comment|/* which bus we are on */
+name|uint8_t
+name|udp_index
+decl_stmt|;
+comment|/* which device index */
+name|uint8_t
+name|udp_port_level
+decl_stmt|;
+comment|/* how many levels: 0, 1, 2 ... */
+name|uint8_t
+name|udp_port_no
+index|[
+name|USB_DEVICE_PORT_PATH_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|usb_device_stats
@@ -940,8 +973,15 @@ value|_IOW ('U', 127, struct usb_read_dir)
 end_define
 
 begin_comment
-comment|/* 128 - 134 unused */
+comment|/* 128 - 133 unused */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_GET_DEV_PORT_PATH
+value|_IOR ('U', 134, struct usb_device_port_path)
+end_define
 
 begin_define
 define|#
