@@ -24,6 +24,16 @@ name|CONFIG_H
 end_define
 
 begin_comment
+comment|/* Get __FreeBSD_version. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_comment
 comment|/* Bug report URL. */
 end_comment
 
@@ -800,12 +810,35 @@ begin_comment
 comment|/* Define to 1 if you have the `log2' function. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|900027
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|900000
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|802502
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_LOG2
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `longjmp' function. */
