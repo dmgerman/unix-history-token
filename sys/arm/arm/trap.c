@@ -828,7 +828,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("data abort: %p (from %p %p)\n", (void*)far, (void*)tf->tf_pc, 	    (void*)tf->tf_svc_lr);
+block|printf("data abort: fault address=%p (from pc=%p lr=%p)\n", 	       (void*)far, (void*)tf->tf_pc, (void*)tf->tf_svc_lr);
 endif|#
 directive|endif
 comment|/* Update vmmeter statistics */
