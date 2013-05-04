@@ -3008,6 +3008,11 @@ argument_list|,
 name|LK_INTERLOCK
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|next_iter_mntunlocked
 goto|;
