@@ -360,6 +360,12 @@ comment|/* 93 - ENOTCAPABLE */
 literal|"Not permitted in capability mode"
 block|,
 comment|/* 94 - ECAPMODE */
+literal|"State not recoverable"
+block|,
+comment|/* 95 - ENOTRECOVERABLE */
+literal|"Previous owner died"
+block|,
+comment|/* 96 - EOWNERDEAD */
 block|}
 decl_stmt|;
 end_decl_stmt
