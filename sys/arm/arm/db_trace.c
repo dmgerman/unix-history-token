@@ -1659,7 +1659,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Stop if directed to do so, or if we've unwound back to the 		 * kernel entry point, or if the unwind function didn't change 		 * anything (to avoid getting stuck in this loop forever). 		 * If the latter happens, it's an indication that the unwind 		 * information is incorrect somehow for the function named in 		 * the last frame printed before you see the unwind failure 		 * message (maybe it needs a STOP_UNWINDING). 		 */
+comment|/* 		 * Stop if directed to do so, or if we've unwound back to the 		 * kernel entry point, or if the unwind function didn't change 		 * anything (to avoid getting stuck in this loop forever). 		 * If the latter happens, it's an indication that the unwind 		 * information is incorrect somehow for the function named in 		 * the last frame printed before you see the unwind failure 		 * message (maybe it needs a STOP_UNWINDING). 		 */
 if|if
 condition|(
 name|index
