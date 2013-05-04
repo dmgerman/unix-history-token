@@ -658,6 +658,12 @@ name|ssp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|smb_share_lock
+argument_list|(
+name|ssp
+argument_list|)
+expr_stmt|;
 name|smb_share_rele
 argument_list|(
 name|ssp
@@ -665,6 +671,7 @@ argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
+block|}
 name|vcp
 operator|=
 name|sdp
@@ -677,6 +684,12 @@ name|vcp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|smb_vc_lock
+argument_list|(
+name|vcp
+argument_list|)
+expr_stmt|;
 name|smb_vc_rele
 argument_list|(
 name|vcp
@@ -684,6 +697,7 @@ argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|scred
@@ -855,8 +869,6 @@ expr_stmt|;
 name|smb_vc_unlock
 argument_list|(
 name|vcp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -936,8 +948,6 @@ expr_stmt|;
 name|smb_share_unlock
 argument_list|(
 name|ssp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1097,8 +1107,6 @@ name|smb_vc_get
 argument_list|(
 name|vcp
 argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
 name|scred
 argument_list|)
 expr_stmt|;
@@ -1239,8 +1247,6 @@ operator|=
 name|smb_share_get
 argument_list|(
 name|ssp
-argument_list|,
-name|LK_EXCLUSIVE
 argument_list|,
 name|scred
 argument_list|)
@@ -1406,8 +1412,6 @@ expr_stmt|;
 name|smb_vc_unlock
 argument_list|(
 name|vcp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1431,8 +1435,6 @@ expr_stmt|;
 name|smb_share_unlock
 argument_list|(
 name|ssp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -1926,8 +1928,6 @@ operator|=
 name|smb_share_get
 argument_list|(
 name|ssp
-argument_list|,
-name|LK_EXCLUSIVE
 argument_list|,
 name|scred
 argument_list|)

@@ -951,8 +951,6 @@ expr_stmt|;
 name|smb_share_unlock
 argument_list|(
 name|ssp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1635,8 +1633,6 @@ argument_list|(
 name|smp
 operator|->
 name|sm_share
-argument_list|,
-name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 if|if
