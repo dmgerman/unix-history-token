@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -2375,7 +2381,7 @@ index|[
 name|reqpage
 index|]
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2436,7 +2442,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2445,7 +2451,7 @@ return|return
 literal|0
 return|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2610,7 +2616,7 @@ operator|&
 name|smbfs_pbuf_freecnt
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2682,7 +2688,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -2826,7 +2832,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3380,7 +3386,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|vp
 operator|->
@@ -3404,7 +3410,7 @@ argument_list|,
 name|OBJPC_SYNC
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|vp
 operator|->
