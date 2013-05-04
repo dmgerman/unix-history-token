@@ -16489,16 +16489,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|txq
-operator|->
-name|axq_depth
-operator|>
-literal|0
-condition|)
-block|{
-comment|/* 			 * More frames follow.  Mark the buffer busy 			 * so it's not re-used while the hardware may 			 * still re-read the link field in the descriptor. 			 * 			 * Use the last buffer in an aggregate as that 			 * is where the hardware may be - intermediate 			 * descriptors won't be "busy". 			 */
+comment|/* 		 * Always mark the last buffer in this list as busy. 		 * 		 * The hardware may re-read the holding descriptor 		 * even if we hit the end of the list and try writing 		 * a new TxDP. 		 * 		 * If there's no holding descriptor then this is the 		 * last buffer in the list of buffers after a fresh 		 * reset; it'll soon become the holding buffer. 		 */
 name|bf
 operator|->
 name|bf_last
@@ -16506,14 +16497,6 @@ operator|->
 name|bf_flags
 operator||=
 name|ATH_BUF_BUSY
-expr_stmt|;
-block|}
-else|else
-name|txq
-operator|->
-name|axq_link
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
