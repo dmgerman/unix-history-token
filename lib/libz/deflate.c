@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.c -- compress data using the deflation algorithm  * Copyright (C) 1995-2012 Jean-loup Gailly and Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* deflate.c -- compress data using the deflation algorithm  * Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|deflate_copyright
 index|[]
 init|=
-literal|" deflate 1.2.7 Copyright 1995-2012 Jean-loup Gailly and Mark Adler "
+literal|" deflate 1.2.8 Copyright 1995-2013 Jean-loup Gailly and Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -1450,10 +1450,6 @@ name|strm
 operator|->
 name|msg
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|ERR_MSG
 argument_list|(
 name|Z_MEM_ERROR
@@ -1576,6 +1572,7 @@ decl_stmt|;
 name|unsigned
 name|avail
 decl_stmt|;
+name|z_const
 name|unsigned
 name|char
 modifier|*
@@ -1748,6 +1745,7 @@ operator|->
 name|next_in
 operator|=
 operator|(
+name|z_const
 name|Bytef
 operator|*
 operator|)
@@ -2632,6 +2630,22 @@ name|strm
 argument_list|,
 name|Z_BLOCK
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+name|Z_BUF_ERROR
+operator|&&
+name|s
+operator|->
+name|pending
+operator|==
+literal|0
+condition|)
+name|err
+operator|=
+name|Z_OK
 expr_stmt|;
 block|}
 if|if

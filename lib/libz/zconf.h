@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2012 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2013 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -62,6 +62,13 @@ define|#
 directive|define
 name|_tr_align
 value|z__tr_align
+end_define
+
+begin_define
+define|#
+directive|define
+name|_tr_flush_bits
+value|z__tr_flush_bits
 end_define
 
 begin_define
@@ -452,6 +459,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|gzvprintf
+value|z_gzvprintf
+end_define
+
+begin_define
+define|#
+directive|define
 name|gzputc
 value|z_gzputc
 end_define
@@ -627,6 +641,13 @@ define|#
 directive|define
 name|inflateSetDictionary
 value|z_inflateSetDictionary
+end_define
+
+begin_define
+define|#
+directive|define
+name|inflateGetDictionary
+value|z_inflateGetDictionary
 end_define
 
 begin_define
@@ -2311,10 +2332,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ./configure may #define Z_U4 here */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -2359,20 +2376,15 @@ name|Z_U4
 value|unsigned
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 operator|(
 name|ULONG_MAX
 operator|==
 literal|0xffffffffUL
 operator|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -2381,20 +2393,15 @@ name|Z_U4
 value|unsigned long
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 operator|(
 name|USHRT_MAX
 operator|==
 literal|0xffffffffUL
 operator|)
-end_if
+end_elif
 
 begin_define
 define|#
@@ -2402,16 +2409,6 @@ directive|define
 name|Z_U4
 value|unsigned short
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2528,11 +2525,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|Z_HAVE_STDARG_H
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_comment
+comment|/* for va_list */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_WIN32
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
 
 begin_include
 include|#
@@ -2549,6 +2592,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* a little trick to accommodate both "#define _LARGEFILE64_SOURCE" and  * "#define _LARGEFILE64_SOURCE 1" as requesting 64-bit operations, (even  * though the former does not conform to the LFS document), but considering  * both "#undef _LARGEFILE64_SOURCE" and "#define _LARGEFILE64_SOURCE 0" as  * equivalently requesting no 64-bit operations  */
 end_comment
@@ -2558,7 +2606,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|LARGEFILE64_SOURCE
+name|_LARGEFILE64_SOURCE
 argument_list|)
 operator|&&
 operator|-
@@ -2623,7 +2671,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|LARGEFILE64_SOURCE
+name|_LARGEFILE64_SOURCE
 argument_list|)
 end_if
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010, 2011, 2012, 2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -306,7 +306,10 @@ init|=
 name|state
 operator|->
 name|in
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+specifier|const
+name|char
 modifier|*
 name|q
 init|=
@@ -433,6 +436,11 @@ name|state
 operator|->
 name|in
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|state
@@ -444,6 +452,11 @@ name|state
 operator|->
 name|out
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|state
@@ -1664,6 +1677,11 @@ name|gz_load
 argument_list|(
 name|state
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -1694,6 +1712,11 @@ name|strm
 operator|->
 name|next_out
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 if|if
@@ -1774,11 +1797,33 @@ begin_comment
 comment|/* -- see zlib.h -- */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|Z_PREFIX_SET
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|z_gzgetc
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_undef
 undef|#
 directive|undef
 name|gzgetc
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -2473,6 +2518,11 @@ name|have
 expr_stmt|;
 name|eol
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|memchr
 argument_list|(
 name|state
