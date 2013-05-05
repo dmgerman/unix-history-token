@@ -80,7 +80,7 @@ end_include
 begin_if
 if|#
 directive|if
-literal|0
+literal|1
 end_if
 
 begin_include
@@ -660,8 +660,24 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|0
-if|else if (be32toh(hdr.sc_hal_magic) == AR9300_MAGIC) 					ar9300_alq_payload(a);
+literal|1
+elseif|else
+if|if
+condition|(
+name|be32toh
+argument_list|(
+name|hdr
+operator|.
+name|sc_hal_magic
+argument_list|)
+operator|==
+name|AR9300_MAGIC
+condition|)
+name|ar9300_alq_payload
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 else|else
