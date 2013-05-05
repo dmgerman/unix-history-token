@@ -1439,6 +1439,8 @@ argument_list|(
 name|fname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<
@@ -1469,7 +1471,7 @@ name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|F_DUPFD
+name|F_DUPFD_CLOEXEC
 argument_list|,
 literal|10
 argument_list|)
@@ -1508,7 +1510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like setinputfile, but takes an open file descriptor.  Call this with  * interrupts off.  */
+comment|/*  * Like setinputfile, but takes an open file descriptor (which should have  * its FD_CLOEXEC flag already set).  Call this with interrupts off.  */
 end_comment
 
 begin_function
@@ -1522,18 +1524,6 @@ name|int
 name|push
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|push
