@@ -789,17 +789,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|vp
 operator|->
 name|v_usecount
-operator|==
+operator|!=
 literal|0
-condition|)
-name|panic
-argument_list|(
+argument_list|,
+operator|(
 literal|"vnode_pager_alloc: no vnode reference"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
