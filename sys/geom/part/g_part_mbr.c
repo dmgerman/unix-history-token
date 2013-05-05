@@ -636,6 +636,12 @@ name|G_PART_ALIAS_MS_NTFS
 block|}
 block|,
 block|{
+name|DOSPTYP_FAT16
+block|,
+name|G_PART_ALIAS_MS_FAT16
+block|}
+block|,
+block|{
 name|DOSPTYP_FAT32
 block|,
 name|G_PART_ALIAS_MS_FAT32

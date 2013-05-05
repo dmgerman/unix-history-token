@@ -99,6 +99,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_FAT16
+value|0x06
+end_define
+
+begin_comment
+comment|/* FAT16 partition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_NTFS
 value|0x07
 end_define
