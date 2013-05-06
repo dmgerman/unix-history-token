@@ -481,6 +481,22 @@ name|MV_DDR_CADR_BASE
 value|(MV_BASE + 0xF1500)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_DDR_CADR_BASE
+value|(MV_BASE + 0x20180)
+end_define
+
 begin_else
 else|#
 directive|else
