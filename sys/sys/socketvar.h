@@ -297,7 +297,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mtx_padalign
+name|mtx
 name|accept_mtx
 decl_stmt|;
 end_decl_stmt

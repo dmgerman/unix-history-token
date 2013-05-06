@@ -1223,7 +1223,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx_padalign
+name|mtx
 name|isn_mtx
 decl_stmt|;
 end_decl_stmt
