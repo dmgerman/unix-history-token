@@ -1424,7 +1424,7 @@ begin_define
 define|#
 directive|define
 name|L2_S_PROT_R
-value|(L2_APX|L2_AP0(1))
+value|(L2_AP0(1))
 end_define
 
 begin_comment
