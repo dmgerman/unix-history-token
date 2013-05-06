@@ -769,6 +769,18 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * pcpu_init() updates queue, so it should not be executed in parallel 	 * on several cores 	 */
+while|while
+condition|(
+name|mp_naps
+operator|<
+operator|(
+name|cpu
+operator|-
+literal|1
+operator|)
+condition|)
+empty_stmt|;
 name|pcpu_init
 argument_list|(
 name|pc
