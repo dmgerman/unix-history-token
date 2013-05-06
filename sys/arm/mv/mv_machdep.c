@@ -146,6 +146,15 @@ end_if
 
 begin_function_decl
 name|void
+name|armadaxp_init_coher_fabric
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|armadaxp_l2_init
 parameter_list|(
 name|void
@@ -904,6 +913,19 @@ name|defined
 argument_list|(
 name|SOC_MV_ARMADAXP
 argument_list|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+comment|/* For SMP case it should be initialized after APs are booted */
+name|armadaxp_init_coher_fabric
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|armadaxp_l2_init
 argument_list|()
 expr_stmt|;
