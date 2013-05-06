@@ -6452,7 +6452,7 @@ block|{
 name|printf
 argument_list|(
 literal|"pf: state insert failed: "
-literal|"id: %016llx creatorid: %08x"
+literal|"id: %016llx creatorid: %08x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -6472,11 +6472,6 @@ name|s
 operator|->
 name|creatorid
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
