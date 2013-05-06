@@ -9026,9 +9026,13 @@ operator|==
 name|PFSYNC_S_NONE
 argument_list|,
 operator|(
-literal|"%s: st->sync_state == PFSYNC_S_NONE"
+literal|"%s: st->sync_state %u"
 operator|,
 name|__func__
+operator|,
+name|st
+operator|->
+name|sync_state
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10491,9 +10495,13 @@ operator|==
 name|PFSYNC_S_NONE
 argument_list|,
 operator|(
-literal|"%s: st->sync_state == PFSYNC_S_NONE"
+literal|"%s: st->sync_state %u"
 operator|,
 name|__func__
+operator|,
+name|st
+operator|->
+name|sync_state
 operator|)
 argument_list|)
 expr_stmt|;
