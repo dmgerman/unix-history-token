@@ -156,6 +156,14 @@ name|__start_set_vnet
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__start_set_vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|uintptr_t
@@ -163,6 +171,14 @@ modifier|*
 name|__stop_set_vnet
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__stop_set_vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
