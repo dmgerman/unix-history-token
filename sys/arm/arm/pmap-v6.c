@@ -9727,6 +9727,11 @@ else|else
 block|{
 comment|/* 		 * Need to do page referenced emulation. 		 */
 name|npte
+operator|&=
+operator|~
+name|L2_TYPE_MASK
+expr_stmt|;
+name|npte
 operator||=
 name|L2_TYPE_INV
 expr_stmt|;
