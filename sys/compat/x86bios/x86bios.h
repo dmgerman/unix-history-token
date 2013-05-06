@@ -455,7 +455,7 @@ name|X86BIOS_PHYSTOSEG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> 4)& 0xffff)
+value|(((x)>> 4)& 0xff00)
 end_define
 
 begin_define
@@ -465,7 +465,7 @@ name|X86BIOS_PHYSTOOFF
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x000f)
+value|((x)& 0x0fff)
 end_define
 
 begin_function_decl

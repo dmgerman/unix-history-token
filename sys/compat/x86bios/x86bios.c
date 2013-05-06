@@ -150,17 +150,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|X86BIOS_SEG_SIZE
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* 64K */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|X86BIOS_MEM_SIZE
 value|0x00100000
 end_define
@@ -200,6 +189,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|X86BIOS_SEG_SIZE
+value|X86BIOS_PAGE_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|X86BIOS_PAGES
 value|(X86BIOS_MEM_SIZE / X86BIOS_PAGE_SIZE)
 end_define
@@ -207,15 +203,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|X86BIOS_R_DS
-value|_pad1
+name|X86BIOS_R_SS
+value|_pad2
 end_define
 
 begin_define
 define|#
 directive|define
-name|X86BIOS_R_SS
-value|_pad2
+name|X86BIOS_R_SP
+value|_pad3.I16_reg.x_reg
 end_define
 
 begin_decl_stmt
@@ -1475,17 +1471,20 @@ argument_list|)
 expr_stmt|;
 name|regs
 operator|->
-name|X86BIOS_R_DS
+name|X86BIOS_R_SS
 operator|=
-literal|0x40
+name|X86BIOS_PHYSTOSEG
+argument_list|(
+name|x86bios_seg_phys
+argument_list|)
 expr_stmt|;
 name|regs
 operator|->
-name|X86BIOS_R_SS
+name|X86BIOS_R_SP
 operator|=
-name|x86bios_seg_phys
-operator|>>
-literal|4
+name|X86BIOS_PAGE_SIZE
+operator|-
+literal|2
 expr_stmt|;
 block|}
 end_function
