@@ -323,6 +323,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_MV_ARMADAXP
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -4041,6 +4052,17 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOC_MV_ARMADAXP
+end_ifdef
 
 begin_function
 specifier|static
