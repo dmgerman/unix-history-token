@@ -1650,6 +1650,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|struct
 name|libusb_pollfd
 modifier|*
@@ -1765,6 +1766,13 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+specifier|const
+expr|struct
+name|libusb_pollfd
+operator|*
+operator|*
+operator|)
 name|ret
 operator|)
 return|;
