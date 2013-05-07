@@ -136,14 +136,14 @@ file|<vm/vm_phys.h>
 end_include
 
 begin_comment
-comment|/*  * VM_FREELIST_DEFAULT is split into VM_NDOMAIN lists, one for each  * domain.  These extra lists are stored at the end of the regular  * free lists starting with VM_NFREELIST.  */
+comment|/*  * VM_FREELIST_DEFAULT is split into MAXMEMDOM lists, one for each  * domain.  These extra lists are stored at the end of the regular  * free lists starting with VM_NFREELIST.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VM_RAW_NFREELIST
-value|(VM_NFREELIST + VM_NDOMAIN - 1)
+value|(VM_NFREELIST + MAXMEMDOM - 1)
 end_define
 
 begin_struct
@@ -293,7 +293,7 @@ argument_list|(
 operator|*
 name|vm_phys_lookup_lists
 index|[
-name|VM_NDOMAIN
+name|MAXMEMDOM
 index|]
 index|[
 name|VM_RAW_NFREELIST
@@ -421,7 +421,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 end_if
@@ -983,7 +983,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 end_if
@@ -1280,7 +1280,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 if|if
@@ -1521,7 +1521,7 @@ name|pind
 decl_stmt|;
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 name|int
@@ -1811,7 +1811,7 @@ block|}
 block|}
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 comment|/* 	 * Build a free list lookup list for each domain.  All of the 	 * memory domain lists are inserted at the VM_FREELIST_DEFAULT 	 * index in a round-robin order starting with the current 	 * domain. 	 */
@@ -2288,7 +2288,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 name|domain
@@ -4673,7 +4673,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 name|domain

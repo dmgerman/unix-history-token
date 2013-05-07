@@ -127,6 +127,24 @@ begin_comment
 comment|/* SMP || KLD_MODULE */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXMEMDOM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXMEMDOM
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

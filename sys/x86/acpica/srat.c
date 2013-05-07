@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -104,7 +98,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 end_if
@@ -1270,7 +1264,7 @@ if|if
 condition|(
 name|ndomain
 operator|>
-name|VM_NDOMAIN
+name|MAXMEMDOM
 condition|)
 block|{
 name|printf
@@ -1715,7 +1709,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VM_NDOMAIN> 1 */
+comment|/* MAXMEMDOM> 1 */
 end_comment
 
 end_unit

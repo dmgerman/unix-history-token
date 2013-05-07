@@ -287,28 +287,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Only one memory domain.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_NDOMAIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_NDOMAIN
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Disable superpage reservations. (not sure if this is right  * I copied it from ARM)  */
 end_comment
 
