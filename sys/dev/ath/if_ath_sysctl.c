@@ -4010,6 +4010,31 @@ argument_list|,
 literal|"Maximum buffer depth for multicast/broadcast frames"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"txq_node_maxdepth"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txq_node_maxdepth
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum buffer depth for a single node"
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
