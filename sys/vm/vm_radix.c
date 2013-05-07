@@ -674,9 +674,6 @@ name|clev
 operator|=
 literal|0
 init|;
-name|clev
-operator|<=
-name|VM_RADIX_LIMIT
 condition|;
 name|clev
 operator|++
@@ -689,22 +686,12 @@ name|index1
 argument_list|,
 name|clev
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 name|clev
-operator|)
-return|;
-name|panic
-argument_list|(
-literal|"%s: cannot reach this point"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
