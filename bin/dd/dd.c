@@ -1793,8 +1793,19 @@ block|}
 comment|/* 		 * POSIX states that if bs is set and no other conversions 		 * than noerror, notrunc or sync are specified, the block 		 * is output without buffering as it is read. 		 */
 if|if
 condition|(
+operator|(
 name|ddflags
 operator|&
+operator|~
+operator|(
+name|C_NOERROR
+operator||
+name|C_NOTRUNC
+operator||
+name|C_SYNC
+operator|)
+operator|)
+operator|==
 name|C_BS
 condition|)
 block|{
