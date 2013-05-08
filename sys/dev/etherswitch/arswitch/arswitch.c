@@ -1984,6 +1984,12 @@ literal|0
 condition|)
 block|{
 comment|/* fill in fixed values for CPU port */
+name|p
+operator|->
+name|es_flags
+operator||=
+name|ETHERSWITCH_PORT_CPU
+expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_count
