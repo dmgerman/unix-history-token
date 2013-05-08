@@ -16133,6 +16133,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_UNLOCK_ASSERT
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 comment|/* If unicast frame, update general statistics */
 if|if
 condition|(
@@ -16625,16 +16630,95 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Sanity check. 		 */
 if|if
 condition|(
 name|txq
 operator|->
-name|axq_depth
-operator|>
-literal|0
+name|axq_qnum
+operator|!=
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: TXQ=%d: bf=%p, bfs_tx_queue=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|bf
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|txq
+operator|->
+name|axq_qnum
+operator|!=
+name|bf
+operator|->
+name|bf_last
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: TXQ=%d: bf_last=%p, bfs_tx_queue=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+name|bf
+operator|->
+name|bf_last
+argument_list|,
+name|bf
+operator|->
+name|bf_last
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
+argument_list|)
+expr_stmt|;
+block|}
+if|#
+directive|if
+literal|0
+block|if (txq->axq_depth> 0) {
 comment|/* 			 * More frames follow.  Mark the buffer busy 			 * so it's not re-used while the hardware may 			 * still re-read the link field in the descriptor. 			 * 			 * Use the last buffer in an aggregate as that 			 * is where the hardware may be - intermediate 			 * descriptors won't be "busy". 			 */
+block|bf->bf_last->bf_flags |= ATH_BUF_BUSY; 		} else 			txq->axq_link = NULL;
+else|#
+directive|else
 name|bf
 operator|->
 name|bf_last
@@ -16643,14 +16727,8 @@ name|bf_flags
 operator||=
 name|ATH_BUF_BUSY
 expr_stmt|;
-block|}
-else|else
-name|txq
-operator|->
-name|axq_link
-operator|=
-name|NULL
-expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bf
@@ -17889,9 +17967,14 @@ modifier|*
 name|txq
 parameter_list|)
 block|{
-name|ATH_TXBUF_LOCK_ASSERT
+name|ATH_TXBUF_UNLOCK_ASSERT
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 if|if
@@ -17912,6 +17995,11 @@ operator|&=
 operator|~
 name|ATH_BUF_BUSY
 expr_stmt|;
+name|ATH_TXBUF_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_returnbuf_tail
 argument_list|(
 name|sc
@@ -17919,6 +18007,11 @@ argument_list|,
 name|txq
 operator|->
 name|axq_holdingbf
+argument_list|)
+expr_stmt|;
+name|ATH_TXBUF_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|txq
@@ -17955,9 +18048,28 @@ name|ath_txq
 modifier|*
 name|txq
 decl_stmt|;
-name|ATH_TXBUF_LOCK_ASSERT
+name|txq
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
+index|]
+expr_stmt|;
+name|ATH_TXBUF_UNLOCK_ASSERT
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 comment|/* XXX assert ATH_BUF_BUSY is set */
@@ -18008,20 +18120,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|txq
-operator|=
-operator|&
-name|sc
-operator|->
-name|sc_txq
-index|[
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_tx_queue
-index|]
-expr_stmt|;
 name|ath_txq_freeholdingbuf
 argument_list|(
 name|sc
@@ -18039,7 +18137,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a buffer to the pool and update the 'busy' flag on the  * previous 'tail' entry.  *  * This _must_ only be called when the buffer is involved in a completed  * TX. The logic is that if it was part of an active TX, the previous  * buffer on the list is now not involved in a halted TX DMA queue, waiting  * for restart (eg for TDMA.)  *  * The caller must free the mbuf and recycle the node reference.  */
+comment|/*  * Return a buffer to the pool and update the 'busy' flag on the  * previous 'tail' entry.  *  * This _must_ only be called when the buffer is involved in a completed  * TX. The logic is that if it was part of an active TX, the previous  * buffer on the list is now not involved in a halted TX DMA queue, waiting  * for restart (eg for TDMA.)  *  * The caller must free the mbuf and recycle the node reference.  *  * XXX This method of handling busy / holding buffers is insanely stupid.  * It requires bf_state.bfs_tx_queue to be correctly assigned.  It would  * be much nicer if buffers in the processq() methods would instead be  * always completed there (pushed onto a txq or ath_bufhead) so we knew  * exactly what hardware queue they came from in the first place.  */
 end_comment
 
 begin_function
@@ -18057,6 +18155,25 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
+name|struct
+name|ath_txq
+modifier|*
+name|txq
+decl_stmt|;
+name|txq
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_tx_queue
+index|]
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -18091,7 +18208,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this buffer is busy, push it onto the holding queue 	 */
+comment|/* 	 * If this buffer is busy, push it onto the holding queue. 	 */
 if|if
 condition|(
 name|bf
@@ -18101,9 +18218,9 @@ operator|&
 name|ATH_BUF_BUSY
 condition|)
 block|{
-name|ATH_TXBUF_LOCK
+name|ATH_TXQ_LOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 name|ath_txq_addholdingbuf
@@ -18113,9 +18230,9 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-name|ATH_TXBUF_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 return|return;
@@ -18720,9 +18837,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Free the holding buffer if it exists 	 */
-name|ATH_TXBUF_LOCK
+name|ATH_TXQ_LOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 name|ath_txq_freeholdingbuf
@@ -18732,9 +18849,9 @@ argument_list|,
 name|txq
 argument_list|)
 expr_stmt|;
-name|ATH_TXBUF_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Drain software queued frames which are on 	 * active TIDs. 	 */

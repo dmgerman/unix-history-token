@@ -1159,6 +1159,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_TXQ_UNLOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_assert(&(_tq)->axq_lock,	\ 					    MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_NODE_LOCK
 parameter_list|(
 name|_an
@@ -3341,6 +3351,17 @@ name|_sc
 parameter_list|)
 define|\
 value|mtx_assert(&(_sc)->sc_txbuflock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXBUF_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_assert(&(_sc)->sc_txbuflock, MA_NOTOWNED)
 end_define
 
 begin_define
