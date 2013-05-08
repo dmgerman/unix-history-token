@@ -570,6 +570,17 @@ begin_comment
 comment|/* Is ASPD trigger frame */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_RX_STBC
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Is an STBC frame */
+end_comment
+
 begin_enum
 enum|enum
 block|{

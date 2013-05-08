@@ -2332,6 +2332,21 @@ operator|.
 name|ast_rx_hi_rx_chain
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|rs
+operator|->
+name|rs_flags
+operator|&
+name|HAL_RX_STBC
+condition|)
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_stbc
+operator|++
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* AH_SUPPORT_AR5416 */
