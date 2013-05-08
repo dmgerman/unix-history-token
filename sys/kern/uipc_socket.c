@@ -2115,7 +2115,9 @@ name|head
 operator|->
 name|so_pcb
 argument_list|,
-name|over
+name|head
+operator|->
+name|so_qlen
 argument_list|)
 expr_stmt|;
 return|return
