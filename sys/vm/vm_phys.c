@@ -2373,7 +2373,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 name|vm_page_t
@@ -2430,7 +2430,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 comment|/* 	 * This routine expects to be called with a VM_FREELIST_* constant. 	 * On a system with multiple domains we need to adjust the flind 	 * appropriately.  If it is for VM_FREELIST_DEFAULT we need to 	 * iterate over the per-domain lists. 	 */
