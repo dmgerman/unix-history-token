@@ -511,8 +511,6 @@ index|]
 operator|=
 name|phy
 expr_stmt|;
-comment|//		if (phy == sc->cpuport)
-comment|//			sc->info.es_cpuport = port;
 name|sc
 operator|->
 name|ifp
@@ -832,7 +830,8 @@ name|sc
 operator|->
 name|cpuport
 operator|=
-literal|5
+operator|-
+literal|1
 expr_stmt|;
 name|sc
 operator|->
@@ -953,6 +952,15 @@ name|media
 operator|=
 literal|100
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|cpuport
+operator|!=
+operator|-
+literal|1
+condition|)
 comment|/* Always attach the cpu port. */
 name|sc
 operator|->
@@ -966,7 +974,6 @@ operator|->
 name|cpuport
 operator|)
 expr_stmt|;
-comment|//	sc->info.es_cpuport = sc->cpuport;
 comment|/* We do not support any vlan groups. */
 name|sc
 operator|->
@@ -1796,6 +1803,8 @@ name|es_ifmr
 decl_stmt|;
 name|int
 name|err
+decl_stmt|,
+name|phy
 decl_stmt|;
 if|if
 condition|(
@@ -1820,9 +1829,20 @@ operator|)
 return|;
 name|p
 operator|->
-name|es_vlangroup
+name|es_pvid
 operator|=
 literal|0
+expr_stmt|;
+name|phy
+operator|=
+name|sc
+operator|->
+name|portphy
+index|[
+name|p
+operator|->
+name|es_port
+index|]
 expr_stmt|;
 name|mii
 operator|=
@@ -1839,12 +1859,12 @@ if|if
 condition|(
 name|sc
 operator|->
-name|portphy
-index|[
-name|p
-operator|->
-name|es_port
-index|]
+name|cpuport
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|phy
 operator|==
 name|sc
 operator|->
@@ -1852,6 +1872,12 @@ name|cpuport
 condition|)
 block|{
 comment|/* fill in fixed values for CPU port */
+name|p
+operator|->
+name|es_flags
+operator||=
+name|ETHERSWITCH_PORT_CPU
+expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_count
