@@ -1737,6 +1737,16 @@ name|iflags
 operator||=
 name|LO_QUIET
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|LK_IS_VNODE
+condition|)
+name|iflags
+operator||=
+name|LO_IS_VNODE
+expr_stmt|;
 name|iflags
 operator||=
 name|flags

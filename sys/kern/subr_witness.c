@@ -5751,6 +5751,37 @@ operator|&
 name|w_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITNESS_NO_VNODE
+comment|/* 			 * There are known LORs between VNODE locks. They are 			 * not an indication of a bug. VNODE locks are flagged 			 * as such (LO_IS_VNODE) and we don't yell if the LOR 			 * is between 2 VNODE locks. 			 */
+if|if
+condition|(
+operator|(
+name|lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_IS_VNODE
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|lock1
+operator|->
+name|li_lock
+operator|->
+name|lo_flags
+operator|&
+name|LO_IS_VNODE
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* 			 * Ok, yell about it. 			 */
 if|if
 condition|(

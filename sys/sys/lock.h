@@ -280,6 +280,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LO_IS_VNODE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Tell WITNESS about a VNODE lock */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LO_CLASSMASK
 value|0x0f000000
 end_define

@@ -4215,6 +4215,8 @@ argument_list|,
 name|VLKTIMEOUT
 argument_list|,
 name|LK_NOSHARE
+operator||
+name|LK_IS_VNODE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize bufobj. 	 */
