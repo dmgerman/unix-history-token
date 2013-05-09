@@ -1950,6 +1950,20 @@ parameter_list|)
 value|((1000 * (usecs) + 512) / 1024)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_INTS_PER_SEC
+value|8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ITR
+value|(1000000000/(MAX_INTS_PER_SEC * 256))
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -2762,6 +2776,32 @@ name|E1000_TADV
 argument_list|)
 argument_list|,
 name|lem_tx_abs_int_delay_dflt
+argument_list|)
+expr_stmt|;
+name|lem_add_int_delay_sysctl
+argument_list|(
+name|adapter
+argument_list|,
+literal|"itr"
+argument_list|,
+literal|"interrupt delay limit in usecs/4"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|tx_itr
+argument_list|,
+name|E1000_REGISTER
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_ITR
+argument_list|)
+argument_list|,
+name|DEFAULT_ITR
 argument_list|)
 expr_stmt|;
 block|}
@@ -6357,6 +6397,9 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
+name|bool
+name|more
+init|=
 name|lem_rxeof
 argument_list|(
 name|adapter
@@ -6367,7 +6410,7 @@ name|rx_process_limit
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|EM_TX_LOCK
 argument_list|(
 name|adapter
@@ -6399,6 +6442,25 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|more
+condition|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|adapter
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|rxtx_task
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 if|if
 condition|(
@@ -15207,20 +15269,6 @@ begin_comment
 comment|/*********************************************************************  *  *  Enable receive unit.  *  **********************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAX_INTS_PER_SEC
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ITR
-value|1000000000/(MAX_INTS_PER_SEC * 256)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -22238,6 +22286,19 @@ name|EM_USECS_TO_TICKS
 argument_list|(
 name|usecs
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|offset
+operator|==
+name|E1000_ITR
+condition|)
+comment|/* units are 256ns here */
+name|ticks
+operator|*=
+literal|4
 expr_stmt|;
 name|adapter
 operator|=

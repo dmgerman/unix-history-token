@@ -2386,6 +2386,20 @@ name|M_TSO_LEN
 value|66
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_INTS_PER_SEC
+value|8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_ITR
+value|(1000000000/(MAX_INTS_PER_SEC * 256))
+end_define
+
 begin_comment
 comment|/* Allow common code without TSO */
 end_comment
@@ -3651,6 +3665,29 @@ name|E1000_TADV
 argument_list|)
 argument_list|,
 name|em_tx_abs_int_delay_dflt
+argument_list|)
+expr_stmt|;
+name|em_add_int_delay_sysctl
+argument_list|(
+name|adapter
+argument_list|,
+literal|"itr"
+argument_list|,
+literal|"interrupt delay limit in usecs/4"
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|tx_itr
+argument_list|,
+name|E1000_REGISTER
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_ITR
+argument_list|)
+argument_list|,
+name|DEFAULT_ITR
 argument_list|)
 expr_stmt|;
 comment|/* Sysctl for limiting the amount of work done in the taskqueue */
@@ -20546,20 +20583,6 @@ begin_comment
 comment|/*********************************************************************  *  *  Enable receive unit.  *  **********************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAX_INTS_PER_SEC
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ITR
-value|1000000000/(MAX_INTS_PER_SEC * 256)
-end_define
-
 begin_function
 specifier|static
 name|void
@@ -27806,6 +27829,19 @@ name|EM_USECS_TO_TICKS
 argument_list|(
 name|usecs
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|offset
+operator|==
+name|E1000_ITR
+condition|)
+comment|/* units are 256ns here */
+name|ticks
+operator|*=
+literal|4
 expr_stmt|;
 name|adapter
 operator|=
