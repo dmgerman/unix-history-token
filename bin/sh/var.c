@@ -3981,7 +3981,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns true if the two strings specify the same varable.  The first  * variable name is terminated by '='; the second may be terminated by  * either '=' or '\0'.  */
+comment|/*  * Returns true if the two strings specify the same variable.  The first  * variable name is terminated by '='; the second may be terminated by  * either '=' or '\0'.  */
 end_comment
 
 begin_function
@@ -4048,7 +4048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search for a variable.  * 'name' may be terminated by '=' or a NUL.  * vppp is set to the pointer to vp, or the list head if vp isn't found  * lenp is set to the number of charactets in 'name'  */
+comment|/*  * Search for a variable.  * 'name' may be terminated by '=' or a NUL.  * vppp is set to the pointer to vp, or the list head if vp isn't found  * lenp is set to the number of characters in 'name'  */
 end_comment
 
 begin_function
