@@ -1237,7 +1237,7 @@ index|]
 operator||=
 name|IEEE80211_FC1_MORE_DATA
 expr_stmt|;
-comment|/* sync descriptor to memory */
+comment|/* re-sync buffer to memory */
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -2334,9 +2334,9 @@ operator|&
 name|ATH_BUF_FIFOEND
 condition|)
 block|{
-name|ATH_TXBUF_LOCK
+name|ATH_TXQ_LOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 name|ath_txq_freeholdingbuf
@@ -2346,9 +2346,9 @@ argument_list|,
 name|txq
 argument_list|)
 expr_stmt|;
-name|ATH_TXBUF_UNLOCK
+name|ATH_TXQ_UNLOCK
 argument_list|(
-name|sc
+name|txq
 argument_list|)
 expr_stmt|;
 block|}
