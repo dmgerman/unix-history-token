@@ -4637,13 +4637,6 @@ operator||
 name|PCB_FULL_IRET
 argument_list|)
 expr_stmt|;
-name|clear_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_GS32BIT
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
