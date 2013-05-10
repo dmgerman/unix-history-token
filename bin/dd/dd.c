@@ -326,6 +326,13 @@ begin_comment
 comment|/* Character to fill with if defined */
 end_comment
 
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|need_summary
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -365,7 +372,7 @@ name|signal
 argument_list|(
 name|SIGINFO
 argument_list|,
-name|summaryx
+name|siginfo_handler
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1893,6 +1900,15 @@ name|cfunc
 call|)
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|need_summary
+condition|)
+block|{
+name|summary
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
