@@ -1609,6 +1609,19 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+specifier|static
+name|VMM_STAT_ARRAY
+argument_list|(
+name|IPIS_SENT
+argument_list|,
+name|VM_MAXCPU
+argument_list|,
+literal|"ipis sent to vcpu"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1795,6 +1808,7 @@ name|mode
 operator|==
 name|APIC_DELMODE_FIXED
 condition|)
+block|{
 name|lapic_set_intr
 argument_list|(
 name|vlapic
@@ -1806,6 +1820,24 @@ argument_list|,
 name|vec
 argument_list|)
 expr_stmt|;
+name|vmm_stat_array_incr
+argument_list|(
+name|vlapic
+operator|->
+name|vm
+argument_list|,
+name|vlapic
+operator|->
+name|vcpuid
+argument_list|,
+name|IPIS_SENT
+argument_list|,
+name|i
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|vm_inject_nmi
 argument_list|(
