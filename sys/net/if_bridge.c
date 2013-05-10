@@ -8638,6 +8638,15 @@ name|bridge_iflist
 modifier|*
 name|bif
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_RENAMING
+condition|)
+return|return;
 comment|/* Check if the interface is a bridge member */
 if|if
 condition|(
