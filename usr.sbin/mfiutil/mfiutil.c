@@ -340,6 +340,20 @@ argument_list|,
 literal|"    flash<firmware>\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    start learn               - start a BBU relearn\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    bbu<setting><value>     - set BBU properties\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
