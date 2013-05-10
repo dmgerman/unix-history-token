@@ -1116,7 +1116,7 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * There still might be channels (in OPEN state?) that 	 * did not submit any commands, so diconnect them 	 */
+comment|/* 	 * There still might be channels (in OPEN state?) that 	 * did not submit any commands, so disconnect them 	 */
 name|LIST_FOREACH
 argument_list|(
 argument|ch

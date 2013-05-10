@@ -9573,7 +9573,7 @@ name|DA_CCB_BUFFER_IO
 expr_stmt|;
 name|out
 label|:
-comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
+comment|/* 		 * Block out any asynchronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -11293,7 +11293,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
+comment|/* 		 * Block out any asynchronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|LIST_REMOVE
 argument_list|(
 operator|&

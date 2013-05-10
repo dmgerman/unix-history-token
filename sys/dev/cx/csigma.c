@@ -7700,7 +7700,7 @@ name|num
 condition|)
 block|{
 default|default:
-comment|/* Channels 4..7 and 12..15 in syncronous mode 		 * have no DTR signal. */
+comment|/* Channels 4..7 and 12..15 in synchronous mode 		 * have no DTR signal. */
 break|break;
 case|case
 literal|1

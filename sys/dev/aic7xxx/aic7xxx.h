@@ -1875,7 +1875,7 @@ value|0x0a
 end_define
 
 begin_comment
-comment|/*  * Indexes into our table of syncronous transfer rates.  */
+comment|/*  * Indexes into our table of synchronous transfer rates.  */
 end_comment
 
 begin_define

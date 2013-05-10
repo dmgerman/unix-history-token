@@ -4917,7 +4917,7 @@ break|break;
 case|case
 literal|5
 case|:
-comment|/* Connecter type */
+comment|/* Connector type */
 if|if
 condition|(
 name|len
