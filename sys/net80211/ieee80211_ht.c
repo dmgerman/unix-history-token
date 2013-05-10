@@ -13029,17 +13029,16 @@ define|#
 directive|define
 name|PROTMODE
 value|(IEEE80211_HTINFO_OPMODE|IEEE80211_HTINFO_NONHT_PRESENT)
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+decl_stmt|;
 specifier|const
 name|struct
 name|ieee80211_channel
 modifier|*
 name|bsschan
-init|=
-name|vap
-operator|->
-name|iv_bss
-operator|->
-name|ni_chan
 decl_stmt|;
 name|struct
 name|ieee80211com
@@ -13064,6 +13063,21 @@ name|bo
 operator|->
 name|bo_htinfo
 decl_stmt|;
+name|ni
+operator|=
+name|ieee80211_ref_node
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+argument_list|)
+expr_stmt|;
+name|bsschan
+operator|=
+name|ni
+operator|->
+name|ni_chan
+expr_stmt|;
 comment|/* XXX only update on channel change */
 name|ht
 operator|->
@@ -13161,6 +13175,11 @@ operator||
 name|ic
 operator|->
 name|ic_curhtprotmode
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
 comment|/* XXX propagate to vendor ie's */
 undef|#
