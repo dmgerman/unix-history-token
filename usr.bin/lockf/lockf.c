@@ -202,6 +202,8 @@ block|{
 name|int
 name|ch
 decl_stmt|,
+name|flags
+decl_stmt|,
 name|silent
 decl_stmt|,
 name|status
@@ -216,6 +218,10 @@ operator|=
 name|keep
 operator|=
 literal|0
+expr_stmt|;
+name|flags
+operator|=
+name|O_CREAT
 expr_stmt|;
 name|waitsec
 operator|=
@@ -234,7 +240,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"skt:"
+literal|"sknt:"
 argument_list|)
 operator|)
 operator|!=
@@ -253,6 +259,15 @@ case|:
 name|keep
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|flags
+operator|&=
+operator|~
+name|O_CREAT
 expr_stmt|;
 break|break;
 case|case
@@ -399,6 +414,8 @@ name|acquire_lock
 argument_list|(
 name|lockname
 argument_list|,
+name|flags
+operator||
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
@@ -427,7 +444,7 @@ name|acquire_lock
 argument_list|(
 name|lockname
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 else|else
@@ -443,6 +460,8 @@ name|acquire_lock
 argument_list|(
 name|lockname
 argument_list|,
+name|flags
+operator||
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
@@ -655,9 +674,9 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-name|O_RDONLY
+name|flags
 operator||
-name|O_CREAT
+name|O_RDONLY
 operator||
 name|O_EXLOCK
 operator||
@@ -816,7 +835,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lockf [-ks] [-t seconds] file command [arguments]\n"
+literal|"usage: lockf [-kns] [-t seconds] file command [arguments]\n"
 argument_list|)
 expr_stmt|;
 name|exit
