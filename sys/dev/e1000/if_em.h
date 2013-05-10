@@ -1154,6 +1154,10 @@ name|struct
 name|em_int_delay_info
 name|rx_abs_int_delay
 decl_stmt|;
+name|struct
+name|em_int_delay_info
+name|tx_itr
+decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long

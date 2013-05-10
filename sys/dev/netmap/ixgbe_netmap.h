@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: ixgbe_netmap.h 10627 2012-02-23 19:37:15Z luigi $  *  * netmap modifications for ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions  * that are used by a single driver. To avoid replication of  * code we just #include it near the beginning of the  * standard driver.  */
+comment|/*  * $FreeBSD$  *  * netmap modifications for ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions  * that are used by a single driver. To avoid replication of  * code we just #include it near the beginning of the  * standard driver.  */
 end_comment
 
 begin_include
@@ -668,17 +668,19 @@ decl_stmt|;
 name|u_int
 name|j
 decl_stmt|,
-name|k
-init|=
-name|ring
-operator|->
-name|cur
-decl_stmt|,
 name|l
 decl_stmt|,
 name|n
 init|=
 literal|0
+decl_stmt|;
+name|u_int
+specifier|const
+name|k
+init|=
+name|ring
+operator|->
+name|cur
 decl_stmt|,
 name|lim
 init|=
@@ -1274,14 +1276,9 @@ name|txr
 operator|->
 name|tx_base
 decl_stmt|;
-name|l
-operator|=
-name|txr
-operator|->
-name|next_to_clean
-expr_stmt|;
-name|k
-operator|=
+name|u_int
+name|k1
+init|=
 name|netmap_idx_k2n
 argument_list|(
 name|kring
@@ -1290,6 +1287,12 @@ name|kring
 operator|->
 name|nr_hwcur
 argument_list|)
+decl_stmt|;
+name|l
+operator|=
+name|txr
+operator|->
+name|next_to_clean
 expr_stmt|;
 name|delta
 operator|=
@@ -1299,7 +1302,7 @@ while|while
 condition|(
 name|l
 operator|!=
-name|k
+name|k1
 operator|&&
 name|txd
 index|[

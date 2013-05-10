@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011-2012 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_kern.h 11829 2012-09-26 04:06:34Z luigi $  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
+comment|/*  * $FreeBSD$  *  * The header contains the definitions of constants and function  * prototypes used only in kernelspace.  */
 end_comment
 
 begin_ifndef
@@ -18,16 +18,6 @@ define|#
 directive|define
 name|_NET_NETMAP_KERN_H_
 end_define
-
-begin_define
-define|#
-directive|define
-name|NETMAP_MEM2
-end_define
-
-begin_comment
-comment|// use the new memory allocator
-end_comment
 
 begin_if
 if|#
@@ -107,8 +97,12 @@ begin_define
 define|#
 directive|define
 name|NM_LOCK_T
-value|spinlock_t
+value|safe_spinlock_t
 end_define
+
+begin_comment
+comment|// see bsd_glue.h
+end_comment
 
 begin_define
 define|#
@@ -285,6 +279,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* end - platform-specific code */
+end_comment
 
 begin_define
 define|#
@@ -592,8 +590,12 @@ modifier|*
 name|rxd
 parameter_list|)
 function_decl|;
+comment|/* 	 * Bridge support: 	 * 	 * bdg_port is the port number used in the bridge; 	 * na_bdg_refcount is a refcount used for bridge ports, 	 *	when it goes to 0 we can detach+free this port 	 *	(a bridge port is always attached if it exists; 	 *	it is not always registered) 	 */
 name|int
 name|bdg_port
+decl_stmt|;
+name|int
+name|na_bdg_refcount
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -602,10 +604,6 @@ name|struct
 name|net_device_ops
 name|nm_ndo
 decl_stmt|;
-name|int
-name|if_refcount
-decl_stmt|;
-comment|// XXX additions for bridge
 endif|#
 directive|endif
 comment|/* linux */
@@ -671,6 +669,32 @@ directive|endif
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* How to handle locking support in netmap_rx_irq/netmap_tx_irq */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_LOCKED_ENTER
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* already locked on enter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_LOCKED_EXIT
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* keep locked on exit */
+end_comment
 
 begin_comment
 comment|/*  * The following are support routines used by individual drivers to  * support netmap operation.  *  * netmap_attach() initializes a struct netmap_adapter, allocating the  * 	struct netmap_ring's and the struct selinfo.  *  * netmap_detach() frees the memory allocated by netmap_attach().  *  * netmap_start() replaces the if_transmit routine of the interface,  *	and is used to intercept packets coming from the stack.  *  * netmap_load_map/netmap_reload_map are helper routines to set/reset  *	the dmamap for a packet buffer  *  * netmap_reset() is a helper routine to be called in the driver  *	when reinitializing a ring.  */
@@ -778,6 +802,10 @@ directive|define
 name|NETMAP_BUF_SIZE
 value|netmap_buf_size
 end_define
+
+begin_comment
+comment|// XXX remove
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1342,12 +1370,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETMAP_MEM2
-end_ifdef
-
 begin_comment
 comment|/* Entries of the look-up table. */
 end_comment
@@ -1364,7 +1386,7 @@ comment|/* virtual address. */
 name|vm_paddr_t
 name|paddr
 decl_stmt|;
-comment|/* phisical address. */
+comment|/* physical address. */
 block|}
 struct|;
 end_struct
@@ -1403,34 +1425,6 @@ name|i
 parameter_list|)
 value|(netmap_buffer_lut[i].paddr)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NETMAP_MEM1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NMB_VA
-parameter_list|(
-name|i
-parameter_list|)
-value|(netmap_buffer_base + (i * NETMAP_BUF_SIZE) )
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NETMAP_MEM2 */
-end_comment
 
 begin_comment
 comment|/*  * NMB return the virtual address of a buffer (buffer 0 on bad index)  * PNMB also fills the physical address  */
@@ -1523,9 +1517,6 @@ argument_list|(
 name|i
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NETMAP_MEM2
 operator|*
 name|pp
 operator|=
@@ -1545,18 +1536,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|*
-name|pp
-operator|=
-name|vtophys
-argument_list|(
-name|ret
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|ret
 return|;
@@ -1594,13 +1573,6 @@ name|_q
 parameter_list|)
 value|netmap_rx_irq(_n, _q, NULL)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|netmap_copy
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

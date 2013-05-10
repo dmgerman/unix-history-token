@@ -1012,6 +1012,10 @@ name|struct
 name|em_int_delay_info
 name|rx_abs_int_delay
 decl_stmt|;
+name|struct
+name|em_int_delay_info
+name|tx_itr
+decl_stmt|;
 comment|/* 	 * Transmit definitions 	 * 	 * We have an array of num_tx_desc descriptors (handled 	 * by the controller) paired with an array of tx_buffers 	 * (at tx_buffer_area). 	 * The index of the next available descriptor is next_avail_tx_desc. 	 * The number of remaining tx_desc is num_tx_desc_avail. 	 */
 name|struct
 name|em_dma_alloc
