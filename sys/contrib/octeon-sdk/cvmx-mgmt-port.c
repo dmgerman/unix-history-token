@@ -227,6 +227,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OCTEON_VENDOR_GEFES
+argument_list|)
+return|return
+literal|0
+return|;
+comment|/* none of the GEFES boards have mgmt ports */
+else|#
+directive|else
 if|if
 condition|(
 name|OCTEON_IS_MODEL
@@ -262,6 +274,8 @@ else|else
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
