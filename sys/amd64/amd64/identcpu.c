@@ -1221,11 +1221,11 @@ literal|"\013INVPCID"
 comment|/* Restricted Transactional Memory */
 literal|"\014RTM"
 comment|/* Enhanced NRBG */
-literal|"\022RDSEED"
+literal|"\023RDSEED"
 comment|/* ADCX + ADOX */
-literal|"\023ADX"
+literal|"\024ADX"
 comment|/* Supervisor Mode Access Prevention */
-literal|"\024SMAP"
+literal|"\025SMAP"
 argument_list|)
 expr_stmt|;
 block|}
