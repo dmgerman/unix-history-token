@@ -9323,6 +9323,7 @@ name|PF_RULES_RUNLOCK
 argument_list|()
 expr_stmt|;
 block|}
+else|else
 name|error
 operator|=
 name|EOPNOTSUPP
