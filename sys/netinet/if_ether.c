@@ -2442,6 +2442,30 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|arp_lastlog
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|arp_curpps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|arp_maxpps
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2525,6 +2549,40 @@ literal|"accept multicast addresses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_ether_inet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_log_per_second
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|arp_maxpps
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of remotely triggered ARP messages that can be "
+literal|"logged per second"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|ARP_LOG
+parameter_list|(
+name|pri
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 	if (ppsratecheck(&arp_lastlog,&arp_curpps, arp_maxpps))	\ 		log((pri), "arp: " __VA_ARGS__);			\ } while (0)
+end_define
 
 begin_function
 specifier|static
@@ -2700,11 +2758,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"in_arp: runt packet -- m_pullup failed\n"
+literal|"runt packet -- m_pullup failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2734,11 +2792,11 @@ name|in_addr
 argument_list|)
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"in_arp: requested protocol length != %zu\n"
+literal|"requested protocol length != %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2766,11 +2824,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: %*D is multicast\n"
+literal|"%*D is multicast\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3267,11 +3325,12 @@ name|if_addrlen
 argument_list|)
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: link address is broadcast for IP address %s!\n"
+literal|"link address is broadcast for IP address "
+literal|"%s!\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -3307,11 +3366,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %*D is using my IP address %s on %s!\n"
+literal|"%*D is using my IP address %s on %s!\n"
 argument_list|,
 name|ifp
 operator|->
@@ -3471,11 +3530,11 @@ if|if
 condition|(
 name|log_arp_wrong_iface
 condition|)
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"arp: %s is on %s "
+literal|"%s is on %s "
 literal|"but got reply from %*D on %s\n"
 argument_list|,
 name|inet_ntoa
@@ -3566,11 +3625,11 @@ if|if
 condition|(
 name|log_arp_permanent_modify
 condition|)
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %*D attempts to modify "
+literal|"%*D attempts to modify "
 literal|"permanent entry for %s on %s\n"
 argument_list|,
 name|ifp
@@ -3607,11 +3666,11 @@ condition|(
 name|log_arp_movements
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"arp: %s moved from %*D "
+literal|"%s moved from %*D "
 literal|"to %*D on %s\n"
 argument_list|,
 name|inet_ntoa
@@ -3672,11 +3731,11 @@ argument_list|(
 name|la
 argument_list|)
 expr_stmt|;
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"arp from %*D: addr len: new %d, "
+literal|"from %*D: addr len: new %d, "
 literal|"i/f %d (ignored)\n"
 argument_list|,
 name|ifp
@@ -4256,11 +4315,11 @@ operator|!=
 name|ifp
 condition|)
 block|{
-name|log
+name|ARP_LOG
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"arp_proxy: ignoring request"
+literal|"proxy: ignoring request"
 literal|" from %s via %s, expecting %s\n"
 argument_list|,
 name|inet_ntoa
