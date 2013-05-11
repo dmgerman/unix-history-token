@@ -410,6 +410,8 @@ argument_list|(
 name|fd1
 argument_list|,
 name|F_DUPFD
+argument_list|,
+literal|10
 argument_list|)
 operator|)
 operator|<
@@ -422,6 +424,23 @@ argument_list|,
 literal|"fcntl(F_DUPFD)"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fd2
+operator|<
+literal|10
+condition|)
+name|printf
+argument_list|(
+literal|"not ok %d - fcntl(F_DUPFD) returned wrong fd %d\n"
+argument_list|,
+operator|++
+name|test
+argument_list|,
+name|fd2
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"ok %d - fcntl(F_DUPFD) works\n"
