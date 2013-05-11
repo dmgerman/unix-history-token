@@ -5378,8 +5378,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EEXIST
 operator|)
 return|;
 comment|/* collision! */
@@ -6215,6 +6214,9 @@ name|pf_state
 modifier|*
 name|cur
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|TAILQ_EMPTY
@@ -6370,6 +6372,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|pf_state_key_attach
 argument_list|(
 name|skw
@@ -6378,11 +6383,13 @@ name|sks
 argument_list|,
 name|s
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|error
 operator|)
 return|;
 name|ih
@@ -6482,8 +6489,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EEXIST
 operator|)
 return|;
 block|}
