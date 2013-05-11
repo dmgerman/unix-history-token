@@ -7008,8 +7008,6 @@ decl_stmt|,
 name|logcnt
 decl_stmt|,
 name|max_logcnt
-decl_stmt|,
-name|valid
 decl_stmt|;
 name|struct
 name|oldlog_entry
