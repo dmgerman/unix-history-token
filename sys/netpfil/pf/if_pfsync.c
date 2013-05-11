@@ -2236,14 +2236,16 @@ operator|->
 name|creatorid
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|V_pf_status
 operator|.
 name|debug
 operator|>=
 name|PF_DEBUG_MISC
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s: invalid creator id: %08x\n"
