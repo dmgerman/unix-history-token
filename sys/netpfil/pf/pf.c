@@ -6451,7 +6451,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pf: state insert failed: "
+literal|"pf: state ID collision: "
 literal|"id: %016llx creatorid: %08x\n"
 argument_list|,
 operator|(
