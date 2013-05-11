@@ -191,7 +191,7 @@ parameter_list|(
 name|lev
 parameter_list|)
 define|\
-value|((vm_pindex_t)1<< ((VM_RADIX_LIMIT - (lev)) * VM_RADIX_WIDTH))
+value|((vm_pindex_t)1<< ((lev) * VM_RADIX_WIDTH))
 end_define
 
 begin_struct
@@ -359,11 +359,7 @@ operator|(
 name|index
 operator|>>
 operator|(
-operator|(
-name|VM_RADIX_LIMIT
-operator|-
 name|level
-operator|)
 operator|*
 name|VM_RADIX_WIDTH
 operator|)
@@ -402,27 +398,19 @@ expr_stmt|;
 if|if
 condition|(
 name|level
-operator|<
-name|VM_RADIX_LIMIT
+operator|>
+literal|0
 condition|)
 block|{
 name|ret
 operator|>>=
-operator|(
-name|VM_RADIX_LIMIT
-operator|-
 name|level
-operator|)
 operator|*
 name|VM_RADIX_WIDTH
 expr_stmt|;
 name|ret
 operator|<<=
-operator|(
-name|VM_RADIX_LIMIT
-operator|-
 name|level
-operator|)
 operator|*
 name|VM_RADIX_WIDTH
 expr_stmt|;
@@ -672,11 +660,11 @@ for|for
 control|(
 name|clev
 operator|=
-literal|0
+name|VM_RADIX_LIMIT
 init|;
 condition|;
 name|clev
-operator|++
+operator|--
 control|)
 if|if
 condition|(
@@ -721,8 +709,8 @@ condition|(
 name|rnode
 operator|->
 name|rn_clev
-operator|>
-literal|0
+operator|<
+name|VM_RADIX_LIMIT
 condition|)
 block|{
 name|idx
@@ -734,7 +722,7 @@ argument_list|,
 name|rnode
 operator|->
 name|rn_clev
-operator|-
+operator|+
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1303,7 +1291,7 @@ argument_list|(
 name|index
 argument_list|,
 name|clev
-operator|-
+operator|+
 literal|1
 argument_list|)
 argument_list|,
@@ -1442,7 +1430,7 @@ argument_list|(
 name|index
 argument_list|,
 name|clev
-operator|-
+operator|+
 literal|1
 argument_list|)
 argument_list|,
@@ -2027,8 +2015,8 @@ argument_list|(
 name|rnode
 operator|->
 name|rn_clev
-operator|<
-name|VM_RADIX_LIMIT
+operator|>
+literal|0
 argument_list|,
 operator|(
 literal|"vm_radix_lookup_ge: pushing leaf's parent"
@@ -2476,8 +2464,8 @@ argument_list|(
 name|rnode
 operator|->
 name|rn_clev
-operator|<
-name|VM_RADIX_LIMIT
+operator|>
+literal|0
 argument_list|,
 operator|(
 literal|"vm_radix_lookup_le: pushing leaf's parent"
