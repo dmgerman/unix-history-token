@@ -9039,6 +9039,13 @@ name|out
 goto|;
 endif|#
 directive|endif
+name|vfs_notify_upper
+argument_list|(
+name|vp
+argument_list|,
+name|VFS_NOTIFY_UPPER_UNLINK
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_REMOVE
@@ -18835,6 +18842,13 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|vfs_notify_upper
+argument_list|(
+name|vp
+argument_list|,
+name|VFS_NOTIFY_UPPER_UNLINK
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_RMDIR
