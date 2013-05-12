@@ -982,13 +982,6 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
-name|MPASS
-argument_list|(
-name|curthread
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|rw
@@ -1250,13 +1243,6 @@ name|SCHEDULER_STOPPED
 argument_list|()
 condition|)
 return|return;
-name|MPASS
-argument_list|(
-name|curthread
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|rw
