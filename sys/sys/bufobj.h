@@ -51,6 +51,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_pctrie.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|bufobj
@@ -95,11 +101,10 @@ name|bv_hd
 decl_stmt|;
 comment|/* Sorted blocklist */
 name|struct
-name|buf
-modifier|*
+name|pctrie
 name|bv_root
 decl_stmt|;
-comment|/* Buf splay tree */
+comment|/* Buf trie */
 name|int
 name|bv_cnt
 decl_stmt|;

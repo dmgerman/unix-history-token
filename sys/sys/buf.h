@@ -227,18 +227,6 @@ argument_list|)
 name|b_bobufs
 expr_stmt|;
 comment|/* (V) Buffer's associated vnode. */
-name|struct
-name|buf
-modifier|*
-name|b_left
-decl_stmt|;
-comment|/* (V) splay tree link */
-name|struct
-name|buf
-modifier|*
-name|b_right
-decl_stmt|;
-comment|/* (V) splay tree link */
 name|uint32_t
 name|b_vflags
 decl_stmt|;
