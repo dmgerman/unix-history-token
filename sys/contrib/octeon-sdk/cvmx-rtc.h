@@ -126,17 +126,6 @@ case|:
 case|case
 name|CVMX_BOARD_TYPE_EBH5200
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OCTEON_VENDOR_GEFES
-argument_list|)
-case|case
-name|CVMX_BOARD_TYPE_CUST_W63XX
-case|:
-endif|#
-directive|endif
 name|supported
 operator|=
 name|CVMX_RTC_READ
