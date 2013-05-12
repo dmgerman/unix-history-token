@@ -1319,7 +1319,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Unlock our root node (dvp) when doing this, since we might 		 * deadlock since the vnode might be locked by another thread 		 * and the root vnode lock will be obtained afterwards (in case 		 * we're looking up the fd of the root vnode), which will be the 		 * opposite lock order. Vhold the root vnode first so we don't 		 * loose it. 		 */
+comment|/* 		 * Unlock our root node (dvp) when doing this, since we might 		 * deadlock since the vnode might be locked by another thread 		 * and the root vnode lock will be obtained afterwards (in case 		 * we're looking up the fd of the root vnode), which will be the 		 * opposite lock order. Vhold the root vnode first so we don't 		 * lose it. 		 */
 name|vhold
 argument_list|(
 name|dvp
