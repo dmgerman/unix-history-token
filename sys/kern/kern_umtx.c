@@ -14311,11 +14311,16 @@ argument_list|(
 name|uq
 argument_list|)
 expr_stmt|;
+comment|/* A relative timeout cannot be restarted. */
 if|if
 condition|(
 name|error
 operator|==
 name|ERESTART
+operator|&&
+name|timeout
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
