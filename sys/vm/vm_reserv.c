@@ -1854,7 +1854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a page from an existing or newly-created reservation.  *  * The object and free page queue must be locked.  */
+comment|/*  * Allocates a page from an existing or newly-created reservation.  *  * The page "mpred" must immediately precede the offset "pindex" within the  * specified object.  *  * The object and free page queue must be locked.  */
 end_comment
 
 begin_function
@@ -1866,12 +1866,13 @@ name|object
 parameter_list|,
 name|vm_pindex_t
 name|pindex
+parameter_list|,
+name|vm_page_t
+name|mpred
 parameter_list|)
 block|{
 name|vm_page_t
 name|m
-decl_stmt|,
-name|mpred
 decl_stmt|,
 name|msucc
 decl_stmt|;
@@ -1922,18 +1923,6 @@ name|NULL
 operator|)
 return|;
 comment|/* 	 * Look for an existing reservation. 	 */
-name|mpred
-operator|=
-name|vm_radix_lookup_le
-argument_list|(
-operator|&
-name|object
-operator|->
-name|rtree
-argument_list|,
-name|pindex
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mpred
@@ -1945,12 +1934,35 @@ name|KASSERT
 argument_list|(
 name|mpred
 operator|->
+name|object
+operator|==
+name|object
+operator|||
+operator|(
+name|mpred
+operator|->
+name|flags
+operator|&
+name|PG_SLAB
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vm_reserv_alloc_page: object doesn't contain mpred"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mpred
+operator|->
 name|pindex
 operator|<
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_reserv_alloc_page: pindex already allocated"
+literal|"vm_reserv_alloc_page: mpred doesn't precede pindex"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2016,7 +2028,7 @@ operator|>
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_reserv_alloc_page: pindex already allocated"
+literal|"vm_reserv_alloc_page: msucc doesn't succeed pindex"
 operator|)
 argument_list|)
 expr_stmt|;

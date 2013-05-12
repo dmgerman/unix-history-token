@@ -74,6 +74,9 @@ name|object
 parameter_list|,
 name|vm_pindex_t
 name|pindex
+parameter_list|,
+name|vm_page_t
+name|mpred
 parameter_list|)
 function_decl|;
 end_function_decl
