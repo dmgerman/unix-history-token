@@ -4809,6 +4809,14 @@ name|mtree_global_inode
 operator|.
 name|st
 operator|.
+name|st_nlink
+operator|=
+literal|1
+expr_stmt|;
+name|mtree_global_inode
+operator|.
+name|st
+operator|.
 name|st_atime
 operator|=
 name|mtree_global_inode
