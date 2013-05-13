@@ -25171,13 +25171,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|an
 operator|->
 name|an_swq_depth
-argument_list|)
 operator|==
 literal|0
 condition|)
@@ -25425,20 +25421,6 @@ condition|(
 name|enable
 condition|)
 block|{
-comment|/* 		 * Don't bother grabbing the lock unless the queue is not 		 * empty. 		 */
-if|if
-condition|(
-name|atomic_load_acq_int
-argument_list|(
-operator|&
-name|an
-operator|->
-name|an_swq_depth
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return;
 if|if
 condition|(
 name|an
@@ -25451,13 +25433,9 @@ name|an_tim_set
 operator|==
 literal|0
 operator|&&
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|an
 operator|->
 name|an_swq_depth
-argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -25500,13 +25478,10 @@ block|{
 comment|/* 		 * Don't bother grabbing the lock unless the queue is empty. 		 */
 if|if
 condition|(
-name|atomic_load_acq_int
-argument_list|(
 operator|&
 name|an
 operator|->
 name|an_swq_depth
-argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -25529,13 +25504,9 @@ name|an_tim_set
 operator|==
 literal|1
 operator|&&
-name|atomic_load_acq_int
-argument_list|(
-operator|&
 name|an
 operator|->
 name|an_swq_depth
-argument_list|)
 operator|==
 literal|0
 condition|)

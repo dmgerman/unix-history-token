@@ -1289,7 +1289,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1303,7 +1303,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1317,7 +1317,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	(_tq)->an->an_swq_depth--; \ } while (0)
 end_define
 
 begin_define
@@ -1357,7 +1357,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1371,7 +1371,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1385,7 +1385,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	(_tq)->an->an_swq_depth--; \ } while (0)
 end_define
 
 begin_define
