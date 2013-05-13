@@ -707,6 +707,13 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the payload _after_ the header field. 	 */
+if|if
+condition|(
+name|buf
+operator|!=
+name|NULL
+condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|(
@@ -728,6 +735,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 name|alq_post
 argument_list|(
 name|alq
