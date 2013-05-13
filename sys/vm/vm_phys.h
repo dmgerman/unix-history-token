@@ -55,6 +55,13 @@ name|mem_affinity
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_ndomains
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The following functions are only to be used by the virtual memory system.  */
 end_comment

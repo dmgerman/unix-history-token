@@ -827,6 +827,10 @@ name|int
 name|td_no_sleeping
 decl_stmt|;
 comment|/* (k) Sleeping disabled count. */
+name|int
+name|td_dom_rr_idx
+decl_stmt|;
+comment|/* (k) RR Numa domain selection. */
 define|#
 directive|define
 name|td_endzero
