@@ -479,7 +479,7 @@ name|struct
 name|mtx
 name|an_mtx
 decl_stmt|;
-comment|/* protecting the ath_node state */
+comment|/* protecting the rate control state */
 name|uint32_t
 name|an_swq_depth
 decl_stmt|;
