@@ -12500,9 +12500,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, called\n"
+literal|"%s: %6D: tid=%p, called\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|)
@@ -12528,9 +12538,19 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bar_tx=%d, bar_wait=%d: ?\n"
+literal|"%s: %6D: bar_tx=%d, bar_wait=%d: ?\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 operator|->
@@ -12612,9 +12632,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p (%d), bar ready\n"
+literal|"%s: %6D: tid=%p (%d), bar ready\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|,
@@ -12667,9 +12697,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, called\n"
+literal|"%s: %6D: tid=%p, called\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|)
@@ -12709,9 +12749,19 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: tid=%p, bar_tx=%d, bar_wait=%d: ?\n"
+literal|"%s: %6D: tid=%p, bar_tx=%d, bar_wait=%d: ?\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|,
@@ -12742,9 +12792,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, hwq_depth=%d, waiting\n"
+literal|"%s: %6D: tid=%p, hwq_depth=%d, waiting\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|,
@@ -12779,9 +12839,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, new BAW left edge=%d\n"
+literal|"%s: %6D: tid=%p, new BAW left edge=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|,
@@ -12838,9 +12908,19 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: tid=%p, failed to TX BAR, continue!\n"
+literal|"%s: %6D: tid=%p, failed to TX BAR, continue!\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 argument_list|)
@@ -13473,8 +13553,34 @@ condition|)
 block|{
 if|#
 directive|if
-literal|0
-block|DPRINTF(sc, ATH_DEBUG_SW_TX_CTRL, 		    "%s: node %p: TID %d: sliding BAW left edge to %d\n", 		    __func__, an, tid->tid, tap->txa_start);
+literal|1
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX_CTRL
+argument_list|,
+literal|"%s: %6D: node %p: TID %d: sliding BAW left edge to %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|an
+argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|ni
@@ -13666,6 +13772,46 @@ expr_stmt|;
 name|ATH_TX_LOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_NODE
+argument_list|,
+literal|"%s: %6D: flush; is_powersave=%d, stack_psq=%d, tim=%d, "
+literal|"swq_depth=%d, clrdmask=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|an
+operator|->
+name|an_is_powersave
+argument_list|,
+name|an
+operator|->
+name|an_stack_psq
+argument_list|,
+name|an
+operator|->
+name|an_tim_set
+argument_list|,
+name|an
+operator|->
+name|an_swq_depth
+argument_list|,
+name|an
+operator|->
+name|clrdmask
 argument_list|)
 expr_stmt|;
 for|for
@@ -19248,9 +19394,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: called; dialogtoken=%d, baparamset=%d, batimeout=%d\n"
+literal|"%s: %6D: called; dialogtoken=%d, baparamset=%d, batimeout=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|dialogtoken
 argument_list|,
@@ -19380,9 +19532,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: called; status=%d, code=%d, batimeout=%d\n"
+literal|"%s: %6D: called; status=%d, code=%d, batimeout=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|status
 argument_list|,
@@ -19548,9 +19706,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: called\n"
+literal|"%s: %6D: called\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pause TID traffic early, so there aren't any races 	 * Unblock the pending BAR held traffic, if it's currently paused. 	 */
@@ -19918,9 +20082,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: called; tap=%p, atid=%p, txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
+literal|"%s: %6D: called; tap=%p, atid=%p, txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tap
 argument_list|,
@@ -20087,9 +20257,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: called; resuming\n"
+literal|"%s: %6D: called; resuming\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|ATH_TX_LOCK

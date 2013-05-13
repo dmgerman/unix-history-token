@@ -14244,9 +14244,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE
 argument_list|,
-literal|"%s: an %p\n"
+literal|"%s: %6D: an %p\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|mac
+argument_list|,
+literal|":"
 argument_list|,
 name|an
 argument_list|)
@@ -14291,6 +14295,28 @@ name|ic_ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_NODE
+argument_list|,
+literal|"%s: %6D: an %p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|ATH_NODE
+argument_list|(
+name|ni
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Cleanup ath_tid, free unused bufs, unlink bufs in TXQ */
 name|ath_tx_node_flush
 argument_list|(
@@ -14359,11 +14385,20 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE
 argument_list|,
-literal|"%s: ni %p\n"
+literal|"%s: %6D: an %p\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|ATH_NODE
+argument_list|(
+name|ni
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -24910,11 +24945,6 @@ operator|->
 name|ni_vap
 argument_list|)
 decl_stmt|;
-name|ATH_NODE_UNLOCK_ASSERT
-argument_list|(
-name|an
-argument_list|)
-expr_stmt|;
 comment|/* XXX and no TXQ locks should be held here */
 name|DPRINTF
 argument_list|(
@@ -24922,12 +24952,18 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: ni=%p, enable=%d\n"
+literal|"%s: %6D: enable=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|ni
+operator|->
+name|ni_macaddr
 argument_list|,
+literal|":"
+argument_list|,
+operator|!
+operator|!
 name|enable
 argument_list|)
 expr_stmt|;
@@ -25109,11 +25145,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: an=%p, enable=%d, tim_set=1, ignoring\n"
+literal|"%s: %6D: enable=%d, tim_set=1, ignoring\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|an
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|enable
 argument_list|)
@@ -25136,11 +25176,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: an=%p, enable=%d, enabling TIM\n"
+literal|"%s: %6D: enable=%d, enabling TIM\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|an
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|enable
 argument_list|)
@@ -25185,11 +25229,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: an=%p, enable=%d, an_swq_depth == 0, disabling\n"
+literal|"%s: %6D: enable=%d, an_swq_depth == 0, disabling\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|an
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|enable
 argument_list|)
@@ -25233,11 +25281,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: an=%p, enable=%d, an_pwrsave=0, disabling\n"
+literal|"%s: %6D: enable=%d, an_pwrsave=0, disabling\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|an
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|enable
 argument_list|)
@@ -25279,9 +25331,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: enable=%d, an_swq_depth> 0, ignoring\n"
+literal|"%s: %6D: enable=%d, an_swq_depth> 0, ignoring\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|enable
 argument_list|)
@@ -25446,11 +25504,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_NODE_PWRSAVE
 argument_list|,
-literal|"%s: an=%p, swq_depth>0, tim_set=0, set!\n"
+literal|"%s: %6D: swq_depth>0, tim_set=0, set!\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|an
+name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|an
