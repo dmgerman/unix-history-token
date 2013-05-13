@@ -83,6 +83,13 @@ name|every_first_cmd
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|opt_use_backslash
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Return a printable description of an option.  */
 end_comment
@@ -1873,6 +1880,8 @@ control|)
 block|{
 if|if
 condition|(
+name|opt_use_backslash
+operator|&&
 operator|*
 name|p
 operator|==

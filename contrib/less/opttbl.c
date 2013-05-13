@@ -384,6 +384,17 @@ begin_comment
 comment|/* Old bottom of screen behavior {{REMOVE}} */
 end_comment
 
+begin_decl_stmt
+name|public
+name|int
+name|opt_use_backslash
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use backslash escaping in option parsing */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1089,6 +1100,20 @@ name|follow_optname
 init|=
 block|{
 literal|"follow-name"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|use_backslash_optname
+init|=
+block|{
+literal|"use-backslash"
 block|,
 name|NULL
 block|}
@@ -2192,6 +2217,30 @@ block|{
 literal|"F command follows file descriptor"
 block|,
 literal|"F command follows file name"
+block|,
+name|NULL
+block|}
+block|}
+block|,
+block|{
+name|OLETTER_NONE
+block|,
+operator|&
+name|use_backslash_optname
+block|,
+name|BOOL
+block|,
+name|OPT_OFF
+block|,
+operator|&
+name|opt_use_backslash
+block|,
+name|NULL
+block|,
+block|{
+literal|"Use backslash escaping in command line parameters"
+block|,
+literal|"Don't use backslash escaping in command line parameters"
 block|,
 name|NULL
 block|}
