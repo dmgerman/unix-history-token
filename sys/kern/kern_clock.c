@@ -252,6 +252,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|PMC_SOFT_DEFINE_EX
+argument_list|( , ,
+name|clock
+argument_list|,
+name|prof
+argument_list|, \
+name|cpu_startprofclock
+argument_list|,
+name|cpu_stopprofclock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -3293,6 +3307,30 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+if|if
+condition|(
+name|td
+operator|->
+name|td_intr_frame
+operator|!=
+name|NULL
+condition|)
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|clock
+argument_list|,
+name|prof
+argument_list|,
+name|td
+operator|->
+name|td_intr_frame
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
