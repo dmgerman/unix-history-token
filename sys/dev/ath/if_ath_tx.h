@@ -675,6 +675,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ath_tx_node_reassoc
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Misc debugging stuff  */
 end_comment
