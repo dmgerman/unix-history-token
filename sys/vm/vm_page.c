@@ -3959,6 +3959,11 @@ name|flags
 decl_stmt|,
 name|req_class
 decl_stmt|;
+name|mpred
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: pacify gcc */
 name|KASSERT
 argument_list|(
 operator|(
