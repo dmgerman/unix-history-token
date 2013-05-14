@@ -294,6 +294,12 @@ name|pv_entry
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pv_chunk
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|md_page
@@ -405,6 +411,25 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statictics */
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|!=
+literal|0
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pv_chunk
+argument_list|)
+name|pm_pvchunk
+expr_stmt|;
+comment|/* list of mappings in pmap */
+else|#
+directive|else
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -413,6 +438,8 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -550,10 +577,6 @@ typedef|typedef
 struct|struct
 name|pv_entry
 block|{
-name|pmap_t
-name|pv_pmap
-decl_stmt|;
-comment|/* pmap where mapping lies */
 name|vm_offset_t
 name|pv_va
 decl_stmt|;
@@ -564,21 +587,98 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|int
+name|pv_flags
+decl_stmt|;
+comment|/* flags (wired, etc...) */
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|==
+literal|0
+name|pmap_t
+name|pv_pmap
+decl_stmt|;
+comment|/* pmap where mapping lies */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pv_entry
 argument_list|)
 name|pv_plist
 expr_stmt|;
-name|int
-name|pv_flags
-decl_stmt|;
-comment|/* flags (wired, etc...) */
+endif|#
+directive|endif
 block|}
 typedef|*
 name|pv_entry_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * pv_entries are allocated in chunks per-process.  This avoids the  * need to track per-pmap assignments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_NPCM
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NPCPV
+value|252
+end_define
+
+begin_struct
+struct|struct
+name|pv_chunk
+block|{
+name|pmap_t
+name|pc_pmap
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_list
+expr_stmt|;
+name|uint32_t
+name|pc_map
+index|[
+name|_NPCM
+index|]
+decl_stmt|;
+comment|/* bitmap; 1 = free */
+name|uint32_t
+name|pc_dummy
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* aligns pv_chunk to 4KB */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_lru
+expr_stmt|;
+name|struct
+name|pv_entry
+name|pc_pventry
+index|[
+name|_NPCPV
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
