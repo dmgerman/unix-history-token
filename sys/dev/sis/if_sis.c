@@ -2876,7 +2876,13 @@ name|sc
 operator|->
 name|sis_type
 operator|==
-name|SIS_TYPE_83816
+name|SIS_TYPE_83815
+operator|&&
+name|sc
+operator|->
+name|sis_srr
+operator|>=
+name|NS_SRR_16A
 condition|)
 block|{
 comment|/* 		 * MPII03.D: Half Duplex Excessive Collisions. 		 * Also page 49 in 83816 manual 		 */
@@ -9512,12 +9518,6 @@ operator|->
 name|sis_type
 operator|==
 name|SIS_TYPE_83815
-operator|||
-name|sc
-operator|->
-name|sis_type
-operator|==
-name|SIS_TYPE_83816
 condition|)
 block|{
 if|if
