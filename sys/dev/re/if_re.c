@@ -7713,6 +7713,14 @@ operator|->
 name|rl_rev
 operator|==
 name|RL_HWREV_8168C_SPIN2
+operator|||
+name|sc
+operator|->
+name|rl_hwrev
+operator|->
+name|rl_rev
+operator|==
+name|RL_HWREV_8168CP
 condition|)
 name|ifp
 operator|->
@@ -16404,6 +16412,10 @@ operator|||
 name|rev
 operator|==
 name|RL_HWREV_8168C_SPIN2
+operator|||
+name|rev
+operator|==
+name|RL_HWREV_8168CP
 condition|)
 name|ifp
 operator|->
