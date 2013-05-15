@@ -521,6 +521,9 @@ name|u_int32_t
 name|ast_tx_swfiltered
 decl_stmt|;
 name|u_int32_t
+name|ast_tx_node_psq_overflow
+decl_stmt|;
+name|u_int32_t
 name|ast_rx_stbc
 decl_stmt|;
 comment|/* RX STBC frame */
@@ -531,7 +534,7 @@ comment|/* node sw queue overflow */
 name|u_int32_t
 name|ast_pad
 index|[
-literal|13
+literal|12
 index|]
 decl_stmt|;
 block|}

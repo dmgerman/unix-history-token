@@ -3230,7 +3230,22 @@ name|bf_prev
 operator|=
 name|bf
 expr_stmt|;
-comment|/* 		 * XXX TODO: if any sub-frames have RTS/CTS enabled; 		 * enable it for the entire aggregate. 		 */
+comment|/* 		 * If we're leaking frames, just return at this point; 		 * we've queued a single frame and we don't want to add 		 * any more. 		 */
+if|if
+condition|(
+name|tid
+operator|->
+name|an
+operator|->
+name|an_leak_count
+condition|)
+block|{
+name|status
+operator|=
+name|ATH_AGGR_LEAK_CLOSED
+expr_stmt|;
+break|break;
+block|}
 if|#
 directive|if
 literal|0

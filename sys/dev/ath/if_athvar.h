@@ -488,6 +488,10 @@ name|int
 name|clrdmask
 decl_stmt|;
 comment|/* has clrdmask been set */
+name|uint32_t
+name|an_leak_count
+decl_stmt|;
+comment|/* How many frames to leak during pause */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -1511,6 +1515,21 @@ name|ieee80211_node
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|av_recv_pspoll
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 block|}
@@ -2813,7 +2832,7 @@ name|sc_delim_min_pad
 decl_stmt|;
 comment|/* Minimum delimiter count */
 comment|/* Queue limits */
-comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
+comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * + A node in powersave shouldn't be allowed to exhaust 	 *   all available mbufs; 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
 name|int
 name|sc_txq_node_maxdepth
 decl_stmt|;
@@ -2822,6 +2841,9 @@ name|sc_txq_data_minfree
 decl_stmt|;
 name|int
 name|sc_txq_mcastq_maxdepth
+decl_stmt|;
+name|int
+name|sc_txq_node_psq_maxdepth
 decl_stmt|;
 comment|/* 	 * Aggregation twiddles 	 * 	 * hwq_limit:	how busy to keep the hardware queue - don't schedule 	 *		further packets to the hardware, regardless of the TID 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
 name|int
