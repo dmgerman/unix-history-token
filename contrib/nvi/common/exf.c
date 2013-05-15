@@ -667,7 +667,7 @@ name|opts_empty
 argument_list|(
 name|sp
 argument_list|,
-name|O_DIRECTORY
+name|O_TMP_DIRECTORY
 argument_list|,
 literal|0
 argument_list|)
@@ -693,7 +693,7 @@ name|O_STR
 argument_list|(
 name|sp
 argument_list|,
-name|O_DIRECTORY
+name|O_TMP_DIRECTORY
 argument_list|)
 argument_list|)
 expr_stmt|;
