@@ -3873,7 +3873,7 @@ condition|(
 name|sc
 operator|->
 name|bge_func_addr
-operator|!=
+operator|==
 literal|0
 condition|)
 name|bit
