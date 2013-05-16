@@ -13069,10 +13069,12 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: tid=%p, bar_wait=%d, bar_tx=%d, called\n"
+literal|"%s: tid=%d, bar_wait=%d, bar_tx=%d, called\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|,
 name|tid
@@ -13161,7 +13163,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: tid=%p, called\n"
+literal|"%s: %6D: TID=%d, called\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13175,6 +13177,8 @@ name|ni_macaddr
 argument_list|,
 literal|":"
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|)
 expr_stmt|;
@@ -13199,7 +13203,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: %6D: bar_tx=%d, bar_wait=%d: ?\n"
+literal|"%s: %6D: TID=%d, bar_tx=%d, bar_wait=%d: ?\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13212,6 +13216,10 @@ operator|.
 name|ni_macaddr
 argument_list|,
 literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tid
 operator|->
@@ -13293,7 +13301,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: tid=%p (%d), bar ready\n"
+literal|"%s: %6D: TID=%d, bar ready\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13306,8 +13314,6 @@ operator|.
 name|ni_macaddr
 argument_list|,
 literal|":"
-argument_list|,
-name|tid
 argument_list|,
 name|tid
 operator|->
@@ -13358,7 +13364,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: tid=%p, called\n"
+literal|"%s: %6D: TID=%d, called\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13372,6 +13378,8 @@ name|ni_macaddr
 argument_list|,
 literal|":"
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|)
 expr_stmt|;
@@ -13410,7 +13418,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: %6D: tid=%p, bar_tx=%d, bar_wait=%d: ?\n"
+literal|"%s: %6D: TID=%d, bar_tx=%d, bar_wait=%d: ?\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13424,6 +13432,8 @@ name|ni_macaddr
 argument_list|,
 literal|":"
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|,
 name|tid
@@ -13453,7 +13463,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: tid=%p, hwq_depth=%d, waiting\n"
+literal|"%s: %6D: TID=%d, hwq_depth=%d, waiting\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13467,6 +13477,8 @@ name|ni_macaddr
 argument_list|,
 literal|":"
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|,
 name|tid
@@ -13500,7 +13512,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: tid=%p, new BAW left edge=%d\n"
+literal|"%s: %6D: TID=%d, new BAW left edge=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13514,6 +13526,8 @@ name|ni_macaddr
 argument_list|,
 literal|":"
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|,
 name|tap
@@ -13569,7 +13583,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: %6D: tid=%p, failed to TX BAR, continue!\n"
+literal|"%s: %6D: TID=%d, failed to TX BAR, continue!\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13583,6 +13597,8 @@ name|ni_macaddr
 argument_list|,
 literal|":"
 argument_list|,
+name|tid
+operator|->
 name|tid
 argument_list|)
 expr_stmt|;
@@ -20794,7 +20810,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: called; tap=%p, atid=%p, txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
+literal|"%s: %6D: called; txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20803,10 +20819,6 @@ operator|->
 name|ni_macaddr
 argument_list|,
 literal|":"
-argument_list|,
-name|tap
-argument_list|,
-name|atid
 argument_list|,
 name|tap
 operator|->
@@ -20969,7 +20981,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: %6D: called; resuming\n"
+literal|"%s: %6D: TID=%d, called; resuming\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20978,6 +20990,8 @@ operator|->
 name|ni_macaddr
 argument_list|,
 literal|":"
+argument_list|,
+name|tid
 argument_list|)
 expr_stmt|;
 name|ATH_TX_LOCK
