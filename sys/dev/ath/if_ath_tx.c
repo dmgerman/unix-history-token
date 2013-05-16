@@ -19761,12 +19761,12 @@ argument_list|,
 name|tid
 argument_list|)
 expr_stmt|;
-comment|/* Give the software queue time to aggregate more packets */
+comment|/* 		 * Give the software queue time to aggregate more 		 * packets.  If we aren't running aggregation then 		 * we should still limit the hardware queue depth. 		 */
 if|if
 condition|(
 name|txq
 operator|->
-name|axq_aggr_depth
+name|axq_depth
 operator|>=
 name|sc
 operator|->
