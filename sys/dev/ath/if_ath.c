@@ -19011,7 +19011,8 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RESET
 argument_list|,
-literal|"%s: tx queue [%u] %p, active=%d, hwpending=%d, flags 0x%08x, link %p\n"
+literal|"%s: tx queue [%u] %p, active=%d, hwpending=%d, flags 0x%08x, "
+literal|"link %p, holdingbf=%p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -19069,6 +19070,10 @@ argument_list|,
 name|txq
 operator|->
 name|axq_link
+argument_list|,
+name|txq
+operator|->
+name|axq_holdingbf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -19083,6 +19088,48 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_debug
+operator|&
+name|ATH_DEBUG_RESET
+operator|)
+operator|&&
+operator|(
+name|txq
+operator|->
+name|axq_holdingbf
+operator|!=
+name|NULL
+operator|)
+condition|)
+block|{
+name|ath_printtxbuf
+argument_list|(
+name|sc
+argument_list|,
+name|txq
+operator|->
+name|axq_holdingbf
+argument_list|,
+name|txq
+operator|->
+name|axq_qnum
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
