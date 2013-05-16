@@ -4407,7 +4407,6 @@ name|m_flags
 operator|&
 name|M_COPYFLAGS
 expr_stmt|;
-comment|/* incl. FIB */
 operator|*
 name|mnext
 operator|=
@@ -4604,6 +4603,18 @@ argument_list|(
 operator|*
 name|ip6f
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|fibnum
+operator|=
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|fibnum
 expr_stmt|;
 name|m
 operator|->
