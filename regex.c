@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Extended regular expression matching and search library.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.    This file is part of the GNU C Library.    Contributed by Isamu Hasegawa<isamu@yamato.ibm.com>.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Lesser General Public    License as published by the Free Software Foundation; either    version 2.1 of the License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public    License along with the GNU C Library; if not, write to the Free    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307 USA.  */
+comment|/* Extended regular expression matching and search library.    Copyright (C) 2002-2012 Free Software Foundation, Inc.    This file is part of the GNU C Library.    Contributed by Isamu Hasegawa<isamu@yamato.ibm.com>.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Lesser General Public    License as published by the Free Software Foundation; either    version 2.1 of the License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public    License along with the GNU C Library; if not, see<http://www.gnu.org/licenses/>.  */
 end_comment
 
 begin_ifdef
@@ -20,149 +20,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX
-end_ifdef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|alloca
-end_pragma
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|allocax
-end_ifndef
-
 begin_comment
-comment|/* predefined by HP cc +Olibcalls */
+comment|/* Make sure noone compiles this code with a C++ compiler.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__GNUC__
+name|__cplusplus
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|alloca
-parameter_list|(
-name|size
-parameter_list|)
-value|__builtin_alloca (size)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|HAVE_ALLOCA_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<alloca.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__hpux
-end_ifdef
-
-begin_function_decl
-name|void
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|__OS2__
-operator|&&
-operator|!
-name|defined
-name|WIN32
-end_if
-
-begin_function_decl
-name|char
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<malloc.h>
-end_include
-
-begin_comment
-comment|/* OS/2 defines alloca in here */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_error
+error|#
+directive|error
+literal|"This is C code, use a C compiler"
+end_error
 
 begin_endif
 endif|#
@@ -396,16 +268,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* POSIX says that<sys/types.h> must be included (by the caller) before<regex.h>.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
 comment|/* On some systems, limits.h sets RE_DUP_MAX to a lower value than    GNU regex allows.  Include it before<regex.h>, which correctly    #undefs RE_DUP_MAX and sets it to the right value.  */
 end_comment
 
@@ -413,6 +275,16 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_comment
+comment|/* This header defines the MIN and MAX macros.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
