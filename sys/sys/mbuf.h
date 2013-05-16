@@ -4462,10 +4462,10 @@ name|m
 operator|->
 name|m_flags
 operator|&
-name|M_EXT
+name|M_PKTHDR
 argument_list|,
 operator|(
-literal|"attempt to set FIB on non header mbuf"
+literal|"Attempt to get FIB from non header mbuf."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4500,7 +4500,7 @@ name|_m
 parameter_list|,
 name|_fib
 parameter_list|)
-value|do {						\         KASSERT((_m)->m_flags& M_EXT, ("No FIB on non header mbuf"));	\ 	((_m)->m_pkthdr.fibnum) = (_fib);				\ } while (0)
+value|do {						\         KASSERT((_m)->m_flags& M_PKTHDR, ("Attempt to set FIB on non header mbuf."));	\ 	((_m)->m_pkthdr.fibnum) = (_fib);				\ } while (0)
 end_define
 
 begin_endif
