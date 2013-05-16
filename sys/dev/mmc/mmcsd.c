@@ -625,12 +625,36 @@ name|d_flags
 operator|=
 name|DISKFLAG_CANDELETE
 expr_stmt|;
-comment|/* 	 * Display in most natural units.  There's no cards< 1MB.  The SD 	 * standard goes to 2GiB due to its reliance on FAT, but the data 	 * format supports up to 4GiB and some card makers push it up to this 	 * limit.  The SDHC standard only goes to 32GiB due to FAT32, but the 	 * data format supports up to 2TiB however. 2048GB isn't too ugly, so 	 * we note it in passing here and don't add the code to print 	 * TB). Since these cards are sold in terms of MB and GB not MiB and 	 * GiB, report them like that. 	 */
+name|d
+operator|->
+name|d_delmaxsize
+operator|=
+name|mmc_get_erase_sector
+argument_list|(
+name|dev
+argument_list|)
+operator|*
+name|d
+operator|->
+name|d_sectorsize
+operator|*
+literal|1
+expr_stmt|;
+comment|/* conservative */
+comment|/* 	 * Display in most natural units.  There's no cards< 1MB.  The SD 	 * standard goes to 2GiB due to its reliance on FAT, but the data 	 * format supports up to 4GiB and some card makers push it up to this 	 * limit.  The SDHC standard only goes to 32GiB due to FAT32, but the 	 * data format supports up to 2TiB however. 2048GB isn't too ugly, so 	 * we note it in passing here and don't add the code to print 	 * TB). Since these cards are sold in terms of MB and GB not MiB and 	 * GiB, report them like that. We also round to the nearest unit, since 	 * many cards are a few percent short, even of the power of 10 size. 	 */
 name|mb
 operator|=
+operator|(
 name|d
 operator|->
 name|d_mediasize
+operator|+
+literal|1000000
+operator|/
+literal|2
+operator|-
+literal|1
+operator|)
 operator|/
 literal|1000000
 expr_stmt|;
@@ -650,7 +674,17 @@ operator|=
 literal|'G'
 expr_stmt|;
 name|mb
-operator|/=
+operator|=
+operator|(
+name|mb
+operator|+
+literal|1000
+operator|/
+literal|2
+operator|-
+literal|1
+operator|)
+operator|/
 literal|1000
 expr_stmt|;
 block|}
