@@ -1,5 +1,5 @@
 #
-# acpibin - Binary ACPI table utility
+# acpidump - ACPI table dump utility (binary to ascii hex)
 #
 
 #
@@ -11,46 +11,41 @@
 # compile options, and prevents pollution of the source code.
 #
 include ../Makefile.config
-FINAL_PROG = ../$(BINDIR)/acpibin
-PROG = $(OBJDIR)/acpibin
+FINAL_PROG = ../$(BINDIR)/acpidump
+PROG = $(OBJDIR)/acpidump
 
 #
 # Search paths for source files
 #
 vpath %.c \
-    $(ACPIBIN)\
+    $(ACPIDUMP)\
+    $(ACPICA_TABLES)\
     $(ACPICA_UTILITIES)\
     $(ACPICA_COMMON)\
     $(ACPICA_OSL)
 
 HEADERS = \
-    $(wildcard $(ACPIBIN)/*.h)
+    $(wildcard $(ACPIDUMP)/*.h)
 
 OBJECTS = \
-	$(OBJDIR)/abcompare.o\
-	$(OBJDIR)/abmain.o\
-	$(OBJDIR)/utalloc.o\
+	$(OBJDIR)/apdump.o\
+	$(OBJDIR)/apfiles.o\
+	$(OBJDIR)/apmain.o\
+	$(OBJDIR)/tbprint.o\
 	$(OBJDIR)/utbuffer.o\
-	$(OBJDIR)/utcache.o\
-	$(OBJDIR)/utdecode.o\
 	$(OBJDIR)/utexcep.o\
-	$(OBJDIR)/utglobal.o\
-	$(OBJDIR)/utlock.o\
 	$(OBJDIR)/utmath.o\
-	$(OBJDIR)/utmisc.o\
-	$(OBJDIR)/utmutex.o\
-	$(OBJDIR)/utstate.o\
 	$(OBJDIR)/utstring.o\
 	$(OBJDIR)/utxferror.o\
-	$(OBJDIR)/osunixxf.o\
+	$(OBJDIR)/oslinuxtbl.o\
 	$(OBJDIR)/getopt.o
 
 #
-# Flags specific to acpibin
+# Flags specific to acpidump
 #
 CFLAGS += \
-    -DACPI_BIN_APP\
-    -I$(ACPIBIN)
+    -DACPI_DUMP_APP\
+    -I$(ACPIDUMP)
 
 #
 # Common Rules

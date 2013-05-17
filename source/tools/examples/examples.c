@@ -134,6 +134,10 @@ operator|-
 expr|main
 argument_list|)
 expr_stmt|;
+name|ACPI_DEBUG_INITIALIZE
+argument_list|()
+expr_stmt|;
+comment|/* For debug version only */
 name|InitializeFullAcpi
 argument_list|()
 expr_stmt|;

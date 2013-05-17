@@ -286,11 +286,6 @@ literal|"must be SSDT or OEMx"
 operator|,
 name|AcpiUtValidAcpiName
 argument_list|(
-operator|*
-operator|(
-name|UINT32
-operator|*
-operator|)
 name|TableDesc
 operator|->
 name|Pointer

@@ -1075,14 +1075,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Name            - The name to be examined  *  * RETURN:      TRUE if the name is valid, FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI name. Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidAcpiName  *  * PARAMETERS:  Name            - The name to be examined. Does not have to  *                                be NULL terminated string.  *  * RETURN:      TRUE if the name is valid, FALSE otherwise  *  * DESCRIPTION: Check for a valid ACPI name. Each character must be one of:  *              1) Upper case alpha  *              2) numeric  *              3) underscore  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
 name|AcpiUtValidAcpiName
 parameter_list|(
-name|UINT32
+name|char
+modifier|*
 name|Name
 parameter_list|)
 block|{
@@ -1111,15 +1112,7 @@ condition|(
 operator|!
 name|AcpiUtValidAcpiChar
 argument_list|(
-operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
-operator|&
 name|Name
-argument_list|)
-operator|)
 index|[
 name|i
 index|]

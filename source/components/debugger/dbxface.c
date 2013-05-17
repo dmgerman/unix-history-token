@@ -918,6 +918,11 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|DbInitialize
+argument_list|)
+expr_stmt|;
 comment|/* Init globals */
 name|AcpiGbl_DbBuffer
 operator|=
@@ -978,11 +983,11 @@ operator|!
 name|AcpiGbl_DbBuffer
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|ACPI_MEMSET
 argument_list|(
@@ -1041,11 +1046,11 @@ argument_list|(
 literal|"Could not get debugger mutex\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|Status
 operator|=
@@ -1067,11 +1072,11 @@ argument_list|(
 literal|"Could not get debugger mutex\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Create the debug execution thread to execute commands */
 name|Status
@@ -1093,16 +1098,22 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiOsPrintf
+name|ACPI_EXCEPTION
 argument_list|(
-literal|"Could not start debugger thread\n"
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Could not start debugger thread"
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -1120,11 +1131,11 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1148,6 +1159,10 @@ name|AcpiOsFree
 argument_list|(
 name|AcpiGbl_DbBuffer
 argument_list|)
+expr_stmt|;
+name|AcpiGbl_DbBuffer
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}

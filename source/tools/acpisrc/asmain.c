@@ -905,6 +905,10 @@ decl_stmt|;
 name|UINT32
 name|FileType
 decl_stmt|;
+name|ACPI_DEBUG_INITIALIZE
+argument_list|()
+expr_stmt|;
+comment|/* For debug version only */
 name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON

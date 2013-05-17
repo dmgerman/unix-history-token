@@ -669,6 +669,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiGbl_EventsInitialized
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 comment|/* Deallocate all handler objects installed within GPE info structs */
 name|Status

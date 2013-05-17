@@ -142,6 +142,10 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|ACPI_DEBUG_INITIALIZE
+argument_list|()
+expr_stmt|;
+comment|/* For debug version only */
 name|AcpiGbl_DebugFile
 operator|=
 name|NULL
@@ -406,7 +410,9 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 end_function

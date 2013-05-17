@@ -164,7 +164,7 @@ comment|/* 30 seconds */
 end_comment
 
 begin_comment
-comment|/* Upcalls to application */
+comment|/* Upcalls to AcpiExec application */
 end_comment
 
 begin_function_decl
@@ -188,18 +188,6 @@ name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|NewTable
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_TABLE_HEADER
-modifier|*
-name|OsGetTable
-parameter_list|(
-name|char
-modifier|*
-name|Signature
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -436,6 +424,17 @@ modifier|*
 name|NewTable
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -490,18 +489,26 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-operator|*
-name|NewTable
+name|Status
 operator|=
-name|OsGetTable
+name|AcpiOsGetTableByName
 argument_list|(
 name|TableName
+argument_list|,
+literal|0
+argument_list|,
+name|NewTable
+argument_list|,
+operator|&
+name|Address
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|NewTable
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -523,9 +530,14 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not read table %s from registry\n"
+literal|"Could not read table %s from registry (%s)\n"
 argument_list|,
 name|TableName
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

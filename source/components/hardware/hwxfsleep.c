@@ -507,16 +507,10 @@ operator|(
 operator|!
 name|ACPI_REDUCED_HARDWARE
 operator|)
-comment|/*      * If the Hardware Reduced flag is set (from the FADT), we must      * use the extended sleep registers      */
+comment|/*      * If the Hardware Reduced flag is set (from the FADT), we must      * use the extended sleep registers (FADT). Note: As per the ACPI      * specification, these extended registers are to be used for HW-reduced      * platforms only. They are not general-purpose replacements for the      * legacy PM register sleep support.      */
 if|if
 condition|(
 name|AcpiGbl_ReducedHardware
-operator|||
-name|AcpiGbl_FADT
-operator|.
-name|SleepControl
-operator|.
-name|Address
 condition|)
 block|{
 name|Status

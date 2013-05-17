@@ -13,23 +13,6 @@ directive|include
 file|"aecommon.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_DEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<crtdbg.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -256,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|AE_SUPPORTED_OPTIONS
-value|"?b:d:e:f:gm^orv:x:"
+value|"?b:d:e:f:ghm^orv:x:"
 end_define
 
 begin_comment
@@ -278,16 +261,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-?"
+literal|"-b \"CommandLine\""
 argument_list|,
-literal|"Display this message"
+literal|"Batch mode command line execution (cmd1;cmd2;...)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-b \"CommandLine\""
+literal|"-h -?"
 argument_list|,
-literal|"Batch mode command line execution (cmd1;cmd2;...)"
+literal|"Display this help message"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -703,6 +686,20 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
+literal|'h'
+case|:
+case|case
+literal|'?'
+case|:
+name|usage
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 literal|'m'
 case|:
 name|AcpiGbl_ExecutionMode
@@ -833,12 +830,6 @@ name|AcpiDbgLevel
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
-case|case
-literal|'h'
-case|:
 default|default:
 name|usage
 argument_list|()
@@ -912,24 +903,10 @@ name|char
 modifier|*
 name|FullPathname
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_DEBUG
-name|_CrtSetDbgFlag
-argument_list|(
-name|_CRTDBG_CHECK_ALWAYS_DF
-operator||
-name|_CRTDBG_LEAK_CHECK_DF
-operator||
-name|_CrtSetDbgFlag
-argument_list|(
-name|_CRTDBG_REPORT_FLAG
-argument_list|)
-argument_list|)
+name|ACPI_DEBUG_INITIALIZE
+argument_list|()
 expr_stmt|;
-comment|/*  * Debugging memory corruption issues with windows:  * Add #include<crtdbg.h> to accommon.h  * Add _ASSERTE(_CrtCheckMemory()); where needed to test memory integrity  */
-endif|#
-directive|endif
+comment|/* For debug version only */
 name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON

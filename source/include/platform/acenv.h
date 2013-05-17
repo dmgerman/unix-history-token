@@ -193,7 +193,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * AcpiBin/AcpiHelp/AcpiSrc configuration. All single threaded, with  * no debug output.  */
+comment|/*  * AcpiBin/AcpiDump/AcpiSrc/AcpiXtract configuration. All single  * threaded, with no debug output.  */
 end_comment
 
 begin_if
@@ -202,6 +202,12 @@ directive|if
 operator|(
 name|defined
 name|ACPI_BIN_APP
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+name|ACPI_DUMP_APP
 operator|)
 operator|||
 expr|\
@@ -370,6 +376,26 @@ begin_include
 include|#
 directive|include
 file|"aclinux.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_APPLE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acmacosx.h"
 end_include
 
 begin_elif

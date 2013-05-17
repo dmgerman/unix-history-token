@@ -408,6 +408,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Debug support. Must be last in this file, do not move. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<crtdbg.h>
+end_include
+
+begin_comment
+comment|/*  * Debugging memory corruption issues with windows:  * Add #include<crtdbg.h> to accommon.h if necessary.  * Add _ASSERTE(_CrtCheckMemory()); where needed to test memory integrity.  * This can quickly localize the memory corruption.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_INITIALIZE
+parameter_list|()
+define|\
+value|_CrtSetDbgFlag (_CRTDBG_CHECK_ALWAYS_DF | \         _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_CRT_DF | \         _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
