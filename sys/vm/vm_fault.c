@@ -3804,7 +3804,7 @@ name|lobject
 operator|=
 name|object
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3866,12 +3866,12 @@ name|backing_object_offset
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3889,7 +3889,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3927,7 +3927,7 @@ operator|->
 name|protection
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
