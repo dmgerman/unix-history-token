@@ -3627,6 +3627,21 @@ name|sr
 operator|->
 name|isr_noise
 expr_stmt|;
+comment|/*          * the rssi value reported by the kernel is in 0.5dB steps relative to          * the reported noise floor. see ieee80211_node.h for details.          */
+name|result
+operator|->
+name|level
+operator|=
+name|sr
+operator|->
+name|isr_rssi
+operator|/
+literal|2
+operator|+
+name|sr
+operator|->
+name|isr_noise
+expr_stmt|;
 name|pos
 operator|=
 operator|(
