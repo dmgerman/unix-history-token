@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.181 2013/02/10 23:35:24 djm Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.182 2013/04/11 02:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -6866,7 +6866,7 @@ name|reason
 operator|==
 name|SSH2_DISCONNECT_BY_APPLICATION
 condition|?
-name|SYSLOG_LEVEL_DEBUG1
+name|SYSLOG_LEVEL_INFO
 else|:
 name|SYSLOG_LEVEL_ERROR
 argument_list|,

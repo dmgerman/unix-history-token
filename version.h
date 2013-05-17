@@ -14,7 +14,7 @@ begin_define
 define|#
 directive|define
 name|SSH_PORTABLE
-value|"p1"
+value|"p2"
 end_define
 
 begin_define
