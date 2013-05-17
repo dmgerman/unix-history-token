@@ -11466,7 +11466,7 @@ name|mnt_stat
 operator|.
 name|f_iosize
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -11576,7 +11576,7 @@ goto|goto
 name|notinmem
 goto|;
 block|}
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -11586,7 +11586,7 @@ literal|1
 return|;
 name|notinmem
 label|:
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
