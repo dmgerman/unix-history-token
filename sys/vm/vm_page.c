@@ -3179,7 +3179,7 @@ name|vm_pindex_t
 name|pindex
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
