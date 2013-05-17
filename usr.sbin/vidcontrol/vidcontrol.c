@@ -4396,7 +4396,7 @@ operator|=
 literal|0
 init|;
 name|mode
-operator|<
+operator|<=
 name|M_VESA_MODE_MAX
 condition|;
 operator|++
