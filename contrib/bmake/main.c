@@ -3269,10 +3269,16 @@ name|p1
 decl_stmt|,
 modifier|*
 name|path
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PWD_OVERRIDE
+name|char
 modifier|*
 name|pwd
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|mdpath
 index|[
