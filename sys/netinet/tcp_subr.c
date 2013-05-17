@@ -10509,7 +10509,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
