@@ -194,6 +194,41 @@ directive|undef
 name|USB_HOST_ALIGN
 end_undef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USB_HOST_ALIGN
+value|32
+end_define
+
+begin_comment
+comment|/* Arm and MIPS need at least this much, if not more */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -204,6 +239,11 @@ end_define
 begin_comment
 comment|/* bytes, must be power of two */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
