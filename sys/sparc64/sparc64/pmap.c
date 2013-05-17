@@ -6830,7 +6830,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->
