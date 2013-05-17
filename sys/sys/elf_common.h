@@ -3704,6 +3704,105 @@ begin_comment
 comment|/* Thread miscellaneous info. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_PROC
+value|8
+end_define
+
+begin_comment
+comment|/* Procstat proc data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_FILES
+value|9
+end_define
+
+begin_comment
+comment|/* Procstat files data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_VMMAP
+value|10
+end_define
+
+begin_comment
+comment|/* Procstat vmmap data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_GROUPS
+value|11
+end_define
+
+begin_comment
+comment|/* Procstat groups data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_UMASK
+value|12
+end_define
+
+begin_comment
+comment|/* Procstat umask data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_RLIMIT
+value|13
+end_define
+
+begin_comment
+comment|/* Procstat rlimit data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_OSREL
+value|14
+end_define
+
+begin_comment
+comment|/* Procstat osreldate data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_PSSTRINGS
+value|15
+end_define
+
+begin_comment
+comment|/* Procstat ps_strings data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_AUXV
+value|16
+end_define
+
+begin_comment
+comment|/* Procstat auxv data. */
+end_comment
+
 begin_comment
 comment|/* Symbol Binding - ELFNN_ST_BIND - st_info */
 end_comment
