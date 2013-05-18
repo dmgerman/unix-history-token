@@ -6368,6 +6368,26 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/*      * We're caught in a catch-22 here. On the one hand, we want to use any      * transformation implied by the target's sources, but we can't examine      * the sources until we've expanded any variables/wildcards they may hold,      * and we can't do that until we've set up the target's local variables      * and we can't do that until we know what the proper suffix for the      * target is (in case there are two suffixes one of which is a suffix of      * the other) and we can't know that until we've found its implied      * source, which we may not want to use if there's an existing source      * that implies a different transformation.      *      * In an attempt to get around this, which may not work all the time,      * but should work most of the time, we look for implied sources first,      * checking transformations to all possible suffixes of the target,      * use what we find to set the target's local variables, expand the      * children, then look for any overriding transformations they imply.      * Should we find one, we discard the one we found before.      */
+name|bottom
+operator|=
+name|NULL
+expr_stmt|;
+name|targ
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|gn
+operator|->
+name|type
+operator|&
+name|OP_PHONY
+operator|)
+condition|)
+block|{
 while|while
 condition|(
 name|ln
@@ -6789,6 +6809,7 @@ operator|->
 name|parent
 control|)
 continue|continue;
+block|}
 block|}
 name|Var_Set
 argument_list|(
@@ -7641,18 +7662,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_PHONY
-condition|)
-block|{
-comment|/* 	 * If this is a .PHONY target, we do not apply suffix rules. 	 */
-return|return;
-block|}
 if|if
 condition|(
 name|DEBUG
