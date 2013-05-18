@@ -6036,7 +6036,9 @@ name|dev
 argument_list|,
 literal|"mmc"
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|device_id
 argument_list|)
 expr_stmt|;
 name|device_set_ivars
