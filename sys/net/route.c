@@ -6475,8 +6475,7 @@ argument_list|,
 operator|&
 name|info
 argument_list|,
-operator|&
-name|rt
+name|NULL
 argument_list|,
 name|fibnum
 argument_list|)
