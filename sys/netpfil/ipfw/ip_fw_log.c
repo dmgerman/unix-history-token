@@ -1139,9 +1139,12 @@ argument_list|)
 argument_list|,
 literal|"SetFib %d"
 argument_list|,
+name|IP_FW_ARG_TABLEARG
+argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1159,9 +1162,12 @@ argument_list|)
 argument_list|,
 literal|"SkipTo %d"
 argument_list|,
+name|IP_FW_ARG_TABLEARG
+argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1179,9 +1185,12 @@ argument_list|)
 argument_list|,
 literal|"Pipe %d"
 argument_list|,
+name|IP_FW_ARG_TABLEARG
+argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1199,9 +1208,12 @@ argument_list|)
 argument_list|,
 literal|"Queue %d"
 argument_list|,
+name|IP_FW_ARG_TABLEARG
+argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

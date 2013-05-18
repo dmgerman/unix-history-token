@@ -899,6 +899,16 @@ begin_comment
 comment|/* used by tcp_var.h */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_ARG_TABLEARG
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) == IP_FW_TABLEARG) ? tablearg : (a)
+end_define
+
 begin_comment
 comment|/*  * The lock is heavily used by ip_fw2.c (the main file) and ip_fw_nat.c  * so the variable and the macros must be here.  */
 end_comment
