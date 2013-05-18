@@ -4317,8 +4317,6 @@ argument_list|(
 name|pcb
 argument_list|,
 name|PCB_32BIT
-operator||
-name|PCB_GS32BIT
 argument_list|)
 expr_stmt|;
 name|pcb
