@@ -1023,11 +1023,12 @@ comment|/* WME AC */
 name|u_int
 name|axq_flags
 decl_stmt|;
+comment|//#define	ATH_TXQ_PUTPENDING	0x0001		/* ath_hal_puttxbuf pending */
 define|#
 directive|define
-name|ATH_TXQ_PUTPENDING
-value|0x0001
-comment|/* ath_hal_puttxbuf pending */
+name|ATH_TXQ_PUTRUNNING
+value|0x0002
+comment|/* ath_hal_puttxbuf has been called */
 name|u_int
 name|axq_depth
 decl_stmt|;

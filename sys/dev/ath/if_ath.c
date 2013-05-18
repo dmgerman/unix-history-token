@@ -19102,6 +19102,11 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -19184,6 +19189,14 @@ name|txq
 operator|->
 name|axq_qnum
 argument_list|)
+expr_stmt|;
+comment|/* We've stopped TX DMA, so mark this as stopped. */
+name|txq
+operator|->
+name|axq_flags
+operator|&=
+operator|~
+name|ATH_TXQ_PUTRUNNING
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -19303,6 +19316,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* stop the beacon queue */
 operator|(
 name|void
 operator|)
@@ -19315,6 +19329,7 @@ operator|->
 name|sc_bhalq
 argument_list|)
 expr_stmt|;
+comment|/* Stop the data queues */
 for|for
 control|(
 name|i
@@ -19328,6 +19343,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|ATH_TXQ_SETUP
@@ -19337,6 +19353,18 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
+block|{
+name|ATH_TXQ_LOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|ath_tx_stopdma
 argument_list|(
 name|sc
@@ -19350,6 +19378,19 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 return|return
 literal|1
@@ -19364,7 +19405,6 @@ name|ATH_DEBUG
 end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|ath_tx_dump
 parameter_list|(
@@ -19539,6 +19579,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|ath_buf
+modifier|*
+name|bf_last
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -19647,7 +19692,51 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Reset the link pointer to NULL; there's 				 * no frames to chain DMA to. 				 */
+comment|/* 				 * Setup the link pointer to be the 				 * _last_ buffer/descriptor in the list. 				 * If there's nothing in the list, set it 				 * to NULL. 				 */
+name|bf_last
+operator|=
+name|ATH_TXQ_LAST
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+argument_list|,
+name|axq_q_s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bf_last
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ath_hal_gettxdesclinkptr
+argument_list|(
+name|ah
+argument_list|,
+name|bf_last
+operator|->
+name|bf_lastds
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txq
+index|[
+name|i
+index|]
+operator|.
+name|axq_link
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_txq
@@ -19659,6 +19748,7 @@ name|axq_link
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|ATH_TXQ_UNLOCK
 argument_list|(
 operator|&

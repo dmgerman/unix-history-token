@@ -2560,6 +2560,12 @@ operator|->
 name|bf_daddr
 argument_list|)
 expr_stmt|;
+name|cabq
+operator|->
+name|axq_flags
+operator||=
+name|ATH_TXQ_PUTRUNNING
+expr_stmt|;
 comment|/* NB: gated by beacon so safe to start here */
 name|ath_hal_txstart
 argument_list|(
@@ -2641,6 +2647,12 @@ name|bf
 operator|->
 name|bf_daddr
 argument_list|)
+expr_stmt|;
+name|cabq
+operator|->
+name|axq_flags
+operator||=
+name|ATH_TXQ_PUTRUNNING
 expr_stmt|;
 comment|/* NB: gated by beacon so safe to start here */
 name|ath_hal_txstart
@@ -2959,6 +2971,7 @@ name|sc_stagbeacons
 condition|)
 block|{
 comment|/* 			 * CABQ traffic from a previous vap is still pending. 			 * We must drain the q before this beacon frame goes 			 * out as otherwise this vap's stations will get cab 			 * frames from a different vap. 			 * XXX could be slow causing us to miss DBA 			 */
+comment|/* 			 * XXX TODO: this doesn't stop CABQ DMA - it assumes 			 * that since we're about to transmit a beacon, we've 			 * already stopped transmitting on the CABQ.  But this 			 * doesn't at all mean that the CABQ DMA QCU will 			 * accept a new TXDP!  So what, should we do a DMA 			 * stop? What if it fails? 			 * 			 * More thought is required here. 			 */
 name|ath_tx_draintxq
 argument_list|(
 name|sc
