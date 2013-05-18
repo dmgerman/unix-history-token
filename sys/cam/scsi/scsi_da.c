@@ -320,6 +320,14 @@ name|da_quirks
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|DA_Q_BIT_STRING
+define|\
+value|"\020"			\ 	"\001NO_SYNC_CACHE"	\ 	"\002NO_6_BYTE"		\ 	"\003NO_PREVENT"	\ 	"\0044K"
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -12232,6 +12240,17 @@ argument_list|(
 name|periph
 argument_list|,
 name|announce_buf
+argument_list|)
+expr_stmt|;
+name|xpt_announce_quirks
+argument_list|(
+name|periph
+argument_list|,
+name|softc
+operator|->
+name|quirks
+argument_list|,
+name|DA_Q_BIT_STRING
 argument_list|)
 expr_stmt|;
 block|}

@@ -634,6 +634,14 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|SA_QUIRK_BIT_STRING
+define|\
+value|"\020"			\ 	"\001NOCOMP"		\ 	"\002FIXED"		\ 	"\003VARIABLE"		\ 	"\0042FM"		\ 	"\0051FM"		\ 	"\006NODREAD"		\ 	"\007NO_MODESEL"	\ 	"\010NO_CPAGE"
+end_define
+
+begin_define
+define|#
+directive|define
 name|SAMODE
 parameter_list|(
 name|z
@@ -6605,6 +6613,17 @@ argument_list|(
 name|periph
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|xpt_announce_quirks
+argument_list|(
+name|periph
+argument_list|,
+name|softc
+operator|->
+name|quirks
+argument_list|,
+name|SA_QUIRK_BIT_STRING
 argument_list|)
 expr_stmt|;
 return|return
