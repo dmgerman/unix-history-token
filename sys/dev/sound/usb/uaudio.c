@@ -29166,16 +29166,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-name|usbd_xfer_set_stall
-argument_list|(
-name|chan
-operator|->
-name|xfer
-index|[
-name|UMIDI_TX_TRANSFER
-index|]
-argument_list|)
-expr_stmt|;
 name|chan
 operator|->
 name|write_open_refcount
@@ -29663,17 +29653,6 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
-comment|/* clear stall first */
-name|usbd_xfer_set_stall
-argument_list|(
-name|chan
-operator|->
-name|xfer
-index|[
-name|UMIDI_RX_TRANSFER
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* 	 * NOTE: At least one device will not work properly unless the 	 * BULK IN pipe is open all the time. This might have to do 	 * about that the internal queues of the device overflow if we 	 * don't read them regularly. 	 */
 name|usbd_transfer_start
 argument_list|(
@@ -30122,6 +30101,16 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* Error */
+name|DPRINTF
+argument_list|(
+literal|"error=%s\n"
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|error
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -30129,7 +30118,7 @@ operator|!=
 name|USB_ERR_CANCELLED
 condition|)
 block|{
-comment|/* try clear stall first */
+comment|/* try to clear stall first */
 name|usbd_xfer_set_stall
 argument_list|(
 name|xfer
