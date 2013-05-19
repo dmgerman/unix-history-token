@@ -59,6 +59,10 @@ directive|include
 file|<machine/stack.h>
 end_include
 
+begin_comment
+comment|/*  * This code makes assumptions about the stack layout. These are correct  * when using APCS (the old ABI), but are no longer true with AAPCS and the  * ARM EABI. There is also an issue with clang and llvm when building for  * APCS where it lays out the stack incorrectly. Because of this we disable  * this when building for ARM EABI or when building with clang.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -180,6 +184,7 @@ argument_list|(
 literal|"stack_save_td: running"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This register, the frame pointer, is incorrect for the ARM EABI 	 * as it doesn't have a frame pointer, however it's value is not used 	 * when building for EABI. 	 */
 name|frame
 operator|=
 operator|(
