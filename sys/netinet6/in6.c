@@ -5048,14 +5048,6 @@ argument_list|)
 expr_stmt|;
 name|ia
 operator|->
-name|ia_prefixmask
-operator|.
-name|sin6_family
-operator|=
-name|AF_INET6
-expr_stmt|;
-name|ia
-operator|->
 name|ia6_createtime
 operator|=
 name|time_second
@@ -5283,6 +5275,14 @@ operator|=
 name|ifra
 operator|->
 name|ifra_prefixmask
+expr_stmt|;
+name|ia
+operator|->
+name|ia_prefixmask
+operator|.
+name|sin6_family
+operator|=
+name|AF_INET6
 expr_stmt|;
 block|}
 comment|/* 	 * If a new destination address is specified, scrub the old one and 	 * install the new destination.  Note that the interface must be 	 * p2p or loopback (see the check above.) 	 */
