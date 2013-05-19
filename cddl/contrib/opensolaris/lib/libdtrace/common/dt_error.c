@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -77,12 +81,6 @@ block|{
 name|EDT_COMPILER
 block|,
 literal|"Error in D program compilation"
-block|}
-block|,
-block|{
-name|EDT_NOREG
-block|,
-literal|"Insufficient registers to generate code"
 block|}
 block|,
 block|{

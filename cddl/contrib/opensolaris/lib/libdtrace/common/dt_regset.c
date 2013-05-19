@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2003 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -50,13 +47,19 @@ directive|include
 file|<dt_regset.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dt_impl.h>
+end_include
+
 begin_function
 name|dt_regset_t
 modifier|*
 name|dt_regset_create
 parameter_list|(
 name|ulong_t
-name|size
+name|nregs
 parameter_list|)
 block|{
 name|ulong_t
@@ -64,12 +67,9 @@ name|n
 init|=
 name|BT_BITOUL
 argument_list|(
-name|size
-operator|+
-literal|1
+name|nregs
 argument_list|)
 decl_stmt|;
-comment|/* + 1 for %r0 */
 name|dt_regset_t
 modifier|*
 name|drp
@@ -111,9 +111,7 @@ name|drp
 operator|->
 name|dr_size
 operator|=
-name|size
-operator|+
-literal|1
+name|nregs
 expr_stmt|;
 if|if
 condition|(
@@ -208,6 +206,84 @@ operator|->
 name|dr_size
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dt_regset_assert_free
+parameter_list|(
+name|dt_regset_t
+modifier|*
+name|drp
+parameter_list|)
+block|{
+name|int
+name|reg
+decl_stmt|;
+name|boolean_t
+name|fail
+init|=
+name|B_FALSE
+decl_stmt|;
+for|for
+control|(
+name|reg
+operator|=
+literal|0
+init|;
+name|reg
+operator|<
+name|drp
+operator|->
+name|dr_size
+condition|;
+name|reg
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|BT_TEST
+argument_list|(
+name|drp
+operator|->
+name|dr_bitmap
+argument_list|,
+name|reg
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|dt_dprintf
+argument_list|(
+literal|"%%r%d was left allocated\n"
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|fail
+operator|=
+name|B_TRUE
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * We set this during dtest runs to check for register leaks. 	 */
+if|if
+condition|(
+name|fail
+operator|&&
+name|getenv
+argument_list|(
+literal|"DTRACE_DEBUG_REGSET"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -375,13 +451,20 @@ return|;
 block|}
 block|}
 block|}
+name|xyerror
+argument_list|(
+name|D_NOREG
+argument_list|,
+literal|"Insufficient registers to generate code"
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-comment|/* no available registers */
 block|}
 end_function
 
@@ -400,7 +483,7 @@ block|{
 name|assert
 argument_list|(
 name|reg
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|reg
