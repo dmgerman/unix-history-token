@@ -1486,21 +1486,6 @@ name|_Thread_local
 value|thread_local
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|_Thread_local
-end_define
-
 begin_else
 else|#
 directive|else
