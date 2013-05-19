@@ -3124,15 +3124,6 @@ name|txq
 parameter_list|)
 block|{
 name|struct
-name|ath_hal
-modifier|*
-name|ah
-init|=
-name|sc
-operator|->
-name|sc_ah
-decl_stmt|;
-name|struct
 name|ath_buf
 modifier|*
 name|bf
@@ -3198,6 +3189,9 @@ operator|->
 name|bf_daddr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG
 if|if
 condition|(
 name|sc
@@ -3213,6 +3207,8 @@ argument_list|,
 name|txq
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * This is called from a restart, so DMA is known to be 	 * completely stopped. 	 */
 name|KASSERT
 argument_list|(
@@ -3261,7 +3257,9 @@ name|ATH_TXQ_PUTRUNNING
 expr_stmt|;
 name|ath_hal_gettxdesclinkptr
 argument_list|(
-name|ah
+name|sc
+operator|->
+name|sc_ah
 argument_list|,
 name|bf_last
 operator|->
@@ -3275,7 +3273,9 @@ argument_list|)
 expr_stmt|;
 name|ath_hal_txstart
 argument_list|(
-name|ah
+name|sc
+operator|->
+name|sc_ah
 argument_list|,
 name|txq
 operator|->
