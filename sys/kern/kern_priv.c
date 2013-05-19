@@ -78,7 +78,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_comment
-comment|/*  * `suser_enabled' (which can be set by the security.bsd.suser_enabled  * sysctl) determines whether the system 'super-user' policy is in effect.  If  * it is nonzero, an effective uid of 0 connotes special privilege,  * overriding many mandatory and discretionary protections.  If it is zero,  * uid 0 is offered no special privilege in the kernel security policy.  * Setting it to zero may seriously impact the functionality of many existing  * userland programs, and should not be done without careful consideration of  * the consequences.   */
+comment|/*  * `suser_enabled' (which can be set by the security.bsd.suser_enabled  * sysctl) determines whether the system 'super-user' policy is in effect.  If  * it is nonzero, an effective uid of 0 connotes special privilege,  * overriding many mandatory and discretionary protections.  If it is zero,  * uid 0 is offered no special privilege in the kernel security policy.  * Setting it to zero may seriously impact the functionality of many existing  * userland programs, and should not be done without careful consideration of  * the consequences.  */
 end_comment
 
 begin_decl_stmt
