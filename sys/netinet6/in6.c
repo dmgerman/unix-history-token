@@ -5048,6 +5048,14 @@ argument_list|)
 expr_stmt|;
 name|ia
 operator|->
+name|ia_prefixmask
+operator|.
+name|sin6_family
+operator|=
+name|AF_INET6
+expr_stmt|;
+name|ia
+operator|->
 name|ia6_createtime
 operator|=
 name|time_second
