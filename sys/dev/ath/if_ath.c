@@ -19553,9 +19553,6 @@ name|ATH_RESET_TYPE
 name|reset_type
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATH_DEBUG
 name|struct
 name|ath_hal
 modifier|*
@@ -19565,8 +19562,6 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|ifnet
 modifier|*
