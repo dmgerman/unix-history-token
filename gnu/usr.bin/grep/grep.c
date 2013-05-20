@@ -6185,8 +6185,6 @@ modifier|*
 name|keys
 decl_stmt|;
 name|size_t
-name|cc
-decl_stmt|,
 name|keycc
 decl_stmt|,
 name|oldcc
@@ -6198,6 +6196,8 @@ name|with_filenames
 decl_stmt|;
 name|int
 name|opt
+decl_stmt|,
+name|cc
 decl_stmt|,
 name|status
 decl_stmt|;
