@@ -498,13 +498,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|m_fibnum
-value|m_hdr.mh_nextpkt
-end_define
-
-begin_define
-define|#
-directive|define
 name|m_act
 value|m_nextpkt
 end_define
