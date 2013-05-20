@@ -263,6 +263,10 @@ operator|==
 name|ASL_FILE_C_OFFSET_OUTPUT
 condition|)
 block|{
+name|Gbl_CurrentAmlOffset
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Offset table file has a special header and footer */
 name|LsDoOffsetTableHeader
 argument_list|(
@@ -544,7 +548,13 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"\n"
+literal|"    (%.4X)\n"
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
 argument_list|)
 expr_stmt|;
 return|return

@@ -401,6 +401,130 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * For the iASL compiler case, the output is redirected to stderr so that  * any of the various ACPI errors and warnings do not appear in the output  * files, for either the compiler or disassembler portions of the tool.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|AcpiGbl_OutputFile
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_REDIRECT_BEGIN
+define|\
+value|FILE                    *OutputFile = AcpiGbl_OutputFile; \     AcpiOsRedirectOutput (stderr);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_REDIRECT_END
+define|\
+value|AcpiOsRedirectOutput (OutputFile);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * non-iASL case - no redirection, nothing to do  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_REDIRECT_BEGIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_REDIRECT_END
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Common error message prefixes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_ERROR
+value|"ACPI Error: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_EXCEPTION
+value|"ACPI Exception: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_WARNING
+value|"ACPI Warning: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_INFO
+value|"ACPI: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_BIOS_ERROR
+value|"ACPI BIOS Error (bug): "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_BIOS_WARNING
+value|"ACPI BIOS Warning (bug): "
+end_define
+
+begin_comment
+comment|/*  * Common message suffix  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSG_SUFFIX
+define|\
+value|AcpiOsPrintf (" (%8.8X/%s-%u)\n", ACPI_CA_VERSION, ModuleName, LineNumber)
+end_define
+
+begin_comment
 comment|/* Types for Resource descriptor entries */
 end_comment
 
@@ -2757,7 +2881,8 @@ begin_function_decl
 name|BOOLEAN
 name|AcpiUtValidAcpiName
 parameter_list|(
-name|UINT32
+name|char
+modifier|*
 name|Name
 parameter_list|)
 function_decl|;

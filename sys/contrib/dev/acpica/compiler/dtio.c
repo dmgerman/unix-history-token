@@ -1004,7 +1004,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 for|for
@@ -1030,9 +1030,6 @@ expr_stmt|;
 block|}
 name|c
 operator|=
-operator|(
-name|char
-operator|)
 name|getc
 argument_list|(
 name|Handle
@@ -1105,6 +1102,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 switch|switch
@@ -1245,6 +1245,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|i
@@ -1301,6 +1304,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|i
@@ -1358,6 +1364,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|i

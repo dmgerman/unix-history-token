@@ -2571,6 +2571,7 @@ break|break;
 case|case
 name|CMD_HISTORY_EXE
 case|:
+comment|/* ! command */
 name|CommandLine
 operator|=
 name|AcpiDbGetFromHistory
@@ -2612,6 +2613,7 @@ return|;
 case|case
 name|CMD_HISTORY_LAST
 case|:
+comment|/* !! command */
 name|CommandLine
 operator|=
 name|AcpiDbGetFromHistory

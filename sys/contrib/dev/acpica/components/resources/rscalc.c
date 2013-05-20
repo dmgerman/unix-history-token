@@ -1260,7 +1260,11 @@ literal|0
 init|;
 name|TableIndex
 operator|<
-literal|4
+name|PackageElement
+operator|->
+name|Package
+operator|.
+name|Count
 operator|&&
 operator|!
 name|NameFound

@@ -264,9 +264,26 @@ name|Status
 argument_list|)
 condition|)
 block|{
+comment|/* We might be able to fix some errors */
+if|if
+condition|(
+operator|(
+name|Status
+operator|!=
+name|AE_AML_OPERAND_TYPE
+operator|)
+operator|&&
+operator|(
+name|Status
+operator|!=
+name|AE_AML_OPERAND_VALUE
+operator|)
+condition|)
+block|{
 goto|goto
 name|Exit
 goto|;
+block|}
 block|}
 block|}
 comment|/*      * The return object was OK, or it was successfully repaired above.      * Now make some additional checks such as verifying that package      * objects are sorted correctly (if required) or buffer objects have      * the correct data width (bytes vs. dwords). These repairs are      * performed on a per-name basis, i.e., the code is specific to      * particular predefined names.      */

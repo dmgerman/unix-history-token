@@ -674,6 +674,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Compiler/Clibrary-dependent debug initialization. Used for ACPICA  * utilities only.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_DEBUG_INITIALIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_INITIALIZE
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
 end_comment
 
