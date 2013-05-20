@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.29 2013/03/31 05:49:51 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.30 2013/05/16 21:56:56 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -2318,7 +2318,9 @@ end_comment
 begin_function
 name|void
 name|meta_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef

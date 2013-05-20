@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.173 2013/02/24 19:43:37 christos Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.174 2013/05/18 13:12:45 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.173 2013/02/24 19:43:37 christos Exp $"
+literal|"$NetBSD: var.c,v 1.174 2013/05/18 13:12:45 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.173 2013/02/24 19:43:37 christos Exp $"
+literal|"$NetBSD: var.c,v 1.174 2013/05/18 13:12:45 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1832,6 +1832,45 @@ name|Hash_Entry
 modifier|*
 name|ln
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|'$'
+argument_list|)
+condition|)
+block|{
+name|cp
+operator|=
+name|Var_Subst
+argument_list|(
+name|NULL
+argument_list|,
+name|name
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|name
+expr_stmt|;
+block|}
 name|ln
 operator|=
 name|Hash_FindEntry
@@ -1841,7 +1880,7 @@ name|ctxt
 operator|->
 name|context
 argument_list|,
-name|name
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1862,13 +1901,26 @@ name|ctxt
 operator|->
 name|name
 argument_list|,
-name|name
+name|cp
 argument_list|,
 name|ln
 condition|?
 literal|""
 else|:
 literal|" (not found)"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cp
+operator|!=
+name|name
+condition|)
+block|{
+name|free
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
