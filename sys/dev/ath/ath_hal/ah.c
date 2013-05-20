@@ -1395,7 +1395,7 @@ name|ht40_bps
 index|[
 name|rate
 operator|&
-literal|0xf
+literal|0x1f
 index|]
 expr_stmt|;
 else|else
@@ -1405,7 +1405,7 @@ name|ht20_bps
 index|[
 name|rate
 operator|&
-literal|0xf
+literal|0x1f
 index|]
 expr_stmt|;
 name|numBits
