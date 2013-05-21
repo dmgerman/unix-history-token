@@ -376,6 +376,45 @@ begin_comment
 comment|/* wint_t (see above) */
 end_comment
 
+begin_comment
+comment|/* Clang already provides these types as built-ins, but only in C++ mode. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|__uint_least16_t
+name|__char16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint_least32_t
+name|__char32_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|__uint32_t

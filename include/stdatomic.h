@@ -595,17 +595,25 @@ name|atomic_ullong
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_typedef
+typedef|typedef
+atomic|_Atomic
+argument_list|(
+name|__char16_t
+argument_list|)
+name|atomic_char16_t
+typedef|;
+end_typedef
 
-begin_endif
-unit|typedef _Atomic(__char16_t)		atomic_char16_t; typedef _Atomic(__char32_t)		atomic_char32_t;
-endif|#
-directive|endif
-end_endif
+begin_typedef
+typedef|typedef
+atomic|_Atomic
+argument_list|(
+name|__char32_t
+argument_list|)
+name|atomic_char32_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
