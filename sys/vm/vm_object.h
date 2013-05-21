@@ -554,6 +554,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_LOCK_DOWNGRADE
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_downgrade(&(object)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_RLOCK
 parameter_list|(
 name|object

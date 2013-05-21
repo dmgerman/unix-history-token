@@ -7349,6 +7349,13 @@ name|diff
 decl_stmt|,
 name|psize
 decl_stmt|;
+name|VM_OBJECT_ASSERT_LOCKED
+argument_list|(
+name|m_start
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
 name|psize
 operator|=
 name|atop

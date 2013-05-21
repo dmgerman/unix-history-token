@@ -10628,7 +10628,7 @@ name|diff
 decl_stmt|,
 name|psize
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m_start
 operator|->
