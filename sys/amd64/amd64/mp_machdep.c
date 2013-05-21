@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kstack_pages.h"
 end_include
 
@@ -5798,6 +5804,14 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|amd64_db_resume_dbreg
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cpu
