@@ -333,7 +333,6 @@ name|int
 name|cclp
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -368,7 +367,6 @@ name|i
 argument_list|)
 condition|)
 block|{
-specifier|register
 name|int
 name|start_char
 init|=
@@ -926,7 +924,6 @@ name|cset
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -959,7 +956,6 @@ name|i
 index|]
 condition|)
 block|{
-specifier|register
 name|int
 name|start_char
 init|=

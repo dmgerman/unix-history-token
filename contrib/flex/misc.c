@@ -722,7 +722,6 @@ name|size_t
 name|element_size
 decl_stmt|;
 block|{
-specifier|register
 name|void
 modifier|*
 name|mem
@@ -770,7 +769,6 @@ name|all_lower
 parameter_list|(
 name|str
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|str
@@ -827,7 +825,6 @@ name|all_upper
 parameter_list|(
 name|str
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|str
@@ -978,7 +975,6 @@ name|clower
 parameter_list|(
 name|c
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -1022,20 +1018,17 @@ name|copy_string
 parameter_list|(
 name|str
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
 name|c1
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|c2
@@ -1139,13 +1132,11 @@ name|copy_unsigned_string
 parameter_list|(
 name|str
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|c
@@ -2730,7 +2721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* readable_form - return the the human-readable form of a character  *  * The returned string is in static storage.  */
+comment|/* readable_form - return the human-readable form of a character  *  * The returned string is in static storage.  */
 end_comment
 
 begin_function
@@ -2740,7 +2731,6 @@ name|readable_form
 parameter_list|(
 name|c
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2907,7 +2897,6 @@ name|size_t
 name|element_size
 decl_stmt|;
 block|{
-specifier|register
 name|void
 modifier|*
 name|new_array
@@ -3665,7 +3654,6 @@ name|size_t
 name|size_in_bytes
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|rp

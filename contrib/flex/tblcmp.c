@@ -111,7 +111,6 @@ name|mkentry
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|int
 operator|*
 operator|,
@@ -586,7 +585,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|tmp
@@ -780,7 +778,6 @@ name|void
 name|expand_nxt_chk
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|old_max
 init|=
@@ -859,11 +856,9 @@ name|numtrans
 decl_stmt|;
 block|{
 comment|/* Firstfree is the position of the first possible occurrence of two 	 * consecutive unused records in the chk and nxt arrays. 	 */
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|state_ptr
@@ -871,7 +866,6 @@ decl_stmt|,
 modifier|*
 name|chk_ptr
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|ptr_to_last_entry_in_state
@@ -1073,7 +1067,6 @@ name|void
 name|inittbl
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1279,7 +1272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* mkentry - create base/def and nxt/chk entries for transition array  *  * synopsis  *   int state[numchars + 1], numchars, statenum, deflink, totaltrans;  *   mkentry( state, numchars, statenum, deflink, totaltrans );  *  * "state" is a transition array "numchars" characters in size, "statenum"  * is the offset to be used into the base/def tables, and "deflink" is the  * entry to put in the "def" table entry.  If "deflink" is equal to  * "JAMSTATE", then no attempt will be made to fit zero entries of "state"  * (i.e., jam entries) into the table.  It is assumed that by linking to  * "JAMSTATE" they will be taken care of.  In any case, entries in "state"  * marking transitions to "SAME_TRANS" are treated as though they will be  * taken care of by whereever "deflink" points.  "totaltrans" is the total  * number of transitions out of the state.  If it is below a certain threshold,  * the tables are searched for an interior spot that will accommodate the  * state array.  */
+comment|/* mkentry - create base/def and nxt/chk entries for transition array  *  * synopsis  *   int state[numchars + 1], numchars, statenum, deflink, totaltrans;  *   mkentry( state, numchars, statenum, deflink, totaltrans );  *  * "state" is a transition array "numchars" characters in size, "statenum"  * is the offset to be used into the base/def tables, and "deflink" is the  * entry to put in the "def" table entry.  If "deflink" is equal to  * "JAMSTATE", then no attempt will be made to fit zero entries of "state"  * (i.e., jam entries) into the table.  It is assumed that by linking to  * "JAMSTATE" they will be taken care of.  In any case, entries in "state"  * marking transitions to "SAME_TRANS" are treated as though they will be  * taken care of by wherever "deflink" points.  "totaltrans" is the total  * number of transitions out of the state.  If it is below a certain threshold,  * the tables are searched for an interior spot that will accommodate the  * state array.  */
 end_comment
 
 begin_function
@@ -1296,7 +1289,6 @@ name|deflink
 parameter_list|,
 name|totaltrans
 parameter_list|)
-specifier|register
 name|int
 modifier|*
 name|state
@@ -1311,7 +1303,6 @@ decl_stmt|,
 name|totaltrans
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|minec
 decl_stmt|,
@@ -2335,11 +2326,9 @@ decl_stmt|,
 name|transnum
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 modifier|*
 name|state_ptr
@@ -2559,7 +2548,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2576,7 +2564,6 @@ decl_stmt|,
 modifier|*
 name|protp
 decl_stmt|;
-specifier|register
 name|int
 name|numdiff
 init|=

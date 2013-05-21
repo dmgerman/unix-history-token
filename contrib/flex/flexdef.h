@@ -1326,7 +1326,7 @@ comment|/* Declarations for global variables. */
 end_comment
 
 begin_comment
-comment|/* Variables for flags:  * printstats - if true (-v), dump statistics  * syntaxerror - true if a syntax error has been found  * eofseen - true if we've seen an eof in the input file  * ddebug - if true (-d), make a "debug" scanner  * trace - if true (-T), trace processing  * nowarn - if true (-w), do not generate warnings  * spprdflt - if true (-s), suppress the default rule  * interactive - if true (-I), generate an interactive scanner  * lex_compat - if true (-l), maximize compatibility with AT&T lex  * posix_compat - if true (-X), maximize compatibility with POSIX lex  * do_yylineno - if true, generate code to maintain yylineno  * useecs - if true (-Ce flag), use equivalence classes  * fulltbl - if true (-Cf flag), don't compress the DFA state table  * usemecs - if true (-Cm flag), use meta-equivalence classes  * fullspd - if true (-F flag), use Jacobson method of table representation  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives  * performance_report - if> 0 (i.e., -p flag), generate a report relating  *   to scanner performance; if> 1 (-p -p), report on minor performance  *   problems, too  * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file  *   listing backing-up states  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;  *   otherwise, a standard C scanner  * reentrant - if true (-R), generate a reentrant C scanner.  * bison_bridge_lval - if true (--bison-bridge), bison pure calling convention.  * bison_bridge_lloc - if true (--bison-locations), bison yylloc.  * long_align - if true (-Ca flag), favor long-word alignment.  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;  *   otherwise, use fread().  * yytext_is_array - if true (i.e., %array directive), then declare  *   yytext as a array instead of a character pointer.  Nice and inefficient.  * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as  *   "no more files".  * csize - size of character set for the scanner we're generating;  *   128 for 7-bit chars and 256 for 8-bit  * yymore_used - if true, yymore() is used in input rules  * reject - if true, generate back-up tables for REJECT macro  * real_reject - if true, scanner really uses REJECT (as opposed to just  *   having "reject" set for variable trailing context)  * continued_action - true if this rule's action is to "fall through" to  *   the next rule's action (i.e., the '|' action)  * in_rule - true if we're inside an individual rule, false if not.  * yymore_really_used - whether to treat yymore() as really used, regardless  *   of what we think based on references to it in the user's actions.  * reject_really_used - same for REJECT  */
+comment|/* Variables for flags:  * printstats - if true (-v), dump statistics  * syntaxerror - true if a syntax error has been found  * eofseen - true if we've seen an eof in the input file  * ddebug - if true (-d), make a "debug" scanner  * trace - if true (-T), trace processing  * nowarn - if true (-w), do not generate warnings  * spprdflt - if true (-s), suppress the default rule  * interactive - if true (-I), generate an interactive scanner  * lex_compat - if true (-l), maximize compatibility with AT&T lex  * posix_compat - if true (-X), maximize compatibility with POSIX lex  * do_yylineno - if true, generate code to maintain yylineno  * useecs - if true (-Ce flag), use equivalence classes  * fulltbl - if true (-Cf flag), don't compress the DFA state table  * usemecs - if true (-Cm flag), use meta-equivalence classes  * fullspd - if true (-F flag), use Jacobson method of table representation  * gen_line_dirs - if true (i.e., no -L flag), generate #line directives  * performance_report - if> 0 (i.e., -p flag), generate a report relating  *   to scanner performance; if> 1 (-p -p), report on minor performance  *   problems, too  * backing_up_report - if true (i.e., -b flag), generate "lex.backup" file  *   listing backing-up states  * C_plus_plus - if true (i.e., -+ flag), generate a C++ scanner class;  *   otherwise, a standard C scanner  * reentrant - if true (-R), generate a reentrant C scanner.  * bison_bridge_lval - if true (--bison-bridge), bison pure calling convention.  * bison_bridge_lloc - if true (--bison-locations), bison yylloc.  * long_align - if true (-Ca flag), favor long-word alignment.  * use_read - if true (-f, -F, or -Cr) then use read() for scanner input;  *   otherwise, use fread().  * yytext_is_array - if true (i.e., %array directive), then declare  *   yytext as an array instead of a character pointer.  Nice and inefficient.  * do_yywrap - do yywrap() processing on EOF.  If false, EOF treated as  *   "no more files".  * csize - size of character set for the scanner we're generating;  *   128 for 7-bit chars and 256 for 8-bit  * yymore_used - if true, yymore() is used in input rules  * reject - if true, generate back-up tables for REJECT macro  * real_reject - if true, scanner really uses REJECT (as opposed to just  *   having "reject" set for variable trailing context)  * continued_action - true if this rule's action is to "fall through" to  *   the next rule's action (i.e., the '|' action)  * in_rule - true if we're inside an individual rule, false if not.  * yymore_really_used - whether to treat yymore() as really used, regardless  *   of what we think based on references to it in the user's actions.  * reject_really_used - same for REJECT  */
 end_comment
 
 begin_decl_stmt
@@ -3118,7 +3118,6 @@ name|all_lower
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 operator|*
 operator|)
@@ -3137,7 +3136,6 @@ name|all_upper
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|char
 operator|*
 operator|)
@@ -3215,7 +3213,6 @@ name|copy_string
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 specifier|const
 name|char
 operator|*
@@ -3236,7 +3233,6 @@ name|copy_unsigned_string
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|Char
 operator|*
 operator|)
@@ -3529,7 +3525,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Generate a data statment for a two-dimensional array. */
+comment|/* Generate a data statement for a two-dimensional array. */
 end_comment
 
 begin_decl_stmt
@@ -4009,7 +4005,6 @@ name|mark_beginning_as_normal
 name|PROTO
 argument_list|(
 operator|(
-specifier|register
 name|int
 operator|)
 argument_list|)

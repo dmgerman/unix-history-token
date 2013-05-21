@@ -285,7 +285,6 @@ name|void
 name|do_indent
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 init|=
@@ -715,7 +714,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1341,7 +1339,6 @@ name|void
 name|genctbl
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1747,7 +1744,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1892,7 +1888,6 @@ name|void
 name|genecs
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2081,6 +2076,11 @@ expr_stmt|;
 name|indent_puts
 argument_list|(
 literal|"YY_G(yy_lp) = yy_accept[yy_current_state];"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"goto find_rule; /* avoid `defined but not used' warning */"
 argument_list|)
 expr_stmt|;
 name|outn
@@ -2425,7 +2425,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2538,7 +2537,6 @@ operator|++
 name|i
 control|)
 block|{
-specifier|register
 name|int
 name|anum
 init|=
@@ -2606,7 +2604,6 @@ name|void
 name|genftbl
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2657,7 +2654,6 @@ operator|++
 name|i
 control|)
 block|{
-specifier|register
 name|int
 name|anum
 init|=
@@ -2725,7 +2721,7 @@ decl_stmt|;
 block|{
 name|indent_put2s
 argument_list|(
-literal|"register YY_CHAR yy_c = %s;"
+literal|"YY_CHAR yy_c = %s;"
 argument_list|,
 name|char_map
 argument_list|)
@@ -2920,12 +2916,12 @@ argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"register yyconst struct yy_trans_info *yy_trans_info;\n"
+literal|"yyconst struct yy_trans_info *yy_trans_info;\n"
 argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"register YY_CHAR yy_c;\n"
+literal|"YY_CHAR yy_c;\n"
 argument_list|)
 expr_stmt|;
 name|indent_put2s
@@ -3325,7 +3321,7 @@ condition|)
 comment|/* We're going to need yy_cp lying around for the call 		 * below to gen_backing_up(). 		 */
 name|indent_puts
 argument_list|(
-literal|"register char *yy_cp = YY_G(yy_c_buf_p);"
+literal|"char *yy_cp = YY_G(yy_c_buf_p);"
 argument_list|)
 expr_stmt|;
 name|outc
@@ -3394,14 +3390,14 @@ argument_list|()
 expr_stmt|;
 name|out_dec
 argument_list|(
-literal|"register int yy_c = %d;\n"
+literal|"int yy_c = %d;\n"
 argument_list|,
 name|NUL_ec
 argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"register yyconst struct yy_trans_info *yy_trans_info;\n"
+literal|"yyconst struct yy_trans_info *yy_trans_info;\n"
 argument_list|)
 expr_stmt|;
 name|indent_puts
@@ -4802,7 +4798,6 @@ operator|++
 name|i
 control|)
 block|{
-specifier|register
 name|int
 name|d
 init|=
@@ -5644,7 +5639,6 @@ name|void
 name|make_tables
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
