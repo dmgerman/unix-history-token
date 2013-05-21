@@ -249,12 +249,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -802,6 +796,17 @@ begin_define
 define|#
 directive|define
 name|NUMDATALINES
+value|10
+end_define
+
+begin_comment
+comment|/* Number of characters to print a line number, i.e., 1 + log10(INT_MAX) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUMCHARLINES
 value|10
 end_define
 

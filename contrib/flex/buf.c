@@ -402,20 +402,7 @@ name|filename
 argument_list|)
 operator|+
 comment|/* filename with possibly all backslashes escaped */
-call|(
-name|int
-call|)
-argument_list|(
-literal|1
-operator|+
-name|log10
-argument_list|(
-name|abs
-argument_list|(
-name|lineno
-argument_list|)
-argument_list|)
-argument_list|)
+name|NUMCHARLINES
 operator|+
 comment|/* line number */
 literal|1
