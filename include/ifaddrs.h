@@ -32,7 +32,8 @@ name|char
 modifier|*
 name|ifa_name
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|ifa_flags
 decl_stmt|;
 name|struct

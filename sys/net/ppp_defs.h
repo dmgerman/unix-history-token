@@ -19,6 +19,12 @@ directive|define
 name|_PPP_DEFS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
 begin_comment
 comment|/*  * The basic PPP frame.  */
 end_comment
@@ -391,7 +397,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|__uint32_t
 name|ext_accm
 index|[
 literal|8
@@ -599,11 +605,11 @@ begin_struct
 struct|struct
 name|ppp_idle
 block|{
-name|time_t
+name|__time_t
 name|xmit_idle
 decl_stmt|;
 comment|/* time since last NP packet sent */
-name|time_t
+name|__time_t
 name|recv_idle
 decl_stmt|;
 comment|/* time since last NP packet received */
