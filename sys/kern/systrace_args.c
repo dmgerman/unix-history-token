@@ -17875,7 +17875,7 @@ name|p
 operator|->
 name|id
 expr_stmt|;
-comment|/* int */
+comment|/* id_t */
 name|uarg
 index|[
 literal|2
@@ -31191,7 +31191,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"id_t"
 expr_stmt|;
 break|break;
 case|case
