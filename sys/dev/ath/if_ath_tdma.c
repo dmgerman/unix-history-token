@@ -1040,7 +1040,25 @@ operator|->
 name|mcastrate
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the chip supports enforcing TxOP on transmission, 	 * we can just delete the guard window.  It isn't at all required. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_hasenforcetxop
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_tdmaguard
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* XXX short preamble assumed */
+comment|/* XXX non-11n rate assumed */
 name|sc
 operator|->
 name|sc_tdmaguard
@@ -1064,6 +1082,7 @@ argument_list|,
 name|AH_TRUE
 argument_list|)
 expr_stmt|;
+block|}
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -1546,9 +1565,10 @@ operator|->
 name|rs_rate
 index|]
 expr_stmt|;
+comment|/* 	 * To calculate the packet duration for legacy rates, we 	 * only need the rix and preamble. 	 * 	 * For 11n non-aggregate frames, we also need the channel 	 * width and short/long guard interval. 	 * 	 * For 11n aggregate frames, the required hacks are a little 	 * more subtle.  You need to figure out the frame duration 	 * for each frame, including the delimiters.  However, when 	 * a frame isn't received successfully, we won't hear it 	 * (unless you enable reception of CRC errored frames), so 	 * your duration calculation is going to be off. 	 * 	 * However, we can assume that the beacon frames won't be 	 * transmitted as aggregate frames, so we should be okay. 	 * Just add a check to ensure that we aren't handed something 	 * bad. 	 * 	 * For ath_hal_pkt_txtime() - for 11n rates, shortPreamble is 	 * actually short guard interval. For legacy rates, 	 * it's short preamble. 	 */
 name|txtime
 operator|=
-name|ath_hal_computetxtime
+name|ath_hal_pkt_txtime
 argument_list|(
 name|ah
 argument_list|,
@@ -1560,6 +1580,33 @@ name|rs_datalen
 argument_list|,
 name|rix
 argument_list|,
+operator|!
+operator|!
+operator|(
+name|rs
+operator|->
+name|rs_flags
+operator|&
+name|HAL_RX_2040
+operator|)
+argument_list|,
+operator|(
+name|rix
+operator|&
+literal|0x80
+operator|)
+condition|?
+operator|(
+operator|!
+operator|(
+name|rs
+operator|->
+name|rs_flags
+operator|&
+name|HAL_RX_GI
+operator|)
+operator|)
+else|:
 name|rt
 operator|->
 name|info
