@@ -67,6 +67,15 @@ begin_comment
 comment|/*  PURPOSE. */
 end_comment
 
+begin_function_decl
+name|int
+name|yywrap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|yywrap

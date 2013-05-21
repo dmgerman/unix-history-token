@@ -557,19 +557,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
-name|r
-decl_stmt|;
-specifier|const
-name|int
-name|readsz
-init|=
-literal|512
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
 comment|/* Tricky recursion, since we want to begin the chain 	 * at the END. Why? Because we need all the forked processes 	 * to be children of the main flex process. 	 */
 if|if
 condition|(

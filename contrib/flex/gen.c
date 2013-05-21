@@ -468,7 +468,9 @@ begin_function
 specifier|static
 name|void
 name|geneoltbl
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1736,6 +1738,7 @@ comment|/* mkecstbl - Make equivalence-class tables.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|yytbl_data
 modifier|*

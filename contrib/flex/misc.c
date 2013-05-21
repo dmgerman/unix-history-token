@@ -528,6 +528,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/** Append "m4_define([[defname]],[[value]])m4_dnl\n" to the running buffer.  *  @param defname The macro name.  *  @param value The macro value, can be NULL, which is the same as the empty string.  */
 end_comment
@@ -612,6 +618,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Append "new_text" to the running buffer. */

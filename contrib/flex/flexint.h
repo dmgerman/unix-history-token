@@ -24,12 +24,20 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
 name|__STDC_VERSION__
 argument_list|)
 operator|&&
 name|__STDC_VERSION__
 operator|>=
 literal|199901L
+operator|)
 end_if
 
 begin_comment

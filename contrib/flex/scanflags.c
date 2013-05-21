@@ -253,7 +253,11 @@ literal|"Unable to allocate %ld of stack"
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 sizeof|sizeof
 argument_list|(

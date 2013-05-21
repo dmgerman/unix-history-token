@@ -377,10 +377,12 @@ modifier|*
 name|dst
 decl_stmt|,
 modifier|*
-name|src
-decl_stmt|,
-modifier|*
 name|t
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|src
 decl_stmt|;
 name|t
 operator|=

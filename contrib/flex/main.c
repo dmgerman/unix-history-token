@@ -5650,6 +5650,7 @@ condition|(
 operator|!
 name|C_plus_plus
 condition|)
+block|{
 if|if
 condition|(
 name|reentrant
@@ -5665,6 +5666,7 @@ argument_list|(
 literal|"\n#define yywrap() 1"
 argument_list|)
 expr_stmt|;
+block|}
 name|outn
 argument_list|(
 literal|"#define YY_SKIP_YYWRAP"
