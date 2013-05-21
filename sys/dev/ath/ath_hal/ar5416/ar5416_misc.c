@@ -1771,9 +1771,7 @@ operator|!=
 literal|1
 condition|)
 return|return
-operator|(
-name|HAL_ENOTSUPP
-operator|)
+name|AH_FALSE
 return|;
 if|if
 condition|(
