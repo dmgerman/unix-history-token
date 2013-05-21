@@ -170,6 +170,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+name|ctx_switch_xsave
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
 name|kstack
 index|[]
 decl_stmt|;
