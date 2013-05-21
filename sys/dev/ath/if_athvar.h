@@ -2851,9 +2851,12 @@ decl_stmt|;
 name|int
 name|sc_txq_node_psq_maxdepth
 decl_stmt|;
-comment|/* 	 * Aggregation twiddles 	 * 	 * hwq_limit:	how busy to keep the hardware queue - don't schedule 	 *		further packets to the hardware, regardless of the TID 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
+comment|/* 	 * Software queue twiddles 	 * 	 * hwq_limit_nonaggr: 	 *		when to begin limiting non-aggregate frames to the 	 *		hardware queue, regardless of the TID. 	 * hwq_limit_aggr: 	 *		when to begin limiting A-MPDU frames to the 	 *		hardware queue, regardless of the TID. 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
 name|int
-name|sc_hwq_limit
+name|sc_hwq_limit_nonaggr
+decl_stmt|;
+name|int
+name|sc_hwq_limit_aggr
 decl_stmt|;
 name|int
 name|sc_tid_hwq_lo

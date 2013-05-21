@@ -3817,18 +3817,43 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"hwq_limit"
+literal|"hwq_limit_nonaggr"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_hwq_limit
+name|sc_hwq_limit_nonaggr
 argument_list|,
 literal|0
 argument_list|,
-literal|"Hardware queue depth before software-queuing TX frames"
+literal|"Hardware non-AMPDU queue depth before software-queuing TX frames"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"hwq_limit_aggr"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_hwq_limit_aggr
+argument_list|,
+literal|0
+argument_list|,
+literal|"Hardware AMPDU queue depth before software-queuing TX frames"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT

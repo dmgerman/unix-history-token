@@ -3935,9 +3935,15 @@ directive|endif
 comment|/* 	 * Initial aggregation settings. 	 */
 name|sc
 operator|->
-name|sc_hwq_limit
+name|sc_hwq_limit_aggr
 operator|=
 name|ATH_AGGR_MIN_QDEPTH
+expr_stmt|;
+name|sc
+operator|->
+name|sc_hwq_limit_nonaggr
+operator|=
+name|ATH_NONAGGR_MIN_QDEPTH
 expr_stmt|;
 name|sc
 operator|->

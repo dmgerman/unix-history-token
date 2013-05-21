@@ -72,6 +72,13 @@ name|ATH_AGGR_MIN_QDEPTH
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_NONAGGR_MIN_QDEPTH
+value|32
+end_define
+
 begin_comment
 comment|/*  * Watermark for scheduling TIDs in order to maximise aggregation.  *  * If hwq_depth is greater than this, don't schedule the TID  * for packet scheduling - the hardware is already busy servicing  * this TID.  *  * If hwq_depth is less than this, schedule the TID for packet  * scheduling in the completion handler.  */
 end_comment
