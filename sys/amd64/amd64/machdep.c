@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_sched.h"
 end_include
 
@@ -527,6 +533,23 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<x86/fdt.h>
 end_include
 
 begin_endif
@@ -8871,6 +8894,14 @@ directive|endif
 name|cpu_probe_amdc1e
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FDT
+name|x86_init_fdt
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Location of kernel stack for locore */
 return|return
 operator|(
