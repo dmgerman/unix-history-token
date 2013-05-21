@@ -1700,7 +1700,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If vunref() dropped the last use reference on the nullfs 	 * vnode, it must be reclaimed, and its lock was split from 	 * the lower vnode lock.  Need to do extra unlock before 	 * allowing the final vdrop() to free the vnode. 	 */
 if|if
 condition|(
 name|vp
@@ -1710,6 +1709,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * If vunref() dropped the last use reference on the 		 * nullfs vnode, it must be reclaimed, and its lock 		 * was split from the lower vnode lock.  Need to do 		 * extra unlock before allowing the final vdrop() to 		 * free the vnode. 		 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -1723,7 +1723,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"not reclaimed %p"
+literal|"not reclaimed nullfs vnode %p"
 operator|,
 name|vp
 operator|)
@@ -1735,6 +1735,43 @@ name|vp
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Otherwise, the nullfs vnode still shares the lock 		 * with the lower vnode, and must not be unlocked. 		 * Also clear the NULLV_NOUNLOCK, the flag is not 		 * relevant for future reclamations. 		 */
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"unlink_lowervp"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"reclaimed nullfs vnode %p"
+operator|,
+name|vp
+operator|)
+argument_list|)
+expr_stmt|;
+name|xp
+operator|->
+name|null_flags
+operator|&=
+operator|~
+name|NULLV_NOUNLOCK
 expr_stmt|;
 block|}
 name|vdrop
