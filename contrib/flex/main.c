@@ -1893,7 +1893,7 @@ name|output_chain
 argument_list|,
 name|m4
 argument_list|,
-literal|"-P"
+literal|"-gP"
 argument_list|,
 literal|0
 argument_list|)
