@@ -15,6 +15,52 @@ directive|define
 name|_MACHINE_GDB_MACHDEP_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOKE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS0
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS4
+value|(70 + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS8
+value|(1 + 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS16
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PPC_GDB_NREGS0
+value|0
+end_define
+
 begin_define
 define|#
 directive|define
@@ -36,11 +82,16 @@ name|PPC_GDB_NREGS16
 value|32
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|GDB_NREGS
-value|(PPC_GDB_NREGS4 + PPC_GDB_NREGS8 + PPC_GDB_NREGS16)
+value|(PPC_GDB_NREGS0 + PPC_GDB_NREGS4 + \ 			 PPC_GDB_NREGS8 + PPC_GDB_NREGS16)
 end_define
 
 begin_define
@@ -67,6 +118,37 @@ name|int
 name|regnum
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BOOKE
+if|if
+condition|(
+name|regnum
+operator|==
+literal|70
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|regnum
+operator|==
+literal|71
+operator|||
+name|regnum
+operator|>=
+literal|73
+condition|)
+return|return
+operator|(
+literal|8
+operator|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|regnum
@@ -97,6 +179,8 @@ operator|(
 literal|16
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|4
