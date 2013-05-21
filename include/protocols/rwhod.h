@@ -15,6 +15,12 @@ directive|define
 name|_PROTOCOLS_RWHOD_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
 begin_comment
 comment|/*  * rwho protocol packet format.  */
 end_comment
@@ -37,7 +43,7 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* user id */
-name|int32_t
+name|__int32_t
 name|out_time
 decl_stmt|;
 comment|/* time on */
