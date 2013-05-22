@@ -2668,6 +2668,19 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
+name|M_SENTINEL
+argument_list|,
+literal|"sentinal"
+argument_list|,
+literal|"Worklist sentinal"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
 name|M_SAVEDINO
 argument_list|,
 literal|"savedino"
@@ -2756,6 +2769,8 @@ block|,
 name|M_JTRUNC
 block|,
 name|M_JFSYNC
+block|,
+name|M_SENTINEL
 block|}
 decl_stmt|;
 end_decl_stmt
