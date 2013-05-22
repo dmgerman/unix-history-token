@@ -4802,7 +4802,7 @@ name|NULL
 condition|)
 do|;
 comment|/* 		 * Find the page in the source object, and copy it in. 		 * (Because the source is wired down, the page will be in 		 * memory.) 		 */
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -4846,7 +4846,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Allow fallback to backing objects if we are reading. 			 */
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -4860,7 +4860,7 @@ operator|->
 name|backing_object_offset
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4888,7 +4888,7 @@ argument_list|,
 name|dst_m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
