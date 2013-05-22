@@ -44106,6 +44106,7 @@ name|pino
 operator|==
 literal|0
 condition|)
+block|{
 name|bp
 operator|=
 name|getblk
@@ -44135,7 +44136,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|error
 operator|=
 name|bread
@@ -44169,6 +44172,16 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -61129,6 +61142,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|bqrelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|softdep_freework
 argument_list|(
 name|wkhd
