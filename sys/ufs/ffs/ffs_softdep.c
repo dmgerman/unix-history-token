@@ -2670,9 +2670,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_SENTINEL
 argument_list|,
-literal|"sentinal"
+literal|"sentinel"
 argument_list|,
-literal|"Worklist sentinal"
+literal|"Worklist sentinel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
