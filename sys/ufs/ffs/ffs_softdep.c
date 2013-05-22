@@ -38670,6 +38670,10 @@ argument_list|,
 name|D_MKDIR
 argument_list|)
 expr_stmt|;
+name|mkdir2
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
