@@ -23952,10 +23952,17 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|bp
-condition|)
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bmsafemap_lookup: missing buffer"
+operator|)
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|wk
@@ -23964,6 +23971,7 @@ argument|&bp->b_dep
 argument_list|,
 argument|wk_list
 argument_list|)
+block|{
 if|if
 condition|(
 name|wk
@@ -23992,6 +24000,7 @@ name|wk
 argument_list|)
 operator|)
 return|;
+block|}
 block|}
 name|fs
 operator|=
