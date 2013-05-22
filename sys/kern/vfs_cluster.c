@@ -297,6 +297,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|read_min
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|read_min
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|read_min
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cluster read min block count"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Page expended to mark partially backed buffers */
 end_comment
@@ -695,6 +725,9 @@ decl_stmt|;
 name|int
 name|nblks
 decl_stmt|;
+name|long
+name|minread
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|bp
@@ -711,6 +744,23 @@ expr_stmt|;
 name|ncontig
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 		 * Adjust totread if needed 		 */
+name|minread
+operator|=
+name|read_min
+operator|*
+name|size
+expr_stmt|;
+if|if
+condition|(
+name|minread
+operator|>
+name|totread
+condition|)
+name|totread
+operator|=
+name|minread
 expr_stmt|;
 comment|/* 		 * Compute the total number of blocks that we should read 		 * synchronously. 		 */
 if|if
