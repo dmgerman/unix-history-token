@@ -3248,6 +3248,9 @@ name|d
 operator|->
 name|bd_hbuf_in_use
 condition|)
+block|{
+name|error
+operator|=
 name|mtx_sleep
 argument_list|(
 operator|&
@@ -3269,6 +3272,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|BPFD_UNLOCK
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
 comment|/* 	 * If the hold buffer is empty, then do a timed sleep, which 	 * ends when the timeout expires or when enough packets 	 * have arrived to fill the store buffer. 	 */
 while|while
 condition|(
