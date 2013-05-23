@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Martin Matuska. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2580,25 +2580,6 @@ operator|<
 name|SPA_VERSION_RECVD_PROPS
 condition|)
 block|{
-name|zfs_prop_t
-name|prop
-init|=
-name|zfs_name_to_prop
-argument_list|(
-name|propname
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|prop
-operator|==
-name|ZFS_PROP_QUOTA
-operator|||
-name|prop
-operator|==
-name|ZFS_PROP_RESERVATION
-condition|)
-return|return;
 if|if
 condition|(
 name|source
