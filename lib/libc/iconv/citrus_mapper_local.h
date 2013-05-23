@@ -64,7 +64,7 @@ parameter_list|(
 name|_m_
 parameter_list|)
 define|\
-value|struct _citrus_mapper_ops _citrus_##_m_##_mapper_ops = {		\
+value|extern struct _citrus_mapper_ops _citrus_##_m_##_mapper_ops;		\ struct _citrus_mapper_ops _citrus_##_m_##_mapper_ops = {		\
 comment|/* mo_init */
 value|&_citrus_##_m_##_mapper_init,		\
 comment|/* mo_uninit */

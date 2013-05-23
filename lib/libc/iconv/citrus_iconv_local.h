@@ -70,7 +70,7 @@ parameter_list|(
 name|_m_
 parameter_list|)
 define|\
-value|struct _citrus_iconv_ops _citrus_##_m_##_iconv_ops = {			\
+value|extern struct _citrus_iconv_ops _citrus_##_m_##_iconv_ops;		\ struct _citrus_iconv_ops _citrus_##_m_##_iconv_ops = {			\
 comment|/* io_init_shared */
 value|&_citrus_##_m_##_iconv_init_shared,	\
 comment|/* io_uninit_shared */

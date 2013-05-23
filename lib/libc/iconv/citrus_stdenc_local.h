@@ -88,7 +88,7 @@ parameter_list|(
 name|_e_
 parameter_list|)
 define|\
-value|struct _citrus_stdenc_ops _citrus_##_e_##_stdenc_ops = {		\
+value|extern struct _citrus_stdenc_ops _citrus_##_e_##_stdenc_ops;		\ struct _citrus_stdenc_ops _citrus_##_e_##_stdenc_ops = {		\
 comment|/* eo_init */
 value|&_citrus_##_e_##_stdenc_init,		\
 comment|/* eo_uninit */
