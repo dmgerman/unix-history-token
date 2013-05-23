@@ -1523,6 +1523,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_AF_ENABLE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Access Flag enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_IDC_ENABLE
 value|CPU_CONTROL_DC_ENABLE
 end_define
@@ -2348,6 +2359,17 @@ end_define
 
 begin_comment
 comment|/* Translation -- Section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_TRANS_F
+value|0x06
+end_define
+
+begin_comment
+comment|/* Translation -- Flag */
 end_comment
 
 begin_define

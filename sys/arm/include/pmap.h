@@ -1509,6 +1509,21 @@ operator|!=
 literal|0
 end_elif
 
+begin_comment
+comment|/*  * AP[2:1] access permissions model:  *  * AP[2](APX)	- Write Disable  * AP[1]	- User Enable  * AP[0]	- Reference Flag  *  * AP[2]     AP[1]     Kernel     User  *  0          0        R/W        N  *  0          1        R/W       R/W  *  1          0         R         N  *  1          1         R         R  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2_S_PROT_R
+value|(0)
+end_define
+
+begin_comment
+comment|/* kernel read */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1517,18 +1532,18 @@ value|(L2_AP0(2))
 end_define
 
 begin_comment
-comment|/* user access */
+comment|/* user read */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|L2_S_PROT_R
+name|L2_S_REF
 value|(L2_AP0(1))
 end_define
 
 begin_comment
-comment|/* read access */
+comment|/* reference flag */
 end_comment
 
 begin_define
@@ -1546,6 +1561,16 @@ parameter_list|(
 name|pte
 parameter_list|)
 value|(!(pte& L2_APX))
+end_define
+
+begin_define
+define|#
+directive|define
+name|L2_S_REFERENCED
+parameter_list|(
+name|pte
+parameter_list|)
+value|(!!(pte& L2_S_REF))
 end_define
 
 begin_ifndef
