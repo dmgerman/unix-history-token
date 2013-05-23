@@ -6523,23 +6523,6 @@ name|pmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"pmap_pinit0: pmap = %08x, pm_pdir = %08x\n"
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|pmap
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|pmap
-operator|->
-name|pm_pdir
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|kernel_pmap

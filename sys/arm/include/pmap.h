@@ -397,11 +397,6 @@ index|[
 name|L2_SIZE
 index|]
 decl_stmt|;
-name|pd_entry_t
-modifier|*
-name|pm_pdir
-decl_stmt|;
-comment|/* KVA of page directory */
 name|cpuset_t
 name|pm_active
 decl_stmt|;

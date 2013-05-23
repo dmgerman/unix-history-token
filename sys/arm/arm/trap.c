@@ -1290,12 +1290,10 @@ argument_list|(
 name|fsr
 argument_list|)
 condition|)
-block|{
 name|ftype
 operator|=
 name|VM_PROT_WRITE
 expr_stmt|;
-block|}
 else|else
 block|{
 name|u_int
@@ -1342,14 +1340,15 @@ operator|==
 literal|0x08000000
 operator|)
 condition|)
-comment|/* STM/CDT */
 block|{
+comment|/* STM/CDT */
 name|ftype
 operator|=
 name|VM_PROT_WRITE
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -1372,6 +1371,7 @@ name|ftype
 operator|=
 name|VM_PROT_READ
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * See if the fault is as a result of ref/mod emulation, 	 * or domain mismatch. 	 */
 ifdef|#

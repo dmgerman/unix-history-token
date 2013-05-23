@@ -1936,7 +1936,7 @@ name|void
 name|pmap_alloc_l1
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|)
 block|{
 name|struct
@@ -2017,13 +2017,13 @@ name|l1_lru_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fix up the relevant bits in the pmap structure 	 */
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|=
 name|l1
 expr_stmt|;
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 operator|=
@@ -2044,7 +2044,7 @@ name|void
 name|pmap_free_l1
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|)
 block|{
 name|struct
@@ -2052,7 +2052,7 @@ name|l1_ttable
 modifier|*
 name|l1
 init|=
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 decl_stmt|;
@@ -2086,7 +2086,7 @@ name|l1
 operator|->
 name|l1_domain_free
 index|[
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 operator|-
@@ -2101,7 +2101,7 @@ name|l1
 operator|->
 name|l1_domain_first
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 operator|-
@@ -2165,7 +2165,7 @@ name|l2_bucket
 operator|*
 name|pmap_get_l2_bucket
 argument_list|(
-argument|pmap_t pm
+argument|pmap_t pmap
 argument_list|,
 argument|vm_offset_t va
 argument_list|)
@@ -2193,7 +2193,7 @@ condition|(
 operator|(
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2253,7 +2253,7 @@ modifier|*
 name|pmap_alloc_l2_bucket
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -2281,7 +2281,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_ASSERT_LOCKED
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|rw_assert
@@ -2297,7 +2297,7 @@ condition|(
 operator|(
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2314,7 +2314,7 @@ block|{
 comment|/* 		 * No mapping at this address, as there is 		 * no entry in the L1 table. 		 * Need to allocate a new l2_dtable. 		 */
 name|PMAP_UNLOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -2347,7 +2347,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 return|return
@@ -2364,12 +2364,12 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2392,7 +2392,7 @@ argument_list|)
 expr_stmt|;
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2417,7 +2417,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Link it into the parent pmap 			 */
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2461,7 +2461,7 @@ decl_stmt|;
 comment|/* 		 * No L2 page table has been allocated. Chances are, this 		 * is because we just allocated the l2_dtable, above. 		 */
 name|PMAP_UNLOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -2487,7 +2487,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 if|if
@@ -2539,7 +2539,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2622,7 +2622,7 @@ name|void
 name|pmap_free_l2_bucket
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|struct
 name|l2_bucket
@@ -2667,7 +2667,7 @@ name|l2b_occupancy
 operator|>
 literal|0
 operator|||
-name|pm
+name|pmap
 operator|==
 name|pmap_kernel
 argument_list|()
@@ -2695,7 +2695,7 @@ expr_stmt|;
 name|pl1pd
 operator|=
 operator|&
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -2723,7 +2723,7 @@ operator|==
 operator|(
 name|L1_C_DOM
 argument_list|(
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 argument_list|)
@@ -2752,7 +2752,7 @@ expr_stmt|;
 comment|/* 	 * Update the reference count in the associated l2_dtable 	 */
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2773,7 +2773,7 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * There are no more valid mappings in any of the Level 1 	 * slots managed by this l2_dtable. Go ahead and NULL-out 	 * the pointer in the parent pmap and free the l2_dtable. 	 */
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -2955,7 +2955,7 @@ parameter_list|(
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 parameter_list|,
 name|u_int
 name|maskbits
@@ -2980,7 +2980,7 @@ decl_stmt|,
 name|opte
 decl_stmt|;
 name|pmap_t
-name|pm
+name|pmap
 decl_stmt|;
 name|vm_offset_t
 name|va
@@ -3014,7 +3014,7 @@ condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|pg
+name|m
 operator|->
 name|md
 operator|.
@@ -3039,7 +3039,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pv
 argument_list|,
-argument|&pg->md.pv_list
+argument|&m->md.pv_list
 argument_list|,
 argument|pv_list
 argument_list|)
@@ -3050,7 +3050,7 @@ name|pv
 operator|->
 name|pv_va
 expr_stmt|;
-name|pm
+name|pmap
 operator|=
 name|PV_PMAP
 argument_list|(
@@ -3072,14 +3072,14 @@ name|maskbits
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|va
 argument_list|)
@@ -3124,7 +3124,7 @@ condition|)
 block|{
 name|vm_page_dirty
 argument_list|(
-name|pg
+name|m
 argument_list|)
 expr_stmt|;
 comment|/* make the pte read only */
@@ -3160,7 +3160,7 @@ name|KTR_PMAP
 argument_list|,
 literal|"clearbit: pmap:%p bits:%x pte:%x->%x"
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|maskbits
 argument_list|,
@@ -3222,7 +3222,7 @@ expr_stmt|;
 block|}
 name|PMAP_UNLOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -3234,7 +3234,7 @@ name|PVF_WRITE
 condition|)
 name|vm_page_aflag_clear
 argument_list|(
-name|pg
+name|m
 argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
@@ -3269,7 +3269,7 @@ parameter_list|(
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 parameter_list|,
 name|struct
 name|pv_entry
@@ -3277,7 +3277,7 @@ modifier|*
 name|pve
 parameter_list|,
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -3296,7 +3296,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_ASSERT_LOCKED
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|pve
@@ -3314,7 +3314,7 @@ expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
-name|pg
+name|m
 operator|->
 name|md
 operator|.
@@ -3334,18 +3334,11 @@ operator|&
 name|PVF_WIRED
 condition|)
 operator|++
-name|pm
+name|pmap
 operator|->
 name|pm_stats
 operator|.
 name|wired_count
-expr_stmt|;
-name|vm_page_aflag_set
-argument_list|(
-name|pg
-argument_list|,
-name|PGA_REFERENCED
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3362,9 +3355,9 @@ name|pv_entry
 operator|*
 name|pmap_find_pv
 argument_list|(
-argument|struct vm_page *pg
+argument|struct vm_page *m
 argument_list|,
-argument|pmap_t pm
+argument|pmap_t pmap
 argument_list|,
 argument|vm_offset_t va
 argument_list|)
@@ -3385,13 +3378,13 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pv
 argument_list|,
-argument|&pg->md.pv_list
+argument|&m->md.pv_list
 argument_list|,
 argument|pv_list
 argument_list|)
 if|if
 condition|(
-name|pm
+name|pmap
 operator|==
 name|PV_PMAP
 argument_list|(
@@ -3576,10 +3569,10 @@ parameter_list|(
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 parameter_list|,
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|struct
 name|pv_entry
@@ -3597,13 +3590,13 @@ argument_list|)
 expr_stmt|;
 name|PMAP_ASSERT_LOCKED
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
-name|pg
+name|m
 operator|->
 name|md
 operator|.
@@ -3623,7 +3616,7 @@ operator|&
 name|PVF_WIRED
 condition|)
 operator|--
-name|pm
+name|pmap
 operator|->
 name|pm_stats
 operator|.
@@ -3642,7 +3635,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pve
 argument_list|,
-argument|&pg->md.pv_list
+argument|&m->md.pv_list
 argument_list|,
 argument|pv_list
 argument_list|)
@@ -3663,7 +3656,7 @@ condition|)
 block|{
 name|vm_page_aflag_clear
 argument_list|(
-name|pg
+name|m
 argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
@@ -3683,10 +3676,10 @@ parameter_list|(
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 parameter_list|,
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -3707,59 +3700,31 @@ argument_list|)
 expr_stmt|;
 name|pve
 operator|=
-name|TAILQ_FIRST
+name|pmap_find_pv
 argument_list|(
-operator|&
-name|pg
-operator|->
-name|md
-operator|.
-name|pv_list
+name|m
+argument_list|,
+name|pmap
+argument_list|,
+name|va
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|pve
-condition|)
-block|{
+comment|/* find corresponding pve */
 if|if
 condition|(
-name|PV_PMAP
-argument_list|(
 name|pve
-argument_list|)
-operator|==
-name|pm
-operator|&&
-name|pve
-operator|->
-name|pv_va
-operator|==
-name|va
+operator|!=
+name|NULL
 condition|)
-block|{
-comment|/* match? */
 name|pmap_nuke_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|pve
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-name|pve
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|pve
-argument_list|,
-name|pv_list
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|pve
@@ -3781,10 +3746,10 @@ parameter_list|(
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 parameter_list|,
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -3808,7 +3773,7 @@ name|oflags
 decl_stmt|;
 name|PMAP_ASSERT_LOCKED
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|rw_assert
@@ -3826,9 +3791,9 @@ name|npv
 operator|=
 name|pmap_find_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|va
 argument_list|)
@@ -3881,7 +3846,7 @@ operator|&
 name|PVF_WIRED
 condition|)
 operator|++
-name|pm
+name|pmap
 operator|->
 name|pm_stats
 operator|.
@@ -3889,7 +3854,7 @@ name|wired_count
 expr_stmt|;
 else|else
 operator|--
-name|pm
+name|pmap
 operator|->
 name|pm_stats
 operator|.
@@ -3916,7 +3881,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|npv
 argument_list|,
-argument|&pg->md.pv_list
+argument|&m->md.pv_list
 argument_list|,
 argument|pv_list
 argument_list|)
@@ -3938,7 +3903,7 @@ name|npv
 condition|)
 name|vm_page_aflag_clear
 argument_list|(
-name|pg
+name|m
 argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
@@ -4016,23 +3981,6 @@ name|u_int32_t
 operator|)
 name|pmap
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"pmap_pinit0: pmap = %08x, pm_pdir = %08x\n"
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|pmap
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|pmap
-operator|->
-name|pm_pdir
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -4532,7 +4480,7 @@ name|int
 name|pmap_fault_fixup
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -4592,13 +4540,13 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there is no l2_dtable for this address, then the process 	 * has no business accessing it. 	 * 	 * Note: This will catch userland processes trying to access 	 * kernel addresses. 	 */
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -4707,7 +4655,7 @@ name|KTR_PMAP
 argument_list|,
 literal|"pmap_fault_fix: pmap:%p va:%x pte:0x%x ftype:%x user:%x"
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|va
 argument_list|,
@@ -4749,13 +4697,13 @@ decl_stmt|;
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 decl_stmt|;
 comment|/* Extract the physical address of the page */
 if|if
 condition|(
 operator|(
-name|pg
+name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -4775,9 +4723,9 @@ name|pv
 operator|=
 name|pmap_find_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|va
 argument_list|)
@@ -4813,7 +4761,7 @@ goto|;
 block|}
 name|vm_page_dirty
 argument_list|(
-name|pg
+name|m
 argument_list|)
 expr_stmt|;
 name|pv
@@ -4875,13 +4823,13 @@ decl_stmt|;
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 decl_stmt|;
 comment|/* Extract the physical address of the page */
 if|if
 condition|(
 operator|(
-name|pg
+name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -4899,9 +4847,9 @@ name|pv
 operator|=
 name|pmap_find_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|va
 argument_list|)
@@ -4917,7 +4865,7 @@ name|out
 goto|;
 name|vm_page_aflag_set
 argument_list|(
-name|pg
+name|m
 argument_list|,
 name|PGA_REFERENCED
 argument_list|)
@@ -4950,7 +4898,7 @@ comment|/* 	 * We know there is a valid mapping here, so simply 	 * fix up the L
 name|pl1pd
 operator|=
 operator|&
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -4967,7 +4915,7 @@ name|l2b_phys
 operator||
 name|L1_C_DOM
 argument_list|(
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 argument_list|)
@@ -5007,7 +4955,7 @@ name|rv
 operator|==
 literal|0
 operator|&&
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -5018,9 +4966,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fixup: pm %p, va 0x%08x, ftype %d - nothing to do!\n"
+literal|"fixup: pmap %p, va 0x%08x, ftype %d - nothing to do!\n"
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|va
 argument_list|,
@@ -5084,7 +5032,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 return|return
@@ -5336,7 +5284,7 @@ name|void
 name|pmap_set_pcb_pagedir
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|struct
 name|pcb
@@ -5353,7 +5301,7 @@ name|pcb
 operator|->
 name|pcb_pagedir
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -5377,7 +5325,7 @@ operator|(
 name|DOMAIN_CLIENT
 operator|<<
 operator|(
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 operator|*
@@ -5397,7 +5345,7 @@ operator|->
 name|pcb_pl1vec
 operator|=
 operator|&
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -5413,7 +5361,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|vector_page
 argument_list|)
@@ -5430,7 +5378,7 @@ name|L1_C_PROTO
 operator||
 name|L1_C_DOM
 argument_list|(
-name|pm
+name|pmap
 operator|->
 name|pm_domain
 argument_list|)
@@ -5462,14 +5410,14 @@ name|td
 parameter_list|)
 block|{
 name|pmap_t
-name|pm
+name|pmap
 decl_stmt|;
 name|struct
 name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
-name|pm
+name|pmap
 operator|=
 name|vmspace_pmap
 argument_list|(
@@ -5491,7 +5439,7 @@ argument_list|()
 expr_stmt|;
 name|pmap_set_pcb_pagedir
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|pcb
 argument_list|)
@@ -6754,9 +6702,9 @@ decl_stmt|;
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 decl_stmt|;
-name|pg
+name|m
 operator|=
 name|vm_page_alloc
 argument_list|(
@@ -6771,7 +6719,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pg
+name|m
 operator|==
 name|NULL
 condition|)
@@ -6784,7 +6732,7 @@ name|pa
 operator|=
 name|VM_PAGE_TO_PHYS
 argument_list|(
-name|pg
+name|m
 argument_list|)
 expr_stmt|;
 if|if
@@ -6866,7 +6814,7 @@ name|l2_bucket
 operator|*
 name|pmap_grow_l2_bucket
 argument_list|(
-argument|pmap_t pm
+argument|pmap_t pmap
 argument_list|,
 argument|vm_offset_t va
 argument_list|)
@@ -6905,7 +6853,7 @@ condition|(
 operator|(
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -7023,7 +6971,7 @@ comment|/* 		 * Link it into the parent pmap 		 */
 end_comment
 
 begin_expr_stmt
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -7249,7 +7197,7 @@ end_macro
 begin_block
 block|{
 name|pmap_t
-name|kpm
+name|kpmap
 init|=
 name|pmap_kernel
 argument_list|()
@@ -7277,7 +7225,7 @@ name|L1_S_SIZE
 control|)
 name|pmap_grow_l2_bucket
 argument_list|(
-name|kpm
+name|kpmap
 argument_list|,
 name|pmap_curmaxkvaddr
 argument_list|)
@@ -7331,7 +7279,7 @@ name|m
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pt
+name|ptep
 decl_stmt|;
 name|struct
 name|pv_chunk
@@ -7498,7 +7446,7 @@ literal|"No L2 bucket in pmap_remove_pages"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pt
+name|ptep
 operator|=
 operator|&
 name|l2b
@@ -7518,7 +7466,7 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 operator|*
-name|pt
+name|ptep
 operator|&
 name|L2_ADDR_MASK
 argument_list|)
@@ -7533,25 +7481,26 @@ operator|>=
 name|KERNBASE
 argument_list|,
 operator|(
-literal|"Trying to access non-existent page va %x pte %x"
+literal|"Trying to access non-existent page "
+literal|"va %x pte %x"
 operator|,
 name|pv
 operator|->
 name|pv_va
 operator|,
 operator|*
-name|pt
+name|ptep
 operator|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|pt
+name|ptep
 operator|=
 literal|0
 expr_stmt|;
 name|PTE_SYNC
 argument_list|(
-name|pt
+name|ptep
 argument_list|)
 expr_stmt|;
 comment|/* Mark free */
@@ -8043,7 +7992,7 @@ name|l2b
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|;
 name|pt_entry_t
 name|opte
@@ -8105,7 +8054,7 @@ literal|"No L2 Bucket"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 operator|=
 operator|&
 name|l2b
@@ -8121,7 +8070,7 @@ expr_stmt|;
 name|opte
 operator|=
 operator|*
-name|pte
+name|ptep
 expr_stmt|;
 if|if
 condition|(
@@ -8162,7 +8111,7 @@ name|KENTER_CACHE
 condition|)
 block|{
 operator|*
-name|pte
+name|ptep
 operator|=
 name|L2_S_PROTO
 operator||
@@ -8174,7 +8123,7 @@ name|L2_S_REF
 expr_stmt|;
 name|pmap_set_prot
 argument_list|(
-name|pte
+name|ptep
 argument_list|,
 name|VM_PROT_READ
 operator||
@@ -8189,7 +8138,7 @@ block|}
 else|else
 block|{
 operator|*
-name|pte
+name|ptep
 operator|=
 name|L2_S_PROTO
 operator||
@@ -8199,7 +8148,7 @@ name|L2_S_REF
 expr_stmt|;
 name|pmap_set_prot
 argument_list|(
-name|pte
+name|ptep
 argument_list|,
 name|VM_PROT_READ
 operator||
@@ -8222,18 +8171,18 @@ argument_list|,
 operator|(
 name|uint32_t
 operator|)
-name|pte
+name|ptep
 argument_list|,
 name|opte
 argument_list|,
 operator|*
-name|pte
+name|ptep
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|PTE_SYNC
 argument_list|(
-name|pte
+name|ptep
 argument_list|)
 expr_stmt|;
 name|cpu_cpwait
@@ -8368,7 +8317,7 @@ name|l2b
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|,
 name|opte
 decl_stmt|;
@@ -8399,7 +8348,7 @@ literal|"No L2 Bucket"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 operator|=
 operator|&
 name|l2b
@@ -8415,7 +8364,7 @@ expr_stmt|;
 name|opte
 operator|=
 operator|*
-name|pte
+name|ptep
 expr_stmt|;
 if|if
 condition|(
@@ -8441,13 +8390,13 @@ name|cpu_cpwait
 argument_list|()
 expr_stmt|;
 operator|*
-name|pte
+name|ptep
 operator|=
 literal|0
 expr_stmt|;
 name|PTE_SYNC
 argument_list|(
-name|pte
+name|ptep
 argument_list|)
 expr_stmt|;
 block|}
@@ -8731,11 +8680,11 @@ parameter_list|)
 block|{
 name|pd_entry_t
 modifier|*
-name|pde
+name|pdep
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|;
 if|if
 condition|(
@@ -8747,10 +8696,10 @@ argument_list|,
 name|addr
 argument_list|,
 operator|&
-name|pde
+name|pdep
 argument_list|,
 operator|&
-name|pte
+name|ptep
 argument_list|)
 condition|)
 return|return
@@ -8760,7 +8709,7 @@ operator|)
 return|;
 name|KASSERT
 argument_list|(
-name|pte
+name|ptep
 operator|!=
 name|NULL
 argument_list|,
@@ -8772,7 +8721,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|pte
+name|ptep
 operator|==
 literal|0
 condition|)
@@ -8798,7 +8747,7 @@ name|boolean_t
 name|pmap_get_pde_pte
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -8834,7 +8783,7 @@ name|l1idx
 decl_stmt|;
 if|if
 condition|(
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|==
@@ -8858,7 +8807,7 @@ operator|=
 name|pl1pd
 operator|=
 operator|&
-name|pm
+name|pmap
 operator|->
 name|pm_l1
 operator|->
@@ -8893,7 +8842,7 @@ return|;
 block|}
 if|if
 condition|(
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 operator|==
@@ -8906,7 +8855,7 @@ operator|)
 return|;
 name|l2
 operator|=
-name|pm
+name|pmap
 operator|->
 name|pm_l2
 index|[
@@ -9000,7 +8949,7 @@ init|=
 name|FALSE
 decl_stmt|;
 name|pmap_t
-name|curpm
+name|curpmap
 decl_stmt|;
 name|int
 name|flags
@@ -9045,7 +8994,7 @@ operator|&
 name|pvh_global_lock
 argument_list|)
 expr_stmt|;
-name|curpm
+name|curpmap
 operator|=
 name|vmspace_pmap
 argument_list|(
@@ -9089,7 +9038,7 @@ operator|&&
 operator|(
 name|pmap
 operator|==
-name|curpm
+name|curpmap
 operator|||
 name|pmap
 operator|==
@@ -9499,7 +9448,7 @@ name|void
 name|pmap_protect
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|sva
@@ -9544,7 +9493,7 @@ condition|)
 block|{
 name|pmap_remove
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|sva
 argument_list|,
@@ -9571,7 +9520,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * OK, at this point, we know we're doing write-protect operation. 	 * If the pmap is active, write-back the range. 	 */
@@ -9628,7 +9577,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|sva
 argument_list|)
@@ -9686,12 +9635,12 @@ block|{
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 decl_stmt|;
 name|u_int
 name|f
 decl_stmt|;
-name|pg
+name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -9709,7 +9658,7 @@ name|prot
 argument_list|,
 operator|!
 operator|(
-name|pm
+name|pmap
 operator|==
 name|pmap_kernel
 argument_list|()
@@ -9725,9 +9674,9 @@ name|f
 operator|=
 name|pmap_modify_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|sva
 argument_list|,
@@ -9822,7 +9771,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -9938,7 +9887,7 @@ decl_stmt|;
 name|struct
 name|vm_page
 modifier|*
-name|opg
+name|om
 decl_stmt|;
 name|struct
 name|pv_entry
@@ -10097,8 +10046,8 @@ literal|1
 argument_list|,
 name|printf
 argument_list|(
-literal|"pmap_enter: pmap = %08x, va = %08x, m = %08x, prot = %x, "
-literal|"wired = %x\n"
+literal|"pmap_enter: pmap = %08x, va = %08x, m = %08x, "
+literal|"prot = %x, wired = %x\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -10250,7 +10199,7 @@ argument_list|)
 operator|!=
 name|pa
 condition|)
-name|opg
+name|om
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -10261,13 +10210,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|opg
+name|om
 operator|=
 name|m
 expr_stmt|;
 block|}
 else|else
-name|opg
+name|om
 operator|=
 name|NULL
 expr_stmt|;
@@ -10433,12 +10382,16 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|&&
+operator|(
+name|m
 operator|->
 name|md
 operator|.
 name|pv_memattr
 operator|!=
 name|VM_MEMATTR_UNCACHEABLE
+operator|)
 condition|)
 name|npte
 operator||=
@@ -10450,7 +10403,7 @@ name|m
 operator|&&
 name|m
 operator|==
-name|opg
+name|om
 condition|)
 block|{
 comment|/* 		 * We're changing the attrs of an existing mapping. 		 */
@@ -10483,7 +10436,7 @@ block|{
 comment|/* 		 * New mapping, or changing the backing page 		 * of an existing mapping. 		 */
 if|if
 condition|(
-name|opg
+name|om
 condition|)
 block|{
 comment|/* 			 * Replacing an existing mapping with a new one. 			 * It is part of our managed memory so we 			 * must remove it from the PV list 			 */
@@ -10494,7 +10447,7 @@ name|pve
 operator|=
 name|pmap_remove_pv
 argument_list|(
-name|opg
+name|om
 argument_list|,
 name|pmap
 argument_list|,
@@ -11073,7 +11026,7 @@ decl_stmt|,
 name|pte
 decl_stmt|;
 name|vm_page_t
-name|pg
+name|m
 decl_stmt|;
 name|rw_wlock
 argument_list|(
@@ -11122,7 +11075,7 @@ operator|=
 operator|*
 name|ptep
 expr_stmt|;
-name|pg
+name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -11134,11 +11087,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pg
+name|m
+operator|!=
+name|NULL
 condition|)
 name|pmap_modify_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
 name|pmap
 argument_list|,
@@ -12004,7 +11959,7 @@ name|pmap
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pt
+name|ptep
 decl_stmt|;
 name|pv_entry_t
 name|pv
@@ -12287,7 +12242,7 @@ literal|"No l2 bucket"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pt
+name|ptep
 operator|=
 operator|&
 name|l2b
@@ -12307,7 +12262,7 @@ argument_list|(
 name|l2pte_pa
 argument_list|(
 operator|*
-name|pt
+name|ptep
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12327,18 +12282,18 @@ operator|,
 name|va
 operator|,
 operator|*
-name|pt
+name|ptep
 operator|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|pt
+name|ptep
 operator|=
 literal|0
 expr_stmt|;
 name|PTE_SYNC
 argument_list|(
-name|pt
+name|ptep
 argument_list|)
 expr_stmt|;
 name|pmap_nuke_pv
@@ -13385,7 +13340,7 @@ name|void
 name|pmap_remove
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|sva
@@ -13430,7 +13385,7 @@ argument_list|)
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 name|total
@@ -13466,7 +13421,7 @@ name|l2b
 operator|=
 name|pmap_get_l2_bucket
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|sva
 argument_list|)
@@ -13511,7 +13466,7 @@ block|{
 name|struct
 name|vm_page
 modifier|*
-name|pg
+name|m
 decl_stmt|;
 name|pt_entry_t
 name|pte
@@ -13541,7 +13496,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-name|pm
+name|pmap
 operator|->
 name|pm_stats
 operator|.
@@ -13567,7 +13522,7 @@ comment|/* 			 * Update flags. In a number of circumstances, 			 * we could clus
 if|if
 condition|(
 operator|(
-name|pg
+name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
@@ -13587,9 +13542,9 @@ name|pve
 operator|=
 name|pmap_remove_pv
 argument_list|(
-name|pg
+name|m
 argument_list|,
-name|pm
+name|pmap
 argument_list|,
 name|sva
 argument_list|)
@@ -13619,7 +13574,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_free_pv_entry
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|pve
 argument_list|)
@@ -13630,7 +13585,7 @@ if|if
 condition|(
 name|pmap_is_current
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 condition|)
 block|{
@@ -13671,12 +13626,10 @@ name|total
 operator|==
 name|PMAP_REMOVE_CLEAN_LIST_SIZE
 condition|)
-block|{
 name|flushall
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 operator|*
 name|ptep
@@ -13701,7 +13654,7 @@ expr_stmt|;
 block|}
 name|pmap_free_l2_bucket
 argument_list|(
-name|pm
+name|pmap
 argument_list|,
 name|l2b
 argument_list|,
@@ -13724,7 +13677,7 @@ argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
-name|pm
+name|pmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -13740,7 +13693,7 @@ name|void
 name|pmap_zero_page_gen
 parameter_list|(
 name|vm_page_t
-name|pg
+name|m
 parameter_list|,
 name|int
 name|off
@@ -13754,7 +13707,7 @@ name|phys
 init|=
 name|VM_PAGE_TO_PHYS
 argument_list|(
-name|pg
+name|m
 argument_list|)
 decl_stmt|;
 if|if
@@ -13763,7 +13716,7 @@ operator|!
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
-name|pg
+name|m
 operator|->
 name|md
 operator|.
@@ -14588,7 +14541,7 @@ name|pv
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|;
 name|pmap_t
 name|pmap
@@ -14657,7 +14610,7 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 operator|=
 operator|&
 name|l2b
@@ -14677,7 +14630,7 @@ operator|=
 name|L2_S_REFERENCED
 argument_list|(
 operator|*
-name|pte
+name|ptep
 argument_list|)
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -14767,7 +14720,7 @@ name|pv
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|;
 name|pmap_t
 name|pmap
@@ -14871,7 +14824,7 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 operator|=
 operator|&
 name|l2b
@@ -14892,7 +14845,7 @@ operator|(
 name|L2_S_WRITABLE
 argument_list|(
 operator|*
-name|pte
+name|ptep
 argument_list|)
 operator|)
 expr_stmt|;
@@ -15374,7 +15327,7 @@ name|void
 name|pmap_sync_icache
 parameter_list|(
 name|pmap_t
-name|pm
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
@@ -15764,7 +15717,7 @@ name|fl
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -15814,7 +15767,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 operator|=
 operator|(
 name|pt_entry_t
@@ -15835,7 +15788,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pte
+name|ptep
 operator|==
 name|NULL
 condition|)
@@ -15846,7 +15799,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -15865,7 +15818,7 @@ expr_stmt|;
 name|pmap_set_prot
 argument_list|(
 operator|&
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -15881,7 +15834,7 @@ expr_stmt|;
 name|PTE_SYNC
 argument_list|(
 operator|&
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -15932,7 +15885,7 @@ name|l1pt
 decl_stmt|;
 name|pt_entry_t
 modifier|*
-name|pte
+name|ptep
 decl_stmt|,
 name|f1
 decl_stmt|,
@@ -16127,7 +16080,7 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|pte
+name|ptep
 operator|=
 operator|(
 name|pt_entry_t
@@ -16148,7 +16101,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pte
+name|ptep
 operator|==
 name|NULL
 condition|)
@@ -16197,7 +16150,7 @@ name|i
 operator|++
 control|)
 block|{
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -16223,7 +16176,7 @@ expr_stmt|;
 name|PTE_SYNC
 argument_list|(
 operator|&
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -16260,7 +16213,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -16279,7 +16232,7 @@ expr_stmt|;
 name|pmap_set_prot
 argument_list|(
 operator|&
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
@@ -16295,7 +16248,7 @@ expr_stmt|;
 name|PTE_SYNC
 argument_list|(
 operator|&
-name|pte
+name|ptep
 index|[
 name|l2pte_index
 argument_list|(
