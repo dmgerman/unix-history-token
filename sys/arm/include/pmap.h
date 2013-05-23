@@ -1551,6 +1551,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|L2_S_EXECUTABLE
+parameter_list|(
+name|pte
+parameter_list|)
+value|(!(pte& L2_XN))
+end_define
+
+begin_define
+define|#
+directive|define
 name|L2_S_WRITABLE
 parameter_list|(
 name|pte
