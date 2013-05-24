@@ -1220,6 +1220,42 @@ literal|"X86 encoding"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PCIM_HTCAP_GEN3
+case|:
+name|printf
+argument_list|(
+literal|"Gen3"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCIM_HTCAP_FLE
+case|:
+name|printf
+argument_list|(
+literal|"function-level extension"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCIM_HTCAP_PM
+case|:
+name|printf
+argument_list|(
+literal|"power management"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCIM_HTCAP_HIGH_NODE_COUNT
+case|:
+name|printf
+argument_list|(
+literal|"high node count"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
