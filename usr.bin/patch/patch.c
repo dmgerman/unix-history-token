@@ -1588,7 +1588,7 @@ name|ferror
 argument_list|(
 name|ofp
 argument_list|)
-operator|||
+operator||
 name|fclose
 argument_list|(
 name|ofp
@@ -1924,7 +1924,7 @@ name|ferror
 argument_list|(
 name|rejfp
 argument_list|)
-operator|||
+operator||
 name|fclose
 argument_list|(
 name|rejfp
@@ -4827,7 +4827,7 @@ name|ofp
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|&
 name|fclose
 argument_list|(
 name|ofp
