@@ -2935,7 +2935,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-name|vfs_reclaim_lowervp_t
+name|vfs_notify_lowervp_t
 parameter_list|(
 name|struct
 name|mount
@@ -3014,9 +3014,13 @@ name|vfs_susp_clean_t
 modifier|*
 name|vfs_susp_clean
 decl_stmt|;
-name|vfs_reclaim_lowervp_t
+name|vfs_notify_lowervp_t
 modifier|*
 name|vfs_reclaim_lowervp
+decl_stmt|;
+name|vfs_notify_lowervp_t
+modifier|*
+name|vfs_unlink_lowervp
 decl_stmt|;
 block|}
 struct|;
@@ -3273,6 +3277,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|VFS_UNLINK_LOWERVP
+parameter_list|(
+name|MP
+parameter_list|,
+name|VP
+parameter_list|)
+value|do {					\ 	if (*(MP)->mnt_op->vfs_unlink_lowervp != NULL) {		\ 		(*(MP)->mnt_op->vfs_unlink_lowervp)((MP), (VP));	\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFS_KNOTE_LOCKED
 parameter_list|(
 name|vp
@@ -3292,6 +3308,20 @@ parameter_list|,
 name|hint
 parameter_list|)
 value|do					\ {									\ 	if (((vp)->v_vflag& VV_NOKNOTE) == 0)				\ 		VN_KNOTE((vp), (hint), 0);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_NOTIFY_UPPER_RECLAIM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_NOTIFY_UPPER_UNLINK
+value|2
 end_define
 
 begin_include
@@ -4057,6 +4087,19 @@ specifier|const
 name|char
 modifier|*
 name|from
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_notify_upper
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

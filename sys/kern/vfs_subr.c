@@ -12153,7 +12153,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vgonel_reclaim_lowervp_vfs
+name|notify_lowervp_vfs_dummy
 parameter_list|(
 name|struct
 name|mount
@@ -12171,18 +12171,20 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * Notify upper mounts about reclaimed vnode.  */
+comment|/*  * Notify upper mounts about reclaimed or unlinked vnode.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|vgonel_reclaim_lowervp
+name|vfs_notify_upper
 parameter_list|(
 name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|,
+name|int
+name|event
 parameter_list|)
 block|{
 specifier|static
@@ -12194,8 +12196,13 @@ block|{
 operator|.
 name|vfs_reclaim_lowervp
 operator|=
-name|vgonel_reclaim_lowervp_vfs
-block|}
+name|notify_lowervp_vfs_dummy
+block|,
+operator|.
+name|vfs_unlink_lowervp
+operator|=
+name|notify_lowervp_vfs_dummy
+block|, 	}
 decl_stmt|;
 name|struct
 name|mount
@@ -12346,6 +12353,14 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|event
+condition|)
+block|{
+case|case
+name|VFS_NOTIFY_UPPER_RECLAIM
+case|:
 name|VFS_RECLAIM_LOWERVP
 argument_list|(
 name|ump
@@ -12353,6 +12368,32 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|VFS_NOTIFY_UPPER_UNLINK
+case|:
+name|VFS_UNLINK_LOWERVP
+argument_list|(
+name|ump
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|KASSERT
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+literal|"invalid event %d"
+operator|,
+name|event
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|MNT_ILOCK
 argument_list|(
 name|mp
@@ -12545,9 +12586,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|vgonel_reclaim_lowervp
+name|vfs_notify_upper
 argument_list|(
 name|vp
+argument_list|,
+name|VFS_NOTIFY_UPPER_RECLAIM
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clean out any buffers associated with the vnode. 	 * If the flush fails, just toss the buffers. 	 */

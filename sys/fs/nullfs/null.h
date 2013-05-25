@@ -77,9 +77,26 @@ modifier|*
 name|null_vnode
 decl_stmt|;
 comment|/* Back pointer */
+name|u_int
+name|null_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NULLV_NOUNLOCK
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|NULLV_DROP
+value|0x0002
+end_define
 
 begin_define
 define|#
