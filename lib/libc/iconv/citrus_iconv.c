@@ -1111,6 +1111,8 @@ name|struct
 name|_citrus_iconv
 modifier|*
 name|cv
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|_citrus_iconv_shared
@@ -1393,8 +1395,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|*
-name|rcv
+name|cv
 argument_list|)
 expr_stmt|;
 return|return
