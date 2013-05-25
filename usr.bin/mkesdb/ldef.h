@@ -14,7 +14,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|line_number
+name|linenumber
 decl_stmt|;
 end_decl_stmt
 
