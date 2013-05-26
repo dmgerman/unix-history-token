@@ -706,6 +706,10 @@ index|[
 name|ATH_MAX_SCATTER
 index|]
 decl_stmt|;
+name|uint32_t
+name|bf_nextfraglen
+decl_stmt|;
+comment|/* length of next fragment */
 comment|/* Completion function to call on TX complete (fail or not) */
 comment|/* 	 * "fail" here is set to 1 if the queue entries were removed 	 * through a call to ath_tx_draintxq(). 	 */
 name|void
@@ -2625,11 +2629,6 @@ name|task
 name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
-name|struct
-name|task
-name|sc_txpkttask
-decl_stmt|;
-comment|/* tx frame processing */
 name|struct
 name|ath_descdma
 name|sc_txcompdma

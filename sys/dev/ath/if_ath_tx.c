@@ -4005,21 +4005,6 @@ operator|+=
 name|dur
 expr_stmt|;
 comment|/* additional SIFS+ACK */
-name|KASSERT
-argument_list|(
-name|bf
-operator|->
-name|bf_m
-operator|->
-name|m_nextpkt
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"no fragment"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Include the size of next fragment so NAV is 			 * updated properly.  The last fragment uses only 			 * the ACK duration 			 * 			 * XXX TODO: ensure that the rate lookup for each 			 * fragment is the same as the rate used by the 			 * first fragment! 			 */
 name|dur
 operator|+=
@@ -4031,13 +4016,7 @@ name|rt
 argument_list|,
 name|bf
 operator|->
-name|bf_m
-operator|->
-name|m_nextpkt
-operator|->
-name|m_pkthdr
-operator|.
-name|len
+name|bf_nextfraglen
 argument_list|,
 name|rix
 argument_list|,

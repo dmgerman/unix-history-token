@@ -687,23 +687,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ATH_TX_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ath_start
-argument_list|(
-name|sc
-operator|->
-name|sc_ifp
-argument_list|)
-expr_stmt|;
-name|ATH_TX_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* XXX NULL for now */
 block|}
 end_function
 
