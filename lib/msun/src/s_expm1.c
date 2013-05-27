@@ -51,10 +51,6 @@ name|one
 init|=
 literal|1.0
 decl_stmt|,
-name|huge
-init|=
-literal|1.0e+300
-decl_stmt|,
 name|tiny
 init|=
 literal|1.0e-300
@@ -112,6 +108,16 @@ end_decl_stmt
 begin_comment
 comment|/* BE8AFDB7 6E09C32D */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|huge
+init|=
+literal|1.0e+300
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|double

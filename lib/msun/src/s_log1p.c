@@ -112,6 +112,16 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|vzero
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|double
 name|log1p
@@ -188,7 +198,7 @@ return|return
 operator|-
 name|two54
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* log1p(-1)=+inf */
 else|else

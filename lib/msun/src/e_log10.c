@@ -87,6 +87,16 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|vzero
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|double
 name|__ieee754_log10
@@ -165,7 +175,7 @@ return|return
 operator|-
 name|two54
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* log(+-0)=-inf */
 if|if

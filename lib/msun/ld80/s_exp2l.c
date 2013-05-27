@@ -88,36 +88,13 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|const
+specifier|volatile
 name|long
 name|double
 name|huge
 init|=
 literal|0x1p10000L
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX Prevent gcc from erroneously constant folding this. */
-end_comment
-
-begin_else
-unit|static const long double twom10000 = 0x1p-10000L;
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|long
-name|double
+decl_stmt|,
 name|twom10000
 init|=
 literal|0x1p
@@ -125,11 +102,6 @@ operator|-
 literal|10000L
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static

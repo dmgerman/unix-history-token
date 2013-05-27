@@ -59,10 +59,6 @@ operator|-
 literal|0.5
 block|,}
 decl_stmt|,
-name|huge
-init|=
-literal|1.0e+30
-decl_stmt|,
 name|o_threshold
 init|=
 literal|8.8721679688e+01
@@ -128,6 +124,10 @@ begin_decl_stmt
 specifier|static
 specifier|volatile
 name|float
+name|huge
+init|=
+literal|1.0e+30
+decl_stmt|,
 name|twom100
 init|=
 literal|7.8886090522e-31
