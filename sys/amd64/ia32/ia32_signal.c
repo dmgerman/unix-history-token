@@ -440,7 +440,7 @@ name|mcp
 operator|->
 name|mc_flags
 operator||=
-name|_MC_HASFPXSTATE
+name|_MC_IA32_HASFPXSTATE
 expr_stmt|;
 name|mcp
 operator|->
