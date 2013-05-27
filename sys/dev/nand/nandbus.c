@@ -1516,13 +1516,13 @@ name|onfi_id
 index|[]
 init|=
 block|{
-literal|'o'
+literal|'O'
 block|,
-literal|'n'
+literal|'N'
 block|,
-literal|'f'
+literal|'F'
 block|,
-literal|'i'
+literal|'I'
 block|,
 literal|'\0'
 block|}
