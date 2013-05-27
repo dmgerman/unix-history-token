@@ -3031,7 +3031,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close all file descriptors from START on up.  * This is a horrific kluge, since getdtablesize() might return  * ``infinity'', in which case we will be spending a long time  * closing ``files'' which were never open.  Perhaps it would  * be better to close the first N fds, for some small value of N.  */
+comment|/*  * Close all file descriptors from START on up.  */
 end_comment
 
 begin_function
@@ -3044,10 +3044,25 @@ parameter_list|)
 block|{
 name|int
 name|stop
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|USE_CLOSEFROM
+condition|)
+comment|/* The faster, modern solution */
+name|closefrom
+argument_list|(
+name|start
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* This older logic can be pretty awful on some OS's.  The 		 * getdtablesize() might return ``infinity'', and then this 		 * will waste a lot of time closing file descriptors which 		 * had never been open()-ed. */
+name|stop
+operator|=
 name|getdtablesize
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3063,6 +3078,7 @@ argument_list|(
 name|start
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
