@@ -79,17 +79,27 @@ begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
-ifdef|#
-directive|ifdef
-name|_WIN32
+if|#
+directive|if
+name|SANITIZER_WINDOWS
 name|class
 name|MemoryMappingLayout
 block|{
 name|public
 label|:
+name|explicit
 name|MemoryMappingLayout
-argument_list|()
-block|{}
+parameter_list|(
+name|bool
+name|cache_enabled
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|cache_enabled
+expr_stmt|;
+block|}
 name|bool
 name|GetObjectNameAndOffset
 parameter_list|(
@@ -106,6 +116,10 @@ index|[]
 parameter_list|,
 name|uptr
 name|filename_size
+parameter_list|,
+name|uptr
+modifier|*
+name|protection
 parameter_list|)
 block|{
 name|UNIMPLEMENTED
@@ -119,10 +133,7 @@ directive|else
 comment|// _WIN32
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
+name|SANITIZER_LINUX
 struct|struct
 name|ProcSelfMapsBuff
 block|{
@@ -140,15 +151,19 @@ block|}
 struct|;
 endif|#
 directive|endif
-comment|// defined(__linux__)
+comment|// SANITIZER_LINUX
 name|class
 name|MemoryMappingLayout
 block|{
 name|public
 label|:
+name|explicit
 name|MemoryMappingLayout
-argument_list|()
-expr_stmt|;
+parameter_list|(
+name|bool
+name|cache_enabled
+parameter_list|)
+function_decl|;
 name|bool
 name|Next
 parameter_list|(
@@ -170,6 +185,10 @@ index|[]
 parameter_list|,
 name|uptr
 name|filename_size
+parameter_list|,
+name|uptr
+modifier|*
+name|protection
 parameter_list|)
 function_decl|;
 name|void
@@ -194,6 +213,10 @@ index|[]
 parameter_list|,
 name|uptr
 name|filename_size
+parameter_list|,
+name|uptr
+modifier|*
+name|protection
 parameter_list|)
 function_decl|;
 comment|// In some cases, e.g. when running under a sandbox on Linux, ASan is unable
@@ -208,6 +231,35 @@ operator|~
 name|MemoryMappingLayout
 argument_list|()
 expr_stmt|;
+comment|// Memory protection masks.
+specifier|static
+specifier|const
+name|uptr
+name|kProtectionRead
+init|=
+literal|1
+decl_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kProtectionWrite
+init|=
+literal|2
+decl_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kProtectionExecute
+init|=
+literal|4
+decl_stmt|;
+specifier|static
+specifier|const
+name|uptr
+name|kProtectionShared
+init|=
+literal|8
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -233,6 +285,10 @@ index|[]
 parameter_list|,
 name|uptr
 name|filename_size
+parameter_list|,
+name|uptr
+modifier|*
+name|protection
 parameter_list|)
 block|{
 name|Reset
@@ -266,6 +322,8 @@ argument_list|,
 name|filename
 argument_list|,
 name|filename_size
+argument_list|,
+name|protection
 argument_list|)
 condition|;
 name|i
@@ -333,8 +391,7 @@ return|;
 block|}
 if|#
 directive|if
-name|defined
-name|__linux__
+name|SANITIZER_LINUX
 name|ProcSelfMapsBuff
 name|proc_self_maps_
 decl_stmt|;
@@ -354,8 +411,7 @@ decl_stmt|;
 comment|// protects cached_proc_self_maps_.
 elif|#
 directive|elif
-name|defined
-name|__APPLE__
+name|SANITIZER_MAC
 name|template
 operator|<
 name|u32
@@ -376,6 +432,8 @@ argument_list|,
 argument|char filename[]
 argument_list|,
 argument|uptr filename_size
+argument_list|,
+argument|uptr *protection
 argument_list|)
 expr_stmt|;
 name|int

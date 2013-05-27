@@ -116,11 +116,11 @@ comment|// CHECK:     #0 free
 end_comment
 
 begin_comment
-comment|// CHECK:     #1 foo
+comment|// CHECK:     #{{1|2}} foo
 end_comment
 
 begin_comment
-comment|// CHECK:     #2 main
+comment|// CHECK:     #{{2|3}} main
 end_comment
 
 end_unit

@@ -99,7 +99,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sanitizer/common_interface_defs.h"
+file|"sanitizer_common/sanitizer_internal_defs.h"
 end_include
 
 begin_comment
@@ -150,7 +150,7 @@ begin_typedef
 typedef|typedef
 name|__sanitizer
 operator|::
-name|u64
+name|OFF_T
 name|OFF_T
 expr_stmt|;
 end_typedef
@@ -159,54 +159,10 @@ begin_typedef
 typedef|typedef
 name|__sanitizer
 operator|::
-name|u64
+name|OFF64_T
 name|OFF64_T
 expr_stmt|;
 end_typedef
-
-begin_comment
-comment|// How to use this library:
-end_comment
-
-begin_comment
-comment|//      1) Include this header to define your own interceptors
-end_comment
-
-begin_comment
-comment|//         (see details below).
-end_comment
-
-begin_comment
-comment|//      2) Build all *.cc files and link against them.
-end_comment
-
-begin_comment
-comment|// On Mac you will also need to:
-end_comment
-
-begin_comment
-comment|//      3) Provide your own implementation for the following functions:
-end_comment
-
-begin_comment
-comment|//           mach_error_t __interception::allocate_island(void **ptr,
-end_comment
-
-begin_comment
-comment|//                                                      size_t size,
-end_comment
-
-begin_comment
-comment|//                                                      void *hint);
-end_comment
-
-begin_comment
-comment|//           mach_error_t __interception::deallocate_island(void *ptr);
-end_comment
-
-begin_comment
-comment|//         See "interception_mac.h" for more details.
-end_comment
 
 begin_comment
 comment|// How to add an interceptor:
@@ -229,7 +185,11 @@ comment|//      1) define INTERCEPTOR(int, foo, const char *bar, double baz) { .
 end_comment
 
 begin_comment
-comment|//         your source file.
+comment|//         your source file. See the notes below for cases when
+end_comment
+
+begin_comment
+comment|//         INTERCEPTOR_WITH_SUFFIX(...) should be used instead.
 end_comment
 
 begin_comment
@@ -281,7 +241,7 @@ comment|//          to a header file.
 end_comment
 
 begin_comment
-comment|// Notes: 1. Things may not work properly if macro INTERCEPT(...) {...} or
+comment|// Notes: 1. Things may not work properly if macro INTERCEPTOR(...) {...} or
 end_comment
 
 begin_comment
@@ -289,7 +249,7 @@ comment|//           DECLARE_REAL(...) are located inside namespaces.
 end_comment
 
 begin_comment
-comment|//        2. On Mac you can also use: "OVERRIDE_FUNCTION(foo, zoo);" to
+comment|//        2. On Mac you can also use: "OVERRIDE_FUNCTION(foo, zoo)" to
 end_comment
 
 begin_comment
@@ -309,11 +269,31 @@ comment|//           but instead you'll have to add
 end_comment
 
 begin_comment
-comment|//           DEFINE_REAL(int, foo, const char *bar, double baz) in your
+comment|//           DECLARE_REAL(int, foo, const char *bar, double baz) in your
 end_comment
 
 begin_comment
 comment|//           source file (to define a pointer to overriden function).
+end_comment
+
+begin_comment
+comment|//        3. Some Mac functions have symbol variants discriminated by
+end_comment
+
+begin_comment
+comment|//           additional suffixes, e.g. _$UNIX2003 (see
+end_comment
+
+begin_comment
+comment|//           https://developer.apple.com/library/mac/#releasenotes/Darwin/SymbolVariantsRelNotes/index.html
+end_comment
+
+begin_comment
+comment|//           for more details). To intercept such functions you need to use the
+end_comment
+
+begin_comment
+comment|//           INTERCEPTOR_WITH_SUFFIX(...) macro.
 end_comment
 
 begin_comment
@@ -349,6 +329,10 @@ comment|// functions.
 end_comment
 
 begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// This is not so on Mac OS, where the two-level namespace makes
 end_comment
 
@@ -361,81 +345,121 @@ comment|// using the DYLD_FORCE_FLAT_NAMESPACE, but some errors loading the shar
 end_comment
 
 begin_comment
-comment|// libraries in Chromium were noticed when doing so. Instead we use
+comment|// libraries in Chromium were noticed when doing so.
 end_comment
 
 begin_comment
-comment|// mach_override, a handy framework for patching functions at runtime.
+comment|// Instead we create a dylib containing a __DATA,__interpose section that
 end_comment
 
 begin_comment
-comment|// To avoid possible name clashes, our replacement functions have
+comment|// associates library functions with their wrappers. When this dylib is
 end_comment
 
 begin_comment
-comment|// the "wrap_" prefix on Mac.
+comment|// preloaded before an executable using DYLD_INSERT_LIBRARIES, it routes all
 end_comment
 
 begin_comment
-comment|// An alternative to function patching is to create a dylib containing a
+comment|// the calls to interposed functions done through stubs to the wrapper
 end_comment
 
 begin_comment
-comment|// __DATA,__interpose section that associates library functions with their
+comment|// functions.
 end_comment
 
 begin_comment
-comment|// wrappers. When this dylib is preloaded before an executable using
+comment|// As it's decided at compile time which functions are to be intercepted on Mac,
 end_comment
 
 begin_comment
-comment|// DYLD_INSERT_LIBRARIES, it routes all the calls to interposed functions done
-end_comment
-
-begin_comment
-comment|// through stubs to the wrapper functions. Such a library is built with
-end_comment
-
-begin_comment
-comment|// -DMAC_INTERPOSE_FUNCTIONS=1.
+comment|// INTERCEPT_FUNCTION() is effectively a no-op on this system.
 end_comment
 
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAC_INTERPOSE_FUNCTIONS
-argument_list|)
-operator|||
-operator|!
 name|defined
 argument_list|(
 name|__APPLE__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_comment
+comment|// For __DARWIN_ALIAS_C().
+end_comment
+
+begin_comment
+comment|// Just a pair of pointers.
+end_comment
+
+begin_struct
+struct|struct
+name|interpose_substitution
+block|{
+specifier|const
+name|uptr
+name|replacement
+decl_stmt|;
+specifier|const
+name|uptr
+name|original
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// For a function foo() create a global pair of pointers { wrap_foo, foo } in
+end_comment
+
+begin_comment
+comment|// the __DATA,__interpose section.
+end_comment
+
+begin_comment
+comment|// As a result all the calls to foo() will be routed to wrap_foo() at runtime.
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MAC_INTERPOSE_FUNCTIONS
-value|0
+name|INTERPOSER
+parameter_list|(
+name|func_name
+parameter_list|)
+value|__attribute__((used)) \ const interpose_substitution substitution_##func_name[] \     __attribute__((section("__DATA, __interpose"))) = { \     { reinterpret_cast<const uptr>(WRAP(func_name)), \       reinterpret_cast<const uptr>(func_name) } \ }
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|// For a function foo() and a wrapper function bar() create a global pair
+end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-end_if
+begin_comment
+comment|// of pointers { bar, foo } in the __DATA,__interpose section.
+end_comment
+
+begin_comment
+comment|// As a result all the calls to foo() will be routed to bar() at runtime.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERPOSER_2
+parameter_list|(
+name|func_name
+parameter_list|,
+name|wrapper_name
+parameter_list|)
+value|__attribute__((used)) \ const interpose_substitution substitution_##func_name[] \     __attribute__((section("__DATA, __interpose"))) = { \     { reinterpret_cast<const uptr>(wrapper_name), \       reinterpret_cast<const uptr>(func_name) } \ }
+end_define
 
 begin_define
 define|#
@@ -633,7 +657,10 @@ begin_if
 if|#
 directive|if
 operator|!
-name|MAC_INTERPOSE_FUNCTIONS
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
 end_if
 
 begin_define
@@ -687,7 +714,7 @@ directive|else
 end_else
 
 begin_comment
-comment|// MAC_INTERPOSE_FUNCTIONS
+comment|// __APPLE__
 end_comment
 
 begin_define
@@ -721,7 +748,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// MAC_INTERPOSE_FUNCTIONS
+comment|// __APPLE__
 end_comment
 
 begin_define
@@ -759,7 +786,10 @@ begin_if
 if|#
 directive|if
 operator|!
-name|MAC_INTERPOSE_FUNCTIONS
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
 end_if
 
 begin_define
@@ -800,6 +830,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -814,6 +854,105 @@ parameter_list|)
 define|\
 value|DEFINE_REAL(ret_type, func, __VA_ARGS__) \   DECLARE_WRAPPER(ret_type, func, __VA_ARGS__) \   extern "C" \   INTERCEPTOR_ATTRIBUTE \   ret_type WRAP(func)(__VA_ARGS__)
 end_define
+
+begin_comment
+comment|// We don't need INTERCEPTOR_WITH_SUFFIX on non-Darwin for now.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERCEPTOR_WITH_SUFFIX
+parameter_list|(
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|INTERCEPTOR(ret_type, func, __VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// __APPLE__
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERCEPTOR_ZZZ
+parameter_list|(
+name|suffix
+parameter_list|,
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|extern "C" ret_type func(__VA_ARGS__) suffix; \   extern "C" ret_type WRAP(func)(__VA_ARGS__); \   INTERPOSER(func); \   extern "C" INTERCEPTOR_ATTRIBUTE ret_type WRAP(func)(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTERCEPTOR
+parameter_list|(
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|INTERCEPTOR_ZZZ(
+comment|/*no symbol variants*/
+value|, ret_type, func, __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTERCEPTOR_WITH_SUFFIX
+parameter_list|(
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|INTERCEPTOR_ZZZ(__DARWIN_ALIAS_C(func), ret_type, func, __VA_ARGS__)
+end_define
+
+begin_comment
+comment|// Override |overridee| with |overrider|.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OVERRIDE_FUNCTION
+parameter_list|(
+name|overridee
+parameter_list|,
+name|overrider
+parameter_list|)
+define|\
+value|INTERPOSER_2(overridee, WRAP(overrider))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -944,19 +1083,6 @@ include|#
 directive|include
 file|"interception_mac.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|OVERRIDE_FUNCTION
-parameter_list|(
-name|old_func
-parameter_list|,
-name|new_func
-parameter_list|)
-define|\
-value|OVERRIDE_FUNCTION_MAC(old_func, new_func)
-end_define
 
 begin_define
 define|#

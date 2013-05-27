@@ -221,24 +221,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ASAN_LOW_MEMORY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASAN_LOW_MEMORY
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|ASAN_AVOID_EXPENSIVE_TESTS
 end_ifndef
 

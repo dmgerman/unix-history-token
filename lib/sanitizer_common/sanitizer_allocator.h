@@ -101,16 +101,16 @@ name|__sanitizer
 block|{
 comment|// SizeClassMap maps allocation sizes into size classes and back.
 comment|// Class 0 corresponds to size 0.
-comment|// Classes 1 - 16 correspond to sizes 8 - 128 (size = class_id * 8).
-comment|// Next 8 classes: 128 + i * 16 (i = 1 to 8).
-comment|// Next 8 classes: 256 + i * 32 (i = 1 to 8).
+comment|// Classes 1 - 16 correspond to sizes 16 to 256 (size = class_id * 16).
+comment|// Next 4 classes: 256 + i * 64  (i = 1 to 4).
+comment|// Next 4 classes: 512 + i * 128 (i = 1 to 4).
 comment|// ...
-comment|// Next 8 classes: 2^k + i * 2^(k-3) (i = 1 to 8).
+comment|// Next 4 classes: 2^k + i * 2^(k-2) (i = 1 to 4).
 comment|// Last class corresponds to kMaxSize = 1<< kMaxSizeLog.
 comment|//
 comment|// This structure of the size class map gives us:
 comment|//   - Efficient table-free class-to-size and size-to-class functions.
-comment|//   - Difference between two consequent size classes is betweed 12% and 6%
+comment|//   - Difference between two consequent size classes is betweed 14% and 25%
 comment|//
 comment|// This class also gives a hint to a thread-caching allocator about the amount
 comment|// of chunks that need to be cached per-thread:
@@ -118,27 +118,47 @@ comment|//  - kMaxNumCached is the maximal number of chunks per size class.
 comment|//  - (1<< kMaxBytesCachedLog) is the maximal number of bytes per size class.
 comment|//
 comment|// Part of output of SizeClassMap::Print():
-comment|//    c00 => s: 0 diff: +0 00% l 0 cached: 0 0; id 0
-comment|//    c01 => s: 8 diff: +8 00% l 3 cached: 256 2048; id 1
-comment|//    c02 => s: 16 diff: +8 100% l 4 cached: 256 4096; id 2
-comment|//    ...
-comment|//    c07 => s: 56 diff: +8 16% l 5 cached: 256 14336; id 7
+comment|// c00 => s: 0 diff: +0 00% l 0 cached: 0 0; id 0
+comment|// c01 => s: 16 diff: +16 00% l 4 cached: 256 4096; id 1
+comment|// c02 => s: 32 diff: +16 100% l 5 cached: 256 8192; id 2
+comment|// c03 => s: 48 diff: +16 50% l 5 cached: 256 12288; id 3
+comment|// c04 => s: 64 diff: +16 33% l 6 cached: 256 16384; id 4
+comment|// c05 => s: 80 diff: +16 25% l 6 cached: 256 20480; id 5
+comment|// c06 => s: 96 diff: +16 20% l 6 cached: 256 24576; id 6
+comment|// c07 => s: 112 diff: +16 16% l 6 cached: 256 28672; id 7
 comment|//
-comment|//    c08 => s: 64 diff: +8 14% l 6 cached: 256 16384; id 8
-comment|//    ...
-comment|//    c15 => s: 120 diff: +8 07% l 6 cached: 256 30720; id 15
+comment|// c08 => s: 128 diff: +16 14% l 7 cached: 256 32768; id 8
+comment|// c09 => s: 144 diff: +16 12% l 7 cached: 256 36864; id 9
+comment|// c10 => s: 160 diff: +16 11% l 7 cached: 256 40960; id 10
+comment|// c11 => s: 176 diff: +16 10% l 7 cached: 256 45056; id 11
+comment|// c12 => s: 192 diff: +16 09% l 7 cached: 256 49152; id 12
+comment|// c13 => s: 208 diff: +16 08% l 7 cached: 256 53248; id 13
+comment|// c14 => s: 224 diff: +16 07% l 7 cached: 256 57344; id 14
+comment|// c15 => s: 240 diff: +16 07% l 7 cached: 256 61440; id 15
 comment|//
-comment|//    c16 => s: 128 diff: +8 06% l 7 cached: 256 32768; id 16
-comment|//    c17 => s: 144 diff: +16 12% l 7 cached: 227 32688; id 17
-comment|//    ...
-comment|//    c23 => s: 240 diff: +16 07% l 7 cached: 136 32640; id 23
+comment|// c16 => s: 256 diff: +16 06% l 8 cached: 256 65536; id 16
+comment|// c17 => s: 320 diff: +64 25% l 8 cached: 204 65280; id 17
+comment|// c18 => s: 384 diff: +64 20% l 8 cached: 170 65280; id 18
+comment|// c19 => s: 448 diff: +64 16% l 8 cached: 146 65408; id 19
 comment|//
-comment|//    c24 => s: 256 diff: +16 06% l 8 cached: 128 32768; id 24
-comment|//    c25 => s: 288 diff: +32 12% l 8 cached: 113 32544; id 25
-comment|//    ...
-comment|//    c31 => s: 480 diff: +32 07% l 8 cached: 68 32640; id 31
+comment|// c20 => s: 512 diff: +64 14% l 9 cached: 128 65536; id 20
+comment|// c21 => s: 640 diff: +128 25% l 9 cached: 102 65280; id 21
+comment|// c22 => s: 768 diff: +128 20% l 9 cached: 85 65280; id 22
+comment|// c23 => s: 896 diff: +128 16% l 9 cached: 73 65408; id 23
 comment|//
-comment|//    c32 => s: 512 diff: +32 06% l 9 cached: 64 32768; id 32
+comment|// c24 => s: 1024 diff: +128 14% l 10 cached: 64 65536; id 24
+comment|// c25 => s: 1280 diff: +256 25% l 10 cached: 51 65280; id 25
+comment|// c26 => s: 1536 diff: +256 20% l 10 cached: 42 64512; id 26
+comment|// c27 => s: 1792 diff: +256 16% l 10 cached: 36 64512; id 27
+comment|//
+comment|// ...
+comment|//
+comment|// c48 => s: 65536 diff: +8192 14% l 16 cached: 1 65536; id 48
+comment|// c49 => s: 81920 diff: +16384 25% l 16 cached: 1 81920; id 49
+comment|// c50 => s: 98304 diff: +16384 20% l 16 cached: 1 98304; id 50
+comment|// c51 => s: 114688 diff: +16384 16% l 16 cached: 1 114688; id 51
+comment|//
+comment|// c52 => s: 131072 diff: +16384 14% l 17 cached: 1 131072; id 52
 name|template
 operator|<
 name|uptr
@@ -149,9 +169,6 @@ name|kMaxNumCachedT
 operator|,
 name|uptr
 name|kMaxBytesCachedLog
-operator|,
-name|uptr
-name|kMinBatchClassT
 operator|>
 name|class
 name|SizeClassMap
@@ -161,7 +178,7 @@ specifier|const
 name|uptr
 name|kMinSizeLog
 operator|=
-literal|3
+literal|4
 block|;
 specifier|static
 specifier|const
@@ -204,7 +221,7 @@ specifier|const
 name|uptr
 name|S
 operator|=
-literal|3
+literal|2
 block|;
 specifier|static
 specifier|const
@@ -227,7 +244,11 @@ name|uptr
 name|kMaxNumCached
 operator|=
 name|kMaxNumCachedT
-block|;   struct
+block|;
+comment|// We transfer chunks between central and thread-local free lists in batches.
+comment|// For small size classes we allocate batches separately.
+comment|// For large size classes we use one of the chunks to store the batch.
+block|struct
 name|TransferBatch
 block|{
 name|TransferBatch
@@ -248,16 +269,9 @@ block|;
 specifier|static
 specifier|const
 name|uptr
-name|kMinBatchClass
-operator|=
-name|kMinBatchClassT
-block|;
-specifier|static
-specifier|const
-name|uptr
 name|kMaxSize
 operator|=
-literal|1
+literal|1UL
 operator|<<
 name|kMaxSizeLog
 block|;
@@ -402,11 +416,7 @@ return|;
 name|uptr
 name|l
 init|=
-name|SANITIZER_WORDSIZE
-operator|-
-literal|1
-operator|-
-name|__builtin_clzl
+name|MostSignificantSetBitIndex
 argument_list|(
 name|size
 argument_list|)
@@ -503,16 +513,19 @@ argument_list|)
 decl_stmt|;
 return|return
 name|Max
-argument_list|(
-literal|1UL
-argument_list|,
+operator|<
+name|uptr
+operator|>
+operator|(
+literal|1
+operator|,
 name|Min
 argument_list|(
 name|kMaxNumCached
 argument_list|,
 name|n
 argument_list|)
-argument_list|)
+operator|)
 return|;
 block|}
 specifier|static
@@ -603,14 +616,14 @@ decl_stmt|;
 name|uptr
 name|l
 init|=
-name|SANITIZER_WORDSIZE
-operator|-
-literal|1
-operator|-
-name|__builtin_clzl
+name|s
+condition|?
+name|MostSignificantSetBitIndex
 argument_list|(
 name|s
 argument_list|)
+else|:
+literal|0
 decl_stmt|;
 name|uptr
 name|cached
@@ -671,6 +684,40 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
+name|bool
+name|SizeClassRequiresSeparateTransferBatch
+parameter_list|(
+name|uptr
+name|class_id
+parameter_list|)
+block|{
+return|return
+name|Size
+argument_list|(
+name|class_id
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|TransferBatch
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|uptr
+argument_list|)
+operator|*
+operator|(
+name|kMaxNumCached
+operator|-
+name|MaxCached
+argument_list|(
+name|class_id
+argument_list|)
+operator|)
+return|;
+block|}
+specifier|static
 name|void
 name|Validate
 parameter_list|()
@@ -699,6 +746,13 @@ argument_list|(
 name|c
 argument_list|)
 decl_stmt|;
+name|CHECK_NE
+argument_list|(
+name|s
+argument_list|,
+literal|0U
+argument_list|)
+expr_stmt|;
 name|CHECK_EQ
 argument_list|(
 name|ClassID
@@ -835,82 +889,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|// TransferBatch for kMinBatchClass must fit into the block itself.
-specifier|const
-name|uptr
-name|batch_size
-init|=
-sizeof|sizeof
-argument_list|(
-name|TransferBatch
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-comment|// NOLINT
-operator|*
-operator|(
-name|kMaxNumCached
-operator|-
-name|MaxCached
-argument_list|(
-name|kMinBatchClass
-argument_list|)
-operator|)
-decl_stmt|;
-name|CHECK_LE
-argument_list|(
-name|batch_size
-argument_list|,
-name|Size
-argument_list|(
-name|kMinBatchClass
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|// TransferBatch for kMinBatchClass-1 must not fit into the block itself.
-specifier|const
-name|uptr
-name|batch_size1
-init|=
-sizeof|sizeof
-argument_list|(
-name|TransferBatch
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-comment|// NOLINT
-operator|*
-operator|(
-name|kMaxNumCached
-operator|-
-name|MaxCached
-argument_list|(
-name|kMinBatchClass
-operator|-
-literal|1
-argument_list|)
-operator|)
-decl_stmt|;
-name|CHECK_GT
-argument_list|(
-name|batch_size1
-argument_list|,
-name|Size
-argument_list|(
-name|kMinBatchClass
-operator|-
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_decl_stmt
@@ -925,16 +903,9 @@ name|SizeClassMap
 operator|<
 literal|17
 operator|,
-literal|256
+literal|128
 operator|,
 literal|16
-operator|,
-name|FIRST_32_SECOND_64
-argument_list|(
-literal|33
-argument_list|,
-literal|36
-argument_list|)
 operator|>
 name|DefaultSizeClassMap
 expr_stmt|;
@@ -949,13 +920,6 @@ operator|,
 literal|64
 operator|,
 literal|14
-operator|,
-name|FIRST_32_SECOND_64
-argument_list|(
-literal|25
-argument_list|,
-literal|28
-argument_list|)
 operator|>
 name|CompactSizeClassMap
 expr_stmt|;
@@ -971,6 +935,407 @@ expr|struct
 name|SizeClassAllocatorLocalCache
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// Memory allocator statistics
+end_comment
+
+begin_enum
+enum|enum
+name|AllocatorStat
+block|{
+name|AllocatorStatMalloced
+block|,
+name|AllocatorStatFreed
+block|,
+name|AllocatorStatMmapped
+block|,
+name|AllocatorStatUnmapped
+block|,
+name|AllocatorStatCount
+block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|u64
+name|AllocatorStatCounters
+index|[
+name|AllocatorStatCount
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|// Per-thread stats, live in per-thread cache.
+end_comment
+
+begin_decl_stmt
+name|class
+name|AllocatorStats
+block|{
+name|public
+label|:
+name|void
+name|Init
+parameter_list|()
+block|{
+name|internal_memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Add
+parameter_list|(
+name|AllocatorStat
+name|i
+parameter_list|,
+name|u64
+name|v
+parameter_list|)
+block|{
+name|v
+operator|+=
+name|atomic_load
+argument_list|(
+operator|&
+name|stats_
+index|[
+name|i
+index|]
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+expr_stmt|;
+name|atomic_store
+argument_list|(
+operator|&
+name|stats_
+index|[
+name|i
+index|]
+argument_list|,
+name|v
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Set
+parameter_list|(
+name|AllocatorStat
+name|i
+parameter_list|,
+name|u64
+name|v
+parameter_list|)
+block|{
+name|atomic_store
+argument_list|(
+operator|&
+name|stats_
+index|[
+name|i
+index|]
+argument_list|,
+name|v
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+expr_stmt|;
+block|}
+name|u64
+name|Get
+argument_list|(
+name|AllocatorStat
+name|i
+argument_list|)
+decl|const
+block|{
+return|return
+name|atomic_load
+argument_list|(
+operator|&
+name|stats_
+index|[
+name|i
+index|]
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+return|;
+block|}
+name|private
+label|:
+name|friend
+name|class
+name|AllocatorGlobalStats
+decl_stmt|;
+name|AllocatorStats
+modifier|*
+name|next_
+decl_stmt|;
+name|AllocatorStats
+modifier|*
+name|prev_
+decl_stmt|;
+name|atomic_uint64_t
+name|stats_
+index|[
+name|AllocatorStatCount
+index|]
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Global stats, used for aggregation and querying.
+end_comment
+
+begin_decl_stmt
+name|class
+name|AllocatorGlobalStats
+range|:
+name|public
+name|AllocatorStats
+block|{
+name|public
+operator|:
+name|void
+name|Init
+argument_list|()
+block|{
+name|internal_memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|next_
+operator|=
+name|this
+block|;
+name|prev_
+operator|=
+name|this
+block|;   }
+name|void
+name|Register
+argument_list|(
+argument|AllocatorStats *s
+argument_list|)
+block|{
+name|SpinMutexLock
+name|l
+argument_list|(
+operator|&
+name|mu_
+argument_list|)
+block|;
+name|s
+operator|->
+name|next_
+operator|=
+name|next_
+block|;
+name|s
+operator|->
+name|prev_
+operator|=
+name|this
+block|;
+name|next_
+operator|->
+name|prev_
+operator|=
+name|s
+block|;
+name|next_
+operator|=
+name|s
+block|;   }
+name|void
+name|Unregister
+argument_list|(
+argument|AllocatorStats *s
+argument_list|)
+block|{
+name|SpinMutexLock
+name|l
+argument_list|(
+operator|&
+name|mu_
+argument_list|)
+block|;
+name|s
+operator|->
+name|prev_
+operator|->
+name|next_
+operator|=
+name|s
+operator|->
+name|next_
+block|;
+name|s
+operator|->
+name|next_
+operator|->
+name|prev_
+operator|=
+name|s
+operator|->
+name|prev_
+block|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|AllocatorStatCount
+condition|;
+name|i
+operator|++
+control|)
+name|Add
+argument_list|(
+name|AllocatorStat
+argument_list|(
+name|i
+argument_list|)
+argument_list|,
+name|s
+operator|->
+name|Get
+argument_list|(
+name|AllocatorStat
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Get
+argument_list|(
+argument|AllocatorStatCounters s
+argument_list|)
+specifier|const
+block|{
+name|internal_memset
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|,
+name|AllocatorStatCount
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u64
+argument_list|)
+argument_list|)
+block|;
+name|SpinMutexLock
+name|l
+argument_list|(
+operator|&
+name|mu_
+argument_list|)
+block|;
+specifier|const
+name|AllocatorStats
+operator|*
+name|stats
+operator|=
+name|this
+block|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|AllocatorStatCount
+condition|;
+name|i
+operator|++
+control|)
+name|s
+index|[
+name|i
+index|]
+operator|+=
+name|stats
+operator|->
+name|Get
+argument_list|(
+name|AllocatorStat
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stats
+operator|=
+name|stats
+operator|->
+name|next_
+expr_stmt|;
+if|if
+condition|(
+name|stats
+operator|==
+name|this
+condition|)
+break|break;
+block|}
+block|}
+name|private
+operator|:
+name|mutable
+name|SpinMutex
+name|mu_
+block|; }
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Allocators call these callbacks on mmap/munmap.
@@ -1278,11 +1643,15 @@ block|}
 end_function
 
 begin_function
+name|NOINLINE
 name|Batch
 modifier|*
-name|NOINLINE
 name|AllocateBatch
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|AllocatorCache
 modifier|*
 name|c
@@ -1328,6 +1697,8 @@ name|b
 operator|=
 name|PopulateFreeList
 argument_list|(
+name|stat
+argument_list|,
 name|c
 argument_list|,
 name|class_id
@@ -1350,10 +1721,14 @@ block|}
 end_function
 
 begin_function
-name|void
 name|NOINLINE
+name|void
 name|DeallocateBatch
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|uptr
 name|class_id
 parameter_list|,
@@ -1371,6 +1746,15 @@ argument_list|(
 name|class_id
 argument_list|)
 decl_stmt|;
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|region
 operator|->
 name|free_list
@@ -1475,6 +1859,14 @@ argument_list|(
 name|class_id
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|size
+condition|)
+return|return
+literal|0
+return|;
 name|uptr
 name|chunk_idx
 init|=
@@ -1517,6 +1909,15 @@ name|beg
 operator|+
 name|size
 decl_stmt|;
+if|if
+condition|(
+name|class_id
+operator|>=
+name|kNumClasses
+condition|)
+return|return
+literal|0
+return|;
 name|RegionInfo
 modifier|*
 name|region
@@ -1887,7 +2288,189 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|// ForceLock() and ForceUnlock() are needed to implement Darwin malloc zone
+end_comment
+
+begin_comment
+comment|// introspection API.
+end_comment
+
+begin_function
+name|void
+name|ForceLock
+parameter_list|()
+block|{
+for|for
+control|(
+name|uptr
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|kNumClasses
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|GetRegionInfo
+argument_list|(
+name|i
+argument_list|)
+operator|->
+name|mutex
+operator|.
+name|Lock
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|ForceUnlock
+parameter_list|()
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+operator|(
+name|int
+operator|)
+name|kNumClasses
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+block|{
+name|GetRegionInfo
+argument_list|(
+name|i
+argument_list|)
+operator|->
+name|mutex
+operator|.
+name|Unlock
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// Iterate over existing chunks. May include chunks that are not currently
+end_comment
+
+begin_comment
+comment|// allocated to the user (e.g. freed).
+end_comment
+
+begin_comment
+comment|// The caller is expected to call ForceLock() before calling this function.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Callable
+operator|>
+name|void
+name|ForEachChunk
+argument_list|(
+argument|const Callable&callback
+argument_list|)
+block|{
+for|for
+control|(
+name|uptr
+name|class_id
+init|=
+literal|1
+init|;
+name|class_id
+operator|<
+name|kNumClasses
+condition|;
+name|class_id
+operator|++
+control|)
+block|{
+name|RegionInfo
+modifier|*
+name|region
+init|=
+name|GetRegionInfo
+argument_list|(
+name|class_id
+argument_list|)
+decl_stmt|;
+name|uptr
+name|chunk_size
+init|=
+name|SizeClassMap
+operator|::
+name|Size
+argument_list|(
+name|class_id
+argument_list|)
+decl_stmt|;
+name|uptr
+name|region_beg
+init|=
+name|kSpaceBeg
+operator|+
+name|class_id
+operator|*
+name|kRegionSize
+decl_stmt|;
+for|for
+control|(
+name|uptr
+name|p
+init|=
+name|region_beg
+init|;
+name|p
+operator|<
+name|region_beg
+operator|+
+name|region
+operator|->
+name|allocated_user
+condition|;
+name|p
+operator|+=
+name|chunk_size
+control|)
+block|{
+comment|// Too slow: CHECK_EQ((void *)p, GetBlockBegin((void *)p));
+name|callback
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
 begin_typedef
+unit|}   }
 typedef|typedef
 name|SizeClassMap
 name|SizeClassMapT
@@ -2015,7 +2598,7 @@ name|kUserMapSize
 init|=
 literal|1
 operator|<<
-literal|15
+literal|16
 decl_stmt|;
 end_decl_stmt
 
@@ -2163,7 +2746,7 @@ name|uptr
 name|size
 parameter_list|)
 block|{
-name|u32
+name|uptr
 name|offset
 init|=
 name|chunk
@@ -2171,9 +2754,26 @@ operator|%
 name|kRegionSize
 decl_stmt|;
 comment|// Here we divide by a non-constant. This is costly.
-comment|// We require that kRegionSize is at least 2^32 so that offset is 32-bit.
-comment|// We save 2x by using 32-bit div, but may need to use a 256-way switch.
+comment|// size always fits into 32-bits. If the offset fits too, use 32-bit div.
+if|if
+condition|(
+name|offset
+operator|>>
+operator|(
+name|SANITIZER_WORDSIZE
+operator|/
+literal|2
+operator|)
+condition|)
 return|return
+name|offset
+operator|/
+name|size
+return|;
+return|return
+operator|(
+name|u32
+operator|)
 name|offset
 operator|/
 operator|(
@@ -2185,11 +2785,15 @@ block|}
 end_function
 
 begin_function
+name|NOINLINE
 name|Batch
 modifier|*
-name|NOINLINE
 name|PopulateFreeList
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|AllocatorCache
 modifier|*
 name|c
@@ -2335,6 +2939,15 @@ argument_list|,
 name|map_size
 argument_list|)
 expr_stmt|;
+name|stat
+operator|->
+name|Add
+argument_list|(
+name|AllocatorStatMmapped
+argument_list|,
+name|map_size
+argument_list|)
+expr_stmt|;
 name|region
 operator|->
 name|mapped_user
@@ -2452,18 +3065,20 @@ if|if
 condition|(
 name|region
 operator|->
-name|allocated_user
+name|mapped_user
 operator|+
 name|region
 operator|->
-name|allocated_meta
+name|mapped_meta
 operator|>
 name|kRegionSize
 condition|)
 block|{
 name|Printf
 argument_list|(
-literal|"Out of memory. Dying.\n"
+literal|"%s: Out of memory. Dying. "
+argument_list|,
+name|SanitizerToolName
 argument_list|)
 expr_stmt|;
 name|Printf
@@ -2491,11 +3106,12 @@ control|)
 block|{
 if|if
 condition|(
-name|class_id
-operator|<
 name|SizeClassMap
 operator|::
-name|kMinBatchClass
+name|SizeClassRequiresSeparateTransferBatch
+argument_list|(
+name|class_id
+argument_list|)
 condition|)
 name|b
 operator|=
@@ -2614,6 +3230,15 @@ operator|->
 name|mapped_user
 condition|)
 break|break;
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|region
 operator|->
 name|free_list
@@ -2632,6 +3257,107 @@ end_function
 
 begin_comment
 unit|};
+comment|// Maps integers in rage [0, kSize) to u8 values.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|u64
+name|kSize
+operator|>
+name|class
+name|FlatByteMap
+block|{
+name|public
+operator|:
+name|void
+name|TestOnlyInit
+argument_list|()
+block|{
+name|internal_memset
+argument_list|(
+name|map_
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|map_
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|set
+argument_list|(
+argument|uptr idx
+argument_list|,
+argument|u8 val
+argument_list|)
+block|{
+name|CHECK_LT
+argument_list|(
+name|idx
+argument_list|,
+name|kSize
+argument_list|)
+block|;
+name|CHECK_EQ
+argument_list|(
+literal|0U
+argument_list|,
+name|map_
+index|[
+name|idx
+index|]
+argument_list|)
+block|;
+name|map_
+index|[
+name|idx
+index|]
+operator|=
+name|val
+block|;   }
+name|u8
+name|operator
+index|[]
+operator|(
+name|uptr
+name|idx
+operator|)
+block|{
+name|CHECK_LT
+argument_list|(
+name|idx
+argument_list|,
+name|kSize
+argument_list|)
+block|;
+comment|// FIXME: CHECK may be too expensive here.
+return|return
+name|map_
+index|[
+name|idx
+index|]
+return|;
+block|}
+name|private
+operator|:
+name|u8
+name|map_
+index|[
+name|kSize
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|// FIXME: Also implement TwoLevelByteMap.
+end_comment
+
+begin_comment
 comment|// SizeClassAllocator32 -- allocator for 32-bit address space.
 end_comment
 
@@ -2676,7 +3402,7 @@ comment|// kNumPossibleRegions possible regions in the address space and so we k
 end_comment
 
 begin_comment
-comment|// an u8 array possible_regions[kNumPossibleRegions] to store the size classes.
+comment|// a ByteMap possible_regions to store the size classes of each Region.
 end_comment
 
 begin_comment
@@ -2729,6 +3455,13 @@ operator|,
 name|class
 name|SizeClassMap
 operator|,
+specifier|const
+name|uptr
+name|kRegionSizeLog
+operator|,
+name|class
+name|ByteMap
+operator|,
 name|class
 name|MapUnmapCallback
 operator|=
@@ -2760,6 +3493,10 @@ name|kMetadataSize
 operator|,
 name|SizeClassMap
 operator|,
+name|kRegionSizeLog
+operator|,
+name|ByteMap
+operator|,
 name|MapUnmapCallback
 operator|>
 name|ThisT
@@ -2781,22 +3518,22 @@ name|void
 name|Init
 parameter_list|()
 block|{
-name|state_
-operator|=
-name|reinterpret_cast
-operator|<
-name|State
-operator|*
-operator|>
-operator|(
-name|MapWithCallback
+name|possible_regions
+operator|.
+name|TestOnlyInit
+argument_list|()
+expr_stmt|;
+name|internal_memset
 argument_list|(
+name|size_class_info_array
+argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
-name|State
+name|size_class_info_array
 argument_list|)
 argument_list|)
-operator|)
 expr_stmt|;
 block|}
 end_function
@@ -3015,11 +3752,15 @@ block|}
 end_function
 
 begin_function
+name|NOINLINE
 name|Batch
 modifier|*
-name|NOINLINE
 name|AllocateBatch
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|AllocatorCache
 modifier|*
 name|c
@@ -3064,6 +3805,8 @@ argument_list|()
 condition|)
 name|PopulateFreeList
 argument_list|(
+name|stat
+argument_list|,
 name|c
 argument_list|,
 name|sci
@@ -3107,10 +3850,14 @@ block|}
 end_function
 
 begin_function
-name|void
 name|NOINLINE
+name|void
 name|DeallocateBatch
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|uptr
 name|class_id
 parameter_list|,
@@ -3144,6 +3891,15 @@ operator|->
 name|mutex
 argument_list|)
 decl_stmt|;
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sci
 operator|->
 name|free_list
@@ -3186,8 +3942,6 @@ name|p
 parameter_list|)
 block|{
 return|return
-name|state_
-operator|->
 name|possible_regions
 index|[
 name|ComputeRegionId
@@ -3377,8 +4131,6 @@ operator|++
 control|)
 if|if
 condition|(
-name|state_
-operator|->
 name|possible_regions
 index|[
 name|i
@@ -3415,8 +4167,6 @@ operator|++
 control|)
 if|if
 condition|(
-name|state_
-operator|->
 name|possible_regions
 index|[
 name|i
@@ -3433,26 +4183,199 @@ argument_list|,
 name|kRegionSize
 argument_list|)
 expr_stmt|;
-name|UnmapWithCallback
-argument_list|(
-name|reinterpret_cast
-operator|<
+block|}
+end_function
+
+begin_comment
+comment|// ForceLock() and ForceUnlock() are needed to implement Darwin malloc zone
+end_comment
+
+begin_comment
+comment|// introspection API.
+end_comment
+
+begin_function
+name|void
+name|ForceLock
+parameter_list|()
+block|{
+for|for
+control|(
 name|uptr
-operator|>
-operator|(
-name|state_
-operator|)
-argument_list|,
-sizeof|sizeof
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|kNumClasses
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|GetSizeClassInfo
 argument_list|(
-name|State
+name|i
 argument_list|)
-argument_list|)
+operator|->
+name|mutex
+operator|.
+name|Lock
+argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_function
+name|void
+name|ForceUnlock
+parameter_list|()
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+name|kNumClasses
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+block|{
+name|GetSizeClassInfo
+argument_list|(
+name|i
+argument_list|)
+operator|->
+name|mutex
+operator|.
+name|Unlock
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// Iterate over existing chunks. May include chunks that are not currently
+end_comment
+
+begin_comment
+comment|// allocated to the user (e.g. freed).
+end_comment
+
+begin_comment
+comment|// The caller is expected to call ForceLock() before calling this function.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Callable
+operator|>
+name|void
+name|ForEachChunk
+argument_list|(
+argument|const Callable&callback
+argument_list|)
+block|{
+for|for
+control|(
+name|uptr
+name|region
+init|=
+literal|0
+init|;
+name|region
+operator|<
+name|kNumPossibleRegions
+condition|;
+name|region
+operator|++
+control|)
+if|if
+condition|(
+name|possible_regions
+index|[
+name|region
+index|]
+condition|)
+block|{
+name|uptr
+name|chunk_size
+init|=
+name|SizeClassMap
+operator|::
+name|Size
+argument_list|(
+name|possible_regions
+index|[
+name|region
+index|]
+argument_list|)
+decl_stmt|;
+name|uptr
+name|max_chunks_in_region
+init|=
+name|kRegionSize
+operator|/
+operator|(
+name|chunk_size
+operator|+
+name|kMetadataSize
+operator|)
+decl_stmt|;
+name|uptr
+name|region_beg
+init|=
+name|region
+operator|*
+name|kRegionSize
+decl_stmt|;
+for|for
+control|(
+name|uptr
+name|p
+init|=
+name|region_beg
+init|;
+name|p
+operator|<
+name|region_beg
+operator|+
+name|max_chunks_in_region
+operator|*
+name|chunk_size
+condition|;
+name|p
+operator|+=
+name|chunk_size
+control|)
+block|{
+comment|// Too slow: CHECK_EQ((void *)p, GetBlockBegin((void *)p));
+name|callback
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_function
+unit|}   }
 name|void
 name|PrintStats
 parameter_list|()
@@ -3482,22 +4405,6 @@ begin_label
 name|private
 label|:
 end_label
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uptr
-name|kRegionSizeLog
-init|=
-name|SANITIZER_WORDSIZE
-operator|==
-literal|64
-condition|?
-literal|24
-else|:
-literal|20
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3625,6 +4532,10 @@ begin_function
 name|uptr
 name|AllocateRegion
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|uptr
 name|class_id
 parameter_list|)
@@ -3664,6 +4575,15 @@ argument_list|,
 name|kRegionSize
 argument_list|)
 expr_stmt|;
+name|stat
+operator|->
+name|Add
+argument_list|(
+name|AllocatorStatMmapped
+argument_list|,
+name|kRegionSize
+argument_list|)
+expr_stmt|;
 name|CHECK_EQ
 argument_list|(
 literal|0U
@@ -3679,32 +4599,17 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|CHECK_EQ
+name|possible_regions
+operator|.
+name|set
 argument_list|(
-literal|0U
+name|ComputeRegionId
+argument_list|(
+name|res
+argument_list|)
 argument_list|,
-name|state_
-operator|->
-name|possible_regions
-index|[
-name|ComputeRegionId
-argument_list|(
-name|res
-argument_list|)
-index|]
-argument_list|)
-expr_stmt|;
-name|state_
-operator|->
-name|possible_regions
-index|[
-name|ComputeRegionId
-argument_list|(
-name|res
-argument_list|)
-index|]
-operator|=
 name|class_id
+argument_list|)
 expr_stmt|;
 return|return
 name|res
@@ -3730,8 +4635,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|&
-name|state_
-operator|->
 name|size_class_info_array
 index|[
 name|class_id
@@ -3744,6 +4647,10 @@ begin_function
 name|void
 name|PopulateFreeList
 parameter_list|(
+name|AllocatorStats
+modifier|*
+name|stat
+parameter_list|,
 name|AllocatorCache
 modifier|*
 name|c
@@ -3771,6 +4678,8 @@ name|reg
 init|=
 name|AllocateRegion
 argument_list|(
+name|stat
+argument_list|,
 name|class_id
 argument_list|)
 decl_stmt|;
@@ -3830,11 +4739,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|class_id
-operator|<
 name|SizeClassMap
 operator|::
-name|kMinBatchClass
+name|SizeClassRequiresSeparateTransferBatch
+argument_list|(
+name|class_id
+argument_list|)
 condition|)
 name|b
 operator|=
@@ -3900,6 +4810,15 @@ operator|==
 name|max_count
 condition|)
 block|{
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sci
 operator|->
 name|free_list
@@ -3919,6 +4838,16 @@ if|if
 condition|(
 name|b
 condition|)
+block|{
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sci
 operator|->
 name|free_list
@@ -3929,32 +4858,21 @@ name|b
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
-begin_struct
-struct|struct
-name|State
-block|{
-name|u8
+begin_decl_stmt
+name|ByteMap
 name|possible_regions
-index|[
-name|kNumPossibleRegions
-index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|SizeClassInfo
 name|size_class_info_array
 index|[
 name|kNumClasses
 index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|State
-modifier|*
-name|state_
 decl_stmt|;
 end_decl_stmt
 
@@ -3995,26 +4913,63 @@ name|kNumClasses
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// Don't need to call Init if the object is a global (i.e. zero-initialized).
-end_comment
-
 begin_function
 name|void
 name|Init
-parameter_list|()
+parameter_list|(
+name|AllocatorGlobalStats
+modifier|*
+name|s
+parameter_list|)
 block|{
-name|internal_memset
+name|stats_
+operator|.
+name|Init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
+name|s
+operator|->
+name|Register
 argument_list|(
-name|this
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|this
+operator|&
+name|stats_
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|Destroy
+parameter_list|(
+name|SizeClassAllocator
+modifier|*
+name|allocator
+parameter_list|,
+name|AllocatorGlobalStats
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|Drain
+argument_list|(
+name|allocator
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+condition|)
+name|s
+operator|->
+name|Unregister
+argument_list|(
+operator|&
+name|stats_
 argument_list|)
 expr_stmt|;
 block|}
@@ -4045,6 +5000,20 @@ argument_list|(
 name|class_id
 argument_list|,
 name|kNumClasses
+argument_list|)
+expr_stmt|;
+name|stats_
+operator|.
+name|Add
+argument_list|(
+name|AllocatorStatMalloced
+argument_list|,
+name|SizeClassMap
+operator|::
+name|Size
+argument_list|(
+name|class_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|PerClass
@@ -4139,6 +5108,25 @@ argument_list|,
 name|kNumClasses
 argument_list|)
 expr_stmt|;
+comment|// If the first allocator call on a new thread is a deallocation, then
+comment|// max_count will be zero, leading to check failure.
+name|InitCache
+argument_list|()
+expr_stmt|;
+name|stats_
+operator|.
+name|Add
+argument_list|(
+name|AllocatorStatFreed
+argument_list|,
+name|SizeClassMap
+operator|::
+name|Size
+argument_list|(
+name|class_id
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|PerClass
 modifier|*
 name|c
@@ -4149,6 +5137,15 @@ index|[
 name|class_id
 index|]
 decl_stmt|;
+name|CHECK_NE
+argument_list|(
+name|c
+operator|->
+name|max_count
+argument_list|,
+literal|0UL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|UNLIKELY
@@ -4295,6 +5292,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|AllocatorStats
+name|stats_
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|InitCache
@@ -4304,7 +5307,7 @@ if|if
 condition|(
 name|per_class_
 index|[
-literal|0
+literal|1
 index|]
 operator|.
 name|max_count
@@ -4353,8 +5356,8 @@ block|}
 end_function
 
 begin_function
-name|void
 name|NOINLINE
+name|void
 name|Refill
 parameter_list|(
 name|SizeClassAllocator
@@ -4386,11 +5389,23 @@ name|allocator
 operator|->
 name|AllocateBatch
 argument_list|(
+operator|&
+name|stats_
+argument_list|,
 name|this
 argument_list|,
 name|class_id
 argument_list|)
 decl_stmt|;
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|uptr
@@ -4431,11 +5446,12 @@ name|count
 expr_stmt|;
 if|if
 condition|(
-name|class_id
-operator|<
 name|SizeClassMap
 operator|::
-name|kMinBatchClass
+name|SizeClassRequiresSeparateTransferBatch
+argument_list|(
+name|class_id
+argument_list|)
 condition|)
 name|Deallocate
 argument_list|(
@@ -4458,8 +5474,8 @@ block|}
 end_function
 
 begin_function
-name|void
 name|NOINLINE
+name|void
 name|Drain
 parameter_list|(
 name|SizeClassAllocator
@@ -4489,11 +5505,12 @@ name|b
 decl_stmt|;
 if|if
 condition|(
-name|class_id
-operator|<
 name|SizeClassMap
 operator|::
-name|kMinBatchClass
+name|SizeClassRequiresSeparateTransferBatch
+argument_list|(
+name|class_id
+argument_list|)
 condition|)
 name|b
 operator|=
@@ -4608,10 +5625,22 @@ name|count
 operator|-=
 name|cnt
 expr_stmt|;
+name|CHECK_GT
+argument_list|(
+name|b
+operator|->
+name|count
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|allocator
 operator|->
 name|DeallocateBatch
 argument_list|(
+operator|&
+name|stats_
+argument_list|,
 name|class_id
 argument_list|,
 name|b
@@ -4672,6 +5701,8 @@ name|void
 operator|*
 name|Allocate
 argument_list|(
+argument|AllocatorStats *stat
+argument_list|,
 argument|uptr size
 argument_list|,
 argument|uptr alignment
@@ -4863,14 +5894,10 @@ begin_decl_stmt
 name|uptr
 name|size_log
 init|=
-name|SANITIZER_WORDSIZE
-operator|-
-name|__builtin_clzl
+name|MostSignificantSetBitIndex
 argument_list|(
 name|map_size
 argument_list|)
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -4958,6 +5985,24 @@ name|size_log
 index|]
 operator|++
 expr_stmt|;
+name|stat
+operator|->
+name|Add
+argument_list|(
+name|AllocatorStatMalloced
+argument_list|,
+name|map_size
+argument_list|)
+expr_stmt|;
+name|stat
+operator|->
+name|Add
+argument_list|(
+name|AllocatorStatMmapped
+argument_list|,
+name|map_size
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -4978,6 +6023,8 @@ begin_macro
 unit|}    void
 name|Deallocate
 argument_list|(
+argument|AllocatorStats *stat
+argument_list|,
 argument|void *p
 argument_list|)
 end_macro
@@ -5061,6 +6108,28 @@ operator|-=
 name|h
 operator|->
 name|map_size
+expr_stmt|;
+name|stat
+operator|->
+name|Add
+argument_list|(
+name|AllocatorStatFreed
+argument_list|,
+name|h
+operator|->
+name|map_size
+argument_list|)
+expr_stmt|;
+name|stat
+operator|->
+name|Add
+argument_list|(
+name|AllocatorStatUnmapped
+argument_list|,
+name|h
+operator|->
+name|map_size
+argument_list|)
 expr_stmt|;
 block|}
 name|MapUnmapCallback
@@ -5396,7 +6465,7 @@ operator|+
 name|h
 operator|->
 name|map_size
-operator|<
+operator|<=
 name|p
 condition|)
 return|return
@@ -5499,6 +6568,92 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// ForceLock() and ForceUnlock() are needed to implement Darwin malloc zone
+end_comment
+
+begin_comment
+comment|// introspection API.
+end_comment
+
+begin_function
+name|void
+name|ForceLock
+parameter_list|()
+block|{
+name|mutex_
+operator|.
+name|Lock
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ForceUnlock
+parameter_list|()
+block|{
+name|mutex_
+operator|.
+name|Unlock
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Iterate over existing chunks. May include chunks that are not currently
+end_comment
+
+begin_comment
+comment|// allocated to the user (e.g. freed).
+end_comment
+
+begin_comment
+comment|// The caller is expected to call ForceLock() before calling this function.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Callable
+operator|>
+name|void
+name|ForEachChunk
+argument_list|(
+argument|const Callable&callback
+argument_list|)
+block|{
+for|for
+control|(
+name|uptr
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|n_chunks_
+condition|;
+name|i
+operator|++
+control|)
+name|callback
+argument_list|(
+name|GetUser
+argument_list|(
+name|chunks_
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
 
 begin_label
 name|private
@@ -5771,6 +6926,11 @@ name|secondary_
 operator|.
 name|Init
 argument_list|()
+block|;
+name|stats_
+operator|.
+name|Init
+argument_list|()
 block|;   }
 name|void
 operator|*
@@ -5870,6 +7030,9 @@ name|secondary_
 operator|.
 name|Allocate
 argument_list|(
+operator|&
+name|stats_
+argument_list|,
 name|size
 argument_list|,
 name|alignment
@@ -5978,6 +7141,9 @@ name|secondary_
 operator|.
 name|Deallocate
 argument_list|(
+operator|&
+name|stats_
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -6300,6 +7466,49 @@ end_function
 
 begin_function
 name|void
+name|InitCache
+parameter_list|(
+name|AllocatorCache
+modifier|*
+name|cache
+parameter_list|)
+block|{
+name|cache
+operator|->
+name|Init
+argument_list|(
+operator|&
+name|stats_
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|DestroyCache
+parameter_list|(
+name|AllocatorCache
+modifier|*
+name|cache
+parameter_list|)
+block|{
+name|cache
+operator|->
+name|Destroy
+argument_list|(
+operator|&
+name|primary_
+argument_list|,
+operator|&
+name|stats_
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|SwallowCache
 parameter_list|(
 name|AllocatorCache
@@ -6317,6 +7526,25 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|void
+name|GetStats
+argument_list|(
+name|AllocatorStatCounters
+name|s
+argument_list|)
+decl|const
+block|{
+name|stats_
+operator|.
+name|Get
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_function
 name|void
@@ -6336,16 +7564,94 @@ expr_stmt|;
 block|}
 end_function
 
-begin_label
-name|private
-label|:
-end_label
+begin_comment
+comment|// ForceLock() and ForceUnlock() are needed to implement Darwin malloc zone
+end_comment
 
-begin_decl_stmt
+begin_comment
+comment|// introspection API.
+end_comment
+
+begin_function
+name|void
+name|ForceLock
+parameter_list|()
+block|{
+name|primary_
+operator|.
+name|ForceLock
+argument_list|()
+expr_stmt|;
+name|secondary_
+operator|.
+name|ForceLock
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ForceUnlock
+parameter_list|()
+block|{
+name|secondary_
+operator|.
+name|ForceUnlock
+argument_list|()
+expr_stmt|;
+name|primary_
+operator|.
+name|ForceUnlock
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Iterate over existing chunks. May include chunks that are not currently
+end_comment
+
+begin_comment
+comment|// allocated to the user (e.g. freed).
+end_comment
+
+begin_comment
+comment|// The caller is expected to call ForceLock() before calling this function.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Callable
+operator|>
+name|void
+name|ForEachChunk
+argument_list|(
+argument|const Callable&callback
+argument_list|)
+block|{
+name|primary_
+operator|.
+name|ForEachChunk
+argument_list|(
+name|callback
+argument_list|)
+block|;
+name|secondary_
+operator|.
+name|ForEachChunk
+argument_list|(
+name|callback
+argument_list|)
+block|;   }
+name|private
+operator|:
 name|PrimaryAllocator
 name|primary_
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|SecondaryAllocator
@@ -6353,8 +7659,32 @@ name|secondary_
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|AllocatorGlobalStats
+name|stats_
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-unit|};  }
+unit|};
+comment|// Returns true if calloc(size, n) should return 0 due to overflow in size*n.
+end_comment
+
+begin_function_decl
+name|bool
+name|CallocShouldReturnNullDueToOverflow
+parameter_list|(
+name|uptr
+name|size
+parameter_list|,
+name|uptr
+name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+unit|}
 comment|// namespace __sanitizer
 end_comment
 

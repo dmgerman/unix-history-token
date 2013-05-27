@@ -91,6 +91,10 @@ name|uptr
 name|addr
 parameter_list|)
 function_decl|;
+name|void
+name|SymbolizeFlush
+parameter_list|()
+function_decl|;
 name|ReportStack
 modifier|*
 name|SymbolizeCodeAddr2Line

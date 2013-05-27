@@ -57,6 +57,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+modifier|*
+name|memset
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|strcat

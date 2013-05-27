@@ -108,6 +108,23 @@ name|jptr
 name|addr
 parameter_list|)
 function_decl|;
+name|void
+name|__tsan_java_mutex_lock_rec
+parameter_list|(
+name|jptr
+name|addr
+parameter_list|,
+name|int
+name|rec
+parameter_list|)
+function_decl|;
+name|int
+name|__tsan_java_mutex_unlock_rec
+parameter_list|(
+name|jptr
+name|addr
+parameter_list|)
+function_decl|;
 block|}
 end_extern
 

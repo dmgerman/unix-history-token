@@ -194,7 +194,7 @@ comment|// CHECK:      WARNING: ThreadSanitizer: data race
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   Read of size 1 at {{.*}} by thread T2:
+comment|// CHECK-NEXT:   Atomic read of size 1 at {{.*}} by thread T2:
 end_comment
 
 begin_comment

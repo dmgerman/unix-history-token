@@ -69,12 +69,6 @@ directive|include
 file|"asan_thread.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"sanitizer/asan_interface.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|__asan
@@ -96,6 +90,9 @@ name|DescribeAddressIfGlobal
 parameter_list|(
 name|uptr
 name|addr
+parameter_list|,
+name|uptr
+name|access_size
 parameter_list|)
 function_decl|;
 name|bool
@@ -103,6 +100,9 @@ name|DescribeAddressRelativeToGlobal
 parameter_list|(
 name|uptr
 name|addr
+parameter_list|,
+name|uptr
+name|access_size
 parameter_list|,
 specifier|const
 name|__asan_global
@@ -141,9 +141,9 @@ function_decl|;
 name|void
 name|DescribeThread
 parameter_list|(
-name|AsanThreadSummary
+name|AsanThreadContext
 modifier|*
-name|summary
+name|context
 parameter_list|)
 function_decl|;
 comment|// Different kinds of error reports.

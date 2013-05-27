@@ -126,6 +126,10 @@ name|kTsanOptionsEnv
 init|=
 literal|"GORACE"
 decl_stmt|;
+comment|// Go linker does not support weak symbols.
+define|#
+directive|define
+name|CPP_WEAK
 else|#
 directive|else
 specifier|const
@@ -148,6 +152,10 @@ name|kTsanOptionsEnv
 init|=
 literal|"TSAN_OPTIONS"
 decl_stmt|;
+define|#
+directive|define
+name|CPP_WEAK
+value|WEAK
 endif|#
 directive|endif
 specifier|const
@@ -177,7 +185,7 @@ specifier|const
 name|int
 name|kClkBits
 init|=
-literal|43
+literal|42
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -637,9 +645,6 @@ struct_decl|struct
 name|ThreadState
 struct_decl|;
 struct_decl|struct
-name|ThreadContext
-struct_decl|;
-struct_decl|struct
 name|Context
 struct_decl|;
 struct_decl|struct
@@ -656,6 +661,9 @@ name|StackTrace
 decl_stmt|;
 struct_decl|struct
 name|MBlock
+struct_decl|;
+struct_decl|struct
+name|Suppression
 struct_decl|;
 block|}
 end_decl_stmt

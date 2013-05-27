@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sanitizer/common_interface_defs.h>
+file|<sanitizer_common/sanitizer_internal_defs.h>
 end_include
 
 begin_comment

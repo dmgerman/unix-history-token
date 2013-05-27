@@ -89,10 +89,7 @@ operator|==
 literal|64
 operator|)
 operator|||
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
+name|SANITIZER_MAC
 typedef|typedef
 name|uptr
 name|operator_new_ptr_type

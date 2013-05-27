@@ -207,7 +207,11 @@ comment|// CHECK:     #0 free
 end_comment
 
 begin_comment
-comment|// CHECK:     #1 Thread1
+comment|// CHECK:     #{{(1|2)}} Thread1
+end_comment
+
+begin_comment
+comment|// CHECK: SUMMARY: ThreadSanitizer: heap-use-after-free{{.*}}Thread2
 end_comment
 
 end_unit

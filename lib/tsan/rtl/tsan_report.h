@@ -80,6 +80,8 @@ name|ReportType
 block|{
 name|ReportTypeRace
 block|,
+name|ReportTypeVptrRace
+block|,
 name|ReportTypeUseAfterFree
 block|,
 name|ReportTypeThreadLeak
@@ -149,6 +151,9 @@ name|size
 decl_stmt|;
 name|bool
 name|write
+decl_stmt|;
+name|bool
+name|atomic
 decl_stmt|;
 name|Vector
 operator|<
@@ -307,6 +312,9 @@ expr_stmt|;
 name|ReportStack
 modifier|*
 name|sleep
+decl_stmt|;
+name|int
+name|count
 decl_stmt|;
 name|ReportDesc
 argument_list|()

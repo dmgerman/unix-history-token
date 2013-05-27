@@ -205,8 +205,7 @@ name|INTERFACE_ATTRIBUTE
 decl_stmt|;
 comment|// Mutex lock.
 comment|// Addr is any unique address associated with the mutex.
-comment|// Must not be called on recursive reentry.
-comment|// Object.wait() is handled as a pair of unlock/lock.
+comment|// Can be called on recursive reentry.
 name|void
 name|__tsan_java_mutex_lock
 argument_list|(
@@ -236,6 +235,33 @@ decl_stmt|;
 comment|// Mutex read unlock.
 name|void
 name|__tsan_java_mutex_read_unlock
+argument_list|(
+name|jptr
+name|addr
+argument_list|)
+name|INTERFACE_ATTRIBUTE
+decl_stmt|;
+comment|// Recursive mutex lock, intended for handling of Object.wait().
+comment|// The 'rec' value must be obtained from the previous
+comment|// __tsan_java_mutex_unlock_rec().
+name|void
+name|__tsan_java_mutex_lock_rec
+argument_list|(
+name|jptr
+name|addr
+argument_list|,
+name|int
+name|rec
+argument_list|)
+name|INTERFACE_ATTRIBUTE
+decl_stmt|;
+comment|// Recursive mutex unlock, intended for handling of Object.wait().
+comment|// The return value says how many times this thread called lock()
+comment|// w/o a pairing unlock() (i.e. how many recursive levels it unlocked).
+comment|// It must be passed back to __tsan_java_mutex_lock_rec() to restore
+comment|// the same recursion level.
+name|int
+name|__tsan_java_mutex_unlock_rec
 argument_list|(
 name|jptr
 name|addr

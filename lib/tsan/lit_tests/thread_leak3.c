@@ -9,6 +9,12 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function
 name|void
 modifier|*
@@ -45,6 +51,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -53,6 +64,10 @@ end_function
 
 begin_comment
 comment|// CHECK: WARNING: ThreadSanitizer: thread leak
+end_comment
+
+begin_comment
+comment|// CHECK: SUMMARY: ThreadSanitizer: thread leak{{.*}}main
 end_comment
 
 end_unit

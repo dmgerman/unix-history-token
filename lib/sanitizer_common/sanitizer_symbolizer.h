@@ -235,18 +235,19 @@ comment|// of descriptions actually filled.
 comment|// This function should NOT be called from two threads simultaneously.
 name|uptr
 name|SymbolizeCode
-parameter_list|(
+argument_list|(
 name|uptr
 name|address
-parameter_list|,
+argument_list|,
 name|AddressInfo
-modifier|*
+operator|*
 name|frames
-parameter_list|,
+argument_list|,
 name|uptr
 name|max_frames
-parameter_list|)
-function_decl|;
+argument_list|)
+name|SANITIZER_WEAK_ATTRIBUTE
+decl_stmt|;
 name|bool
 name|SymbolizeData
 parameter_list|(
@@ -258,6 +259,15 @@ modifier|*
 name|info
 parameter_list|)
 function_decl|;
+name|bool
+name|IsSymbolizerAvailable
+parameter_list|()
+function_decl|;
+name|void
+name|FlushSymbolizer
+parameter_list|()
+function_decl|;
+comment|// releases internal caches (if any)
 comment|// Attempts to demangle the provided C++ mangled name.
 specifier|const
 name|char
@@ -390,7 +400,20 @@ parameter_list|)
 function_decl|;
 comment|// OS-dependent function that fills array with descriptions of at most
 comment|// "max_modules" currently loaded modules. Returns the number of
-comment|// initialized modules.
+comment|// initialized modules. If filter is nonzero, ignores modules for which
+comment|// filter(full_name) is false.
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|string_predicate_t
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|uptr
 name|GetListOfModules
 parameter_list|(
@@ -400,7 +423,14 @@ name|modules
 parameter_list|,
 name|uptr
 name|max_modules
+parameter_list|,
+name|string_predicate_t
+name|filter
 parameter_list|)
+function_decl|;
+name|void
+name|SymbolizerPrepareForSandboxing
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"asan_interface_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_common/sanitizer_common.h"
 end_include
 
@@ -93,39 +99,6 @@ directive|include
 file|"sanitizer_common/sanitizer_libc.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"This operating system is not supported by AddressSanitizer"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -136,153 +109,14 @@ end_define
 begin_if
 if|#
 directive|if
-name|defined
+name|__has_feature
 argument_list|(
-name|__linux__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASAN_LINUX
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASAN_LINUX
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASAN_MAC
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASAN_MAC
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASAN_WINDOWS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASAN_WINDOWS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ANDROID__
+name|address_sanitizer
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|ANDROID
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ASAN_ANDROID
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASAN_ANDROID
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|ASAN_POSIX
-value|(ASAN_LINUX || ASAN_MAC)
-end_define
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|address_sanitizer
+name|__SANITIZE_ADDRESS__
 argument_list|)
 end_if
 
@@ -303,7 +137,7 @@ directive|ifndef
 name|ASAN_NEEDS_SEGV
 if|#
 directive|if
-name|ASAN_ANDROID
+name|SANITIZER_ANDROID
 operator|==
 literal|1
 define|#
@@ -363,6 +197,15 @@ name|ASAN_LOW_MEMORY
 value|0
 endif|#
 directive|endif
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|ASAN_USE_PREINIT_ARRAY
+define|#
+directive|define
+name|ASAN_USE_PREINIT_ARRAY
+value|(SANITIZER_LINUX&& !SANITIZER_ANDROID)
 endif|#
 directive|endif
 comment|// All internal functions in asan reside inside the __asan namespace
@@ -463,6 +306,10 @@ name|void
 name|AsanPlatformThreadInit
 argument_list|()
 block|;
+name|void
+name|StopInitOrderChecking
+argument_list|()
+block|;
 comment|// Wrapper for TLS/TSD.
 name|void
 name|AsanTSDInit
@@ -501,36 +348,10 @@ operator|*
 name|buffer
 argument_list|)
 block|;
-comment|// asan_poisoning.cc
-comment|// Poisons the shadow memory for "size" bytes starting from "addr".
-name|void
-name|PoisonShadow
-argument_list|(
-argument|uptr addr
-argument_list|,
-argument|uptr size
-argument_list|,
-argument|u8 value
-argument_list|)
-block|;
-comment|// Poisons the shadow memory for "redzone_size" bytes starting from
-comment|// "addr + size".
-name|void
-name|PoisonShadowPartialRightRedzone
-argument_list|(
-argument|uptr addr
-argument_list|,
-argument|uptr size
-argument_list|,
-argument|uptr redzone_size
-argument_list|,
-argument|u8 value
-argument_list|)
-block|;
 comment|// Platfrom-specific options.
-ifdef|#
-directive|ifdef
-name|__APPLE__
+if|#
+directive|if
+name|SANITIZER_MAC
 name|bool
 name|PlatformHasDifferentMemcpyAndMemmove
 argument_list|()
@@ -548,7 +369,7 @@ name|PLATFORM_HAS_DIFFERENT_MEMCPY_AND_MEMMOVE
 value|true
 endif|#
 directive|endif
-comment|// __APPLE__
+comment|// SANITIZER_MAC
 comment|// Add convenient macro for interface functions that may be represented as
 comment|// weak hooks.
 define|#

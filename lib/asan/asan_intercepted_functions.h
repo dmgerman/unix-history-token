@@ -87,6 +87,12 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_expr_stmt
 name|using
 name|__sanitizer
@@ -107,10 +113,7 @@ begin_if
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
+name|SANITIZER_WINDOWS
 end_if
 
 begin_define
@@ -131,13 +134,6 @@ begin_define
 define|#
 directive|define
 name|ASAN_INTERCEPT_STRDUP
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASAN_INTERCEPT_STRCASECMP_AND_STRNCASECMP
 value|1
 end_define
 
@@ -191,13 +187,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASAN_INTERCEPT_STRCASECMP_AND_STRNCASECMP
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|ASAN_INTERCEPT_INDEX
 value|0
 end_define
@@ -224,10 +213,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
+name|SANITIZER_LINUX
 end_if
 
 begin_define
@@ -258,10 +244,7 @@ begin_if
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
+name|SANITIZER_MAC
 end_if
 
 begin_define
@@ -291,16 +274,10 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
+name|SANITIZER_LINUX
 operator|&&
 operator|!
-name|defined
-argument_list|(
-name|ANDROID
-argument_list|)
+name|SANITIZER_ANDROID
 end_if
 
 begin_define
@@ -331,16 +308,10 @@ begin_if
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
-name|ANDROID
-argument_list|)
+name|SANITIZER_ANDROID
 operator|&&
 operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
+name|SANITIZER_WINDOWS
 end_if
 
 begin_define
@@ -367,32 +338,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|// On Darwin siglongjmp tailcalls longjmp, so we don't want to intercept it
-end_comment
-
-begin_comment
-comment|// there.
-end_comment
-
 begin_if
 if|#
 directive|if
 operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|||
-name|MAC_INTERPOSE_FUNCTIONS
-operator|)
+name|SANITIZER_WINDOWS
 end_if
 
 begin_define
@@ -425,10 +375,7 @@ directive|if
 name|ASAN_HAS_EXCEPTIONS
 operator|&&
 operator|!
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
+name|SANITIZER_WINDOWS
 end_if
 
 begin_define
@@ -455,626 +402,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|SANITIZER_WINDOWS
+end_if
+
 begin_define
 define|#
 directive|define
-name|DECLARE_FUNCTION_AND_WRAPPER
-parameter_list|(
-name|ret_type
-parameter_list|,
-name|func
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|ret_type func(__VA_ARGS__); \   ret_type WRAP(func)(__VA_ARGS__)
+name|ASAN_INTERCEPT___CXA_ATEXIT
+value|1
 end_define
 
-begin_comment
-comment|// Use extern declarations of intercepted functions on Mac and Windows
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
-begin_comment
-comment|// to avoid including system headers.
-end_comment
+begin_define
+define|#
+directive|define
+name|ASAN_INTERCEPT___CXA_ATEXIT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_DLL
-argument_list|)
-operator|)
+name|SANITIZER_WINDOWS
 end_if
 
 begin_extern
 extern|extern
 literal|"C"
 block|{
-comment|// signal.h
-if|#
-directive|if
-name|ASAN_INTERCEPT_SIGNAL_AND_SIGACTION
-struct_decl|struct
-name|sigaction
-struct_decl|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|sigaction
-argument_list|,
-argument|int sig
-argument_list|,
-argument|const struct sigaction *act
-argument_list|,
-argument|struct sigaction *oldact
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void*
-argument_list|,
-argument|signal
-argument_list|,
-argument|int signum
-argument_list|,
-argument|void *handler
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-comment|// setjmp.h
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|longjmp
-argument_list|,
-argument|void *env
-argument_list|,
-argument|int value
-argument_list|)
-empty_stmt|;
-if|#
-directive|if
-name|ASAN_INTERCEPT__LONGJMP
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|_longjmp
-argument_list|,
-argument|void *env
-argument_list|,
-argument|int value
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|ASAN_INTERCEPT_SIGLONGJMP
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|siglongjmp
-argument_list|,
-argument|void *env
-argument_list|,
-argument|int value
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|ASAN_INTERCEPT___CXA_THROW
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|void
-argument_list|,
-name|__cxa_throw
-argument_list|,
-name|void
-operator|*
-name|a
-argument_list|,
-name|void
-operator|*
-name|b
-argument_list|,
-name|void
-operator|*
-name|c
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|// string.h / strings.h
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|memcmp
-argument_list|,
-argument|const void *a1
-argument_list|,
-argument|const void *a2
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void*
-argument_list|,
-argument|memmove
-argument_list|,
-argument|void *to
-argument_list|,
-argument|const void *from
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void*
-argument_list|,
-argument|memcpy
-argument_list|,
-argument|void *to
-argument_list|,
-argument|const void *from
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void*
-argument_list|,
-argument|memset
-argument_list|,
-argument|void *block
-argument_list|,
-argument|int c
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|char*
-argument_list|,
-argument|strchr
-argument_list|,
-argument|const char *str
-argument_list|,
-argument|int c
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|char
-operator|*
-argument_list|,
-name|strcat
-argument_list|,
-comment|/* NOLINT */
-name|char
-operator|*
-name|to
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|from
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|char*
-argument_list|,
-argument|strncat
-argument_list|,
-argument|char *to
-argument_list|,
-argument|const char* from
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|char
-operator|*
-argument_list|,
-name|strcpy
-argument_list|,
-comment|/* NOLINT */
-name|char
-operator|*
-name|to
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|from
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|char*
-argument_list|,
-argument|strncpy
-argument_list|,
-argument|char *to
-argument_list|,
-argument|const char* from
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|strcmp
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s1
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s2
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|strncmp
-argument_list|,
-argument|const char *s1
-argument_list|,
-argument|const char* s2
-argument_list|,
-argument|uptr size
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|uptr
-argument_list|,
-name|strlen
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|ASAN_INTERCEPT_STRCASECMP_AND_STRNCASECMP
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|strcasecmp
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s1
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s2
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|strncasecmp
-argument_list|,
-argument|const char *s1
-argument_list|,
-argument|const char *s2
-argument_list|,
-argument|uptr n
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|ASAN_INTERCEPT_STRDUP
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|char
-operator|*
-argument_list|,
-name|strdup
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|s
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|ASAN_INTERCEPT_STRNLEN
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|uptr
-argument_list|,
-argument|strnlen
-argument_list|,
-argument|const char *s
-argument_list|,
-argument|uptr maxlen
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|ASAN_INTERCEPT_INDEX
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|char*
-argument_list|,
-argument|index
-argument_list|,
-argument|const char *string
-argument_list|,
-argument|int c
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-comment|// stdlib.h
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|atoi
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|nptr
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|long
-argument_list|,
-name|atol
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|nptr
-argument_list|)
-expr_stmt|;
-comment|// NOLINT
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|long
-argument_list|,
-argument|strtol
-argument_list|,
-argument|const char *nptr
-argument_list|,
-argument|char **endptr
-argument_list|,
-argument|int base
-argument_list|)
-empty_stmt|;
-comment|// NOLINT
-if|#
-directive|if
-name|ASAN_INTERCEPT_ATOLL_AND_STRTOLL
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|long long
-argument_list|,
-argument|atoll
-argument_list|,
-argument|const char *nptr
-argument_list|)
-empty_stmt|;
-comment|// NOLINT
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|long long
-argument_list|,
-argument|strtoll
-argument_list|,
-argument|const char *nptr
-argument_list|,
-argument|char **endptr
-argument_list|,
-argument|int base
-argument_list|)
-empty_stmt|;
-comment|// NOLINT
-endif|#
-directive|endif
-comment|// unistd.h
-if|#
-directive|if
-name|SANITIZER_INTERCEPT_READ
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|SSIZE_T
-argument_list|,
-argument|read
-argument_list|,
-argument|int fd
-argument_list|,
-argument|void *buf
-argument_list|,
-argument|SIZE_T count
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|SANITIZER_INTERCEPT_PREAD
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|SSIZE_T
-argument_list|,
-argument|pread
-argument_list|,
-argument|int fd
-argument_list|,
-argument|void *buf
-argument_list|,
-argument|SIZE_T count
-argument_list|,
-argument|OFF_T offset
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|SANITIZER_INTERCEPT_PREAD64
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|SSIZE_T
-argument_list|,
-argument|pread64
-argument_list|,
-argument|int fd
-argument_list|,
-argument|void *buf
-argument_list|,
-argument|SIZE_T count
-argument_list|,
-argument|OFF64_T offset
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|SANITIZER_INTERCEPT_WRITE
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|SSIZE_T
-argument_list|,
-argument|write
-argument_list|,
-argument|int fd
-argument_list|,
-argument|void *ptr
-argument_list|,
-argument|SIZE_T count
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|SANITIZER_INTERCEPT_PWRITE
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|SSIZE_T
-argument_list|,
-argument|pwrite
-argument_list|,
-argument|int fd
-argument_list|,
-argument|void *ptr
-argument_list|,
-argument|SIZE_T count
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|ASAN_INTERCEPT_MLOCKX
-comment|// mlock/munlock
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|mlock
-argument_list|,
-argument|const void *addr
-argument_list|,
-argument|SIZE_T len
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|munlock
-argument_list|,
-argument|const void *addr
-argument_list|,
-argument|SIZE_T len
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|mlockall
-argument_list|,
-argument|int flags
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|munlockall
-argument_list|,
-name|void
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|// Windows threads.
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
 name|__declspec
 argument_list|(
 argument|dllimport
@@ -1107,381 +476,261 @@ modifier|*
 name|id
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|// Posix threads.
-if|#
-directive|if
-name|ASAN_INTERCEPT_PTHREAD_CREATE
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
 name|int
-argument_list|,
-name|pthread_create
-argument_list|,
-name|void
-operator|*
-name|thread
-argument_list|,
-name|void
-operator|*
-name|attr
-argument_list|,
-name|void
-operator|*
-call|(
-modifier|*
-name|start_routine
-call|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-argument_list|,
-name|void
-operator|*
-name|arg
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-typedef|typedef
+name|memcmp
+parameter_list|(
+specifier|const
 name|void
 modifier|*
-name|pthread_workqueue_t
-typedef|;
-typedef|typedef
+name|a1
+parameter_list|,
+specifier|const
 name|void
 modifier|*
-name|pthread_workitem_handle_t
-typedef|;
-typedef|typedef
+name|a2
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|memmove
+parameter_list|(
 name|void
 modifier|*
-name|dispatch_group_t
-typedef|;
-typedef|typedef
+name|to
+parameter_list|,
+specifier|const
 name|void
 modifier|*
-name|dispatch_queue_t
-typedef|;
-typedef|typedef
+name|from
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
 name|void
 modifier|*
-name|dispatch_source_t
-typedef|;
-typedef|typedef
-name|u64
-name|dispatch_time_t
-typedef|;
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|dispatch_function_t
-function_decl|)
+name|memset
 parameter_list|(
 name|void
 modifier|*
 name|block
+parameter_list|,
+name|int
+name|c
+parameter_list|,
+name|uptr
+name|size
 parameter_list|)
 function_decl|;
-typedef|typedef
 name|void
 modifier|*
-function_decl|(
-modifier|*
-name|worker_t
-function_decl|)
+name|memcpy
 parameter_list|(
 name|void
 modifier|*
-name|block
+name|to
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|from
+parameter_list|,
+name|uptr
+name|size
 parameter_list|)
 function_decl|;
-typedef|typedef
-name|void
+name|char
 modifier|*
-name|CFStringRef
-typedef|;
-typedef|typedef
-name|void
+name|strcat
+parameter_list|(
+name|char
 modifier|*
-name|CFAllocatorRef
-typedef|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_async_f
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void *ctxt
-argument_list|,
-argument|dispatch_function_t func
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_sync_f
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void *ctxt
-argument_list|,
-argument|dispatch_function_t func
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_after_f
-argument_list|,
-argument|dispatch_time_t when
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void *ctxt
-argument_list|,
-argument|dispatch_function_t func
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_barrier_async_f
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void *ctxt
-argument_list|,
-argument|dispatch_function_t func
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_group_async_f
-argument_list|,
-argument|dispatch_group_t group
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void *ctxt
-argument_list|,
-argument|dispatch_function_t func
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|void
-argument_list|,
-name|__CFInitialize
-argument_list|,
-name|void
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|CFStringRef
-argument_list|,
-argument|CFStringCreateCopy
-argument_list|,
-argument|CFAllocatorRef alloc
-argument_list|,
-argument|CFStringRef str
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|void
-argument_list|,
-name|free
-argument_list|,
-name|void
-operator|*
-name|ptr
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|vscanf
-argument_list|,
-argument|const char *format
-argument_list|,
-argument|va_list ap
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|vsscanf
-argument_list|,
-argument|const char *str
-argument_list|,
-argument|const char *format
-argument_list|,
-argument|va_list ap
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|int
-argument_list|,
-argument|vfscanf
-argument_list|,
-argument|void *stream
-argument_list|,
-argument|const char *format
-argument_list|,
-argument|va_list ap
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|scanf
-argument_list|,
+name|to
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|format
-argument_list|,
-operator|...
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|fscanf
-argument_list|,
-name|void
-operator|*
-name|stream
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|format
-argument_list|,
-operator|...
-argument_list|)
-expr_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-name|int
-argument_list|,
-name|sscanf
-argument_list|,
+modifier|*
+name|from
+parameter_list|)
+function_decl|;
 comment|// NOLINT
+name|char
+modifier|*
+name|strchr
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|str
-argument_list|,
+parameter_list|,
+name|int
+name|c
+parameter_list|)
+function_decl|;
+name|int
+name|strcmp
+parameter_list|(
 specifier|const
 name|char
-operator|*
-name|format
-argument_list|,
-operator|...
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|MAC_INTERPOSE_FUNCTIONS
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|MISSING_BLOCKS_SUPPORT
-argument_list|)
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_group_async
-argument_list|,
-argument|dispatch_group_t dg
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void (^work)(void)
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_async
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void (^work)(void)
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_after
-argument_list|,
-argument|dispatch_queue_t dq
-argument_list|,
-argument|void (^work)(void)
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_source_set_event_handler
-argument_list|,
-argument|dispatch_source_t ds
-argument_list|,
-argument|void (^work)(void)
-argument_list|)
-empty_stmt|;
-name|DECLARE_FUNCTION_AND_WRAPPER
-argument_list|(
-argument|void
-argument_list|,
-argument|dispatch_source_set_cancel_handler
-argument_list|,
-argument|dispatch_source_t ds
-argument_list|,
-argument|void (^work)(void)
-argument_list|)
-empty_stmt|;
-endif|#
-directive|endif
-comment|// MAC_INTERPOSE_FUNCTIONS
-endif|#
-directive|endif
-comment|// __APPLE__
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+name|strcpy
+parameter_list|(
+name|char
+modifier|*
+name|to
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|from
+parameter_list|)
+function_decl|;
+comment|// NOLINT
+name|uptr
+name|strlen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+name|strncat
+parameter_list|(
+name|char
+modifier|*
+name|to
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|from
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
+name|int
+name|strncmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s1
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s2
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
+name|char
+modifier|*
+name|strncpy
+parameter_list|(
+name|char
+modifier|*
+name|to
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|from
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
+name|uptr
+name|strnlen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|uptr
+name|maxlen
+parameter_list|)
+function_decl|;
+name|int
+name|atoi
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|nptr
+parameter_list|)
+function_decl|;
+name|long
+name|atol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|nptr
+parameter_list|)
+function_decl|;
+comment|// NOLINT
+name|long
+name|strtol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|nptr
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|endptr
+parameter_list|,
+name|int
+name|base
+parameter_list|)
+function_decl|;
+comment|// NOLINT
+name|void
+name|longjmp
+parameter_list|(
+name|void
+modifier|*
+name|env
+parameter_list|,
+name|int
+name|value
+parameter_list|)
+function_decl|;
+name|double
+name|frexp
+parameter_list|(
+name|double
+name|x
+parameter_list|,
+name|int
+modifier|*
+name|expptr
+parameter_list|)
+function_decl|;
 block|}
 end_extern
-
-begin_comment
-comment|// extern "C"
-end_comment
 
 begin_endif
 endif|#

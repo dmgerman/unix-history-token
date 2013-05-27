@@ -388,7 +388,8 @@ init|=
 literal|0x0000
 block|,
 comment|/// A floating-point type. Low 16 bits are bit width. The value
-comment|/// representation is a pointer to the floating-point value.
+comment|/// representation is that of bitcasting the floating-point value to an
+comment|/// integer type.
 name|TK_Float
 init|=
 literal|0x0001
@@ -577,6 +578,48 @@ name|getType
 argument_list|()
 operator|.
 name|getIntegerBitWidth
+argument_list|()
+block|;
+return|return
+name|Bits
+operator|<=
+name|InlineBits
+return|;
+block|}
+comment|/// Is \c Val a (zero-extended) integer representation of a float?
+name|bool
+name|isInlineFloat
+argument_list|()
+specifier|const
+block|{
+name|CHECK
+argument_list|(
+name|getType
+argument_list|()
+operator|.
+name|isFloatTy
+argument_list|()
+argument_list|)
+block|;
+specifier|const
+name|unsigned
+name|InlineBits
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ValueHandle
+argument_list|)
+operator|*
+literal|8
+block|;
+specifier|const
+name|unsigned
+name|Bits
+operator|=
+name|getType
+argument_list|()
+operator|.
+name|getFloatBitWidth
 argument_list|()
 block|;
 return|return

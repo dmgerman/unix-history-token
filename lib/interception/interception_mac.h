@@ -90,104 +90,6 @@ directive|define
 name|INTERCEPTION_MAC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<mach/mach_error.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_comment
-comment|// Allocate memory for the escape island. This cannot be moved to
-end_comment
-
-begin_comment
-comment|// mach_override, because each user of interceptors may specify its
-end_comment
-
-begin_comment
-comment|// own memory range for escape islands.
-end_comment
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-name|mach_error_t
-name|__interception_allocate_island
-parameter_list|(
-name|void
-modifier|*
-modifier|*
-name|ptr
-parameter_list|,
-name|size_t
-name|unused_size
-parameter_list|,
-name|void
-modifier|*
-name|unused_hint
-parameter_list|)
-function_decl|;
-name|mach_error_t
-name|__interception_deallocate_island
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-function_decl|;
-block|}
-end_extern
-
-begin_comment
-comment|// extern "C"
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|__interception
-block|{
-comment|// returns true if the old function existed.
-name|bool
-name|OverrideFunction
-parameter_list|(
-name|uptr
-name|old_func
-parameter_list|,
-name|uptr
-name|new_func
-parameter_list|,
-name|uptr
-modifier|*
-name|orig_old_func
-parameter_list|)
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace __interception
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OVERRIDE_FUNCTION_MAC
-parameter_list|(
-name|old_func
-parameter_list|,
-name|new_func
-parameter_list|)
-define|\
-value|::__interception::OverrideFunction( \           (::__interception::uptr)old_func, \           (::__interception::uptr)new_func, \           (::__interception::uptr*)((::__interception::uptr)&REAL(old_func)))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -195,7 +97,6 @@ name|INTERCEPT_FUNCTION_MAC
 parameter_list|(
 name|func
 parameter_list|)
-value|OVERRIDE_FUNCTION_MAC(func, WRAP(func))
 end_define
 
 begin_endif

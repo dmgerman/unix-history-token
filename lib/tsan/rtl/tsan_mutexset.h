@@ -85,7 +85,7 @@ specifier|const
 name|uptr
 name|kMaxSize
 init|=
-literal|64
+literal|16
 decl_stmt|;
 struct|struct
 name|Desc

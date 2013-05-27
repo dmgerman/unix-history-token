@@ -139,6 +139,22 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|FILE
+modifier|*
+name|fdopen
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|fprintf
 parameter_list|(

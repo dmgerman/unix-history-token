@@ -248,8 +248,8 @@ name|SyncClock
 name|read_clock
 decl_stmt|;
 comment|// Used for rw mutexes only.
-name|StackTrace
-name|creation_stack
+name|u32
+name|creation_stack_id
 decl_stmt|;
 name|int
 name|owner_tid

@@ -214,19 +214,6 @@ name|void
 name|InitializeAsanInterceptors
 parameter_list|()
 function_decl|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-name|void
-name|InitializeMacInterceptors
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|// __APPLE__
 block|}
 end_decl_stmt
 

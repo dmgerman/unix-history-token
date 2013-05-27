@@ -775,9 +775,9 @@ block|}
 end_function
 
 begin_function
+name|NOINLINE
 name|QuarantineBatch
 modifier|*
-name|NOINLINE
 name|AllocBatch
 parameter_list|(
 name|Callback
@@ -828,8 +828,12 @@ return|;
 block|}
 end_function
 
-begin_endif
+begin_comment
 unit|}; }
+comment|// namespace __sanitizer
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

@@ -493,6 +493,15 @@ block|}
 block|}
 end_function
 
+begin_macro
+name|ARM_EABI_FNALIAS
+argument_list|(
+argument|fcmpun
+argument_list|,
+argument|unordsf2
+argument_list|)
+end_macro
+
 begin_function
 name|int
 name|__unordsf2

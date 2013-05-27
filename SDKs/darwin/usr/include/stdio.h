@@ -39,7 +39,7 @@ typedef|typedef
 name|__SIZE_TYPE__
 name|size_t
 typedef|;
-comment|/* Determine the appropriate fopen() and fwrite() functions. */
+comment|/* Determine the appropriate fdopen, fopen(), and fwrite() functions. */
 if|#
 directive|if
 name|defined
@@ -52,6 +52,10 @@ name|defined
 argument_list|(
 name|__i386
 argument_list|)
+define|#
+directive|define
+name|__FDOPEN_NAME
+value|"_fdopen$UNIX2003"
 define|#
 directive|define
 name|__FOPEN_NAME
@@ -68,6 +72,10 @@ name|__x86_64__
 argument_list|)
 define|#
 directive|define
+name|__FDOPEN_NAME
+value|"_fdopen"
+define|#
+directive|define
 name|__FOPEN_NAME
 value|"_fopen"
 define|#
@@ -80,6 +88,10 @@ name|defined
 argument_list|(
 name|__arm
 argument_list|)
+define|#
+directive|define
+name|__FDOPEN_NAME
+value|"_fdopen"
 define|#
 directive|define
 name|__FOPEN_NAME
@@ -114,6 +126,10 @@ name|__x86_64
 argument_list|)
 define|#
 directive|define
+name|__FDOPEN_NAME
+value|"_fdopen"
+define|#
+directive|define
 name|__FOPEN_NAME
 value|"_fopen"
 define|#
@@ -126,6 +142,10 @@ name|defined
 argument_list|(
 name|__arm
 argument_list|)
+define|#
+directive|define
+name|__FDOPEN_NAME
+value|"_fdopen"
 define|#
 directive|define
 name|__FOPEN_NAME
@@ -216,6 +236,17 @@ operator|*
 name|__restrict
 argument_list|)
 asm|__asm(__FOPEN_NAME);
+name|FILE
+modifier|*
+name|fdopen
+argument_list|(
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+asm|__asm(__FDOPEN_NAME);
 name|int
 name|fprintf
 argument_list|(

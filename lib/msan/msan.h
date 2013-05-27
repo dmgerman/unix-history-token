@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"sanitizer_common/sanitizer_flags.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_common/sanitizer_internal_defs.h"
 end_include
 
@@ -78,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sanitizer/msan_interface.h"
+file|"msan_interface_internal.h"
 end_include
 
 begin_include
@@ -86,6 +92,24 @@ include|#
 directive|include
 file|"msan_flags.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MSAN_REPLACE_OPERATORS_NEW_AND_DELETE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MSAN_REPLACE_OPERATORS_NEW_AND_DELETE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -126,6 +150,16 @@ name|mem
 parameter_list|)
 value|((uptr)mem>=         0x200000000000ULL&& \                             (uptr)mem<=         0x400000000000ULL)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|link_map
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|// Opaque type returned by dlopen().
+end_comment
 
 begin_decl_stmt
 specifier|const
@@ -239,6 +273,45 @@ name|ReplaceOperatorsNewAndDelete
 parameter_list|()
 function_decl|;
 name|void
+name|EnterSymbolizer
+parameter_list|()
+function_decl|;
+name|void
+name|ExitSymbolizer
+parameter_list|()
+function_decl|;
+name|bool
+name|IsInSymbolizer
+parameter_list|()
+function_decl|;
+struct|struct
+name|SymbolizerScope
+block|{
+name|SymbolizerScope
+argument_list|()
+block|{
+name|EnterSymbolizer
+argument_list|()
+expr_stmt|;
+block|}
+operator|~
+name|SymbolizerScope
+argument_list|()
+block|{
+name|ExitSymbolizer
+argument_list|()
+block|; }
+block|}
+struct|;
+name|void
+name|EnterLoader
+parameter_list|()
+function_decl|;
+name|void
+name|ExitLoader
+parameter_list|()
+function_decl|;
+name|void
 name|MsanDie
 parameter_list|()
 function_decl|;
@@ -280,6 +353,9 @@ name|pc
 parameter_list|,
 name|uptr
 name|bp
+parameter_list|,
+name|bool
+name|fast
 parameter_list|)
 function_decl|;
 name|void
@@ -305,11 +381,20 @@ name|void
 name|ReportAtExitStatistics
 parameter_list|()
 function_decl|;
+name|void
+name|UnpoisonMappedDSO
+parameter_list|(
+name|struct
+name|link_map
+modifier|*
+name|map
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|GET_MALLOC_STACK_TRACE
 define|\
-value|StackTrace stack;                                                \   stack.size = 0;                                                  \   if (__msan_get_track_origins()&& msan_inited)                   \     GetStackTrace(&stack, flags()->num_callers,                    \       StackTrace::GetCurrentPc(), GET_CURRENT_FRAME())
+value|StackTrace stack;                                                \   stack.size = 0;                                                  \   if (__msan_get_track_origins()&& msan_inited)                   \     GetStackTrace(&stack, common_flags()->malloc_context_size,     \         StackTrace::GetCurrentPc(), GET_CURRENT_FRAME(),           \         common_flags()->fast_unwind_on_malloc)
 block|}
 end_decl_stmt
 

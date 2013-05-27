@@ -77,6 +77,130 @@ begin_comment
 comment|// http://code.google.com/p/address-sanitizer/wiki/AddressSanitizerAlgorithm
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Typical shadow mapping on Linux/x86_64 with SHADOW_OFFSET == 0x00007fff8000:
+end_comment
+
+begin_comment
+comment|// || `[0x10007fff8000, 0x7fffffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x02008fff7000, 0x10007fff7fff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x00008fff7000, 0x02008fff6fff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00007fff8000, 0x00008fff6fff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x000000000000, 0x00007fff7fff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// When SHADOW_OFFSET is zero (-pie):
+end_comment
+
+begin_comment
+comment|// || `[0x100000000000, 0x7fffffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x020000000000, 0x0fffffffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x000000040000, 0x01ffffffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Special case when something is already mapped between
+end_comment
+
+begin_comment
+comment|// 0x003000000000 and 0x005000000000 (e.g. when prelink is installed):
+end_comment
+
+begin_comment
+comment|// || `[0x10007fff8000, 0x7fffffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x02008fff7000, 0x10007fff7fff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x005000000000, 0x02008fff6fff]` || ShadowGap3 ||
+end_comment
+
+begin_comment
+comment|// || `[0x003000000000, 0x004fffffffff]` || MidMem     ||
+end_comment
+
+begin_comment
+comment|// || `[0x000a7fff8000, 0x002fffffffff]` || ShadowGap2 ||
+end_comment
+
+begin_comment
+comment|// || `[0x00067fff8000, 0x000a7fff7fff]` || MidShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00008fff7000, 0x00067fff7fff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00007fff8000, 0x00008fff6fff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x000000000000, 0x00007fff7fff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Linux/i386 mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x40000000, 0xffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x28000000, 0x3fffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x24000000, 0x27ffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x20000000, 0x23ffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000, 0x1fffffff]` || LowMem     ||
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -123,7 +247,7 @@ end_else
 begin_if
 if|#
 directive|if
-name|ASAN_ANDROID
+name|SANITIZER_ANDROID
 end_if
 
 begin_define
@@ -193,12 +317,35 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|SANITIZER_MAC
+end_if
+
 begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
 value|(1ULL<< 44)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|0x7fff8000ULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -238,7 +385,7 @@ name|MEM_TO_SHADOW
 parameter_list|(
 name|mem
 parameter_list|)
-value|(((mem)>> SHADOW_SCALE) | (SHADOW_OFFSET))
+value|(((mem)>> SHADOW_SCALE) + (SHADOW_OFFSET))
 end_define
 
 begin_define
@@ -250,81 +397,6 @@ name|shadow
 parameter_list|)
 value|(((shadow) - SHADOW_OFFSET)<< SHADOW_SCALE)
 end_define
-
-begin_if
-if|#
-directive|if
-name|SANITIZER_WORDSIZE
-operator|==
-literal|64
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__powerpc64__
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uptr
-name|kHighMemEnd
-init|=
-literal|0x00000fffffffffffUL
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uptr
-name|kHighMemEnd
-init|=
-literal|0x00007fffffffffffUL
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|// SANITIZER_WORDSIZE == 32
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uptr
-name|kHighMemEnd
-init|=
-literal|0xffffffff
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// SANITIZER_WORDSIZE
-end_comment
 
 begin_define
 define|#
@@ -375,6 +447,20 @@ name|kHighShadowEnd
 value|MEM_TO_SHADOW(kHighMemEnd)
 end_define
 
+begin_define
+define|#
+directive|define
+name|kMidShadowBeg
+value|MEM_TO_SHADOW(kMidMemBeg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kMidShadowEnd
+value|MEM_TO_SHADOW(kMidMemEnd)
+end_define
+
 begin_comment
 comment|// With the zero shadow base we can not actually map pages starting from 0.
 end_comment
@@ -401,21 +487,141 @@ begin_define
 define|#
 directive|define
 name|kShadowGapEnd
-value|(kHighShadowBeg - 1)
+value|((kMidMemBeg ? kMidShadowBeg : kHighShadowBeg) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|kGlobalAndStackRedzone
-define|\
-value|(SHADOW_GRANULARITY< 32 ? 32 : SHADOW_GRANULARITY)
+name|kShadowGap2Beg
+value|(kMidMemBeg ? kMidShadowEnd + 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kShadowGap2End
+value|(kMidMemBeg ? kMidMemBeg - 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kShadowGap3Beg
+value|(kMidMemBeg ? kMidMemEnd + 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kShadowGap3End
+value|(kMidMemBeg ? kHighShadowBeg - 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_ASAN_MAPPING_PROFILE
+value|0
+end_define
+
+begin_comment
+comment|// Set to 1 to profile the functions below.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|DO_ASAN_MAPPING_PROFILE
+end_if
+
+begin_define
+define|#
+directive|define
+name|PROFILE_ASAN_MAPPING
+parameter_list|()
+value|AsanMappingProfile[__LINE__]++;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PROFILE_ASAN_MAPPING
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// If 1, all shadow boundaries are constants.
+end_comment
+
+begin_comment
+comment|// Don't set to 1 other than for testing.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASAN_FIXED_MAPPING
+value|0
 end_define
 
 begin_decl_stmt
 name|namespace
 name|__asan
 block|{
+specifier|extern
+name|uptr
+name|AsanMappingProfile
+index|[]
+decl_stmt|;
+if|#
+directive|if
+name|ASAN_FIXED_MAPPING
+comment|// Fixed mapping for 64-bit Linux. Mostly used for performance comparison
+comment|// with non-fixed mapping. As of r175253 (Feb 2013) the performance
+comment|// difference between fixed and non-fixed mapping is below the noise level.
+specifier|static
+name|uptr
+name|kHighMemEnd
+init|=
+literal|0x7fffffffffffULL
+decl_stmt|;
+specifier|static
+name|uptr
+name|kMidMemBeg
+init|=
+literal|0x3000000000ULL
+decl_stmt|;
+specifier|static
+name|uptr
+name|kMidMemEnd
+init|=
+literal|0x4fffffffffULL
+decl_stmt|;
+else|#
+directive|else
+name|SANITIZER_INTERFACE_ATTRIBUTE
+specifier|extern
+name|uptr
+name|kHighMemEnd
+decl_stmt|,
+name|kMidMemBeg
+decl_stmt|,
+name|kMidMemEnd
+decl_stmt|;
+comment|// Initialized in __asan_init.
+endif|#
+directive|endif
 specifier|static
 specifier|inline
 name|bool
@@ -425,6 +631,9 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 name|a
 operator|<
@@ -440,6 +649,9 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 name|a
 operator|>=
@@ -459,6 +671,9 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 name|a
 operator|>=
@@ -472,14 +687,46 @@ block|}
 specifier|static
 specifier|inline
 name|bool
+name|AddrIsInMidMem
+parameter_list|(
+name|uptr
+name|a
+parameter_list|)
+block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
+return|return
+name|kMidMemBeg
+operator|&&
+name|a
+operator|>=
+name|kMidMemBeg
+operator|&&
+name|a
+operator|<=
+name|kMidMemEnd
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
 name|AddrIsInMem
 parameter_list|(
 name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 name|AddrIsInLowMem
+argument_list|(
+name|a
+argument_list|)
+operator|||
+name|AddrIsInMidMem
 argument_list|(
 name|a
 argument_list|)
@@ -499,6 +746,9 @@ name|uptr
 name|p
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 name|CHECK
 argument_list|(
 name|AddrIsInMem
@@ -523,6 +773,9 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 name|a
 operator|>=
@@ -536,14 +789,46 @@ block|}
 specifier|static
 specifier|inline
 name|bool
+name|AddrIsInMidShadow
+parameter_list|(
+name|uptr
+name|a
+parameter_list|)
+block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
+return|return
+name|kMidMemBeg
+operator|&&
+name|a
+operator|>=
+name|kMidShadowBeg
+operator|&&
+name|a
+operator|<=
+name|kMidMemEnd
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
 name|AddrIsInShadow
 parameter_list|(
 name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 name|AddrIsInLowShadow
+argument_list|(
+name|a
+argument_list|)
+operator|||
+name|AddrIsInMidShadow
 argument_list|(
 name|a
 argument_list|)
@@ -563,6 +848,64 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|kMidMemBeg
+condition|)
+block|{
+if|if
+condition|(
+name|a
+operator|<=
+name|kShadowGapEnd
+condition|)
+return|return
+name|SHADOW_OFFSET
+operator|==
+literal|0
+operator|||
+name|a
+operator|>=
+name|kShadowGapBeg
+return|;
+return|return
+operator|(
+name|a
+operator|>=
+name|kShadowGap2Beg
+operator|&&
+name|a
+operator|<=
+name|kShadowGap2End
+operator|)
+operator|||
+operator|(
+name|a
+operator|>=
+name|kShadowGap3Beg
+operator|&&
+name|a
+operator|<=
+name|kShadowGap3End
+operator|)
+return|;
+block|}
+comment|// In zero-based shadow mode we treat addresses near zero as addresses
+comment|// in shadow gap as well.
+if|if
+condition|(
+name|SHADOW_OFFSET
+operator|==
+literal|0
+condition|)
+return|return
+name|a
+operator|<=
+name|kShadowGapEnd
+return|;
 return|return
 name|a
 operator|>=
@@ -582,6 +925,9 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|a
@@ -605,6 +951,9 @@ name|uptr
 name|a
 parameter_list|)
 block|{
+name|PROFILE_ASAN_MAPPING
+argument_list|()
+expr_stmt|;
 specifier|const
 name|uptr
 name|kAccessSize
@@ -619,7 +968,7 @@ operator|(
 name|u8
 operator|*
 operator|)
-name|MemToShadow
+name|MEM_TO_SHADOW
 argument_list|(
 name|a
 argument_list|)
@@ -664,6 +1013,14 @@ return|return
 name|false
 return|;
 block|}
+comment|// Must be after all calls to PROFILE_ASAN_MAPPING().
+specifier|static
+specifier|const
+name|uptr
+name|kAsanMappingProfileSize
+init|=
+name|__LINE__
+decl_stmt|;
 block|}
 end_decl_stmt
 

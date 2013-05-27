@@ -75,9 +75,6 @@ name|int
 name|exit_code
 decl_stmt|;
 name|int
-name|num_callers
-decl_stmt|;
-name|int
 name|verbosity
 decl_stmt|;
 name|bool
@@ -94,6 +91,9 @@ decl_stmt|;
 comment|// default: true
 name|bool
 name|report_umrs
+decl_stmt|;
+name|bool
+name|wrap_signals
 decl_stmt|;
 block|}
 struct|;

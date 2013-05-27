@@ -125,6 +125,63 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
+struct|struct
+name|CommonFlags
+block|{
+comment|// If set, use the online symbolizer from common sanitizer runtime.
+name|bool
+name|symbolize
+decl_stmt|;
+comment|// Path to external symbolizer.
+specifier|const
+name|char
+modifier|*
+name|external_symbolizer_path
+decl_stmt|;
+comment|// Strips this prefix from file paths in error reports.
+specifier|const
+name|char
+modifier|*
+name|strip_path_prefix
+decl_stmt|;
+comment|// Use fast (frame-pointer-based) unwinder on fatal errors (if available).
+name|bool
+name|fast_unwind_on_fatal
+decl_stmt|;
+comment|// Use fast (frame-pointer-based) unwinder on malloc/free (if available).
+name|bool
+name|fast_unwind_on_malloc
+decl_stmt|;
+comment|// Max number of stack frames kept for each allocation/deallocation.
+name|int
+name|malloc_context_size
+decl_stmt|;
+block|}
+struct|;
+specifier|extern
+name|CommonFlags
+name|common_flags_dont_use_directly
+decl_stmt|;
+specifier|inline
+name|CommonFlags
+modifier|*
+name|common_flags
+parameter_list|()
+block|{
+return|return
+operator|&
+name|common_flags_dont_use_directly
+return|;
+block|}
+name|void
+name|ParseCommonFlagsFromString
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

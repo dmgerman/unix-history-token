@@ -36,15 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is shared between AddressSanitizer and ThreadSanitizer.
-end_comment
-
-begin_comment
-comment|// It contains basic macro and types.
-end_comment
-
-begin_comment
-comment|// NOTE: This file may be included into user code.
+comment|// Common part of the public sanitizer interface.
 end_comment
 
 begin_comment
@@ -63,116 +55,20 @@ directive|define
 name|SANITIZER_COMMON_INTERFACE_DEFS_H
 end_define
 
-begin_comment
-comment|// ----------- ATTENTION -------------
-end_comment
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
 
 begin_comment
-comment|// This header should NOT include any other headers to avoid portability issues.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_if
-
-begin_comment
-comment|// FIXME find out what we need on Windows. __declspec(dllexport) ?
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_INTERFACE_ATTRIBUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_WEAK_ATTRIBUTE
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SANITIZER_GO
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_INTERFACE_ATTRIBUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_WEAK_ATTRIBUTE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_INTERFACE_ATTRIBUTE
-value|__attribute__((visibility("default")))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_WEAK_ATTRIBUTE
-value|__attribute__((weak))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_SUPPORTS_WEAK_HOOKS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_SUPPORTS_WEAK_HOOKS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// __has_feature
+comment|// GCC does not understand __has_feature.
 end_comment
 
 begin_if
@@ -200,181 +96,137 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|// For portability reasons we do not include stddef.h, stdint.h or any other
-end_comment
-
-begin_comment
-comment|// system header, but we do need some basic types that are not defined
-end_comment
-
-begin_comment
-comment|// in a portable way by the language itself.
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|__sanitizer
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_WIN64
-argument_list|)
-comment|// 64-bit Windows uses LLP64 data model.
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|uptr
-typedef|;
-comment|// NOLINT
-typedef|typedef
-name|signed
-name|long
-name|long
-name|sptr
-typedef|;
-comment|// NOLINT
-else|#
-directive|else
-typedef|typedef
-name|unsigned
-name|long
-name|uptr
-typedef|;
-comment|// NOLINT
-typedef|typedef
-name|signed
-name|long
-name|sptr
-typedef|;
-comment|// NOLINT
-endif|#
-directive|endif
-comment|// defined(_WIN64)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-comment|// Since x32 uses ILP32 data model in 64-bit hardware mode,  we must use
-comment|// 64-bit pointer to unwind stack frame.
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|uhwptr
-typedef|;
-comment|// NOLINT
-else|#
-directive|else
-typedef|typedef
-name|uptr
-name|uhwptr
-typedef|;
-comment|// NOLINT
-endif|#
-directive|endif
-typedef|typedef
-name|unsigned
-name|char
-name|u8
-typedef|;
-typedef|typedef
-name|unsigned
-name|short
-name|u16
-typedef|;
-comment|// NOLINT
-typedef|typedef
-name|unsigned
-name|int
-name|u32
-typedef|;
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|u64
-typedef|;
-comment|// NOLINT
-typedef|typedef
-name|signed
-name|char
-name|s8
-typedef|;
-typedef|typedef
-name|signed
-name|short
-name|s16
-typedef|;
-comment|// NOLINT
-typedef|typedef
-name|signed
-name|int
-name|s32
-typedef|;
-typedef|typedef
-name|signed
-name|long
-name|long
-name|s64
-typedef|;
-comment|// NOLINT
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace __sanitizer
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
 begin_extern
 extern|extern
 literal|"C"
 block|{
+endif|#
+directive|endif
 comment|// Tell the tools to write their reports to "path.<pid>" instead of stderr.
 name|void
 name|__sanitizer_set_report_path
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|path
-argument_list|)
-name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Tell the tools to write their reports to given file descriptor instead of
 comment|// stderr.
 name|void
 name|__sanitizer_set_report_fd
-argument_list|(
+parameter_list|(
 name|int
 name|fd
-argument_list|)
-name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Notify the tools that the sandbox is going to be turned on. The reserved
 comment|// parameter will be used in the future to hold a structure with functions
 comment|// that the tools may call to bypass the sandbox.
 name|void
 name|__sanitizer_sandbox_on_notify
-argument_list|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|reserved
-argument_list|)
-name|SANITIZER_WEAK_ATTRIBUTE
-name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
+parameter_list|)
+function_decl|;
+comment|// This function is called by the tool when it has just finished reporting
+comment|// an error. 'error_summary' is a one-line string that summarizes
+comment|// the error message. This function can be overridden by the client.
+name|void
+name|__sanitizer_report_error_summary
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|error_summary
+parameter_list|)
+function_decl|;
+comment|// Some of the sanitizers (e.g. asan/tsan) may miss bugs that happen
+comment|// in unaligned loads/stores. In order to find such bugs reliably one needs
+comment|// to replace plain unaligned loads/stores with these calls.
+name|uint16_t
+name|__sanitizer_unaligned_load16
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|__sanitizer_unaligned_load32
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|__sanitizer_unaligned_load64
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_unaligned_store16
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|uint16_t
+name|x
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_unaligned_store32
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|uint32_t
+name|x
+parameter_list|)
+function_decl|;
+name|void
+name|__sanitizer_unaligned_store64
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|x
+parameter_list|)
+function_decl|;
+ifdef|#
+directive|ifdef
+name|__cplusplus
 block|}
 end_extern
 
 begin_comment
 comment|// extern "C"
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

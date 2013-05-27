@@ -177,6 +177,32 @@ parameter_list|()
 function_decl|;
 block|}
 struct|;
+comment|// Returns stats for GetCurrentThread(), or stats for fake "unknown thread"
+comment|// if GetCurrentThread() returns 0.
+name|AsanStats
+modifier|&
+name|GetCurrentThreadStats
+parameter_list|()
+function_decl|;
+comment|// Flushes all thread-local stats to accumulated stats, and makes
+comment|// a copy of accumulated stats.
+name|void
+name|GetAccumulatedStats
+parameter_list|(
+name|AsanStats
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+comment|// Flushes a given stats into accumulated stats.
+name|void
+name|FlushToAccumulatedStats
+parameter_list|(
+name|AsanStats
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
 comment|// A cross-platform equivalent of malloc_statistics_t on Mac OS.
 struct|struct
 name|AsanMallocStats
@@ -195,6 +221,14 @@ name|size_allocated
 decl_stmt|;
 block|}
 struct|;
+name|void
+name|FillMallocStatistics
+parameter_list|(
+name|AsanMallocStats
+modifier|*
+name|malloc_stats
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

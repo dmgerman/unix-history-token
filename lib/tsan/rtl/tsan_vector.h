@@ -248,6 +248,21 @@ index|]
 return|;
 block|}
 name|void
+name|PopBack
+parameter_list|()
+block|{
+name|DCHECK_GT
+argument_list|(
+name|end_
+argument_list|,
+name|begin_
+argument_list|)
+expr_stmt|;
+name|end_
+operator|--
+expr_stmt|;
+block|}
+name|void
 name|Resize
 parameter_list|(
 name|uptr
@@ -470,8 +485,12 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_comment
 unit|}
+comment|// namespace __tsan
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

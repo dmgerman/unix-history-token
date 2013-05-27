@@ -60,7 +60,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|ASAN_MAC_H
+name|ASAN__MAC_H
 end_define
 
 begin_comment

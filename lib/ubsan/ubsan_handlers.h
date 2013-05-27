@@ -207,6 +207,33 @@ argument_list|,
 argument|ValueHandle RHS
 argument_list|)
 struct|struct
+name|OutOfBoundsData
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+specifier|const
+name|TypeDescriptor
+modifier|&
+name|ArrayType
+decl_stmt|;
+specifier|const
+name|TypeDescriptor
+modifier|&
+name|IndexType
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Handle an array index out of bounds error.
+name|RECOVERABLE
+argument_list|(
+argument|out_of_bounds
+argument_list|,
+argument|OutOfBoundsData *Data
+argument_list|,
+argument|ValueHandle Index
+argument_list|)
+struct|struct
 name|UnreachableData
 block|{
 name|SourceLocation

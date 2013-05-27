@@ -66,11 +66,11 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sanitizer/common_interface_defs.h"
+file|"sanitizer_common/sanitizer_internal_defs.h"
 end_include
 
 begin_comment
-comment|// ASan flag values can be defined in three ways:
+comment|// ASan flag values can be defined in four ways:
 end_comment
 
 begin_comment
@@ -78,7 +78,15 @@ comment|// 1) initialized with default values at startup.
 end_comment
 
 begin_comment
-comment|// 2) overriden from string returned by user-specified function
+comment|// 2) overriden during compilation of ASan runtime by providing
+end_comment
+
+begin_comment
+comment|//    compile definition ASAN_DEFAULT_OPTIONS.
+end_comment
+
+begin_comment
+comment|// 3) overriden from string returned by user-specified function
 end_comment
 
 begin_comment
@@ -86,7 +94,7 @@ comment|//    __asan_default_options().
 end_comment
 
 begin_comment
-comment|// 3) overriden from env variable ASAN_OPTIONS.
+comment|// 4) overriden from env variable ASAN_OPTIONS.
 end_comment
 
 begin_decl_stmt
@@ -101,10 +109,6 @@ comment|// Lower value may reduce memory usage but increase the chance of
 comment|// false negatives.
 name|int
 name|quarantine_size
-decl_stmt|;
-comment|// If set, uses in-process symbolizer from common sanitizer runtime.
-name|bool
-name|symbolize
 decl_stmt|;
 comment|// Verbosity level (0 - silent, 1 - a bit of output, 2+ - more output).
 name|int
@@ -129,10 +133,6 @@ comment|// If set, attempts to catch initialization order issues.
 name|bool
 name|check_initialization_order
 decl_stmt|;
-comment|// Max number of stack frames kept for each allocation/deallocation.
-name|int
-name|malloc_context_size
-decl_stmt|;
 comment|// If set, uses custom wrappers and replacements for libc string functions
 comment|// to find more errors.
 name|bool
@@ -142,22 +142,20 @@ comment|// If set, uses custom wrappers for memset/memcpy/memmove intinsics.
 name|bool
 name|replace_intrin
 decl_stmt|;
-comment|// Used on Mac only. See comments in asan_mac.cc and asan_malloc_mac.cc.
-name|bool
-name|replace_cfallocator
-decl_stmt|;
 comment|// Used on Mac only.
 name|bool
 name|mac_ignore_invalid_free
 decl_stmt|;
-comment|// ASan allocator flag. See asan_allocator.cc.
+comment|// ASan allocator flag.
 name|bool
 name|use_fake_stack
 decl_stmt|;
-comment|// ASan allocator flag. Sets the maximal size of allocation request
-comment|// that would return memory filled with zero bytes.
+comment|// ASan allocator flag. max_malloc_fill_size is the maximal amount of bytes
+comment|// that will be filled with malloc_fill_byte on malloc.
 name|int
 name|max_malloc_fill_size
+decl_stmt|,
+name|malloc_fill_byte
 decl_stmt|;
 comment|// Override exit status if something was reported.
 name|int
@@ -177,6 +175,10 @@ comment|// If set, registers ASan custom segv handler.
 name|bool
 name|handle_segv
 decl_stmt|;
+comment|// If set, allows user register segv handler even if ASan registers one.
+name|bool
+name|allow_user_segv_handler
+decl_stmt|;
 comment|// If set, uses alternate stack for signal handling.
 name|bool
 name|use_sigaltstack
@@ -193,6 +195,14 @@ comment|// If set, calls abort() instead of _exit() after printing an error repo
 name|bool
 name|abort_on_error
 decl_stmt|;
+comment|// Print various statistics after printing an error message or if atexit=1.
+name|bool
+name|print_stats
+decl_stmt|;
+comment|// Print the legend for the shadow bytes.
+name|bool
+name|print_legend
+decl_stmt|;
 comment|// If set, prints ASan exit stats even after program terminates successfully.
 name|bool
 name|atexit
@@ -207,12 +217,6 @@ comment|// debugger.
 name|bool
 name|allow_reexec
 decl_stmt|;
-comment|// Strips this prefix from file paths in error reports.
-specifier|const
-name|char
-modifier|*
-name|strip_path_prefix
-decl_stmt|;
 comment|// If set, prints not only thread creation stacks for threads in error report,
 comment|// but also thread creation stacks for threads that created those threads,
 comment|// etc. up to main thread.
@@ -224,14 +228,6 @@ specifier|const
 name|char
 modifier|*
 name|log_path
-decl_stmt|;
-comment|// Use fast (frame-pointer-based) unwinder on fatal errors (if available).
-name|bool
-name|fast_unwind_on_fatal
-decl_stmt|;
-comment|// Use fast (frame-pointer-based) unwinder on malloc/free (if available).
-name|bool
-name|fast_unwind_on_malloc
 decl_stmt|;
 comment|// Poison (or not) the heap memory on [de]allocation. Zero value is useful
 comment|// for benchmarking the allocator or instrumentator.
@@ -246,13 +242,37 @@ comment|// Use stack depot instead of storing stacks in the redzones.
 name|bool
 name|use_stack_depot
 decl_stmt|;
+comment|// If true, assume that memcmp(p1, p2, n) always reads n bytes before
+comment|// comparing p1 and p2.
+name|bool
+name|strict_memcmp
+decl_stmt|;
+comment|// If true, assume that dynamic initializers can never access globals from
+comment|// other modules, even if the latter are already initialized.
+name|bool
+name|strict_init_order
+decl_stmt|;
+comment|// Invoke LeakSanitizer at process exit.
+name|bool
+name|detect_leaks
+decl_stmt|;
 block|}
 struct|;
+specifier|extern
+name|Flags
+name|asan_flags_dont_use_directly
+decl_stmt|;
+specifier|inline
 name|Flags
 modifier|*
 name|flags
 parameter_list|()
-function_decl|;
+block|{
+return|return
+operator|&
+name|asan_flags_dont_use_directly
+return|;
+block|}
 name|void
 name|InitializeFlags
 parameter_list|(

@@ -208,6 +208,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -227,7 +233,7 @@ define|#
 directive|define
 name|ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
 define|\
-value|__attribute__((no_address_safety_analysis))
+value|__attribute__((no_sanitize_address))
 end_define
 
 begin_else
@@ -245,6 +251,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
+end_comment
 
 begin_if
 if|#

@@ -122,6 +122,10 @@ comment|// (e.g. malloc() call from a signal handler).
 name|bool
 name|report_signal_unsafe
 decl_stmt|;
+comment|// Report races between atomic and plain memory accesses.
+name|bool
+name|report_atomic_races
+decl_stmt|;
 comment|// If set, all atomics are effectively sequentially consistent (seq_cst),
 comment|// regardless of what user actually specified.
 name|bool
@@ -138,6 +142,14 @@ specifier|const
 name|char
 modifier|*
 name|suppressions
+decl_stmt|;
+comment|// Print matched suppressions at exit.
+name|bool
+name|print_suppressions
+decl_stmt|;
+comment|// Print matched "benign" races at exit.
+name|bool
+name|print_benign
 decl_stmt|;
 comment|// Override exit status if something was reported.
 name|int
@@ -169,6 +181,10 @@ decl_stmt|;
 comment|// Flush shadow memory every X ms.
 name|int
 name|flush_memory_ms
+decl_stmt|;
+comment|// Flush symbolizer caches every X ms.
+name|int
+name|flush_symbolizer_ms
 decl_stmt|;
 comment|// Stops on start until __tsan_resume() is called (for debugging).
 name|bool
@@ -221,6 +237,10 @@ parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace __tsan
+end_comment
 
 begin_endif
 endif|#

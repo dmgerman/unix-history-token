@@ -80,12 +80,24 @@ name|InitializeAllocator
 parameter_list|()
 function_decl|;
 name|void
-name|AlloctorThreadFinish
+name|AllocatorThreadStart
 parameter_list|(
 name|ThreadState
 modifier|*
 name|thr
 parameter_list|)
+function_decl|;
+name|void
+name|AllocatorThreadFinish
+parameter_list|(
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|)
+function_decl|;
+name|void
+name|AllocatorPrintStats
+parameter_list|()
 function_decl|;
 comment|// For user allocations.
 name|void
@@ -159,6 +171,21 @@ name|sz
 parameter_list|,
 name|uptr
 name|align
+parameter_list|)
+function_decl|;
+name|uptr
+name|user_alloc_usable_size
+parameter_list|(
+name|ThreadState
+modifier|*
+name|thr
+parameter_list|,
+name|uptr
+name|pc
+parameter_list|,
+name|void
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 comment|// Given the pointer p into a valid allocated block,
@@ -242,6 +269,8 @@ block|,
 name|MBlockSignal
 block|,
 name|MBlockFD
+block|,
+name|MBlockJmpBuf
 block|,
 comment|// This must be the last.
 name|MBlockTypeCount
