@@ -195,6 +195,20 @@ name|EDMA_TPTC1_CLK
 block|,
 name|EDMA_TPTC2_CLK
 block|,
+comment|/* LCD controller module */
+name|LCDC_CLK
+init|=
+literal|1300
+block|,
+comment|/* PWM modules */
+name|PWMSS0_CLK
+init|=
+literal|1400
+block|,
+name|PWMSS1_CLK
+block|,
+name|PWMSS2_CLK
+block|,
 name|INVALID_CLK_IDENT
 block|}
 name|clk_ident_t
