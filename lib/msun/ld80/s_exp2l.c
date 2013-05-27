@@ -1607,7 +1607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Compute the base 2 exponential of x for Intel 80-bit format.  *  * Accuracy: Peak error< 0.511 ulp.  *  * Method: (equally-spaced tables)  *  *   Reduce x:  *     x = 2**k + y, for integer k and |y|<= 1/2.  *     Thus we have exp2l(x) = 2**k * exp2(y).  *  *   Reduce y:  *     y = i/TBLSIZE + z for integer i near y * TBLSIZE.  *     Thus we have exp2(y) = exp2(i/TBLSIZE) * exp2(z),  *     with |z|<= 2**-(TBLBITS+1).  *  *   We compute exp2(i/TBLSIZE) via table lookup and exp2(z) via a  *   degree-6 minimax polynomial with maximum error under 2**-75.6.  *   The table entries each have 104 bits of accuracy, encoded as  *   a pair of double precision values.  */
+comment|/**  * Compute the base 2 exponential of x for Intel 80-bit format.  *  * Accuracy: Peak error< 0.511 ulp.  *  * Method: (equally-spaced tables)  *  *   Reduce x:  *     x = 2**k + y, for integer k and |y|<= 1/2.  *     Thus we have exp2l(x) = 2**k * exp2(y).  *  *   Reduce y:  *     y = i/TBLSIZE + z for integer i near y * TBLSIZE.  *     Thus we have exp2(y) = exp2(i/TBLSIZE) * exp2(z),  *     with |z|<= 2**-(TBLBITS+1).  *  *   We compute exp2(i/TBLSIZE) via table lookup and exp2(z) via a  *   degree-6 minimax polynomial with maximum error under 2**-75.6.  *   The table entries each have 104 bits of accuracy, encoded as  *   a pair of double precision values.  */
 end_comment
 
 begin_function
