@@ -214,6 +214,8 @@ block|,
 name|CMD_STATUS
 block|,
 name|CMD_DUMP
+block|,
+name|CMD_LIST
 block|}
 enum|;
 end_enum
@@ -243,6 +245,16 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"       %s role [-d] [-c config]<init | primary | secondary> all | name ...\n"
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       %s list [-d] [-c config] [all | name ...]\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -1917,6 +1929,31 @@ index|[
 literal|1
 index|]
 argument_list|,
+literal|"list"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|cmd
+operator|=
+name|CMD_LIST
+expr_stmt|;
+name|optstr
+operator|=
+literal|"c:dh"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
 literal|"status"
 argument_list|)
 operator|==
@@ -2333,6 +2370,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CMD_LIST
+case|:
+case|case
 name|CMD_STATUS
 case|:
 comment|/* Obtain status of the given resources. */
@@ -2594,6 +2634,9 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|CMD_LIST
+case|:
 case|case
 name|CMD_STATUS
 case|:
