@@ -30,13 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/taskqueue.h>
+file|<sys/selinfo.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -44,6 +50,14 @@ include|#
 directive|include
 file|<geom/geom_disk.h>
 end_include
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_aac
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -738,6 +752,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|aac_interface
 name|aac_rx_interface
@@ -746,6 +761,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|aac_interface
 name|aac_sa_interface
@@ -754,6 +770,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|aac_interface
 name|aac_fa_interface
@@ -762,6 +779,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|aac_interface
 name|aac_rkt_interface
@@ -775,7 +793,7 @@ name|AAC_GET_FWSTATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_get_fwstatus((sc)))
+value|((sc)->aac_if->aif_get_fwstatus((sc)))
 end_define
 
 begin_define
@@ -787,7 +805,7 @@ name|sc
 parameter_list|,
 name|qbit
 parameter_list|)
-value|((sc)->aac_if.aif_qnotify((sc), (qbit)))
+value|((sc)->aac_if->aif_qnotify((sc), (qbit)))
 end_define
 
 begin_define
@@ -797,7 +815,7 @@ name|AAC_GET_ISTATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_get_istatus((sc)))
+value|((sc)->aac_if->aif_get_istatus((sc)))
 end_define
 
 begin_define
@@ -809,7 +827,7 @@ name|sc
 parameter_list|,
 name|mask
 parameter_list|)
-value|((sc)->aac_if.aif_clr_istatus((sc), \ 					(mask)))
+value|((sc)->aac_if->aif_clr_istatus((sc), \ 					(mask)))
 end_define
 
 begin_define
@@ -830,7 +848,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|((sc)->aac_if.aif_set_mailbox((sc), (command), (arg0), (arg1), (arg2), \ 	(arg3)))
+value|((sc)->aac_if->aif_set_mailbox((sc), (command), (arg0), (arg1), (arg2), \ 	(arg3)))
 end_define
 
 begin_define
@@ -842,7 +860,7 @@ name|sc
 parameter_list|,
 name|mb
 parameter_list|)
-value|((sc)->aac_if.aif_get_mailbox((sc), \ 					(mb)))
+value|((sc)->aac_if->aif_get_mailbox((sc), \ 					(mb)))
 end_define
 
 begin_define
@@ -852,7 +870,7 @@ name|AAC_MASK_INTERRUPTS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_set_interrupts((sc), \ 					0))
+value|((sc)->aac_if->aif_set_interrupts((sc), \ 					0))
 end_define
 
 begin_define
@@ -862,7 +880,7 @@ name|AAC_UNMASK_INTERRUPTS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_set_interrupts((sc), \ 					1))
+value|((sc)->aac_if->aif_set_interrupts((sc), \ 					1))
 end_define
 
 begin_define
@@ -874,7 +892,7 @@ name|sc
 parameter_list|,
 name|cm
 parameter_list|)
-value|((sc)->aac_if.aif_send_command((sc), (cm)))
+value|((sc)->aac_if->aif_send_command((sc), (cm)))
 end_define
 
 begin_define
@@ -884,7 +902,7 @@ name|AAC_GET_OUTB_QUEUE
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_get_outb_queue((sc)))
+value|((sc)->aac_if->aif_get_outb_queue((sc)))
 end_define
 
 begin_define
@@ -896,7 +914,7 @@ name|sc
 parameter_list|,
 name|idx
 parameter_list|)
-value|((sc)->aac_if.aif_set_outb_queue((sc), (idx)))
+value|((sc)->aac_if->aif_set_outb_queue((sc), (idx)))
 end_define
 
 begin_define
@@ -1105,12 +1123,6 @@ modifier|*
 name|aac_regs_res1
 decl_stmt|;
 comment|/* reg. if. window */
-name|int
-name|aac_regs_rid0
-decl_stmt|,
-name|aac_regs_rid1
-decl_stmt|;
-comment|/* resource ID */
 name|bus_space_handle_t
 name|aac_bhandle0
 decl_stmt|,
@@ -1137,9 +1149,6 @@ modifier|*
 name|aac_irq
 decl_stmt|;
 comment|/* interrupt */
-name|int
-name|aac_irq_rid
-decl_stmt|;
 name|void
 modifier|*
 name|aac_intr
@@ -1212,8 +1221,10 @@ decl_stmt|;
 name|u_int32_t
 name|aac_common_busaddr
 decl_stmt|;
+specifier|const
 name|struct
 name|aac_interface
+modifier|*
 name|aac_if
 decl_stmt|;
 comment|/* command/fib resources */
@@ -2002,6 +2013,7 @@ begin_struct
 struct|struct
 name|aac_code_lookup
 block|{
+specifier|const
 name|char
 modifier|*
 name|string
@@ -2065,18 +2077,8 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void							\ aac_initq_ ## name (struct aac_softc *sc)				\ {									\ 	TAILQ_INIT(&sc->aac_ ## name);					\ 	AACQ_INIT(sc, index);						\ }									\ static __inline void							\ aac_enqueue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		panic("aac: command %p is on another queue, flags = %#x", \ 		    cm, cm->cm_flags);					\ 	}								\ 	TAILQ_INSERT_TAIL(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline void							\ aac_requeue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		panic("aac: command %p is on another queue, flags = %#x", \ 		    cm, cm->cm_flags);					\ 	}								\ 	TAILQ_INSERT_HEAD(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline struct aac_command *					\ aac_dequeue_ ## name (struct aac_softc *sc)				\ {									\ 	struct aac_command *cm;						\ 									\ 	if ((cm = TAILQ_FIRST(&sc->aac_ ## name)) != NULL) {		\ 		if ((cm->cm_flags& AAC_ON_ ## index) == 0) {		\ 			panic("aac: command %p not in queue, flags = %#x, bit = %#x", \ 			    cm, cm->cm_flags, AAC_ON_ ## index);	\ 		}							\ 		TAILQ_REMOVE(&sc->aac_ ## name, cm, cm_link);		\ 		cm->cm_flags&= ~AAC_ON_ ## index;			\ 		AACQ_REMOVE(sc, index);					\ 	}								\ 	return(cm);							\ }									\ static __inline void							\ aac_remove_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 		panic("aac: command %p not in queue, flags = %#x, bit = %#x", \ 		    cm, cm->cm_flags, AAC_ON_ ## index);		\ 	}								\ 	TAILQ_REMOVE(&cm->cm_sc->aac_ ## name, cm, cm_link);		\ 	cm->cm_flags&= ~AAC_ON_ ## index;				\ 	AACQ_REMOVE(cm->cm_sc, index);					\ }									\ struct hack
+value|static __inline void							\ aac_initq_ ## name (struct aac_softc *sc)				\ {									\ 	TAILQ_INIT(&sc->aac_ ## name);					\ 	AACQ_INIT(sc, index);						\ }									\ static __inline void							\ aac_enqueue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		panic("aac: command %p is on another queue, flags = %#x", \ 		    cm, cm->cm_flags);					\ 	}								\ 	TAILQ_INSERT_TAIL(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline void							\ aac_requeue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		panic("aac: command %p is on another queue, flags = %#x", \ 		    cm, cm->cm_flags);					\ 	}								\ 	TAILQ_INSERT_HEAD(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline struct aac_command *					\ aac_dequeue_ ## name (struct aac_softc *sc)				\ {									\ 	struct aac_command *cm;						\ 									\ 	if ((cm = TAILQ_FIRST(&sc->aac_ ## name)) != NULL) {		\ 		if ((cm->cm_flags& AAC_ON_ ## index) == 0) {		\ 			panic("aac: command %p not in queue, flags = %#x, bit = %#x", \ 			    cm, cm->cm_flags, AAC_ON_ ## index);	\ 		}							\ 		TAILQ_REMOVE(&sc->aac_ ## name, cm, cm_link);		\ 		cm->cm_flags&= ~AAC_ON_ ## index;			\ 		AACQ_REMOVE(sc, index);					\ 	}								\ 	return(cm);							\ }									\ static __inline void							\ aac_remove_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 		panic("aac: command %p not in queue, flags = %#x, bit = %#x", \ 		    cm, cm->cm_flags, AAC_ON_ ## index);		\ 	}								\ 	TAILQ_REMOVE(&cm->cm_sc->aac_ ## name, cm, cm_link);		\ 	cm->cm_flags&= ~AAC_ON_ ## index;				\ 	AACQ_REMOVE(cm->cm_sc, index);					\ }									\  AACQ_COMMAND_QUEUE(free, AACQ_FREE);
 end_define
-
-begin_expr_stmt
-name|AACQ_COMMAND_QUEUE
-argument_list|(
-name|free
-argument_list|,
-name|AACQ_FREE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|AACQ_COMMAND_QUEUE
