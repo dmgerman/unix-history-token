@@ -5240,7 +5240,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|WRITE_REG32(ha, prod_reg, val);
+value|bus_write_4((ha->pci_reg), prod_reg, val);
 end_define
 
 begin_define
@@ -5270,7 +5270,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|WRITE_REG32(ha, ha->hw.sds[i].sds_consumer, val)
+value|bus_write_4((ha->pci_reg), (ha->hw.sds[i].sds_consumer), val);
 end_define
 
 begin_define
@@ -5282,7 +5282,8 @@ name|ha
 parameter_list|,
 name|i
 parameter_list|)
-value|WRITE_REG32(ha, ha->hw.intr_src[i], 0);
+define|\
+value|bus_write_4((ha->pci_reg), (ha->hw.intr_src[i]), 0);
 end_define
 
 begin_define
