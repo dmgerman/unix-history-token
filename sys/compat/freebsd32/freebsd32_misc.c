@@ -1154,9 +1154,14 @@ name|uap
 operator|->
 name|idtype
 argument_list|,
+name|PAIR32TO64
+argument_list|(
+name|id_t
+argument_list|,
 name|uap
 operator|->
 name|id
+argument_list|)
 argument_list|,
 operator|&
 name|status
