@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -297,8 +303,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-break|break;
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"nanosleep"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
