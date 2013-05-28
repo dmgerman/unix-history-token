@@ -302,6 +302,7 @@ comment|/*  * The list of all interfaces that are being listened to.  rarp_loop(
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|if_info
 modifier|*
@@ -310,6 +311,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
@@ -320,6 +322,7 @@ comment|/* verbose messages */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -334,6 +337,7 @@ comment|/* tftp directory */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 decl_stmt|;
@@ -344,6 +348,7 @@ comment|/* messages to stdout/stderr, not syslog(3) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
@@ -3316,6 +3321,7 @@ comment|/*  * Poke the kernel arp tables with the ethernet/ip address combinatai
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_inarp
 name|sin_inarp
@@ -3347,6 +3353,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_dl
 name|sin_dl
@@ -3376,6 +3383,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|struct
