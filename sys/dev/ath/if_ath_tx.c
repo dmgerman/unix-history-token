@@ -14938,7 +14938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Performs transmit side cleanup when TID changes from aggregated to  * unaggregated.  *  * - Discard all retry frames from the s/w queue.  * - Fix the tx completion function for all buffers in s/w queue.  * - Count the number of unacked frames, and let transmit completion  *   handle it later.  *  * The caller is responsible for pausing the TID.  */
+comment|/*  * Performs transmit side cleanup when TID changes from aggregated to  * unaggregated.  *  * - Discard all retry frames from the s/w queue.  * - Fix the tx completion function for all buffers in s/w queue.  * - Count the number of unacked frames, and let transmit completion  *   handle it later.  *  * The caller is responsible for pausing the TID and unpausing the  * TID if no cleanup was required. Otherwise the cleanup path will  * unpause the TID once the last hardware queued frame is completed.  */
 end_comment
 
 begin_function
@@ -15176,14 +15176,6 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The caller is required to pause the TID */
-if|#
-directive|if
-literal|0
-comment|/* Pause the TID */
-block|ath_tx_tid_pause(sc, atid);
-endif|#
-directive|endif
 comment|/* 	 * Calculate what hardware-queued frames exist based 	 * on the current BAW size. Ie, what frames have been 	 * added to the TX hardware queue for this TID but 	 * not yet ACKed. 	 */
 name|tap
 operator|=
@@ -15260,21 +15252,6 @@ name|IEEE80211_SEQ_RANGE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If cleanup is required, defer TID scheduling 	 * until all the HW queued packets have been 	 * sent. 	 */
-if|if
-condition|(
-operator|!
-name|atid
-operator|->
-name|cleanup_inprogress
-condition|)
-name|ath_tx_tid_resume
-argument_list|(
-name|sc
-argument_list|,
-name|atid
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|atid
@@ -20388,6 +20365,21 @@ operator|&
 name|bf_cq
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Unpause the TID if no cleanup is required. 	 */
+if|if
+condition|(
+operator|!
+name|atid
+operator|->
+name|cleanup_inprogress
+condition|)
+name|ath_tx_tid_resume
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|)
+expr_stmt|;
 name|ATH_TX_UNLOCK
 argument_list|(
 name|sc
@@ -20554,6 +20546,21 @@ name|i
 argument_list|,
 operator|&
 name|bf_cq
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Unpause the TID if no cleanup is required. 		 */
+if|if
+condition|(
+operator|!
+name|tid
+operator|->
+name|cleanup_inprogress
+condition|)
+name|ath_tx_tid_resume
+argument_list|(
+name|sc
+argument_list|,
+name|tid
 argument_list|)
 expr_stmt|;
 block|}
