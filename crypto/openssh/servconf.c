@@ -3024,14 +3024,6 @@ name|SSHCFG_GLOBAL
 block|}
 block|,
 block|{
-literal|"versionaddendum"
-block|,
-name|sVersionAddendum
-block|,
-name|SSHCFG_GLOBAL
-block|}
-block|,
-block|{
 literal|"hpndisabled"
 block|,
 name|sHPNDisabled
