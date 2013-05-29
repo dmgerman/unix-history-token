@@ -1020,6 +1020,14 @@ name|sc
 parameter_list|)
 block|{
 comment|/* XXX: do a purge of pending requests? */
+if|if
+condition|(
+name|sc
+operator|->
+name|mps_cdev
+operator|!=
+name|NULL
+condition|)
 name|destroy_dev
 argument_list|(
 name|sc
