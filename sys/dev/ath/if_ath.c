@@ -22473,11 +22473,11 @@ operator|!
 name|isnew
 condition|)
 block|{
-name|device_printf
+name|DPRINTF
 argument_list|(
 name|sc
-operator|->
-name|sc_dev
+argument_list|,
+name|ATH_DEBUG_NODE
 argument_list|,
 literal|"%s: %6D: reassoc; is_powersave=%d\n"
 argument_list|,
