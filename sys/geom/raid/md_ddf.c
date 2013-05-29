@@ -3406,7 +3406,7 @@ literal|0
 init|;
 name|bvd
 operator|<
-name|GET16
+name|GET8
 argument_list|(
 name|vmeta
 argument_list|,
