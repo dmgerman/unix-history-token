@@ -1379,6 +1379,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|resolv
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|cap_enter
 argument_list|()
 operator|<
@@ -1395,6 +1402,7 @@ argument_list|,
 literal|"unable to enter capability mode"
 argument_list|)
 expr_stmt|;
+block|}
 name|limitfd
 argument_list|(
 name|STDIN_FILENO
