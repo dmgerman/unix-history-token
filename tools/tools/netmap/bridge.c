@@ -22,7 +22,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"$Id: bridge.c 12016 2013-01-23 17:24:22Z luigi $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,9 +207,42 @@ index|[
 name|k
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NO_SWAP
+name|char
+modifier|*
+name|rxbuf
+init|=
+name|NETMAP_BUF
+argument_list|(
+name|rxring
+argument_list|,
+name|rs
+operator|->
+name|buf_idx
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|txbuf
+init|=
+name|NETMAP_BUF
+argument_list|(
+name|txring
+argument_list|,
+name|ts
+operator|->
+name|buf_idx
+argument_list|)
+decl_stmt|;
+else|#
+directive|else
 name|uint32_t
 name|pkt
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* swap packets */
 if|if
 condition|(
@@ -249,6 +282,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_SWAP
 name|pkt
 operator|=
 name|ts
@@ -269,6 +305,8 @@ name|buf_idx
 operator|=
 name|pkt
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* copy the packet length. */
 if|if
 condition|(
@@ -327,6 +365,22 @@ name|rs
 operator|->
 name|len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NO_SWAP
+name|pkt_copy
+argument_list|(
+name|rxbuf
+argument_list|,
+name|txbuf
+argument_list|,
+name|ts
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* report the buffer change. */
 name|ts
 operator|->
@@ -340,6 +394,9 @@ name|flags
 operator||=
 name|NS_BUF_CHANGED
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* NO_SWAP */
 name|j
 operator|=
 name|NETMAP_RING_NEXT
