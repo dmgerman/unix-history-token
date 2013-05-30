@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: output.c,v 1.44 2012/05/26 01:13:02 tom Exp $ */
+comment|/* $Id: output.c,v 1.45 2013/03/05 00:29:17 tom Exp $ */
 end_comment
 
 begin_include
@@ -3901,6 +3901,13 @@ condition|(
 name|unionized
 condition|)
 block|{
+if|if
+condition|(
+name|union_file
+operator|!=
+literal|0
+condition|)
+block|{
 name|rewind
 argument_list|(
 name|union_file
@@ -3926,6 +3933,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -6574,6 +6582,11 @@ condition|(
 name|iflag
 condition|)
 block|{
+if|if
+condition|(
+name|dflag
+condition|)
+block|{
 operator|++
 name|outline
 expr_stmt|;
@@ -6586,11 +6599,8 @@ argument_list|,
 name|defines_file_name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|dflag
-condition|)
+block|}
+else|else
 name|output_defines
 argument_list|(
 name|externs_file
