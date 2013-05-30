@@ -7272,6 +7272,7 @@ decl_stmt|;
 name|u_int16_t
 name|sk_did
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sk_name
