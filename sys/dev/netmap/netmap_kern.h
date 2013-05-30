@@ -58,6 +58,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NM_RWLOCK_T
+value|struct rwlock
+end_define
+
+begin_define
+define|#
+directive|define
 name|NM_SELINFO_T
 value|struct selinfo
 end_define
@@ -97,6 +104,17 @@ begin_define
 define|#
 directive|define
 name|NM_LOCK_T
+value|safe_spinlock_t
+end_define
+
+begin_comment
+comment|// see bsd_glue.h
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_RWLOCK_T
 value|safe_spinlock_t
 end_define
 
@@ -185,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|IFCAP_NETMAP
-value|0x100000
+value|0x200000
 end_define
 
 begin_endif
@@ -333,6 +351,24 @@ name|netmap_adapter
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|nm_bdg_fwd
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|nm_bridge
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|netmap_priv_d
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->cur - ring->reserved  *  *	nr_hwavail	the number of slots "owned" by userspace.  *			nr_hwavail =:= ring->avail + ring->reserved  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  */
 end_comment
@@ -377,6 +413,11 @@ name|netmap_adapter
 modifier|*
 name|na
 decl_stmt|;
+name|struct
+name|nm_bdg_fwd
+modifier|*
+name|nkr_ft
+decl_stmt|;
 name|NM_SELINFO_T
 name|si
 decl_stmt|;
@@ -419,6 +460,11 @@ directive|define
 name|NAF_SKIP_INTR
 value|1
 comment|/* use the regular interrupt handler. 				 * useful during initialization 				 */
+define|#
+directive|define
+name|NAF_SW_ONLY
+value|2
+comment|/* forward packets only to sw adapter */
 name|int
 name|refcount
 decl_stmt|;
@@ -590,12 +636,23 @@ modifier|*
 name|rxd
 parameter_list|)
 function_decl|;
-comment|/* 	 * Bridge support: 	 * 	 * bdg_port is the port number used in the bridge; 	 * na_bdg_refcount is a refcount used for bridge ports, 	 *	when it goes to 0 we can detach+free this port 	 *	(a bridge port is always attached if it exists; 	 *	it is not always registered) 	 */
+comment|/* 	 * Bridge support: 	 * 	 * bdg_port is the port number used in the bridge; 	 * na_bdg_refcount is a refcount used for bridge ports, 	 *	when it goes to 0 we can detach+free this port 	 *	(a bridge port is always attached if it exists; 	 *	it is not always registered) 	 * na_bdg points to the bridge this NA is attached to. 	 */
 name|int
 name|bdg_port
 decl_stmt|;
 name|int
 name|na_bdg_refcount
+decl_stmt|;
+name|struct
+name|nm_bridge
+modifier|*
+name|na_bdg
+decl_stmt|;
+comment|/* When we attach a physical interface to the bridge, we 	 * allow the controlling process to terminate, so we need 	 * a place to store the netmap_priv_d data structure. 	 * This is only done when physical interfaces are attached to a bridge. 	 */
+name|struct
+name|netmap_priv_d
+modifier|*
+name|na_kpriv
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -789,6 +846,106 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * The following bridge-related interfaces are used by other kernel modules  * In the version that only supports unicast or broadcast, the lookup  * function can return 0 .. NM_BDG_MAXPORTS-1 for regular ports,  * NM_BDG_MAXPORTS for broadcast, NM_BDG_MAXPORTS+1 for unknown.  * XXX in practice "unknown" might be handled same as broadcast.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int
+function_decl|(
+modifier|*
+name|bdg_lookup_fn_t
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|u_int
+name|len
+parameter_list|,
+name|uint8_t
+modifier|*
+name|ring_nr
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|int
+name|netmap_bdg_ctl
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+name|nmr
+parameter_list|,
+name|bdg_lookup_fn_t
+name|func
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|netmap_bdg_learning
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|NM_NAME
+value|"vale"
+end_define
+
+begin_comment
+comment|/* prefix for the bridge port name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_BDG_MAXPORTS
+value|254
+end_define
+
+begin_comment
+comment|/* up to 32 for bitmap, 254 ok otherwise */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_BDG_BROADCAST
+value|NM_BDG_MAXPORTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_BDG_NOPORT
+value|(NM_BDG_MAXPORTS+1)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -892,7 +1049,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * NA returns a pointer to the struct netmap adapter from the ifp,  * WNA is used to write it.  */
+comment|/*  * NA returns a pointer to the struct netmap adapter from the ifp,  * WNA is used to write it.  * SWNA() is used for the "host stack" endpoint associated  *	to an interface. It is allocated together with the main NA(),  *	as an array of two objects.  */
 end_comment
 
 begin_ifndef
@@ -924,6 +1081,16 @@ parameter_list|(
 name|_ifp
 parameter_list|)
 value|((struct netmap_adapter *)WNA(_ifp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWNA
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|(NA(_ifp) + 1)
 end_define
 
 begin_comment
