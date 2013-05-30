@@ -387,6 +387,23 @@ literal|"userret: Returning while holding vnode reservation"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_SBDRY
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with stop signals deferred"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VIMAGE

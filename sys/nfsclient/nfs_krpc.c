@@ -2771,8 +2771,6 @@ name|SIGHUP
 block|,
 name|SIGKILL
 block|,
-name|SIGSTOP
-block|,
 name|SIGQUIT
 block|}
 decl_stmt|;
@@ -2841,7 +2839,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The set/restore sigmask functions are used to (temporarily) overwrite  * the process p_sigmask during an RPC call (for example).  These are also  * used in other places in the NFS client that might tsleep().  */
+comment|/*  * The set/restore sigmask functions are used to (temporarily) overwrite  * the thread td_sigmask during an RPC call (for example).  These are also  * used in other places in the NFS client that might tsleep().  */
 end_comment
 
 begin_function
@@ -2981,11 +2979,6 @@ operator|->
 name|ps_mtx
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|kern_sigprocmask
 argument_list|(
 name|td
@@ -2997,7 +2990,12 @@ name|newset
 argument_list|,
 name|oldset
 argument_list|,
-literal|0
+name|SIGPROCMASK_PROC_LOCKED
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

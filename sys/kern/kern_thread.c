@@ -2709,6 +2709,38 @@ operator|(
 name|ERESTART
 operator|)
 return|;
+comment|/* 		 * Ignore suspend requests for stop signals if they 		 * are deferred. 		 */
+if|if
+condition|(
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+operator|==
+name|P_STOPPED_SIG
+operator|&&
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_SBDRY
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|return_instead
+argument_list|,
+operator|(
+literal|"TDF_SBDRY set for unsafe thread_suspend_check"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* If thread will exit, flush its pending signals */
 if|if
 condition|(
