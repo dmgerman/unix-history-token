@@ -268,6 +268,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|avalue
@@ -290,6 +291,7 @@ decl_stmt|,
 modifier|*
 name|nvalue
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tvalue
@@ -3524,6 +3526,7 @@ specifier|static
 name|void
 name|dir_clear_block
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|block
