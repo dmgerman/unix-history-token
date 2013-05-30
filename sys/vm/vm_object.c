@@ -2077,7 +2077,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"Shadowed tmpfs v_object"
+literal|"shadowed tmpfs v_object %p"
+operator|,
+name|object
 operator|)
 argument_list|)
 expr_stmt|;
