@@ -386,6 +386,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CFI_INTEL_LB
+value|0x01
+end_define
+
+begin_comment
+comment|/* Lock Block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_LBS
+value|0x60
+end_define
+
+begin_comment
+comment|/* Lock Block Setup */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CFI_INTEL_READ_ID
 value|0x90
 end_define
@@ -403,6 +425,17 @@ end_define
 
 begin_comment
 comment|/* Protection Program Setup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFI_INTEL_UB
+value|0xd0
+end_define
+
+begin_comment
+comment|/* Unlock Block */
 end_comment
 
 begin_comment
