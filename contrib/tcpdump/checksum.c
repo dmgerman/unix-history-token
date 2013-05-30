@@ -848,10 +848,6 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|checksum
-operator|=
-literal|0
-expr_stmt|;
 name|c0
 operator|=
 literal|0

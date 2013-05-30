@@ -5951,11 +5951,6 @@ name|tlen
 operator|=
 name|len
 expr_stmt|;
-if|if
-condition|(
-name|vflag
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"LLDP, length %u"
@@ -5963,7 +5958,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|tlen
@@ -6448,11 +6442,6 @@ case|case
 name|LLDP_SYSTEM_NAME_TLV
 case|:
 comment|/*              * The system name is also print in non-verbose mode              * similar to the CDP printer.              */
-if|if
-condition|(
-name|vflag
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|": "
@@ -6470,34 +6459,6 @@ argument_list|,
 name|tlv_len
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"LLDP, name "
-argument_list|)
-expr_stmt|;
-name|safeputs
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|tptr
-argument_list|,
-name|tlv_len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|", length %u"
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|LLDP_SYSTEM_DESCR_TLV

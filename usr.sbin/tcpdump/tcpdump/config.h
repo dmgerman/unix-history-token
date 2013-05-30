@@ -851,6 +851,10 @@ name|NETINET_IF_ETHER_H_DECLARES_ETHER_NTOHOST
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -925,6 +929,10 @@ define|#
 directive|define
 name|RETSIGVAL
 end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the ANSI C header files. */

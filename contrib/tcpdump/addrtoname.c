@@ -1835,6 +1835,19 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|e_bs
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"lookup_bytestring: calloc"
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|tp
