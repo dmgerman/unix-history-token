@@ -7652,7 +7652,9 @@ name|ncl
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|nwritten
+operator|)
 return|;
 block|}
 block|}
