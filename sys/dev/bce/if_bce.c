@@ -34093,7 +34093,7 @@ comment|/* Returns:                                                             
 end_comment
 
 begin_comment
-comment|/*   0 for success, positive value for failure.                             */
+comment|/*   Nothing.                                                               */
 end_comment
 
 begin_comment
@@ -34194,10 +34194,23 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the hardware status block index 	 * matches the last value read by the 	 * driver and we haven't asserted our 	 * interrupt then there's nothing to do. 	 */
+comment|/* 	 * If the hardware status block index matches the last value read 	 * by the driver and we haven't asserted our interrupt then there's 	 * nothing to do.  This may only happen in case of INTx due to the 	 * interrupt arriving at the CPU before the status block is updated. 	 */
 if|if
 condition|(
 operator|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+operator|(
+name|BCE_USING_MSI_FLAG
+operator||
+name|BCE_USING_MSIX_FLAG
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|status_block
@@ -34207,7 +34220,6 @@ operator|==
 name|sc
 operator|->
 name|last_status_idx
-operator|)
 operator|&&
 operator|(
 name|REG_RD
@@ -35031,6 +35043,19 @@ operator|=
 name|sc
 operator|->
 name|bce_ifp
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|stats_tag
+argument_list|,
+name|sc
+operator|->
+name|stats_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
 expr_stmt|;
 name|stats
 operator|=
@@ -37009,6 +37034,21 @@ argument_list|(
 expr|struct
 name|statistics_block
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|stats_tag
+argument_list|,
+name|sc
+operator|->
+name|stats_map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Clear the internal H/W statistics counters. */
@@ -45941,6 +45981,19 @@ name|status_block
 modifier|*
 name|sblk
 decl_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|status_tag
+argument_list|,
+name|sc
+operator|->
+name|status_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
 name|sblk
 operator|=
 name|sc
@@ -46176,6 +46229,19 @@ block|{ 	struct
 name|statistics_block
 operator|*
 name|sblk
+block|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|stats_tag
+argument_list|,
+name|sc
+operator|->
+name|stats_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
 block|;
 name|sblk
 operator|=
