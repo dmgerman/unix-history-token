@@ -164,7 +164,7 @@ name|struct
 name|pcap_addr
 name|pcap_addr_t
 typedef|;
-comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  *  * Do not change the layout of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  *  * Also, do not change the interpretation of any of the members of this  * structure, in any way (this includes using values other than  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"  * field).  *  * Instead:  *  *	introduce a new structure for the new format, if the layout  *	of the structure changed;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed file  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old file header as well as files with the new file header  *	(using the magic number to determine the header format).  *  * Then supply the changes as a patch at  *  *	http://sourceforge.net/projects/libpcap/  *  * so that future versions of libpcap and programs that use it (such as  * tcpdump) will be able to read your new capture file format.  */
+comment|/*  * The first record in the file contains saved values for some  * of the flags used in the printout phases of tcpdump.  * Many fields here are 32 bit ints so compilers won't insert unwanted  * padding; these files need to be interchangeable across architectures.  *  * Do not change the layout of this structure, in any way (this includes  * changes that only affect the length of fields in this structure).  *  * Also, do not change the interpretation of any of the members of this  * structure, in any way (this includes using values other than  * LINKTYPE_ values, as defined in "savefile.c", in the "linktype"  * field).  *  * Instead:  *  *	introduce a new structure for the new format, if the layout  *	of the structure changed;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed file  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old file header as well as files with the new file header  *	(using the magic number to determine the header format).  *  * Then supply the changes by forking the branch at  *  *	https://github.com/mcr/libpcap/issues  *  * and issuing a pull request, so that future versions of libpcap and  * programs that use it (such as tcpdump) will be able to read your new  * capture file format.  */
 struct|struct
 name|pcap_file_header
 block|{
@@ -1048,6 +1048,7 @@ function_decl|;
 name|int
 name|pcap_offline_filter
 parameter_list|(
+specifier|const
 name|struct
 name|bpf_program
 modifier|*

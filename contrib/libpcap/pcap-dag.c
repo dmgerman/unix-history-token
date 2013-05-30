@@ -157,6 +157,17 @@ directive|include
 file|"pcap-dag.h"
 end_include
 
+begin_comment
+comment|/*  * DAG devices have names beginning with "dag", followed by a number  * from 0 to MAXDAG.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDAG
+value|31
+end_define
+
 begin_define
 define|#
 directive|define
@@ -326,43 +337,6 @@ name|IS_BIGENDIAN
 parameter_list|()
 value|(*((unsigned char *)&endian_test_word))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DAG_ONLY
-end_ifdef
-
-begin_comment
-comment|/* This code is required when compiling for a DAG device only. */
-end_comment
-
-begin_comment
-comment|/* Replace dag function names with pcap equivalent. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|dag_create
-value|pcap_create
-end_define
-
-begin_define
-define|#
-directive|define
-name|dag_platform_finddevs
-value|pcap_platform_finddevs
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DAG_ONLY */
-end_comment
 
 begin_define
 define|#
@@ -3650,12 +3624,139 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|is_ours
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|char
+modifier|*
+name|cpend
+decl_stmt|;
+name|long
+name|devnum
+decl_stmt|;
 name|pcap_t
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Does this look like a DAG device? */
+name|cp
+operator|=
+name|strrchr
+argument_list|(
+name|device
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|cp
+operator|=
+name|device
+expr_stmt|;
+comment|/* Does it begin with "dag"? */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"dag"
+argument_list|,
+literal|3
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Nope, doesn't begin with "dag" */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+comment|/* Yes - is "dag" followed by a number from 0 to MAXDAG? */
+name|cp
+operator|+=
+literal|3
+expr_stmt|;
+name|devnum
+operator|=
+name|strtol
+argument_list|(
+name|cp
+argument_list|,
+operator|&
+name|cpend
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpend
+operator|==
+name|cp
+operator|||
+operator|*
+name|cpend
+operator|!=
+literal|'\0'
+condition|)
+block|{
+comment|/* Not followed by a number. */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|devnum
+operator|<
+literal|0
+operator|||
+name|devnum
+operator|>
+name|MAXDAG
+condition|)
+block|{
+comment|/* Followed by a non-valid number. */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+comment|/* OK, it's probably ours. */
+operator|*
+name|is_ours
+operator|=
+literal|1
+expr_stmt|;
 name|p
 operator|=
 name|pcap_create_common
@@ -3725,7 +3826,7 @@ end_comment
 
 begin_function
 name|int
-name|dag_platform_finddevs
+name|dag_findalldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -3764,7 +3865,7 @@ decl_stmt|;
 name|int
 name|dagfd
 decl_stmt|;
-comment|/* Try all the DAGs 0-31 */
+comment|/* Try all the DAGs 0-MAXDAG */
 for|for
 control|(
 name|c
@@ -3772,8 +3873,8 @@ operator|=
 literal|0
 init|;
 name|c
-operator|<
-literal|32
+operator|<=
+name|MAXDAG
 condition|;
 name|c
 operator|++

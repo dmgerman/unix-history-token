@@ -183,6 +183,30 @@ comment|/* #undef HAVE_LIBNL_2_x */
 end_comment
 
 begin_comment
+comment|/* if libnl exists and is version 3.x */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNL_3_x */
+end_comment
+
+begin_comment
+comment|/* libnl has NLE_FAILURE */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNL_NLE */
+end_comment
+
+begin_comment
+comment|/* libnl has new-style socket api */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNL_SOCKETS */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
 end_comment
 
@@ -674,6 +698,16 @@ comment|/* #undef LINUX_USB_MON_DEV */
 end_comment
 
 begin_comment
+comment|/* if we need a pcap_parse wrapper around yyparse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEED_YYPARSE_WRAPPER
+end_define
+
+begin_comment
 comment|/* Define to 1 if netinet/ether.h declares `ether_hostton' */
 end_comment
 
@@ -690,10 +724,6 @@ define|#
 directive|define
 name|NETINET_IF_ETHER_H_DECLARES_ETHER_HOSTTON
 end_define
-
-begin_comment
-comment|/**/
-end_comment
 
 begin_comment
 comment|/* do not use protochain */
@@ -744,17 +774,6 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
-value|""
-end_define
-
-begin_comment
-comment|/* Define to the home page for this package. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKAGE_URL
 value|""
 end_define
 
@@ -823,6 +842,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SITA */
+end_comment
+
+begin_comment
+comment|/* if struct sockaddr_hci has hci_channel member */
+end_comment
+
+begin_comment
+comment|/* #undef SOCKADDR_HCI_HAS_HCI_CHANNEL */
 end_comment
 
 begin_comment

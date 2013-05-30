@@ -88,31 +88,6 @@ directive|include
 file|"pcap-int.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SNF_ONLY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|snf_create
-value|pcap_create
-end_define
-
-begin_define
-define|#
-directive|define
-name|snf_platform_finddevs
-value|pcap_platform_finddevs
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -1234,7 +1209,7 @@ end_function
 
 begin_function
 name|int
-name|snf_platform_finddevs
+name|snf_findalldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -1266,6 +1241,10 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|is_ours
 parameter_list|)
 block|{
 name|pcap_t
@@ -1296,9 +1275,17 @@ argument_list|(
 name|SNF_VERSION_API
 argument_list|)
 condition|)
+block|{
+comment|/* Can't initialize the API, so no SNF devices */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 comment|/* 	 * Match a given interface name to our list of interface names, from 	 * which we can obtain the intended board number 	 */
 if|if
 condition|(
@@ -1312,9 +1299,17 @@ name|ifaddrs
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* Can't get SNF addresses */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|devlen
 operator|=
 name|strlen
@@ -1402,10 +1397,24 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
+block|{
+comment|/* Nope, not a supported name */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
+block|}
+comment|/* OK, it's probably ours. */
+operator|*
+name|is_ours
+operator|=
+literal|1
+expr_stmt|;
 name|p
 operator|=
 name|pcap_create_common

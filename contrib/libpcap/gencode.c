@@ -470,6 +470,78 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|IPPROTO_HOPOPTS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_HOPOPTS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPPROTO_ROUTING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ROUTING
+value|43
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPPROTO_FRAGMENT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_FRAGMENT
+value|44
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPPROTO_DSTOPTS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_DSTOPTS
+value|60
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IPPROTO_SCTP
 end_ifndef
 
@@ -1682,12 +1754,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|struct
@@ -1717,11 +1783,6 @@ name|bpf_int32
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|struct
@@ -1789,12 +1850,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function_decl
 name|struct
 name|block
@@ -1860,11 +1915,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2652,6 +2702,33 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
+comment|/* 	 * If this pcap_t hasn't been activated, it doesn't have a 	 * link-layer type, so we can't use it. 	 */
+if|if
+condition|(
+operator|!
+name|p
+operator|->
+name|activated
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"not-yet-activated pcap_t passed to pcap_compile"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|no_optimize
 operator|=
 literal|0
@@ -9369,9 +9446,6 @@ operator|=
 name|PPP_IP
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -9380,8 +9454,6 @@ operator|=
 name|PPP_IPV6
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|ETHERTYPE_DN
 case|:
@@ -9821,9 +9893,6 @@ argument_list|,
 literal|0xF0
 argument_list|)
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -9842,8 +9911,6 @@ argument_list|,
 literal|0xF0
 argument_list|)
 return|;
-endif|#
-directive|endif
 default|default:
 return|return
 name|gen_false
@@ -9879,9 +9946,6 @@ case|case
 name|DLT_IPV6
 case|:
 comment|/* 		 * Raw IPv6, so no type field. 		 */
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|proto
@@ -9893,8 +9957,6 @@ name|gen_true
 argument_list|()
 return|;
 comment|/* always true */
-endif|#
-directive|endif
 comment|/* Checking for something other than IPv6; always false */
 return|return
 name|gen_false
@@ -10173,9 +10235,6 @@ name|AF_INET
 argument_list|)
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 elseif|else
 if|if
 condition|(
@@ -10206,9 +10265,6 @@ name|AF_INET6
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* INET6 */
 else|else
 return|return
 name|gen_false
@@ -10236,9 +10292,6 @@ return|return
 name|gen_false
 argument_list|()
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -10259,9 +10312,6 @@ name|ARCTYPE_INET6
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|ETHERTYPE_IP
 case|:
@@ -10453,9 +10503,6 @@ operator||
 literal|0xcc
 argument_list|)
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|ETHERTYPE_IPV6
 case|:
@@ -10478,8 +10525,6 @@ operator||
 literal|0x8e
 argument_list|)
 return|;
-endif|#
-directive|endif
 case|case
 name|LLCSAP_ISONS
 case|:
@@ -11679,10 +11724,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*INET6*/
-end_comment
 
 begin_function
 specifier|static
@@ -14692,9 +14733,6 @@ argument_list|(
 literal|"MOPRC host filtering not implemented"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_IPV6
 case|:
@@ -14713,9 +14751,6 @@ argument_list|,
 name|typestr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|Q_AH
 case|:
@@ -15223,10 +15258,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*INET6*/
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15574,9 +15605,6 @@ argument_list|,
 name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -15595,8 +15623,6 @@ argument_list|,
 name|b1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|Q_TCP
@@ -15612,9 +15638,6 @@ argument_list|,
 name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -15633,8 +15656,6 @@ argument_list|,
 name|b1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|Q_UDP
@@ -15650,9 +15671,6 @@ argument_list|,
 name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -15671,8 +15689,6 @@ argument_list|,
 name|b1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|Q_ICMP
@@ -15760,9 +15776,6 @@ argument_list|,
 name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -15781,8 +15794,6 @@ argument_list|,
 name|b1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 ifndef|#
 directive|ifndef
@@ -15950,9 +15961,6 @@ name|ETHERTYPE_MOPRC
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_IPV6
 case|:
@@ -15988,9 +15996,6 @@ name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* INET6 */
 ifndef|#
 directive|ifndef
 name|IPPROTO_AH
@@ -16014,9 +16019,6 @@ argument_list|,
 name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -16035,8 +16037,6 @@ argument_list|,
 name|b1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 ifndef|#
 directive|ifndef
@@ -16061,9 +16061,6 @@ argument_list|,
 name|Q_DEFAULT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -16082,8 +16079,6 @@ argument_list|,
 name|b1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|Q_ISO
@@ -16693,12 +16688,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function
 specifier|static
 name|struct
@@ -16731,15 +16720,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*INET6*/
-end_comment
 
 begin_function
 name|struct
@@ -17066,12 +17046,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function
 name|struct
 name|block
@@ -17385,15 +17359,6 @@ name|b1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_comment
 comment|/* gen_portrange code */
@@ -17865,12 +17830,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_function
 specifier|static
 name|struct
@@ -18325,15 +18284,6 @@ name|b1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
 
 begin_function
 specifier|static
@@ -18807,9 +18757,6 @@ name|i
 operator|++
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_IPV6
 case|:
@@ -18881,8 +18828,6 @@ name|i
 operator|++
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|bpf_error
 argument_list|(
@@ -19032,9 +18977,6 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|proto
@@ -19624,8 +19566,6 @@ index|]
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 comment|/* nop */
 name|s
@@ -20384,9 +20324,6 @@ decl_stmt|,
 modifier|*
 name|b1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 ifndef|#
 directive|ifndef
 name|CHASE_CHAIN
@@ -20395,8 +20332,6 @@ name|block
 modifier|*
 name|b2
 decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 if|if
@@ -20418,9 +20353,6 @@ block|{
 case|case
 name|Q_DEFAULT
 case|:
-ifdef|#
-directive|ifdef
-name|INET6
 name|b0
 operator|=
 name|gen_proto
@@ -20453,11 +20385,6 @@ expr_stmt|;
 return|return
 name|b1
 return|;
-else|#
-directive|else
-comment|/*FALLTHROUGH*/
-endif|#
-directive|endif
 case|case
 name|Q_IP
 case|:
@@ -20823,9 +20750,6 @@ literal|"'carp proto' is bogus"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_IPV6
 case|:
@@ -20930,9 +20854,6 @@ argument_list|(
 literal|"'icmp6 proto' is bogus"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|Q_AH
 case|:
@@ -22074,21 +21995,6 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INET6
-return|return
-name|gen_port
-argument_list|(
-name|port
-argument_list|,
-name|real_proto
-argument_list|,
-name|dir
-argument_list|)
-return|;
-else|#
-directive|else
 name|b
 operator|=
 name|gen_port
@@ -22117,9 +22023,6 @@ expr_stmt|;
 return|return
 name|b
 return|;
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|Q_PORTRANGE
 case|:
@@ -22346,23 +22249,6 @@ argument_list|,
 name|port2
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INET6
-return|return
-name|gen_portrange
-argument_list|(
-name|port1
-argument_list|,
-name|port2
-argument_list|,
-name|real_proto
-argument_list|,
-name|dir
-argument_list|)
-return|;
-else|#
-directive|else
 name|b
 operator|=
 name|gen_portrange
@@ -22395,9 +22281,6 @@ expr_stmt|;
 return|return
 name|b
 return|;
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|Q_GATEWAY
 case|:
@@ -23065,24 +22948,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INET6
-return|return
-name|gen_port
-argument_list|(
-operator|(
-name|int
-operator|)
-name|v
-argument_list|,
-name|proto
-argument_list|,
-name|dir
-argument_list|)
-return|;
-else|#
-directive|else
 block|{
 name|struct
 name|block
@@ -23124,9 +22989,6 @@ return|return
 name|b
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|Q_PORTRANGE
 case|:
@@ -23192,29 +23054,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|INET6
-return|return
-name|gen_portrange
-argument_list|(
-operator|(
-name|int
-operator|)
-name|v
-argument_list|,
-operator|(
-name|int
-operator|)
-name|v
-argument_list|,
-name|proto
-argument_list|,
-name|dir
-argument_list|)
-return|;
-else|#
-directive|else
 block|{
 name|struct
 name|block
@@ -23266,9 +23105,6 @@ return|return
 name|b
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* INET6 */
 case|case
 name|Q_GATEWAY
 case|:
@@ -24364,14 +24200,9 @@ case|:
 case|case
 name|Q_MOPDL
 case|:
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_IPV6
 case|:
-endif|#
-directive|endif
 comment|/* 		 * The offset is relative to the beginning of 		 * the network-layer header. 		 * XXX - are there any cases where we want 		 * off_nl_nosnap? 		 */
 name|s
 operator|=
@@ -24633,9 +24464,6 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|gen_and
 argument_list|(
 name|gen_proto_abbrev
@@ -24646,8 +24474,6 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|inst
 operator|->
 name|b
@@ -24655,9 +24481,6 @@ operator|=
 name|b
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_ICMPV6
 case|:
@@ -24667,8 +24490,6 @@ literal|"IPv6 upper-layer protocol is not supported by proto[x]"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
-endif|#
-directive|endif
 block|}
 name|inst
 operator|->
@@ -26690,9 +26511,6 @@ expr_stmt|;
 return|return
 name|b1
 return|;
-ifdef|#
-directive|ifdef
-name|INET6
 case|case
 name|Q_IPV6
 case|:
@@ -26729,9 +26547,6 @@ expr_stmt|;
 return|return
 name|b1
 return|;
-endif|#
-directive|endif
-comment|/* INET6 */
 block|}
 name|bpf_error
 argument_list|(

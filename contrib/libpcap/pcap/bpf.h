@@ -998,7 +998,7 @@ define|#
 directive|define
 name|DLT_NETANALYZER_TRANSPARENT
 value|241
-comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+comment|/*  * IP-over-InfiniBand, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
 define|#
 directive|define
 name|DLT_IPOIB
@@ -1056,10 +1056,20 @@ name|DLT_PFSYNC
 value|246
 endif|#
 directive|endif
+comment|/*  * Raw InfiniBand packets, starting with the Local Routing Header.  *  * Requested by Oren Kladnitsky<orenk@mellanox.com>.  */
+define|#
+directive|define
+name|DLT_INFINIBAND
+value|247
+comment|/*  * SCTP, with no lower-level protocols (i.e., no IPv4 or IPv6).  *  * Requested by Michael Tuexen<Michael.Tuexen@lurchi.franken.de>.  */
+define|#
+directive|define
+name|DLT_SCTP
+value|248
 define|#
 directive|define
 name|DLT_MATCHING_MAX
-value|246
+value|248
 comment|/* highest value in the "matching" range */
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 define|#

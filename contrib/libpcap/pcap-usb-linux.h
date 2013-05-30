@@ -9,7 +9,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|usb_platform_finddevs
+name|usb_findalldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -36,6 +36,10 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|is_ours
 parameter_list|)
 function_decl|;
 end_function_decl

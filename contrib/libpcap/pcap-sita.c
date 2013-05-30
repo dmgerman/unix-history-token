@@ -1363,11 +1363,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* and re-allocate the old large buffer into a new small one */
+if|if
+condition|(
+name|u
+operator|->
+name|imsg
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* oops, realloc call failed */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning...call to realloc() failed, value of errno is %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|empty_unit_table
@@ -1461,9 +1477,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -1609,9 +1622,6 @@ literal|""
 return|;
 comment|/* ... but if there wasn't any entry... return an empty string instead */
 block|}
-end_function
-
-begin_function
 name|int
 name|acn_parse_hosts_file
 parameter_list|(
@@ -1948,9 +1958,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|open_with_IOP
@@ -1992,6 +1999,30 @@ name|sockaddr_in
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* since we called malloc(), lets check to see if we actually got the memory	*/
+if|if
+condition|(
+name|u
+operator|->
+name|serv_addr
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* oops, we didn't get the memory requested	*/
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"malloc() request for u->serv_addr failed, value of errno is: %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 name|ip
 operator|=
@@ -1999,7 +2030,8 @@ name|u
 operator|->
 name|ip
 expr_stmt|;
-name|bzero
+comment|/* bzero() is deprecated, replaced with memset()	*/
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -2008,6 +2040,8 @@ operator|)
 name|u
 operator|->
 name|serv_addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2147,9 +2181,6 @@ name|sockfd
 return|;
 comment|/* return the non-zero file descriptor as a 'success' indicator */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|close_with_IOP
@@ -2223,9 +2254,6 @@ expr_stmt|;
 comment|/* and forget that the descriptor exists because we are not open */
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|pcap_cleanup_acn
@@ -2290,9 +2318,6 @@ name|handle
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|send_to_fd
@@ -2421,9 +2446,6 @@ name|nwritten
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|acn_freealldevs
@@ -2580,9 +2602,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -2615,9 +2634,6 @@ return|return
 name|static_buf
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -2677,9 +2693,6 @@ return|return
 name|static_buf
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -2738,7 +2751,28 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* get memory for a structure */
-name|bzero
+if|if
+condition|(
+name|iface
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* oops, we didn't get the memory requested	*/
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error...couldn't allocate memory for interface structure...value of errno is: %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -2746,12 +2780,15 @@ operator|*
 operator|)
 name|iface
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|iface_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* bzero is deprecated(), replaced with memset() */
 name|iface
 operator|->
 name|iftype
@@ -2772,6 +2809,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* get memory for the IOP's name */
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* oops, we didn't get the memory requested     */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error...couldn't allocate memory for IOPname...value of errno is: %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|name
@@ -3006,6 +3064,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* get memory for that name */
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* oops, we didn't get the memory requested     */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Error...couldn't allocate memory for IOP port name...value of errno is: %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|strcpy
 argument_list|(
 name|name
@@ -3077,9 +3156,6 @@ operator|->
 name|name
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|if_sort
@@ -3295,9 +3371,6 @@ argument_list|)
 return|;
 comment|/* otherwise we return the result of comparing the 2nd half of the string */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|sort_if_table
@@ -3464,9 +3537,6 @@ return|return;
 block|}
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|process_client_data
@@ -3630,7 +3700,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -3638,12 +3708,15 @@ operator|*
 operator|)
 name|iff
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|pcap_if_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* bzero() is deprecated, replaced with memset() */
 if|if
 condition|(
 name|acn_if_list
@@ -3924,7 +3997,8 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
+operator|+
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -3932,12 +4006,15 @@ operator|*
 operator|)
 name|addr
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|pcap_addr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* bzero() is deprecated, replaced with memset() */
 if|if
 condition|(
 name|iff
@@ -4008,13 +4085,15 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|s
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4023,6 +4102,7 @@ name|sockaddr_in
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* bzero() is deprecated, replaced with memset() */
 name|addr
 operator|->
 name|addr
@@ -4113,13 +4193,16 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
+comment|/* bzero() is deprecated, replaced with memset() */
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|s
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4215,13 +4298,16 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
+comment|/* bzero() is deprecated, replaced with memset() */
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|s
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4317,13 +4403,16 @@ operator|-
 literal|1
 return|;
 block|}
-name|bzero
+comment|/* bzero() is deprecated, replaced with memset() */
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|s
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4460,9 +4549,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|read_client_data
@@ -4587,9 +4673,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|wait_for_all_answers
@@ -4811,9 +4894,6 @@ block|}
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -4908,9 +4988,6 @@ block|}
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|acn_findalldevs
 parameter_list|(
@@ -5107,9 +5184,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pcap_stats_acn
@@ -5231,9 +5305,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|acn_open_live
@@ -5270,7 +5341,7 @@ name|pcap_if_t
 modifier|*
 name|alldevsp
 decl_stmt|;
-name|pcap_findalldevs
+name|pcap_findalldevs_interfaces
 argument_list|(
 operator|&
 name|alldevsp
@@ -5445,9 +5516,6 @@ literal|1
 return|;
 comment|/* if the interface wasn't found, return an error */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|acn_start_monitor
@@ -5565,9 +5633,6 @@ expr_stmt|;
 block|}
 comment|//printf("acn_start_monitor() complete\n");				// fulko
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pcap_inject_acn
@@ -5605,9 +5670,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pcap_setfilter_acn
@@ -5803,9 +5865,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pcap_setdirection_acn
@@ -5839,9 +5898,6 @@ operator|-
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|acn_read_n_bytes_with_timeout
@@ -6036,9 +6092,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pcap_read_acn
@@ -6253,9 +6306,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|pcap_activate_sita
@@ -6456,12 +6506,9 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 name|pcap_t
 modifier|*
-name|pcap_create
+name|pcap_create_interface
 parameter_list|(
 specifier|const
 name|char

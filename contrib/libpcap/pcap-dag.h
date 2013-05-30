@@ -14,13 +14,16 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|dag_platform_finddevs
+name|dag_findalldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
