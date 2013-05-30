@@ -109,12 +109,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SEPTEL_API
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -145,57 +139,11 @@ directive|include
 file|<system.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SEPTEL_API */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SEPTEL_ONLY
-end_ifdef
-
-begin_comment
-comment|/* This code is required when compiling for a Septel device only. */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|"pcap-septel.h"
 end_include
-
-begin_comment
-comment|/* Replace septel function names with pcap equivalent. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|septel_create
-value|pcap_create
-end_define
-
-begin_define
-define|#
-directive|define
-name|septel_platform_finddevs
-value|pcap_platform_finddevs
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SEPTEL_ONLY */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -703,12 +651,69 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|is_ours
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|pcap_t
 modifier|*
 name|p
 decl_stmt|;
+comment|/* Does this look like the Septel device? */
+name|cp
+operator|=
+name|strrchr
+argument_list|(
+name|device
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|cp
+operator|=
+name|device
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"septel"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Nope, it's not "septel" */
+operator|*
+name|is_ours
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+comment|/* OK, it's probably ours. */
+operator|*
+name|is_ours
+operator|=
+literal|1
+expr_stmt|;
 name|p
 operator|=
 name|pcap_create_common
@@ -773,7 +778,7 @@ end_function
 
 begin_function
 name|int
-name|septel_platform_finddevs
+name|septel_findalldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*

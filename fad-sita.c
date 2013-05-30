@@ -56,7 +56,7 @@ end_comment
 
 begin_function
 name|int
-name|pcap_findalldevs
+name|pcap_findalldevs_interfaces
 parameter_list|(
 name|pcap_if_t
 modifier|*

@@ -1709,7 +1709,7 @@ value|241
 end_define
 
 begin_comment
-comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+comment|/*  * IP-over-InfiniBand, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
 end_comment
 
 begin_define
@@ -1763,11 +1763,33 @@ name|LINKTYPE_PFSYNC
 value|246
 end_define
 
+begin_comment
+comment|/*  * Raw InfiniBand packets, starting with the Local Routing Header.  *  * Requested by Oren Kladnitsky<orenk@mellanox.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_INFINIBAND
+value|247
+end_define
+
+begin_comment
+comment|/*  * SCTP, with no lower-level protocols (i.e., no IPv4 or IPv6).  *  * Requested by Michael Tuexen<Michael.Tuexen@lurchi.franken.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_SCTP
+value|248
+end_define
+
 begin_define
 define|#
 directive|define
 name|LINKTYPE_MATCHING_MAX
-value|246
+value|248
 end_define
 
 begin_comment

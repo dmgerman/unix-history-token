@@ -264,12 +264,12 @@ value|255
 end_define
 
 begin_comment
-comment|/*  * Get a list of all interfaces that are up and that we can open.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * were up and could be opened.  *  * This is the implementation used on platforms that have SIOCGIFCONF but  * don't have any other mechanism for getting a list of interfaces.  *  * XXX - or platforms that have other, better mechanisms but for which  * we don't yet have code to use that mechanism; I think there's a better  * way on Linux, for example.  */
+comment|/*  * Get a list of all interfaces that are up and that we can open.  * Returns -1 on error, 0 otherwise.  * The list, as returned through "alldevsp", may be null if no interfaces  * were up and could be opened.  *  * This is the implementation used on platforms that have SIOCGIFCONF but  * don't have any other mechanism for getting a list of interfaces.  *  * XXX - or platforms that have other, better mechanisms but for which  * we don't yet have code to use that mechanism; I think there's a better  * way on Linux, for example, but if that better way is "getifaddrs()",  * we already have that.  */
 end_comment
 
 begin_function
 name|int
-name|pcap_findalldevs
+name|pcap_findalldevs_interfaces
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -1382,33 +1382,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* 		 * We haven't had any errors yet; do any platform-specific 		 * operations to add devices. 		 */
-if|if
-condition|(
-name|pcap_platform_finddevs
-argument_list|(
-operator|&
-name|devlist
-argument_list|,
-name|errbuf
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ret
