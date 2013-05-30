@@ -2216,7 +2216,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7995,7 +7994,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -11336,7 +11334,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -16157,7 +16154,6 @@ operator|->
 name|aac_aifq_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -18198,7 +18194,6 @@ operator|->
 name|aac_dev
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

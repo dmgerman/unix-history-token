@@ -721,7 +721,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2477,7 +2476,6 @@ operator|->
 name|cm_sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2960,7 +2958,6 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

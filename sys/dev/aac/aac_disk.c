@@ -553,7 +553,6 @@ operator|->
 name|aac_io_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

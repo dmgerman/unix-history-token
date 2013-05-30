@@ -398,8 +398,7 @@ name|u_int64_t
 name|cm_fibphys
 decl_stmt|;
 comment|/* bus address of the FIB */
-name|struct
-name|bio
+name|void
 modifier|*
 name|cm_data
 decl_stmt|;
@@ -418,7 +417,7 @@ modifier|*
 name|cm_sgtable
 decl_stmt|;
 comment|/* pointer to s/g table in 						 * command */
-name|int
+name|u_int
 name|cm_flags
 decl_stmt|;
 define|#
