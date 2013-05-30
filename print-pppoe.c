@@ -674,8 +674,6 @@ specifier|const
 name|u_char
 modifier|*
 name|v
-init|=
-name|p
 decl_stmt|;
 name|char
 name|tag_str

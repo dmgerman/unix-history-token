@@ -369,6 +369,39 @@ begin_comment
 comment|/* Common Address Redundancy Protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PT_RADIUS
+value|11
+end_define
+
+begin_comment
+comment|/* RADIUS authentication Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_ZMTP1
+value|12
+end_define
+
+begin_comment
+comment|/* ZeroMQ Message Transport Protocol 1.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_VXLAN
+value|13
+end_define
+
+begin_comment
+comment|/* Virtual eXtensible Local Area Network */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1876,6 +1909,26 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
+name|u_char
+modifier|*
+name|ns_nprint
+parameter_list|(
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+specifier|register
+specifier|const
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|ntp_print
 parameter_list|(
@@ -3330,6 +3383,20 @@ name|u_char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|zmtp1_print
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

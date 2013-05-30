@@ -124,6 +124,12 @@ literal|"IDRP"
 block|}
 block|,
 block|{
+name|NLPID_SPB
+block|,
+literal|"ISIS_SPB"
+block|}
+block|,
+block|{
 name|NLPID_MFR
 block|,
 literal|"FRF.15"
