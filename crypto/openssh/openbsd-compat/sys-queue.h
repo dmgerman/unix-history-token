@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: queue.h,v 1.32 2007/04/30 18:42:34 pedro Exp $	*/
+comment|/*	$OpenBSD: queue.h,v 1.36 2012/04/11 13:29:14 naddy Exp $	*/
 end_comment
 
 begin_comment
@@ -660,18 +660,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|SLIST_FOREACH_PREVPTR
+name|SLIST_FOREACH_SAFE
 parameter_list|(
 name|var
-parameter_list|,
-name|varp
 parameter_list|,
 name|head
 parameter_list|,
 name|field
+parameter_list|,
+name|tvar
 parameter_list|)
 define|\
-value|for ((varp) =&SLIST_FIRST((head));				\ 	    ((var) = *(varp)) != SLIST_END(head);			\ 	    (varp) =&SLIST_NEXT((var), field))
+value|for ((var) = SLIST_FIRST(head);				\ 	    (var)&& ((tvar) = SLIST_NEXT(var, field), 1);		\ 	    (var) = (tvar))
 end_define
 
 begin_comment
@@ -719,15 +719,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|SLIST_REMOVE_NEXT
+name|SLIST_REMOVE_AFTER
 parameter_list|(
-name|head
-parameter_list|,
 name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	(elm)->field.sle_next = (elm)->field.sle_next->field.sle_next;	\ } while (0)
+value|do {				\ 	(elm)->field.sle_next = (elm)->field.sle_next->field.sle_next;	\ } while (0)
 end_define
 
 begin_define
@@ -862,6 +860,23 @@ name|field
 parameter_list|)
 define|\
 value|for((var) = LIST_FIRST(head);					\ 	    (var)!= LIST_END(head);					\ 	    (var) = LIST_NEXT(var, field))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIST_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = LIST_FIRST(head);				\ 	    (var)&& ((tvar) = LIST_NEXT(var, field), 1);		\ 	    (var) = (tvar))
 end_define
 
 begin_comment
@@ -1052,6 +1067,23 @@ define|\
 value|for((var) = SIMPLEQ_FIRST(head);				\ 	    (var) != SIMPLEQ_END(head);					\ 	    (var) = SIMPLEQ_NEXT(var, field))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIMPLEQ_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = SIMPLEQ_FIRST(head);				\ 	    (var)&& ((tvar) = SIMPLEQ_NEXT(var, field), 1);		\ 	    (var) = (tvar))
+end_define
+
 begin_comment
 comment|/*  * Simple queue functions.  */
 end_comment
@@ -1120,6 +1152,20 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {			\ 	if (((head)->sqh_first = (head)->sqh_first->field.sqe_next) == NULL) \ 		(head)->sqh_last =&(head)->sqh_first;			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIMPLEQ_REMOVE_AFTER
+parameter_list|(
+name|head
+parameter_list|,
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	if (((elm)->field.sqe_next = (elm)->field.sqe_next->field.sqe_next) \ 	    == NULL)							\ 		(head)->sqh_last =&(elm)->field.sqe_next;		\ } while (0)
 end_define
 
 begin_comment
@@ -1266,6 +1312,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|TAILQ_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = TAILQ_FIRST(head);					\ 	    (var) != TAILQ_END(head)&&					\ 	    ((tvar) = TAILQ_NEXT(var, field), 1);			\ 	    (var) = (tvar))
+end_define
+
+begin_define
+define|#
+directive|define
 name|TAILQ_FOREACH_REVERSE
 parameter_list|(
 name|var
@@ -1278,6 +1341,25 @@ name|field
 parameter_list|)
 define|\
 value|for((var) = TAILQ_LAST(head, headname);				\ 	    (var) != TAILQ_END(head);					\ 	    (var) = TAILQ_PREV(var, headname, field))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAILQ_FOREACH_REVERSE_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|headname
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = TAILQ_LAST(head, headname);			\ 	    (var) != TAILQ_END(head)&&					\ 	    ((tvar) = TAILQ_PREV(var, headname, field), 1);		\ 	    (var) = (tvar))
 end_define
 
 begin_comment
@@ -1516,6 +1598,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|CIRCLEQ_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = CIRCLEQ_FIRST(head);				\ 	    (var) != CIRCLEQ_END(head)&&				\ 	    ((tvar) = CIRCLEQ_NEXT(var, field), 1);			\ 	    (var) = (tvar))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CIRCLEQ_FOREACH_REVERSE
 parameter_list|(
 name|var
@@ -1526,6 +1625,25 @@ name|field
 parameter_list|)
 define|\
 value|for((var) = CIRCLEQ_LAST(head);					\ 	    (var) != CIRCLEQ_END(head);					\ 	    (var) = CIRCLEQ_PREV(var, field))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CIRCLEQ_FOREACH_REVERSE_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|headname
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = CIRCLEQ_LAST(head, headname);			\ 	    (var) != CIRCLEQ_END(head)&& 				\ 	    ((tvar) = CIRCLEQ_PREV(var, headname, field), 1);		\ 	    (var) = (tvar))
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: platform.h,v 1.7 2010/11/05 03:47:01 dtucker Exp $ */
+comment|/* $Id: platform.h,v 1.8 2013/03/12 00:31:05 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -107,6 +107,15 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|platform_sys_dir_uid
+parameter_list|(
+name|uid_t
 parameter_list|)
 function_decl|;
 end_function_decl

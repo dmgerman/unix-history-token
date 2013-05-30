@@ -202,6 +202,12 @@ name|defined
 argument_list|(
 name|HAVE_VIS_H
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_STRNVIS
+argument_list|)
 end_if
 
 begin_include

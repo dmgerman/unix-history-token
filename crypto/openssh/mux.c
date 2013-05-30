@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mux.c,v 1.36 2012/07/06 01:37:21 djm Exp $ */
+comment|/* $OpenBSD: mux.c,v 1.38 2013/01/02 00:32:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -171,23 +171,6 @@ begin_include
 include|#
 directive|include
 file|<util.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_LIBUTIL_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<libutil.h>
 end_include
 
 begin_endif
@@ -924,7 +907,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|mux_master_session_cleanup_cb
 parameter_list|(
@@ -4154,6 +4136,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|channel_setup_local_fwd_listener
 argument_list|(
 name|fwd
@@ -4176,8 +4159,6 @@ name|options
 operator|.
 name|gateway_ports
 argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
 name|fail

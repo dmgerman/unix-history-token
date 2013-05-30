@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.117 2012/06/22 12:30:26 dtucker Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.120 2012/12/11 22:16:21 markus Exp $ */
 end_comment
 
 begin_comment
@@ -1155,6 +1155,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|auth_submethod
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|u_int
 name|session_id2_len
 init|=
@@ -2040,6 +2050,10 @@ name|int
 name|authenticated
 init|=
 literal|0
+decl_stmt|,
+name|partial
+init|=
+literal|0
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -2147,9 +2161,17 @@ operator|!
 name|authenticated
 condition|)
 block|{
+name|partial
+operator|=
+literal|0
+expr_stmt|;
 name|auth_method
 operator|=
 literal|"unknown"
+expr_stmt|;
+name|auth_submethod
+operator|=
+name|NULL
 expr_stmt|;
 name|authenticated
 operator|=
@@ -2167,6 +2189,59 @@ operator|==
 literal|1
 operator|)
 expr_stmt|;
+comment|/* Special handling for multiple required authentications */
+if|if
+condition|(
+name|options
+operator|.
+name|num_auth_methods
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|compat20
+condition|)
+name|fatal
+argument_list|(
+literal|"AuthenticationMethods is not supported"
+literal|"with SSH protocol 1"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|authenticated
+operator|&&
+operator|!
+name|auth2_update_methods_lists
+argument_list|(
+name|authctxt
+argument_list|,
+name|auth_method
+argument_list|)
+condition|)
+block|{
+name|debug3
+argument_list|(
+literal|"%s: method %s: partial"
+argument_list|,
+name|__func__
+argument_list|,
+name|auth_method
+argument_list|)
+expr_stmt|;
+name|authenticated
+operator|=
+literal|0
+expr_stmt|;
+name|partial
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|authenticated
@@ -2289,7 +2364,11 @@ name|authctxt
 argument_list|,
 name|authenticated
 argument_list|,
+name|partial
+argument_list|,
 name|auth_method
+argument_list|,
+name|auth_submethod
 argument_list|,
 name|compat20
 condition|?
@@ -2349,24 +2428,6 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* Drain any buffered messages from the child */
-while|while
-condition|(
-name|pmonitor
-operator|->
-name|m_log_recvfd
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|monitor_read_log
-argument_list|(
-name|pmonitor
-argument_list|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -2415,6 +2476,24 @@ argument_list|(
 name|pmonitor
 argument_list|)
 expr_stmt|;
+comment|/* Drain any buffered messages from the child */
+while|while
+condition|(
+name|pmonitor
+operator|->
+name|m_log_recvfd
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|monitor_read_log
+argument_list|(
+name|pmonitor
+argument_list|)
+operator|==
+literal|0
+condition|)
+empty_stmt|;
 name|close
 argument_list|(
 name|pmonitor
@@ -4057,6 +4136,28 @@ name|M_CP_STROPT
 undef|#
 directive|undef
 name|M_CP_STRARRAYOPT
+comment|/* Create valid auth method lists */
+if|if
+condition|(
+name|compat20
+operator|&&
+name|auth2_setup_methods_lists
+argument_list|(
+name|authctxt
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * The monitor will continue long enough to let the child 		 * run to it's packet_disconnect(), but it must not allow any 		 * authentication to succeed. 		 */
+name|debug
+argument_list|(
+literal|"%s: no valid authentication method lists"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 name|debug3
 argument_list|(
 literal|"%s: sending MONITOR_ANS_PWNAM: %d"
@@ -4677,6 +4778,16 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|compat20
+condition|)
+name|auth_method
+operator|=
+literal|"keyboard-interactive"
+expr_stmt|;
+comment|/* XXX auth_submethod */
+else|else
 name|auth_method
 operator|=
 literal|"bsdauth"
@@ -5392,7 +5503,11 @@ argument_list|)
 expr_stmt|;
 name|auth_method
 operator|=
-literal|"keyboard-interactive/pam"
+literal|"keyboard-interactive"
+expr_stmt|;
+name|auth_submethod
+operator|=
+literal|"pam"
 expr_stmt|;
 name|mm_request_send
 argument_list|(
@@ -5582,7 +5697,11 @@ argument_list|)
 expr_stmt|;
 name|auth_method
 operator|=
-literal|"keyboard-interactive/pam"
+literal|"keyboard-interactive"
+expr_stmt|;
+name|auth_submethod
+operator|=
+literal|"pam"
 expr_stmt|;
 if|if
 condition|(
@@ -5646,7 +5765,11 @@ argument_list|)
 expr_stmt|;
 name|auth_method
 operator|=
-literal|"keyboard-interactive/pam"
+literal|"keyboard-interactive"
+expr_stmt|;
+name|auth_submethod
+operator|=
+literal|"pam"
 expr_stmt|;
 return|return
 operator|(
@@ -5980,7 +6103,11 @@ name|authctxt
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|auth_method
+argument_list|,
+name|NULL
 argument_list|,
 name|compat20
 condition|?

@@ -724,21 +724,35 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_BSD_LIBUTIL_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<bsd/libutil.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|HAVE_LIBUTIL_H
-end_ifdef
+argument_list|)
+end_elif
 
 begin_include
 include|#
 directive|include
 file|<libutil.h>
 end_include
-
-begin_comment
-comment|/* Openpty on FreeBSD at least */
-end_comment
 
 begin_endif
 endif|#

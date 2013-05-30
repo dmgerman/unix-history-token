@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: platform.c,v 1.18 2011/01/11 06:02:25 djm Exp $ */
+comment|/* $Id: platform.c,v 1.19 2013/03/12 00:31:05 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -639,6 +639,47 @@ name|NULL
 return|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * return 1 if the specified uid is a uid that may own a system directory  * otherwise 0.  */
+end_comment
+
+begin_function
+name|int
+name|platform_sys_dir_uid
+parameter_list|(
+name|uid_t
+name|uid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|uid
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+ifdef|#
+directive|ifdef
+name|PLATFORM_SYS_DIR_UID
+if|if
+condition|(
+name|uid
+operator|==
+name|PLATFORM_SYS_DIR_UID
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
 block|}
 end_function
 

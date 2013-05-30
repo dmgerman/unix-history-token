@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.79 2011/09/23 07:45:05 markus Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.80 2012/08/17 01:30:00 djm Exp $ */
 end_comment
 
 begin_comment
@@ -108,6 +108,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|compat20
+condition|)
+return|return;
 name|debug
 argument_list|(
 literal|"Enabling compatibility mode for protocol 2.0"
