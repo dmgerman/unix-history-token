@@ -1200,6 +1200,27 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|uobj
+operator|->
+name|flags
+operator|&
+name|OBJ_TMPFS
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"leaked OBJ_TMPFS node %p vm_obj %p"
+operator|,
+name|node
+operator|,
+name|uobj
+operator|)
+argument_list|)
+expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
 name|uobj
