@@ -1929,6 +1929,12 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEAD
+operator|||
+name|object
+operator|->
+name|ref_count
+operator|!=
+literal|1
 condition|)
 block|{
 name|VM_OBJECT_WUNLOCK
@@ -1945,7 +1951,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -1957,15 +1962,6 @@ name|OBJ_TMPFS
 operator|)
 operator|!=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|object
-operator|->
-name|ref_count
-operator|==
-literal|1
 condition|)
 name|VOP_UNSET_TEXT
 argument_list|(
@@ -1979,7 +1975,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
