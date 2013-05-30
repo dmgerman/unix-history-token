@@ -240,9 +240,7 @@ literal|0x1p
 operator|-
 literal|1074
 argument_list|,
-literal|0x1p
-operator|-
-literal|1074
+literal|0
 argument_list|)
 expr_stmt|;
 name|testf
@@ -257,9 +255,7 @@ literal|0x1p
 operator|-
 literal|149
 argument_list|,
-literal|0x1p
-operator|-
-literal|149
+literal|0
 argument_list|)
 expr_stmt|;
 name|test
