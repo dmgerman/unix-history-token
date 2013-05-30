@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.39 2012/05/26 00:50:20 tom Exp $ */
+comment|/* $Id: main.c,v 1.40 2012/09/29 13:11:00 Adrian.Bunk Exp $ */
 end_comment
 
 begin_include
@@ -24,15 +24,6 @@ include|#
 directive|include
 file|"defs.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_ATEXIT
-argument_list|)
-end_if
 
 begin_ifdef
 ifdef|#
@@ -72,23 +63,6 @@ end_include
 begin_comment
 comment|/* for open(), O_EXCL, etc. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|USE_MKSTEMP
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
