@@ -20,7 +20,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"$Id: pcap.c 11463 2012-07-30 15:26:02Z luigi $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -1962,17 +1962,6 @@ name|memsize
 argument_list|)
 expr_stmt|;
 comment|/* restore original flags ? */
-name|ioctl
-argument_list|(
-name|me
-operator|->
-name|fd
-argument_list|,
-name|NIOCUNREGIF
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|me
