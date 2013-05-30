@@ -144,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b06FwText
 index|[
@@ -9687,6 +9688,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b06FwData
 index|[
@@ -9706,6 +9708,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b06FwRodata
 index|[
@@ -9735,6 +9738,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b06FwBss
 index|[
@@ -9754,6 +9758,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b06FwSbss
 index|[
@@ -9773,6 +9778,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b06FwSdata
 index|[
@@ -9920,6 +9926,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b06FwText
 index|[
@@ -24635,6 +24642,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b06FwData
 index|[
@@ -24654,6 +24662,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b06FwRodata
 index|[
@@ -24691,6 +24700,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b06FwBss
 index|[
@@ -24710,6 +24720,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b06FwSbss
 index|[
@@ -24729,6 +24740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b06FwSdata
 index|[
@@ -24876,6 +24888,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b06FwText
 index|[
@@ -27945,6 +27958,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b06FwData
 index|[
@@ -27964,6 +27978,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b06FwRodata
 index|[
@@ -27983,6 +27998,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b06FwBss
 index|[
@@ -28002,6 +28018,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b06FwSbss
 index|[
@@ -28021,6 +28038,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b06FwSdata
 index|[
@@ -28168,6 +28186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b06FwText
 index|[
@@ -35865,6 +35884,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b06FwData
 index|[
@@ -35884,6 +35904,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b06FwRodata
 index|[
@@ -35903,6 +35924,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b06FwBss
 index|[
@@ -35922,6 +35944,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b06FwSbss
 index|[
@@ -35941,6 +35964,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b06FwSdata
 index|[
@@ -36088,6 +36112,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b06FwText
 index|[
@@ -47183,6 +47208,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b06FwData
 index|[
@@ -47268,6 +47294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b06FwRodata
 index|[
@@ -47459,6 +47486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b06FwBss
 index|[
@@ -47478,6 +47506,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b06FwSbss
 index|[
@@ -47497,6 +47526,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b06FwSdata
 index|[
@@ -47516,6 +47546,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_rv2p_proc1
 index|[]
@@ -50466,6 +50497,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b09FwText
 index|[
@@ -58313,6 +58345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b09FwData
 index|[
@@ -58332,6 +58365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b09FwRodata
 index|[
@@ -58375,6 +58409,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b09FwBss
 index|[
@@ -58394,6 +58429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b09FwSbss
 index|[
@@ -58413,6 +58449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TXP_b09FwSdata
 index|[
@@ -58560,6 +58597,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b09FwText
 index|[
@@ -61009,6 +61047,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b09FwData
 index|[
@@ -61028,6 +61067,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b09FwRodata
 index|[
@@ -61049,6 +61089,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b09FwBss
 index|[
@@ -61068,6 +61109,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b09FwSbss
 index|[
@@ -61087,6 +61129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_TPAT_b09FwSdata
 index|[
@@ -61234,6 +61277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b09FwText
 index|[
@@ -72207,6 +72251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b09FwData
 index|[
@@ -72226,6 +72271,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b09FwRodata
 index|[
@@ -72273,6 +72319,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b09FwBss
 index|[
@@ -72292,6 +72339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b09FwSbss
 index|[
@@ -72311,6 +72359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_COM_b09FwSdata
 index|[
@@ -72458,6 +72507,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b09FwText
 index|[
@@ -91433,6 +91483,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b09FwBss
 index|[
@@ -91452,6 +91503,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b09FwSbss
 index|[
@@ -91471,6 +91523,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b09FwSdata
 index|[
@@ -91618,6 +91671,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b09FwText
 index|[
@@ -102807,6 +102861,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b09FwData
 index|[
@@ -102892,6 +102947,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b09FwRodata
 index|[
@@ -103135,6 +103191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b09FwBss
 index|[
@@ -103154,6 +103211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b09FwSbss
 index|[
@@ -103173,6 +103231,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_CP_b09FwSdata
 index|[
@@ -103192,6 +103251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_xi_rv2p_proc1
 index|[]
@@ -104349,6 +104409,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_xi_rv2p_proc2
 index|[]
@@ -106218,6 +106279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_xi90_rv2p_proc1
 index|[]
@@ -107435,6 +107497,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_xi90_rv2p_proc2
 index|[]
