@@ -229,9 +229,6 @@ modifier|*
 name|dpt
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -251,6 +248,11 @@ operator|->
 name|dev
 operator|=
 name|dev
+expr_stmt|;
+name|dpt_alloc
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|command
 operator|=
@@ -444,20 +446,9 @@ name|bad
 goto|;
 block|}
 comment|/* Ensure busmastering is enabled */
-name|command
-operator||=
-name|PCIM_CMD_BUSMASTEREN
-expr_stmt|;
-name|pci_write_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|command
-argument_list|,
-comment|/*bytes*/
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -497,11 +488,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|dpt_alloc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Allocate a dmatag representing the capabilities of this attachment */
 if|if
 condition|(
@@ -545,11 +531,10 @@ comment|/* flags     */
 literal|0
 argument_list|,
 comment|/* lockfunc  */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg   */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|dpt
@@ -568,11 +553,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|dpt_init
@@ -597,11 +577,6 @@ argument_list|(
 name|dpt
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bus_setup_intr
@@ -615,6 +590,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,

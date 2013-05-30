@@ -197,6 +197,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 name|union
 name|ccb
 modifier|*
@@ -2312,11 +2316,13 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
-name|bus_space_tag_t
-name|tag
+name|struct
+name|resource
+modifier|*
+name|res
 decl_stmt|;
-name|bus_space_handle_t
-name|bsh
+name|long
+name|reg_off
 decl_stmt|;
 name|struct
 name|cam_sim
@@ -2472,9 +2478,6 @@ modifier|*
 name|path
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|init_level
 decl_stmt|;
 name|u_int32_t
@@ -2516,6 +2519,10 @@ name|sdtr_period_tbl
 decl_stmt|;
 name|u_int8_t
 name|sdtr_period_tbl_size
+decl_stmt|;
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
 block|}
 struct|;
@@ -3248,11 +3255,10 @@ begin_function_decl
 name|int
 name|adv_find_signature
 parameter_list|(
-name|bus_space_tag_t
-name|tag
-parameter_list|,
-name|bus_space_handle_t
-name|bsh
+name|struct
+name|resource
+modifier|*
+name|res
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3696,7 +3702,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_1((adv)->tag, (adv)->bsh, offset)
+value|bus_read_1((adv)->res, (adv)->reg_off + offset)
 end_define
 
 begin_define
@@ -3709,7 +3715,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|bus_space_read_2((adv)->tag, (adv)->bsh, offset)
+value|bus_read_2((adv)->res, (adv)->reg_off + offset)
 end_define
 
 begin_define
@@ -3726,7 +3732,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1((adv)->tag, (adv)->bsh, offset, valp, count)
+value|bus_read_multi_1((adv)->res, (adv)->reg_off + offset, valp, count)
 end_define
 
 begin_comment
@@ -3784,16 +3790,16 @@ operator|*
 name|valp
 operator|++
 operator|=
-name|bus_space_read_2
+name|bus_read_2
 argument_list|(
 name|adv
 operator|->
-name|tag
+name|res
 argument_list|,
 name|adv
 operator|->
-name|bsh
-argument_list|,
+name|reg_off
+operator|+
 name|offset
 argument_list|)
 expr_stmt|;
@@ -3812,7 +3818,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1((adv)->tag, (adv)->bsh, offset, val)
+value|bus_write_1((adv)->res, (adv)->reg_off + offset, val)
 end_define
 
 begin_define
@@ -3827,7 +3833,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2((adv)->tag, (adv)->bsh, offset, val)
+value|bus_write_2((adv)->res, (adv)->reg_off + offset, val)
 end_define
 
 begin_comment
@@ -3881,16 +3887,16 @@ condition|(
 name|count
 operator|--
 condition|)
-name|bus_space_write_2
+name|bus_write_2
 argument_list|(
 name|adv
 operator|->
-name|tag
+name|res
 argument_list|,
 name|adv
 operator|->
-name|bsh
-argument_list|,
+name|reg_off
+operator|+
 name|offset
 argument_list|,
 operator|*

@@ -526,7 +526,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -559,9 +559,6 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|int
-name|opri
 decl_stmt|;
 name|int
 name|error
@@ -633,11 +630,10 @@ comment|/* flags	*/
 literal|0
 argument_list|,
 comment|/* lockfunc	*/
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg	*/
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|bt
@@ -659,12 +655,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Protect ourself from spurrious interrupts during 	 * intialization and attach.  We should really rely 	 * on interrupts during attach, but we don't have 	 * access to our interrupts during ISA probes, so until 	 * that changes, we mask our interrupts during attach 	 * too. 	 */
-name|opri
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|bt_probe
@@ -688,11 +678,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|opri
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -704,11 +689,6 @@ operator|=
 name|bt_attach
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|opri
 argument_list|)
 expr_stmt|;
 if|if
