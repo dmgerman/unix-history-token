@@ -29,12 +29,11 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__clang__
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
