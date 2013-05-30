@@ -90,6 +90,7 @@ specifier|static
 name|int
 name|kgetenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -101,6 +102,7 @@ specifier|static
 name|int
 name|ksetenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -115,6 +117,7 @@ specifier|static
 name|int
 name|kunsetenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -753,6 +756,7 @@ specifier|static
 name|int
 name|kgetenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|env
@@ -829,6 +833,7 @@ specifier|static
 name|int
 name|ksetenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|env
@@ -887,6 +892,7 @@ specifier|static
 name|int
 name|kunsetenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|env
