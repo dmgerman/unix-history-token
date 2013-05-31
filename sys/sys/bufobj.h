@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_mutex.h>
+file|<sys/_rwlock.h>
 end_include
 
 begin_include
@@ -253,10 +253,10 @@ struct|struct
 name|bufobj
 block|{
 name|struct
-name|mtx
-name|bo_mtx
+name|rwlock
+name|bo_lock
 decl_stmt|;
-comment|/* Mutex which protects "i" things */
+comment|/* Lock which protects "i" things */
 name|struct
 name|buf_ops
 modifier|*
@@ -342,11 +342,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BO_MTX
+name|BO_LOCKPTR
 parameter_list|(
 name|bo
 parameter_list|)
-value|(&(bo)->bo_mtx)
+value|(&(bo)->bo_lock)
 end_define
 
 begin_define
@@ -356,7 +356,7 @@ name|BO_LOCK
 parameter_list|(
 name|bo
 parameter_list|)
-value|mtx_lock(BO_MTX((bo)))
+value|rw_wlock(BO_LOCKPTR((bo)))
 end_define
 
 begin_define
@@ -366,7 +366,37 @@ name|BO_UNLOCK
 parameter_list|(
 name|bo
 parameter_list|)
-value|mtx_unlock(BO_MTX((bo)))
+value|rw_wunlock(BO_LOCKPTR((bo)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_RLOCK
+parameter_list|(
+name|bo
+parameter_list|)
+value|rw_rlock(BO_LOCKPTR((bo)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BO_RUNLOCK
+parameter_list|(
+name|bo
+parameter_list|)
+value|rw_runlock(BO_LOCKPTR((bo)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_BO_WLOCKED
+parameter_list|(
+name|bo
+parameter_list|)
+value|rw_assert(BO_LOCKPTR((bo)), RA_WLOCKED)
 end_define
 
 begin_define
@@ -376,7 +406,7 @@ name|ASSERT_BO_LOCKED
 parameter_list|(
 name|bo
 parameter_list|)
-value|mtx_assert(BO_MTX((bo)), MA_OWNED)
+value|rw_assert(BO_LOCKPTR((bo)), RA_LOCKED)
 end_define
 
 begin_define
@@ -386,7 +416,7 @@ name|ASSERT_BO_UNLOCKED
 parameter_list|(
 name|bo
 parameter_list|)
-value|mtx_assert(BO_MTX((bo)), MA_NOTOWNED)
+value|rw_assert(BO_LOCKPTR((bo)), RA_UNLOCKED)
 end_define
 
 begin_function_decl

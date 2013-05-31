@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -10163,7 +10169,7 @@ name|bp
 operator|->
 name|b_xflags
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bp
 operator|->

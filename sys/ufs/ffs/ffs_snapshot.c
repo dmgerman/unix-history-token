@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -12602,19 +12608,6 @@ name|nbp
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|BO_MTX
-argument_list|(
-name|bo
-argument_list|)
-operator|!=
-name|VI_MTX
-argument_list|(
-name|vp
-argument_list|)
-condition|)
-block|{
 name|VI_UNLOCK
 argument_list|(
 name|devvp
@@ -12625,7 +12618,6 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
-block|}
 name|BUF_UNLOCK
 argument_list|(
 name|nbp

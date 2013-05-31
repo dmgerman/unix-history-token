@@ -586,7 +586,7 @@ operator|&=
 operator|~
 name|B_RAM
 expr_stmt|;
-name|BO_LOCK
+name|BO_RLOCK
 argument_list|(
 name|bo
 argument_list|)
@@ -693,7 +693,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|BO_UNLOCK
+name|BO_RUNLOCK
 argument_list|(
 name|bo
 argument_list|)
@@ -1791,12 +1791,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 			 * Stop scanning if the buffer is fully valid 			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers. 			 */
-name|BO_LOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Stop scanning if the buffer is fully valid 			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers.  The bo lock is not 			 * required for the BKGRDINPROG check since it 			 * can not be set without the buf lock. 			 */
 if|if
 condition|(
 operator|(
@@ -1826,11 +1821,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|BO_UNLOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
 name|bqrelse
 argument_list|(
 name|tbp
@@ -1838,11 +1828,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|BO_UNLOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
 comment|/* 			 * The buffer must be completely invalid in order to 			 * take part in the cluster.  If it is partially valid 			 * then we stop. 			 */
 name|off
 operator|=
@@ -3465,7 +3450,7 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
@@ -3872,7 +3857,7 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)

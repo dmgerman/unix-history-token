@@ -17840,7 +17840,7 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
