@@ -577,10 +577,13 @@ literal|" Packet Len %u,"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
-operator|&
+operator|(
+name|u_int8_t
+operator|*
+operator|)
 name|ni
-operator|->
-name|rip_dest
+operator|+
+literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
