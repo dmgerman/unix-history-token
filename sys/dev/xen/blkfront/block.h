@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * XenBSD block device driver  *  * Copyright (c) 2009 Scott Long, Yahoo!  * Copyright (c) 2009 Frank Suchomel, Citrix  * Copyright (c) 2009 Doug F. Rabson, Citrix  * Copyright (c) 2005 Kip Macy  * Copyright (c) 2003-2004, Keir Fraser& Steve Hand  * Modifications by Mark A. Williamson are (c) Intel Research Cambridge  *  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * $FreeBSD$  */
+comment|/*  * XenBSD block device driver  *  * Copyright (c) 2010-2013 Spectra Logic Corporation  * Copyright (c) 2009 Scott Long, Yahoo!  * Copyright (c) 2009 Frank Suchomel, Citrix  * Copyright (c) 2009 Doug F. Rabson, Citrix  * Copyright (c) 2005 Kip Macy  * Copyright (c) 2003-2004, Keir Fraser& Steve Hand  * Modifications by Mark A. Williamson are (c) Intel Research Cambridge  *  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__XEN_DRIVERS_BLOCK_H__
+name|__XEN_BLKFRONT_BLOCK_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__XEN_DRIVERS_BLOCK_H__
+name|__XEN_BLKFRONT_BLOCK_H__
 end_define
 
 begin_include
@@ -28,7 +28,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XBF_SEGS_TO_SIZE
+name|XBD_SEGS_TO_SIZE
 parameter_list|(
 name|segs
 parameter_list|)
@@ -43,7 +43,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XBF_SIZE_TO_SEGS
+name|XBD_SIZE_TO_SEGS
 parameter_list|(
 name|size
 parameter_list|)
@@ -58,7 +58,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XBF_MAX_REQUESTS
+name|XBD_MAX_REQUESTS
 value|256
 end_define
 
@@ -69,9 +69,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XBF_MAX_REQUEST_SIZE
+name|XBD_MAX_REQUEST_SIZE
 define|\
-value|MIN(MAXPHYS, XBF_SEGS_TO_SIZE(BLKIF_MAX_SEGMENTS_PER_REQUEST))
+value|MIN(MAXPHYS, XBD_SEGS_TO_SIZE(BLKIF_MAX_SEGMENTS_PER_REQUEST))
 end_define
 
 begin_comment
@@ -81,79 +81,53 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XBF_MAX_SEGMENTS_PER_REQUEST
+name|XBD_MAX_SEGMENTS_PER_REQUEST
 define|\
-value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,				\ 	     XBF_SIZE_TO_SEGS(XBF_MAX_REQUEST_SIZE)))
+value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,				\ 	     XBD_SIZE_TO_SEGS(XBD_MAX_REQUEST_SIZE)))
 end_define
 
 begin_comment
-comment|/**  * The maximum number of shared memory ring pages we will allow in a  * negotiated block-front/back communication channel.  Allow enough  * ring space for all requests to be  XBF_MAX_REQUEST_SIZE'd.  */
+comment|/**  * The maximum number of shared memory ring pages we will allow in a  * negotiated block-front/back communication channel.  Allow enough  * ring space for all requests to be  XBD_MAX_REQUEST_SIZE'd.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XBF_MAX_RING_PAGES
+name|XBD_MAX_RING_PAGES
 define|\
-value|BLKIF_RING_PAGES(BLKIF_SEGS_TO_BLOCKS(XBF_MAX_SEGMENTS_PER_REQUEST) \ 		       * XBF_MAX_REQUESTS)
+value|BLKIF_RING_PAGES(BLKIF_SEGS_TO_BLOCKS(XBD_MAX_SEGMENTS_PER_REQUEST) \ 		       * XBD_MAX_REQUESTS)
 end_define
 
-begin_struct
-struct|struct
-name|xlbd_type_info
-block|{
-name|int
-name|partn_shift
-decl_stmt|;
-name|int
-name|disks_per_major
-decl_stmt|;
-name|char
-modifier|*
-name|devname
-decl_stmt|;
-name|char
-modifier|*
-name|diskname
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_struct_decl
+struct_decl|struct
+name|xbd_command
+struct_decl|;
+end_struct_decl
 
-begin_struct
-struct|struct
-name|xlbd_major_info
-block|{
-name|int
-name|major
-decl_stmt|;
-name|int
-name|index
-decl_stmt|;
-name|int
-name|usage
-decl_stmt|;
+begin_typedef
+typedef|typedef
+name|void
+name|xbd_cbcf_t
+parameter_list|(
 name|struct
-name|xlbd_type_info
+name|xbd_command
 modifier|*
-name|type
-decl_stmt|;
-block|}
-struct|;
-end_struct
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_struct
 struct|struct
-name|xb_command
+name|xbd_command
 block|{
 name|TAILQ_ENTRY
 argument_list|(
-argument|xb_command
+argument|xbd_command
 argument_list|)
 name|cm_link
 expr_stmt|;
 name|struct
-name|xb_softc
+name|xbd_softc
 modifier|*
 name|cm_sc
 decl_stmt|;
@@ -162,80 +136,73 @@ name|cm_flags
 decl_stmt|;
 define|#
 directive|define
-name|XB_CMD_FROZEN
+name|XBD_CMD_FROZEN
 value|(1<<0)
 define|#
 directive|define
-name|XB_CMD_POLLED
+name|XBD_CMD_POLLED
 value|(1<<1)
 define|#
 directive|define
-name|XB_ON_XBQ_FREE
+name|XBD_ON_XBDQ_FREE
 value|(1<<2)
 define|#
 directive|define
-name|XB_ON_XBQ_READY
+name|XBD_ON_XBDQ_READY
 value|(1<<3)
 define|#
 directive|define
-name|XB_ON_XBQ_BUSY
+name|XBD_ON_XBDQ_BUSY
 value|(1<<4)
 define|#
 directive|define
-name|XB_ON_XBQ_COMPLETE
+name|XBD_ON_XBDQ_COMPLETE
 value|(1<<5)
 define|#
 directive|define
-name|XB_ON_XBQ_MASK
+name|XBD_ON_XBDQ_MASK
 value|((1<<2)|(1<<3)|(1<<4)|(1<<5))
 name|bus_dmamap_t
-name|map
+name|cm_map
 decl_stmt|;
 name|uint64_t
-name|id
+name|cm_id
 decl_stmt|;
 name|grant_ref_t
 modifier|*
-name|sg_refs
+name|cm_sg_refs
 decl_stmt|;
 name|struct
 name|bio
 modifier|*
-name|bp
+name|cm_bp
 decl_stmt|;
 name|grant_ref_t
-name|gref_head
+name|cm_gref_head
 decl_stmt|;
 name|void
 modifier|*
-name|data
+name|cm_data
 decl_stmt|;
 name|size_t
-name|datalen
+name|cm_datalen
 decl_stmt|;
 name|u_int
-name|nseg
+name|cm_nseg
 decl_stmt|;
 name|int
-name|operation
+name|cm_operation
 decl_stmt|;
 name|blkif_sector_t
-name|sector_number
+name|cm_sector_number
 decl_stmt|;
 name|int
-name|status
+name|cm_status
 decl_stmt|;
-name|void
-function_decl|(
+name|xbd_cbcf_t
 modifier|*
 name|cm_complete
-function_decl|)
-parameter_list|(
-name|struct
-name|xb_command
-modifier|*
-parameter_list|)
-function_decl|;
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -243,48 +210,48 @@ end_struct
 begin_define
 define|#
 directive|define
-name|XBQ_FREE
+name|XBDQ_FREE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_BIO
+name|XBDQ_BIO
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_READY
+name|XBDQ_READY
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_BUSY
+name|XBDQ_BUSY
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_COMPLETE
+name|XBDQ_COMPLETE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_COUNT
+name|XBDQ_COUNT
 value|5
 end_define
 
 begin_struct
 struct|struct
-name|xb_qstat
+name|xbd_qstat
 block|{
 name|uint32_t
 name|q_length
@@ -298,13 +265,13 @@ end_struct
 
 begin_union
 union|union
-name|xb_statrequest
+name|xbd_statrequest
 block|{
 name|uint32_t
 name|ms_item
 decl_stmt|;
 name|struct
-name|xb_qstat
+name|xbd_qstat
 name|ms_qstat
 decl_stmt|;
 block|}
@@ -317,136 +284,136 @@ end_comment
 
 begin_struct
 struct|struct
-name|xb_softc
+name|xbd_softc
 block|{
 name|device_t
-name|xb_dev
+name|xbd_dev
 decl_stmt|;
 name|struct
 name|disk
 modifier|*
-name|xb_disk
+name|xbd_disk
 decl_stmt|;
 comment|/* disk params */
 name|struct
 name|bio_queue_head
-name|xb_bioq
+name|xbd_bioq
 decl_stmt|;
 comment|/* sort queue */
 name|int
-name|xb_unit
+name|xbd_unit
 decl_stmt|;
 name|int
-name|xb_flags
+name|xbd_flags
 decl_stmt|;
 define|#
 directive|define
-name|XB_OPEN
+name|XBD_OPEN
 value|(1<<0)
 comment|/* drive is open (can't shut down) */
 define|#
 directive|define
-name|XB_BARRIER
+name|XBD_BARRIER
 value|(1<< 1)
 comment|/* backend supports barriers */
 define|#
 directive|define
-name|XB_READY
+name|XBD_READY
 value|(1<< 2)
 comment|/* Is ready */
 define|#
 directive|define
-name|XB_FROZEN
+name|XBD_FROZEN
 value|(1<< 3)
 comment|/* Waiting for resources */
 name|int
-name|vdevice
+name|xbd_vdevice
 decl_stmt|;
 name|int
-name|connected
+name|xbd_connected
 decl_stmt|;
 name|u_int
-name|ring_pages
+name|xbd_ring_pages
 decl_stmt|;
 name|uint32_t
-name|max_requests
+name|xbd_max_requests
 decl_stmt|;
 name|uint32_t
-name|max_request_segments
+name|xbd_max_request_segments
 decl_stmt|;
 name|uint32_t
-name|max_request_blocks
+name|xbd_max_request_blocks
 decl_stmt|;
 name|uint32_t
-name|max_request_size
+name|xbd_max_request_size
 decl_stmt|;
 name|grant_ref_t
-name|ring_ref
+name|xbd_ring_ref
 index|[
-name|XBF_MAX_RING_PAGES
+name|XBD_MAX_RING_PAGES
 index|]
 decl_stmt|;
 name|blkif_front_ring_t
-name|ring
+name|xbd_ring
 decl_stmt|;
 name|unsigned
 name|int
-name|irq
+name|xbd_irq
 decl_stmt|;
 name|struct
 name|gnttab_free_callback
-name|callback
+name|xbd_callback
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|xb_command
+argument|xbd_command
 argument_list|)
-name|cm_free
+name|xbd_cm_free
 expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|xb_command
+argument|xbd_command
 argument_list|)
-name|cm_ready
+name|xbd_cm_ready
 expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|xb_command
+argument|xbd_command
 argument_list|)
-name|cm_busy
+name|xbd_cm_busy
 expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|xb_command
+argument|xbd_command
 argument_list|)
-name|cm_complete
+name|xbd_cm_complete
 expr_stmt|;
 name|struct
-name|xb_qstat
-name|xb_qstat
+name|xbd_qstat
+name|xbd_qstat
 index|[
-name|XBQ_COUNT
+name|XBDQ_COUNT
 index|]
 decl_stmt|;
 name|bus_dma_tag_t
-name|xb_io_dmat
+name|xbd_io_dmat
 decl_stmt|;
 comment|/** 	 * The number of people holding this device open.  We won't allow a 	 * hot-unplug unless this is 0. 	 */
 name|int
-name|users
+name|xbd_users
 decl_stmt|;
 name|struct
 name|mtx
-name|xb_io_lock
+name|xbd_io_lock
 decl_stmt|;
 name|struct
-name|xb_command
+name|xbd_command
 modifier|*
-name|shadow
+name|xbd_shadow
 decl_stmt|;
 block|}
 struct|;
@@ -454,10 +421,10 @@ end_struct
 
 begin_function_decl
 name|int
-name|xlvbd_add
+name|xbd_instance_create
 parameter_list|(
 name|struct
-name|xb_softc
+name|xbd_softc
 modifier|*
 parameter_list|,
 name|blkif_sector_t
@@ -476,104 +443,93 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|xlvbd_del
-parameter_list|(
-name|struct
-name|xb_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
-name|XBQ_ADD
+name|XBDQ_ADD
 parameter_list|(
 name|sc
 parameter_list|,
 name|qname
 parameter_list|)
 define|\
-value|do {							\ 		struct xb_qstat *qs;				\ 								\ 		qs =&(sc)->xb_qstat[qname];			\ 		qs->q_length++;					\ 		if (qs->q_length> qs->q_max)			\ 			qs->q_max = qs->q_length;		\ 	} while (0)
+value|do {							\ 		struct xbd_qstat *qs;				\ 								\ 		qs =&(sc)->xbd_qstat[qname];			\ 		qs->q_length++;					\ 		if (qs->q_length> qs->q_max)			\ 			qs->q_max = qs->q_length;		\ 	} while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_REMOVE
+name|XBDQ_REMOVE
 parameter_list|(
 name|sc
 parameter_list|,
 name|qname
 parameter_list|)
-value|(sc)->xb_qstat[qname].q_length--
+value|(sc)->xbd_qstat[qname].q_length--
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_INIT
+name|XBDQ_INIT
 parameter_list|(
 name|sc
 parameter_list|,
 name|qname
 parameter_list|)
 define|\
-value|do {							\ 		sc->xb_qstat[qname].q_length = 0;		\ 		sc->xb_qstat[qname].q_max = 0;			\ 	} while (0)
+value|do {							\ 		sc->xbd_qstat[qname].q_length = 0;		\ 		sc->xbd_qstat[qname].q_max = 0;			\ 	} while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|XBQ_COMMAND_QUEUE
+name|XBDQ_COMMAND_QUEUE
 parameter_list|(
 name|name
 parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void						\ 	xb_initq_ ## name (struct xb_softc *sc)				\ 	{								\ 		TAILQ_INIT(&sc->cm_ ## name);				\ 		XBQ_INIT(sc, index);					\ 	}								\ 	static __inline void						\ 	xb_enqueue_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_TAIL(&cm->cm_sc->cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XB_ON_ ## index;			\ 		XBQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline void						\ 	xb_requeue_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_HEAD(&cm->cm_sc->cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XB_ON_ ## index;			\ 		XBQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline struct xb_command *				\ 	xb_dequeue_ ## name (struct xb_softc *sc)			\ 	{								\ 		struct xb_command *cm;					\ 									\ 		if ((cm = TAILQ_FIRST(&sc->cm_ ## name)) != NULL) {	\ 			if ((cm->cm_flags& XB_ON_XBQ_MASK) !=		\ 			     XB_ON_ ## index) {				\ 				printf("command %p not in queue, "	\ 				    "flags = %#x, bit = %#x\n", cm,	\ 				    cm->cm_flags, XB_ON_ ## index);	\ 				panic("command not in queue");		\ 			}						\ 			TAILQ_REMOVE(&sc->cm_ ## name, cm, cm_link);	\ 			cm->cm_flags&= ~XB_ON_ ## index;		\ 			XBQ_REMOVE(sc, index);				\ 		}							\ 		return (cm);						\ 	}								\ 	static __inline void						\ 	xb_remove_ ## name (struct xb_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XB_ON_XBQ_MASK) != XB_ON_ ## index){\ 			printf("command %p not in queue, flags = %#x, " \ 			    "bit = %#x\n", cm, cm->cm_flags,		\ 			    XB_ON_ ## index);				\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&cm->cm_sc->cm_ ## name, cm, cm_link);	\ 		cm->cm_flags&= ~XB_ON_ ## index;			\ 		XBQ_REMOVE(cm->cm_sc, index);				\ 	}								\ struct hack
+value|static __inline void						\ 	xbd_initq_ ## name (struct xbd_softc *sc)			\ 	{								\ 		TAILQ_INIT(&sc->xbd_cm_ ## name);			\ 		XBDQ_INIT(sc, index);					\ 	}								\ 	static __inline void						\ 	xbd_enqueue_ ## name (struct xbd_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XBD_ON_XBDQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_TAIL(&cm->cm_sc->xbd_cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XBD_ON_ ## index;			\ 		XBDQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline void						\ 	xbd_requeue_ ## name (struct xbd_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XBD_ON_XBDQ_MASK) != 0) {		\ 			printf("command %p is on another queue, "	\ 			    "flags = %#x\n", cm, cm->cm_flags);		\ 			panic("command is on another queue");		\ 		}							\ 		TAILQ_INSERT_HEAD(&cm->cm_sc->xbd_cm_ ## name, cm, cm_link); \ 		cm->cm_flags |= XBD_ON_ ## index;			\ 		XBDQ_ADD(cm->cm_sc, index);				\ 	}								\ 	static __inline struct xbd_command *				\ 	xbd_dequeue_ ## name (struct xbd_softc *sc)			\ 	{								\ 		struct xbd_command *cm;					\ 									\ 		if ((cm = TAILQ_FIRST(&sc->xbd_cm_ ## name)) != NULL) {	\ 			if ((cm->cm_flags& XBD_ON_XBDQ_MASK) !=		\ 			     XBD_ON_ ## index) {				\ 				printf("command %p not in queue, "	\ 				    "flags = %#x, bit = %#x\n", cm,	\ 				    cm->cm_flags, XBD_ON_ ## index);	\ 				panic("command not in queue");		\ 			}						\ 			TAILQ_REMOVE(&sc->xbd_cm_ ## name, cm, cm_link);\ 			cm->cm_flags&= ~XBD_ON_ ## index;		\ 			XBDQ_REMOVE(sc, index);				\ 		}							\ 		return (cm);						\ 	}								\ 	static __inline void						\ 	xbd_remove_ ## name (struct xbd_command *cm)			\ 	{								\ 		if ((cm->cm_flags& XBD_ON_XBDQ_MASK) != XBD_ON_ ## index){\ 			printf("command %p not in queue, flags = %#x, " \ 			    "bit = %#x\n", cm, cm->cm_flags,		\ 			    XBD_ON_ ## index);				\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&cm->cm_sc->xbd_cm_ ## name, cm, cm_link);	\ 		cm->cm_flags&= ~XBD_ON_ ## index;			\ 		XBDQ_REMOVE(cm->cm_sc, index);				\ 	}								\ struct hack
 end_define
 
 begin_expr_stmt
-name|XBQ_COMMAND_QUEUE
+name|XBDQ_COMMAND_QUEUE
 argument_list|(
 name|free
 argument_list|,
-name|XBQ_FREE
+name|XBDQ_FREE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|XBQ_COMMAND_QUEUE
+name|XBDQ_COMMAND_QUEUE
 argument_list|(
 name|ready
 argument_list|,
-name|XBQ_READY
+name|XBDQ_READY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|XBQ_COMMAND_QUEUE
+name|XBDQ_COMMAND_QUEUE
 argument_list|(
 name|busy
 argument_list|,
-name|XBQ_BUSY
+name|XBDQ_BUSY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|XBQ_COMMAND_QUEUE
+name|XBDQ_COMMAND_QUEUE
 argument_list|(
 name|complete
 argument_list|,
-name|XBQ_COMPLETE
+name|XBDQ_COMPLETE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -582,10 +538,10 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|xb_initq_bio
+name|xbd_initq_bio
 parameter_list|(
 name|struct
-name|xb_softc
+name|xbd_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -595,14 +551,14 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|xb_bioq
+name|xbd_bioq
 argument_list|)
 expr_stmt|;
-name|XBQ_INIT
+name|XBDQ_INIT
 argument_list|(
 name|sc
 argument_list|,
-name|XBQ_BIO
+name|XBDQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -612,10 +568,10 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|xb_enqueue_bio
+name|xbd_enqueue_bio
 parameter_list|(
 name|struct
-name|xb_softc
+name|xbd_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -630,16 +586,16 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|xb_bioq
+name|xbd_bioq
 argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|XBQ_ADD
+name|XBDQ_ADD
 argument_list|(
 name|sc
 argument_list|,
-name|XBQ_BIO
+name|XBDQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -649,10 +605,10 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|xb_requeue_bio
+name|xbd_requeue_bio
 parameter_list|(
 name|struct
-name|xb_softc
+name|xbd_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -667,16 +623,16 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|xb_bioq
+name|xbd_bioq
 argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|XBQ_ADD
+name|XBDQ_ADD
 argument_list|(
 name|sc
 argument_list|,
-name|XBQ_BIO
+name|XBDQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -688,9 +644,9 @@ name|__inline
 expr|struct
 name|bio
 operator|*
-name|xb_dequeue_bio
+name|xbd_dequeue_bio
 argument_list|(
-argument|struct xb_softc *sc
+argument|struct xbd_softc *sc
 argument_list|)
 block|{ 	struct
 name|bio
@@ -707,7 +663,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|xb_bioq
+name|xbd_bioq
 argument_list|)
 operator|)
 operator|!=
@@ -719,16 +675,16 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|xb_bioq
+name|xbd_bioq
 argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|XBQ_REMOVE
+name|XBDQ_REMOVE
 argument_list|(
 name|sc
 argument_list|,
-name|XBQ_BIO
+name|XBDQ_BIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -749,7 +705,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __XEN_DRIVERS_BLOCK_H__ */
+comment|/* __XEN_BLKFRONT_BLOCK_H__ */
 end_comment
 
 end_unit
