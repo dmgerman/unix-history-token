@@ -389,7 +389,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|flush_requests
+name|xbd_flush_requests
 parameter_list|(
 name|struct
 name|xbd_softc
@@ -940,7 +940,7 @@ name|cm_flags
 operator|&
 name|XBD_CMD_FROZEN
 condition|)
-name|flush_requests
+name|xbd_flush_requests
 argument_list|(
 name|sc
 argument_list|)
@@ -1404,7 +1404,7 @@ name|queued
 operator|!=
 literal|0
 condition|)
-name|flush_requests
+name|xbd_flush_requests
 argument_list|(
 name|sc
 argument_list|)
@@ -2603,7 +2603,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|xbd_setup_ring
+name|xbd_alloc_ring
 parameter_list|(
 name|struct
 name|xbd_softc
@@ -4833,7 +4833,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|xbd_setup_ring
+name|xbd_alloc_ring
 argument_list|(
 name|sc
 argument_list|)
