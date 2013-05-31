@@ -570,49 +570,6 @@ parameter_list|)
 value|vm_page_trylock_KBI((m), LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INVARIANTS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|vm_page_lock_assert
-parameter_list|(
-name|m
-parameter_list|,
-name|a
-parameter_list|)
-define|\
-value|vm_page_lock_assert_KBI((m), (a), __FILE__, __LINE__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vm_page_lock_assert
-parameter_list|(
-name|m
-parameter_list|,
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_else
 else|#
 directive|else
@@ -662,6 +619,20 @@ parameter_list|)
 value|mtx_trylock(vm_page_lockptr((m)))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -671,7 +642,24 @@ name|m
 parameter_list|,
 name|a
 parameter_list|)
-value|mtx_assert(vm_page_lockptr((m)), (a))
+define|\
+value|vm_page_lock_assert_KBI((m), (a), __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|vm_page_lock_assert
+parameter_list|(
+name|m
+parameter_list|,
+name|a
+parameter_list|)
 end_define
 
 begin_endif
