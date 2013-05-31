@@ -443,6 +443,16 @@ directive|include
 file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|compat_freebsd_32bit
+argument_list|,
+literal|"Compatible with 32-bit FreeBSD"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
