@@ -9295,6 +9295,15 @@ operator|->
 name|sc_media
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|xn_ifp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ether_ifdetach
 argument_list|(
 name|info
@@ -9309,6 +9318,13 @@ operator|->
 name|xn_ifp
 argument_list|)
 expr_stmt|;
+name|info
+operator|->
+name|xn_ifp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
