@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -747,7 +753,7 @@ argument_list|,
 name|sc
 argument_list|,
 operator|&
-name|aha
+name|sc
 operator|->
 name|ih
 argument_list|)
