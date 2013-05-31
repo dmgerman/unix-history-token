@@ -439,7 +439,7 @@ parameter_list|(
 name|obj
 parameter_list|)
 define|\
-value|__atomic_is_lock_free(sizeof((obj)->__val),&(obj)->val)
+value|__atomic_is_lock_free(sizeof((obj)->__val),&(obj)->__val)
 end_define
 
 begin_else
