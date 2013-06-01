@@ -6570,13 +6570,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
-argument_list|(
-name|m
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
