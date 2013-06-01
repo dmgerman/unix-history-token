@@ -127,8 +127,7 @@ name|bfd_size_type
 name|extended_names_size
 decl_stmt|;
 comment|/* Size of extended names */
-comment|/* when more compilers are standard C, this can be a time_t */
-name|long
+name|time_t
 name|armap_timestamp
 decl_stmt|;
 comment|/* Timestamp value written into armap. 				   This is used for BSD archives to check 				   that the timestamp is recent enough 				   for the BSD linker to not complain, 				   just before we finish writing an 				   archive.  */

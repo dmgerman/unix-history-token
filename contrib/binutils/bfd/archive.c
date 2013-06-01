@@ -5274,8 +5274,12 @@ operator|->
 name|ar_date
 argument_list|)
 argument_list|,
-literal|"%-12ld"
+literal|"%-12lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|status
 operator|.
 name|st_mtime
@@ -5591,6 +5595,18 @@ name|size
 parameter_list|)
 define|\
 value|buf->stelt = strtol (hdr->arelt,&aloser, size);	\   if (aloser == hdr->arelt)	      			\     return -1;
+define|#
+directive|define
+name|fooll
+parameter_list|(
+name|arelt
+parameter_list|,
+name|stelt
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|buf->stelt = strtoll (hdr->arelt,&aloser, size);	\   if (aloser == hdr->arelt)	      			\     return -1;
 comment|/* Some platforms support special notations for large IDs.  */
 ifdef|#
 directive|ifdef
@@ -5622,7 +5638,7 @@ parameter_list|)
 value|foo (arelt, stelt, size)
 endif|#
 directive|endif
-name|foo
+name|fooll
 argument_list|(
 name|ar_date
 argument_list|,

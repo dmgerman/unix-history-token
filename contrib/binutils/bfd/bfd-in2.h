@@ -37,6 +37,10 @@ file|"ansidecl.h"
 include|#
 directive|include
 file|"symcat.h"
+include|#
+directive|include
+file|<time.h>
+comment|/* time_t */
 if|#
 directive|if
 name|defined
@@ -4044,7 +4048,7 @@ directive|define
 name|H_GET_S8
 value|bfd_h_get_signed_8
 comment|/* Extracted from bfdio.c.  */
-name|long
+name|time_t
 name|bfd_get_mtime
 parameter_list|(
 name|bfd

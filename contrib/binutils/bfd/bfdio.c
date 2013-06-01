@@ -1312,11 +1312,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_get_mtime  SYNOPSIS 	long bfd_get_mtime (bfd *abfd);  DESCRIPTION 	Return the file modification time (as read from the file system, or 	from the archive header for archive members).  */
+comment|/* FUNCTION 	bfd_get_mtime  SYNOPSIS 	time_t bfd_get_mtime (bfd *abfd);  DESCRIPTION 	Return the file modification time (as read from the file system, or 	from the archive header for archive members).  */
 end_comment
 
 begin_function
-name|long
+name|time_t
 name|bfd_get_mtime
 parameter_list|(
 name|bfd

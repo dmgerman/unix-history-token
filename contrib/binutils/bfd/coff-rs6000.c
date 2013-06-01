@@ -7200,7 +7200,7 @@ name|s
 operator|->
 name|st_mtime
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|hdrp
 operator|->
@@ -7304,7 +7304,7 @@ name|s
 operator|->
 name|st_mtime
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|hdrp
 operator|->
@@ -8019,6 +8019,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FMT12_LL
+value|"%-12lld"
+end_define
+
+begin_define
+define|#
+directive|define
 name|FMT12_OCTAL
 value|"%-12o"
 end_define
@@ -8054,6 +8061,19 @@ name|v
 parameter_list|)
 define|\
 value|sprintf (buff20, FMT12, (int)(v)), \   memcpy ((void *) (d), buff20, 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT12_LL
+parameter_list|(
+name|d
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|sprintf (buff20, FMT12_LL, (long long)(v)), \   memcpy ((void *) (d), buff20, 12)
 end_define
 
 begin_define
@@ -10079,9 +10099,10 @@ name|ahdrp
 operator|->
 name|date
 argument_list|,
-literal|"%ld"
+literal|"%lld"
 argument_list|,
 operator|(
+name|long
 name|long
 operator|)
 name|s
@@ -11396,7 +11417,7 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
-name|PRINT12
+name|PRINT12_LL
 argument_list|(
 name|ahdrp
 operator|->

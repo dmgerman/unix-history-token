@@ -13649,9 +13649,10 @@ name|hdr
 operator|.
 name|ar_date
 argument_list|,
-literal|"%ld"
+literal|"%lld"
 argument_list|,
 call|(
+name|long
 name|long
 call|)
 argument_list|(
