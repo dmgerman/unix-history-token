@@ -3076,6 +3076,7 @@ comment|/* must be called with ATA channel locked and state_mtx held */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ata_generic_status
 parameter_list|(
