@@ -358,11 +358,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|M_ASSERTPKTHDR
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -1427,6 +1422,11 @@ name|nsegs
 decl_stmt|,
 name|error
 decl_stmt|;
+name|M_ASSERTPKTHDR
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 name|flags
 operator||=
 name|BUS_DMA_NOWAIT
