@@ -1659,16 +1659,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|UGAR
-parameter_list|(
-name|rval
-parameter_list|)
-value|do {							\ 	int _val = (rval);						\ 	mtx_unlock(&Giant);						\ 	return (_val);							\ } while (0)
-end_define
-
 begin_struct
 struct|struct
 name|mtx_args
