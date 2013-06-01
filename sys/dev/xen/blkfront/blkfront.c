@@ -275,66 +275,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* XXX move to xbd_vbd.c when VBD update support is added */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_VBDS
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|XBD_SECTOR_SIZE
-value|512
-end_define
-
-begin_comment
-comment|/* XXX: assume for now */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|XBD_SECTOR_SHFT
 value|9
 end_define
-
-begin_comment
-comment|/* Control whether runtime update of vbds is enabled. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENABLE_VBD_UPDATE
-value|0
-end_define
-
-begin_if
-if|#
-directive|if
-name|ENABLE_VBD_UPDATE
-end_if
-
-begin_function_decl
-specifier|static
-name|void
-name|vbd_update
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
