@@ -7123,6 +7123,11 @@ decl_stmt|;
 name|struct
 name|xhci_td
 modifier|*
+name|td_first
+decl_stmt|;
+name|struct
+name|xhci_td
+modifier|*
 name|td_next
 decl_stmt|;
 name|struct
@@ -7184,6 +7189,8 @@ operator|->
 name|td
 expr_stmt|;
 name|td_next
+operator|=
+name|td_first
 operator|=
 name|temp
 operator|->
@@ -7679,11 +7686,14 @@ argument_list|(
 name|dword
 argument_list|)
 expr_stmt|;
+comment|/* BEI: Interrupts are inhibited until EOT */
 name|dword
 operator|=
 name|XHCI_TRB_3_CHAIN_BIT
 operator||
 name|XHCI_TRB_3_CYCLE_BIT
+operator||
+name|XHCI_TRB_3_BEI_BIT
 operator||
 name|XHCI_TRB_3_TYPE_SET
 argument_list|(
@@ -7938,6 +7948,7 @@ argument_list|(
 name|dword
 argument_list|)
 expr_stmt|;
+comment|/* BEI: interrupts are inhibited until EOT */
 name|dword
 operator|=
 name|XHCI_TRB_3_TYPE_SET
@@ -7948,6 +7959,8 @@ operator||
 name|XHCI_TRB_3_CYCLE_BIT
 operator||
 name|XHCI_TRB_3_IOC_BIT
+operator||
+name|XHCI_TRB_3_BEI_BIT
 expr_stmt|;
 name|td
 operator|->
@@ -8040,14 +8053,34 @@ goto|goto
 name|restart
 goto|;
 block|}
-comment|/* remove cycle bit from first if we are stepping the TRBs */
+comment|/* need to force an interrupt if we are stepping the TRBs */
+if|if
+condition|(
+operator|(
+name|temp
+operator|->
+name|direction
+operator|&
+name|UE_DIR_IN
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|temp
+operator|->
+name|multishort
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* remove cycle bit from first TRB if we are stepping them */
 if|if
 condition|(
 name|temp
 operator|->
 name|step_td
 condition|)
-name|td
+name|td_first
 operator|->
 name|td_trb
 index|[
@@ -8062,6 +8095,25 @@ argument_list|(
 name|XHCI_TRB_3_CYCLE_BIT
 argument_list|)
 expr_stmt|;
+comment|/* make sure the last LINK event generates an interrupt */
+name|td
+operator|->
+name|td_trb
+index|[
+name|td
+operator|->
+name|ntrb
+index|]
+operator|.
+name|dwTrb3
+operator|&=
+operator|~
+name|htole32
+argument_list|(
+name|XHCI_TRB_3_BEI_BIT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* remove chain bit because this is the last TRB in the chain */
 name|td
 operator|->
@@ -12076,6 +12128,11 @@ modifier|*
 name|td_last
 decl_stmt|;
 name|struct
+name|xhci_trb
+modifier|*
+name|trb_link
+decl_stmt|;
+name|struct
 name|xhci_endpoint_ext
 modifier|*
 name|pepext
@@ -12374,16 +12431,20 @@ name|xhci_trb
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* update next pointer of last link TRB */
+comment|/* compute link TRB pointer */
+name|trb_link
+operator|=
 name|td_last
 operator|->
 name|td_trb
-index|[
+operator|+
 name|td_last
 operator|->
 name|ntrb
-index|]
-operator|.
+expr_stmt|;
+comment|/* update next pointer of last link TRB */
+name|trb_link
+operator|->
 name|qwTrb0
 operator|=
 name|htole64
@@ -12391,15 +12452,8 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|td_last
+name|trb_link
 operator|->
-name|td_trb
-index|[
-name|td_last
-operator|->
-name|ntrb
-index|]
-operator|.
 name|dwTrb2
 operator|=
 name|htole32
@@ -12410,15 +12464,8 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|td_last
+name|trb_link
 operator|->
-name|td_trb
-index|[
-name|td_last
-operator|->
-name|ntrb
-index|]
-operator|.
 name|dwTrb3
 operator|=
 name|htole32
