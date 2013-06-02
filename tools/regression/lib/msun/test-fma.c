@@ -51,12 +51,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ALL_STD_EXCEPT
-value|(FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \ 			 FE_OVERFLOW | FE_UNDERFLOW)
-end_define
+begin_include
+include|#
+directive|include
+file|"test-utils.h"
+end_include
 
 begin_pragma
 pragma|#
@@ -89,7 +88,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)((x), (y), (z)), (result)));		\ 	assert(((func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
+value|do {		\ 	volatile long double _vx = (x), _vy = (y), _vz = (z);		\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_vx, _vy, _vz), (result)));		\ 	assert(((void)(func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
 end_define
 
 begin_define
@@ -109,7 +108,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	test(fma, (x), (y), (z), (double)(result), (exceptmask), (excepts)); \ 	test(fmaf, (x), (y), (z), (float)(result), (exceptmask), (excepts)); \ 	test(fmal, (x), (y), (z), (result), (exceptmask), (excepts));	\ } while (0)
+value|do {		\ 	test(fma, (double)(x), (double)(y), (double)(z),		\ 		(double)(result), (exceptmask), (excepts));		\ 	test(fmaf, (float)(x), (float)(y), (float)(z),			\ 		(float)(result), (exceptmask), (excepts));		\ 	test(fmal, (x), (y), (z), (result), (exceptmask), (excepts));	\ } while (0)
 end_define
 
 begin_comment
@@ -156,59 +155,6 @@ init|=
 literal|1.0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Determine whether x and y are equal, with two special rules:  *	+0.0 != -0.0  *	 NaN == NaN  */
-end_comment
-
-begin_function
-name|int
-name|fpequal
-parameter_list|(
-name|long
-name|double
-name|x
-parameter_list|,
-name|long
-name|double
-name|y
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|x
-operator|==
-name|y
-operator|&&
-operator|!
-name|signbit
-argument_list|(
-name|x
-argument_list|)
-operator|==
-operator|!
-name|signbit
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|isnan
-argument_list|(
-name|x
-argument_list|)
-operator|&&
-name|isnan
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static

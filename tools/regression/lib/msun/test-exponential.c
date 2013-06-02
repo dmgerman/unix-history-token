@@ -68,12 +68,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ALL_STD_EXCEPT
-value|(FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \ 			 FE_OVERFLOW | FE_UNDERFLOW)
-end_define
+begin_include
+include|#
+directive|include
+file|"test-utils.h"
+end_include
 
 begin_pragma
 pragma|#
@@ -102,7 +101,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	volatile long double _d = x;					\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_d), (result)));				 \ 	assert(((func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
+value|do {		\ 	volatile long double _d = x;					\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_d), (result)));				 \ 	assert(((void)(func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
 end_define
 
 begin_comment
@@ -144,57 +143,6 @@ name|excepts
 parameter_list|)
 value|do {		\ 	test(expm1, x, result, exceptmask, excepts);			\ 	test(expm1f, x, result, exceptmask, excepts);			\ } while (0)
 end_define
-
-begin_comment
-comment|/*  * Determine whether x and y are equal, with two special rules:  *	+0.0 != -0.0  *	 NaN == NaN  */
-end_comment
-
-begin_function
-name|int
-name|fpequal
-parameter_list|(
-name|long
-name|double
-name|x
-parameter_list|,
-name|long
-name|double
-name|y
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|x
-operator|==
-name|y
-operator|&&
-operator|!
-name|signbit
-argument_list|(
-name|x
-argument_list|)
-operator|==
-operator|!
-name|signbit
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|||
-name|isnan
-argument_list|(
-name|x
-argument_list|)
-operator|&&
-name|isnan
-argument_list|(
-name|y
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|void
