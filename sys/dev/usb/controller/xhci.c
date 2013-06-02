@@ -7140,6 +7140,9 @@ name|uint32_t
 name|len_old
 decl_stmt|;
 name|uint32_t
+name|npkt_off
+decl_stmt|;
+name|uint32_t
 name|dword
 decl_stmt|;
 name|uint8_t
@@ -7175,6 +7178,10 @@ operator|=
 name|temp
 operator|->
 name|len
+expr_stmt|;
+name|npkt_off
+operator|=
+literal|0
 expr_stmt|;
 name|precompute
 operator|=
@@ -7539,7 +7546,7 @@ condition|)
 block|{
 name|npkt
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|memset
 argument_list|(
@@ -7603,11 +7610,19 @@ name|length
 operator|=
 name|XHCI_TD_PAGE_SIZE
 expr_stmt|;
+name|npkt_off
+operator|+=
+name|buf_res
+operator|.
+name|length
+expr_stmt|;
 comment|/* setup npkt */
 name|npkt
 operator|=
 operator|(
-name|average
+name|len_old
+operator|-
+name|npkt_off
 operator|+
 name|temp
 operator|->
