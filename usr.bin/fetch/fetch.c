@@ -3067,7 +3067,7 @@ name|nsb
 operator|.
 name|st_ino
 operator|!=
-name|nsb
+name|sb
 operator|.
 name|st_ino
 operator|||
