@@ -10884,7 +10884,9 @@ name|fstatat
 argument_list|(
 name|dir_fd
 argument_list|,
-name|logfname
+name|dp
+operator|->
+name|d_name
 argument_list|,
 operator|&
 name|sb
