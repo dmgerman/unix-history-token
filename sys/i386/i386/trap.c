@@ -2573,7 +2573,7 @@ block|{
 name|uprintf
 argument_list|(
 literal|"pid %d comm %s: signal %d err %x code %d type %d "
-literal|"addr 0x%x eip 0x%08x "
+literal|"addr 0x%x esp 0x%08x eip 0x%08x "
 literal|"<%02x %02x %02x %02x %02x %02x %02x %02x>\n"
 argument_list|,
 name|p
@@ -2595,6 +2595,10 @@ argument_list|,
 name|type
 argument_list|,
 name|addr
+argument_list|,
+name|frame
+operator|->
+name|tf_esp
 argument_list|,
 name|frame
 operator|->
