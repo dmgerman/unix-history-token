@@ -9547,20 +9547,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* disable interrupts */
-name|ath_txrx_stop_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Ensure TX/RX is stopped */
+comment|/* 	 * Grab the reset lock before TX/RX is stopped. 	 * 	 * This is needed to ensure that when the TX/RX actually does finish, 	 * no further TX/RX/reset runs in parallel with this. 	 */
 if|if
 condition|(
 name|ath_reset_grablock
@@ -9585,6 +9572,20 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* disable interrupts */
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now, ensure that any in progress TX/RX completes before we 	 * continue. 	 */
+name|ath_txrx_stop_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
@@ -19977,20 +19978,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Stop new RX/TX completion */
-name|ath_txrx_stop_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* Stop pending RX/TX completion */
+comment|/* Stop new RX/TX/interrupt completion */
 if|if
 condition|(
 name|ath_reset_grablock
@@ -20015,6 +20003,19 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Stop pending RX/TX completion */
+name|ath_txrx_stop_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
