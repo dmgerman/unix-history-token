@@ -124,7 +124,8 @@ specifier|const
 name|union
 name|IEEEl2bits
 comment|/* log(2**16384 - 0.5) rounded towards zero: */
-name|o_threshold
+comment|/* log(2**16384 - 0.5 + 1) rounded towards zero for expm1l() is the same: */
+name|o_thresholdu
 init|=
 name|LD80C
 argument_list|(
@@ -135,8 +136,12 @@ argument_list|,
 literal|11356.5234062941439488L
 argument_list|)
 decl_stmt|,
+define|#
+directive|define
+name|o_threshold
+value|(o_thresholdu.e)
 comment|/* log(2**(-16381-64-1)) rounded towards zero: */
-name|u_threshold
+name|u_thresholdu
 init|=
 name|LD80C
 argument_list|(
@@ -149,6 +154,13 @@ literal|11399.4985314888605581L
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|u_threshold
+value|(u_thresholdu.e)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1706,8 +1718,6 @@ condition|(
 name|x
 operator|>
 name|o_threshold
-operator|.
-name|e
 condition|)
 return|return
 operator|(
@@ -1721,8 +1731,6 @@ condition|(
 name|x
 operator|<
 name|u_threshold
-operator|.
-name|e
 condition|)
 return|return
 operator|(
