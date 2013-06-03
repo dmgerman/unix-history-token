@@ -525,6 +525,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NF_TSO_MAXBURST
+value|((IP_MAXPACKET / PAGE_SIZE) * MCLBYTES)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RX_COPY_THRESHOLD
 value|256
 end_define
@@ -9130,6 +9137,12 @@ operator|->
 name|if_capabilities
 operator|=
 name|IFCAP_HWCSUM
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+name|NF_TSO_MAXBURST
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
