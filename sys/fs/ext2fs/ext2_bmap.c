@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_mount.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_comment
