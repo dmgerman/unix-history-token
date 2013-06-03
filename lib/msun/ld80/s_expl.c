@@ -1929,9 +1929,9 @@ name|t45
 operator|=
 name|r
 operator|*
-name|P5
+name|A5
 operator|+
-name|P4
+name|A4
 expr_stmt|;
 name|z
 operator|=
@@ -1943,9 +1943,9 @@ name|t23
 operator|=
 name|r
 operator|*
-name|P3
+name|A3
 operator|+
-name|P2
+name|A2
 expr_stmt|;
 name|q
 operator|=
@@ -1967,7 +1967,7 @@ name|z
 operator|*
 name|z
 operator|*
-name|P6
+name|A6
 expr_stmt|;
 name|t
 operator|=
