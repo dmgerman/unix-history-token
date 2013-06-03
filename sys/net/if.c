@@ -251,10 +251,6 @@ name|INET6
 argument_list|)
 end_if
 
-begin_comment
-comment|/*XXX*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -270,8 +266,35 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_carp.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -296,27 +319,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET || INET6 */
+end_comment
 
 begin_include
 include|#
@@ -3155,6 +3169,44 @@ operator|->
 name|if_broadcastaddr
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* Initialize to max value. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|==
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+name|IP_MAXPACKET
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|<=
+name|IP_MAXPACKET
+operator|&&
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|>=
+name|IP_MAXPACKET
+operator|/
+literal|8
+argument_list|,
+operator|(
+literal|"%s: tsomax outside of range"
+operator|,
+name|__func__
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#

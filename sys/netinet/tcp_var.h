@@ -615,6 +615,10 @@ name|u_int
 name|t_keepcnt
 decl_stmt|;
 comment|/* number of keepalives before close */
+name|u_int
+name|t_tsomax
+decl_stmt|;
+comment|/* tso burst length limit */
 name|uint32_t
 name|t_ispare
 index|[
@@ -1283,6 +1287,24 @@ name|u_long
 name|rmx_recvpipe
 decl_stmt|;
 comment|/* inbound delay-bandwidth product */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Used by tcp_maxmtu() to communicate interface specific features  * and limits at the time of connection setup.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tcp_ifcap
+block|{
+name|int
+name|ifcap
+decl_stmt|;
+name|u_int
+name|tsomax
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3278,7 +3300,8 @@ name|struct
 name|in_conninfo
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3292,7 +3315,8 @@ name|struct
 name|in_conninfo
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3314,7 +3338,8 @@ name|struct
 name|hc_metrics_lite
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
 parameter_list|)
 function_decl|;
