@@ -900,13 +900,6 @@ name|mc_spare2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
