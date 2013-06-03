@@ -1546,9 +1546,9 @@ name|L1
 expr_stmt|;
 name|r2
 operator|=
-operator|-
 name|fn
 operator|*
+operator|-
 name|L2
 expr_stmt|;
 comment|/* Prepare scale factors. */
