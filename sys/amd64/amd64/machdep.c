@@ -10867,6 +10867,9 @@ operator|&
 name|mcp
 operator|->
 name|mc_fpstate
+index|[
+literal|0
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
