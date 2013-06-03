@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -394,6 +400,31 @@ name|val_hi
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|log10
+argument_list|,
+name|log10l
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
