@@ -1412,29 +1412,16 @@ condition|(
 name|hx
 operator|&
 literal|0x8000
-operator|&&
-name|u
-operator|.
-name|xbits
-operator|.
-name|manh
-operator|==
-literal|0
-operator|&&
-name|u
-operator|.
-name|xbits
-operator|.
-name|manl
-operator|==
-literal|0
 condition|)
+comment|/* x is -Inf or -NaN */
 return|return
 operator|(
-literal|0.0L
+operator|-
+literal|1
+operator|/
+name|x
 operator|)
 return|;
-comment|/* x is -Inf */
 return|return
 operator|(
 name|x
@@ -1478,26 +1465,18 @@ name|ix
 operator|<
 name|BIAS
 operator|-
-literal|115
+literal|114
 condition|)
 block|{
-comment|/* |x|< 0x1p-115 */
-if|if
-condition|(
-name|huge
-operator|+
-name|x
-operator|>
-literal|1.0L
-condition|)
-comment|/* trigger inexact iff x != 0 */
+comment|/* |x|< 0x1p-114 */
 return|return
 operator|(
-literal|1.0L
+literal|1
 operator|+
 name|x
 operator|)
 return|;
+comment|/* 1 with inexact iff x != 0 */
 block|}
 comment|/* Reduce x to (k*ln2 + endpoint[n2] + r1 + r2). */
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */

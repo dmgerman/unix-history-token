@@ -1685,23 +1685,16 @@ condition|(
 name|hx
 operator|&
 literal|0x8000
-operator|&&
-name|u
-operator|.
-name|xbits
-operator|.
-name|man
-operator|==
-literal|1ULL
-operator|<<
-literal|63
 condition|)
+comment|/* x is -Inf, -NaN or unsupported */
 return|return
 operator|(
-literal|0.0L
+operator|-
+literal|1
+operator|/
+name|x
 operator|)
 return|;
-comment|/* x is -Inf */
 return|return
 operator|(
 name|x
@@ -1709,7 +1702,7 @@ operator|+
 name|x
 operator|)
 return|;
-comment|/* x is +Inf, NaN or unsupported */
+comment|/* x is +Inf, +NaN or unsupported */
 block|}
 if|if
 condition|(
@@ -1745,27 +1738,18 @@ name|ix
 operator|<
 name|BIAS
 operator|-
-literal|66
+literal|65
 condition|)
 block|{
-comment|/* |x|< 0x1p-66 */
-comment|/* includes pseudo-denormals */
-if|if
-condition|(
-name|huge
-operator|+
-name|x
-operator|>
-literal|1.0L
-condition|)
-comment|/* trigger inexact iff x != 0 */
+comment|/* |x|< 0x1p-65 (includes pseudos) */
 return|return
 operator|(
-literal|1.0L
+literal|1
 operator|+
 name|x
 operator|)
 return|;
+comment|/* 1 with inexact iff x != 0 */
 block|}
 name|ENTERI
 argument_list|()
