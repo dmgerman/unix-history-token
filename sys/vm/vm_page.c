@@ -2750,7 +2750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The pagetables are not updated but will presumably fault the page  *	in if necessary, or if a kernel page the caller will at some point  *	enter the page into the kernel's pmap.  We are not allowed to sleep  *	here so we *can't* do this anyway.  *  *	The object must be locked.  */
+comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -3029,7 +3029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_remove:  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The underlying pmap entry (if any) is NOT removed here.  *  *	The object must be locked.  The page must be locked if it is managed.  */
+comment|/*  *	vm_page_remove:  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list, but do not invalidate/terminate  *	the backing store.  *  *	The object must be locked.  The page must be locked if it is managed.  */
 end_comment
 
 begin_function
