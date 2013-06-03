@@ -165,26 +165,26 @@ literal|3.2819649005320973e-13
 decl_stmt|,
 comment|/* -0x1718432a1b0e26.0p-94 */
 comment|/*  * Domain [-0.002708, 0.002708], range ~[-5.7136e-24, 5.7110e-24]:  * |exp(x) - p(x)|< 2**-77.2  * (0.002708 is ln2/(2*INTERVALS) rounded up a little).  */
-name|P2
+name|A2
 init|=
 literal|0.5
 decl_stmt|,
-name|P3
+name|A3
 init|=
 literal|1.6666666666666119e-1
 decl_stmt|,
 comment|/*  0x15555555555490.0p-55 */
-name|P4
+name|A4
 init|=
 literal|4.1666666666665887e-2
 decl_stmt|,
 comment|/*  0x155555555554e5.0p-57 */
-name|P5
+name|A5
 init|=
 literal|8.3333354987869413e-3
 decl_stmt|,
 comment|/*  0x1111115b789919.0p-59 */
-name|P6
+name|A6
 init|=
 literal|1.3888891738560272e-3
 decl_stmt|;
@@ -209,9 +209,8 @@ decl_stmt|;
 name|double
 name|lo
 decl_stmt|;
-comment|/* XXX should rename 's'. */
 block|}
-name|s
+name|tbl
 index|[
 name|INTERVALS
 index|]
@@ -1912,7 +1911,7 @@ operator|.
 name|e
 expr_stmt|;
 block|}
-comment|/* Evaluate expl(midpoint[n2] + r1 + r2) = s[n2] * expl(r1 + r2). */
+comment|/* Evaluate expl(midpoint[n2] + r1 + r2) = tbl[n2] * expl(r1 + r2). */
 comment|/* Here q = q(r), not q(r1), since r1 is lopped like L1. */
 name|t45
 operator|=
@@ -1964,14 +1963,14 @@ operator|(
 name|long
 name|double
 operator|)
-name|s
+name|tbl
 index|[
 name|n2
 index|]
 operator|.
 name|lo
 operator|+
-name|s
+name|tbl
 index|[
 name|n2
 index|]
@@ -1980,7 +1979,7 @@ name|hi
 expr_stmt|;
 name|t
 operator|=
-name|s
+name|tbl
 index|[
 name|n2
 index|]
@@ -1995,7 +1994,7 @@ operator|+
 name|r1
 operator|)
 operator|+
-name|s
+name|tbl
 index|[
 name|n2
 index|]
