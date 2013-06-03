@@ -2560,7 +2560,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|dadeletemethodset
 parameter_list|(
 name|struct
@@ -5811,7 +5811,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|dadeletemethodset
 parameter_list|(
 name|struct
@@ -5823,21 +5823,6 @@ name|da_delete_methods
 name|delete_method
 parameter_list|)
 block|{
-if|if
-condition|(
-name|delete_method
-operator|<
-literal|0
-operator|||
-name|delete_method
-operator|>
-name|DA_DELETE_MAX
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|softc
 operator|->
 name|delete_method
@@ -5870,11 +5855,6 @@ operator|&=
 operator|~
 name|DISKFLAG_CANDELETE
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -6020,13 +6000,17 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-return|return
 name|dadeletemethodset
 argument_list|(
 name|softc
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 return|return
