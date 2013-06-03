@@ -2726,6 +2726,22 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+operator|(
+name|read_eflags
+argument_list|()
+operator|&
+name|PSL_I
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"interrupts disabled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|trapsignal
 argument_list|(
 name|td
