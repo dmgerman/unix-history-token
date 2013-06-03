@@ -2394,7 +2394,13 @@ name|file
 argument_list|,
 name|line
 argument_list|,
+name|flags
+operator|&
+name|LK_INTERLOCK
+condition|?
 name|ilk
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -3187,7 +3193,13 @@ name|file
 argument_list|,
 name|line
 argument_list|,
+name|flags
+operator|&
+name|LK_INTERLOCK
+condition|?
 name|ilk
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If curthread already holds the lock and this one is 		 * allowed to recurse, simply recurse on it. 		 */
@@ -4572,7 +4584,13 @@ name|file
 argument_list|,
 name|line
 argument_list|,
+name|flags
+operator|&
+name|LK_INTERLOCK
+condition|?
 name|ilk
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Trying to drain a lock we already own will result in a 		 * deadlock. 		 */
