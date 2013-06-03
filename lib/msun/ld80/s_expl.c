@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Compute the exponential of x for Intel 80-bit format.  This is based on:  *  *   PTP Tang, "Table-driven implementation of the exponential function  *   in IEEE floating-point arithmetic," ACM Trans. Math. Soft., 15,  *   144-157 (1989).  *  * where the 32 table entries have been expanded to INTERVALS (see below).  */
+comment|/**  * Compute the exponential of x for Intel 80-bit format.  This is based on:  *  *   PTP Tang, "Table-driven implementation of the exponential function  *   in IEEE floating-point arithmetic," ACM Trans. Math. Soft., 15,  *   144-157 (1989).  *  * where the 32 table entries have been expanded to INTERVALS (see below).  */
 end_comment
 
 begin_include
