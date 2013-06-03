@@ -80,9 +80,17 @@ init|=
 literal|0x1p
 operator|-
 literal|10000L
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* XXX Prevent gcc from erroneously constant folding this: */
-decl_stmt|static volatile const
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+specifier|const
 name|long
 name|double
 name|tiny
@@ -1430,7 +1438,7 @@ operator|+
 name|x
 operator|)
 return|;
-comment|/* x is +Inf or NaN */
+comment|/* x is +Inf or +NaN */
 block|}
 if|if
 condition|(
