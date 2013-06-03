@@ -1854,9 +1854,7 @@ name|v
 operator|.
 name|e
 operator|=
-literal|1ULL
-operator|<<
-literal|63
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2006,7 +2004,7 @@ name|RETURNI
 argument_list|(
 name|t
 operator|*
-literal|2.0L
+literal|2
 operator|*
 literal|0x1p16383L
 argument_list|)

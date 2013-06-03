@@ -1362,7 +1362,7 @@ name|n
 decl_stmt|,
 name|n2
 decl_stmt|;
-name|uint32_t
+name|uint16_t
 name|hx
 decl_stmt|,
 name|ix
@@ -1478,6 +1478,9 @@ operator|)
 return|;
 comment|/* 1 with inexact iff x != 0 */
 block|}
+name|ENTERI
+argument_list|()
+expr_stmt|;
 comment|/* Reduce x to (k*ln2 + endpoint[n2] + r1 + r2). */
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
 comment|/* XXX assume no extra precision for the additions, as for trig fns. */
@@ -1551,22 +1554,19 @@ operator|*
 operator|-
 name|L2
 expr_stmt|;
-comment|/* Prepare scale factors. */
-name|v
-operator|.
-name|xbits
-operator|.
-name|manh
+name|r
 operator|=
-literal|0
+name|r1
+operator|+
+name|r2
 expr_stmt|;
+comment|/* Prepare scale factors. */
+comment|/* XXX sparc64 multiplication is so slow that scalbnl() is faster. */
 name|v
 operator|.
-name|xbits
-operator|.
-name|manl
+name|e
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1730,34 +1730,34 @@ name|k
 operator|==
 name|LDBL_MAX_EXP
 condition|)
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|t
 operator|*
-literal|2.0L
+literal|2
 operator|*
 literal|0x1p16383L
-operator|)
-return|;
-return|return
-operator|(
+argument_list|)
+expr_stmt|;
+name|RETURNI
+argument_list|(
 name|t
 operator|*
 name|twopk
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|t
 operator|*
 name|twopkp10000
 operator|*
 name|twom10000
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
