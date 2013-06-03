@@ -55,6 +55,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LOG2_INTERVALS
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIAS
 value|(LDBL_MAX_EXP - 1)
 end_define
@@ -1491,13 +1498,9 @@ name|INTERVALS
 expr_stmt|;
 name|k
 operator|=
-operator|(
 name|n
-operator|-
-name|n2
-operator|)
-operator|/
-name|INTERVALS
+operator|>>
+name|LOG2_INTERVALS
 expr_stmt|;
 name|r1
 operator|=
