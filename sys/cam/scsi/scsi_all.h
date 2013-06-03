@@ -3019,6 +3019,58 @@ name|protocol
 decl_stmt|;
 define|#
 directive|define
+name|AP_PROTO_HARD_RESET
+value|(0x00<< 1)
+define|#
+directive|define
+name|AP_PROTO_SRST
+value|(0x01<< 1)
+define|#
+directive|define
+name|AP_PROTO_NON_DATA
+value|(0x03<< 1)
+define|#
+directive|define
+name|AP_PROTO_PIO_IN
+value|(0x04<< 1)
+define|#
+directive|define
+name|AP_PROTO_PIO_OUT
+value|(0x05<< 1)
+define|#
+directive|define
+name|AP_PROTO_DMA
+value|(0x06<< 1)
+define|#
+directive|define
+name|AP_PROTO_DMA_QUEUED
+value|(0x07<< 1)
+define|#
+directive|define
+name|AP_PROTO_DEVICE_DIAG
+value|(0x08<< 1)
+define|#
+directive|define
+name|AP_PROTO_DEVICE_RESET
+value|(0x09<< 1)
+define|#
+directive|define
+name|AP_PROTO_UDMA_IN
+value|(0x10<< 1)
+define|#
+directive|define
+name|AP_PROTO_UDMA_OUT
+value|(0x11<< 1)
+define|#
+directive|define
+name|AP_PROTO_FPDMA
+value|(0x12<< 1)
+define|#
+directive|define
+name|AP_PROTO_RESP_INFO
+value|(0x15<< 1)
+define|#
+directive|define
 name|AP_MULTI
 value|0xe0
 name|u_int8_t
@@ -3132,6 +3184,42 @@ value|0x01
 name|u_int8_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|AP_FLAG_TLEN_NO_DATA
+value|(0<< 0)
+define|#
+directive|define
+name|AP_FLAG_TLEN_FEAT
+value|(1<< 0)
+define|#
+directive|define
+name|AP_FLAG_TLEN_SECT_CNT
+value|(2<< 0)
+define|#
+directive|define
+name|AP_FLAG_TLEN_STPSIU
+value|(3<< 0)
+define|#
+directive|define
+name|AP_FLAG_BYT_BLOK_BYTES
+value|(0<< 2)
+define|#
+directive|define
+name|AP_FLAG_BYT_BLOK_BLOCKS
+value|(1<< 2)
+define|#
+directive|define
+name|AP_FLAG_TDIR_TO_DEV
+value|(0<< 3)
+define|#
+directive|define
+name|AP_FLAG_TDIR_FROM_DEV
+value|(1<< 3)
+define|#
+directive|define
+name|AP_FLAG_CHK_COND
+value|(1<< 5)
 name|u_int8_t
 name|features_ext
 decl_stmt|;
@@ -3826,7 +3914,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * This length is the initial inquiry length used by the probe code, as      * well as the legnth necessary for scsi_print_inquiry() to function   * correctly.  If either use requires a different length in the future,   * the two values should be de-coupled.  */
+comment|/*  * This length is the initial inquiry length used by the probe code, as      * well as the length necessary for scsi_print_inquiry() to function   * correctly.  If either use requires a different length in the future,   * the two values should be de-coupled.  */
 end_comment
 
 begin_define
@@ -9028,6 +9116,76 @@ modifier|*
 name|data_ptr
 parameter_list|,
 name|u_int32_t
+name|dxfer_len
+parameter_list|,
+name|u_int8_t
+name|sense_len
+parameter_list|,
+name|u_int32_t
+name|timeout
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|scsi_ata_pass_16
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+name|csio
+parameter_list|,
+name|u_int32_t
+name|retries
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|cbfcnp
+function_decl|)
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+parameter_list|,
+name|union
+name|ccb
+modifier|*
+parameter_list|)
+parameter_list|,
+name|u_int32_t
+name|flags
+parameter_list|,
+name|u_int8_t
+name|tag_action
+parameter_list|,
+name|u_int8_t
+name|protocol
+parameter_list|,
+name|u_int8_t
+name|ata_flags
+parameter_list|,
+name|u_int16_t
+name|features
+parameter_list|,
+name|u_int16_t
+name|sector_count
+parameter_list|,
+name|uint64_t
+name|lba
+parameter_list|,
+name|u_int8_t
+name|command
+parameter_list|,
+name|u_int8_t
+name|control
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|data_ptr
+parameter_list|,
+name|u_int16_t
 name|dxfer_len
 parameter_list|,
 name|u_int8_t
