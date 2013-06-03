@@ -1000,7 +1000,7 @@ name|in_sigsuspend
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * if thread is in deferred cancellation mode, disable cancellation 	 * in signal handler. 	 * if user signal handler calls a cancellation point function, e.g, 	 * it calls write() to write data to file, because write() is a 	 * cancellation point, the thread is immediately cancelled if  	 * cancellation is pending, to avoid this problem while thread is in 	 * deferring mode, cancellation is temporarily disabled. 	 */
+comment|/* 	 * If thread is in deferred cancellation mode, disable cancellation 	 * in signal handler. 	 * If user signal handler calls a cancellation point function, e.g, 	 * it calls write() to write data to file, because write() is a 	 * cancellation point, the thread is immediately cancelled if  	 * cancellation is pending, to avoid this problem while thread is in 	 * deferring mode, cancellation is temporarily disabled. 	 */
 name|cancel_point
 operator|=
 name|curthread
@@ -1055,7 +1055,7 @@ name|actp
 operator|->
 name|sa_sigaction
 expr_stmt|;
-comment|/* 	 * We have already reset cancellation point flags, so if user's code 	 * longjmp()s out of its signal handler, wish its jmpbuf was set 	 * outside of a cancellation point, in most cases, this would be 	 * true. however, ther is no way to save cancel_enable in jmpbuf, 	 * so after setjmps() returns once more, the user code may need to 	 * re-set cancel_enable flag by calling pthread_setcancelstate(). 	 */
+comment|/* 	 * We have already reset cancellation point flags, so if user's code 	 * longjmp()s out of its signal handler, wish its jmpbuf was set 	 * outside of a cancellation point, in most cases, this would be 	 * true.  However, there is no way to save cancel_enable in jmpbuf, 	 * so after setjmps() returns once more, the user code may need to 	 * re-set cancel_enable flag by calling pthread_setcancelstate(). 	 */
 if|if
 condition|(
 operator|(
