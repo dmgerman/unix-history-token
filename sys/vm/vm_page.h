@@ -636,6 +636,17 @@ end_if
 begin_define
 define|#
 directive|define
+name|vm_page_assert_locked
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|vm_page_assert_locked_KBI((m), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
 name|vm_page_lock_assert
 parameter_list|(
 name|m
@@ -654,6 +665,15 @@ end_else
 begin_define
 define|#
 directive|define
+name|vm_page_assert_locked
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|vm_page_lock_assert
 parameter_list|(
 name|m
@@ -668,7 +688,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  However, kernel  * loadable modules should not directly set this flag.  They should call  * vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
+comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the page is locked.  It is set by  * both the MI and MD VM layers.  However, kernel loadable modules should not  * directly set this flag.  They should call vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -1928,6 +1948,24 @@ end_if
 
 begin_function_decl
 name|void
+name|vm_page_assert_locked_KBI
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_lock_assert_KBI
 parameter_list|(
 name|vm_page_t
@@ -2046,7 +2084,7 @@ name|addr
 decl_stmt|,
 name|val
 decl_stmt|;
-comment|/* 	 * The PGA_REFERENCED flag can only be cleared if the object 	 * containing the page is locked. 	 */
+comment|/* 	 * The PGA_REFERENCED flag can only be cleared if the page is locked. 	 */
 if|if
 condition|(
 operator|(
@@ -2057,7 +2095,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|VM_PAGE_OBJECT_LOCK_ASSERT
+name|vm_page_assert_locked
 argument_list|(
 name|m
 argument_list|)
