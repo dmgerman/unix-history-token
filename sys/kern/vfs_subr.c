@@ -21105,9 +21105,11 @@ operator|&
 name|vnode_free_list_mtx
 argument_list|)
 expr_stmt|;
-name|kern_yield
+name|pause
 argument_list|(
-name|PRI_USER
+literal|"vnacti"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_lock
