@@ -7025,11 +7025,6 @@ name|mres
 operator|=
 name|m
 expr_stmt|;
-name|vm_page_lock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_page_insert
 argument_list|(
 name|m
@@ -7040,11 +7035,6 @@ name|OFF_TO_IDX
 argument_list|(
 name|offset
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 name|vm_page_busy
