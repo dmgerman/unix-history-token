@@ -379,7 +379,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"};\n"
+literal|"}\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_finish
