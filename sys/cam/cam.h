@@ -614,6 +614,24 @@ name|num_cam_status_entries
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cam_sort_io_queues
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_union_decl
 union_decl|union
 name|ccb
