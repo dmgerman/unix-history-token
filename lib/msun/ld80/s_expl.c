@@ -1772,7 +1772,7 @@ block|}
 name|ENTERI
 argument_list|()
 expr_stmt|;
-comment|/* Reduce x to (k*ln2 + midpoint[n2] + r1 + r2). */
+comment|/* Reduce x to (k*ln2 + endpoint[n2] + r1 + r2). */
 comment|/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
 name|fn
 operator|=

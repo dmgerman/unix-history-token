@@ -1467,7 +1467,7 @@ name|x
 operator|)
 return|;
 block|}
-comment|/* Reduce x to (k*ln2 + midpoint[n2] + r1 + r2). */
+comment|/* Reduce x to (k*ln2 + endpoint[n2] + r1 + r2). */
 name|fn
 operator|=
 name|x
