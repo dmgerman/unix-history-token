@@ -7929,6 +7929,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|scsi_vpd_supported_page
+parameter_list|(
+name|struct
+name|cam_periph
+modifier|*
+name|periph
+parameter_list|,
+name|uint8_t
+name|page_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
