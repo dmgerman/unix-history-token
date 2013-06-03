@@ -150,7 +150,7 @@ specifier|static
 specifier|const
 name|long
 name|double
-comment|/*  * Domain [-0.002708, 0.002708], range ~[-2.4011e-38, 2.4244e-38]:  * |exp(x) - p(x)|< 2**-124.9  * (0.002708 is ln2/(2*INTERVALS) rounded up a little).  */
+comment|/*  * Domain [-0.002708, 0.002708], range ~[-2.4021e-38, 2.4234e-38]:  * |exp(x) - p(x)|< 2**-124.9  * (0.002708 is ln2/(2*INTERVALS) rounded up a little).  */
 name|A2
 init|=
 literal|0.5
@@ -200,6 +200,7 @@ specifier|static
 specifier|const
 struct|struct
 block|{
+comment|/* 	 * hi must be rounded to at most 106 bits so that multiplication 	 * by r1 in expm1l() is exact, but it is rounded to 88 bits due to 	 * historical accidents. 	 */
 name|long
 name|double
 name|hi
