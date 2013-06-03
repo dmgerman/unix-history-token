@@ -2736,6 +2736,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|double
+name|expm1l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|long
 name|double
@@ -3295,17 +3306,6 @@ begin_function_decl
 name|long
 name|double
 name|erfl
-parameter_list|(
-name|long
-name|double
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|double
-name|expm1l
 parameter_list|(
 name|long
 name|double
