@@ -2822,7 +2822,7 @@ name|actcount
 decl_stmt|,
 name|remove_mode
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|first_object
 argument_list|)
@@ -2864,7 +2864,7 @@ condition|)
 goto|goto
 name|unlock_return
 goto|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
@@ -3181,7 +3181,7 @@ condition|)
 goto|goto
 name|unlock_return
 goto|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -3192,7 +3192,7 @@ name|object
 operator|!=
 name|first_object
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3206,7 +3206,7 @@ name|object
 operator|!=
 name|first_object
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3308,7 +3308,7 @@ name|obj
 operator|!=
 name|NULL
 operator|&&
-name|VM_OBJECT_TRYWLOCK
+name|VM_OBJECT_TRYRLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3343,7 +3343,7 @@ name|bigobj
 operator|!=
 name|NULL
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|bigobj
 argument_list|)
@@ -3354,7 +3354,7 @@ name|obj
 expr_stmt|;
 block|}
 else|else
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3398,7 +3398,7 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|bigobj
 argument_list|)
@@ -3464,7 +3464,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3480,7 +3480,7 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
