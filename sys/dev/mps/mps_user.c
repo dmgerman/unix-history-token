@@ -1506,6 +1506,12 @@ name|PageVersion
 expr_stmt|;
 name|hdr
 operator|->
+name|PageType
+operator|=
+name|MPI2_CONFIG_PAGETYPE_EXTENDED
+expr_stmt|;
+name|hdr
+operator|->
 name|ExtPageLength
 operator|=
 literal|0
@@ -1726,6 +1732,12 @@ operator|=
 name|reqhdr
 operator|->
 name|PageVersion
+expr_stmt|;
+name|hdr
+operator|->
+name|PageType
+operator|=
+name|MPI2_CONFIG_PAGETYPE_EXTENDED
 expr_stmt|;
 name|hdr
 operator|->

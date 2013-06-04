@@ -11212,11 +11212,11 @@ name|params
 operator|->
 name|hdr
 operator|.
-name|Ext
+name|Struct
 operator|.
-name|ExtPageType
-operator|!=
-literal|0
+name|PageType
+operator|==
+name|MPI2_CONFIG_PAGETYPE_EXTENDED
 condition|)
 block|{
 name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
