@@ -442,7 +442,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|int		pc_md_placeholder
+value|int		pc_md_placeholder[32]
 end_define
 
 begin_endif
