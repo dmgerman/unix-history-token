@@ -3170,6 +3170,17 @@ name|if_broadcastaddr
 operator|=
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 comment|/* Initialize to max value. */
 if|if
 condition|(
@@ -3208,6 +3219,8 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
