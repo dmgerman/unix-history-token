@@ -5071,6 +5071,14 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* page automatically made dirty by rename and cache handled */
+if|if
+condition|(
+name|orig_object
+operator|->
+name|type
+operator|==
+name|OBJT_SWAP
+condition|)
 name|vm_page_busy
 argument_list|(
 name|m
@@ -5098,6 +5106,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|m
+argument_list|,
+argument|&new_object->memq
+argument_list|,
+argument|listq
+argument_list|)
+name|vm_page_wakeup
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Transfer any cached pages from orig_object to new_object. 		 * If swap_pager_copy() found swapped out pages within the 		 * specified range of orig_object, then it changed 		 * new_object's type to OBJT_SWAP when it transferred those 		 * pages to new_object.  Otherwise, new_object's type 		 * should still be OBJT_DEFAULT and orig_object should not 		 * contain any cached pages within the specified range. 		 */
 if|if
 condition|(
@@ -5123,19 +5144,6 @@ block|}
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|orig_object
-argument_list|)
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|m
-argument_list|,
-argument|&new_object->memq
-argument_list|,
-argument|listq
-argument_list|)
-name|vm_page_wakeup
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WUNLOCK
