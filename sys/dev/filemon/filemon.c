@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/param.h>
 end_include
 
 begin_expr_stmt
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"opt_compat.h"
 end_include
 
 begin_include
