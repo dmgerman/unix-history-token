@@ -2203,11 +2203,6 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WLOCK
-argument_list|(
-name|tobj
-argument_list|)
-expr_stmt|;
 name|vm_page_lock
 argument_list|(
 name|m
@@ -2245,11 +2240,6 @@ block|}
 name|vm_page_unlock
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|tobj
 argument_list|)
 expr_stmt|;
 return|return
