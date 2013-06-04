@@ -152,8 +152,12 @@ begin_define
 define|#
 directive|define
 name|MV_CLOCK_SRC
-value|get_l2clk()
+value|25000000
 end_define
+
+begin_comment
+comment|/* Timers' 25MHz mode */
+end_comment
 
 begin_else
 else|#
@@ -1468,6 +1472,18 @@ name|CPU_TIMER_WD_EN
 operator||
 name|CPU_TIMER_WD_AUTO
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+name|val
+operator||=
+name|CPU_TIMER_WD_25MHZ_EN
+expr_stmt|;
+endif|#
+directive|endif
 name|mv_set_timer_control
 argument_list|(
 name|val
@@ -1962,6 +1978,21 @@ name|CPU_TIMER1_EN
 operator||
 name|CPU_TIMER1_AUTO
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+comment|/* Enable 25MHz mode */
+name|val
+operator||=
+name|CPU_TIMER0_25MHZ_EN
+operator||
+name|CPU_TIMER1_25MHZ_EN
+expr_stmt|;
+endif|#
+directive|endif
 name|mv_set_timer_control
 argument_list|(
 name|val
