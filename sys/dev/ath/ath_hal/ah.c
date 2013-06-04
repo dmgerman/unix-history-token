@@ -3441,6 +3441,19 @@ return|return
 name|HAL_OK
 return|;
 case|case
+name|HAL_CAP_ANT_DIV_COMB
+case|:
+comment|/* AR9285/AR9485 LNA diversity */
+return|return
+name|pCap
+operator|->
+name|halAntDivCombSupport
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
+case|case
 name|HAL_CAP_ENHANCED_DFS_SUPPORT
 case|:
 return|return

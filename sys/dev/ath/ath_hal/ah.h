@@ -539,6 +539,11 @@ init|=
 literal|100
 block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_ANT_DIV_COMB
+init|=
+literal|105
+block|,
+comment|/* Enable antenna diversity/combining */
 name|HAL_CAP_PHYRESTART_CLR_WAR
 init|=
 literal|106
