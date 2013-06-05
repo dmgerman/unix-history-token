@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<link.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
