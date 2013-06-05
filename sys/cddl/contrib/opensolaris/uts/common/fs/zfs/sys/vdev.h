@@ -86,6 +86,10 @@ name|boolean_t
 name|zfs_nocacheflush
 decl_stmt|;
 specifier|extern
+name|boolean_t
+name|zfs_trim_enabled
+decl_stmt|;
+specifier|extern
 name|int
 name|vdev_open
 parameter_list|(

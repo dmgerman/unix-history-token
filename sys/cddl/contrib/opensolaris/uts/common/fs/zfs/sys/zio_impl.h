@@ -177,21 +177,21 @@ literal|1
 operator|<<
 literal|17
 block|,
-comment|/* RW--I */
+comment|/* RWF-I */
 name|ZIO_STAGE_VDEV_IO_DONE
 init|=
 literal|1
 operator|<<
 literal|18
 block|,
-comment|/* RW--- */
+comment|/* RWF-- */
 name|ZIO_STAGE_VDEV_IO_ASSESS
 init|=
 literal|1
 operator|<<
 literal|19
 block|,
-comment|/* RW--I */
+comment|/* RWF-I */
 name|ZIO_STAGE_CHECKSUM_VERIFY
 init|=
 literal|1
@@ -291,7 +291,7 @@ define|#
 directive|define
 name|ZIO_FREE_PIPELINE
 define|\
-value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_ISSUE_ASYNC |			\ 	ZIO_STAGE_DVA_FREE)
+value|(ZIO_INTERLOCK_STAGES |			\ 	ZIO_STAGE_FREE_BP_INIT |		\ 	ZIO_STAGE_ISSUE_ASYNC |			\ 	ZIO_STAGE_DVA_FREE |			\ 	ZIO_STAGE_VDEV_IO_START |		\ 	ZIO_STAGE_VDEV_IO_ASSESS)
 define|#
 directive|define
 name|ZIO_DDT_FREE_PIPELINE
