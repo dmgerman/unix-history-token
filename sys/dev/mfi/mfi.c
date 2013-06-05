@@ -1010,6 +1010,47 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|mfi_cmd_timeout
+init|=
+name|MFI_CMD_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.cmd_timeout"
+argument_list|,
+operator|&
+name|mfi_cmd_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_mfi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cmd_timeout
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|mfi_cmd_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"Command timeout (in seconds)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Management interface */
 end_comment
@@ -4276,7 +4317,7 @@ name|sc
 operator|->
 name|mfi_watchdog_callout
 argument_list|,
-name|MFI_CMD_TIMEOUT
+name|mfi_cmd_timeout
 operator|*
 name|hz
 argument_list|,
@@ -20233,7 +20274,7 @@ name|deadline
 operator|=
 name|time_uptime
 operator|-
-name|MFI_CMD_TIMEOUT
+name|mfi_cmd_timeout
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -20354,7 +20395,7 @@ name|deadline
 operator|=
 name|time_uptime
 operator|-
-name|MFI_CMD_TIMEOUT
+name|mfi_cmd_timeout
 expr_stmt|;
 if|if
 condition|(
@@ -20381,7 +20422,7 @@ name|sc
 operator|->
 name|mfi_watchdog_callout
 argument_list|,
-name|MFI_CMD_TIMEOUT
+name|mfi_cmd_timeout
 operator|*
 name|hz
 argument_list|,
@@ -20540,7 +20581,7 @@ name|sc
 operator|->
 name|mfi_watchdog_callout
 argument_list|,
-name|MFI_CMD_TIMEOUT
+name|mfi_cmd_timeout
 operator|*
 name|hz
 argument_list|,
