@@ -1037,17 +1037,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUS_SPACE_MAXADDR_ENVY24
-value|0x0fffffff
-end_define
-
-begin_comment
-comment|/* Address space beyond 256MB is not  supported */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BUS_SPACE_MAXSIZE_ENVY24
 value|0x3fffc
 end_define
