@@ -261,6 +261,7 @@ argument_list|,
 name|report_request
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: [EINTR] is supposed to happen only when a signal was handled 	 * but the kernel also returns it when a ptrace-based debugger 	 * attaches. This is a bug but it is hard to fix. 	 */
 while|while
 condition|(
 name|nanosleep
