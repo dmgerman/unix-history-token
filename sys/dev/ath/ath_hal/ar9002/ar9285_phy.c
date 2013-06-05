@@ -267,10 +267,13 @@ name|ee_base
 operator|.
 name|modalHeader
 decl_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* For now, simply disable this until it's better debugged. -adrian */
-return|return
-name|AH_FALSE
-return|;
+block|return AH_FALSE;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
