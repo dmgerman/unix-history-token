@@ -419,7 +419,7 @@ name|zfs_write_limit_inflated
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum size of the dynamic write limit"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -451,7 +451,7 @@ name|zfs_write_limit_override
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Force a txg if dirty buffers exceed this value (bytes)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
