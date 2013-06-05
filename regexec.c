@@ -1273,6 +1273,9 @@ argument_list|(
 name|re_match_context_t
 operator|*
 name|mctx
+argument_list|,
+name|int
+name|min_len
 argument_list|)
 name|internal_function
 decl_stmt|;
@@ -5950,6 +5953,10 @@ operator|=
 name|extend_buffers
 argument_list|(
 name|mctx
+argument_list|,
+name|next_char_idx
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -8731,6 +8738,10 @@ operator|=
 name|extend_buffers
 argument_list|(
 name|mctx
+argument_list|,
+name|next_state_log_idx
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -13688,6 +13699,10 @@ operator|=
 name|extend_buffers
 argument_list|(
 name|mctx
+argument_list|,
+name|bkref_str_off
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -20214,6 +20229,9 @@ parameter_list|(
 name|re_match_context_t
 modifier|*
 name|mctx
+parameter_list|,
+name|int
+name|min_len
 parameter_list|)
 block|{
 name|reg_errcode_t
@@ -20253,12 +20271,16 @@ condition|)
 return|return
 name|REG_ESPACE
 return|;
-comment|/* Double the lengthes of the buffers.  */
+comment|/* Double the lengthes of the buffers, but allocate at least MIN_LEN.  */
 name|ret
 operator|=
 name|re_string_realloc_buffers
 argument_list|(
 name|pstr
+argument_list|,
+name|MAX
+argument_list|(
+name|min_len
 argument_list|,
 name|MIN
 argument_list|(
@@ -20271,6 +20293,7 @@ operator|->
 name|bufs_len
 operator|*
 literal|2
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
