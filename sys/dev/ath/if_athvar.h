@@ -2288,8 +2288,13 @@ decl_stmt|,
 name|sc_hasenforcetxop
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* support enforce TxOP */
+name|sc_rx_lnamixer
+range|:
+literal|1
+decl_stmt|;
+comment|/* RX using LNA mixing */
 name|int
 name|sc_cabq_enable
 decl_stmt|;
@@ -5155,6 +5160,17 @@ name|_v
 parameter_list|)
 define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_ENFORCE_TXOP, 1, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasrxlnamixer
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RX_LNA_MIXING, 0, NULL) == HAL_OK)
 end_define
 
 begin_comment

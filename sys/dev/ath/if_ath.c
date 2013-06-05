@@ -3367,6 +3367,15 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_lnamixer
+operator|=
+name|ath_hal_hasrxlnamixer
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_hasfastframes
