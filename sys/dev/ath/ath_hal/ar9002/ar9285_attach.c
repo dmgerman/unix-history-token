@@ -2304,6 +2304,12 @@ name|halSpectralScanSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|halRxUsingLnaMixing
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|if
 condition|(
 name|AR_SREV_KITE_12_OR_LATER

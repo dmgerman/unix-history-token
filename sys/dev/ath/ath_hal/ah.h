@@ -657,6 +657,11 @@ init|=
 literal|246
 block|,
 comment|/* Enforce TXOP if supported */
+name|HAL_CAP_RX_LNA_MIXING
+init|=
+literal|247
+block|,
+comment|/* RX hardware uses LNA mixing */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

@@ -3617,6 +3617,19 @@ expr_stmt|;
 return|return
 name|HAL_OK
 return|;
+case|case
+name|HAL_CAP_RX_LNA_MIXING
+case|:
+comment|/* Hardware uses an RX LNA mixer to map 2 antennas to a 1 stream receiver */
+return|return
+name|pCap
+operator|->
+name|halRxUsingLnaMixing
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
 default|default:
 return|return
 name|HAL_EINVAL
