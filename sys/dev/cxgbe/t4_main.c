@@ -10393,7 +10393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The firmware in the KLD is usable and can be installed.  But should it be?  * This routine explains itself in detail if it indicates the KLD firmware  * should be installed.  */
+comment|/*  * The firmware in the KLD is usable, but should it be installed?  This routine  * explains itself in detail if it indicates the KLD firmware should be  * installed.  */
 end_comment
 
 begin_function
@@ -10421,20 +10421,6 @@ name|char
 modifier|*
 name|reason
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|t4_fw_install
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"%s: Can't install; shouldn't be asked "
-literal|"to evaluate if install is a good idea."
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -10490,6 +10476,52 @@ operator|)
 return|;
 name|install
 label|:
+if|if
+condition|(
+name|t4_fw_install
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"firmware on card (%u.%u.%u.%u) is %s, "
+literal|"but the driver is prohibited from installing a different "
+literal|"firmware on the card.\n"
+argument_list|,
+name|G_FW_HDR_FW_VER_MAJOR
+argument_list|(
+name|c
+argument_list|)
+argument_list|,
+name|G_FW_HDR_FW_VER_MINOR
+argument_list|(
+name|c
+argument_list|)
+argument_list|,
+name|G_FW_HDR_FW_VER_MICRO
+argument_list|(
+name|c
+argument_list|)
+argument_list|,
+name|G_FW_HDR_FW_VER_BUILD
+argument_list|(
+name|c
+argument_list|)
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|device_printf
 argument_list|(
 name|sc
@@ -10933,14 +10965,10 @@ operator|==
 name|drv_fw
 operator|->
 name|fw_ver
-operator|||
-name|t4_fw_install
-operator|==
-literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * Common case: the firmware on the card is an exact match and 		 * the KLD is an exact match too, or the KLD is 		 * absent/incompatible, or we're prohibited from using it.  Note 		 * that t4_fw_install = 2 is ignored here -- use cxgbetool 		 * loadfw if you want to reinstall the same firmware as the one 		 * on the card. 		 */
+comment|/* 		 * Common case: the firmware on the card is an exact match and 		 * the KLD is an exact match too, or the KLD is 		 * absent/incompatible.  Note that t4_fw_install = 2 is ignored 		 * here -- use cxgbetool loadfw if you want to reinstall the 		 * same firmware as the one on the card. 		 */
 block|}
 elseif|else
 if|if
