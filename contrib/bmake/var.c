@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.174 2013/05/18 13:12:45 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.175 2013/05/29 00:23:31 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.174 2013/05/18 13:12:45 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.175 2013/05/29 00:23:31 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.174 2013/05/18 13:12:45 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.175 2013/05/29 00:23:31 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8693,13 +8693,6 @@ name|c1
 decl_stmt|,
 name|c2
 decl_stmt|;
-name|int
-name|done
-decl_stmt|;
-name|done
-operator|=
-literal|1
-expr_stmt|;
 name|h
 operator|=
 literal|0x971e137bU
@@ -8890,12 +8883,6 @@ operator|^=
 name|k
 expr_stmt|;
 block|}
-while|while
-condition|(
-operator|!
-name|done
-condition|)
-empty_stmt|;
 name|h
 operator|^=
 name|len2
