@@ -512,8 +512,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* if (y> 1) */
 block|{
+comment|/* if (y> 1) */
 comment|/* 			 * A-1 = y-1 (inexactly). 			 */
 operator|*
 name|rx
@@ -776,8 +776,8 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-comment|/* if (y< 1) */
 block|{
+comment|/* if (y< 1) */
 comment|/* 			 * fm = 1-y>= DBL_EPSILON, fp is of order x^2, and 			 * A = 1 (inexactly). 			 */
 operator|*
 name|sqrt_A2my2
@@ -943,7 +943,6 @@ argument_list|)
 operator|)
 return|;
 comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
-comment|/* Bruce Evans tells me this is the way to do this: */
 return|return
 operator|(
 name|cpack
@@ -1916,10 +1915,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *=============================================================================  */
-end_comment
-
-begin_comment
 comment|/*  *				=================  *				| catanh, catan |  *				=================  */
 end_comment
 
@@ -2296,7 +2291,6 @@ argument_list|(
 name|y
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|cpack
@@ -2319,7 +2313,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 comment|/* 		 * All other cases involving NaN return NaN + I*NaN. 		 * C99 leaves it optional whether to raise invalid if one of 		 * the arguments is not NaN, so we opt not to raise it. 		 */
 return|return
 operator|(
@@ -2358,7 +2351,6 @@ name|ay
 operator|>
 name|RECIP_EPSILON
 condition|)
-block|{
 return|return
 operator|(
 name|cpack
@@ -2381,7 +2373,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|ax
@@ -2420,15 +2411,14 @@ condition|)
 name|rx
 operator|=
 operator|(
+name|m_ln2
+operator|-
 name|log
 argument_list|(
 name|ay
 argument_list|)
-operator|-
-name|m_ln2
 operator|)
 operator|/
-operator|-
 literal|2
 expr_stmt|;
 else|else

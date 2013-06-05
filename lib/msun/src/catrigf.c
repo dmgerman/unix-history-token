@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012 Stephen Montgomery-Smith<stephen@FreeBSD.ORG> 
 end_comment
 
 begin_comment
-comment|/*  * The algorithm is very close to that in "Implementing the complex arcsine  * and arccosine functions using exception handling" by T. E. Hull, Thomas F.  * Fairgrieve, and Ping Tak Peter Tang, published in ACM Transactions on  * Mathematical Software, Volume 23 Issue 3, 1997, Pages 299-335,  * http://dl.acm.org/citation.cfm?id=275324.  *  * The code for catrig.c contains complete comments.  */
+comment|/*  * The algorithm is very close to that in "Implementing the complex arcsine  * and arccosine functions using exception handling" by T. E. Hull, Thomas F.  * Fairgrieve, and Ping Tak Peter Tang, published in ACM Transactions on  * Mathematical Software, Volume 23 Issue 3, 1997, Pages 299-335,  * http://dl.acm.org/citation.cfm?id=275324.  *  * See catrig.c for complete comments.  *  * XXX comments were removed automatically, and even short ones on the right  * of statements were removed (all of them), contrary to normal style.  Only  * a few comments on the right of declarations remain.  */
 end_comment
 
 begin_include
@@ -1725,7 +1725,6 @@ name|FLT_MAX
 operator|/
 literal|2
 condition|)
-block|{
 return|return
 operator|(
 name|cpackf
@@ -1755,7 +1754,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|ax
@@ -2164,7 +2162,6 @@ argument_list|(
 name|y
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|cpackf
@@ -2187,7 +2184,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|cpackf
@@ -2225,7 +2221,6 @@ name|ay
 operator|>
 name|RECIP_EPSILON
 condition|)
-block|{
 return|return
 operator|(
 name|cpackf
@@ -2248,7 +2243,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|ax
@@ -2286,15 +2280,14 @@ condition|)
 name|rx
 operator|=
 operator|(
+name|m_ln2
+operator|-
 name|logf
 argument_list|(
 name|ay
 argument_list|)
-operator|-
-name|m_ln2
 operator|)
 operator|/
-operator|-
 literal|2
 expr_stmt|;
 else|else
