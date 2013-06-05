@@ -2465,6 +2465,8 @@ name|NULL
 decl_stmt|;
 name|bus_addr_t
 name|baddr
+init|=
+literal|0
 decl_stmt|;
 name|vbp
 operator|=
@@ -30309,7 +30311,6 @@ operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
 block|}
-return|return;
 block|}
 comment|/*  *  Move the scatter list to our data block.  */
 specifier|static
@@ -31210,7 +31211,7 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_UNMAPPED
 expr_stmt|;
 if|if
 condition|(
