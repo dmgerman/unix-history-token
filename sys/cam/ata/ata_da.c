@@ -396,7 +396,7 @@ begin_define
 define|#
 directive|define
 name|TRIM_MAX_RANGES
-value|(TRIM_MAX_BLOCKS * 64)
+value|(TRIM_MAX_BLOCKS * ATA_DSM_BLK_RANGES)
 end_define
 
 begin_define
@@ -415,7 +415,7 @@ name|data
 index|[
 name|TRIM_MAX_RANGES
 operator|*
-literal|8
+name|ATA_DSM_RANGE_SIZE
 index|]
 decl_stmt|;
 name|struct
@@ -4556,7 +4556,7 @@ name|ident_data
 operator|.
 name|max_dsm_blocks
 operator|*
-literal|64
+name|ATA_DSM_BLK_RANGES
 argument_list|,
 name|softc
 operator|->
@@ -5054,15 +5054,25 @@ name|DISKFLAG_CANFLUSHCACHE
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|softc
 operator|->
 name|flags
 operator|&
 name|ADA_FLAG_CAN_TRIM
-operator|)
-operator|||
-operator|(
+condition|)
+block|{
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_flags
+operator||=
+name|DISKFLAG_CANDELETE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|softc
 operator|->
@@ -5079,8 +5089,8 @@ name|flags
 operator|&
 name|ADA_FLAG_CAN_48BIT
 operator|)
-operator|)
 condition|)
+block|{
 name|softc
 operator|->
 name|disk
@@ -5089,6 +5099,7 @@ name|d_flags
 operator||=
 name|DISKFLAG_CANDELETE
 expr_stmt|;
+block|}
 name|strlcpy
 argument_list|(
 name|softc
@@ -5941,7 +5952,7 @@ name|min
 argument_list|(
 name|count
 argument_list|,
-literal|0xffff
+name|ATA_DSM_RANGE_MAX
 operator|-
 name|lastcount
 argument_list|)
@@ -5958,7 +5969,7 @@ operator|-
 literal|1
 operator|)
 operator|*
-literal|8
+name|ATA_DSM_RANGE_SIZE
 expr_stmt|;
 name|req
 operator|->
@@ -6012,14 +6023,14 @@ name|min
 argument_list|(
 name|count
 argument_list|,
-literal|0xffff
+name|ATA_DSM_RANGE_MAX
 argument_list|)
 expr_stmt|;
 name|off
 operator|=
 name|ranges
 operator|*
-literal|8
+name|ATA_DSM_RANGE_SIZE
 expr_stmt|;
 name|req
 operator|->
@@ -6164,6 +6175,7 @@ expr_stmt|;
 name|ranges
 operator|++
 expr_stmt|;
+comment|/* 					 * Its the caller's responsibility to ensure the 					 * request will fit so we don't need to check for 					 * overrun here 					 */
 block|}
 name|lastlba
 operator|=
@@ -6217,7 +6229,7 @@ operator|-
 name|ranges
 operator|)
 operator|*
-literal|0xffff
+name|ATA_DSM_RANGE_MAX
 condition|)
 break|break;
 block|}
@@ -6246,13 +6258,15 @@ operator|(
 operator|(
 name|ranges
 operator|+
-literal|63
+name|ATA_DSM_BLK_RANGES
+operator|-
+literal|1
 operator|)
 operator|/
-literal|64
+name|ATA_DSM_BLK_RANGES
 operator|)
 operator|*
-literal|512
+name|ATA_DSM_BLK_SIZE
 argument_list|,
 name|ada_default_timeout
 operator|*
@@ -6272,10 +6286,12 @@ argument_list|,
 operator|(
 name|ranges
 operator|+
-literal|63
+name|ATA_DSM_BLK_RANGES
+operator|-
+literal|1
 operator|)
 operator|/
-literal|64
+name|ATA_DSM_BLK_RANGES
 argument_list|)
 expr_stmt|;
 name|start_ccb
