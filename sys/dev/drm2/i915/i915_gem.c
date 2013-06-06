@@ -12093,6 +12093,8 @@ name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
+name|VM_ALLOC_NOBUSY
+operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
@@ -12105,6 +12107,11 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
+name|vm_page_busy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_pager_has_page
@@ -12202,6 +12209,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|vm_page_wakeup
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 name|vm_page_lock
 argument_list|(
@@ -12214,11 +12226,6 @@ name|m
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
