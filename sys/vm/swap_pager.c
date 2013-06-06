@@ -5660,6 +5660,8 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
+operator||
+name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -5698,11 +5700,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_pager_page_unswapped
 argument_list|(
 name|m
@@ -5710,6 +5707,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|vm_page_busy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|swap_pager_getpages
