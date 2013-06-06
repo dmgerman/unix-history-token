@@ -452,6 +452,9 @@ name|ada_quirks
 name|quirks
 decl_stmt|;
 name|int
+name|sort_io_queue
+decl_stmt|;
+name|int
 name|ordered_tag_count
 decl_stmt|;
 name|int
@@ -1493,6 +1496,13 @@ define|#
 directive|define
 name|ADA_WC
 value|(softc->write_cache>= 0 ? \ 		 softc->write_cache : ada_write_cache)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADA_SIO
+value|(softc->sort_io_queue>= 0 ? \ 		 softc->sort_io_queue : cam_sort_io_queues)
 end_define
 
 begin_comment
@@ -2566,6 +2576,11 @@ operator|&
 name|ADA_FLAG_CAN_TRIM
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|ADA_SIO
+condition|)
 name|bioq_disksort
 argument_list|(
 operator|&
@@ -2577,6 +2592,23 @@ name|bp
 argument_list|)
 expr_stmt|;
 else|else
+name|bioq_insert_tail
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|trim_queue
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ADA_SIO
+condition|)
 name|bioq_disksort
 argument_list|(
 operator|&
@@ -2587,6 +2619,18 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+else|else
+name|bioq_insert_tail
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|bio_queue
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Schedule ourselves for performing the work. 	 */
 name|adaschedule
 argument_list|(
@@ -4042,6 +4086,38 @@ argument_list|,
 literal|"Enable disk write cache."
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|softc
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"sort_io_queue"
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+operator|&
+name|softc
+operator|->
+name|sort_io_queue
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sort IO queue to try and optimise disk access patterns"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ADA_TEST_FAILURE
@@ -4758,6 +4834,13 @@ name|softc
 operator|->
 name|write_cache
 argument_list|)
+expr_stmt|;
+name|softc
+operator|->
+name|sort_io_queue
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|adagetparams
 argument_list|(
