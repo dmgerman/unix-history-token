@@ -941,14 +941,29 @@ name|ext2bgd_ndirs
 decl_stmt|;
 comment|/* number of directories */
 name|uint16_t
-name|reserved
+name|ext2bgd_flags
 decl_stmt|;
+comment|/* block group flags */
 name|uint32_t
-name|reserved2
-index|[
-literal|3
-index|]
+name|ext2bgd_x_bitmap
 decl_stmt|;
+comment|/* snapshot exclusion bitmap loc. */
+name|uint16_t
+name|ext2bgd_b_bmap_csum
+decl_stmt|;
+comment|/* block bitmap checksum */
+name|uint16_t
+name|ext2bgd_i_bmap_csum
+decl_stmt|;
+comment|/* inode bitmap checksum */
+name|uint16_t
+name|ext2bgd_i_unused
+decl_stmt|;
+comment|/* unused inode count */
+name|uint16_t
+name|ext2bgd_csum
+decl_stmt|;
+comment|/* group descriptor checksum */
 block|}
 struct|;
 end_struct
