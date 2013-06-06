@@ -760,20 +760,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Used for BIO_DELETE on MD_VNODE */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_char
-name|zero
-index|[
-name|PAGE_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|struct
@@ -2629,16 +2615,10 @@ condition|)
 block|{
 name|zerosize
 operator|=
-sizeof|sizeof
-argument_list|(
-name|zero
-argument_list|)
+name|ZERO_REGION_SIZE
 operator|-
 operator|(
-sizeof|sizeof
-argument_list|(
-name|zero
-argument_list|)
+name|ZERO_REGION_SIZE
 operator|%
 name|sc
 operator|->
@@ -2745,7 +2725,13 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
-name|zero
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
+name|zero_region
+argument_list|)
 expr_stmt|;
 name|aiov
 operator|.
