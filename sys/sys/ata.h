@@ -929,6 +929,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* ATA Dataset Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_DSM_BLK_SIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_DSM_BLK_RANGES
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_DSM_RANGE_SIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_DSM_RANGE_MAX
+value|65535
+end_define
+
+begin_comment
 comment|/*  * ATA Device Register  *  * bit 7 Obsolete (was 1 in early ATA specs)  * bit 6 Sets LBA/CHS mode. 1=LBA, 0=CHS   * bit 5 Obsolete (was 1 in early ATA specs)  * bit 4 1 = Slave Drive, 0 = Master Drive  * bit 3-0 In LBA mode, 27-24 of address. In CHS mode, head number */
 end_comment
 
