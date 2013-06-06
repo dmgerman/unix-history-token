@@ -488,6 +488,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(2 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 2MB */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

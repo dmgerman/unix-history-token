@@ -387,6 +387,17 @@ begin_comment
 comment|/* ARM_USE_SMALL_ALLOC */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* 64KB */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

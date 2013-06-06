@@ -512,6 +512,17 @@ name|vm_max_kernel_address
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Older sparc64 machines have a virtually indexed L1 data cache of 16KB.  * Consequently, mapping the same physical page multiple times may have  * caching disabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|PAGE_SIZE
+end_define
+
 begin_endif
 endif|#
 directive|endif
