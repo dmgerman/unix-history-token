@@ -20022,6 +20022,8 @@ argument_list|,
 name|M_CAMXPT
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 block|}
@@ -20406,6 +20408,25 @@ operator|&
 name|device
 operator|->
 name|ccbq
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Free allocated memory.  free(9) does nothing if the 		 * supplied pointer is NULL, so it is safe to call without 		 * checking. 		 */
+name|free
+argument_list|(
+name|device
+operator|->
+name|supported_vpds
+argument_list|,
+name|M_CAMXPT
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|device
+operator|->
+name|serial_num
+argument_list|,
+name|M_CAMXPT
 argument_list|)
 expr_stmt|;
 name|xpt_release_target

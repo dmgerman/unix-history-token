@@ -280,6 +280,13 @@ name|struct
 name|scsi_inquiry_data
 name|inq_data
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|supported_vpds
+decl_stmt|;
+name|uint8_t
+name|supported_vpds_len
+decl_stmt|;
 name|struct
 name|ata_params
 name|ident_data
