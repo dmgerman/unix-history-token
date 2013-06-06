@@ -14877,7 +14877,7 @@ argument_list|(
 name|cdb_string
 argument_list|)
 argument_list|,
-literal|"%x "
+literal|"%02hhx "
 argument_list|,
 name|cdb_ptr
 index|[
