@@ -7433,11 +7433,6 @@ name|DA_STATE_PROBE
 case|:
 block|{
 name|struct
-name|ccb_scsiio
-modifier|*
-name|csio
-decl_stmt|;
-name|struct
 name|scsi_read_capacity_data
 modifier|*
 name|rcap
@@ -7479,15 +7474,11 @@ expr_stmt|;
 comment|/* da_free_periph??? */
 break|break;
 block|}
-name|csio
-operator|=
+name|scsi_read_capacity
+argument_list|(
 operator|&
 name|start_ccb
 operator|->
-name|csio
-expr_stmt|;
-name|scsi_read_capacity
-argument_list|(
 name|csio
 argument_list|,
 comment|/*retries*/
@@ -7533,11 +7524,6 @@ name|DA_STATE_PROBE2
 case|:
 block|{
 name|struct
-name|ccb_scsiio
-modifier|*
-name|csio
-decl_stmt|;
-name|struct
 name|scsi_read_capacity_data_long
 modifier|*
 name|rcaplong
@@ -7579,15 +7565,11 @@ expr_stmt|;
 comment|/* da_free_periph??? */
 break|break;
 block|}
-name|csio
-operator|=
+name|scsi_read_capacity_16
+argument_list|(
 operator|&
 name|start_ccb
 operator|->
-name|csio
-expr_stmt|;
-name|scsi_read_capacity_16
-argument_list|(
 name|csio
 argument_list|,
 comment|/*retries*/
