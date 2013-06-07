@@ -1980,6 +1980,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|usb_callout
+name|sc_callout
+decl_stmt|;
 name|union
 name|xhci_hub_desc
 name|sc_hub_desc
@@ -2148,6 +2152,15 @@ end_comment
 begin_function_decl
 name|uint32_t
 name|xhci_get_port_route
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|xhci_use_polling
 parameter_list|(
 name|void
 parameter_list|)
