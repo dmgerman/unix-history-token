@@ -3040,6 +3040,13 @@ operator|->
 name|llq_ifp
 expr_stmt|;
 comment|/* Set the link layer address */
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|if_setlladdr
@@ -3052,6 +3059,9 @@ name|llq_lladdr
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
