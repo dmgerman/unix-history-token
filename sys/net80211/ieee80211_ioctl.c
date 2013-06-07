@@ -7415,6 +7415,12 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+name|IEEE80211_NODE_UNLOCK
+argument_list|(
+name|nt
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Don't do the node update inside the node 		 * table lock.  This unfortunately causes LORs 		 * with drivers and their TX paths. 		 */
 if|if
 condition|(
 name|ni
@@ -7439,11 +7445,6 @@ else|else
 name|error
 operator|=
 name|ENOENT
-expr_stmt|;
-name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -7685,6 +7686,12 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Don't do the node update inside the node 			 * table lock.  This unfortunately causes LORs 			 * with drivers and their TX paths. 			 */
+name|IEEE80211_NODE_UNLOCK
+argument_list|(
+name|nt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -7710,11 +7717,6 @@ operator|=
 name|ENOENT
 expr_stmt|;
 block|}
-name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|error
@@ -7767,6 +7769,12 @@ argument_list|,
 name|mac
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Don't do the node update inside the node 		 * table lock.  This unfortunately causes LORs 		 * with drivers and their TX paths. 		 */
+name|IEEE80211_NODE_UNLOCK
+argument_list|(
+name|nt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -7813,11 +7821,6 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|IEEE80211_MLME_AUTH
@@ -7851,6 +7854,12 @@ argument_list|,
 name|vap
 argument_list|,
 name|mac
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Don't do the node update inside the node 		 * table lock.  This unfortunately causes LORs 		 * with drivers and their TX paths. 		 */
+name|IEEE80211_NODE_UNLOCK
+argument_list|(
+name|nt
 argument_list|)
 expr_stmt|;
 if|if
@@ -7952,11 +7961,6 @@ else|else
 name|error
 operator|=
 name|ENOENT
-expr_stmt|;
-name|IEEE80211_NODE_UNLOCK
-argument_list|(
-name|nt
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
