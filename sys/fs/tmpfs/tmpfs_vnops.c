@@ -2107,6 +2107,11 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_WUNLOCK
+argument_list|(
+name|tobj
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EIO
@@ -2655,6 +2660,11 @@ argument_list|,
 name|idx
 argument_list|,
 name|rv
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_WUNLOCK
+argument_list|(
+name|tobj
 argument_list|)
 expr_stmt|;
 return|return
