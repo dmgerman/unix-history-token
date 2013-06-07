@@ -1008,7 +1008,7 @@ name|ar5416BTCoexSetupBmissThresh
 expr_stmt|;
 name|ah
 operator|->
-name|ah_btcoexSetParameter
+name|ah_btCoexSetParameter
 operator|=
 name|ar5416BTCoexSetParameter
 expr_stmt|;

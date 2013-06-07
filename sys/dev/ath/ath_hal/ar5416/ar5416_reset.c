@@ -1247,6 +1247,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Enable Bluetooth Coexistence if it's enabled. 	 */
+if|if
+condition|(
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_btCoexConfigType
+operator|!=
+name|HAL_BT_COEX_CFG_NONE
+condition|)
+name|ar5416InitBTCoex
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
 comment|/* Restore previous antenna */
 name|OS_REG_WRITE
 argument_list|(

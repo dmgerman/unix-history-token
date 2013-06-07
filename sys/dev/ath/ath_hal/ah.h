@@ -6315,7 +6315,7 @@ name|void
 name|__ahdecl
 function_decl|(
 modifier|*
-name|ah_btcoexSetParameter
+name|ah_btCoexSetParameter
 function_decl|)
 parameter_list|(
 name|struct

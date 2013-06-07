@@ -1244,6 +1244,21 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_BT_COEX
+argument_list|,
+literal|"%s: called; configType=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ahp
+operator|->
+name|ah_btCoexConfigType
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ahp

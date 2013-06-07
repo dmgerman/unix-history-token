@@ -876,7 +876,7 @@ argument_list|)
 operator|->
 name|ah_btCoexSetDiversity
 operator|=
-name|ar5416BTCoexAntennaDiversity
+name|ar9285BTCoexAntennaDiversity
 expr_stmt|;
 name|ah
 operator|->
@@ -910,7 +910,7 @@ name|ar9285SetBoardValues
 expr_stmt|;
 name|ah
 operator|->
-name|ah_btcoexSetParameter
+name|ah_btCoexSetParameter
 operator|=
 name|ar9285BTCoexSetParameter
 expr_stmt|;
@@ -2396,9 +2396,14 @@ name|AH_TRUE
 expr_stmt|;
 if|#
 directive|if
-literal|0
+literal|1
 comment|/* XXX bluetooth */
-block|pCap->halBtCoexSupport = AH_TRUE;
+name|pCap
+operator|->
+name|halBtCoexSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 endif|#
 directive|endif
 name|pCap
