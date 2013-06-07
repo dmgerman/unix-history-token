@@ -272,6 +272,14 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|CH_Q_BIT_STRING
+define|\
+value|"\020"		\ 	"\001NO_DBD"
+end_define
+
+begin_define
+define|#
+directive|define
 name|ccb_state
 value|ppriv_field0
 end_define
@@ -2456,6 +2464,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|xpt_announce_periph
 argument_list|(
 name|periph
@@ -2463,6 +2472,18 @@ argument_list|,
 name|announce_buf
 argument_list|)
 expr_stmt|;
+name|xpt_announce_quirks
+argument_list|(
+name|periph
+argument_list|,
+name|softc
+operator|->
+name|quirks
+argument_list|,
+name|CH_Q_BIT_STRING
+argument_list|)
+expr_stmt|;
+block|}
 name|softc
 operator|->
 name|state
