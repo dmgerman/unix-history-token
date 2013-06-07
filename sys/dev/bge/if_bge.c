@@ -11289,6 +11289,7 @@ name|sc
 argument_list|,
 name|BGE_TX_RANDOM_BACKOFF
 argument_list|,
+operator|(
 name|IF_LLADDR
 argument_list|(
 name|sc
@@ -11348,7 +11349,8 @@ argument_list|)
 index|[
 literal|5
 index|]
-operator|+
+operator|)
+operator|&
 name|BGE_TX_BACKOFF_SEED_MASK
 argument_list|)
 expr_stmt|;
