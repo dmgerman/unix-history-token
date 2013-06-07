@@ -639,10 +639,12 @@ comment|/*089*/
 name|u_int16_t
 name|erase_time
 decl_stmt|;
+comment|/* time req'd in 2min units */
 comment|/*090*/
 name|u_int16_t
 name|enhanced_erase_time
 decl_stmt|;
+comment|/* time req'd in 2min units */
 comment|/*091*/
 name|u_int16_t
 name|apm_value
@@ -651,6 +653,7 @@ comment|/*092*/
 name|u_int16_t
 name|master_passwd_revision
 decl_stmt|;
+comment|/* password revision code */
 comment|/*093*/
 name|u_int16_t
 name|hwres
@@ -796,6 +799,41 @@ comment|/*128*/
 name|u_int16_t
 name|security_status
 decl_stmt|;
+define|#
+directive|define
+name|ATA_SECURITY_LEVEL
+value|0x0100
+comment|/* 0: high, 1: maximum */
+define|#
+directive|define
+name|ATA_SECURITY_ENH_SUPP
+value|0x0020
+comment|/* enhanced erase supported */
+define|#
+directive|define
+name|ATA_SECURITY_COUNT_EXP
+value|0x0010
+comment|/* count expired */
+define|#
+directive|define
+name|ATA_SECURITY_FROZEN
+value|0x0008
+comment|/* security config is frozen */
+define|#
+directive|define
+name|ATA_SECURITY_LOCKED
+value|0x0004
+comment|/* drive is locked */
+define|#
+directive|define
+name|ATA_SECURITY_ENABLED
+value|0x0002
+comment|/* ATA Security is enabled */
+define|#
+directive|define
+name|ATA_SECURITY_SUPPORTED
+value|0x0001
+comment|/* ATA Security is supported */
 name|u_int16_t
 name|reserved129
 index|[
@@ -1854,12 +1892,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_SECURITY_FREEE_LOCK
+name|ATA_SECURITY_SET_PASSWORD
+value|0xf1
+end_define
+
+begin_comment
+comment|/* set drive password */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECURITY_UNLOCK
+value|0xf2
+end_define
+
+begin_comment
+comment|/* unlock drive using passwd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECURITY_ERASE_PREPARE
+value|0xf3
+end_define
+
+begin_comment
+comment|/* prepare to erase drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECURITY_ERASE_UNIT
+value|0xf4
+end_define
+
+begin_comment
+comment|/* erase all blocks on drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECURITY_FREEZE_LOCK
 value|0xf5
 end_define
 
 begin_comment
 comment|/* freeze security config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SECURITY_DISABLE_PASSWORD
+value|0xf6
+end_define
+
+begin_comment
+comment|/* disable drive password */
 end_comment
 
 begin_define
@@ -2808,6 +2901,56 @@ name|timeout
 decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ata_security_password
+block|{
+name|u_int16_t
+name|ctrl
+decl_stmt|;
+define|#
+directive|define
+name|ATA_SECURITY_PASSWORD_USER
+value|0x0000
+define|#
+directive|define
+name|ATA_SECURITY_PASSWORD_MASTER
+value|0x0001
+define|#
+directive|define
+name|ATA_SECURITY_ERASE_NORMAL
+value|0x0000
+define|#
+directive|define
+name|ATA_SECURITY_ERASE_ENHANCED
+value|0x0002
+define|#
+directive|define
+name|ATA_SECURITY_LEVEL_HIGH
+value|0x0000
+define|#
+directive|define
+name|ATA_SECURITY_LEVEL_MAXIMUM
+value|0x0100
+name|u_int8_t
+name|password
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_int16_t
+name|revision
+decl_stmt|;
+name|u_int16_t
+name|reserved
+index|[
+literal|238
+index|]
 decl_stmt|;
 block|}
 struct|;
