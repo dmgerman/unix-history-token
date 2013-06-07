@@ -4835,6 +4835,24 @@ operator|->
 name|write_cache
 argument_list|)
 expr_stmt|;
+comment|/* Disable queue sorting for non-rotational media by default. */
+if|if
+condition|(
+name|cgd
+operator|->
+name|ident_data
+operator|.
+name|media_rotation_rate
+operator|==
+literal|1
+condition|)
+name|softc
+operator|->
+name|sort_io_queue
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|softc
 operator|->
 name|sort_io_queue
