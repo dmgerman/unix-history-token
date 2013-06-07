@@ -387,6 +387,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_btcoex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_ath_spectral.h>
 end_include
 
@@ -2762,6 +2768,36 @@ goto|goto
 name|bad2
 goto|;
 block|}
+comment|/* Attach bluetooth coexistence module */
+if|if
+condition|(
+name|ath_btcoex_attach
+argument_list|(
+name|sc
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: unable to attach bluetooth coexistence\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|bad2
+goto|;
+block|}
 comment|/* Start DFS processing tasklet */
 name|TASK_INIT
 argument_list|(
@@ -4685,6 +4721,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ath_btcoex_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_spectral_detach
 argument_list|(
 name|sc
@@ -6887,6 +6928,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Let bluetooth coexistence at in case it's needed for this channel 	 */
+name|ath_btcoex_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we're doing TDMA, enforce the TXOP limitation for chips that 	 * support it. 	 */
 if|if
 condition|(
@@ -8671,6 +8722,16 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Let bluetooth coexistence at in case it's needed for this channel 	 */
+name|ath_btcoex_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we're doing TDMA, enforce the TXOP limitation for chips that 	 * support it. 	 */
 if|if
 condition|(
@@ -9710,6 +9771,16 @@ argument_list|)
 expr_stmt|;
 comment|/* Let spectral at in case spectral is enabled */
 name|ath_spectral_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Let bluetooth coexistence at in case it's needed for this channel 	 */
+name|ath_btcoex_enable
 argument_list|(
 name|sc
 argument_list|,
@@ -20206,6 +20277,16 @@ argument_list|(
 name|sc
 argument_list|,
 name|chan
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Let bluetooth coexistence at in case it's needed for this 		 * channel 		 */
+name|ath_btcoex_enable
+argument_list|(
+name|sc
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If we're doing TDMA, enforce the TXOP limitation for chips 		 * that support it. 		 */
