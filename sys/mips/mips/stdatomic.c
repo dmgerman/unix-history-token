@@ -110,6 +110,10 @@ name|reg_t
 union|;
 end_union
 
+begin_comment
+comment|/*  * Given a memory address pointing to an 8-bit or 16-bit integer, return  * the address of the 32-bit word containing it.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -143,7 +147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 8-bit routines.  */
+comment|/*  * Utility functions for loading and storing 8-bit and 16-bit integers  * in 32-bit words at an offset corresponding with the location of the  * atomic variable.  */
 end_comment
 
 begin_function
@@ -230,442 +234,40 @@ block|}
 end_function
 
 begin_function
-name|uint8_t
-name|__sync_lock_test_and_set_1
-parameter_list|(
-name|uint8_t
-modifier|*
-name|mem8
-parameter_list|,
-name|uint8_t
-name|val8
-parameter_list|)
-block|{
-name|uint32_t
-modifier|*
-name|mem32
-decl_stmt|;
-name|reg_t
-name|val32
-decl_stmt|,
-name|negmask32
-decl_stmt|,
-name|old
-decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
-name|mem32
-operator|=
-name|round_to_word
-argument_list|(
-name|mem8
-argument_list|)
-expr_stmt|;
-name|val32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_1
-argument_list|(
-operator|&
-name|val32
-argument_list|,
-name|mem8
-argument_list|,
-name|val8
-argument_list|)
-expr_stmt|;
-name|negmask32
-operator|.
-name|v32
-operator|=
-literal|0xffffffff
-expr_stmt|;
-name|put_1
-argument_list|(
-operator|&
-name|negmask32
-argument_list|,
-name|mem8
-argument_list|,
-name|val8
-argument_list|)
-expr_stmt|;
-name|mips_sync
-argument_list|()
-expr_stmt|;
-asm|__asm volatile (
-literal|"1:"
-literal|"\tll	%0, %5\n"
-comment|/* Load old value. */
-literal|"\tand	%2, %4, %0\n"
-comment|/* Trim out affected part. */
-literal|"\tor	%2, %3\n"
-comment|/* Put in the new value. */
-literal|"\tsc	%2, %1\n"
-comment|/* Attempt to store. */
-literal|"\tbeqz	%2, 1b\n"
-comment|/* Spin if failed. */
-operator|:
-literal|"=&r"
-operator|(
-name|old
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"=m"
-operator|(
-operator|*
-name|mem32
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|temp
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|val32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|negmask32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|mem32
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|get_1
-argument_list|(
-operator|&
-name|old
-argument_list|,
-name|mem8
-argument_list|)
-operator|)
-return|;
-end_return
-
-begin_macro
-unit|}  uint8_t
-name|__sync_val_compare_and_swap_1
-argument_list|(
-argument|uint8_t *mem8
-argument_list|,
-argument|uint8_t expected
-argument_list|,
-argument|uint8_t desired
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|uint32_t
-modifier|*
-name|mem32
-decl_stmt|;
-name|reg_t
-name|expected32
-decl_stmt|,
-name|desired32
-decl_stmt|,
-name|posmask32
-decl_stmt|,
-name|negmask32
-decl_stmt|,
-name|old
-decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
-name|mem32
-operator|=
-name|round_to_word
-argument_list|(
-name|mem8
-argument_list|)
-expr_stmt|;
-name|expected32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_1
-argument_list|(
-operator|&
-name|expected32
-argument_list|,
-name|mem8
-argument_list|,
-name|expected
-argument_list|)
-expr_stmt|;
-name|desired32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_1
-argument_list|(
-operator|&
-name|desired32
-argument_list|,
-name|mem8
-argument_list|,
-name|desired
-argument_list|)
-expr_stmt|;
-name|posmask32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_1
-argument_list|(
-operator|&
-name|posmask32
-argument_list|,
-name|mem8
-argument_list|,
-literal|0xff
-argument_list|)
-expr_stmt|;
-name|negmask32
-operator|.
-name|v32
-operator|=
-operator|~
-name|posmask32
-operator|.
-name|v32
-expr_stmt|;
-name|mips_sync
-argument_list|()
-expr_stmt|;
-asm|__asm volatile (
-literal|"1:"
-literal|"\tll	%0, %7\n"
-comment|/* Load old value. */
-literal|"\tand	%2, %5, %0\n"
-comment|/* Isolate affected part. */
-literal|"\tbne	%2, %3, 2f\n"
-comment|/* Compare to expected value. */
-literal|"\tand	%2, %6, %0\n"
-comment|/* Trim out affected part. */
-literal|"\tor	%2, %4\n"
-comment|/* Put in the new value. */
-literal|"\tsc	%2, %1\n"
-comment|/* Attempt to store. */
-literal|"\tbeqz	%2, 1b\n"
-comment|/* Spin if failed. */
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|old
-operator|)
-operator|,
-literal|"=m"
-operator|(
-operator|*
-name|mem32
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|temp
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|expected32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|desired32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|posmask32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|negmask32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|mem32
-operator|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_return
-return|return
-operator|(
-name|get_1
-argument_list|(
-operator|&
-name|old
-argument_list|,
-name|mem8
-argument_list|)
-operator|)
-return|;
-end_return
-
-begin_define
-unit|}
-define|#
-directive|define
-name|EMIT_ARITHMETIC_FETCH_AND_OP_1
-parameter_list|(
-name|name
-parameter_list|,
-name|op
-parameter_list|)
-define|\
-value|uint8_t									\ __sync_##name##_1(uint8_t *mem8, uint8_t val8)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask32, negmask32, old;				\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem8);					\ 	val32.v32 = 0x00000000;						\ 	put_1(&val32, mem8, val8);					\ 	posmask32.v32 = 0x00000000;					\ 	put_1(&posmask32, mem8, 0xff);					\ 	negmask32.v32 = ~posmask32.v32;					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
-comment|/* Load old value. */
-value|\ 		"\t"op"	%2, %0, %4\n"
-comment|/* Calculate new value. */
-value|\ 		"\tand	%2, %5\n"
-comment|/* Isolate affected part. */
-value|\ 		"\tand	%3, %6, %0\n"
-comment|/* Trim out affected part. */
-value|\ 		"\tor	%2, %3\n"
-comment|/* Put in the new value. */
-value|\ 		"\tsc	%2, %1\n"
-comment|/* Attempt to store. */
-value|\ 		"\tbeqz	%2, 1b\n"
-comment|/* Spin if failed. */
-value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp1),	\ 		  "=&r" (temp2)						\ 		: "r" (val32.v32), "r" (posmask32.v32),			\ 		  "r" (negmask32.v32), "m" (*mem32));			\ 	return (get_1(&old, mem8));					\ }
-end_define
-
-begin_expr_stmt
-unit|EMIT_ARITHMETIC_FETCH_AND_OP_1
-operator|(
-name|fetch_and_add
-operator|,
-literal|"addu"
-operator|)
-name|EMIT_ARITHMETIC_FETCH_AND_OP_1
-argument_list|(
-argument|fetch_and_sub
-argument_list|,
-literal|"subu"
-argument_list|)
-define|#
-directive|define
-name|EMIT_BITWISE_FETCH_AND_OP_1
-parameter_list|(
-name|name
-parameter_list|,
-name|op
-parameter_list|,
-name|idempotence
-parameter_list|)
-define|\
-value|uint8_t									\ __sync_##name##_1(uint8_t *mem8, uint8_t val8)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem8);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_1(&val32, mem8, val8);					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
-comment|/* Load old value. */
-value|\ 		"\t"op"	%2, %3, %0\n"
-comment|/* Calculate new value. */
-value|\ 		"\tsc	%2, %1\n"
-comment|/* Attempt to store. */
-value|\ 		"\tbeqz	%2, 1b\n"
-comment|/* Spin if failed. */
-value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp)		\ 		: "r" (val32.v32), "m" (*mem32));			\ 	return (get_1(&old, mem8));					\ }
-name|EMIT_BITWISE_FETCH_AND_OP_1
-argument_list|(
-argument|fetch_and_and
-argument_list|,
-literal|"and"
-argument_list|,
-literal|1
-argument_list|)
-name|EMIT_BITWISE_FETCH_AND_OP_1
-argument_list|(
-argument|fetch_and_or
-argument_list|,
-literal|"or"
-argument_list|,
-literal|0
-argument_list|)
-name|EMIT_BITWISE_FETCH_AND_OP_1
-argument_list|(
-argument|fetch_and_xor
-argument_list|,
-literal|"xor"
-argument_list|,
-literal|0
-argument_list|)
-comment|/*  * 16-bit routines.  */
 specifier|static
 specifier|inline
 name|void
 name|put_2
-argument_list|(
-argument|reg_t *r
-argument_list|,
-argument|uint16_t *offset_ptr
-argument_list|,
-argument|uint16_t val
-argument_list|)
+parameter_list|(
+name|reg_t
+modifier|*
+name|r
+parameter_list|,
+name|uint16_t
+modifier|*
+name|offset_ptr
+parameter_list|,
+name|uint16_t
+name|val
+parameter_list|)
 block|{
 name|size_t
 name|offset
-block|;
-expr|union
+decl_stmt|;
+union|union
 block|{
 name|uint16_t
 name|in
-block|;
+decl_stmt|;
 name|uint8_t
 name|out
 index|[
 literal|2
 index|]
-block|; 	}
+decl_stmt|;
+block|}
 name|bytes
-block|;
+union|;
 name|offset
 operator|=
 operator|(
@@ -674,13 +276,13 @@ operator|)
 name|offset_ptr
 operator|&
 literal|3
-block|;
+expr_stmt|;
 name|bytes
 operator|.
 name|in
 operator|=
 name|val
-block|;
+expr_stmt|;
 name|r
 operator|->
 name|v8
@@ -694,7 +296,7 @@ name|out
 index|[
 literal|0
 index|]
-block|;
+expr_stmt|;
 name|r
 operator|->
 name|v8
@@ -710,33 +312,43 @@ name|out
 index|[
 literal|1
 index|]
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 specifier|inline
 name|uint16_t
 name|get_2
-argument_list|(
-argument|const reg_t *r
-argument_list|,
-argument|uint16_t *offset_ptr
-argument_list|)
+parameter_list|(
+specifier|const
+name|reg_t
+modifier|*
+name|r
+parameter_list|,
+name|uint16_t
+modifier|*
+name|offset_ptr
+parameter_list|)
 block|{
 name|size_t
 name|offset
-block|;
-expr|union
+decl_stmt|;
+union|union
 block|{
 name|uint8_t
 name|in
 index|[
 literal|2
 index|]
-block|;
+decl_stmt|;
 name|uint16_t
 name|out
-block|; 	}
+decl_stmt|;
+block|}
 name|bytes
-block|;
+union|;
 name|offset
 operator|=
 operator|(
@@ -745,7 +357,7 @@ operator|)
 name|offset_ptr
 operator|&
 literal|3
-block|;
+expr_stmt|;
 name|bytes
 operator|.
 name|in
@@ -759,7 +371,7 @@ name|v8
 index|[
 name|offset
 index|]
-block|;
+expr_stmt|;
 name|bytes
 operator|.
 name|in
@@ -775,7 +387,7 @@ name|offset
 operator|+
 literal|1
 index|]
-block|;
+expr_stmt|;
 return|return
 operator|(
 name|bytes
@@ -784,376 +396,190 @@ name|out
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
-name|uint16_t
-name|__sync_lock_test_and_set_2
-parameter_list|(
-name|uint16_t
-modifier|*
-name|mem16
-parameter_list|,
-name|uint16_t
-name|val16
-parameter_list|)
-block|{
-name|uint32_t
-modifier|*
-name|mem32
-decl_stmt|;
-name|reg_t
-name|val32
-decl_stmt|,
-name|negmask32
-decl_stmt|,
-name|old
-decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
-name|mem32
-operator|=
-name|round_to_word
-argument_list|(
-name|mem16
-argument_list|)
-expr_stmt|;
-name|val32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_2
-argument_list|(
-operator|&
-name|val32
-argument_list|,
-name|mem16
-argument_list|,
-name|val16
-argument_list|)
-expr_stmt|;
-name|negmask32
-operator|.
-name|v32
-operator|=
-literal|0xffffffff
-expr_stmt|;
-name|put_2
-argument_list|(
-operator|&
-name|negmask32
-argument_list|,
-name|mem16
-argument_list|,
-literal|0x0000
-argument_list|)
-expr_stmt|;
-name|mips_sync
-argument_list|()
-expr_stmt|;
-asm|__asm volatile (
-literal|"1:"
-literal|"\tll	%0, %5\n"
-comment|/* Load old value. */
-literal|"\tand	%2, %4, %0\n"
-comment|/* Trim out affected part. */
-literal|"\tor	%2, %3\n"
-comment|/* Combine to new value. */
-literal|"\tsc	%2, %1\n"
-comment|/* Attempt to store. */
-literal|"\tbeqz	%2, 1b\n"
-comment|/* Spin if failed. */
-operator|:
-literal|"=&r"
-operator|(
-name|old
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"=m"
-operator|(
-operator|*
-name|mem32
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|temp
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|val32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|negmask32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|mem32
-operator|)
-block|)
-function|;
 end_function
 
-begin_return
-return|return
-operator|(
-name|get_2
-argument_list|(
-operator|&
-name|old
-argument_list|,
-name|mem16
-argument_list|)
-operator|)
-return|;
-end_return
+begin_comment
+comment|/*  * 8-bit and 16-bit routines.  *  * These operations are not natively supported by the CPU, so we use  * some shifting and bitmasking on top of the 32-bit instructions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMIT_LOCK_TEST_AND_SET_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_lock_test_and_set_##N(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, negmask, old;					\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	negmask.v32 = 0xffffffff;					\ 	put_##N(&negmask, mem, 0);					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %5\n"
+comment|/* Load old value. */
+value|\ 		"\tand	%2, %4, %0\n"
+comment|/* Remove the old value. */
+value|\ 		"\tor	%2, %3\n"
+comment|/* Put in the new value. */
+value|\ 		"\tsc	%2, %1\n"
+comment|/* Attempt to store. */
+value|\ 		"\tbeqz	%2, 1b\n"
+comment|/* Spin if failed. */
+value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp)		\ 		: "r" (val32.v32), "r" (negmask.v32), "m" (*mem32));	\ 	return (get_##N(&old, mem));					\ }
+end_define
 
 begin_macro
-unit|}  uint16_t
-name|__sync_val_compare_and_swap_2
+name|EMIT_LOCK_TEST_AND_SET_N
 argument_list|(
-argument|uint16_t *mem16
+literal|1
 argument_list|,
-argument|uint16_t expected
-argument_list|,
-argument|uint16_t desired
+argument|uint8_t
 argument_list|)
 end_macro
 
-begin_block
-block|{
-name|uint32_t
-modifier|*
-name|mem32
-decl_stmt|;
-name|reg_t
-name|expected32
-decl_stmt|,
-name|desired32
-decl_stmt|,
-name|posmask32
-decl_stmt|,
-name|negmask32
-decl_stmt|,
-name|old
-decl_stmt|;
-name|uint32_t
-name|temp
-decl_stmt|;
-name|mem32
-operator|=
-name|round_to_word
+begin_macro
+name|EMIT_LOCK_TEST_AND_SET_N
 argument_list|(
-name|mem16
+literal|2
+argument_list|,
+argument|uint16_t
 argument_list|)
-expr_stmt|;
-name|expected32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_2
-argument_list|(
-operator|&
-name|expected32
-argument_list|,
-name|mem16
-argument_list|,
-name|expected
-argument_list|)
-expr_stmt|;
-name|desired32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_2
-argument_list|(
-operator|&
-name|desired32
-argument_list|,
-name|mem16
-argument_list|,
-name|desired
-argument_list|)
-expr_stmt|;
-name|posmask32
-operator|.
-name|v32
-operator|=
-literal|0x00000000
-expr_stmt|;
-name|put_2
-argument_list|(
-operator|&
-name|posmask32
-argument_list|,
-name|mem16
-argument_list|,
-literal|0xffff
-argument_list|)
-expr_stmt|;
-name|negmask32
-operator|.
-name|v32
-operator|=
-operator|~
-name|posmask32
-operator|.
-name|v32
-expr_stmt|;
-name|mips_sync
-argument_list|()
-expr_stmt|;
-asm|__asm volatile (
-literal|"1:"
-literal|"\tll	%0, %7\n"
-comment|/* Load old value. */
-literal|"\tand	%2, %5, %0\n"
-comment|/* Isolate affected part. */
-literal|"\tbne	%2, %3, 2f\n"
-comment|/* Compare to expected value. */
-literal|"\tand	%2, %6, %0\n"
-comment|/* Trim out affected part. */
-literal|"\tor	%2, %4\n"
-comment|/* Put in the new value. */
-literal|"\tsc	%2, %1\n"
-comment|/* Attempt to store. */
-literal|"\tbeqz	%2, 1b\n"
-comment|/* Spin if failed. */
-literal|"2:"
-operator|:
-literal|"=&r"
-operator|(
-name|old
-operator|)
-operator|,
-literal|"=m"
-operator|(
-operator|*
-name|mem32
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|temp
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|expected32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|desired32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|posmask32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|negmask32
-operator|.
-name|v32
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|mem32
-operator|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_return
-return|return
-operator|(
-name|get_2
-argument_list|(
-operator|&
-name|old
-argument_list|,
-name|mem16
-argument_list|)
-operator|)
-return|;
-end_return
+end_macro
 
 begin_define
-unit|}
 define|#
 directive|define
-name|EMIT_ARITHMETIC_FETCH_AND_OP_2
+name|EMIT_VAL_COMPARE_AND_SWAP_N
 parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t *mem32;						\ 	reg_t expected32, desired32, posmask, negmask, old;		\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	expected32.v32 = 0x00000000;					\ 	put_##N(&expected32, mem, expected);				\ 	desired32.v32 = 0x00000000;					\ 	put_##N(&desired32, mem, desired);				\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask.v32 = ~posmask.v32;					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
+comment|/* Load old value. */
+value|\ 		"\tand	%2, %5, %0\n"
+comment|/* Isolate the old value. */
+value|\ 		"\tbne	%2, %3, 2f\n"
+comment|/* Compare to expected value. */
+value|\ 		"\tand	%2, %6, %0\n"
+comment|/* Remove the old value. */
+value|\ 		"\tor	%2, %4\n"
+comment|/* Put in the new value. */
+value|\ 		"\tsc	%2, %1\n"
+comment|/* Attempt to store. */
+value|\ 		"\tbeqz	%2, 1b\n"
+comment|/* Spin if failed. */
+value|\ 		"2:"							\ 		: "=&r" (old), "=m" (*mem32), "=&r" (temp)		\ 		: "r" (expected32.v32), "r" (desired32.v32),		\ 		  "r" (posmask.v32), "r" (negmask.v32), "m" (*mem32));	\ 	return (get_##N(&old, mem));					\ }
+end_define
+
+begin_macro
+name|EMIT_VAL_COMPARE_AND_SWAP_N
+argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_VAL_COMPARE_AND_SWAP_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|)
+end_macro
+
+begin_define
+define|#
+directive|define
+name|EMIT_ARITHMETIC_FETCH_AND_OP_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
 name|name
 parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uint16_t								\ __sync_##name##_2(uint16_t *mem16, uint16_t val16)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask32, negmask32, old;				\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem16);					\ 	val32.v32 = 0x00000000;						\ 	put_2(&val32, mem16, val16);					\ 	posmask32.v32 = 0x00000000;					\ 	put_2(&posmask32, mem16, 0xffff);				\ 	negmask32.v32 = ~posmask32.v32;					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
+value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask, negmask, old;				\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask.v32 = ~posmask.v32;					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"	%2, %0, %4\n"
 comment|/* Calculate new value. */
 value|\ 		"\tand	%2, %5\n"
-comment|/* Isolate affected part. */
+comment|/* Isolate the new value. */
 value|\ 		"\tand	%3, %6, %0\n"
-comment|/* Trim out affected part. */
+comment|/* Remove the old value. */
 value|\ 		"\tor	%2, %3\n"
-comment|/* Combine to new value. */
+comment|/* Put in the new value. */
 value|\ 		"\tsc	%2, %1\n"
 comment|/* Attempt to store. */
 value|\ 		"\tbeqz	%2, 1b\n"
 comment|/* Spin if failed. */
-value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp1),	\ 		  "=&r" (temp2)						\ 		: "r" (val32.v32), "r" (posmask32.v32),			\ 		  "r" (negmask32.v32), "m" (*mem32));			\ 	return (get_2(&old, mem16));					\ }
+value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp1),	\ 		  "=&r" (temp2)						\ 		: "r" (val32.v32), "r" (posmask.v32),			\ 		  "r" (negmask.v32), "m" (*mem32));			\ 	return (get_##N(&old, mem));					\ }
 end_define
 
-begin_expr_stmt
-unit|EMIT_ARITHMETIC_FETCH_AND_OP_2
-operator|(
-name|fetch_and_add
-operator|,
-literal|"addu"
-operator|)
-name|EMIT_ARITHMETIC_FETCH_AND_OP_2
+begin_macro
+name|EMIT_ARITHMETIC_FETCH_AND_OP_N
 argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
+argument|fetch_and_add
+argument_list|,
+literal|"addu"
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ARITHMETIC_FETCH_AND_OP_N
+argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
 argument|fetch_and_sub
 argument_list|,
 literal|"subu"
 argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ARITHMETIC_FETCH_AND_OP_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+argument|fetch_and_add
+argument_list|,
+literal|"addu"
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ARITHMETIC_FETCH_AND_OP_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+argument|fetch_and_sub
+argument_list|,
+literal|"subu"
+argument_list|)
+end_macro
+
+begin_define
 define|#
 directive|define
-name|EMIT_BITWISE_FETCH_AND_OP_2
+name|EMIT_BITWISE_FETCH_AND_OP_N
 parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
 name|name
 parameter_list|,
 name|op
@@ -1161,7 +587,7 @@ parameter_list|,
 name|idempotence
 parameter_list|)
 define|\
-value|uint16_t								\ __sync_##name##_2(uint16_t *mem16, uint16_t val16)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem16);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_2(&val32, mem16, val16);					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
+value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_##N(&val32, mem, val);					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"	%2, %3, %0\n"
 comment|/* Calculate new value. */
@@ -1169,50 +595,126 @@ value|\ 		"\tsc	%2, %1\n"
 comment|/* Attempt to store. */
 value|\ 		"\tbeqz	%2, 1b\n"
 comment|/* Spin if failed. */
-value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp)		\ 		: "r" (val32.v32), "m" (*mem32));			\ 	return (get_2(&old, mem16));					\ }
-name|EMIT_BITWISE_FETCH_AND_OP_2
+value|\ 		: "=&r" (old.v32), "=m" (*mem32), "=&r" (temp)		\ 		: "r" (val32.v32), "m" (*mem32));			\ 	return (get_##N(&old, mem));					\ }
+end_define
+
+begin_macro
+name|EMIT_BITWISE_FETCH_AND_OP_N
 argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
 argument|fetch_and_and
 argument_list|,
 literal|"and"
 argument_list|,
 literal|1
 argument_list|)
-name|EMIT_BITWISE_FETCH_AND_OP_2
+end_macro
+
+begin_macro
+name|EMIT_BITWISE_FETCH_AND_OP_N
 argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
 argument|fetch_and_or
 argument_list|,
 literal|"or"
 argument_list|,
 literal|0
 argument_list|)
-name|EMIT_BITWISE_FETCH_AND_OP_2
+end_macro
+
+begin_macro
+name|EMIT_BITWISE_FETCH_AND_OP_N
 argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
 argument|fetch_and_xor
 argument_list|,
 literal|"xor"
 argument_list|,
 literal|0
 argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_BITWISE_FETCH_AND_OP_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+argument|fetch_and_and
+argument_list|,
+literal|"and"
+argument_list|,
+literal|1
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_BITWISE_FETCH_AND_OP_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+argument|fetch_and_or
+argument_list|,
+literal|"or"
+argument_list|,
+literal|0
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_BITWISE_FETCH_AND_OP_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+argument|fetch_and_xor
+argument_list|,
+literal|"xor"
+argument_list|,
+literal|0
+argument_list|)
+end_macro
+
+begin_comment
 comment|/*  * 32-bit routines.  */
+end_comment
+
+begin_function
 name|uint32_t
 name|__sync_val_compare_and_swap_4
-argument_list|(
-argument|uint32_t *mem
-argument_list|,
-argument|uint32_t expected
-argument_list|,
-argument|uint32_t desired
-argument_list|)
+parameter_list|(
+name|uint32_t
+modifier|*
+name|mem
+parameter_list|,
+name|uint32_t
+name|expected
+parameter_list|,
+name|uint32_t
+name|desired
+parameter_list|)
 block|{
 name|uint32_t
 name|old
-block|,
+decl_stmt|,
 name|temp
-block|;
+decl_stmt|;
 name|mips_sync
 argument_list|()
-block|;
+expr_stmt|;
 asm|__asm volatile (
 literal|"1:"
 literal|"\tll	%0, %5\n"
@@ -1231,13 +733,13 @@ literal|"=&r"
 operator|(
 name|old
 operator|)
-block|,
+operator|,
 literal|"=m"
 operator|(
 operator|*
 name|mem
 operator|)
-block|,
+operator|,
 literal|"=&r"
 operator|(
 name|temp
@@ -1247,20 +749,20 @@ literal|"r"
 operator|(
 name|expected
 operator|)
-block|,
+operator|,
 literal|"r"
 operator|(
 name|desired
 operator|)
-block|,
+operator|,
 literal|"m"
 operator|(
 operator|*
 name|mem
 operator|)
 block|)
-expr_stmt|;
-end_expr_stmt
+function|;
+end_function
 
 begin_return
 return|return
