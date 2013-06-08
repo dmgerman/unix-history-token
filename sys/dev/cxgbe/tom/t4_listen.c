@@ -675,12 +675,12 @@ name|mask
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<=
 name|s
 operator|->
 name|free
-operator|-
+operator|>=
+name|n
+operator|+
 name|f
 condition|)
 block|{
