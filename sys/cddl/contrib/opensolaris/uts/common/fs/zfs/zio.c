@@ -3892,6 +3892,13 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+name|arc_freed
+argument_list|(
+name|spa
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
 name|zio
 operator|=
 name|zio_create
