@@ -17738,6 +17738,38 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
+comment|/* freebsd32_aio_mlock */
+case|case
+literal|543
+case|:
+block|{
+name|struct
+name|freebsd32_aio_mlock_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|aiocbp
+expr_stmt|;
+comment|/* struct aiocb32 * */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -30459,6 +30491,28 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+comment|/* freebsd32_aio_mlock */
+case|case
+literal|543
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"struct aiocb32 *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -37296,6 +37350,25 @@ break|break;
 comment|/* pipe2 */
 case|case
 literal|542
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_aio_mlock */
+case|case
+literal|543
 case|:
 if|if
 condition|(
