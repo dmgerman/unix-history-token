@@ -2323,15 +2323,9 @@ name|struct
 name|bce_softc
 modifier|*
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
+name|u16
 parameter_list|,
 name|u16
-modifier|*
-parameter_list|,
-name|u16
-modifier|*
 parameter_list|,
 name|u32
 modifier|*
@@ -2384,15 +2378,9 @@ name|struct
 name|bce_softc
 modifier|*
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
+name|u16
 parameter_list|,
 name|u16
-modifier|*
-parameter_list|,
-name|u16
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15892,6 +15880,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|status_block_paddr
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16070,6 +16064,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|stats_block_paddr
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16336,6 +16336,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|ctx_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16553,6 +16562,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|tx_bd_chain_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16918,6 +16936,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|rx_bd_chain_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -17300,6 +17327,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|pg_bd_chain_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -23846,17 +23882,10 @@ name|bce_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
 name|u16
-modifier|*
 name|prod
 parameter_list|,
 name|u16
-modifier|*
 name|chain_prod
 parameter_list|,
 name|u32
@@ -23864,13 +23893,10 @@ modifier|*
 name|prod_bseq
 parameter_list|)
 block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
-name|BCE_MAX_SEGMENTS
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -23900,7 +23926,6 @@ name|BCE_DEBUG
 name|u16
 name|debug_chain_prod
 init|=
-operator|*
 name|chain_prod
 decl_stmt|;
 endif|#
@@ -23918,7 +23943,6 @@ comment|/* Make sure the inputs are valid. */
 name|DBRUNIF
 argument_list|(
 operator|(
-operator|*
 name|chain_prod
 operator|>
 name|MAX_RX_BD_ALLOC
@@ -23933,7 +23957,6 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-operator|*
 name|chain_prod
 argument_list|,
 operator|(
@@ -23954,10 +23977,8 @@ literal|"chain_prod = 0x%04X, prod_bseq = 0x%08X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|chain_prod
 argument_list|,
 operator|*
@@ -24004,20 +24025,12 @@ name|rx_empty_count
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Check whether this is a new mbuf allocation. */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(mbuf_alloc_failed_sim_control)
 argument_list|,
-argument|sc->mbuf_alloc_failed_count++; 		    sc->mbuf_alloc_failed_sim_count++; 		    rc = ENOBUFS; 		    goto bce_get_rx_buf_exit
+argument|sc->mbuf_alloc_failed_count++; 	    sc->mbuf_alloc_failed_sim_count++; 	    rc = ENOBUFS; 	    goto bce_get_rx_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -24080,15 +24093,6 @@ name|debug_rx_mbuf_alloc
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Reuse an existing mbuf. */
-name|m_new
-operator|=
-name|m
-expr_stmt|;
-block|}
 comment|/* Make sure we have a valid packet header. */
 name|M_ASSERTPKTHDR
 argument_list|(
@@ -24121,16 +24125,6 @@ argument_list|)
 expr_stmt|;
 comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
-name|map
-operator|=
-name|sc
-operator|->
-name|rx_mbuf_map
-index|[
-operator|*
-name|chain_prod
-index|]
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -24139,7 +24133,12 @@ name|sc
 operator|->
 name|rx_mbuf_tag
 argument_list|,
-name|map
+name|sc
+operator|->
+name|rx_mbuf_map
+index|[
+name|chain_prod
+index|]
 argument_list|,
 name|m_new
 argument_list|,
@@ -24221,14 +24220,12 @@ name|rx_bd_chain
 index|[
 name|RX_PAGE
 argument_list|(
-operator|*
 name|chain_prod
 argument_list|)
 index|]
 index|[
 name|RX_IDX
 argument_list|(
-operator|*
 name|chain_prod
 argument_list|)
 index|]
@@ -24307,7 +24304,6 @@ name|sc
 operator|->
 name|rx_mbuf_ptr
 index|[
-operator|*
 name|chain_prod
 index|]
 operator|=
@@ -24344,10 +24340,8 @@ literal|"chain_prod = 0x%04X, prod_bseq = 0x%08X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|chain_prod
 argument_list|,
 operator|*
@@ -24407,23 +24401,13 @@ name|bce_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
 name|u16
-modifier|*
 name|prod
 parameter_list|,
 name|u16
-modifier|*
 name|prod_idx
 parameter_list|)
 block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|bus_addr_t
 name|busaddr
 decl_stmt|;
@@ -24452,7 +24436,6 @@ name|BCE_DEBUG
 name|u16
 name|debug_prod_idx
 init|=
-operator|*
 name|prod_idx
 decl_stmt|;
 endif|#
@@ -24470,7 +24453,6 @@ comment|/* Make sure the inputs are valid. */
 name|DBRUNIF
 argument_list|(
 operator|(
-operator|*
 name|prod_idx
 operator|>
 name|MAX_PG_BD_ALLOC
@@ -24485,7 +24467,6 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-operator|*
 name|prod_idx
 argument_list|,
 operator|(
@@ -24506,10 +24487,8 @@ literal|"chain_prod = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|prod_idx
 argument_list|)
 expr_stmt|;
@@ -24553,20 +24532,12 @@ name|pg_empty_count
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Check whether this is a new mbuf allocation. */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(mbuf_alloc_failed_sim_control)
 argument_list|,
-argument|sc->mbuf_alloc_failed_count++; 		    sc->mbuf_alloc_failed_sim_count++; 		    rc = ENOBUFS; 		    goto bce_get_pg_buf_exit
+argument|sc->mbuf_alloc_failed_count++; 	    sc->mbuf_alloc_failed_sim_count++; 	    rc = ENOBUFS; 	    goto bce_get_pg_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -24609,25 +24580,6 @@ name|debug_pg_mbuf_alloc
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Reuse an existing mbuf. */
-name|m_new
-operator|=
-name|m
-expr_stmt|;
-name|m_new
-operator|->
-name|m_data
-operator|=
-name|m_new
-operator|->
-name|m_ext
-operator|.
-name|ext_buf
-expr_stmt|;
-block|}
 name|m_new
 operator|->
 name|m_len
@@ -24636,16 +24588,6 @@ name|MCLBYTES
 expr_stmt|;
 comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
-name|map
-operator|=
-name|sc
-operator|->
-name|pg_mbuf_map
-index|[
-operator|*
-name|prod_idx
-index|]
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load
@@ -24654,7 +24596,12 @@ name|sc
 operator|->
 name|pg_mbuf_tag
 argument_list|,
-name|map
+name|sc
+operator|->
+name|pg_mbuf_map
+index|[
+name|prod_idx
+index|]
 argument_list|,
 name|mtod
 argument_list|(
@@ -24678,6 +24625,10 @@ comment|/* Handle any mapping errors. */
 if|if
 condition|(
 name|error
+operator|||
+name|busaddr
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -24721,14 +24672,12 @@ name|pg_bd_chain
 index|[
 name|PG_PAGE
 argument_list|(
-operator|*
 name|prod_idx
 argument_list|)
 index|]
 index|[
 name|PG_IDX
 argument_list|(
-operator|*
 name|prod_idx
 argument_list|)
 index|]
@@ -24782,7 +24731,6 @@ name|sc
 operator|->
 name|pg_mbuf_ptr
 index|[
-operator|*
 name|prod_idx
 index|]
 operator|=
@@ -24818,10 +24766,8 @@ literal|"prod_idx = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|prod_idx
 argument_list|)
 expr_stmt|;
@@ -26208,12 +26154,8 @@ name|bce_get_rx_buf
 argument_list|(
 name|sc
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
 name|prod
 argument_list|,
-operator|&
 name|prod_idx
 argument_list|,
 operator|&
@@ -26264,8 +26206,6 @@ literal|"%s(): Invalid rx_prod value: 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|sc
-operator|->
 name|rx_prod
 argument_list|)
 argument_list|)
@@ -26282,9 +26222,7 @@ argument_list|)
 operator|+
 name|BCE_L2MQ_RX_HOST_BDIDX
 argument_list|,
-name|sc
-operator|->
-name|rx_prod
+name|prod
 argument_list|)
 expr_stmt|;
 name|REG_WR
@@ -26298,9 +26236,7 @@ argument_list|)
 operator|+
 name|BCE_L2MQ_RX_HOST_BSEQ
 argument_list|,
-name|sc
-operator|->
-name|rx_prod_bseq
+name|prod_bseq
 argument_list|)
 expr_stmt|;
 name|DBEXIT
@@ -27021,12 +26957,8 @@ name|bce_get_pg_buf
 argument_list|(
 name|sc
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
 name|prod
 argument_list|,
-operator|&
 name|prod_idx
 argument_list|)
 condition|)
@@ -27067,8 +26999,6 @@ literal|"%s(): Invalid pg_prod value: 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|sc
-operator|->
 name|pg_prod
 argument_list|)
 argument_list|)
@@ -27085,9 +27015,7 @@ argument_list|)
 operator|+
 name|BCE_L2MQ_RX_HOST_PG_BDIDX
 argument_list|,
-name|sc
-operator|->
-name|pg_prod
+name|prod
 argument_list|)
 expr_stmt|;
 name|DBEXIT
@@ -29249,31 +29177,6 @@ operator|->
 name|free_rx_bd
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|m0
-operator|==
-name|NULL
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_EXTREME_RECV
-argument_list|,
-literal|"%s(): Oops! Empty mbuf pointer "
-literal|"found in sc->rx_mbuf_ptr[0x%04X]!\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|sw_rx_cons_idx
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bce_rx_int_next_rx
-goto|;
-block|}
 comment|/*  		 * Frames received on the NetXteme II are prepended  		 * with an l2_fhdr structure which provides status  		 * information about the received frame (including  		 * VLAN tags and checksum info).  The frames are 		 * also automatically adjusted to word align the IP  		 * header (i.e. two null bytes are inserted before  		 * the Ethernet	header).  As a result the data  		 * DMA'd by the controller into	the mbuf looks 		 * like this: 		 * 		 * +---------+-----+---------------------+-----+ 		 * | l2_fhdr | pad | packet data         | FCS | 		 * +---------+-----+---------------------+-----+ 		 *  		 * The l2_fhdr needs to be checked and skipped and  		 * the FCS needs to be stripped before sending the 		 * packet up the stack. 		 */
 name|l2fhdr
 operator|=
@@ -29647,7 +29550,7 @@ operator|=
 name|NULL
 expr_stmt|;
 goto|goto
-name|bce_rx_int_next_rx
+name|bce_rx_intr_next_rx
 goto|;
 block|}
 comment|/* Send the packet to the appropriate interface. */
@@ -29797,9 +29700,20 @@ block|}
 comment|/* Attach the VLAN tag.	*/
 if|if
 condition|(
+operator|(
 name|status
 operator|&
 name|L2_FHDR_STATUS_L2_VLAN_TAG
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|rx_mode
+operator|&
+name|BCE_EMAC_RX_MODE_KEEP_VLAN_TAG
+operator|)
 condition|)
 block|{
 name|DBRUN
@@ -29951,7 +29865,7 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-name|bce_rx_int_next_rx
+name|bce_rx_intr_next_rx
 label|:
 name|sw_rx_cons
 operator|=
