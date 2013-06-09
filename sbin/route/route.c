@@ -4631,6 +4631,11 @@ argument_list|,
 name|nrflags
 argument_list|)
 expr_stmt|;
+name|gateway
+operator|=
+operator|*
+name|argv
+expr_stmt|;
 break|break;
 case|case
 name|K_DST
