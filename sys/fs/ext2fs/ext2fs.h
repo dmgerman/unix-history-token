@@ -422,7 +422,7 @@ name|uint32_t
 name|e2fs_bshift
 decl_stmt|;
 comment|/* calc of logical block no */
-name|int32_t
+name|uint32_t
 name|e2fs_bpg
 decl_stmt|;
 comment|/* Number of blocks per group */
@@ -466,7 +466,7 @@ name|uint32_t
 name|e2fs_gcount
 decl_stmt|;
 comment|/* Number of groups */
-name|int32_t
+name|uint32_t
 name|e2fs_isize
 decl_stmt|;
 comment|/* Size of inode */
