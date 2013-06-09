@@ -608,12 +608,27 @@ name|defined
 argument_list|(
 name|__CLANG_ATOMICS
 argument_list|)
-operator|||
+end_if
+
+begin_define
+define|#
+directive|define
+name|atomic_is_lock_free
+parameter_list|(
+name|obj
+parameter_list|)
+define|\
+value|__atomic_is_lock_free(sizeof(*(obj)), obj)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__GNUC_ATOMICS
 argument_list|)
-end_if
+end_elif
 
 begin_define
 define|#
