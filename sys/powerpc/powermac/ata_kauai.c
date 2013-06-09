@@ -341,11 +341,7 @@ argument_list|,
 name|ata_kauai_setmode
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -418,9 +414,9 @@ name|ata_kauai_driver
 argument_list|,
 name|ata_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -447,12 +443,14 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|kauai_pci_dev
 block|{
 name|u_int32_t
 name|kpd_devid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|kpd_desc
