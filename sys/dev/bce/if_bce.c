@@ -2067,6 +2067,7 @@ name|struct
 name|bce_softc
 modifier|*
 parameter_list|,
+specifier|const
 name|u32
 modifier|*
 parameter_list|,
@@ -6683,44 +6684,6 @@ name|bce_get_mac_addr
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Trip points control how many BDs 	 * should be ready before generating an 	 * interrupt while ticks control how long 	 * a BD can sit in the chain before 	 * generating an interrupt.  Set the default 	 * values for the RX and TX chains. 	 */
-comment|/* Not used for L2. */
-name|sc
-operator|->
-name|bce_comp_prod_trip_int
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_comp_prod_trip
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_com_ticks_int
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_com_ticks
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_cmd_ticks_int
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_cmd_ticks
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Update statistics once every second. */
 name|sc
@@ -13700,12 +13663,6 @@ name|sc
 operator|->
 name|rx_bd_mbuf_align_pad
 expr_stmt|;
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|=
-name|MCLBYTES
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -15591,7 +15548,6 @@ operator|->
 name|ds_addr
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -17016,8 +16972,6 @@ name|TRUE
 condition|)
 name|max_size
 operator|=
-name|max_seg_size
-operator|=
 operator|(
 operator|(
 name|sc
@@ -17037,13 +16991,7 @@ expr_stmt|;
 else|else
 name|max_size
 operator|=
-name|max_seg_size
-operator|=
 name|MJUM9BYTES
-expr_stmt|;
-name|max_segments
-operator|=
-literal|1
 expr_stmt|;
 name|DBPRINT
 argument_list|(
@@ -17052,8 +17000,7 @@ argument_list|,
 name|BCE_INFO_LOAD
 argument_list|,
 literal|"%s(): Creating rx_mbuf_tag "
-literal|"(max size = 0x%jX max segments = %d, max segment "
-literal|"size = 0x%jX)\n"
+literal|"(max size = 0x%jX)\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -17061,13 +17008,6 @@ operator|(
 name|uintmax_t
 operator|)
 name|max_size
-argument_list|,
-name|max_segments
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|max_seg_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -17094,9 +17034,9 @@ name|NULL
 argument_list|,
 name|max_size
 argument_list|,
-name|max_segments
+literal|1
 argument_list|,
-name|max_seg_size
+name|max_size
 argument_list|,
 literal|0
 argument_list|,
@@ -17406,26 +17346,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Create a DMA tag for page mbufs. 		 */
-name|max_size
-operator|=
-name|max_seg_size
-operator|=
-operator|(
-operator|(
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|<
-name|MCLBYTES
-operator|)
-condition|?
-name|MCLBYTES
-else|:
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -17448,11 +17368,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|max_size
+name|MCLBYTES
 argument_list|,
 literal|1
 argument_list|,
-name|max_seg_size
+name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
@@ -18085,6 +18005,7 @@ name|bce_softc
 modifier|*
 name|sc
 parameter_list|,
+specifier|const
 name|u32
 modifier|*
 name|rv2p_code
@@ -23505,7 +23426,7 @@ name|stats_block_paddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Program various host coalescing parameters. */
+comment|/* 	 * Program various host coalescing parameters. 	 * Trip points control how many BDs should be ready before generating 	 * an interrupt while ticks control how long a BD can sit in the chain 	 * before generating an interrupt. 	 */
 name|REG_WR
 argument_list|(
 name|sc
@@ -23542,25 +23463,6 @@ operator||
 name|sc
 operator|->
 name|bce_rx_quick_cons_trip
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_HC_COMP_PROD_TRIP
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|bce_comp_prod_trip_int
-operator|<<
-literal|16
-operator|)
-operator||
-name|sc
-operator|->
-name|bce_comp_prod_trip
 argument_list|)
 expr_stmt|;
 name|REG_WR
@@ -23605,53 +23507,13 @@ name|REG_WR
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_HC_COM_TICKS
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|bce_com_ticks_int
-operator|<<
-literal|16
-operator|)
-operator||
-name|sc
-operator|->
-name|bce_com_ticks
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_HC_CMD_TICKS
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|bce_cmd_ticks_int
-operator|<<
-literal|16
-operator|)
-operator||
-name|sc
-operator|->
-name|bce_cmd_ticks
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
 name|BCE_HC_STATS_TICKS
 argument_list|,
-operator|(
 name|sc
 operator|->
 name|bce_stats_ticks
 operator|&
 literal|0xffff00
-operator|)
 argument_list|)
 expr_stmt|;
 name|REG_WR
@@ -23664,6 +23526,34 @@ literal|0xbb8
 argument_list|)
 expr_stmt|;
 comment|/* 3ms */
+comment|/* Not used for L2. */
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_COMP_PROD_TRIP
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_COM_TICKS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_CMD_TICKS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Configure the Host Coalescing block. */
 name|val
 operator|=
@@ -24742,9 +24632,7 @@ name|m_new
 operator|->
 name|m_len
 operator|=
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 expr_stmt|;
 comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
@@ -24776,9 +24664,7 @@ name|void
 operator|*
 argument_list|)
 argument_list|,
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 argument_list|,
 name|bce_dma_map_addr
 argument_list|,
@@ -24877,9 +24763,7 @@ name|rx_bd_len
 operator|=
 name|htole32
 argument_list|(
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 argument_list|)
 expr_stmt|;
 name|pgbd
@@ -26590,7 +26474,6 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
 name|bzero
 argument_list|(
 operator|(
@@ -26607,7 +26490,6 @@ argument_list|,
 name|BCE_RX_CHAIN_PAGE_SZ
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|free_rx_bd
@@ -26896,9 +26778,7 @@ operator|<<
 literal|16
 operator|)
 operator||
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 expr_stmt|;
 name|CTX_WR
 argument_list|(
@@ -31189,15 +31069,11 @@ name|ifp
 operator|->
 name|if_mtu
 operator|<=
-operator|(
 name|sc
 operator|->
 name|rx_bd_mbuf_data_len
 operator|+
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|)
+name|MCLBYTES
 condition|)
 name|ether_mtu
 operator|=
@@ -31205,9 +31081,7 @@ name|sc
 operator|->
 name|rx_bd_mbuf_data_len
 operator|+
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 expr_stmt|;
 else|else
 name|ether_mtu
@@ -31315,21 +31189,6 @@ operator|==
 name|TRUE
 condition|)
 block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO_LOAD
-argument_list|,
-literal|"%s(): pg_bd_mbuf_alloc_size = %d\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-argument_list|)
-expr_stmt|;
 comment|/* Init page buffer descriptor chain. */
 name|bce_init_pg_chain
 argument_list|(
@@ -33395,7 +33254,6 @@ operator||
 name|BCE_VERBOSE_CTX
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -36268,8 +36126,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * ToDo: This is a safety measure.  Need to re-evaluate  	 * high	level processing logic and eliminate this code.  	 */
-comment|/* Top off the receive and page chains. */
+comment|/* Ensure page and RX chains get refilled in low-memory situations. */
 if|if
 condition|(
 name|bce_hdr_split
@@ -36521,7 +36378,6 @@ argument_list|(
 name|BCE_EXTREME_MISC
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -50176,10 +50032,6 @@ name|breakpoint
 argument_list|()
 expr_stmt|;
 end_expr_stmt
-
-begin_return
-return|return;
-end_return
 
 begin_endif
 unit|}

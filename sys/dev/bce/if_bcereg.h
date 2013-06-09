@@ -15,23 +15,6 @@ directive|define
 name|_BCEREG_H_DEFINED
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_KERNEL_OPTION_HEADERS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_device_polling.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -35497,6 +35480,7 @@ decl_stmt|;
 name|u32
 name|bss_index
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|bss
@@ -35511,6 +35495,7 @@ decl_stmt|;
 name|u32
 name|rodata_index
 decl_stmt|;
+specifier|const
 name|u32
 modifier|*
 name|rodata
@@ -35856,6 +35841,10 @@ begin_struct
 struct|struct
 name|bce_softc
 block|{
+name|struct
+name|mtx
+name|bce_mtx
+decl_stmt|;
 comment|/* Interface info */
 name|struct
 name|ifnet
@@ -35898,10 +35887,6 @@ name|struct
 name|resource
 modifier|*
 name|bce_res_irq
-decl_stmt|;
-name|struct
-name|mtx
-name|bce_mtx
 decl_stmt|;
 comment|/* Interrupt handler. */
 name|void
@@ -36132,25 +36117,6 @@ decl_stmt|;
 name|u32
 name|bce_stats_ticks
 decl_stmt|;
-comment|/* ToDo: Can these be removed? */
-name|u16
-name|bce_comp_prod_trip_int
-decl_stmt|;
-name|u16
-name|bce_comp_prod_trip
-decl_stmt|;
-name|u16
-name|bce_com_ticks_int
-decl_stmt|;
-name|u16
-name|bce_com_ticks
-decl_stmt|;
-name|u16
-name|bce_cmd_ticks_int
-decl_stmt|;
-name|u16
-name|bce_cmd_ticks
-decl_stmt|;
 comment|/* The address of the integrated PHY on the MII bus. */
 name|int
 name|bce_phy_addr
@@ -36204,9 +36170,6 @@ name|int
 name|watchdog_timer
 decl_stmt|;
 comment|/* Frame size and mbuf allocation size for RX frames. */
-name|u32
-name|max_frame_size
-decl_stmt|;
 name|int
 name|rx_bd_mbuf_alloc_size
 decl_stmt|;
@@ -36215,9 +36178,6 @@ name|rx_bd_mbuf_data_len
 decl_stmt|;
 name|int
 name|rx_bd_mbuf_align_pad
-decl_stmt|;
-name|int
-name|pg_bd_mbuf_alloc_size
 decl_stmt|;
 comment|/* Receive mode settings (i.e promiscuous, multicast, etc.). */
 name|u32
