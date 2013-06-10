@@ -24,7 +24,7 @@ name|address
 name|of
 name|myvar
 comment|// CHECK: t1
-comment|// CHECK: call void asm sideeffect inteldialect "mov rax, $0", "r,~{rax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}) [[NUW:#[0-9]+]]
+comment|// CHECK: call void asm sideeffect inteldialect "mov rax, $0", "r,~{rax},~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
 block|}
 end_function
 
@@ -40,13 +40,94 @@ literal|10
 decl_stmt|;
 asm|__asm mov [eax], offset var
 comment|// CHECK: t2
-comment|// CHECK: call void asm sideeffect inteldialect "mov [eax], $0", "r,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}}) [[NUW]]
+comment|// CHECK: call void asm sideeffect inteldialect "mov [eax], $0", "r,~{dirflag},~{fpsr},~{flags}"(i32* %{{.*}})
 block|}
 end_function
 
-begin_comment
-comment|// CHECK: attributes [[NUW]] = { nounwind }
-end_comment
+begin_struct
+struct|struct
+name|t3_type
+block|{
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|int
+name|t3
+parameter_list|()
+block|{
+name|struct
+name|t3_type
+name|foo
+decl_stmt|;
+name|foo
+operator|.
+name|a
+operator|=
+literal|1
+expr_stmt|;
+name|foo
+operator|.
+name|b
+operator|=
+literal|2
+expr_stmt|;
+asm|__asm {
+asm|lea ebx, foo
+asm|mov eax, [ebx].0
+asm|mov [ebx].4, ecx
+asm|}
+return|return
+name|foo
+operator|.
+name|b
+return|;
+comment|// CHECK: t3
+comment|// CHECK: call void asm sideeffect inteldialect "lea ebx, qword ptr $0\0A\09mov eax, [ebx].0\0A\09mov [ebx].4, ecx", "*m,~{eax},~{ebx},~{dirflag},~{fpsr},~{flags}"(%struct.t3_type* %{{.*}})
+block|}
+end_function
+
+begin_function
+name|int
+name|t4
+parameter_list|()
+block|{
+name|struct
+name|t3_type
+name|foo
+decl_stmt|;
+name|foo
+operator|.
+name|a
+operator|=
+literal|1
+expr_stmt|;
+name|foo
+operator|.
+name|b
+operator|=
+literal|2
+expr_stmt|;
+asm|__asm {
+asm|lea ebx, foo
+asm|mov eax, [ebx].foo.a
+asm|mov [ebx].foo.b, ecx
+asm|}
+return|return
+name|foo
+operator|.
+name|b
+return|;
+comment|// CHECK: t4
+comment|// CHECK: call void asm sideeffect inteldialect "lea ebx, qword ptr $0\0A\09mov eax, [ebx].0\0A\09mov [ebx].4, ecx", "*m,~{eax},~{ebx},~{dirflag},~{fpsr},~{flags}"(%struct.t3_type* %{{.*}})
+block|}
+end_function
 
 end_unit
 

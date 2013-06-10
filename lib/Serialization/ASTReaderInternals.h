@@ -544,6 +544,12 @@ block|{
 name|SelectorID
 name|ID
 decl_stmt|;
+name|unsigned
+name|InstanceBits
+decl_stmt|;
+name|unsigned
+name|FactoryBits
+decl_stmt|;
 name|SmallVector
 operator|<
 name|ObjCMethodDecl

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -1003,6 +1009,10 @@ name|BumpPtrAllocator
 operator|&
 name|Allocator
 expr_stmt|;
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+decl_stmt|;
 specifier|const
 name|CommandTraits
 modifier|&
@@ -1270,6 +1280,27 @@ name|CharNo
 argument_list|)
 return|;
 block|}
+name|DiagnosticBuilder
+name|Diag
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|unsigned
+name|DiagID
+parameter_list|)
+block|{
+return|return
+name|Diags
+operator|.
+name|Report
+argument_list|(
+name|Loc
+argument_list|,
+name|DiagID
+argument_list|)
+return|;
+block|}
 comment|/// Eat string matching regexp \code \s*\* \endcode.
 name|void
 name|skipLineStartingDecorations
@@ -1392,6 +1423,8 @@ label|:
 name|Lexer
 argument_list|(
 argument|llvm::BumpPtrAllocator&Allocator
+argument_list|,
+argument|DiagnosticsEngine&Diags
 argument_list|,
 argument|const CommandTraits&Traits
 argument_list|,

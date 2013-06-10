@@ -50,11 +50,11 @@ comment|// expected-error{{redefinition}}
 end_comment
 
 begin_comment
-comment|// expected-note{{previous definition}}
+comment|// expected-note@libroot/usr/include/reloc.h:13{{previous definition}}
 end_comment
 
 begin_comment
-comment|// expected-note{{previous definition}}
+comment|// expected-note@libroot/usr/include/reloc2.h:14{{previous definition}}
 end_comment
 
 end_unit

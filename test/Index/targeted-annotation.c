@@ -288,19 +288,19 @@ comment|// TOP: Identifier: "define" [3:2 - 3:8] preprocessing directive=
 end_comment
 
 begin_comment
-comment|// TOP: Identifier: "TARGETED_TOP_H" [3:9 - 3:23] preprocessing directive=
+comment|// TOP: Identifier: "TARGETED_TOP_H" [3:9 - 3:23] macro definition=TARGETED_TOP_H
 end_comment
 
 begin_comment
-comment|// TOP: Punctuation: "#" [5:1 - 5:2] preprocessing directive=
+comment|// TOP: Punctuation: "#" [5:1 - 5:2] inclusion directive=targeted-nested1.h
 end_comment
 
 begin_comment
-comment|// TOP: Identifier: "include" [5:2 - 5:9] preprocessing directive=
+comment|// TOP: Identifier: "include" [5:2 - 5:9] inclusion directive=targeted-nested1.h
 end_comment
 
 begin_comment
-comment|// TOP: Literal: ""targeted-nested1.h"" [5:10 - 5:30] preprocessing directive=
+comment|// TOP: Literal: ""targeted-nested1.h"" [5:10 - 5:30] inclusion directive=targeted-nested1.h
 end_comment
 
 begin_comment

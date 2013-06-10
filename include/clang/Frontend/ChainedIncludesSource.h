@@ -105,8 +105,6 @@ operator|&
 name|CI
 argument_list|)
 block|;
-name|private
-operator|:
 name|ExternalSemaSource
 operator|&
 name|getFinalReader
@@ -118,6 +116,8 @@ operator|*
 name|FinalReader
 return|;
 block|}
+name|private
+operator|:
 name|std
 operator|::
 name|vector

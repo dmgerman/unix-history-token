@@ -587,6 +587,8 @@ name|unsigned
 operator|>
 name|MaxNodesPerTopLevelFunction
 expr_stmt|;
+name|public
+label|:
 comment|/// Interprets an option's string value as a boolean.
 comment|///
 comment|/// Accepts the strings "true" and "false".
@@ -630,8 +632,6 @@ name|int
 name|DefaultVal
 parameter_list|)
 function_decl|;
-name|public
-label|:
 comment|/// \brief Retrieves and sets the UserMode. This is a high-level option,
 comment|/// which is used to set other low-level options. It is not accessible
 comment|/// outside of AnalyzerOptions.

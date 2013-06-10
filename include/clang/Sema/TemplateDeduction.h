@@ -450,8 +450,8 @@ decl_stmt|;
 comment|/// \brief The expression which caused a deduction failure.
 comment|///
 comment|///   TDK_FailedOverloadResolution: this argument is the reference to
-comment|//    an overloaded function which could not be resolved to a specific
-comment|//    function.
+comment|///   an overloaded function which could not be resolved to a specific
+comment|///   function.
 name|Expr
 modifier|*
 name|Expression

@@ -412,5 +412,45 @@ comment|// expected-error {{dereference of pointer to incomplete type 'struct S'
 block|}
 end_function
 
+begin_comment
+comment|// PR15759.
+end_comment
+
+begin_function
+name|double
+name|test15
+parameter_list|()
+block|{
+name|double
+name|ret
+init|=
+literal|0
+decl_stmt|;
+asm|__asm("0.0":"="(ret));
+comment|// expected-error {{invalid output constraint '=' in asm}}
+asm|__asm("0.0":"=&"(ret));
+comment|// expected-error {{invalid output constraint '=&' in asm}}
+asm|__asm("0.0":"+?"(ret));
+comment|// expected-error {{invalid output constraint '+?' in asm}}
+asm|__asm("0.0":"+!"(ret));
+comment|// expected-error {{invalid output constraint '+!' in asm}}
+asm|__asm("0.0":"+#"(ret));
+comment|// expected-error {{invalid output constraint '+#' in asm}}
+asm|__asm("0.0":"+*"(ret));
+comment|// expected-error {{invalid output constraint '+*' in asm}}
+asm|__asm("0.0":"=%"(ret));
+comment|// expected-error {{invalid output constraint '=%' in asm}}
+asm|__asm("0.0":"=,="(ret));
+comment|// expected-error {{invalid output constraint '=,=' in asm}}
+asm|__asm("0.0":"=,g"(ret));
+comment|// no-error
+asm|__asm("0.0":"=g"(ret));
+comment|// no-error
+return|return
+name|ret
+return|;
+block|}
+end_function
+
 end_unit
 

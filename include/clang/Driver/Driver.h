@@ -969,6 +969,9 @@ argument_list|,
 name|bool
 name|AtTopLevel
 argument_list|,
+name|bool
+name|MultipleArchs
+argument_list|,
 specifier|const
 name|char
 operator|*
@@ -988,7 +991,9 @@ comment|/// \param C - The compilation.
 comment|/// \param JA - The action of interest.
 comment|/// \param BaseInput - The original input file that this action was
 comment|/// triggered by.
+comment|/// \param BoundArch - The bound architecture.
 comment|/// \param AtTopLevel - Whether this is a "top-level" action.
+comment|/// \param MultipleArchs - Whether multiple -arch options were supplied.
 specifier|const
 name|char
 modifier|*
@@ -1008,8 +1013,16 @@ name|char
 operator|*
 name|BaseInput
 argument_list|,
+specifier|const
+name|char
+operator|*
+name|BoundArch
+argument_list|,
 name|bool
 name|AtTopLevel
+argument_list|,
+name|bool
+name|MultipleArchs
 argument_list|)
 decl|const
 decl_stmt|;

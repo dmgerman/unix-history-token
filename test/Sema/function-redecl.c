@@ -268,6 +268,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|outer5
@@ -320,7 +324,6 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
-comment|// expected-note{{previous declaration is here}}
 name|int
 name|outer5
 argument_list|(

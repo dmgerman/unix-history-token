@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=region -fblocks -verify %s
 end_comment
 
 begin_struct
@@ -644,6 +644,14 @@ comment|// no-warning
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/12278788> - FP when returning a void-valued expression from
+end_comment
+
+begin_comment
+comment|// a void function...or block.
+end_comment
+
 begin_function
 name|void
 name|foo_radar12278788
@@ -718,6 +726,60 @@ operator|(
 operator|)
 return|;
 comment|//expected-warning {{Undefined or garbage value returned to caller}}
+block|}
+end_function
+
+begin_function
+name|void
+name|rdar13665798
+parameter_list|()
+block|{
+lambda|^
+parameter_list|()
+block|{
+return|return
+name|foo_radar12278788
+argument_list|()
+return|;
+comment|// no-warning
+block|}
+argument_list|()
+expr_stmt|;
+lambda|^
+name|void
+parameter_list|()
+block|{
+return|return
+name|foo_radar12278788
+argument_list|()
+return|;
+comment|// no-warning
+block|}
+argument_list|()
+expr_stmt|;
+lambda|^
+name|int
+parameter_list|()
+block|{
+name|RetVoidFuncType
+name|f
+init|=
+name|foo_radar12278788_fp
+decl_stmt|;
+return|return
+operator|(
+operator|(
+name|RetIntFuncType
+operator|)
+name|f
+operator|)
+operator|(
+operator|)
+return|;
+comment|//expected-warning {{Undefined or garbage value returned to caller}}
+block|}
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

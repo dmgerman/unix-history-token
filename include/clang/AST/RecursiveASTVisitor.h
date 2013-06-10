@@ -3775,13 +3775,24 @@ operator|++
 name|Child
 control|)
 block|{
-comment|// BlockDecls are traversed through BlockExprs.
+comment|// BlockDecls and CapturedDecls are traversed through BlockExprs and
+comment|// CapturedStmts respectively.
 if|if
 condition|(
 operator|!
 name|isa
 operator|<
 name|BlockDecl
+operator|>
+operator|(
+operator|*
+name|Child
+operator|)
+operator|&&
+operator|!
+name|isa
+operator|<
+name|CapturedDecl
 operator|>
 operator|(
 operator|*
@@ -3836,6 +3847,16 @@ argument_list|(
 argument|BlockDecl
 argument_list|,
 argument|{     if (TypeSourceInfo *TInfo = D->getSignatureAsWritten())       TRY_TO(TraverseTypeLoc(TInfo->getTypeLoc()));     TRY_TO(TraverseStmt(D->getBody()));
+comment|// This return statement makes sure the traversal of nodes in
+comment|// decls_begin()/decls_end() (done in the DEF_TRAVERSE_DECL macro)
+comment|// is skipped - don't remove it.
+argument|return true;   }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|CapturedDecl
+argument_list|,
+argument|{     TRY_TO(TraverseStmt(D->getBody()));
 comment|// This return statement makes sure the traversal of nodes in
 comment|// decls_begin()/decls_end() (done in the DEF_TRAVERSE_DECL macro)
 comment|// is skipped - don't remove it.
@@ -4979,7 +5000,7 @@ end_return
 begin_expr_stmt
 unit|}  DEF_TRAVERSE_DECL
 operator|(
-name|FieldDecl
+name|MSPropertyDecl
 operator|,
 block|{
 name|TRY_TO
@@ -4989,49 +5010,14 @@ argument_list|(
 name|D
 argument_list|)
 argument_list|)
-block|;
-if|if
-condition|(
-name|D
-operator|->
-name|isBitField
-argument_list|()
-condition|)
-name|TRY_TO
+block|;   }
+operator|)
+name|DEF_TRAVERSE_DECL
 argument_list|(
-name|TraverseStmt
-argument_list|(
-name|D
-operator|->
-name|getBitWidth
-argument_list|()
+argument|FieldDecl
+argument_list|,
+argument|{     TRY_TO(TraverseDeclaratorHelper(D));     if (D->isBitField())       TRY_TO(TraverseStmt(D->getBitWidth()));     else if (D->hasInClassInitializer())       TRY_TO(TraverseStmt(D->getInClassInitializer()));   }
 argument_list|)
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|D
-operator|->
-name|hasInClassInitializer
-argument_list|()
-condition|)
-name|TRY_TO
-argument_list|(
-name|TraverseStmt
-argument_list|(
-name|D
-operator|->
-name|getInClassInitializer
-argument_list|()
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_macro
-unit|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|ObjCAtDefsFieldDecl
@@ -5040,9 +5026,6 @@ argument|{     TRY_TO(TraverseDeclaratorHelper(D));     if (D->isBitField())    
 comment|// FIXME: implement the rest.
 argument|}
 argument_list|)
-end_macro
-
-begin_macro
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|ObjCIvarDecl
@@ -5051,9 +5034,6 @@ argument|{     TRY_TO(TraverseDeclaratorHelper(D));     if (D->isBitField())    
 comment|// FIXME: implement the rest.
 argument|}
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -6142,6 +6122,12 @@ argument|if (S->isTypeOperand())       TRY_TO(TraverseTypeLoc(S->getTypeOperandS
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|MSPropertyRefExpr
+argument_list|,
+argument|{   TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc())); }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|CXXUuidofExpr
 argument_list|,
 argument|{
@@ -6500,6 +6486,12 @@ argument|{ }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
+argument|CXXDefaultInitExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
 argument|CXXDeleteExpr
 argument_list|,
 argument|{ }
@@ -6592,7 +6584,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|ObjCMessageExpr
 argument_list|,
-argument|{ }
+argument|{   if (TypeSourceInfo *TInfo = S->getClassReceiverTypeInfo())     TRY_TO(TraverseTypeLoc(TInfo->getTypeLoc())); }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
@@ -6689,6 +6681,12 @@ argument_list|(
 argument|SEHFinallyStmt
 argument_list|,
 argument|{}
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|CapturedStmt
+argument_list|,
+argument|{   TRY_TO(TraverseDecl(S->getCapturedDecl())); }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(

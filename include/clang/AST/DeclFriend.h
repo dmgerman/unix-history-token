@@ -384,13 +384,7 @@ operator|*
 operator|>
 name|FriendTypeTPLists
 operator|=
-name|ArrayRef
-operator|<
-name|TemplateParameterList
-operator|*
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
 end_decl_stmt

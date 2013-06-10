@@ -19,10 +19,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -verify %s
 end_comment
 
-begin_comment
-comment|// expected-note{{'f1' declared here}}
-end_comment
-
 begin_function
 name|int
 name|f0
@@ -43,10 +39,6 @@ name|y0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// expected-note{{passing argument to parameter here}}
-end_comment
 
 begin_function
 name|float
@@ -85,6 +77,7 @@ name|x
 argument_list|)
 return|;
 comment|// expected-error{{too few arguments to function call}}
+comment|// expected-note@functions.h:7{{'f1' declared here}}
 block|}
 end_function
 
@@ -107,6 +100,7 @@ name|y
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{incompatible pointer types passing 'float *' to parameter of type 'int *'}}
+comment|// expected-note@functions.h:9{{passing argument to parameter here}}
 name|g0
 argument_list|(
 name|x

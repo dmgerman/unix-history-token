@@ -117,23 +117,14 @@ comment|/// template argument list (17) at depth 1.
 name|class
 name|MultiLevelTemplateArgumentList
 block|{
-name|public
-label|:
+comment|/// \brief The template argument list at a certain template depth
 typedef|typedef
-name|std
-operator|::
-name|pair
+name|ArrayRef
 operator|<
-specifier|const
 name|TemplateArgument
-operator|*
-operator|,
-name|unsigned
 operator|>
 name|ArgList
 expr_stmt|;
-name|private
-label|:
 comment|/// \brief The template argument lists, stored from the innermost template
 comment|/// argument list (first) to the outermost template argument list (last).
 name|SmallVector
@@ -220,7 +211,8 @@ operator|-
 literal|1
 index|]
 operator|.
-name|second
+name|size
+argument_list|()
 argument_list|)
 block|;
 return|return
@@ -233,8 +225,6 @@ name|Depth
 operator|-
 literal|1
 index|]
-operator|.
-name|first
 index|[
 name|Index
 index|]
@@ -279,7 +269,8 @@ operator|-
 literal|1
 index|]
 operator|.
-name|second
+name|size
+argument_list|()
 condition|)
 return|return
 name|false
@@ -338,7 +329,8 @@ operator|-
 literal|1
 index|]
 operator|.
-name|second
+name|size
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|const_cast
@@ -356,8 +348,6 @@ name|Depth
 operator|-
 literal|1
 index|]
-operator|.
-name|first
 index|[
 name|Index
 index|]
@@ -377,9 +367,7 @@ modifier|*
 name|TemplateArgs
 parameter_list|)
 block|{
-name|TemplateArgumentLists
-operator|.
-name|push_back
+name|addOuterTemplateArguments
 argument_list|(
 name|ArgList
 argument_list|(
@@ -410,9 +398,7 @@ name|unsigned
 name|NumArgs
 parameter_list|)
 block|{
-name|TemplateArgumentLists
-operator|.
-name|push_back
+name|addOuterTemplateArguments
 argument_list|(
 name|ArgList
 argument_list|(
@@ -420,6 +406,23 @@ name|Args
 argument_list|,
 name|NumArgs
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add a new outmost level to the multi-level template argument
+comment|/// list.
+name|void
+name|addOuterTemplateArguments
+parameter_list|(
+name|ArgList
+name|Args
+parameter_list|)
+block|{
+name|TemplateArgumentLists
+operator|.
+name|push_back
+argument_list|(
+name|Args
 argument_list|)
 expr_stmt|;
 block|}
@@ -618,7 +621,7 @@ block|;
 typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|SmallDenseMap
 operator|<
 specifier|const
 name|Decl
@@ -634,7 +637,9 @@ operator|,
 name|DeclArgumentPack
 operator|*
 operator|>
-expr|>
+operator|,
+literal|4
+operator|>
 name|LocalDeclsMap
 expr_stmt|;
 comment|/// \brief A mapping from local declarations that occur
@@ -1422,6 +1427,15 @@ modifier|*
 name|VisitFieldDecl
 parameter_list|(
 name|FieldDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|Decl
+modifier|*
+name|VisitMSPropertyDecl
+parameter_list|(
+name|MSPropertyDecl
 modifier|*
 name|D
 parameter_list|)

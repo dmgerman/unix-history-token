@@ -4,19 +4,15 @@ comment|// RUN: rm -rf %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: mkdir -p %t.dir/a.out
+comment|// RUN: mkdir -p %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: cd %t.dir&& not %clang %s
+comment|// RUN: not %clang %s -c -emit-llvm -o %t.dir
 end_comment
 
 begin_comment
-comment|// RUN: test -d %t.dir/a.out
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell
+comment|// RUN: test -d %t.dir
 end_comment
 
 begin_function

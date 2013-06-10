@@ -388,7 +388,31 @@ return|return
 name|OI
 return|;
 block|}
-expr|}
+expr|struct
+name|input_iterator_tag
+block|{ }
+block|;   struct
+name|output_iterator_tag
+block|{ }
+block|;   struct
+name|forward_iterator_tag
+operator|:
+name|public
+name|input_iterator_tag
+block|{ }
+block|;   struct
+name|bidirectional_iterator_tag
+operator|:
+name|public
+name|forward_iterator_tag
+block|{ }
+block|;   struct
+name|random_access_iterator_tag
+operator|:
+name|public
+name|bidirectional_iterator_tag
+block|{ }
+block|; }
 name|void
 operator|*
 name|operator

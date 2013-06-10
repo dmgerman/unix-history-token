@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: mips-registered-target
-end_comment
-
-begin_comment
 comment|// Check handling -mhard-float / -msoft-float / -mfloat-abi options
 end_comment
 
@@ -152,7 +148,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// -mfloat-abi=single
+comment|// -mdouble-float
 end_comment
 
 begin_comment
@@ -160,7 +156,35 @@ comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -target mips-linux-gnu -mfloat-abi=single \
+comment|// RUN:     -target mips-linux-gnu -msingle-float -mdouble-float \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-DOUBLE %s
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-DOUBLE: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-DOUBLE-NOT: "+single-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msingle-float
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -mdouble-float -msingle-float \
 end_comment
 
 begin_comment
@@ -168,7 +192,39 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SINGLE %s
 end_comment
 
 begin_comment
+comment|// CHECK-ABI-SINGLE: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
 comment|// CHECK-ABI-SINGLE: "-target-feature" "+single-float"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -msoft-float -msingle-float
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -msoft-float -msingle-float \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-SOFT-SINGLE %s
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-SOFT-SINGLE: "-mfloat-abi" "soft"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-SOFT-SINGLE: "-target-feature" "+single-float"
 end_comment
 
 begin_comment

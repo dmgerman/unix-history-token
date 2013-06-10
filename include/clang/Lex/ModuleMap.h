@@ -481,7 +481,6 @@ name|FileManager
 operator|&
 name|FileMgr
 argument_list|,
-specifier|const
 name|DiagnosticConsumer
 operator|&
 name|DC
@@ -532,16 +531,6 @@ name|BuiltinIncludeDir
 operator|=
 name|Dir
 expr_stmt|;
-block|}
-specifier|const
-name|DirectoryEntry
-modifier|*
-name|getBuiltinIncludeDir
-parameter_list|()
-block|{
-return|return
-name|BuiltinIncludeDir
-return|;
 block|}
 comment|/// \brief Retrieve the module that owns the given header file, if any.
 comment|///

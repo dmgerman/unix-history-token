@@ -379,6 +379,15 @@ argument_list|(
 argument|StringRef Path
 argument_list|)
 expr_stmt|;
+comment|/// \brief Returns an iterator for identifiers stored in the index table.
+comment|///
+comment|/// The caller accepts ownership of the returned object.
+name|IdentifierIterator
+operator|*
+name|createIdentifierIterator
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve the set of modules that have up-to-date indexes.
 comment|///
 comment|/// \param ModuleFiles Will be populated with the set of module files that

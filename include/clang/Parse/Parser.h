@@ -465,6 +465,12 @@ name|PragmaHandler
 operator|>
 name|OpenMPHandler
 block|;
+name|OwningPtr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSCommentHandler
+block|;
 comment|/// Whether the '>' token acts as an operator or not. This will be
 comment|/// true except when we are parsing an expression within a C++
 comment|/// template argument list, where the '>' closes the template
@@ -490,6 +496,68 @@ block|;
 comment|/// The "depth" of the template parameters currently being parsed.
 name|unsigned
 name|TemplateParameterDepth
+block|;
+comment|/// \brief RAII class that manages the template parameter depth.
+name|class
+name|TemplateParameterDepthRAII
+block|{
+name|unsigned
+operator|&
+name|Depth
+block|;
+name|unsigned
+name|AddedLevels
+block|;
+name|public
+operator|:
+name|explicit
+name|TemplateParameterDepthRAII
+argument_list|(
+name|unsigned
+operator|&
+name|Depth
+argument_list|)
+operator|:
+name|Depth
+argument_list|(
+name|Depth
+argument_list|)
+block|,
+name|AddedLevels
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+operator|~
+name|TemplateParameterDepthRAII
+argument_list|()
+block|{
+name|Depth
+operator|-=
+name|AddedLevels
+block|;     }
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|Depth
+block|;
+operator|++
+name|AddedLevels
+block|;     }
+name|unsigned
+name|getDepth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Depth
+return|;
+block|}
+expr|}
 block|;
 comment|/// Factory object for creating AttributeList objects.
 name|AttributeFactory
@@ -1358,6 +1426,12 @@ name|void
 name|HandlePragmaOpenCLExtension
 parameter_list|()
 function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma clang __debug captured
+name|StmtResult
+name|HandlePragmaCaptured
+parameter_list|()
+function_decl|;
 comment|/// GetLookAheadToken - This peeks ahead N tokens and returns that token
 comment|/// without consuming any tokens.  LookAhead(0) returns 'Tok', LookAhead(1)
 comment|/// returns the token after Tok, etc.
@@ -1480,30 +1554,15 @@ modifier|&
 name|Tok
 parameter_list|)
 block|{
-if|if
-condition|(
+return|return
+name|ExprResult
+operator|::
+name|getFromOpaquePointer
+argument_list|(
 name|Tok
 operator|.
 name|getAnnotationValue
 argument_list|()
-condition|)
-return|return
-name|ExprResult
-argument_list|(
-operator|(
-name|Expr
-operator|*
-operator|)
-name|Tok
-operator|.
-name|getAnnotationValue
-argument_list|()
-argument_list|)
-return|;
-return|return
-name|ExprResult
-argument_list|(
-name|true
 argument_list|)
 return|;
 block|}
@@ -1521,28 +1580,13 @@ name|ExprResult
 name|ER
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ER
-operator|.
-name|isInvalid
-argument_list|()
-condition|)
-name|Tok
-operator|.
-name|setAnnotationValue
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
 name|Tok
 operator|.
 name|setAnnotationValue
 argument_list|(
 name|ER
 operator|.
-name|get
+name|getAsOpaquePointer
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -4273,6 +4317,30 @@ init|=
 name|NotTypeCast
 parameter_list|)
 function_decl|;
+name|ExprResult
+name|ParseMSAsmIdentifier
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|Token
+operator|>
+operator|&
+name|LineToks
+argument_list|,
+name|unsigned
+operator|&
+name|NumLineToksConsumed
+argument_list|,
+name|void
+operator|*
+name|Info
+argument_list|,
+name|bool
+name|IsUnevaluated
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|ExprResult

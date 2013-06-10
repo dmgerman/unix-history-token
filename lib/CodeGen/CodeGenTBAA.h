@@ -242,6 +242,24 @@ operator|*
 operator|>
 name|StructTagMetadataCache
 expr_stmt|;
+comment|/// This maps a scalar type to a scalar tag node.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|,
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|>
+name|ScalarTagMetadataCache
+expr_stmt|;
 comment|/// StructMetadataCache - This maps clang::Types to llvm::MDNodes describing
 comment|/// them for struct assignments.
 name|llvm
@@ -315,6 +333,20 @@ name|bool
 name|MayAlias
 argument_list|)
 decl_stmt|;
+comment|/// A wrapper function to create a scalar type. For struct-path aware TBAA,
+comment|/// the scalar type has the same format as the struct type: name, offset,
+comment|/// pointer to another node in the type DAG.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|createTBAAScalarType
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|llvm::MDNode *Parent
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 name|CodeGenTBAA
@@ -389,7 +421,7 @@ argument_list|(
 argument|QualType QType
 argument_list|)
 expr_stmt|;
-comment|/// Get the tag MDNode for a given base type, the actual sclar access MDNode
+comment|/// Get the tag MDNode for a given base type, the actual scalar access MDNode
 comment|/// and offset into the base type.
 name|llvm
 operator|::
@@ -402,6 +434,20 @@ argument_list|,
 argument|llvm::MDNode *AccessNode
 argument_list|,
 argument|uint64_t Offset
+argument_list|)
+expr_stmt|;
+comment|/// Get the sclar tag MDNode for a given scalar type.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAScalarTagInfo
+argument_list|(
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|AccessNode
 argument_list|)
 expr_stmt|;
 block|}

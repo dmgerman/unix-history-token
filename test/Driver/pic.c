@@ -152,6 +152,14 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK-NO-UNUSED-ARG-NOT: argument unused during compilation
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -target i386-unknown-unknown -### 2>&1 \
 end_comment
 
@@ -661,6 +669,14 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target x86_64-apple-darwin -fPIC -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-UNUSED-ARG
 end_comment
 
 begin_comment

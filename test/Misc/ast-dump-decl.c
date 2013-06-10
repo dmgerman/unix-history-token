@@ -477,7 +477,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:      VarDecl{{.*}} TestVarDeclThread 'int' __thread
+comment|// CHECK:      VarDecl{{.*}} TestVarDeclThread 'int' tls{{$}}
 end_comment
 
 begin_decl_stmt

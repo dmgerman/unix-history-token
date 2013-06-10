@@ -123,7 +123,7 @@ comment|// RUN: c-index-test -test-print-type %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: FunctionDecl=f:3:6 (Definition) [type=int *(int *, char *, FooType, int *, void (*)(int))] [typekind=FunctionProto] [canonicaltype=int *(int *, char *, int, int *, void (*)(int))] [canonicaltypekind=FunctionProto] [resulttype=int *] [resulttypekind=Pointer] [args= [int *] [Pointer] [char *] [Pointer] [FooType] [Typedef] [int *] [Pointer] [void (*)(int)] [Pointer]] [isPOD=0]
+comment|// CHECK: FunctionDecl=f:3:6 (Definition) [type=int *(int *, char *, FooType, int *, void (*)(int))] [typekind=FunctionProto] [canonicaltype=int *(int *, char *, int, int *, void (*)(int))] [canonicaltypekind=FunctionProto] [resulttype=int *] [resulttypekind=Pointer] [args= [int *] [Pointer] [char *] [Pointer] [FooType] [Typedef] [int [5]] [ConstantArray] [void (*)(int)] [Pointer]] [isPOD=0]
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ comment|// CHECK: TypeRef=FooType:1:13 [type=FooType] [typekind=Typedef] [canoni
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=arr:3:40 (Definition) [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: ParmDecl=arr:3:40 (Definition) [type=int [5]] [typekind=ConstantArray] [isPOD=1]
 end_comment
 
 begin_comment

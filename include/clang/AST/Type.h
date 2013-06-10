@@ -5751,6 +5751,24 @@ operator|-
 name|NumTypeBits
 block|;   }
 block|;
+name|class
+name|AutoTypeBitfields
+block|{
+name|friend
+name|class
+name|AutoType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// Was this placeholder type spelled as 'decltype(auto)'?
+name|unsigned
+name|IsDecltypeAuto
+operator|:
+literal|1
+block|;   }
+block|;
 expr|union
 block|{
 name|TypeBitfields
@@ -5761,6 +5779,9 @@ name|ArrayTypeBits
 block|;
 name|AttributedTypeBitfields
 name|AttributedTypeBits
+block|;
+name|AutoTypeBitfields
+name|AutoTypeBits
 block|;
 name|BuiltinTypeBitfields
 name|BuiltinTypeBits
@@ -6099,10 +6120,12 @@ argument_list|()
 return|;
 block|}
 comment|/// isLiteralType - Return true if this is a literal type
-comment|/// (C++0x [basic.types]p10)
+comment|/// (C++11 [basic.types]p10)
 name|bool
 name|isLiteralType
-argument_list|()
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|)
 specifier|const
 block|;
 comment|/// \brief Test if this type is a standard-layout type.
@@ -6709,6 +6732,13 @@ operator|.
 name|InstantiationDependent
 return|;
 block|}
+comment|/// \brief Determine whether this type is an undeduced type, meaning that
+comment|/// it somehow involves a C++11 'auto' type which has not yet been deduced.
+name|bool
+name|isUndeducedType
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Whether this type is a variably-modified type (C99 6.7.5).
 name|bool
 name|isVariablyModifiedType
@@ -8399,19 +8429,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// The inheritance model to use for this member pointer.
-block|enum
-name|MSInheritanceModel
-block|{
-name|MSIM_Single
-block|,
-name|MSIM_Multiple
-block|,
-name|MSIM_Virtual
-block|,
-name|MSIM_Unspecified
-block|}
-block|;
 comment|/// MemberPointerType - C++ 8.3.3 - Pointers to members
 comment|///
 name|class
@@ -8545,20 +8562,6 @@ name|isFunctionProtoType
 argument_list|()
 return|;
 block|}
-comment|/// Returns the number of pointer and integer slots used to represent this
-comment|/// member pointer in the MS C++ ABI.
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-block|,
-name|unsigned
-operator|>
-name|getMSMemberPointerSlots
-argument_list|()
-specifier|const
-block|;
 specifier|const
 name|Type
 operator|*
@@ -14224,11 +14227,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a C++0x auto type.
+comment|/// \brief Represents a C++11 auto or C++1y decltype(auto) type.
 comment|///
-comment|/// These types are usually a placeholder for a deduced type. However, within
-comment|/// templates and before the initializer is attached, there is no deduced type
-comment|/// and an auto type is type-dependent and canonical.
+comment|/// These types are usually a placeholder for a deduced type. However, before
+comment|/// the initializer is attached, or if the initializer is type-dependent, there
+comment|/// is no deduced type and an auto type is canonical. In the latter case, it is
+comment|/// also a dependent type.
 name|class
 name|AutoType
 operator|:
@@ -14243,6 +14247,10 @@ block|{
 name|AutoType
 argument_list|(
 argument|QualType DeducedType
+argument_list|,
+argument|bool IsDecltypeAuto
+argument_list|,
+argument|bool IsDependent
 argument_list|)
 operator|:
 name|Type
@@ -14254,10 +14262,10 @@ literal|0
 argument|) : DeducedType
 argument_list|,
 comment|/*Dependent=*/
-argument|DeducedType.isNull()
+argument|IsDependent
 argument_list|,
 comment|/*InstantiationDependent=*/
-argument|DeducedType.isNull()
+argument|IsDependent
 argument_list|,
 comment|/*VariablyModified=*/
 argument|false
@@ -14275,14 +14283,17 @@ name|isNull
 argument_list|()
 operator|||
 operator|!
-name|DeducedType
-operator|->
-name|isDependentType
-argument_list|()
+name|IsDependent
 operator|)
 operator|&&
-literal|"deduced a dependent type for auto"
+literal|"auto deduced to dependent type"
 argument_list|)
+block|;
+name|AutoTypeBits
+operator|.
+name|IsDecltypeAuto
+operator|=
+name|IsDecltypeAuto
 block|;   }
 name|friend
 name|class
@@ -14292,12 +14303,24 @@ comment|// ASTContext creates these
 name|public
 operator|:
 name|bool
+name|isDecltypeAuto
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AutoTypeBits
+operator|.
+name|IsDecltypeAuto
+return|;
+block|}
+name|bool
 name|isSugared
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isDeduced
+operator|!
+name|isCanonicalUnqualified
 argument_list|()
 return|;
 block|}
@@ -14311,13 +14334,16 @@ name|getCanonicalTypeInternal
 argument_list|()
 return|;
 block|}
+comment|/// \brief Get the type deduced for this auto type, or null if it's either
+comment|/// not been deduced or was deduced to a dependent type.
 name|QualType
 name|getDeducedType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isDeduced
+operator|!
+name|isCanonicalUnqualified
 argument_list|()
 condition|?
 name|getCanonicalTypeInternal
@@ -14334,6 +14360,9 @@ specifier|const
 block|{
 return|return
 operator|!
+name|isCanonicalUnqualified
+argument_list|()
+operator|||
 name|isDependentType
 argument_list|()
 return|;
@@ -14350,6 +14379,12 @@ name|ID
 argument_list|,
 name|getDeducedType
 argument_list|()
+argument_list|,
+name|isDecltypeAuto
+argument_list|()
+argument_list|,
+name|isDependentType
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -14359,6 +14394,10 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType Deduced
+argument_list|,
+argument|bool IsDecltypeAuto
+argument_list|,
+argument|bool IsDependent
 argument_list|)
 block|{
 name|ID
@@ -14369,6 +14408,20 @@ name|Deduced
 operator|.
 name|getAsOpaquePtr
 argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|IsDecltypeAuto
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|IsDependent
 argument_list|)
 block|;   }
 specifier|static
@@ -19976,8 +20029,36 @@ name|false
 return|;
 end_return
 
+begin_expr_stmt
+unit|}  inline
+name|bool
+name|Type
+operator|::
+name|isUndeducedType
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|AutoType
+operator|*
+name|AT
+operator|=
+name|getContainedAutoType
+argument_list|()
+block|;
+return|return
+name|AT
+operator|&&
+operator|!
+name|AT
+operator|->
+name|isDeduced
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|}
 comment|/// \brief Determines whether this is a type for which one can define
 end_comment
 
@@ -19986,7 +20067,7 @@ comment|/// an overloaded operator.
 end_comment
 
 begin_expr_stmt
-unit|inline
+specifier|inline
 name|bool
 name|Type
 operator|::

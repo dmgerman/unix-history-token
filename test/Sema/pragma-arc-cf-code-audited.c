@@ -87,7 +87,7 @@ comment|// This is actually on the #pragma line in the header.
 end_comment
 
 begin_comment
-comment|// expected-error {{'#pragma clang arc_cf_code_audited' was not ended within this file}}
+comment|// expected-error@Inputs/pragma-arc-cf-code-audited.h:16 {{'#pragma clang arc_cf_code_audited' was not ended within this file}}
 end_comment
 
 begin_pragma

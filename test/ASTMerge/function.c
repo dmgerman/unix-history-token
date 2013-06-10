@@ -36,19 +36,19 @@ comment|// CHECK: 2 errors generated
 end_comment
 
 begin_comment
-comment|// expected-error@3 {{external function 'f1' declared with incompatible types}}
+comment|// expected-error@Inputs/function2.c:3 {{external function 'f1' declared with incompatible types}}
 end_comment
 
 begin_comment
-comment|// expected-note@2 {{declared here}}
+comment|// expected-note@Inputs/function1.c:2 {{declared here}}
 end_comment
 
 begin_comment
-comment|// expected-error@5 {{external function 'f3' declared with incompatible types}}
+comment|// expected-error@Inputs/function2.c:5 {{external function 'f3' declared with incompatible types}}
 end_comment
 
 begin_comment
-comment|// expected-note@4 {{declared here}}
+comment|// expected-note@Inputs/function1.c:4 {{declared here}}
 end_comment
 
 end_unit

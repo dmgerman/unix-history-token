@@ -177,5 +177,40 @@ name|=
 name|power
 end_pragma
 
+begin_comment
+comment|// PR13580
+end_comment
+
+begin_struct
+struct|struct
+name|S
+block|{
+name|char
+name|a
+index|[
+literal|3
+index|]
+decl_stmt|;
+pragma|#
+directive|pragma
+name|align
+name|=
+name|packed
+struct|struct
+name|T
+block|{
+name|char
+name|b
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+block|}
+name|d
+struct|;
+block|}
+struct|;
+end_struct
+
 end_unit
 

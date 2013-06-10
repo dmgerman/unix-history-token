@@ -39,6 +39,14 @@ begin_comment
 comment|// CHECK: @j = thread_local(localexec) global
 end_comment
 
+begin_comment
+comment|// CHECK-NOT: @_ZTW
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: @_ZTH
+end_comment
+
 begin_decl_stmt
 name|__thread
 name|int

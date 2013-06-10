@@ -211,14 +211,6 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
-block|;
-name|DiagnosticConsumer
-operator|*
-name|clone
-argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 block|}

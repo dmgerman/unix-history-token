@@ -20,7 +20,7 @@ comment|// RUN: grep "@incomplete_array = common global .*1 x i32" %t | count 1
 end_comment
 
 begin_comment
-comment|// FIXME: tentative-defs.h expected-warning{{tentative}}
+comment|// FIXME: expected-warning@tentative-defs.h:9{{tentative}}
 end_comment
 
 end_unit

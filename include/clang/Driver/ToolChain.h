@@ -318,6 +318,25 @@ parameter_list|)
 function_decl|;
 specifier|static
 name|void
+name|addExternCSystemIncludeIfExists
+parameter_list|(
+specifier|const
+name|ArgList
+modifier|&
+name|DriverArgs
+parameter_list|,
+name|ArgStringList
+modifier|&
+name|CC1Args
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
 name|addSystemIncludes
 argument_list|(
 specifier|const
@@ -704,9 +723,19 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// \brief Tests whether this toolchain forces its default for PIC or non-PIC.
-comment|/// If this returns true, any PIC related flags should be ignored and instead
-comment|/// the result of \c isPICDefault() is used exclusively.
+comment|/// \brief Test whether this toolchain defaults to PIE.
+name|virtual
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Tests whether this toolchain forces its default for PIC, PIE or
+comment|/// non-PIC.  If this returns true, any PIC related flags should be ignored
+comment|/// and instead the results of \c isPICDefault() and \c isPIEDefault() are
+comment|/// used exclusively.
 name|virtual
 name|bool
 name|isPICDefaultForced

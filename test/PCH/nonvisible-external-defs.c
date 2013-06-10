@@ -35,7 +35,7 @@ comment|// expected-error{{conflicting types}}
 end_comment
 
 begin_comment
-comment|// expected-note{{previous declaration}}
+comment|// expected-note@nonvisible-external-defs.h:10{{previous declaration}}
 end_comment
 
 end_unit

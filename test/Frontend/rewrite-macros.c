@@ -1,6 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -verify -rewrite-macros -o %t %s
+comment|// RUN: %clang_cc1 %s -verify -rewrite-macros -o %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s< %t
+end_comment
+
+begin_comment
+comment|// Any CHECK line comments are included in the output, so we use some extra
+end_comment
+
+begin_comment
+comment|// regex brackets to make sure we don't match the CHECK lines themselves.
 end_comment
 
 begin_define
@@ -16,7 +28,7 @@ value|a ## b
 end_define
 
 begin_comment
-comment|// RUN: grep '12 */\*A\*/ /\*(1,2)\*/' %t
+comment|// CHECK: {{^}} 12 /*A*/ /*(1,2)*/{{$}}
 end_comment
 
 begin_macro
@@ -29,7 +41,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// RUN: grep '/\*_Pragma("mark")\*/' %t
+comment|// CHECK: {{^}} /*_Pragma("mark")*/{{$}}
 end_comment
 
 begin_macro
@@ -40,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// RUN: grep "//#warning eek" %t
+comment|// CHECK: /*#warning eek*/{{$}}
 end_comment
 
 begin_comment
@@ -54,7 +66,7 @@ warning|eek
 end_warning
 
 begin_comment
-comment|// RUN: grep "//#pragma mark mark" %t
+comment|// CHECK: {{^}}//#pragma mark mark{{$}}
 end_comment
 
 begin_pragma

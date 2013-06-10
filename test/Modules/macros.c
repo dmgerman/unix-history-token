@@ -36,23 +36,31 @@ comment|// These notes come from headers in modules, and are bogus.
 end_comment
 
 begin_comment
-comment|// FIXME: expected-note{{previous definition is here}}
+comment|// FIXME: expected-note@Inputs/macros_left.h:11{{previous definition is here}}
 end_comment
 
 begin_comment
-comment|// FIXME: expected-note{{previous definition is here}} expected-note{{expanding this definition of 'LEFT_RIGHT_DIFFERENT'}}
+comment|// FIXME: expected-note@Inputs/macros_right.h:12{{previous definition is here}}
 end_comment
 
 begin_comment
-comment|// expected-note{{other definition of 'TOP_RIGHT_REDEF'}} expected-note{{expanding this definition of 'LEFT_RIGHT_DIFFERENT2'}}
+comment|// expected-note@Inputs/macros_right.h:12{{expanding this definition of 'LEFT_RIGHT_DIFFERENT'}}
 end_comment
 
 begin_comment
-comment|// expected-note{{other definition of 'LEFT_RIGHT_DIFFERENT'}}
+comment|// expected-note@Inputs/macros_top.h:13{{other definition of 'TOP_RIGHT_REDEF'}}
 end_comment
 
 begin_comment
-comment|// expected-note{{expanding this definition of 'TOP_RIGHT_REDEF'}}
+comment|// expected-note@Inputs/macros_right.h:13{{expanding this definition of 'LEFT_RIGHT_DIFFERENT2'}}
+end_comment
+
+begin_comment
+comment|// expected-note@Inputs/macros_left.h:14{{other definition of 'LEFT_RIGHT_DIFFERENT'}}
+end_comment
+
+begin_comment
+comment|// expected-note@Inputs/macros_right.h:17{{expanding this definition of 'TOP_RIGHT_REDEF'}}
 end_comment
 
 begin_decl_stmt

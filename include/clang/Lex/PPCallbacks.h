@@ -115,6 +115,9 @@ decl_stmt|;
 name|class
 name|MacroDirective
 decl_stmt|;
+name|class
+name|MacroArgs
+decl_stmt|;
 comment|/// \brief This interface provides a way to observe the actions of the
 comment|/// preprocessor as it does its thing.
 comment|///
@@ -374,8 +377,38 @@ operator|&
 name|Str
 argument_list|)
 block|{   }
+comment|/// \brief Callback invoked when a \#pragma clang __debug directive is read.
+comment|/// \param Loc The location of the debug directive.
+comment|/// \param DebugType The identifier following __debug.
+name|virtual
+name|void
+name|PragmaDebug
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|StringRef
+name|DebugType
+parameter_list|)
+block|{   }
+comment|/// \brief Determines the kind of \#pragma invoking a call to PragmaMessage.
+enum|enum
+name|PragmaMessageKind
+block|{
+comment|/// \brief \#pragma message has been invoked.
+name|PMK_Message
+block|,
+comment|/// \brief \#pragma GCC warning has been invoked.
+name|PMK_Warning
+block|,
+comment|/// \brief \#pragma GCC error has been invoked.
+name|PMK_Error
+block|}
+enum|;
 comment|/// \brief Callback invoked when a \#pragma message directive is read.
 comment|/// \param Loc The location of the message directive.
+comment|/// \param Namespace The namespace of the message directive.
+comment|/// \param Kind The type of the message directive.
 comment|/// \param Str The text of the message directive.
 name|virtual
 name|void
@@ -383,6 +416,12 @@ name|PragmaMessage
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|StringRef
+name|Namespace
+parameter_list|,
+name|PragmaMessageKind
+name|Kind
 parameter_list|,
 name|StringRef
 name|Str
@@ -452,6 +491,11 @@ name|MD
 parameter_list|,
 name|SourceRange
 name|Range
+parameter_list|,
+specifier|const
+name|MacroArgs
+modifier|*
+name|Args
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever a macro definition is seen.
@@ -961,6 +1005,10 @@ name|PragmaMessage
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
+argument|StringRef Namespace
+argument_list|,
+argument|PragmaMessageKind Kind
+argument_list|,
 argument|StringRef Str
 argument_list|)
 block|{
@@ -970,6 +1018,10 @@ name|PragmaMessage
 argument_list|(
 name|Loc
 argument_list|,
+name|Namespace
+argument_list|,
+name|Kind
+argument_list|,
 name|Str
 argument_list|)
 block|;
@@ -978,6 +1030,10 @@ operator|->
 name|PragmaMessage
 argument_list|(
 name|Loc
+argument_list|,
+name|Namespace
+argument_list|,
+name|Kind
 argument_list|,
 name|Str
 argument_list|)
@@ -1084,6 +1140,8 @@ argument_list|,
 argument|const MacroDirective *MD
 argument_list|,
 argument|SourceRange Range
+argument_list|,
+argument|const MacroArgs *Args
 argument_list|)
 block|{
 name|First
@@ -1095,6 +1153,8 @@ argument_list|,
 name|MD
 argument_list|,
 name|Range
+argument_list|,
+name|Args
 argument_list|)
 block|;
 name|Second
@@ -1106,6 +1166,8 @@ argument_list|,
 name|MD
 argument_list|,
 name|Range
+argument_list|,
+name|Args
 argument_list|)
 block|;   }
 name|virtual

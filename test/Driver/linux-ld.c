@@ -988,6 +988,70 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Check fedora 18 on arm.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target armv7-unknown-linux-gnueabihf \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/fedora_18_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-FEDORA-18-ARM-HF %s
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../crt1.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../crti.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/crtend.o"
+end_comment
+
+begin_comment
+comment|// CHECK-FEDORA-18-ARM-HF: "{{.*}}/usr/lib/gcc/armv7hl-redhat-linux-gnueabi/4.7.2/../../../crtn.o"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang --analyze %s -o /dev/null -Xclang -analyzer-checker=debug.ConfigDumper> %t 2>&1
+comment|// RUN: %clang -target x86_64-apple-darwin10 --analyze %s -o /dev/null -Xclang -analyzer-checker=debug.ConfigDumper> %t 2>&1
 end_comment
 
 begin_comment
@@ -54,6 +54,10 @@ comment|// CHECK-NEXT: ipa-always-inline-size = 3
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: leak-diagnostics-reference-allocation = false
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: max-inlinable-size = 50
 end_comment
 
@@ -70,11 +74,15 @@ comment|// CHECK-NEXT: mode = deep
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: region-store-small-struct-limit = 2
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: [stats]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: num-entries = 10
+comment|// CHECK-NEXT: num-entries = 12
 end_comment
 
 end_unit

@@ -854,6 +854,23 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// The inheritance model to use for member pointers of a given CXXRecordDecl.
+block|enum
+name|MSInheritanceModel
+block|{
+name|MSIM_Single
+block|,
+name|MSIM_SinglePolymorphic
+block|,
+name|MSIM_Multiple
+block|,
+name|MSIM_MultiplePolymorphic
+block|,
+name|MSIM_Virtual
+block|,
+name|MSIM_Unspecified
+block|}
+block|;
 comment|/// CXXRecordDecl - Represents a C++ struct/union/class.
 comment|/// FIXME: This class will disappear once we've properly taught RecordDecl
 comment|/// to deal with C++-specific things.
@@ -6971,8 +6988,6 @@ name|MemberOrEllipsisLocation
 decl_stmt|;
 comment|/// \brief The argument used to initialize the base or member, which may
 comment|/// end up constructing an object (when multiple arguments are involved).
-comment|/// If 0, this is a field initializer, and the in-class member initializer
-comment|/// will be used.
 name|Stmt
 modifier|*
 name|Init
@@ -7258,8 +7273,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
+name|isa
+operator|<
+name|CXXDefaultInitExpr
+operator|>
+operator|(
 name|Init
+operator|)
 return|;
 block|}
 comment|/// isDelegatingInitializer - Returns true when this initializer is creating
@@ -7865,11 +7885,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Get the initializer. This is 0 if this is an in-class initializer
-end_comment
-
-begin_comment
-comment|/// for a non-static data member which has not yet been parsed.
+comment|/// \brief Get the initializer.
 end_comment
 
 begin_expr_stmt
@@ -7879,21 +7895,6 @@ name|getInit
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|Init
-condition|)
-return|return
-name|getAnyMember
-argument_list|()
-operator|->
-name|getInClassInitializer
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|static_cast
 operator|<
@@ -7904,14 +7905,11 @@ operator|(
 name|Init
 operator|)
 return|;
-end_return
-
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+block|}
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// CXXConstructorDecl - Represents a C++ constructor within a
 end_comment
 
@@ -9404,8 +9402,19 @@ enum|;
 name|private
 label|:
 comment|/// Language - The language for this linkage specification.
-name|LanguageIDs
+name|unsigned
 name|Language
+range|:
+literal|3
+decl_stmt|;
+comment|/// True if this linkage spec has brances. This is needed so that hasBraces()
+comment|/// returns the correct result while the linkage spec body is being parsed.
+comment|/// Once RBraceLoc has been set this is not used, so it doesn't need to be
+comment|/// serialized.
+name|unsigned
+name|HasBraces
+range|:
+literal|1
 decl_stmt|;
 comment|/// ExternLoc - The source location for the extern keyword.
 name|SourceLocation
@@ -9425,7 +9434,7 @@ argument|SourceLocation LangLoc
 argument_list|,
 argument|LanguageIDs lang
 argument_list|,
-argument|SourceLocation RBLoc
+argument|bool HasBraces
 argument_list|)
 block|:
 name|Decl
@@ -9447,6 +9456,11 @@ argument_list|(
 name|lang
 argument_list|)
 operator|,
+name|HasBraces
+argument_list|(
+name|HasBraces
+argument_list|)
+operator|,
 name|ExternLoc
 argument_list|(
 name|ExternLoc
@@ -9454,7 +9468,7 @@ argument_list|)
 operator|,
 name|RBraceLoc
 argument_list|(
-argument|RBLoc
+argument|SourceLocation()
 argument_list|)
 block|{ }
 name|public
@@ -9474,7 +9488,7 @@ argument|SourceLocation LangLoc
 argument_list|,
 argument|LanguageIDs Lang
 argument_list|,
-argument|SourceLocation RBraceLoc = SourceLocation()
+argument|bool HasBraces
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -9497,7 +9511,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|LanguageIDs
+argument_list|(
 name|Language
+argument_list|)
 return|;
 block|}
 comment|/// \brief Set the language specified by this linkage specification.
@@ -9520,11 +9537,19 @@ name|hasBraces
 argument_list|()
 specifier|const
 block|{
-return|return
+name|assert
+argument_list|(
+operator|!
 name|RBraceLoc
 operator|.
 name|isValid
 argument_list|()
+operator|||
+name|HasBraces
+argument_list|)
+block|;
+return|return
+name|HasBraces
 return|;
 block|}
 name|SourceLocation
@@ -9567,6 +9592,13 @@ block|{
 name|RBraceLoc
 operator|=
 name|L
+expr_stmt|;
+name|HasBraces
+operator|=
+name|RBraceLoc
+operator|.
+name|isValid
+argument_list|()
 expr_stmt|;
 block|}
 name|SourceLocation
@@ -12080,6 +12112,167 @@ return|return
 name|K
 operator|==
 name|StaticAssert
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+block|; }
+block|;
+comment|/// An instance of this class represents the declaration of a property
+comment|/// member.  This is a Microsoft extension to C++, first introduced in
+comment|/// Visual Studio .NET 2003 as a parallel to similar features in C#
+comment|/// and Managed C++.
+comment|///
+comment|/// A property must always be a non-static class member.
+comment|///
+comment|/// A property member superficially resembles a non-static data
+comment|/// member, except preceded by a property attribute:
+comment|///   __declspec(property(get=GetX, put=PutX)) int x;
+comment|/// Either (but not both) of the 'get' and 'put' names may be omitted.
+comment|///
+comment|/// A reference to a property is always an lvalue.  If the lvalue
+comment|/// undergoes lvalue-to-rvalue conversion, then a getter name is
+comment|/// required, and that member is called with no arguments.
+comment|/// If the lvalue is assigned into, then a setter name is required,
+comment|/// and that member is called with one argument, the value assigned.
+comment|/// Both operations are potentially overloaded.  Compound assignments
+comment|/// are permitted, as are the increment and decrement operators.
+comment|///
+comment|/// The getter and putter methods are permitted to be overloaded,
+comment|/// although their return and parameter types are subject to certain
+comment|/// restrictions according to the type of the property.
+comment|///
+comment|/// A property declared using an incomplete array type may
+comment|/// additionally be subscripted, adding extra parameters to the getter
+comment|/// and putter methods.
+name|class
+name|MSPropertyDecl
+operator|:
+name|public
+name|DeclaratorDecl
+block|{
+name|IdentifierInfo
+operator|*
+name|GetterId
+block|,
+operator|*
+name|SetterId
+block|;
+name|public
+operator|:
+name|MSPropertyDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName N
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|SourceLocation StartL
+argument_list|,
+argument|IdentifierInfo *Getter
+argument_list|,
+argument|IdentifierInfo *Setter
+argument_list|)
+operator|:
+name|DeclaratorDecl
+argument_list|(
+name|MSProperty
+argument_list|,
+name|DC
+argument_list|,
+name|L
+argument_list|,
+name|N
+argument_list|,
+name|T
+argument_list|,
+name|TInfo
+argument_list|,
+name|StartL
+argument_list|)
+block|,
+name|GetterId
+argument_list|(
+name|Getter
+argument_list|)
+block|,
+name|SetterId
+argument_list|(
+argument|Setter
+argument_list|)
+block|{}
+specifier|static
+name|MSPropertyDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MSProperty
+return|;
+block|}
+name|bool
+name|hasGetter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterId
+operator|!=
+name|NULL
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getGetterId
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterId
+return|;
+block|}
+name|bool
+name|hasSetter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterId
+operator|!=
+name|NULL
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getSetterId
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterId
 return|;
 block|}
 name|friend

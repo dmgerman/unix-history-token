@@ -75,6 +75,9 @@ name|class
 name|FileEntry
 decl_stmt|;
 name|class
+name|MSPropertyDecl
+decl_stmt|;
+name|class
 name|ObjCPropertyDecl
 decl_stmt|;
 name|class
@@ -1589,6 +1592,15 @@ name|handleField
 argument_list|(
 specifier|const
 name|FieldDecl
+operator|*
+name|D
+argument_list|)
+block|;
+name|bool
+name|handleMSProperty
+argument_list|(
+specifier|const
+name|MSPropertyDecl
 operator|*
 name|D
 argument_list|)

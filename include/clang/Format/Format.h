@@ -135,10 +135,6 @@ comment|/// instead of \c A<A<int>> for LS_Cpp03.
 name|LanguageStandard
 name|Standard
 decl_stmt|;
-comment|/// \brief If \c true, analyze the formatted file for C++03 compatibility.
-name|bool
-name|DeriveBackwardsCompatibility
-decl_stmt|;
 comment|/// \brief Indent case labels one level from the switch statement.
 comment|///
 comment|/// When false, use the same indentation level as for the switch statement.
@@ -179,6 +175,11 @@ comment|/// Foo<Protocol> instead of Foo<Protocol>.
 name|bool
 name|ObjCSpaceBeforeProtocolList
 decl_stmt|;
+comment|/// \brief If \c true, aligns escaped newlines as far left as possible.
+comment|/// Otherwise puts them into the right-most column.
+name|bool
+name|AlignEscapedNewlinesLeft
+decl_stmt|;
 block|}
 struct|;
 comment|/// \brief Returns a format style complying with the LLVM coding standards:
@@ -197,6 +198,12 @@ comment|/// \brief Returns a format style complying with Chromium's style guide:
 comment|/// http://www.chromium.org/developers/coding-style.
 name|FormatStyle
 name|getChromiumStyle
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns a format style complying with Mozilla's style guide:
+comment|/// https://developer.mozilla.org/en-US/docs/Developer_Guide/Coding_Style.
+name|FormatStyle
+name|getMozillaStyle
 parameter_list|()
 function_decl|;
 comment|/// \brief Reformats the given \p Ranges in the token stream coming out of

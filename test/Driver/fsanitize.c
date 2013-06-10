@@ -272,7 +272,11 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=thread %s -### 2>&1 |
 end_comment
 
 begin_comment
-comment|// CHECK-TSAN-NO-PIE: invalid argument '-fsanitize=thread' only allowed with '-pie'
+comment|// CHECK-TSAN-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-NO-PIE: "-pie"
 end_comment
 
 begin_comment
@@ -280,7 +284,11 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=memory %s -### 2>&1 |
 end_comment
 
 begin_comment
-comment|// CHECK-MSAN-NO-PIE: invalid argument '-fsanitize=memory' only allowed with '-pie'
+comment|// CHECK-MSAN-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-NO-PIE: "-pie"
 end_comment
 
 begin_comment
@@ -288,7 +296,11 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-ad
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-ZERO-BASE-SHADOW-NO-PIE: invalid argument '-fsanitize-address-zero-base-shadow' only allowed with '-pie'
+comment|// CHECK-ASAN-ZERO-BASE-SHADOW-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ZERO-BASE-SHADOW-NO-PIE: "-pie"
 end_comment
 
 begin_comment
@@ -296,7 +308,11 @@ comment|// RUN: %clang -target x86_64-linux-gnu -fsanitize=address -fsanitize-ad
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-ZERO-BASE-SHADOW-CANCEL-NOT: '-fsanitize-address-zero-base-shadow' only allowed with '-pie'
+comment|// CHECK-ASAN-ZERO-BASE-SHADOW-CANCEL-NOT: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-ZERO-BASE-SHADOW-CANCEL-NOT: "-pie"
 end_comment
 
 begin_comment
@@ -304,7 +320,27 @@ comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=address %s -### 
 end_comment
 
 begin_comment
-comment|// CHECK-ANDROID-ASAN-NO-PIE: AddressSanitizer on Android requires '-pie'
+comment|// CHECK-ANDROID-ASAN-NO-PIE: "-mrelocation-model" "pic" "-pic-level" "2" "-pie-level" "2"
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-ASAN-NO-PIE: "-pie"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=address -fsanitize-address-zero-base-shadow %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ANDROID-ASAN-ZERO-BASE
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-ASAN-ZERO-BASE-NOT: argument unused during compilation
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-androideabi -fsanitize=address -fno-sanitize-address-zero-base-shadow %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ANDROID-ASAN-NO-ZERO-BASE
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-ASAN-NO-ZERO-BASE: '-fno-sanitize-address-zero-base-shadow' not allowed with '-fsanitize=address'
 end_comment
 
 begin_comment

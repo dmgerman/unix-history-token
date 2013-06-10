@@ -255,6 +255,9 @@ name|class
 name|TargetInfo
 decl_stmt|;
 name|class
+name|Token
+decl_stmt|;
+name|class
 name|VersionTuple
 decl_stmt|;
 name|class
@@ -1660,6 +1663,20 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+comment|/// \brief Emit a token.
+name|void
+name|AddToken
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|Tok
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a source location.
 name|void
 name|AddSourceLocation

@@ -8,7 +8,15 @@ comment|// RUN: %clang -S -o - %s -include %t.h -save-temps -### 2> %t.log
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-include' %t.log | count 1
+comment|// RUN: FileCheck %s< %t.log
+end_comment
+
+begin_comment
+comment|// CHECK: "-include
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: "-include
 end_comment
 
 end_unit

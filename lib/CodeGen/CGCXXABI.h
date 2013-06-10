@@ -370,6 +370,53 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Returns true if the given record type should be returned indirectly.
+name|virtual
+name|bool
+name|isReturnTypeIndirect
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// Specify how one should pass an argument of a record type.
+enum|enum
+name|RecordArgABI
+block|{
+comment|/// Pass it using the normal C aggregate rules for the ABI, potentially
+comment|/// introducing extra copies and passing some or all of it in registers.
+name|RAA_Default
+init|=
+literal|0
+block|,
+comment|/// Pass it on the stack using its defined layout.  The argument must be
+comment|/// evaluated directly into the correct stack position in the arguments area,
+comment|/// and the call machinery must not move it or introduce extra copies.
+name|RAA_DirectInMemory
+block|,
+comment|/// Pass it as a pointer to temporary memory.
+name|RAA_Indirect
+block|}
+enum|;
+comment|/// Returns how an argument of the given record type should be passed.
+name|virtual
+name|RecordArgABI
+name|getRecordArgABI
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// Find the LLVM type used to represent the given member pointer
 comment|/// type.
 name|virtual
@@ -1033,6 +1080,11 @@ name|CodeGenFunction
 operator|&
 name|CGF
 argument_list|,
+specifier|const
+name|VarDecl
+operator|&
+name|D
+argument_list|,
 name|llvm
 operator|::
 name|Constant
@@ -1046,6 +1098,62 @@ operator|*
 name|addr
 argument_list|)
 decl_stmt|;
+comment|/*************************** thread_local initialization ********************/
+comment|/// Emits ABI-required functions necessary to initialize thread_local
+comment|/// variables in this translation unit.
+comment|///
+comment|/// \param Decls The thread_local declarations in this translation unit.
+comment|/// \param InitFunc If this translation unit contains any non-constant
+comment|///        initialization or non-trivial destruction for thread_local
+comment|///        variables, a function to perform the initialization. Otherwise, 0.
+name|virtual
+name|void
+name|EmitThreadLocalInitFuncs
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+operator|>
+expr|>
+name|Decls
+argument_list|,
+name|llvm
+operator|::
+name|Function
+operator|*
+name|InitFunc
+argument_list|)
+decl_stmt|;
+comment|/// Emit a reference to a non-local thread_local variable (including
+comment|/// triggering the initialization of all thread_local variables in its
+comment|/// translation unit).
+name|virtual
+name|LValue
+name|EmitThreadLocalDeclRefExpr
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|DeclRefExpr
+modifier|*
+name|DRE
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|// Create an instance of a C++ ABI class:

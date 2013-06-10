@@ -8,14 +8,6 @@ comment|// CHECK-PWD: {{"-fdebug-compilation-dir" ".*Driver.*"}}
 end_comment
 
 begin_comment
-comment|// RUN: env PWD=/foo %clang -### -g %s -c 2>&1 | FileCheck -check-prefix=CHECK-FOO %s
-end_comment
-
-begin_comment
-comment|// CHECK-FOO: {{"-fdebug-compilation-dir" ".*foo"}}
-end_comment
-
-begin_comment
 comment|// "PWD=/foo gcc" wouldn't necessarily work. You would need to pick a different
 end_comment
 

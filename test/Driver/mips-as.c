@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: mips-registered-target
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Check passing options to the assembler for MIPS targets.
 end_comment
 
@@ -297,6 +289,182 @@ end_comment
 
 begin_comment
 comment|// MIPS-ALIAS-64R2: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mno-mips16 -mips16 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-16 %s
+end_comment
+
+begin_comment
+comment|// MIPS-16: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mips16"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mips16 -mno-mips16 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-N16 %s
+end_comment
+
+begin_comment
+comment|// MIPS-N16: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MIPS-N16-NOT: "-mips16"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mno-micromips -mmicromips -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-MICRO %s
+end_comment
+
+begin_comment
+comment|// MIPS-MICRO: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mmicromips"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mmicromips -mno-micromips -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-NMICRO %s
+end_comment
+
+begin_comment
+comment|// MIPS-NMICRO: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MIPS-NMICRO-NOT: "-mmicromips"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mno-dsp -mdsp -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-DSP %s
+end_comment
+
+begin_comment
+comment|// MIPS-DSP: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mdsp"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mdsp -mno-dsp -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-NDSP %s
+end_comment
+
+begin_comment
+comment|// MIPS-NDSP: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MIPS-NDSP-NOT: "-mdsp"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mno-dspr2 -mdspr2 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-DSPR2 %s
+end_comment
+
+begin_comment
+comment|// MIPS-DSPR2: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB" "-mdspr2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mdspr2 -mno-dspr2 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-NDSPR2 %s
+end_comment
+
+begin_comment
+comment|// MIPS-NDSPR2: as{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// MIPS-NDSPR2-NOT: "-mdspr2"
 end_comment
 
 end_unit

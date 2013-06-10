@@ -31,10 +31,6 @@ comment|// CHECK: MutuallyRecursive2.h:3:9: fatal error: cyclic dependency in mo
 end_comment
 
 begin_comment
-comment|// CHECK: While building module 'MutuallyRecursive1' imported from
-end_comment
-
-begin_comment
 comment|// CHECK: MutuallyRecursive1.h:2:9: fatal error: could not build module 'MutuallyRecursive2'
 end_comment
 
@@ -43,7 +39,7 @@ comment|// CHECK: cycles.c:4:9: fatal error: could not build module 'MutuallyRec
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: error:
+comment|// CHECK: 3 errors generated
 end_comment
 
 end_unit

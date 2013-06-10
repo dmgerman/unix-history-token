@@ -30,7 +30,7 @@ comment|// CHECK: # 1 "{{.*}}pragma_sysheader.h" 1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: # 1 "{{.*}}pragma_sysheader.h" 3
+comment|// CHECK-NEXT: # 2 "{{.*}}pragma_sysheader.h" 3
 end_comment
 
 begin_comment

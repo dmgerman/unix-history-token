@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/CapturedStmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/IdentifierTable.h"
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -134,6 +146,9 @@ name|class
 name|Attr
 decl_stmt|;
 name|class
+name|CapturedDecl
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -156,6 +171,9 @@ name|PrintingPolicy
 struct_decl|;
 name|class
 name|QualType
+decl_stmt|;
+name|class
+name|RecordDecl
 decl_stmt|;
 name|class
 name|SourceManager
@@ -6907,11 +6925,6 @@ block|;
 name|unsigned
 name|NumClobbers
 block|;
-name|IdentifierInfo
-operator|*
-operator|*
-name|Names
-block|;
 name|Stmt
 operator|*
 operator|*
@@ -6969,6 +6982,10 @@ argument_list|(
 argument|numclobbers
 argument_list|)
 block|{ }
+name|friend
+name|class
+name|ASTStmtReader
+block|;
 name|public
 operator|:
 comment|/// \brief Build an empty inline-assembly statement.
@@ -6985,11 +7002,6 @@ argument_list|(
 name|SC
 argument_list|,
 name|Empty
-argument_list|)
-block|,
-name|Names
-argument_list|(
-literal|0
 argument_list|)
 block|,
 name|Exprs
@@ -7097,50 +7109,6 @@ return|return
 name|NumOutputs
 return|;
 block|}
-name|IdentifierInfo
-operator|*
-name|getOutputIdentifier
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Names
-index|[
-name|i
-index|]
-return|;
-block|}
-name|StringRef
-name|getOutputName
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|IdentifierInfo
-modifier|*
-name|II
-init|=
-name|getOutputIdentifier
-argument_list|(
-name|i
-argument_list|)
-condition|)
-return|return
-name|II
-operator|->
-name|getName
-argument_list|()
-return|;
-return|return
-name|StringRef
-argument_list|()
-return|;
-block|}
 comment|/// getOutputConstraint - Return the constraint string for the specified
 comment|/// output operand.  All output constraints are known to be non-empty (either
 comment|/// '=' or '+').
@@ -7197,52 +7165,6 @@ specifier|const
 block|{
 return|return
 name|NumInputs
-return|;
-block|}
-name|IdentifierInfo
-operator|*
-name|getInputIdentifier
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Names
-index|[
-name|i
-operator|+
-name|NumOutputs
-index|]
-return|;
-block|}
-name|StringRef
-name|getInputName
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|IdentifierInfo
-modifier|*
-name|II
-init|=
-name|getInputIdentifier
-argument_list|(
-name|i
-argument_list|)
-condition|)
-return|return
-name|II
-operator|->
-name|getName
-argument_list|()
-return|;
-return|return
-name|StringRef
-argument_list|()
 return|;
 block|}
 comment|/// getInputConstraint - Return the specified input constraint.  Unlike output
@@ -7490,6 +7412,15 @@ operator|*
 operator|*
 name|Clobbers
 block|;
+name|IdentifierInfo
+operator|*
+operator|*
+name|Names
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
 name|public
 operator|:
 name|GCCAsmStmt
@@ -7541,6 +7472,11 @@ literal|0
 argument_list|)
 block|,
 name|Clobbers
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Names
 argument_list|(
 literal|0
 argument_list|)
@@ -7777,6 +7713,50 @@ argument_list|)
 specifier|const
 block|;
 comment|//===--- Output operands ---===//
+name|IdentifierInfo
+operator|*
+name|getOutputIdentifier
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Names
+index|[
+name|i
+index|]
+return|;
+block|}
+name|StringRef
+name|getOutputName
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|IdentifierInfo
+modifier|*
+name|II
+init|=
+name|getOutputIdentifier
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+name|II
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+name|StringRef
+argument_list|()
+return|;
+block|}
 name|StringRef
 name|getOutputConstraint
 argument_list|(
@@ -7847,6 +7827,52 @@ argument_list|)
 return|;
 block|}
 comment|//===--- Input operands ---===//
+name|IdentifierInfo
+operator|*
+name|getInputIdentifier
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Names
+index|[
+name|i
+operator|+
+name|NumOutputs
+index|]
+return|;
+block|}
+name|StringRef
+name|getInputName
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|IdentifierInfo
+modifier|*
+name|II
+init|=
+name|getInputIdentifier
+argument_list|(
+name|i
+argument_list|)
+condition|)
+return|return
+name|II
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+name|StringRef
+argument_list|()
+return|;
+block|}
 name|StringRef
 name|getInputConstraint
 argument_list|(
@@ -7928,6 +7954,8 @@ name|i
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
 name|void
 name|setOutputsAndInputsAndClobbers
 argument_list|(
@@ -7948,6 +7976,8 @@ argument_list|,
 argument|unsigned NumClobbers
 argument_list|)
 block|;
+name|public
+operator|:
 comment|//===--- Other ---===//
 comment|/// getNamedOperand - Given a symbolic operand reference like %[foo],
 comment|/// translate this into a numeric value needed to reference the same operand.
@@ -8047,9 +8077,7 @@ name|LBraceLoc
 block|,
 name|EndLoc
 block|;
-name|std
-operator|::
-name|string
+name|StringRef
 name|AsmStr
 block|;
 name|unsigned
@@ -8066,6 +8094,10 @@ block|;
 name|StringRef
 operator|*
 name|Clobbers
+block|;
+name|friend
+name|class
+name|ASTStmtReader
 block|;
 name|public
 operator|:
@@ -8086,8 +8118,6 @@ argument_list|,
 argument|unsigned numoutputs
 argument_list|,
 argument|unsigned numinputs
-argument_list|,
-argument|ArrayRef<IdentifierInfo*> names
 argument_list|,
 argument|ArrayRef<StringRef> constraints
 argument_list|,
@@ -8202,45 +8232,15 @@ name|AsmToks
 return|;
 block|}
 comment|//===--- Asm String Analysis ---===//
-specifier|const
-name|std
-operator|::
-name|string
-operator|*
+name|StringRef
 name|getAsmString
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
 name|AsmStr
 return|;
 block|}
-name|std
-operator|::
-name|string
-operator|*
-name|getAsmString
-argument_list|()
-block|{
-return|return
-operator|&
-name|AsmStr
-return|;
-block|}
-name|void
-name|setAsmString
-argument_list|(
-argument|StringRef&E
-argument_list|)
-block|{
-name|AsmStr
-operator|=
-name|E
-operator|.
-name|str
-argument_list|()
-block|; }
 comment|/// Assemble final IR asm string.
 name|std
 operator|::
@@ -8259,6 +8259,13 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|NumOutputs
+argument_list|)
+block|;
 return|return
 name|Constraints
 index|[
@@ -8306,6 +8313,13 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|NumInputs
+argument_list|)
+block|;
 return|return
 name|Constraints
 index|[
@@ -8356,6 +8370,80 @@ argument_list|)
 return|;
 block|}
 comment|//===--- Other ---===//
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|getAllConstraints
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+operator|(
+name|Constraints
+expr|,
+name|NumInputs
+operator|+
+name|NumOutputs
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+name|getClobbers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|StringRef
+operator|>
+operator|(
+name|Clobbers
+expr|,
+name|NumClobbers
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getAllExprs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|Exprs
+operator|)
+expr|,
+name|NumInputs
+operator|+
+name|NumOutputs
+operator|)
+return|;
+block|}
 name|StringRef
 name|getClobber
 argument_list|(
@@ -8364,12 +8452,33 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|Clobbers
+name|getClobbers
+argument_list|()
 index|[
 name|i
 index|]
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|initialize
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|StringRef AsmString
+argument_list|,
+argument|ArrayRef<Token> AsmToks
+argument_list|,
+argument|ArrayRef<StringRef> Constraints
+argument_list|,
+argument|ArrayRef<Expr*> Exprs
+argument_list|,
+argument|ArrayRef<StringRef> Clobbers
+argument_list|)
+block|;
+name|public
+operator|:
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -8974,6 +9083,643 @@ name|SEHTryStmtClass
 return|;
 block|}
 expr|}
+block|;
+comment|/// \brief This captures a statement into a function. For example, the following
+comment|/// pragma annotated compound statement can be represented as a CapturedStmt,
+comment|/// and this compound statement is the body of an anonymous outlined function.
+comment|/// @code
+comment|/// #pragma omp parallel
+comment|/// {
+comment|///   compute();
+comment|/// }
+comment|/// @endcode
+name|class
+name|CapturedStmt
+operator|:
+name|public
+name|Stmt
+block|{
+name|public
+operator|:
+comment|/// \brief The different capture forms: by 'this' or by reference, etc.
+expr|enum
+name|VariableCaptureKind
+block|{
+name|VCK_This
+block|,
+name|VCK_ByRef
+block|}
+block|;
+comment|/// \brief Describes the capture of either a variable or 'this'.
+name|class
+name|Capture
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|VarDecl
+operator|*
+block|,
+literal|1
+block|,
+name|VariableCaptureKind
+operator|>
+name|VarAndKind
+block|;
+name|SourceLocation
+name|Loc
+block|;
+name|public
+operator|:
+comment|/// \brief Create a new capture.
+comment|///
+comment|/// \param Loc The source location associated with this capture.
+comment|///
+comment|/// \param Kind The kind of capture (this, ByRef, ...).
+comment|///
+comment|/// \param Var The variable being captured, or null if capturing this.
+comment|///
+name|Capture
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|VariableCaptureKind Kind
+argument_list|,
+argument|VarDecl *Var =
+literal|0
+argument_list|)
+operator|:
+name|VarAndKind
+argument_list|(
+name|Var
+argument_list|,
+name|Kind
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|Kind
+condition|)
+block|{
+case|case
+name|VCK_This
+case|:
+name|assert
+argument_list|(
+name|Var
+operator|==
+literal|0
+operator|&&
+literal|"'this' capture cannot have a variable!"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VCK_ByRef
+case|:
+name|assert
+argument_list|(
+name|Var
+operator|&&
+literal|"capturing by reference must have a variable!"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/// \brief Determine the kind of capture.
+name|VariableCaptureKind
+name|getCaptureKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarAndKind
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the source location at which the variable or 'this' was
+comment|/// first used.
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
+comment|/// \brief Determine whether this capture handles the C++ 'this' pointer.
+name|bool
+name|capturesThis
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCaptureKind
+argument_list|()
+operator|==
+name|VCK_This
+return|;
+block|}
+comment|/// \brief Determine whether this capture handles a variable.
+name|bool
+name|capturesVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCaptureKind
+argument_list|()
+operator|!=
+name|VCK_This
+return|;
+block|}
+comment|/// \brief Retrieve the declaration of the variable being captured.
+comment|///
+comment|/// This operation is only valid if this capture does not capture 'this'.
+name|VarDecl
+operator|*
+name|getCapturedVar
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|capturesThis
+argument_list|()
+operator|&&
+literal|"No variable available for 'this' capture"
+argument_list|)
+block|;
+return|return
+name|VarAndKind
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|friend
+name|class
+name|ASTStmtReader
+block|;   }
+block|;
+name|private
+operator|:
+comment|/// \brief The number of variable captured, including 'this'.
+name|unsigned
+name|NumCaptures
+block|;
+comment|/// \brief The pointer part is the implicit the outlined function and the
+comment|/// int part is the captured region kind, 'CR_Default' etc.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|CapturedDecl
+operator|*
+block|,
+literal|1
+block|,
+name|CapturedRegionKind
+operator|>
+name|CapDeclAndKind
+block|;
+comment|/// \brief The record for captured variables, a RecordDecl or CXXRecordDecl.
+name|RecordDecl
+operator|*
+name|TheRecordDecl
+block|;
+comment|/// \brief Construct a captured statement.
+name|CapturedStmt
+argument_list|(
+argument|Stmt *S
+argument_list|,
+argument|CapturedRegionKind Kind
+argument_list|,
+argument|ArrayRef<Capture> Captures
+argument_list|,
+argument|ArrayRef<Expr *> CaptureInits
+argument_list|,
+argument|CapturedDecl *CD
+argument_list|,
+argument|RecordDecl *RD
+argument_list|)
+block|;
+comment|/// \brief Construct an empty captured statement.
+name|CapturedStmt
+argument_list|(
+argument|EmptyShell Empty
+argument_list|,
+argument|unsigned NumCaptures
+argument_list|)
+block|;
+name|Stmt
+operator|*
+operator|*
+name|getStoredStmts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|CapturedStmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|Capture
+operator|*
+name|getStoredCaptures
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setCapturedStmt
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+name|getStoredStmts
+argument_list|()
+index|[
+name|NumCaptures
+index|]
+operator|=
+name|S
+block|; }
+name|public
+operator|:
+specifier|static
+name|CapturedStmt
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|Stmt *S
+argument_list|,
+argument|CapturedRegionKind Kind
+argument_list|,
+argument|ArrayRef<Capture> Captures
+argument_list|,
+argument|ArrayRef<Expr *> CaptureInits
+argument_list|,
+argument|CapturedDecl *CD
+argument_list|,
+argument|RecordDecl *RD
+argument_list|)
+block|;
+specifier|static
+name|CapturedStmt
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned NumCaptures
+argument_list|)
+block|;
+comment|/// \brief Retrieve the statement being captured.
+name|Stmt
+operator|*
+name|getCapturedStmt
+argument_list|()
+block|{
+return|return
+name|getStoredStmts
+argument_list|()
+index|[
+name|NumCaptures
+index|]
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+name|getCapturedStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CapturedStmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCapturedStmt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the outlined function declaration.
+name|CapturedDecl
+operator|*
+name|getCapturedDecl
+argument_list|()
+block|{
+return|return
+name|CapDeclAndKind
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+specifier|const
+name|CapturedDecl
+operator|*
+name|getCapturedDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|CapturedStmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCapturedDecl
+argument_list|()
+return|;
+block|}
+comment|/// \brief Set the outlined function declaration.
+name|void
+name|setCapturedDecl
+argument_list|(
+argument|CapturedDecl *D
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|D
+operator|&&
+literal|"null CapturedDecl"
+argument_list|)
+block|;
+name|CapDeclAndKind
+operator|.
+name|setPointer
+argument_list|(
+name|D
+argument_list|)
+block|;   }
+comment|/// \brief Retrieve the captured region kind.
+name|CapturedRegionKind
+name|getCapturedRegionKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CapDeclAndKind
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+comment|/// \brief Set the captured region kind.
+name|void
+name|setCapturedRegionKind
+argument_list|(
+argument|CapturedRegionKind Kind
+argument_list|)
+block|{
+name|CapDeclAndKind
+operator|.
+name|setInt
+argument_list|(
+name|Kind
+argument_list|)
+block|;   }
+comment|/// \brief Retrieve the record declaration for captured variables.
+specifier|const
+name|RecordDecl
+operator|*
+name|getCapturedRecordDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheRecordDecl
+return|;
+block|}
+comment|/// \brief Set the record declaration for captured variables.
+name|void
+name|setCapturedRecordDecl
+argument_list|(
+argument|RecordDecl *D
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|D
+operator|&&
+literal|"null RecordDecl"
+argument_list|)
+block|;
+name|TheRecordDecl
+operator|=
+name|D
+block|;   }
+comment|/// \brief True if this variable has been captured.
+name|bool
+name|capturesVariable
+argument_list|(
+argument|const VarDecl *Var
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief An iterator that walks over the captures.
+typedef|typedef
+name|Capture
+modifier|*
+name|capture_iterator
+typedef|;
+typedef|typedef
+specifier|const
+name|Capture
+modifier|*
+name|const_capture_iterator
+typedef|;
+comment|/// \brief Retrieve an iterator pointing to the first capture.
+name|capture_iterator
+name|capture_begin
+argument_list|()
+block|{
+return|return
+name|getStoredCaptures
+argument_list|()
+return|;
+block|}
+name|const_capture_iterator
+name|capture_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStoredCaptures
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve an iterator pointing past the end of the sequence of
+comment|/// captures.
+name|capture_iterator
+name|capture_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStoredCaptures
+argument_list|()
+operator|+
+name|NumCaptures
+return|;
+block|}
+comment|/// \brief Retrieve the number of captures, including 'this'.
+name|unsigned
+name|capture_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumCaptures
+return|;
+block|}
+comment|/// \brief Iterator that walks over the capture initialization arguments.
+typedef|typedef
+name|Expr
+modifier|*
+modifier|*
+name|capture_init_iterator
+typedef|;
+comment|/// \brief Retrieve the first initialization argument.
+name|capture_init_iterator
+name|capture_init_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|getStoredStmts
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the iterator pointing one past the last initialization
+comment|/// argument.
+name|capture_init_iterator
+name|capture_init_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|capture_init_begin
+argument_list|()
+operator|+
+name|NumCaptures
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getCapturedStmt
+argument_list|()
+operator|->
+name|getLocStart
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getCapturedStmt
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getCapturedStmt
+argument_list|()
+operator|->
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|CapturedStmtClass
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|; }
 block|;  }
 end_decl_stmt
 

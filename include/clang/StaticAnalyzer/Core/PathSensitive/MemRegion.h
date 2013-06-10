@@ -145,6 +145,9 @@ name|namespace
 name|ento
 block|{
 name|class
+name|CodeTextRegion
+decl_stmt|;
+name|class
 name|MemRegionManager
 decl_stmt|;
 name|class
@@ -154,10 +157,10 @@ name|class
 name|SValBuilder
 decl_stmt|;
 name|class
-name|VarRegion
+name|SymbolicRegion
 decl_stmt|;
 name|class
-name|CodeTextRegion
+name|VarRegion
 decl_stmt|;
 comment|/// Represent a region's offset within the top level base region.
 name|class
@@ -462,6 +465,15 @@ argument|bool StripBaseCasts = true
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief If this is a symbolic region, returns the region. Otherwise,
+comment|/// goes up the base chain looking for the first symbolic base region.
+specifier|const
+name|SymbolicRegion
+operator|*
+name|getSymbolicBase
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|hasGlobalsOrParametersStorage
 argument_list|()
@@ -520,6 +532,26 @@ comment|/// \brief Print the region for use in diagnostics.
 name|virtual
 name|void
 name|printPretty
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns true if this region's textual representation can be used
+comment|/// as part of a larger expression.
+name|virtual
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Print the region as expression.
+comment|///
+comment|/// When this region represents a subexpression, the method is for printing
+comment|/// an expression containing it.
+name|virtual
+name|void
+name|printPrettyAsExpr
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -3377,12 +3409,12 @@ name|VarRegionKind
 return|;
 block|}
 name|bool
-name|canPrintPretty
+name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
 block|;
 name|void
-name|printPretty
+name|printPrettyAsExpr
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -3632,6 +3664,18 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+block|;
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPrettyAsExpr
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
 block|; }
 block|;
 name|class
@@ -3693,12 +3737,12 @@ argument_list|()
 specifier|const
 block|;
 name|bool
-name|canPrintPretty
+name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
 block|;
 name|void
-name|printPretty
+name|printPrettyAsExpr
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -4208,7 +4252,18 @@ operator|==
 name|CXXBaseObjectRegionKind
 return|;
 block|}
-expr|}
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPrettyAsExpr
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|; }
 block|;
 name|template
 operator|<

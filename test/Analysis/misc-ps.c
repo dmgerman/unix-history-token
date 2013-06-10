@@ -1032,5 +1032,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// PR15684: If a checker generates a sink node after generating a regular node
+end_comment
+
+begin_comment
+comment|// and no state changes between the two, graph trimming would consider the two
+end_comment
+
+begin_comment
+comment|// the same node, forming a loop.
+end_comment
+
+begin_struct
+struct|struct
+name|PR15684
+block|{
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|sinkAfterRegularNode
+parameter_list|(
+name|struct
+name|PR15684
+modifier|*
+name|context
+parameter_list|)
+block|{
+name|int
+name|uninitialized
+decl_stmt|;
+name|context
+operator|->
+name|callback
+argument_list|(
+name|uninitialized
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{uninitialized}}
+block|}
+end_function
+
 end_unit
 

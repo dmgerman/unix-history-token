@@ -496,7 +496,7 @@ name|assert
 argument_list|(
 name|T
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 operator|||
 name|Loc

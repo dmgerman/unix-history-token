@@ -280,9 +280,27 @@ name|errno
 return|;
 comment|// no-warning
 block|}
-return|return
+name|errno
+operator|=
 literal|0
+expr_stmt|;
+name|fscanf
+argument_list|(
+name|stdin
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// errno gets invalidated here.
+return|return
+literal|5
+operator|/
+name|errno
 return|;
+comment|// no-warning
 block|}
 end_function
 

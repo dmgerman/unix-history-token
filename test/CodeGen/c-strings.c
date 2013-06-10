@@ -12,6 +12,10 @@ comment|// shared.
 end_comment
 
 begin_comment
+comment|// CHECK: @align = global i8 [[ALIGN:[0-9]+]]
+end_comment
+
+begin_comment
 comment|// CHECK: @.str = private unnamed_addr constant [6 x i8] c"hello\00"
 end_comment
 
@@ -20,11 +24,11 @@ comment|// CHECK: @f1.x = internal global i8* getelementptr inbounds ([6 x i8]* 
 end_comment
 
 begin_comment
-comment|// CHECK: @f2.x = internal global [6 x i8] c"hello\00", align 1
+comment|// CHECK: @f2.x = internal global [6 x i8] c"hello\00", align [[ALIGN]]
 end_comment
 
 begin_comment
-comment|// CHECK: @f3.x = internal global [8 x i8] c"hello\00\00\00", align 1
+comment|// CHECK: @f3.x = internal global [8 x i8] c"hello\00\00\00", align [[ALIGN]]
 end_comment
 
 begin_comment
@@ -32,8 +36,45 @@ comment|// CHECK: @f4.x = internal global %struct.s { i8* getelementptr inbounds
 end_comment
 
 begin_comment
-comment|// CHECK: @x = global [3 x i8] c"ola", align 1
+comment|// CHECK: @x = global [3 x i8] c"ola", align [[ALIGN]]
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__s390x__
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|align
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|align
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

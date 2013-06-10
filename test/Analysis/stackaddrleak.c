@@ -1,7 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -verify -std=c99 -Dbool=_Bool %s
 end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -verify -x c++ %s
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__INTPTR_TYPE__
+name|intptr_t
+typedef|;
+end_typedef
 
 begin_decl_stmt
 name|char
@@ -79,7 +90,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Address of stack memory allocated by call to alloca() on line 17 is still referred to by the global variable 'p' upon returning to the caller.  This will be a dangling reference}}
+comment|// expected-warning{{Address of stack memory allocated by call to alloca() on line 19 is still referred to by the global variable 'p' upon returning to the caller.  This will be a dangling reference}}
 end_comment
 
 begin_comment
@@ -153,6 +164,92 @@ end_function
 
 begin_comment
 comment|// expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the global variable 'a' upon returning}} expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the global variable 'b' upon returning}}
+end_comment
+
+begin_function
+name|intptr_t
+name|returnAsNonLoc
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+return|return
+operator|(
+name|intptr_t
+operator|)
+operator|&
+name|x
+return|;
+comment|// expected-warning{{Address of stack memory associated with local variable 'x' returned to caller}}
+block|}
+end_function
+
+begin_function
+name|bool
+name|returnAsBool
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+return|return
+operator|&
+name|x
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|assignAsNonLoc
+parameter_list|()
+block|{
+specifier|extern
+name|intptr_t
+name|ip
+decl_stmt|;
+name|int
+name|x
+decl_stmt|;
+name|ip
+operator|=
+operator|(
+name|intptr_t
+operator|)
+operator|&
+name|x
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-warning{{Address of stack memory associated with local variable 'x' is still referred to by the global variable 'ip' upon returning}}
+end_comment
+
+begin_function
+name|void
+name|assignAsBool
+parameter_list|()
+block|{
+specifier|extern
+name|bool
+name|b
+decl_stmt|;
+name|int
+name|x
+decl_stmt|;
+name|b
+operator|=
+operator|&
+name|x
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// no-warning
 end_comment
 
 end_unit

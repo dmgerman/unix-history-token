@@ -3,6 +3,12 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin10 -target-cpu cortex-a8 -fsyntax-only -Wvector-conversion -ffreestanding -verify %s
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INCLUDE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -166,6 +172,60 @@ return|;
 comment|// expected-warning {{incompatible pointer types}}
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|INCLUDE
+end_define
+
+begin_include
+include|#
+directive|include
+file|"arm-neon-types.c"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// Make sure we don't get a warning about using a static function in an
+end_comment
+
+begin_comment
+comment|// extern inline function from a header.
+end_comment
+
+begin_function
+specifier|extern
+specifier|inline
+name|uint8x8_t
+name|test7
+parameter_list|(
+name|uint8x8_t
+name|a
+parameter_list|,
+name|uint8x8_t
+name|b
+parameter_list|)
+block|{
+return|return
+name|vadd_u8
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

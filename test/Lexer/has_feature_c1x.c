@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E -std=c1x %s -o - | FileCheck --check-prefix=CHECK-1X %s
+comment|// RUN: %clang_cc1 -E -triple x86_64-linux-gnu -std=c1x %s -o - | FileCheck --check-prefix=CHECK-1X %s
 end_comment
 
 begin_comment
@@ -169,6 +169,47 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-1X: no_alignas
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|c_thread_local
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_thread_local
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|no_thread_local
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK-1X: has_thread_local
+end_comment
+
+begin_comment
+comment|// CHECK-NO-1X: no_thread_local
 end_comment
 
 begin_if

@@ -1,15 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -analyze -analyzer-checker=core,alpha.core -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -analyze -analyzer-checker=core,alpha.core,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -analyze -analyzer-checker=core,alpha.core -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -analyze -analyzer-checker=core,alpha.core,debug.ExprInspection -analyzer-store=region -verify %s
 end_comment
 
-begin_comment
-comment|// expected-no-diagnostics
-end_comment
+begin_function_decl
+specifier|extern
+name|void
+name|clang_analyzer_eval
+parameter_list|(
+name|_Bool
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// Test if the 'storage' region gets properly initialized after it is cast to
@@ -470,6 +476,151 @@ block|}
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|castsToBool
+parameter_list|()
+block|{
+name|clang_analyzer_eval
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+literal|0U
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{FALSE}}
+name|clang_analyzer_eval
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+literal|1U
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+literal|0x100
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+literal|0x100U
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+literal|0x100
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+specifier|extern
+name|int
+name|symbolicInt
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|symbolicInt
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+name|symbolicInt
+condition|)
+name|clang_analyzer_eval
+argument_list|(
+name|symbolicInt
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+specifier|extern
+name|void
+modifier|*
+name|symbolicPointer
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|symbolicPointer
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
+if|if
+condition|(
+name|symbolicPointer
+condition|)
+name|clang_analyzer_eval
+argument_list|(
+name|symbolicPointer
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|int
+name|localInt
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+operator|&
+name|localInt
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+operator|&
+name|castsToBool
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+name|clang_analyzer_eval
+argument_list|(
+literal|"abc"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{TRUE}}
+specifier|extern
+name|float
+name|globalFloat
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|globalFloat
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{UNKNOWN}}
 block|}
 end_function
 

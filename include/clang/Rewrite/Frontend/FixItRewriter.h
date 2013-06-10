@@ -374,16 +374,6 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
-name|DiagnosticConsumer
-modifier|*
-name|clone
-argument_list|(
-name|DiagnosticsEngine
-operator|&
-name|Diags
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 end_decl_stmt
 

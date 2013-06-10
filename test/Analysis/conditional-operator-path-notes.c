@@ -956,7 +956,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>10</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -976,7 +976,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>10</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -1024,7 +1024,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>10</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -1160,7 +1160,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>10</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -3516,7 +3516,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>44</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -3536,7 +3536,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>44</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -3584,7 +3584,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>44</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -3720,7 +3720,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>44</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment

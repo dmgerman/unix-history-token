@@ -645,28 +645,6 @@ decl_stmt|;
 comment|//==---------------------------------------------------------------------==//
 comment|// Binding and retrieving values to/from the environment and symbolic store.
 comment|//==---------------------------------------------------------------------==//
-comment|/// \brief Create a new state with the specified CompoundLiteral binding.
-comment|/// \param CL the compound literal expression (the binding key)
-comment|/// \param LC the LocationContext of the binding
-comment|/// \param V the value to bind.
-name|ProgramStateRef
-name|bindCompoundLiteral
-argument_list|(
-specifier|const
-name|CompoundLiteralExpr
-operator|*
-name|CL
-argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|LC
-argument_list|,
-name|SVal
-name|V
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Create a new state by binding the value 'V' to the statement 'S' in the
 comment|/// state's environment.
 name|ProgramStateRef
@@ -3086,7 +3064,7 @@ argument_list|)
 operator|||
 name|T
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 condition|)
 return|return

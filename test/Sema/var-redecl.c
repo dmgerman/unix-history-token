@@ -46,6 +46,10 @@ name|outer5
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-note{{previous definition is here}}
+end_comment
+
 begin_function_decl
 name|int
 name|outer6
@@ -95,7 +99,6 @@ specifier|extern
 name|int
 name|outer5
 decl_stmt|;
-comment|// expected-note{{previous definition is here}}
 specifier|extern
 name|int
 name|outer6

@@ -549,5 +549,52 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST8
+end_ifdef
+
+begin_comment
+comment|// RUN: %clang_cc1 -DTEST8 -verify %s 2>&1 | FileCheck -check-prefix=CHECK8 %s
+end_comment
+
+begin_comment
+comment|// expected-warning@nonexistant-file:1 {{ }}
+end_comment
+
+begin_comment
+comment|// expected-error@-1 {{file 'nonexistant-file' could not be located}}
+end_comment
+
+begin_comment
+comment|// expected-warning@verify-directive.h: {{ }}
+end_comment
+
+begin_comment
+comment|// expected-error@-1 {{missing or invalid line number}}
+end_comment
+
+begin_comment
+comment|// expected-warning@verify-directive.h:1 {{diagnostic}}
+end_comment
+
+begin_comment
+comment|//      CHECK8: error: 'warning' diagnostics expected but not seen:
+end_comment
+
+begin_comment
+comment|// CHECK8-NEXT:   File {{.*}}verify-directive.h Line 1 (directive at {{.*}}verify.c:137): diagnostic
+end_comment
+
+begin_comment
+comment|// CHECK8-NEXT: 1 error generated.
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

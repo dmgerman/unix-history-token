@@ -44,6 +44,10 @@ comment|// CHECK-ASAN-LINUX: "-lpthread"
 end_comment
 
 begin_comment
+comment|// CHECK-ASAN-LINUX: "-lrt"
+end_comment
+
+begin_comment
 comment|// CHECK-ASAN-LINUX: "-ldl"
 end_comment
 
@@ -93,6 +97,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-ASAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-LINUX-CXX: "-lrt"
 end_comment
 
 begin_comment
@@ -268,6 +276,10 @@ comment|// CHECK-TSAN-LINUX-CXX: "-lpthread"
 end_comment
 
 begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "-lrt"
+end_comment
+
+begin_comment
 comment|// CHECK-TSAN-LINUX-CXX: "-ldl"
 end_comment
 
@@ -321,6 +333,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-MSAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "-lrt"
 end_comment
 
 begin_comment

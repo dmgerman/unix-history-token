@@ -8,7 +8,7 @@ comment|// CHECK: define i64 @f1_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f1_2(i32 %a0.0, i32 %a0.1)
+comment|// CHECK: define void @f1_2(%struct.s1* byval align 4 %a0)
 end_comment
 
 begin_struct
@@ -163,7 +163,7 @@ comment|// CHECK: define i64 @f5_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f5_2(double %a0.0)
+comment|// CHECK: define void @f5_2(%struct.s5* byval align 4)
 end_comment
 
 begin_struct
@@ -209,7 +209,7 @@ comment|// CHECK: define i32 @f6_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f6_2(float %a0.0)
+comment|// CHECK: define void @f6_2(%struct.s6* byval align 4 %a0)
 end_comment
 
 begin_struct

@@ -207,7 +207,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{potential leak}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'm'}}
 end_comment
 
 begin_function
@@ -247,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{potential leak}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'm'}}
 end_comment
 
 begin_function
@@ -284,7 +284,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{potential leak}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'm'}}
 end_comment
 
 begin_function
@@ -326,7 +326,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{potential leak}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'm'}}
 end_comment
 
 begin_function
@@ -422,7 +422,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{potential leak}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'm'}}
 end_comment
 
 begin_function
@@ -495,7 +495,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{potential leak}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'm'}}
 end_comment
 
 begin_function

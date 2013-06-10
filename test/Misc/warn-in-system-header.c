@@ -10,7 +10,7 @@ file|<warn-in-system-header.h>
 end_include
 
 begin_comment
-comment|// expected-warning {{the cake is a lie}}
+comment|// expected-warning@warn-in-system-header.h:4 {{the cake is a lie}}
 end_comment
 
 end_unit

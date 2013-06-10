@@ -118,6 +118,12 @@ directive|include
 file|"rewrite-includes7.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rewrite-includes8.h"
+end_include
+
 begin_comment
 comment|// ENDCOMPARE
 end_comment
@@ -399,6 +405,46 @@ comment|// CHECK-NEXT: {{^}}# 21 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}#if 0 /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#include "rewrite-includes8.h"{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs[/\\]}}rewrite-includes8.h" 1{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#if (1)/*__has_include_next(<rewrite-includes8.h>)*/{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#elif (0)/*__has_include(<rewrite-includes8.hfail>)*/{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#endif{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#if !(1)/*__has_include("rewrite-includes8.h")*/{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}#endif{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 22 "{{.*}}rewrite-includes.c" 2{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}// ENDCOMPARE{{$}}
 end_comment
 
@@ -608,6 +654,38 @@ end_comment
 
 begin_comment
 comment|// CHECKNL-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#if 0 /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#include "rewrite-includes8.h"{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#if (1)/*__has_include_next(<rewrite-includes8.h>)*/{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#elif (0)/*__has_include(<rewrite-includes8.hfail>)*/{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#endif{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#if !(1)/*__has_include("rewrite-includes8.h")*/{{$}}
+end_comment
+
+begin_comment
+comment|// CHECKNL-NEXT: {{^}}#endif{{$}}
 end_comment
 
 begin_comment

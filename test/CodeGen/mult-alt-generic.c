@@ -32,7 +32,15 @@ comment|// RUN: %clang_cc1 -triple powerpc64 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple s390x %s -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple sparc %s -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple sparcv9 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment

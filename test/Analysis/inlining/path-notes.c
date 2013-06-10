@@ -305,6 +305,146 @@ comment|// expected-note@-4 {{Calling 'usePointer'}}
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|X
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|setFieldToNull
+parameter_list|(
+name|struct
+name|X
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|x
+operator|->
+name|p
+operator|=
+literal|0
+expr_stmt|;
+comment|// expected-note {{Null pointer value stored to field 'p'}}
+block|}
+end_function
+
+begin_function
+name|int
+name|testSetFieldToNull
+parameter_list|(
+name|struct
+name|X
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|setFieldToNull
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-note {{Calling 'setFieldToNull'}}
+comment|// expected-note@-1{{Returning from 'setFieldToNull'}}
+return|return
+operator|*
+name|x
+operator|->
+name|p
+return|;
+comment|// expected-warning@-1 {{Dereference of null pointer (loaded from field 'p')}}
+comment|// expected-note@-2 {{Dereference of null pointer (loaded from field 'p')}}
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|Outer
+block|{
+struct|struct
+name|Inner
+block|{
+name|int
+modifier|*
+name|p
+decl_stmt|;
+block|}
+name|inner
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|test
+parameter_list|(
+name|struct
+name|Outer
+modifier|*
+name|wrapperPtr
+parameter_list|)
+block|{
+name|wrapperPtr
+operator|->
+name|inner
+operator|.
+name|p
+operator|=
+literal|0
+expr_stmt|;
+comment|// expected-note {{Null pointer value stored to field 'p'}}
+operator|*
+name|wrapperPtr
+operator|->
+name|inner
+operator|.
+name|p
+operator|=
+literal|1
+expr_stmt|;
+comment|//expected-warning {{Dereference of null pointer (loaded from field 'p')}}
+comment|// expected-note@-1 {{Dereference of null pointer (loaded from field 'p')}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test4
+parameter_list|(
+name|int
+modifier|*
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+condition|)
+return|return;
+comment|// expected-note {{Taking false branch}}
+comment|// expected-note@-1 {{Assuming pointer value is null}}
+operator|*
+operator|*
+name|p
+operator|=
+literal|1
+expr_stmt|;
+comment|// expected-warning {{Dereference of null pointer}}
+comment|// expected-note@-1 {{Dereference of null pointer}}
+block|}
+end_function
+
 begin_comment
 comment|// CHECK:<key>diagnostics</key>
 end_comment
@@ -842,7 +982,7 @@ comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
@@ -954,7 +1094,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -974,7 +1114,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -1022,7 +1162,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -1158,7 +1298,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>14</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -1578,6 +1718,142 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
@@ -1594,7 +1870,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>24</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -1730,7 +2006,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>24</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -2402,6 +2678,142 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
@@ -2418,7 +2830,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -2554,7 +2966,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>39</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -3226,6 +3638,142 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>51</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>51</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>51</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>51</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
@@ -3242,7 +3790,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>51</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -3378,7 +3926,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>51</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -4310,7 +4858,7 @@ comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
@@ -4370,142 +4918,6 @@ comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>end</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>10</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>kind</key><string>control</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>edges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>start</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
-end_comment
-
-begin_comment
 comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
 end_comment
 
@@ -4558,7 +4970,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
 end_comment
 
 begin_comment
@@ -4578,7 +4990,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
 end_comment
 
 begin_comment
@@ -4626,7 +5038,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
 end_comment
 
 begin_comment
@@ -4762,7 +5174,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>65</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
 end_comment
 
 begin_comment
@@ -5694,7 +6106,7 @@ comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
@@ -5711,142 +6123,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<string>Returning from&apos;getZero&apos;</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>kind</key><string>control</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>edges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>start</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>72</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>72</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>end</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>72</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>11</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>72</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>17</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
@@ -7078,7 +7354,7 @@ comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
@@ -7095,142 +7371,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<string>Returning from&apos;getZero&apos;</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>kind</key><string>control</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>edges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>start</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>79</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>79</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>5</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>end</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>79</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>12</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>79</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>18</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
@@ -7578,7 +7718,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>83</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -7598,7 +7738,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>83</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -7646,7 +7786,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>83</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -7782,7 +7922,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>83</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -8714,7 +8854,7 @@ comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
@@ -8731,142 +8871,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<string>Returning from&apos;getZero&apos;</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>kind</key><string>control</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>edges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>start</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>88</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>88</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>end</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>88</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>88</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>13</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
@@ -9214,7 +9218,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>92</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -9234,7 +9238,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>92</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -9282,7 +9286,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>92</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -9418,7 +9422,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>92</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -10350,7 +10354,7 @@ comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
 end_comment
 
 begin_comment
@@ -10367,142 +10371,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<string>Returning from&apos;getZero&apos;</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>kind</key><string>control</string>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>edges</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>start</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>12</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>end</key>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>line</key><integer>103</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>20</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</dict>
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT:</array>
 end_comment
 
 begin_comment
@@ -10938,6 +10806,142 @@ comment|// CHECK-NEXT:<dict>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>97</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>97</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>97</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>97</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>kind</key><string>event</string>
 end_comment
 
@@ -10954,7 +10958,7 @@ comment|// CHECK-NEXT:<key>line</key><integer>97</integer>
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
 end_comment
 
 begin_comment
@@ -11090,7 +11094,2147 @@ comment|// CHECK-NEXT:<key>line</key><integer>97</integer>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>6</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>path</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>19</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Calling&apos;setFieldToNull&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Calling&apos;setFieldToNull&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>112</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Entered call from&apos;testSetFieldToNull&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Entered call from&apos;testSetFieldToNull&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>112</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>1</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>112</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>113</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>2</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>113</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>2</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>113</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>2</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>113</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>2</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>113</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>1</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Null pointer value stored to field&apos;p&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Null pointer value stored to field&apos;p&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>19</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Returning from&apos;setFieldToNull&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Returning from&apos;setFieldToNull&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>117</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>16</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>10</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>10</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>10</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>14</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Dereference of null pointer (loaded from field&apos;p&apos;)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Dereference of null pointer (loaded from field&apos;p&apos;)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>description</key><string>Dereference of null pointer (loaded from field&apos;p&apos;)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>category</key><string>Logic error</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>type</key><string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_context</key><string>testSetFieldToNull</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash</key><string>3</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>119</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>10</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>path</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>131</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>131</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>131</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>25</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Null pointer value stored to field&apos;p&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Null pointer value stored to field&apos;p&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>131</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>131</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>12</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>132</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>132</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>132</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>132</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>22</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>132</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>22</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Dereference of null pointer (loaded from field&apos;p&apos;)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Dereference of null pointer (loaded from field&apos;p&apos;)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>description</key><string>Dereference of null pointer (loaded from field&apos;p&apos;)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>category</key><string>Logic error</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>type</key><string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_context</key><string>test</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash</key><string>2</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>132</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>24</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>path</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>4</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>8</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Assuming pointer value is null</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Assuming pointer value is null</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>137</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>control</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>edges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>start</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>end</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>kind</key><string>event</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>ranges</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>3</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>9</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>file</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>depth</key><integer>0</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>extended_message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>message</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:</array>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>description</key><string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>category</key><string>Logic error</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>type</key><string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_context</key><string>test4</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>issue_hash</key><string>3</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>location</key>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<dict>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>line</key><integer>139</integer>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>col</key><integer>7</integer>
 end_comment
 
 begin_comment

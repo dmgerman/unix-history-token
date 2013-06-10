@@ -2112,7 +2112,7 @@ comment|// CHECK029-NEXT: "{{.*}}/bin/hexagon-as"
 end_comment
 
 begin_comment
-comment|// CHECK029:        "-gdwarf-2" "--noexecstack" "--trap" "--keep-locals"
+comment|// CHECK029:      "--noexecstack" "--trap" "--keep-locals"
 end_comment
 
 begin_comment

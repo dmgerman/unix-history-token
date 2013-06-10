@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -disable-llvm-optzns -o %t %s
+comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -disable-llvm-optzns -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: %clang_cc1 -Werror -triple i386-unknown-unknown -emit-llvm -O1 -struct-path-tbaa -disable-llvm-optzns -o - %s | FileCheck %s -check-prefix=PATH
 end_comment
 
 begin_comment
@@ -42,12 +42,14 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK: store i32 0, i32* %{{.*}}, !tbaa !1
+comment|// PATH: store i32 0, i32* %{{.*}}, !tbaa [[TAG_CHAR:!.*]]
 operator|*
 name|ai
 operator|=
 literal|0
 expr_stmt|;
 comment|// CHECK: store i32 1, i32* %{{.*}}, !tbaa !3
+comment|// PATH: store i32 1, i32* %{{.*}}, !tbaa [[TAG_INT:!.*]]
 operator|*
 name|i
 operator|=
@@ -104,6 +106,7 @@ name|p2
 parameter_list|)
 block|{
 comment|// CHECK: store i32 2, i32* {{%.*}}, !tbaa !1
+comment|// PATH: store i32 2, i32* {{%.*}}, !tbaa [[TAG_CHAR]]
 name|p1
 operator|->
 name|x
@@ -111,6 +114,7 @@ operator|=
 literal|2
 expr_stmt|;
 comment|// CHECK: store i32 3, i32* {{%.*}}, !tbaa !3
+comment|// PATH: store i32 3, i32* {{%.*}}, !tbaa [[TAG_test1_x:!.*]]
 name|p2
 operator|->
 name|x
@@ -134,6 +138,30 @@ end_comment
 
 begin_comment
 comment|// CHECK: !3 = metadata !{metadata !"int", metadata !1}
+end_comment
+
+begin_comment
+comment|// PATH: [[TYPE_CHAR:!.*]] = metadata !{metadata !"omnipotent char", metadata !{{.*}}
+end_comment
+
+begin_comment
+comment|// PATH: [[TAG_CHAR]] = metadata !{metadata [[TYPE_CHAR]], metadata [[TYPE_CHAR]], i64 0}
+end_comment
+
+begin_comment
+comment|// PATH: [[TAG_INT]] = metadata !{metadata [[TYPE_INT:!.*]], metadata [[TYPE_INT]], i64 0}
+end_comment
+
+begin_comment
+comment|// PATH: [[TYPE_INT]] = metadata !{metadata !"int", metadata [[TYPE_CHAR]]
+end_comment
+
+begin_comment
+comment|// PATH: [[TAG_test1_x]] = metadata !{metadata [[TYPE_test1:!.*]], metadata [[TYPE_INT]], i64 0}
+end_comment
+
+begin_comment
+comment|// PATH: [[TYPE_test1]] = metadata !{metadata !"_ZTS5Test1", metadata [[TYPE_INT]], i64 0}
 end_comment
 
 end_unit

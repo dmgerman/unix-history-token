@@ -166,6 +166,14 @@ name|CXTranslationUnit
 name|TU
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|TU
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|TU
 operator|->

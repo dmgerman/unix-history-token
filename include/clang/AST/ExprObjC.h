@@ -2159,6 +2159,13 @@ name|t
 argument_list|,
 name|VK_LValue
 argument_list|,
+name|d
+operator|->
+name|isBitField
+argument_list|()
+condition|?
+name|OK_BitField
+else|:
 name|OK_Ordinary
 argument_list|,
 comment|/*TypeDependent=*/
@@ -2361,9 +2368,9 @@ block|{
 return|return
 name|isFreeIvar
 argument_list|()
-operator|?
+condition|?
 name|Loc
-operator|:
+else|:
 name|getBase
 argument_list|()
 operator|->

@@ -295,5 +295,29 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|// PR15693
+end_comment
+
+begin_enum
+enum|enum
+name|enum1
+block|{
+name|VALUE
+comment|// expected-note{{previous definition is here}}
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|enum2
+block|{
+name|VALUE
+comment|// expected-error{{redefinition of enumerator 'VALUE'}}
+block|}
+enum|;
+end_enum
+
 end_unit
 

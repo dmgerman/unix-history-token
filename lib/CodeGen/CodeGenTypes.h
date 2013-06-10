@@ -203,14 +203,13 @@ block|{
 name|public
 label|:
 comment|// Some of this stuff should probably be left on the CGM.
+name|CodeGenModule
+modifier|&
+name|CGM
+decl_stmt|;
 name|ASTContext
 modifier|&
 name|Context
-decl_stmt|;
-specifier|const
-name|TargetInfo
-modifier|&
-name|Target
 decl_stmt|;
 name|llvm
 operator|::
@@ -226,9 +225,9 @@ operator|&
 name|TheDataLayout
 expr_stmt|;
 specifier|const
-name|ABIInfo
+name|TargetInfo
 modifier|&
-name|TheABIInfo
+name|Target
 decl_stmt|;
 name|CGCXXABI
 modifier|&
@@ -239,9 +238,12 @@ name|CodeGenOptions
 modifier|&
 name|CodeGenOpts
 decl_stmt|;
-name|CodeGenModule
+comment|// This should not be moved earlier, since its initialization depends on some
+comment|// of the previous reference members being already initialized
+specifier|const
+name|ABIInfo
 modifier|&
-name|CGM
+name|TheABIInfo
 decl_stmt|;
 name|private
 label|:
@@ -373,7 +375,7 @@ name|CodeGenTypes
 argument_list|(
 name|CodeGenModule
 operator|&
-name|CGM
+name|cgm
 argument_list|)
 expr_stmt|;
 operator|~
@@ -391,17 +393,6 @@ specifier|const
 block|{
 return|return
 name|TheDataLayout
-return|;
-block|}
-specifier|const
-name|TargetInfo
-operator|&
-name|getTarget
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Target
 return|;
 block|}
 name|ASTContext
@@ -434,6 +425,17 @@ specifier|const
 block|{
 return|return
 name|CodeGenOpts
+return|;
+block|}
+specifier|const
+name|TargetInfo
+operator|&
+name|getTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Target
 return|;
 block|}
 name|CGCXXABI

@@ -1,13 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: mips-registered-target
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Check handling MIPS specific features options.
 end_comment
 
@@ -57,6 +49,54 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOMIPS16: "-target-feature" "-mips16"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mmicromips
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mno-micromips -mmicromips 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MICROMIPS %s
+end_comment
+
+begin_comment
+comment|// CHECK-MICROMIPS: "-target-feature" "+micromips"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-micromips
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mmicromips -mno-micromips 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOMICROMIPS %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOMICROMIPS: "-target-feature" "-micromips"
 end_comment
 
 begin_comment

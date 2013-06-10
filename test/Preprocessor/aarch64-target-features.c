@@ -4,15 +4,7 @@ comment|// RUN: %clang -target aarch64-none-linux-gnu -x c -E -dM %s -o - | File
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH 8
-end_comment
-
-begin_comment
 comment|// CHECK: __AARCH64EL__
-end_comment
-
-begin_comment
-comment|// CHECK: __AARCH_ACLE 101
 end_comment
 
 begin_comment
@@ -24,51 +16,67 @@ comment|// CHECK-NOT: __AARCH_FEATURE_ADVSIMD
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: __AARCH_FEATURE_BIG_ENDIAN
+comment|// CHECK: __ARM_ACLE 101
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FEATURE_CLZ 1
+comment|// CHECK: __ARM_ARCH 8
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FEATURE_FMA 1
+comment|// CHECK: __ARM_ARCH_PROFILE 'A'
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FEATURE_LDREX 0xf
+comment|// CHECK-NOT: __ARM_FEATURE_BIG_ENDIAN
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FEATURE_UNALIGNED 1
+comment|// CHECK: __ARM_FEATURE_CLZ 1
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FP 0xe
+comment|// CHECK: __ARM_FEATURE_FMA 1
 end_comment
 
 begin_comment
-comment|// CHECK-NOT: __AARCH_FP_FAST
+comment|// CHECK: __ARM_FEATURE_LDREX 0xf
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FP16_FORMAT_IEEE 1
+comment|// CHECK: __ARM_FEATURE_UNALIGNED 1
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_FP_FENV_ROUNDING 1
+comment|// CHECK: __ARM_FP 0xe
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_PROFILE 'A'
+comment|// CHECK-NOT: __ARM_FP_FAST
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_SIZEOF_MINIMAL_ENUM 4
+comment|// CHECK: __ARM_FP16_FORMAT_IEEE 1
 end_comment
 
 begin_comment
-comment|// CHECK: __AARCH_SIZEOF_WCHAR_T 4
+comment|// CHECK: __ARM_FP_FENV_ROUNDING 1
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_NEON_FP
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __ARM_NEON
+end_comment
+
+begin_comment
+comment|// CHECK: __ARM_SIZEOF_MINIMAL_ENUM 4
+end_comment
+
+begin_comment
+comment|// CHECK: __ARM_SIZEOF_WCHAR_T 4
 end_comment
 
 begin_comment
@@ -80,7 +88,7 @@ comment|// RUN: %clang -target aarch64-none-linux-gnu -ffast-math -x c -E -dM %s
 end_comment
 
 begin_comment
-comment|// CHECK-FASTMATH: __AARCH_FP_FAST
+comment|// CHECK-FASTMATH: __ARM_FP_FAST
 end_comment
 
 begin_comment
@@ -88,7 +96,7 @@ comment|// RUN: %clang -target aarch64-none-linux-gnu -fshort-wchar -x c -E -dM 
 end_comment
 
 begin_comment
-comment|// CHECK-SHORTWCHAR: __AARCH_SIZEOF_WCHAR_T 2
+comment|// CHECK-SHORTWCHAR: __ARM_SIZEOF_WCHAR_T 2
 end_comment
 
 begin_comment
@@ -96,7 +104,7 @@ comment|// RUN: %clang -target aarch64-none-linux-gnu -fshort-enums -x c -E -dM 
 end_comment
 
 begin_comment
-comment|// CHECK-SHORTENUMS: __AARCH_SIZEOF_MINIMAL_ENUM 1
+comment|// CHECK-SHORTENUMS: __ARM_SIZEOF_MINIMAL_ENUM 1
 end_comment
 
 end_unit

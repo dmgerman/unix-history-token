@@ -116,6 +116,13 @@ end_function_decl
 begin_macro
 name|__declspec
 argument_list|(
+argument|safebuffers
+argument_list|)
+end_macro
+
+begin_macro
+name|__declspec
+argument_list|(
 argument|noalias
 argument_list|)
 end_macro
@@ -141,7 +148,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* expected-warning{{__declspec attribute 'noalias' is not supported}} expected-warning{{__declspec attribute 'restrict' is not supported}} */
+comment|/* expected-warning{{__declspec attribute 'safebuffers' is not supported}} expected-warning{{__declspec attribute 'noalias' is not supported}} expected-warning{{__declspec attribute 'restrict' is not supported}} */
 end_comment
 
 begin_typedef

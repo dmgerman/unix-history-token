@@ -195,6 +195,14 @@ begin_comment
 comment|// expected-error {{invalid flag line marker directive}}
 end_comment
 
+begin_empty
+empty|# 42a33
+end_empty
+
+begin_comment
+comment|// expected-error {{GNU line marker directive requires a simple digit sequence}}
+end_comment
+
 begin_comment
 comment|// These are checked by the RUN line.
 end_comment
@@ -505,6 +513,31 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_empty
+empty|# 020
+end_empty
+
+begin_comment
+comment|// expected-warning {{GNU line marker directive interprets number as decimal, not octal}}
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|array_gnuline
+index|[
+name|__LINE__
+operator|==
+literal|20
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* PR3917 */
 end_comment
@@ -525,6 +558,33 @@ expr|\
 name|_LINE__
 operator|==
 literal|42
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line marker is location of first _ */
+end_comment
+
+begin_empty
+empty|# 51
+end_empty
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|array2_gnuline
+index|[\
+name|_
+expr|\
+name|_LINE__
+operator|==
+literal|52
 condition|?
 literal|1
 else|:

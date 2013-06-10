@@ -273,26 +273,6 @@ name|getStoreManager
 argument_list|()
 return|;
 block|}
-specifier|const
-name|AnalyzerOptions
-operator|::
-name|ConfigTable
-operator|&
-name|getConfig
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Eng
-operator|.
-name|getAnalysisManager
-argument_list|()
-operator|.
-name|options
-operator|.
-name|Config
-return|;
-block|}
 comment|/// \brief Returns the previous node in the exploded graph, which includes
 comment|/// the state of the program before the checker ran. Note, checkers should
 comment|/// not retain the node in their state since the nodes might get invalidated.

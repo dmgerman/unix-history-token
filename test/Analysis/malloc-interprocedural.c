@@ -240,7 +240,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'data'}}
 end_comment
 
 begin_function
@@ -297,7 +297,7 @@ name|x
 init|=
 literal|5
 decl_stmt|;
-comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'data'}}
 name|data
 operator|=
 name|my_malloc2
@@ -311,7 +311,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'data'}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'data'}}
 end_comment
 
 begin_function
@@ -516,7 +516,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{Memory is never released; potential leak of memory pointed to by 'v'}}
+comment|// expected-warning {{Potential leak of memory pointed to by 'v'}}
 block|}
 end_function
 

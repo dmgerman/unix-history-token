@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang -fsyntax-only -Xclang -verify -std=c11 -fmodules %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang -fsyntax-only -Xclang -verify -std=c11 -ffreestanding %s
+end_comment
+
 begin_function_decl
 name|noreturn
 name|int
@@ -123,6 +127,60 @@ literal|""
 argument_list|)
 assert|;
 end_assert
+
+begin_define
+define|#
+directive|define
+name|__STDC_WANT_LIB_EXT1__
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_decl_stmt
+name|rsize_t
+name|x
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// If we are freestanding, then also check RSIZE_MAX (in a hosted implementation
+end_comment
+
+begin_comment
+comment|// we will use the host stdint.h, which may not yet have C11 support).
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC_HOSTED__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_decl_stmt
+name|rsize_t
+name|x2
+init|=
+name|RSIZE_MAX
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

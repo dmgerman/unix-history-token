@@ -282,7 +282,7 @@ literal|12
 argument_list|)
 decl_stmt|;
 return|return;
-comment|// expected-warning{{Memory is never released; potential leak}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 block|}
 end_function
 
@@ -413,7 +413,7 @@ literal|12
 argument_list|)
 decl_stmt|;
 return|return;
-comment|// expected-warning{{Memory is never released; potential leak}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 block|}
 end_function
 
@@ -432,7 +432,7 @@ literal|12
 argument_list|)
 decl_stmt|;
 return|return;
-comment|// expected-warning{{Memory is never released; potential leak}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 block|}
 end_function
 
@@ -454,7 +454,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Memory is never released; potential leak}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 end_comment
 
 begin_function
@@ -495,7 +495,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning{{Memory is never released; potential leak}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 end_comment
 
 begin_comment
@@ -1281,7 +1281,7 @@ literal|2
 argument_list|)
 decl_stmt|;
 return|return;
-comment|// expected-warning{{never released}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 block|}
 end_function
 
@@ -1382,7 +1382,7 @@ block|}
 return|return
 name|result
 return|;
-comment|// expected-warning{{never released}}
+comment|// expected-warning{{Potential leak of memory pointed to by}}
 block|}
 end_function
 
