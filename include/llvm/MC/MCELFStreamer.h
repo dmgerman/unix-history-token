@@ -238,6 +238,11 @@ specifier|const
 name|MCSection
 operator|*
 name|Section
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Subsection
 argument_list|)
 block|;
 name|virtual

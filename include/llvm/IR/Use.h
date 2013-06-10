@@ -112,7 +112,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/Core.h"
 end_include
 
 begin_include
@@ -1029,7 +1041,21 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};  }
+unit|};
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|Use
+argument_list|,
+argument|LLVMUseRef
+argument_list|)
+end_macro
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

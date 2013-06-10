@@ -338,6 +338,8 @@ name|kw_readnone
 block|,
 name|kw_readonly
 block|,
+name|kw_returned
+block|,
 name|kw_returns_twice
 block|,
 name|kw_signext

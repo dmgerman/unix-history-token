@@ -147,6 +147,21 @@ decl_stmt|;
 name|class
 name|formatted_raw_ostream
 decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MCSection
+operator|*
+operator|,
+specifier|const
+name|MCExpr
+operator|*
+operator|>
+name|MCSectionSubPair
+expr_stmt|;
 comment|/// MCStreamer - Streaming machine code generation interface.  This interface
 comment|/// is intended to provide a programatic interface that is very similar to the
 comment|/// level that an assembler .s file provides.  It has callbacks to emit bytes,
@@ -276,13 +291,9 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
-name|MCSection
-operator|*
+name|MCSectionSubPair
 operator|,
-specifier|const
-name|MCSection
-operator|*
+name|MCSectionSubPair
 operator|>
 operator|,
 literal|4
@@ -547,9 +558,7 @@ comment|/// @name Symbol& Section Management
 comment|/// @{
 comment|/// getCurrentSection - Return the current section that the streamer is
 comment|/// emitting code to.
-specifier|const
-name|MCSection
-operator|*
+name|MCSectionSubPair
 name|getCurrentSection
 argument_list|()
 specifier|const
@@ -571,14 +580,13 @@ operator|.
 name|first
 return|;
 return|return
-name|NULL
+name|MCSectionSubPair
+argument_list|()
 return|;
 block|}
 comment|/// getPreviousSection - Return the previous section that the streamer is
 comment|/// emitting code to.
-specifier|const
-name|MCSection
-operator|*
+name|MCSectionSubPair
 name|getPreviousSection
 argument_list|()
 specifier|const
@@ -600,7 +608,8 @@ operator|.
 name|second
 return|;
 return|return
-name|NULL
+name|MCSectionSubPair
+argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -628,6 +637,10 @@ name|ChangeSection
 parameter_list|(
 specifier|const
 name|MCSection
+modifier|*
+parameter_list|,
+specifier|const
+name|MCExpr
 modifier|*
 parameter_list|)
 init|=
@@ -700,9 +713,7 @@ condition|)
 return|return
 name|false
 return|;
-specifier|const
-name|MCSection
-modifier|*
+name|MCSectionSubPair
 name|oldSection
 init|=
 name|SectionStack
@@ -712,9 +723,7 @@ argument_list|()
 operator|.
 name|first
 decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
+name|MCSectionSubPair
 name|curSection
 init|=
 name|SectionStack
@@ -733,6 +742,52 @@ condition|)
 name|ChangeSection
 argument_list|(
 name|curSection
+operator|.
+name|first
+argument_list|,
+name|curSection
+operator|.
+name|second
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|SubSection
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Subsection
+parameter_list|)
+block|{
+if|if
+condition|(
+name|SectionStack
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+name|SwitchSection
+argument_list|(
+name|SectionStack
+operator|.
+name|back
+argument_list|()
+operator|.
+name|first
+operator|.
+name|first
+argument_list|,
+name|Subsection
 argument_list|)
 expr_stmt|;
 return|return
@@ -765,6 +820,13 @@ specifier|const
 name|MCSection
 modifier|*
 name|Section
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+name|Subsection
+init|=
+literal|0
 parameter_list|)
 block|{
 name|assert
@@ -774,9 +836,7 @@ operator|&&
 literal|"Cannot switch to a null section!"
 argument_list|)
 expr_stmt|;
-specifier|const
-name|MCSection
-modifier|*
+name|MCSectionSubPair
 name|curSection
 init|=
 name|SectionStack
@@ -797,7 +857,12 @@ name|curSection
 expr_stmt|;
 if|if
 condition|(
+name|MCSectionSubPair
+argument_list|(
 name|Section
+argument_list|,
+name|Subsection
+argument_list|)
 operator|!=
 name|curSection
 condition|)
@@ -809,11 +874,18 @@ argument_list|()
 operator|.
 name|first
 operator|=
+name|MCSectionSubPair
+argument_list|(
 name|Section
+argument_list|,
+name|Subsection
+argument_list|)
 expr_stmt|;
 name|ChangeSection
 argument_list|(
 name|Section
+argument_list|,
+name|Subsection
 argument_list|)
 expr_stmt|;
 block|}
@@ -840,6 +912,13 @@ specifier|const
 name|MCSection
 modifier|*
 name|Section
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+name|Subsection
+init|=
+literal|0
 parameter_list|)
 block|{
 name|assert
@@ -849,9 +928,7 @@ operator|&&
 literal|"Cannot switch to a null section!"
 argument_list|)
 expr_stmt|;
-specifier|const
-name|MCSection
-modifier|*
+name|MCSectionSubPair
 name|curSection
 init|=
 name|SectionStack
@@ -872,7 +949,12 @@ name|curSection
 expr_stmt|;
 if|if
 condition|(
+name|MCSectionSubPair
+argument_list|(
 name|Section
+argument_list|,
+name|Subsection
+argument_list|)
 operator|!=
 name|curSection
 condition|)
@@ -883,7 +965,12 @@ argument_list|()
 operator|.
 name|first
 operator|=
+name|MCSectionSubPair
+argument_list|(
 name|Section
+argument_list|,
+name|Subsection
+argument_list|)
 expr_stmt|;
 block|}
 end_function

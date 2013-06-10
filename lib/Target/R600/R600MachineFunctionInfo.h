@@ -114,6 +114,9 @@ operator|<
 name|unsigned
 operator|>
 name|IndirectRegs
+block|;
+name|unsigned
+name|StackSize
 block|; }
 decl_stmt|;
 block|}

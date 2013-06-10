@@ -1055,6 +1055,12 @@ literal|1
 decl_stmt|;
 comment|// Is a commutable instruction.
 name|bool
+name|hasPhysRegUses
+range|:
+literal|1
+decl_stmt|;
+comment|// Has physreg uses.
+name|bool
 name|hasPhysRegDefs
 range|:
 literal|1
@@ -1255,6 +1261,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|hasPhysRegUses
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|hasPhysRegDefs
 argument_list|(
 name|false
@@ -1446,6 +1457,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|hasPhysRegUses
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|hasPhysRegDefs
 argument_list|(
 name|false
@@ -1628,6 +1644,11 @@ name|false
 argument_list|)
 operator|,
 name|isCommutable
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasPhysRegUses
 argument_list|(
 name|false
 argument_list|)
@@ -3424,18 +3445,17 @@ modifier|*
 name|TargetSU
 parameter_list|)
 function_decl|;
-comment|/// WillCreateCycle - Returns true if adding an edge from SU to TargetSU
-comment|/// will create a cycle.
+comment|/// WillCreateCycle - Return true if addPred(TargetSU, SU) creates a cycle.
 name|bool
 name|WillCreateCycle
 parameter_list|(
 name|SUnit
 modifier|*
-name|SU
+name|TargetSU
 parameter_list|,
 name|SUnit
 modifier|*
-name|TargetSU
+name|SU
 parameter_list|)
 function_decl|;
 comment|/// AddPred - Updates the topological ordering to accommodate an edge

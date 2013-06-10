@@ -143,6 +143,11 @@ comment|//    Otherwise, use div.full
 name|int
 name|do_DIVF32_PREC
 block|;
+comment|// If true, generate sqrt.rn, else generate sqrt.approx. If FTZ
+comment|// is true, then generate the corresponding FTZ version.
+name|bool
+name|do_SQRTF32_PREC
+block|;
 comment|// If true, add .ftz to f32 instructions.
 comment|// This is only meaningful for sm_20 and later, as the default
 comment|// is not ftz.

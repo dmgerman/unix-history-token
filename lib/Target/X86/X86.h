@@ -191,6 +191,15 @@ modifier|*
 name|createX86PadShortFunctions
 parameter_list|()
 function_decl|;
+comment|/// createX86FixupLEAs - Return a a pass that selectively replaces
+comment|/// certain instructions (like add, sub, inc, dec, some shifts,
+comment|/// and some multiplies) by equivalent LEA instructions, in order
+comment|/// to eliminate execution delays in some Atom processors.
+name|FunctionPass
+modifier|*
+name|createX86FixupLEAs
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

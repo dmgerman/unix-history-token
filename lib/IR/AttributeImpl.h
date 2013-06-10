@@ -1042,7 +1042,7 @@ comment|/// \brief Get the index of the given "slot" in the AttrNodes list. This
 comment|/// is the index of the return, parameter, or function object that the
 comment|/// attributes are applied to, not the index into the AttrNodes list where the
 comment|/// attributes reside.
-name|uint64_t
+name|unsigned
 name|getSlotIndex
 argument_list|(
 argument|unsigned Slot
@@ -1116,13 +1116,13 @@ expr_stmt|;
 name|iterator
 name|begin
 argument_list|(
-argument|unsigned Idx
+argument|unsigned Slot
 argument_list|)
 block|{
 return|return
 name|AttrNodes
 index|[
-name|Idx
+name|Slot
 index|]
 operator|.
 name|second
@@ -1134,13 +1134,13 @@ block|}
 name|iterator
 name|end
 argument_list|(
-argument|unsigned Idx
+argument|unsigned Slot
 argument_list|)
 block|{
 return|return
 name|AttrNodes
 index|[
-name|Idx
+name|Slot
 index|]
 operator|.
 name|second
@@ -1152,14 +1152,14 @@ block|}
 name|const_iterator
 name|begin
 argument_list|(
-argument|unsigned Idx
+argument|unsigned Slot
 argument_list|)
 specifier|const
 block|{
 return|return
 name|AttrNodes
 index|[
-name|Idx
+name|Slot
 index|]
 operator|.
 name|second
@@ -1171,14 +1171,14 @@ block|}
 name|const_iterator
 name|end
 argument_list|(
-argument|unsigned Idx
+argument|unsigned Slot
 argument_list|)
 specifier|const
 block|{
 return|return
 name|AttrNodes
 index|[
-name|Idx
+name|Slot
 index|]
 operator|.
 name|second
@@ -1264,7 +1264,7 @@ comment|// FIXME: This atrocity is temporary.
 name|uint64_t
 name|Raw
 argument_list|(
-argument|uint64_t Index
+argument|unsigned Index
 argument_list|)
 specifier|const
 decl_stmt|;

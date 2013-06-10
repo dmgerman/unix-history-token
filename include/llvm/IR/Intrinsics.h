@@ -139,7 +139,7 @@ name|getName
 argument_list|(
 argument|ID id
 argument_list|,
-argument|ArrayRef<Type*> Tys = ArrayRef<Type*>()
+argument|ArrayRef<Type*> Tys = None
 argument_list|)
 expr_stmt|;
 comment|/// Intrinsic::getType(ID) - Return the function type for an intrinsic.
@@ -162,13 +162,7 @@ operator|*
 operator|>
 name|Tys
 operator|=
-name|ArrayRef
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
 comment|/// Intrinsic::isOverloaded(ID) - Returns true if the intrinsic can be
@@ -196,11 +190,10 @@ function_decl|;
 comment|/// Intrinsic::getDeclaration(M, ID) - Create or insert an LLVM Function
 comment|/// declaration for an intrinsic, and return it.
 comment|///
-comment|/// The Tys and numTys parameters are for intrinsics with overloaded types
-comment|/// (e.g., those using iAny, fAny, vAny, or iPTRAny). For a declaration for an
-comment|/// overloaded intrinsic, Tys should point to an array of numTys pointers to
-comment|/// Type, and must provide exactly one type for each overloaded type in the
-comment|/// intrinsic.
+comment|/// The Tys parameter is for intrinsics with overloaded types (e.g., those
+comment|/// using iAny, fAny, vAny, or iPTRAny).  For a declaration of an overloaded
+comment|/// intrinsic, Tys must provide exactly one type for each overloaded type in
+comment|/// the intrinsic.
 name|Function
 modifier|*
 name|getDeclaration
@@ -219,13 +212,7 @@ operator|*
 operator|>
 name|Tys
 operator|=
-name|ArrayRef
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
 comment|/// Map a GCC builtin name to an intrinsic ID.

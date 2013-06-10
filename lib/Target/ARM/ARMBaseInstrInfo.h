@@ -515,6 +515,23 @@ argument|bool=false
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|MachineInstrBuilder
+operator|&
+name|AddDReg
+argument_list|(
+argument|MachineInstrBuilder&MIB
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|unsigned SubIdx
+argument_list|,
+argument|unsigned State
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|produceSameValue

@@ -441,6 +441,21 @@ name|unsigned
 name|NumOps
 parameter_list|)
 function_decl|;
+comment|/// Verify the sanity of the use list for Reg.
+name|void
+name|verifyUseList
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Verify the use list of all registers.
+name|void
+name|verifyUseLists
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// reg_begin/reg_end - Provide iteration support to walk over all definitions
 comment|/// and uses of a register within the MachineFunction that corresponds to this
 comment|/// MachineRegisterInfo object.

@@ -183,6 +183,15 @@ name|Predicate
 name|Opcode
 parameter_list|)
 function_decl|;
+comment|/// Assume the condition register is set by MI(a,b), return the predicate if
+comment|/// we modify the instructions such that condition register is set by MI(b,a).
+name|Predicate
+name|getSwappedPredicate
+parameter_list|(
+name|Predicate
+name|Opcode
+parameter_list|)
+function_decl|;
 block|}
 block|}
 end_decl_stmt

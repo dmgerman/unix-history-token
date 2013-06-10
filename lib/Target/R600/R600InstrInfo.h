@@ -127,6 +127,11 @@ specifier|const
 name|R600RegisterInfo
 name|RI
 block|;
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|ST
+block|;
 name|int
 name|getBranchInstr
 argument_list|(
@@ -202,6 +207,48 @@ name|bool
 name|isALUInstr
 argument_list|(
 argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTransOnly
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isTransOnly
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|usesVertexCache
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|usesVertexCache
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|usesTextureCache
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|usesTextureCache
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;

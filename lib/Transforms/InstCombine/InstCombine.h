@@ -1527,6 +1527,19 @@ modifier|*
 name|GEP
 parameter_list|)
 function_decl|;
+name|Instruction
+modifier|*
+name|scalarizePHI
+parameter_list|(
+name|ExtractElementInst
+modifier|&
+name|EI
+parameter_list|,
+name|PHINode
+modifier|*
+name|PN
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|// InsertNewInstBefore - insert an instruction New before instruction Old

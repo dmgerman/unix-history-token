@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Path.h"
 end_include
 
@@ -385,6 +391,20 @@ decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;
+comment|// Return true if the given arguments fit within system-specific
+comment|// argument length limits.
+name|bool
+name|argumentsFitWithinSystemLimits
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|Args
+argument_list|)
+decl_stmt|;
 block|}
 block|}
 end_decl_stmt

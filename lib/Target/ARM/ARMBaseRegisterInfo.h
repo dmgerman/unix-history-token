@@ -367,6 +367,15 @@ block|;
 specifier|const
 name|uint32_t
 operator|*
+name|getThisReturnPreservedMask
+argument_list|(
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
 name|getNoPreservedMask
 argument_list|()
 specifier|const

@@ -219,6 +219,81 @@ name|index
 operator|=
 name|index
 block|;     }
+ifdef|#
+directive|ifdef
+name|EXPENSIVE_CHECKS
+comment|// When EXPENSIVE_CHECKS is defined, "erased" index list entries will
+comment|// actually be moved to a "graveyard" list, and have their pointers
+comment|// poisoned, so that dangling SlotIndex access can be reliably detected.
+name|void
+name|setPoison
+argument_list|()
+block|{
+name|intptr_t
+name|tmp
+operator|=
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|mi
+operator|)
+block|;
+name|assert
+argument_list|(
+operator|(
+operator|(
+name|tmp
+operator|&
+literal|0x1
+operator|)
+operator|==
+literal|0x0
+operator|)
+operator|&&
+literal|"Pointer already poisoned?"
+argument_list|)
+block|;
+name|tmp
+operator||=
+literal|0x1
+block|;
+name|mi
+operator|=
+name|reinterpret_cast
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|(
+name|tmp
+operator|)
+block|;     }
+name|bool
+name|isPoisoned
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|mi
+operator|)
+operator|&
+literal|0x1
+operator|)
+operator|==
+literal|0x1
+return|;
+block|}
+endif|#
+directive|endif
+comment|// EXPENSIVE_CHECKS
 expr|}
 block|;
 name|template
@@ -394,6 +469,26 @@ operator|&&
 literal|"Attempt to compare reserved index."
 argument_list|)
 block|;
+ifdef|#
+directive|ifdef
+name|EXPENSIVE_CHECKS
+name|assert
+argument_list|(
+operator|!
+name|lie
+operator|.
+name|getPointer
+argument_list|()
+operator|->
+name|isPoisoned
+argument_list|()
+operator|&&
+literal|"Attempt to access deleted list-entry."
+argument_list|)
+block|;
+endif|#
+directive|endif
+comment|// EXPENSIVE_CHECKS
 return|return
 name|lie
 operator|.
@@ -1139,6 +1234,15 @@ expr_stmt|;
 name|IndexList
 name|indexList
 block|;
+ifdef|#
+directive|ifdef
+name|EXPENSIVE_CHECKS
+name|IndexList
+name|graveyardList
+block|;
+endif|#
+directive|endif
+comment|// EXPENSIVE_CHECKS
 name|MachineFunction
 operator|*
 name|mf
@@ -2787,6 +2891,71 @@ name|Idx2MBBCompare
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// \brief Free the resources that were required to maintain a SlotIndex.
+comment|///
+comment|/// Once an index is no longer needed (for instance because the instruction
+comment|/// at that index has been moved), the resources required to maintain the
+comment|/// index can be relinquished to reduce memory use and improve renumbering
+comment|/// performance. Any remaining SlotIndex objects that point to the same
+comment|/// index are left 'dangling' (much the same as a dangling pointer to a
+comment|/// freed object) and should not be accessed, except to destruct them.
+comment|///
+comment|/// Like dangling pointers, access to dangling SlotIndexes can cause
+comment|/// painful-to-track-down bugs, especially if the memory for the index
+comment|/// previously pointed to has been re-used. To detect dangling SlotIndex
+comment|/// bugs, build with EXPENSIVE_CHECKS=1. This will cause "erased" indexes to
+comment|/// be retained in a graveyard instead of being freed. Operations on indexes
+comment|/// in the graveyard will trigger an assertion.
+name|void
+name|eraseIndex
+parameter_list|(
+name|SlotIndex
+name|index
+parameter_list|)
+block|{
+name|IndexListEntry
+modifier|*
+name|entry
+init|=
+name|index
+operator|.
+name|listEntry
+argument_list|()
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EXPENSIVE_CHECKS
+name|indexList
+operator|.
+name|remove
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+name|graveyardList
+operator|.
+name|push_back
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+name|entry
+operator|->
+name|setPoison
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|indexList
+operator|.
+name|erase
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_decl_stmt

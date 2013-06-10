@@ -195,6 +195,12 @@ operator|=
 literal|0
 argument_list|)
 block|;
+name|void
+name|registerEHFrames
+argument_list|(
+argument|StringRef SectionData
+argument_list|)
+block|;
 comment|/// This method returns the address of the specified function. As such it is
 comment|/// only useful for resolving library symbols, not code generated symbols.
 comment|///
@@ -217,9 +223,7 @@ comment|/// Some platforms with separate data cache and instruction cache requir
 comment|/// explicit cache flush, otherwise JIT code manipulations (like resolved
 comment|/// relocations) will get to the data cache but not to the instruction cache.
 comment|///
-comment|/// This method is not called by RuntimeDyld or MCJIT during the load
-comment|/// process.  Clients may call this function when needed.  See the lli
-comment|/// tool for example use.
+comment|/// This method is called from applyPermissions.
 name|virtual
 name|void
 name|invalidateInstructionCache

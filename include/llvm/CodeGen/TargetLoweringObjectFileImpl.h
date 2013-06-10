@@ -413,6 +413,22 @@ argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+block|;
+comment|/// emitModuleFlags - Emit Obj-C garbage collection and linker options.  Only
+comment|/// linker option emission is implemented for COFF.
+name|virtual
+name|void
+name|emitModuleFlags
+argument_list|(
+argument|MCStreamer&Streamer
+argument_list|,
+argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

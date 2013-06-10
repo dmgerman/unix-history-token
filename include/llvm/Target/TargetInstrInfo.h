@@ -1654,6 +1654,10 @@ return|;
 block|}
 comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
 comment|/// instruction, try to fold the immediate into the use instruction.
+comment|/// If MRI->hasOneNonDBGUse(Reg) is true, and this function returns true,
+comment|/// then the caller may assume that DefMI has been erased from its parent
+comment|/// block. The caller may assume that it will not be erased by this
+comment|/// function otherwise.
 name|virtual
 name|bool
 name|FoldImmediate

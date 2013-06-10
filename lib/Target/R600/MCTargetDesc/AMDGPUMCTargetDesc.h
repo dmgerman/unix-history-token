@@ -90,6 +90,9 @@ name|class
 name|MCInstrInfo
 decl_stmt|;
 name|class
+name|MCObjectWriter
+decl_stmt|;
+name|class
 name|MCRegisterInfo
 decl_stmt|;
 name|class
@@ -97,6 +100,9 @@ name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|Target
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 specifier|extern
 name|Target
@@ -120,10 +126,6 @@ specifier|const
 name|MCSubtargetInfo
 modifier|&
 name|STI
-parameter_list|,
-name|MCContext
-modifier|&
-name|Ctx
 parameter_list|)
 function_decl|;
 name|MCCodeEmitter
@@ -164,6 +166,15 @@ name|TT
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|)
+function_decl|;
+name|MCObjectWriter
+modifier|*
+name|createAMDGPUELFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
 parameter_list|)
 function_decl|;
 block|}

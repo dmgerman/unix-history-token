@@ -396,6 +396,47 @@ argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
+comment|// Select analysis.
+name|virtual
+name|bool
+name|canInsertSelect
+argument_list|(
+argument|const MachineBasicBlock&
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|unsigned
+argument_list|,
+argument|int&
+argument_list|,
+argument|int&
+argument_list|,
+argument|int&
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|insertSelect
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|unsigned TrueReg
+argument_list|,
+argument|unsigned FalseReg
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|void
 name|copyPhysReg
@@ -474,6 +515,180 @@ name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|FoldImmediate
+argument_list|(
+argument|MachineInstr *UseMI
+argument_list|,
+argument|MachineInstr *DefMI
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+block|;
+comment|// If conversion by predication (only supported by some branch instructions).
+comment|// All of the profitability checks always return true; it is always
+comment|// profitable to use the predicated branches.
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumCycles
+argument_list|,
+argument|unsigned ExtraPredCycles
+argument_list|,
+argument|const BranchProbability&Probability
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|unsigned NumT
+argument_list|,
+argument|unsigned ExtraT
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|,
+argument|unsigned NumF
+argument_list|,
+argument|unsigned ExtraF
+argument_list|,
+argument|const BranchProbability&Probability
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isProfitableToDupForIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumCycles
+argument_list|,
+argument|const BranchProbability&Probability
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|isProfitableToUnpredicate
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Predication support.
+name|bool
+name|isPredicated
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isUnpredicatedTerminator
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|PredicateInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Pred
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|SubsumesPredicate
+argument_list|(
+argument|const SmallVectorImpl<MachineOperand>&Pred1
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Pred2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|DefinesPredicate
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|std::vector<MachineOperand>&Pred
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isPredicable
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+comment|// Comparison optimization.
+name|virtual
+name|bool
+name|analyzeCompare
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|unsigned&SrcReg2
+argument_list|,
+argument|int&Mask
+argument_list|,
+argument|int&Value
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|optimizeCompareInstr
+argument_list|(
+argument|MachineInstr *CmpInstr
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|unsigned SrcReg2
+argument_list|,
+argument|int Mask
+argument_list|,
+argument|int Value
+argument_list|,
+argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 block|;

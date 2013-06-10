@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"PPCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"PPCRegisterInfo.h"
 end_include
 
@@ -534,6 +540,11 @@ specifier|const
 name|PPCRegisterInfo
 operator|*
 name|PPCRegInfo
+block|;
+specifier|const
+name|PPCInstrInfo
+operator|*
+name|PPCII
 block|;
 name|public
 operator|:

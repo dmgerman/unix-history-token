@@ -138,6 +138,11 @@ name|void
 name|printNeededLibraries
 parameter_list|()
 block|{ }
+name|virtual
+name|void
+name|printProgramHeaders
+parameter_list|()
+block|{ }
 name|protected
 label|:
 name|StreamWriter

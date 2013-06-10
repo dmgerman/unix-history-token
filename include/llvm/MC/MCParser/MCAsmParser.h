@@ -116,6 +116,51 @@ name|MCAsmParserSemaCallback
 block|{
 name|public
 label|:
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|OpDecl
+decl_stmt|;
+name|bool
+name|IsVarDecl
+decl_stmt|;
+name|unsigned
+name|Length
+decl_stmt|,
+name|Size
+decl_stmt|,
+name|Type
+decl_stmt|;
+name|void
+name|clear
+parameter_list|()
+block|{
+name|OpDecl
+operator|=
+literal|0
+expr_stmt|;
+name|IsVarDecl
+operator|=
+name|false
+expr_stmt|;
+name|Length
+operator|=
+literal|1
+expr_stmt|;
+name|Size
+operator|=
+literal|0
+expr_stmt|;
+name|Type
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+name|InlineAsmIdentifierInfo
+typedef|;
 name|virtual
 operator|~
 name|MCAsmParserSemaCallback
@@ -127,27 +172,15 @@ modifier|*
 name|LookupInlineAsmIdentifier
 parameter_list|(
 name|StringRef
-name|Name
-parameter_list|,
-name|void
-modifier|*
-name|Loc
-parameter_list|,
-name|unsigned
 modifier|&
-name|Length
+name|LineBuf
 parameter_list|,
-name|unsigned
+name|InlineAsmIdentifierInfo
 modifier|&
-name|Size
-parameter_list|,
-name|unsigned
-modifier|&
-name|Type
+name|Info
 parameter_list|,
 name|bool
-modifier|&
-name|IsVarDecl
+name|IsUnevaluatedContext
 parameter_list|)
 init|=
 literal|0
@@ -171,6 +204,12 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+typedef|typedef
+name|MCAsmParserSemaCallback
+operator|::
+name|InlineAsmIdentifierInfo
+name|InlineAsmIdentifierInfo
+expr_stmt|;
 comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
 comment|/// assembly parsers.
 name|class
@@ -475,12 +514,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 init|=
 literal|0
@@ -507,12 +541,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 init|=
 literal|0
@@ -550,12 +579,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
 comment|/// parseIdentifier - Parse an identifier or string (as a quoted identifier)
@@ -636,6 +660,28 @@ modifier|*
 modifier|&
 name|Res
 parameter_list|)
+function_decl|;
+comment|/// parsePrimaryExpr - Parse a primary expression.
+comment|///
+comment|/// @param Res - The value of the expression. The result is undefined
+comment|/// on error.
+comment|/// @result - False on success.
+name|virtual
+name|bool
+name|parsePrimaryExpr
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+modifier|&
+name|Res
+parameter_list|,
+name|SMLoc
+modifier|&
+name|EndLoc
+parameter_list|)
+init|=
+literal|0
 function_decl|;
 comment|/// parseParenExpression - Parse an arbitrary expression, assuming that an
 comment|/// initial '(' has already been consumed.

@@ -243,6 +243,13 @@ name|hasStructRetAttr
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return true if this argument has the returned attribute on it in
+comment|/// its containing function.
+name|bool
+name|hasReturnedAttr
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Add a Attribute to an argument.
 name|void
 name|addAttr

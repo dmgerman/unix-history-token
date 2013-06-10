@@ -180,7 +180,12 @@ comment|/// and Width into these values itself.
 name|UBFX
 block|,
 comment|// Wraps an address which the ISelLowering phase has decided should be
-comment|// created using the small absolute memory model: i.e. adrp/add or
+comment|// created using the large memory model style: i.e. a sequence of four
+comment|// movz/movk instructions.
+name|WrapperLarge
+block|,
+comment|// Wraps an address which the ISelLowering phase has decided should be
+comment|// created using the small memory model style: i.e. adrp/add or
 comment|// adrp/mem-op. This exists to prevent bare TargetAddresses which may never
 comment|// get selected.
 name|WrapperSmall
@@ -550,6 +555,24 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|bool IsSigned
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalAddressELFSmall
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerGlobalAddressELFLarge
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;

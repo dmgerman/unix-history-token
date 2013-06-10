@@ -112,6 +112,7 @@ extern|extern llvm::cl::opt<bool> Relocations;
 extern|extern llvm::cl::opt<bool> Symbols;
 extern|extern llvm::cl::opt<bool> DynamicSymbols;
 extern|extern llvm::cl::opt<bool> UnwindInfo;
+extern|extern llvm::cl::opt<bool> ExpandRelocs;
 block|}
 end_decl_stmt
 

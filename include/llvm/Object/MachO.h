@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares the MachOObjectFile class, which binds the MachOObject
+comment|// This file declares the MachOObjectFile class, which implement the ObjectFile
 end_comment
 
 begin_comment
-comment|// class to the generic ObjectFile wrapper.
+comment|// interface for MachO files.
 end_comment
 
 begin_comment
@@ -66,13 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Object/MachOObject.h"
+file|"llvm/Object/MachOFormat.h"
 end_include
 
 begin_include
@@ -100,12 +106,6 @@ block|{
 name|namespace
 name|object
 block|{
-typedef|typedef
-name|MachOObject
-operator|::
-name|LoadCommandInfo
-name|LoadCommandInfo
-expr_stmt|;
 name|class
 name|MachOObjectFile
 range|:
@@ -114,134 +114,34 @@ name|ObjectFile
 block|{
 name|public
 operator|:
+expr|struct
+name|LoadCommandInfo
+block|{
+specifier|const
+name|char
+operator|*
+name|Ptr
+block|;
+comment|// Where in memory the load command is.
+name|macho
+operator|::
+name|LoadCommand
+name|C
+block|;
+comment|// The command itself.
+block|}
+block|;
 name|MachOObjectFile
 argument_list|(
-name|MemoryBuffer
-operator|*
-name|Object
+argument|MemoryBuffer *Object
 argument_list|,
-name|MachOObject
-operator|*
-name|MOO
+argument|bool IsLittleEndian
 argument_list|,
-name|error_code
-operator|&
-name|ec
+argument|bool Is64Bits
+argument_list|,
+argument|error_code&ec
 argument_list|)
 block|;
-name|virtual
-name|symbol_iterator
-name|begin_symbols
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|symbol_iterator
-name|end_symbols
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|symbol_iterator
-name|begin_dynamic_symbols
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|symbol_iterator
-name|end_dynamic_symbols
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|library_iterator
-name|begin_libraries_needed
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|library_iterator
-name|end_libraries_needed
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|section_iterator
-name|begin_sections
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|section_iterator
-name|end_sections
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|uint8_t
-name|getBytesInAddress
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|StringRef
-name|getFileFormatName
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getArch
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|StringRef
-name|getLoadName
-argument_list|()
-specifier|const
-block|;
-comment|// In a MachO file, sections have a segment name. This is used in the .o
-comment|// files. They have a single segment, but this field specifies which segment
-comment|// a section should be put in in the final object.
-name|error_code
-name|getSectionFinalSegmentName
-argument_list|(
-argument|DataRefImpl Sec
-argument_list|,
-argument|StringRef&Res
-argument_list|)
-specifier|const
-block|;
-name|MachOObject
-operator|*
-name|getObject
-argument_list|()
-block|{
-return|return
-name|MachOObj
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Binary *v
-argument_list|)
-block|{
-return|return
-name|v
-operator|->
-name|isMachO
-argument_list|()
-return|;
-block|}
-name|protected
-operator|:
 name|virtual
 name|error_code
 name|getSymbolNext
@@ -264,16 +164,6 @@ specifier|const
 block|;
 name|virtual
 name|error_code
-name|getSymbolFileOffset
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|uint64_t&Res
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|error_code
 name|getSymbolAddress
 argument_list|(
 argument|DataRefImpl Symb
@@ -284,11 +174,41 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|getSymbolFileOffset
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getSymbolAlignment
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint32_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|getSymbolSize
 argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
 argument|uint64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getSymbolType
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|SymbolRef::Type&Res
 argument_list|)
 specifier|const
 block|;
@@ -309,16 +229,6 @@ argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
 argument|uint32_t&Res
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|error_code
-name|getSymbolType
-argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|SymbolRef::Type&Res
 argument_list|)
 specifier|const
 block|;
@@ -476,9 +386,9 @@ name|virtual
 name|error_code
 name|sectionContainsSymbol
 argument_list|(
-argument|DataRefImpl DRI
+argument|DataRefImpl Sec
 argument_list|,
-argument|DataRefImpl S
+argument|DataRefImpl Symb
 argument_list|,
 argument|bool&Result
 argument_list|)
@@ -610,22 +520,405 @@ argument|StringRef&Res
 argument_list|)
 specifier|const
 block|;
+comment|// TODO: Would be useful to have an iterator based version
+comment|// of the load command interface too.
+name|virtual
+name|symbol_iterator
+name|begin_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|symbol_iterator
+name|end_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|symbol_iterator
+name|begin_dynamic_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|symbol_iterator
+name|end_dynamic_symbols
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|section_iterator
+name|begin_sections
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|section_iterator
+name|end_sections
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|library_iterator
+name|begin_libraries_needed
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|library_iterator
+name|end_libraries_needed
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|uint8_t
+name|getBytesInAddress
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|StringRef
+name|getFileFormatName
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getArch
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|StringRef
+name|getLoadName
+argument_list|()
+specifier|const
+block|;
+name|relocation_iterator
+name|getSectionRelBegin
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+name|relocation_iterator
+name|getSectionRelEnd
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+comment|// In a MachO file, sections have a segment name. This is used in the .o
+comment|// files. They have a single segment, but this field specifies which segment
+comment|// a section should be put in in the final object.
+name|StringRef
+name|getSectionFinalSegmentName
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+block|;
+comment|// Names are stored as 16 bytes. These returns the raw 16 bytes without
+comment|// interpreting them as a C string.
+name|ArrayRef
+operator|<
+name|char
+operator|>
+name|getSectionRawName
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+block|;
+name|ArrayRef
+operator|<
+name|char
+operator|>
+name|getSectionRawFinalSegmentName
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+block|;
+comment|// MachO specific Info about relocations.
+name|bool
+name|isRelocationScattered
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getPlainRelocationSymbolNum
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|getPlainRelocationExternal
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|getScatteredRelocationScattered
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|uint32_t
+name|getScatteredRelocationValue
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getAnyRelocationAddress
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getAnyRelocationPCRel
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getAnyRelocationLength
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getAnyRelocationType
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+name|SectionRef
+name|getRelocationSection
+argument_list|(
+argument|const macho::RelocationEntry&RE
+argument_list|)
+specifier|const
+block|;
+comment|// Walk load commands.
+name|LoadCommandInfo
+name|getFirstLoadCommandInfo
+argument_list|()
+specifier|const
+block|;
+name|LoadCommandInfo
+name|getNextLoadCommandInfo
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|)
+specifier|const
+block|;
+comment|// MachO specific structures.
+name|macho
+operator|::
+name|Section
+name|getSection
+argument_list|(
+argument|DataRefImpl DRI
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|Section64
+name|getSection64
+argument_list|(
+argument|DataRefImpl DRI
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|Section
+name|getSection
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|Section64
+name|getSection64
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|SymbolTableEntry
+name|getSymbolTableEntry
+argument_list|(
+argument|DataRefImpl DRI
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|Symbol64TableEntry
+name|getSymbol64TableEntry
+argument_list|(
+argument|DataRefImpl DRI
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|LinkeditDataLoadCommand
+name|getLinkeditDataLoadCommand
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|SegmentLoadCommand
+name|getSegmentLoadCommand
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|Segment64LoadCommand
+name|getSegment64LoadCommand
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|LinkerOptionsLoadCommand
+name|getLinkerOptionsLoadCommand
+argument_list|(
+argument|const LoadCommandInfo&L
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|RelocationEntry
+name|getRelocation
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|Header
+name|getHeader
+argument_list|()
+specifier|const
+block|;
+name|macho
+operator|::
+name|Header64Ext
+name|getHeader64Ext
+argument_list|()
+specifier|const
+block|;
+name|macho
+operator|::
+name|IndirectSymbolTableEntry
+name|getIndirectSymbolTableEntry
+argument_list|(
+argument|const macho::DysymtabLoadCommand&DLC
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|DataInCodeTableEntry
+name|getDataInCodeTableEntry
+argument_list|(
+argument|uint32_t DataOffset
+argument_list|,
+argument|unsigned Index
+argument_list|)
+specifier|const
+block|;
+name|macho
+operator|::
+name|SymtabLoadCommand
+name|getSymtabLoadCommand
+argument_list|()
+specifier|const
+block|;
+name|macho
+operator|::
+name|DysymtabLoadCommand
+name|getDysymtabLoadCommand
+argument_list|()
+specifier|const
+block|;
+name|StringRef
+name|getStringTableData
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|is64Bit
+argument_list|()
+specifier|const
+block|;
+name|void
+name|ReadULEB128s
+argument_list|(
+argument|uint64_t Index
+argument_list|,
+argument|SmallVectorImpl<uint64_t>&Out
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Binary *v
+argument_list|)
+block|{
+return|return
+name|v
+operator|->
+name|isMachO
+argument_list|()
+return|;
+block|}
 name|private
 operator|:
-name|OwningPtr
-operator|<
-name|MachOObject
-operator|>
-name|MachOObj
-block|;
-name|mutable
-name|uint32_t
-name|RegisteredStringTable
-block|;
 typedef|typedef
 name|SmallVector
 operator|<
-name|DataRefImpl
+specifier|const
+name|char
+operator|*
 operator|,
 literal|1
 operator|>
@@ -634,135 +927,15 @@ expr_stmt|;
 name|SectionList
 name|Sections
 decl_stmt|;
-name|void
-name|moveToNextSection
-argument_list|(
-name|DataRefImpl
-operator|&
-name|DRI
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|getSymbolTableEntry
-argument_list|(
-name|DataRefImpl
-name|DRI
-argument_list|,
-name|InMemoryStruct
-operator|<
-name|macho
-operator|::
-name|SymbolTableEntry
-operator|>
-operator|&
-name|Res
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|getSymbol64TableEntry
-argument_list|(
-name|DataRefImpl
-name|DRI
-argument_list|,
-name|InMemoryStruct
-operator|<
-name|macho
-operator|::
-name|Symbol64TableEntry
-operator|>
-operator|&
-name|Res
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|moveToNextSymbol
-argument_list|(
-name|DataRefImpl
-operator|&
-name|DRI
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|getSection
-argument_list|(
-name|DataRefImpl
-name|DRI
-argument_list|,
-name|InMemoryStruct
-operator|<
-name|macho
-operator|::
-name|Section
-operator|>
-operator|&
-name|Res
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|getSection64
-argument_list|(
-name|DataRefImpl
-name|DRI
-argument_list|,
-name|InMemoryStruct
-operator|<
-name|macho
-operator|::
-name|Section64
-operator|>
-operator|&
-name|Res
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|getRelocation
-argument_list|(
-name|DataRefImpl
-name|Rel
-argument_list|,
-name|InMemoryStruct
-operator|<
-name|macho
-operator|::
-name|RelocationEntry
-operator|>
-operator|&
-name|Res
-argument_list|)
-decl|const
-decl_stmt|;
-name|std
-operator|::
-name|size_t
-name|getSectionIndex
-argument_list|(
-argument|DataRefImpl Sec
-argument_list|)
 specifier|const
-expr_stmt|;
-name|void
-name|printRelocationTargetName
-argument_list|(
-name|InMemoryStruct
-operator|<
-name|macho
-operator|::
-name|RelocationEntry
-operator|>
-operator|&
-name|RE
-argument_list|,
-name|raw_string_ostream
-operator|&
-name|fmt
-argument_list|)
-decl|const
+name|char
+modifier|*
+name|SymtabLoadCmd
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|DysymtabLoadCmd
 decl_stmt|;
 block|}
 empty_stmt|;

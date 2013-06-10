@@ -649,6 +649,15 @@ block|;
 name|StringRef
 name|AddrSection
 block|;
+name|SmallVector
+operator|<
+name|MemoryBuffer
+operator|*
+block|,
+literal|4
+operator|>
+name|UncompressedSections
+block|;
 name|public
 operator|:
 name|DWARFContextInMemory
@@ -658,6 +667,10 @@ operator|::
 name|ObjectFile
 operator|*
 argument_list|)
+block|;
+operator|~
+name|DWARFContextInMemory
+argument_list|()
 block|;
 name|virtual
 name|bool

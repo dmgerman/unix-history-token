@@ -231,6 +231,18 @@ return|return
 name|true
 return|;
 block|}
+name|virtual
+name|bool
+name|requiresVirtualBaseRegisters
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|lowerDynamicAlloc
 argument_list|(
@@ -295,6 +307,49 @@ argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
 argument|RegScavenger *RS = NULL
+argument_list|)
+specifier|const
+block|;
+comment|// Support for virtual base registers.
+name|bool
+name|needsFrameBaseReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|materializeFrameBaseRegister
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|resolveFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isFrameOffsetLegal
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;

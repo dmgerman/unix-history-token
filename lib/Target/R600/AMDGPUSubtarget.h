@@ -154,6 +154,9 @@ block|;
 name|bool
 name|R600ALUInst
 block|;
+name|bool
+name|HasVertexCache
+block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
@@ -202,6 +205,11 @@ specifier|const
 block|;
 name|bool
 name|is64bit
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|hasVertexCache
 argument_list|()
 specifier|const
 block|;

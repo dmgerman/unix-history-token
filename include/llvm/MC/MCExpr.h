@@ -632,6 +632,9 @@ block|,
 name|VK_Mips_CALL_HI16
 block|,
 name|VK_Mips_CALL_LO16
+block|,
+name|VK_COFF_IMGREL32
+comment|// symbol@imgrel (image-relative)
 block|}
 block|;
 name|private

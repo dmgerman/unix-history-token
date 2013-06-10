@@ -564,38 +564,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Compute the size of the underlying object pointed by Ptr. Returns
-comment|/// true and the object size in Size if successful, and false otherwise.
-comment|/// If RoundToAlign is true, then Size is rounded up to the aligment of allocas,
-comment|/// byval arguments, and global variables.
-name|bool
-name|getUnderlyingObjectSize
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|Ptr
-parameter_list|,
-name|uint64_t
-modifier|&
-name|Size
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|TD
-parameter_list|,
-specifier|const
-name|TargetLibraryInfo
-modifier|*
-name|TLI
-parameter_list|,
-name|bool
-name|RoundToAlign
-init|=
-name|false
-parameter_list|)
-function_decl|;
 typedef|typedef
 name|std
 operator|::
@@ -620,17 +588,6 @@ decl_stmt|,
 name|SizeOffsetType
 decl|>
 block|{
-typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|Value
-operator|*
-operator|,
-name|SizeOffsetType
-operator|>
-name|CacheMapTy
-expr_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
@@ -650,9 +607,15 @@ decl_stmt|;
 name|APInt
 name|Zero
 decl_stmt|;
-name|CacheMapTy
-name|CacheMap
-decl_stmt|;
+name|SmallPtrSet
+operator|<
+name|Instruction
+operator|*
+operator|,
+literal|8
+operator|>
+name|SeenInsts
+expr_stmt|;
 name|APInt
 name|align
 parameter_list|(

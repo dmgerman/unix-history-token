@@ -1490,22 +1490,15 @@ comment|/// branch of ExitCond, TBB, and FBB.
 name|ExitLimit
 name|ComputeExitLimitFromCond
 argument_list|(
-specifier|const
-name|Loop
-operator|*
-name|L
+argument|const Loop *L
 argument_list|,
-name|Value
-operator|*
-name|ExitCond
+argument|Value *ExitCond
 argument_list|,
-name|BasicBlock
-operator|*
-name|TBB
+argument|BasicBlock *TBB
 argument_list|,
-name|BasicBlock
-operator|*
-name|FBB
+argument|BasicBlock *FBB
+argument_list|,
+argument|bool IsSubExpr
 argument_list|)
 block|;
 comment|/// ComputeExitLimitFromICmp - Compute the number of times the backedge of
@@ -1514,22 +1507,15 @@ comment|/// branch of the ICmpInst ExitCond, TBB, and FBB.
 name|ExitLimit
 name|ComputeExitLimitFromICmp
 argument_list|(
-specifier|const
-name|Loop
-operator|*
-name|L
+argument|const Loop *L
 argument_list|,
-name|ICmpInst
-operator|*
-name|ExitCond
+argument|ICmpInst *ExitCond
 argument_list|,
-name|BasicBlock
-operator|*
-name|TBB
+argument|BasicBlock *TBB
 argument_list|,
-name|BasicBlock
-operator|*
-name|FBB
+argument|BasicBlock *FBB
+argument_list|,
+argument|bool IsSubExpr
 argument_list|)
 block|;
 comment|/// ComputeLoadConstantCompareExitLimit - Given an exit condition
@@ -1570,15 +1556,11 @@ comment|/// CouldNotCompute.
 name|ExitLimit
 name|HowFarToZero
 argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|V
+argument|const SCEV *V
 argument_list|,
-specifier|const
-name|Loop
-operator|*
-name|L
+argument|const Loop *L
+argument_list|,
+argument|bool IsSubExpr
 argument_list|)
 block|;
 comment|/// HowFarToNonZero - Return the number of times an exit condition checking
@@ -1612,6 +1594,8 @@ argument_list|,
 argument|const Loop *L
 argument_list|,
 argument|bool isSigned
+argument_list|,
+argument|bool IsSubExpr
 argument_list|)
 block|;
 comment|/// getPredecessorWithUniqueSuccessorForBB - Return a predecessor of BB

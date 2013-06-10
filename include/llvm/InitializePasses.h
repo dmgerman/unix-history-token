@@ -1637,6 +1637,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeSLPVectorizerPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeBBVectorizePass
 parameter_list|(
 name|PassRegistry

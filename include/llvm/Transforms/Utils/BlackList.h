@@ -88,6 +88,10 @@ comment|// src:file_with_tricky_code.cc
 end_comment
 
 begin_comment
+comment|// global-init-src:ignore-global-initializers-issues.cc
+end_comment
+
+begin_comment
 comment|// ---
 end_comment
 

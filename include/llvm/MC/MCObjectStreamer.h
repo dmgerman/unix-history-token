@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCAssembler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
@@ -97,6 +103,11 @@ block|;
 name|MCSectionData
 operator|*
 name|CurSectionData
+block|;
+name|MCSectionData
+operator|::
+name|iterator
+name|CurInsertionPoint
 block|;
 name|virtual
 name|void
@@ -188,6 +199,32 @@ name|getCurrentFragment
 argument_list|()
 specifier|const
 block|;
+name|void
+name|insert
+argument_list|(
+argument|MCFragment *F
+argument_list|)
+specifier|const
+block|{
+name|CurSectionData
+operator|->
+name|getFragmentList
+argument_list|()
+operator|.
+name|insert
+argument_list|(
+name|CurInsertionPoint
+argument_list|,
+name|F
+argument_list|)
+block|;
+name|F
+operator|->
+name|setParent
+argument_list|(
+name|CurSectionData
+argument_list|)
+block|;   }
 comment|/// Get a data fragment to write into, creating a new one if the current
 comment|/// fragment is not a data fragment.
 name|MCDataFragment
@@ -306,6 +343,11 @@ specifier|const
 name|MCSection
 operator|*
 name|Section
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Subsection
 argument_list|)
 block|;
 name|virtual

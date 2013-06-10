@@ -1670,6 +1670,39 @@ name|End
 argument_list|)
 return|;
 block|}
+comment|/// True iff this live range is a single segment that lies between the
+comment|/// specified boundaries, exclusively. Vregs live across a backedge are not
+comment|/// considered local. The boundaries are expected to lie within an extended
+comment|/// basic block, so vregs that are not live out should contain no holes.
+name|bool
+name|isLocal
+argument_list|(
+name|SlotIndex
+name|Start
+argument_list|,
+name|SlotIndex
+name|End
+argument_list|)
+decl|const
+block|{
+return|return
+name|beginIndex
+argument_list|()
+operator|>
+name|Start
+operator|.
+name|getBaseIndex
+argument_list|()
+operator|&&
+name|endIndex
+argument_list|()
+operator|<
+name|End
+operator|.
+name|getBoundaryIndex
+argument_list|()
+return|;
+block|}
 comment|/// removeRange - Remove the specified range from this interval.  Note that
 comment|/// the range must be a single LiveRange in its entirety.
 name|void

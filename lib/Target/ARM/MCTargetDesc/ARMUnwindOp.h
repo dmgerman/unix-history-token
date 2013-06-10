@@ -205,6 +205,29 @@ init|=
 literal|0xd0
 block|}
 enum|;
+comment|/// ARM-defined Personality Routine Index
+enum|enum
+name|ARMPersonalityRoutineIndex
+block|{
+comment|// To make the exception handling table become more compact, ARM defined
+comment|// several personality routines in EHABI.  There are 3 different
+comment|// personality routines in ARM EHABI currently.  It is possible to have 16
+comment|// pre-defined personality routines at most.
+name|AEABI_UNWIND_CPP_PR0
+init|=
+literal|0
+block|,
+name|AEABI_UNWIND_CPP_PR1
+init|=
+literal|1
+block|,
+name|AEABI_UNWIND_CPP_PR2
+init|=
+literal|2
+block|,
+name|NUM_PERSONALITY_INDEX
+block|}
+enum|;
 block|}
 end_decl_stmt
 

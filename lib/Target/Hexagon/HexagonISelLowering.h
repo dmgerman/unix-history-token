@@ -185,6 +185,8 @@ block|,
 name|WrapperShuffOH
 block|,
 name|TC_RETURN
+block|,
+name|EH_RETURN
 block|}
 enum|;
 block|}
@@ -324,6 +326,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerEH_RETURN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerFormalArguments
 argument_list|(
 argument|SDValue Chain
@@ -409,15 +420,6 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerMEMBARRIER
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
 block|;

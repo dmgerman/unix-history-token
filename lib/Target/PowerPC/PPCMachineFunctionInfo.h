@@ -162,6 +162,17 @@ comment|/// CRSpillFrameIndex - FrameIndex for CR spill slot for 32-bit SVR4.
 name|int
 name|CRSpillFrameIndex
 block|;
+comment|/// If any of CR[2-4] need to be saved in the prologue and restored in the
+comment|/// epilogue then they are added to this array. This is used for the
+comment|/// 64-bit SVR4 ABI.
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|3
+operator|>
+name|MustSaveCRs
+block|;
 name|public
 operator|:
 name|explicit
@@ -543,6 +554,35 @@ block|{
 name|CRSpillFrameIndex
 operator|=
 name|idx
+block|; }
+specifier|const
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|3
+operator|>
+operator|&
+name|getMustSaveCRs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MustSaveCRs
+return|;
+block|}
+name|void
+name|addMustSaveCR
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|MustSaveCRs
+operator|.
+name|push_back
+argument_list|(
+name|Reg
+argument_list|)
 block|; }
 expr|}
 block|;  }

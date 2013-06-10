@@ -127,6 +127,9 @@ name|class
 name|DataLayout
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|TargetFrameLowering
 decl_stmt|;
 name|class

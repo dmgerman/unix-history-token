@@ -294,15 +294,6 @@ name|getDefaultLowerBound
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getOrCreateContextDIE - Get context owner's DIE.
-name|DIE
-modifier|*
-name|getOrCreateContextDIE
-parameter_list|(
-name|DIDescriptor
-name|Context
-parameter_list|)
-function_decl|;
 name|public
 label|:
 name|CompileUnit
@@ -1578,6 +1569,15 @@ name|createStaticMemberDIE
 parameter_list|(
 name|DIDerivedType
 name|DT
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateContextDIE - Get context owner's DIE.
+name|DIE
+modifier|*
+name|getOrCreateContextDIE
+parameter_list|(
+name|DIDescriptor
+name|Context
 parameter_list|)
 function_decl|;
 name|private

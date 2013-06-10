@@ -4450,6 +4450,16 @@ block|,
 comment|// MO_LO12 - On a symbol operand, this represents a relocation containing
 comment|// lower 12 bits of the address. Used in add/sub/ldr/str.
 name|MO_LO12
+block|,
+comment|// MO_ABS_G* - Represent the 16-bit granules of an absolute reference using
+comment|// movz/movk instructions.
+name|MO_ABS_G3
+block|,
+name|MO_ABS_G2_NC
+block|,
+name|MO_ABS_G1_NC
+block|,
+name|MO_ABS_G0_NC
 block|}
 enum|;
 block|}

@@ -121,6 +121,15 @@ name|SDValue
 name|getMips16SPAliasReg
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|runOnMachineFunction
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+block|;
 name|void
 name|getMips16SPRefReg
 argument_list|(

@@ -375,6 +375,8 @@ block|{
 return|return
 name|getSubclassData
 argument_list|()
+operator|!=
+literal|0
 return|;
 block|}
 name|Type

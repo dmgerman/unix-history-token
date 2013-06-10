@@ -124,7 +124,15 @@ block|}
 comment|/// \brief Emit register usage information so that the GPU driver
 comment|/// can correctly setup the GPU state.
 name|void
-name|EmitProgramInfo
+name|EmitProgramInfoR600
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+block|;
+name|void
+name|EmitProgramInfoSI
 argument_list|(
 name|MachineFunction
 operator|&

@@ -471,6 +471,9 @@ name|bool
 name|HasMicrosoftFastStdCallMangling
 decl_stmt|;
 comment|// Defaults to false.
+name|bool
+name|NeedsDwarfSectionOffsetDirective
+decl_stmt|;
 comment|//===--- Alignment Information ----------------------------------------===//
 comment|/// AlignDirective - The directive used to emit round up to an alignment
 comment|/// boundary.
@@ -632,13 +635,6 @@ name|bool
 name|DwarfUsesInlineInfoSection
 decl_stmt|;
 comment|// Defaults to false.
-comment|/// DwarfSectionOffsetDirective - Special section offset directive.
-specifier|const
-name|char
-modifier|*
-name|DwarfSectionOffsetDirective
-decl_stmt|;
-comment|// Defaults to NULL
 comment|/// DwarfUsesRelocationsAcrossSections - True if Dwarf2 output generally
 comment|/// uses relocations for references to other .debug_* sections.
 name|bool
@@ -952,6 +948,15 @@ specifier|const
 block|{
 return|return
 name|HasMicrosoftFastStdCallMangling
+return|;
+block|}
+name|bool
+name|needsDwarfSectionOffsetDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NeedsDwarfSectionOffsetDirective
 return|;
 block|}
 comment|// Accessors.
@@ -1501,17 +1506,6 @@ specifier|const
 block|{
 return|return
 name|DwarfUsesInlineInfoSection
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getDwarfSectionOffsetDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfSectionOffsetDirective
 return|;
 block|}
 name|bool

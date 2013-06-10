@@ -82,6 +82,11 @@ expr_stmt|;
 enum|enum
 name|AsmRewriteKind
 block|{
+name|AOK_Delete
+init|=
+literal|0
+block|,
+comment|// Rewrite should be ignored.
 name|AOK_Align
 block|,
 comment|// Rewrite align as .align.
@@ -111,6 +116,43 @@ name|AOK_Skip
 comment|// Skip emission (e.g., offset/type operators).
 block|}
 enum|;
+specifier|const
+name|char
+name|AsmRewritePrecedence
+index|[]
+init|=
+block|{
+literal|0
+block|,
+comment|// AOK_Delete
+literal|1
+block|,
+comment|// AOK_Align
+literal|1
+block|,
+comment|// AOK_DotOperator
+literal|1
+block|,
+comment|// AOK_Emit
+literal|3
+block|,
+comment|// AOK_Imm
+literal|3
+block|,
+comment|// AOK_ImmPrefix
+literal|2
+block|,
+comment|// AOK_Input
+literal|2
+block|,
+comment|// AOK_Output
+literal|4
+block|,
+comment|// AOK_SizeDirective
+literal|1
+comment|// AOK_Skip
+block|}
+decl_stmt|;
 struct|struct
 name|AsmRewrite
 block|{

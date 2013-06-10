@@ -113,6 +113,7 @@ name|FunctionPass
 modifier|*
 name|createHexagonISelDag
 argument_list|(
+specifier|const
 name|HexagonTargetMachine
 operator|&
 name|TM
@@ -127,6 +128,7 @@ name|FunctionPass
 modifier|*
 name|createHexagonDelaySlotFillerPass
 parameter_list|(
+specifier|const
 name|TargetMachine
 modifier|&
 name|TM
@@ -136,6 +138,7 @@ name|FunctionPass
 modifier|*
 name|createHexagonFPMoverPass
 parameter_list|(
+specifier|const
 name|TargetMachine
 modifier|&
 name|TM
@@ -143,8 +146,9 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
-name|createHexagonRemoveExtendOps
+name|createHexagonRemoveExtendArgs
 parameter_list|(
+specifier|const
 name|HexagonTargetMachine
 modifier|&
 name|TM
@@ -154,6 +158,7 @@ name|FunctionPass
 modifier|*
 name|createHexagonCFGOptimizer
 parameter_list|(
+specifier|const
 name|HexagonTargetMachine
 modifier|&
 name|TM
@@ -163,6 +168,7 @@ name|FunctionPass
 modifier|*
 name|createHexagonSplitTFRCondSets
 parameter_list|(
+specifier|const
 name|HexagonTargetMachine
 modifier|&
 name|TM
@@ -172,6 +178,7 @@ name|FunctionPass
 modifier|*
 name|createHexagonExpandPredSpillCode
 parameter_list|(
+specifier|const
 name|HexagonTargetMachine
 modifier|&
 name|TM
@@ -202,7 +209,7 @@ modifier|*
 name|createHexagonNewValueJump
 parameter_list|()
 function_decl|;
-comment|/* TODO: object output.   MCCodeEmitter *createHexagonMCCodeEmitter(const Target&,                                             TargetMachine&TM,                                             MCContext&Ctx); */
+comment|/* TODO: object output.   MCCodeEmitter *createHexagonMCCodeEmitter(const Target&,                                             const TargetMachine&TM,                                             MCContext&Ctx); */
 comment|/* TODO: assembler input.   TargetAsmBackend *createHexagonAsmBackend(const Target&,                                                   const std::string&); */
 name|void
 name|HexagonLowerToMC

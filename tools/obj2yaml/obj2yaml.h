@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_UTILS_OBJ2YAML_H
+name|LLVM_TOOLS_OBJ2YAML_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_UTILS_OBJ2YAML_H
+name|LLVM_TOOLS_OBJ2YAML_H
 end_define
 
 begin_include
@@ -81,7 +81,7 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|yaml
+name|objyaml
 block|{
 comment|// routines for writing YAML
 comment|// Write a hex stream:

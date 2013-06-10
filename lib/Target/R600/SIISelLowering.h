@@ -96,6 +96,15 @@ operator|*
 name|TRI
 block|;
 name|SDValue
+name|LowerSTORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerSELECT_CC
 argument_list|(
 argument|SDValue Op
@@ -145,6 +154,25 @@ argument_list|,
 argument|unsigned RegClass
 argument_list|,
 argument|bool&ScalarSlotUsed
+argument_list|)
+specifier|const
+block|;
+name|SDNode
+operator|*
+name|foldOperands
+argument_list|(
+argument|MachineSDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|void
+name|adjustWritemask
+argument_list|(
+argument|MachineSDNode *&N
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -231,6 +259,16 @@ argument_list|(
 argument|MachineSDNode *N
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AdjustInstrPostInstrSelection
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|SDNode *Node
 argument_list|)
 specifier|const
 block|;

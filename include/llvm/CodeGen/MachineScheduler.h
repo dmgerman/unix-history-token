@@ -1096,6 +1096,20 @@ argument_list|(
 name|Mutation
 argument_list|)
 block|;   }
+comment|/// \brief True if an edge can be added from PredSU to SuccSU without creating
+comment|/// a cycle.
+name|bool
+name|canAddEdge
+argument_list|(
+name|SUnit
+operator|*
+name|SuccSU
+argument_list|,
+name|SUnit
+operator|*
+name|PredSU
+argument_list|)
+block|;
 comment|/// \brief Add a DAG edge to the given SU with the given predecessor
 comment|/// dependence data.
 comment|///
@@ -1157,6 +1171,16 @@ name|virtual
 name|void
 name|schedule
 argument_list|()
+block|;
+comment|/// Change the position of an instruction within the basic block and update
+comment|/// live ranges and region boundary iterators.
+name|void
+name|moveInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPos
+argument_list|)
 block|;
 comment|/// Get current register pressure for the top scheduled instructions.
 specifier|const
@@ -1377,14 +1401,6 @@ name|unsigned
 operator|>
 operator|&
 name|NewMaxPressure
-argument_list|)
-block|;
-name|void
-name|moveInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|MachineBasicBlock::iterator InsertPos
 argument_list|)
 block|;
 name|bool

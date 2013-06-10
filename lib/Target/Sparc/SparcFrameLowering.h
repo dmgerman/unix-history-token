@@ -90,6 +90,11 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
+specifier|const
+name|SparcSubtarget
+operator|&
+name|SubTarget
+block|;
 name|public
 operator|:
 name|explicit
@@ -98,18 +103,41 @@ argument_list|(
 specifier|const
 name|SparcSubtarget
 operator|&
-comment|/*sti*/
+name|ST
 argument_list|)
 operator|:
 name|TargetFrameLowering
 argument_list|(
-argument|TargetFrameLowering::StackGrowsDown
+name|TargetFrameLowering
+operator|::
+name|StackGrowsDown
 argument_list|,
+name|ST
+operator|.
+name|is64Bit
+argument_list|()
+condition|?
+literal|16
+else|:
 literal|8
 argument_list|,
 literal|0
+argument_list|,
+name|ST
+operator|.
+name|is64Bit
+argument_list|()
+condition|?
+literal|16
+else|:
+literal|8
 argument_list|)
-block|{   }
+block|,
+name|SubTarget
+argument_list|(
+argument|ST
+argument_list|)
+block|{}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void

@@ -1671,7 +1671,8 @@ argument|const MCExpr&Value_
 argument_list|,
 argument|bool IsSigned_
 argument_list|,
-argument|MCSectionData *SD
+argument|MCSectionData *SD =
+literal|0
 argument_list|)
 operator|:
 name|MCFragment
@@ -1806,7 +1807,8 @@ argument|int64_t _LineDelta
 argument_list|,
 argument|const MCExpr&_AddrDelta
 argument_list|,
-argument|MCSectionData *SD
+argument|MCSectionData *SD =
+literal|0
 argument_list|)
 operator|:
 name|MCFragment
@@ -1939,6 +1941,8 @@ argument_list|,
 name|MCSectionData
 operator|*
 name|SD
+operator|=
+literal|0
 argument_list|)
 operator|:
 name|MCFragment
@@ -2138,6 +2142,24 @@ name|unsigned
 name|HasInstructions
 operator|:
 literal|1
+block|;
+comment|/// Mapping from subsection number to insertion point for subsection numbers
+comment|/// below that number.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|MCFragment
+operator|*
+operator|>
+block|,
+literal|1
+operator|>
+name|SubsectionFragmentMap
 block|;
 comment|/// @}
 name|public
@@ -2386,6 +2408,12 @@ name|empty
 argument_list|()
 return|;
 block|}
+name|iterator
+name|getSubsectionInsertionPoint
+argument_list|(
+argument|unsigned Subsection
+argument_list|)
+block|;
 name|bool
 name|isBundleLocked
 argument_list|()

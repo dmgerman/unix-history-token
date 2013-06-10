@@ -120,6 +120,8 @@ argument_list|(
 argument|const MCAsmInfo&MAI
 argument_list|,
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCExpr *Subsection
 argument_list|)
 specifier|const
 block|{}

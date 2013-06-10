@@ -188,6 +188,9 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|StringRef Asm
+argument_list|,
+argument|StringRef Default =
+literal|""
 argument_list|)
 block|;
 name|void
@@ -292,6 +295,26 @@ argument_list|)
 block|;
 name|void
 name|printSel
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printBankSwizzle
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printKCache
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

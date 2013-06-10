@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -2026,6 +2032,34 @@ argument_list|)
 block|;
 return|return
 name|O
+return|;
+block|}
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|Module
+argument_list|,
+argument|LLVMModuleRef
+argument_list|)
+comment|/* LLVMModuleProviderRef exists for historical reasons, but now just holds a  * Module.  */
+specifier|inline
+name|Module
+modifier|*
+name|unwrap
+parameter_list|(
+name|LLVMModuleProviderRef
+name|MP
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Module
+operator|*
+operator|>
+operator|(
+name|MP
+operator|)
 return|;
 block|}
 block|}

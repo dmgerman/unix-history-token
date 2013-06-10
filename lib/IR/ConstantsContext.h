@@ -1439,7 +1439,7 @@ argument_list|,
 argument|unsigned short optionalflags =
 literal|0
 argument_list|,
-argument|ArrayRef<unsigned> inds = ArrayRef<unsigned>()
+argument|ArrayRef<unsigned> inds = None
 argument_list|)
 block|:
 name|opcode

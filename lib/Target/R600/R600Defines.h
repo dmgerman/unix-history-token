@@ -218,6 +218,22 @@ literal|1
 operator|<<
 literal|11
 operator|)
+block|,
+name|VTX_INST
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
+operator|)
+block|,
+name|TEX_INST
+init|=
+operator|(
+literal|1
+operator|<<
+literal|13
+operator|)
 block|}
 enum|;
 block|}
@@ -269,6 +285,26 @@ parameter_list|(
 name|reg
 parameter_list|)
 value|((reg)& HW_REG_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_VTX
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc).TSFlags& R600_InstFlag::VTX_INST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_TEX
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc).TSFlags& R600_InstFlag::TEX_INST)
 end_define
 
 begin_decl_stmt
@@ -326,6 +362,8 @@ name|PRED_SEL
 block|,
 name|IMM
 block|,
+name|BANK_SWIZZLE
+block|,
 name|COUNT
 block|}
 enum|;
@@ -346,8 +384,8 @@ block|{
 comment|//            W        C     S  S  S  S     S  S  S  S     S  S  S
 comment|//            R  O  D  L  S  R  R  R  R  S  R  R  R  R  S  R  R  R  L  P
 comment|//   D  U     I  M  R  A  R  C  C  C  C  R  C  C  C  C  R  C  C  C  A  R  I
-comment|//   S  E  U  T  O  E  M  C  0  0  0  0  C  1  1  1  1  C  2  2  2  S  E  M
-comment|//   T  M  P  E  D  L  P  0  N  R  A  S  1  N  R  A  S  2  N  R  S  T  D  M
+comment|//   S  E  U  T  O  E  M  C  0  0  0  0  C  1  1  1  1  C  2  2  2  S  E  M  B
+comment|//   T  M  P  E  D  L  P  0  N  R  A  S  1  N  R  A  S  2  N  R  S  T  D  M  S
 block|{
 literal|0
 block|,
@@ -407,6 +445,8 @@ block|,
 literal|11
 block|,
 literal|12
+block|,
+literal|13
 block|}
 block|,
 block|{
@@ -461,6 +501,8 @@ block|,
 literal|18
 block|,
 literal|19
+block|,
+literal|20
 block|}
 block|,
 block|{
@@ -517,11 +559,132 @@ block|,
 literal|16
 block|,
 literal|17
+block|,
+literal|18
 block|}
 block|}
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// Config register definitions
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_02880C_DB_SHADER_CONTROL
+value|0x02880C
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_02880C_KILL_ENABLE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x1)<< 6)
+end_define
+
+begin_comment
+comment|// These fields are the same for all shader types and families.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_NUM_GPRS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xFF)<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_STACK_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xFF)<< 8)
+end_define
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// R600, R700 Registers
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_028850_SQ_PGM_RESOURCES_PS
+value|0x028850
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_028868_SQ_PGM_RESOURCES_VS
+value|0x028868
+end_define
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// Evergreen, Northern Islands Registers
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_028844_SQ_PGM_RESOURCES_PS
+value|0x028844
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_028860_SQ_PGM_RESOURCES_VS
+value|0x028860
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_028878_SQ_PGM_RESOURCES_GS
+value|0x028878
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_0288D4_SQ_PGM_RESOURCES_LS
+value|0x0288d4
+end_define
 
 begin_endif
 endif|#

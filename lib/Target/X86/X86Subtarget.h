@@ -330,6 +330,11 @@ comment|/// to a register-based indirect call.
 name|bool
 name|CallRegIndirect
 block|;
+comment|/// LEAUsesAG - True if the LEA instruction inputs have to be ready at
+comment|///             address generation (AG) time.
+name|bool
+name|LEAUsesAG
+block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -910,6 +915,15 @@ specifier|const
 block|{
 return|return
 name|CallRegIndirect
+return|;
+block|}
+name|bool
+name|LEAusesAG
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LEAUsesAG
 return|;
 block|}
 name|bool

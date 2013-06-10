@@ -119,6 +119,155 @@ block|{
 name|class
 name|PassConfigImpl
 decl_stmt|;
+comment|/// Discriminated union of Pass ID types.
+comment|///
+comment|/// The PassConfig API prefers dealing with IDs because they are safer and more
+comment|/// efficient. IDs decouple configuration from instantiation. This way, when a
+comment|/// pass is overriden, it isn't unnecessarily instantiated. It is also unsafe to
+comment|/// refer to a Pass pointer after adding it to a pass manager, which deletes
+comment|/// redundant pass instances.
+comment|///
+comment|/// However, it is convient to directly instantiate target passes with
+comment|/// non-default ctors. These often don't have a registered PassInfo. Rather than
+comment|/// force all target passes to implement the pass registry boilerplate, allow
+comment|/// the PassConfig API to handle either type.
+comment|///
+comment|/// AnalysisID is sadly char*, so PointerIntPair won't work.
+name|class
+name|IdentifyingPassPtr
+block|{
+union|union
+block|{
+name|AnalysisID
+name|ID
+decl_stmt|;
+name|Pass
+modifier|*
+name|P
+decl_stmt|;
+block|}
+union|;
+name|bool
+name|IsInstance
+decl_stmt|;
+name|public
+label|:
+name|IdentifyingPassPtr
+argument_list|()
+operator|:
+name|P
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IsInstance
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|IdentifyingPassPtr
+argument_list|(
+argument|AnalysisID IDPtr
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|IDPtr
+argument_list|)
+operator|,
+name|IsInstance
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|IdentifyingPassPtr
+argument_list|(
+name|Pass
+operator|*
+name|InstancePtr
+argument_list|)
+operator|:
+name|P
+argument_list|(
+name|InstancePtr
+argument_list|)
+operator|,
+name|IsInstance
+argument_list|(
+argument|true
+argument_list|)
+block|{}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|P
+return|;
+block|}
+name|bool
+name|isInstance
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsInstance
+return|;
+block|}
+name|AnalysisID
+name|getID
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|IsInstance
+operator|&&
+literal|"Not a Pass ID"
+argument_list|)
+block|;
+return|return
+name|ID
+return|;
+block|}
+name|Pass
+operator|*
+name|getInstance
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|IsInstance
+operator|&&
+literal|"Not a Pass Instance"
+argument_list|)
+block|;
+return|return
+name|P
+return|;
+block|}
+block|}
+empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|IdentifyingPassPtr
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
 comment|/// Target-Independent Code Generator Pass Configuration Options.
 comment|///
 comment|/// This is an ImmutablePass solely for the purpose of exposing CodeGen options
@@ -350,7 +499,7 @@ name|substitutePass
 argument_list|(
 argument|AnalysisID StandardID
 argument_list|,
-argument|AnalysisID TargetID
+argument|IdentifyingPassPtr TargetID
 argument_list|)
 block|;
 comment|/// Insert InsertedPassID pass after TargetPassID pass.
@@ -359,7 +508,7 @@ name|insertPass
 argument_list|(
 argument|AnalysisID TargetPassID
 argument_list|,
-argument|AnalysisID InsertedPassID
+argument|IdentifyingPassPtr InsertedPassID
 argument_list|)
 block|;
 comment|/// Allow the target to enable a specific standard pass by default.
@@ -387,12 +536,13 @@ name|substitutePass
 argument_list|(
 name|PassID
 argument_list|,
-literal|0
+name|IdentifyingPassPtr
+argument_list|()
 argument_list|)
-block|; }
+block|;   }
 comment|/// Return the pass substituted for StandardID by the target.
 comment|/// If no substitution exists, return StandardID.
-name|AnalysisID
+name|IdentifyingPassPtr
 name|getPassSubstitution
 argument_list|(
 argument|AnalysisID StandardID
@@ -554,22 +704,6 @@ comment|/// all virtual registers.
 name|virtual
 name|bool
 name|addPreRewrite
-argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// addFinalizeRegAlloc - This method may be implemented by targets that want
-comment|/// to run passes within the regalloc pipeline, immediately after the register
-comment|/// allocation pass itself. These passes run as soon as virtual regisiters
-comment|/// have been rewritten to physical registers but before and other postRA
-comment|/// optimization happens. Targets that have marked instructions for bundling
-comment|/// must have finalized those bundles by the time these passes have run,
-comment|/// because subsequent passes are not guaranteed to be bundle-aware.
-name|virtual
-name|bool
-name|addFinalizeRegAlloc
 argument_list|()
 block|{
 return|return

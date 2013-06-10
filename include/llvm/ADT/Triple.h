@@ -104,7 +104,7 @@ name|UnknownArch
 block|,
 name|arm
 block|,
-comment|// ARM; arm, armv.*, xscale
+comment|// ARM: arm, armv.*, xscale
 name|aarch64
 block|,
 comment|// AArch64: aarch64
@@ -141,6 +141,9 @@ comment|// Sparc: sparc
 name|sparcv9
 block|,
 comment|// Sparcv9: Sparcv9
+name|systemz
+block|,
+comment|// SystemZ: s390x
 name|tce
 block|,
 comment|// TCE (http://tce.cs.tut.fi/): tce

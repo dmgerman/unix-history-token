@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -1068,6 +1074,13 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|BasicBlock
+argument_list|,
+argument|LLVMBasicBlockRef
+argument_list|)
 block|}
 end_decl_stmt
 

@@ -682,6 +682,36 @@ modifier|*
 name|BB
 parameter_list|)
 function_decl|;
+comment|/// @brief Recursively replace the entry basic block of the region.
+comment|///
+comment|/// This function replaces the entry basic block with a new basic block. It
+comment|/// also updates all child regions that have the same entry basic block as
+comment|/// this region.
+comment|///
+comment|/// @param NewEntry The new entry basic block.
+name|void
+name|replaceEntryRecursive
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|NewEntry
+parameter_list|)
+function_decl|;
+comment|/// @brief Recursively replace the exit basic block of the region.
+comment|///
+comment|/// This function replaces the exit basic block with a new basic block. It
+comment|/// also updates all child regions that have the same exit basic block as
+comment|/// this region.
+comment|///
+comment|/// @param NewExit The new exit basic block.
+name|void
+name|replaceExitRecursive
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|NewExit
+parameter_list|)
+function_decl|;
 comment|/// @brief Get the exit BasicBlock of the Region.
 comment|/// @return The exit BasicBlock of the Region, NULL if this is the TopLevel
 comment|///         Region.

@@ -873,7 +873,7 @@ block|}
 comment|///===---------------------------------------------------------------------===//
 comment|///  Dbg Intrinsic utilities
 comment|///
-comment|/// Inserts a llvm.dbg.value instrinsic before the stores to an alloca'd value
+comment|/// Inserts a llvm.dbg.value intrinsic before a store to an alloca'd value
 comment|/// that has an associated llvm.dbg.decl intrinsic.
 name|bool
 name|ConvertDebugDeclareToDebugValue
@@ -891,7 +891,7 @@ modifier|&
 name|Builder
 parameter_list|)
 function_decl|;
-comment|/// Inserts a llvm.dbg.value instrinsic before the stores to an alloca'd value
+comment|/// Inserts a llvm.dbg.value intrinsic before a load of an alloca'd value
 comment|/// that has an associated llvm.dbg.decl intrinsic.
 name|bool
 name|ConvertDebugDeclareToDebugValue
