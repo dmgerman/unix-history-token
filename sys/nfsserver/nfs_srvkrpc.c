@@ -247,6 +247,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<nfs/nfs_fha.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nfsserver/nfs.h>
 end_include
 
@@ -265,7 +271,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsserver/nfs_fha.h>
+file|<nfsserver/nfs_fha_old.h>
 end_include
 
 begin_include
@@ -2117,7 +2123,7 @@ name|nfsrv_pool
 operator|->
 name|sp_assign
 operator|=
-name|fha_assign
+name|fhaold_assign
 expr_stmt|;
 name|nfsrv_pool
 operator|->

@@ -650,7 +650,7 @@ comment|/*  * These architectures don't need re-alignment, so just return.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|newnfs_realign
 parameter_list|(
 name|struct
@@ -658,9 +658,16 @@ name|mbuf
 modifier|*
 modifier|*
 name|pm
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -678,7 +685,7 @@ comment|/*  *	newnfs_realign:  *  *	Check for badly aligned mbuf data and realig
 end_comment
 
 begin_function
-name|void
+name|int
 name|newnfs_realign
 parameter_list|(
 name|struct
@@ -686,6 +693,9 @@ name|mbuf
 modifier|*
 modifier|*
 name|pm
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
 name|struct
@@ -760,7 +770,7 @@ name|n
 operator|=
 name|m_getcl
 argument_list|(
-name|M_WAITOK
+name|how
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -773,7 +783,7 @@ name|n
 operator|=
 name|m_get
 argument_list|(
-name|M_WAITOK
+name|how
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -784,7 +794,11 @@ name|n
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 comment|/* 			 * Align the remainder of the mbuf chain. 			 */
 name|n
 operator|->
@@ -858,6 +872,11 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

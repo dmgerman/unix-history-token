@@ -50,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<nfs/nfs_fha.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/nfsserver/nfs_fha_new.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -75,7 +87,6 @@ comment|/*  * Mapping of old NFS Version 2 RPC numbers to generic numbers.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|newnfs_nfsv3_procid
 index|[
@@ -496,6 +507,8 @@ operator|&
 name|nd
 operator|.
 name|nd_mrep
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|nd
@@ -1898,13 +1911,13 @@ name|nfsrvd_pool
 operator|->
 name|sp_assign
 operator|=
-name|NULL
+name|fhanew_assign
 expr_stmt|;
 name|nfsrvd_pool
 operator|->
 name|sp_done
 operator|=
-name|NULL
+name|fha_nd_complete
 expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
