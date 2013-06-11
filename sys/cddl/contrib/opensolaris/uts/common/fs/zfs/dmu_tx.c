@@ -4812,6 +4812,7 @@ operator|->
 name|tx_txgh
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Walk the transaction's hold list, removing the hold on the 	 * associated dnode, and notifying waiters if the refcount drops to 0. 	 */
 for|for
 control|(
 name|txh
@@ -5337,6 +5338,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Go through the transaction's hold list and remove holds on 	 * associated dnodes, notifying waiters if no holds remain. 	 */
 while|while
 condition|(
 name|txh

@@ -2271,6 +2271,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Divides the IO evenly across all child vdevs; usually, dcols is  * the number of children in the target vdev.  */
+end_comment
+
 begin_function
 specifier|static
 name|raidz_map_t
@@ -2295,6 +2299,7 @@ name|raidz_map_t
 modifier|*
 name|rm
 decl_stmt|;
+comment|/* The starting RAIDZ (parent) vdev sector of the block. */
 name|uint64_t
 name|b
 init|=
@@ -2304,6 +2309,7 @@ name|io_offset
 operator|>>
 name|unit_shift
 decl_stmt|;
+comment|/* The zio's size in units of the vdev's minimum sector size. */
 name|uint64_t
 name|s
 init|=
@@ -2313,6 +2319,7 @@ name|io_size
 operator|>>
 name|unit_shift
 decl_stmt|;
+comment|/* The first column for this stripe. */
 name|uint64_t
 name|f
 init|=
@@ -2320,6 +2327,7 @@ name|b
 operator|%
 name|dcols
 decl_stmt|;
+comment|/* The starting byte offset on each child vdev. */
 name|uint64_t
 name|o
 init|=
@@ -2354,6 +2362,7 @@ name|asize
 decl_stmt|,
 name|tot
 decl_stmt|;
+comment|/* 	 * "Quotient": The number of data sectors for this stripe on all but 	 * the "big column" child vdevs that also contain "remainder" data. 	 */
 name|q
 operator|=
 name|s
@@ -2364,6 +2373,7 @@ operator|-
 name|nparity
 operator|)
 expr_stmt|;
+comment|/* 	 * "Remainder": The number of partial stripe data sectors in this I/O. 	 * This will add a sector to some, but not all, child vdevs. 	 */
 name|r
 operator|=
 name|s
@@ -2376,6 +2386,7 @@ operator|-
 name|nparity
 operator|)
 expr_stmt|;
+comment|/* The number of "big columns" - those which contain remainder data. */
 name|bc
 operator|=
 operator|(
@@ -2390,6 +2401,7 @@ operator|+
 name|nparity
 operator|)
 expr_stmt|;
+comment|/* 	 * The total number of data and parity sectors associated with 	 * this I/O. 	 */
 name|tot
 operator|=
 name|s
@@ -2410,6 +2422,8 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
+comment|/* acols: The columns that will be accessed. */
+comment|/* scols: The columns that will be accessed or skipped. */
 if|if
 condition|(
 name|q
@@ -2417,6 +2431,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Our I/O request doesn't span all child vdevs. */
 name|acols
 operator|=
 name|bc
@@ -7791,6 +7806,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Start an IO operation on a RAIDZ VDev  *  * Outline:  * - For write operations:  *   1. Generate the parity data  *   2. Create child zio write operations to each column's vdev, for both  *      data and parity.  *   3. If the column skips any sectors for padding, create optional dummy  *      write zio children for those areas to improve aggregation continuity.  * - For read operations:  *   1. Create child zio read operations to each data column's vdev to read  *      the range of data required for zio.  *   2. If this is a scrub or resilver operation, or if any of the data  *      vdevs have had errors, then create zio read operations to the parity  *      columns' VDevs as well.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -9547,6 +9566,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Complete an IO operation on a RAIDZ VDev  *  * Outline:  * - For write operations:  *   1. Check for errors on the child IOs.  *   2. Return, setting an error code if too few child VDevs were written  *      to reconstruct the data later.  Note that partial writes are  *      considered successful if they can be reconstructed at all.  * - For read operations:  *   1. Check for errors on the child IOs.  *   2. If data errors occurred:  *      a. Try to reassemble the data from the parity available.  *      b. If we haven't yet read the parity drives, read them now.  *      c. If all parity drives have been read but the data still doesn't  *         reassemble with a correct checksum, then try combinatorial  *         reconstruction.  *      d. If that doesn't work, return an error.  *   3. If there were unexpected errors or this is a resilver operation,  *      rewrite the vdevs that had errors.  */
+end_comment
 
 begin_function
 specifier|static
