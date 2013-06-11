@@ -20718,6 +20718,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convert the zvol's volume size to an appropriate reservation.  * Note: If this routine is updated, it is necessary to update the ZFS test  * suite's shell version in reservation.kshlib.  */
+end_comment
+
 begin_function
 name|uint64_t
 name|zvol_volsize_to_reservation
