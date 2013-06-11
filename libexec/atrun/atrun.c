@@ -772,7 +772,9 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"cannot open input file"
+literal|"cannot open input file %s"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 if|if
