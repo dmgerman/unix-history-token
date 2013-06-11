@@ -1277,6 +1277,10 @@ comment|/* defensive */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Blocks until all transactions in the group are committed.  *  * On return, the transaction group has reached a stable state in which it can  * then be passed off to the syncing context.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1517,7 +1521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispatch the commit callbacks registered on this txg to worker threads.  */
+comment|/*  * Dispatch the commit callbacks registered on this txg to worker threads.  *  * If no callbacks are registered for a given TXG, nothing happens.  * This function creates a taskq for the associated pool, if needed.  */
 end_comment
 
 begin_function
@@ -1575,7 +1579,7 @@ index|[
 name|c
 index|]
 decl_stmt|;
-comment|/* No need to lock tx_cpu_t at this point */
+comment|/* 		 * No need to lock tx_cpu_t at this point, since this can 		 * only be called once a txg has been synced. 		 */
 name|int
 name|g
 init|=

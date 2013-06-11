@@ -1216,7 +1216,7 @@ modifier|*
 name|zp
 parameter_list|)
 function_decl|;
-comment|/*  * The bonus data is accessed more or less like a regular buffer.  * You must dmu_bonus_hold() to get the buffer, which will give you a  * dmu_buf_t with db_offset==-1ULL, and db_size = the size of the bonus  * data.  As with any normal buffer, you must call dmu_buf_read() to  * read db_data, dmu_buf_will_dirty() before modifying it, and the  * object must be held in an assigned transaction before calling  * dmu_buf_will_dirty.  You may use dmu_buf_set_user() on the bonus  * buffer as well.  You must release your hold with dmu_buf_rele().  */
+comment|/*  * The bonus data is accessed more or less like a regular buffer.  * You must dmu_bonus_hold() to get the buffer, which will give you a  * dmu_buf_t with db_offset==-1ULL, and db_size = the size of the bonus  * data.  As with any normal buffer, you must call dmu_buf_read() to  * read db_data, dmu_buf_will_dirty() before modifying it, and the  * object must be held in an assigned transaction before calling  * dmu_buf_will_dirty.  You may use dmu_buf_set_user() on the bonus  * buffer as well.  You must release your hold with dmu_buf_rele().  *  * Returns ENOENT, EIO, or 0.  */
 name|int
 name|dmu_bonus_hold
 parameter_list|(
@@ -2248,6 +2248,7 @@ modifier|*
 name|doi
 parameter_list|)
 function_decl|;
+comment|/* Like dmu_object_info, but faster if you have a held dnode in hand. */
 name|void
 name|dmu_object_info_from_dnode
 parameter_list|(
@@ -2261,6 +2262,7 @@ modifier|*
 name|doi
 parameter_list|)
 function_decl|;
+comment|/* Like dmu_object_info, but faster if you have a held dbuf in hand. */
 name|void
 name|dmu_object_info_from_db
 parameter_list|(
@@ -2273,6 +2275,7 @@ modifier|*
 name|doi
 parameter_list|)
 function_decl|;
+comment|/*  * Like dmu_object_info_from_db, but faster still when you only care about  * the size.  This is specifically optimized for zfs_getattr().  */
 name|void
 name|dmu_object_size_from_db
 parameter_list|(

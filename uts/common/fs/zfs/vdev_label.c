@@ -4099,6 +4099,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Sync the uberblocks to all vdevs in svd[] */
+end_comment
+
 begin_function
 name|int
 name|vdev_uberblock_sync_list
