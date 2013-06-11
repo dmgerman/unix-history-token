@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -2134,6 +2140,28 @@ condition|)
 name|perr
 argument_list|(
 literal|"cannot read %s"
+argument_list|,
+name|ATJOB_DIR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flock
+argument_list|(
+name|dirfd
+argument_list|(
+name|spool
+argument_list|)
+argument_list|,
+name|LOCK_EX
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perr
+argument_list|(
+literal|"cannot lock %s"
 argument_list|,
 name|ATJOB_DIR
 argument_list|)
