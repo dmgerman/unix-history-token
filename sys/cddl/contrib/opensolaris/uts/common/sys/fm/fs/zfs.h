@@ -93,6 +93,10 @@ name|FM_EREPORT_ZFS_LOG_REPLAY
 value|"log_replay"
 define|#
 directive|define
+name|FM_EREPORT_ZFS_CONFIG_CACHE_WRITE
+value|"config_cache_write"
+define|#
+directive|define
 name|FM_EREPORT_PAYLOAD_ZFS_POOL
 value|"pool"
 define|#
