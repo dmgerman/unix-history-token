@@ -1422,6 +1422,8 @@ name|struct
 name|toepcb
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|uint16_t
 parameter_list|,
 name|uint64_t

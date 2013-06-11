@@ -2835,6 +2835,8 @@ name|sc
 argument_list|,
 name|toep
 argument_list|,
+literal|1
+argument_list|,
 name|W_TCB_RX_DDP_FLAGS
 argument_list|,
 name|V_TF_DDP_OFF
@@ -2883,6 +2885,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|toep
+argument_list|,
+literal|1
 argument_list|,
 name|W_TCB_T_FLAGS
 argument_list|,
@@ -2970,6 +2974,8 @@ name|sc
 argument_list|,
 name|toep
 argument_list|,
+literal|1
+argument_list|,
 name|W_TCB_T_FLAGS
 argument_list|,
 name|V_TF_RCV_COALESCE_ENABLE
@@ -2988,6 +2994,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|toep
+argument_list|,
+literal|1
 argument_list|,
 name|W_TCB_RX_DDP_FLAGS
 argument_list|,

@@ -7708,6 +7708,9 @@ name|toepcb
 modifier|*
 name|toep
 parameter_list|,
+name|int
+name|ctrl
+parameter_list|,
 name|uint16_t
 name|word
 parameter_list|,
@@ -7738,9 +7741,15 @@ operator|*
 name|req
 argument_list|)
 argument_list|,
+name|ctrl
+condition|?
 name|toep
 operator|->
 name|ctrlq
+else|:
+name|toep
+operator|->
+name|ofld_txq
 argument_list|)
 expr_stmt|;
 if|if
