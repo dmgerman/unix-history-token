@@ -1846,6 +1846,14 @@ name|doi_type
 operator|!=
 name|DMU_OT_DSL_DATASET
 condition|)
+block|{
+name|dmu_buf_rele
+argument_list|(
+name|dbuf
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|SET_ERROR
@@ -1854,6 +1862,7 @@ name|EINVAL
 argument_list|)
 operator|)
 return|;
+block|}
 name|ds
 operator|=
 name|dmu_buf_get_user
