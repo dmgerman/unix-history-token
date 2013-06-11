@@ -2274,7 +2274,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delay this thread by delay nanoseconds if we are still in the open  * transaction group and there is already a waiting txg quiesing or quiesced.  * Abort the delay if this txg stalls or enters the quiesing state.  */
+comment|/*  * Delay this thread by delay nanoseconds if we are still in the open  * transaction group and there is already a waiting txg quiescing or quiesced.  * Abort the delay if this txg stalls or enters the quiescing state.  */
 end_comment
 
 begin_function
@@ -2310,7 +2310,7 @@ init|=
 name|gethrtime
 argument_list|()
 decl_stmt|;
-comment|/* don't delay if this txg could transition to quiesing immediately */
+comment|/* don't delay if this txg could transition to quiescing immediately */
 if|if
 condition|(
 name|tx

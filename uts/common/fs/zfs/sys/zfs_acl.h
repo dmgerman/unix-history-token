@@ -97,7 +97,7 @@ define|#
 directive|define
 name|ZFS_ACL_VERSION
 value|ZFS_ACL_VERSION_FUID
-comment|/*  * ZFS ACLs are store in various forms.  * Files created with ACL version ZFS_ACL_VERSION_INITIAL  * will all be created with fixed length ACEs of type  * zfs_oldace_t.  *  * Files with ACL version ZFS_ACL_VERSION_FUID will be created  * with various sized ACEs.  The abstraction entries will utilize  * zfs_ace_hdr_t, normal user/group entries will use zfs_ace_t  * and some specialized CIFS ACEs will use zfs_object_ace_t.  */
+comment|/*  * ZFS ACLs (Access Control Lists) are stored in various forms.  *  * Files created with ACL version ZFS_ACL_VERSION_INITIAL  * will all be created with fixed length ACEs of type  * zfs_oldace_t.  *  * Files with ACL version ZFS_ACL_VERSION_FUID will be created  * with various sized ACEs.  The abstraction entries will utilize  * zfs_ace_hdr_t, normal user/group entries will use zfs_ace_t  * and some specialized CIFS ACEs will use zfs_object_ace_t.  */
 comment|/*  * All ACEs have a common hdr.  For  * owner@, group@, and everyone@ this is all  * thats needed.  */
 typedef|typedef
 struct|struct
@@ -394,6 +394,7 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* off of access mask in ace */
+comment|/* ptr to data if any */
 name|int
 function_decl|(
 modifier|*
@@ -410,7 +411,6 @@ modifier|*
 name|datap
 parameter_list|)
 function_decl|;
-comment|/* ptr to data if any */
 block|}
 name|acl_ops_t
 typedef|;

@@ -972,7 +972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_create() is used to handle TX_CREATE, TX_CREATE_ATTR, TX_MKDIR,  * TX_MKDIR_ATTR and TX_MKXATTR  * transactions.  *  * TX_CREATE and TX_MKDIR are standard creates, but they may have FUID  * domain information appended prior to the name.  In this case the  * uid/gid in the log record will be a log centric FUID.  *  * TX_CREATE_ACL_ATTR and TX_MKDIR_ACL_ATTR handle special creates that  * may contain attributes, ACL and optional fuid information.  *  * TX_CREATE_ACL and TX_MKDIR_ACL handle special creates that specify  * and ACL and normal users/groups in the ACEs.  *  * There may be an optional xvattr attribute information similar  * to zfs_log_setattr.  *  * Also, after the file name "domain" strings may be appended.  */
+comment|/*  * Handles TX_CREATE, TX_CREATE_ATTR, TX_MKDIR, TX_MKDIR_ATTR and  * TK_MKXATTR transactions.  *  * TX_CREATE and TX_MKDIR are standard creates, but they may have FUID  * domain information appended prior to the name.  In this case the  * uid/gid in the log record will be a log centric FUID.  *  * TX_CREATE_ACL_ATTR and TX_MKDIR_ACL_ATTR handle special creates that  * may contain attributes, ACL and optional fuid information.  *  * TX_CREATE_ACL and TX_MKDIR_ACL handle special creates that specify  * and ACL and normal users/groups in the ACEs.  *  * There may be an optional xvattr attribute information similar  * to zfs_log_setattr.  *  * Also, after the file name "domain" strings may be appended.  */
 end_comment
 
 begin_function
@@ -1630,7 +1630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_remove() handles both TX_REMOVE and TX_RMDIR transactions.  */
+comment|/*  * Handles both TX_REMOVE and TX_RMDIR transactions.  */
 end_comment
 
 begin_function
@@ -1758,7 +1758,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_link() handles TX_LINK transactions.  */
+comment|/*  * Handles TX_LINK transactions.  */
 end_comment
 
 begin_function
@@ -1889,7 +1889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_symlink() handles TX_SYMLINK transactions.  */
+comment|/*  * Handles TX_SYMLINK transactions.  */
 end_comment
 
 begin_function
@@ -2134,7 +2134,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_rename() handles TX_RENAME transactions.  */
+comment|/*  * Handles TX_RENAME transactions.  */
 end_comment
 
 begin_function
@@ -2312,7 +2312,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_write() handles TX_WRITE transactions.  */
+comment|/*  * Handles TX_WRITE transactions.  */
 end_comment
 
 begin_decl_stmt
@@ -2737,7 +2737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_truncate() handles TX_TRUNCATE transactions.  */
+comment|/*  * Handles TX_TRUNCATE transactions.  */
 end_comment
 
 begin_function
@@ -2857,7 +2857,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_setattr() handles TX_SETATTR transactions.  */
+comment|/*  * Handles TX_SETATTR transactions.  */
 end_comment
 
 begin_function
@@ -3209,7 +3209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_log_acl() handles TX_ACL transactions.  */
+comment|/*  * Handles TX_ACL transactions.  */
 end_comment
 
 begin_function

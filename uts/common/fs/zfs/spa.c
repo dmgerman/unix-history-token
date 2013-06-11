@@ -20115,7 +20115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach a device from a mirror or replacing vdev.  * If 'replace_done' is specified, only detach if the parent  * is a replacing vdev.  */
+comment|/*  * Detach a device from a mirror or replacing vdev.  *  * If 'replace_done' is specified, only detach if the parent  * is a replacing vdev.  */
 end_comment
 
 begin_function
@@ -23176,11 +23176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a device from the pool -  *  * Removing a device from the vdev namespace requires several steps  * and can take a significant amount of time.  As a result we use  * the spa_vdev_config_[enter/exit] functions which allow us to  * grab and release the spa_config_lock while still holding the namespace  * lock.  During each step the configuration is synced out.  */
-end_comment
-
-begin_comment
-comment|/*  * Remove a device from the pool.  Currently, this supports removing only hot  * spares, slogs, and level 2 ARC devices.  */
+comment|/*  * Remove a device from the pool -  *  * Removing a device from the vdev namespace requires several steps  * and can take a significant amount of time.  As a result we use  * the spa_vdev_config_[enter/exit] functions which allow us to  * grab and release the spa_config_lock while still holding the namespace  * lock.  During each step the configuration is synced out.  *  * Currently, this supports removing only hot spares, slogs, and level 2 ARC  * devices.  */
 end_comment
 
 begin_function
@@ -23614,7 +23610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find any device that's done replacing, or a vdev marked 'unspare' that's  * current spared, so we can detach it.  */
+comment|/*  * Find any device that's done replacing, or a vdev marked 'unspare' that's  * currently spared, so we can detach it.  */
 end_comment
 
 begin_function

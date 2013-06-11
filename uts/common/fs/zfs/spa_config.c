@@ -1203,7 +1203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate the pool's configuration based on the current in-core state.  * We infer whether to generate a complete config or just one top-level config  * based on whether vd is the root vdev.  */
+comment|/*  * Generate the pool's configuration based on the current in-core state.  *  * We infer whether to generate a complete config or just one top-level config  * based on whether vd is the root vdev.  */
 end_comment
 
 begin_function

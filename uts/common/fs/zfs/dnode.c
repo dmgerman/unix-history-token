@@ -9975,7 +9975,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function scans a block at the indicated "level" looking for  * a hole or data (depending on 'flags').  If level> 0, then we are  * scanning an indirect block looking at its pointers.  If level == 0,  * then we are looking at a block of dnodes.  If we don't find what we  * are looking for in the block, we return ESRCH.  Otherwise, return  * with *offset pointing to the beginning (if searching forwards) or  * end (if searching backwards) of the range covered by the block  * pointer we matched on (or dnode).  *  * The basic search algorithm used below by dnode_next_offset() is to  * use this function to search up the block tree (widen the search) until  * we find something (i.e., we don't return ESRCH) and then search back  * down the tree (narrow the search) until we reach our original search  * level.  */
+comment|/*  * Scans a block at the indicated "level" looking for a hole or data,  * depending on 'flags'.  *  * If level> 0, then we are scanning an indirect block looking at its  * pointers.  If level == 0, then we are looking at a block of dnodes.  *  * If we don't find what we are looking for in the block, we return ESRCH.  * Otherwise, return with *offset pointing to the beginning (if searching  * forwards) or end (if searching backwards) of the range covered by the  * block pointer we matched on (or dnode).  *  * The basic search algorithm used below by dnode_next_offset() is to  * use this function to search up the block tree (widen the search) until  * we find something (i.e., we don't return ESRCH) and then search back  * down the tree (narrow the search) until we reach our original search  * level.  */
 end_comment
 
 begin_function

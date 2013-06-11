@@ -94,7 +94,7 @@ comment|/*  * The zfs intent log (ZIL) saves transaction records of system calls
 end_comment
 
 begin_comment
-comment|/*  * This global ZIL switch affects all pools  */
+comment|/*  * Disable intent logging replay.  This global ZIL switch affects all pools.  */
 end_comment
 
 begin_decl_stmt
@@ -104,10 +104,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* disable intent logging replay */
-end_comment
 
 begin_comment
 comment|/*  * Tunable parameter for debugging or performance analysis.  Setting  * zfs_nocacheflush will cause corruption on power loss if a volatile  * out-of-order write cache is enabled.  */
@@ -4099,7 +4095,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Define a limited set of intent log block sizes.  * These must be a multiple of 4KB. Note only the amount used (again  * aligned to 4KB) actually gets written. However, we can't always just  * allocate SPA_MAXBLOCKSIZE as the slog space could be exhausted.  */
+comment|/*  * Define a limited set of intent log block sizes.  *  * These must be a multiple of 4KB. Note only the amount used (again  * aligned to 4KB) actually gets written. However, we can't always just  * allocate SPA_MAXBLOCKSIZE as the slog space could be exhausted.  */
 end_comment
 
 begin_decl_stmt

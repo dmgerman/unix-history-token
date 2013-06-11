@@ -108,14 +108,13 @@ name|zio_cksum_t
 name|ddk_cksum
 decl_stmt|;
 comment|/* 256-bit block checksum */
+comment|/* 	 * Encoded with logical& physical size, and compression, as follows: 	 *   +-------+-------+-------+-------+-------+-------+-------+-------+ 	 *   |   0   |   0   |   0   | comp  |     PSIZE     |     LSIZE     | 	 *   +-------+-------+-------+-------+-------+-------+-------+-------+ 	 */
 name|uint64_t
 name|ddk_prop
 decl_stmt|;
-comment|/* LSIZE, PSIZE, compression */
 block|}
 name|ddt_key_t
 typedef|;
-comment|/*  * ddk_prop layout:  *  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *	|   0	|   0	|   0	| comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  */
 define|#
 directive|define
 name|DDK_GET_LSIZE
