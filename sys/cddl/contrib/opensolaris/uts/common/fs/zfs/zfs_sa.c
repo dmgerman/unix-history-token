@@ -1058,7 +1058,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * I'm not convinced we should do any of this upgrade.  * since the SA code can read both old/new znode formats  * with probably little to know performance difference.  *  * All new files will be created with the new format.  */
+comment|/*  * I'm not convinced we should do any of this upgrade.  * since the SA code can read both old/new znode formats  * with probably little to no performance difference.  *  * All new files will be created with the new format.  */
 end_comment
 
 begin_function

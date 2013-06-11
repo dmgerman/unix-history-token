@@ -8225,7 +8225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieve a files ACL  */
+comment|/*  * Retrieve a file's ACL  */
 end_comment
 
 begin_function
@@ -9027,7 +9027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set a files ACL  */
+comment|/*  * Set a file's ACL  */
 end_comment
 
 begin_function
@@ -10881,7 +10881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether Access should be granted/denied.  * The least priv subsytem is always consulted as a basic privilege  * can define any form of access.  */
+comment|/*  * Determine whether Access should be granted/denied.  *  * The least priv subsytem is always consulted as a basic privilege  * can define any form of access.  */
 end_comment
 
 begin_function
@@ -11812,7 +11812,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether Access should be granted/deny, without  * consulting least priv subsystem.  *  *  * The following chart is the recommended NFSv4 enforcement for  * ability to delete an object.  *  *      -------------------------------------------------------  *      |   Parent Dir  |           Target Object Permissions |  *      |  permissions  |                                     |  *      -------------------------------------------------------  *      |               | ACL Allows | ACL Denies| Delete     |  *      |               |  Delete    |  Delete   | unspecified|  *      -------------------------------------------------------  *      |  ACL Allows   | Permit     | Permit    | Permit     |  *      |  DELETE_CHILD |                                     |  *      -------------------------------------------------------  *      |  ACL Denies   | Permit     | Deny      | Deny       |  *      |  DELETE_CHILD |            |           |            |  *      -------------------------------------------------------  *      | ACL specifies |            |           |            |  *      | only allow    | Permit     | Permit    | Permit     |  *      | write and     |            |           |            |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *      | ACL denies    |            |           |            |  *      | write and     | Permit     | Deny      | Deny       |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *         ^  *         |  *         No search privilege, can't even look up file?  *  */
+comment|/*  * Determine whether Access should be granted/deny, without  * consulting least priv subsystem.  *  * The following chart is the recommended NFSv4 enforcement for  * ability to delete an object.  *  *      -------------------------------------------------------  *      |   Parent Dir  |           Target Object Permissions |  *      |  permissions  |                                     |  *      -------------------------------------------------------  *      |               | ACL Allows | ACL Denies| Delete     |  *      |               |  Delete    |  Delete   | unspecified|  *      -------------------------------------------------------  *      |  ACL Allows   | Permit     | Permit    | Permit     |  *      |  DELETE_CHILD |                                     |  *      -------------------------------------------------------  *      |  ACL Denies   | Permit     | Deny      | Deny       |  *      |  DELETE_CHILD |            |           |            |  *      -------------------------------------------------------  *      | ACL specifies |            |           |            |  *      | only allow    | Permit     | Permit    | Permit     |  *      | write and     |            |           |            |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *      | ACL denies    |            |           |            |  *      | write and     | Permit     | Deny      | Deny       |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *         ^  *         |  *         No search privilege, can't even look up file?  *  */
 end_comment
 
 begin_function

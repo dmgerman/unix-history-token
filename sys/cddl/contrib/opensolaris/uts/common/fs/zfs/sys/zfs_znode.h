@@ -419,8 +419,7 @@ define|#
 directive|define
 name|ZFS_MAX_BLOCKSIZE
 value|(SPA_MAXBLOCKSIZE)
-comment|/* Path component length */
-comment|/*  * The generic fs code uses MAXNAMELEN to represent  * what the largest component length is.  Unfortunately,  * this length includes the terminating NULL.  ZFS needs  * to tell the users via pathconf() and statvfs() what the  * true maximum length of a component is, excluding the NULL.  */
+comment|/*  * Path component length  *  * The generic fs code uses MAXNAMELEN to represent  * what the largest component length is.  Unfortunately,  * this length includes the terminating NULL.  ZFS needs  * to tell the users via pathconf() and statvfs() what the  * true maximum length of a component is, excluding the NULL.  */
 define|#
 directive|define
 name|ZFS_MAXNAMELEN
@@ -746,7 +745,7 @@ parameter_list|)
 value|((znode_t *)(VP)->v_data)
 endif|#
 directive|endif
-comment|/*  * ZFS_ENTER() is called on entry to each ZFS vnode and vfs operation.  * ZFS_ENTER_NOERROR() is called when we can't return EIO.  * ZFS_EXIT() must be called before exitting the vop.  * ZFS_VERIFY_ZP() verifies the znode is valid.  */
+comment|/* Called on entry to each ZFS vnode and vfs operation  */
 define|#
 directive|define
 name|ZFS_ENTER
@@ -755,6 +754,7 @@ name|zfsvfs
 parameter_list|)
 define|\
 value|{ \ 		rrw_enter_read(&(zfsvfs)->z_teardown_lock, FTAG); \ 		if ((zfsvfs)->z_unmounted) { \ 			ZFS_EXIT(zfsvfs); \ 			return (EIO); \ 		} \ 	}
+comment|/* Called on entry to each ZFS vnode and vfs operation that can not return EIO */
 define|#
 directive|define
 name|ZFS_ENTER_NOERROR
@@ -763,6 +763,7 @@ name|zfsvfs
 parameter_list|)
 define|\
 value|rrw_enter(&(zfsvfs)->z_teardown_lock, RW_READER, FTAG)
+comment|/* Must be called before exiting the vop */
 define|#
 directive|define
 name|ZFS_EXIT
@@ -770,6 +771,7 @@ parameter_list|(
 name|zfsvfs
 parameter_list|)
 value|rrw_exit(&(zfsvfs)->z_teardown_lock, FTAG)
+comment|/* Verifies the znode is valid */
 define|#
 directive|define
 name|ZFS_VERIFY_ZP
@@ -827,7 +829,7 @@ name|obj_num
 parameter_list|)
 define|\
 value|mutex_exit(ZFS_OBJ_MUTEX((zfsvfs), (obj_num)))
-comment|/*  * Macros to encode/decode ZFS stored time values from/to struct timespec  */
+comment|/* Encode ZFS stored time values from a struct timespec */
 define|#
 directive|define
 name|ZFS_TIME_ENCODE
@@ -838,6 +840,7 @@ name|stmp
 parameter_list|)
 define|\
 value|{						\ 	(stmp)[0] = (uint64_t)(tp)->tv_sec;	\ 	(stmp)[1] = (uint64_t)(tp)->tv_nsec;	\ }
+comment|/* Decode ZFS stored time values to a struct timespec */
 define|#
 directive|define
 name|ZFS_TIME_DECODE

@@ -294,7 +294,7 @@ decl_stmt|;
 name|txg_list_t
 name|dp_sync_tasks
 decl_stmt|;
-comment|/* 	 * Protects administrative changes (properties, namespace) 	 * It is only held for write in syncing context.  Therefore 	 * syncing context does not need to ever have it for read, since 	 * nobody else could possibly have it for write. 	 */
+comment|/* 	 * Protects administrative changes (properties, namespace) 	 * 	 * It is only held for write in syncing context.  Therefore 	 * syncing context does not need to ever have it for read, since 	 * nobody else could possibly have it for write. 	 */
 name|rrwlock_t
 name|dp_config_rwlock
 decl_stmt|;

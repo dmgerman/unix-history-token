@@ -80,7 +80,7 @@ file|<sys/spa.h>
 end_include
 
 begin_comment
-comment|/*  * A bptree is a queue of root block pointers from destroyed datasets. When a  * dataset is destroyed its root block pointer is put on the end of the pool's  * bptree queue so the dataset's blocks can be freed asynchronously by  * dsl_scan_sync. This allows the delete operation to finish without traversing  * all the dataset's blocks.  *  * Note that while bt_begin and bt_end are only ever incremented in this code  * they are effectively reset to 0 every time the entire bptree is freed because  * the bptree's object is destroyed and re-created.  */
+comment|/*  * A bptree is a queue of root block pointers from destroyed datasets. When a  * dataset is destroyed its root block pointer is put on the end of the pool's  * bptree queue so the dataset's blocks can be freed asynchronously by  * dsl_scan_sync. This allows the delete operation to finish without traversing  * all the dataset's blocks.  *  * Note that while bt_begin and bt_end are only ever incremented in this code,  * they are effectively reset to 0 every time the entire bptree is freed because  * the bptree's object is destroyed and re-created.  */
 end_comment
 
 begin_struct

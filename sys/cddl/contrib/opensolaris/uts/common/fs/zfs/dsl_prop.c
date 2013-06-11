@@ -1602,7 +1602,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unregister this callback.  Return 0 on success, ENOENT if ddname is  * invalid, ENOMSG if no matching callback registered.  */
+comment|/*  * Unregister this callback.  Return 0 on success, ENOENT if ddname is  * invalid, or ENOMSG if no matching callback registered.  */
 end_comment
 
 begin_function
