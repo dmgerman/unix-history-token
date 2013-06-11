@@ -1664,6 +1664,8 @@ argument_list|)
 expr_stmt|;
 name|list_move_tail
 argument_list|(
+name|cb_list
+argument_list|,
 operator|&
 name|tc
 operator|->
@@ -1671,8 +1673,6 @@ name|tc_callbacks
 index|[
 name|g
 index|]
-argument_list|,
-name|cb_list
 argument_list|)
 expr_stmt|;
 operator|(
