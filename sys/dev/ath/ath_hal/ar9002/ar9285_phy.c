@@ -78,8 +78,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|struct
-name|ar9285_antcomb_conf
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 name|antconf
 parameter_list|)
@@ -144,8 +143,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|struct
-name|ar9285_antcomb_conf
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 name|antconf
 parameter_list|)
