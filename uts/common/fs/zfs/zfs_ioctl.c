@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -21484,61 +21484,6 @@ modifier|*
 name|errlist
 parameter_list|)
 block|{
-name|nvpair_t
-modifier|*
-name|pair
-decl_stmt|;
-name|int
-name|err
-decl_stmt|;
-comment|/* 	 * The release may cause the snapshot to be destroyed; make sure it 	 * is not mounted. 	 */
-for|for
-control|(
-name|pair
-operator|=
-name|nvlist_next_nvpair
-argument_list|(
-name|holds
-argument_list|,
-name|NULL
-argument_list|)
-init|;
-name|pair
-operator|!=
-name|NULL
-condition|;
-name|pair
-operator|=
-name|nvlist_next_nvpair
-argument_list|(
-name|holds
-argument_list|,
-name|pair
-argument_list|)
-control|)
-block|{
-name|err
-operator|=
-name|zfs_unmount_snap
-argument_list|(
-name|nvpair_name
-argument_list|(
-name|pair
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|dsl_dataset_user_release
