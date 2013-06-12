@@ -417,7 +417,7 @@ comment|/* Random number of maximum number of 					 * repeats of an event. Shoul
 end_comment
 
 begin_comment
-comment|/*   * All the astronomical calculations are carried out for the meridian 120  * degrees east of Greenwich.  */
+comment|/*  * All the astronomical calculations are carried out for the meridian 120  * degrees east of Greenwich.  */
 end_comment
 
 begin_define
@@ -886,7 +886,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|mondaytab
+name|monthdaytab
 index|[]
 index|[
 literal|14
