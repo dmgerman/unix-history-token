@@ -1282,17 +1282,39 @@ specifier|const
 block|;
 name|public
 operator|:
+comment|/// \brief Returns true if this expression is a gl-value that
+comment|/// potentially refers to a bit-field.
+comment|///
+comment|/// In C++, whether a gl-value refers to a bitfield is essentially
+comment|/// an aspect of the value-kind type system.
+name|bool
+name|refersToBitField
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectKind
+argument_list|()
+operator|==
+name|OK_BitField
+return|;
+block|}
 comment|/// \brief If this expression refers to a bit-field, retrieve the
 comment|/// declaration of that bit-field.
+comment|///
+comment|/// Note that this returns a non-null pointer in subtly different
+comment|/// places than refersToBitField returns true.  In particular, this can
+comment|/// return a non-null pointer even for r-values loaded from
+comment|/// bit-fields, but it will return null for a conditional bit-field.
 name|FieldDecl
 operator|*
-name|getBitField
+name|getSourceBitField
 argument_list|()
 block|;
 specifier|const
 name|FieldDecl
 operator|*
-name|getBitField
+name|getSourceBitField
 argument_list|()
 specifier|const
 block|{
@@ -1306,7 +1328,7 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getBitField
+name|getSourceBitField
 argument_list|()
 return|;
 block|}
@@ -10754,10 +10776,14 @@ operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 operator|||
+operator|(
+name|op
+operator|&&
 name|op
 operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
+operator|)
 operator|)
 argument_list|)
 operator|,

@@ -137,6 +137,9 @@ name|class
 name|DIGlobalVariable
 decl_stmt|;
 name|class
+name|DIImportedModule
+decl_stmt|;
+name|class
 name|DINameSpace
 decl_stmt|;
 name|class
@@ -150,6 +153,9 @@ name|DILexicalBlockFile
 decl_stmt|;
 name|class
 name|DILexicalBlock
+decl_stmt|;
+name|class
+name|DIScope
 decl_stmt|;
 name|class
 name|DISubprogram
@@ -196,6 +202,10 @@ name|MDNode
 modifier|*
 name|TempGVs
 decl_stmt|;
+name|MDNode
+modifier|*
+name|TempImportedModules
+decl_stmt|;
 name|Function
 modifier|*
 name|DeclareFn
@@ -241,6 +251,15 @@ operator|,
 literal|4
 operator|>
 name|AllGVs
+expr_stmt|;
+name|SmallVector
+operator|<
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|AllImportedModules
 expr_stmt|;
 name|DIBuilder
 argument_list|(
@@ -1018,13 +1037,14 @@ parameter_list|)
 function_decl|;
 comment|/// createEnumerationType - Create debugging information entry for an
 comment|/// enumeration.
-comment|/// @param Scope        Scope in which this enumeration is defined.
-comment|/// @param Name         Union name.
-comment|/// @param File         File where this member is defined.
-comment|/// @param LineNumber   Line number.
-comment|/// @param SizeInBits   Member size.
-comment|/// @param AlignInBits  Member alignment.
-comment|/// @param Elements     Enumeration elements.
+comment|/// @param Scope          Scope in which this enumeration is defined.
+comment|/// @param Name           Union name.
+comment|/// @param File           File where this member is defined.
+comment|/// @param LineNumber     Line number.
+comment|/// @param SizeInBits     Member size.
+comment|/// @param AlignInBits    Member alignment.
+comment|/// @param Elements       Enumeration elements.
+comment|/// @param UnderlyingType Underlying type of a C++11/ObjC fixed enum.
 name|DICompositeType
 name|createEnumerationType
 parameter_list|(
@@ -1050,7 +1070,7 @@ name|DIArray
 name|Elements
 parameter_list|,
 name|DIType
-name|ClassType
+name|UnderlyingType
 parameter_list|)
 function_decl|;
 comment|/// createSubroutineType - Create subroutine type.
@@ -1591,6 +1611,23 @@ name|Line
 parameter_list|,
 name|unsigned
 name|Col
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a descriptor for an imported module.
+comment|/// @param Context The scope this module is imported into
+comment|/// @param NS The namespace being imported here
+comment|/// @param Line Line number
+name|DIImportedModule
+name|createImportedModule
+parameter_list|(
+name|DIScope
+name|Context
+parameter_list|,
+name|DINameSpace
+name|NS
+parameter_list|,
+name|unsigned
+name|Line
 parameter_list|)
 function_decl|;
 comment|/// insertDeclare - Insert a new llvm.dbg.declare intrinsic call.

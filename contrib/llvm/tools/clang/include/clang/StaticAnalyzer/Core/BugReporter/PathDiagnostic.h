@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
 end_include
 
@@ -363,6 +369,8 @@ block|,
 name|Minimal
 block|,
 name|Extensive
+block|,
+name|AlternateExtensive
 block|}
 enum|;
 name|virtual
@@ -1233,6 +1241,33 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Given an exploded node, retrieve the statement that should be used
+comment|/// for the diagnostic location.
+specifier|static
+specifier|const
+name|Stmt
+modifier|*
+name|getStmt
+parameter_list|(
+specifier|const
+name|ExplodedNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the statement corresponding to the sucessor node.
+specifier|static
+specifier|const
+name|Stmt
+modifier|*
+name|getNextStmt
+parameter_list|(
+specifier|const
+name|ExplodedNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -1291,6 +1326,34 @@ block|{
 return|return
 name|End
 return|;
+block|}
+name|void
+name|setStart
+parameter_list|(
+specifier|const
+name|PathDiagnosticLocation
+modifier|&
+name|L
+parameter_list|)
+block|{
+name|Start
+operator|=
+name|L
+expr_stmt|;
+block|}
+name|void
+name|setEnd
+parameter_list|(
+specifier|const
+name|PathDiagnosticLocation
+modifier|&
+name|L
+parameter_list|)
+block|{
+name|End
+operator|=
+name|L
+expr_stmt|;
 block|}
 name|void
 name|flatten
@@ -1625,7 +1688,7 @@ range|:
 name|public
 name|std
 operator|::
-name|deque
+name|list
 operator|<
 name|IntrusiveRefCntPtr
 operator|<
@@ -2546,6 +2609,38 @@ name|getEnd
 argument_list|()
 return|;
 block|}
+name|void
+name|setStartLocation
+argument_list|(
+argument|const PathDiagnosticLocation&L
+argument_list|)
+block|{
+name|LPairs
+index|[
+literal|0
+index|]
+operator|.
+name|setStart
+argument_list|(
+name|L
+argument_list|)
+block|;   }
+name|void
+name|setEndLocation
+argument_list|(
+argument|const PathDiagnosticLocation&L
+argument_list|)
+block|{
+name|LPairs
+index|[
+literal|0
+index|]
+operator|.
+name|setEnd
+argument_list|(
+name|L
+argument_list|)
+block|;   }
 name|void
 name|push_back
 argument_list|(

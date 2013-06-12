@@ -211,6 +211,15 @@ name|createLoopVectorizePass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SLPVectorizer - Create a bottom-up SLP vectorizer pass.
+comment|//
+name|Pass
+modifier|*
+name|createSLPVectorizerPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
 comment|/// @brief Vectorize the BasicBlock.
 comment|///
 comment|/// @param BB The BasicBlock to be vectorized

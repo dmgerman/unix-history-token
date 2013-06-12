@@ -734,6 +734,45 @@ literal|"Target does not support mangling guard variables"
 argument_list|)
 expr_stmt|;
 block|}
+comment|// FIXME: Revisit this once we know what we need to do for MSVC compatibility.
+name|virtual
+name|void
+name|mangleItaniumThreadLocalInit
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|D
+parameter_list|,
+name|raw_ostream
+modifier|&
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target does not support mangling thread_local variables"
+argument_list|)
+expr_stmt|;
+block|}
+name|virtual
+name|void
+name|mangleItaniumThreadLocalWrapper
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|D
+parameter_list|,
+name|raw_ostream
+modifier|&
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Target does not support mangling thread_local variables"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// @}
 block|}
 end_decl_stmt

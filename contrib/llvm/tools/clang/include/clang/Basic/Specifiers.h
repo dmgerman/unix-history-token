@@ -110,10 +110,10 @@ block|,
 comment|// C++ wchar_t
 name|TST_char16
 block|,
-comment|// C++0x char16_t
+comment|// C++11 char16_t
 name|TST_char32
 block|,
-comment|// C++0x char32_t
+comment|// C++11 char32_t
 name|TST_int
 block|,
 name|TST_int128
@@ -158,13 +158,16 @@ name|TST_typeofExpr
 block|,
 name|TST_decltype
 block|,
-comment|// C++0x decltype
+comment|// C++11 decltype
 name|TST_underlyingType
 block|,
-comment|// __underlying_type for C++0x
+comment|// __underlying_type for C++11
 name|TST_auto
 block|,
-comment|// C++0x auto
+comment|// C++11 auto
+name|TST_decltype_auto
+block|,
+comment|// C++1y decltype(auto)
 name|TST_unknown_anytype
 block|,
 comment|// __unknown_anytype extension
@@ -308,13 +311,31 @@ name|TSK_ExplicitSpecialization
 block|,
 comment|/// This template specialization was instantiated from a template
 comment|/// due to an explicit instantiation declaration request
-comment|/// (C++0x [temp.explicit]).
+comment|/// (C++11 [temp.explicit]).
 name|TSK_ExplicitInstantiationDeclaration
 block|,
 comment|/// This template specialization was instantiated from a template
 comment|/// due to an explicit instantiation definition request
 comment|/// (C++ [temp.explicit]).
 name|TSK_ExplicitInstantiationDefinition
+block|}
+enum|;
+comment|/// \brief Thread storage-class-specifier.
+enum|enum
+name|ThreadStorageClassSpecifier
+block|{
+name|TSCS_unspecified
+block|,
+comment|/// GNU __thread.
+name|TSCS___thread
+block|,
+comment|/// C++11 thread_local. Implies 'static' at block scope, but not at
+comment|/// class scope.
+name|TSCS_thread_local
+block|,
+comment|/// C11 _Thread_local. Must be combined with either 'static' or 'extern'
+comment|/// if used at block scope.
+name|TSCS__Thread_local
 block|}
 enum|;
 comment|/// \brief Storage classes.

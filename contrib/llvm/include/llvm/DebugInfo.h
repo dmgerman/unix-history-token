@@ -593,6 +593,11 @@ name|isObjCProperty
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isImportedModule
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// print - print descriptor.
 name|void
 name|print
@@ -959,6 +964,11 @@ name|getGlobalVariables
 argument_list|()
 specifier|const
 block|;
+name|DIArray
+name|getImportedModules
+argument_list|()
+specifier|const
+block|;
 name|StringRef
 name|getSplitDebugFilename
 argument_list|()
@@ -967,7 +977,7 @@ block|{
 return|return
 name|getStringField
 argument_list|(
-literal|11
+literal|12
 argument_list|)
 return|;
 block|}
@@ -1620,7 +1630,10 @@ block|;   }
 block|;
 comment|/// DICompositeType - This descriptor holds a type that can refer to multiple
 comment|/// other types, like a function or struct.
-comment|/// FIXME: Why is this a DIDerivedType??
+comment|/// DICompositeType is derived from DIDerivedType because some
+comment|/// composite types (such as enums) can be derived from basic types
+comment|// FIXME: Make this derive from DIType directly& just store the
+comment|// base type in a single DIType field.
 name|class
 name|DICompositeType
 operator|:
@@ -3609,6 +3622,94 @@ operator|)
 return|;
 block|}
 comment|/// Verify - Verify that a derived type descriptor is well formed.
+name|bool
+name|Verify
+argument_list|()
+specifier|const
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief An imported module (C++ using directive or similar).
+end_comment
+
+begin_decl_stmt
+name|class
+name|DIImportedModule
+range|:
+name|public
+name|DIDescriptor
+block|{
+name|friend
+name|class
+name|DIDescriptor
+block|;
+name|void
+name|printInternal
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+name|public
+operator|:
+name|explicit
+name|DIImportedModule
+argument_list|(
+specifier|const
+name|MDNode
+operator|*
+name|N
+argument_list|)
+operator|:
+name|DIDescriptor
+argument_list|(
+argument|N
+argument_list|)
+block|{ }
+name|DIScope
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|DINameSpace
+name|getNameSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DINameSpace
+operator|>
+operator|(
+literal|2
+operator|)
+return|;
+block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
 name|bool
 name|Verify
 argument_list|()

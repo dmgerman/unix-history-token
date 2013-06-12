@@ -284,6 +284,18 @@ name|MSUB_DSP
 block|,
 name|MSUBU_DSP
 block|,
+comment|// DSP shift nodes.
+name|SHLL_DSP
+block|,
+name|SHRA_DSP
+block|,
+name|SHRL_DSP
+block|,
+comment|// DSP setcc and select_cc nodes.
+name|SETCC_DSP
+block|,
+name|SELECT_CC_DSP
+block|,
 comment|// Load/Store Left/Right nodes.
 name|LWL
 init|=
@@ -1041,15 +1053,6 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerMEMBARRIER
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG& DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|lowerATOMIC_FENCE
 argument_list|(
 argument|SDValue Op
@@ -1089,24 +1092,6 @@ specifier|const
 block|;
 name|SDValue
 name|lowerSTORE
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|lowerINTRINSIC_WO_CHAIN
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|lowerINTRINSIC_W_CHAIN
 argument_list|(
 argument|SDValue Op
 argument_list|,

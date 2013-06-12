@@ -369,6 +369,13 @@ comment|/// target of an indirect branch.
 name|bool
 name|AddressTaken
 decl_stmt|;
+comment|/// \brief since getSymbol is a relatively heavy-weight operation, the symbol
+comment|/// is only computed once and is cached.
+name|mutable
+name|MCSymbol
+modifier|*
+name|CachedMCSymbol
+decl_stmt|;
 comment|// Intrusive list support
 name|MachineBasicBlock
 argument_list|()

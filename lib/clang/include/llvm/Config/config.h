@@ -273,6 +273,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<cxxabi.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CXXABI_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the declaration of `FE_ALL_EXCEPT', and to 0 if you    don't. */
 end_comment
 
@@ -739,6 +750,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_LIBUDIS86 */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `z' library (-lz). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBZ
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
@@ -1692,6 +1714,17 @@ comment|/* #undef HAVE_XDOT_PY */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<zlib.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ZLIB_H
+value|1
+end_define
+
+begin_comment
 comment|/* Have host's _alloca */
 end_comment
 
@@ -1890,6 +1923,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* Define if zlib is enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_ZLIB
+value|1
+end_define
+
+begin_comment
 comment|/* Installation directory for config files */
 end_comment
 
@@ -1913,7 +1957,7 @@ comment|/* Host triple LLVM will be executed on */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_HOSTTRIPLE */
+comment|/* #undef LLVM_HOST_TRIPLE */
 end_comment
 
 begin_comment
@@ -2272,7 +2316,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.3svn"
+value|"LLVM 3.3"
 end_define
 
 begin_comment
@@ -2294,7 +2338,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.3svn"
+value|"3.3"
 end_define
 
 begin_comment

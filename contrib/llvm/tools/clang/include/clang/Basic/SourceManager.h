@@ -1926,6 +1926,29 @@ name|NumLinearScans
 decl_stmt|,
 name|NumBinaryProbes
 decl_stmt|;
+comment|/// \brief Associates a FileID with its "included/expanded in" decomposed
+comment|/// location.
+comment|///
+comment|/// Used to cache results from and speed-up \c getDecomposedIncludedLoc
+comment|/// function.
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|FileID
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|FileID
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|IncludedLocMap
+expr_stmt|;
 comment|/// The key value into the IsBeforeInTUCache table.
 typedef|typedef
 name|std
@@ -3995,6 +4018,31 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Returns the "included/expanded in" decomposed location of the given
+end_comment
+
+begin_comment
+comment|/// FileID.
+end_comment
+
+begin_expr_stmt
+unit|std
+operator|::
+name|pair
+operator|<
+name|FileID
+operator|,
+name|unsigned
+operator|>
+name|getDecomposedIncludedLoc
+argument_list|(
+argument|FileID FID
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns the offset from the start of the file that the
 end_comment
 
@@ -4010,16 +4058,14 @@ begin_comment
 comment|/// This is not very meaningful for a macro ID.
 end_comment
 
-begin_macro
-unit|unsigned
+begin_decl_stmt
+name|unsigned
 name|getFileOffset
 argument_list|(
-argument|SourceLocation SpellingLoc
+name|SourceLocation
+name|SpellingLoc
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 return|return
 name|getDecomposedLoc
@@ -4030,7 +4076,7 @@ operator|.
 name|second
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Tests whether the given source location represents a macro

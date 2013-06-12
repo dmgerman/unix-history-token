@@ -243,39 +243,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Create a new store that binds a value to a compound literal.
-comment|///
-comment|/// \param ST The original store whose bindings are the basis for the new
-comment|///        store.
-comment|///
-comment|/// \param CL The compound literal to bind (the binding key).
-comment|///
-comment|/// \param LC The LocationContext for the binding.
-comment|///
-comment|/// \param V The value to bind to the compound literal.
-name|virtual
-name|StoreRef
-name|bindCompoundLiteral
-parameter_list|(
-name|Store
-name|ST
-parameter_list|,
-specifier|const
-name|CompoundLiteralExpr
-modifier|*
-name|CL
-parameter_list|,
-specifier|const
-name|LocationContext
-modifier|*
-name|LC
-parameter_list|,
-name|SVal
-name|V
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// getInitialStore - Returns the initial "empty" store representing the
 comment|///  value bindings upon entry to an analyzed function.
 name|virtual

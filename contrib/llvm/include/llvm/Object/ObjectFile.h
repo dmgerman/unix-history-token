@@ -952,6 +952,16 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// @brief Get the alignment of this symbol as the actual value (not log 2).
+name|error_code
+name|getAlignment
+argument_list|(
+name|uint32_t
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 name|error_code
 name|getSize
 argument_list|(
@@ -988,16 +998,6 @@ name|error_code
 name|getFlags
 argument_list|(
 name|uint32_t
-operator|&
-name|Result
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @brief Return true for common symbols such as uninitialized globals
-name|error_code
-name|isCommon
-argument_list|(
-name|bool
 operator|&
 name|Result
 argument_list|)
@@ -1201,8 +1201,6 @@ argument_list|(
 argument|unsigned int Type
 argument_list|,
 argument|MemoryBuffer *source
-argument_list|,
-argument|error_code&ec
 argument_list|)
 block|;
 specifier|const
@@ -1286,6 +1284,16 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+name|virtual
+name|error_code
+name|getSymbolAlignment
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint32_t&Res
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|error_code
@@ -2042,6 +2050,30 @@ return|return
 name|OwningObject
 operator|->
 name|getSymbolFileOffset
+argument_list|(
+name|SymbolPimpl
+argument_list|,
+name|Result
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|error_code
+name|SymbolRef
+operator|::
+name|getAlignment
+argument_list|(
+argument|uint32_t&Result
+argument_list|)
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|getSymbolAlignment
 argument_list|(
 name|SymbolPimpl
 argument_list|,

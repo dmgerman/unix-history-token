@@ -315,6 +315,10 @@ name|iterator
 name|RegionEnd
 block|;
 comment|/// The index in BB of RegionEnd.
+comment|///
+comment|/// This is the instruction number from the top of the current block, not
+comment|/// the SlotIndex. It is only used by the AntiDepBreaker and should be
+comment|/// removed once that client is obsolete.
 name|unsigned
 name|EndIndex
 block|;
@@ -420,6 +424,17 @@ operator|~
 name|ScheduleDAGInstrs
 argument_list|()
 block|{}
+comment|/// \brief Expose LiveIntervals for use in DAG mutators and such.
+name|LiveIntervals
+operator|*
+name|getLIS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LIS
+return|;
+block|}
 comment|/// \brief Get the machine model for instruction scheduling.
 specifier|const
 name|TargetSchedModel

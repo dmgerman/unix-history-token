@@ -1311,8 +1311,8 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal functions used to automatically number MachineBasicBlocks
 comment|//
-comment|/// getNextMBBNumber - Returns the next unique number to be assigned
-comment|/// to a MachineBasicBlock in this MachineFunction.
+comment|/// \brief Adds the MBB to the internal numbering. Returns the unique number
+comment|/// assigned to the MBB.
 comment|///
 name|unsigned
 name|addToMBBNumbering

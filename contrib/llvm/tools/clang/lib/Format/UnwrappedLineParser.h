@@ -147,7 +147,12 @@ argument_list|)
 operator|,
 name|MustBreakBefore
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|TrailingWhiteSpaceLength
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|/// \brief The \c Token.
@@ -200,6 +205,29 @@ comment|/// before the token.
 name|bool
 name|MustBreakBefore
 decl_stmt|;
+comment|/// \brief Number of characters of trailing whitespace.
+name|unsigned
+name|TrailingWhiteSpaceLength
+decl_stmt|;
+comment|/// \brief Returns actual token start location without leading escaped
+comment|/// newlines and whitespace.
+comment|///
+comment|/// This can be different to Tok.getLocation(), which includes leading escaped
+comment|/// newlines.
+name|SourceLocation
+name|getStartOfNonWhitespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WhiteSpaceStart
+operator|.
+name|getLocWithOffset
+argument_list|(
+name|WhiteSpaceLength
+argument_list|)
+return|;
+block|}
 block|}
 struct|;
 comment|/// \brief An unwrapped line is a sequence of \c Token, that we would like to
@@ -329,18 +357,18 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
-name|bool
+name|void
 name|parseFile
 parameter_list|()
 function_decl|;
-name|bool
+name|void
 name|parseLevel
 parameter_list|(
 name|bool
 name|HasOpeningBrace
 parameter_list|)
 function_decl|;
-name|bool
+name|void
 name|parseBlock
 parameter_list|(
 name|bool
@@ -539,6 +567,11 @@ name|bool
 operator|>
 name|DeclarationScopeStack
 expr_stmt|;
+comment|// Will be true if we encounter an error that leads to possibily incorrect
+comment|// indentation levels.
+name|bool
+name|StructuralError
+decl_stmt|;
 name|clang
 operator|::
 name|DiagnosticsEngine

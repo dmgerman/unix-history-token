@@ -1926,6 +1926,9 @@ block|,
 comment|/// \brief A FieldDecl record.
 name|DECL_FIELD
 block|,
+comment|/// \brief A MSPropertyDecl record.
+name|DECL_MS_PROPERTY
+block|,
 comment|/// \brief A VarDecl record.
 name|DECL_VAR
 block|,
@@ -1940,6 +1943,9 @@ name|DECL_FILE_SCOPE_ASM
 block|,
 comment|/// \brief A BlockDecl record.
 name|DECL_BLOCK
+block|,
+comment|/// \brief A CapturedDecl record.
+name|DECL_CAPTURED
 block|,
 comment|/// \brief A record that stores the set of declarations that are
 comment|/// lexically stored within a given DeclContext.
@@ -2138,6 +2144,9 @@ name|STMT_RETURN
 block|,
 comment|/// \brief A DeclStmt record.
 name|STMT_DECL
+block|,
+comment|/// \brief A CapturedStmt record.
+name|STMT_CAPTURED
 block|,
 comment|/// \brief A GCC-style AsmStmt record.
 name|STMT_GCCASM
@@ -2375,6 +2384,9 @@ comment|// CXXThrowExpr
 name|EXPR_CXX_DEFAULT_ARG
 block|,
 comment|// CXXDefaultArgExpr
+name|EXPR_CXX_DEFAULT_INIT
+block|,
+comment|// CXXDefaultInitExpr
 name|EXPR_CXX_BIND_TEMPORARY
 block|,
 comment|// CXXBindTemporaryExpr
@@ -2459,6 +2471,9 @@ name|EXPR_ASTYPE
 block|,
 comment|// AsTypeExpr
 comment|// Microsoft
+name|EXPR_CXX_PROPERTY_REF_EXPR
+block|,
+comment|// MSPropertyRefExpr
 name|EXPR_CXX_UUIDOF_EXPR
 block|,
 comment|// CXXUuidofExpr (of expr).

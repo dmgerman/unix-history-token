@@ -74,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/Core.h"
 end_include
 
 begin_decl_stmt
@@ -765,9 +777,10 @@ return|return
 name|HasValueHandle
 return|;
 block|}
-comment|/// stripPointerCasts - This method strips off any unneeded pointer casts and
-comment|/// all-zero GEPs from the specified value, returning the original uncasted
-comment|/// value. If this is called on a non-pointer value, it returns 'this'.
+comment|/// \brief This method strips off any unneeded pointer casts,
+comment|/// all-zero GEPs and aliases from the specified value, returning the original
+comment|/// uncasted value. If this is called on a non-pointer value, it returns
+comment|/// 'this'.
 name|Value
 modifier|*
 name|stripPointerCasts
@@ -791,6 +804,36 @@ name|this
 operator|)
 operator|->
 name|stripPointerCasts
+argument_list|()
+return|;
+block|}
+comment|/// \brief This method strips off any unneeded pointer casts and
+comment|/// all-zero GEPs from the specified value, returning the original
+comment|/// uncasted value. If this is called on a non-pointer value, it returns
+comment|/// 'this'.
+name|Value
+modifier|*
+name|stripPointerCastsNoFollowAliases
+parameter_list|()
+function_decl|;
+specifier|const
+name|Value
+operator|*
+name|stripPointerCastsNoFollowAliases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripPointerCastsNoFollowAliases
 argument_list|()
 return|;
 block|}
@@ -1483,7 +1526,159 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};  }
+unit|};
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_ISA_CONVERSION_FUNCTIONS
+argument_list|(
+argument|Value
+argument_list|,
+argument|LLVMValueRef
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Specialized opaque value conversions.  */
+end_comment
+
+begin_function
+specifier|inline
+name|Value
+modifier|*
+modifier|*
+name|unwrap
+parameter_list|(
+name|LLVMValueRef
+modifier|*
+name|Vals
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Value
+operator|*
+operator|*
+operator|>
+operator|(
+name|Vals
+operator|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|T
+operator|*
+operator|*
+name|unwrap
+argument_list|(
+argument|LLVMValueRef *Vals
+argument_list|,
+argument|unsigned Length
+argument_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+for|for
+control|(
+name|LLVMValueRef
+modifier|*
+name|I
+init|=
+name|Vals
+init|,
+modifier|*
+name|E
+init|=
+name|Vals
+operator|+
+name|Length
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|cast
+operator|<
+name|T
+operator|>
+operator|(
+operator|*
+name|I
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+operator|(
+name|void
+operator|)
+name|Length
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|reinterpret_cast
+operator|<
+name|T
+operator|*
+operator|*
+operator|>
+operator|(
+name|Vals
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  inline
+name|LLVMValueRef
+modifier|*
+name|wrap
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+modifier|*
+name|Vals
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|LLVMValueRef
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|*
+operator|>
+operator|(
+name|Vals
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

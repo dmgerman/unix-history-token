@@ -209,10 +209,8 @@ comment|//===-------------------------------------------------------------------
 comment|///
 comment|/// SubtargetFeatures - Manages the enabling and disabling of subtarget
 comment|/// specific features.  Features are encoded as a string of the form
-comment|///   "cpu,+attr1,+attr2,-attr3,...,+attrN"
+comment|///   "+attr1,+attr2,-attr3,...,+attrN"
 comment|/// A comma separates each feature from the next (all lowercase.)
-comment|/// The first feature is always the CPU subtype (eg. pentiumm).  If the CPU
-comment|/// value is "generic" then the CPU subtype should be generic for the target.
 comment|/// Each of the remaining features is prefixed with + or - indicating whether
 comment|/// that feature should be enabled or disabled contrary to the cpu
 comment|/// specification.

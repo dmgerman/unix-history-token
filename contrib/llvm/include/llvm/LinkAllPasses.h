@@ -1149,6 +1149,14 @@ name|void
 operator|)
 name|llvm
 operator|::
+name|createSLPVectorizerPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
 name|createBBVectorizePass
 argument_list|()
 expr_stmt|;

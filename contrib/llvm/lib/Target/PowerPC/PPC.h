@@ -117,6 +117,11 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createPPCEarlyReturnPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createPPCBranchSelectionPass
 parameter_list|()
 function_decl|;

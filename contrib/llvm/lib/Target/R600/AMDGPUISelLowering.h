@@ -468,6 +468,8 @@ block|,
 comment|// End AMDIL ISD Opcodes
 name|BITALIGN
 block|,
+name|BUFFER_STORE
+block|,
 name|DWORDADDR
 block|,
 name|FRACT

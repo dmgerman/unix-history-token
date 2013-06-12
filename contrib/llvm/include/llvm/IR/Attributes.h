@@ -242,6 +242,9 @@ comment|///< Function does not access memory
 name|ReadOnly
 block|,
 comment|///< Function only reads from memory
+name|Returned
+block|,
+comment|///< Return value is always equal to this argument
 name|ReturnsTwice
 block|,
 comment|///< Function can return twice
@@ -589,7 +592,7 @@ modifier|*
 name|getAttributes
 argument_list|(
 name|unsigned
-name|Idx
+name|Index
 argument_list|)
 decl|const
 decl_stmt|;
@@ -713,7 +716,7 @@ operator|&
 name|C
 argument_list|,
 name|unsigned
-name|Idx
+name|Index
 argument_list|,
 name|ArrayRef
 operator|<
@@ -733,7 +736,7 @@ modifier|&
 name|C
 parameter_list|,
 name|unsigned
-name|Idx
+name|Index
 parameter_list|,
 name|AttrBuilder
 modifier|&
@@ -750,7 +753,7 @@ operator|&
 name|C
 argument_list|,
 name|unsigned
-name|Idx
+name|Index
 argument_list|,
 name|Attribute
 operator|::
@@ -769,7 +772,7 @@ operator|&
 name|C
 argument_list|,
 name|unsigned
-name|Idx
+name|Index
 argument_list|,
 name|StringRef
 name|Kind
@@ -786,7 +789,7 @@ operator|&
 name|C
 argument_list|,
 name|unsigned
-name|Idx
+name|Index
 argument_list|,
 name|AttributeSet
 name|Attrs
@@ -804,7 +807,7 @@ operator|&
 name|C
 argument_list|,
 name|unsigned
-name|Idx
+name|Index
 argument_list|,
 name|Attribute
 operator|::
@@ -824,7 +827,7 @@ operator|&
 name|C
 argument_list|,
 name|unsigned
-name|Idx
+name|Index
 argument_list|,
 name|AttributeSet
 name|Attrs
@@ -846,7 +849,7 @@ name|AttributeSet
 name|getParamAttributes
 argument_list|(
 name|unsigned
-name|Idx
+name|Index
 argument_list|)
 decl|const
 decl_stmt|;
@@ -940,7 +943,7 @@ name|unsigned
 name|getParamAlignment
 argument_list|(
 name|unsigned
-name|Idx
+name|Index
 argument_list|)
 decl|const
 decl_stmt|;
@@ -978,7 +981,7 @@ name|iterator
 name|begin
 argument_list|(
 name|unsigned
-name|Idx
+name|Slot
 argument_list|)
 decl|const
 decl_stmt|;
@@ -986,7 +989,7 @@ name|iterator
 name|end
 argument_list|(
 name|unsigned
-name|Idx
+name|Slot
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1074,7 +1077,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Return the index for the given slot.
-name|uint64_t
+name|unsigned
 name|getSlotIndex
 argument_list|(
 name|unsigned
@@ -1700,11 +1703,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// \brief Remove attributes that are used on functions only.
-name|void
-name|removeFunctionOnlyAttrs
-parameter_list|()
-function_decl|;
 name|bool
 name|operator
 operator|==

@@ -555,26 +555,44 @@ name|getAsFunctionDecl
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// If this SVal is a location (subclasses Loc) and
-comment|/// wraps a symbol, return that SymbolRef.  Otherwise return 0.
+comment|/// \brief If this SVal is a location and wraps a symbol, return that
+comment|///  SymbolRef. Otherwise return 0.
+comment|///
+comment|/// Casts are ignored during lookup.
+comment|/// \param IncludeBaseRegions The boolean that controls whether the search
+comment|/// should continue to the base regions if the region is not symbolic.
 name|SymbolRef
 name|getAsLocSymbol
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+name|IncludeBaseRegions
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Get the symbol in the SVal or its base region.
 name|SymbolRef
 name|getLocSymbolInBase
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// If this SVal wraps a symbol return that SymbolRef.
+comment|/// \brief If this SVal wraps a symbol return that SymbolRef.
 comment|/// Otherwise, return 0.
+comment|///
+comment|/// Casts are ignored during lookup.
+comment|/// \param IncludeBaseRegions The boolean that controls whether the search
+comment|/// should continue to the base regions if the region is not symbolic.
 name|SymbolRef
 name|getAsSymbol
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+name|IncludeBaseRegions
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getAsSymbolicExpression - If this Sval wraps a symbolic expression then
 comment|///  return that expression.  Otherwise return NULL.
 specifier|const

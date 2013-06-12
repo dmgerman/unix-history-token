@@ -208,6 +208,10 @@ block|,
 comment|/// \brief The entity being initialized is the field that captures a
 comment|/// variable in a lambda.
 name|EK_LambdaCapture
+block|,
+comment|/// \brief The entity being initialized is the initializer for a compound
+comment|/// literal.
+name|EK_CompoundLiteralInit
 block|}
 enum|;
 name|private
@@ -271,8 +275,8 @@ comment|/// low bit indicating whether the parameter is "consumed".
 name|uintptr_t
 name|Parameter
 decl_stmt|;
-comment|/// \brief When Kind == EK_Temporary, the type source information for
-comment|/// the temporary.
+comment|/// \brief When Kind == EK_Temporary or EK_CompoundLiteralInit, the type
+comment|/// source information for the temporary.
 name|TypeSourceInfo
 modifier|*
 name|TypeInfo
@@ -977,6 +981,40 @@ name|Loc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Create the entity for a compound literal initializer.
+specifier|static
+name|InitializedEntity
+name|InitializeCompoundLiteralInit
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|TSI
+parameter_list|)
+block|{
+name|InitializedEntity
+name|Result
+argument_list|(
+name|EK_CompoundLiteralInit
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|TSI
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|Result
+operator|.
+name|TypeInfo
+operator|=
+name|TSI
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// \brief Determine the kind of initialization.
 name|EntityKind
 name|getKind
@@ -1024,6 +1062,10 @@ condition|(
 name|Kind
 operator|==
 name|EK_Temporary
+operator|||
+name|Kind
+operator|==
+name|EK_CompoundLiteralInit
 condition|)
 return|return
 name|TypeInfo
@@ -1961,6 +2003,9 @@ block|,
 comment|/// \brief Perform a qualification conversion, producing an lvalue.
 name|SK_QualificationConversionLValue
 block|,
+comment|/// \brief Perform a load from a glvalue, producing an rvalue.
+name|SK_LValueToRValue
+block|,
 comment|/// \brief Perform an implicit conversion sequence.
 name|SK_ConversionSequence
 block|,
@@ -2241,8 +2286,6 @@ comment|///
 comment|/// \param Kind the kind of initialization being performed.
 comment|///
 comment|/// \param Args the argument(s) provided for initialization.
-comment|///
-comment|/// \param NumArgs the number of arguments provided for initialization.
 name|InitializationSequence
 argument_list|(
 argument|Sema&S
@@ -2251,9 +2294,7 @@ argument|const InitializedEntity&Entity
 argument_list|,
 argument|const InitializationKind&Kind
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|MultiExprArg Args
 argument_list|)
 empty_stmt|;
 operator|~
@@ -2314,30 +2355,29 @@ comment|/// \returns true if the initialization sequence was ill-formed,
 comment|/// false otherwise.
 name|bool
 name|Diagnose
-parameter_list|(
+argument_list|(
 name|Sema
-modifier|&
+operator|&
 name|S
-parameter_list|,
+argument_list|,
 specifier|const
 name|InitializedEntity
-modifier|&
+operator|&
 name|Entity
-parameter_list|,
+argument_list|,
 specifier|const
 name|InitializationKind
-modifier|&
+operator|&
 name|Kind
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|Expr
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Args
-parameter_list|,
-name|unsigned
-name|NumArgs
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Determine the kind of initialization sequence computed.
 block|enum
 name|SequenceKind
@@ -2568,6 +2608,17 @@ name|Ty
 parameter_list|,
 name|ExprValueKind
 name|Category
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a new step that performs a load of the given type.
+comment|///
+comment|/// Although the term "LValueToRValue" is conventional, this applies to both
+comment|/// lvalues and xvalues.
+name|void
+name|AddLValueToRValueStep
+parameter_list|(
+name|QualType
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step that applies an implicit conversion sequence.

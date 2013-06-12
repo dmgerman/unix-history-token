@@ -173,8 +173,7 @@ name|native
 operator|&&
 name|sys
 operator|::
-name|isBigEndianHost
-argument_list|()
+name|IsBigEndianHost
 operator|!=
 operator|(
 name|endian

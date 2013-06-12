@@ -3928,6 +3928,40 @@ name|Op
 operator|)
 return|;
 block|}
+comment|/// m_UIToFP
+name|template
+operator|<
+name|typename
+name|OpTy
+operator|>
+specifier|inline
+name|CastClass_match
+operator|<
+name|OpTy
+block|,
+name|Instruction
+operator|::
+name|UIToFP
+operator|>
+name|m_UIToFp
+argument_list|(
+argument|const OpTy&Op
+argument_list|)
+block|{
+return|return
+name|CastClass_match
+operator|<
+name|OpTy
+operator|,
+name|Instruction
+operator|::
+name|UIToFP
+operator|>
+operator|(
+name|Op
+operator|)
+return|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|// Matchers for unary operators
 comment|//
@@ -4643,6 +4677,9 @@ comment|//
 name|template
 operator|<
 name|typename
+name|CmpInst_t
+block|,
+name|typename
 name|LHS_t
 block|,
 name|typename
@@ -4715,13 +4752,13 @@ condition|)
 return|return
 name|false
 return|;
-name|ICmpInst
+name|CmpInst_t
 operator|*
 name|Cmp
 operator|=
 name|dyn_cast
 operator|<
-name|ICmpInst
+name|CmpInst_t
 operator|>
 operator|(
 name|SI
@@ -4805,7 +4842,8 @@ condition|)
 return|return
 name|false
 return|;
-name|ICmpInst
+name|typename
+name|CmpInst_t
 operator|::
 name|Predicate
 name|Pred
@@ -4965,6 +5003,114 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// ofmax_pred_ty - Helper class for identifying ordered max predicates.
+block|struct
+name|ofmax_pred_ty
+block|{
+specifier|static
+name|bool
+name|match
+argument_list|(
+argument|FCmpInst::Predicate Pred
+argument_list|)
+block|{
+return|return
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_OGT
+operator|||
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_OGE
+return|;
+block|}
+expr|}
+block|;
+comment|/// ofmin_pred_ty - Helper class for identifying ordered min predicates.
+block|struct
+name|ofmin_pred_ty
+block|{
+specifier|static
+name|bool
+name|match
+argument_list|(
+argument|FCmpInst::Predicate Pred
+argument_list|)
+block|{
+return|return
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_OLT
+operator|||
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_OLE
+return|;
+block|}
+expr|}
+block|;
+comment|/// ufmax_pred_ty - Helper class for identifying unordered max predicates.
+block|struct
+name|ufmax_pred_ty
+block|{
+specifier|static
+name|bool
+name|match
+argument_list|(
+argument|FCmpInst::Predicate Pred
+argument_list|)
+block|{
+return|return
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_UGT
+operator|||
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_UGE
+return|;
+block|}
+expr|}
+block|;
+comment|/// ufmin_pred_ty - Helper class for identifying unordered min predicates.
+block|struct
+name|ufmin_pred_ty
+block|{
+specifier|static
+name|bool
+name|match
+argument_list|(
+argument|FCmpInst::Predicate Pred
+argument_list|)
+block|{
+return|return
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_ULT
+operator|||
+name|Pred
+operator|==
+name|CmpInst
+operator|::
+name|FCMP_ULE
+return|;
+block|}
+expr|}
+block|;
 name|template
 operator|<
 name|typename
@@ -4976,6 +5122,8 @@ operator|>
 specifier|inline
 name|MaxMin_match
 operator|<
+name|ICmpInst
+block|,
 name|LHS
 block|,
 name|RHS
@@ -4992,6 +5140,8 @@ block|{
 return|return
 name|MaxMin_match
 operator|<
+name|ICmpInst
+operator|,
 name|LHS
 operator|,
 name|RHS
@@ -5016,6 +5166,8 @@ operator|>
 specifier|inline
 name|MaxMin_match
 operator|<
+name|ICmpInst
+block|,
 name|LHS
 block|,
 name|RHS
@@ -5032,6 +5184,8 @@ block|{
 return|return
 name|MaxMin_match
 operator|<
+name|ICmpInst
+operator|,
 name|LHS
 operator|,
 name|RHS
@@ -5056,6 +5210,8 @@ operator|>
 specifier|inline
 name|MaxMin_match
 operator|<
+name|ICmpInst
+block|,
 name|LHS
 block|,
 name|RHS
@@ -5072,6 +5228,8 @@ block|{
 return|return
 name|MaxMin_match
 operator|<
+name|ICmpInst
+operator|,
 name|LHS
 operator|,
 name|RHS
@@ -5096,6 +5254,8 @@ operator|>
 specifier|inline
 name|MaxMin_match
 operator|<
+name|ICmpInst
+block|,
 name|LHS
 block|,
 name|RHS
@@ -5112,11 +5272,225 @@ block|{
 return|return
 name|MaxMin_match
 operator|<
+name|ICmpInst
+operator|,
 name|LHS
 operator|,
 name|RHS
 operator|,
 name|umin_pred_ty
+operator|>
+operator|(
+name|L
+operator|,
+name|R
+operator|)
+return|;
+block|}
+comment|/// \brief Match an 'ordered' floating point maximum function.
+comment|/// Floating point has one special value 'NaN'. Therefore, there is no total
+comment|/// order. However, if we can ignore the 'NaN' value (for example, because of a
+comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'maximum'
+comment|/// semantics. In the presence of 'NaN' we have to preserve the original
+comment|/// select(fcmp(ogt/ge, L, R), L, R) semantics matched by this predicate.
+comment|///
+comment|///                         max(L, R)  iff L and R are not NaN
+comment|///  m_OrdFMax(L, R) =      R          iff L or R are NaN
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|MaxMin_match
+operator|<
+name|FCmpInst
+block|,
+name|LHS
+block|,
+name|RHS
+block|,
+name|ofmax_pred_ty
+operator|>
+name|m_OrdFMax
+argument_list|(
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|MaxMin_match
+operator|<
+name|FCmpInst
+operator|,
+name|LHS
+operator|,
+name|RHS
+operator|,
+name|ofmax_pred_ty
+operator|>
+operator|(
+name|L
+operator|,
+name|R
+operator|)
+return|;
+block|}
+comment|/// \brief Match an 'ordered' floating point minimum function.
+comment|/// Floating point has one special value 'NaN'. Therefore, there is no total
+comment|/// order. However, if we can ignore the 'NaN' value (for example, because of a
+comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'minimum'
+comment|/// semantics. In the presence of 'NaN' we have to preserve the original
+comment|/// select(fcmp(olt/le, L, R), L, R) semantics matched by this predicate.
+comment|///
+comment|///                         max(L, R)  iff L and R are not NaN
+comment|///  m_OrdFMin(L, R) =      R          iff L or R are NaN
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|MaxMin_match
+operator|<
+name|FCmpInst
+block|,
+name|LHS
+block|,
+name|RHS
+block|,
+name|ofmin_pred_ty
+operator|>
+name|m_OrdFMin
+argument_list|(
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|MaxMin_match
+operator|<
+name|FCmpInst
+operator|,
+name|LHS
+operator|,
+name|RHS
+operator|,
+name|ofmin_pred_ty
+operator|>
+operator|(
+name|L
+operator|,
+name|R
+operator|)
+return|;
+block|}
+comment|/// \brief Match an 'unordered' floating point maximum function.
+comment|/// Floating point has one special value 'NaN'. Therefore, there is no total
+comment|/// order. However, if we can ignore the 'NaN' value (for example, because of a
+comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'maximum'
+comment|/// semantics. In the presence of 'NaN' we have to preserve the original
+comment|/// select(fcmp(ugt/ge, L, R), L, R) semantics matched by this predicate.
+comment|///
+comment|///                         max(L, R)  iff L and R are not NaN
+comment|///  m_UnordFMin(L, R) =    L          iff L or R are NaN
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|MaxMin_match
+operator|<
+name|FCmpInst
+block|,
+name|LHS
+block|,
+name|RHS
+block|,
+name|ufmax_pred_ty
+operator|>
+name|m_UnordFMax
+argument_list|(
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|MaxMin_match
+operator|<
+name|FCmpInst
+operator|,
+name|LHS
+operator|,
+name|RHS
+operator|,
+name|ufmax_pred_ty
+operator|>
+operator|(
+name|L
+operator|,
+name|R
+operator|)
+return|;
+block|}
+comment|/// \brief Match an 'unordered' floating point minimum function.
+comment|/// Floating point has one special value 'NaN'. Therefore, there is no total
+comment|/// order. However, if we can ignore the 'NaN' value (for example, because of a
+comment|/// 'no-nans-float-math' flag) a combination of a fcmp and select has 'minimum'
+comment|/// semantics. In the presence of 'NaN' we have to preserve the original
+comment|/// select(fcmp(ult/le, L, R), L, R) semantics matched by this predicate.
+comment|///
+comment|///                          max(L, R)  iff L and R are not NaN
+comment|///  m_UnordFMin(L, R) =     L          iff L or R are NaN
+name|template
+operator|<
+name|typename
+name|LHS
+block|,
+name|typename
+name|RHS
+operator|>
+specifier|inline
+name|MaxMin_match
+operator|<
+name|FCmpInst
+block|,
+name|LHS
+block|,
+name|RHS
+block|,
+name|ufmin_pred_ty
+operator|>
+name|m_UnordFMin
+argument_list|(
+argument|const LHS&L
+argument_list|,
+argument|const RHS&R
+argument_list|)
+block|{
+return|return
+name|MaxMin_match
+operator|<
+name|FCmpInst
+operator|,
+name|LHS
+operator|,
+name|RHS
+operator|,
+name|ufmin_pred_ty
 operator|>
 operator|(
 name|L

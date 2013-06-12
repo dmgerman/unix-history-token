@@ -1296,6 +1296,16 @@ operator|*
 name|Init
 argument_list|)
 decl_stmt|;
+comment|/// \brief - Emit C++ using directive.
+name|void
+name|EmitUsingDirective
+parameter_list|(
+specifier|const
+name|UsingDirectiveDecl
+modifier|&
+name|UD
+parameter_list|)
+function_decl|;
 comment|/// getOrCreateRecordType - Emit record type's standalone debug info.
 name|llvm
 operator|::
@@ -1367,7 +1377,7 @@ expr_stmt|;
 comment|/// getContextDescriptor - Get context info for the decl.
 name|llvm
 operator|::
-name|DIDescriptor
+name|DIScope
 name|getContextDescriptor
 argument_list|(
 specifier|const

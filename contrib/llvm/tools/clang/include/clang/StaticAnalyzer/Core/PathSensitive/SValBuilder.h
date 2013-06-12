@@ -315,12 +315,12 @@ operator|||
 operator|(
 name|Ty1
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 operator|&&
 name|Ty2
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 operator|)
 operator|)
@@ -893,6 +893,22 @@ modifier|*
 name|locContext
 parameter_list|)
 function_decl|;
+comment|/// Returns the value of \p E, if it can be determined in a non-path-sensitive
+comment|/// manner.
+comment|///
+comment|/// If \p E is not a constant or cannot be modeled, returns \c None.
+name|Optional
+operator|<
+name|SVal
+operator|>
+name|getConstantVal
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
 name|NonLoc
 name|makeCompoundVal
 argument_list|(

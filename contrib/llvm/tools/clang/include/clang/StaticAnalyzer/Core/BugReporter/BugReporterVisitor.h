@@ -390,6 +390,11 @@ block|;
 name|bool
 name|IsZeroCheck
 block|;
+comment|/// We should start tracking from the last node along the path in which the
+comment|/// value is constrained.
+name|bool
+name|IsTrackingTurnedOn
+block|;
 name|public
 operator|:
 name|TrackConstraintBRVisitor
@@ -416,7 +421,22 @@ argument_list|)
 block|,
 name|IsZeroCheck
 argument_list|(
-argument|!Assumption&& Constraint.getAs<Loc>()
+operator|!
+name|Assumption
+operator|&&
+name|Constraint
+operator|.
+name|getAs
+operator|<
+name|Loc
+operator|>
+operator|(
+operator|)
+argument_list|)
+block|,
+name|IsTrackingTurnedOn
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|void

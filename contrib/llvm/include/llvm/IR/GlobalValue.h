@@ -81,6 +81,12 @@ directive|include
 file|"llvm/IR/Constant.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -431,10 +437,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|PointerType
-operator|*
 operator|>
 operator|(
 name|User

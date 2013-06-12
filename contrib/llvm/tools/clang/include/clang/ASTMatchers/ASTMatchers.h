@@ -516,6 +516,26 @@ name|NamedDecl
 operator|>
 name|namedDecl
 expr_stmt|;
+comment|/// \brief Matches a declaration of a namespace.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   namespace {}
+comment|///   namespace test {}
+comment|/// \endcode
+comment|/// namespaceDecl()
+comment|///   matches "namespace {}" and "namespace test {}"
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|NamespaceDecl
+operator|>
+name|namespaceDecl
+expr_stmt|;
 comment|/// \brief Matches C++ class declarations.
 comment|///
 comment|/// Example matches \c X, \c Z
@@ -6795,6 +6815,60 @@ argument_list|,
 name|Builder
 argument_list|)
 operator|)
+return|;
+block|}
+comment|/// \brief Matches if the given method declaration is virtual.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   class A {
+comment|///    public:
+comment|///     virtual void x();
+comment|///   };
+comment|/// \endcode
+comment|///   matches A::x
+name|AST_MATCHER
+argument_list|(
+argument|CXXMethodDecl
+argument_list|,
+argument|isVirtual
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|isVirtual
+argument_list|()
+return|;
+block|}
+comment|/// \brief Matches if the given method declaration overrides another method.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   class A {
+comment|///    public:
+comment|///     virtual void x();
+comment|///   };
+comment|///   class B : public A {
+comment|///    public:
+comment|///     virtual void x();
+comment|///   };
+comment|/// \endcode
+comment|///   matches B::x
+name|AST_MATCHER
+argument_list|(
+argument|CXXMethodDecl
+argument_list|,
+argument|isOverride
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|size_overridden_methods
+argument_list|()
+operator|>
+literal|0
 return|;
 block|}
 comment|/// \brief Matches member expressions that are called with '->' as opposed

@@ -214,6 +214,17 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// Register the EH frames with the runtime so that c++ exceptions work. The
+comment|/// default implementation does nothing. Look at SectionMemoryManager for one
+comment|/// that uses __register_frame.
+name|virtual
+name|void
+name|registerEHFrames
+parameter_list|(
+name|StringRef
+name|SectionData
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -327,6 +338,10 @@ parameter_list|)
 function_decl|;
 name|StringRef
 name|getErrorString
+parameter_list|()
+function_decl|;
+name|StringRef
+name|getEHFrameSection
 parameter_list|()
 function_decl|;
 block|}

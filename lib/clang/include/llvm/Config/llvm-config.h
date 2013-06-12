@@ -132,7 +132,7 @@ comment|/* Host triple LLVM will be executed on */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_HOSTTRIPLE */
+comment|/* #undef LLVM_HOST_TRIPLE */
 end_comment
 
 begin_comment

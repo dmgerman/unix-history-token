@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/Core.h"
 end_include
 
 begin_decl_stmt
@@ -1860,7 +1872,84 @@ block|}
 end_function
 
 begin_comment
-unit|};  }
+unit|};
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_ISA_CONVERSION_FUNCTIONS
+argument_list|(
+argument|Type
+argument_list|,
+argument|LLVMTypeRef
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Specialized opaque type conversions.  */
+end_comment
+
+begin_function
+specifier|inline
+name|Type
+modifier|*
+modifier|*
+name|unwrap
+parameter_list|(
+name|LLVMTypeRef
+modifier|*
+name|Tys
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Type
+operator|*
+operator|*
+operator|>
+operator|(
+name|Tys
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|LLVMTypeRef
+modifier|*
+name|wrap
+parameter_list|(
+name|Type
+modifier|*
+modifier|*
+name|Tys
+parameter_list|)
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|LLVMTypeRef
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|Type
+operator|*
+operator|*
+operator|>
+operator|(
+name|Tys
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

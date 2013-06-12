@@ -1985,6 +1985,11 @@ name|MD
 parameter_list|,
 name|SourceRange
 name|Range
+parameter_list|,
+specifier|const
+name|MacroArgs
+modifier|*
+name|Args
 parameter_list|)
 function_decl|;
 name|virtual

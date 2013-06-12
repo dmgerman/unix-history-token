@@ -2784,11 +2784,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// CurFuncDecl - Holds the Decl for the current function or ObjC method.
+comment|/// CurFuncDecl - Holds the Decl for the current outermost
 end_comment
 
 begin_comment
-comment|/// This excludes BlockDecls.
+comment|/// non-closure context.
 end_comment
 
 begin_decl_stmt
@@ -3944,6 +3944,10 @@ begin_comment
 comment|/// process all branch fixups.
 end_comment
 
+begin_comment
+comment|/// \param EHLoc - Optional debug location for EH code.
+end_comment
+
 begin_function_decl
 name|void
 name|PopCleanupBlock
@@ -3952,6 +3956,12 @@ name|bool
 name|FallThroughIsBranchThrough
 init|=
 name|false
+parameter_list|,
+name|SourceLocation
+name|EHLoc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4439,6 +4449,10 @@ begin_comment
 comment|/// the cleanup blocks that have been added.
 end_comment
 
+begin_comment
+comment|/// \param EHLoc - Optional debug location for EH code.
+end_comment
+
 begin_decl_stmt
 name|void
 name|PopCleanupBlocks
@@ -4447,6 +4461,12 @@ name|EHScopeStack
 operator|::
 name|stable_iterator
 name|OldCleanupStackSize
+argument_list|,
+name|SourceLocation
+name|EHLoc
+operator|=
+name|SourceLocation
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -5827,6 +5847,190 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Counts of the number return expressions in the function.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|NumReturnExprs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Count the number of simple (constant) return expressions in the function.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|NumSimpleReturnExprs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// The last regular (non-return) debug location (breakpoint) in the function.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|LastStopPoint
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_comment
+comment|/// A scope within which we are constructing the fields of an object which
+end_comment
+
+begin_comment
+comment|/// might use a CXXDefaultInitExpr. This stashes away a 'this' value to use
+end_comment
+
+begin_comment
+comment|/// if we need to evaluate a CXXDefaultInitExpr within the evaluation.
+end_comment
+
+begin_decl_stmt
+name|class
+name|FieldConstructionScope
+block|{
+name|public
+label|:
+name|FieldConstructionScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|This
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|OldCXXDefaultInitExprThis
+argument_list|(
+argument|CGF.CXXDefaultInitExprThis
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+operator|=
+name|This
+block|;     }
+operator|~
+name|FieldConstructionScope
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+operator|=
+name|OldCXXDefaultInitExprThis
+block|;     }
+name|private
+operator|:
+name|CodeGenFunction
+operator|&
+name|CGF
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OldCXXDefaultInitExprThis
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// The scope of a CXXDefaultInitExpr. Within this scope, the value of 'this'
+end_comment
+
+begin_comment
+comment|/// is overridden to be the object under construction.
+end_comment
+
+begin_decl_stmt
+name|class
+name|CXXDefaultInitExprScope
+block|{
+name|public
+label|:
+name|CXXDefaultInitExprScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|OldCXXThisValue
+argument_list|(
+argument|CGF.CXXThisValue
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|CXXThisValue
+operator|=
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+block|;     }
+operator|~
+name|CXXDefaultInitExprScope
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|CXXThisValue
+operator|=
+name|OldCXXThisValue
+block|;     }
+name|public
+operator|:
+name|CodeGenFunction
+operator|&
+name|CGF
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OldCXXThisValue
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
 comment|/// CXXThisDecl - When generating code for a C++ member function,
 end_comment
 
@@ -5856,6 +6060,23 @@ operator|::
 name|Value
 operator|*
 name|CXXThisValue
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// The value of 'this' to use when evaluating CXXDefaultInitExprs within
+end_comment
+
+begin_comment
+comment|/// this expression.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CXXDefaultInitExprThis
 expr_stmt|;
 end_expr_stmt
 
@@ -6336,7 +6557,21 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    llvm
+unit|}    const
+name|TargetInfo
+operator|&
+name|getTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Target
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
 operator|::
 name|LLVMContext
 operator|&
@@ -6962,8 +7197,6 @@ argument_list|(
 argument|GlobalDecl GD
 argument_list|,
 argument|const CGBlockInfo&Info
-argument_list|,
-argument|const Decl *OuterFuncDecl
 argument_list|,
 argument|const DeclMapTy&ldm
 argument_list|,
@@ -7724,6 +7957,9 @@ specifier|const
 name|CGFunctionInfo
 modifier|&
 name|FI
+parameter_list|,
+name|bool
+name|EmitRetDbgLoc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11096,6 +11332,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|EmitCapturedStmt
+parameter_list|(
+specifier|const
+name|CapturedStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|EmitObjCForCollectionStmt
 parameter_list|(
 specifier|const
@@ -12372,6 +12620,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|LValue
+name|EmitLValueForLambdaField
+parameter_list|(
+specifier|const
+name|FieldDecl
+modifier|*
+name|Field
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// EmitLValueForFieldInitialization - Like EmitLValueForField, except that
 end_comment
@@ -13206,6 +13466,20 @@ operator|::
 name|Value
 operator|*
 name|EmitTargetBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitAArch64BuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
@@ -14536,15 +14810,22 @@ name|Function
 operator|*
 name|Fn
 argument_list|,
+name|ArrayRef
+operator|<
 name|llvm
 operator|::
 name|Constant
 operator|*
-operator|*
+operator|>
 name|Decls
 argument_list|,
-name|unsigned
-name|NumDecls
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|Guard
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -14706,6 +14987,11 @@ specifier|const
 name|CXXThrowExpr
 modifier|*
 name|E
+parameter_list|,
+name|bool
+name|KeepInsertionPoint
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl

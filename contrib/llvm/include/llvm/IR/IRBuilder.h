@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ConstantFolder.h"
 end_include
 
@@ -202,6 +208,13 @@ name|CurDbgLocation
 decl_stmt|;
 name|protected
 label|:
+comment|/// Save the current debug location here while we are suppressing
+comment|/// line table entries.
+name|llvm
+operator|::
+name|DebugLoc
+name|SavedDbgLocation
+expr_stmt|;
 name|BasicBlock
 modifier|*
 name|BB
@@ -446,6 +459,50 @@ block|{
 name|CurDbgLocation
 operator|=
 name|L
+expr_stmt|;
+block|}
+comment|/// \brief Temporarily suppress DebugLocations from being attached
+comment|/// to emitted instructions, until the next call to
+comment|/// SetCurrentDebugLocation() or EnableDebugLocations().  Use this
+comment|/// if you want an instruction to be counted towards the prologue or
+comment|/// if there is no useful source location.
+name|void
+name|DisableDebugLocations
+parameter_list|()
+block|{
+name|llvm
+operator|::
+name|DebugLoc
+name|Empty
+expr_stmt|;
+name|SavedDbgLocation
+operator|=
+name|getCurrentDebugLocation
+argument_list|()
+expr_stmt|;
+name|SetCurrentDebugLocation
+argument_list|(
+name|Empty
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Restore the previously saved DebugLocation.
+name|void
+name|EnableDebugLocations
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|CurDbgLocation
+operator|.
+name|isUnknown
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|SetCurrentDebugLocation
+argument_list|(
+name|SavedDbgLocation
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Get location information used by debugging information.
@@ -11307,8 +11364,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+unit|};
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|IRBuilder<>
+argument_list|,
+argument|LLVMBuilderRef
+argument_list|)
+end_macro
+
 begin_endif
-unit|};  }
+unit|}
 endif|#
 directive|endif
 end_endif

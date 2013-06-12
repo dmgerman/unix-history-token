@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -125,6 +131,23 @@ comment|/// Construct an empty ArrayRef.
 comment|/*implicit*/
 name|ArrayRef
 argument_list|()
+operator|:
+name|Data
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Length
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// Construct an empty ArrayRef from None.
+comment|/*implicit*/
+name|ArrayRef
+argument_list|(
+name|NoneType
+argument_list|)
 operator|:
 name|Data
 argument_list|(
@@ -742,10 +765,24 @@ name|T
 modifier|*
 name|iterator
 typedef|;
-comment|/// Construct an empty ArrayRef.
+comment|/// Construct an empty MutableArrayRef.
 comment|/*implicit*/
 name|MutableArrayRef
 argument_list|()
+operator|:
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+block|{}
+comment|/// Construct an empty MutableArrayRef from None.
+comment|/*implicit*/
+name|MutableArrayRef
+argument_list|(
+name|NoneType
+argument_list|)
 operator|:
 name|ArrayRef
 operator|<

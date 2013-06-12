@@ -729,8 +729,7 @@ name|llvm
 operator|::
 name|sys
 operator|::
-name|isBigEndianHost
-argument_list|()
+name|IsBigEndianHost
 condition|)
 name|V
 operator|=

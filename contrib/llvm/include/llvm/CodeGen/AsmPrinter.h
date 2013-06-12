@@ -105,6 +105,9 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
+name|ConstantArray
+decl_stmt|;
+name|class
 name|GCMetadataPrinter
 decl_stmt|;
 name|class
@@ -334,6 +337,12 @@ specifier|const
 name|DataLayout
 operator|&
 name|getDataLayout
+argument_list|()
+specifier|const
+block|;
+comment|/// getTargetTriple - Return the target triple string.
+name|StringRef
+name|getTargetTriple
 argument_list|()
 specifier|const
 block|;
@@ -1109,9 +1118,9 @@ name|void
 name|EmitLLVMUsedList
 argument_list|(
 specifier|const
-name|Constant
+name|ConstantArray
 operator|*
-name|List
+name|InitList
 argument_list|)
 block|;
 name|void

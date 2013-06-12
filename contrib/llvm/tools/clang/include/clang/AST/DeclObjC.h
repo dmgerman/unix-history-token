@@ -5290,6 +5290,13 @@ name|bool
 name|shallowCategoryLookup
 operator|=
 name|false
+argument_list|,
+specifier|const
+name|ObjCCategoryDecl
+operator|*
+name|C
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5410,6 +5417,51 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Lookup a setter or getter in the class hierarchy,
+end_comment
+
+begin_comment
+comment|/// including in all categories except for category passed
+end_comment
+
+begin_comment
+comment|/// as argument.
+end_comment
+
+begin_decl_stmt
+name|ObjCMethodDecl
+modifier|*
+name|lookupPropertyAccessor
+argument_list|(
+specifier|const
+name|Selector
+name|Sel
+argument_list|,
+specifier|const
+name|ObjCCategoryDecl
+operator|*
+name|Cat
+argument_list|)
+decl|const
+block|{
+return|return
+name|lookupMethod
+argument_list|(
+name|Sel
+argument_list|,
+name|true
+comment|/*isInstance*/
+argument_list|,
+name|false
+comment|/*shallowCategoryLookup*/
+argument_list|,
+name|Cat
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_expr_stmt
 name|SourceLocation
@@ -8240,6 +8292,9 @@ name|ObjCInterfaceDecl
 operator|*
 name|SuperClass
 block|;
+name|SourceLocation
+name|SuperLoc
+block|;
 comment|/// \@implementation may have private ivars.
 name|SourceLocation
 name|IvarLBraceLoc
@@ -8282,6 +8337,8 @@ argument|SourceLocation nameLoc
 argument_list|,
 argument|SourceLocation atStartLoc
 argument_list|,
+argument|SourceLocation superLoc = SourceLocation()
+argument_list|,
 argument|SourceLocation IvarLBraceLoc=SourceLocation()
 argument_list|,
 argument|SourceLocation IvarRBraceLoc=SourceLocation()
@@ -8303,6 +8360,11 @@ block|,
 name|SuperClass
 argument_list|(
 name|superDecl
+argument_list|)
+block|,
+name|SuperLoc
+argument_list|(
+name|superLoc
 argument_list|)
 block|,
 name|IvarLBraceLoc
@@ -8353,6 +8415,8 @@ argument_list|,
 argument|SourceLocation nameLoc
 argument_list|,
 argument|SourceLocation atStartLoc
+argument_list|,
+argument|SourceLocation superLoc = SourceLocation()
 argument_list|,
 argument|SourceLocation IvarLBraceLoc=SourceLocation()
 argument_list|,
@@ -8699,6 +8763,18 @@ name|SuperClass
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SourceLocation
+name|getSuperClassLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuperLoc
+return|;
+block|}
+end_expr_stmt
 
 begin_function
 name|void

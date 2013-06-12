@@ -99,6 +99,18 @@ comment|/// Should not include the leading backslash.
 name|BlockCommandNamesTy
 name|BlockCommandNames
 decl_stmt|;
+comment|/// \brief Treat ordinary comments as documentation comments.
+name|bool
+name|ParseAllComments
+decl_stmt|;
+name|CommentOptions
+argument_list|()
+operator|:
+name|ParseAllComments
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
 block|}
 struct|;
 block|}

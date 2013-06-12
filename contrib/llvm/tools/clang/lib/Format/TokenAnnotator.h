@@ -258,11 +258,6 @@ argument_list|(
 name|NULL
 argument_list|)
 operator|,
-name|FakeLParens
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|FakeRParens
 argument_list|(
 literal|0
@@ -274,6 +269,11 @@ name|false
 argument_list|)
 operator|,
 name|PartOfMultiVariableDeclStmt
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NoMoreTokensOnLevel
 argument_list|(
 argument|false
 argument_list|)
@@ -683,6 +683,33 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Returns whether \p Tok is ([{ or a template opening<.
+name|bool
+name|opensScope
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Returns whether \p Tok is )]} or a template opening>.
+name|bool
+name|closesScope
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isUnaryOperator
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isBinaryOperator
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isTrailingComment
+argument_list|()
+specifier|const
+expr_stmt|;
 name|FormatToken
 name|FormatTok
 decl_stmt|;
@@ -744,10 +771,21 @@ name|AnnotatedToken
 modifier|*
 name|Parent
 decl_stmt|;
-comment|/// \brief Insert this many fake ( before this token for correct indentation.
-name|unsigned
+comment|/// \brief Stores the number of required fake parentheses and the
+comment|/// corresponding operator precedence.
+comment|///
+comment|/// If multiple fake parentheses start at a token, this vector stores them in
+comment|/// reverse order, i.e. inner fake parenthesis first.
+name|SmallVector
+operator|<
+name|prec
+operator|::
+name|Level
+operator|,
+literal|4
+operator|>
 name|FakeLParens
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Insert this many fake ) after this token for correct indentation.
 name|unsigned
 name|FakeRParens
@@ -762,44 +800,35 @@ comment|/// Only set if \c Type == \c TT_StartOfName.
 name|bool
 name|PartOfMultiVariableDeclStmt
 decl_stmt|;
-specifier|const
+comment|/// \brief Set to \c true for "("-tokens if this is the last token other than
+comment|/// ")" in the next higher parenthesis level.
+comment|///
+comment|/// If this is \c true, no more formatting decisions have to be made on the
+comment|/// next higher parenthesis level, enabling optimizations.
+comment|///
+comment|/// Example:
+comment|/// \code
+comment|/// aaaaaa(aaaaaa());
+comment|///              ^  // Set to true for this parenthesis.
+comment|/// \endcode
+name|bool
+name|NoMoreTokensOnLevel
+decl_stmt|;
+comment|/// \brief Returns the previous token ignoring comments.
 name|AnnotatedToken
 operator|*
 name|getPreviousNoneComment
 argument_list|()
 specifier|const
-block|{
+expr_stmt|;
+comment|/// \brief Returns the next token ignoring comments.
+specifier|const
 name|AnnotatedToken
 operator|*
-name|Tok
-operator|=
-name|Parent
-block|;
-while|while
-condition|(
-name|Tok
-operator|!=
-name|NULL
-operator|&&
-name|Tok
-operator|->
-name|is
-argument_list|(
-name|tok
-operator|::
-name|comment
-argument_list|)
-condition|)
-name|Tok
-operator|=
-name|Tok
-operator|->
-name|Parent
+name|getNextNoneComment
+argument_list|()
+specifier|const
 expr_stmt|;
-return|return
-name|Tok
-return|;
-block|}
 block|}
 empty_stmt|;
 name|class
@@ -847,6 +876,11 @@ name|MustBeDeclaration
 argument_list|)
 operator|,
 name|MightBeFunctionDecl
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|StartsDefinition
 argument_list|(
 argument|false
 argument_list|)
@@ -991,7 +1025,14 @@ argument_list|)
 operator|,
 name|MightBeFunctionDecl
 argument_list|(
-argument|Other.MightBeFunctionDecl
+name|Other
+operator|.
+name|MightBeFunctionDecl
+argument_list|)
+operator|,
+name|StartsDefinition
+argument_list|(
+argument|Other.StartsDefinition
 argument_list|)
 block|{
 name|Last
@@ -1054,6 +1095,9 @@ name|MustBeDeclaration
 decl_stmt|;
 name|bool
 name|MightBeFunctionDecl
+decl_stmt|;
+name|bool
+name|StartsDefinition
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1211,6 +1255,15 @@ modifier|&
 name|Right
 parameter_list|)
 function_decl|;
+name|void
+name|printDebugInfo
+parameter_list|(
+specifier|const
+name|AnnotatedLine
+modifier|&
+name|Line
+parameter_list|)
+function_decl|;
 specifier|const
 name|FormatStyle
 modifier|&
@@ -1232,14 +1285,11 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// end namespace format
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace format
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

@@ -450,6 +450,12 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
 name|isPICDefaultForced
 argument_list|()
 specifier|const
@@ -1205,6 +1211,12 @@ specifier|const
 expr_stmt|;
 name|virtual
 name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|bool
 name|isPICDefaultForced
 argument_list|()
 specifier|const
@@ -1881,6 +1893,24 @@ return|return
 name|true
 return|;
 block|}
+name|virtual
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|virtual
@@ -2065,6 +2095,12 @@ argument|ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+block|;
 name|std
 operator|::
 name|string
@@ -2079,6 +2115,9 @@ operator|::
 name|string
 operator|>
 name|ExtraOpts
+block|;
+name|bool
+name|IsPIEDefault
 block|;
 name|protected
 operator|:
@@ -2127,6 +2166,15 @@ argument|const ArgList&DriverArgs
 argument_list|,
 argument|ArgStringList&CC1Args
 argument_list|)
+block|;
+name|std
+operator|::
+name|string
+name|computeSysRoot
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
 block|; }
 block|;
 name|class
@@ -2291,6 +2339,11 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+block|;
+name|bool
 name|isPICDefaultForced
 argument_list|()
 specifier|const
@@ -2340,6 +2393,12 @@ block|;
 name|virtual
 name|bool
 name|isPICDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isPIEDefault
 argument_list|()
 specifier|const
 block|;

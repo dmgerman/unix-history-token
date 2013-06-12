@@ -687,7 +687,7 @@ modifier|&
 name|Ctx
 parameter_list|)
 function_decl|;
-comment|/// \brief \arg Loc is the end of a statement range. This returns the location
+comment|/// \brief 'Loc' is the end of a statement range. This returns the location
 comment|/// of the semicolon following the statement.
 comment|/// If no semicolon is found or the location is inside a macro, the returned
 comment|/// source location will be invalid.

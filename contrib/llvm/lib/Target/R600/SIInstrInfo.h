@@ -298,6 +298,13 @@ name|uint16_t
 name|Opcode
 parameter_list|)
 function_decl|;
+name|int
+name|isMIMG
+parameter_list|(
+name|uint16_t
+name|Opcode
+parameter_list|)
+function_decl|;
 block|}
 comment|// End namespace AMDGPU
 block|}

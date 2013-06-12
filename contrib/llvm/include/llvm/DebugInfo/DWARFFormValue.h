@@ -362,10 +362,13 @@ specifier|static
 specifier|const
 name|uint8_t
 modifier|*
-name|getFixedFormSizesForAddressSize
+name|getFixedFormSizes
 parameter_list|(
 name|uint8_t
-name|addr_size
+name|AddrSize
+parameter_list|,
+name|uint16_t
+name|Version
 parameter_list|)
 function_decl|;
 block|}

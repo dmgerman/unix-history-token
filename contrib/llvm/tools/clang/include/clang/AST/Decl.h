@@ -760,13 +760,6 @@ operator|==
 name|ExternalLinkage
 return|;
 block|}
-comment|/// \brief True if this decl has external linkage. Don't cache the linkage,
-comment|/// because we are not finished setting up the redecl chain for the decl.
-name|bool
-name|hasExternalLinkageUncached
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// \brief Determines the visibility of this entity.
 name|Visibility
 name|getVisibility
@@ -2487,6 +2480,20 @@ name|ListInit
 comment|///< Direct list-initialization (C++11)
 block|}
 block|;
+comment|/// \brief Kinds of thread-local storage.
+block|enum
+name|TLSKind
+block|{
+name|TLS_None
+block|,
+comment|///< Not a TLS variable.
+name|TLS_Static
+block|,
+comment|///< TLS with a known-constant initializer.
+name|TLS_Dynamic
+comment|///< TLS with a dynamic initializer.
+block|}
+block|;
 name|protected
 operator|:
 comment|/// \brief Placeholder type used in Init to denote an unparsed C++ default
@@ -2549,9 +2556,9 @@ range|:
 literal|3
 decl_stmt|;
 name|unsigned
-name|ThreadSpecified
+name|TSCSpec
 range|:
-literal|1
+literal|2
 decl_stmt|;
 name|unsigned
 name|InitStyle
@@ -2605,7 +2612,7 @@ enum|enum
 block|{
 name|NumVarDeclBits
 init|=
-literal|14
+literal|12
 block|}
 enum|;
 end_enum
@@ -2996,36 +3003,86 @@ end_function_decl
 
 begin_function
 name|void
-name|setThreadSpecified
+name|setTSCSpec
 parameter_list|(
-name|bool
-name|T
+name|ThreadStorageClassSpecifier
+name|TSC
 parameter_list|)
 block|{
 name|VarDeclBits
 operator|.
-name|ThreadSpecified
+name|TSCSpec
 operator|=
-name|T
+name|TSC
 expr_stmt|;
 block|}
 end_function
 
 begin_expr_stmt
-name|bool
-name|isThreadSpecified
+name|ThreadStorageClassSpecifier
+name|getTSCSpec
 argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|ThreadStorageClassSpecifier
+operator|>
+operator|(
 name|VarDeclBits
 operator|.
-name|ThreadSpecified
+name|TSCSpec
+operator|)
 return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|TLSKind
+name|getTLSKind
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|VarDeclBits
+operator|.
+name|TSCSpec
+condition|)
+block|{
+case|case
+name|TSCS_unspecified
+case|:
+return|return
+name|TLS_None
+return|;
+case|case
+name|TSCS___thread
+case|:
+comment|// Fall through.
+case|case
+name|TSCS__Thread_local
+case|:
+return|return
+name|TLS_Static
+return|;
+case|case
+name|TSCS_thread_local
+case|:
+return|return
+name|TLS_Dynamic
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown thread storage class specifier!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
+unit|}
 comment|/// hasLocalStorage - Returns true if a variable with function scope
 end_comment
 
@@ -3033,10 +3090,13 @@ begin_comment
 comment|///  is a non-static local variable.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|hasLocalStorage
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -3178,6 +3238,38 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isExternC
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determines whether this variable's context is, or is nested within,
+end_comment
+
+begin_comment
+comment|/// a C++ extern "C" linkage spec.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isInExternCContext
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determines whether this variable's context is, or is nested within,
+end_comment
+
+begin_comment
+comment|/// a C++ extern "C++" linkage spec.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isInExternCXXContext
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -7056,6 +7148,20 @@ name|isExternC
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determines whether this function's context is, or is nested within,
+comment|/// a C++ extern "C" linkage spec.
+name|bool
+name|isInExternCContext
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determines whether this function's context is, or is nested within,
+comment|/// a C++ extern "C++" linkage spec.
+name|bool
+name|isInExternCXXContext
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determines whether this is a global function.
 name|bool
 name|isGlobal
@@ -9633,7 +9739,7 @@ operator|:
 literal|1
 block|;
 comment|/// IsFixed - True if this is an enumeration with fixed underlying type. Only
-comment|/// possible in C++11 or Microsoft extensions mode.
+comment|/// possible in C++11, Microsoft extensions, or Objective C mode.
 name|bool
 name|IsFixed
 operator|:
@@ -11472,7 +11578,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// \brief Returns true if this is a C++0x scoped enumeration.
+comment|/// \brief Returns true if this is a C++11 scoped enumeration.
 end_comment
 
 begin_expr_stmt
@@ -11488,7 +11594,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns true if this is a C++0x scoped enumeration.
+comment|/// \brief Returns true if this is a C++11 scoped enumeration.
 end_comment
 
 begin_expr_stmt
@@ -11504,11 +11610,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Returns true if this is a C++0x enumeration with fixed underlying
+comment|/// \brief Returns true if this is an Objective-C, C++11, or
 end_comment
 
 begin_comment
-comment|/// type.
+comment|/// Microsoft-style enumeration with a fixed underlying type.
 end_comment
 
 begin_expr_stmt
@@ -13256,6 +13362,382 @@ end_function
 
 begin_comment
 unit|};
+comment|/// \brief This represents the body of a CapturedStmt, and serves as its
+end_comment
+
+begin_comment
+comment|/// DeclContext.
+end_comment
+
+begin_decl_stmt
+name|class
+name|CapturedDecl
+range|:
+name|public
+name|Decl
+decl_stmt|,
+name|public
+name|DeclContext
+block|{
+name|private
+label|:
+comment|/// \brief The number of parameters to the outlined function.
+name|unsigned
+name|NumParams
+decl_stmt|;
+comment|/// \brief The body of the outlined function.
+name|Stmt
+modifier|*
+name|Body
+decl_stmt|;
+name|explicit
+name|CapturedDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|unsigned NumParams
+argument_list|)
+block|:
+name|Decl
+argument_list|(
+name|Captured
+argument_list|,
+name|DC
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
+operator|,
+name|DeclContext
+argument_list|(
+name|Captured
+argument_list|)
+operator|,
+name|NumParams
+argument_list|(
+name|NumParams
+argument_list|)
+operator|,
+name|Body
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|ImplicitParamDecl
+operator|*
+operator|*
+name|getParams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|ImplicitParamDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|CapturedDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|public
+label|:
+specifier|static
+name|CapturedDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|unsigned
+name|NumParams
+parameter_list|)
+function_decl|;
+specifier|static
+name|CapturedDecl
+modifier|*
+name|CreateDeserialized
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+name|NumParams
+parameter_list|)
+function_decl|;
+name|Stmt
+operator|*
+name|getBody
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Body
+return|;
+block|}
+name|void
+name|setBody
+parameter_list|(
+name|Stmt
+modifier|*
+name|B
+parameter_list|)
+block|{
+name|Body
+operator|=
+name|B
+expr_stmt|;
+block|}
+name|unsigned
+name|getNumParams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumParams
+return|;
+block|}
+name|ImplicitParamDecl
+modifier|*
+name|getParam
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|NumParams
+argument_list|)
+expr_stmt|;
+return|return
+name|getParams
+argument_list|()
+index|[
+name|i
+index|]
+return|;
+block|}
+name|void
+name|setParam
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|,
+name|ImplicitParamDecl
+modifier|*
+name|P
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|NumParams
+argument_list|)
+expr_stmt|;
+name|getParams
+argument_list|()
+index|[
+name|i
+index|]
+operator|=
+name|P
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the parameter containing captured variables.
+name|ImplicitParamDecl
+operator|*
+name|getContextParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getParam
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+name|void
+name|setContextParam
+parameter_list|(
+name|ImplicitParamDecl
+modifier|*
+name|P
+parameter_list|)
+block|{
+name|setParam
+argument_list|(
+literal|0
+argument_list|,
+name|P
+argument_list|)
+expr_stmt|;
+block|}
+typedef|typedef
+name|ImplicitParamDecl
+modifier|*
+modifier|*
+name|param_iterator
+typedef|;
+comment|/// \brief Retrieve an iterator pointing to the first parameter decl.
+name|param_iterator
+name|param_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getParams
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve an iterator one past the last parameter decl.
+name|param_iterator
+name|param_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getParams
+argument_list|()
+operator|+
+name|NumParams
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Captured
+return|;
+block|}
+specifier|static
+name|DeclContext
+modifier|*
+name|castToDeclContext
+parameter_list|(
+specifier|const
+name|CapturedDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|CapturedDecl
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+operator|)
+return|;
+block|}
+specifier|static
+name|CapturedDecl
+modifier|*
+name|castFromDeclContext
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|CapturedDecl
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|DC
+operator|)
+operator|)
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Describes a module import declaration, which makes the contents
 end_comment
 

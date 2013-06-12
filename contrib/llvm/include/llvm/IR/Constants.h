@@ -117,6 +117,12 @@ directive|include
 file|"llvm/IR/OperandTraits.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DerivedTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -484,10 +490,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|IntegerType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -1219,10 +1224,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|ArrayType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -1462,10 +1466,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|StructType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -1623,10 +1626,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|VectorType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -1745,7 +1747,7 @@ argument_list|)
 operator|:
 name|Constant
 argument_list|(
-argument|reinterpret_cast<Type*>(T)
+argument|T
 argument_list|,
 argument|Value::ConstantPointerNullVal
 argument_list|,
@@ -1806,10 +1808,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|PointerType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -2036,10 +2037,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|SequentialType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -2405,10 +2405,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|ArrayType
-operator|*
 operator|>
 operator|(
 name|Value
@@ -2654,10 +2653,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
+name|cast
 operator|<
 name|VectorType
-operator|*
 operator|>
 operator|(
 name|Value

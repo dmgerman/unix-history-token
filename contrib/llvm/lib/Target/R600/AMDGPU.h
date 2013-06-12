@@ -106,6 +106,15 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createR600Packetizer
+parameter_list|(
+name|TargetMachine
+modifier|&
+name|tm
+parameter_list|)
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createR600ControlFlowFinalizer
 parameter_list|(
 name|TargetMachine

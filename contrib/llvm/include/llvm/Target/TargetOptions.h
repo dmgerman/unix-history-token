@@ -494,6 +494,15 @@ operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
 expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|TargetOptions
+operator|&
+operator|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

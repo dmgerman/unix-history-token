@@ -445,6 +445,15 @@ operator|~
 name|TargetLoweringBase
 argument_list|()
 expr_stmt|;
+name|protected
+label|:
+comment|/// \brief Initialize all of the actions to default values.
+name|void
+name|initActions
+parameter_list|()
+function_decl|;
+name|public
+label|:
 specifier|const
 name|TargetMachine
 operator|&
@@ -3009,18 +3018,6 @@ return|return
 name|PrefLoopAlignment
 return|;
 block|}
-comment|/// getShouldFoldAtomicFences - return whether the combiner should fold
-comment|/// fence MEMBARRIER instructions into the atomic intrinsic instructions.
-comment|///
-name|bool
-name|getShouldFoldAtomicFences
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ShouldFoldAtomicFences
-return|;
-block|}
 comment|/// getInsertFencesFor - return whether the DAG builder should automatically
 comment|/// insert fences and reduce ordering for atomics.
 comment|///
@@ -3099,6 +3096,12 @@ comment|//===-------------------------------------------------------------------
 comment|// TargetLowering Configuration Methods - These methods should be invoked by
 comment|// the derived class constructor to configure this object for the target.
 comment|//
+comment|/// \brief Reset the operation actions based on target options.
+name|virtual
+name|void
+name|resetOperationActions
+parameter_list|()
+block|{}
 name|protected
 label|:
 comment|/// setBooleanContents - Specify how the target extends the result of a
@@ -3390,34 +3393,27 @@ operator|=
 name|RC
 expr_stmt|;
 block|}
-comment|/// clearRegisterClasses - remove all register classes
+comment|/// clearRegisterClasses - Remove all register classes.
 name|void
 name|clearRegisterClasses
 parameter_list|()
 block|{
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|array_lengthof
+name|memset
 argument_list|(
 name|RegClassForVT
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-name|RegClassForVT
-index|[
-name|i
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+operator|*
+sizeof|sizeof
+argument_list|(
+name|TargetRegisterClass
+operator|*
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|AvailableRegClasses
 operator|.
@@ -3425,6 +3421,11 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// \brief Remove all operation actions.
+name|void
+name|clearOperationActions
+parameter_list|()
+block|{   }
 comment|/// findRepresentativeClass - Return the largest legal super-reg register class
 comment|/// of the register class for the specified type and its associated "cost".
 name|virtual
@@ -4027,20 +4028,6 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setShouldFoldAtomicFences - Set if the target's implementation of the
-comment|/// atomic operation intrinsics includes locking. Default is false.
-name|void
-name|setShouldFoldAtomicFences
-parameter_list|(
-name|bool
-name|fold
-parameter_list|)
-block|{
-name|ShouldFoldAtomicFences
-operator|=
-name|fold
-expr_stmt|;
-block|}
 comment|/// setInsertFencesForAtomic - Set if the DAG builder should
 comment|/// automatically insert fences and reduce the order of atomic memory
 comment|/// operations to Monotonic.
@@ -4631,12 +4618,6 @@ comment|///
 name|unsigned
 name|PrefLoopAlignment
 decl_stmt|;
-comment|/// ShouldFoldAtomicFences - Whether fencing MEMBARRIER instructions should
-comment|/// be folded into the enclosed atomic intrinsic instruction by the
-comment|/// combiner.
-name|bool
-name|ShouldFoldAtomicFences
-decl_stmt|;
 comment|/// InsertFencesForAtomic - Whether the DAG builder should automatically
 comment|/// insert fences and reduce ordering for atomics.  (This will be set for
 comment|/// for most architectures with weak memory ordering.)
@@ -5212,6 +5193,11 @@ comment|// Promote the integer element types until a legal vector type is found
 comment|// or until the element integer type is too big. If a legal type was not
 comment|// found, fallback to the usual mechanism of widening/splitting the
 comment|// vector.
+name|EVT
+name|OldEltVT
+init|=
+name|EltVT
+decl_stmt|;
 while|while
 condition|(
 literal|1
@@ -5303,6 +5289,12 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|// Reset the type to the unexpanded type if we did not find a legal vector
+comment|// type with a promoted vector element type.
+name|EltVT
+operator|=
+name|OldEltVT
+expr_stmt|;
 block|}
 comment|// Try to widen the vector until a legal type is found.
 comment|// If there is no wider legal type, split the vector.
@@ -6376,6 +6368,11 @@ name|isByVal
 operator|:
 literal|1
 block|;
+name|bool
+name|isReturned
+operator|:
+literal|1
+block|;
 name|uint16_t
 name|Alignment
 block|;
@@ -6408,6 +6405,11 @@ name|false
 argument_list|)
 block|,
 name|isByVal
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|isReturned
 argument_list|(
 name|false
 argument_list|)

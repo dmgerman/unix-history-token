@@ -1216,6 +1216,16 @@ return|return
 name|ModuleManager
 return|;
 block|}
+name|void
+name|setModuleManager
+argument_list|(
+argument|ASTReader *Reader
+argument_list|)
+block|{
+name|ModuleManager
+operator|=
+name|Reader
+block|; }
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1346,9 +1356,6 @@ comment|/// unit.
 comment|///
 comment|/// \param ShouldOwnClient If Client is non-NULL, specifies whether
 comment|/// the diagnostic object should take ownership of the client.
-comment|///
-comment|/// \param ShouldCloneClient If Client is non-NULL, specifies whether that
-comment|/// client should be cloned.
 name|void
 name|createDiagnostics
 argument_list|(
@@ -1356,8 +1363,6 @@ argument|DiagnosticConsumer *Client =
 literal|0
 argument_list|,
 argument|bool ShouldOwnClient = true
-argument_list|,
-argument|bool ShouldCloneClient = true
 argument_list|)
 block|;
 comment|/// Create a DiagnosticsEngine object with a the TextDiagnosticPrinter.
@@ -1391,8 +1396,6 @@ argument|DiagnosticConsumer *Client =
 literal|0
 argument_list|,
 argument|bool ShouldOwnClient = true
-argument_list|,
-argument|bool ShouldCloneClient = true
 argument_list|,
 argument|const CodeGenOptions *CodeGenOpts =
 literal|0

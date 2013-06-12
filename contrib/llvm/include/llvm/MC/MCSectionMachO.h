@@ -584,6 +584,11 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Subsection
 argument_list|)
 decl|const
 decl_stmt|;

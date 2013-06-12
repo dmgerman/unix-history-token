@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/CapturedStmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/PartialDiagnostic.h"
 end_include
 
@@ -98,6 +104,9 @@ name|class
 name|BlockDecl
 decl_stmt|;
 name|class
+name|CapturedDecl
+decl_stmt|;
+name|class
 name|CXXMethodDecl
 decl_stmt|;
 name|class
@@ -105,6 +114,9 @@ name|ObjCPropertyDecl
 decl_stmt|;
 name|class
 name|IdentifierInfo
+decl_stmt|;
+name|class
+name|ImplicitParamDecl
 decl_stmt|;
 name|class
 name|LabelDecl
@@ -224,6 +236,8 @@ block|,
 name|SK_Block
 block|,
 name|SK_Lambda
+block|,
+name|SK_CapturedRegion
 block|}
 enum|;
 name|public
@@ -929,6 +943,8 @@ block|,
 name|ImpCap_LambdaByref
 block|,
 name|ImpCap_Block
+block|,
+name|ImpCap_CapturedRegion
 block|}
 block|;
 name|ImplicitCaptureStyle
@@ -1527,6 +1543,12 @@ operator|->
 name|Kind
 operator|==
 name|SK_Lambda
+operator|||
+name|FSI
+operator|->
+name|Kind
+operator|==
+name|SK_CapturedRegion
 return|;
 block|}
 expr|}
@@ -1609,6 +1631,136 @@ operator|->
 name|Kind
 operator|==
 name|SK_Block
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Retains information about a captured region.
+name|class
+name|CapturedRegionScopeInfo
+operator|:
+name|public
+name|CapturingScopeInfo
+block|{
+name|public
+operator|:
+comment|/// \brief The CapturedDecl for this statement.
+name|CapturedDecl
+operator|*
+name|TheCapturedDecl
+block|;
+comment|/// \brief The captured record type.
+name|RecordDecl
+operator|*
+name|TheRecordDecl
+block|;
+comment|/// \brief This is the enclosing scope of the captured region.
+name|Scope
+operator|*
+name|TheScope
+block|;
+comment|/// \brief The implicit parameter for the captured variables.
+name|ImplicitParamDecl
+operator|*
+name|ContextParam
+block|;
+comment|/// \brief The kind of captured region.
+name|CapturedRegionKind
+name|CapRegionKind
+block|;
+name|CapturedRegionScopeInfo
+argument_list|(
+argument|DiagnosticsEngine&Diag
+argument_list|,
+argument|Scope *S
+argument_list|,
+argument|CapturedDecl *CD
+argument_list|,
+argument|RecordDecl *RD
+argument_list|,
+argument|ImplicitParamDecl *Context
+argument_list|,
+argument|CapturedRegionKind K
+argument_list|)
+operator|:
+name|CapturingScopeInfo
+argument_list|(
+name|Diag
+argument_list|,
+name|ImpCap_CapturedRegion
+argument_list|)
+block|,
+name|TheCapturedDecl
+argument_list|(
+name|CD
+argument_list|)
+block|,
+name|TheRecordDecl
+argument_list|(
+name|RD
+argument_list|)
+block|,
+name|TheScope
+argument_list|(
+name|S
+argument_list|)
+block|,
+name|ContextParam
+argument_list|(
+name|Context
+argument_list|)
+block|,
+name|CapRegionKind
+argument_list|(
+argument|K
+argument_list|)
+block|{
+name|Kind
+operator|=
+name|SK_CapturedRegion
+block|;   }
+name|virtual
+operator|~
+name|CapturedRegionScopeInfo
+argument_list|()
+block|;
+comment|/// \brief A descriptive name for the kind of captured region this is.
+name|StringRef
+name|getRegionName
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|CapRegionKind
+condition|)
+block|{
+case|case
+name|CR_Default
+case|:
+return|return
+literal|"default captured statement"
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid captured region kind!"
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const FunctionScopeInfo *FSI
+argument_list|)
+block|{
+return|return
+name|FSI
+operator|->
+name|Kind
+operator|==
+name|SK_CapturedRegion
 return|;
 block|}
 expr|}

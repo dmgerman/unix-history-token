@@ -247,6 +247,20 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|MVT
+name|getScalarShiftAmountTy
+argument_list|(
+argument|EVT LHSTy
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MVT
+operator|::
+name|i32
+return|;
+block|}
+name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -314,6 +328,24 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerCall_32
+argument_list|(
+argument|TargetLowering::CallLoweringInfo&CLI
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerCall_64
+argument_list|(
+argument|TargetLowering::CallLoweringInfo&CLI
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|SDValue
 name|LowerReturn
@@ -329,6 +361,44 @@ argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerReturn_32
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool IsVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerReturn_64
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool IsVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
+argument|DebugLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -358,6 +428,39 @@ argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SDValue Callee
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|withTargetFlags
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|unsigned TF
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|makeHiLoPair
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|unsigned HiTF
+argument_list|,
+argument|unsigned LoTF
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|makeAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;   }

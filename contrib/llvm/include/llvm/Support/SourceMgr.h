@@ -561,12 +561,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|,
 name|ArrayRef
 operator|<
@@ -574,12 +569,7 @@ name|SMFixIt
 operator|>
 name|FixIts
 operator|=
-name|ArrayRef
-operator|<
-name|SMFixIt
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|,
 name|bool
 name|ShowColors
@@ -613,12 +603,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|,
 name|ArrayRef
 operator|<
@@ -626,12 +611,7 @@ name|SMFixIt
 operator|>
 name|FixIts
 operator|=
-name|ArrayRef
-operator|<
-name|SMFixIt
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl|const
 decl_stmt|;
@@ -993,7 +973,7 @@ argument|ArrayRef<std::pair<unsigned
 argument_list|,
 argument|unsigned>> Ranges
 argument_list|,
-argument|ArrayRef<SMFixIt> FixIts = ArrayRef<SMFixIt>()
+argument|ArrayRef<SMFixIt> FixIts = None
 argument_list|)
 expr_stmt|;
 specifier|const

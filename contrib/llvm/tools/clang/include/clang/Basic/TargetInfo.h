@@ -291,6 +291,10 @@ name|SuitableAlign
 block|;
 name|unsigned
 name|char
+name|MinGlobalAlign
+block|;
+name|unsigned
+name|char
 name|MaxAtomicPromoteWidth
 block|,
 name|MaxAtomicInlineWidth
@@ -507,6 +511,15 @@ comment|/// __builtin_va_list as defined by ARM AAPCS ABI
 comment|/// http://infocenter.arm.com
 comment|//        /help/topic/com.arm.doc.ihi0042d/IHI0042D_aapcs.pdf
 name|AAPCSABIBuiltinVaList
+block|,
+comment|// typedef struct __va_list_tag
+comment|//   {
+comment|//     long __gpr;
+comment|//     long __fpr;
+comment|//     void *__overflow_arg_area;
+comment|//     void *__reg_save_area;
+comment|//   } va_list[1];
+name|SystemZBuiltinVaList
 block|}
 block|;
 name|protected
@@ -911,6 +924,17 @@ specifier|const
 block|{
 return|return
 name|SuitableAlign
+return|;
+block|}
+comment|/// getMinGlobalAlign - Return the minimum alignment of a global variable,
+comment|/// unless its alignment is explicitly reduced via attributes.
+name|unsigned
+name|getMinGlobalAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinGlobalAlign
 return|;
 block|}
 comment|/// getWCharWidth/Align - Return the size of 'wchar_t' for this target, in

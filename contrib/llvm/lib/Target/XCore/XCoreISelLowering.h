@@ -345,6 +345,21 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|lowerLoadWordFromAlignedBasePlusOffset
+argument_list|(
+argument|DebugLoc DL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Base
+argument_list|,
+argument|int64_t Offset
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 comment|// Lower Operand specifics
 name|SDValue
 name|LowerLOAD

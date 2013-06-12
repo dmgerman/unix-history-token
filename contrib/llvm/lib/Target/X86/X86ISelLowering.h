@@ -1424,6 +1424,12 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Reset the operation actions based on target options.
+name|virtual
+name|void
+name|resetOperationActions
+argument_list|()
+block|;
 name|protected
 operator|:
 name|std
@@ -1460,6 +1466,11 @@ specifier|const
 name|DataLayout
 operator|*
 name|TD
+block|;
+comment|/// Used to store the TargetOptions so that we don't waste time resetting
+comment|/// the operation actions unless we have to.
+name|TargetOptions
+name|TO
 block|;
 comment|/// X86ScalarSSEf32, X86ScalarSSEf64 - Select between SSE or x87
 comment|/// floating point ops.

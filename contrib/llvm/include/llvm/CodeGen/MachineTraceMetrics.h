@@ -776,7 +776,9 @@ comment|/// required to execute the instructions in the trace if they were all
 comment|/// independent, exposing the maximum instruction-level parallelism.
 comment|///
 comment|/// Any blocks in Extrablocks are included as if they were part of the
-comment|/// trace.
+comment|/// trace. Likewise, extra resources required by the specified scheduling
+comment|/// classes are included. For the caller to account for extra machine
+comment|/// instructions, it must first resolve each instruction's scheduling class.
 name|unsigned
 name|getResourceLength
 argument_list|(
@@ -788,14 +790,17 @@ operator|*
 operator|>
 name|Extrablocks
 operator|=
+name|None
+argument_list|,
 name|ArrayRef
 operator|<
 specifier|const
-name|MachineBasicBlock
+name|MCSchedClassDesc
 operator|*
 operator|>
-operator|(
-operator|)
+name|ExtraInstrs
+operator|=
+name|None
 argument_list|)
 decl|const
 decl_stmt|;

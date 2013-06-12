@@ -191,7 +191,7 @@ name|uint8_t
 modifier|*
 name|Address
 decl_stmt|;
-comment|/// Size - section size.
+comment|/// Size - section size. Doesn't include the stubs.
 name|size_t
 name|Size
 decl_stmt|;
@@ -219,8 +219,6 @@ argument_list|,
 argument|uint8_t *address
 argument_list|,
 argument|size_t size
-argument_list|,
-argument|uintptr_t stubOffset
 argument_list|,
 argument|uintptr_t objAddress
 argument_list|)
@@ -250,7 +248,7 @@ argument_list|)
 operator|,
 name|StubOffset
 argument_list|(
-name|stubOffset
+name|size
 argument_list|)
 operator|,
 name|ObjAddress
@@ -284,6 +282,14 @@ comment|/// used to make a relocation section relative instead of symbol relativ
 name|intptr_t
 name|Addend
 decl_stmt|;
+comment|/// True if this is a PCRel relocation (MachO specific).
+name|bool
+name|IsPCRel
+decl_stmt|;
+comment|/// The size of this relocation (MachO specific).
+name|unsigned
+name|Size
+decl_stmt|;
 name|RelocationEntry
 argument_list|(
 argument|unsigned id
@@ -312,34 +318,64 @@ argument_list|)
 operator|,
 name|Addend
 argument_list|(
-argument|addend
+name|addend
+argument_list|)
+operator|,
+name|IsPCRel
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+literal|0
 argument_list|)
 block|{}
-block|}
-empty_stmt|;
-comment|/// ObjRelocationInfo - relocation information as read from the object file.
-comment|/// Used to pass around data taken from object::RelocationRef, together with
-comment|/// the section to which the relocation points (represented by a SectionID).
-name|class
-name|ObjRelocationInfo
-block|{
-name|public
-label|:
-name|unsigned
+name|RelocationEntry
+argument_list|(
+argument|unsigned id
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|uint32_t type
+argument_list|,
+argument|int64_t addend
+argument_list|,
+argument|bool IsPCRel
+argument_list|,
+argument|unsigned Size
+argument_list|)
+operator|:
 name|SectionID
-decl_stmt|;
-name|uint64_t
+argument_list|(
+name|id
+argument_list|)
+operator|,
 name|Offset
-decl_stmt|;
-name|SymbolRef
-name|Symbol
-decl_stmt|;
-name|uint64_t
-name|Type
-decl_stmt|;
-name|int64_t
-name|AdditionalInfo
-decl_stmt|;
+argument_list|(
+name|offset
+argument_list|)
+operator|,
+name|RelType
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|Addend
+argument_list|(
+name|addend
+argument_list|)
+operator|,
+name|IsPCRel
+argument_list|(
+name|IsPCRel
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+argument|Size
+argument_list|)
+block|{}
 block|}
 empty_stmt|;
 name|class
@@ -585,6 +621,18 @@ name|Arch
 operator|==
 name|Triple
 operator|::
+name|aarch64
+condition|)
+return|return
+literal|20
+return|;
+comment|// movz; movk; movk; movk; br
+if|if
+condition|(
+name|Arch
+operator|==
+name|Triple
+operator|::
 name|arm
 operator|||
 name|Arch
@@ -627,9 +675,55 @@ condition|)
 return|return
 literal|44
 return|;
+elseif|else
+if|if
+condition|(
+name|Arch
+operator|==
+name|Triple
+operator|::
+name|x86_64
+condition|)
+return|return
+literal|8
+return|;
+comment|// GOT
+elseif|else
+if|if
+condition|(
+name|Arch
+operator|==
+name|Triple
+operator|::
+name|systemz
+condition|)
+return|return
+literal|16
+return|;
 else|else
 return|return
 literal|0
+return|;
+block|}
+specifier|inline
+name|unsigned
+name|getStubAlignment
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Arch
+operator|==
+name|Triple
+operator|::
+name|systemz
+condition|)
+return|return
+literal|8
+return|;
+else|else
+return|return
+literal|1
 return|;
 block|}
 name|bool
@@ -702,22 +796,6 @@ operator|.
 name|Address
 return|;
 block|}
-comment|// Subclasses can override this method to get the alignment requirement of
-comment|// a common symbol. Returns no alignment requirement if not implemented.
-name|virtual
-name|unsigned
-name|getCommonSymbolAlignment
-parameter_list|(
-specifier|const
-name|SymbolRef
-modifier|&
-name|Sym
-parameter_list|)
-block|{
-return|return
-literal|0
-return|;
-block|}
 name|void
 name|writeInt16BE
 parameter_list|(
@@ -733,8 +811,7 @@ if|if
 condition|(
 name|sys
 operator|::
-name|isLittleEndianHost
-argument_list|()
+name|IsLittleEndianHost
 condition|)
 name|Value
 operator|=
@@ -783,8 +860,7 @@ if|if
 condition|(
 name|sys
 operator|::
-name|isLittleEndianHost
-argument_list|()
+name|IsLittleEndianHost
 condition|)
 name|Value
 operator|=
@@ -863,8 +939,7 @@ if|if
 condition|(
 name|sys
 operator|::
-name|isLittleEndianHost
-argument_list|()
+name|IsLittleEndianHost
 condition|)
 name|Value
 operator|=
@@ -1107,8 +1182,12 @@ name|uint64_t
 name|Value
 parameter_list|)
 function_decl|;
+comment|/// \brief A object file specific relocation resolver
+comment|/// \param RE The relocation to be resolved
+comment|/// \param Value Target symbol address to apply the relocation action
+name|virtual
 name|void
-name|resolveRelocationEntry
+name|resolveRelocation
 parameter_list|(
 specifier|const
 name|RelocationEntry
@@ -1117,35 +1196,6 @@ name|RE
 parameter_list|,
 name|uint64_t
 name|Value
-parameter_list|)
-function_decl|;
-comment|/// \brief A object file specific relocation resolver
-comment|/// \param Section The section where the relocation is being applied
-comment|/// \param Offset The offset into the section for this relocation
-comment|/// \param Value Target symbol address to apply the relocation action
-comment|/// \param Type object file specific relocation type
-comment|/// \param Addend A constant addend used to compute the value to be stored
-comment|///        into the relocatable field
-name|virtual
-name|void
-name|resolveRelocation
-parameter_list|(
-specifier|const
-name|SectionEntry
-modifier|&
-name|Section
-parameter_list|,
-name|uint64_t
-name|Offset
-parameter_list|,
-name|uint64_t
-name|Value
-parameter_list|,
-name|uint32_t
-name|Type
-parameter_list|,
-name|int64_t
-name|Addend
 parameter_list|)
 init|=
 literal|0
@@ -1156,10 +1206,11 @@ name|virtual
 name|void
 name|processRelocationRef
 parameter_list|(
-specifier|const
-name|ObjRelocationInfo
-modifier|&
-name|Rel
+name|unsigned
+name|SectionID
+parameter_list|,
+name|RelocationRef
+name|RelI
 parameter_list|,
 name|ObjectImage
 modifier|&
@@ -1395,6 +1446,11 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|StringRef
+name|getEHFrameSection
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 block|}

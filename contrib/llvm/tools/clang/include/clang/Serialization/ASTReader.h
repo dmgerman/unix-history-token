@@ -583,6 +583,36 @@ name|unsigned
 name|Value
 argument_list|)
 block|{}
+comment|/// \brief Returns true if this \c ASTReaderListener wants to receive the
+comment|/// input files of the AST file via \c visitInputFile, false otherwise.
+name|virtual
+name|bool
+name|needsInputFileVisitation
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief if \c needsInputFileVisitation returns true, this is called for each
+comment|/// input file of the AST file.
+comment|///
+comment|/// \returns true to continue receiving the next input file, false to stop.
+name|virtual
+name|bool
+name|visitInputFile
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|,
+name|bool
+name|isSystem
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// \brief ASTReaderListener implementation to validate the information of
@@ -3379,6 +3409,17 @@ name|finishPendingActions
 parameter_list|()
 function_decl|;
 name|void
+name|pushExternalDeclIntoScope
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|)
+function_decl|;
+name|void
 name|addPendingDeclContextInfo
 argument_list|(
 name|Decl
@@ -4757,11 +4798,10 @@ comment|/// \brief Retrieve an iterator into the set of all identifiers
 comment|/// in all loaded AST files.
 name|virtual
 name|IdentifierIterator
-operator|*
+modifier|*
 name|getIdentifiers
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
 name|virtual
@@ -5893,6 +5933,24 @@ name|Expr
 modifier|*
 name|ReadSubExpr
 parameter_list|()
+function_decl|;
+comment|/// \brief Reads a token out of a record.
+name|Token
+name|ReadToken
+parameter_list|(
+name|ModuleFile
+modifier|&
+name|M
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
 function_decl|;
 comment|/// \brief Reads the macro record located at the given offset.
 name|MacroInfo

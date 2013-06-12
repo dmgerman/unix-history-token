@@ -298,6 +298,10 @@ comment|/// precision.
 name|bool
 name|FPOnlySP
 block|;
+comment|/// HasTrustZone - if true, processor supports TrustZone security extensions
+name|bool
+name|HasTrustZone
+block|;
 comment|/// AllowsUnalignedMem - If true, the subtarget allows unaligned memory
 comment|/// accesses for some types.  For details, see
 comment|/// ARMTargetLowering::allowsUnalignedMemoryAccesses().
@@ -739,6 +743,15 @@ specifier|const
 block|{
 return|return
 name|FPOnlySP
+return|;
+block|}
+name|bool
+name|hasTrustZone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasTrustZone
 return|;
 block|}
 name|bool

@@ -85,6 +85,9 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// MCSection - Instances of this class represent a uniqued identifier for a
@@ -187,6 +190,11 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Subsection
 argument_list|)
 decl|const
 init|=

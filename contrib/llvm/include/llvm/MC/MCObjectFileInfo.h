@@ -121,12 +121,17 @@ decl_stmt|;
 name|unsigned
 name|TTypeEncoding
 decl_stmt|;
-comment|// Section flags for eh_frame
+comment|/// Section flags for eh_frame
 name|unsigned
 name|EHSectionType
 decl_stmt|;
 name|unsigned
 name|EHSectionFlags
+decl_stmt|;
+comment|/// CompactUnwindDwarfEHFrameOnly - Compact unwind encoding indicating that we
+comment|/// should emit only an EH frame.
+name|unsigned
+name|CompactUnwindDwarfEHFrameOnly
 decl_stmt|;
 comment|/// TextSection - Section directive for standard text.
 comment|///
@@ -571,6 +576,15 @@ specifier|const
 block|{
 return|return
 name|TTypeEncoding
+return|;
+block|}
+name|unsigned
+name|getCompactUnwindDwarfEHFrameOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompactUnwindDwarfEHFrameOnly
 return|;
 block|}
 specifier|const

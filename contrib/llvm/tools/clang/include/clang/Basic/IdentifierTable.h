@@ -1626,11 +1626,10 @@ comment|/// \returns A new iterator into the set of known identifiers. The
 comment|/// caller is responsible for deleting this iterator.
 name|virtual
 name|IdentifierIterator
-operator|*
+modifier|*
 name|getIdentifiers
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -269,9 +269,6 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
-name|TargetOptions
-decl_stmt|;
-name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
@@ -798,17 +795,16 @@ name|CodeGenOptions
 modifier|&
 name|CodeGenOpts
 decl_stmt|;
-specifier|const
-name|TargetOptions
-modifier|&
-name|TargetOpts
-decl_stmt|;
 name|llvm
 operator|::
 name|Module
 operator|&
 name|TheModule
 expr_stmt|;
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+decl_stmt|;
 specifier|const
 name|llvm
 operator|::
@@ -816,26 +812,36 @@ name|DataLayout
 operator|&
 name|TheDataLayout
 expr_stmt|;
+specifier|const
+name|TargetInfo
+modifier|&
+name|Target
+decl_stmt|;
+name|CGCXXABI
+modifier|&
+name|ABI
+decl_stmt|;
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|VMContext
+expr_stmt|;
+name|CodeGenTBAA
+modifier|*
+name|TBAA
+decl_stmt|;
 name|mutable
 specifier|const
 name|TargetCodeGenInfo
 modifier|*
 name|TheTargetCodeGenInfo
 decl_stmt|;
-name|DiagnosticsEngine
-modifier|&
-name|Diags
-decl_stmt|;
-name|CGCXXABI
-modifier|&
-name|ABI
-decl_stmt|;
+comment|// This should not be moved earlier, since its initialization depends on some
+comment|// of the previous reference members being already initialized and also checks
+comment|// if TheTargetCodeGenInfo is NULL
 name|CodeGenTypes
 name|Types
-decl_stmt|;
-name|CodeGenTBAA
-modifier|*
-name|TBAA
 decl_stmt|;
 comment|/// VTables - Holds information about C++ vtables.
 name|CodeGenVTables
@@ -876,8 +882,8 @@ modifier|*
 name|RRData
 decl_stmt|;
 comment|// WeakRefReferences - A set of references that have only been seen via
-comment|// a weakref so far. This is used to remove the weak of the reference if we ever
-comment|// see a direct reference or a definition.
+comment|// a weakref so far. This is used to remove the weak of the reference if we
+comment|// ever see a direct reference or a definition.
 name|llvm
 operator|::
 name|SmallPtrSet
@@ -1067,6 +1073,60 @@ operator|*
 operator|>
 name|AtomicGetterHelperFnMap
 expr_stmt|;
+comment|/// Map used to track internal linkage functions declared within
+comment|/// extern "C" regions.
+typedef|typedef
+name|llvm
+operator|::
+name|MapVector
+operator|<
+name|IdentifierInfo
+operator|*
+operator|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+operator|>
+name|StaticExternCMap
+expr_stmt|;
+name|StaticExternCMap
+name|StaticExternCValues
+decl_stmt|;
+comment|/// \brief thread_local variables defined or used in this TU.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+operator|>
+expr|>
+name|CXXThreadLocals
+expr_stmt|;
+comment|/// \brief thread_local variables with initializers that need to run
+comment|/// before any thread_local variable in this TU is odr-used.
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|CXXThreadLocalInits
+expr_stmt|;
 comment|/// CXXGlobalInits - Global variables with initializers that need to run
 comment|/// before main.
 name|std
@@ -1195,16 +1255,14 @@ comment|/// CFConstantStringClassRef - Cached reference to the class for constan
 comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
-name|Constant
-operator|*
+name|WeakVH
 name|CFConstantStringClassRef
 expr_stmt|;
 comment|/// ConstantStringClassRef - Cached reference to the class for constant
 comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
-name|Constant
-operator|*
+name|WeakVH
 name|ConstantStringClassRef
 expr_stmt|;
 comment|/// \brief The LLVM type corresponding to NSConstantString.
@@ -1251,12 +1309,6 @@ modifier|*
 name|F
 parameter_list|)
 function_decl|;
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|VMContext
-expr_stmt|;
 comment|/// @name Cache for Blocks Runtime Globals
 comment|/// @{
 name|llvm
@@ -1343,11 +1395,6 @@ specifier|const
 name|CodeGenOptions
 operator|&
 name|CodeGenOpts
-argument_list|,
-specifier|const
-name|TargetOptions
-operator|&
-name|TargetOpts
 argument_list|,
 name|llvm
 operator|::
@@ -1442,16 +1489,6 @@ expr_stmt|;
 return|return
 operator|*
 name|CUDARuntime
-return|;
-block|}
-comment|/// getCXXABI() - Return a reference to the configured C++ ABI.
-name|CGCXXABI
-modifier|&
-name|getCXXABI
-parameter_list|()
-block|{
-return|return
-name|ABI
 return|;
 block|}
 name|ARCEntrypoints
@@ -1713,20 +1750,6 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|const
-name|CodeGenOptions
-operator|&
-name|getCodeGenOpts
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CodeGenOpts
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
 name|LangOptions
 operator|&
 name|getLangOpts
@@ -1735,6 +1758,20 @@ specifier|const
 block|{
 return|return
 name|LangOpts
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|CodeGenOptions
+operator|&
+name|getCodeGenOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeGenOpts
 return|;
 block|}
 end_expr_stmt
@@ -1753,45 +1790,6 @@ name|TheModule
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|CodeGenTypes
-modifier|&
-name|getTypes
-parameter_list|()
-block|{
-return|return
-name|Types
-return|;
-block|}
-end_function
-
-begin_function
-name|CodeGenVTables
-modifier|&
-name|getVTables
-parameter_list|()
-block|{
-return|return
-name|VTables
-return|;
-block|}
-end_function
-
-begin_function
-name|VTableContext
-modifier|&
-name|getVTableContext
-parameter_list|()
-block|{
-return|return
-name|VTables
-operator|.
-name|getVTableContext
-argument_list|()
-return|;
-block|}
-end_function
 
 begin_expr_stmt
 name|DiagnosticsEngine
@@ -1831,13 +1829,22 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Context
-operator|.
-name|getTargetInfo
-argument_list|()
+name|Target
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|CGCXXABI
+modifier|&
+name|getCXXABI
+parameter_list|()
+block|{
+return|return
+name|ABI
+return|;
+block|}
+end_function
 
 begin_expr_stmt
 name|llvm
@@ -1853,23 +1860,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
-specifier|const
-name|TargetCodeGenInfo
-modifier|&
-name|getTargetCodeGenInfo
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-name|bool
-name|isTargetDarwin
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|bool
 name|shouldUseTBAA
@@ -1883,6 +1873,54 @@ literal|0
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+specifier|const
+name|TargetCodeGenInfo
+modifier|&
+name|getTargetCodeGenInfo
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|CodeGenTypes
+modifier|&
+name|getTypes
+parameter_list|()
+block|{
+return|return
+name|Types
+return|;
+block|}
+end_function
+
+begin_function
+name|CodeGenVTables
+modifier|&
+name|getVTables
+parameter_list|()
+block|{
+return|return
+name|VTables
+return|;
+block|}
+end_function
+
+begin_function
+name|VTableContext
+modifier|&
+name|getVTableContext
+parameter_list|()
+block|{
+return|return
+name|VTables
+operator|.
+name|getVTableContext
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_expr_stmt
 name|llvm
@@ -1989,8 +2027,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// Decorate the instruction with a TBAA tag. For scalar TBAA, the tag
+end_comment
+
+begin_comment
+comment|/// is the same as the type. For struct-path aware TBAA, the tag
+end_comment
+
+begin_comment
+comment|/// is different from the type: base type, access type and offset.
+end_comment
+
+begin_comment
+comment|/// When ConvertTypeToTag is true, we create a tag based on the scalar type.
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|void
 name|DecorateInstruction
 argument_list|(
@@ -2005,6 +2058,11 @@ operator|::
 name|MDNode
 operator|*
 name|TBAAInfo
+argument_list|,
+name|bool
+name|ConvertTypeToTag
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2306,11 +2364,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// CreateOrReplaceCXXRuntimeVariable - Will return a global variable of the given
+comment|/// CreateOrReplaceCXXRuntimeVariable - Will return a global variable of the
 end_comment
 
 begin_comment
-comment|/// type. If a variable with a different type already exists then a new
+comment|/// given type. If a variable with a different type already exists then a new
 end_comment
 
 begin_comment
@@ -2940,7 +2998,7 @@ argument|const char *GlobalName=
 literal|0
 argument_list|,
 argument|unsigned Alignment=
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2982,7 +3040,7 @@ argument|const char *GlobalName=
 literal|0
 argument_list|,
 argument|unsigned Alignment=
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3106,7 +3164,7 @@ name|getIntrinsic
 argument_list|(
 argument|unsigned IID
 argument_list|,
-argument|ArrayRef<llvm::Type*> Tys =                                                  ArrayRef<llvm::Type*>()
+argument|ArrayRef<llvm::Type*> Tys = None
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3144,6 +3202,41 @@ name|VD
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief If the declaration has internal linkage but is inside an
+end_comment
+
+begin_comment
+comment|/// extern "C" linkage specification, prepare to emit an alias for it
+end_comment
+
+begin_comment
+comment|/// to the expected name.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|SomeDecl
+operator|>
+name|void
+name|MaybeHandleStaticInExternC
+argument_list|(
+specifier|const
+name|SomeDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// AddUsedGlobal - Add a global which should be forced to be
@@ -4573,6 +4666,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Emit the function that initializes C++ thread_local variables.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitCXXThreadLocalInitFunc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitCXXGlobalInitFunc - Emit the function that initializes C++ globals.
 end_comment
 
@@ -4777,6 +4881,21 @@ end_comment
 begin_function_decl
 name|void
 name|EmitModuleLinkOptions
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Emit aliases for internal-linkage declarations inside "C" language
+end_comment
+
+begin_comment
+comment|/// linkage specifications, giving them the "expected" name where possible.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitStaticExternCAliases
 parameter_list|()
 function_decl|;
 end_function_decl

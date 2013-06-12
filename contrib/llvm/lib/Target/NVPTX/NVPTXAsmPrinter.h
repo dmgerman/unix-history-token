@@ -364,6 +364,7 @@ name|symbolPosInBuffer
 block|;
 name|SmallVector
 operator|<
+specifier|const
 name|Value
 operator|*
 block|,
@@ -575,7 +576,7 @@ block|}
 name|void
 name|addSymbol
 argument_list|(
-argument|Value *GVar
+argument|const Value *GVar
 argument_list|)
 block|{
 name|symbolPosInBuffer
@@ -716,6 +717,7 @@ operator|==
 name|nextSymbolPos
 condition|)
 block|{
+specifier|const
 name|Value
 modifier|*
 name|v
@@ -727,6 +729,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+specifier|const
 name|GlobalValue
 modifier|*
 name|GVar
@@ -762,6 +765,7 @@ block|}
 elseif|else
 if|if
 condition|(
+specifier|const
 name|ConstantExpr
 modifier|*
 name|Cexpr
@@ -1019,6 +1023,7 @@ block|;
 name|void
 name|printModuleLevelGV
 argument_list|(
+specifier|const
 name|GlobalVariable
 operator|*
 name|GVar
@@ -1048,6 +1053,15 @@ argument_list|,
 argument|int paramIndex
 argument_list|,
 argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|emitGlobals
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
 argument_list|)
 block|;
 name|void
@@ -1224,6 +1238,9 @@ operator|::
 name|string
 name|CurrentBankselLabelInBasicBlock
 block|;
+name|bool
+name|GlobalsEmitted
+block|;
 comment|// This is specific per MachineFunction.
 specifier|const
 name|MachineRegisterInfo
@@ -1279,6 +1296,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|GlobalVariable
 operator|*
 operator|>
@@ -1341,6 +1359,7 @@ block|;
 name|void
 name|printScalarConstant
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|CPV
@@ -1366,7 +1385,7 @@ block|;
 name|void
 name|bufferLEByte
 argument_list|(
-argument|Constant *CPV
+argument|const Constant *CPV
 argument_list|,
 argument|int Bytes
 argument_list|,
@@ -1376,6 +1395,7 @@ block|;
 name|void
 name|bufferAggregateConstant
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|CV
@@ -1410,6 +1430,7 @@ block|;
 name|void
 name|emitDeclarations
 argument_list|(
+specifier|const
 name|Module
 operator|&
 argument_list|,

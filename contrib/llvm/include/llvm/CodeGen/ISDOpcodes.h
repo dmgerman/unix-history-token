@@ -787,14 +787,6 @@ comment|/// read / write specifier, locality specifier and instruction / data ca
 comment|/// specifier.
 name|PREFETCH
 block|,
-comment|/// OUTCHAIN = MEMBARRIER(INCHAIN, load-load, load-store, store-load,
-comment|///                       store-store, device)
-comment|/// This corresponds to the memory.barrier intrinsic.
-comment|/// it takes an input chain, 4 operands to specify the type of barrier, an
-comment|/// operand specifying if the barrier applies to device and uncached memory
-comment|/// and produces an output chain.
-name|MEMBARRIER
-block|,
 comment|/// OUTCHAIN = ATOMIC_FENCE(INCHAIN, ordering, scope)
 comment|/// This corresponds to the fence instruction. It takes an input chain, and
 comment|/// two integer constants: an AtomicOrdering and a SynchronizationScope.

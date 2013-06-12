@@ -92,6 +92,25 @@ argument_list|)
 block|{}
 name|private
 operator|:
+name|virtual
+name|bool
+name|runOnMachineFunction
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+block|;
+name|void
+name|addDSPCtrlRegOperands
+argument_list|(
+argument|bool IsDef
+argument_list|,
+argument|MachineInstr&MI
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+block|;
 name|bool
 name|replaceUsesWithZeroReg
 argument_list|(

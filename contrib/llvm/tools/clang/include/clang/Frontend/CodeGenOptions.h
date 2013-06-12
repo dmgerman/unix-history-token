@@ -387,7 +387,7 @@ name|memcpy
 argument_list|(
 name|CoverageVersion
 argument_list|,
-literal|"*204"
+literal|"402*"
 argument_list|,
 literal|4
 argument_list|)

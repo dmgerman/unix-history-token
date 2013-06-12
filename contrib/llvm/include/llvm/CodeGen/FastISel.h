@@ -354,13 +354,41 @@ operator|*
 name|V
 argument_list|)
 expr_stmt|;
-comment|/// TryToFoldLoad - The specified machine instr operand is a vreg, and that
+comment|/// \brief We're checking to see if we can fold \p LI into \p FoldInst.
+comment|/// Note that we could have a sequence where multiple LLVM IR instructions
+comment|/// are folded into the same machineinstr.  For example we could have:
+comment|///   A: x = load i32 *P
+comment|///   B: y = icmp A, 42
+comment|///   C: br y, ...
+comment|///
+comment|/// In this scenario, \p LI is "A", and \p FoldInst is "C".  We know
+comment|/// about "B" (and any other folded instructions) because it is between
+comment|/// A and C.
+comment|///
+comment|/// If we succeed folding, return true.
+comment|///
+name|bool
+name|tryToFoldLoad
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|FoldInst
+parameter_list|)
+function_decl|;
+comment|/// \brief The specified machine instr operand is a vreg, and that
 comment|/// vreg is being provided by the specified load instruction.  If possible,
 comment|/// try to fold the load as an operand to the instruction, returning true if
 comment|/// possible.
+comment|/// This method should be implemented by targets.
 name|virtual
 name|bool
-name|TryToFoldLoad
+name|tryToFoldLoadIntoMI
 parameter_list|(
 name|MachineInstr
 modifier|*

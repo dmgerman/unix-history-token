@@ -84,6 +84,9 @@ block|{
 name|class
 name|ASTContext
 decl_stmt|;
+name|class
+name|TargetInfo
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -888,6 +891,13 @@ operator|::
 name|DataLayout
 operator|&
 name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|TargetInfo
+operator|&
+name|getTarget
 argument_list|()
 specifier|const
 expr_stmt|;

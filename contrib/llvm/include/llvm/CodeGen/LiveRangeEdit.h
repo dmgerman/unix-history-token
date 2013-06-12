@@ -741,12 +741,7 @@ name|unsigned
 operator|>
 name|RegsBeingSpilled
 operator|=
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
 comment|/// calculateRegClassAndHint - Recompute register class and hint for each new

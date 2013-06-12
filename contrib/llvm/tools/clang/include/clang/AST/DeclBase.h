@@ -1117,15 +1117,18 @@ name|getDeclContext
 argument_list|()
 return|;
 block|}
-comment|/// Finds the innermost non-closure context of this declaration.
-comment|/// That is, walk out the DeclContext chain, skipping any blocks.
-name|DeclContext
+comment|/// Find the innermost non-closure ancestor of this declaration,
+comment|/// walking up through blocks, lambdas, etc.  If that ancestor is
+comment|/// not a code context (!isFunctionOrMethod()), returns null.
+comment|///
+comment|/// A declaration may be its own non-closure context.
+name|Decl
 modifier|*
 name|getNonClosureContext
 parameter_list|()
 function_decl|;
 specifier|const
-name|DeclContext
+name|Decl
 operator|*
 name|getNonClosureContext
 argument_list|()
@@ -1216,6 +1219,20 @@ argument_list|()
 block|;
 endif|#
 directive|endif
+return|return
+name|AccessSpecifier
+argument_list|(
+name|Access
+argument_list|)
+return|;
+block|}
+comment|/// \brief Retrieve the access specifier for this declaration, even though
+comment|/// it may not yet have been properly set.
+name|AccessSpecifier
+name|getAccessUnsafe
+argument_list|()
+specifier|const
+block|{
 return|return
 name|AccessSpecifier
 argument_list|(
@@ -4097,6 +4114,11 @@ case|:
 case|case
 name|Decl
 operator|::
+name|Captured
+case|:
+case|case
+name|Decl
+operator|::
 name|ObjCMethod
 case|:
 return|return
@@ -4214,20 +4236,6 @@ name|isTransparentContext
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Determines whether this context is, or is nested within,
-comment|/// a C++ extern "C" linkage spec.
-name|bool
-name|isExternCContext
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Determines whether this context is, or is nested within,
-comment|/// a C++ extern "C++" linkage spec.
-name|bool
-name|isExternCXXContext
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// \brief Determine whether this declaration context is equivalent
 comment|/// to the declaration context DC.
 name|bool
@@ -4269,13 +4277,13 @@ decl_stmt|;
 comment|/// \brief Find the nearest non-closure ancestor of this context,
 comment|/// i.e. the innermost semantic parent of this context which is not
 comment|/// a closure.  A context may be its own non-closure ancestor.
-name|DeclContext
+name|Decl
 modifier|*
 name|getNonClosureAncestor
 parameter_list|()
 function_decl|;
 specifier|const
-name|DeclContext
+name|Decl
 operator|*
 name|getNonClosureAncestor
 argument_list|()
@@ -5483,6 +5491,22 @@ name|D
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// @brief Checks whether a declaration is in this context.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|containsDecl
+argument_list|(
+name|Decl
+operator|*
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// lookup_iterator - An iterator that provides access to the results

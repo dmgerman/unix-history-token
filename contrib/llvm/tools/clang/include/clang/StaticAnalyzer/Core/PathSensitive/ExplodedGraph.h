@@ -725,6 +725,26 @@ name|getFirstPred
 argument_list|()
 return|;
 block|}
+specifier|const
+name|ExplodedNode
+operator|*
+name|getFirstSucc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|succ_empty
+argument_list|()
+condition|?
+name|NULL
+else|:
+operator|*
+operator|(
+name|succ_begin
+argument_list|()
+operator|)
+return|;
+block|}
 comment|// Iterators over successor and predecessor vertices.
 typedef|typedef
 name|ExplodedNode
