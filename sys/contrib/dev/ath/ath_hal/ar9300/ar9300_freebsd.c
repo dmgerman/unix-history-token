@@ -986,6 +986,20 @@ name|ar9300SetChainMasks
 expr_stmt|;
 comment|/* ah_get11nRxClear */
 comment|/* ah_set11nRxClear */
+comment|/* bluetooth coexistence functions */
+comment|/* LNA diversity functions */
+name|ah
+operator|->
+name|ah_divLnaConfGet
+operator|=
+name|ar9300_ant_div_comb_get_config
+expr_stmt|;
+name|ah
+operator|->
+name|ah_divLnaConfSet
+operator|=
+name|ar9300_ant_div_comb_set_config
+expr_stmt|;
 block|}
 end_function
 
