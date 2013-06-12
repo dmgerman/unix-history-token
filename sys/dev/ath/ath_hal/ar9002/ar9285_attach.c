@@ -914,6 +914,18 @@ name|ah_btCoexSetParameter
 operator|=
 name|ar9285BTCoexSetParameter
 expr_stmt|;
+name|ah
+operator|->
+name|ah_divLnaConfGet
+operator|=
+name|ar9285_antdiv_comb_conf_get
+expr_stmt|;
+name|ah
+operator|->
+name|ah_divLnaConfSet
+operator|=
+name|ar9285_antdiv_comb_conf_set
+expr_stmt|;
 name|AH5416
 argument_list|(
 name|ah
@@ -1701,12 +1713,6 @@ name|ah
 argument_list|,
 literal|"[ath] Enabling diversity for Kite\n"
 argument_list|)
-expr_stmt|;
-name|ah
-operator|->
-name|ah_rxAntCombDiversity
-operator|=
-name|ar9285_ant_comb_scan
 expr_stmt|;
 block|}
 comment|/* Disable 11n for the AR2427 */

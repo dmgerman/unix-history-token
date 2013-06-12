@@ -2290,6 +2290,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* support enforce TxOP */
+name|sc_hasdivcomb
+range|:
+literal|1
+decl_stmt|,
+comment|/* RX diversity combining */
 name|sc_rx_lnamixer
 range|:
 literal|1
@@ -2890,6 +2895,14 @@ name|sc_spectral
 decl_stmt|;
 name|int
 name|sc_dospectral
+decl_stmt|;
+comment|/* LNA diversity related state */
+name|void
+modifier|*
+name|sc_lna_div
+decl_stmt|;
+name|int
+name|sc_dolnadiv
 decl_stmt|;
 comment|/* ALQ */
 ifdef|#
@@ -5173,6 +5186,17 @@ define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_RX_LNA_MIXING, 0, NULL) == HAL_OK)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ath_hal_hasdivantcomb
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ANT_DIV_COMB, 0, NULL) == HAL_OK)
+end_define
+
 begin_comment
 comment|/* EDMA definitions */
 end_comment
@@ -6210,6 +6234,32 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_btCoexDisable)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_div_comb_conf_get
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_conf
+parameter_list|)
+define|\
+value|((*(_ah)->ah_divLnaConfGet)((_ah), (_conf)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_div_comb_conf_set
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_conf
+parameter_list|)
+define|\
+value|((*(_ah)->ah_divLnaConfSet)((_ah), (_conf)))
 end_define
 
 begin_endif

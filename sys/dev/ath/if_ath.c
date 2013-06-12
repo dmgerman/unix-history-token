@@ -399,6 +399,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ath/if_ath_lna_div.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ath/if_athdfs.h>
 end_include
 
@@ -2798,6 +2804,36 @@ goto|goto
 name|bad2
 goto|;
 block|}
+comment|/* Attach LNA diversity module */
+if|if
+condition|(
+name|ath_lna_div_attach
+argument_list|(
+name|sc
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: unable to attach LNA diversity\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|bad2
+goto|;
+block|}
 comment|/* Start DFS processing tasklet */
 name|TASK_INIT
 argument_list|(
@@ -3408,6 +3444,15 @@ operator|->
 name|sc_rx_lnamixer
 operator|=
 name|ath_hal_hasrxlnamixer
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_hasdivcomb
+operator|=
+name|ath_hal_hasdivantcomb
 argument_list|(
 name|ah
 argument_list|)
@@ -4721,6 +4766,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ath_lna_div_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_btcoex_detach
 argument_list|(
 name|sc

@@ -85,6 +85,12 @@ directive|include
 file|"ar9002/ar9285an.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ar9002/ar9285_diversity.h"
+end_include
+
 begin_comment
 comment|/* Eeprom versioning macros. Returns true if the version is equal or newer than the ver specified */
 end_comment

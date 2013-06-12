@@ -412,6 +412,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_ath_lna_div.h>
+end_include
+
 begin_comment
 comment|/*  * Calculate the receive filter according to the  * operating mode and state:  *  * o always accept unicast, broadcast, and multicast traffic  * o accept PHY error frames when hardware doesn't have MIB support  *   to count and we need them for ANI (sta mode only until recently)  *   and we are not scanning (ANI is disabled)  *   NB: older hal's add rx filter bits out of sight and we need to  *	 blindly preserve them  * o probe request frames are accepted only when operating in  *   hostap, adhoc, mesh, or monitor modes  * o enable promiscuous mode  *   - when in monitor mode  *   - if interface marked PROMISC (assumes bridge setting is filtered)  * o accept beacons:  *   - when operating in station mode for collecting rssi data when  *     the station is otherwise quiet, or  *   - when operating in adhoc mode so the 802.11 layer creates  *     node table entries for peers,  *   - when scanning  *   - when doing s/w beacon miss (e.g. for ap+sta)  *   - when operating in ap mode in 11g to detect overlapping bss that  *     require protection  *   - when operating in mesh mode to detect neighbors  * o accept control frames:  *   - when in monitor mode  * XXX HT protection for 11n  */
 end_comment
@@ -2166,15 +2172,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|struct
-name|ath_hal
-modifier|*
-name|ah
-init|=
-name|sc
-operator|->
-name|sc_ah
-decl_stmt|;
 name|uint64_t
 name|rstamp
 decl_stmt|;
@@ -3339,34 +3336,26 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Newer school diversity - kite specific for now */
-comment|/* XXX perhaps migrate the normal diversity code to this? */
+comment|/* Handle slow diversity if enabled */
 if|if
 condition|(
-operator|(
-name|ah
-operator|)
+name|sc
 operator|->
-name|ah_rxAntCombDiversity
+name|sc_dolnadiv
 condition|)
-operator|(
-operator|*
-operator|(
-name|ah
-operator|)
-operator|->
-name|ah_rxAntCombDiversity
-operator|)
-operator|(
-name|ah
-operator|,
+block|{
+name|ath_lna_rx_comb_scan
+argument_list|(
+name|sc
+argument_list|,
 name|rs
-operator|,
+argument_list|,
 name|ticks
-operator|,
+argument_list|,
 name|hz
-operator|)
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
