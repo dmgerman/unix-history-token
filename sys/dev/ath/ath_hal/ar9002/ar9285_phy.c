@@ -131,6 +131,12 @@ operator|)
 operator|>>
 name|AR_PHY_9285_FAST_DIV_BIAS_S
 expr_stmt|;
+name|antconf
+operator|->
+name|antdiv_configgroup
+operator|=
+name|DEFAULT_ANTDIV_CONFIG_GROUP
+expr_stmt|;
 block|}
 end_function
 
