@@ -548,7 +548,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|length
@@ -1608,7 +1608,7 @@ name|done
 label|:
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 for|for
 control|(
 name|level
@@ -1716,7 +1716,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 comment|/* 	 * Put back the real size. 	 */
 name|oip
 operator|->

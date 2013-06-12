@@ -118,7 +118,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 end_ifdef
 
 begin_decl_stmt
@@ -2984,7 +2984,7 @@ name|e2fs_bsize
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
