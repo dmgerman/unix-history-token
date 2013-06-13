@@ -1588,9 +1588,6 @@ decl_stmt|;
 name|uint16_t
 name|sc_lenmask
 decl_stmt|;
-name|int
-name|sc_tx_bufsz
-decl_stmt|;
 block|}
 struct|;
 end_struct
