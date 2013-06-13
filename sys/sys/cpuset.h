@@ -254,6 +254,16 @@ parameter_list|)
 value|BIT_COPY_STORE_REL(CPU_SETSIZE, f, t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_FFS
+parameter_list|(
+name|p
+parameter_list|)
+value|BIT_FFS(CPU_SETSIZE, p)
+end_define
+
 begin_comment
 comment|/*  * Valid cpulevel_t values.  */
 end_comment
@@ -554,17 +564,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|cpuset
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|cpusetobj_ffs
-parameter_list|(
-specifier|const
-name|cpuset_t
 modifier|*
 parameter_list|)
 function_decl|;

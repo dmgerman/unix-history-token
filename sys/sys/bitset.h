@@ -302,6 +302,18 @@ parameter_list|)
 value|do {				\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		atomic_store_rel_long(&(t)->__bits[__i],		\ 		    (f)->__bits[__i]);					\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIT_FFS
+parameter_list|(
+name|_s
+parameter_list|,
+name|p
+parameter_list|)
+value|__extension__ ({					\ 	__size_t __i;							\ 	int __bit;							\ 									\ 	__bit = 0;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++) {		\ 		if ((p)->__bits[__i] != 0) {				\ 			__bit = ffsl((p)->__bits[__i]);			\ 			__bit += __i * _BITSET_BITS;			\ 			break;						\ 		}							\ 	}								\ 	__bit;								\ })
+end_define
+
 begin_endif
 endif|#
 directive|endif
