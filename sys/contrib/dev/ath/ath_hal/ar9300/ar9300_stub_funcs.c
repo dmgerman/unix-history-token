@@ -1476,7 +1476,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|HAL_ANTENNA_FIXED_A
+name|HAL_ANT_VARIABLE
 operator|)
 return|;
 block|}
