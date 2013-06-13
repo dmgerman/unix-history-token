@@ -443,7 +443,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* The interrupt endpoint is currently unused by the KLSI part. */
+comment|/* The interrupt endpoint is currently unused by the CATC part. */
 end_comment
 
 begin_enum
