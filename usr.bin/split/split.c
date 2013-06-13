@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -175,6 +181,7 @@ comment|/* Default num lines per file. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|bytecnt
 decl_stmt|;
@@ -185,6 +192,7 @@ comment|/* Byte count to split on. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|chunks
 init|=
@@ -197,6 +205,7 @@ comment|/* Chunks count to split into. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|numlines
 decl_stmt|;
@@ -207,6 +216,7 @@ comment|/* Line count to split on. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|file_open
 decl_stmt|;
@@ -217,6 +227,7 @@ comment|/* If a file open. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ifd
 init|=
@@ -235,6 +246,7 @@ comment|/* Input/output file descriptors. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|bfr
 index|[
@@ -248,6 +260,7 @@ comment|/* I/O buffer. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|fname
 index|[
@@ -261,18 +274,28 @@ comment|/* File name prefix. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|regex_t
 name|rgx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|bool
+name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|long
 name|sufflen
 init|=
@@ -370,6 +393,10 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|dflag
+operator|=
+name|false
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -381,7 +408,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789a:b:l:n:p:"
+literal|"0123456789a:b:dl:n:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -685,6 +712,15 @@ name|bytecnti
 operator|*
 name|scale
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* Decimal suffix */
+name|dflag
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -1680,6 +1716,14 @@ name|char
 modifier|*
 name|fpnt
 decl_stmt|;
+name|char
+name|beg
+decl_stmt|,
+name|end
+decl_stmt|;
+name|int
+name|pattlen
+decl_stmt|;
 if|if
 condition|(
 name|ofd
@@ -1732,7 +1776,40 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* maxfiles = 26^sufflen, but don't use libm. */
+if|if
+condition|(
+name|dflag
+condition|)
+block|{
+name|beg
+operator|=
+literal|'0'
+expr_stmt|;
+name|end
+operator|=
+literal|'9'
+expr_stmt|;
+block|}
+else|else
+block|{
+name|beg
+operator|=
+literal|'a'
+expr_stmt|;
+name|end
+operator|=
+literal|'z'
+expr_stmt|;
+block|}
+name|pattlen
+operator|=
+name|end
+operator|-
+name|beg
+operator|+
+literal|1
+expr_stmt|;
+comment|/* maxfiles = pattlen^sufflen, but don't use libm. */
 for|for
 control|(
 name|maxfiles
@@ -1752,13 +1829,11 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
+name|LONG_MAX
+operator|/
+name|pattlen
+operator|<
 name|maxfiles
-operator|*=
-literal|26
-operator|)
-operator|<=
-literal|0
 condition|)
 name|errx
 argument_list|(
@@ -1768,6 +1843,11 @@ literal|"suffix is too long (max %ld)"
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+else|else
+name|maxfiles
+operator|*=
+name|pattlen
 expr_stmt|;
 if|if
 condition|(
@@ -1802,13 +1882,13 @@ index|]
 operator|=
 name|tfnum
 operator|%
-literal|26
+name|pattlen
 operator|+
-literal|'a'
+name|beg
 expr_stmt|;
 name|tfnum
 operator|/=
-literal|26
+name|pattlen
 expr_stmt|;
 block|}
 do|while
