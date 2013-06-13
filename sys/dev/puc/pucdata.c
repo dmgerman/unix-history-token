@@ -2985,7 +2985,7 @@ block|,
 literal|8
 block|, 	}
 block|,
-comment|/* 	 * Oxford Semiconductor PCI Express Expresso family 	 * 	 * Found in many 'native' PCI Express serial boards such as: 	 * 	 * eMegatech MP954ER4 (4 port) and MP958ER8 (8 port) 	 *<URL:http://www.emegatech.com.tw/pdrs232pcie.html> 	 * 	 * Lindy 51189 (4 port) 	 *<URL:http://www.lindy.com><URL:http://tinyurl.com/lindy-51189> 	 *  	 * StarTech.com PEX4S952 (4 port) and PEX8S952 (8 port) 	 *<URL:http://www.startech.com> 	 */
+comment|/* 	 * Oxford Semiconductor PCI Express Expresso family 	 * 	 * Found in many 'native' PCI Express serial boards such as: 	 * 	 * eMegatech MP954ER4 (4 port) and MP958ER8 (8 port) 	 *<URL:http://www.emegatech.com.tw/pdrs232pcie.html> 	 * 	 * Lindy 51189 (4 port) 	 *<URL:http://www.lindy.com><URL:http://tinyurl.com/lindy-51189> 	 * 	 * StarTech.com PEX4S952 (4 port) and PEX8S952 (8 port) 	 *<URL:http://www.startech.com> 	 */
 block|{
 literal|0x1415
 block|,
