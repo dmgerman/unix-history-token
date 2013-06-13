@@ -11772,6 +11772,27 @@ block|}
 endif|#
 directive|endif
 comment|/* ATH_ANT_DIV_COMB */
+comment|/*      * FreeBSD: enable LNA mixing if the chip is Hornet or Poseidon.      */
+if|if
+condition|(
+name|AR_SREV_HORNET
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+name|AR_SREV_POSEIDON_11_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+name|p_cap
+operator|->
+name|halRxUsingLnaMixing
+operator|=
+name|AH_TRUE
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|ATH_WOW_OFFLOAD
