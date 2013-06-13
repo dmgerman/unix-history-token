@@ -517,7 +517,7 @@ name|ip
 operator|.
 name|ip_ttl
 operator|=
-literal|16
+literal|128
 expr_stmt|;
 name|ip
 operator|.
