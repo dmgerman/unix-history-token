@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/stdatomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -40,6 +46,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__SYNC_ATOMICS
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Memory barriers.  *  * It turns out __sync_synchronize() does not emit any code when used  * with GCC 4.2. Implement our own version that does work reliably.  *  * Although __sync_lock_test_and_set() should only perform an acquire  * barrier, make it do a full barrier like the other functions. This  * should make<stdatomic.h>'s atomic_exchange_explicit() work reliably.  */
 end_comment
@@ -48,7 +63,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|mips_sync
+name|do_sync
 parameter_list|(
 name|void
 parameter_list|)
@@ -160,6 +175,7 @@ name|reg_t
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|offset_ptr
@@ -203,6 +219,7 @@ name|reg_t
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|offset_ptr
@@ -243,6 +260,7 @@ name|reg_t
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|uint16_t
 modifier|*
 name|offset_ptr
@@ -327,6 +345,7 @@ name|reg_t
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|uint16_t
 modifier|*
 name|offset_ptr
@@ -412,7 +431,7 @@ parameter_list|,
 name|uintN_t
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_lock_test_and_set_##N(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, negmask, old;					\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	negmask.v32 = 0xffffffff;					\ 	put_##N(&negmask, mem, 0);					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %5\n"
+value|uintN_t									\ __sync_lock_test_and_set_##N(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, negmask, old;					\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	negmask.v32 = 0xffffffff;					\ 	put_##N(&negmask, mem, 0);					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %5\n"
 comment|/* Load old value. */
 value|\ 		"\tand	%2, %4, %0\n"
 comment|/* Remove the old value. */
@@ -453,7 +472,7 @@ parameter_list|,
 name|uintN_t
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t *mem32;						\ 	reg_t expected32, desired32, posmask, negmask, old;		\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	expected32.v32 = 0x00000000;					\ 	put_##N(&expected32, mem, expected);				\ 	desired32.v32 = 0x00000000;					\ 	put_##N(&desired32, mem, desired);				\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask.v32 = ~posmask.v32;					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
+value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t *mem32;						\ 	reg_t expected32, desired32, posmask, negmask, old;		\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	expected32.v32 = 0x00000000;					\ 	put_##N(&expected32, mem, expected);				\ 	desired32.v32 = 0x00000000;					\ 	put_##N(&desired32, mem, desired);				\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask.v32 = ~posmask.v32;					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
 comment|/* Load old value. */
 value|\ 		"\tand	%2, %5, %0\n"
 comment|/* Isolate the old value. */
@@ -502,7 +521,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask, negmask, old;				\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask.v32 = ~posmask.v32;					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
+value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask, negmask, old;				\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask.v32 = ~posmask.v32;					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %7\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"	%2, %0, %4\n"
 comment|/* Calculate new value. */
@@ -587,7 +606,7 @@ parameter_list|,
 name|idempotence
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_##N(&val32, mem, val);					\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
+value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp;							\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_##N(&val32, mem, val);					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"	%2, %3, %0\n"
 comment|/* Calculate new value. */
@@ -712,7 +731,7 @@ name|old
 decl_stmt|,
 name|temp
 decl_stmt|;
-name|mips_sync
+name|do_sync
 argument_list|()
 expr_stmt|;
 asm|__asm volatile (
@@ -783,7 +802,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uint32_t								\ __sync_##name##_4(uint32_t *mem, uint32_t val)				\ {									\ 	uint32_t old, temp;						\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
+value|uint32_t								\ __sync_##name##_4(uint32_t *mem, uint32_t val)				\ {									\ 	uint32_t old, temp;						\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tll	%0, %4\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"\n"
 comment|/* Calculate new value. */
@@ -858,7 +877,7 @@ name|old
 block|,
 name|temp
 block|;
-name|mips_sync
+name|do_sync
 argument_list|()
 block|;
 asm|__asm volatile (
@@ -929,7 +948,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uint64_t								\ __sync_##name##_8(uint64_t *mem, uint64_t val)				\ {									\ 	uint64_t old, temp;						\ 									\ 	mips_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tlld	%0, %4\n"
+value|uint64_t								\ __sync_##name##_8(uint64_t *mem, uint64_t val)				\ {									\ 	uint64_t old, temp;						\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tlld	%0, %4\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"\n"
 comment|/* Calculate new value. */
@@ -986,6 +1005,15 @@ end_endif
 
 begin_comment
 comment|/* __mips_n32 || __mips_n64 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __SYNC_ATOMICS */
 end_comment
 
 end_unit
