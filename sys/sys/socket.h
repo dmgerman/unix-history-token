@@ -2026,6 +2026,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_IEEE80211
+value|AF_IEEE80211
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_MAX
 value|AF_MAX
 end_define
