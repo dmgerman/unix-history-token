@@ -123,9 +123,6 @@ name|ext2mount
 modifier|*
 name|ump
 decl_stmt|;
-name|int32_t
-name|nb
-decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -154,8 +151,11 @@ literal|2
 index|]
 decl_stmt|;
 name|uint32_t
-name|newb
+name|nb
 decl_stmt|,
+name|newb
+decl_stmt|;
+name|int32_t
 modifier|*
 name|bap
 decl_stmt|,
@@ -723,9 +723,6 @@ name|lbn
 argument_list|,
 name|pref
 argument_list|,
-operator|(
-name|int
-operator|)
 name|fs
 operator|->
 name|e2fs_bsize
