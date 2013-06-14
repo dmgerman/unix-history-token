@@ -1781,7 +1781,7 @@ condition|(
 operator|(
 name|i
 operator|=
-name|cpusetobj_ffs
+name|CPU_FFS
 argument_list|(
 operator|&
 name|dmask
