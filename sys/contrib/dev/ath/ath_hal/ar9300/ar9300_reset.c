@@ -3170,6 +3170,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|chan
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+name|AH_NULL
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|IS
 argument_list|(
