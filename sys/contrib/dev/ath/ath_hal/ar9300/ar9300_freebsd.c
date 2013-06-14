@@ -987,6 +987,54 @@ expr_stmt|;
 comment|/* ah_get11nRxClear */
 comment|/* ah_set11nRxClear */
 comment|/* bluetooth coexistence functions */
+name|ah
+operator|->
+name|ah_btCoexSetInfo
+operator|=
+name|ar9300_set_bt_coex_info
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetConfig
+operator|=
+name|ar9300_bt_coex_config
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetQcuThresh
+operator|=
+name|ar9300_bt_coex_set_qcu_thresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetWeights
+operator|=
+name|ar9300_bt_coex_set_weights
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetBmissThresh
+operator|=
+name|ar9300_bt_coex_setup_bmiss_thresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexSetParameter
+operator|=
+name|ar9300_bt_coex_set_parameter
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexDisable
+operator|=
+name|ar9300_bt_coex_disable
+expr_stmt|;
+name|ah
+operator|->
+name|ah_btCoexEnable
+operator|=
+name|ar9300_bt_coex_enable
+expr_stmt|;
 comment|/* LNA diversity functions */
 name|ah
 operator|->
