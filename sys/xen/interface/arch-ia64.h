@@ -148,7 +148,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|set_xen_guest_handle
+name|set_xen_guest_handle_raw
 parameter_list|(
 name|hnd
 parameter_list|,
@@ -179,6 +179,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|set_xen_guest_handle
+parameter_list|(
+name|hnd
+parameter_list|,
+name|val
+parameter_list|)
+value|set_xen_guest_handle_raw(hnd, val)
+end_define
 
 begin_ifndef
 ifndef|#
@@ -254,7 +266,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 value|64
 end_define
 
@@ -828,6 +840,15 @@ literal|16
 index|]
 decl_stmt|;
 comment|// temp registers (e.g. for hyperprivops)
+comment|/* itc paravirtualization              * vAR.ITC = mAR.ITC + itc_offset              * itc_last is one which was lastly passed to              * the guest OS in order to prevent it from              * going backwords.              */
+name|unsigned
+name|long
+name|itc_offset
+decl_stmt|;
+name|unsigned
+name|long
+name|itc_last
+decl_stmt|;
 block|}
 struct|;
 block|}
@@ -1565,6 +1586,11 @@ directive|define
 name|VGCF_online
 value|(1UL<< 3)
 comment|/* make this vcpu online */
+define|#
+directive|define
+name|VGCF_SET_AR_ITC
+value|(1UL<< 4)
+comment|/* set pv ar.itc. itc_offset, itc_last */
 name|unsigned
 name|long
 name|flags
@@ -1770,6 +1796,17 @@ define|#
 directive|define
 name|IA64_DOM0VP_unexpose_foreign_p2m
 value|13
+end_define
+
+begin_comment
+comment|/* get memmap_info and memmap. It is possible to map the page directly    by foreign page mapping, but there is a race between writer.    This hypercall avoids such race. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA64_DOM0VP_get_memmap
+value|14
 end_define
 
 begin_comment

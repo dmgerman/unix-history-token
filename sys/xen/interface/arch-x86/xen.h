@@ -3,6 +3,12 @@ begin_comment
 comment|/******************************************************************************  * arch-x86/xen.h  *   * Guest OS interface to x86 Xen.  *   * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Copyright (c) 2004-2006, K A Fraser  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"../xen.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -44,12 +50,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_error
-error|#
-directive|error
-literal|"using old handle"
-end_error
 
 begin_define
 define|#
@@ -115,7 +115,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|set_xen_guest_handle
+name|set_xen_guest_handle_raw
 parameter_list|(
 name|hnd
 parameter_list|,
@@ -147,6 +147,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|set_xen_guest_handle
+parameter_list|(
+name|hnd
+parameter_list|,
+name|val
+parameter_list|)
+value|set_xen_guest_handle_raw(hnd, val)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -159,7 +171,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<xen/interface/arch-x86/xen-x86_32.h>
+file|"xen-x86_32.h"
 end_include
 
 begin_elif
@@ -174,7 +186,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<xen/interface/arch-x86/xen-x86_64.h>
+file|"xen-x86_64.h"
 end_include
 
 begin_endif
@@ -213,6 +225,10 @@ comment|/*  * SEGMENT DESCRIPTOR TABLES  */
 end_comment
 
 begin_comment
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_set_gdt(const xen_pfn_t frames[], unsigned int entries);  * `  */
+end_comment
+
+begin_comment
 comment|/*  * A number of GDT entries are reserved by Xen. These are not situated at the  * start of the GDT because some stupid OSes export hard-coded selector values  * in their ABI. These hard-coded values are always near the start of the GDT,  * so Xen places itself out of the way, at the far end of the GDT.  */
 end_comment
 
@@ -238,13 +254,13 @@ value|(FIRST_RESERVED_GDT_BYTE / 8)
 end_define
 
 begin_comment
-comment|/* Maximum number of virtual CPUs in multi-processor guests. */
+comment|/* Maximum number of virtual CPUs in legacy multi-processor guests. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 value|32
 end_define
 
@@ -263,7 +279,15 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Send an array of these to HYPERVISOR_set_trap_table().  * The privilege level specifies which modes may enter a trap via a software  * interrupt. On x86/64, since rings 1 and 2 are unavailable, we allocate  * privilege levels as follows:  *  Level == 0: Noone may enter  *  Level == 1: Kernel may enter  *  Level == 2: Kernel may enter  *  Level == 3: Everyone may enter  */
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_stack_switch(unsigned long ss, unsigned long esp);  * `  * Sets the stack segment and pointer for the current vcpu.  */
+end_comment
+
+begin_comment
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_set_trap_table(const struct trap_info traps[]);  * `  */
+end_comment
+
+begin_comment
+comment|/*  * Send an array of these to HYPERVISOR_set_trap_table().  * Terminate the array with a sentinel entry, with traps[].address==0.  * The privilege level specifies which modes may enter a trap via a software  * interrupt. On x86/64, since rings 1 and 2 are unavailable, we allocate  * privilege levels as follows:  *  Level == 0: Noone may enter  *  Level == 1: Kernel may enter  *  Level == 2: Kernel may enter  *  Level == 3: Everyone may enter  */
 end_comment
 
 begin_define
@@ -545,7 +569,6 @@ comment|/* compat CS of failsafe cb  */
 block|}
 struct|;
 block|}
-name|u
 union|;
 else|#
 directive|else
@@ -639,6 +662,14 @@ end_endif
 
 begin_comment
 comment|/* !__ASSEMBLY__ */
+end_comment
+
+begin_comment
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_fpu_taskswitch(int set);  * `  * Sets (if set!=0) or clears (if set==0) CR0.TS.  */
+end_comment
+
+begin_comment
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_set_debugreg(int regno, unsigned long value);  *  * ` unsigned long  * ` HYPERVISOR_get_debugreg(int regno);  * For 0<=reg<=7, returns the debug register value.  * For other values of reg, returns ((unsigned long)-EINVAL).  * (Unfortunately, this interface is defective.)  */
 end_comment
 
 begin_comment

@@ -15,6 +15,12 @@ directive|define
 name|__XEN_PUBLIC_VCPU_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"xen.h"
+end_include
+
 begin_comment
 comment|/*  * Prototype for this hypercall is:  *  int vcpu_op(int cmd, int vcpuid, void *extra_args)  * @cmd        == VCPUOP_??? (VCPU operation).  * @vcpuid     == VCPU to operate on.  * @extra_args == Operation-specific extra arguments (NULL if none).  */
 end_comment
@@ -407,7 +413,7 @@ value|11
 end_define
 
 begin_comment
-comment|/*   * Get the physical ID information for a pinned vcpu's underlying physical  * processor.  The physical ID informmation is architecture-specific.  * On x86: id[31:0]=apic_id, id[63:32]=acpi_id, and all values 0xff and  *         greater are reserved.  * This command returns -EINVAL if it is not a valid operation for this VCPU.  */
+comment|/*   * Get the physical ID information for a pinned vcpu's underlying physical  * processor.  The physical ID informmation is architecture-specific.  * On x86: id[31:0]=apic_id, id[63:32]=acpi_id.  * This command returns -EINVAL if it is not a valid operation for this VCPU.  */
 end_comment
 
 begin_define
@@ -455,8 +461,7 @@ name|xen_vcpu_physid_to_x86_apicid
 parameter_list|(
 name|physid
 parameter_list|)
-define|\
-value|((((uint32_t)(physid))>= 0xff) ? 0xff : ((uint8_t)(physid)))
+value|((uint32_t)(physid))
 end_define
 
 begin_define
@@ -466,9 +471,70 @@ name|xen_vcpu_physid_to_x86_acpiid
 parameter_list|(
 name|physid
 parameter_list|)
-define|\
-value|((((uint32_t)((physid)>>32))>= 0xff) ? 0xff : ((uint8_t)((physid)>>32)))
+value|((uint32_t)((physid)>> 32))
 end_define
+
+begin_comment
+comment|/*   * Register a memory location to get a secondary copy of the vcpu time  * parameters.  The master copy still exists as part of the vcpu shared  * memory area, and this secondary copy is updated whenever the master copy  * is updated (and using the same versioning scheme for synchronisation).  *  * The intent is that this copy may be mapped (RO) into userspace so  * that usermode can compute system time using the time info and the  * tsc.  Usermode will see an array of vcpu_time_info structures, one  * for each vcpu, and choose the right one by an existing mechanism  * which allows it to get the current vcpu number (such as via a  * segment limit).  It can then apply the normal algorithm to compute  * system time from the tsc.  *  * @extra_arg == pointer to vcpu_register_time_info_memory_area structure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VCPUOP_register_vcpu_time_memory_area
+value|13
+end_define
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|vcpu_time_info_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|vcpu_register_time_memory_area
+block|{
+union|union
+block|{
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|vcpu_time_info_t
+argument_list|)
+name|h
+expr_stmt|;
+name|struct
+name|vcpu_time_info
+modifier|*
+name|v
+decl_stmt|;
+name|uint64_t
+name|p
+decl_stmt|;
+block|}
+name|addr
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vcpu_register_time_memory_area
+name|vcpu_register_time_memory_area_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|vcpu_register_time_memory_area_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

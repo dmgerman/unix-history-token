@@ -32,6 +32,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ASSEMBLY__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -42,15 +59,11 @@ name|__XEN_INTERFACE_VERSION__
 argument_list|)
 end_if
 
-begin_comment
-comment|/*    * Can update to a more recent version when we implement    * the hypercall page    */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|__XEN_INTERFACE_VERSION__
-value|0x00030204
+value|0x00030208
 end_define
 
 begin_endif
@@ -58,11 +71,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|GRANT_REF_INVALID
+value|0xffffffff
+end_define
+
 begin_include
 include|#
 directive|include
 file|<xen/interface/xen.h>
 end_include
+
+begin_comment
+comment|/* Everything below this point is not included by assembler (.S) files. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
 
 begin_comment
 comment|/* Force a proper event-channel callback from Xen. */
@@ -149,16 +179,6 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Everything below this point is not included by assembler (.S) files. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__ASSEMBLY__
-end_ifndef
 
 begin_function_decl
 name|void
@@ -398,15 +418,15 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|mb
+name|xen_mb
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|mb
+name|xen_mb
 parameter_list|()
-value|__asm__ __volatile__("mfence":::"memory")
+value|mb()
 end_define
 
 begin_endif
@@ -417,15 +437,15 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|rmb
+name|xen_rmb
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|rmb
+name|xen_rmb
 parameter_list|()
-value|__asm__ __volatile__("lfence":::"memory");
+value|rmb()
 end_define
 
 begin_endif
@@ -436,15 +456,15 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|wmb
+name|xen_wmb
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|wmb
+name|xen_wmb
 parameter_list|()
-value|barrier()
+value|wmb()
 end_define
 
 begin_endif

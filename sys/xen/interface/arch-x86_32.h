@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<xen/interface/arch-x86/xen.h>
+file|"arch-x86/xen.h"
 end_include
 
 end_unit

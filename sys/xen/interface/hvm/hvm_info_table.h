@@ -36,6 +36,17 @@ name|HVM_INFO_PADDR
 value|((HVM_INFO_PFN<< 12) + HVM_INFO_OFFSET)
 end_define
 
+begin_comment
+comment|/* Maximum we can support with current vLAPIC ID mapping. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HVM_MAX_VCPUS
+value|128
+end_define
+
 begin_struct
 struct|struct
 name|hvm_info_table
@@ -53,14 +64,39 @@ decl_stmt|;
 name|uint8_t
 name|checksum
 decl_stmt|;
-name|uint8_t
-name|acpi_enabled
-decl_stmt|;
+comment|/* Should firmware build APIC descriptors (APIC MADT / MP BIOS)? */
 name|uint8_t
 name|apic_mode
 decl_stmt|;
+comment|/* How many CPUs does this domain have? */
 name|uint32_t
 name|nr_vcpus
+decl_stmt|;
+comment|/*      * MEMORY MAP provided by HVM domain builder.      * Notes:      *  1. page_to_phys(x) = x<< 12      *  2. If a field is zero, the corresponding range does not exist.      */
+comment|/*      *  0x0 to page_to_phys(low_mem_pgend)-1:      *    RAM below 4GB (except for VGA hole 0xA0000-0xBFFFF)      */
+name|uint32_t
+name|low_mem_pgend
+decl_stmt|;
+comment|/*      *  page_to_phys(reserved_mem_pgstart) to 0xFFFFFFFF:      *    Reserved for special memory mappings      */
+name|uint32_t
+name|reserved_mem_pgstart
+decl_stmt|;
+comment|/*      *  0x100000000 to page_to_phys(high_mem_pgend)-1:      *    RAM above 4GB      */
+name|uint32_t
+name|high_mem_pgend
+decl_stmt|;
+comment|/* Bitmap of which CPUs are online at boot time. */
+name|uint8_t
+name|vcpu_online
+index|[
+operator|(
+name|HVM_MAX_VCPUS
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
+index|]
 decl_stmt|;
 block|}
 struct|;

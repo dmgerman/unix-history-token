@@ -108,19 +108,26 @@ block|{
 name|uint64_t
 name|addr
 decl_stmt|;
-comment|/*  physical address            */
-name|uint64_t
-name|size
-decl_stmt|;
-comment|/*  size in bytes               */
-name|uint64_t
-name|count
-decl_stmt|;
-comment|/*  for rep prefixes            */
+comment|/* physical address */
 name|uint64_t
 name|data
 decl_stmt|;
-comment|/*  data (or paddr of data)     */
+comment|/* data (or paddr of data) */
+name|uint32_t
+name|count
+decl_stmt|;
+comment|/* for rep prefixes */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+name|uint32_t
+name|vp_eport
+decl_stmt|;
+comment|/* evtchn for notifications to/from device model */
+name|uint16_t
+name|_pad0
+decl_stmt|;
 name|uint8_t
 name|state
 range|:
@@ -131,37 +138,27 @@ name|data_is_ptr
 range|:
 literal|1
 decl_stmt|;
-comment|/*  if 1, data above is the guest paddr                               *   of the real data to use.   */
+comment|/* if 1, data above is the guest paddr                               * of the real data to use. */
 name|uint8_t
 name|dir
 range|:
 literal|1
 decl_stmt|;
-comment|/*  1=read, 0=write             */
+comment|/* 1=read, 0=write */
 name|uint8_t
 name|df
 range|:
 literal|1
 decl_stmt|;
 name|uint8_t
-name|pad
+name|_pad1
 range|:
 literal|1
 decl_stmt|;
 name|uint8_t
 name|type
 decl_stmt|;
-comment|/* I/O type                     */
-name|uint8_t
-name|_pad0
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|uint64_t
-name|io_count
-decl_stmt|;
-comment|/* How many IO done on a vcpu   */
+comment|/* I/O type */
 block|}
 struct|;
 end_struct
@@ -176,38 +173,11 @@ end_typedef
 
 begin_struct
 struct|struct
-name|vcpu_iodata
-block|{
-name|struct
-name|ioreq
-name|vp_ioreq
-decl_stmt|;
-comment|/* Event channel port, used for notifications to/from the device model. */
-name|uint32_t
-name|vp_eport
-decl_stmt|;
-name|uint32_t
-name|_pad0
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|vcpu_iodata
-name|vcpu_iodata_t
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
 name|shared_iopage
 block|{
 name|struct
-name|vcpu_iodata
-name|vcpu_iodata
+name|ioreq
+name|vcpu_ioreq
 index|[
 literal|1
 index|]
@@ -408,39 +378,125 @@ begin_comment
 comment|/* defined(__ia64__) */
 end_comment
 
+begin_comment
+comment|/*  * ACPI Control/Event register locations. Location is controlled by a   * version number in HVM_PARAM_ACPI_IOPORTS_LOCATION.  */
+end_comment
+
+begin_comment
+comment|/* Version 0 (default): Traditional Xen locations. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1A_EVT_BLK_ADDRESS_V0
+value|0x1f40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1A_CNT_BLK_ADDRESS_V0
+value|(ACPI_PM1A_EVT_BLK_ADDRESS_V0 + 0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM_TMR_BLK_ADDRESS_V0
+value|(ACPI_PM1A_EVT_BLK_ADDRESS_V0 + 0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE0_BLK_ADDRESS_V0
+value|(ACPI_PM_TMR_BLK_ADDRESS_V0 + 0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE0_BLK_LEN_V0
+value|0x08
+end_define
+
+begin_comment
+comment|/* Version 1: Locations preferred by modern Qemu. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1A_EVT_BLK_ADDRESS_V1
+value|0xb000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM1A_CNT_BLK_ADDRESS_V1
+value|(ACPI_PM1A_EVT_BLK_ADDRESS_V1 + 0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PM_TMR_BLK_ADDRESS_V1
+value|(ACPI_PM1A_EVT_BLK_ADDRESS_V1 + 0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE0_BLK_ADDRESS_V1
+value|0xafe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE0_BLK_LEN_V1
+value|0x04
+end_define
+
+begin_comment
+comment|/* Compatibility definitions for the default location (version 0). */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_PM1A_EVT_BLK_ADDRESS
-value|0x0000000000001f40
+value|ACPI_PM1A_EVT_BLK_ADDRESS_V0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PM1A_CNT_BLK_ADDRESS
-value|(ACPI_PM1A_EVT_BLK_ADDRESS + 0x04)
+value|ACPI_PM1A_CNT_BLK_ADDRESS_V0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_PM_TMR_BLK_ADDRESS
-value|(ACPI_PM1A_EVT_BLK_ADDRESS + 0x08)
+value|ACPI_PM_TMR_BLK_ADDRESS_V0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE0_BLK_ADDRESS
-value|(ACPI_PM_TMR_BLK_ADDRESS + 0x20)
+value|ACPI_GPE0_BLK_ADDRESS_V0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE0_BLK_LEN
-value|0x08
+value|ACPI_GPE0_BLK_LEN_V0
 end_define
 
 begin_endif

@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<xen/interface/io/ring.h>
+file|"ring.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<xen/interface/grant_table.h>
+file|"../grant_table.h"
 end_include
 
 begin_comment

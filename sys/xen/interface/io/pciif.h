@@ -41,7 +41,35 @@ begin_define
 define|#
 directive|define
 name|XEN_PCIF_active
-value|(1<<_XEN_PCI_active)
+value|(1<<_XEN_PCIF_active)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_XEN_PCIB_AERHANDLER
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCIB_AERHANDLER
+value|(1<<_XEN_PCIB_AERHANDLER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_XEN_PCIB_active
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCIB_active
+value|(1<<_XEN_PCIB_active)
 end_define
 
 begin_comment
@@ -88,6 +116,34 @@ define|#
 directive|define
 name|XEN_PCI_OP_disable_msix
 value|(5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_aer_detected
+value|(6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_aer_resume
+value|(7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_aer_mmio
+value|(8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_PCI_OP_aer_slotreset
+value|(9)
 end_define
 
 begin_comment
@@ -215,6 +271,37 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*used for pcie aer handling*/
+end_comment
+
+begin_struct
+struct|struct
+name|xen_pcie_aer_op
+block|{
+comment|/* IN: what action to perform: XEN_PCI_OP_* */
+name|uint32_t
+name|cmd
+decl_stmt|;
+comment|/*IN/OUT: return aer_op result or carry error_detected state as input*/
+name|int32_t
+name|err
+decl_stmt|;
+comment|/* IN: which device to touch */
+name|uint32_t
+name|domain
+decl_stmt|;
+comment|/* PCI Domain/Segment*/
+name|uint32_t
+name|bus
+decl_stmt|;
+name|uint32_t
+name|devfn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|xen_pci_sharedinfo
@@ -226,6 +313,10 @@ decl_stmt|;
 name|struct
 name|xen_pci_op
 name|op
+decl_stmt|;
+name|struct
+name|xen_pcie_aer_op
+name|aer_op
 decl_stmt|;
 block|}
 struct|;

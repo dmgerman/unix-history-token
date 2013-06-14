@@ -56,6 +56,21 @@ directive|include
 file|"arch-ia64.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"arch-arm.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -156,6 +171,14 @@ end_expr_stmt
 begin_expr_stmt
 name|DEFINE_XEN_GUEST_HANDLE
 argument_list|(
+name|uint64_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
 name|xen_pfn_t
 argument_list|)
 expr_stmt|;
@@ -168,6 +191,10 @@ end_endif
 
 begin_comment
 comment|/*  * HYPERCALLS  */
+end_comment
+
+begin_comment
+comment|/* `incontents 100 hcalls List of hypercalls  * ` enum hypercall_num { // __HYPERVISOR_* => HYPERVISOR_*()  */
 end_comment
 
 begin_define
@@ -449,6 +476,24 @@ name|__HYPERVISOR_kexec_op
 value|37
 end_define
 
+begin_define
+define|#
+directive|define
+name|__HYPERVISOR_tmem_op
+value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|__HYPERVISOR_xc_reserved_op
+value|39
+end_define
+
+begin_comment
+comment|/* reserved for XenClient */
+end_comment
+
 begin_comment
 comment|/* Architecture-specific hypercall definitions. */
 end_comment
@@ -508,6 +553,10 @@ directive|define
 name|__HYPERVISOR_arch_7
 value|55
 end_define
+
+begin_comment
+comment|/* ` } */
+end_comment
 
 begin_comment
 comment|/*  * HYPERCALL COMPATIBILITY.  */
@@ -614,6 +663,10 @@ begin_comment
 comment|/*   * VIRTUAL INTERRUPTS  *   * Virtual interrupts that a guest OS may receive from Xen.  *   * In the side comments, 'V.' denotes a per-VCPU VIRQ while 'G.' denotes a  * global VIRQ. The former can be bound once per VCPU and cannot be re-bound.  * The latter can be allocated only once per guest: they must initially be  * allocated to VCPU0 but can subsequently be re-bound.  */
 end_comment
 
+begin_comment
+comment|/* ` enum virq { */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -702,6 +755,50 @@ begin_comment
 comment|/* G. (DOM0) Bytes received on console            */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIRQ_PCPU_STATE
+value|9
+end_define
+
+begin_comment
+comment|/* G. (DOM0) PCPU state changed                   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRQ_MEM_EVENT
+value|10
+end_define
+
+begin_comment
+comment|/* G. (DOM0) A memory event has occured           */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRQ_XC_RESERVED
+value|11
+end_define
+
+begin_comment
+comment|/* G. Reserved for XenClient                     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRQ_ENOMEM
+value|12
+end_define
+
+begin_comment
+comment|/* G. (DOM0) Low on heap memory       */
+end_comment
+
 begin_comment
 comment|/* Architecture-specific VIRQ definitions. */
 end_comment
@@ -762,6 +859,10 @@ name|VIRQ_ARCH_7
 value|23
 end_define
 
+begin_comment
+comment|/* ` } */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -770,7 +871,7 @@ value|24
 end_define
 
 begin_comment
-comment|/*  * MMU-UPDATE REQUESTS  *   * HYPERVISOR_mmu_update() accepts a list of (ptr, val) pairs.  * A foreigndom (FD) can be specified (or DOMID_SELF for none).  * Where the FD has some effect, it is described below.  * ptr[1:0] specifies the appropriate MMU_* command.  *   * ptr[1:0] == MMU_NORMAL_PT_UPDATE:  * Updates an entry in a page table. If updating an L1 table, and the new  * table entry is valid/present, the mapped frame must belong to the FD, if  * an FD has been specified. If attempting to map an I/O page then the  * caller assumes the privilege of the FD.  * FD == DOMID_IO: Permit /only/ I/O mappings, at the priv level of the caller.  * FD == DOMID_XEN: Map restricted areas of Xen's heap space.  * ptr[:2]  -- Machine address of the page-table entry to modify.  * val      -- Value to write.  *   * ptr[1:0] == MMU_MACHPHYS_UPDATE:  * Updates an entry in the machine->pseudo-physical mapping table.  * ptr[:2]  -- Machine address within the frame whose mapping to modify.  *             The frame must belong to the FD, if one is specified.  * val      -- Value to write into the mapping entry.  *   * ptr[1:0] == MMU_PT_UPDATE_PRESERVE_AD:  * As MMU_NORMAL_PT_UPDATE above, but A/D bits currently in the PTE are ORed  * with those in @val.  */
+comment|/*  * ` enum neg_errnoval  * ` HYPERVISOR_mmu_update(const struct mmu_update reqs[],  * `                       unsigned count, unsigned *done_out,  * `                       unsigned foreigndom)  * `  * @reqs is an array of mmu_update_t structures ((ptr, val) pairs).  * @count is the length of the above array.  * @pdone is an output parameter indicating number of completed operations  * @foreigndom[15:0]: FD, the expected owner of data pages referenced in this  *                    hypercall invocation. Can be DOMID_SELF.  * @foreigndom[31:16]: PFD, the expected owner of pagetable pages referenced  *                     in this hypercall invocation. The value of this field  *                     (x) encodes the PFD as follows:  *                     x == 0 => PFD == DOMID_SELF  *                     x != 0 => PFD == x - 1  *   * Sub-commands: ptr[1:0] specifies the appropriate MMU_* command.  * -------------  * ptr[1:0] == MMU_NORMAL_PT_UPDATE:  * Updates an entry in a page table belonging to PFD. If updating an L1 table,  * and the new table entry is valid/present, the mapped frame must belong to  * FD. If attempting to map an I/O page then the caller assumes the privilege  * of the FD.  * FD == DOMID_IO: Permit /only/ I/O mappings, at the priv level of the caller.  * FD == DOMID_XEN: Map restricted areas of Xen's heap space.  * ptr[:2]  -- Machine address of the page-table entry to modify.  * val      -- Value to write.  *  * There also certain implicit requirements when using this hypercall. The  * pages that make up a pagetable must be mapped read-only in the guest.  * This prevents uncontrolled guest updates to the pagetable. Xen strictly  * enforces this, and will disallow any pagetable update which will end up  * mapping pagetable page RW, and will disallow using any writable page as a  * pagetable. In practice it means that when constructing a page table for a  * process, thread, etc, we MUST be very dilligient in following these rules:  *  1). Start with top-level page (PGD or in Xen language: L4). Fill out  *      the entries.  *  2). Keep on going, filling out the upper (PUD or L3), and middle (PMD  *      or L2).  *  3). Start filling out the PTE table (L1) with the PTE entries. Once  *  	done, make sure to set each of those entries to RO (so writeable bit  *  	is unset). Once that has been completed, set the PMD (L2) for this  *  	PTE table as RO.  *  4). When completed with all of the PMD (L2) entries, and all of them have  *  	been set to RO, make sure to set RO the PUD (L3). Do the same  *  	operation on PGD (L4) pagetable entries that have a PUD (L3) entry.  *  5). Now before you can use those pages (so setting the cr3), you MUST also  *      pin them so that the hypervisor can verify the entries. This is done  *      via the HYPERVISOR_mmuext_op(MMUEXT_PIN_L4_TABLE, guest physical frame  *      number of the PGD (L4)). And this point the HYPERVISOR_mmuext_op(  *      MMUEXT_NEW_BASEPTR, guest physical frame number of the PGD (L4)) can be  *      issued.  * For 32-bit guests, the L4 is not used (as there is less pagetables), so  * instead use L3.  * At this point the pagetables can be modified using the MMU_NORMAL_PT_UPDATE  * hypercall. Also if so desired the OS can also try to write to the PTE  * and be trapped by the hypervisor (as the PTE entry is RO).  *  * To deallocate the pages, the operations are the reverse of the steps  * mentioned above. The argument is MMUEXT_UNPIN_TABLE for all levels and the  * pagetable MUST not be in use (meaning that the cr3 is not set to it).  *   * ptr[1:0] == MMU_MACHPHYS_UPDATE:  * Updates an entry in the machine->pseudo-physical mapping table.  * ptr[:2]  -- Machine address within the frame whose mapping to modify.  *             The frame must belong to the FD, if one is specified.  * val      -- Value to write into the mapping entry.  *   * ptr[1:0] == MMU_PT_UPDATE_PRESERVE_AD:  * As MMU_NORMAL_PT_UPDATE above, but A/D bits currently in the PTE are ORed  * with those in @val.  *  * @val is usually the machine frame number along with some attributes.  * The attributes by default follow the architecture defined bits. Meaning that  * if this is a X86_64 machine and four page table layout is used, the layout  * of val is:  *  - 63 if set means No execute (NX)  *  - 46-13 the machine frame number  *  - 12 available for guest  *  - 11 available for guest  *  - 10 available for guest  *  - 9 available for guest  *  - 8 global  *  - 7 PAT (PSE is disabled, must use hypercall to make 4MB or 2MB pages)  *  - 6 dirty  *  - 5 accessed  *  - 4 page cached disabled  *  - 3 page write through  *  - 2 userspace accessible  *  - 1 writeable  *  - 0 present  *  *  The one bits that does not fit with the default layout is the PAGE_PSE  *  also called PAGE_PAT). The MMUEXT_[UN]MARK_SUPER arguments to the  *  HYPERVISOR_mmuext_op serve as mechanism to set a pagetable to be 4MB  *  (or 2MB) instead of using the PAGE_PSE bit.  *  *  The reason that the PAGE_PSE (bit 7) is not being utilized is due to Xen  *  using it as the Page Attribute Table (PAT) bit - for details on it please  *  refer to Intel SDM 10.12. The PAT allows to set the caching attributes of  *  pages instead of using MTRRs.  *  *  The PAT MSR is as follow (it is a 64-bit value, each entry is 8 bits):  *             PAT4                 PAT0  *   +---+----+----+----+-----+----+----+  *    WC | WC | WB | UC | UC- | WC | WB |<= Linux  *   +---+----+----+----+-----+----+----+  *    WC | WT | WB | UC | UC- | WT | WB |<= BIOS (default when machine boots)  *   +---+----+----+----+-----+----+----+  *    WC | WP | WC | UC | UC- | WT | WB |<= Xen  *   +---+----+----+----+-----+----+----+  *  *  The lookup of this index table translates to looking up  *  Bit 7, Bit 4, and Bit 3 of val entry:  *  *  PAT/PSE (bit 7) ... PCD (bit 4) .. PWT (bit 3).  *  *  If all bits are off, then we are using PAT0. If bit 3 turned on,  *  then we are using PAT1, if bit 3 and bit 4, then PAT2..  *  *  As you can see, the Linux PAT1 translates to PAT4 under Xen. Which means  *  that if a guest that follows Linux's PAT setup and would like to set Write  *  Combined on pages it MUST use PAT4 entry. Meaning that Bit 7 (PAGE_PAT) is  *  set. For example, under Linux it only uses PAT0, PAT1, and PAT2 for the  *  caching as:  *  *   WB = none (so PAT0)  *   WC = PWT (bit 3 on)  *   UC = PWT | PCD (bit 3 and 4 are on).  *  * To make it work with Xen, it needs to translate the WC bit as so:  *  *  PWT (so bit 3 on) --> PAT (so bit 7 is on) and clear bit 3  *  * And to translate back it would:  *  * PAT (bit 7 on) --> PWT (bit 3 on) and clear bit 7.  */
 end_comment
 
 begin_define
@@ -807,7 +908,7 @@ comment|/* atomically: *ptr = val | (*ptr&(A|D)) */
 end_comment
 
 begin_comment
-comment|/*  * MMU EXTENDED OPERATIONS  *   * HYPERVISOR_mmuext_op() accepts a list of mmuext_op structures.  * A foreigndom (FD) can be specified (or DOMID_SELF for none).  * Where the FD has some effect, it is described below.  *   * cmd: MMUEXT_(UN)PIN_*_TABLE  * mfn: Machine frame number to be (un)pinned as a p.t. page.  *      The frame must belong to the FD, if one is specified.  *   * cmd: MMUEXT_NEW_BASEPTR  * mfn: Machine frame number of new page-table base to install in MMU.  *   * cmd: MMUEXT_NEW_USER_BASEPTR [x86/64 only]  * mfn: Machine frame number of new page-table base to install in MMU  *      when in user space.  *   * cmd: MMUEXT_TLB_FLUSH_LOCAL  * No additional arguments. Flushes local TLB.  *   * cmd: MMUEXT_INVLPG_LOCAL  * linear_addr: Linear address to be flushed from the local TLB.  *   * cmd: MMUEXT_TLB_FLUSH_MULTI  * vcpumask: Pointer to bitmap of VCPUs to be flushed.  *   * cmd: MMUEXT_INVLPG_MULTI  * linear_addr: Linear address to be flushed.  * vcpumask: Pointer to bitmap of VCPUs to be flushed.  *   * cmd: MMUEXT_TLB_FLUSH_ALL  * No additional arguments. Flushes all VCPUs' TLBs.  *   * cmd: MMUEXT_INVLPG_ALL  * linear_addr: Linear address to be flushed from all VCPUs' TLBs.  *   * cmd: MMUEXT_FLUSH_CACHE  * No additional arguments. Writes back and flushes cache contents.  *   * cmd: MMUEXT_SET_LDT  * linear_addr: Linear address of LDT base (NB. must be page-aligned).  * nr_ents: Number of entries in LDT.  */
+comment|/*  * MMU EXTENDED OPERATIONS  *   * HYPERVISOR_mmuext_op() accepts a list of mmuext_op structures.  * A foreigndom (FD) can be specified (or DOMID_SELF for none).  * Where the FD has some effect, it is described below.  *   * cmd: MMUEXT_(UN)PIN_*_TABLE  * mfn: Machine frame number to be (un)pinned as a p.t. page.  *      The frame must belong to the FD, if one is specified.  *   * cmd: MMUEXT_NEW_BASEPTR  * mfn: Machine frame number of new page-table base to install in MMU.  *   * cmd: MMUEXT_NEW_USER_BASEPTR [x86/64 only]  * mfn: Machine frame number of new page-table base to install in MMU  *      when in user space.  *   * cmd: MMUEXT_TLB_FLUSH_LOCAL  * No additional arguments. Flushes local TLB.  *   * cmd: MMUEXT_INVLPG_LOCAL  * linear_addr: Linear address to be flushed from the local TLB.  *   * cmd: MMUEXT_TLB_FLUSH_MULTI  * vcpumask: Pointer to bitmap of VCPUs to be flushed.  *   * cmd: MMUEXT_INVLPG_MULTI  * linear_addr: Linear address to be flushed.  * vcpumask: Pointer to bitmap of VCPUs to be flushed.  *   * cmd: MMUEXT_TLB_FLUSH_ALL  * No additional arguments. Flushes all VCPUs' TLBs.  *   * cmd: MMUEXT_INVLPG_ALL  * linear_addr: Linear address to be flushed from all VCPUs' TLBs.  *   * cmd: MMUEXT_FLUSH_CACHE  * No additional arguments. Writes back and flushes cache contents.  *  * cmd: MMUEXT_FLUSH_CACHE_GLOBAL  * No additional arguments. Writes back and flushes cache contents  * on all CPUs in the system.  *   * cmd: MMUEXT_SET_LDT  * linear_addr: Linear address of LDT base (NB. must be page-aligned).  * nr_ents: Number of entries in LDT.  *  * cmd: MMUEXT_CLEAR_PAGE  * mfn: Machine frame number to be cleared.  *  * cmd: MMUEXT_COPY_PAGE  * mfn: Machine frame number of the destination page.  * src_mfn: Machine frame number of the source page.  *  * cmd: MMUEXT_[UN]MARK_SUPER  * mfn: Machine frame number of head of superpage to be [un]marked.  */
 end_comment
 
 begin_define
@@ -915,6 +1016,41 @@ name|MMUEXT_NEW_USER_BASEPTR
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|MMUEXT_CLEAR_PAGE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUEXT_COPY_PAGE
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUEXT_FLUSH_CACHE_GLOBAL
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUEXT_MARK_SUPER
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMUEXT_UNMARK_SUPER
+value|20
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -931,7 +1067,7 @@ name|cmd
 decl_stmt|;
 union|union
 block|{
-comment|/* [UN]PIN_TABLE, NEW_BASEPTR, NEW_USER_BASEPTR */
+comment|/* [UN]PIN_TABLE, NEW_BASEPTR, NEW_USER_BASEPTR          * CLEAR_PAGE, COPY_PAGE, [UN]MARK_SUPER */
 name|xen_pfn_t
 name|mfn
 decl_stmt|;
@@ -958,18 +1094,23 @@ operator|>=
 literal|0x00030205
 name|XEN_GUEST_HANDLE
 argument_list|(
-argument|void
+argument|const_void
 argument_list|)
 name|vcpumask
 expr_stmt|;
 else|#
 directive|else
+specifier|const
 name|void
 modifier|*
 name|vcpumask
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* COPY_PAGE */
+name|xen_pfn_t
+name|src_mfn
+decl_stmt|;
 block|}
 name|arg2
 union|;
@@ -1228,6 +1369,39 @@ value|(0x7FF2U)
 end_define
 
 begin_comment
+comment|/*  * DOMID_COW is used as the owner of sharable pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOMID_COW
+value|(0x7FF3U)
+end_define
+
+begin_comment
+comment|/* DOMID_INVALID is used to identify pages with unknown owner. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOMID_INVALID
+value|(0x7FF4U)
+end_define
+
+begin_comment
+comment|/* Idle domain. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOMID_IDLE
+value|(0x7FFFU)
+end_define
+
+begin_comment
 comment|/*  * Send an array of these to HYPERVISOR_mmu_update().  * NB. The fields are natural pointer/address size for this architecture.  */
 end_comment
 
@@ -1425,7 +1599,7 @@ name|struct
 name|vcpu_info
 name|vcpu_info
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 decl_stmt|;
 comment|/*      * A domain can create "event channels" on which it can send and receive      * asynchronous event notifications. There are three classes of event that      * are delivered by this mechanism:      *  1. Bi-directional inter- and intra-domain connections. Domains must      *     arrange out-of-band to set up a connection (usually by allocating      *     an unbound 'listener' port and avertising that via a storage service      *     such as xenstore).      *  2. Physical interrupts. A domain with suitable hardware-access      *     privileges can bind an event-channel port to a physical interrupt      *     source.      *  3. Virtual interrupts ('events'). A domain can bind an event-channel      *     port to a virtual interrupt source, such as the virtual-timer      *     device or the emergency console.      *       * Event channels are addressed by a "port index". Each channel is      * associated with two bits of information:      *  1. PENDING -- notifies the domain that there is a pending notification      *     to be processed. This bit is cleared by the guest.      *  2. MASK -- if this bit is clear then a 0->1 transition of PENDING      *     will cause an asynchronous upcall to be scheduled. This bit is only      *     updated by the guest. It is read-only within Xen. If a channel      *     becomes pending while the channel is masked then the 'edge' is lost      *     (i.e., when the channel is unmasked, the guest must manually handle      *     pending notifications as no upcall will be scheduled by Xen).      *       * To expedite scanning of pending notifications, any 0->1 pending      * transition on an unmasked channel causes a corresponding bit in a      * per-vcpu selector word to be set. Each bit in the selector covers a      * 'C long' in the PENDING bitfield array.      */
@@ -1496,7 +1670,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Start-of-day memory layout:  *  1. The domain is started within contiguous virtual-memory region.  *  2. The contiguous region ends on an aligned 4MB boundary.  *  3. This the order of bootstrap elements in the initial virtual region:  *      a. relocated kernel image  *      b. initial ram disk              [mod_start, mod_len]  *      c. list of allocated page frames [mfn_list, nr_pages]  *      d. start_info_t structure        [register ESI (x86)]  *      e. bootstrap page tables         [pt_base, CR3 (x86)]  *      f. bootstrap stack               [register ESP (x86)]  *  4. Bootstrap elements are packed together, but each is 4kB-aligned.  *  5. The initial ram disk may be omitted.  *  6. The list of page frames forms a contiguous 'pseudo-physical' memory  *     layout for the domain. In particular, the bootstrap virtual-memory  *     region is a 1:1 mapping to the first section of the pseudo-physical map.  *  7. All bootstrap elements are mapped read-writable for the guest OS. The  *     only exception is the bootstrap page table, which is mapped read-only.  *  8. There is guaranteed to be at least 512kB padding after the final  *     bootstrap element. If necessary, the bootstrap virtual region is  *     extended by an extra 4MB to ensure this.  */
+comment|/*  * Start-of-day memory layout:  *  1. The domain is started within contiguous virtual-memory region.  *  2. The contiguous region ends on an aligned 4MB boundary.  *  3. This the order of bootstrap elements in the initial virtual region:  *      a. relocated kernel image  *      b. initial ram disk              [mod_start, mod_len]  *      c. list of allocated page frames [mfn_list, nr_pages]  *         (unless relocated due to XEN_ELFNOTE_INIT_P2M)  *      d. start_info_t structure        [register ESI (x86)]  *      e. bootstrap page tables         [pt_base, CR3 (x86)]  *      f. bootstrap stack               [register ESP (x86)]  *  4. Bootstrap elements are packed together, but each is 4kB-aligned.  *  5. The initial ram disk may be omitted.  *  6. The list of page frames forms a contiguous 'pseudo-physical' memory  *     layout for the domain. In particular, the bootstrap virtual-memory  *     region is a 1:1 mapping to the first section of the pseudo-physical map.  *  7. All bootstrap elements are mapped read-writable for the guest OS. The  *     only exception is the bootstrap page table, which is mapped read-only.  *  8. There is guaranteed to be at least 512kB padding after the final  *     bootstrap element. If necessary, the bootstrap virtual region is  *     extended by an extra 4MB to ensure this.  */
 end_comment
 
 begin_define
@@ -1591,7 +1765,9 @@ name|unsigned
 name|long
 name|mod_start
 decl_stmt|;
-comment|/* VIRTUAL address of pre-loaded module.  */
+comment|/* VIRTUAL address of pre-loaded module   */
+comment|/* (PFN of pre-loaded module if           */
+comment|/*  SIF_MOD_START_PFN set in flags).      */
 name|unsigned
 name|long
 name|mod_len
@@ -1603,6 +1779,17 @@ index|[
 name|MAX_GUEST_CMDLINE
 index|]
 decl_stmt|;
+comment|/* The pfn range here covers both page table and p->m table frames.   */
+name|unsigned
+name|long
+name|first_p2m_pfn
+decl_stmt|;
+comment|/* 1st pfn forming initial P->M table.    */
+name|unsigned
+name|long
+name|nr_p2m_frames
+decl_stmt|;
+comment|/* # of pfns forming initial P->M table.  */
 block|}
 struct|;
 end_struct
@@ -1675,6 +1862,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIF_MULTIBOOT_MOD
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* Is mod_start a multiboot module? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIF_MOD_START_PFN
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* Is mod_start a PFN? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIF_PM_MASK
 value|(0xFF<<8)
 end_define
@@ -1682,6 +1891,34 @@ end_define
 begin_comment
 comment|/* reserve 1 byte for xen-pm options */
 end_comment
+
+begin_comment
+comment|/*  * A multiboot module is a package containing modules very similar to a  * multiboot module array. The only differences are:  * - the array of module descriptors is by convention simply at the beginning  *   of the multiboot module,  * - addresses in the module descriptors are based on the beginning of the  *   multiboot module,  * - the number of modules is determined by a termination descriptor that has  *   mod_start == 0.  *  * This permits to both build it statically and reference it in a configuration  * file, and let the PV guest easily rebase the addresses to virtual addresses  * and at the same time count the number of modules.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_multiboot_mod_list
+block|{
+comment|/* Address of first byte of the module */
+name|uint32_t
+name|mod_start
+decl_stmt|;
+comment|/* Address of last byte of the module (inclusive) */
+name|uint32_t
+name|mod_end
+decl_stmt|;
+comment|/* Address of zero-terminated command line */
+name|uint32_t
+name|cmdline
+decl_stmt|;
+comment|/* Unused, must be zero */
+name|uint32_t
+name|pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -1700,6 +1937,10 @@ define|#
 directive|define
 name|XEN_VGATYPE_VESA_LFB
 value|0x23
+define|#
+directive|define
+name|XEN_VGATYPE_EFI_LFB
+value|0x70
 union|union
 block|{
 struct|struct
@@ -1970,10 +2211,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
+
+begin_struct
+struct|struct
+name|xenctl_cpumap
+block|{
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint8
+argument_list|)
+name|bitmap
+expr_stmt|;
+name|uint32_t
+name|nr_cpus
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__XEN__) || defined(__XEN_TOOLS__) */
+end_comment
 
 begin_endif
 endif|#
