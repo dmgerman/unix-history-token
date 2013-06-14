@@ -134,6 +134,16 @@ name|arg4
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_ERROR
+parameter_list|(
+name|err
+parameter_list|)
+value|(err)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -2830,6 +2830,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|ASSERT3P
+argument_list|(
+name|dn
+operator|->
+name|dn_bonus
+argument_list|,
+operator|==
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX - It would be nice to assert this, but we may still 	 * have residual holds from async evictions from the arc... 	 * 	 * zfs_obj_to_path() also depends on this being 	 * commented out. 	 * 	 * ASSERT3U(refcount_count(&dn->dn_holds), ==, 1); 	 */
 comment|/* Undirty next bits */
 name|dn

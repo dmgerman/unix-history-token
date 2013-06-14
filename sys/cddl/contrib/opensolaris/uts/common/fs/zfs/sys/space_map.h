@@ -59,7 +59,7 @@ block|{
 name|avl_tree_t
 name|sm_root
 decl_stmt|;
-comment|/* AVL tree of map segments */
+comment|/* offset-ordered segment AVL tree */
 name|uint64_t
 name|sm_space
 decl_stmt|;
@@ -77,13 +77,6 @@ name|sm_shift
 decl_stmt|;
 comment|/* unit shift */
 name|uint8_t
-name|sm_pad
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* unused */
-name|uint8_t
 name|sm_loaded
 decl_stmt|;
 comment|/* map loaded? */
@@ -91,6 +84,10 @@ name|uint8_t
 name|sm_loading
 decl_stmt|;
 comment|/* map loading? */
+name|uint8_t
+name|sm_condensing
+decl_stmt|;
+comment|/* map condensing? */
 name|kcondvar_t
 name|sm_load_cv
 decl_stmt|;
@@ -104,7 +101,7 @@ name|avl_tree_t
 modifier|*
 name|sm_pp_root
 decl_stmt|;
-comment|/* picker-private AVL tree */
+comment|/* size-ordered, picker-private tree */
 name|void
 modifier|*
 name|sm_ppd
@@ -496,6 +493,41 @@ name|start
 parameter_list|,
 name|uint64_t
 name|size
+parameter_list|)
+function_decl|;
+specifier|extern
+name|space_seg_t
+modifier|*
+name|space_map_find
+parameter_list|(
+name|space_map_t
+modifier|*
+name|sm
+parameter_list|,
+name|uint64_t
+name|start
+parameter_list|,
+name|uint64_t
+name|size
+parameter_list|,
+name|avl_index_t
+modifier|*
+name|wherep
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|space_map_swap
+parameter_list|(
+name|space_map_t
+modifier|*
+modifier|*
+name|msrc
+parameter_list|,
+name|space_map_t
+modifier|*
+modifier|*
+name|mdest
 parameter_list|)
 function_decl|;
 specifier|extern

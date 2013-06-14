@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -579,7 +579,10 @@ name|VDEV_AUX_BAD_LABEL
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1068,7 +1071,10 @@ name|mc
 operator|->
 name|mc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 name|mc
 operator|->
@@ -1110,7 +1116,10 @@ name|mc
 operator|->
 name|mc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESTALE
+argument_list|)
 expr_stmt|;
 name|mc
 operator|->
@@ -1887,7 +1896,10 @@ name|mc
 operator|->
 name|mc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESTALE
+argument_list|)
 expr_stmt|;
 block|}
 name|zio_nowait

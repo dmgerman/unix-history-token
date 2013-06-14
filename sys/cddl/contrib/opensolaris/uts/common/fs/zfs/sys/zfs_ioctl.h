@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/*  * The structures in this file are passed between userland and the  * kernel.  Userland may be running a 32-bit process, while the kernel  * is 64-bit.  Therefore, these structures need to compile the same in  * 32-bit and 64-bit.  This means not using type "long", and adding  * explicit padding so that the 32-bit structure will not be packed more  * tightly than the 64-bit structure (which requires 64-bit alignment).  */
 comment|/*  * Property values for snapdir  */
 define|#
 directive|define
@@ -569,6 +570,12 @@ decl_stmt|;
 name|uint64_t
 name|zi_timer
 decl_stmt|;
+name|uint32_t
+name|zi_cmd
+decl_stmt|;
+name|uint32_t
+name|zi_pad
+decl_stmt|;
 block|}
 name|zinject_record_t
 typedef|;
@@ -584,6 +591,26 @@ define|#
 directive|define
 name|ZINJECT_UNLOAD_SPA
 value|0x4
+typedef|typedef
+enum|enum
+name|zinject_type
+block|{
+name|ZINJECT_UNINITIALIZED
+block|,
+name|ZINJECT_DATA_FAULT
+block|,
+name|ZINJECT_DEVICE_FAULT
+block|,
+name|ZINJECT_LABEL_FAULT
+block|,
+name|ZINJECT_IGNORED_WRITES
+block|,
+name|ZINJECT_PANIC
+block|,
+name|ZINJECT_DELAY_IO
+block|, }
+name|zinject_type_t
+typedef|;
 typedef|typedef
 struct|struct
 name|zfs_share
@@ -628,36 +655,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|char
-name|zc_value
-index|[
-name|MAXPATHLEN
-operator|*
-literal|2
-index|]
-decl_stmt|;
-name|char
-name|zc_string
-index|[
-name|MAXNAMELEN
-index|]
-decl_stmt|;
-name|char
-name|zc_top_ds
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
-name|uint64_t
-name|zc_guid
-decl_stmt|;
-name|uint64_t
-name|zc_nvlist_conf
-decl_stmt|;
-comment|/* really (char *) */
-name|uint64_t
-name|zc_nvlist_conf_size
-decl_stmt|;
+comment|/* name of pool or dataset */
 name|uint64_t
 name|zc_nvlist_src
 decl_stmt|;
@@ -672,6 +670,42 @@ comment|/* really (char *) */
 name|uint64_t
 name|zc_nvlist_dst_size
 decl_stmt|;
+name|boolean_t
+name|zc_nvlist_dst_filled
+decl_stmt|;
+comment|/* put an nvlist in dst? */
+name|int
+name|zc_pad2
+decl_stmt|;
+comment|/* 	 * The following members are for legacy ioctls which haven't been 	 * converted to the new method. 	 */
+name|uint64_t
+name|zc_history
+decl_stmt|;
+comment|/* really (char *) */
+name|char
+name|zc_value
+index|[
+name|MAXPATHLEN
+operator|*
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|zc_string
+index|[
+name|MAXNAMELEN
+index|]
+decl_stmt|;
+name|uint64_t
+name|zc_guid
+decl_stmt|;
+name|uint64_t
+name|zc_nvlist_conf
+decl_stmt|;
+comment|/* really (char *) */
+name|uint64_t
+name|zc_nvlist_conf_size
+decl_stmt|;
 name|uint64_t
 name|zc_cookie
 decl_stmt|;
@@ -681,10 +715,6 @@ decl_stmt|;
 name|uint64_t
 name|zc_perm_action
 decl_stmt|;
-name|uint64_t
-name|zc_history
-decl_stmt|;
-comment|/* really (char *) */
 name|uint64_t
 name|zc_history_len
 decl_stmt|;
@@ -858,14 +888,20 @@ name|void
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|void
 name|zfs_unmount_snap
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-parameter_list|,
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
+name|zfs_destroy_unmount_origin
+parameter_list|(
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -158,6 +158,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * To aid debugging, we keep the most recently removed entry.  This way if  * we are in the callback, we can easily locate the entry.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bplist_entry_t
+modifier|*
+name|bplist_iterate_last_removed
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|bplist_iterate
@@ -204,6 +216,10 @@ name|bpl_list
 argument_list|)
 condition|)
 block|{
+name|bplist_iterate_last_removed
+operator|=
+name|bpe
+expr_stmt|;
 name|list_remove
 argument_list|(
 operator|&

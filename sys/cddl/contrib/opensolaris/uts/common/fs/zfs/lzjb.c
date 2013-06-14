@@ -23,6 +23,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -99,9 +105,12 @@ decl_stmt|;
 name|uchar_t
 modifier|*
 name|cpy
-decl_stmt|,
+decl_stmt|;
+name|uchar_t
 modifier|*
 name|copymap
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|copymask
@@ -501,8 +510,11 @@ decl_stmt|;
 name|uchar_t
 modifier|*
 name|cpy
-decl_stmt|,
+decl_stmt|;
+name|uchar_t
 name|copymap
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|copymask

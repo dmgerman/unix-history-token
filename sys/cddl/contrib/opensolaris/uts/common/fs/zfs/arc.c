@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -8456,7 +8456,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|arc_buf_remove_ref
 parameter_list|(
 name|arc_buf_t
@@ -8485,7 +8485,7 @@ argument_list|(
 name|hdr
 argument_list|)
 decl_stmt|;
-name|int
+name|boolean_t
 name|no_callback
 init|=
 operator|(
@@ -9697,7 +9697,7 @@ argument_list|,
 name|missed
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have just evicted some date into the ghost state, make 	 * sure we also adjust the ghost state size if necessary. 	 */
+comment|/* 	 * We have just evicted some data into the ghost state, make 	 * sure we also adjust the ghost state size if necessary. 	 */
 if|if
 condition|(
 name|arc_no_grow
@@ -13087,8 +13087,6 @@ name|buf
 argument_list|,
 name|arg
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -13139,8 +13137,6 @@ name|buf
 argument_list|,
 name|arg
 argument_list|)
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -13809,6 +13805,8 @@ decl_stmt|;
 name|arc_buf_t
 modifier|*
 name|buf
+init|=
+name|NULL
 decl_stmt|;
 name|kmutex_t
 modifier|*
@@ -14235,6 +14233,8 @@ name|NULL
 decl_stmt|;
 name|uint64_t
 name|addr
+init|=
+literal|0
 decl_stmt|;
 name|boolean_t
 name|devw
@@ -14886,6 +14886,23 @@ operator|->
 name|l2rcb_flags
 operator|=
 name|zio_flags
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|addr
+operator|>=
+name|VDEV_LABEL_START_SIZE
+operator|&&
+name|addr
+operator|+
+name|size
+operator|<
+name|vd
+operator|->
+name|vdev_psize
+operator|-
+name|VDEV_LABEL_END_SIZE
+argument_list|)
 expr_stmt|;
 comment|/* 				 * l2arc read.  The SCL_L2ARC lock will be 				 * released by l2arc_read_done(). 				 */
 name|rzio
@@ -15806,13 +15823,13 @@ name|b_l2hdr
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|buf_size
 operator|=
 name|hdr
 operator|->
 name|b_size
 expr_stmt|;
-block|}
 comment|/* 	 * Do we have more than one buf? 	 */
 if|if
 condition|(
@@ -17347,7 +17364,10 @@ literal|4
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 comment|/* Note: reserve is inflated, so we deflate */
@@ -17384,7 +17404,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17460,7 +17483,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17542,7 +17568,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17578,7 +17607,10 @@ name|arc_c
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOMEM
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Don't count loaned bufs as in flight dirty data to prevent long 	 * network delays from blocking transactions that are ready to be 	 * assigned to a txg. 	 */
@@ -17677,7 +17709,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -20092,7 +20127,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -20215,6 +20253,8 @@ block|{
 name|list_t
 modifier|*
 name|list
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|idx

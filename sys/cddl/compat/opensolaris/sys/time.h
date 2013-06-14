@@ -100,6 +100,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SEC_TO_TICK
+parameter_list|(
+name|sec
+parameter_list|)
+value|((sec) * hz)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSEC_TO_TICK
+parameter_list|(
+name|usec
+parameter_list|)
+value|((usec) / (NANOSEC / hz))
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

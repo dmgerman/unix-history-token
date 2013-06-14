@@ -237,6 +237,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|mutex_init
+argument_list|(
+operator|&
+name|tx
+operator|->
+name|tx_cpu
+index|[
+name|c
+index|]
+operator|.
+name|tc_open_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -495,6 +514,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|tx
+operator|->
+name|tx_cpu
+index|[
+name|c
+index|]
+operator|.
+name|tc_open_lock
+argument_list|)
+expr_stmt|;
 name|mutex_destroy
 argument_list|(
 operator|&
@@ -1056,7 +1088,7 @@ argument_list|(
 operator|&
 name|tc
 operator|->
-name|tc_lock
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 name|txg
@@ -1064,6 +1096,14 @@ operator|=
 name|tx
 operator|->
 name|tx_open_txg
+expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_lock
+argument_list|)
 expr_stmt|;
 name|tc
 operator|->
@@ -1074,6 +1114,14 @@ operator|&
 name|TXG_MASK
 index|]
 operator|++
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_lock
+argument_list|)
 expr_stmt|;
 name|th
 operator|->
@@ -1112,12 +1160,24 @@ name|th
 operator|->
 name|th_cpu
 decl_stmt|;
-name|mutex_exit
+name|ASSERT
+argument_list|(
+operator|!
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|tc
 operator|->
 name|tc_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1304,7 +1364,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-comment|/* 	 * Grab all tx_cpu locks so nobody else can get into this txg. 	 */
+comment|/* 	 * Grab all tc_open_locks so nobody else can get into this txg. 	 */
 for|for
 control|(
 name|c
@@ -1328,7 +1388,7 @@ index|[
 name|c
 index|]
 operator|.
-name|tc_lock
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -1369,7 +1429,7 @@ index|[
 name|c
 index|]
 operator|.
-name|tc_lock
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Quiesce the transaction group by waiting for everyone to txg_exit(). 	 */
@@ -2381,6 +2441,15 @@ name|dp
 operator|->
 name|dp_tx
 decl_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_pool_config_held
+argument_list|(
+name|dp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -2520,6 +2589,15 @@ name|dp
 operator|->
 name|dp_tx
 decl_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_pool_config_held
+argument_list|(
+name|dp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -2832,11 +2910,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add an entry to the list.  * Returns 0 if it's a new entry, 1 if it's already there.  */
+comment|/*  * Add an entry to the list (unless it's already on the list).  * Returns B_TRUE if it was actually added.  */
 end_comment
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_add
 parameter_list|(
 name|txg_list_t
@@ -2878,8 +2956,8 @@ operator|->
 name|tl_offset
 operator|)
 decl_stmt|;
-name|int
-name|already_on_list
+name|boolean_t
+name|add
 decl_stmt|;
 name|mutex_enter
 argument_list|(
@@ -2889,19 +2967,22 @@ operator|->
 name|tl_lock
 argument_list|)
 expr_stmt|;
-name|already_on_list
+name|add
 operator|=
+operator|(
 name|tn
 operator|->
 name|tn_member
 index|[
 name|t
 index|]
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|already_on_list
+name|add
 condition|)
 block|{
 name|tn
@@ -2947,18 +3028,18 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|already_on_list
+name|add
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Add an entry to the end of the list (walks list to find end).  * Returns 0 if it's a new entry, 1 if it's already there.  */
+comment|/*  * Add an entry to the end of the list, unless it's already on the list.  * (walks list to find end)  * Returns B_TRUE if it was actually added.  */
 end_comment
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_add_tail
 parameter_list|(
 name|txg_list_t
@@ -3000,8 +3081,8 @@ operator|->
 name|tl_offset
 operator|)
 decl_stmt|;
-name|int
-name|already_on_list
+name|boolean_t
+name|add
 decl_stmt|;
 name|mutex_enter
 argument_list|(
@@ -3011,19 +3092,22 @@ operator|->
 name|tl_lock
 argument_list|)
 expr_stmt|;
-name|already_on_list
+name|add
 operator|=
+operator|(
 name|tn
 operator|->
 name|tn_member
 index|[
 name|t
 index|]
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|already_on_list
+name|add
 condition|)
 block|{
 name|txg_node_t
@@ -3096,7 +3180,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|already_on_list
+name|add
 operator|)
 return|;
 block|}
@@ -3372,7 +3456,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|boolean_t
 name|txg_list_member
 parameter_list|(
 name|txg_list_t
@@ -3422,6 +3506,8 @@ name|tn_member
 index|[
 name|t
 index|]
+operator|!=
+literal|0
 operator|)
 return|;
 block|}

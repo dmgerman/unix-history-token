@@ -143,7 +143,7 @@ name|mg_next
 decl_stmt|;
 block|}
 struct|;
-comment|/*  * Each metaslab's free space is tracked in space map object in the MOS,  * which is only updated in syncing context.  Each time we sync a txg,  * we append the allocs and frees from that txg to the space map object.  * When the txg is done syncing, metaslab_sync_done() updates ms_smo  * to ms_smo_syncing.  Everything in ms_smo is always safe to allocate.  */
+comment|/*  * Each metaslab maintains an in-core free map (ms_map) that contains the  * current list of free segments. As blocks are allocated, the allocated  * segment is removed from the ms_map and added to a per txg allocation map.  * As blocks are freed, they are added to the per txg free map. These per  * txg maps allow us to process all allocations and frees in syncing context  * where it is safe to update the on-disk space maps.  *  * Each metaslab's free space is tracked in a space map object in the MOS,  * which is only updated in syncing context. Each time we sync a txg,  * we append the allocs and frees from that txg to the space map object.  * When the txg is done syncing, metaslab_sync_done() updates ms_smo  * to ms_smo_syncing. Everything in ms_smo is always safe to allocate.  *  * To load the in-core free map we read the space map object from disk.  * This object contains a series of alloc and free records that are  * combined to make up the list of all free segments in this metaslab. These  * segments are represented in-core by the ms_map and are stored in an  * AVL tree.  *  * As the space map objects grows (as a result of the appends) it will  * eventually become space-inefficient. When the space map object is  * zfs_condense_pct/100 times the size of the minimal on-disk representation,  * we rewrite it in its minimized form.  */
 struct|struct
 name|metaslab
 block|{
@@ -160,6 +160,7 @@ name|ms_smo_syncing
 decl_stmt|;
 comment|/* syncing space map object	*/
 name|space_map_t
+modifier|*
 name|ms_allocmap
 index|[
 name|TXG_SIZE
@@ -167,6 +168,7 @@ index|]
 decl_stmt|;
 comment|/* allocated this txg	*/
 name|space_map_t
+modifier|*
 name|ms_freemap
 index|[
 name|TXG_SIZE
@@ -174,13 +176,15 @@ index|]
 decl_stmt|;
 comment|/* freed this txg	*/
 name|space_map_t
+modifier|*
 name|ms_defermap
 index|[
 name|TXG_DEFER_SIZE
 index|]
 decl_stmt|;
-comment|/* deferred frees	*/
+comment|/* deferred frees */
 name|space_map_t
+modifier|*
 name|ms_map
 decl_stmt|;
 comment|/* in-core free space map	*/

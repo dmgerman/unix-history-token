@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -205,6 +209,20 @@ file|<sys/fm/util.h>
 include|#
 directive|include
 file|<sys/sunddi.h>
+ifdef|#
+directive|ifdef
+name|illumos
+include|#
+directive|include
+file|<sys/cyclic.h>
+else|#
+directive|else
+comment|/* FreeBSD */
+include|#
+directive|include
+file|<sys/callout.h>
+endif|#
+directive|endif
 include|#
 directive|include
 file|<machine/stdarg.h>

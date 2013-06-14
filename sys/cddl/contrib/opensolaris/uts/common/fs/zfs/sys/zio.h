@@ -1055,6 +1055,9 @@ decl_stmt|;
 name|uint64_t
 name|io_deadline
 decl_stmt|;
+name|hrtime_t
+name|io_timestamp
+decl_stmt|;
 name|avl_node_t
 name|io_offset_node
 decl_stmt|;
@@ -2120,6 +2123,15 @@ function_decl|;
 specifier|extern
 name|void
 name|zio_handle_ignored_writes
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|zio_handle_io_delay
 parameter_list|(
 name|zio_t
 modifier|*

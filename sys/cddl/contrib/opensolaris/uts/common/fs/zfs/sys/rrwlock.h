@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_SYS_RR_RW_LOCK_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -68,6 +65,9 @@ decl_stmt|;
 name|boolean_t
 name|rr_writer_wanted
 decl_stmt|;
+name|boolean_t
+name|rr_track_all
+decl_stmt|;
 block|}
 name|rrwlock_t
 typedef|;
@@ -78,6 +78,9 @@ parameter_list|(
 name|rrwlock_t
 modifier|*
 name|rrl
+parameter_list|,
+name|boolean_t
+name|track_all
 parameter_list|)
 function_decl|;
 name|void
@@ -104,6 +107,26 @@ name|tag
 parameter_list|)
 function_decl|;
 name|void
+name|rrw_enter_read
+parameter_list|(
+name|rrwlock_t
+modifier|*
+name|rrl
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+name|void
+name|rrw_enter_write
+parameter_list|(
+name|rrwlock_t
+modifier|*
+name|rrl
+parameter_list|)
+function_decl|;
+name|void
 name|rrw_exit
 parameter_list|(
 name|rrwlock_t
@@ -126,6 +149,14 @@ name|krw_t
 name|rw
 parameter_list|)
 function_decl|;
+name|void
+name|rrw_tsd_destroy
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|RRW_READ_HELD
@@ -140,6 +171,14 @@ parameter_list|(
 name|x
 parameter_list|)
 value|rrw_held(x, RW_WRITER)
+define|#
+directive|define
+name|RRW_LOCK_HELD
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(rrw_held(x, RW_WRITER) || rrw_held(x, RW_READER))
 ifdef|#
 directive|ifdef
 name|__cplusplus

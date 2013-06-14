@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1662,7 +1662,10 @@ literal|2
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSPC
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3994,7 +3997,10 @@ name|ZAP_MAXNAMELEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 return|return
@@ -4039,7 +4045,10 @@ break|break;
 default|default:
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4451,7 +4460,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -5510,7 +5522,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|err
@@ -5641,7 +5656,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|err
@@ -5772,7 +5790,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|err
@@ -7038,7 +7059,10 @@ name|ZAP_MAXNAMELEN
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 name|err

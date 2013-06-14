@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -56,16 +60,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* deadline = pri + ddi_get_lbolt64()>> time_shift) */
+comment|/*  * The deadlines are grouped into buckets based on zfs_vdev_time_shift:  * deadline = pri + gethrtime()>> time_shift)  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|zfs_vdev_time_shift
 init|=
-literal|6
+literal|29
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* each bucket is 0.537 seconds */
+end_comment
 
 begin_comment
 comment|/* exponential I/O issue ramp-up rate */
@@ -1463,6 +1471,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|aio
+operator|->
+name|io_timestamp
+operator|=
+name|fio
+operator|->
+name|io_timestamp
+expr_stmt|;
 name|nio
 operator|=
 name|fio
@@ -1806,11 +1822,19 @@ argument_list|)
 expr_stmt|;
 name|zio
 operator|->
+name|io_timestamp
+operator|=
+name|gethrtime
+argument_list|()
+expr_stmt|;
+name|zio
+operator|->
 name|io_deadline
 operator|=
 operator|(
-name|ddi_get_lbolt64
-argument_list|()
+name|zio
+operator|->
+name|io_timestamp
 operator|>>
 name|zfs_vdev_time_shift
 operator|)
@@ -1902,6 +1926,21 @@ name|io_vd
 operator|->
 name|vdev_queue
 decl_stmt|;
+if|if
+condition|(
+name|zio_injection_enabled
+condition|)
+name|delay
+argument_list|(
+name|SEC_TO_TICK
+argument_list|(
+name|zio_handle_io_delay
+argument_list|(
+name|zio
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -1919,6 +1958,13 @@ name|vq_pending_tree
 argument_list|,
 name|zio
 argument_list|)
+expr_stmt|;
+name|vq
+operator|->
+name|vq_io_complete_ts
+operator|=
+name|gethrtime
+argument_list|()
 expr_stmt|;
 for|for
 control|(

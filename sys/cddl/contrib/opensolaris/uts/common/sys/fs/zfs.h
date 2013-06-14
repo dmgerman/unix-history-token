@@ -76,6 +76,28 @@ literal|0x8
 block|}
 name|zfs_type_t
 typedef|;
+typedef|typedef
+enum|enum
+name|dmu_objset_type
+block|{
+name|DMU_OST_NONE
+block|,
+name|DMU_OST_META
+block|,
+name|DMU_OST_ZFS
+block|,
+name|DMU_OST_ZVOL
+block|,
+name|DMU_OST_OTHER
+block|,
+comment|/* For testing only! */
+name|DMU_OST_ANY
+block|,
+comment|/* Be careful! */
+name|DMU_OST_NUMTYPES
+block|}
+name|dmu_objset_type_t
+typedef|;
 define|#
 directive|define
 name|ZFS_TYPE_DATASET
@@ -228,6 +250,10 @@ block|,
 name|ZFS_PROP_WRITTEN
 block|,
 name|ZFS_PROP_CLONES
+block|,
+name|ZFS_PROP_LOGICALUSED
+block|,
+name|ZFS_PROP_LOGICALREFERENCED
 block|,
 name|ZFS_NUM_PROPS
 block|}
@@ -2004,277 +2030,157 @@ name|ZVOL_DEFAULT_BLOCKSIZE
 value|8192
 comment|/*  * /dev/zfs ioctl numbers.  */
 typedef|typedef
-name|unsigned
-name|long
+enum|enum
+name|zfs_ioc
+block|{
+name|ZFS_IOC_FIRST
+init|=
+literal|0
+block|,
+name|ZFS_IOC_POOL_CREATE
+init|=
+name|ZFS_IOC_FIRST
+block|,
+name|ZFS_IOC_POOL_DESTROY
+block|,
+name|ZFS_IOC_POOL_IMPORT
+block|,
+name|ZFS_IOC_POOL_EXPORT
+block|,
+name|ZFS_IOC_POOL_CONFIGS
+block|,
+name|ZFS_IOC_POOL_STATS
+block|,
+name|ZFS_IOC_POOL_TRYIMPORT
+block|,
+name|ZFS_IOC_POOL_SCAN
+block|,
+name|ZFS_IOC_POOL_FREEZE
+block|,
+name|ZFS_IOC_POOL_UPGRADE
+block|,
+name|ZFS_IOC_POOL_GET_HISTORY
+block|,
+name|ZFS_IOC_VDEV_ADD
+block|,
+name|ZFS_IOC_VDEV_REMOVE
+block|,
+name|ZFS_IOC_VDEV_SET_STATE
+block|,
+name|ZFS_IOC_VDEV_ATTACH
+block|,
+name|ZFS_IOC_VDEV_DETACH
+block|,
+name|ZFS_IOC_VDEV_SETPATH
+block|,
+name|ZFS_IOC_VDEV_SETFRU
+block|,
+name|ZFS_IOC_OBJSET_STATS
+block|,
+name|ZFS_IOC_OBJSET_ZPLPROPS
+block|,
+name|ZFS_IOC_DATASET_LIST_NEXT
+block|,
+name|ZFS_IOC_SNAPSHOT_LIST_NEXT
+block|,
+name|ZFS_IOC_SET_PROP
+block|,
+name|ZFS_IOC_CREATE
+block|,
+name|ZFS_IOC_DESTROY
+block|,
+name|ZFS_IOC_ROLLBACK
+block|,
+name|ZFS_IOC_RENAME
+block|,
+name|ZFS_IOC_RECV
+block|,
+name|ZFS_IOC_SEND
+block|,
+name|ZFS_IOC_INJECT_FAULT
+block|,
+name|ZFS_IOC_CLEAR_FAULT
+block|,
+name|ZFS_IOC_INJECT_LIST_NEXT
+block|,
+name|ZFS_IOC_ERROR_LOG
+block|,
+name|ZFS_IOC_CLEAR
+block|,
+name|ZFS_IOC_PROMOTE
+block|,
+name|ZFS_IOC_DESTROY_SNAPS
+block|,
+name|ZFS_IOC_SNAPSHOT
+block|,
+name|ZFS_IOC_DSOBJ_TO_DSNAME
+block|,
+name|ZFS_IOC_OBJ_TO_PATH
+block|,
+name|ZFS_IOC_POOL_SET_PROPS
+block|,
+name|ZFS_IOC_POOL_GET_PROPS
+block|,
+name|ZFS_IOC_SET_FSACL
+block|,
+name|ZFS_IOC_GET_FSACL
+block|,
+name|ZFS_IOC_SHARE
+block|,
+name|ZFS_IOC_INHERIT_PROP
+block|,
+name|ZFS_IOC_SMB_ACL
+block|,
+name|ZFS_IOC_USERSPACE_ONE
+block|,
+name|ZFS_IOC_USERSPACE_MANY
+block|,
+name|ZFS_IOC_USERSPACE_UPGRADE
+block|,
+name|ZFS_IOC_HOLD
+block|,
+name|ZFS_IOC_RELEASE
+block|,
+name|ZFS_IOC_GET_HOLDS
+block|,
+name|ZFS_IOC_OBJSET_RECVD_PROPS
+block|,
+name|ZFS_IOC_VDEV_SPLIT
+block|,
+name|ZFS_IOC_NEXT_OBJ
+block|,
+name|ZFS_IOC_DIFF
+block|,
+name|ZFS_IOC_TMP_SNAPSHOT
+block|,
+name|ZFS_IOC_OBJ_TO_STATS
+block|,
+name|ZFS_IOC_JAIL
+block|,
+name|ZFS_IOC_UNJAIL
+block|,
+name|ZFS_IOC_POOL_REGUID
+block|,
+name|ZFS_IOC_SPACE_WRITTEN
+block|,
+name|ZFS_IOC_SPACE_SNAPS
+block|,
+name|ZFS_IOC_SEND_PROGRESS
+block|,
+name|ZFS_IOC_POOL_REOPEN
+block|,
+name|ZFS_IOC_LOG_HISTORY
+block|,
+name|ZFS_IOC_SEND_NEW
+block|,
+name|ZFS_IOC_SEND_SPACE
+block|,
+name|ZFS_IOC_CLONE
+block|,
+name|ZFS_IOC_LAST
+block|}
 name|zfs_ioc_t
 typedef|;
-define|#
-directive|define
-name|ZFS_IOC
-parameter_list|(
-name|ioreq
-parameter_list|)
-value|((ioreq)& 0xff)
-define|#
-directive|define
-name|ZFS_IOC_POOL_CREATE
-value|_IOWR('Z', 0, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_DESTROY
-value|_IOWR('Z', 1, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_IMPORT
-value|_IOWR('Z', 2, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_EXPORT
-value|_IOWR('Z', 3, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_CONFIGS
-value|_IOWR('Z', 4, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_STATS
-value|_IOWR('Z', 5, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_TRYIMPORT
-value|_IOWR('Z', 6, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_SCAN
-value|_IOWR('Z', 7, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_FREEZE
-value|_IOWR('Z', 8, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_UPGRADE
-value|_IOWR('Z', 9, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_GET_HISTORY
-value|_IOWR('Z', 10, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_ADD
-value|_IOWR('Z', 11, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_REMOVE
-value|_IOWR('Z', 12, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_SET_STATE
-value|_IOWR('Z', 13, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_ATTACH
-value|_IOWR('Z', 14, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_DETACH
-value|_IOWR('Z', 15, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_SETPATH
-value|_IOWR('Z', 16, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_SETFRU
-value|_IOWR('Z', 17, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_OBJSET_STATS
-value|_IOWR('Z', 18, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_OBJSET_ZPLPROPS
-value|_IOWR('Z', 19, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_DATASET_LIST_NEXT
-value|_IOWR('Z', 20, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SNAPSHOT_LIST_NEXT
-value|_IOWR('Z', 21, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SET_PROP
-value|_IOWR('Z', 22, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_CREATE
-value|_IOWR('Z', 23, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_DESTROY
-value|_IOWR('Z', 24, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_ROLLBACK
-value|_IOWR('Z', 25, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_RENAME
-value|_IOWR('Z', 26, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_RECV
-value|_IOWR('Z', 27, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SEND
-value|_IOWR('Z', 28, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_INJECT_FAULT
-value|_IOWR('Z', 29, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_CLEAR_FAULT
-value|_IOWR('Z', 30, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_INJECT_LIST_NEXT
-value|_IOWR('Z', 31, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_ERROR_LOG
-value|_IOWR('Z', 32, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_CLEAR
-value|_IOWR('Z', 33, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_PROMOTE
-value|_IOWR('Z', 34, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_DESTROY_SNAPS_NVL
-value|_IOWR('Z', 35, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SNAPSHOT
-value|_IOWR('Z', 36, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_DSOBJ_TO_DSNAME
-value|_IOWR('Z', 37, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_OBJ_TO_PATH
-value|_IOWR('Z', 38, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_SET_PROPS
-value|_IOWR('Z', 39, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_GET_PROPS
-value|_IOWR('Z', 40, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SET_FSACL
-value|_IOWR('Z', 41, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_GET_FSACL
-value|_IOWR('Z', 42, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SHARE
-value|_IOWR('Z', 43, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_INHERIT_PROP
-value|_IOWR('Z', 44, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SMB_ACL
-value|_IOWR('Z', 45, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_USERSPACE_ONE
-value|_IOWR('Z', 46, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_USERSPACE_MANY
-value|_IOWR('Z', 47, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_USERSPACE_UPGRADE
-value|_IOWR('Z', 48, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_HOLD
-value|_IOWR('Z', 49, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_RELEASE
-value|_IOWR('Z', 50, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_GET_HOLDS
-value|_IOWR('Z', 51, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_OBJSET_RECVD_PROPS
-value|_IOWR('Z', 52, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_VDEV_SPLIT
-value|_IOWR('Z', 53, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_NEXT_OBJ
-value|_IOWR('Z', 54, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_DIFF
-value|_IOWR('Z', 55, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_TMP_SNAPSHOT
-value|_IOWR('Z', 56, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_OBJ_TO_STATS
-value|_IOWR('Z', 57, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_JAIL
-value|_IOWR('Z', 58, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_UNJAIL
-value|_IOWR('Z', 59, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_REGUID
-value|_IOWR('Z', 60, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SPACE_WRITTEN
-value|_IOWR('Z', 61, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SPACE_SNAPS
-value|_IOWR('Z', 62, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_SEND_PROGRESS
-value|_IOWR('Z', 63, struct zfs_cmd)
-define|#
-directive|define
-name|ZFS_IOC_POOL_REOPEN
-value|_IOWR('Z', 64, struct zfs_cmd)
 comment|/*  * Internal SPA load state.  Used by FMA diagnosis engine.  */
 typedef|typedef
 enum|enum
@@ -2353,6 +2259,30 @@ define|#
 directive|define
 name|ZPOOL_HIST_INT_STR
 value|"history internal str"
+define|#
+directive|define
+name|ZPOOL_HIST_INT_NAME
+value|"internal_name"
+define|#
+directive|define
+name|ZPOOL_HIST_IOCTL
+value|"ioctl"
+define|#
+directive|define
+name|ZPOOL_HIST_INPUT_NVL
+value|"in_nvl"
+define|#
+directive|define
+name|ZPOOL_HIST_OUTPUT_NVL
+value|"out_nvl"
+define|#
+directive|define
+name|ZPOOL_HIST_DSNAME
+value|"dsname"
+define|#
+directive|define
+name|ZPOOL_HIST_DSID
+value|"dsid"
 comment|/*  * Flags for ZFS_IOC_VDEV_SET_STATE  */
 define|#
 directive|define
@@ -2412,99 +2342,6 @@ define|#
 directive|define
 name|ZFS_EV_VDEV_GUID
 value|"vdev_guid"
-comment|/*  * Note: This is encoded on-disk, so new events must be added to the  * end, and unused events can not be removed.  Be sure to edit  * libzfs_pool.c: hist_event_table[].  */
-typedef|typedef
-enum|enum
-name|history_internal_events
-block|{
-name|LOG_NO_EVENT
-init|=
-literal|0
-block|,
-name|LOG_POOL_CREATE
-block|,
-name|LOG_POOL_VDEV_ADD
-block|,
-name|LOG_POOL_REMOVE
-block|,
-name|LOG_POOL_DESTROY
-block|,
-name|LOG_POOL_EXPORT
-block|,
-name|LOG_POOL_IMPORT
-block|,
-name|LOG_POOL_VDEV_ATTACH
-block|,
-name|LOG_POOL_VDEV_REPLACE
-block|,
-name|LOG_POOL_VDEV_DETACH
-block|,
-name|LOG_POOL_VDEV_ONLINE
-block|,
-name|LOG_POOL_VDEV_OFFLINE
-block|,
-name|LOG_POOL_UPGRADE
-block|,
-name|LOG_POOL_CLEAR
-block|,
-name|LOG_POOL_SCAN
-block|,
-name|LOG_POOL_PROPSET
-block|,
-name|LOG_DS_CREATE
-block|,
-name|LOG_DS_CLONE
-block|,
-name|LOG_DS_DESTROY
-block|,
-name|LOG_DS_DESTROY_BEGIN
-block|,
-name|LOG_DS_INHERIT
-block|,
-name|LOG_DS_PROPSET
-block|,
-name|LOG_DS_QUOTA
-block|,
-name|LOG_DS_PERM_UPDATE
-block|,
-name|LOG_DS_PERM_REMOVE
-block|,
-name|LOG_DS_PERM_WHO_REMOVE
-block|,
-name|LOG_DS_PROMOTE
-block|,
-name|LOG_DS_RECEIVE
-block|,
-name|LOG_DS_RENAME
-block|,
-name|LOG_DS_RESERVATION
-block|,
-name|LOG_DS_REPLAY_INC_SYNC
-block|,
-name|LOG_DS_REPLAY_FULL_SYNC
-block|,
-name|LOG_DS_ROLLBACK
-block|,
-name|LOG_DS_SNAPSHOT
-block|,
-name|LOG_DS_UPGRADE
-block|,
-name|LOG_DS_REFQUOTA
-block|,
-name|LOG_DS_REFRESERV
-block|,
-name|LOG_POOL_SCAN_DONE
-block|,
-name|LOG_DS_USER_HOLD
-block|,
-name|LOG_DS_USER_RELEASE
-block|,
-name|LOG_POOL_SPLIT
-block|,
-name|LOG_END
-block|}
-name|history_internal_events_t
-typedef|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
