@@ -168,7 +168,7 @@ value|100
 end_define
 
 begin_comment
-comment|/* .5 dbM (XXX units?) */
+comment|/* .5 dBm (XXX units?) */
 end_comment
 
 begin_define
