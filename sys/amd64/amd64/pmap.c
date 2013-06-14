@@ -1567,36 +1567,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-literal|1
-operator|<<
-name|PDESHIFT
-operator|==
-sizeof|sizeof
-argument_list|(
-name|pd_entry_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-literal|1
-operator|<<
-name|PTESHIFT
-operator|==
-sizeof|sizeof
-argument_list|(
-name|pt_entry_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Move the kernel virtual free pointer to the next  * 2MB.  This is used to help improve performance  * by using a large (2MB) page for much of the kernel  * (.text, .data, .bss)  */
 end_comment

@@ -647,16 +647,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PTESHIFT
-argument_list|,
-name|PTESHIFT
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|PAGE_SHIFT
 argument_list|,
 name|PAGE_SHIFT
