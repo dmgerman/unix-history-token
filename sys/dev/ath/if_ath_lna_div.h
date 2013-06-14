@@ -88,13 +88,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATH_ANT_DIV_COMB_LNA1_LNA2_DELTA
-value|-3
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATH_ANT_DIV_COMB_LNA1_LNA2_SWITCH_DELTA
 value|-1
 end_define
@@ -199,6 +192,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|scan_start_time
+decl_stmt|;
+name|int
+name|lna1_lna2_delta
 decl_stmt|;
 block|}
 struct|;
