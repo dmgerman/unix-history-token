@@ -1052,6 +1052,9 @@ name|hhh_flags
 operator||=
 name|HHH_ISINVNET
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
 name|KASSERT
 argument_list|(
 name|curvnet
@@ -1082,6 +1085,8 @@ argument_list|,
 name|hhh_vnext
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -1133,6 +1138,9 @@ argument_list|,
 name|hhh_next
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
 if|if
 condition|(
 name|hhook_head_is_virtualised
@@ -1149,6 +1157,8 @@ argument_list|,
 name|hhh_vnext
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|HHH_WLOCK
 argument_list|(
 name|hhh
@@ -1362,6 +1372,9 @@ operator|==
 name|hhook_id
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|VIMAGE
 if|if
 condition|(
 name|hhook_head_is_virtualised
@@ -1396,6 +1409,8 @@ name|curvnet
 condition|)
 continue|continue;
 block|}
+endif|#
+directive|endif
 name|refcount_acquire
 argument_list|(
 operator|&
