@@ -225,6 +225,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|spectral
 operator|->
 name|atd
@@ -461,6 +463,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|spectral
 operator|->
 name|atd
@@ -568,6 +572,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|spectral
 operator|->
@@ -746,6 +752,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|spectral
 operator|->
 name|atd
@@ -854,6 +862,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|spectral
 operator|->
@@ -964,6 +974,8 @@ condition|)
 name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|spectral
 operator|->
