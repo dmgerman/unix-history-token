@@ -202,6 +202,9 @@ name|struct
 name|rmlock
 name|hhh_lock
 decl_stmt|;
+name|uintptr_t
+name|hhh_vid
+decl_stmt|;
 name|int32_t
 name|hhh_id
 decl_stmt|;
@@ -223,6 +226,12 @@ argument_list|(
 argument|hhook_head
 argument_list|)
 name|hhh_next
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|hhook_head
+argument_list|)
+name|hhh_vnext
 expr_stmt|;
 block|}
 struct|;
