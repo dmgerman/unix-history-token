@@ -1048,6 +1048,15 @@ name|ah_divLnaConfSet
 operator|=
 name|ar9300_ant_div_comb_set_config
 expr_stmt|;
+comment|/* Setup HAL configuration defaults */
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ath_hal_ant_ctrl_comm2g_switch_enable
+operator|=
+literal|0x000bbb88
+expr_stmt|;
 block|}
 end_function
 
