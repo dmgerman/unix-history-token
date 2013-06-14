@@ -6453,14 +6453,16 @@ name|BGE_RXMODE_FLOWCTL_ENABLE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|IFM_OPTIONS
 argument_list|(
 name|mii
 operator|->
 name|mii_media_active
+argument_list|)
 operator|&
 name|IFM_FDX
-argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
