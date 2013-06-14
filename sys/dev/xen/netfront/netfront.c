@@ -9300,14 +9300,6 @@ argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
-name|ifmedia_removeall
-argument_list|(
-operator|&
-name|info
-operator|->
-name|sc_media
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|info
@@ -9338,6 +9330,14 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|ifmedia_removeall
+argument_list|(
+operator|&
+name|info
+operator|->
+name|sc_media
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
