@@ -3275,6 +3275,9 @@ name|mii_softc
 modifier|*
 name|miisc
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|UDAV_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -3302,6 +3305,8 @@ argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|mii_mediachg
 argument_list|(
 name|mii
@@ -3309,7 +3314,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
