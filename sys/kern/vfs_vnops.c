@@ -6182,7 +6182,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -6227,6 +6227,7 @@ operator|->
 name|f_offset
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|com
