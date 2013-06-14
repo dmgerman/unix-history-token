@@ -2270,6 +2270,13 @@ name|CPP_N_DFLOAT
 value|0x4000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPP_N_DEFAULT
+value|0x8000
+end_define
+
 begin_comment
 comment|/* Classify a CPP_NUMBER token.  The return value is a combination of    the flags from the above sets.  */
 end_comment
