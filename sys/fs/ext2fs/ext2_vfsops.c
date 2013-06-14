@@ -3953,7 +3953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file system statistics.  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function
@@ -4485,7 +4485,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Force stale file system control information to be flushed. 	 */
+comment|/* 	 * Force stale filesystem control information to be flushed. 	 */
 if|if
 condition|(
 name|waitfor
