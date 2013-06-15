@@ -1885,7 +1885,7 @@ name|VNET_SYSINIT
 argument_list|(
 name|hhook_vnet_init
 argument_list|,
-name|SI_SUB_PROTO_BEGIN
+name|SI_SUB_MBUF
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
@@ -1905,9 +1905,9 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|hhook_vnet_uninit
 argument_list|,
-name|SI_SUB_PROTO_BEGIN
+name|SI_SUB_MBUF
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_ANY
 argument_list|,
 name|hhook_vnet_uninit
 argument_list|,
