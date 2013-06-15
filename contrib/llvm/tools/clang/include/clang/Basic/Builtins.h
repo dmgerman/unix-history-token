@@ -538,6 +538,33 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// \brief Determines whether this builtin is a predefined compiler-rt/libgcc
+comment|/// function, such as "__clear_cache", where we know the signature a
+comment|/// priori.
+name|bool
+name|isPredefinedRuntimeFunction
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|GetRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Attributes
+argument_list|,
+literal|'i'
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// \brief Determines whether this builtin has custom typechecking.
 name|bool
 name|hasCustomTypechecking
