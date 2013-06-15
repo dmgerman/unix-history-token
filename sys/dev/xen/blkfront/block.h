@@ -118,6 +118,12 @@ literal|1
 operator|<<
 literal|9
 block|,
+name|XBDCF_ASYNC_MAPPING
+init|=
+literal|1
+operator|<<
+literal|10
+block|,
 name|XBDCF_INITIALIZER
 init|=
 name|XBDCF_Q_MASK
@@ -272,6 +278,10 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|XBDF_NONE
+init|=
+literal|0
+block|,
 name|XBDF_OPEN
 init|=
 literal|1
@@ -293,12 +303,19 @@ operator|<<
 literal|2
 block|,
 comment|/* Is ready */
-name|XBDF_FROZEN
+name|XBDF_CM_SHORTAGE
 init|=
 literal|1
 operator|<<
 literal|3
-comment|/* Waiting for resources */
+block|,
+comment|/* Free cm resource shortage active. */
+name|XBDF_GNT_SHORTAGE
+init|=
+literal|1
+operator|<<
+literal|4
+comment|/* Grant ref resource shortage active */
 block|}
 name|xbd_flag_t
 typedef|;
@@ -331,6 +348,9 @@ name|xbd_unit
 decl_stmt|;
 name|xbd_flag_t
 name|xbd_flags
+decl_stmt|;
+name|int
+name|xbd_qfrozen_cnt
 decl_stmt|;
 name|int
 name|xbd_vdevice
