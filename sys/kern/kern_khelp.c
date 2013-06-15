@@ -235,8 +235,6 @@ name|inserted
 decl_stmt|;
 name|error
 operator|=
-literal|0
-expr_stmt|;
 name|inserted
 operator|=
 literal|0
@@ -265,15 +263,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* It's only safe to add the hooks after osd_register(). */
-if|if
-condition|(
-name|h
-operator|->
-name|h_nhooks
-operator|>
-literal|0
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -320,6 +309,42 @@ argument_list|,
 name|HHOOK_WAITOK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"%s: \"%s\" khelp module unable to "
+literal|"hook type %d id %d due to error %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|h
+operator|->
+name|h_name
+argument_list|,
+name|h
+operator|->
+name|h_hooks
+index|[
+name|i
+index|]
+operator|.
+name|hook_type
+argument_list|,
+name|h
+operator|->
+name|h_hooks
+index|[
+name|i
+index|]
+operator|.
+name|hook_id
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -359,17 +384,12 @@ name|h_id
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|error
-condition|)
+else|else
 block|{
 name|KHELP_LIST_WLOCK
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Keep list of helpers sorted in descending h_id order. Due to 		 * the way osd_set() works, a sorted list ensures 		 * init_helper_osd() will operate with improved efficiency. 		 */
+comment|/* 		 * Keep list of helpers sorted in descending h_id order. Due to 		 * the way osd_set() works, a sorted list ensures 		 * khelp_init_osd() will operate with improved efficiency. 		 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|tmph
@@ -453,10 +473,6 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|KHELP_LIST_WLOCK
 argument_list|()
 expr_stmt|;
@@ -521,15 +537,6 @@ operator|!
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|h
-operator|->
-name|h_nhooks
-operator|>
-literal|0
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -556,7 +563,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|osd_deregister
 argument_list|(
 name|OSD_KHELP
