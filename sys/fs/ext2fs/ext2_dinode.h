@@ -309,6 +309,52 @@ value|(EXT2_HAS_RO_COMPAT_FEATURE(ip->i_e2fs,	\ 				    EXT2F_ROCOMPAT_EXTRA_ISI
 end_define
 
 begin_comment
+comment|/*  * Constants relative to the data blocks  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_NDIR_BLOCKS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_IND_BLOCK
+value|EXT2_NDIR_BLOCKS
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_DIND_BLOCK
+value|(EXT2_IND_BLOCK + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_TIND_BLOCK
+value|(EXT2_DIND_BLOCK + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_N_BLOCKS
+value|(EXT2_TIND_BLOCK + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_MAXSYMLINKLEN
+value|(EXT2_N_BLOCKS * sizeof(uint32_t))
+end_define
+
+begin_comment
 comment|/*  * Structure of an inode on the disk  */
 end_comment
 

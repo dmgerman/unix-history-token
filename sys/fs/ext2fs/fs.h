@@ -49,6 +49,17 @@ value|512
 end_define
 
 begin_comment
+comment|/*  * A summary of contiguous blocks of various sizes is maintained  * in each cylinder group. Normally this is set by the initial  * value of fs_maxcontig.  *  * XXX:FS_MAXCONTIG is set to 16 to conserve space. Here we set  * EXT2_MAXCONTIG to 32 for better performance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_MAXCONTIG
+value|32
+end_define
+
+begin_comment
 comment|/*  * Grigoriy Orlov<gluk@ptci.ru> has done some extensive work to fine  * tune the layout preferences for directories within a filesystem.  * His algorithm can be tuned by adjusting the following parameters  * which tell the system the average file size and the average number  * of files per directory. These defaults are well selected for typical  * filesystems, but may need to be tuned for odd cases like filesystems  * being used for squid caches or news spools.  * AVFPDIR is the expected number of files per directory. AVGDIRSIZE is   * obtained by multiplying AVFPDIR and AVFILESIZ which is assumed to be   * 16384.  */
 end_comment
 
