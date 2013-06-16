@@ -95,31 +95,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__CLANG_ATOMICS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_Atomic
-parameter_list|(
-name|T
-parameter_list|)
-value|struct { volatile T __val; }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * 7.17.1 Atomic lock-free macros.  */
 end_comment
