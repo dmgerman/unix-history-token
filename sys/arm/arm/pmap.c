@@ -2608,7 +2608,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * Returns a pointer to the L2 bucket associated with the specified pmap  * and VA.  *  * If no L2 bucket exists, perform the necessary allocations to put an L2  * bucket/page table in place.  *  * Note that if a new L2 bucket/page was allocated, the caller *must*  * increment the bucket occupancy counter appropriately *before*   * releasing the pmap's lock to ensure no other thread or cpu deallocates  * the bucket/page in the meantime.  */
+comment|/*  * Returns a pointer to the L2 bucket associated with the specified pmap  * and VA.  *  * If no L2 bucket exists, perform the necessary allocations to put an L2  * bucket/page table in place.  *  * Note that if a new L2 bucket/page was allocated, the caller *must*  * increment the bucket occupancy counter appropriately *before*  * releasing the pmap's lock to ensure no other thread or cpu deallocates  * the bucket/page in the meantime.  */
 end_comment
 
 begin_function
@@ -3384,7 +3384,7 @@ operator|!=
 name|pte_l2_s_cache_mode_pt
 condition|)
 block|{
-comment|/* 			 * Page tables must have the cache-mode set to  			 * Write-Thru. 			 */
+comment|/* 			 * Page tables must have the cache-mode set to 			 * Write-Thru. 			 */
 operator|*
 name|ptep
 operator|=
@@ -5094,7 +5094,7 @@ name|PVF_NC
 operator|)
 condition|)
 block|{
-comment|/*  				 * Entry is not cacheable: 				 * 				 * Don't turn caching on again if this is a  				 * modified emulation. This would be 				 * inconsitent with the settings created by 				 * pmap_fix_cache(). Otherwise, it's safe 				 * to re-enable cacheing. 				 * 				 * There's no need to call pmap_fix_cache() 				 * here: all pages are losing their write 				 * permission. 				 */
+comment|/* 				 * Entry is not cacheable: 				 * 				 * Don't turn caching on again if this is a 				 * modified emulation. This would be 				 * inconsitent with the settings created by 				 * pmap_fix_cache(). Otherwise, it's safe 				 * to re-enable cacheing. 				 * 				 * There's no need to call pmap_fix_cache() 				 * here: all pages are losing their write 				 * permission. 				 */
 if|if
 condition|(
 name|maskbits
@@ -5132,7 +5132,7 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-comment|/*  				 * Entry is writable/cacheable: check if pmap 				 * is current if it is flush it, otherwise it 				 * won't be in the cache 				 */
+comment|/* 				 * Entry is writable/cacheable: check if pmap 				 * is current if it is flush it, otherwise it 				 * won't be in the cache 				 */
 if|if
 condition|(
 name|PV_BEEN_EXECD
@@ -6298,7 +6298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * pmap_modify_pv: Update pv flags  *  * => caller should hold lock on vm_page [so that attrs can be adjusted]  * => caller should NOT adjust pmap's wire_count  * => we return the old flags  *   * Modify a physical-virtual mapping in the pv table  */
+comment|/*  *  * pmap_modify_pv: Update pv flags  *  * => caller should hold lock on vm_page [so that attrs can be adjusted]  * => caller should NOT adjust pmap's wire_count  * => we return the old flags  *  * Modify a physical-virtual mapping in the pv table  */
 end_comment
 
 begin_function
@@ -7060,7 +7060,7 @@ name|PVF_REF
 operator||
 name|PVF_MOD
 expr_stmt|;
-comment|/*  		 * Re-enable write permissions for the page.  No need to call 		 * pmap_fix_cache(), since this is just a 		 * modified-emulation fault, and the PVF_WRITE bit isn't 		 * changing. We've already set the cacheable bits based on 		 * the assumption that we can write to this page. 		 */
+comment|/* 		 * Re-enable write permissions for the page.  No need to call 		 * pmap_fix_cache(), since this is just a 		 * modified-emulation fault, and the PVF_WRITE bit isn't 		 * changing. We've already set the cacheable bits based on 		 * the assumption that we can write to this page. 		 */
 operator|*
 name|ptep
 operator|=
@@ -10616,7 +10616,7 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
-comment|/* kernel direct mappings can be shared, so use a pv_entry 		 * to ensure proper caching. 		 * 		 * The pvzone is used to delay the recording of kernel 		 * mappings until the VM is running. 		 *  		 * This expects the physical memory to have vm_page_array entry. 		 */
+comment|/* kernel direct mappings can be shared, so use a pv_entry 		 * to ensure proper caching. 		 * 		 * The pvzone is used to delay the recording of kernel 		 * mappings until the VM is running. 		 * 		 * This expects the physical memory to have vm_page_array entry. 		 */
 if|if
 condition|(
 name|pvzone
@@ -15153,7 +15153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pmap_zero_page()  *   * Zero a given physical page by mapping it at a page hook point.  * In doing the zero page op, the page we zero is mapped cachable, as with  * StrongARM accesses to non-cached pages are non-burst making writing  * _any_ bulk data very slow.  */
+comment|/*  * pmap_zero_page()  *  * Zero a given physical page by mapping it at a page hook point.  * In doing the zero page op, the page we zero is mapped cachable, as with  * StrongARM accesses to non-cached pages are non-burst making writing  * _any_ bulk data very slow.  */
 end_comment
 
 begin_if
@@ -15836,7 +15836,7 @@ comment|/* ARM_MMU_XSCALE == 1 */
 end_comment
 
 begin_comment
-comment|/*  *	pmap_zero_page zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  */
+comment|/*  *	pmap_zero_page zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  */
 end_comment
 
 begin_function
@@ -15863,7 +15863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_zero_page_area zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  *  *	off and size may not cover an area beyond a single hardware page.  */
+comment|/*  *	pmap_zero_page_area zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  *  *	off and size may not cover an area beyond a single hardware page.  */
 end_comment
 
 begin_function
@@ -15896,7 +15896,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping   *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
+comment|/*  *	pmap_zero_page_idle zeros the specified hardware page by mapping  *	the page into KVM and using bzero to clear its contents.  This  *	is intended to be called from the vm_pagezero process only and  *	outside of Giant.  */
 end_comment
 
 begin_function
@@ -15937,7 +15937,7 @@ end_comment
 
 begin_comment
 unit|if (curthread) 		pm = vmspace_pmap(curproc->p_vmspace); 	else 		pm = pmap_kernel();  	for (npv = pv; npv; npv = TAILQ_NEXT(npv, pv_list)) { 		if (npv->pv_pmap == pmap_kernel() || npv->pv_pmap == pm) { 			flags |= npv->pv_flags;
-comment|/* 			 * The page is mapped non-cacheable in  			 * this map.  No need to flush the cache. 			 */
+comment|/* 			 * The page is mapped non-cacheable in 			 * this map.  No need to flush the cache. 			 */
 end_comment
 
 begin_ifdef

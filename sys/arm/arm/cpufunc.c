@@ -7183,7 +7183,7 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
-comment|/*  	 * enable clockswitching, note that this doesn't read or write to r0, 	 * r0 is just to make it valid asm 	 */
+comment|/* 	 * enable clockswitching, note that this doesn't read or write to r0, 	 * r0 is just to make it valid asm 	 */
 asm|__asm ("mcr 15, 0, r0, c15, c1, 2");
 block|}
 end_function
@@ -8361,7 +8361,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425  	   CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
 end_comment
 
 end_unit

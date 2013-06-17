@@ -275,7 +275,7 @@ return|;
 case|case
 literal|15
 case|:
-comment|/*  		   * On context switch, the PC is not put in the PCB, but 		   * we can retrieve it from the stack. 		   */
+comment|/* 		   * On context switch, the PC is not put in the PCB, but 		   * we can retrieve it from the stack. 		   */
 if|if
 condition|(
 name|kdb_thrctx

@@ -3633,7 +3633,7 @@ operator|-
 name|INSN_SIZE
 operator|)
 expr_stmt|;
-comment|/* 	 * Enable interrupts if they were enabled before the exception. 	 * Since all syscalls *should* come from user mode it will always 	 * be safe to enable them, but check anyway.  	 */
+comment|/* 	 * Enable interrupts if they were enabled before the exception. 	 * Since all syscalls *should* come from user mode it will always 	 * be safe to enable them, but check anyway. 	 */
 if|if
 condition|(
 name|td

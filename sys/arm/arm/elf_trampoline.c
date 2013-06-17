@@ -992,7 +992,7 @@ literal|"mrc p15, 0, %1, c1, c0, 0\n"
 literal|"bic %1, %1, #1\n"
 comment|/* Disable MMU */
 literal|"orr %1, %1, #(4 | 8)\n"
-comment|/* Add DC enable,  						     WBUF enable */
+comment|/* Add DC enable, 						     WBUF enable */
 literal|"orr %1, %1, #0x1000\n"
 comment|/* Add IC enable */
 literal|"orr %1, %1, #(0x800)\n"
@@ -3075,7 +3075,7 @@ function|;
 end_function
 
 begin_comment
-comment|/*  	 * XXX: This is the most stupid workaround I've ever wrote. 	 * For some reason, the KB9202 won't boot the kernel unless 	 * we access an address which is not in the  	 * 0x20000000 - 0x20ffffff range. I hope I'll understand 	 * what's going on later. 	 */
+comment|/* 	 * XXX: This is the most stupid workaround I've ever wrote. 	 * For some reason, the KB9202 won't boot the kernel unless 	 * we access an address which is not in the 	 * 0x20000000 - 0x20ffffff range. I hope I'll understand 	 * what's going on later. 	 */
 end_comment
 
 begin_expr_stmt

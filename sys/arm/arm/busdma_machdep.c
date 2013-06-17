@@ -4430,7 +4430,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/*  		 * force "no valid mappings" on error in callback. 		 */
+comment|/* 		 * force "no valid mappings" on error in callback. 		 */
 call|(
 modifier|*
 name|callback
@@ -4982,7 +4982,7 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/*  		 * force "no valid mappings" on error in callback. 		 */
+comment|/* 		 * force "no valid mappings" on error in callback. 		 */
 call|(
 modifier|*
 name|callback

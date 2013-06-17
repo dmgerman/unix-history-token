@@ -40,7 +40,7 @@ file|<machine/bootconfig.h>
 end_include
 
 begin_comment
-comment|/*   * Function to identify and process different types of boot argument  */
+comment|/*  * Function to identify and process different types of boot argument  */
 end_comment
 
 begin_function

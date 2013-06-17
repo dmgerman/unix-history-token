@@ -640,7 +640,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{        }
+block|{ }
 end_function
 
 begin_comment
@@ -1080,7 +1080,7 @@ expr_stmt|;
 name|sf_buf_alloc_want
 operator|--
 expr_stmt|;
-comment|/* 		 * If we got a signal, don't risk going back to sleep.  		 */
+comment|/* 		 * If we got a signal, don't risk going back to sleep. 		 */
 if|if
 condition|(
 name|error
@@ -1403,7 +1403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back  * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
@@ -2000,7 +2000,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Functions to map and unmap memory non-cached into KVA the kernel won't try   * to allocate. The goal is to provide uncached memory to busdma, to honor  * BUS_DMA_COHERENT.   * We can allocate at most ARM_NOCACHE_KVA_SIZE bytes.   * The allocator is rather dummy, each page is represented by a bit in  * a bitfield, 0 meaning the page is not allocated, 1 meaning it is.  * As soon as it finds enough contiguous pages to satisfy the request,  * it returns the address.  */
+comment|/*  * Functions to map and unmap memory non-cached into KVA the kernel won't try  * to allocate. The goal is to provide uncached memory to busdma, to honor  * BUS_DMA_COHERENT.  * We can allocate at most ARM_NOCACHE_KVA_SIZE bytes.  * The allocator is rather dummy, each page is represented by a bit in  * a bitfield, 0 meaning the page is not allocated, 1 meaning it is.  * As soon as it finds enough contiguous pages to satisfy the request,  * it returns the address.  */
 end_comment
 
 begin_function
@@ -2625,7 +2625,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*  	 * We need to use dump_avail and not phys_avail, since we want to 	 * map the whole memory and not just the memory available to the VM 	 * to be able to do a pa => va association for any address. 	 */
+comment|/* 	 * We need to use dump_avail and not phys_avail, since we want to 	 * map the whole memory and not just the memory available to the VM 	 * to be able to do a pa => va association for any address. 	 */
 for|for
 control|(
 name|i
