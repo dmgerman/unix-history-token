@@ -32834,12 +32834,13 @@ argument_list|,
 argument|links
 argument_list|)
 block|{
-name|uint8_t
+name|struct
+name|scsi_vpd_id_descriptor
 modifier|*
-name|item_addr
+name|idd
 decl_stmt|;
 comment|/* 		 * XXX KDM look for LUN IDs as well? 		 */
-name|item_addr
+name|idd
 operator|=
 name|scsi_get_devid
 argument_list|(
@@ -32856,7 +32857,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|item_addr
+name|idd
 operator|==
 name|NULL
 condition|)
@@ -32865,7 +32866,9 @@ if|if
 condition|(
 name|scsi_8btou64
 argument_list|(
-name|item_addr
+name|idd
+operator|->
+name|identifier
 argument_list|)
 operator|==
 name|sasaddr
