@@ -904,13 +904,6 @@ name|alq
 modifier|*
 name|alq
 decl_stmt|;
-name|EVENTHANDLER_DEREGISTER
-argument_list|(
-name|shutdown_pre_sync
-argument_list|,
-name|alq_eventhandler_tag
-argument_list|)
-expr_stmt|;
 name|ALD_LOCK
 argument_list|()
 expr_stmt|;
@@ -3748,6 +3741,13 @@ literal|1
 expr_stmt|;
 name|ALD_UNLOCK
 argument_list|()
+expr_stmt|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|shutdown_pre_sync
+argument_list|,
+name|alq_eventhandler_tag
+argument_list|)
 expr_stmt|;
 name|ald_shutdown
 argument_list|(
