@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: help.c,v 1.2 2011/06/25 00:27:16 tom Exp $  *  *  help.c -- implements the help dialog  *  *  Copyright 2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: help.c,v 1.3 2012/12/04 02:01:10 tom Exp $  *  *  help.c -- implements the help dialog  *  *  Copyright 2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -39,6 +39,9 @@ name|result
 init|=
 name|DLG_EXIT_ERROR
 decl_stmt|;
+name|DIALOG_VARS
+name|save
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -56,6 +59,42 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+name|dlg_save_vars
+argument_list|(
+operator|&
+name|save
+argument_list|)
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|no_label
+operator|=
+name|NULL
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|ok_label
+operator|=
+name|NULL
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|help_button
+operator|=
+name|FALSE
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|extra_button
+operator|=
+name|FALSE
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|nook
+operator|=
+name|FALSE
+expr_stmt|;
 name|dialog_vars
 operator|.
 name|in_helpfile
@@ -75,11 +114,11 @@ argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
-name|dialog_vars
-operator|.
-name|in_helpfile
-operator|=
-name|FALSE
+name|dlg_restore_vars
+argument_list|(
+operator|&
+name|save
+argument_list|)
 expr_stmt|;
 block|}
 return|return
