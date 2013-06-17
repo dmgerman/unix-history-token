@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|BASE64_h
+name|BASE64_H
 end_define
 
 begin_function_decl
