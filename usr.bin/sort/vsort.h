@@ -20,7 +20,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|_VSORT_H__
+name|__VSORT_H__
 end_define
 
 begin_include
