@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: prgbox.c,v 1.8 2011/10/20 23:42:32 tom Exp $  *  *  prgbox.c -- implements the prg box  *  *  Copyright 2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: prgbox.c,v 1.9 2012/12/02 23:40:30 tom Exp $  *  *  prgbox.c -- implements the prg box  *  *  Copyright 2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -8,6 +8,23 @@ include|#
 directive|include
 file|<dialog.h>
 end_include
+
+begin_function
+specifier|static
+name|void
+name|reapchild
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|sig
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Open a pipe which ties stderr and stdout together.  */
@@ -392,6 +409,22 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|oldreaper
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+init|=
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+function_decl|;
 name|fp
 operator|=
 name|dlg_popen
@@ -434,6 +467,13 @@ expr_stmt|;
 name|pclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|oldreaper
 argument_list|)
 expr_stmt|;
 return|return

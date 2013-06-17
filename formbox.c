@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: formbox.c,v 1.81 2012/07/01 18:13:51 Zoltan.Kelemen Exp $  *  *  formbox.c -- implements the form (i.e, some pairs label/editbox)  *  *  Copyright 2003-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Valery Reznic (valery_reznic@users.sourceforge.net)  */
+comment|/*  *  $Id: formbox.c,v 1.85 2013/03/17 15:03:41 tom Exp $  *  *  formbox.c -- implements the form (i.e, some pairs label/editbox)  *  *  Copyright 2003-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is adapted from source contributed by  *	Valery Reznic (valery_reznic@users.sourceforge.net)  */
 end_comment
 
 begin_include
@@ -1338,6 +1338,11 @@ modifier|*
 name|scrollamt
 parameter_list|)
 block|{
+name|bool
+name|result
+init|=
+name|TRUE
+decl_stmt|;
 name|int
 name|old_choice
 init|=
@@ -1410,32 +1415,36 @@ name|target
 operator|<
 literal|0
 condition|)
-name|target
+block|{
+name|result
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
-name|int
-name|limit
-init|=
-name|form_limit
-argument_list|(
-name|item
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|target
 operator|>
-name|limit
+name|form_limit
+argument_list|(
+name|item
+argument_list|)
 condition|)
-name|target
+block|{
+name|result
 operator|=
-name|limit
+name|FALSE
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|result
+condition|)
+block|{
 for|for
 control|(
 name|n
@@ -1576,7 +1585,8 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|result
+operator|=
 operator|(
 name|old_choice
 operator|!=
@@ -1590,6 +1600,18 @@ operator|!=
 operator|*
 name|scrollamt
 operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|result
+condition|)
+name|beep
+argument_list|()
+expr_stmt|;
+return|return
+name|result
 return|;
 block|}
 end_function
@@ -2138,7 +2160,7 @@ value|DLG_KEYS_DATA( DLGK_FIELD_NEXT, TAB ), \ 	DLG_KEYS_DATA( DLGK_FIELD_PREV, 
 end_define
 
 begin_comment
-comment|/*  * Display a form for fulfill a number of fields  */
+comment|/*  * Display a form for entering a number of fields  */
 end_comment
 
 begin_function
@@ -3036,6 +3058,16 @@ name|current
 argument_list|)
 argument_list|,
 name|first
+argument_list|)
+expr_stmt|;
+name|wsyncup
+argument_list|(
+name|form
+argument_list|)
+expr_stmt|;
+name|wcursyncup
+argument_list|(
+name|form
 argument_list|)
 expr_stmt|;
 name|field_changed
@@ -4661,6 +4693,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|dlg_add_last_key
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|dlg_free_formitems
 argument_list|(

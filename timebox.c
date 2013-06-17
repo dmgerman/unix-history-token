@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: timebox.c,v 1.52 2012/07/02 09:34:04 tom Exp $  *  *  timebox.c -- implements the timebox dialog  *  *  Copyright 2001-2011,2012   Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  * $Id: timebox.c,v 1.54 2013/03/17 15:03:41 tom Exp $  *  *  timebox.c -- implements the timebox dialog  *  *  Copyright 2001-2012,2013   Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -84,25 +84,6 @@ struct_decl|struct
 name|_box
 struct_decl|;
 end_struct_decl
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|BOX_DRAW
-function_decl|)
-parameter_list|(
-name|struct
-name|_box
-modifier|*
-parameter_list|,
-name|struct
-name|tm
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1989,6 +1970,12 @@ argument_list|)
 expr_stmt|;
 name|dlg_add_separator
 argument_list|()
+expr_stmt|;
+name|dlg_add_last_key
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 name|CleanupResult

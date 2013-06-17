@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: progressbox.c,v 1.21 2012/07/03 00:12:52 tom Exp $  *  *  progressbox.c -- implements the progress box  *  *  Copyright 2005	Valery Reznic  *  Copyright 2006-2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License as  *  published by the Free Software Foundation; either version 2.1 of the  *  License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: progressbox.c,v 1.23 2012/12/21 10:00:05 tom Exp $  *  *  progressbox.c -- implements the progress box  *  *  Copyright 2005	Valery Reznic  *  Copyright 2006-2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License as  *  published by the Free Software Foundation; either version 2.1 of the  *  License, or (at your option) any later version.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -93,10 +93,11 @@ name|tmpint
 decl_stmt|,
 name|ch
 decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -148,6 +149,13 @@ condition|)
 break|break;
 if|if
 condition|(
+name|col
+operator|>=
+name|MAX_LEN
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|(
 name|ch
 operator|==
@@ -195,6 +203,7 @@ name|col
 operator|<
 name|MAX_LEN
 condition|)
+block|{
 name|obj
 operator|->
 name|line
@@ -207,6 +216,11 @@ expr_stmt|;
 operator|++
 name|col
 expr_stmt|;
+block|}
+else|else
+block|{
+break|break;
+block|}
 block|}
 block|}
 else|else
@@ -227,13 +241,6 @@ operator|++
 name|col
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|col
-operator|>=
-name|MAX_LEN
-condition|)
-break|break;
 block|}
 name|obj
 operator|->

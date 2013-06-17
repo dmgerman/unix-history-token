@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: mixedgauge.c,v 1.29 2011/10/20 23:35:31 tom Exp $  *  *  mixedgauge.c -- implements the mixedgauge dialog  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is inspired by a patch from Kiran Cherupally  *  (but different interface design).  */
+comment|/*  *  $Id: mixedgauge.c,v 1.30 2012/11/18 16:30:20 tom Exp $  *  *  mixedgauge.c -- implements the mixedgauge dialog  *  *  Copyright 2007-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  This is inspired by a patch from Kiran Cherupally  *  (but different interface design).  */
 end_comment
 
 begin_include
@@ -455,11 +455,6 @@ name|freeMe
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|win
-condition|)
-block|{
 name|bm
 operator|-=
 operator|(
@@ -468,13 +463,6 @@ operator|*
 name|MARGIN
 operator|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|win
-operator|!=
-literal|0
-condition|)
 name|getyx
 argument_list|(
 name|win

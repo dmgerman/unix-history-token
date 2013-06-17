@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: guage.c,v 1.64 2011/10/20 23:34:35 tom Exp $  *  *  guage.c -- implements the gauge dialog  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Marc Ewing, Red Hat Software  */
+comment|/*  *  $Id: guage.c,v 1.65 2012/11/30 10:43:31 tom Exp $  *  *  guage.c -- implements the gauge dialog  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Marc Ewing, Red Hat Software  */
 end_comment
 
 begin_include
@@ -293,6 +293,13 @@ operator|,
 name|buffer
 operator|)
 argument_list|)
+expr_stmt|;
+name|buffer
+index|[
+name|MY_LEN
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|dlg_trim_string
 argument_list|(
@@ -796,6 +803,8 @@ name|char
 name|buf
 index|[
 name|MY_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if

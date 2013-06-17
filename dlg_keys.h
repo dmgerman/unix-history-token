@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dlg_keys.h,v 1.31 2012/07/02 23:57:52 tom Exp $  *  *  dlg_keys.h -- runtime binding support for dialog  *  *  Copyright 2005-2011,2012 Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: dlg_keys.h,v 1.32 2012/12/21 21:54:30 tom Exp $  *  *  dlg_keys.h -- runtime binding support for dialog  *  *  Copyright 2005-2011,2012 Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_ifndef
@@ -248,9 +248,14 @@ define|\
 value|DLG_KEYS_DATA( DLGK_BEGIN,	   KEY_HOME ), \ 	DLG_KEYS_DATA( DLGK_DELETE_ALL,    CHR_KILL ), \ 	DLG_KEYS_DATA( DLGK_DELETE_LEFT,   CHR_BACKSPACE ), \ 	DLG_KEYS_DATA( DLGK_DELETE_LEFT,   KEY_BACKSPACE ), \ 	DLG_KEYS_DATA( DLGK_DELETE_RIGHT,  CHR_DELETE ), \ 	DLG_KEYS_DATA( DLGK_DELETE_RIGHT,  KEY_DC ), \ 	DLG_KEYS_DATA( DLGK_FINAL,	   KEY_END ), \ 	DLG_KEYS_DATA( DLGK_GRID_LEFT,	   KEY_LEFT ), \ 	DLG_KEYS_DATA( DLGK_GRID_RIGHT,	   KEY_RIGHT )
 define|#
 directive|define
+name|SCROLL_FKEY_BINDINGS
+define|\
+value|DLG_KEYS_DATA( DLGK_GRID_DOWN,	KEY_DOWN ), \ 	DLG_KEYS_DATA( DLGK_GRID_UP,	KEY_UP ), \ 	DLG_KEYS_DATA( DLGK_PAGE_FIRST,	KEY_HOME ), \ 	DLG_KEYS_DATA( DLGK_PAGE_LAST,	KEY_END ), \ 	DLG_KEYS_DATA( DLGK_PAGE_NEXT,	KEY_NPAGE ), \ 	DLG_KEYS_DATA( DLGK_PAGE_PREV,	KEY_PPAGE )
+define|#
+directive|define
 name|SCROLLKEY_BINDINGS
 define|\
-value|DLG_KEYS_DATA( DLGK_GRID_DOWN,	'J' ), \ 	DLG_KEYS_DATA( DLGK_GRID_DOWN,	'j' ), \ 	DLG_KEYS_DATA( DLGK_GRID_DOWN,	KEY_DOWN ), \ 	DLG_KEYS_DATA( DLGK_GRID_UP,	'K' ), \ 	DLG_KEYS_DATA( DLGK_GRID_UP,	'k' ), \ 	DLG_KEYS_DATA( DLGK_GRID_UP,	KEY_UP ), \ 	DLG_KEYS_DATA( DLGK_PAGE_FIRST,	'g' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_FIRST,	KEY_HOME ), \ 	DLG_KEYS_DATA( DLGK_PAGE_LAST,	'G' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_LAST,	KEY_END ), \ 	DLG_KEYS_DATA( DLGK_PAGE_NEXT,	'F' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_NEXT,	'f' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_NEXT,	KEY_NPAGE ), \ 	DLG_KEYS_DATA( DLGK_PAGE_PREV,	'B' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_PREV,	'b' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_PREV,	KEY_PPAGE )
+value|SCROLL_FKEY_BINDINGS, \ 	DLG_KEYS_DATA( DLGK_GRID_DOWN,	'J' ), \ 	DLG_KEYS_DATA( DLGK_GRID_DOWN,	'j' ), \ 	DLG_KEYS_DATA( DLGK_GRID_UP,	'K' ), \ 	DLG_KEYS_DATA( DLGK_GRID_UP,	'k' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_FIRST,	'g' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_LAST,	'G' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_NEXT,	'F' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_NEXT,	'f' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_PREV,	'B' ), \ 	DLG_KEYS_DATA( DLGK_PAGE_PREV,	'b' )
 define|#
 directive|define
 name|TRAVERSE_BINDINGS

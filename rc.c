@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: rc.c,v 1.49 2011/10/15 00:56:44 tom Exp $  *  *  rc.c -- routines for processing the configuration file  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: rc.c,v 1.51 2012/11/30 21:32:39 tom Exp $  *  *  rc.c -- routines for processing the configuration file  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -767,6 +767,9 @@ decl_stmt|,
 modifier|*
 name|part
 decl_stmt|;
+name|size_t
+name|have
+decl_stmt|;
 if|if
 condition|(
 name|str
@@ -839,19 +842,49 @@ return|;
 comment|/* invalid representation */
 block|}
 comment|/* remove the parenthesis */
-name|strcpy
+name|have
+operator|=
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have
+operator|>
+name|MAX_LEN
+condition|)
+block|{
+name|have
+operator|=
+name|MAX_LEN
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|have
+operator|-=
+literal|2
+expr_stmt|;
+block|}
+name|memcpy
 argument_list|(
 name|tempstr
 argument_list|,
 name|str
 operator|+
 literal|1
+argument_list|,
+name|have
 argument_list|)
 expr_stmt|;
-name|lastch
-argument_list|(
 name|tempstr
-argument_list|)
+index|[
+name|have
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;

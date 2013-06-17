@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dialog.h,v 1.245 2012/07/01 18:44:03 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: dialog.h,v 1.260 2013/03/17 15:03:41 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_ifndef
@@ -1212,6 +1212,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_WSYNCUP
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|wsyncup
+end_undef
+
+begin_define
+define|#
+directive|define
+name|wsyncup
+parameter_list|(
+name|win
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_WCURSYNCUP
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|wcursyncup
+end_undef
+
+begin_define
+define|#
+directive|define
+name|wcursyncup
+parameter_list|(
+name|win
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1737,6 +1805,13 @@ parameter_list|)
 value|dlg_mouse_setbase(x,y)
 define|#
 directive|define
+name|mouse_setcode
+parameter_list|(
+name|c
+parameter_list|)
+value|dlg_mouse_setcode(c)
+define|#
+directive|define
 name|mouse_wgetch
 parameter_list|(
 name|w
@@ -2193,6 +2268,10 @@ name|bool
 name|no_mouse
 decl_stmt|;
 comment|/* option "--no-mouse" */
+name|int
+name|visit_cols
+decl_stmt|;
+comment|/* option "--visit-items" */
 block|}
 name|DIALOG_STATE
 typedef|;
@@ -2456,6 +2535,20 @@ name|int
 name|default_button
 decl_stmt|;
 comment|/* option "--default-button" (exit code) */
+comment|/* 1.1-20121218 */
+name|bool
+name|no_tags
+decl_stmt|;
+comment|/* option "--no-tags" */
+name|bool
+name|no_items
+decl_stmt|;
+comment|/* option "--no-items" */
+comment|/* 1.2-20130315 */
+name|bool
+name|last_key
+decl_stmt|;
+comment|/* option "--last-key" */
 block|}
 name|DIALOG_VARS
 typedef|;
@@ -2466,26 +2559,40 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(dialog_vars.item_help&& (s) != 0)
+comment|/*  * Some settings change the number of data items per row which dialog reads  * from a script.  */
+define|#
+directive|define
+name|DLG__NO_ITEMS
+value|(dialog_vars.no_items ? 0 : 1)
+define|#
+directive|define
+name|DLG__ITEM_HELP
+value|(dialog_vars.item_help ? 1 : 0)
+comment|/*  * These are the total number of data items per row used for each widget type.  */
 define|#
 directive|define
 name|CHECKBOX_TAGS
-value|(dialog_vars.item_help ? 4 : 3)
+value|(2 + DLG__ITEM_HELP + DLG__NO_ITEMS)
 define|#
 directive|define
 name|MENUBOX_TAGS
-value|(dialog_vars.item_help ? 3 : 2)
+value|(1 + DLG__ITEM_HELP + DLG__NO_ITEMS)
 define|#
 directive|define
 name|FORMBOX_TAGS
-value|(dialog_vars.item_help ? 9 : 8)
+value|(8 + DLG__ITEM_HELP)
 define|#
 directive|define
 name|MIXEDFORM_TAGS
-value|(FORMBOX_TAGS + 1)
+value|(1 + FORMBOX_TAGS)
 define|#
 directive|define
 name|MIXEDGAUGE_TAGS
 value|2
+define|#
+directive|define
+name|TREEVIEW_TAGS
+value|(3 + DLG__ITEM_HELP + DLG__NO_ITEMS)
 specifier|extern
 name|DIALOG_VARS
 name|dialog_vars
@@ -2599,6 +2706,41 @@ name|void
 parameter_list|)
 function_decl|;
 comment|/* widgets, each in separate files */
+specifier|extern
+name|int
+name|dialog_buildlist
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*cprompt*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*list_height*/
+parameter_list|,
+name|int
+comment|/*item_no*/
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+comment|/*items*/
+parameter_list|,
+name|int
+comment|/*order_mode*/
+parameter_list|)
+function_decl|;
 specifier|extern
 name|int
 name|dialog_calendar
@@ -3030,6 +3172,36 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|dialog_rangebox
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*file*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*min_value*/
+parameter_list|,
+name|int
+comment|/*max_value*/
+parameter_list|,
+name|int
+comment|/*default_value*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|dialog_tailbox
 parameter_list|(
 specifier|const
@@ -3101,6 +3273,41 @@ comment|/*minute*/
 parameter_list|,
 name|int
 comment|/*second*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dialog_treeview
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*subtitle*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*list_height*/
+parameter_list|,
+name|int
+comment|/*item_no*/
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+comment|/*items*/
+parameter_list|,
+name|int
+comment|/*flag*/
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -3524,6 +3731,50 @@ comment|/*attr*/
 parameter_list|,
 name|chtype
 comment|/*borderattr*/
+parameter_list|)
+function_decl|;
+comment|/* buildlist.c */
+specifier|extern
+name|int
+name|dlg_buildlist
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*cprompt*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*list_height*/
+parameter_list|,
+name|int
+comment|/*item_no*/
+parameter_list|,
+name|DIALOG_LISTITEM
+modifier|*
+comment|/*items*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*states*/
+parameter_list|,
+name|int
+comment|/*order_mode*/
+parameter_list|,
+name|int
+modifier|*
+comment|/*current_item*/
 parameter_list|)
 function_decl|;
 comment|/* buttons.c */
@@ -4123,6 +4374,54 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/* treeview.c */
+specifier|extern
+name|int
+name|dlg_treeview
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/*title*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*cprompt*/
+parameter_list|,
+name|int
+comment|/*height*/
+parameter_list|,
+name|int
+comment|/*width*/
+parameter_list|,
+name|int
+comment|/*list_height*/
+parameter_list|,
+name|int
+comment|/*item_no*/
+parameter_list|,
+name|DIALOG_LISTITEM
+modifier|*
+comment|/*items*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*states*/
+parameter_list|,
+name|int
+modifier|*
+comment|/*depths*/
+parameter_list|,
+name|int
+comment|/*flag*/
+parameter_list|,
+name|int
+modifier|*
+comment|/*current_item*/
+parameter_list|)
+function_decl|;
 comment|/* ui_getc.c */
 specifier|extern
 name|int
@@ -4157,6 +4456,14 @@ name|int
 name|dlg_last_getc
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dlg_add_last_key
+parameter_list|(
+name|int
+comment|/*mode*/
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -4821,6 +5128,29 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+name|dlg_print_listitem
+parameter_list|(
+name|WINDOW
+modifier|*
+comment|/*win*/
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/*text*/
+parameter_list|,
+name|int
+comment|/*climit*/
+parameter_list|,
+name|bool
+comment|/*first*/
+parameter_list|,
+name|int
+comment|/*selected*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|dlg_print_size
 parameter_list|(
 name|int
@@ -5351,6 +5681,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|dlg_mouse_setcode
+parameter_list|(
+name|int
+comment|/*code*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -5452,6 +5793,19 @@ parameter_list|(
 name|x
 parameter_list|,
 name|y
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*nothing*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dlg_mouse_setcode
+parameter_list|(
+name|c
 parameter_list|)
 end_define
 
