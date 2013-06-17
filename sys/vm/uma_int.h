@@ -706,7 +706,20 @@ comment|/* Initializer for each item */
 name|uma_fini
 name|uz_fini
 decl_stmt|;
-comment|/* Discards memory */
+comment|/* Finalizer for each item. */
+name|uma_import
+name|uz_import
+decl_stmt|;
+comment|/* Import new memory to cache. */
+name|uma_release
+name|uz_release
+decl_stmt|;
+comment|/* Release memory from cache. */
+name|void
+modifier|*
+name|uz_arg
+decl_stmt|;
+comment|/* Import/release argument. */
 name|uint32_t
 name|uz_flags
 decl_stmt|;
@@ -715,19 +728,22 @@ name|uint32_t
 name|uz_size
 decl_stmt|;
 comment|/* Size inherited from kegs */
-name|uint64_t
+specifier|volatile
+name|u_long
 name|uz_allocs
 name|UMA_ALIGN
 decl_stmt|;
 comment|/* Total number of allocations */
-name|uint64_t
-name|uz_frees
-decl_stmt|;
-comment|/* Total number of frees */
-name|uint64_t
+specifier|volatile
+name|u_long
 name|uz_fails
 decl_stmt|;
 comment|/* Total number of alloc failures */
+specifier|volatile
+name|u_long
+name|uz_frees
+decl_stmt|;
+comment|/* Total number of frees */
 name|uint64_t
 name|uz_sleeps
 decl_stmt|;
@@ -852,6 +868,32 @@ directive|define
 name|UMA_ZFLAG_INHERIT
 value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|uma_keg_t
+name|zone_first_keg
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+return|return
+operator|(
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|zone
+operator|->
+name|uz_kegs
+argument_list|)
+operator|->
+name|kl_keg
+operator|)
+return|;
+block|}
+end_function
 
 begin_undef
 undef|#
