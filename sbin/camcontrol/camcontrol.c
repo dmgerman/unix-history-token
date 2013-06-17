@@ -8859,7 +8859,7 @@ argument_list|,
 name|retry_count
 argument_list|,
 comment|/*flags*/
-name|CAM_DIR_IN
+name|CAM_DIR_NONE
 argument_list|,
 comment|/*protocol*/
 name|protocol
@@ -9005,7 +9005,7 @@ argument_list|,
 name|retry_count
 argument_list|,
 comment|/*flags*/
-name|CAM_DIR_OUT
+name|CAM_DIR_NONE
 argument_list|,
 comment|/*protocol*/
 name|protocol
@@ -9260,7 +9260,7 @@ argument_list|,
 name|retry_count
 argument_list|,
 comment|/*flags*/
-name|CAM_DIR_OUT
+name|CAM_DIR_NONE
 argument_list|,
 comment|/*protocol*/
 name|protocol
@@ -9515,7 +9515,7 @@ argument_list|,
 name|retry_count
 argument_list|,
 comment|/*flags*/
-name|CAM_DIR_OUT
+name|CAM_DIR_NONE
 argument_list|,
 comment|/*protocol*/
 name|protocol
