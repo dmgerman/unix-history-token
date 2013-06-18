@@ -464,7 +464,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* For command timout */
+comment|/* For command timeout */
 name|TW_UINT32
 name|watchdog_index
 decl_stmt|;

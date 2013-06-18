@@ -1153,7 +1153,7 @@ name|sc_ccf
 operator|=
 literal|2
 expr_stmt|;
-comment|/* 	 * The recommended timeout is 250ms.  This register is loaded 	 * with a value calculated as follows, from the docs: 	 * 	 *		(timout period) x (CLK frequency) 	 *	reg = ------------------------------------- 	 *		 8192 x (Clock Conversion Factor) 	 * 	 * Since CCF has a linear relation to CLK, this generally computes 	 * to the constant of 153. 	 */
+comment|/* 	 * The recommended timeout is 250ms.  This register is loaded 	 * with a value calculated as follows, from the docs: 	 * 	 *		(timeout period) x (CLK frequency) 	 *	reg = ------------------------------------- 	 *		 8192 x (Clock Conversion Factor) 	 * 	 * Since CCF has a linear relation to CLK, this generally computes 	 * to the constant of 153. 	 */
 name|sc
 operator|->
 name|sc_timeout
