@@ -545,6 +545,17 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|pp
 operator|->
