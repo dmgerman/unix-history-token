@@ -32599,6 +32599,8 @@ operator|->
 name|hba_misc
 operator|=
 name|PIM_NOBUSRESET
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 comment|/* 			 * Because our loop ID can shift from time to time, 			 * make our initiator ID out of range of our bus. 			 */
 name|cpi
@@ -32764,7 +32766,7 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->
