@@ -441,7 +441,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_paddr_t
+name|void
+modifier|*
 name|ia64_physmem_alloc
 parameter_list|(
 name|vm_size_t
