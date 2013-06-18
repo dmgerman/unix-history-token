@@ -202,6 +202,17 @@ begin_comment
 comment|/* bus_dmamap_load() failed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TW_OSLI_REQ_FLAGS_CCB
+value|(1<<8)
+end_define
+
+begin_comment
+comment|/* req is ccb. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

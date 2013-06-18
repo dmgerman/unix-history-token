@@ -4011,10 +4011,6 @@ name|mapinfo
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|need_unmap
-init|=
-literal|0
 decl_stmt|;
 name|softc
 operator|=
@@ -4022,33 +4018,6 @@ name|periph
 operator|->
 name|softc
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_DIR_MASK
-operator|)
-operator|!=
-name|CAM_DIR_NONE
-operator|)
-operator|&&
-operator|(
-name|ccb
-operator|->
-name|csio
-operator|.
-name|data_ptr
-operator|!=
-name|NULL
-operator|)
-condition|)
-block|{
 name|bzero
 argument_list|(
 operator|&
@@ -4060,7 +4029,7 @@ name|mapinfo
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * cam_periph_mapmem calls into proc and vm functions that can 		 * sleep as well as trigger I/O, so we can't hold the lock. 		 * Dropping it here is reasonably safe. 		 */
+comment|/* 	 * cam_periph_mapmem calls into proc and vm functions that can 	 * sleep as well as trigger I/O, so we can't hold the lock. 	 * Dropping it here is reasonably safe. 	 * The only CCB opcode that is possible here is XPT_SCSI_IO, no 	 * need for additional checks. 	 */
 name|cam_periph_unlock
 argument_list|(
 name|periph
@@ -4090,11 +4059,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|need_unmap
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|error
 operator|=
 name|cam_periph_runccb
@@ -4112,10 +4076,6 @@ operator|->
 name|device_stats
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|need_unmap
-condition|)
 name|cam_periph_unmapmem
 argument_list|(
 name|ccb

@@ -2675,34 +2675,6 @@ goto|goto
 name|action_invalid
 goto|;
 block|}
-if|if
-condition|(
-operator|(
-name|ccb_h
-operator|->
-name|flags
-operator|&
-name|CAM_SCATTER_VALID
-operator|)
-condition|)
-block|{
-comment|/* scatter-gather not supported */
-name|xpt_print_path
-argument_list|(
-name|ccb_h
-operator|->
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ATAPI/CAM does not support scatter-gather yet!\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|action_invalid
-goto|;
-block|}
 switch|switch
 condition|(
 name|ccb_h

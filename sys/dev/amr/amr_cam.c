@@ -1008,28 +1008,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|ccbh
 operator|->
 name|flags
 operator|&
-name|CAM_DATA_PHYS
+name|CAM_DATA_MASK
+operator|)
+operator|!=
+name|CAM_DATA_VADDR
 condition|)
 comment|/* we can't map it */
-name|ccbh
-operator|->
-name|status
-operator|=
-name|CAM_REQ_INVALID
-expr_stmt|;
-if|if
-condition|(
-name|ccbh
-operator|->
-name|flags
-operator|&
-name|CAM_SCATTER_VALID
-condition|)
-comment|/* we want to do the s/g setup */
 name|ccbh
 operator|->
 name|status

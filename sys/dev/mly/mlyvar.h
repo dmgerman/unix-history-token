@@ -335,6 +335,11 @@ directive|define
 name|MLY_CMD_DATAOUT
 value|(1<<5)
 comment|/* data moves system->controller */
+define|#
+directive|define
+name|MLY_CMD_CCB
+value|(1<<6)
+comment|/* data is ccb. */
 name|u_int16_t
 name|mc_status
 decl_stmt|;

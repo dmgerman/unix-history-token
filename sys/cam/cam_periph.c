@@ -3008,7 +3008,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map user virtual pointers into kernel virtual address space, so we can  * access the memory.  This won't work on physical pointers, for now it's  * up to the caller to check for that.  (XXX KDM -- should we do that here  * instead?)  This also only works for up to MAXPHYS memory.  Since we use  * buffers to map stuff in and out, we're limited to the buffer size.  */
+comment|/*  * Map user virtual pointers into kernel virtual address space, so we can  * access the memory.  This is now a generic function that centralizes most  * of the sanity checks on the data flags, if any.  * This also only works for up to MAXPHYS memory.  Since we use  * buffers to map stuff in and out, we're limited to the buffer size.  */
 end_comment
 
 begin_function
@@ -3259,6 +3259,25 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_DATA_MASK
+operator|)
+operator|!=
+name|CAM_DATA_VADDR
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|data_ptrs
 index|[
 literal|0
@@ -3320,6 +3339,25 @@ condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+operator|&
+name|CAM_DATA_MASK
+operator|)
+operator|!=
+name|CAM_DATA_VADDR
+condition|)
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 name|data_ptrs
@@ -3636,8 +3674,7 @@ name|BIO_READ
 expr_stmt|;
 block|}
 block|}
-comment|/* this keeps the current process from getting swapped */
-comment|/* 	 * XXX KDM should I use P_NOSWAP instead? 	 */
+comment|/* 	 * This keeps the the kernel stack of current thread from getting 	 * swapped.  In low-memory situations where the kernel stack might 	 * otherwise get swapped out, this holds it and allows the thread 	 * to make progress and release the kernel mapped pages sooner. 	 * 	 * XXX KDM should I use P_NOSWAP instead? 	 */
 name|PHOLD
 argument_list|(
 name|curproc
@@ -3923,12 +3960,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|/* allow ourselves to be swapped once again */
-name|PRELE
-argument_list|(
-name|curproc
-argument_list|)
-expr_stmt|;
+comment|/* nothing to free and the process wasn't held. */
 return|return;
 block|}
 switch|switch

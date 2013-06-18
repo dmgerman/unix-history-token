@@ -266,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|CFCS_BAD_CCB_FLAGS
-value|(CAM_DATA_PHYS | CAM_SG_LIST_PHYS | \ 	CAM_MSG_BUF_PHYS | CAM_SNS_BUF_PHYS | CAM_CDB_PHYS | CAM_SENSE_PTR |\ 	CAM_SENSE_PHYS)
+value|(CAM_DATA_ISPHYS | CAM_MSG_BUF_PHYS |	\ 	CAM_SNS_BUF_PHYS | CAM_CDB_PHYS | CAM_SENSE_PTR |		\ 	CAM_SENSE_PHYS)
 end_define
 
 begin_function_decl
@@ -1759,38 +1759,22 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Simplify things on both sides by putting single buffers into a 	 * single entry S/G list. 	 */
-if|if
+switch|switch
 condition|(
+operator|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_MASK
+operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|&
-name|CAM_SG_LIST_PHYS
-condition|)
-block|{
-comment|/* We should filter this out on entry */
-name|panic
-argument_list|(
-literal|"%s: physical S/G list, should not get here"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-else|else
+case|case
+name|CAM_DATA_SG
+case|:
 block|{
 name|int
 name|len_seen
@@ -1879,10 +1863,11 @@ operator|.
 name|ds_len
 expr_stmt|;
 block|}
+break|break;
 block|}
-block|}
-else|else
-block|{
+case|case
+name|CAM_DATA_VADDR
+case|:
 name|cam_sglist
 operator|=
 operator|&
@@ -1932,6 +1917,19 @@ operator|->
 name|scsiio
 operator|.
 name|kern_rel_offset
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"Invalid CAM flags %#x"
+argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|flags
+argument_list|)
 expr_stmt|;
 block|}
 if|if

@@ -5334,17 +5334,15 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|ccb_h
 operator|->
 name|flags
 operator|&
-operator|(
-name|CAM_CDB_PHYS
-operator||
-name|CAM_SCATTER_VALID
-operator||
-name|CAM_DATA_PHYS
+name|CAM_DATA_MASK
 operator|)
+operator|!=
+name|CAM_DATA_VADDR
 condition|)
 block|{
 comment|/* don't support these */

@@ -734,6 +734,10 @@ define|#
 directive|define
 name|MPS_CM_FLAGS_ERROR_MASK
 value|MPS_CM_FLAGS_CHAIN_FAILED
+define|#
+directive|define
+name|MPS_CM_FLAGS_USE_CCB
+value|(1<< 10)
 name|u_int
 name|cm_state
 decl_stmt|;
