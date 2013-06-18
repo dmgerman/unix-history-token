@@ -337,10 +337,6 @@ name|uk_full_slab
 expr_stmt|;
 comment|/* full slabs */
 name|uint32_t
-name|uk_recurse
-decl_stmt|;
-comment|/* Allocation recursion count */
-name|uint32_t
 name|uk_align
 decl_stmt|;
 comment|/* Alignment mask */
@@ -663,17 +659,9 @@ argument_list|(
 argument_list|,
 argument|uma_bucket
 argument_list|)
-name|uz_full_bucket
+name|uz_buckets
 expr_stmt|;
 comment|/* full buckets */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|uma_bucket
-argument_list|)
-name|uz_free_bucket
-expr_stmt|;
-comment|/* Buckets for frees */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -749,10 +737,6 @@ name|uz_sleeps
 decl_stmt|;
 comment|/* Total number of alloc sleeps */
 name|uint16_t
-name|uz_fills
-decl_stmt|;
-comment|/* Outstanding bucket fills */
-name|uint16_t
 name|uz_count
 decl_stmt|;
 comment|/* Highest amount of items in bucket */
@@ -783,17 +767,6 @@ end_struct
 
 begin_comment
 comment|/*  * These flags must not overlap with the UMA_ZONE flags specified in uma.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_ZFLAG_BUCKET
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Bucket zone. */
 end_comment
 
 begin_define
@@ -866,7 +839,7 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_INHERIT
-value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
+value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY)
 end_define
 
 begin_function
@@ -1008,6 +981,16 @@ parameter_list|(
 name|z
 parameter_list|)
 value|mtx_lock((z)->uz_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_TRYLOCK
+parameter_list|(
+name|z
+parameter_list|)
+value|mtx_trylock((z)->uz_lock)
 end_define
 
 begin_define
