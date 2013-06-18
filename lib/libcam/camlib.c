@@ -2624,7 +2624,7 @@ name|ccb
 operator|.
 name|cts
 operator|.
-name|protocol
+name|transport
 operator|==
 name|XPORT_SPI
 condition|)
