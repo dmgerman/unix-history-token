@@ -1117,6 +1117,16 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|newpp
+operator|->
+name|flags
+operator||=
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_ACCEPT_UNMAPPED
+expr_stmt|;
 name|g_error_provider
 argument_list|(
 name|newpp
