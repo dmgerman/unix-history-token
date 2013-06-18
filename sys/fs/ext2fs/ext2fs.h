@@ -26,28 +26,6 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * Maximal count of links to a file  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_LINK_MAX
-value|32000
-end_define
-
-begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXMNTLEN
-value|512
-end_define
-
-begin_comment
 comment|/*  * Super block for an ext2fs file system.  */
 end_comment
 
@@ -328,6 +306,17 @@ comment|/* Padding to the end of the block */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXMNTLEN
+value|512
+end_define
 
 begin_comment
 comment|/*  * In-Memory Superblock  */

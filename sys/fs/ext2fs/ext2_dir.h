@@ -89,6 +89,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Maximal count of links to a file  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_LINK_MAX
+value|32000
+end_define
+
+begin_comment
 comment|/*  * Ext2 directory file types.  Only the low 3 bits are used.  The  * other bits are reserved for now.  */
 end_comment
 
