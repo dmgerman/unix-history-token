@@ -1709,6 +1709,14 @@ name|sc
 operator|->
 name|ad_disk
 operator|->
+name|d_flags
+operator|=
+name|DISKFLAG_UNMAPPED_BIO
+expr_stmt|;
+name|sc
+operator|->
+name|ad_disk
+operator|->
 name|d_name
 operator|=
 literal|"aacd"
