@@ -9246,6 +9246,12 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|unmapped_buf_allowed
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|pmap_copy_pages

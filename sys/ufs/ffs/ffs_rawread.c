@@ -1167,6 +1167,8 @@ condition|(
 name|vmapbuf
 argument_list|(
 name|bp
+argument_list|,
+literal|1
 argument_list|)
 operator|<
 literal|0
@@ -1276,6 +1278,8 @@ condition|(
 name|vmapbuf
 argument_list|(
 name|bp
+argument_list|,
+literal|1
 argument_list|)
 operator|<
 literal|0

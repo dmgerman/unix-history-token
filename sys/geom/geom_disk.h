@@ -316,6 +316,13 @@ name|DISKFLAG_LACKS_GONE
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|DISKFLAG_UNMAPPED_BIO
+value|0x20
+end_define
+
 begin_function_decl
 name|struct
 name|disk

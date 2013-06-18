@@ -5559,6 +5559,8 @@ operator||
 name|MNTK_EXTENDED_SHARED
 operator||
 name|MNTK_NO_IOPF
+operator||
+name|MNTK_UNMAPPED_BUFS
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -10295,6 +10297,23 @@ goto|goto
 name|normal_write
 goto|;
 comment|/* 		 * set it to be identical to the old block.  We have to 		 * set b_lblkno and BKGRDMARKER before calling bgetvp() 		 * to avoid confusing the splay tree and gbincore(). 		 */
+name|KASSERT
+argument_list|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_UNMAPPED
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Unmapped cg"
+operator|)
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|newbp

@@ -20014,6 +20014,8 @@ operator|->
 name|hba_misc
 operator|=
 name|PIM_SEQSCAN
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->

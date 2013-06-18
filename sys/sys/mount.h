@@ -1564,6 +1564,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MNTK_UNMAPPED_BUFS
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define

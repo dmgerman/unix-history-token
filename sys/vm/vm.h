@@ -321,6 +321,12 @@ decl_stmt|;
 name|vm_offset_t
 name|pager_eva
 decl_stmt|;
+name|vm_offset_t
+name|bio_transient_sva
+decl_stmt|;
+name|vm_offset_t
+name|bio_transient_eva
+decl_stmt|;
 block|}
 struct|;
 end_struct

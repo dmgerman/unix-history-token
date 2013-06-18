@@ -835,6 +835,10 @@ define|#
 directive|define
 name|G_PF_ORPHAN
 value|0x4
+define|#
+directive|define
+name|G_PF_ACCEPT_UNMAPPED
+value|0x8
 comment|/* Two fields for the implementing class to use */
 name|void
 modifier|*

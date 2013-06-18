@@ -1095,6 +1095,8 @@ name|reclaimed
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|gbflags
 decl_stmt|;
 name|ufs2_daddr_t
 name|bno
@@ -1138,6 +1140,20 @@ operator|=
 name|ip
 operator|->
 name|i_ump
+expr_stmt|;
+name|gbflags
+operator|=
+operator|(
+name|flags
+operator|&
+name|BA_UNMAPPED
+operator|)
+operator|!=
+literal|0
+condition|?
+name|GB_UNMAPPED
+else|:
+literal|0
 expr_stmt|;
 name|mtx_assert
 argument_list|(
@@ -1344,7 +1360,7 @@ expr_stmt|;
 comment|/* 	 * Allocate the extra space in the buffer. 	 */
 name|error
 operator|=
-name|bread
+name|bread_gb
 argument_list|(
 name|vp
 argument_list|,
@@ -1353,6 +1369,8 @@ argument_list|,
 name|osize
 argument_list|,
 name|NOCRED
+argument_list|,
+name|gbflags
 argument_list|,
 operator|&
 name|bp
@@ -1559,12 +1577,10 @@ name|b_flags
 operator||=
 name|B_DONE
 expr_stmt|;
-name|bzero
+name|vfs_bio_bzero_buf
 argument_list|(
 name|bp
-operator|->
-name|b_data
-operator|+
+argument_list|,
 name|osize
 argument_list|,
 name|nsize
@@ -1906,12 +1922,10 @@ name|b_flags
 operator||=
 name|B_DONE
 expr_stmt|;
-name|bzero
+name|vfs_bio_bzero_buf
 argument_list|(
 name|bp
-operator|->
-name|b_data
-operator|+
+argument_list|,
 name|osize
 argument_list|,
 name|nsize

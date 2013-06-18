@@ -3116,6 +3116,22 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Allow user to override unmapped_buf_allowed for testing. 	 * XXXKIB Only direct map implementation was tested. 	 */
+if|if
+condition|(
+operator|!
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vfs.unmapped_buf_allowed"
+argument_list|,
+operator|&
+name|unmapped_buf_allowed
+argument_list|)
+condition|)
+name|unmapped_buf_allowed
+operator|=
+name|hw_direct_map
+expr_stmt|;
 block|}
 end_function
 
