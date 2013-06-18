@@ -2250,6 +2250,10 @@ name|ATA_R_NEEDRESULT
 value|0x00002000
 define|#
 directive|define
+name|ATA_R_DATA_IN_CCB
+value|0x00004000
+define|#
+directive|define
 name|ATA_R_ATAPI16
 value|0x00010000
 define|#

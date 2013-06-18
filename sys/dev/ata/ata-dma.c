@@ -1807,7 +1807,9 @@ if|if
 condition|(
 name|request
 operator|->
-name|ccb
+name|flags
+operator|&
+name|ATA_R_DATA_IN_CCB
 condition|)
 name|error
 operator|=
