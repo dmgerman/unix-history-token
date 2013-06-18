@@ -575,6 +575,39 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Like bus_dmamap_load but for bios.  */
+end_comment
+
+begin_function_decl
+name|int
+name|bus_dmamap_load_bio
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bio
+parameter_list|,
+name|bus_dmamap_callback_t
+modifier|*
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|callback_arg
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Loads any memory descriptor.  */
 end_comment
 
