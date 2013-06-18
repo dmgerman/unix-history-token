@@ -340,26 +340,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ia64_btop
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)>> PAGE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ia64_ptob
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)<< PAGE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|pgtok
 parameter_list|(
 name|x
