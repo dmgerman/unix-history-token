@@ -92,12 +92,12 @@ comment|/** Version tag: a string describing the version.  *  * This tag remains
 define|#
 directive|define
 name|SVN_VER_TAG
-value|" (Release Candidate 3)"
+value|" (r1490375)"
 comment|/** Number tag: a string describing the version.  *  * This tag is used to generate a version number string to identify  * the client and server in HTTP requests, for example. It must not  * contain any spaces. This value remains "-dev" in the repository.  *  * When rolling a tarball, we automatically replace this text with ""  * for final releases; in prereleases, it becomes "-alpha1, "-beta1",  * etc., as appropriate.  *  * Always change this at the same time as SVN_VER_TAG.  */
 define|#
 directive|define
 name|SVN_VER_NUMTAG
-value|"-rc3"
+value|""
 comment|/** Revision number: The repository revision number of this release.  *  * This constant is used to generate the build number part of the Windows  * file version. Its value remains 0 in the repository.  *  * When rolling a tarball, we automatically replace it with what we  * guess to be the correct revision number.  */
 define|#
 directive|define
