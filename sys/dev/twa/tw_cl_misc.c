@@ -1935,6 +1935,8 @@ name|tw_osl_dbg_printf
 argument_list|(
 name|ctlr_handle
 argument_list|,
+literal|"%s"
+argument_list|,
 name|print_str
 argument_list|)
 expr_stmt|;
