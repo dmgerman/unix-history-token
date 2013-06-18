@@ -1204,7 +1204,7 @@ argument_list|,
 literal|"======="
 argument_list|,
 comment|/* separator */
-name|svn_diff_conflict_display_modified_latest
+name|svn_diff_conflict_display_modified_original_latest
 argument_list|,
 name|pool
 argument_list|)
