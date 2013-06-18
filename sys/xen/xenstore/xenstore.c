@@ -515,6 +515,12 @@ modifier|*
 name|ret
 decl_stmt|;
 comment|/* Protect against unterminated buffers. */
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
 name|strings
 index|[
 name|len
