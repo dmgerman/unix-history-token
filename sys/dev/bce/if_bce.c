@@ -24408,8 +24408,11 @@ name|u16
 name|prod_idx
 parameter_list|)
 block|{
-name|bus_addr_t
-name|busaddr
+name|bus_dma_segment_t
+name|segs
+index|[
+literal|1
+index|]
 decl_stmt|;
 name|struct
 name|mbuf
@@ -24425,6 +24428,8 @@ name|pgbd
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|nsegs
 decl_stmt|,
 name|rc
 init|=
@@ -24590,7 +24595,7 @@ comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
 name|error
 operator|=
-name|bus_dmamap_load
+name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|sc
 operator|->
@@ -24603,20 +24608,12 @@ index|[
 name|prod_idx
 index|]
 argument_list|,
-name|mtod
-argument_list|(
 name|m_new
 argument_list|,
-name|void
-operator|*
-argument_list|)
-argument_list|,
-name|MCLBYTES
-argument_list|,
-name|bce_dma_map_addr
+name|segs
 argument_list|,
 operator|&
-name|busaddr
+name|nsegs
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
@@ -24625,10 +24622,6 @@ comment|/* Handle any mapping errors. */
 if|if
 condition|(
 name|error
-operator|||
-name|busaddr
-operator|==
-literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -24661,6 +24654,22 @@ goto|goto
 name|bce_get_pg_buf_exit
 goto|;
 block|}
+comment|/* All mbufs must map to a single segment. */
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s(): Too many segments returned (%d)!"
+operator|,
+name|__FUNCTION__
+operator|,
+name|nsegs
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* ToDo: Do we need bus_dmamap_sync(,,BUS_DMASYNC_PREREAD) here? */
 comment|/* 	 * The page chain uses the same rx_bd data structure 	 * as the receive chain but doesn't require a byte sequence (bseq). 	 */
 name|pgbd
@@ -24690,7 +24699,12 @@ name|htole32
 argument_list|(
 name|BCE_ADDR_LO
 argument_list|(
-name|busaddr
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -24702,7 +24716,12 @@ name|htole32
 argument_list|(
 name|BCE_ADDR_HI
 argument_list|(
-name|busaddr
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
