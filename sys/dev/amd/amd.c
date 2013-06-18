@@ -2077,7 +2077,7 @@ name|int
 name|error
 decl_stmt|;
 name|error
-operator|-
+operator|=
 name|bus_dmamap_load_ccb
 argument_list|(
 name|amd
@@ -2108,7 +2108,7 @@ block|{
 comment|/* 				 * So as to maintain ordering, 				 * freeze the controller queue 				 * until our mapping is 				 * returned. 				 */
 name|xpt_freeze_simq
 argument_list|(
-name|sim
+name|psim
 argument_list|,
 literal|1
 argument_list|)
