@@ -109,6 +109,8 @@ name|int
 name|error
 decl_stmt|,
 name|i
+decl_stmt|,
+name|mapped
 decl_stmt|;
 comment|/* Keep the process UPAGES from being swapped. XXX: why ? */
 name|PHOLD
@@ -394,9 +396,6 @@ operator|==
 name|UIO_USERSPACE
 condition|)
 block|{
-name|int
-name|mapped
-decl_stmt|;
 if|if
 condition|(
 name|csw
