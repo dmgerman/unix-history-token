@@ -4591,9 +4591,11 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_EXECUTE
 argument_list|,
-name|VM_PROT_ALL
+name|VM_PROT_READ
+operator||
+name|VM_PROT_EXECUTE
 argument_list|,
-name|MAP_COPY_ON_WRITE
+name|MAP_INHERIT_SHARE
 operator||
 name|MAP_ACC_NO_CHARGE
 argument_list|)
