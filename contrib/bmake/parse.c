@@ -241,7 +241,6 @@ typedef|typedef
 struct|struct
 name|IFile
 block|{
-specifier|const
 name|char
 modifier|*
 name|fname
@@ -7726,7 +7725,10 @@ name|curFile
 operator|->
 name|fname
 operator|=
+name|bmake_strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|curFile
 operator|->
@@ -7788,6 +7790,19 @@ name|NULL
 condition|)
 block|{
 comment|/* Was all a waste of time ... */
+if|if
+condition|(
+name|curFile
+operator|->
+name|fname
+condition|)
+name|free
+argument_list|(
+name|curFile
+operator|->
+name|fname
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|curFile
