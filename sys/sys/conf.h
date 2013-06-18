@@ -727,6 +727,17 @@ begin_comment
 comment|/* driver uses clone_create() */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_UNMAPPED_IO
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* d_strategy can accept unmapped IO */
+end_comment
+
 begin_comment
 comment|/*  * Version numbers.  */
 end_comment
