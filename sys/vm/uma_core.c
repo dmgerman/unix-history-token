@@ -10060,6 +10060,13 @@ name|uz_count
 expr_stmt|;
 name|bflags
 operator|=
+operator|(
+name|flags
+operator|&
+operator|~
+name|M_WAITOK
+operator|)
+operator||
 name|M_NOWAIT
 expr_stmt|;
 if|if
