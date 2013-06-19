@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -938,7 +932,7 @@ name|memsize
 operator|=
 name|ptoa
 argument_list|(
-name|Maxmem
+name|realmem
 argument_list|)
 operator|>>
 literal|20
