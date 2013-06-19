@@ -638,7 +638,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|num

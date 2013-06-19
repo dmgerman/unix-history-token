@@ -302,7 +302,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -367,7 +367,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 if|if
 condition|(
 name|size
@@ -819,7 +819,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 for|for
 control|(
 name|i
@@ -1072,7 +1072,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|start_ap
@@ -1282,7 +1282,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|buflist
@@ -3496,7 +3496,7 @@ name|gotit
 label|:
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|isset
