@@ -194,7 +194,7 @@ block|,
 comment|/* 					      * Perform transport negotiation 					      * with this command. 					      */
 name|CAM_DATA_ISPHYS
 init|=
-literal|0x00000010
+literal|0x00200000
 block|,
 comment|/* Data type with physical addrs */
 name|CAM_DIS_AUTOSENSE
@@ -234,22 +234,22 @@ block|,
 comment|/* Data type (000:Virtual)       */
 name|CAM_DATA_PADDR
 init|=
-literal|0x00000010
+literal|0x00200000
 block|,
 comment|/* Data type (001:Physical)      */
 name|CAM_DATA_SG
 init|=
-literal|0x00040000
+literal|0x00000010
 block|,
 comment|/* Data type (010:sglist)        */
 name|CAM_DATA_SG_PADDR
 init|=
-literal|0x00040010
+literal|0x00200010
 block|,
 comment|/* Data type (011:sglist phys)   */
 name|CAM_DATA_BIO
 init|=
-literal|0x00200000
+literal|0x00040000
 block|,
 comment|/* Data type (100:bio)           */
 name|CAM_DATA_MASK
@@ -327,6 +327,22 @@ init|=
 literal|0x00800000
 block|,
 comment|/* SG list is for the HBA engine */
+comment|/* Compatibility for FreeBSD 9.x*/
+name|CAM_SCATTER_VALID
+init|=
+literal|0x00000010
+block|,
+comment|/* These exist for src compat for*/
+name|CAM_SG_LIST_PHYS
+init|=
+literal|0x00200010
+block|,
+comment|/* old drivers.  Hardly anything */
+name|CAM_DATA_PHYS
+init|=
+literal|0x00200000
+block|,
+comment|/* uses them.		      */
 comment|/* Phase cognizant mode flags */
 name|CAM_DIS_AUTOSRP
 init|=
