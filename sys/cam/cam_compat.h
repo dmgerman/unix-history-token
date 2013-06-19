@@ -77,21 +77,21 @@ begin_define
 define|#
 directive|define
 name|CAM_SCATTER_VALID_0x16
-value|0x10
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAM_SG_LIST_PHYS_0x16
-value|0x40000
+value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAM_DATA_PHYS_0x16
-value|0x20000
+value|0x00200000
 end_define
 
 begin_endif
