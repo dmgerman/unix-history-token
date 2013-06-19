@@ -233,21 +233,6 @@ name|caddr_t
 name|bio_data
 decl_stmt|;
 comment|/* Memory, superblocks, indirect etc. */
-name|struct
-name|vm_page
-modifier|*
-modifier|*
-name|bio_ma
-decl_stmt|;
-comment|/* Or unmapped. */
-name|int
-name|bio_ma_offset
-decl_stmt|;
-comment|/* Offset in the first page of bio_ma. */
-name|int
-name|bio_ma_n
-decl_stmt|;
-comment|/* Number of pages in bio_ma. */
 name|int
 name|bio_error
 decl_stmt|;
@@ -380,6 +365,22 @@ name|daddr_t
 name|bio_pblkno
 decl_stmt|;
 comment|/* physical block number */
+comment|/* Unmapped i/o.  Placed at the end in 9.x for binary compatibility. */
+name|struct
+name|vm_page
+modifier|*
+modifier|*
+name|bio_ma
+decl_stmt|;
+comment|/* Physical page array. */
+name|int
+name|bio_ma_offset
+decl_stmt|;
+comment|/* Offset in first page of bio_ma. */
+name|int
+name|bio_ma_n
+decl_stmt|;
+comment|/* Number of pages in bio_ma. */
 block|}
 struct|;
 end_struct
