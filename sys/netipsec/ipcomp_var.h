@@ -153,6 +153,28 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|IPCOMPSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ipcompstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPCOMPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|IPCOMPSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ipcomp_enable
 value|VNET(ipcomp_enable)
 end_define

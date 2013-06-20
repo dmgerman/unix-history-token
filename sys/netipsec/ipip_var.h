@@ -102,6 +102,28 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|IPIPSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ipipstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPIPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|IPIPSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ipip_allow
 value|VNET(ipip_allow)
 end_define

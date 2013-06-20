@@ -1135,13 +1135,9 @@ define|#
 directive|define
 name|IPSEC_OSTAT
 parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
+name|name
 parameter_list|)
-value|(isr->saidx.proto == IPPROTO_ESP ? (x)++ : \ 			    isr->saidx.proto == IPPROTO_AH ? (y)++ : (z)++)
+value|do {		\ 	if (isr->saidx.proto == IPPROTO_ESP)	\ 		ESPSTAT_INC(esps_##name);	\ 	else if (isr->saidx.proto == IPPROTO_AH)\ 		AHSTAT_INC(ahs_##name);		\ 	else					\ 		IPCOMPSTAT_INC(ipcomps_##name);	\ } while (0)
 name|struct
 name|secasvar
 modifier|*
@@ -1685,17 +1681,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_OSTAT
 argument_list|(
-name|V_espstat
-operator|.
-name|esps_pdrops
-argument_list|,
-name|V_ahstat
-operator|.
-name|ahs_pdrops
-argument_list|,
-name|V_ipcompstat
-operator|.
-name|ipcomps_pdrops
+name|pdrops
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1728,17 +1714,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_OSTAT
 argument_list|(
-name|V_espstat
-operator|.
-name|esps_noxform
-argument_list|,
-name|V_ahstat
-operator|.
-name|ahs_noxform
-argument_list|,
-name|V_ipcompstat
-operator|.
-name|ipcomps_noxform
+name|noxform
 argument_list|)
 expr_stmt|;
 operator|*
