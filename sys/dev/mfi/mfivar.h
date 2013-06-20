@@ -224,11 +224,11 @@ name|MFI_ON_MFIQ_FREE
 value|(1<<8)
 define|#
 directive|define
-name|MFI_ON_MFIQ_BUSY
+name|MFI_ON_MFIQ_READY
 value|(1<<9)
 define|#
 directive|define
-name|MFI_ON_MFIQ_READY
+name|MFI_ON_MFIQ_BUSY
 value|(1<<10)
 define|#
 directive|define
