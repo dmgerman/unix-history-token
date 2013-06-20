@@ -483,10 +483,10 @@ literal|0
 expr_stmt|;
 comment|/* ... of new mbuf */
 block|}
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_mbinserted
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -916,10 +916,10 @@ literal|0
 condition|)
 block|{
 comment|/* The header was at the beginning of the mbuf */
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_input_front
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_adj
 argument_list|(
@@ -967,10 +967,10 @@ modifier|*
 name|mo
 decl_stmt|;
 comment|/* 		 * Part or all of the header is at the end of this mbuf, 		 * so first let's remove the remainder of the header from 		 * the beginning of the remainder of the mbuf chain, if any. 		 */
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_input_end
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1082,10 +1082,10 @@ block|}
 else|else
 block|{
 comment|/* 		 * The header lies in the "middle" of the mbuf; copy 		 * the remainder of the mbuf down over the header. 		 */
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_input_middle
-operator|++
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(

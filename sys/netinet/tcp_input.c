@@ -4788,10 +4788,10 @@ name|inp
 argument_list|)
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|in_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|dropunlock
@@ -4813,10 +4813,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|in_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|dropunlock
