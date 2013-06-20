@@ -1454,6 +1454,8 @@ name|nigroup
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1535,6 +1537,12 @@ decl_stmt|,
 name|optval
 decl_stmt|,
 name|ret_ga
+decl_stmt|;
+name|int
+name|nig_oldmcprefix
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|u_char
 modifier|*
@@ -2368,6 +2376,9 @@ name|options
 operator||=
 name|F_NIGROUP
 expr_stmt|;
+name|nig_oldmcprefix
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'o'
@@ -2858,6 +2869,8 @@ name|argc
 operator|-
 literal|1
 index|]
+argument_list|,
+name|nig_oldmcprefix
 argument_list|)
 expr_stmt|;
 if|if
@@ -13934,6 +13947,9 @@ parameter_list|(
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|nig_oldmcprefix
 parameter_list|)
 block|{
 name|char
@@ -13968,6 +13984,9 @@ decl_stmt|;
 name|struct
 name|in6_addr
 name|in6
+decl_stmt|;
+name|int
+name|valid
 decl_stmt|;
 name|p
 operator|=
@@ -14077,7 +14096,7 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* generate 8 bytes of pseudo-random value. */
+comment|/* generate 16 bytes of pseudo-random value. */
 name|memset
 argument_list|(
 operator|&
@@ -14142,6 +14161,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nig_oldmcprefix
+condition|)
+block|{
+comment|/* draft-ietf-ipngwg-icmp-name-lookup */
+name|valid
+operator|=
 name|inet_pton
 argument_list|(
 name|AF_INET6
@@ -14151,6 +14176,27 @@ argument_list|,
 operator|&
 name|in6
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* RFC 4620 */
+name|valid
+operator|=
+name|inet_pton
+argument_list|(
+name|AF_INET6
+argument_list|,
+literal|"ff02::2:ff00:0000"
+argument_list|,
+operator|&
+name|in6
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|valid
 operator|!=
 literal|1
 condition|)
@@ -14158,6 +14204,12 @@ return|return
 name|NULL
 return|;
 comment|/*XXX*/
+if|if
+condition|(
+name|nig_oldmcprefix
+condition|)
+block|{
+comment|/* draft-ietf-ipngwg-icmp-name-lookup */
 name|bcopy
 argument_list|(
 name|digest
@@ -14173,6 +14225,26 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* RFC 4620 */
+name|bcopy
+argument_list|(
+name|digest
+argument_list|,
+operator|&
+name|in6
+operator|.
+name|s6_addr
+index|[
+literal|13
+index|]
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|inet_ntop

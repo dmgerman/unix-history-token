@@ -2005,6 +2005,18 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|icmp6_nodeinfo_oldmcprefix
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* UDP on IP6 parameters */
 end_comment
@@ -3408,6 +3420,31 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_icmp6
+argument_list|,
+name|ICMPV6CTL_NODEINFO_OLDMCPREFIX
+argument_list|,
+name|nodeinfo_oldmcprefix
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|icmp6_nodeinfo_oldmcprefix
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Join old IPv6 NI group address in draft-ietf-ipngwg-icmp-name-lookup"
+literal|" for compatibility with KAME implememtation."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

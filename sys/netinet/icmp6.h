@@ -3016,8 +3016,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMPV6CTL_MAXID
+name|ICMPV6CTL_NODEINFO_OLDMCPREFIX
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPV6CTL_MAXID
+value|26
 end_define
 
 begin_define
