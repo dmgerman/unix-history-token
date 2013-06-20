@@ -349,6 +349,9 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+name|int
+name|size
+parameter_list|,
 name|uma_ctor
 name|ctor
 parameter_list|,

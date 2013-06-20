@@ -296,7 +296,7 @@ struct|struct
 name|uma_keg
 block|{
 name|struct
-name|mtx
+name|mtx_padalign
 name|uk_lock
 decl_stmt|;
 comment|/* Lock for the keg */
@@ -635,18 +635,22 @@ begin_struct
 struct|struct
 name|uma_zone
 block|{
+name|struct
+name|mtx_padalign
+name|uz_lock
+decl_stmt|;
+comment|/* Lock for the zone */
+name|struct
+name|mtx_padalign
+modifier|*
+name|uz_lockptr
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|uz_name
 decl_stmt|;
 comment|/* Text name of the zone */
-name|struct
-name|mtx
-modifier|*
-name|uz_lock
-decl_stmt|;
-comment|/* Lock for the zone (keg's lock) */
 name|LIST_ENTRY
 argument_list|(
 argument|uma_zone
@@ -852,8 +856,11 @@ name|uma_zone_t
 name|zone
 parameter_list|)
 block|{
-return|return
-operator|(
+name|uma_klink_t
+name|klink
+decl_stmt|;
+name|klink
+operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
@@ -861,9 +868,19 @@ name|zone
 operator|->
 name|uz_kegs
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|klink
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|klink
 operator|->
 name|kl_keg
-operator|)
+else|:
+name|NULL
 return|;
 block|}
 end_function
@@ -976,11 +993,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|ZONE_LOCK_INIT
+parameter_list|(
+name|z
+parameter_list|,
+name|lc
+parameter_list|)
+define|\
+value|do {							\ 		if ((lc))					\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    (z)->uz_name, MTX_DEF | MTX_DUPOK);	\ 		else						\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    "UMA zone", MTX_DEF | MTX_DUPOK);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZONE_LOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_lock((z)->uz_lock)
+value|mtx_lock((z)->uz_lockptr)
 end_define
 
 begin_define
@@ -990,7 +1020,7 @@ name|ZONE_TRYLOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_trylock((z)->uz_lock)
+value|mtx_trylock((z)->uz_lockptr)
 end_define
 
 begin_define
@@ -1000,7 +1030,17 @@ name|ZONE_UNLOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_unlock((z)->uz_lock)
+value|mtx_unlock((z)->uz_lockptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_LOCK_FINI
+parameter_list|(
+name|z
+parameter_list|)
+value|mtx_destroy(&(z)->uz_lock)
 end_define
 
 begin_comment
