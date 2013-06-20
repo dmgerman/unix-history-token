@@ -132,6 +132,12 @@ name|defined
 argument_list|(
 name|LINUX
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 operator|)
 ifdef|#
 directive|ifdef
