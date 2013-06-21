@@ -4378,11 +4378,13 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to get packages/INDEX file from selected media.\n\n"
+literal|"Unable to get %s file from selected media.\n\n"
 literal|"This may be because the packages collection is not available\n"
 literal|"on the distribution media you've chosen, most likely an FTP site\n"
 literal|"without the packages collection mirrored.  Please verify that\n"
 literal|"your media, or your path to the media, is correct and try again."
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 name|DEVICE_SHUTDOWN
@@ -4429,8 +4431,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"I/O or format error on packages/INDEX file.\n"
+literal|"I/O or format error on %s file.\n"
 literal|"Please verify media (or path to media) and try again."
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 name|fclose
