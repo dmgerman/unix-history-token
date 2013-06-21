@@ -15560,6 +15560,7 @@ argument_list|(
 name|nmp
 argument_list|)
 condition|)
+block|{
 name|nfscl_layoutcommit
 argument_list|(
 name|vp
@@ -15567,6 +15568,23 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Invalidate the attribute cache, since writes to a DS 		 * won't update the size attribute. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_mtx
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|n_attrstamp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|mtx_lock
 argument_list|(
 operator|&
