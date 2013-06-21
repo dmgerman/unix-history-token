@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -274,6 +280,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -317,6 +330,20 @@ modifier|*
 parameter_list|,
 name|time_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gssd_verbose_out
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -412,6 +439,10 @@ name|debug
 operator|=
 literal|0
 expr_stmt|;
+name|verbose
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -423,7 +454,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ds:c:r:"
+literal|"dvs:c:r:"
 argument_list|)
 operator|)
 operator|!=
@@ -441,6 +472,14 @@ literal|'d'
 case|:
 name|debug_level
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1324,6 +1363,72 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|gssd_verbose_out
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|if
+condition|(
+name|verbose
+operator|!=
+literal|0
+condition|)
+block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|debug_level
+operator|==
+literal|0
+condition|)
+name|vsyslog
+argument_list|(
+name|LOG_INFO
+operator||
+name|LOG_DAEMON
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+else|else
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
 name|bool_t
 name|gssd_null_1_svc
 parameter_list|(
@@ -1341,6 +1446,11 @@ modifier|*
 name|rqstp
 parameter_list|)
 block|{
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_null: done\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -1523,6 +1633,19 @@ name|major_status
 operator|=
 name|GSS_S_CREDENTIALS_EXPIRED
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_init_sec_context: -s no"
+literal|" credential cache file found for uid=%d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|argp
+operator|->
+name|uid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -1629,6 +1752,12 @@ name|major_status
 operator|=
 name|GSS_S_CREDENTIALS_EXPIRED
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_init_sec_context: cred"
+literal|" resource not found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -1664,6 +1793,12 @@ name|major_status
 operator|=
 name|GSS_S_CONTEXT_EXPIRED
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_init_sec_context: context"
+literal|" resource not found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -1698,6 +1833,12 @@ operator|->
 name|major_status
 operator|=
 name|GSS_S_BAD_NAME
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_init_sec_context: name"
+literal|" resource not found\n"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1764,6 +1905,34 @@ operator|&
 name|result
 operator|->
 name|time_rec
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_init_sec_context: done major=0x%x minor=%d"
+literal|" uid=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|argp
+operator|->
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1889,6 +2058,12 @@ name|major_status
 operator|=
 name|GSS_S_CONTEXT_EXPIRED
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_accept_sec_context: ctx"
+literal|" resource not found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -1923,6 +2098,12 @@ operator|->
 name|major_status
 operator|=
 name|GSS_S_CREDENTIALS_EXPIRED
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_accept_sec_context: cred"
+literal|" resource not found\n"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1994,6 +2175,26 @@ name|time_rec
 argument_list|,
 operator|&
 name|delegated_cred_handle
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_accept_sec_context: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
 argument_list|)
 expr_stmt|;
 if|if
@@ -2138,6 +2339,26 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_delete_sec_context: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -2244,6 +2465,26 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_export_sec_context: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -2295,6 +2536,26 @@ name|input_name_type
 argument_list|,
 operator|&
 name|name
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_import_name: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
 argument_list|)
 expr_stmt|;
 if|if
@@ -2412,6 +2673,26 @@ operator|&
 name|output_name
 argument_list|)
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_canonicalize_name: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|result
@@ -2497,6 +2778,11 @@ name|major_status
 operator|=
 name|GSS_S_BAD_NAME
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_export_name: name resource not found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -2520,6 +2806,26 @@ operator|&
 name|result
 operator|->
 name|exported_name
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_export_name: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -2601,6 +2907,26 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_release_name: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -2898,6 +3224,26 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_pname_to_uid: mapped"
+literal|" to uid=%d, gid=%d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|uid
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|gid
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2923,6 +3269,19 @@ name|gidlist_val
 operator|=
 name|NULL
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_pname_to_uid: mapped"
+literal|" to uid=%d, but no groups\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|uid
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2943,6 +3302,28 @@ name|bufp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_pname_to_uid: failed major=0x%x"
+literal|" minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2957,6 +3338,11 @@ operator|->
 name|minor_status
 operator|=
 literal|0
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_pname_to_uid: no name\n"
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -3134,6 +3520,12 @@ name|major_status
 operator|=
 name|GSS_S_CREDENTIALS_EXPIRED
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_acquire_cred: no cred cache"
+literal|" file found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -3240,6 +3632,12 @@ name|major_status
 operator|=
 name|GSS_S_BAD_NAME
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_acquire_cred: no desired name"
+literal|" found\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -3284,6 +3682,26 @@ operator|&
 name|result
 operator|->
 name|time_rec
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_acquire_cred: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
 argument_list|)
 expr_stmt|;
 if|if
@@ -3371,6 +3789,11 @@ name|major_status
 operator|=
 name|GSS_S_CREDENTIALS_EXPIRED
 expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_set_cred: no credentials\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -3399,6 +3822,26 @@ operator|&
 name|argp
 operator|->
 name|option_value
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_set_cred: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -3480,6 +3923,26 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_release_cred: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -3546,6 +4009,26 @@ operator|&
 name|result
 operator|->
 name|status_string
+argument_list|)
+expr_stmt|;
+name|gssd_verbose_out
+argument_list|(
+literal|"gssd_display_status: done major=0x%x minor=%d\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|result
+operator|->
+name|major_status
+argument_list|,
+operator|(
+name|int
+operator|)
+name|result
+operator|->
+name|minor_status
 argument_list|)
 expr_stmt|;
 return|return
