@@ -1720,13 +1720,17 @@ parameter_list|)
 block|{
 name|counter_u64_add
 argument_list|(
+operator|*
+operator|(
 operator|(
 name|counter_u64_t
+operator|*
 operator|)
 operator|&
 name|V_tcpstatp
 operator|+
 name|statnum
+operator|)
 argument_list|,
 literal|1
 argument_list|)
