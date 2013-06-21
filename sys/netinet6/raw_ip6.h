@@ -61,6 +61,28 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|RIP6STAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_rip6stat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIP6STAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|RIP6STAT_ADD(name, 1)
+end_define
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(

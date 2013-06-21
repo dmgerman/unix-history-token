@@ -384,7 +384,7 @@ condition|(
 name|sc
 operator|->
 name|xbd_qfrozen_cnt
-operator|!=
+operator|==
 literal|0
 condition|)
 name|panic

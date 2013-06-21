@@ -26,85 +26,6 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * Maximal count of links to a file  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_LINK_MAX
-value|32000
-end_define
-
-begin_comment
-comment|/*  * A summary of contiguous blocks of various sizes is maintained  * in each cylinder group. Normally this is set by the initial  * value of fs_maxcontig.  *  * XXX:FS_MAXCONTIG is set to 16 to conserve space. Here we set  * EXT2_MAXCONTIG to 32 for better performance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_MAXCONTIG
-value|32
-end_define
-
-begin_comment
-comment|/*  * Constants relative to the data blocks  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_NDIR_BLOCKS
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_IND_BLOCK
-value|EXT2_NDIR_BLOCKS
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_DIND_BLOCK
-value|(EXT2_IND_BLOCK + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_TIND_BLOCK
-value|(EXT2_DIND_BLOCK + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_N_BLOCKS
-value|(EXT2_TIND_BLOCK + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXT2_MAXSYMLINKLEN
-value|(EXT2_N_BLOCKS * sizeof(uint32_t))
-end_define
-
-begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXMNTLEN
-value|512
-end_define
-
-begin_comment
 comment|/*  * Super block for an ext2fs file system.  */
 end_comment
 
@@ -387,6 +308,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in  * the super block for this name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXMNTLEN
+value|512
+end_define
+
+begin_comment
 comment|/*  * In-Memory Superblock  */
 end_comment
 
@@ -512,22 +444,25 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The second extended file system version  */
+comment|/* cluster summary information */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|E2FS_DATE
-value|"95/08/09"
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2FS_VERSION
-value|"0.5b"
-end_define
+begin_struct
+struct|struct
+name|csum
+block|{
+name|int8_t
+name|cs_init
+decl_stmt|;
+comment|/* cluster summary has been initialized */
+name|int32_t
+modifier|*
+name|cs_sum
+decl_stmt|;
+comment|/* cluster summary array */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * The second extended file system magic number  */
@@ -565,20 +500,6 @@ end_define
 begin_comment
 comment|/* V2 format w/ dynamic inode sizes */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_CURRENT_REV
-value|E2FS_REV0
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2FS_MAX_SUPP_REV
-value|E2FS_REV1
-end_define
 
 begin_define
 define|#
@@ -800,89 +721,6 @@ value|( EXT2_SB(sb)->e2fs->e2fs_features_incompat& htole32(mask) )
 end_define
 
 begin_comment
-comment|/*  * Definitions of behavior on errors  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_BEH_CONTINUE
-value|1
-end_define
-
-begin_comment
-comment|/* continue operation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_BEH_READONLY
-value|2
-end_define
-
-begin_comment
-comment|/* remount fs read only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_BEH_PANIC
-value|3
-end_define
-
-begin_comment
-comment|/* cause panic */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_BEH_DEFAULT
-value|E2FS_BEH_CONTINUE
-end_define
-
-begin_comment
-comment|/*  * OS identification  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_OS_LINUX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2FS_OS_HURD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2FS_OS_MASIX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2FS_OS_FREEBSD
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2FS_OS_LITES
-value|4
-end_define
-
-begin_comment
 comment|/*  * File clean flags  */
 end_comment
 
@@ -941,50 +779,29 @@ name|ext2bgd_ndirs
 decl_stmt|;
 comment|/* number of directories */
 name|uint16_t
-name|ext2bgd_flags
+name|ext4bgd_flags
 decl_stmt|;
 comment|/* block group flags */
 name|uint32_t
-name|ext2bgd_x_bitmap
+name|ext4bgd_x_bitmap
 decl_stmt|;
 comment|/* snapshot exclusion bitmap loc. */
 name|uint16_t
-name|ext2bgd_b_bmap_csum
+name|ext4bgd_b_bmap_csum
 decl_stmt|;
 comment|/* block bitmap checksum */
 name|uint16_t
-name|ext2bgd_i_bmap_csum
+name|ext4bgd_i_bmap_csum
 decl_stmt|;
 comment|/* inode bitmap checksum */
 name|uint16_t
-name|ext2bgd_i_unused
+name|ext4bgd_i_unused
 decl_stmt|;
 comment|/* unused inode count */
 name|uint16_t
-name|ext2bgd_csum
+name|ext4bgd_csum
 decl_stmt|;
 comment|/* group descriptor checksum */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* cluster summary information */
-end_comment
-
-begin_struct
-struct|struct
-name|csum
-block|{
-name|int8_t
-name|cs_init
-decl_stmt|;
-comment|/* cluster summary has been initialized */
-name|int32_t
-modifier|*
-name|cs_sum
-decl_stmt|;
-comment|/* cluster summary array */
 block|}
 struct|;
 end_struct

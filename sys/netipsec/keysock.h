@@ -181,6 +181,28 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|PFKEYSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_pfkeystat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFKEYSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|PFKEYSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_pfkeystat
 value|VNET(pfkeystat)
 end_define

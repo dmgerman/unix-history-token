@@ -2323,7 +2323,7 @@ argument_list|(
 operator|&
 name|uz
 operator|.
-name|uz_full_bucket
+name|uz_buckets
 argument_list|)
 init|;
 name|ubp

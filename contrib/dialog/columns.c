@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: columns.c,v 1.8 2011/06/28 09:26:23 tom Exp $  *  *  columns.c -- implements column-alignment  *  *  Copyright 2008-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: columns.c,v 1.10 2011/10/20 20:53:55 tom Exp $  *  *  columns.c -- implements column-alignment  *  *  Copyright 2008-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -102,6 +102,10 @@ return|return
 operator|(
 name|char
 operator|*
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|result
@@ -663,6 +667,13 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|text
+index|[
+name|realwidth
+index|]
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|value
 operator|=

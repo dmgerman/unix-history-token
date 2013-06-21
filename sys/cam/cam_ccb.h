@@ -1767,7 +1767,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x16
+value|0x17
 end_define
 
 begin_comment

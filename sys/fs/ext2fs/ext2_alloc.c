@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/inode.h>
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<fs/ext2fs/ext2fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/ext2fs/fs.h>
 end_include
 
 begin_include

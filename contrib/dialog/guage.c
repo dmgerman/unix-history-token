@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: guage.c,v 1.60 2011/06/27 00:52:28 tom Exp $  *  *  guage.c -- implements the gauge dialog  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Marc Ewing, Red Hat Software  */
+comment|/*  *  $Id: guage.c,v 1.65 2012/11/30 10:43:31 tom Exp $  *  *  guage.c -- implements the gauge dialog  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Marc Ewing, Red Hat Software  */
 end_comment
 
 begin_include
@@ -294,6 +294,13 @@ name|buffer
 operator|)
 argument_list|)
 expr_stmt|;
+name|buffer
+index|[
+name|MY_LEN
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|dlg_trim_string
 argument_list|(
 name|buffer
@@ -432,7 +439,7 @@ argument_list|(
 name|dialog
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|dialog
 argument_list|,
@@ -451,6 +458,8 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
+argument_list|,
+name|border2_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -462,6 +471,9 @@ operator|->
 name|title
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|dialog
@@ -493,7 +505,7 @@ operator|->
 name|width
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|dialog
 argument_list|,
@@ -526,9 +538,11 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
+argument_list|,
+name|border2_attr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear the area for the progress bar by filling it with spaces 	 * in the title-attribute, and write the percentage with that 	 * attribute. 	 */
+comment|/* 	 * Clear the area for the progress bar by filling it with spaces 	 * in the gauge-attribute, and write the percentage with that 	 * attribute. 	 */
 operator|(
 name|void
 operator|)
@@ -545,6 +559,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|dialog
@@ -653,7 +670,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|title_attr
+name|gauge_attr
 operator|&
 name|A_REVERSE
 operator|)
@@ -671,6 +688,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|dialog
@@ -719,7 +739,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|title_attr
+name|gauge_attr
 operator|&
 name|A_REVERSE
 condition|)
@@ -783,6 +803,8 @@ name|char
 name|buf
 index|[
 name|MY_LEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -1542,11 +1564,6 @@ name|obj
 operator|)
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1632,6 +1649,15 @@ argument_list|(
 name|obj
 argument_list|,
 name|percent
+argument_list|)
+expr_stmt|;
+name|dlg_trace_win
+argument_list|(
+name|obj
+operator|->
+name|obj
+operator|.
+name|win
 argument_list|)
 expr_stmt|;
 do|do

@@ -158,7 +158,7 @@ parameter_list|,
 name|dtor
 parameter_list|)
 define|\
-value|static struct khelp_modevent_data kmd_##hname = {		\ 		.name = #hname,						\ 		.helper = hdata,					\ 		.hooks = hhooks,					\ 		.nhooks = sizeof(hhooks) / sizeof(hhooks[0]),		\ 		.uma_zsize = size,					\ 		.umactor = ctor,					\ 		.umadtor = dtor						\ 	};								\ 	static moduledata_t h_##hname = {				\ 		.name = #hname,						\ 		.evhand = khelp_modevent,				\ 		.priv =&kmd_##hname					\ 	};								\ 	DECLARE_MODULE(hname, h_##hname, SI_SUB_PROTO_IFATTACHDOMAIN,	\ 	    SI_ORDER_ANY);						\ 	MODULE_VERSION(hname, version)
+value|static struct khelp_modevent_data kmd_##hname = {		\ 		.name = #hname,						\ 		.helper = hdata,					\ 		.hooks = hhooks,					\ 		.nhooks = sizeof(hhooks) / sizeof(hhooks[0]),		\ 		.uma_zsize = size,					\ 		.umactor = ctor,					\ 		.umadtor = dtor						\ 	};								\ 	static moduledata_t h_##hname = {				\ 		.name = #hname,						\ 		.evhand = khelp_modevent,				\ 		.priv =&kmd_##hname					\ 	};								\ 	DECLARE_MODULE(hname, h_##hname, SI_SUB_KLD, SI_ORDER_ANY);	\ 	MODULE_VERSION(hname, version)
 end_define
 
 begin_define

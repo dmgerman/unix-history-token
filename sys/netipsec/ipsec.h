@@ -1291,6 +1291,16 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|IPSECSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|V_ipsec4stat.name += 1
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ipsec4stat
 value|VNET(ipsec4stat)
 end_define

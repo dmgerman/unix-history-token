@@ -390,10 +390,10 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|in_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -599,10 +599,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|out_inval
-operator|++
+argument_list|)
 expr_stmt|;
 name|IP6STAT_INC
 argument_list|(
@@ -651,10 +651,10 @@ case|case
 name|IPSEC_POLICY_DISCARD
 case|:
 comment|/* 		 * This packet is just discarded. 		 */
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|out_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 name|IP6STAT_INC
 argument_list|(

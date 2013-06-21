@@ -296,7 +296,7 @@ struct|struct
 name|uma_keg
 block|{
 name|struct
-name|mtx
+name|mtx_padalign
 name|uk_lock
 decl_stmt|;
 comment|/* Lock for the keg */
@@ -336,10 +336,6 @@ argument_list|)
 name|uk_full_slab
 expr_stmt|;
 comment|/* full slabs */
-name|uint32_t
-name|uk_recurse
-decl_stmt|;
-comment|/* Allocation recursion count */
 name|uint32_t
 name|uk_align
 decl_stmt|;
@@ -639,18 +635,22 @@ begin_struct
 struct|struct
 name|uma_zone
 block|{
+name|struct
+name|mtx_padalign
+name|uz_lock
+decl_stmt|;
+comment|/* Lock for the zone */
+name|struct
+name|mtx_padalign
+modifier|*
+name|uz_lockptr
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|uz_name
 decl_stmt|;
 comment|/* Text name of the zone */
-name|struct
-name|mtx
-modifier|*
-name|uz_lock
-decl_stmt|;
-comment|/* Lock for the zone (keg's lock) */
 name|LIST_ENTRY
 argument_list|(
 argument|uma_zone
@@ -663,17 +663,9 @@ argument_list|(
 argument_list|,
 argument|uma_bucket
 argument_list|)
-name|uz_full_bucket
+name|uz_buckets
 expr_stmt|;
 comment|/* full buckets */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|uma_bucket
-argument_list|)
-name|uz_free_bucket
-expr_stmt|;
-comment|/* Buckets for frees */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -706,7 +698,20 @@ comment|/* Initializer for each item */
 name|uma_fini
 name|uz_fini
 decl_stmt|;
-comment|/* Discards memory */
+comment|/* Finalizer for each item. */
+name|uma_import
+name|uz_import
+decl_stmt|;
+comment|/* Import new memory to cache. */
+name|uma_release
+name|uz_release
+decl_stmt|;
+comment|/* Release memory from cache. */
+name|void
+modifier|*
+name|uz_arg
+decl_stmt|;
+comment|/* Import/release argument. */
 name|uint32_t
 name|uz_flags
 decl_stmt|;
@@ -715,27 +720,26 @@ name|uint32_t
 name|uz_size
 decl_stmt|;
 comment|/* Size inherited from kegs */
-name|uint64_t
+specifier|volatile
+name|u_long
 name|uz_allocs
 name|UMA_ALIGN
 decl_stmt|;
 comment|/* Total number of allocations */
-name|uint64_t
+specifier|volatile
+name|u_long
+name|uz_fails
+decl_stmt|;
+comment|/* Total number of alloc failures */
+specifier|volatile
+name|u_long
 name|uz_frees
 decl_stmt|;
 comment|/* Total number of frees */
 name|uint64_t
-name|uz_fails
-decl_stmt|;
-comment|/* Total number of alloc failures */
-name|uint64_t
 name|uz_sleeps
 decl_stmt|;
 comment|/* Total number of alloc sleeps */
-name|uint16_t
-name|uz_fills
-decl_stmt|;
-comment|/* Outstanding bucket fills */
 name|uint16_t
 name|uz_count
 decl_stmt|;
@@ -767,17 +771,6 @@ end_struct
 
 begin_comment
 comment|/*  * These flags must not overlap with the UMA_ZONE flags specified in uma.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_ZFLAG_BUCKET
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Bucket zone. */
 end_comment
 
 begin_define
@@ -850,8 +843,47 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_INHERIT
-value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
+value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|uma_keg_t
+name|zone_first_keg
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+name|uma_klink_t
+name|klink
+decl_stmt|;
+name|klink
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|zone
+operator|->
+name|uz_kegs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|klink
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|klink
+operator|->
+name|kl_keg
+else|:
+name|NULL
+return|;
+block|}
+end_function
 
 begin_undef
 undef|#
@@ -961,11 +993,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|ZONE_LOCK_INIT
+parameter_list|(
+name|z
+parameter_list|,
+name|lc
+parameter_list|)
+define|\
+value|do {							\ 		if ((lc))					\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    (z)->uz_name, MTX_DEF | MTX_DUPOK);	\ 		else						\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    "UMA zone", MTX_DEF | MTX_DUPOK);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZONE_LOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_lock((z)->uz_lock)
+value|mtx_lock((z)->uz_lockptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_TRYLOCK
+parameter_list|(
+name|z
+parameter_list|)
+value|mtx_trylock((z)->uz_lockptr)
 end_define
 
 begin_define
@@ -975,7 +1030,17 @@ name|ZONE_UNLOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_unlock((z)->uz_lock)
+value|mtx_unlock((z)->uz_lockptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_LOCK_FINI
+parameter_list|(
+name|z
+parameter_list|)
+value|mtx_destroy(&(z)->uz_lock)
 end_define
 
 begin_comment

@@ -42,6 +42,13 @@ name|frame_unwind_data
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|frame_unwind_sniffer_ftype
+modifier|*
+name|kgdb_sniffer_kluge
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|frame_unwind_table
@@ -153,6 +160,19 @@ argument_list|(
 name|table
 argument_list|,
 name|dummy_frame_sniffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kgdb_sniffer_kluge
+operator|!=
+name|NULL
+condition|)
+name|append_predicate
+argument_list|(
+name|table
+argument_list|,
+name|kgdb_sniffer_kluge
 argument_list|)
 expr_stmt|;
 return|return

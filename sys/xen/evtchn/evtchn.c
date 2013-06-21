@@ -597,7 +597,7 @@ name|unsigned
 name|long
 name|cpu_evtchn_mask
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 index|[
 name|NR_EVENT_CHANNELS
@@ -4321,7 +4321,7 @@ literal|1
 init|;
 name|cpu
 operator|<
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 condition|;
 name|cpu
 operator|++

@@ -94,7 +94,7 @@ literal|0
 index|]
 operator|)
 operator|,
-literal|"r"
+literal|"ri"
 operator|(
 name|inc
 operator|)

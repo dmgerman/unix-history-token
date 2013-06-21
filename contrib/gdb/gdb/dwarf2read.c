@@ -24480,7 +24480,11 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Dwarf Error: Cannot find type of die [in module %s]"
+literal|"Dwarf Error: Cannot find type of die 0x%x [in module %s]"
+argument_list|,
+name|die
+operator|->
+name|tag
 argument_list|,
 name|cu
 operator|->

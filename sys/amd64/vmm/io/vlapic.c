@@ -1775,6 +1775,15 @@ name|dmask
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|CPU_ZERO
+argument_list|(
+operator|&
+name|dmask
+argument_list|)
+expr_stmt|;
+comment|/* satisfy gcc */
+break|break;
 block|}
 while|while
 condition|(
