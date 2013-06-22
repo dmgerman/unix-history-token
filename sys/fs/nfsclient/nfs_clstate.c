@@ -25378,20 +25378,9 @@ name|NFSCL_DEBUG
 argument_list|(
 literal|4
 argument_list|,
-literal|"layoutcommit err=%d off=%qd len=%qd "
-literal|"lastbyte=%qd\n"
+literal|"layoutcommit err=%d\n"
 argument_list|,
 name|error
-argument_list|,
-name|flp
-operator|->
-name|nfsfl_off
-argument_list|,
-name|len
-argument_list|,
-name|lyp
-operator|->
-name|nfsly_lastbyte
 argument_list|)
 expr_stmt|;
 if|if
