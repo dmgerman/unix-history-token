@@ -5140,7 +5140,7 @@ block|{
 block|{
 literal|"URL"
 block|,
-literal|"Specify some other ftp site by URL"
+literal|"Specify some other http site by URL"
 block|,
 name|NULL
 block|,
