@@ -4618,7 +4618,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENETDOWN
 operator|)
 return|;
 block|}
