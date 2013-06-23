@@ -87,7 +87,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -150,7 +150,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 parameter_list|,
 name|int
 parameter_list|,
