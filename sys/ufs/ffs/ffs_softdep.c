@@ -2202,7 +2202,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|D_SENTINAL
+name|D_SENTINEL
 value|27
 end_define
 
@@ -2210,7 +2210,7 @@ begin_define
 define|#
 directive|define
 name|D_LAST
-value|D_SENTINAL
+value|D_SENTINEL
 end_define
 
 begin_decl_stmt
@@ -2668,6 +2668,19 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
+name|M_SENTINEL
+argument_list|,
+literal|"sentinel"
+argument_list|,
+literal|"Worklist sentinel"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
 name|M_SAVEDINO
 argument_list|,
 literal|"savedino"
@@ -2756,6 +2769,8 @@ block|,
 name|M_JTRUNC
 block|,
 name|M_JFSYNC
+block|,
+name|M_SENTINEL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9544,7 +9559,7 @@ decl_stmt|;
 block|{
 name|struct
 name|worklist
-name|sintenel
+name|sentinel
 decl_stmt|;
 name|struct
 name|worklist
@@ -9613,17 +9628,17 @@ name|matchcnt
 operator|=
 literal|0
 expr_stmt|;
-name|sintenel
+name|sentinel
 operator|.
 name|wk_mp
 operator|=
 name|NULL
 expr_stmt|;
-name|sintenel
+name|sentinel
 operator|.
 name|wk_type
 operator|=
-name|D_SENTINAL
+name|D_SENTINEL
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -9633,7 +9648,7 @@ operator|->
 name|softdep_workitem_pending
 argument_list|,
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9645,7 +9660,7 @@ operator|=
 name|LIST_NEXT
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9659,7 +9674,7 @@ operator|=
 name|LIST_NEXT
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9671,13 +9686,13 @@ name|wk
 operator|->
 name|wk_type
 operator|==
-name|D_SENTINAL
+name|D_SENTINEL
 condition|)
 block|{
 name|LIST_REMOVE
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9687,7 +9702,7 @@ argument_list|(
 name|wk
 argument_list|,
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9887,7 +9902,7 @@ block|}
 name|LIST_REMOVE
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9900,7 +9915,7 @@ operator|->
 name|softdep_worklist_tail
 operator|==
 operator|&
-name|sintenel
+name|sentinel
 condition|)
 name|ump
 operator|->
@@ -9911,7 +9926,7 @@ expr|struct
 name|worklist
 operator|*
 operator|)
-name|sintenel
+name|sentinel
 operator|.
 name|wk_list
 operator|.
@@ -24018,10 +24033,17 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|bp
-condition|)
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bmsafemap_lookup: missing buffer"
+operator|)
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|wk
@@ -24030,6 +24052,7 @@ argument|&bp->b_dep
 argument_list|,
 argument|wk_list
 argument_list|)
+block|{
 if|if
 condition|(
 name|wk
@@ -24058,6 +24081,7 @@ name|wk
 argument_list|)
 operator|)
 return|;
+block|}
 block|}
 name|fs
 operator|=
@@ -38727,6 +38751,10 @@ argument_list|,
 name|D_MKDIR
 argument_list|)
 expr_stmt|;
+name|mkdir2
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -44138,6 +44166,7 @@ name|pino
 operator|==
 literal|0
 condition|)
+block|{
 name|bp
 operator|=
 name|getblk
@@ -44167,7 +44196,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|error
 operator|=
 name|bread
@@ -44201,6 +44232,16 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -56859,7 +56900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sync all cylinder groups that were dirty at the time this function is  * called.  Newly dirtied cgs will be inserted before the sintenel.  This  * is used to flush freedep activity that may be holding up writes to a  * indirect block.  */
+comment|/*  * Sync all cylinder groups that were dirty at the time this function is  * called.  Newly dirtied cgs will be inserted before the sentinel.  This  * is used to flush freedep activity that may be holding up writes to a  * indirect block.  */
 end_comment
 
 begin_function
@@ -56888,7 +56929,7 @@ decl_stmt|;
 name|struct
 name|bmsafemap
 modifier|*
-name|sintenel
+name|sentinel
 decl_stmt|;
 name|struct
 name|ufsmount
@@ -56903,14 +56944,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|sintenel
+name|sentinel
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sintenel
+name|sentinel
 argument_list|)
 argument_list|,
 name|M_BMSAFEMAP
@@ -56920,7 +56961,7 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|sintenel
+name|sentinel
 operator|->
 name|sm_cg
 operator|=
@@ -56951,7 +56992,7 @@ name|ump
 operator|->
 name|softdep_dirtycg
 argument_list|,
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -56962,7 +57003,7 @@ name|bmsafemap
 operator|=
 name|LIST_NEXT
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -56975,13 +57016,13 @@ name|bmsafemap
 operator|=
 name|LIST_NEXT
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
 control|)
 block|{
-comment|/* Skip sintenels and cgs with no work to release. */
+comment|/* Skip sentinels and cgs with no work to release. */
 if|if
 condition|(
 name|bmsafemap
@@ -57012,7 +57053,7 @@ condition|)
 block|{
 name|LIST_REMOVE
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57021,7 +57062,7 @@ name|LIST_INSERT_AFTER
 argument_list|(
 name|bmsafemap
 argument_list|,
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57056,7 +57097,7 @@ condition|)
 continue|continue;
 name|LIST_REMOVE
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57065,7 +57106,7 @@ name|LIST_INSERT_AFTER
 argument_list|(
 name|bmsafemap
 argument_list|,
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57116,7 +57157,7 @@ break|break;
 block|}
 name|LIST_REMOVE
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57129,7 +57170,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|M_BMSAFEMAP
 argument_list|)
@@ -61148,6 +61189,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|bqrelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|softdep_freework
 argument_list|(
 name|wkhd
