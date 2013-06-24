@@ -1467,9 +1467,7 @@ operator|!=
 name|curthread
 argument_list|,
 operator|(
-literal|"%s (%s): wlock already held @ %s:%d"
-operator|,
-name|__func__
+literal|"rw_rlock: wlock already held for %s @ %s:%d"
 operator|,
 name|rw
 operator|->
@@ -4371,6 +4369,16 @@ case|:
 case|case
 name|RA_RLOCKED
 case|:
+case|case
+name|RA_RLOCKED
+operator||
+name|RA_RECURSED
+case|:
+case|case
+name|RA_RLOCKED
+operator||
+name|RA_NOTRECURSED
+case|:
 ifdef|#
 directive|ifdef
 name|WITNESS
@@ -4411,7 +4419,7 @@ operator|)
 operator|&&
 operator|(
 name|what
-operator|==
+operator|&
 name|RA_RLOCKED
 operator|||
 name|rw_wowner
@@ -4435,7 +4443,7 @@ name|lo_name
 argument_list|,
 operator|(
 name|what
-operator|==
+operator|&
 name|RA_RLOCKED
 operator|)
 condition|?
@@ -4457,6 +4465,13 @@ operator|->
 name|rw_lock
 operator|&
 name|RW_LOCK_READ
+operator|)
+operator|&&
+operator|!
+operator|(
+name|what
+operator|&
+name|RA_RLOCKED
 operator|)
 condition|)
 block|{
