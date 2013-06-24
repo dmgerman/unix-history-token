@@ -7169,7 +7169,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "activate" determines to which queue the page is added.  If "activate" is  * non-zero, then the page is added to the active queue.  Otherwise, it is  * added to the inactive queue.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must alway be one.  *  * A managed page must be locked.  */
+comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "activate" determines to which queue the page is added.  If "activate" is  * non-zero, then the page is added to the active queue.  Otherwise, it is  * added to the inactive queue.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
 end_comment
 
 begin_function
