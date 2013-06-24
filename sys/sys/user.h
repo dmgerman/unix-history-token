@@ -1508,6 +1508,17 @@ name|kf_file
 struct|;
 struct|struct
 block|{
+name|uint32_t
+name|kf_sem_value
+decl_stmt|;
+name|uint16_t
+name|kf_sem_mode
+decl_stmt|;
+block|}
+name|kf_sem
+struct|;
+struct|struct
+block|{
 name|uint64_t
 name|kf_pipe_addr
 decl_stmt|;
