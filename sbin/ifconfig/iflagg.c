@@ -631,12 +631,6 @@ operator||=
 name|LAGG_F_HASHL4
 expr_stmt|;
 else|else
-block|{
-name|free
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -646,7 +640,6 @@ argument_list|,
 name|tok
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|free
 argument_list|(
