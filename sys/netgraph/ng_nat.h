@@ -402,6 +402,56 @@ parameter_list|)
 value|{		\ 	  { "total_count",&ng_parse_uint32_type	},	\ 	  { "redirects",	(redirtype)		},	\ 	  { NULL }						\ }
 end_define
 
+begin_comment
+comment|/* Structure returned by NGM_NAT_LIBALIAS_INFO */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_nat_libalias_info
+block|{
+name|uint32_t
+name|icmpLinkCount
+decl_stmt|;
+name|uint32_t
+name|udpLinkCount
+decl_stmt|;
+name|uint32_t
+name|tcpLinkCount
+decl_stmt|;
+name|uint32_t
+name|sctpLinkCount
+decl_stmt|;
+name|uint32_t
+name|pptpLinkCount
+decl_stmt|;
+name|uint32_t
+name|protoLinkCount
+decl_stmt|;
+name|uint32_t
+name|fragmentIdLinkCount
+decl_stmt|;
+name|uint32_t
+name|fragmentPtrLinkCount
+decl_stmt|;
+name|uint32_t
+name|sockCount
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NAT_LIBALIAS_INFO
+value|{					\ 	  { "icmpLinkCount",&ng_parse_uint32_type	},	\ 	  { "udpLinkCount",&ng_parse_uint32_type	},	\ 	  { "tcpLinkCount",&ng_parse_uint32_type	},	\ 	  { "sctpLinkCount",&ng_parse_uint32_type	},	\ 	  { "pptpLinkCount",&ng_parse_uint32_type	},	\ 	  { "protoLinkCount",&ng_parse_uint32_type	},	\ 	  { "fragmentIdLinkCount",&ng_parse_uint32_type },	\ 	  { "fragmentPtrLinkCount",&ng_parse_uint32_type },	\ 	  { "sockCount",&ng_parse_uint32_type	},	\ 	  { NULL }						\ }
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -428,6 +478,8 @@ block|,
 name|NGM_NAT_LIST_REDIRECTS
 block|,
 name|NGM_NAT_PROXY_RULE
+block|,
+name|NGM_NAT_LIBALIAS_INFO
 block|, }
 enum|;
 end_enum
