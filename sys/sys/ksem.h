@@ -15,11 +15,21 @@ directive|define
 name|_POSIX4_KSEM_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WANT_FILE
+argument_list|)
+end_if
 
 begin_error
 error|#
@@ -98,6 +108,11 @@ modifier|*
 name|ks_label
 decl_stmt|;
 comment|/* MAC label */
+specifier|const
+name|char
+modifier|*
+name|ks_path
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -123,6 +138,44 @@ end_define
 begin_comment
 comment|/* No new waiters allowed. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|ksem_info
+function_decl|)
+parameter_list|(
+name|struct
+name|ksem
+modifier|*
+name|ks
+parameter_list|,
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|uint32_t
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
