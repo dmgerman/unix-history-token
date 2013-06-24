@@ -321,9 +321,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bits_lost
 operator|!=
 literal|1
+operator|)
 operator|^
 call|(
 name|int
