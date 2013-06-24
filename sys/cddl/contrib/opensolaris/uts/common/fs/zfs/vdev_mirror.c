@@ -1337,9 +1337,15 @@ operator|->
 name|io_type
 operator|==
 name|ZIO_TYPE_WRITE
+operator|||
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_FREE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Writes go to all children. 		 */
+comment|/* 		 * Writes and frees go to all children. 		 */
 name|c
 operator|=
 literal|0
@@ -1653,6 +1659,18 @@ name|mm
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_FREE
+condition|)
+block|{
 return|return;
 block|}
 name|ASSERT

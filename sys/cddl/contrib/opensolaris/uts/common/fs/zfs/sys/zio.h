@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fs/zfs.h>
 end_include
 
@@ -293,8 +299,12 @@ name|ZIO_PRIORITY_DDT_PREFETCH
 value|(zio_priority_table[11])
 define|#
 directive|define
+name|ZIO_PRIORITY_TRIM
+value|(zio_priority_table[12])
+define|#
+directive|define
 name|ZIO_PRIORITY_TABLE_SIZE
-value|12
+value|13
 define|#
 directive|define
 name|ZIO_PIPELINE_CONTINUE
@@ -932,6 +942,52 @@ decl_stmt|;
 block|}
 name|zio_link_t
 typedef|;
+comment|/*  * Used for TRIM kstat.  */
+typedef|typedef
+struct|struct
+name|zio_trim_stats
+block|{
+comment|/* 	 * Number of bytes successfully TRIMmed. 	 */
+name|kstat_named_t
+name|bytes
+decl_stmt|;
+comment|/* 	 * Number of successful TRIM requests. 	 */
+name|kstat_named_t
+name|success
+decl_stmt|;
+comment|/* 	 * Number of TRIM requests that failed because TRIM is not 	 * supported. 	 */
+name|kstat_named_t
+name|unsupported
+decl_stmt|;
+comment|/* 	 * Number of TRIM requests that failed for other reasons. 	 */
+name|kstat_named_t
+name|failed
+decl_stmt|;
+block|}
+name|zio_trim_stats_t
+typedef|;
+specifier|extern
+name|zio_trim_stats_t
+name|zio_trim_stats
+decl_stmt|;
+define|#
+directive|define
+name|ZIO_TRIM_STAT_INCR
+parameter_list|(
+name|stat
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|atomic_add_64(&zio_trim_stats.stat.value.ui64, (val));
+define|#
+directive|define
+name|ZIO_TRIM_STAT_BUMP
+parameter_list|(
+name|stat
+parameter_list|)
+define|\
+value|ZIO_TRIM_STAT_INCR(stat, 1);
 struct|struct
 name|zio
 block|{
@@ -1161,6 +1217,12 @@ name|io_task
 decl_stmt|;
 endif|#
 directive|endif
+name|avl_node_t
+name|io_trim_node
+decl_stmt|;
+name|list_node_t
+name|io_trim_link
+decl_stmt|;
 block|}
 struct|;
 specifier|extern
@@ -1455,6 +1517,12 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|uint64_t
+name|size
+parameter_list|,
 name|zio_done_func_t
 modifier|*
 name|done
@@ -1582,6 +1650,9 @@ name|blkptr_t
 modifier|*
 name|bp
 parameter_list|,
+name|uint64_t
+name|size
+parameter_list|,
 name|enum
 name|zio_flag
 name|flags
@@ -1640,6 +1711,30 @@ parameter_list|,
 name|vdev_t
 modifier|*
 name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|zio_t
+modifier|*
+name|zio_trim
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
+parameter_list|,
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|uint64_t
+name|size
 parameter_list|)
 function_decl|;
 specifier|extern

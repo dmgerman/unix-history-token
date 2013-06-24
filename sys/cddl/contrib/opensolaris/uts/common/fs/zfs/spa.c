@@ -221,6 +221,12 @@ directive|include
 file|<sys/zvol.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/trim_map.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4581,6 +4587,12 @@ name|spa
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Start TRIM thread. 	 */
+name|trim_thread_create
+argument_list|(
+name|spa
+argument_list|)
+expr_stmt|;
 name|list_create
 argument_list|(
 operator|&
@@ -4741,6 +4753,12 @@ operator|->
 name|spa_state
 operator|!=
 name|POOL_STATE_UNINITIALIZED
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Stop TRIM thread in case spa_unload() wasn't called directly 	 * before spa_deactivate(). 	 */
+name|trim_thread_destroy
+argument_list|(
+name|spa
 argument_list|)
 expr_stmt|;
 name|txg_list_destroy
@@ -5277,6 +5295,12 @@ argument_list|(
 operator|&
 name|spa_namespace_lock
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Stop TRIM thread. 	 */
+name|trim_thread_destroy
+argument_list|(
+name|spa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop async tasks. 	 */
@@ -26539,6 +26563,11 @@ name|tx
 argument_list|)
 argument_list|,
 name|bp
+argument_list|,
+name|BP_GET_PSIZE
+argument_list|(
+name|bp
+argument_list|)
 argument_list|,
 name|zio
 operator|->

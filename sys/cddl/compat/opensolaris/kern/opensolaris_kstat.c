@@ -532,7 +532,9 @@ name|kstat_sysctl
 argument_list|,
 literal|"QU"
 argument_list|,
-literal|""
+name|ksent
+operator|->
+name|desc
 argument_list|)
 expr_stmt|;
 block|}
