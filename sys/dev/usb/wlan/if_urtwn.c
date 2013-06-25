@@ -505,6 +505,13 @@ argument_list|)
 block|,
 name|URTWN_DEV
 argument_list|(
+name|DLINK
+argument_list|,
+name|DWA131B
+argument_list|)
+block|,
+name|URTWN_DEV
+argument_list|(
 name|EDIMAX
 argument_list|,
 name|EW7811UN
