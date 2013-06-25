@@ -9922,7 +9922,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|reply
 argument_list|,
