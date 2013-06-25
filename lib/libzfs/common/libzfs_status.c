@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -447,6 +447,56 @@ operator|+
 name|vs
 operator|->
 name|vs_checksum_errors
+argument_list|)
+condition|)
+return|return
+operator|(
+name|B_TRUE
+operator|)
+return|;
+block|}
+comment|/* 	 * Check any L2 cache devs 	 */
+if|if
+condition|(
+name|nvlist_lookup_nvlist_array
+argument_list|(
+name|vdev
+argument_list|,
+name|ZPOOL_CONFIG_L2CACHE
+argument_list|,
+operator|&
+name|child
+argument_list|,
+operator|&
+name|children
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+for|for
+control|(
+name|c
+operator|=
+literal|0
+init|;
+name|c
+operator|<
+name|children
+condition|;
+name|c
+operator|++
+control|)
+if|if
+condition|(
+name|find_vdev_problem
+argument_list|(
+name|child
+index|[
+name|c
+index|]
+argument_list|,
+name|func
 argument_list|)
 condition|)
 return|return
