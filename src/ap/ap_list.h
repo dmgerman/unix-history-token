@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / AP table  * Copyright (c) 2002-2003, Jouni Malinen<j@w1.fi>  * Copyright (c) 2003-2004, Instant802 Networks, Inc.  * Copyright (c) 2006, Devicescape Software, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / AP table  * Copyright (c) 2002-2003, Jouni Malinen<j@w1.fi>  * Copyright (c) 2003-2004, Instant802 Networks, Inc.  * Copyright (c) 2006, Devicescape Software, Inc.  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -92,9 +92,6 @@ name|datarate
 decl_stmt|;
 comment|/* in 100 kbps */
 name|int
-name|ssi_signal
-decl_stmt|;
-name|int
 name|ht_support
 decl_stmt|;
 name|unsigned
@@ -102,7 +99,7 @@ name|int
 name|num_beacons
 decl_stmt|;
 comment|/* number of beacon frames received */
-name|time_t
+name|os_time_t
 name|last_beacon
 decl_stmt|;
 name|int

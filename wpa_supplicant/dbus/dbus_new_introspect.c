@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant - D-Bus introspection  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  * Copyright (c) 2009, Witold Sowa<witold.sowa@gmail.com>  * Copyright (c) 2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant - D-Bus introspection  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  * Copyright (c) 2009, Witold Sowa<witold.sowa@gmail.com>  * Copyright (c) 2010, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ name|xml
 operator|=
 name|wpabuf_alloc
 argument_list|(
-literal|3000
+literal|6000
 argument_list|)
 expr_stmt|;
 if|if
@@ -417,7 +417,8 @@ name|wpabuf_printf
 argument_list|(
 name|xml
 argument_list|,
-literal|"<property name=\"%s\" type=\"%s\" access=\"%s\"/>"
+literal|"<property name=\"%s\" type=\"%s\" "
+literal|"access=\"%s%s\"/>"
 argument_list|,
 name|dsc
 operator|->
@@ -427,27 +428,21 @@ name|dsc
 operator|->
 name|type
 argument_list|,
-operator|(
 name|dsc
 operator|->
-name|access
-operator|==
-name|R
+name|getter
 condition|?
 literal|"read"
 else|:
-operator|(
+literal|""
+argument_list|,
 name|dsc
 operator|->
-name|access
-operator|==
-name|W
+name|setter
 condition|?
 literal|"write"
 else|:
-literal|"readwrite"
-operator|)
-operator|)
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -807,6 +802,38 @@ argument_list|(
 name|xml
 argument_list|,
 literal|"</interface>"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"dbus: Not enough room for "
+literal|"add_interfaces inspect data: tailroom %u, "
+literal|"add %u"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|wpabuf_tailroom
+argument_list|(
+name|xml
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|wpabuf_len
+argument_list|(
+name|iface
+operator|->
+name|xml
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1186,7 +1213,7 @@ name|xml
 operator|=
 name|wpabuf_alloc
 argument_list|(
-literal|4000
+literal|10000
 argument_list|)
 expr_stmt|;
 if|if

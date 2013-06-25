@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - privilege separated driver interface  * Copyright (c) 2007-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - privilege separated driver interface  * Copyright (c) 2007-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -783,10 +783,10 @@ name|results
 operator|->
 name|res
 operator|=
-name|os_zalloc
+name|os_calloc
 argument_list|(
 name|num
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1646,58 +1646,6 @@ begin_function
 specifier|static
 name|int
 name|wpa_driver_privsep_deauthenticate
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|addr
-parameter_list|,
-name|int
-name|reason_code
-parameter_list|)
-block|{
-comment|//struct wpa_driver_privsep_data *drv = priv;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"%s addr="
-name|MACSTR
-literal|" reason_code=%d"
-argument_list|,
-name|__func__
-argument_list|,
-name|MAC2STR
-argument_list|(
-name|addr
-argument_list|)
-argument_list|,
-name|reason_code
-argument_list|)
-expr_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"%s - TODO"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|wpa_driver_privsep_disassociate
 parameter_list|(
 name|void
 modifier|*
@@ -3514,7 +3462,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"bind(PF_UNIX)"
+literal|"privsep-set-params priv-sock: bind(PF_UNIX)"
 argument_list|)
 expr_stmt|;
 name|close
@@ -3678,7 +3626,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"bind(PF_UNIX)"
+literal|"privsep-set-params cmd-sock: bind(PF_UNIX)"
 argument_list|)
 expr_stmt|;
 name|close
@@ -3966,11 +3914,6 @@ operator|.
 name|deauthenticate
 operator|=
 name|wpa_driver_privsep_deauthenticate
-block|,
-operator|.
-name|disassociate
-operator|=
-name|wpa_driver_privsep_disassociate
 block|,
 operator|.
 name|associate

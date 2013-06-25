@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - driver_wext exported functions  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - driver_wext exported functions  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -48,6 +48,12 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|char
+name|phyname
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|int
 name|ifindex
 decl_stmt|;
@@ -56,6 +62,14 @@ name|ifindex2
 decl_stmt|;
 name|int
 name|if_removed
+decl_stmt|;
+name|int
+name|if_disabled
+decl_stmt|;
+name|struct
+name|rfkill_data
+modifier|*
+name|rfkill
 decl_stmt|;
 name|u8
 modifier|*
@@ -106,6 +120,24 @@ name|int
 name|cfg80211
 decl_stmt|;
 comment|/* whether driver is using cfg80211 */
+name|u8
+name|max_level
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ANDROID
+name|int
+name|errors
+decl_stmt|;
+name|int
+name|driver_is_started
+decl_stmt|;
+name|int
+name|bgscan_enabled
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* ANDROID */
 block|}
 struct|;
 end_struct

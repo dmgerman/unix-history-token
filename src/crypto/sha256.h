@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * SHA256 hash implementation and interface functions  * Copyright (c) 2003-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * SHA256 hash implementation and interface functions  * Copyright (c) 2003-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ value|32
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|hmac_sha256_vector
 parameter_list|(
 specifier|const
@@ -56,7 +56,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|hmac_sha256
 parameter_list|(
 specifier|const
@@ -113,6 +113,41 @@ name|buf
 parameter_list|,
 name|size_t
 name|buf_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tls_prf_sha256
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|secret
+parameter_list|,
+name|size_t
+name|secret_len
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|label
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|seed
+parameter_list|,
+name|size_t
+name|seed_len
+parameter_list|,
+name|u8
+modifier|*
+name|out
+parameter_list|,
+name|size_t
+name|outlen
 parameter_list|)
 function_decl|;
 end_function_decl

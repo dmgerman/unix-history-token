@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $FreeBSD: src/sys/net80211/ieee80211_radiotap.h,v 1.5 2005/01/22 20:12:05 sam Exp $ */
 end_comment
 
 begin_comment
@@ -374,6 +374,17 @@ end_define
 
 begin_comment
 comment|/* used rts/cts handshake */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_RADIOTAP_F_TX_NOACK
+value|0x0008
+end_define
+
+begin_comment
+comment|/* don't expect an ACK */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - background scan and roaming interface  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - background scan and roaming interface  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -57,6 +57,30 @@ begin_comment
 comment|/* CONFIG_BGSCAN_SIMPLE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_BGSCAN_LEARN
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|bgscan_ops
+name|bgscan_learn_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_BGSCAN_LEARN */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -76,6 +100,15 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_BGSCAN_SIMPLE */
+ifdef|#
+directive|ifdef
+name|CONFIG_BGSCAN_LEARN
+operator|&
+name|bgscan_learn_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_BGSCAN_LEARN */
 name|NULL
 block|}
 decl_stmt|;
@@ -366,6 +399,11 @@ name|struct
 name|wpa_supplicant
 modifier|*
 name|wpa_s
+parameter_list|,
+name|struct
+name|wpa_scan_results
+modifier|*
+name|scan_res
 parameter_list|)
 block|{
 if|if
@@ -388,6 +426,8 @@ argument_list|(
 name|wpa_s
 operator|->
 name|bgscan_priv
+argument_list|,
+name|scan_res
 argument_list|)
 return|;
 return|return
@@ -441,6 +481,15 @@ name|wpa_s
 parameter_list|,
 name|int
 name|above
+parameter_list|,
+name|int
+name|current_signal
+parameter_list|,
+name|int
+name|current_noise
+parameter_list|,
+name|int
+name|current_txrate
 parameter_list|)
 block|{
 if|if
@@ -464,6 +513,12 @@ operator|->
 name|bgscan_priv
 argument_list|,
 name|above
+argument_list|,
+name|current_signal
+argument_list|,
+name|current_noise
+argument_list|,
+name|current_txrate
 argument_list|)
 expr_stmt|;
 block|}

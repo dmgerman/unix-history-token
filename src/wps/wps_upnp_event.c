@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * UPnP WPS Device - Event processing  * Copyright (c) 2000-2003 Intel Corporation  * Copyright (c) 2006-2007 Sony Corporation  * Copyright (c) 2008-2009 Atheros Communications  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * See wps_upnp.c for more details on licensing and code history.  */
+comment|/*  * UPnP WPS Device - Event processing  * Copyright (c) 2000-2003 Intel Corporation  * Copyright (c) 2006-2007 Sony Corporation  * Copyright (c) 2008-2009 Atheros Communications  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * See wps_upnp.c for more details on licensing and code history.  */
 end_comment
 
 begin_include
@@ -75,12 +75,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EVENT_TIMEOUT_SEC
-value|30
+name|MAX_FAILURES
+value|10
 end_define
 
 begin_comment
-comment|/* Drop sending event after timeout */
+comment|/* Drop subscription after this many failures */
 end_comment
 
 begin_comment
@@ -213,6 +213,15 @@ modifier|*
 name|e
 parameter_list|)
 block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Delete event %p"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|event_clean
 argument_list|(
 name|e
@@ -274,6 +283,19 @@ if|if
 condition|(
 name|e
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Dequeue event %p for "
+literal|"subscription %p"
+argument_list|,
+name|e
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 name|dl_list_del
 argument_list|(
 operator|&
@@ -282,6 +304,7 @@ operator|->
 name|list
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|e
 return|;
@@ -380,6 +403,17 @@ name|s
 operator|->
 name|sm
 decl_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Retry event %p for subscription %p"
+argument_list|,
+name|e
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 name|event_clean
 argument_list|(
 name|e
@@ -390,11 +424,24 @@ if|if
 condition|(
 name|do_next_address
 condition|)
+block|{
 name|e
 operator|->
 name|retry
 operator|++
 expr_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Try address %d"
+argument_list|,
+name|e
+operator|->
+name|retry
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|e
@@ -422,6 +469,35 @@ operator|->
 name|addr
 operator|->
 name|domain_and_port
+argument_list|)
+expr_stmt|;
+name|event_delete
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|last_event_failed
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dl_list_empty
+argument_list|(
+operator|&
+name|s
+operator|->
+name|event_queue
+argument_list|)
+condition|)
+name|event_send_all_later
+argument_list|(
+name|s
+operator|->
+name|sm
 argument_list|)
 expr_stmt|;
 return|return;
@@ -634,6 +710,164 @@ end_function
 begin_function
 specifier|static
 name|void
+name|event_addr_failure
+parameter_list|(
+name|struct
+name|wps_event_
+modifier|*
+name|e
+parameter_list|)
+block|{
+name|struct
+name|subscription
+modifier|*
+name|s
+init|=
+name|e
+operator|->
+name|s
+decl_stmt|;
+name|e
+operator|->
+name|addr
+operator|->
+name|num_failures
+operator|++
+expr_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Failed to send event %p to %s "
+literal|"(num_failures=%u)"
+argument_list|,
+name|e
+argument_list|,
+name|e
+operator|->
+name|addr
+operator|->
+name|domain_and_port
+argument_list|,
+name|e
+operator|->
+name|addr
+operator|->
+name|num_failures
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|addr
+operator|->
+name|num_failures
+operator|<
+name|MAX_FAILURES
+condition|)
+block|{
+comment|/* Try other addresses, if available */
+name|event_retry
+argument_list|(
+name|e
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * If other side doesn't like what we say, forget about them. 	 * (There is no way to tell other side that we are dropping them...). 	 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Deleting subscription %p "
+literal|"address %s due to errors"
+argument_list|,
+name|s
+argument_list|,
+name|e
+operator|->
+name|addr
+operator|->
+name|domain_and_port
+argument_list|)
+expr_stmt|;
+name|dl_list_del
+argument_list|(
+operator|&
+name|e
+operator|->
+name|addr
+operator|->
+name|list
+argument_list|)
+expr_stmt|;
+name|subscr_addr_delete
+argument_list|(
+name|e
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|addr
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|dl_list_empty
+argument_list|(
+operator|&
+name|s
+operator|->
+name|addr_list
+argument_list|)
+condition|)
+block|{
+comment|/* if we've given up on all addresses */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Removing subscription %p "
+literal|"with no addresses"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|dl_list_del
+argument_list|(
+operator|&
+name|s
+operator|->
+name|list
+argument_list|)
+expr_stmt|;
+name|subscription_destroy
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Try other addresses, if available */
+name|event_retry
+argument_list|(
+name|e
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|event_http_cb
 parameter_list|(
 name|void
@@ -666,6 +900,20 @@ name|e
 operator|->
 name|s
 decl_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: HTTP client callback: e=%p c=%p "
+literal|"event=%d"
+argument_list|,
+name|e
+argument_list|,
+name|c
+argument_list|,
+name|event
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|event
@@ -678,8 +926,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPS UPnP: Got event reply OK from "
-literal|"%s"
+literal|"WPS UPnP: Got event %p reply OK from %s"
+argument_list|,
+name|e
 argument_list|,
 name|e
 operator|->
@@ -687,6 +936,20 @@ name|addr
 operator|->
 name|domain_and_port
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|addr
+operator|->
+name|num_failures
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|->
+name|last_event_failed
+operator|=
+literal|0
 expr_stmt|;
 name|event_delete
 argument_list|(
@@ -716,6 +979,19 @@ break|break;
 case|case
 name|HTTP_CLIENT_FAILED
 case|:
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Event send failure"
+argument_list|)
+expr_stmt|;
+name|event_addr_failure
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|HTTP_CLIENT_INVALID_REPLY
 case|:
@@ -723,35 +999,12 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"WPS UPnP: Failed to send event to %s"
-argument_list|,
+literal|"WPS UPnP: Invalid reply"
+argument_list|)
+expr_stmt|;
+name|event_addr_failure
+argument_list|(
 name|e
-operator|->
-name|addr
-operator|->
-name|domain_and_port
-argument_list|)
-expr_stmt|;
-comment|/* 		 * If other side doesn't like what we say, forget about them. 		 * (There is no way to tell other side that we are dropping 		 * them...). 		 * Alternately, we could just do event_delete(e) 		 */
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"WPS UPnP: Deleting subscription due to "
-literal|"errors"
-argument_list|)
-expr_stmt|;
-name|dl_list_del
-argument_list|(
-operator|&
-name|s
-operator|->
-name|list
-argument_list|)
-expr_stmt|;
-name|subscription_destroy
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 break|break;
@@ -765,13 +1018,12 @@ argument_list|,
 literal|"WPS UPnP: Event send timeout"
 argument_list|)
 expr_stmt|;
-name|event_retry
+name|event_addr_failure
 argument_list|(
 name|e
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -806,9 +1058,8 @@ modifier|*
 name|buf
 decl_stmt|;
 comment|/* 	 * Assume we are called ONLY with no current event and ONLY with 	 * nonempty event queue and ONLY with at least one address to send to. 	 */
-name|assert
-argument_list|(
-operator|!
+if|if
+condition|(
 name|dl_list_empty
 argument_list|(
 operator|&
@@ -816,20 +1067,23 @@ name|s
 operator|->
 name|addr_list
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 name|s
 operator|->
 name|current_event
-operator|==
-name|NULL
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-operator|!
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 name|dl_list_empty
 argument_list|(
 operator|&
@@ -837,8 +1091,11 @@ name|s
 operator|->
 name|event_queue
 argument_list|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|s
 operator|->
 name|current_event
@@ -1026,42 +1283,6 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|dl_list_empty
-argument_list|(
-operator|&
-name|s
-operator|->
-name|addr_list
-argument_list|)
-condition|)
-block|{
-comment|/* if we've given up on all addresses */
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"WPS UPnP: Removing "
-literal|"subscription with no addresses"
-argument_list|)
-expr_stmt|;
-name|dl_list_del
-argument_list|(
-operator|&
-name|s
-operator|->
-name|list
-argument_list|)
-expr_stmt|;
-name|subscription_destroy
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
 name|s
 operator|->
 name|current_event
@@ -1090,7 +1311,6 @@ condition|)
 name|nerrors
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -1191,7 +1411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * event_add - Add a new event to a queue  * @s: Subscription  * @data: Event data (is copied; caller retains ownership)  * Returns: 0 on success, 1 on error  */
+comment|/**  * event_add - Add a new event to a queue  * @s: Subscription  * @data: Event data (is copied; caller retains ownership)  * @probereq: Whether this is a Probe Request event  * Returns: 0 on success, -1 on error, 1 on max event queue limit reached  */
 end_comment
 
 begin_function
@@ -1208,6 +1428,9 @@ name|struct
 name|wpabuf
 modifier|*
 name|data
+parameter_list|,
+name|int
+name|probereq
 parameter_list|)
 block|{
 name|struct
@@ -1215,8 +1438,12 @@ name|wps_event_
 modifier|*
 name|e
 decl_stmt|;
-if|if
-condition|(
+name|unsigned
+name|int
+name|len
+decl_stmt|;
+name|len
+operator|=
 name|dl_list_len
 argument_list|(
 operator|&
@@ -1224,6 +1451,10 @@ name|s
 operator|->
 name|event_queue
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
 operator|>=
 name|MAX_EVENTS_QUEUED
 condition|)
@@ -1233,10 +1464,67 @@ argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"WPS UPnP: Too many events queued for "
-literal|"subscriber"
+literal|"subscriber %p"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|probereq
+condition|)
+return|return
+literal|1
+return|;
+comment|/* Drop oldest entry to allow EAP event to be stored. */
+name|e
+operator|=
+name|event_dequeue
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|e
+condition|)
+return|return
+literal|1
+return|;
+name|event_delete
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|s
+operator|->
+name|last_event_failed
+operator|&&
+name|probereq
+operator|&&
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 		 * Avoid queuing frames for subscribers that may have left 		 * without unsubscribing. 		 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Do not queue more Probe "
+literal|"Request frames for subscription %p since last "
+literal|"delivery failed"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|-
 literal|1
 return|;
 block|}
@@ -1258,6 +1546,7 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|-
 literal|1
 return|;
 name|dl_list_init
@@ -1298,6 +1587,7 @@ name|e
 argument_list|)
 expr_stmt|;
 return|return
+operator|-
 literal|1
 return|;
 block|}
@@ -1322,6 +1612,22 @@ name|s
 operator|->
 name|next_subscriber_sequence
 operator|++
+expr_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS UPnP: Queue event %p for subscriber %p "
+literal|"(queue len %u)"
+argument_list|,
+name|e
+argument_list|,
+name|s
+argument_list|,
+name|len
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
 name|dl_list_add_tail
 argument_list|(

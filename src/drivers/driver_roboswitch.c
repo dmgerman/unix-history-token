@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - roboswitch driver interface  * Copyright (c) 2008-2009 Jouke Witteveen  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - roboswitch driver interface  * Copyright (c) 2008-2009 Jouke Witteveen  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<linux/if.h>
 end_include
 
 begin_include
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<linux/mii.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
 end_include
 
 begin_include
@@ -1929,7 +1929,7 @@ argument_list|)
 operator|-
 literal|2
 expr_stmt|;
-comment|/* find the '.' seperating<interface> and<vlan> */
+comment|/* find the '.' separating<interface> and<vlan> */
 while|while
 condition|(
 name|sep

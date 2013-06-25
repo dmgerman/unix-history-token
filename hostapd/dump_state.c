@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / State dump  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / State dump  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"utils/includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -476,7 +482,8 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  AID=%d flags=0x%x %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n"
+literal|"  AID=%d flags=0x%x %s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s"
+literal|"\n"
 literal|"  capability=0x%x listen_interval=%d\n"
 argument_list|,
 name|sta
@@ -548,11 +555,10 @@ literal|""
 operator|)
 argument_list|,
 operator|(
+name|ap_sta_is_authorized
+argument_list|(
 name|sta
-operator|->
-name|flags
-operator|&
-name|WLAN_STA_AUTHORIZED
+argument_list|)
 condition|?
 literal|"[AUTHORIZED]"
 else|:
@@ -663,6 +669,18 @@ operator|&
 name|WLAN_STA_NONERP
 condition|?
 literal|"[NonERP]"
+else|:
+literal|""
+operator|)
+argument_list|,
+operator|(
+name|sta
+operator|->
+name|flags
+operator|&
+name|WLAN_STA_WPS2
+condition|?
+literal|"[WPS2]"
 else|:
 literal|""
 operator|)

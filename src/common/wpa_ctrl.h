@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant/hostapd control interface library  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant/hostapd control interface library  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -49,6 +49,11 @@ define|#
 directive|define
 name|WPA_EVENT_DISCONNECTED
 value|"CTRL-EVENT-DISCONNECTED "
+comment|/** Association rejected during connection attempt */
+define|#
+directive|define
+name|WPA_EVENT_ASSOC_REJECT
+value|"CTRL-EVENT-ASSOC-REJECT "
 comment|/** wpa_supplicant is exiting */
 define|#
 directive|define
@@ -99,11 +104,26 @@ define|#
 directive|define
 name|WPA_EVENT_EAP_FAILURE
 value|"CTRL-EVENT-EAP-FAILURE "
+comment|/** Network block temporarily disabled (e.g., due to authentication failure) */
+define|#
+directive|define
+name|WPA_EVENT_TEMP_DISABLED
+value|"CTRL-EVENT-SSID-TEMP-DISABLED "
+comment|/** Temporarily disabled network block re-enabled */
+define|#
+directive|define
+name|WPA_EVENT_REENABLED
+value|"CTRL-EVENT-SSID-REENABLED "
 comment|/** New scan results available */
 define|#
 directive|define
 name|WPA_EVENT_SCAN_RESULTS
 value|"CTRL-EVENT-SCAN-RESULTS "
+comment|/** wpa_supplicant state change */
+define|#
+directive|define
+name|WPA_EVENT_STATE_CHANGE
+value|"CTRL-EVENT-STATE-CHANGE "
 comment|/** A new BSS entry was added (followed by BSS entry id and BSSID) */
 define|#
 directive|define
@@ -124,6 +144,11 @@ define|#
 directive|define
 name|WPS_EVENT_AP_AVAILABLE_PBC
 value|"WPS-AP-AVAILABLE-PBC "
+comment|/** Available WPS AP with our address as authorized in scan results */
+define|#
+directive|define
+name|WPS_EVENT_AP_AVAILABLE_AUTH
+value|"WPS-AP-AVAILABLE-AUTH "
 comment|/** Available WPS AP with recently selected PIN registrar found in scan results  */
 define|#
 directive|define
@@ -163,6 +188,10 @@ define|#
 directive|define
 name|WPS_EVENT_ENROLLEE_SEEN
 value|"WPS-ENROLLEE-SEEN "
+define|#
+directive|define
+name|WPS_EVENT_OPEN_NETWORK
+value|"WPS-OPEN-NETWORK "
 comment|/* WPS ER events */
 define|#
 directive|define
@@ -180,6 +209,120 @@ define|#
 directive|define
 name|WPS_EVENT_ER_ENROLLEE_REMOVE
 value|"WPS-ER-ENROLLEE-REMOVE "
+define|#
+directive|define
+name|WPS_EVENT_ER_AP_SETTINGS
+value|"WPS-ER-AP-SETTINGS "
+define|#
+directive|define
+name|WPS_EVENT_ER_SET_SEL_REG
+value|"WPS-ER-AP-SET-SEL-REG "
+comment|/** P2P device found */
+define|#
+directive|define
+name|P2P_EVENT_DEVICE_FOUND
+value|"P2P-DEVICE-FOUND "
+comment|/** P2P device lost */
+define|#
+directive|define
+name|P2P_EVENT_DEVICE_LOST
+value|"P2P-DEVICE-LOST "
+comment|/** A P2P device requested GO negotiation, but we were not ready to start the  * negotiation */
+define|#
+directive|define
+name|P2P_EVENT_GO_NEG_REQUEST
+value|"P2P-GO-NEG-REQUEST "
+define|#
+directive|define
+name|P2P_EVENT_GO_NEG_SUCCESS
+value|"P2P-GO-NEG-SUCCESS "
+define|#
+directive|define
+name|P2P_EVENT_GO_NEG_FAILURE
+value|"P2P-GO-NEG-FAILURE "
+define|#
+directive|define
+name|P2P_EVENT_GROUP_FORMATION_SUCCESS
+value|"P2P-GROUP-FORMATION-SUCCESS "
+define|#
+directive|define
+name|P2P_EVENT_GROUP_FORMATION_FAILURE
+value|"P2P-GROUP-FORMATION-FAILURE "
+define|#
+directive|define
+name|P2P_EVENT_GROUP_STARTED
+value|"P2P-GROUP-STARTED "
+define|#
+directive|define
+name|P2P_EVENT_GROUP_REMOVED
+value|"P2P-GROUP-REMOVED "
+define|#
+directive|define
+name|P2P_EVENT_CROSS_CONNECT_ENABLE
+value|"P2P-CROSS-CONNECT-ENABLE "
+define|#
+directive|define
+name|P2P_EVENT_CROSS_CONNECT_DISABLE
+value|"P2P-CROSS-CONNECT-DISABLE "
+comment|/* parameters:<peer address><PIN> */
+define|#
+directive|define
+name|P2P_EVENT_PROV_DISC_SHOW_PIN
+value|"P2P-PROV-DISC-SHOW-PIN "
+comment|/* parameters:<peer address> */
+define|#
+directive|define
+name|P2P_EVENT_PROV_DISC_ENTER_PIN
+value|"P2P-PROV-DISC-ENTER-PIN "
+comment|/* parameters:<peer address> */
+define|#
+directive|define
+name|P2P_EVENT_PROV_DISC_PBC_REQ
+value|"P2P-PROV-DISC-PBC-REQ "
+comment|/* parameters:<peer address> */
+define|#
+directive|define
+name|P2P_EVENT_PROV_DISC_PBC_RESP
+value|"P2P-PROV-DISC-PBC-RESP "
+comment|/* parameters:<peer address><status> */
+define|#
+directive|define
+name|P2P_EVENT_PROV_DISC_FAILURE
+value|"P2P-PROV-DISC-FAILURE"
+comment|/* parameters:<freq><src addr><dialog token><update indicator><TLVs> */
+define|#
+directive|define
+name|P2P_EVENT_SERV_DISC_REQ
+value|"P2P-SERV-DISC-REQ "
+comment|/* parameters:<src addr><update indicator><TLVs> */
+define|#
+directive|define
+name|P2P_EVENT_SERV_DISC_RESP
+value|"P2P-SERV-DISC-RESP "
+define|#
+directive|define
+name|P2P_EVENT_INVITATION_RECEIVED
+value|"P2P-INVITATION-RECEIVED "
+define|#
+directive|define
+name|P2P_EVENT_INVITATION_RESULT
+value|"P2P-INVITATION-RESULT "
+define|#
+directive|define
+name|P2P_EVENT_FIND_STOPPED
+value|"P2P-FIND-STOPPED "
+define|#
+directive|define
+name|INTERWORKING_AP
+value|"INTERWORKING-AP "
+define|#
+directive|define
+name|INTERWORKING_NO_MATCH
+value|"INTERWORKING-NO-MATCH "
+define|#
+directive|define
+name|GAS_RESPONSE_INFO
+value|"GAS-RESPONSE-INFO "
 comment|/* hostapd control interface - fixed message prefixes */
 define|#
 directive|define
@@ -217,6 +360,79 @@ define|#
 directive|define
 name|AP_STA_DISCONNECTED
 value|"AP-STA-DISCONNECTED "
+comment|/* BSS command information masks */
+define|#
+directive|define
+name|WPA_BSS_MASK_ALL
+value|0xFFFFFFFF
+define|#
+directive|define
+name|WPA_BSS_MASK_ID
+value|BIT(0)
+define|#
+directive|define
+name|WPA_BSS_MASK_BSSID
+value|BIT(1)
+define|#
+directive|define
+name|WPA_BSS_MASK_FREQ
+value|BIT(2)
+define|#
+directive|define
+name|WPA_BSS_MASK_BEACON_INT
+value|BIT(3)
+define|#
+directive|define
+name|WPA_BSS_MASK_CAPABILITIES
+value|BIT(4)
+define|#
+directive|define
+name|WPA_BSS_MASK_QUAL
+value|BIT(5)
+define|#
+directive|define
+name|WPA_BSS_MASK_NOISE
+value|BIT(6)
+define|#
+directive|define
+name|WPA_BSS_MASK_LEVEL
+value|BIT(7)
+define|#
+directive|define
+name|WPA_BSS_MASK_TSF
+value|BIT(8)
+define|#
+directive|define
+name|WPA_BSS_MASK_AGE
+value|BIT(9)
+define|#
+directive|define
+name|WPA_BSS_MASK_IE
+value|BIT(10)
+define|#
+directive|define
+name|WPA_BSS_MASK_FLAGS
+value|BIT(11)
+define|#
+directive|define
+name|WPA_BSS_MASK_SSID
+value|BIT(12)
+define|#
+directive|define
+name|WPA_BSS_MASK_WPS_SCAN
+value|BIT(13)
+define|#
+directive|define
+name|WPA_BSS_MASK_P2P_SCAN
+value|BIT(14)
+define|#
+directive|define
+name|WPA_BSS_MASK_INTERNETW
+value|BIT(15)
+define|#
+directive|define
+name|WPA_BSS_MASK_WIFI_DISPLAY
+value|BIT(16)
 comment|/* wpa_supplicant/hostapd control interface access */
 comment|/**  * wpa_ctrl_open - Open a control interface to wpa_supplicant/hostapd  * @ctrl_path: Path for UNIX domain sockets; ignored if UDP sockets are used.  * Returns: Pointer to abstract control interface data or %NULL on failure  *  * This function is used to open a control interface to wpa_supplicant/hostapd.  * ctrl_path is usually /var/run/wpa_supplicant or /var/run/hostapd. This path  * is configured in wpa_supplicant/hostapd and other programs using the control  * interface need to use matching path configuration.  */
 name|struct
@@ -338,17 +554,51 @@ modifier|*
 name|ctrl
 parameter_list|)
 function_decl|;
+name|char
+modifier|*
+name|wpa_ctrl_get_remote_ifname
+parameter_list|(
+name|struct
+name|wpa_ctrl
+modifier|*
+name|ctrl
+parameter_list|)
+function_decl|;
+ifdef|#
+directive|ifdef
+name|ANDROID
+comment|/**  * wpa_ctrl_cleanup() - Delete any local UNIX domain socket files that  * may be left over from clients that were previously connected to  * wpa_supplicant. This keeps these files from being orphaned in the  * event of crashes that prevented them from being removed as part  * of the normal orderly shutdown.  */
+name|void
+name|wpa_ctrl_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* ANDROID */
 ifdef|#
 directive|ifdef
 name|CONFIG_CTRL_IFACE_UDP
+comment|/* Port range for multiple wpa_supplicant instances and multiple VIFs */
 define|#
 directive|define
 name|WPA_CTRL_IFACE_PORT
 value|9877
 define|#
 directive|define
+name|WPA_CTRL_IFACE_PORT_LIMIT
+value|50
+comment|/* decremented from start */
+define|#
+directive|define
 name|WPA_GLOBAL_CTRL_IFACE_PORT
 value|9878
+define|#
+directive|define
+name|WPA_GLOBAL_CTRL_IFACE_PORT_LIMIT
+value|20
+comment|/* incremented from start */
 endif|#
 directive|endif
 comment|/* CONFIG_CTRL_IFACE_UDP */

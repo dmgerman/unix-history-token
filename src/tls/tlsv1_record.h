@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLSv1 Record Protocol  * Copyright (c) 2006-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * TLSv1 Record Protocol  * Copyright (c) 2006-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|TLS_MAX_WRITE_MAC_SECRET_LEN
-value|20
+value|32
 end_define
 
 begin_define
@@ -93,6 +93,9 @@ begin_struct
 struct|struct
 name|tlsv1_record_layer
 block|{
+name|u16
+name|tls_version
+decl_stmt|;
 name|u8
 name|write_mac_secret
 index|[
@@ -239,6 +242,11 @@ name|buf
 parameter_list|,
 name|size_t
 name|buf_size
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|payload
 parameter_list|,
 name|size_t
 name|payload_len

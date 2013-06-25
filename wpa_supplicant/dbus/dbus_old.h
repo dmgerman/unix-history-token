@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / dbus-based control interface  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / dbus-based control interface  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -307,6 +307,37 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|wpa_supplicant_dbus_notify_certification
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+name|int
+name|depth
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|subject
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cert_hash
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|cert
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|wpas_dbus_decompose_object_path
@@ -443,6 +474,39 @@ name|struct
 name|wps_credential
 modifier|*
 name|cred
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|wpa_supplicant_dbus_notify_certification
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+name|int
+name|depth
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|subject
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cert_hash
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|cert
 parameter_list|)
 block|{ }
 end_function

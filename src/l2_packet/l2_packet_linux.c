@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Layer2 packet handling with Linux packet sockets  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - Layer2 packet handling with Linux packet sockets  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -204,9 +204,16 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"l2_packet_send - send"
+name|MSG_ERROR
+argument_list|,
+literal|"l2_packet_send - send: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -303,11 +310,20 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|perror
+block|{
+name|wpa_printf
 argument_list|(
-literal|"l2_packet_send - sendto"
+name|MSG_ERROR
+argument_list|,
+literal|"l2_packet_send - sendto: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|ret
@@ -409,9 +425,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"l2_packet_receive - recvfrom"
+name|MSG_DEBUG
+argument_list|,
+literal|"l2_packet_receive - recvfrom: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -584,9 +607,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket(PF_PACKET)"
+name|MSG_ERROR
+argument_list|,
+literal|"%s: socket(PF_PACKET): %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|os_free
@@ -646,9 +678,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGIFINDEX]"
+name|MSG_ERROR
+argument_list|,
+literal|"%s: ioctl[SIOCGIFINDEX]: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -736,9 +777,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"bind[PF_PACKET]"
+name|MSG_ERROR
+argument_list|,
+literal|"%s: bind[PF_PACKET]: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -774,9 +824,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGIFHWADDR]"
+name|MSG_ERROR
+argument_list|,
+literal|"%s: ioctl[SIOCGIFHWADDR]: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -928,9 +987,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket"
+name|MSG_ERROR
+argument_list|,
+literal|"%s: socket: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -990,9 +1058,18 @@ name|errno
 operator|!=
 name|EADDRNOTAVAIL
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGIFADDR]"
+name|MSG_ERROR
+argument_list|,
+literal|"%s: ioctl[SIOCGIFADDR]: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close

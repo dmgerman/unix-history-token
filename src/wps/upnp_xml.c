@@ -42,7 +42,6 @@ comment|/**  * xml_next_tag - Advance to next tag  * @in: Input  * @out: OUT: st
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|xml_next_tag
 parameter_list|(

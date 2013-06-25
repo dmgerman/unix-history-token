@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / main() function for UNIX like OSes and MinGW  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / main() function for UNIX like OSes and MinGW  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -77,7 +77,8 @@ literal|"  wpa_supplicant [-BddhKLqqstuvW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
-literal|"        [-b<br_ifname>] [-f<debug file>] \\\n"
+literal|"        [-b<br_ifname>] [-f<debug file>] [-e<entropy file>] "
+literal|"\\\n"
 literal|"        [-o<override driver>] [-O<override ctrl>] \\\n"
 literal|"        [-N -i<ifname> -c<conf> [-C<ctrl>] "
 literal|"[-D<driver>] \\\n"
@@ -138,6 +139,7 @@ literal|"  -C = ctrl_interface parameter (only used if -c is not)\n"
 literal|"  -i = interface name\n"
 literal|"  -d = increase debugging verbosity (-dd even more)\n"
 literal|"  -D = driver name (can be multiple drivers: nl80211,wext)\n"
+literal|"  -e = entropy file\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -168,11 +170,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_DEBUG_SYSLOG */
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_LINUX_TRACING
+name|printf
+argument_list|(
+literal|"  -T = record to Linux tracing in addition to logging\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"       (records all messages regardless of debug verbosity)\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_LINUX_TRACING */
 name|printf
 argument_list|(
 literal|"  -t = include timestamp in debug messages\n"
 literal|"  -h = show this help text\n"
-literal|"  -L = show license (GPL and BSD)\n"
+literal|"  -L = show license (BSD)\n"
 literal|"  -o = override driver parameter for new interfaces\n"
 literal|"  -O = override ctrl_interface parameter for new interfaces\n"
 literal|"  -p = driver parameters\n"
@@ -263,18 +281,40 @@ specifier|static
 name|void
 name|wpa_supplicant_fd_workaround
 parameter_list|(
-name|void
+name|int
+name|start
 parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
 name|__linux__
+specifier|static
 name|int
-name|s
-decl_stmt|,
+name|fd
+index|[
+literal|3
+index|]
+init|=
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 comment|/* When started from pcmcia-cs scripts, wpa_supplicant might start with 	 * fd 0, 1, and 2 closed. This will cause some issues because many 	 * places in wpa_supplicant are still printing out to stdout. As a 	 * workaround, make sure that fd's 0, 1, and 2 are not used for other 	 * sockets. */
+if|if
+condition|(
+name|start
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -289,7 +329,10 @@ name|i
 operator|++
 control|)
 block|{
-name|s
+name|fd
+index|[
+name|i
+index|]
 operator|=
 name|open
 argument_list|(
@@ -300,17 +343,77 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
+name|fd
+index|[
+name|i
+index|]
 operator|>
 literal|2
 condition|)
 block|{
 name|close
 argument_list|(
-name|s
+name|fd
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
+name|fd
+index|[
+name|i
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 break|break;
+block|}
+block|}
+block|}
+else|else
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|fd
+index|[
+name|i
+index|]
+operator|>=
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|fd
+index|[
+name|i
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 block|}
 block|}
 endif|#
@@ -418,7 +521,9 @@ operator|=
 literal|1
 expr_stmt|;
 name|wpa_supplicant_fd_workaround
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -434,7 +539,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:C:D:df:g:hi:KLNo:O:p:P:qstuvW"
+literal|"b:Bc:C:D:de:f:g:hi:KLNo:O:p:P:qsTtuvW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -526,6 +631,16 @@ break|break;
 endif|#
 directive|endif
 comment|/* CONFIG_NO_STDOUT_DEBUG */
+case|case
+literal|'e'
+case|:
+name|params
+operator|.
+name|entropy_file
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|CONFIG_DEBUG_FILE
@@ -671,6 +786,21 @@ break|break;
 endif|#
 directive|endif
 comment|/* CONFIG_DEBUG_SYSLOG */
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_LINUX_TRACING
+case|case
+literal|'T'
+case|:
+name|params
+operator|.
+name|wpa_debug_tracing
+operator|++
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_LINUX_TRACING */
 case|case
 literal|'t'
 case|:
@@ -730,12 +860,12 @@ operator|++
 expr_stmt|;
 name|iface
 operator|=
-name|os_realloc
+name|os_realloc_array
 argument_list|(
 name|ifaces
 argument_list|,
 name|iface_count
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -827,6 +957,17 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+else|else
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"Successfully initialized "
+literal|"wpa_supplicant"
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -946,6 +1087,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|wpa_supplicant_fd_workaround
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|os_free
 argument_list|(
 name|ifaces

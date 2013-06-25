@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP-PSK (RFC 4764) server  * Copyright (c) 2005-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * Note: EAP-PSK is an EAP authentication method and as such, completely  * different from WPA-PSK. This file is not needed for WPA-PSK functionality.  */
+comment|/*  * hostapd / EAP-PSK (RFC 4764) server  * Copyright (c) 2005-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * Note: EAP-PSK is an EAP authentication method and as such, completely  * different from WPA-PSK. This file is not needed for WPA-PSK functionality.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/aes_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -247,7 +253,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|data
 operator|->
@@ -599,9 +605,16 @@ operator|->
 name|mac_s
 argument_list|)
 condition|)
+block|{
+name|os_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|os_free
 argument_list|(
 name|buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Wi-Fi Protected Setup - internal definitions  * Copyright (c) 2008-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Wi-Fi Protected Setup - internal definitions  * Copyright (c) 2008-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,18 @@ include|#
 directive|include
 file|"wps.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"wps_attr_parse.h"
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|wps_nfc_pw_token
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/**  * struct wps_data - WPS registration protocol data  *  * This data is stored at the EAP-WSC server/peer method and it is kept for a  * single registration protocol run.  */
@@ -244,6 +256,9 @@ comment|/** 	 * config_error - Configuration Error value to be used in NACK 	 */
 name|u16
 name|config_error
 decl_stmt|;
+name|u16
+name|error_indication
+decl_stmt|;
 name|int
 name|ext_reg
 decl_stmt|;
@@ -288,369 +303,20 @@ decl_stmt|;
 name|int
 name|use_psk_key
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|wps_parse_attr
-block|{
-comment|/* fixed length fields */
-specifier|const
 name|u8
-modifier|*
-name|version
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|msg_type
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|enrollee_nonce
-decl_stmt|;
-comment|/* WPS_NONCE_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|registrar_nonce
-decl_stmt|;
-comment|/* WPS_NONCE_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|uuid_r
-decl_stmt|;
-comment|/* WPS_UUID_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|uuid_e
-decl_stmt|;
-comment|/* WPS_UUID_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|auth_type_flags
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|encr_type_flags
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|conn_type_flags
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|config_methods
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|sel_reg_config_methods
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|primary_dev_type
-decl_stmt|;
-comment|/* 8 octets */
-specifier|const
-name|u8
-modifier|*
-name|rf_bands
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|assoc_state
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|config_error
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|dev_password_id
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|oob_dev_password
-decl_stmt|;
-comment|/* WPS_OOB_DEVICE_PASSWORD_ATTR_LEN (54) 				     * octets */
-specifier|const
-name|u8
-modifier|*
-name|os_version
-decl_stmt|;
-comment|/* 4 octets */
-specifier|const
-name|u8
-modifier|*
-name|wps_state
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|authenticator
-decl_stmt|;
-comment|/* WPS_AUTHENTICATOR_LEN (8) octets */
-specifier|const
-name|u8
-modifier|*
-name|r_hash1
-decl_stmt|;
-comment|/* WPS_HASH_LEN (32) octets */
-specifier|const
-name|u8
-modifier|*
-name|r_hash2
-decl_stmt|;
-comment|/* WPS_HASH_LEN (32) octets */
-specifier|const
-name|u8
-modifier|*
-name|e_hash1
-decl_stmt|;
-comment|/* WPS_HASH_LEN (32) octets */
-specifier|const
-name|u8
-modifier|*
-name|e_hash2
-decl_stmt|;
-comment|/* WPS_HASH_LEN (32) octets */
-specifier|const
-name|u8
-modifier|*
-name|r_snonce1
-decl_stmt|;
-comment|/* WPS_SECRET_NONCE_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|r_snonce2
-decl_stmt|;
-comment|/* WPS_SECRET_NONCE_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|e_snonce1
-decl_stmt|;
-comment|/* WPS_SECRET_NONCE_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|e_snonce2
-decl_stmt|;
-comment|/* WPS_SECRET_NONCE_LEN (16) octets */
-specifier|const
-name|u8
-modifier|*
-name|key_wrap_auth
-decl_stmt|;
-comment|/* WPS_KWA_LEN (8) octets */
-specifier|const
-name|u8
-modifier|*
-name|auth_type
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|encr_type
-decl_stmt|;
-comment|/* 2 octets */
-specifier|const
-name|u8
-modifier|*
-name|network_idx
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|network_key_idx
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|mac_addr
-decl_stmt|;
-comment|/* ETH_ALEN (6) octets */
-specifier|const
-name|u8
-modifier|*
-name|key_prov_auto
-decl_stmt|;
-comment|/* 1 octet (Bool) */
-specifier|const
-name|u8
-modifier|*
-name|dot1x_enabled
-decl_stmt|;
-comment|/* 1 octet (Bool) */
-specifier|const
-name|u8
-modifier|*
-name|selected_registrar
-decl_stmt|;
-comment|/* 1 octet (Bool) */
-specifier|const
-name|u8
-modifier|*
-name|request_type
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|response_type
-decl_stmt|;
-comment|/* 1 octet */
-specifier|const
-name|u8
-modifier|*
-name|ap_setup_locked
-decl_stmt|;
-comment|/* 1 octet */
-comment|/* variable length fields */
-specifier|const
-name|u8
-modifier|*
-name|manufacturer
-decl_stmt|;
-name|size_t
-name|manufacturer_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|model_name
-decl_stmt|;
-name|size_t
-name|model_name_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|model_number
-decl_stmt|;
-name|size_t
-name|model_number_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|serial_number
-decl_stmt|;
-name|size_t
-name|serial_number_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|dev_name
-decl_stmt|;
-name|size_t
-name|dev_name_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|public_key
-decl_stmt|;
-name|size_t
-name|public_key_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|encr_settings
-decl_stmt|;
-name|size_t
-name|encr_settings_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|ssid
-decl_stmt|;
-comment|/*<= 32 octets */
-name|size_t
-name|ssid_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|network_key
-decl_stmt|;
-comment|/*<= 64 octets */
-name|size_t
-name|network_key_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|eap_type
-decl_stmt|;
-comment|/*<= 8 octets */
-name|size_t
-name|eap_type_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|eap_identity
-decl_stmt|;
-comment|/*<= 64 octets */
-name|size_t
-name|eap_identity_len
-decl_stmt|;
-comment|/* attributes that can occur multiple times */
-define|#
-directive|define
-name|MAX_CRED_COUNT
-value|10
-specifier|const
-name|u8
-modifier|*
-name|cred
+name|p2p_dev_addr
 index|[
-name|MAX_CRED_COUNT
+name|ETH_ALEN
 index|]
 decl_stmt|;
-name|size_t
-name|cred_len
-index|[
-name|MAX_CRED_COUNT
-index|]
+comment|/* P2P Device Address of the client or 				    * 00:00:00:00:00:00 if not a P2p client */
+name|int
+name|pbc_in_m1
 decl_stmt|;
-name|size_t
-name|num_cred
+name|struct
+name|wps_nfc_pw_token
+modifier|*
+name|nfc_pw_token
 decl_stmt|;
 block|}
 struct|;
@@ -758,6 +424,12 @@ parameter_list|,
 name|enum
 name|wps_msg_type
 name|msg
+parameter_list|,
+name|u16
+name|config_error
+parameter_list|,
+name|u16
+name|error_indication
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -816,48 +488,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|oob_device_data
-name|oob_ufd_device_data
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|oob_device_data
-name|oob_nfc_device_data
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|oob_nfc_device_data
-name|oob_nfc_pn531_device_data
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* wps_attr_parse.c */
-end_comment
-
 begin_function_decl
-name|int
-name|wps_parse_msg
-parameter_list|(
-specifier|const
 name|struct
 name|wpabuf
 modifier|*
-name|msg
-parameter_list|,
+name|wps_build_wsc_ack
+parameter_list|(
 name|struct
-name|wps_parse_attr
+name|wps_data
 modifier|*
-name|attr
+name|wps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wpabuf
+modifier|*
+name|wps_build_wsc_nack
+parameter_list|(
+name|struct
+name|wps_data
+modifier|*
+name|wps
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1047,6 +701,29 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|wps_build_wfa_ext
+parameter_list|(
+name|struct
+name|wpabuf
+modifier|*
+name|msg
+parameter_list|,
+name|int
+name|req_to_enroll
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|auth_macs
+parameter_list|,
+name|size_t
+name|auth_macs_count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|wps_build_msg_type
 parameter_list|(
 name|struct
@@ -1165,17 +842,43 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|wps_build_oob_dev_password
+name|wps_build_oob_dev_pw
 parameter_list|(
 name|struct
 name|wpabuf
 modifier|*
 name|msg
 parameter_list|,
+name|u16
+name|dev_pw_id
+parameter_list|,
+specifier|const
 name|struct
-name|wps_context
+name|wpabuf
 modifier|*
-name|wps
+name|pubkey
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|dev_pw
+parameter_list|,
+name|size_t
+name|dev_pw_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wpabuf
+modifier|*
+name|wps_ie_encapsulate
+parameter_list|(
+name|struct
+name|wpabuf
+modifier|*
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1406,69 +1109,62 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* ndef.c */
-end_comment
-
 begin_function_decl
-name|struct
-name|wpabuf
-modifier|*
-name|ndef_parse_wifi
-parameter_list|(
-name|struct
-name|wpabuf
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|wpabuf
-modifier|*
-name|ndef_build_wifi
-parameter_list|(
-name|struct
-name|wpabuf
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|wps_version_supported
-parameter_list|(
 specifier|const
 name|u8
 modifier|*
-name|version
+name|wps_authorized_macs
+parameter_list|(
+name|struct
+name|wps_registrar
+modifier|*
+name|reg
+parameter_list|,
+name|size_t
+modifier|*
+name|count
 parameter_list|)
-block|{
-comment|/* Require major version match, but allow minor version differences */
-return|return
-name|version
-operator|&&
-operator|(
-operator|*
-name|version
-operator|&
-literal|0xf0
-operator|)
-operator|==
-operator|(
-name|WPS_VERSION
-operator|&
-literal|0xf0
-operator|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wps_registrar_pbc_overlap
+parameter_list|(
+name|struct
+name|wps_registrar
+modifier|*
+name|reg
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|uuid_e
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wps_registrar_remove_nfc_pw_token
+parameter_list|(
+name|struct
+name|wps_registrar
+modifier|*
+name|reg
+parameter_list|,
+name|struct
+name|wps_nfc_pw_token
+modifier|*
+name|token
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

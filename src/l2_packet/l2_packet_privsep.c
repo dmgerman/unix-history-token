@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Layer2 packet handling with privilege separation  * Copyright (c) 2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - Layer2 packet handling with privilege separation  * Copyright (c) 2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -1002,7 +1002,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"bind(PF_UNIX)"
+literal|"l2-pkt-privsep: bind(PF_UNIX)"
 argument_list|)
 expr_stmt|;
 goto|goto

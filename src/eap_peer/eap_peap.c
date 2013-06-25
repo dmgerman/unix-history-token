@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: EAP-PEAP (draft-josefsson-pppext-eap-tls-eap-10.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer method: EAP-PEAP (draft-josefsson-pppext-eap-tls-eap-10.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -695,6 +695,8 @@ operator|->
 name|ssl
 argument_list|,
 name|config
+argument_list|,
+name|EAP_TYPE_PEAP
 argument_list|)
 condition|)
 block|{
@@ -814,7 +816,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eap_tlv_build_nak - Build EAP-TLV NAK message  * @id: EAP identifier for the header  * @nak_type: TLV type (EAP_TLV_*)  * Returns: Buffer to the allocated EAP-TLV NAK message or %NULL on failure  *  * This funtion builds an EAP-TLV NAK message. The caller is responsible for  * freeing the returned buffer.  */
+comment|/**  * eap_tlv_build_nak - Build EAP-TLV NAK message  * @id: EAP identifier for the header  * @nak_type: TLV type (EAP_TLV_*)  * Returns: Buffer to the allocated EAP-TLV NAK message or %NULL on failure  *  * This function builds an EAP-TLV NAK message. The caller is responsible for  * freeing the returned buffer.  */
 end_comment
 
 begin_function
@@ -1241,6 +1243,8 @@ argument_list|,
 literal|40
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|peap_prfplus
 argument_list|(
 name|data
@@ -1267,7 +1271,13 @@ argument_list|(
 name|imck
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG
@@ -1596,7 +1606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eap_tlv_build_result - Build EAP-TLV Result message  * @id: EAP identifier for the header  * @status: Status (EAP_TLV_RESULT_SUCCESS or EAP_TLV_RESULT_FAILURE)  * Returns: Buffer to the allocated EAP-TLV Result message or %NULL on failure  *  * This funtion builds an EAP-TLV Result message. The caller is responsible for  * freeing the returned buffer.  */
+comment|/**  * eap_tlv_build_result - Build EAP-TLV Result message  * @id: EAP identifier for the header  * @status: Status (EAP_TLV_RESULT_SUCCESS or EAP_TLV_RESULT_FAILURE)  * Returns: Buffer to the allocated EAP-TLV Result message or %NULL on failure  *  * This function builds an EAP-TLV Result message. The caller is responsible  * for freeing the returned buffer.  */
 end_comment
 
 begin_function
@@ -5934,6 +5944,8 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* 		 * Note: It looks like Microsoft implementation requires null 		 * termination for this label while the one used for deriving 		 * IPMK|CMK did not use null termination. 		 */
+if|if
+condition|(
 name|peap_prfplus
 argument_list|(
 name|data
@@ -5963,7 +5975,19 @@ argument_list|(
 name|csk
 argument_list|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|os_free
+argument_list|(
+name|key
+argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG

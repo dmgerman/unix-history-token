@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * SSL/TLS interface definition  * Copyright (c) 2004-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * SSL/TLS interface definition  * Copyright (c) 2004-2010, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -50,15 +50,6 @@ decl_stmt|;
 name|size_t
 name|server_random_len
 decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|inner_secret
-decl_stmt|;
-comment|/* TLS/IA inner secret */
-name|size_t
-name|inner_secret_len
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -67,9 +58,13 @@ begin_enum
 enum|enum
 name|tls_event
 block|{
+name|TLS_CERT_CHAIN_SUCCESS
+block|,
 name|TLS_CERT_CHAIN_FAILURE
 block|,
 name|TLS_PEER_CERTIFICATE
+block|,
+name|TLS_ALERT
 block|}
 enum|;
 end_enum
@@ -180,6 +175,24 @@ decl_stmt|;
 block|}
 name|peer_cert
 struct|;
+struct|struct
+block|{
+name|int
+name|is_local
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|type
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|description
+decl_stmt|;
+block|}
+name|alert
+struct|;
 block|}
 union|;
 end_union
@@ -205,6 +218,9 @@ name|pkcs11_module_path
 decl_stmt|;
 name|int
 name|fips_mode
+decl_stmt|;
+name|int
+name|cert_in_cb
 decl_stmt|;
 name|void
 function_decl|(
@@ -248,8 +264,15 @@ name|TLS_CONN_DISABLE_TIME_CHECKS
 value|BIT(1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TLS_CONN_DISABLE_SESSION_TICKET
+value|BIT(2)
+end_define
+
 begin_comment
-comment|/**  * struct tls_connection_params - Parameters for TLS connection  * @ca_cert: File or reference name for CA X.509 certificate in PEM or DER  * format  * @ca_cert_blob: ca_cert as inlined data or %NULL if not used  * @ca_cert_blob_len: ca_cert_blob length  * @ca_path: Path to CA certificates (OpenSSL specific)  * @subject_match: String to match in the subject of the peer certificate or  * %NULL to allow all subjects  * @altsubject_match: String to match in the alternative subject of the peer  * certificate or %NULL to allow all alternative subjects  * @client_cert: File or reference name for client X.509 certificate in PEM or  * DER format  * @client_cert_blob: client_cert as inlined data or %NULL if not used  * @client_cert_blob_len: client_cert_blob length  * @private_key: File or reference name for client private key in PEM or DER  * format (traditional format (RSA PRIVATE KEY) or PKCS#8 (PRIVATE KEY)  * @private_key_blob: private_key as inlined data or %NULL if not used  * @private_key_blob_len: private_key_blob length  * @private_key_passwd: Passphrase for decrypted private key, %NULL if no  * passphrase is used.  * @dh_file: File name for DH/DSA data in PEM format, or %NULL if not used  * @dh_blob: dh_file as inlined data or %NULL if not used  * @dh_blob_len: dh_blob length  * @engine: 1 = use engine (e.g., a smartcard) for private key operations  * (this is OpenSSL specific for now)  * @engine_id: engine id string (this is OpenSSL specific for now)  * @ppin: pointer to the pin variable in the configuration  * (this is OpenSSL specific for now)  * @key_id: the private key's id when using engine (this is OpenSSL  * specific for now)  * @cert_id: the certificate's id when using engine  * @ca_cert_id: the CA certificate's id when using engine  * @tls_ia: Whether to enable TLS/IA (for EAP-TTLSv1)  * @flags: Parameter options (TLS_CONN_*)  *  * TLS connection parameters to be configured with tls_connection_set_params()  * and tls_global_set_params().  *  * Certificates and private key can be configured either as a reference name  * (file path or reference to certificate store) or by providing the same data  * as a pointer to the data in memory. Only one option will be used for each  * field.  */
+comment|/**  * struct tls_connection_params - Parameters for TLS connection  * @ca_cert: File or reference name for CA X.509 certificate in PEM or DER  * format  * @ca_cert_blob: ca_cert as inlined data or %NULL if not used  * @ca_cert_blob_len: ca_cert_blob length  * @ca_path: Path to CA certificates (OpenSSL specific)  * @subject_match: String to match in the subject of the peer certificate or  * %NULL to allow all subjects  * @altsubject_match: String to match in the alternative subject of the peer  * certificate or %NULL to allow all alternative subjects  * @client_cert: File or reference name for client X.509 certificate in PEM or  * DER format  * @client_cert_blob: client_cert as inlined data or %NULL if not used  * @client_cert_blob_len: client_cert_blob length  * @private_key: File or reference name for client private key in PEM or DER  * format (traditional format (RSA PRIVATE KEY) or PKCS#8 (PRIVATE KEY)  * @private_key_blob: private_key as inlined data or %NULL if not used  * @private_key_blob_len: private_key_blob length  * @private_key_passwd: Passphrase for decrypted private key, %NULL if no  * passphrase is used.  * @dh_file: File name for DH/DSA data in PEM format, or %NULL if not used  * @dh_blob: dh_file as inlined data or %NULL if not used  * @dh_blob_len: dh_blob length  * @engine: 1 = use engine (e.g., a smartcard) for private key operations  * (this is OpenSSL specific for now)  * @engine_id: engine id string (this is OpenSSL specific for now)  * @ppin: pointer to the pin variable in the configuration  * (this is OpenSSL specific for now)  * @key_id: the private key's id when using engine (this is OpenSSL  * specific for now)  * @cert_id: the certificate's id when using engine  * @ca_cert_id: the CA certificate's id when using engine  * @flags: Parameter options (TLS_CONN_*)  *  * TLS connection parameters to be configured with tls_connection_set_params()  * and tls_global_set_params().  *  * Certificates and private key can be configured either as a reference name  * (file path or reference to certificate store) or by providing the same data  * as a pointer to the data in memory. Only one option will be used for each  * field.  */
 end_comment
 
 begin_struct
@@ -327,9 +350,6 @@ name|dh_blob
 decl_stmt|;
 name|size_t
 name|dh_blob_len
-decl_stmt|;
-name|int
-name|tls_ia
 decl_stmt|;
 comment|/* OpenSSL specific variables */
 name|int
@@ -602,30 +622,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * tls_connection_set_ia - Set TLS/IA parameters  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @tls_ia: 1 = enable TLS/IA  * Returns: 0 on success, -1 on failure  *  * This function is used to configure TLS/IA in server mode where  * tls_connection_set_params() is not used.  */
-end_comment
-
-begin_function_decl
-name|int
-name|__must_check
-name|tls_connection_set_ia
-parameter_list|(
-name|void
-modifier|*
-name|tls_ctx
-parameter_list|,
-name|struct
-name|tls_connection
-modifier|*
-name|conn
-parameter_list|,
-name|int
-name|tls_ia
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/**  * tls_connection_get_keys - Get master key and random data from TLS connection  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @keys: Structure of key/random data (filled on success)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
@@ -652,7 +648,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * tls_connection_prf - Use TLS-PRF to derive keying material  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @label: Label (e.g., description of the key) for PRF  * @server_random_first: seed is 0 = client_random|server_random,  * 1 = server_random|client_random  * @out: Buffer for output data from TLS-PRF  * @out_len: Length of the output buffer  * Returns: 0 on success, -1 on failure  *  * This function is optional to implement if tls_connection_get_keys() provides  * access to master secret and server/client random values. If these values are  * not exported from the TLS library, tls_connection_prf() is required so that  * further keying material can be derived from the master secret. If not  * implemented, the function will still need to be defined, but it can just  * return -1. Example implementation of this function is in tls_prf() function  * when it is called with seed set to client_random|server_random (or  * server_random|client_random).  */
+comment|/**  * tls_connection_prf - Use TLS-PRF to derive keying material  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @label: Label (e.g., description of the key) for PRF  * @server_random_first: seed is 0 = client_random|server_random,  * 1 = server_random|client_random  * @out: Buffer for output data from TLS-PRF  * @out_len: Length of the output buffer  * Returns: 0 on success, -1 on failure  *  * This function is optional to implement if tls_connection_get_keys() provides  * access to master secret and server/client random values. If these values are  * not exported from the TLS library, tls_connection_prf() is required so that  * further keying material can be derived from the master secret. If not  * implemented, the function will still need to be defined, but it can just  * return -1. Example implementation of this function is in tls_prf_sha1_md5()  * when it is called with seed set to client_random|server_random (or  * server_random|client_random).  */
 end_comment
 
 begin_function_decl
@@ -717,6 +713,40 @@ name|wpabuf
 modifier|*
 modifier|*
 name|appl_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wpabuf
+modifier|*
+name|tls_connection_handshake2
+parameter_list|(
+name|void
+modifier|*
+name|tls_ctx
+parameter_list|,
+name|struct
+name|tls_connection
+modifier|*
+name|conn
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|in_data
+parameter_list|,
+name|struct
+name|wpabuf
+modifier|*
+modifier|*
+name|appl_data
+parameter_list|,
+name|int
+modifier|*
+name|more_data_needed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -807,6 +837,34 @@ name|struct
 name|wpabuf
 modifier|*
 name|in_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wpabuf
+modifier|*
+name|tls_connection_decrypt2
+parameter_list|(
+name|void
+modifier|*
+name|tls_ctx
+parameter_list|,
+name|struct
+name|tls_connection
+modifier|*
+name|conn
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|in_data
+parameter_list|,
+name|int
+modifier|*
+name|more_data_needed
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1037,17 +1095,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|TLS_CAPABILITY_IA
-value|0x0001
-end_define
-
-begin_comment
-comment|/* TLS Inner Application (TLS/IA) */
-end_comment
-
 begin_comment
 comment|/**  * tls_capabilities - Get supported TLS capabilities  * @tls_ctx: TLS context data from tls_init()  * Returns: Bit field of supported TLS capabilities (TLS_CAPABILITY_*)  */
 end_comment
@@ -1060,81 +1107,6 @@ parameter_list|(
 name|void
 modifier|*
 name|tls_ctx
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * tls_connection_ia_send_phase_finished - Send a TLS/IA PhaseFinished message  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @final: 1 = FinalPhaseFinished, 0 = IntermediatePhaseFinished  * Returns: Encrypted TLS/IA data, %NULL on failure  *  * This function is used to send the TLS/IA end phase message, e.g., when the  * EAP server completes EAP-TTLSv1.  */
-end_comment
-
-begin_function_decl
-name|struct
-name|wpabuf
-modifier|*
-name|tls_connection_ia_send_phase_finished
-parameter_list|(
-name|void
-modifier|*
-name|tls_ctx
-parameter_list|,
-name|struct
-name|tls_connection
-modifier|*
-name|conn
-parameter_list|,
-name|int
-name|final
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * tls_connection_ia_final_phase_finished - Has final phase been completed  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * Returns: 1 if valid FinalPhaseFinished has been received, 0 if not, or -1  * on failure  */
-end_comment
-
-begin_function_decl
-name|int
-name|__must_check
-name|tls_connection_ia_final_phase_finished
-parameter_list|(
-name|void
-modifier|*
-name|tls_ctx
-parameter_list|,
-name|struct
-name|tls_connection
-modifier|*
-name|conn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * tls_connection_ia_permute_inner_secret - Permute TLS/IA inner secret  * @tls_ctx: TLS context data from tls_init()  * @conn: Connection context data from tls_connection_init()  * @key: Session key material (session_key vectors with 2-octet length), or  * %NULL if no session key was generating in the current phase  * @key_len: Length of session key material  * Returns: 0 on success, -1 on failure  */
-end_comment
-
-begin_function_decl
-name|int
-name|__must_check
-name|tls_connection_ia_permute_inner_secret
-parameter_list|(
-name|void
-modifier|*
-name|tls_ctx
-parameter_list|,
-name|struct
-name|tls_connection
-modifier|*
-name|conn
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|key
-parameter_list|,
-name|size_t
-name|key_len
 parameter_list|)
 function_decl|;
 end_function_decl
