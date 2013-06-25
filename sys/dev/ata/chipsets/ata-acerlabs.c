@@ -738,7 +738,7 @@ name|free
 argument_list|(
 name|res
 argument_list|,
-name|M_TEMP
+name|M_ATAPCI
 argument_list|)
 expr_stmt|;
 return|return
