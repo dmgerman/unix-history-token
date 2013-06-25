@@ -499,6 +499,15 @@ argument_list|)
 block|,
 name|AXE_DEV
 argument_list|(
+name|LENOVO
+argument_list|,
+name|ETHERNET
+argument_list|,
+name|AXE_FLAG_772B
+argument_list|)
+block|,
+name|AXE_DEV
+argument_list|(
 name|LINKSYS2
 argument_list|,
 name|USB200M
