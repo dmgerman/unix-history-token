@@ -175,6 +175,14 @@ name|RESET_USAGE
 block|}
 block|,
 block|{
+literal|"logpage"
+block|,
+name|logpage
+block|,
+name|LOGPAGE_USAGE
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
