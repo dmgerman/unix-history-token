@@ -106,18 +106,21 @@ name|XBDCF_Q_MASK
 init|=
 literal|0xFF
 block|,
+comment|/* This command has contributed to xbd_qfrozen_cnt. */
 name|XBDCF_FROZEN
 init|=
 literal|1
 operator|<<
 literal|8
 block|,
-name|XBDCF_POLLED
+comment|/* Freeze the command queue on dispatch (i.e. single step command). */
+name|XBDCF_Q_FREEZE
 init|=
 literal|1
 operator|<<
 literal|9
 block|,
+comment|/* Bus DMA returned EINPROGRESS for this command. */
 name|XBDCF_ASYNC_MAPPING
 init|=
 literal|1
@@ -296,26 +299,40 @@ operator|<<
 literal|1
 block|,
 comment|/* backend supports barriers */
-name|XBDF_READY
+name|XBDF_FLUSH
 init|=
 literal|1
 operator|<<
 literal|2
+block|,
+comment|/* backend supports flush */
+name|XBDF_READY
+init|=
+literal|1
+operator|<<
+literal|3
 block|,
 comment|/* Is ready */
 name|XBDF_CM_SHORTAGE
 init|=
 literal|1
 operator|<<
-literal|3
+literal|4
 block|,
 comment|/* Free cm resource shortage active. */
 name|XBDF_GNT_SHORTAGE
 init|=
 literal|1
 operator|<<
-literal|4
+literal|5
+block|,
 comment|/* Grant ref resource shortage active */
+name|XBDF_WAIT_IDLE
+init|=
+literal|1
+operator|<<
+literal|6
+comment|/* 				     * No new work until oustanding work 				     * completes. 				     */
 block|}
 name|xbd_flag_t
 typedef|;
@@ -521,6 +538,36 @@ operator|.
 name|q_length
 operator|--
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|uint32_t
+name|xbd_queue_length
+parameter_list|(
+name|struct
+name|xbd_softc
+modifier|*
+name|sc
+parameter_list|,
+name|xbd_q_index_t
+name|index
+parameter_list|)
+block|{
+return|return
+operator|(
+name|sc
+operator|->
+name|xbd_cm_q
+index|[
+name|index
+index|]
+operator|.
+name|q_length
+operator|)
+return|;
 block|}
 end_function
 
@@ -1018,7 +1065,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|xbd_initq_bio
 parameter_list|(
@@ -1041,7 +1088,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|xbd_enqueue_bio
 parameter_list|(
@@ -1078,7 +1125,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|xbd_requeue_bio
 parameter_list|(
@@ -1113,21 +1160,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|__inline
-expr|struct
+specifier|inline
+name|struct
 name|bio
-operator|*
+modifier|*
 name|xbd_dequeue_bio
-argument_list|(
-argument|struct xbd_softc *sc
-argument_list|)
-block|{ 	struct
+parameter_list|(
+name|struct
+name|xbd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
 name|bio
-operator|*
+modifier|*
 name|bp
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1163,18 +1214,16 @@ name|XBD_Q_BIO
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|bp
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 specifier|inline
 name|void
 name|xbd_initqs
