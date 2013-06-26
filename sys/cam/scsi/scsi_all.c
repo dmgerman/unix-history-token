@@ -4189,7 +4189,7 @@ literal|0xFF
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Write Error â Too many error recovery revs"
+literal|"Write Error - Too many error recovery revs"
 argument_list|)
 block|}
 block|,
@@ -4202,7 +4202,7 @@ literal|0xFF
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Unrecovered Read Error â Too many error recovery revs"
+literal|"Unrecovered Read Error - Too many error recovery revs"
 argument_list|)
 block|}
 block|,
@@ -4293,7 +4293,7 @@ literal|0x95
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Invalid Field Parameter â CAP File"
+literal|"Invalid Field Parameter - CAP File"
 argument_list|)
 block|}
 block|,
@@ -4306,7 +4306,7 @@ literal|0x96
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Invalid Field Parameter â RAP File"
+literal|"Invalid Field Parameter - RAP File"
 argument_list|)
 block|}
 block|,
@@ -4319,7 +4319,7 @@ literal|0x97
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Invalid Field Parameter â TMS Firmware Tag"
+literal|"Invalid Field Parameter - TMS Firmware Tag"
 argument_list|)
 block|}
 block|,
@@ -4332,7 +4332,7 @@ literal|0x98
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Invalid Field Parameter â Check Sum"
+literal|"Invalid Field Parameter - Check Sum"
 argument_list|)
 block|}
 block|,
@@ -4345,7 +4345,7 @@ literal|0x99
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Invalid Field Parameter â Firmware Tag"
+literal|"Invalid Field Parameter - Firmware Tag"
 argument_list|)
 block|}
 block|,
@@ -4436,7 +4436,7 @@ literal|0x03
 argument_list|,
 argument|SS_RDEF
 argument_list|,
-literal|"Defect List â Length exceeds Command Allocated Length"
+literal|"Defect List - Length exceeds Command Allocated Length"
 argument_list|)
 block|}
 block|,
