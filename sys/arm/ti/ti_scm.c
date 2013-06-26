@@ -443,8 +443,16 @@ operator|.
 name|padconf_muxmode_mask
 argument_list|)
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
 literal|"setting internal %x for %s\n"
 argument_list|,
 name|reg_val
