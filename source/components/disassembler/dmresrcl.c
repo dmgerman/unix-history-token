@@ -1157,7 +1157,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 block|}

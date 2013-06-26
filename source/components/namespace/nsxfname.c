@@ -292,6 +292,10 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|char
+modifier|*
+name|NodeName
+decl_stmt|;
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -416,16 +420,20 @@ name|UnlockAndExit
 goto|;
 block|}
 comment|/* Just copy the ACPI name from the Node and zero terminate it */
+name|NodeName
+operator|=
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
 name|ACPI_MOVE_NAME
 argument_list|(
 name|Buffer
 operator|->
 name|Pointer
 argument_list|,
-name|AcpiUtGetNodeName
-argument_list|(
-name|Node
-argument_list|)
+name|NodeName
 argument_list|)
 expr_stmt|;
 operator|(
@@ -924,7 +932,7 @@ name|ACPI_TYPE_PROCESSOR
 operator|)
 condition|)
 block|{
-comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the _STA, _ADR and, SxW, and _SxD methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          */
+comment|/*          * Get extra info for ACPI Device/Processor objects only:          * Run the _STA, _ADR and, SxW, and _SxD methods.          *          * Notes: none of these methods are required, so they may or may          * not be present for this device. The Info->Valid bitfield is used          * to indicate which methods were found and run successfully.          *          * For _STA, if the method does not exist, then (as per the ACPI          * specification), the returned CurrentStatus flags will indicate          * that the device is present/functional/enabled. Otherwise, the          * CurrentStatus flags reflect the value returned from _STA.          */
 comment|/* Execute the Device._STA method */
 name|Status
 operator|=

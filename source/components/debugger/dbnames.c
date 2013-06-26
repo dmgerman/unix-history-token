@@ -1976,11 +1976,12 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_SIZE
+name|Address
+decl_stmt|;
 comment|/* Convert string to object pointer */
-name|ObjDesc
+name|Address
 operator|=
-name|ACPI_TO_POINTER
-argument_list|(
 name|ACPI_STRTOUL
 argument_list|(
 name|ObjectArg
@@ -1989,6 +1990,12 @@ name|NULL
 argument_list|,
 literal|16
 argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|=
+name|ACPI_TO_POINTER
+argument_list|(
+name|Address
 argument_list|)
 expr_stmt|;
 comment|/* Search all nodes in namespace */

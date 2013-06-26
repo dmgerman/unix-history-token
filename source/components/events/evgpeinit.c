@@ -392,33 +392,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Check for Max GPE number out-of-range */
-if|if
-condition|(
-name|GpeNumberMax
-operator|>
-name|ACPI_GPE_MAX
-condition|)
-block|{
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Maximum GPE number from FADT is too large: 0x%X"
-operator|,
-name|GpeNumberMax
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_BAD_VALUE
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
 name|Cleanup
 label|:
 operator|(

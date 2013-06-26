@@ -1111,41 +1111,7 @@ argument_list|(
 name|NsRepair_CST
 argument_list|)
 expr_stmt|;
-comment|/*      * Entries (subpackages) in the _CST Package must be sorted by the      * C-state type, in ascending order.      */
-name|Status
-operator|=
-name|AcpiNsCheckSortedList
-argument_list|(
-name|Info
-argument_list|,
-name|ReturnObject
-argument_list|,
-literal|1
-argument_list|,
-literal|4
-argument_list|,
-literal|1
-argument_list|,
-name|ACPI_SORT_ASCENDING
-argument_list|,
-literal|"C-State Type"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-comment|/*      * We now know the list is correctly sorted by C-state type. Check if      * the C-state type values are proportional.      */
+comment|/*      * Check if the C-state type values are proportional.      */
 name|OuterElementCount
 operator|=
 name|ReturnObject
@@ -1222,6 +1188,9 @@ name|Removing
 operator|=
 name|TRUE
 expr_stmt|;
+goto|goto
+name|RemoveElement
+goto|;
 block|}
 name|ObjDesc
 operator|=
@@ -1276,6 +1245,8 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+name|RemoveElement
+label|:
 if|if
 condition|(
 name|Removing
@@ -1321,6 +1292,40 @@ name|Value
 operator|=
 name|OuterElementCount
 expr_stmt|;
+comment|/*      * Entries (subpackages) in the _CST Package must be sorted by the      * C-state type, in ascending order.      */
+name|Status
+operator|=
+name|AcpiNsCheckSortedList
+argument_list|(
+name|Info
+argument_list|,
+name|ReturnObject
+argument_list|,
+literal|1
+argument_list|,
+literal|4
+argument_list|,
+literal|1
+argument_list|,
+name|ACPI_SORT_ASCENDING
+argument_list|,
+literal|"C-State Type"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|AE_OK

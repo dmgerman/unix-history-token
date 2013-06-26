@@ -2225,31 +2225,6 @@ value|(ACPI_EVENT_STATUS) 0x04
 end_define
 
 begin_comment
-comment|/*  * General Purpose Events (GPE)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_INVALID
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_MAX
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_GPE
-value|256
-end_define
-
-begin_comment
 comment|/* Actions for AcpiSetGpe, AcpiGpeWakeup, AcpiHwLowSetGpe */
 end_comment
 

@@ -434,6 +434,8 @@ name|ASL_MSG_UNKNOWN_DIRECTIVE
 block|,
 name|ASL_MSG_UNKNOWN_PRAGMA
 block|,
+name|ASL_MSG_WARNING_DIRECTIVE
+block|,
 comment|/* These messages are used by the data table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 block|,
@@ -932,6 +934,9 @@ literal|"Unknown directive"
 block|,
 comment|/*    ASL_MSG_UNKNOWN_PRAGMA */
 literal|"Unknown pragma"
+block|,
+comment|/*    ASL_MSG_WARNING_DIRECTIVE */
+literal|"#warning"
 block|,
 comment|/* Table compiler */
 comment|/*    ASL_MSG_BUFFER_ELEMENT */

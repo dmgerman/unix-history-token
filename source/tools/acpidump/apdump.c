@@ -19,18 +19,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|BOOLEAN
-name|ApIsValidHeader
-parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Table
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|ApDumpTableBuffer
 parameter_list|(
@@ -49,7 +37,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|BOOLEAN
 name|ApIsValidHeader
 parameter_list|(
@@ -74,7 +61,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Table signature (0x%X) is invalid\n"
+literal|"Table signature (0x%8.8X) is invalid\n"
 argument_list|,
 operator|*
 operator|(
@@ -109,7 +96,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Table length (0x%X) is invalid\n"
+literal|"Table length (0x%8.8X) is invalid\n"
 argument_list|,
 name|Table
 operator|->
@@ -601,7 +588,7 @@ name|strlen
 argument_list|(
 name|Signature
 argument_list|)
-operator|>
+operator|!=
 name|ACPI_NAME_SIZE
 condition|)
 block|{
@@ -609,7 +596,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid table signature [%s]: too long (4 chars max)\n"
+literal|"Invalid table signature [%s]: must be exactly 4 characters\n"
 argument_list|,
 name|Signature
 argument_list|)
@@ -634,6 +621,44 @@ argument_list|(
 name|LocalSignature
 argument_list|)
 expr_stmt|;
+comment|/* To be friendly, handle tables whose signatures do not match the name */
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|LocalSignature
+argument_list|,
+literal|"FADT"
+argument_list|)
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|LocalSignature
+argument_list|,
+name|ACPI_SIG_FADT
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|LocalSignature
+argument_list|,
+literal|"MADT"
+argument_list|)
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|LocalSignature
+argument_list|,
+name|ACPI_SIG_MADT
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Dump all instances of this signature (to handle multiple SSDTs) */
 for|for
 control|(

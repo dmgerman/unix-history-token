@@ -1949,6 +1949,7 @@ expr_stmt|;
 name|AeMutexInterfaces
 argument_list|()
 expr_stmt|;
+comment|/* Test _OSI install/remove */
 name|Status
 operator|=
 name|AcpiInstallInterface
@@ -2049,6 +2050,23 @@ expr_stmt|;
 name|AE_CHECK_OK
 argument_list|(
 name|AcpiInstallInterface
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+comment|/* Test _OSI execution */
+name|Status
+operator|=
+name|ExecuteOSI
+argument_list|(
+literal|"Extended Address Space Descriptor"
+argument_list|,
+literal|0xFFFFFFFF
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|ExecuteOSI
 argument_list|,
 name|Status
 argument_list|)

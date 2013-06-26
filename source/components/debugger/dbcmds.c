@@ -179,6 +179,9 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|ACPI_SIZE
+name|Address
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -197,10 +200,8 @@ operator|)
 condition|)
 block|{
 comment|/* Numeric argument, convert */
-name|Node
+name|Address
 operator|=
-name|ACPI_TO_POINTER
-argument_list|(
 name|ACPI_STRTOUL
 argument_list|(
 name|InString
@@ -209,6 +210,12 @@ name|NULL
 argument_list|,
 literal|16
 argument_list|)
+expr_stmt|;
+name|Node
+operator|=
+name|ACPI_TO_POINTER
+argument_list|(
+name|Address
 argument_list|)
 expr_stmt|;
 if|if

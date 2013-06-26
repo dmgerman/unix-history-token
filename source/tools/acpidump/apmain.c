@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|AP_SUPPORTED_OPTIONS
-value|"?a:bf:hn:o:rsv"
+value|"?a:bf:hn:o:svz"
 end_define
 
 begin_comment
@@ -149,13 +149,6 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-r"
-argument_list|,
-literal|"Revision (version)"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-s"
 argument_list|,
 literal|"Print table summaries only"
@@ -164,6 +157,13 @@ expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-v"
+argument_list|,
+literal|"Version of this utility"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-z"
 argument_list|,
 literal|"Verbose mode"
 argument_list|)
@@ -177,21 +177,21 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-a<Address>"
 argument_list|,
-literal|"Get table via physical address"
+literal|"Get table via a physical address"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-f<BinaryFile>"
 argument_list|,
-literal|"Get table via binary file"
+literal|"Get table via a binary file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-n<Signature>"
 argument_list|,
-literal|"Get table via name/signature"
+literal|"Get table via a name/signature"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -358,7 +358,16 @@ expr_stmt|;
 block|}
 continue|continue;
 case|case
-literal|'r'
+literal|'s'
+case|:
+comment|/* Print table summaries only */
+name|Gbl_SummaryMode
+operator|=
+name|TRUE
+expr_stmt|;
+continue|continue;
+case|case
+literal|'v'
 case|:
 comment|/* Revision/version */
 name|printf
@@ -375,16 +384,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 case|case
-literal|'s'
-case|:
-comment|/* Print table summaries only */
-name|Gbl_SummaryMode
-operator|=
-name|TRUE
-expr_stmt|;
-continue|continue;
-case|case
-literal|'v'
+literal|'z'
 case|:
 comment|/* Verbose mode */
 name|Gbl_VerboseMode

@@ -299,6 +299,38 @@ comment|/* Prevent infinite loops */
 end_comment
 
 begin_comment
+comment|/* Minimum FADT sizes for various table addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_FADT_FOR_DSDT
+value|(ACPI_FADT_OFFSET (Dsdt) + sizeof (UINT32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_FADT_FOR_FACS
+value|(ACPI_FADT_OFFSET (Facs) + sizeof (UINT32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_FADT_FOR_XDSDT
+value|(ACPI_FADT_OFFSET (XDsdt) + sizeof (UINT64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_FADT_FOR_XFACS
+value|(ACPI_FADT_OFFSET (XFacs) + sizeof (UINT64))
+end_define
+
+begin_comment
 comment|/*  * apdump - Table get/dump routines  */
 end_comment
 
@@ -340,6 +372,17 @@ name|int
 name|ApDumpAllTables
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|ApIsValidHeader
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -696,13 +696,6 @@ block|{
 name|va_list
 name|Args
 decl_stmt|;
-name|va_start
-argument_list|(
-name|Args
-argument_list|,
-name|Fmt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -729,6 +722,13 @@ condition|)
 block|{
 return|return;
 block|}
+name|va_start
+argument_list|(
+name|Args
+argument_list|,
+name|Fmt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

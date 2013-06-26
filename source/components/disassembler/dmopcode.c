@@ -1447,7 +1447,7 @@ name|Value
 operator|.
 name|String
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 break|break;
