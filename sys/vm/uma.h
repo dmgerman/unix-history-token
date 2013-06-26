@@ -910,6 +910,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Set a reserved number of items to hold for M_USE_RESERVE allocations.  All  * other requests must allocate new backing pages.  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_reserve
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|int
+name|nitems
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Reserves the maximum KVA space required by the zone and configures the zone  * to use a VM_ALLOC_NOOBJ-based backend allocator.  *  * Arguments:  *	zone  The zone to update.  *	nitems  The upper limit on the number of items that can be allocated.  *  * Returns:  *	0  if KVA space can not be allocated  *	1  if successful  *  * Discussion:  *	When the machine supports a direct map and the zone's items are smaller  *	than a page, the zone will use the direct map instead of allocating KVA  *	space.  */
 end_comment
 
