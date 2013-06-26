@@ -699,6 +699,9 @@ name|printf
 argument_list|(
 literal|"(default: 0x%jx "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -706,6 +709,9 @@ name|printf
 argument_list|(
 literal|" / %ju)>>"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
