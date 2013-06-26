@@ -158,6 +158,16 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* Check that a controller was specified. */
+if|if
+condition|(
+name|optind
+operator|>=
+name|argc
+condition|)
+name|reset_usage
+argument_list|()
+expr_stmt|;
 name|open_dev
 argument_list|(
 name|argv

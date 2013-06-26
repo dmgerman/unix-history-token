@@ -1048,6 +1048,16 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* Check that a controller was specified. */
+if|if
+condition|(
+name|optind
+operator|>=
+name|argc
+condition|)
+name|identify_usage
+argument_list|()
+expr_stmt|;
 name|open_dev
 argument_list|(
 name|argv
@@ -1247,6 +1257,16 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* Check that a namespace was specified. */
+if|if
+condition|(
+name|optind
+operator|>=
+name|argc
+condition|)
+name|identify_usage
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Check if the specified device node exists before continuing. 	 *  This is a cleaner check for cases where the correct controller 	 *  is specified, but an invalid namespace on that controller. 	 */
 name|open_dev
 argument_list|(
