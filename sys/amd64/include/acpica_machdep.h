@@ -145,36 +145,6 @@ parameter_list|)
 value|do {			\ 	(Acq) = acpi_release_global_lock(&((GLptr)->GlobalLock));	\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MACHINE_WIDTH
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_INT64
-value|long
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_UINT64
-value|unsigned long
-end_define
-
 begin_function_decl
 name|void
 name|acpi_SetDefaultIntrModel
@@ -232,6 +202,15 @@ name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
