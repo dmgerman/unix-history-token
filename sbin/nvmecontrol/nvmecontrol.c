@@ -121,6 +121,7 @@ function_decl|;
 end_typedef
 
 begin_struct
+specifier|static
 struct|struct
 name|nvme_function
 block|{

@@ -1104,6 +1104,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 name|logpage_function
 block|{
