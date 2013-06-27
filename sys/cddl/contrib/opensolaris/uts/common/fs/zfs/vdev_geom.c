@@ -1278,10 +1278,6 @@ operator|!=
 literal|0
 operator|||
 name|state
-operator|==
-name|POOL_STATE_DESTROYED
-operator|||
-name|state
 operator|>
 name|POOL_STATE_L2CACHE
 condition|)
