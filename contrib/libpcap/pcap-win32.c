@@ -2654,7 +2654,7 @@ end_function
 begin_function
 name|pcap_t
 modifier|*
-name|pcap_create
+name|pcap_create_interface
 parameter_list|(
 specifier|const
 name|char
@@ -3052,8 +3052,6 @@ condition|)
 block|{
 name|snprintf
 argument_list|(
-name|p
-operator|->
 name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE

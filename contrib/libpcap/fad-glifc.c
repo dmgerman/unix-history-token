@@ -201,7 +201,7 @@ end_comment
 
 begin_function
 name|int
-name|pcap_findalldevs
+name|pcap_findalldevs_interfaces
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -1417,33 +1417,6 @@ argument_list|(
 name|fd4
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* 		 * We haven't had any errors yet; do any platform-specific 		 * operations to add devices. 		 */
-if|if
-condition|(
-name|pcap_platform_finddevs
-argument_list|(
-operator|&
-name|devlist
-argument_list|,
-name|errbuf
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ret
