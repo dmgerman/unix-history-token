@@ -496,8 +496,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", poll %us"
+literal|", poll %u (%us)"
 argument_list|,
+name|bp
+operator|->
+name|ppoll
+argument_list|,
+literal|1
+operator|<<
 name|bp
 operator|->
 name|ppoll

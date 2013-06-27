@@ -427,6 +427,17 @@ begin_comment
 comment|/* draft-ohara-capwap-lwapp-04.txt */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OTV_PORT
+value|8472
+end_define
+
+begin_comment
+comment|/* draft-hasmit-otv-04 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
