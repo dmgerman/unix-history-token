@@ -456,7 +456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_STA  *  * PARAMETERS:  DeviceNode          - Node for the device  *              Flags               - Where the status flags are returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes _STA for selected device and stores results in  *              *Flags.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_STA  *  * PARAMETERS:  DeviceNode          - Node for the device  *              Flags               - Where the status flags are returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes _STA for selected device and stores results in  *              *Flags. If _STA does not exist, then the device is assumed  *              to be present/functional/enabled (as per the ACPI spec).  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -513,6 +513,7 @@ operator|==
 name|Status
 condition|)
 block|{
+comment|/*              * if _STA does not exist, then (as per the ACPI specification),              * the returned flags will indicate that the device is present,              * functional, and enabled.              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

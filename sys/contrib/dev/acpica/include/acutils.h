@@ -2860,7 +2860,7 @@ name|char
 modifier|*
 name|String
 parameter_list|,
-name|UINT8
+name|UINT16
 name|MaxLength
 parameter_list|)
 function_decl|;
