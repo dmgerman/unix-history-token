@@ -758,7 +758,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Minmum TCP Maximum Segment Size"
+literal|"Minimum TCP Maximum Segment Size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
