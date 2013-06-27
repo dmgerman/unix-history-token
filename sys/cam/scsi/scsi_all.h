@@ -1834,19 +1834,19 @@ value|(0x09<< 1)
 define|#
 directive|define
 name|AP_PROTO_UDMA_IN
-value|(0x10<< 1)
+value|(0x0a<< 1)
 define|#
 directive|define
 name|AP_PROTO_UDMA_OUT
-value|(0x11<< 1)
+value|(0x0b<< 1)
 define|#
 directive|define
 name|AP_PROTO_FPDMA
-value|(0x12<< 1)
+value|(0x0c<< 1)
 define|#
 directive|define
 name|AP_PROTO_RESP_INFO
-value|(0x15<< 1)
+value|(0x0f<< 1)
 define|#
 directive|define
 name|AP_MULTI
