@@ -38,6 +38,12 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TCPSTATES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -59,12 +65,6 @@ include|#
 directive|include
 file|<netinet/ip.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|TCPSTATES
-end_define
 
 begin_include
 include|#
