@@ -16250,16 +16250,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Create sysctl entry. 		 * It is OK to drop the filedesc lock here as we will 		 * re-validate and re-evaluate its properties when 		 * the loop continues. 		 */
-if|if
-condition|(
-name|type
-operator|==
-name|KF_TYPE_VNODE
-operator|||
-name|type
-operator|==
-name|KF_TYPE_FIFO
-condition|)
 name|FILEDESC_SUNLOCK
 argument_list|(
 name|fdp
@@ -16291,16 +16281,6 @@ operator|&
 name|remainder
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|KF_TYPE_VNODE
-operator|||
-name|type
-operator|==
-name|KF_TYPE_FIFO
-condition|)
 name|FILEDESC_SLOCK
 argument_list|(
 name|fdp
