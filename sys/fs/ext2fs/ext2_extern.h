@@ -87,7 +87,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -150,7 +150,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -285,17 +285,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ext2_reallocblks
-parameter_list|(
-name|struct
-name|vop_reallocblks_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ext2_itimes
 parameter_list|(
@@ -303,6 +292,17 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ext2_reallocblks
+parameter_list|(
+name|struct
+name|vop_reallocblks_args
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

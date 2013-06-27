@@ -440,46 +440,32 @@ argument|pthread_getschedparam
 argument_list|)
 end_macro
 
-begin_macro
+begin_expr_stmt
 name|__gthrw
 argument_list|(
-argument|pthread_setschedparam
+name|pthread_setschedparam
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* _POSIX_THREAD_PRIORITY_SCHEDULING */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* _LIBOBJC || _LIBOBJC_WEAK */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|SUPPORTS_WEAK
 operator|&&
 name|GTHREAD_USE_WEAK
-end_if
-
-begin_comment
-comment|/* On Solaris 2.6 up to 9, the libc exposes a POSIX threads interface even if    -pthreads is not specified.  The functions are dummies and most return an    error value.  However pthread_once returns 0 without invoking the routine    it is passed so we cannot pretend that the interface is active if -pthreads    is not specified.  On Solaris 2.5.1, the interface is not exposed at all so    we need to play the usual game with weak symbols.  On Solaris 10 and up, a    working interface is always exposed.  */
-end_comment
-
-begin_if
+comment|/* On Solaris 2.6 up to 9, the libc exposes a POSIX threads interface even if    -pthreads is not specified.  The functions are dummies and most return an    error value.  However pthread_once returns 0 without invoking the routine    it is passed so we cannot pretend that the interface is active if -pthreads    is not specified.  On Solaris 2.5.1, the interface is not exposed at all so    we need to play the usual game with weak symbols.  On Solaris 10 and up, a    working interface is always exposed. On FreeBSD 6 and later, libc also    exposes a dummy POSIX threads interface, similar to what Solaris 2.6 up    to 9 does.  FreeBSD>= 700014 even provides a pthread_cancel stub in libc,    which means the alternate __gthread_active_p below cannot be used there.  */
+operator|*
+operator|/
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__sun
@@ -489,18 +475,15 @@ name|defined
 argument_list|(
 name|__svr4__
 argument_list|)
-end_if
-
-begin_decl_stmt
 specifier|static
 specifier|volatile
 name|int
 name|__gthread_active
-init|=
+operator|=
 operator|-
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -626,7 +609,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not Solaris */
+comment|/* neither FreeBSD nor Solaris */
 end_comment
 
 begin_function
@@ -669,7 +652,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Solaris */
+comment|/* FreeBSD or Solaris */
 end_comment
 
 begin_else

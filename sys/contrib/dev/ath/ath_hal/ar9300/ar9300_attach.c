@@ -2649,6 +2649,27 @@ argument_list|(
 name|HOST_CALDATA_SIZE
 argument_list|)
 expr_stmt|;
+comment|/*      * If eepromdata is not NULL, copy it it into ah_cal_mem.      */
+if|if
+condition|(
+name|eepromdata
+operator|!=
+name|NULL
+condition|)
+name|OS_MEMCPY
+argument_list|(
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_mem
+argument_list|,
+name|eepromdata
+argument_list|,
+name|HOST_CALDATA_SIZE
+argument_list|)
+expr_stmt|;
 comment|/* XXX FreeBSD: enable RX mitigation */
 name|ah
 operator|->

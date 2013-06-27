@@ -306,10 +306,11 @@ name|void
 modifier|*
 name|ObjPtr
 decl_stmt|;
-name|ObjPtr
+name|ACPI_SIZE
+name|Address
+decl_stmt|;
+name|Address
 operator|=
-name|ACPI_TO_POINTER
-argument_list|(
 name|ACPI_STRTOUL
 argument_list|(
 name|Target
@@ -318,6 +319,12 @@ name|NULL
 argument_list|,
 literal|16
 argument_list|)
+expr_stmt|;
+name|ObjPtr
+operator|=
+name|ACPI_TO_POINTER
+argument_list|(
+name|Address
 argument_list|)
 expr_stmt|;
 return|return

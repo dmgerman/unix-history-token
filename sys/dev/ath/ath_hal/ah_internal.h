@@ -4152,6 +4152,25 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Map the given 2GHz channel to an IEEE number.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ath_hal_mhz2ieee_2ghz
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_CHANNEL_INTERNAL
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

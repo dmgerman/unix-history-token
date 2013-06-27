@@ -376,12 +376,48 @@ begin_comment
 comment|/* These are the embedded boards; we don't currently support these */
 end_comment
 
-begin_comment
-comment|//#define AH_SUPPORT_HORNET               1
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9330
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_HORNET
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|//#define AH_SUPPORT_WASP                 1
+comment|/* AH_SUPPORT_AR9330 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR9340
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_WASP
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AH_SUPPORT_AR9340 */
 end_comment
 
 begin_comment

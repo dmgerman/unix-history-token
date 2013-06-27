@@ -3241,35 +3241,6 @@ operator|~
 name|NFSMNT_RDIRPLUS
 expr_stmt|;
 block|}
-comment|/* Clear NFSMNT_RESVPORT for NFSv4, since it is not required. */
-if|if
-condition|(
-operator|(
-name|argp
-operator|->
-name|flags
-operator|&
-name|NFSMNT_NFSV4
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|argp
-operator|->
-name|flags
-operator|&=
-operator|~
-name|NFSMNT_RESVPORT
-expr_stmt|;
-name|nmp
-operator|->
-name|nm_flag
-operator|&=
-operator|~
-name|NFSMNT_RESVPORT
-expr_stmt|;
-block|}
 comment|/* Re-bind if rsrvd port requested and wasn't on one */
 name|adjsock
 operator|=

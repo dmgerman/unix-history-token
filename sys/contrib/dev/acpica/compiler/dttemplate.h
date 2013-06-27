@@ -1640,7 +1640,7 @@ block|,
 comment|/* 00000000    "DMAR...." */
 literal|0x01
 block|,
-literal|0x15
+literal|0x03
 block|,
 literal|0x49
 block|,
@@ -1689,11 +1689,11 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x28
+literal|0x17
 block|,
 literal|0x05
 block|,
-literal|0x10
+literal|0x13
 block|,
 literal|0x20
 block|,
@@ -1705,7 +1705,7 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000020    "(.. /..." */
+comment|/* 00000020    "... /..." */
 literal|0x00
 block|,
 literal|0x00
@@ -1744,9 +1744,9 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x02
+literal|0x00
 block|,
-literal|0xFD
+literal|0x00
 block|,
 literal|0x00
 block|,
@@ -1767,11 +1767,11 @@ literal|0x00
 block|,
 literal|0x08
 block|,
-literal|0xF0
+literal|0x00
 block|,
-literal|0x1F
+literal|0x00
 block|,
-literal|0x07
+literal|0x01
 block|,
 comment|/* 00000040    "........" */
 literal|0x01
@@ -1793,12 +1793,6 @@ block|,
 comment|/* 00000048    ".. ....." */
 literal|0x00
 block|,
-literal|0x10
-block|,
-literal|0xC2
-block|,
-literal|0x78
-block|,
 literal|0x00
 block|,
 literal|0x00
@@ -1807,14 +1801,16 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000050    "...x...." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000050    "........" */
 literal|0xFF
 block|,
-literal|0x3F
-block|,
-literal|0xC2
-block|,
-literal|0x78
+literal|0x0F
 block|,
 literal|0x00
 block|,
@@ -1824,7 +1820,11 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000058    ".?.x...." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000058    "........" */
 literal|0x01
 block|,
 literal|0x08
@@ -1837,9 +1837,9 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x1D
-block|,
 literal|0x00
+block|,
+literal|0x02
 block|,
 comment|/* 00000060    "........" */
 literal|0x02
@@ -1871,9 +1871,9 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x01
-block|,
 literal|0x00
+block|,
+literal|0x03
 block|,
 comment|/* 00000070    "........" */
 literal|0x03
@@ -1897,9 +1897,9 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x02
+literal|0x00
 block|,
-literal|0xFD
+literal|0x00
 block|,
 literal|0x00
 block|,

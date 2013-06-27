@@ -94,7 +94,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b)<< ((fs)->e2fs_fsbtodb))
+value|((daddr_t)(b)<< (fs)->e2fs_fsbtodb)
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b)>> ((fs)->e2fs_fsbtodb))
+value|((b)>> (fs)->e2fs_fsbtodb)
 end_define
 
 begin_comment

@@ -32,6 +32,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -69,6 +75,13 @@ define|#
 directive|define
 name|NVME_GLOBAL_NAMESPACE_TAG
 value|((uint32_t)0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MAX_XFER_SIZE
+value|MAXPHYS
 end_define
 
 begin_union
@@ -1024,6 +1037,25 @@ block|,
 name|NVME_DSM_ATTR_DEALLOCATE
 init|=
 literal|0x4
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|nvme_activate_action
+block|{
+name|NVME_AA_REPLACE_NO_ACTIVATE
+init|=
+literal|0x0
+block|,
+name|NVME_AA_REPLACE_ACTIVATE
+init|=
+literal|0x1
+block|,
+name|NVME_AA_ACTIVATE
+init|=
+literal|0x2
 block|, }
 enum|;
 end_enum

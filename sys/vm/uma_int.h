@@ -349,6 +349,10 @@ name|uk_free
 decl_stmt|;
 comment|/* Count of items free in slabs */
 name|uint32_t
+name|uk_reserve
+decl_stmt|;
+comment|/* Number of reserved items. */
+name|uint32_t
 name|uk_size
 decl_stmt|;
 comment|/* Requested size of each item */
@@ -798,12 +802,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMA_ZFLAG_PRIVALLOC
+name|UMA_ZFLAG_BUCKET
 value|0x10000000
 end_define
 
 begin_comment
-comment|/* Use uz_allocf. */
+comment|/* Bucket zone. */
 end_comment
 
 begin_define
@@ -843,7 +847,8 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_INHERIT
-value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY)
+define|\
+value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | UMA_ZFLAG_BUCKET)
 end_define
 
 begin_function

@@ -245,10 +245,10 @@ decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;
-name|int32_t
+name|daddr_t
 name|daddr
 decl_stmt|;
-name|long
+name|e2fs_lbn_t
 name|metalbn
 decl_stmt|;
 name|int
@@ -999,7 +999,8 @@ parameter_list|)
 block|{
 name|long
 name|blockcnt
-decl_stmt|,
+decl_stmt|;
+name|e2fs_lbn_t
 name|metalbn
 decl_stmt|,
 name|realbn

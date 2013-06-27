@@ -1941,6 +1941,11 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ReferenceName
+decl_stmt|;
 name|UINT8
 name|Count
 decl_stmt|;
@@ -2176,6 +2181,13 @@ break|break;
 case|case
 name|ACPI_EXD_REFERENCE
 case|:
+name|ReferenceName
+operator|=
+name|AcpiUtGetReferenceName
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 name|AcpiExOutString
 argument_list|(
 literal|"Class Name"
@@ -2184,10 +2196,7 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|char
 argument_list|,
-name|AcpiUtGetReferenceName
-argument_list|(
-name|ObjDesc
-argument_list|)
+name|ReferenceName
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -51,22 +51,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|UINT8
-modifier|*
-name|AcpiTbScanMemoryForRsdp
-parameter_list|(
-name|UINT8
-modifier|*
-name|StartAddress
-parameter_list|,
-name|UINT32
-name|Length
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|ACPI_STATUS
 name|AcpiTbValidateRsdp
 parameter_list|(
@@ -482,7 +466,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|UINT8
 modifier|*
 name|AcpiTbScanMemoryForRsdp

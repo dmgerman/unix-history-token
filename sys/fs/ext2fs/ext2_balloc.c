@@ -98,7 +98,7 @@ name|inode
 modifier|*
 name|ip
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 name|lbn
 parameter_list|,
 name|int

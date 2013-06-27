@@ -306,6 +306,40 @@ name|PR_FILE_NODE
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|MAX_ARGUMENT_LENGTH
+value|24
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|directive_info
+block|{
+name|struct
+name|directive_info
+modifier|*
+name|Next
+decl_stmt|;
+name|char
+name|Argument
+index|[
+name|MAX_ARGUMENT_LENGTH
+index|]
+decl_stmt|;
+name|int
+name|Directive
+decl_stmt|;
+name|BOOLEAN
+name|IgnoringThisCodeBlock
+decl_stmt|;
+block|}
+name|DIRECTIVE_INFO
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Globals  */
 end_comment
@@ -383,6 +417,20 @@ end_comment
 
 begin_decl_stmt
 name|PR_EXTERN
+name|UINT32
+name|Gbl_PreprocessorLineNumber
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PR_EXTERN
+name|int
+name|Gbl_IfDepth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PR_EXTERN
 name|PR_FILE_NODE
 modifier|*
 name|Gbl_InputFileList
@@ -402,20 +450,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|PR_EXTERN
-name|UINT32
-name|Gbl_PreprocessorLineNumber
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|PR_EXTERN
-name|int
-name|Gbl_IfDepth
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|PR_EXTERN
 name|BOOLEAN
@@ -427,6 +461,31 @@ name|FALSE
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|PR_EXTERN
+name|BOOLEAN
+name|PR_INIT_GLOBAL
+parameter_list|(
+name|Gbl_IgnoringThisCodeBlock
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|PR_EXTERN
+name|DIRECTIVE_INFO
+name|PR_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_DirectiveStack
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * prscan - Preprocessor entry  */
@@ -460,7 +519,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|BOOLEAN
+name|void
 name|PrDoPreprocess
 parameter_list|(
 name|void

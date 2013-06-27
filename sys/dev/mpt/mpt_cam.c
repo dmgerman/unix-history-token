@@ -6004,7 +6004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Callback routine from "bus_dmamap_load" or, in simple cases, called directly.  *  * Takes a list of physical segments and builds the SGL for SCSI IO command  * and forwards the commard to the IOC after one last check that CAM has not  * aborted the transaction.  */
+comment|/*  * Callback routine from bus_dmamap_load_ccb(9) or, in simple cases, called  * directly.  *  * Takes a list of physical segments and builds the SGL for SCSI IO command  * and forwards the commard to the IOC after one last check that CAM has not  * aborted the transaction.  */
 end_comment
 
 begin_function
@@ -16726,6 +16726,8 @@ operator|->
 name|hba_misc
 operator|=
 name|PIM_NOBUSRESET
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->
@@ -16771,6 +16773,8 @@ operator|->
 name|hba_misc
 operator|=
 name|PIM_NOBUSRESET
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->
@@ -16810,6 +16814,8 @@ operator|->
 name|hba_misc
 operator|=
 name|PIM_SEQSCAN
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->

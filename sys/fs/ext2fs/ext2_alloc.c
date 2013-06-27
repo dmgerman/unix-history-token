@@ -713,11 +713,12 @@ decl_stmt|,
 modifier|*
 name|idp
 decl_stmt|;
-name|int32_t
+name|e2fs_lbn_t
 name|start_lbn
 decl_stmt|,
 name|end_lbn
-decl_stmt|,
+decl_stmt|;
+name|int32_t
 name|soff
 decl_stmt|,
 name|newblk
@@ -2633,7 +2634,7 @@ name|inode
 modifier|*
 name|ip
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 name|lbn
 parameter_list|,
 name|int

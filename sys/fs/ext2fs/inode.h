@@ -61,6 +61,17 @@ comment|/* Indirect addresses in inode. */
 end_comment
 
 begin_comment
+comment|/*  * The size of physical and logical block numbers and time fields in UFS.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int32_t
+name|e2fs_lbn_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * The inode is used to describe each active (or recently active) file in the  * EXT2FS filesystem. It is composed of two types of information. The first  * part is the information that is needed only while the file is active (such  * as the identity of the file and linkage to speed its lookup). The second  * part is the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
 end_comment
 
@@ -521,7 +532,7 @@ begin_struct
 struct|struct
 name|indir
 block|{
-name|int32_t
+name|e2fs_lbn_t
 name|in_lbn
 decl_stmt|;
 comment|/* Logical block number. */

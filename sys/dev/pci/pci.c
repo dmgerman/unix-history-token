@@ -1520,7 +1520,7 @@ specifier|static
 name|int
 name|pci_do_realloc_bars
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
