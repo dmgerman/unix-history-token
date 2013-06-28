@@ -345,6 +345,26 @@ name|qflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|aalgo_default
+index|[]
+init|=
+literal|"hmac/sha256"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|ealgo_default
+index|[]
+init|=
+literal|"aes"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1480,7 +1500,6 @@ name|int
 name|doingall
 parameter_list|)
 block|{
-specifier|const
 name|char
 modifier|*
 name|ops
@@ -1577,11 +1596,11 @@ expr_stmt|;
 comment|/* Default parameters for geli(8). */
 name|aalgo
 operator|=
-literal|"hmac/sha256"
+name|aalgo_default
 expr_stmt|;
 name|ealgo
 operator|=
-literal|"aes"
+name|ealgo_default
 expr_stmt|;
 name|keylen
 operator|=
