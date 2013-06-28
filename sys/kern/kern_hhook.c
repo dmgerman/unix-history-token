@@ -1026,6 +1026,7 @@ name|hhh
 operator|!=
 name|NULL
 condition|)
+block|{
 name|refcount_init
 argument_list|(
 operator|&
@@ -1036,6 +1037,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|*
+name|hhh
+operator|=
+name|tmphhh
+expr_stmt|;
+block|}
 else|else
 name|refcount_init
 argument_list|(
@@ -1081,11 +1088,6 @@ else|else
 block|{
 comment|/* XXXLAS: Add tmphhh to the non-virtualised list. */
 block|}
-operator|*
-name|hhh
-operator|=
-name|tmphhh
-expr_stmt|;
 return|return
 operator|(
 literal|0
