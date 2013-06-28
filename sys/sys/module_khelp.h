@@ -141,23 +141,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|KHELP_DECLARE_MOD
-parameter_list|(
-name|hname
-parameter_list|,
-name|hdata
-parameter_list|,
-name|hhooks
-parameter_list|,
-name|version
-parameter_list|)
-define|\
-value|static struct khelp_modevent_data kmd_##hname = {		\ 		.name = #hname,						\ 		.helper = hdata						\ 		.hooks = hhooks,					\ 		.nhooks = sizeof(hhooks) / sizeof(hhooks[0]),		\ 	};								\ 	static moduledata_t h_##hname = {				\ 		.name = #hname,						\ 		.evhand = khelp_modevent,				\ 		.priv =&kmd_##hname					\ 	};								\ 	DECLARE_MODULE(hname, h_##hname, SI_SUB_PROTO_IFATTACHDOMAIN,	\ 	    SI_ORDER_ANY);						\ 	MODULE_VERSION(hname, version)
-end_define
-
-begin_define
-define|#
-directive|define
 name|KHELP_DECLARE_MOD_UMA
 parameter_list|(
 name|hname
@@ -176,6 +159,23 @@ name|dtor
 parameter_list|)
 define|\
 value|static struct khelp_modevent_data kmd_##hname = {		\ 		.name = #hname,						\ 		.helper = hdata,					\ 		.hooks = hhooks,					\ 		.nhooks = sizeof(hhooks) / sizeof(hhooks[0]),		\ 		.uma_zsize = size,					\ 		.umactor = ctor,					\ 		.umadtor = dtor						\ 	};								\ 	static moduledata_t h_##hname = {				\ 		.name = #hname,						\ 		.evhand = khelp_modevent,				\ 		.priv =&kmd_##hname					\ 	};								\ 	DECLARE_MODULE(hname, h_##hname, SI_SUB_PROTO_IFATTACHDOMAIN,	\ 	    SI_ORDER_ANY);						\ 	MODULE_VERSION(hname, version)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KHELP_DECLARE_MOD
+parameter_list|(
+name|hname
+parameter_list|,
+name|hdata
+parameter_list|,
+name|hhooks
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|KHELP_DECLARE_MOD_UMA(hname, hdata, hhooks, version, 0, NULL, NULL)
 end_define
 
 begin_function_decl
