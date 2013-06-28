@@ -377,6 +377,15 @@ name|ald_proc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|alq_eventhandler_tag
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -762,6 +771,8 @@ argument_list|(
 name|ald_proc
 argument_list|)
 expr_stmt|;
+name|alq_eventhandler_tag
+operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_pre_sync
@@ -3765,6 +3776,13 @@ literal|1
 expr_stmt|;
 name|ALD_UNLOCK
 argument_list|()
+expr_stmt|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|shutdown_pre_sync
+argument_list|,
+name|alq_eventhandler_tag
+argument_list|)
 expr_stmt|;
 name|ald_shutdown
 argument_list|(
