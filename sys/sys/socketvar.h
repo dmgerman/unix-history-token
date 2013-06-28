@@ -1689,6 +1689,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|selsocket
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|int
+name|events
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|tv
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Accept filter functions (duh).  */
 end_comment
