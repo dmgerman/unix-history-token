@@ -2737,7 +2737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when use count of VC dropped to zero.  * VC should be locked on enter with LK_DRAIN.  */
+comment|/*  * Called when use count of VC dropped to zero.  */
 end_comment
 
 begin_function
