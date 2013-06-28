@@ -1000,7 +1000,6 @@ argument_list|,
 argument|td
 argument_list|)
 block|{
-comment|/* 				 * Once a thread is found in "interesting" 				 * state a possible ticks wrap-up needs to be 				 * checked. 				 */
 name|thread_lock
 argument_list|(
 name|td
@@ -1012,12 +1011,6 @@ name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)
-operator|&&
-name|ticks
-operator|<
-name|td
-operator|->
-name|td_blktick
 condition|)
 block|{
 comment|/* 					 * The thread should be blocked on a 					 * turnstile, simply check if the 					 * turnstile channel is in good state. 					 */
@@ -1087,12 +1080,6 @@ name|TD_ON_SLEEPQ
 argument_list|(
 name|td
 argument_list|)
-operator|&&
-name|ticks
-operator|<
-name|td
-operator|->
-name|td_blktick
 condition|)
 block|{
 comment|/* 					 * Check if the thread is sleeping on a 					 * lock, otherwise skip the check. 					 * Drop the thread lock in order to 					 * avoid a LOR with the sleepqueue 					 * spinlock. 					 */
