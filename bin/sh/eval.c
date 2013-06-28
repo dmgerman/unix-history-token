@@ -2671,6 +2671,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|prevfd
+operator|>=
+literal|0
+condition|)
 name|close
 argument_list|(
 name|prevfd
