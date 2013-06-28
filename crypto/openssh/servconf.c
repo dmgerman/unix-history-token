@@ -1816,7 +1816,7 @@ literal|1
 condition|)
 name|use_privsep
 operator|=
-name|PRIVSEP_ON
+name|PRIVSEP_NOSANDBOX
 expr_stmt|;
 ifndef|#
 directive|ifndef
