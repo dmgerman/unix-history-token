@@ -93,7 +93,14 @@ index|[
 literal|12
 index|]
 init|=
-literal|"BHyVE BHyVE "
+literal|"bhyve bhyve "
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint64_t
+name|bhyve_xcpuids
 decl_stmt|;
 end_decl_stmt
 
@@ -216,6 +223,7 @@ condition|(
 name|func
 condition|)
 block|{
+comment|/* 		 * Pass these through to the guest 		 */
 case|case
 name|CPUID_0000_0000
 case|:
@@ -226,25 +234,7 @@ case|case
 name|CPUID_0000_0003
 case|:
 case|case
-name|CPUID_0000_000A
-case|:
-name|cpuid_count
-argument_list|(
-operator|*
-name|eax
-argument_list|,
-operator|*
-name|ecx
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|CPUID_8000_0000
-case|:
-case|case
-name|CPUID_8000_0001
 case|:
 case|case
 name|CPUID_8000_0002
@@ -271,6 +261,30 @@ name|ecx
 argument_list|,
 name|regs
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CPUID_8000_0001
+case|:
+comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
+name|cpuid_count
+argument_list|(
+operator|*
+name|eax
+argument_list|,
+operator|*
+name|ecx
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|regs
+index|[
+literal|3
+index|]
+operator|&=
+operator|~
+name|AMDID_RDTSCP
 expr_stmt|;
 break|break;
 case|case
@@ -419,6 +433,15 @@ operator|&=
 operator|~
 name|CPUID2_MON
 expr_stmt|;
+comment|/* 			 * Hide the performance and debug features. 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|CPUID2_PDCM
+expr_stmt|;
 comment|/* 			 * Hide thermal monitoring 			 */
 name|regs
 index|[
@@ -446,6 +469,15 @@ name|CPUID_MCE
 operator||
 name|CPUID_MTRR
 operator|)
+expr_stmt|;
+comment|/*                         * Hide the debug store capability.                         */
+name|regs
+index|[
+literal|3
+index|]
+operator|&=
+operator|~
+name|CPUID_DS
 expr_stmt|;
 comment|/* 			 * Disable multi-core. 			 */
 name|regs
@@ -496,6 +528,9 @@ name|CPUID_0000_0006
 case|:
 case|case
 name|CPUID_0000_0007
+case|:
+case|case
+name|CPUID_0000_000A
 case|:
 comment|/* 			 * Handle the access, but report 0 for 			 * all options 			 */
 name|regs
@@ -589,6 +624,8 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 name|bhyve_id
+operator|+
+literal|4
 argument_list|,
 operator|&
 name|regs
@@ -602,6 +639,8 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 name|bhyve_id
+operator|+
+literal|8
 argument_list|,
 operator|&
 name|regs
@@ -614,12 +653,27 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* XXX: Leaf 5? */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* 			 * The leaf value has already been clamped so 			 * simply pass this through, keeping count of 			 * how many unhandled leaf values have been seen. 			 */
+name|atomic_add_long
+argument_list|(
+operator|&
+name|bhyve_xcpuids
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|cpuid_count
+argument_list|(
+operator|*
+name|eax
+argument_list|,
+operator|*
+name|ecx
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 operator|*
 name|eax
