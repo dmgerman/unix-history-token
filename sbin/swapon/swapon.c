@@ -1133,7 +1133,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|devname
+name|dname
 decl_stmt|,
 modifier|*
 name|p
@@ -1145,7 +1145,7 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
-name|devname
+name|dname
 operator|=
 name|strdup
 argument_list|(
@@ -1156,7 +1156,7 @@ name|p
 operator|=
 name|strrchr
 argument_list|(
-name|devname
+name|dname
 argument_list|,
 literal|'.'
 argument_list|)
@@ -1269,7 +1269,7 @@ literal|"%s init %s -P %s"
 argument_list|,
 name|_PATH_GBDE
 argument_list|,
-name|devname
+name|dname
 argument_list|,
 name|pass
 argument_list|)
@@ -1319,7 +1319,7 @@ literal|"%s attach %s -p %s"
 argument_list|,
 name|_PATH_GBDE
 argument_list|,
-name|devname
+name|dname
 argument_list|,
 name|pass
 argument_list|)
@@ -1405,7 +1405,7 @@ literal|"%s detach %s"
 argument_list|,
 name|_PATH_GBDE
 argument_list|,
-name|devname
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1423,7 +1423,7 @@ name|warnx
 argument_list|(
 literal|"%s: Device not found"
 argument_list|,
-name|devname
+name|dname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1499,7 +1499,7 @@ name|sectorsize_str
 decl_stmt|;
 name|char
 modifier|*
-name|devname
+name|dname
 decl_stmt|,
 modifier|*
 name|p
@@ -1526,7 +1526,7 @@ decl_stmt|;
 name|u_long
 name|ul
 decl_stmt|;
-name|devname
+name|dname
 operator|=
 name|strdup
 argument_list|(
@@ -1537,7 +1537,7 @@ name|p
 operator|=
 name|strrchr
 argument_list|(
-name|devname
+name|dname
 argument_list|,
 literal|'.'
 argument_list|)
@@ -1978,7 +1978,7 @@ name|_PATH_GELI
 argument_list|,
 name|args
 argument_list|,
-name|devname
+name|dname
 argument_list|)
 expr_stmt|;
 if|if
