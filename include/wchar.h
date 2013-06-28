@@ -1400,6 +1400,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|FILE
+modifier|*
+name|open_wmemstream
+parameter_list|(
+name|wchar_t
+modifier|*
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|wchar_t
 modifier|*
 name|wcpcpy
