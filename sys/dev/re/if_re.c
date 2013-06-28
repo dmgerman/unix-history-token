@@ -6371,7 +6371,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't llocate IRQ resources for "
+literal|"couldn't allocate IRQ resources for "
 literal|"message %d\n"
 argument_list|,
 name|rid
@@ -7947,7 +7947,7 @@ operator||
 name|IFCAP_WOL_MCAST
 operator|)
 expr_stmt|;
-comment|/* 	 * Don't enable TSO by default.  It is known to generate 	 * corrupted TCP segments(bad TCP options) under certain 	 * circumtances. 	 */
+comment|/* 	 * Don't enable TSO by default.  It is known to generate 	 * corrupted TCP segments(bad TCP options) under certain 	 * circumstances. 	 */
 name|ifp
 operator|->
 name|if_hwassist
@@ -13530,7 +13530,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Unconditionally enable IP checksum if TCP or UDP 		 * checksum is required. Otherwise, TCP/UDP checksum 		 * does't make effects. 		 */
+comment|/* 		 * Unconditionally enable IP checksum if TCP or UDP 		 * checksum is required. Otherwise, TCP/UDP checksum 		 * doesn't make effects. 		 */
 if|if
 condition|(
 operator|(
@@ -15554,7 +15554,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * For controllers that use new jumbo frame scheme, 			 * set maximum size of jumbo frame depedning on 			 * controller revisions. 			 */
+comment|/* 			 * For controllers that use new jumbo frame scheme, 			 * set maximum size of jumbo frame depending on 			 * controller revisions. 			 */
 if|if
 condition|(
 name|ifp
@@ -19103,7 +19103,7 @@ name|sc
 operator|->
 name|rl_dev
 argument_list|,
-literal|"DUMP statistics request timedout\n"
+literal|"DUMP statistics request timed out\n"
 argument_list|)
 expr_stmt|;
 return|return
