@@ -158,18 +158,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_map_t
-name|buffer_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_map_t
-name|bio_transient_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|const
 name|void
 modifier|*

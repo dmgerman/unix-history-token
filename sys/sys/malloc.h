@@ -119,6 +119,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_FIRSTFIT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Only for vmem, fast fit. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BESTFIT
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Only for vmem, low fragmentation. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_MAGIC
 value|877983977
 end_define
