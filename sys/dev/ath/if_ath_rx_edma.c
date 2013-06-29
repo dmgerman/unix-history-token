@@ -1610,6 +1610,12 @@ argument_list|,
 literal|"ath_edma_recv_proc_queue(): kickpcu"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|npkts
+operator|>
+literal|0
+condition|)
 name|device_printf
 argument_list|(
 name|sc
