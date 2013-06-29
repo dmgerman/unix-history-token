@@ -5053,8 +5053,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5127,8 +5128,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5322,8 +5324,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5543,8 +5546,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5633,8 +5637,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5705,8 +5710,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5814,8 +5820,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -6054,8 +6061,9 @@ name|parse
 operator|=
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Optional field */
@@ -6289,8 +6297,9 @@ name|parse
 operator|=
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Optional field */
@@ -6386,8 +6395,9 @@ name|parse
 operator|=
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Optional field */
