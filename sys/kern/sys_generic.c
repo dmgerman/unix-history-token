@@ -7307,6 +7307,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|precision
+operator|=
+literal|0
+expr_stmt|;
+comment|/* stupid gcc! */
 if|if
 condition|(
 name|tvp
