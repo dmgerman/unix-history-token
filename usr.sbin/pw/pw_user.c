@@ -854,8 +854,9 @@ name|p
 operator|=
 name|strchr
 argument_list|(
-operator|++
 name|p
+operator|+
+literal|1
 argument_list|,
 literal|'/'
 argument_list|)
