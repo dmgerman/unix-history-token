@@ -7134,6 +7134,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -7215,6 +7220,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -7260,6 +7270,11 @@ operator|->
 name|rs_nrates
 operator|-
 literal|1
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
