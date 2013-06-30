@@ -694,6 +694,10 @@ condition|(
 name|errno
 operator|!=
 name|EAFNOSUPPORT
+operator|&&
+name|error
+operator|!=
+name|EPROTONOSUPPORT
 condition|)
 name|warn
 argument_list|(
