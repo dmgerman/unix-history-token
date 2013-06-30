@@ -7267,9 +7267,14 @@ name|ni_txrate
 operator|=
 name|rs
 operator|->
+name|rs_rates
+index|[
+name|rs
+operator|->
 name|rs_nrates
 operator|-
 literal|1
+index|]
 expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
