@@ -1281,7 +1281,7 @@ name|first
 decl_stmt|,
 name|last
 decl_stmt|;
-comment|/* 	 * Check the timers are setup, if not just 	 * use a for loop for the meantime          */
+comment|/* 	 * Check the timers are setup, if not just 	 * use a for loop for the meantime 	 */
 if|if
 condition|(
 name|arm_tmr_sc
