@@ -336,7 +336,9 @@ define|#
 directive|define
 name|URTWN_RSSI
 parameter_list|(
-define|(r))  (r) - 110
+name|r
+parameter_list|)
+value|(r) - 110
 end_define
 
 begin_define
