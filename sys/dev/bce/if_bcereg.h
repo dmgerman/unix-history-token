@@ -35945,6 +35945,10 @@ define|#
 directive|define
 name|BCE_USING_TX_FLOW_CONTROL
 value|0x00000400
+define|#
+directive|define
+name|BCE_USING_RX_FLOW_CONTROL
+value|0x00000800
 comment|/* Controller capability flags. */
 name|u32
 name|bce_cap_flags
