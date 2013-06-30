@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"namespace.h"
 end_include
 
@@ -43,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/thr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdatomic.h>
 end_include
 
 begin_include
@@ -148,8 +148,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|atomic_int
 name|sigev_generation
 decl_stmt|;
 end_decl_stmt
@@ -797,12 +796,14 @@ name|sn
 operator|->
 name|sn_gen
 operator|=
-name|atomic_fetchadd_int
+name|atomic_fetch_add_explicit
 argument_list|(
 operator|&
 name|sigev_generation
 argument_list|,
 literal|1
+argument_list|,
+name|memory_order_relaxed
 argument_list|)
 expr_stmt|;
 name|sn
