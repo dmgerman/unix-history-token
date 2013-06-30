@@ -334,6 +334,14 @@ end_endif
 begin_define
 define|#
 directive|define
+name|URTWN_RSSI
+parameter_list|(
+define|(r))  (r) - 110
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_HAS_ADDR4
 parameter_list|(
 name|wh
@@ -3604,6 +3612,14 @@ name|sc
 argument_list|,
 name|rate
 argument_list|,
+name|rssi
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Convert the RSSI to a range that will be accepted 		 * by net80211. 		 */
+name|rssi
+operator|=
+name|URTWN_RSSI
+argument_list|(
 name|rssi
 argument_list|)
 expr_stmt|;
