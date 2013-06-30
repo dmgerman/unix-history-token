@@ -396,7 +396,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0887
+literal|0x0897
 block|,
 literal|"Intel Centrino Wireless-N 130"
 block|}
