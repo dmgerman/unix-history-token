@@ -1393,6 +1393,19 @@ end_else
 begin_define
 define|#
 directive|define
+name|__atomic_apply_stride
+parameter_list|(
+name|object
+parameter_list|,
+name|operand
+parameter_list|)
+define|\
+value|(((__typeof__((object)->__val))0) + (operand))
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_compare_exchange_strong_explicit
 parameter_list|(
 name|object
@@ -1496,7 +1509,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|((void)(order), __sync_fetch_and_add(&(object)->__val, operand))
+value|((void)(order), __sync_fetch_and_add(&(object)->__val,		\ 	    __atomic_apply_stride(object, operand)))
 end_define
 
 begin_define
@@ -1541,7 +1554,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|((void)(order), __sync_fetch_and_sub(&(object)->__val, operand))
+value|((void)(order), __sync_fetch_and_sub(&(object)->__val,		\ 	    __atomic_apply_stride(object, operand)))
 end_define
 
 begin_define
