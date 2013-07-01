@@ -316,8 +316,6 @@ expr_stmt|;
 name|free
 argument_list|(
 name|ma
-operator|->
-name|ma_dir
 argument_list|)
 expr_stmt|;
 goto|goto
