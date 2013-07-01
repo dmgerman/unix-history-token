@@ -36,7 +36,7 @@ comment|/**  * APU_DECLARE_EXPORT is defined when building the APR-UTIL dynamic 
 end_comment
 
 begin_comment
-comment|/**  * The public APR-UTIL functions are declared with APU_DECLARE(), so they may  * use the most appropriate calling convention.  Public APR functions with   * variable arguments must use APU_DECLARE_NONSTD().  *  * @deffunc APU_DECLARE(rettype) apr_func(args);  */
+comment|/**  * The public APR-UTIL functions are declared with APU_DECLARE(), so they may  * use the most appropriate calling convention.  Public APR functions with   * variable arguments must use APU_DECLARE_NONSTD().  *  * @fn APU_DECLARE(rettype) apr_func(args);  */
 end_comment
 
 begin_define
@@ -50,7 +50,7 @@ value|type
 end_define
 
 begin_comment
-comment|/**  * The public APR-UTIL functions using variable arguments are declared with   * APU_DECLARE_NONSTD(), as they must use the C language calling convention.  *  * @deffunc APU_DECLARE_NONSTD(rettype) apr_func(args, ...);  */
+comment|/**  * The public APR-UTIL functions using variable arguments are declared with   * APU_DECLARE_NONSTD(), as they must use the C language calling convention.  *  * @fn APU_DECLARE_NONSTD(rettype) apr_func(args, ...);  */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ value|type
 end_define
 
 begin_comment
-comment|/**  * The public APR-UTIL variables are declared with APU_DECLARE_DATA.  * This assures the appropriate indirection is invoked at compile time.  *  * @deffunc APU_DECLARE_DATA type apr_variable;  * @tip APU_DECLARE_DATA extern type apr_variable; syntax is required for  * declarations within headers to properly import the variable.  */
+comment|/**  * The public APR-UTIL variables are declared with APU_DECLARE_DATA.  * This assures the appropriate indirection is invoked at compile time.  *  * @fn APU_DECLARE_DATA type apr_variable;  * @note APU_DECLARE_DATA extern type apr_variable; syntax is required for  * declarations within headers to properly import the variable.  */
 end_comment
 
 begin_define
@@ -72,6 +72,48 @@ define|#
 directive|define
 name|APU_DECLARE_DATA
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|APU_MODULE_DECLARE_STATIC
+argument_list|)
+end_if
+
+begin_comment
+comment|/**  * Declare a dso module's exported module structure as APU_MODULE_DECLARE_DATA.  *  * Unless APU_MODULE_DECLARE_STATIC is defined at compile time, symbols   * declared with APU_MODULE_DECLARE_DATA are always exported.  * @code  * module APU_MODULE_DECLARE_DATA mod_tag  * @endcode  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APU_MODULE_DECLARE_DATA
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|APU_MODULE_DECLARE_DATA
+value|__declspec(dllexport)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * we always have SDBM (it's in our codebase)  */
@@ -123,10 +165,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* APU_HAVE_DB */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -152,6 +190,48 @@ begin_define
 define|#
 directive|define
 name|APU_HAVE_SQLITE2
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_HAVE_ORACLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_HAVE_FREETDS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_HAVE_ODBC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_HAVE_CRYPTO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_HAVE_OPENSSL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_HAVE_NSS
 value|0
 end_define
 
