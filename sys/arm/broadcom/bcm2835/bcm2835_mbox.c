@@ -699,6 +699,8 @@ name|sc
 operator|->
 name|irq_res
 argument_list|,
+name|INTR_MPSAFE
+operator||
 name|INTR_TYPE_MISC
 argument_list|,
 name|NULL
