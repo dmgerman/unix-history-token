@@ -13,10 +13,16 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_comment
+comment|/* XXX Yes, the original code has three separate file-local lock instances */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|pthread_rwlock_t
 name|lock
+init|=
+name|PTHREAD_RWLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
