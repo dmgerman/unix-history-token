@@ -3838,7 +3838,7 @@ block|{
 comment|/* 		 * The inode itself has a different generation number 		 * than the attribute data.  For now, the best solution 		 * is to coerce this to undefined, and let it get cleaned 		 * up by the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr_get (%s): inode number inconsistency (%d, %jd)\n"
+literal|"ufs_extattr_get (%s): inode number inconsistency (%d, %ju)\n"
 argument_list|,
 name|mp
 operator|->
