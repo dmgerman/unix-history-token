@@ -21825,6 +21825,29 @@ argument_list|,
 literal|"interrupt holdoff packet counter values"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"nfilters"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|sc
+operator|->
+name|tids
+operator|.
+name|nftids
+argument_list|,
+literal|"number of filters"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SBUF_DRAIN
