@@ -6440,14 +6440,16 @@ name|BGE_RXMODE_FLOWCTL_ENABLE
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|IFM_OPTIONS
 argument_list|(
 name|mii
 operator|->
 name|mii_media_active
+argument_list|)
 operator|&
 name|IFM_FDX
-argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -11276,6 +11278,7 @@ name|sc
 argument_list|,
 name|BGE_TX_RANDOM_BACKOFF
 argument_list|,
+operator|(
 name|IF_LLADDR
 argument_list|(
 name|sc
@@ -11335,7 +11338,8 @@ argument_list|)
 index|[
 literal|5
 index|]
-operator|+
+operator|)
+operator|&
 name|BGE_TX_BACKOFF_SEED_MASK
 argument_list|)
 expr_stmt|;

@@ -4644,7 +4644,7 @@ begin_define
 define|#
 directive|define
 name|BGE_TX_BACKOFF_SEED_MASK
-value|0x3F
+value|0x3FF
 end_define
 
 begin_comment
