@@ -3851,7 +3851,7 @@ operator|.
 name|ueh_i_gen
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|ip
 operator|->

@@ -8869,8 +8869,6 @@ name|i_gen
 operator|=
 name|arc4random
 argument_list|()
-operator|/
-literal|2
 operator|+
 literal|1
 expr_stmt|;
