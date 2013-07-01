@@ -1435,7 +1435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build geli(8) arguments from mntopts */
+comment|/* Build geli(8) arguments from mntops */
 end_comment
 
 begin_function
