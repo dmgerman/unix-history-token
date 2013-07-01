@@ -284,6 +284,17 @@ name|page_sizes_mask
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Set this to 1 to have the EPT tables respect the guest PAT settings  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ept_pat_passthru
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|ept_init
@@ -743,7 +754,7 @@ index|]
 operator||=
 name|EPT_PG_EX
 expr_stmt|;
-comment|/* 		 * XXX should we enforce this memory type by setting the 		 * ignore PAT bit to 1. 		 */
+comment|/* 		 * By default the PAT type is ignored - this appears to 		 * be how other hypervisors handle EPT. Allow this to be 		 * overridden. 		 */
 name|ptp
 index|[
 name|ptpindex
@@ -753,6 +764,18 @@ name|EPT_PG_MEMORY_TYPE
 argument_list|(
 name|attr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ept_pat_passthru
+condition|)
+name|ptp
+index|[
+name|ptpindex
+index|]
+operator||=
+name|EPT_PG_IGNORE_PAT
 expr_stmt|;
 if|if
 condition|(
