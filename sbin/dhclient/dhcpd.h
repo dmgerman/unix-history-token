@@ -348,6 +348,10 @@ name|struct
 name|iaddr
 name|address
 decl_stmt|;
+name|struct
+name|iaddr
+name|nextserver
+decl_stmt|;
 name|char
 modifier|*
 name|server_name
