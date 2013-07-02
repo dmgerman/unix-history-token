@@ -580,6 +580,13 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sc_txtmouse_no_retrace_wait
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|intel_fbdev_init
@@ -689,6 +696,10 @@ name|helper
 argument_list|,
 literal|32
 argument_list|)
+expr_stmt|;
+name|sc_txtmouse_no_retrace_wait
+operator|=
+literal|1
 expr_stmt|;
 return|return
 literal|0
