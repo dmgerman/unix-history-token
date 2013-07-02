@@ -6211,7 +6211,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|Strncpy
+name|memcpy
 argument_list|(
 name|buf
 argument_list|,
