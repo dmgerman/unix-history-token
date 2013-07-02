@@ -2406,6 +2406,11 @@ argument_list|,
 name|vnodefile
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|vnodefile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2435,6 +2440,11 @@ name|warnx
 argument_list|(
 literal|"mdconfig (attach) error: file=%s"
 argument_list|,
+name|vnodefile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|vnodefile
 argument_list|)
 expr_stmt|;
@@ -2647,6 +2657,11 @@ argument_list|,
 name|vnodefile
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|vnodefile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -2680,6 +2695,11 @@ literal|"md%d on file=%s"
 argument_list|,
 name|mdunit
 argument_list|,
+name|vnodefile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|vnodefile
 argument_list|)
 expr_stmt|;
@@ -2736,6 +2756,11 @@ name|warnx
 argument_list|(
 literal|"md on %s: Device not found"
 argument_list|,
+name|vnodefile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|vnodefile
 argument_list|)
 expr_stmt|;
@@ -2967,6 +2992,11 @@ argument_list|,
 name|vnodefile
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|vnodefile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -3081,6 +3111,11 @@ condition|)
 name|close
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|vnodefile
 argument_list|)
 expr_stmt|;
 return|return
