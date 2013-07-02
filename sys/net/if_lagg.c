@@ -261,6 +261,18 @@ directive|include
 file|<netinet/ip6.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_ifattach.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -3203,6 +3215,86 @@ operator|(
 name|EPROTONOSUPPORT
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|INET6
+comment|/* 	 * The member interface should not have inet6 address because 	 * two interfaces with a valid link-local scope zone must not be 	 * merged in any form.  This restriction is needed to 	 * prevent violation of link-local scope zone.  Attempts to 	 * add a member interface which has inet6 addresses triggers 	 * removal of all inet6 addresses on the member interface. 	 */
+name|SLIST_FOREACH
+argument_list|(
+argument|lp
+argument_list|,
+argument|&sc->sc_ports
+argument_list|,
+argument|lp_entries
+argument_list|)
+block|{
+if|if
+condition|(
+name|in6ifa_llaonifp
+argument_list|(
+name|lp
+operator|->
+name|lp_ifp
+argument_list|)
+condition|)
+block|{
+name|in6_ifdetach
+argument_list|(
+name|lp
+operator|->
+name|lp_ifp
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|,
+literal|"IPv6 addresses on %s have been removed "
+literal|"before adding it as a member to prevent "
+literal|"IPv6 address scope violation.\n"
+argument_list|,
+name|lp
+operator|->
+name|lp_ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|in6ifa_llaonifp
+argument_list|(
+name|ifp
+argument_list|)
+condition|)
+block|{
+name|in6_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|,
+literal|"IPv6 addresses on %s have been removed "
+literal|"before adding it as a member to prevent "
+literal|"IPv6 address scope violation.\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Allow the first Ethernet member to define the MTU */
 if|if
 condition|(
