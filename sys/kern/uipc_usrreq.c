@@ -8192,7 +8192,7 @@ name|fde_file
 operator|=
 name|fdep
 index|[
-literal|0
+name|i
 index|]
 operator|->
 name|fde_file
@@ -8202,7 +8202,7 @@ argument_list|(
 operator|&
 name|fdep
 index|[
-literal|0
+name|i
 index|]
 operator|->
 name|fde_caps
