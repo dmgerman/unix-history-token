@@ -890,6 +890,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|cxgbc
+argument_list|,
+name|firmware
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Attachment glue for the ports.  Attachment is done directly to the  * controller device.  */
 end_comment

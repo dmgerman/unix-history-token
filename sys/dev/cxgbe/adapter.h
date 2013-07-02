@@ -117,20 +117,6 @@ directive|include
 file|"firmware/t4fw_interface.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|T4_CFGNAME
-value|"t4fw_cfg"
-end_define
-
-begin_define
-define|#
-directive|define
-name|T4_FWNAME
-value|"t4fw"
-end_define
-
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -570,36 +556,6 @@ literal|8
 block|}
 enum|;
 end_enum
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|T4_PKT_TIMESTAMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESHOLD
-value|(MINCLSIZE - 8)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESHOLD
-value|MINCLSIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum
@@ -1279,6 +1235,24 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Listed in order of preference.  Update t4_sysctls too if you change these */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|DOORBELL_UDB
+block|,
+name|DOORBELL_WCWR
+block|,
+name|DOORBELL_UDBWC
+block|,
+name|DOORBELL_KDB
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Egress Queue: driver is producer, T4 is consumer.  *  * Note: A free list is an egress queue (driver produces the buffers and T4  * consumes them) but it's special enough to have its own struct (see sge_fl).  */
 end_comment
 
@@ -1328,6 +1302,19 @@ modifier|*
 name|spg
 decl_stmt|;
 comment|/* status page, for convenience */
+name|int
+name|doorbells
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+modifier|*
+name|udb
+decl_stmt|;
+comment|/* KVA of doorbell (lies within BAR2) */
+name|u_int
+name|udb_qid
+decl_stmt|;
+comment|/* relative qid within the doorbell page */
 name|uint16_t
 name|cap
 decl_stmt|;
@@ -1866,6 +1853,9 @@ name|int
 name|fl_starve_threshold
 decl_stmt|;
 name|int
+name|s_qpp
+decl_stmt|;
+name|int
 name|nrxq
 decl_stmt|;
 comment|/* total # of Ethernet rx queues */
@@ -2076,6 +2066,19 @@ decl_stmt|;
 name|bus_size_t
 name|mmio_len
 decl_stmt|;
+name|int
+name|udbs_rid
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|udbs_res
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+modifier|*
+name|udbs_base
+decl_stmt|;
 name|unsigned
 name|int
 name|pf
@@ -2167,6 +2170,9 @@ comment|/* L2 table */
 name|struct
 name|tid_info
 name|tids
+decl_stmt|;
+name|int
+name|doorbells
 decl_stmt|;
 name|int
 name|open_device_map
@@ -3099,6 +3105,37 @@ end_function
 begin_function
 specifier|static
 specifier|inline
+name|bool
+name|is_40G_port
+parameter_list|(
+specifier|const
+name|struct
+name|port_info
+modifier|*
+name|pi
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|pi
+operator|->
+name|link_cfg
+operator|.
+name|supported
+operator|&
+name|FW_PORT_CAP_SPEED_40G
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
 name|int
 name|tx_resume_threshold
 parameter_list|(
@@ -3343,8 +3380,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|t4_init_sge_cpl_handlers
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_tweak_chip_settings
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|t4_sge_init
+name|t4_read_chip_settings
 parameter_list|(
 name|struct
 name|adapter

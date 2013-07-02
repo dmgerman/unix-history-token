@@ -100,11 +100,11 @@ argument|stid_region
 argument_list|)
 name|link
 expr_stmt|;
-name|int
+name|u_int
 name|used
 decl_stmt|;
 comment|/* # of stids used by this region */
-name|int
+name|u_int
 name|free
 decl_stmt|;
 comment|/* # of contiguous stids free right after this region */

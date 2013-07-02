@@ -225,6 +225,10 @@ begin_enum
 enum|enum
 name|fw_wr_opcodes
 block|{
+name|FW_FRAG_WR
+init|=
+literal|0x1d
+block|,
 name|FW_FILTER_WR
 init|=
 literal|0x02
@@ -781,6 +785,99 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> S_FW_WR_LEN16)& M_FW_WR_LEN16)
+end_define
+
+begin_struct
+struct|struct
+name|fw_frag_wr
+block|{
+name|__be32
+name|op_to_fragoff16
+decl_stmt|;
+name|__be32
+name|flowid_len16
+decl_stmt|;
+name|__be64
+name|r4
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|S_FW_FRAG_WR_EOF
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_FRAG_WR_EOF
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_FRAG_WR_EOF
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_FRAG_WR_EOF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_FRAG_WR_EOF
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_FW_FRAG_WR_EOF)& M_FW_FRAG_WR_EOF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_FW_FRAG_WR_EOF
+value|V_FW_FRAG_WR_EOF(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_FW_FRAG_WR_FRAGOFF16
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FW_FRAG_WR_FRAGOFF16
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FW_FRAG_WR_FRAGOFF16
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FW_FRAG_WR_FRAGOFF16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FW_FRAG_WR_FRAGOFF16
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)>> S_FW_FRAG_WR_FRAGOFF16)& M_FW_FRAG_WR_FRAGOFF16)
 end_define
 
 begin_comment
@@ -13695,6 +13792,18 @@ block|,
 name|FW_LDST_ADDRSPC_I2C
 init|=
 literal|0x0038
+block|,
+name|FW_LDST_ADDRSPC_PCIE_CFGS
+init|=
+literal|0x0040
+block|,
+name|FW_LDST_ADDRSPC_PCIE_DBG
+init|=
+literal|0x0041
+block|,
+name|FW_LDST_ADDRSPC_PCIE_PHY
+init|=
+literal|0x0042
 block|, }
 enum|;
 end_enum
@@ -15755,6 +15864,29 @@ block|,
 name|FW_PARAMS_PARAM_DEV_DIAG
 init|=
 literal|0x11
+block|,
+name|FW_PARAMS_PARAM_DEV_UCLK
+init|=
+literal|0x12
+block|,
+comment|/* uP clock in khz */
+name|FW_PARAMS_PARAM_DEV_MAXORDIRD_QP
+init|=
+literal|0x13
+block|,
+comment|/* max supported QP IRD/ORD 						 */
+name|FW_PARAMS_PARAM_DEV_MAXIRD_ADAPTER
+init|=
+literal|0x14
+block|,
+comment|/* max supported ADAPTER IRD 						 */
+name|FW_PARAMS_PARAM_DEV_INTFVER_FCOEPDU
+init|=
+literal|0x15
+block|,
+name|FW_PARAMS_PARAM_DEV_MCINIT
+init|=
+literal|0x16
 block|, }
 enum|;
 end_enum
@@ -28255,6 +28387,21 @@ init|=
 literal|11
 block|,
 comment|/* No, 4, No, No, Yes, Yes, 10G, BP ANGE */
+name|FW_PORT_TYPE_QSFP_10G
+init|=
+literal|12
+block|,
+comment|/* No, 1, Yes, No, No, No, 10G */
+name|FW_PORT_TYPE_QSFP
+init|=
+literal|14
+block|,
+comment|/* No, 4, Yes, No, No, No, 40G */
+name|FW_PORT_TYPE_BP40_BA
+init|=
+literal|15
+block|,
+comment|/* No, 4, No, No, Yes, Yes, 40G/10G/1G, BP ANGE */
 name|FW_PORT_TYPE_NONE
 init|=
 name|M_FW_PORT_CMD_PTYPE
@@ -32128,6 +32275,10 @@ block|{
 name|FW_DEVLOG_FACILITY_CORE
 init|=
 literal|0x00
+block|,
+name|FW_DEVLOG_FACILITY_CF
+init|=
+literal|0x01
 block|,
 name|FW_DEVLOG_FACILITY_SCHED
 init|=
