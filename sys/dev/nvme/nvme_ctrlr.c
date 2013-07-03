@@ -3847,6 +3847,38 @@ name|len
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|pt
+operator|->
+name|len
+operator|>
+name|ctrlr
+operator|->
+name|max_xfer_size
+condition|)
+block|{
+name|nvme_printf
+argument_list|(
+name|ctrlr
+argument_list|,
+literal|"pt->len (%d) "
+literal|"exceeds max_xfer_size (%d)\n"
+argument_list|,
+name|pt
+operator|->
+name|len
+argument_list|,
+name|ctrlr
+operator|->
+name|max_xfer_size
+argument_list|)
+expr_stmt|;
+return|return
+name|EIO
+return|;
+block|}
 if|if
 condition|(
 name|is_user_buffer
@@ -3974,6 +4006,7 @@ argument_list|,
 name|pt
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|req
 operator|=
