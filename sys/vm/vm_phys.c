@@ -2847,15 +2847,6 @@ argument_list|,
 name|memattr
 argument_list|)
 expr_stmt|;
-name|pmap_page_init
-argument_list|(
-operator|&
-name|fp
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|fp
 index|[
 name|i
