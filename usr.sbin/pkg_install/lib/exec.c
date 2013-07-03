@@ -52,10 +52,11 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
+name|long
+name|maxargs
+decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
-name|maxargs
 decl_stmt|;
 name|maxargs
 operator|=
