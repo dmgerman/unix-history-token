@@ -32,6 +32,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -69,6 +75,13 @@ define|#
 directive|define
 name|NVME_GLOBAL_NAMESPACE_TAG
 value|((uint32_t)0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MAX_XFER_SIZE
+value|MAXPHYS
 end_define
 
 begin_union

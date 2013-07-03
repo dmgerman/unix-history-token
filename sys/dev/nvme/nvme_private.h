@@ -164,13 +164,6 @@ begin_comment
 comment|/* 8 channel board */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NVME_MAX_PRP_LIST_ENTRIES
-value|(32)
-end_define
-
 begin_comment
 comment|/*  * For commands requiring more than 2 PRP entries, one PRP will be  *  embedded in the command (prp1), and the rest of the PRP entries  *  will be in a list pointed to by the command (prp2).  This means  *  that real max number of PRP entries we support is 32+1, which  *  results in a max xfer size of 32*PAGE_SIZE.  */
 end_comment
@@ -178,8 +171,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NVME_MAX_XFER_SIZE
-value|NVME_MAX_PRP_LIST_ENTRIES * PAGE_SIZE
+name|NVME_MAX_PRP_LIST_ENTRIES
+value|(NVME_MAX_XFER_SIZE / PAGE_SIZE)
 end_define
 
 begin_define
@@ -617,9 +610,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|tag
-decl_stmt|;
-name|uint32_t
-name|max_xfer_size
 decl_stmt|;
 name|uint32_t
 name|num_entries
@@ -1610,9 +1600,6 @@ name|num_entries
 parameter_list|,
 name|uint32_t
 name|num_trackers
-parameter_list|,
-name|uint32_t
-name|max_xfer_size
 parameter_list|,
 name|struct
 name|nvme_controller
