@@ -1360,7 +1360,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ssize_t
+name|void
 name|send_packet
 parameter_list|(
 name|struct

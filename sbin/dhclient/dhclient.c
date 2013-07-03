@@ -5721,9 +5721,6 @@ name|interval
 argument_list|)
 expr_stmt|;
 comment|/* Send out a packet. */
-operator|(
-name|void
-operator|)
 name|send_packet
 argument_list|(
 name|ip
@@ -6790,9 +6787,6 @@ name|REMOTE_PORT
 argument_list|)
 expr_stmt|;
 comment|/* Send out a packet. */
-operator|(
-name|void
-operator|)
 name|send_packet
 argument_list|(
 name|ip
@@ -6866,9 +6860,6 @@ name|REMOTE_PORT
 argument_list|)
 expr_stmt|;
 comment|/* Send out a packet. */
-operator|(
-name|void
-operator|)
 name|send_packet
 argument_list|(
 name|ip

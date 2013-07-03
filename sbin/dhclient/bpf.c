@@ -995,7 +995,7 @@ block|}
 end_function
 
 begin_function
-name|ssize_t
+name|void
 name|send_packet
 parameter_list|(
 name|struct
@@ -1268,11 +1268,6 @@ argument_list|(
 literal|"send_packet: %m"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|result
-operator|)
-return|;
 block|}
 end_function
 
