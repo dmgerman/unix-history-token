@@ -1101,10 +1101,6 @@ index|]
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 expr_stmt|;
 name|iov
@@ -1123,10 +1119,6 @@ index|]
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|raw
 expr_stmt|;
 name|iov
