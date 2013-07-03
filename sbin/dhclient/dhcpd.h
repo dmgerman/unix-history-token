@@ -1377,8 +1377,7 @@ name|struct
 name|in_addr
 parameter_list|,
 name|struct
-name|sockaddr_in
-modifier|*
+name|in_addr
 parameter_list|)
 function_decl|;
 end_function_decl
