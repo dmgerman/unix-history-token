@@ -160,10 +160,12 @@ name|_citrus_iconv
 modifier|*
 name|handle
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|src
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|dst
 decl_stmt|;

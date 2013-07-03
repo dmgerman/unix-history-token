@@ -59,7 +59,7 @@ parameter_list|(
 name|_m_
 parameter_list|)
 define|\
-value|static int	 _citrus_##_m_##_iconv_init_shared			\ 		    (struct _citrus_iconv_shared * __restrict,		\ 	 	    const char * __restrict, const char * __restrict);	\ static void	 _citrus_##_m_##_iconv_uninit_shared			\ 		    (struct _citrus_iconv_shared *);			\ static int	 _citrus_##_m_##_iconv_convert				\ 		    (struct _citrus_iconv * __restrict,			\ 		    char * __restrict * __restrict,			\ 		    size_t * __restrict,				\ 		    char * __restrict * __restrict,			\ 		    size_t * __restrict outbytes,			\ 	 	    uint32_t, size_t * __restrict);			\ static int	 _citrus_##_m_##_iconv_init_context			\ 		    (struct _citrus_iconv *);				\ static void	 _citrus_##_m_##_iconv_uninit_context			\ 		    (struct _citrus_iconv *)
+value|static int	 _citrus_##_m_##_iconv_init_shared			\ 		    (struct _citrus_iconv_shared * __restrict,		\ 	 	    const char * __restrict, const char * __restrict);	\ static void	 _citrus_##_m_##_iconv_uninit_shared			\ 		    (struct _citrus_iconv_shared *);			\ static int	 _citrus_##_m_##_iconv_convert				\ 		    (struct _citrus_iconv * __restrict,			\ 		    const char * __restrict * __restrict,		\ 		    size_t * __restrict,				\ 		    char * __restrict * __restrict,			\ 		    size_t * __restrict outbytes,			\ 	 	    uint32_t, size_t * __restrict);			\ static int	 _citrus_##_m_##_iconv_init_context			\ 		    (struct _citrus_iconv *);				\ static void	 _citrus_##_m_##_iconv_uninit_context			\ 		    (struct _citrus_iconv *)
 end_define
 
 begin_define
@@ -149,6 +149,7 @@ name|_citrus_iconv
 modifier|*
 name|__restrict
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|__restrict
