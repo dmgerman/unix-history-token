@@ -695,7 +695,7 @@ name|errno
 operator|!=
 name|EAFNOSUPPORT
 operator|&&
-name|error
+name|errno
 operator|!=
 name|EPROTONOSUPPORT
 condition|)
