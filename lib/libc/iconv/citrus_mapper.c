@@ -152,6 +152,15 @@ name|REFCOUNT_PERSISTENT
 value|-1
 end_define
 
+begin_decl_stmt
+specifier|static
+name|pthread_rwlock_t
+name|cm_lock
+init|=
+name|PTHREAD_RWLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|_citrus_mapper_area
@@ -215,6 +224,10 @@ name|int
 name|ret
 decl_stmt|;
 name|WLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -344,6 +357,10 @@ expr_stmt|;
 name|quit
 label|:
 name|UNLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1217,6 +1234,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|WLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 comment|/* search in the cache */
 name|hashval
@@ -1302,6 +1323,10 @@ name|quit
 goto|;
 comment|/* open mapper */
 name|UNLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -1318,6 +1343,10 @@ name|variable
 argument_list|)
 expr_stmt|;
 name|WLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1390,6 +1419,10 @@ expr_stmt|;
 name|quit
 label|:
 name|UNLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1419,6 +1452,10 @@ name|cm
 condition|)
 block|{
 name|WLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1475,6 +1512,10 @@ expr_stmt|;
 name|quit
 label|:
 name|UNLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1496,6 +1537,10 @@ name|cm
 parameter_list|)
 block|{
 name|WLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 name|cm
 operator|->
@@ -1504,6 +1549,10 @@ operator|=
 name|REFCOUNT_PERSISTENT
 expr_stmt|;
 name|UNLOCK
+argument_list|(
+operator|&
+name|cm_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function

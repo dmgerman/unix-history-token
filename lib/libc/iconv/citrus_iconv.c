@@ -244,6 +244,15 @@ name|shared_unused
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|pthread_rwlock_t
+name|ci_lock
+init|=
+name|PTHREAD_RWLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -254,6 +263,10 @@ name|void
 parameter_list|)
 block|{
 name|WLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -317,6 +330,10 @@ name|true
 expr_stmt|;
 block|}
 name|UNLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -861,6 +878,10 @@ name|dst
 argument_list|)
 expr_stmt|;
 name|WLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 comment|/* lookup alread existing entry */
 name|hashval
@@ -979,6 +1000,10 @@ expr_stmt|;
 name|quit
 label|:
 name|UNLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1001,6 +1026,10 @@ name|ci
 parameter_list|)
 block|{
 name|WLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 name|ci
 operator|->
@@ -1074,6 +1103,10 @@ expr_stmt|;
 block|}
 block|}
 name|UNLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
