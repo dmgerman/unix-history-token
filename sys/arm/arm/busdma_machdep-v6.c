@@ -777,6 +777,13 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|int
+name|uma_flags
+decl_stmt|;
+name|uma_flags
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Create a cache of buffers in standard (cacheable) memory. */
 name|standard_allocator
 operator|=
@@ -793,10 +800,20 @@ comment|/* uma_alloc func */
 name|NULL
 argument_list|,
 comment|/* uma_free func */
-literal|0
+name|uma_flags
 argument_list|)
 expr_stmt|;
 comment|/* uma_zcreate_flags */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+comment|/*  	 * Force UMA zone to allocate service structures like 	 * slabs using own allocator. uma_debug code performs 	 * atomic ops on uma_slab_t fields and safety of this 	 * operation is not guaranteed for write-back caches 	 */
+name|uma_flags
+operator|=
+name|UMA_ZONE_OFFPAGE
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Create a cache of buffers in uncacheable memory, to implement the 	 * BUS_DMA_COHERENT (and potentially BUS_DMA_NOCACHE) flag. 	 */
 name|coherent_allocator
 operator|=
@@ -811,7 +828,7 @@ name|busdma_bufalloc_alloc_uncacheable
 argument_list|,
 name|busdma_bufalloc_free_uncacheable
 argument_list|,
-literal|0
+name|uma_flags
 argument_list|)
 expr_stmt|;
 comment|/* uma_zcreate_flags */
