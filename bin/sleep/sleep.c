@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -255,6 +261,7 @@ argument_list|,
 name|report_request
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: [EINTR] is supposed to happen only when a signal was handled 	 * but the kernel also returns it when a ptrace-based debugger 	 * attaches. This is a bug but it is hard to fix. 	 */
 while|while
 condition|(
 name|nanosleep
@@ -297,8 +304,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-break|break;
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"nanosleep"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
