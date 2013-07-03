@@ -2410,53 +2410,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ethernet.c */
-end_comment
-
-begin_function_decl
-name|void
-name|assemble_ethernet_header
-parameter_list|(
-name|struct
-name|interface_info
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|struct
-name|hardware
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ssize_t
-name|decode_ethernet_header
-parameter_list|(
-name|struct
-name|interface_info
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|hardware
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* clparse.c */
 end_comment
 
