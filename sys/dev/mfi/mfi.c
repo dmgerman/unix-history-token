@@ -20535,25 +20535,7 @@ argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Fail the command instead of leaving it on 				 * the queue where it could remain stuck forever 				 */
-name|mfi_remove_busy
-argument_list|(
-name|cm
-argument_list|)
-expr_stmt|;
-name|cm
-operator|->
-name|cm_error
-operator|=
-name|ETIMEDOUT
-expr_stmt|;
-name|mfi_complete
-argument_list|(
-name|sc
-argument_list|,
-name|cm
-argument_list|)
-expr_stmt|;
+comment|/* 				 * While commands can get stuck forever we do 				 * not fail them as there is no way to tell if 				 * the controller has actually processed them 				 * or not. 				 * 				 * In addition its very likely that force 				 * failing a command here would cause a panic 				 * e.g. in UFS. 				 */
 name|timedout
 operator|++
 expr_stmt|;
