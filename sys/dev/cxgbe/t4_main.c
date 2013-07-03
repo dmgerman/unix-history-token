@@ -9933,7 +9933,7 @@ name|FW_VERSION
 parameter_list|(
 name|chip
 parameter_list|)
-value|( \     V_FW_HDR_FW_VER_MAJOR(FW_VERSION_MAJOR_##chip) | \     V_FW_HDR_FW_VER_MINOR(FW_VERSION_MINOR_##chip) | \     V_FW_HDR_FW_VER_MICRO(FW_VERSION_MICRO_##chip) | \     V_FW_HDR_FW_VER_BUILD(FW_VERSION_BUILD_##chip))
+value|( \     V_FW_HDR_FW_VER_MAJOR(chip##FW_VERSION_MAJOR) | \     V_FW_HDR_FW_VER_MINOR(chip##FW_VERSION_MINOR) | \     V_FW_HDR_FW_VER_MICRO(chip##FW_VERSION_MICRO) | \     V_FW_HDR_FW_VER_BUILD(chip##FW_VERSION_BUILD))
 end_define
 
 begin_define
@@ -9945,7 +9945,7 @@ name|chip
 parameter_list|,
 name|intf
 parameter_list|)
-value|(FW_HDR_INTFVER_##intf)
+value|(chip##FW_HDR_INTFVER_##intf)
 end_define
 
 begin_struct
