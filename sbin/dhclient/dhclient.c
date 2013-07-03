@@ -5796,8 +5796,6 @@ name|inaddr_any
 argument_list|,
 operator|&
 name|sockaddr_broadcast
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|add_timeout
@@ -6920,8 +6918,6 @@ name|from
 argument_list|,
 operator|&
 name|destination
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|add_timeout
@@ -7006,8 +7002,6 @@ name|inaddr_any
 argument_list|,
 operator|&
 name|sockaddr_broadcast
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

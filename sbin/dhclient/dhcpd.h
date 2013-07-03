@@ -1379,10 +1379,6 @@ parameter_list|,
 name|struct
 name|sockaddr_in
 modifier|*
-parameter_list|,
-name|struct
-name|hardware
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1019,11 +1019,6 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|to
-parameter_list|,
-name|struct
-name|hardware
-modifier|*
-name|hto
 parameter_list|)
 block|{
 name|unsigned
@@ -1071,7 +1066,7 @@ argument_list|,
 operator|&
 name|bufp
 argument_list|,
-name|hto
+name|NULL
 argument_list|)
 expr_stmt|;
 name|assemble_udp_ip_header
