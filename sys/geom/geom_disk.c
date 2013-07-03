@@ -606,9 +606,9 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_flags
-operator|&
-name|DISKFLAG_CANDELETE
+name|d_delmaxsize
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -617,14 +617,15 @@ name|bootverbose
 operator|&&
 name|dp
 operator|->
-name|d_delmaxsize
-operator|==
-literal|0
+name|d_flags
+operator|&
+name|DISKFLAG_CANDELETE
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: Disk drive %s%d has no d_delmaxsize\n"
+literal|"WARNING: Disk drive %s%d has no "
+literal|"d_delmaxsize\n"
 argument_list|,
 name|dp
 operator|->
@@ -635,6 +636,7 @@ operator|->
 name|d_unit
 argument_list|)
 expr_stmt|;
+block|}
 name|dp
 operator|->
 name|d_delmaxsize
@@ -642,16 +644,6 @@ operator|=
 name|dp
 operator|->
 name|d_maxsize
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|dp
-operator|->
-name|d_delmaxsize
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|pp
@@ -3267,7 +3259,7 @@ if|if
 condition|(
 name|version
 operator|!=
-name|DISK_VERSION_02
+name|DISK_VERSION
 condition|)
 block|{
 name|printf

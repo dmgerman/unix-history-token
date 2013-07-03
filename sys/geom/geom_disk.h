@@ -464,8 +464,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_03
+value|0x5856105c
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_02
+value|DISK_VERSION_03
 end_define
 
 begin_endif
