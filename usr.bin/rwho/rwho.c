@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1983, 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -148,6 +148,36 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|NUSERS
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WHDRSIZE
+value|(ssize_t)(sizeof (wd) - sizeof (wd.wd_we))
+end_define
+
+begin_comment
+comment|/*  * this macro should be shared with ruptime.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|down
+parameter_list|(
+name|w
+parameter_list|,
+name|now
+parameter_list|)
+value|((now) - (w)->wd_recvtime> 11 * 60)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|DIR
@@ -164,12 +194,12 @@ name|wd
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NUSERS
-value|1000
-end_define
+begin_decl_stmt
+specifier|static
+name|int
+name|nusers
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|static
@@ -201,36 +231,6 @@ name|NUSERS
 index|]
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nusers
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|WHDRSIZE
-value|(ssize_t)(sizeof (wd) - sizeof (wd.wd_we))
-end_define
-
-begin_comment
-comment|/*  * this macro should be shared with ruptime.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|down
-parameter_list|(
-name|w
-parameter_list|,
-name|now
-parameter_list|)
-value|((now) - (w)->wd_recvtime> 11 * 60)
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -299,22 +299,16 @@ decl_stmt|;
 name|ssize_t
 name|cc
 decl_stmt|;
-specifier|register
 name|struct
 name|whod
 modifier|*
 name|w
-init|=
-operator|&
-name|wd
 decl_stmt|;
-specifier|register
 name|struct
 name|whoent
 modifier|*
 name|we
 decl_stmt|;
-specifier|register
 name|struct
 name|myutmp
 modifier|*
@@ -330,6 +324,11 @@ decl_stmt|;
 name|int
 name|d_first
 decl_stmt|;
+name|w
+operator|=
+operator|&
+name|wd
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -370,6 +369,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 operator|(
@@ -393,6 +393,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|argc
 operator|-=
@@ -461,6 +462,8 @@ argument_list|(
 name|dirp
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -481,6 +484,8 @@ literal|"whod."
 argument_list|,
 literal|5
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|f
@@ -546,6 +551,8 @@ name|w
 argument_list|,
 name|now
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
@@ -714,7 +721,9 @@ block|{
 comment|/* append one for the blank and use 8 for the out_line */
 name|int
 name|j
-init|=
+decl_stmt|;
+name|j
+operator|=
 name|strlen
 argument_list|(
 name|mp
@@ -732,7 +741,7 @@ name|myutmp
 operator|.
 name|out_line
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|j
@@ -778,7 +787,9 @@ index|]
 decl_stmt|;
 name|time_t
 name|t
-init|=
+decl_stmt|;
+name|t
+operator|=
 name|_int_to_time
 argument_list|(
 name|mp
@@ -787,7 +798,7 @@ name|myutmp
 operator|.
 name|out_time
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|strftime
 argument_list|(
 name|cbuf
@@ -894,11 +905,15 @@ condition|(
 name|mp
 operator|->
 name|myidle
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 name|aflg
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -948,11 +963,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|":%02d"
@@ -1072,6 +1089,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -1100,6 +1119,8 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
