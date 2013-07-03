@@ -138,13 +138,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|struct
+name|hhookheadhead
+name|hhook_head_list
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|hhookheadhead
 argument_list|,
-name|hhook_head_list
+name|hhook_vhead_list
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -152,8 +159,8 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_hhook_head_list
-value|VNET(hhook_head_list)
+name|V_hhook_vhead_list
+value|VNET(hhook_vhead_list)
 end_define
 
 begin_decl_stmt
@@ -926,31 +933,6 @@ name|EEXIST
 operator|)
 return|;
 block|}
-comment|/* XXXLAS: Need to implement support for non-virtualised hooks. */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|HHOOK_HEADISINVNET
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: only vnet-style virtualised hooks can be used\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 name|tmphhh
 operator|=
 name|malloc
@@ -1054,6 +1036,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|HHHLIST_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1067,13 +1052,46 @@ name|hhh_flags
 operator||=
 name|HHH_ISINVNET
 expr_stmt|;
-name|HHHLIST_LOCK
-argument_list|()
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|KASSERT
+argument_list|(
+name|curvnet
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"curvnet is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|tmphhh
+operator|->
+name|hhh_vid
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|curvnet
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|V_hhook_head_list
+name|V_hhook_vhead_list
+argument_list|,
+name|tmphhh
+argument_list|,
+name|hhh_vnext
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|hhook_head_list
 argument_list|,
 name|tmphhh
 argument_list|,
@@ -1083,11 +1101,6 @@ expr_stmt|;
 name|HHHLIST_UNLOCK
 argument_list|()
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* XXXLAS: Add tmphhh to the non-virtualised list. */
-block|}
 return|return
 operator|(
 literal|0
@@ -1125,6 +1138,27 @@ argument_list|,
 name|hhh_next
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+if|if
+condition|(
+name|hhook_head_is_virtualised
+argument_list|(
+name|hhh
+argument_list|)
+operator|==
+name|HHOOK_HEADISINVNET
+condition|)
+name|LIST_REMOVE
+argument_list|(
+name|hhh
+argument_list|,
+name|hhh_vnext
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|HHH_WLOCK
 argument_list|(
 name|hhh
@@ -1311,7 +1345,6 @@ name|hhook_head
 modifier|*
 name|hhh
 decl_stmt|;
-comment|/* XXXLAS: Pick hhook_head_list based on hhook_head flags. */
 name|HHHLIST_LOCK
 argument_list|()
 expr_stmt|;
@@ -1319,7 +1352,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|hhh
 argument_list|,
-argument|&V_hhook_head_list
+argument|&hhook_head_list
 argument_list|,
 argument|hhh_next
 argument_list|)
@@ -1339,6 +1372,45 @@ operator|==
 name|hhook_id
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|VIMAGE
+if|if
+condition|(
+name|hhook_head_is_virtualised
+argument_list|(
+name|hhh
+argument_list|)
+operator|==
+name|HHOOK_HEADISINVNET
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|curvnet
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"curvnet is NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hhh
+operator|->
+name|hhh_vid
+operator|!=
+operator|(
+name|uintptr_t
+operator|)
+name|curvnet
+condition|)
+continue|continue;
+block|}
+endif|#
+directive|endif
 name|refcount_acquire
 argument_list|(
 operator|&
@@ -1509,7 +1581,7 @@ block|{
 name|LIST_INIT
 argument_list|(
 operator|&
-name|V_hhook_head_list
+name|V_hhook_vhead_list
 argument_list|)
 expr_stmt|;
 block|}
@@ -1547,9 +1619,9 @@ name|LIST_FOREACH_SAFE
 argument_list|(
 argument|hhh
 argument_list|,
-argument|&V_hhook_head_list
+argument|&V_hhook_vhead_list
 argument_list|,
-argument|hhh_next
+argument|hhh_vnext
 argument_list|,
 argument|tmphhh
 argument_list|)
@@ -1582,7 +1654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When a vnet is created and being initialised, init the V_hhook_head_list.  */
+comment|/*  * When a vnet is created and being initialised, init the V_hhook_vhead_list.  */
 end_comment
 
 begin_expr_stmt
