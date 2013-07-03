@@ -158,19 +158,7 @@ name|lo
 decl_stmt|,
 name|x
 decl_stmt|;
-comment|/* Can't be initialized with 0, so use another value. */
-if|if
-condition|(
-operator|*
-name|ctx
-operator|==
-literal|0
-condition|)
-operator|*
-name|ctx
-operator|=
-literal|123459876
-expr_stmt|;
+comment|/* Must be in [1, 0x7ffffffe] range at this point. */
 name|hi
 operator|=
 operator|*
@@ -205,23 +193,17 @@ name|x
 operator|+=
 literal|0x7fffffff
 expr_stmt|;
-return|return
-operator|(
-operator|(
 operator|*
 name|ctx
 operator|=
 name|x
-operator|)
-operator|%
+expr_stmt|;
+comment|/* Transform to [0, 0x7ffffffd] range. */
+return|return
 operator|(
-operator|(
-name|u_long
-operator|)
-name|RAND_MAX
-operator|+
+name|x
+operator|-
 literal|1
-operator|)
 operator|)
 return|;
 endif|#
@@ -249,6 +231,22 @@ operator|)
 operator|*
 name|ctx
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_WEAK_SEEDING
+comment|/* Transform to [1, 0x7ffffffe] range. */
+name|val
+operator|=
+operator|(
+name|val
+operator|%
+literal|0x7ffffffe
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|int
 name|r
 init|=
@@ -315,6 +313,22 @@ name|next
 operator|=
 name|seed
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_WEAK_SEEDING
+comment|/* Transform to [1, 0x7ffffffe] range. */
+name|next
+operator|=
+operator|(
+name|next
+operator|%
+literal|0x7ffffffe
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -378,6 +392,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_WEAK_SEEDING
+comment|/* Transform to [1, 0x7ffffffe] range. */
+name|next
+operator|=
+operator|(
+name|next
+operator|%
+literal|0x7ffffffe
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
