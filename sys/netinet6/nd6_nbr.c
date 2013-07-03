@@ -3406,6 +3406,15 @@ name|la_flags
 operator||=
 name|LLE_VALID
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|ln
+argument_list|,
+name|LLENTRY_RESOLVED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is_solicited
@@ -3658,6 +3667,15 @@ operator|->
 name|la_flags
 operator||=
 name|LLE_VALID
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|lle_event
+argument_list|,
+name|ln
+argument_list|,
+name|LLENTRY_RESOLVED
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * If solicited, make the state REACHABLE. 			 * If not solicited and the link-layer address was 			 * changed, make it STALE. 			 */

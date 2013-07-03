@@ -21,12 +21,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|toeopt
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|void
 name|syncache_init
@@ -100,39 +94,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|tcp_offload_syncache_expand
-parameter_list|(
-name|struct
-name|in_conninfo
-modifier|*
-name|inc
-parameter_list|,
-name|struct
-name|toeopt
-modifier|*
-name|toeo
-parameter_list|,
-name|struct
-name|tcphdr
-modifier|*
-name|th
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-modifier|*
-name|lsop
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|syncache_add
 parameter_list|(
@@ -173,7 +134,7 @@ name|in_conninfo
 modifier|*
 parameter_list|,
 name|struct
-name|toeopt
+name|tcpopt
 modifier|*
 parameter_list|,
 name|struct
@@ -189,14 +150,11 @@ name|socket
 modifier|*
 modifier|*
 parameter_list|,
-name|struct
-name|toe_usrreqs
+name|void
 modifier|*
-name|tu
 parameter_list|,
 name|void
 modifier|*
-name|toepcb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -336,20 +294,29 @@ decl_stmt|;
 name|u_int16_t
 name|sc_flags
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TCP_OFFLOAD
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
 name|TCP_OFFLOAD_DISABLE
+argument_list|)
 name|struct
-name|toe_usrreqs
+name|toedev
 modifier|*
-name|sc_tu
+name|sc_tod
 decl_stmt|;
-comment|/* TOE operations */
+comment|/* entry added by this TOE */
 name|void
 modifier|*
-name|sc_toepcb
+name|sc_todctx
 decl_stmt|;
-comment|/* TOE protocol block */
+comment|/* TOE driver context */
 endif|#
 directive|endif
 name|struct

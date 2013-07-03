@@ -154,7 +154,7 @@ begin_decl_stmt
 name|int
 name|unify_tcp_port_space
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ argument_list|(
 name|unify_tcp_port_space
 argument_list|,
 literal|"Unify the host TCP and RDMA port "
-literal|"space allocation (default=0)"
+literal|"space allocation (default=1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7770,6 +7770,10 @@ name|id
 operator|.
 name|device
 argument_list|,
+name|id_priv
+operator|->
+name|sock
+argument_list|,
 name|iw_conn_req_handler
 argument_list|,
 name|id_priv
@@ -11022,6 +11026,14 @@ name|sin6_scope_id
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|cma_any_addr
+argument_list|(
+name|src_addr
+argument_list|)
+condition|)
 return|return
 name|rdma_bind_addr
 argument_list|(
@@ -11030,6 +11042,53 @@ argument_list|,
 name|src_addr
 argument_list|)
 return|;
+else|else
+block|{
+name|struct
+name|sockaddr_in
+name|addr_in
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|addr_in
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|addr_in
+argument_list|)
+expr_stmt|;
+name|addr_in
+operator|.
+name|sin_family
+operator|=
+name|dst_addr
+operator|->
+name|sa_family
+expr_stmt|;
+name|addr_in
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+name|addr_in
+expr_stmt|;
+return|return
+name|rdma_bind_addr
+argument_list|(
+name|id
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|addr_in
+argument_list|)
+return|;
+block|}
 block|}
 end_function
 
@@ -14070,6 +14129,10 @@ operator|->
 name|id
 operator|.
 name|device
+argument_list|,
+name|id_priv
+operator|->
+name|sock
 argument_list|,
 name|cma_iw_handler
 argument_list|,

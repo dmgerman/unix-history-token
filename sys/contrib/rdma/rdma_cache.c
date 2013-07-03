@@ -487,11 +487,12 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|6
+sizeof|sizeof
+expr|*
+name|gid
 argument_list|)
 condition|)
 block|{
-comment|/* XXX */
 operator|*
 name|port_num
 operator|=

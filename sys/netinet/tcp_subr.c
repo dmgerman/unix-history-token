@@ -303,12 +303,6 @@ directive|include
 file|<netinet/tcp_syncache.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_offload.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -359,6 +353,23 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6protosw.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp_offload.h>
 end_include
 
 begin_endif
@@ -3845,7 +3856,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tcp_output_reset
+name|tcp_output
 argument_list|(
 name|tp
 argument_list|)
@@ -4186,12 +4197,25 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 comment|/* Disconnect offload device, if any. */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_TOE
+condition|)
 name|tcp_offload_detach
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|tcp_free_sackholes
 argument_list|(
 name|tp
@@ -4298,7 +4322,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* Notify any offload devices of listener close */
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
 if|if
 condition|(
 name|tp
@@ -4307,11 +4333,13 @@ name|t_state
 operator|==
 name|TCPS_LISTEN
 condition|)
-name|tcp_offload_listen_close
+name|tcp_offload_listen_stop
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|in_pcbdrop
 argument_list|(
 name|inp
@@ -8018,7 +8046,7 @@ operator|->
 name|t_flags
 argument_list|)
 expr_stmt|;
-name|tcp_output_send
+name|tcp_output
 argument_list|(
 name|tp
 argument_list|)

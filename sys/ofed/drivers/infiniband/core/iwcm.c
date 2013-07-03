@@ -643,6 +643,11 @@ name|ib_device
 modifier|*
 name|device
 parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
 name|iw_cm_handler
 name|cm_handler
 parameter_list|,
@@ -734,6 +739,14 @@ operator|.
 name|rem_ref
 operator|=
 name|rem_ref
+expr_stmt|;
+name|cm_id_priv
+operator|->
+name|id
+operator|.
+name|so
+operator|=
+name|so
 expr_stmt|;
 name|spin_lock_init
 argument_list|(
@@ -2483,6 +2496,10 @@ operator|->
 name|id
 operator|.
 name|device
+argument_list|,
+name|iw_event
+operator|->
+name|so
 argument_list|,
 name|listen_id_priv
 operator|->

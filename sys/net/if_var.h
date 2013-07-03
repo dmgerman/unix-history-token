@@ -2861,6 +2861,16 @@ name|IF_MAXMTU
 value|65535
 end_define
 
+begin_define
+define|#
+directive|define
+name|TOEDEV
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((ifp)->if_llsoftc)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -2811,6 +2817,20 @@ argument_list|(
 name|inp
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_OFFLOAD
+if|if
+condition|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_TOE
+condition|)
+return|return;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|timer_type

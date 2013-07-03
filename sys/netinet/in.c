@@ -7327,9 +7327,11 @@ name|LLE_DELETED
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
-name|arp_update_event
+name|lle_event
 argument_list|,
 name|lle
+argument_list|,
+name|LLENTRY_DELETED
 argument_list|)
 expr_stmt|;
 ifdef|#
