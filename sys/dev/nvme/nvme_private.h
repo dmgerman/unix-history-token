@@ -460,11 +460,6 @@ modifier|*
 name|payload
 decl_stmt|;
 name|struct
-name|uio
-modifier|*
-name|uio
-decl_stmt|;
-name|struct
 name|bio
 modifier|*
 name|bio
@@ -1810,26 +1805,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|nvme_ns_physio
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|nvme_sysctl_initialize_ctrlr
 parameter_list|(
@@ -2100,12 +2075,12 @@ name|__inline
 name|struct
 name|nvme_request
 modifier|*
-name|nvme_allocate_request_uio
+name|nvme_allocate_request_bio
 parameter_list|(
 name|struct
-name|uio
+name|bio
 modifier|*
-name|uio
+name|bio
 parameter_list|,
 name|nvme_cb_fn_t
 name|cb_fn
@@ -2129,64 +2104,6 @@ argument_list|,
 name|cb_arg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|req
-operator|!=
-name|NULL
-condition|)
-block|{
-name|req
-operator|->
-name|type
-operator|=
-name|NVME_REQUEST_UIO
-expr_stmt|;
-name|req
-operator|->
-name|u
-operator|.
-name|uio
-operator|=
-name|uio
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|req
-operator|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|nvme_request
-operator|*
-name|nvme_allocate_request_bio
-argument_list|(
-argument|struct bio *bio
-argument_list|,
-argument|nvme_cb_fn_t cb_fn
-argument_list|,
-argument|void *cb_arg
-argument_list|)
-block|{ 	struct
-name|nvme_request
-operator|*
-name|req
-block|;
-name|req
-operator|=
-name|_nvme_allocate_request
-argument_list|(
-name|cb_fn
-argument_list|,
-name|cb_arg
-argument_list|)
-block|;
 if|if
 condition|(
 name|req
@@ -2240,18 +2157,15 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|req
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_define
-unit|}
 define|#
 directive|define
 name|nvme_free_request
@@ -2261,25 +2175,33 @@ parameter_list|)
 value|uma_zfree(nvme_request_zone, req)
 end_define
 
-begin_macro
-unit|void
+begin_function_decl
+name|void
 name|nvme_notify_async_consumers
-argument_list|(
-argument|struct nvme_controller *ctrlr
-argument_list|,
-argument|const struct nvme_completion *async_cpl
-argument_list|,
-argument|uint32_t log_page_id
-argument_list|,
-argument|void *log_page_buffer
-argument_list|,
-argument|uint32_t log_page_size
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+specifier|const
+name|struct
+name|nvme_completion
+modifier|*
+name|async_cpl
+parameter_list|,
+name|uint32_t
+name|log_page_id
+parameter_list|,
+name|void
+modifier|*
+name|log_page_buffer
+parameter_list|,
+name|uint32_t
+name|log_page_size
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
