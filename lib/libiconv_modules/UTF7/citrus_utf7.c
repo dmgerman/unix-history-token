@@ -594,6 +594,7 @@ modifier|*
 name|__restrict
 name|u16
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -617,6 +618,7 @@ block|{
 name|_UTF7State
 name|sv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s0
@@ -1150,6 +1152,7 @@ modifier|*
 name|__restrict
 name|pwc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1170,6 +1173,7 @@ name|__restrict
 name|nresult
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s0

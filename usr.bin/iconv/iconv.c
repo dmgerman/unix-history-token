@@ -295,6 +295,7 @@ decl_stmt|,
 modifier|*
 name|out
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|in
