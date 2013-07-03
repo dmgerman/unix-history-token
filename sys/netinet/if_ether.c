@@ -838,11 +838,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|lle
 operator|->
 name|la_flags
-operator|!=
+operator|&
 name|LLE_DELETED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|int
