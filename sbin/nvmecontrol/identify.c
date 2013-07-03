@@ -1278,7 +1278,7 @@ index|[
 name|optind
 index|]
 argument_list|,
-literal|"ns"
+name|NVME_NS_PREFIX
 argument_list|,
 literal|10
 argument_list|)
@@ -1523,7 +1523,7 @@ name|strstr
 argument_list|(
 name|target
 argument_list|,
-literal|"ns"
+name|NVME_NS_PREFIX
 argument_list|)
 operator|==
 name|NULL

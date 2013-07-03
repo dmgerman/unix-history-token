@@ -24,6 +24,20 @@ end_include
 begin_define
 define|#
 directive|define
+name|NVME_CTRLR_PREFIX
+value|"nvme"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_NS_PREFIX
+value|"ns"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVLIST_USAGE
 define|\
 value|"       nvmecontrol devlist\n"

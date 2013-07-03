@@ -235,7 +235,9 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nvme%d"
+literal|"%s%d"
+argument_list|,
+name|NVME_CTRLR_PREFIX
 argument_list|,
 name|ctrlr
 argument_list|)
@@ -327,9 +329,13 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"nvme%dns%d"
+literal|"%s%d%s%d"
+argument_list|,
+name|NVME_CTRLR_PREFIX
 argument_list|,
 name|ctrlr
+argument_list|,
+name|NVME_NS_PREFIX
 argument_list|,
 name|i
 operator|+
