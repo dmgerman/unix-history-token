@@ -183,7 +183,7 @@ decl_stmt|,
 modifier|*
 name|rp
 decl_stmt|;
-name|int
+name|long
 name|maxargs
 decl_stmt|;
 name|va_list
