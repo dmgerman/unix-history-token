@@ -2370,6 +2370,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cap_enter
+argument_list|()
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|error
+argument_list|(
+literal|"can't enter capability mode: %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|immediate_daemon
 condition|)
 name|go_daemon
