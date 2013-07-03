@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_freebsd.h>
 end_include
 
@@ -2113,6 +2119,30 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|cap_rights_limit
+argument_list|(
+name|privfd
+argument_list|,
+name|CAP_READ
+operator||
+name|CAP_WRITE
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"can't limit private descriptor: %m"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
