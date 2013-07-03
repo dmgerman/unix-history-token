@@ -1065,8 +1065,6 @@ name|buf
 argument_list|,
 operator|&
 name|bufp
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|assemble_udp_ip_header
