@@ -5378,6 +5378,10 @@ modifier|*
 name|ia6_s
 decl_stmt|;
 comment|/* 		 * If not, check whether one of the existing member 		 * interfaces have inet6 address.  If any, remove 		 * inet6 addresses on the interface to be added. 		 */
+name|ia6_m
+operator|=
+name|NULL
+expr_stmt|;
 name|BRIDGE_XLOCK
 argument_list|(
 name|sc
