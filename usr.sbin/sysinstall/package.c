@@ -289,7 +289,7 @@ name|int
 name|status
 comment|/* = vsystem("pkg_info -e %s", name) */
 decl_stmt|;
-comment|/* XXX KLUDGE ALERT!  This makes evil assumptions about how XXX      * packages register themselves and should *really be done with      * `pkg_info -e<name>' except that this it's too slow for an      * item check routine.. :-(      */
+comment|/* XXX KLUDGE ALERT!  This makes evil assumptions about how XXX      * packages register themselves and should *really be done with      * `pkg_info -e<name>' except that this is too slow for an      * item check routine.. :-(      */
 name|snprintf
 argument_list|(
 name|fname
