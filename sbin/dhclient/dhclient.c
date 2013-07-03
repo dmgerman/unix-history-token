@@ -2036,6 +2036,12 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* set up the interface */
+name|discover_interfaces
+argument_list|(
+name|ifi
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pipe
@@ -2063,6 +2069,34 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|ifi
+operator|->
+name|ufdesc
+argument_list|)
+expr_stmt|;
+name|ifi
+operator|->
+name|ufdesc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|close
+argument_list|(
+name|ifi
+operator|->
+name|wfdesc
+argument_list|)
+expr_stmt|;
+name|ifi
+operator|->
+name|wfdesc
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|close
 argument_list|(
@@ -2191,12 +2225,6 @@ condition|)
 name|error
 argument_list|(
 literal|"can't shutdown route socket: %m"
-argument_list|)
-expr_stmt|;
-comment|/* set up the interface */
-name|discover_interfaces
-argument_list|(
-name|ifi
 argument_list|)
 expr_stmt|;
 if|if
@@ -5770,9 +5798,9 @@ name|interval
 argument_list|)
 expr_stmt|;
 comment|/* Send out a packet. */
-name|send_packet
+name|send_packet_unpriv
 argument_list|(
-name|ip
+name|privfd
 argument_list|,
 operator|&
 name|ip
@@ -6836,9 +6864,9 @@ name|REMOTE_PORT
 argument_list|)
 expr_stmt|;
 comment|/* Send out a packet. */
-name|send_packet
+name|send_packet_unpriv
 argument_list|(
-name|ip
+name|privfd
 argument_list|,
 operator|&
 name|ip
@@ -6909,9 +6937,9 @@ name|REMOTE_PORT
 argument_list|)
 expr_stmt|;
 comment|/* Send out a packet. */
-name|send_packet
+name|send_packet_unpriv
 argument_list|(
-name|ip
+name|privfd
 argument_list|,
 operator|&
 name|ip
@@ -14549,6 +14577,20 @@ argument_list|(
 name|fd2
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|ifi
+operator|->
+name|rfdesc
+argument_list|)
+expr_stmt|;
+name|ifi
+operator|->
+name|rfdesc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -14623,6 +14665,8 @@ condition|)
 continue|continue;
 name|dispatch_imsg
 argument_list|(
+name|ifi
+argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
