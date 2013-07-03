@@ -2177,6 +2177,22 @@ argument_list|,
 name|ifi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|shutdown
+argument_list|(
+name|routefd
+argument_list|,
+name|SHUT_WR
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"can't shutdown route socket: %m"
+argument_list|)
+expr_stmt|;
 comment|/* set up the interface */
 name|discover_interfaces
 argument_list|(
