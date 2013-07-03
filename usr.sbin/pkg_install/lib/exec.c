@@ -52,10 +52,11 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
+name|long
+name|maxargs
+decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
-name|maxargs
 decl_stmt|;
 name|maxargs
 operator|=
@@ -187,7 +188,7 @@ decl_stmt|,
 modifier|*
 name|rp
 decl_stmt|;
-name|int
+name|long
 name|maxargs
 decl_stmt|;
 name|va_list
