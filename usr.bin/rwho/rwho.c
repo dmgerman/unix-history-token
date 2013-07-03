@@ -171,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|WHDRSIZE
-value|(ssize_t)(sizeof (wd) - sizeof (wd.wd_we))
+value|(ssize_t)(sizeof(wd) - sizeof(wd.wd_we))
 end_define
 
 begin_comment
