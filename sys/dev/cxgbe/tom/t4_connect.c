@@ -1214,6 +1214,14 @@ name|F_CONG_CNTRL_VALID
 expr_stmt|;
 comment|/* OPT_2_ISS really, for T5 */
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|tt
+operator|.
+name|rx_coalesce
+condition|)
 name|opt2
 operator||=
 name|V_RX_COALESCE

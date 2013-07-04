@@ -531,11 +531,6 @@ block|,
 comment|/* cluster, jumbo9k, jumbo16k */
 endif|#
 directive|endif
-name|OFLD_BUF_SIZE
-init|=
-name|MJUM16BYTES
-block|,
-comment|/* size of fl buffer for TOE rxq */
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
