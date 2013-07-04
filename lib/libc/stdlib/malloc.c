@@ -7,11 +7,22 @@ begin_comment
 comment|/*  * MALLOC_PRODUCTION disables assertions and statistics gathering.  It also  * defaults the A and J runtime options to off.  These settings are appropriate  * for production systems.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MALLOC_PRODUCTION
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MALLOC_PRODUCTION
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
