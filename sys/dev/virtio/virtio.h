@@ -235,6 +235,7 @@ block|{
 name|uint64_t
 name|vfd_val
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|vfd_str
