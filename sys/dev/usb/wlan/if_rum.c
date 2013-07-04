@@ -3555,6 +3555,18 @@ operator||
 name|IEEE80211_C_WPA
 comment|/* 802.11i */
 expr_stmt|;
+name|ic
+operator|->
+name|ic_cryptocaps
+operator|=
+name|IEEE80211_CRYPTO_WEP
+operator||
+name|IEEE80211_CRYPTO_AES_CCM
+operator||
+name|IEEE80211_CRYPTO_TKIPMIC
+operator||
+name|IEEE80211_CRYPTO_TKIP
+expr_stmt|;
 name|bands
 operator|=
 literal|0
