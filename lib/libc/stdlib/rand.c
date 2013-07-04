@@ -298,9 +298,27 @@ specifier|static
 name|u_long
 name|next
 init|=
+ifdef|#
+directive|ifdef
+name|USE_WEAK_SEEDING
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+literal|2
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
