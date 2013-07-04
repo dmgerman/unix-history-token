@@ -2732,12 +2732,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|VTSCSI_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* 	 * The async register apparently needs to be done without 	 * the lock held, otherwise it can recurse on the lock. 	 */
 if|if
 condition|(
 name|vtscsi_register_async
@@ -2759,15 +2753,15 @@ argument_list|,
 literal|"cannot register async callback\n"
 argument_list|)
 expr_stmt|;
-name|VTSCSI_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
 block|}
+name|VTSCSI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3001,11 +2995,6 @@ name|struct
 name|ccb_setasync
 name|csa
 decl_stmt|;
-name|VTSCSI_LOCK_NOTOWNED
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -5660,7 +5649,7 @@ name|VIRTIO_SCSI_S_BAD_TARGET
 case|:
 name|status
 operator|=
-name|CAM_TID_INVALID
+name|CAM_SEL_TIMEOUT
 expr_stmt|;
 break|break;
 case|case
