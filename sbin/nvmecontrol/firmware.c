@@ -291,7 +291,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unable to malloc %zd bytes.\n"
+literal|"Unable to malloc %jd bytes.\n"
 argument_list|,
 name|sb
 operator|.
@@ -373,7 +373,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Error reading '%s', "
-literal|"read %zd bytes, requested %zd bytes\n"
+literal|"read %zd bytes, requested %jd bytes\n"
 argument_list|,
 name|path
 argument_list|,
