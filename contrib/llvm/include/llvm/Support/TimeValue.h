@@ -47,6 +47,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_SUPPORT_TIMEVALUE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_SUPPORT_TIMEVALUE_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -58,18 +70,6 @@ include|#
 directive|include
 file|<string>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LLVM_SYSTEM_TIMEVALUE_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LLVM_SYSTEM_TIMEVALUE_H
-end_define
 
 begin_decl_stmt
 name|namespace
@@ -195,6 +195,20 @@ comment|/// @name Constructors
 comment|/// @{
 name|public
 label|:
+comment|/// \brief Default construct a time value, initializing to ZeroTime.
+name|TimeValue
+argument_list|()
+operator|:
+name|seconds_
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|nanos_
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/// Caller provides the exact value in seconds and nanoseconds. The
 comment|/// \p nanos argument defaults to zero for convenience.
 comment|/// @brief Explicit constructor
@@ -206,7 +220,7 @@ argument_list|,
 argument|NanoSecondsType nanos =
 literal|0
 argument_list|)
-block|:
+operator|:
 name|seconds_
 argument_list|(
 name|seconds
@@ -746,9 +760,7 @@ name|result
 operator|=
 name|seconds_
 operator|-
-name|PosixZeroTime
-operator|.
-name|seconds_
+name|PosixZeroTimeSeconds
 block|;
 name|result
 operator|+=
@@ -770,9 +782,7 @@ block|{
 return|return
 name|seconds_
 operator|-
-name|PosixZeroTime
-operator|.
-name|seconds_
+name|PosixZeroTimeSeconds
 return|;
 block|}
 comment|/// Converts the TimeValue into the corresponding number of "ticks" for
@@ -788,9 +798,7 @@ name|result
 operator|=
 name|seconds_
 operator|-
-name|Win32ZeroTime
-operator|.
-name|seconds_
+name|Win32ZeroTimeSeconds
 block|;
 name|result
 operator|+=
@@ -822,9 +830,7 @@ name|seconds
 operator|=
 name|seconds_
 operator|-
-name|PosixZeroTime
-operator|.
-name|seconds_
+name|PosixZeroTimeSeconds
 expr_stmt|;
 name|nanos
 operator|=
@@ -1024,9 +1030,7 @@ name|seconds_
 operator|=
 name|seconds
 operator|+
-name|PosixZeroTime
-operator|.
-name|seconds_
+name|PosixZeroTimeSeconds
 expr_stmt|;
 name|nanos_
 operator|=
@@ -1056,9 +1060,7 @@ name|win32Time
 operator|/
 literal|10000000
 operator|+
-name|Win32ZeroTime
-operator|.
-name|seconds_
+name|Win32ZeroTimeSeconds
 expr_stmt|;
 name|this
 operator|->
@@ -1100,6 +1102,16 @@ name|NanoSecondsType
 name|nanos_
 decl_stmt|;
 comment|///< Stores the nanoseconds part of the TimeVal
+specifier|static
+specifier|const
+name|SecondsType
+name|PosixZeroTimeSeconds
+decl_stmt|;
+specifier|static
+specifier|const
+name|SecondsType
+name|Win32ZeroTimeSeconds
+decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -279,6 +285,11 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
+name|ParsedCUOffsets
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 name|bool
 name|allRangesAreContiguous
@@ -461,10 +472,20 @@ operator|::
 name|const_iterator
 name|RangeCollIterator
 expr_stmt|;
+typedef|typedef
+name|DenseSet
+operator|<
+name|uint32_t
+operator|>
+name|ParsedCUOffsetColl
+expr_stmt|;
 name|private
 label|:
 name|RangeColl
 name|Aranges
+decl_stmt|;
+name|ParsedCUOffsetColl
+name|ParsedCUOffsets
 decl_stmt|;
 block|}
 end_decl_stmt

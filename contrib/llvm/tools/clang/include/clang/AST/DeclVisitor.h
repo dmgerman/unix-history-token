@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclObjC.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/DeclCXX.h"
 end_include
 
@@ -86,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclObjC.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclOpenMP.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/DeclTemplate.h"
 end_include
 
@@ -93,19 +99,50 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-define|#
-directive|define
-name|DISPATCH
-parameter_list|(
-name|NAME
-parameter_list|,
-name|CLASS
-parameter_list|)
-define|\
-value|return static_cast<ImplClass*>(this)-> Visit##NAME(static_cast<CLASS*>(D))
+name|namespace
+name|declvisitor
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|make_ptr
+block|{
+typedef|typedef
+name|T
+modifier|*
+name|type
+typedef|;
+block|}
+empty_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|make_const_ptr
+block|{
+typedef|typedef
+specifier|const
+name|T
+modifier|*
+name|type
+typedef|;
+block|}
+empty_stmt|;
 comment|/// \brief A simple visitor class that helps create declaration visitors.
 name|template
 operator|<
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|Ptr
+operator|,
 name|typename
 name|ImplClass
 operator|,
@@ -115,14 +152,31 @@ operator|=
 name|void
 operator|>
 name|class
-name|DeclVisitor
+name|Base
 block|{
 name|public
 operator|:
+define|#
+directive|define
+name|PTR
+parameter_list|(
+name|CLASS
+parameter_list|)
+value|typename Ptr<CLASS>::type
+define|#
+directive|define
+name|DISPATCH
+parameter_list|(
+name|NAME
+parameter_list|,
+name|CLASS
+parameter_list|)
+define|\
+value|return static_cast<ImplClass*>(this)->Visit##NAME(static_cast<PTR(CLASS)>(D))
 name|RetTy
 name|Visit
 argument_list|(
-argument|Decl *D
+argument|PTR(Decl) D
 argument_list|)
 block|{
 switch|switch
@@ -170,14 +224,14 @@ parameter_list|,
 name|BASE
 parameter_list|)
 define|\
-value|RetTy Visit##DERIVED##Decl(DERIVED##Decl *D) { DISPATCH(BASE, BASE); }
+value|RetTy Visit##DERIVED##Decl(PTR(DERIVED##Decl) D) { DISPATCH(BASE, BASE); }
 include|#
 directive|include
 file|"clang/AST/DeclNodes.inc"
 name|RetTy
 name|VisitDecl
 argument_list|(
-argument|Decl *D
+argument|PTR(Decl) D
 argument_list|)
 block|{
 return|return
@@ -185,11 +239,78 @@ name|RetTy
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+undef|#
+directive|undef
+name|PTR
 undef|#
 directive|undef
 name|DISPATCH
+expr|}
+block|;  }
+comment|// end namespace declvisitor
+comment|/// \brief A simple visitor class that helps create declaration visitors.
+comment|///
+comment|/// This class does not preserve constness of Decl pointers (see also
+comment|/// ConstDeclVisitor).
+name|template
+operator|<
+name|typename
+name|ImplClass
+operator|,
+name|typename
+name|RetTy
+operator|=
+name|void
+operator|>
+name|class
+name|DeclVisitor
+operator|:
+name|public
+name|declvisitor
+operator|::
+name|Base
+operator|<
+name|declvisitor
+operator|::
+name|make_ptr
+operator|,
+name|ImplClass
+operator|,
+name|RetTy
+operator|>
+block|{}
+expr_stmt|;
+comment|/// \brief A simple visitor class that helps create declaration visitors.
+comment|///
+comment|/// This class preserves constness of Decl pointers (see also DeclVisitor).
+name|template
+operator|<
+name|typename
+name|ImplClass
+operator|,
+name|typename
+name|RetTy
+operator|=
+name|void
+operator|>
+name|class
+name|ConstDeclVisitor
+operator|:
+name|public
+name|declvisitor
+operator|::
+name|Base
+operator|<
+name|declvisitor
+operator|::
+name|make_const_ptr
+operator|,
+name|ImplClass
+operator|,
+name|RetTy
+operator|>
+block|{}
+expr_stmt|;
 block|}
 end_decl_stmt
 

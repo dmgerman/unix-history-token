@@ -1091,11 +1091,11 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// do not implement. this is to catch errors when people try to use
+comment|// These are to catch errors when people try to use them as random access
 end_comment
 
 begin_comment
-comment|// them as random access iterators
+comment|// iterators.
 end_comment
 
 begin_expr_stmt
@@ -1115,6 +1115,7 @@ operator|<
 name|T
 operator|>
 operator|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
 
@@ -1135,6 +1136,7 @@ operator|>
 operator|,
 name|int
 operator|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
 
@@ -1155,6 +1157,7 @@ operator|<
 name|T
 operator|>
 operator|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
 
@@ -1175,6 +1178,7 @@ operator|>
 operator|,
 name|int
 operator|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
 
@@ -1369,7 +1373,7 @@ specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
-argument|const ilist_iterator<NodeTy>&Node
+argument|ilist_iterator<NodeTy>&Node
 argument_list|)
 block|{
 return|return
@@ -1402,6 +1406,7 @@ operator|>
 expr|>
 block|{
 typedef|typedef
+comment|/*const*/
 name|NodeTy
 modifier|*
 name|SimpleType
@@ -2454,6 +2459,54 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Remove all nodes from the list like clear(), but do not call
+end_comment
+
+begin_comment
+comment|/// removeNodeFromList() or deleteNode().
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This should only be used immediately before freeing nodes in bulk to
+end_comment
+
+begin_comment
+comment|/// avoid traversing the list and bringing all the nodes into cache.
+end_comment
+
+begin_function
+name|void
+name|clearAndLeakNodesUnsafely
+parameter_list|()
+block|{
+if|if
+condition|(
+name|Head
+condition|)
+block|{
+name|Head
+operator|=
+name|getTail
+argument_list|()
+expr_stmt|;
+name|this
+operator|->
+name|setPrev
+argument_list|(
+name|Head
+argument_list|,
+name|Head
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_label
 name|private
 label|:
@@ -2496,6 +2549,17 @@ operator|!=
 name|last
 operator|&&
 literal|"Should be checked by callers"
+argument_list|)
+expr_stmt|;
+comment|// Position cannot be contained in the range to be transferred.
+comment|// Check for the most common mistake.
+name|assert
+argument_list|(
+name|position
+operator|!=
+name|first
+operator|&&
+literal|"Insertion point can't be one of the transferred nodes"
 argument_list|)
 expr_stmt|;
 if|if

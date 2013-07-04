@@ -58,25 +58,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_ASM_INFO_H
+name|LLVM_MC_MCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_ASM_INFO_H
+name|LLVM_MC_MCASMINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
+file|"llvm/MC/MCDirectives.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCDirectives.h"
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
@@ -156,6 +156,12 @@ comment|/// PointerSize - Pointer size in bytes.
 comment|///               Default is 4.
 name|unsigned
 name|PointerSize
+decl_stmt|;
+comment|/// CalleeSaveStackSlotSize - Size of the stack slot reserved for
+comment|///                           callee-saved registers, in bytes.
+comment|///                           Default is same as pointer size.
+name|unsigned
+name|CalleeSaveStackSlotSize
 decl_stmt|;
 comment|/// IsLittleEndian - True if target is little endian.
 comment|///                  Default is true.
@@ -241,6 +247,13 @@ specifier|const
 name|char
 modifier|*
 name|LabelSuffix
+decl_stmt|;
+comment|// Defaults to ":"
+comment|/// LabelSuffix - This is appended to emitted labels.
+specifier|const
+name|char
+modifier|*
+name|DebugLabelSuffix
 decl_stmt|;
 comment|// Defaults to ":"
 comment|/// GlobalPrefix - If this is set to a non-empty string, it is prepended
@@ -458,6 +471,9 @@ name|bool
 name|HasMicrosoftFastStdCallMangling
 decl_stmt|;
 comment|// Defaults to false.
+name|bool
+name|NeedsDwarfSectionOffsetDirective
+decl_stmt|;
 comment|//===--- Alignment Information ----------------------------------------===//
 comment|/// AlignDirective - The directive used to emit round up to an alignment
 comment|/// boundary.
@@ -619,13 +635,6 @@ name|bool
 name|DwarfUsesInlineInfoSection
 decl_stmt|;
 comment|// Defaults to false.
-comment|/// DwarfSectionOffsetDirective - Special section offset directive.
-specifier|const
-name|char
-modifier|*
-name|DwarfSectionOffsetDirective
-decl_stmt|;
-comment|// Defaults to NULL
 comment|/// DwarfUsesRelocationsAcrossSections - True if Dwarf2 output generally
 comment|/// uses relocations for references to other .debug_* sections.
 name|bool
@@ -684,7 +693,18 @@ return|return
 name|PointerSize
 return|;
 block|}
-comment|/// islittleendian - True if the target is little endian.
+comment|/// getCalleeSaveStackSlotSize - Get the callee-saved register stack slot
+comment|/// size in bytes.
+name|unsigned
+name|getCalleeSaveStackSlotSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CalleeSaveStackSlotSize
+return|;
+block|}
+comment|/// isLittleEndian - True if the target is little endian.
 name|bool
 name|isLittleEndian
 argument_list|()
@@ -930,6 +950,15 @@ return|return
 name|HasMicrosoftFastStdCallMangling
 return|;
 block|}
+name|bool
+name|needsDwarfSectionOffsetDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NeedsDwarfSectionOffsetDirective
+return|;
+block|}
 comment|// Accessors.
 comment|//
 name|bool
@@ -1028,6 +1057,17 @@ specifier|const
 block|{
 return|return
 name|LabelSuffix
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDebugLabelSuffix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebugLabelSuffix
 return|;
 block|}
 specifier|const
@@ -1466,17 +1506,6 @@ specifier|const
 block|{
 return|return
 name|DwarfUsesInlineInfoSection
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getDwarfSectionOffsetDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfSectionOffsetDirective
 return|;
 block|}
 name|bool

@@ -43,6 +43,12 @@ directive|define
 name|CLANG_DRIVER_OPTSPECIFIER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -64,11 +70,11 @@ name|private
 label|:
 name|explicit
 name|OptSpecifier
-parameter_list|(
+argument_list|(
 name|bool
-parameter_list|)
-function_decl|;
-comment|// DO NOT IMPLEMENT
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
 name|public
 label|:
 name|OptSpecifier

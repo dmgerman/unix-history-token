@@ -62,31 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Serialization/ASTBitCodes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Serialization/ContinuousRangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Serialization/Module.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Serialization/ModuleManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/ExternalSemaSource.h"
+file|"clang/AST/DeclObjC.h"
 end_include
 
 begin_include
@@ -98,37 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclObjC.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/TemplateBase.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/ExternalPreprocessorSource.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/HeaderSearch.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PPMutationListener.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PreprocessingRecord.h"
 end_include
 
 begin_include
@@ -164,6 +110,60 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Version.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/ExternalPreprocessorSource.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/HeaderSearch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PreprocessingRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/ExternalSemaSource.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/ASTBitCodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/ContinuousRangeMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/ModuleManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APFloat.h"
 end_include
 
@@ -177,6 +177,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/APSInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -213,12 +219,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -261,6 +261,12 @@ begin_include
 include|#
 directive|include
 file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_decl_stmt
@@ -318,10 +324,16 @@ name|class
 name|CXXCtorInitializer
 decl_stmt|;
 name|class
+name|GlobalModuleIndex
+decl_stmt|;
+name|class
 name|GotoStmt
 decl_stmt|;
 name|class
 name|MacroDefinition
+decl_stmt|;
+name|class
+name|MacroDirective
 decl_stmt|;
 name|class
 name|NamedDecl
@@ -368,6 +380,9 @@ decl_stmt|;
 name|class
 name|TargetOptions
 decl_stmt|;
+name|class
+name|ASTUnresolvedSet
+decl_stmt|;
 comment|/// \brief Abstract interface for callback invocations by the ASTReader.
 comment|///
 comment|/// While reading an AST file, the ASTReader will call the methods of the
@@ -384,6 +399,25 @@ operator|~
 name|ASTReaderListener
 argument_list|()
 expr_stmt|;
+comment|/// \brief Receives the full Clang version information.
+comment|///
+comment|/// \returns true to indicate that the version is invalid. Subclasses should
+comment|/// generally defer to this implementation.
+name|virtual
+name|bool
+name|ReadFullVersionInformation
+parameter_list|(
+name|StringRef
+name|FullVersion
+parameter_list|)
+block|{
+return|return
+name|FullVersion
+operator|!=
+name|getClangFullRepositoryVersion
+argument_list|()
+return|;
+block|}
 comment|/// \brief Receives the language options.
 comment|///
 comment|/// \returns true to indicate the options are invalid or false otherwise.
@@ -549,6 +583,36 @@ name|unsigned
 name|Value
 argument_list|)
 block|{}
+comment|/// \brief Returns true if this \c ASTReaderListener wants to receive the
+comment|/// input files of the AST file via \c visitInputFile, false otherwise.
+name|virtual
+name|bool
+name|needsInputFileVisitation
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief if \c needsInputFileVisitation returns true, this is called for each
+comment|/// input file of the AST file.
+comment|///
+comment|/// \returns true to continue receiving the next input file, false to stop.
+name|virtual
+name|bool
+name|visitInputFile
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|,
+name|bool
+name|isSystem
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// \brief ASTReaderListener implementation to validate the information of
@@ -739,6 +803,9 @@ block|,
 comment|/// \brief The AST file itself appears corrupted.
 name|Failure
 block|,
+comment|/// \brief The AST file was missing.
+name|Missing
+block|,
 comment|/// \brief The AST file is out-of-date relative to its input files,
 comment|/// and needs to be regenerated.
 name|OutOfDate
@@ -885,6 +952,15 @@ comment|/// \brief The module manager which manages modules and their dependenci
 name|ModuleManager
 name|ModuleMgr
 decl_stmt|;
+comment|/// \brief The global module index, if loaded.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|GlobalModuleIndex
+operator|>
+name|GlobalIndex
+expr_stmt|;
 comment|/// \brief A map of global bit offsets to the module that stores entities
 comment|/// at those bit offsets.
 name|ContinuousRangeMap
@@ -1244,8 +1320,6 @@ operator|,
 literal|4
 operator|>
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -1370,40 +1444,6 @@ comment|/// global macro ID to produce a local ID.
 name|GlobalMacroMapType
 name|GlobalMacroMap
 decl_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|serialization
-operator|::
-name|MacroID
-operator|,
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|serialization
-operator|::
-name|SubmoduleID
-operator|,
-name|MacroUpdate
-operator|>
-operator|,
-literal|1
-operator|>
-expr|>
-name|MacroUpdatesMap
-expr_stmt|;
-comment|/// \brief Mapping from (global) macro IDs to the set of updates to be
-comment|/// performed to the corresponding macro.
-name|MacroUpdatesMap
-name|MacroUpdates
-decl_stmt|;
 comment|/// \brief A vector containing submodules that have already been loaded.
 comment|///
 comment|/// This vector is indexed by the Submodule ID (-1). NULL submodule entries
@@ -1449,25 +1489,20 @@ block|{
 name|Declaration
 block|,
 name|MacroVisibility
-block|,
-name|MacroUndef
 block|}
 name|Kind
 enum|;
 name|private
 label|:
-name|unsigned
-name|Loc
-decl_stmt|;
 union|union
 block|{
 name|Decl
 modifier|*
 name|D
 decl_stmt|;
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 decl_stmt|;
 block|}
 union|;
@@ -1489,9 +1524,6 @@ argument_list|(
 name|Declaration
 argument_list|)
 operator|,
-name|Loc
-argument_list|()
-operator|,
 name|D
 argument_list|(
 name|D
@@ -1506,9 +1538,9 @@ name|IdentifierInfo
 operator|*
 name|II
 argument_list|,
-name|MacroInfo
+name|MacroDirective
 operator|*
-name|MI
+name|MD
 argument_list|)
 operator|:
 name|Kind
@@ -1516,44 +1548,9 @@ argument_list|(
 name|MacroVisibility
 argument_list|)
 operator|,
-name|Loc
-argument_list|()
-operator|,
-name|MI
+name|MD
 argument_list|(
-name|MI
-argument_list|)
-operator|,
-name|Id
-argument_list|(
-argument|II
-argument_list|)
-block|{ }
-name|HiddenName
-argument_list|(
-argument|IdentifierInfo *II
-argument_list|,
-argument|MacroInfo *MI
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|MacroUndef
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-name|Loc
-operator|.
-name|getRawEncoding
-argument_list|()
-argument_list|)
-operator|,
-name|MI
-argument_list|(
-name|MI
+name|MD
 argument_list|)
 operator|,
 name|Id
@@ -1597,7 +1594,7 @@ operator|<
 name|IdentifierInfo
 operator|*
 operator|,
-name|MacroInfo
+name|MacroDirective
 operator|*
 operator|>
 name|getMacro
@@ -1606,17 +1603,10 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|(
-name|getKind
-argument_list|()
-operator|==
-name|MacroUndef
-operator|||
 name|getKind
 argument_list|()
 operator|==
 name|MacroVisibility
-operator|)
 operator|&&
 literal|"Hidden name is not a macro!"
 argument_list|)
@@ -1628,31 +1618,7 @@ name|make_pair
 argument_list|(
 name|Id
 argument_list|,
-name|MI
-argument_list|)
-return|;
-block|}
-name|SourceLocation
-name|getMacroUndefLoc
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|getKind
-argument_list|()
-operator|==
-name|MacroUndef
-operator|&&
-literal|"Hidden name is not an undef!"
-argument_list|)
-block|;
-return|return
-name|SourceLocation
-operator|::
-name|getFromRawEncoding
-argument_list|(
-name|Loc
+name|MD
 argument_list|)
 return|;
 block|}
@@ -1660,8 +1626,6 @@ block|}
 empty_stmt|;
 comment|/// \brief A set of hidden declarations.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|HiddenName
@@ -1687,9 +1651,9 @@ comment|/// declarations in that submodule that could be made visible.
 name|HiddenNamesMapType
 name|HiddenNamesMap
 decl_stmt|;
-comment|/// \brief A module import or export that hasn't yet been resolved.
+comment|/// \brief A module import, export, or conflict that hasn't yet been resolved.
 struct|struct
-name|UnresolvedModuleImportExport
+name|UnresolvedModuleRef
 block|{
 comment|/// \brief The file in which this module resides.
 name|ModuleFile
@@ -1701,15 +1665,20 @@ name|Module
 modifier|*
 name|Mod
 decl_stmt|;
+comment|/// \brief The kind of module reference.
+enum|enum
+block|{
+name|Import
+block|,
+name|Export
+block|,
+name|Conflict
+block|}
+name|Kind
+enum|;
 comment|/// \brief The local ID of the module that is being exported.
 name|unsigned
 name|ID
-decl_stmt|;
-comment|/// \brief Whether this is an import (vs. an export).
-name|unsigned
-name|IsImport
-range|:
-literal|1
 decl_stmt|;
 comment|/// \brief Whether this is a wildcard export.
 name|unsigned
@@ -1717,19 +1686,21 @@ name|IsWildcard
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief String data.
+name|StringRef
+name|String
+decl_stmt|;
 block|}
 struct|;
 comment|/// \brief The set of module imports and exports that still need to be
 comment|/// resolved.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
-name|UnresolvedModuleImportExport
+name|UnresolvedModuleRef
 operator|,
 literal|2
 operator|>
-name|UnresolvedModuleImportExports
+name|UnresolvedModuleRefs
 expr_stmt|;
 comment|/// \brief A vector containing selectors that have already been loaded.
 comment|///
@@ -1759,7 +1730,6 @@ operator|>
 name|GlobalSelectorMapType
 expr_stmt|;
 comment|/// \brief Mapping from global selector IDs to the module in which the
-comment|/// selector resides along with the offset that should be added to the
 comment|/// global selector ID to produce a local ID.
 name|GlobalSelectorMapType
 name|GlobalSelectorMap
@@ -1776,6 +1746,95 @@ name|unsigned
 operator|>
 name|SelectorGeneration
 expr_stmt|;
+struct|struct
+name|PendingMacroInfo
+block|{
+name|ModuleFile
+modifier|*
+name|M
+decl_stmt|;
+struct|struct
+name|ModuleMacroDataTy
+block|{
+name|serialization
+operator|::
+name|GlobalMacroID
+name|GMacID
+expr_stmt|;
+name|unsigned
+name|ImportLoc
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|PCHMacroDataTy
+block|{
+name|uint64_t
+name|MacroDirectivesOffset
+decl_stmt|;
+block|}
+struct|;
+union|union
+block|{
+name|ModuleMacroDataTy
+name|ModuleMacroData
+decl_stmt|;
+name|PCHMacroDataTy
+name|PCHMacroData
+decl_stmt|;
+block|}
+union|;
+name|PendingMacroInfo
+argument_list|(
+argument|ModuleFile *M
+argument_list|,
+argument|serialization::GlobalMacroID GMacID
+argument_list|,
+argument|SourceLocation ImportLoc
+argument_list|)
+block|:
+name|M
+argument_list|(
+argument|M
+argument_list|)
+block|{
+name|ModuleMacroData
+operator|.
+name|GMacID
+operator|=
+name|GMacID
+expr_stmt|;
+name|ModuleMacroData
+operator|.
+name|ImportLoc
+operator|=
+name|ImportLoc
+operator|.
+name|getRawEncoding
+argument_list|()
+expr_stmt|;
+block|}
+name|PendingMacroInfo
+argument_list|(
+argument|ModuleFile *M
+argument_list|,
+argument|uint64_t MacroDirectivesOffset
+argument_list|)
+block|:
+name|M
+argument_list|(
+argument|M
+argument_list|)
+block|{
+name|PCHMacroData
+operator|.
+name|MacroDirectivesOffset
+operator|=
+name|MacroDirectivesOffset
+expr_stmt|;
+block|}
+block|}
+struct|;
 typedef|typedef
 name|llvm
 operator|::
@@ -1784,13 +1843,9 @@ operator|<
 name|IdentifierInfo
 operator|*
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
-name|serialization
-operator|::
-name|MacroID
+name|PendingMacroInfo
 operator|,
 literal|2
 operator|>
@@ -1936,17 +1991,17 @@ comment|//@}
 comment|/// \name Sema-relevant special data
 comment|/// \brief Fields containing data that is used for semantic analysis
 comment|//@{
-comment|/// \brief The IDs of all locally scoped external decls in the chain.
+comment|/// \brief The IDs of all locally scoped extern "C" decls in the chain.
 comment|///
 comment|/// Sema tracks these to validate that the types are consistent across all
-comment|/// local external declarations.
+comment|/// local extern "C" declarations.
 name|SmallVector
 operator|<
 name|uint64_t
 operator|,
 literal|16
 operator|>
-name|LocallyScopedExternalDecls
+name|LocallyScopedExternCDecls
 expr_stmt|;
 comment|/// \brief The IDs of all dynamic class declarations in the chain.
 comment|///
@@ -2021,6 +2076,16 @@ literal|4
 operator|>
 name|KnownNamespaces
 expr_stmt|;
+comment|/// \brief A list of undefined decls with internal linkage followed by the
+comment|/// SourceLocation of a matching ODR-use.
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|8
+operator|>
+name|UndefinedButUsed
+expr_stmt|;
 comment|/// \brief A list of modules that were imported by precompiled headers or
 comment|/// any other non-module AST file.
 name|SmallVector
@@ -2055,6 +2120,14 @@ decl_stmt|;
 comment|/// \brief Whether to accept an AST file with compiler errors.
 name|bool
 name|AllowASTWithCompilerErrors
+decl_stmt|;
+comment|/// \brief Whether we are allowed to use the global module index.
+name|bool
+name|UseGlobalIndex
+decl_stmt|;
+comment|/// \brief Whether we have tried loading the global module index yet.
+name|bool
+name|TriedLoadingGlobalIndex
 decl_stmt|;
 comment|/// \brief The current "generation" of the module file import stack, which
 comment|/// indicates how many separate module file load operations have occurred.
@@ -2111,6 +2184,14 @@ comment|/// \brief The total number of macros stored in the chain.
 name|unsigned
 name|TotalNumMacros
 decl_stmt|;
+comment|/// \brief The number of lookups into identifier tables.
+name|unsigned
+name|NumIdentifierLookups
+decl_stmt|;
+comment|/// \brief The number of lookups into identifier tables that succeed.
+name|unsigned
+name|NumIdentifierLookupHits
+decl_stmt|;
 comment|/// \brief The number of selectors that have been read.
 name|unsigned
 name|NumSelectorsRead
@@ -2120,9 +2201,24 @@ name|unsigned
 name|NumMethodPoolEntriesRead
 decl_stmt|;
 comment|/// \brief The number of times we have looked up a selector in the method
-comment|/// pool and not found anything interesting.
+comment|/// pool.
 name|unsigned
-name|NumMethodPoolMisses
+name|NumMethodPoolLookups
+decl_stmt|;
+comment|/// \brief The number of times we have looked up a selector in the method
+comment|/// pool and found something.
+name|unsigned
+name|NumMethodPoolHits
+decl_stmt|;
+comment|/// \brief The number of times we have looked up a selector in the method
+comment|/// pool within a specific module.
+name|unsigned
+name|NumMethodPoolTableLookups
+decl_stmt|;
+comment|/// \brief The number of times we have looked up a selector in the method
+comment|/// pool within a specific module and found something.
+name|unsigned
+name|NumMethodPoolTableHits
 decl_stmt|;
 comment|/// \brief The total number of method pool entries in the selector table.
 name|unsigned
@@ -2159,36 +2255,25 @@ comment|/// Number of CXX base specifiers currently loaded
 name|unsigned
 name|NumCXXBaseSpecifiersLoaded
 decl_stmt|;
-comment|/// \brief An IdentifierInfo that has been loaded but whose top-level
-comment|/// declarations of the same name have not (yet) been loaded.
-struct|struct
-name|PendingIdentifierInfo
-block|{
+comment|/// \brief The set of identifiers that were read while the AST reader was
+comment|/// (recursively) loading declarations.
+comment|///
+comment|/// The declarations on the identifier chain for these identifiers will be
+comment|/// loaded once the recursive loading has completed.
+name|llvm
+operator|::
+name|MapVector
+operator|<
 name|IdentifierInfo
-modifier|*
-name|II
-decl_stmt|;
+operator|*
+operator|,
 name|SmallVector
 operator|<
 name|uint32_t
 operator|,
 literal|4
 operator|>
-name|DeclIDs
-expr_stmt|;
-block|}
-struct|;
-comment|/// \brief The set of identifiers that were read while the AST reader was
-comment|/// (recursively) loading declarations.
-comment|///
-comment|/// The declarations on the identifier chain for these identifiers will be
-comment|/// loaded once the recursive loading has completed.
-name|std
-operator|::
-name|deque
-operator|<
-name|PendingIdentifierInfo
-operator|>
+expr|>
 name|PendingIdentifierInfos
 expr_stmt|;
 comment|/// \brief The generation number of each identifier, which keeps track of
@@ -2238,8 +2323,6 @@ comment|///
 comment|/// Each element is the global declaration ID of the first declaration in
 comment|/// the chain. Elements in this vector should be unique; use
 comment|/// PendingDeclChainsKnown to ensure uniqueness.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|serialization
@@ -2263,6 +2346,40 @@ literal|16
 operator|>
 name|PendingDeclChainsKnown
 expr_stmt|;
+comment|/// \brief The Decl IDs for the Sema/Lexical DeclContext of a Decl that has
+comment|/// been loaded but its DeclContext was not set yet.
+struct|struct
+name|PendingDeclContextInfo
+block|{
+name|Decl
+modifier|*
+name|D
+decl_stmt|;
+name|serialization
+operator|::
+name|GlobalDeclID
+name|SemaDC
+expr_stmt|;
+name|serialization
+operator|::
+name|GlobalDeclID
+name|LexicalDC
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief The set of Decls that have been loaded but their DeclContexts are
+comment|/// not set yet.
+comment|///
+comment|/// The DeclContexts for these Decls will be set once recursive loading has
+comment|/// been completed.
+name|std
+operator|::
+name|deque
+operator|<
+name|PendingDeclContextInfo
+operator|>
+name|PendingDeclContextInfos
+expr_stmt|;
 comment|/// \brief The set of Objective-C categories that have been deserialized
 comment|/// since the last time the declaration chains were linked.
 name|llvm
@@ -2279,8 +2396,6 @@ expr_stmt|;
 comment|/// \brief The set of Objective-C class definitions that have already been
 comment|/// loaded, for which we will need to check for categories whenever a new
 comment|/// module is loaded.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ObjCInterfaceDecl
@@ -2298,8 +2413,6 @@ operator|<
 name|Decl
 operator|*
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|serialization
@@ -2326,8 +2439,6 @@ name|serialization
 operator|::
 name|GlobalDeclID
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|serialization
@@ -2490,39 +2601,20 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
-typedef|typedef
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|1
-operator|,
-name|bool
-operator|>
-name|InputFile
-expr_stmt|;
 comment|/// \brief Retrieve the file entry and 'overridden' bit for an input
 comment|/// file in the given module file.
+name|serialization
+operator|::
 name|InputFile
 name|getInputFile
-parameter_list|(
-name|ModuleFile
-modifier|&
-name|F
-parameter_list|,
-name|unsigned
-name|ID
-parameter_list|,
-name|bool
-name|Complain
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|ModuleFile&F
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|bool Complain = true
+argument_list|)
+expr_stmt|;
 comment|/// \brief Get a FileEntry out of stored-in-PCH filename, making sure we take
 comment|/// into account all the necessary relocations.
 specifier|const
@@ -2548,6 +2640,46 @@ operator|&
 name|Filename
 argument_list|)
 decl_stmt|;
+struct|struct
+name|ImportedModule
+block|{
+name|ModuleFile
+modifier|*
+name|Mod
+decl_stmt|;
+name|ModuleFile
+modifier|*
+name|ImportedBy
+decl_stmt|;
+name|SourceLocation
+name|ImportLoc
+decl_stmt|;
+name|ImportedModule
+argument_list|(
+argument|ModuleFile *Mod
+argument_list|,
+argument|ModuleFile *ImportedBy
+argument_list|,
+argument|SourceLocation ImportLoc
+argument_list|)
+block|:
+name|Mod
+argument_list|(
+name|Mod
+argument_list|)
+operator|,
+name|ImportedBy
+argument_list|(
+name|ImportedBy
+argument_list|)
+operator|,
+name|ImportLoc
+argument_list|(
+argument|ImportLoc
+argument_list|)
+block|{ }
+block|}
+struct|;
 name|ASTReadResult
 name|ReadASTCore
 argument_list|(
@@ -2557,19 +2689,25 @@ argument_list|,
 name|ModuleKind
 name|Type
 argument_list|,
+name|SourceLocation
+name|ImportLoc
+argument_list|,
 name|ModuleFile
 operator|*
 name|ImportedBy
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
-name|ModuleFile
-operator|*
+name|ImportedModule
 operator|>
 operator|&
 name|Loaded
+argument_list|,
+name|off_t
+name|ExpectedSize
+argument_list|,
+name|time_t
+name|ExpectedModTime
 argument_list|,
 name|unsigned
 name|ClientLoadCapabilities
@@ -2582,12 +2720,9 @@ name|ModuleFile
 operator|&
 name|F
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
-name|ModuleFile
-operator|*
+name|ImportedModule
 operator|>
 operator|&
 name|Loaded
@@ -3273,6 +3408,59 @@ name|void
 name|finishPendingActions
 parameter_list|()
 function_decl|;
+name|void
+name|pushExternalDeclIntoScope
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|)
+function_decl|;
+name|void
+name|addPendingDeclContextInfo
+argument_list|(
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|serialization
+operator|::
+name|GlobalDeclID
+name|SemaDC
+argument_list|,
+name|serialization
+operator|::
+name|GlobalDeclID
+name|LexicalDC
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+name|PendingDeclContextInfo
+name|Info
+init|=
+block|{
+name|D
+block|,
+name|SemaDC
+block|,
+name|LexicalDC
+block|}
+decl_stmt|;
+name|PendingDeclContextInfos
+operator|.
+name|push_back
+argument_list|(
+name|Info
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Produce an error diagnostic and return true.
 comment|///
 comment|/// This routine should only be used for fatal errors that have to
@@ -3341,6 +3529,9 @@ comment|///
 comment|/// \param AllowASTWithCompilerErrors If true, the AST reader will accept an
 comment|/// AST file the was created out of an AST with compiler errors,
 comment|/// otherwise it will reject it.
+comment|///
+comment|/// \param UseGlobalIndex If true, the AST reader will try to load and use
+comment|/// the global module index.
 name|ASTReader
 argument_list|(
 argument|Preprocessor&PP
@@ -3353,6 +3544,8 @@ argument_list|,
 argument|bool DisableValidation = false
 argument_list|,
 argument|bool AllowASTWithCompilerErrors = false
+argument_list|,
+argument|bool UseGlobalIndex = true
 argument_list|)
 empty_stmt|;
 operator|~
@@ -3369,6 +3562,16 @@ return|return
 name|SourceMgr
 return|;
 block|}
+name|FileManager
+operator|&
+name|getFileManager
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileMgr
+return|;
+block|}
 comment|/// \brief Flags that indicate what kind of AST loading failures the client
 comment|/// of the AST reader can directly handle.
 comment|///
@@ -3383,23 +3586,29 @@ init|=
 literal|0
 block|,
 comment|/// \brief The client can handle an AST file that cannot load because it
+comment|/// is missing.
+name|ARR_Missing
+init|=
+literal|0x1
+block|,
+comment|/// \brief The client can handle an AST file that cannot load because it
 comment|/// is out-of-date relative to its input files.
 name|ARR_OutOfDate
 init|=
-literal|0x1
+literal|0x2
 block|,
 comment|/// \brief The client can handle an AST file that cannot load because it
 comment|/// was built with a different version of Clang.
 name|ARR_VersionMismatch
 init|=
-literal|0x2
+literal|0x4
 block|,
 comment|/// \brief The client can handle an AST file that cannot load because it's
 comment|/// compiled configuration doesn't match that of the context it was
 comment|/// loaded into.
 name|ARR_ConfigurationMismatch
 init|=
-literal|0x4
+literal|0x8
 block|}
 enum|;
 comment|/// \brief Load the AST file designated by the given file name.
@@ -3408,6 +3617,9 @@ comment|/// \param FileName The name of the AST file to load.
 comment|///
 comment|/// \param Type The kind of AST being loaded, e.g., PCH, module, main file,
 comment|/// or preamble.
+comment|///
+comment|/// \param ImportLoc the location where the module file will be considered as
+comment|/// imported from. For non-module AST types it should be invalid.
 comment|///
 comment|/// \param ClientLoadCapabilities The set of client load-failure
 comment|/// capabilities, represented as a bitset of the enumerators of
@@ -3425,6 +3637,9 @@ argument_list|,
 name|ModuleKind
 name|Type
 argument_list|,
+name|SourceLocation
+name|ImportLoc
+argument_list|,
 name|unsigned
 name|ClientLoadCapabilities
 argument_list|)
@@ -3436,6 +3651,10 @@ comment|/// \param Mod The module whose names should be made visible.
 comment|///
 comment|/// \param NameVisibility The level of visibility to give the names in the
 comment|/// module.  Visibility can only be increased over time.
+comment|///
+comment|/// \param ImportLoc The location at which the import occurs.
+comment|///
+comment|/// \param Complain Whether to complain about conflicting module imports.
 name|void
 name|makeModuleVisible
 argument_list|(
@@ -3447,6 +3666,12 @@ name|Module
 operator|::
 name|NameVisibilityKind
 name|NameVisibility
+argument_list|,
+name|SourceLocation
+name|ImportLoc
+argument_list|,
+name|bool
+name|Complain
 argument_list|)
 decl_stmt|;
 comment|/// \brief Make the names within this set of hidden names visible.
@@ -3457,6 +3682,10 @@ specifier|const
 name|HiddenNames
 modifier|&
 name|Names
+parameter_list|,
+name|Module
+modifier|*
+name|Owner
 parameter_list|)
 function_decl|;
 comment|/// \brief Set the AST callbacks listener.
@@ -3485,6 +3714,30 @@ modifier|*
 name|Listener
 parameter_list|)
 function_decl|;
+comment|/// \brief Determine whether this AST reader has a global index.
+name|bool
+name|hasGlobalIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GlobalIndex
+return|;
+block|}
+comment|/// \brief Attempts to load the global index.
+comment|///
+comment|/// \returns true if loading the global index has failed for any reason.
+name|bool
+name|loadGlobalIndex
+parameter_list|()
+function_decl|;
+comment|/// \brief Determine whether we tried to load the global index, but failed,
+comment|/// e.g., because it is out-of-date or does not exist.
+name|bool
+name|isGlobalIndexUnavailable
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Initializes the ASTContext
 name|void
 name|InitializeContext
@@ -3679,8 +3932,6 @@ expr_stmt|;
 comment|/// \brief Optionally returns true or false if the preallocated preprocessed
 comment|/// entity with index \p Index came from file \p FID.
 name|virtual
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -4071,6 +4322,7 @@ name|ModuleFile
 modifier|*
 name|getOwningModuleFile
 parameter_list|(
+specifier|const
 name|Decl
 modifier|*
 name|D
@@ -4339,16 +4591,18 @@ comment|/// \brief Finds all the visible declarations with a given name.
 comment|/// The current implementation of this method just loads the entire
 comment|/// lookup table as unmaterialized references.
 name|virtual
-name|DeclContext
-operator|::
-name|lookup_result
+name|bool
 name|FindExternalVisibleDeclsByName
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|DeclarationName Name
-argument_list|)
-expr_stmt|;
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// \brief Read all of the declarations lexically stored in a
 comment|/// declaration context.
 comment|///
@@ -4544,11 +4798,10 @@ comment|/// \brief Retrieve an iterator into the set of all identifiers
 comment|/// in all loaded AST files.
 name|virtual
 name|IdentifierIterator
-operator|*
+modifier|*
 name|getIdentifiers
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
 name|virtual
@@ -4572,6 +4825,23 @@ operator|*
 operator|>
 operator|&
 name|Namespaces
+argument_list|)
+decl_stmt|;
+name|virtual
+name|void
+name|ReadUndefinedButUsed
+argument_list|(
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|NamedDecl
+operator|*
+argument_list|,
+name|SourceLocation
+operator|>
+operator|&
+name|Undefined
 argument_list|)
 decl_stmt|;
 name|virtual
@@ -4642,7 +4912,7 @@ argument_list|)
 decl_stmt|;
 name|virtual
 name|void
-name|ReadLocallyScopedExternalDecls
+name|ReadLocallyScopedExternCDecls
 argument_list|(
 name|SmallVectorImpl
 operator|<
@@ -4758,10 +5028,15 @@ operator|>
 operator|&
 name|DeclIDs
 argument_list|,
-name|bool
-name|Nonrecursive
+name|SmallVectorImpl
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|*
+name|Decls
 operator|=
-name|false
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// \brief Report a diagnostic.
@@ -4874,6 +5149,50 @@ argument_list|,
 argument|unsigned LocalID
 argument_list|)
 expr_stmt|;
+name|void
+name|resolvePendingMacro
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+specifier|const
+name|PendingMacroInfo
+modifier|&
+name|PMInfo
+parameter_list|)
+function_decl|;
+name|void
+name|installPCHMacroDirectives
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|ModuleFile
+modifier|&
+name|M
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|)
+function_decl|;
+name|void
+name|installImportedMacro
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|MacroDirective
+modifier|*
+name|MD
+parameter_list|,
+name|Module
+modifier|*
+name|Owner
+parameter_list|)
+function_decl|;
 comment|/// \brief Retrieve the macro with the given ID.
 name|MacroInfo
 modifier|*
@@ -4883,12 +5202,6 @@ name|serialization
 operator|::
 name|MacroID
 name|ID
-argument_list|,
-name|MacroInfo
-operator|*
-name|Hint
-operator|=
-literal|0
 argument_list|)
 decl_stmt|;
 comment|/// \brief Retrieve the global macro ID corresponding to the given local
@@ -4912,6 +5225,22 @@ name|int
 name|ID
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the module import location and module name for the
+comment|/// given source manager entry ID.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SourceLocation
+operator|,
+name|StringRef
+operator|>
+name|getModuleImportLoc
+argument_list|(
+argument|int ID
+argument_list|)
+expr_stmt|;
 comment|/// \brief Retrieve the global submodule ID given a module and its local ID
 comment|/// number.
 name|serialization
@@ -4936,6 +5265,18 @@ name|SubmoduleID
 name|GlobalID
 argument_list|)
 decl_stmt|;
+comment|/// \brief Retrieve the module that corresponds to the given module ID.
+comment|///
+comment|/// Note: overrides method in ExternalASTSource
+name|virtual
+name|Module
+modifier|*
+name|getModule
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
 comment|/// \brief Retrieve a selector from the given module with its local ID
 comment|/// number.
 name|Selector
@@ -5224,7 +5565,7 @@ name|ModuleFile
 modifier|&
 name|F
 parameter_list|,
-name|UnresolvedSetImpl
+name|ASTUnresolvedSet
 modifier|&
 name|Set
 parameter_list|,
@@ -5448,6 +5789,13 @@ name|RecordData
 operator|&
 name|Record
 argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|fltSemantics
+operator|&
+name|Sem
+argument_list|,
 name|unsigned
 operator|&
 name|Idx
@@ -5586,8 +5934,27 @@ modifier|*
 name|ReadSubExpr
 parameter_list|()
 function_decl|;
+comment|/// \brief Reads a token out of a record.
+name|Token
+name|ReadToken
+parameter_list|(
+name|ModuleFile
+modifier|&
+name|M
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// \brief Reads the macro record located at the given offset.
-name|void
+name|MacroInfo
+modifier|*
 name|ReadMacroRecord
 parameter_list|(
 name|ModuleFile
@@ -5596,12 +5963,6 @@ name|F
 parameter_list|,
 name|uint64_t
 name|Offset
-parameter_list|,
-name|MacroInfo
-modifier|*
-name|Hint
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine the global preprocessed entity ID that corresponds to
@@ -5617,27 +5978,53 @@ argument|unsigned LocalID
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// \brief Note that the identifier has a macro history.
+comment|/// \brief Add a macro to resolve imported from a module.
 comment|///
 comment|/// \param II The name of the macro.
-comment|///
-comment|/// \param IDs The global macro IDs that are associated with this identifier.
+comment|/// \param M The module file.
+comment|/// \param GMacID The global macro ID that is associated with this identifier.
+comment|/// \param ImportLoc The location where the module is imported.
 name|void
-name|setIdentifierIsMacro
+name|addPendingMacroFromModule
 argument_list|(
 name|IdentifierInfo
 operator|*
 name|II
 argument_list|,
-name|ArrayRef
-operator|<
+name|ModuleFile
+operator|*
+name|M
+argument_list|,
 name|serialization
 operator|::
-name|MacroID
-operator|>
-name|IDs
+name|GlobalMacroID
+name|GMacID
+argument_list|,
+name|SourceLocation
+name|ImportLoc
 argument_list|)
 decl_stmt|;
+comment|/// \brief Add a macro to deserialize its macro directive history from a PCH.
+comment|///
+comment|/// \param II The name of the macro.
+comment|/// \param M The module file.
+comment|/// \param MacroDirectivesOffset Offset of the serialized macro directive
+comment|/// history.
+name|void
+name|addPendingMacroFromPCH
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|ModuleFile
+modifier|*
+name|M
+parameter_list|,
+name|uint64_t
+name|MacroDirectivesOffset
+parameter_list|)
+function_decl|;
 comment|/// \brief Read the set of macros defined by this external macro source.
 name|virtual
 name|void

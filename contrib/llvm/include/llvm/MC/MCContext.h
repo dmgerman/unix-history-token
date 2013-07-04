@@ -46,7 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/SectionKind.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
@@ -58,13 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/MC/SectionKind.h"
 end_include
 
 begin_include
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_include
@@ -279,23 +291,56 @@ comment|/// .secure_log_reset appearing between them.
 name|bool
 name|SecureLogUsed
 decl_stmt|;
-comment|/// The dwarf file and directory tables from the dwarf .file directive.
+comment|/// The compilation directory to use for DW_AT_comp_dir.
 name|std
 operator|::
-name|vector
+name|string
+name|CompilationDir
+expr_stmt|;
+comment|/// The main file name if passed in explicitly.
+name|std
+operator|::
+name|string
+name|MainFileName
+expr_stmt|;
+comment|/// The dwarf file and directory tables from the dwarf .file directive.
+comment|/// We now emit a line table for each compile unit. To reduce the prologue
+comment|/// size of each line table, the files and directories used by each compile
+comment|/// unit are separated.
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|unsigned
+operator|,
+name|SmallVector
 operator|<
 name|MCDwarfFile
 operator|*
+operator|,
+literal|4
 operator|>
-name|MCDwarfFiles
+expr|>
+name|MCDwarfFilesMap
 expr_stmt|;
+name|MCDwarfFilesMap
+name|MCDwarfFilesCUMap
+decl_stmt|;
 name|std
 operator|::
-name|vector
+name|map
+operator|<
+name|unsigned
+operator|,
+name|SmallVector
 operator|<
 name|StringRef
+operator|,
+literal|4
 operator|>
-name|MCDwarfDirs
+expr|>
+name|MCDwarfDirsCUMap
 expr_stmt|;
 comment|/// The current dwarf line information from the last dwarf .loc directive.
 name|MCDwarfLoc
@@ -345,6 +390,11 @@ comment|/// non-empty.
 name|StringRef
 name|DwarfDebugFlags
 decl_stmt|;
+comment|/// The string to embed in as the dwarf AT_producer for the compile unit, if
+comment|/// non-empty.
+name|StringRef
+name|DwarfDebugProducer
+decl_stmt|;
 comment|/// Honor temporary labels, this is useful for debugging semantic
 comment|/// differences between temporary and non-temporary labels (primarily on
 comment|/// Darwin).
@@ -376,6 +426,20 @@ operator|*
 operator|>
 name|MCLineSectionOrder
 expr_stmt|;
+comment|/// The Compile Unit ID that we are currently processing.
+name|unsigned
+name|DwarfCompileUnitID
+decl_stmt|;
+comment|/// The line table start symbol for each Compile Unit.
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+name|MCLineTableSymbols
+expr_stmt|;
 name|void
 modifier|*
 name|MachOUniquingMap
@@ -385,6 +449,10 @@ name|ELFUniquingMap
 decl_stmt|,
 modifier|*
 name|COFFUniquingMap
+decl_stmt|;
+comment|/// Do automatic reset in destructor
+name|bool
+name|AutoReset
 decl_stmt|;
 name|MCSymbol
 modifier|*
@@ -420,6 +488,11 @@ modifier|*
 name|Mgr
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|DoAutoReset
+init|=
+name|true
 parameter_list|)
 function_decl|;
 operator|~
@@ -482,6 +555,15 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+comment|/// @name Module Lifetime Management
+comment|/// @{
+comment|/// reset - return object to right after construction state to prepare
+comment|/// to process a new module
+name|void
+name|reset
+parameter_list|()
+function_decl|;
+comment|/// @}
 comment|/// @name Symbol Management
 comment|/// @{
 comment|/// CreateTempSymbol - Create and return a new assembler temporary symbol
@@ -740,6 +822,72 @@ block|}
 comment|/// @}
 comment|/// @name Dwarf Management
 comment|/// @{
+comment|/// \brief Get the compilation directory for DW_AT_comp_dir
+comment|/// This can be overridden by clients which want to control the reported
+comment|/// compilation directory and have it be something other than the current
+comment|/// working directory.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getCompilationDir
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompilationDir
+return|;
+block|}
+comment|/// \brief Set the compilation directory for DW_AT_comp_dir
+comment|/// Override the default (CWD) compilation directory.
+name|void
+name|setCompilationDir
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+block|{
+name|CompilationDir
+operator|=
+name|S
+operator|.
+name|str
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// \brief Get the main file name for use in error messages and debug
+comment|/// info. This can be set to ensure we've got the correct file name
+comment|/// after preprocessing or for -save-temps.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getMainFileName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MainFileName
+return|;
+block|}
+comment|/// \brief Set the main file name and override the default.
+name|void
+name|setMainFileName
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+block|{
+name|MainFileName
+operator|=
+name|S
+operator|.
+name|str
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// GetDwarfFile - creates an entry in the dwarf file and directory tables.
 name|unsigned
 name|GetDwarfFile
@@ -752,6 +900,9 @@ name|FileName
 parameter_list|,
 name|unsigned
 name|FileNumber
+parameter_list|,
+name|unsigned
+name|CUID
 parameter_list|)
 function_decl|;
 name|bool
@@ -759,6 +910,11 @@ name|isValidDwarfFileNumber
 parameter_list|(
 name|unsigned
 name|FileNumber
+parameter_list|,
+name|unsigned
+name|CUID
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|bool
@@ -766,43 +922,91 @@ name|hasDwarfFiles
 argument_list|()
 specifier|const
 block|{
-return|return
+comment|// Traverse MCDwarfFilesCUMap and check whether each entry is empty.
+name|MCDwarfFilesMap
+operator|::
+name|const_iterator
+name|MapB
+block|,
+name|MapE
+block|;
+for|for
+control|(
+name|MapB
+operator|=
+name|MCDwarfFilesCUMap
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|MapE
+operator|=
+name|MCDwarfFilesCUMap
+operator|.
+name|end
+argument_list|()
+init|;
+name|MapB
+operator|!=
+name|MapE
+condition|;
+name|MapB
+operator|++
+control|)
+if|if
+condition|(
 operator|!
-name|MCDwarfFiles
+name|MapB
+operator|->
+name|second
 operator|.
 name|empty
 argument_list|()
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|MCDwarfFile
 operator|*
 operator|>
 operator|&
 name|getMCDwarfFiles
-argument_list|()
+argument_list|(
+argument|unsigned CUID =
+literal|0
+argument_list|)
 block|{
 return|return
-name|MCDwarfFiles
+name|MCDwarfFilesCUMap
+index|[
+name|CUID
+index|]
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|StringRef
 operator|>
 operator|&
 name|getMCDwarfDirs
-argument_list|()
+argument_list|(
+argument|unsigned CUID =
+literal|0
+argument_list|)
 block|{
 return|return
-name|MCDwarfDirs
+name|MCDwarfDirsCUMap
+index|[
+name|CUID
+index|]
 return|;
 block|}
 specifier|const
@@ -868,6 +1072,107 @@ name|push_back
 argument_list|(
 name|Sec
 argument_list|)
+expr_stmt|;
+block|}
+name|unsigned
+name|getDwarfCompileUnitID
+parameter_list|()
+block|{
+return|return
+name|DwarfCompileUnitID
+return|;
+block|}
+name|void
+name|setDwarfCompileUnitID
+parameter_list|(
+name|unsigned
+name|CUIndex
+parameter_list|)
+block|{
+name|DwarfCompileUnitID
+operator|=
+name|CUIndex
+expr_stmt|;
+block|}
+specifier|const
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+operator|&
+name|getMCLineTableSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCLineTableSymbols
+return|;
+block|}
+name|MCSymbol
+modifier|*
+name|getMCLineTableSymbol
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|CIter
+operator|=
+name|MCLineTableSymbols
+operator|.
+name|find
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CIter
+operator|==
+name|MCLineTableSymbols
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|CIter
+operator|->
+name|second
+return|;
+block|}
+name|void
+name|setMCLineTableSymbol
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sym
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|)
+block|{
+name|MCLineTableSymbols
+index|[
+name|ID
+index|]
+operator|=
+name|Sym
 expr_stmt|;
 block|}
 comment|/// setCurrentDwarfLoc - saves the information from the currently parsed
@@ -1130,6 +1435,26 @@ return|return
 name|DwarfDebugFlags
 return|;
 block|}
+name|void
+name|setDwarfDebugProducer
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+block|{
+name|DwarfDebugProducer
+operator|=
+name|S
+expr_stmt|;
+block|}
+name|StringRef
+name|getDwarfDebugProducer
+parameter_list|()
+block|{
+return|return
+name|DwarfDebugProducer
+return|;
+block|}
 comment|/// @}
 name|char
 modifier|*
@@ -1231,11 +1556,14 @@ name|Msg
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -1336,7 +1664,7 @@ comment|/// @return The allocated memory. Could be NULL.
 end_comment
 
 begin_decl_stmt
-specifier|inline
+unit|inline
 name|void
 modifier|*
 name|operator

@@ -58,25 +58,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_TARGETSCHEDMODEL_H
+name|LLVM_CODEGEN_TARGETSCHEDULE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_TARGETSCHEDMODEL_H
+name|LLVM_CODEGEN_TARGETSCHEDULE_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCSchedule.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -88,7 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/MC/MCSchedule.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_decl_stmt
@@ -283,6 +283,18 @@ return|return
 name|SchedModel
 operator|.
 name|IssueWidth
+return|;
+block|}
+comment|/// \brief Number of cycles the OOO processor is expected to hide.
+name|unsigned
+name|getILPWindow
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SchedModel
+operator|.
+name|ILPWindow
 return|;
 block|}
 comment|/// \brief Return the number of issue slots required for this MI.

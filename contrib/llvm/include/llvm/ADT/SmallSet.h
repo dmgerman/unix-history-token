@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -239,6 +239,7 @@ return|;
 block|}
 block|}
 comment|/// insert - Insert an element into the set if it isn't already there.
+comment|/// Returns true if the element is inserted (it was not in the set before).
 name|bool
 name|insert
 parameter_list|(

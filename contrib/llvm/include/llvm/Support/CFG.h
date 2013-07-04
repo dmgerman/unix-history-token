@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/InstrTypes.h"
+file|"llvm/IR/InstrTypes.h"
 end_include
 
 begin_decl_stmt

@@ -70,19 +70,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Analysis/DomainSpecific/ObjCNoReturn.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/AnalysisManager.h"
+file|"clang/StaticAnalyzer/Core/BugReporter/BugReporter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SubEngine.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/AnalysisManager.h"
 end_include
 
 begin_include
@@ -106,19 +118,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/BugReporter/BugReporter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Expr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SubEngine.h"
 end_include
 
 begin_decl_stmt
@@ -168,11 +168,33 @@ name|class
 name|SimpleCall
 decl_stmt|;
 name|class
+name|CXXConstructorCall
+decl_stmt|;
+name|class
 name|ExprEngine
 range|:
 name|public
 name|SubEngine
 block|{
+name|public
+operator|:
+comment|/// The modes of inlining, which override the default analysis-wide settings.
+expr|enum
+name|InliningModes
+block|{
+comment|/// Follow the default settings for inlining callees.
+name|Inline_Regular
+operator|=
+literal|0
+block|,
+comment|/// Do minimal inlining of callees.
+name|Inline_Minimal
+operator|=
+literal|0x1
+block|}
+block|;
+name|private
+operator|:
 name|AnalysisManager
 operator|&
 name|AMgr
@@ -202,22 +224,6 @@ comment|/// svalBuilder - SValBuilder object that creates SVals from expressions
 name|SValBuilder
 operator|&
 name|svalBuilder
-block|;
-comment|/// EntryNode - The immediate predecessor node.
-name|ExplodedNode
-operator|*
-name|EntryNode
-block|;
-comment|/// CleanedState - The state for EntryNode "cleaned" of all dead
-comment|///  variables and symbols (as determined by a liveness analysis).
-name|ProgramStateRef
-name|CleanedState
-block|;
-comment|/// currStmt - The current block-level statement.
-specifier|const
-name|Stmt
-operator|*
-name|currStmt
 block|;
 name|unsigned
 name|int
@@ -249,6 +255,10 @@ name|SetOfConstDecls
 operator|*
 name|VisitedCallees
 block|;
+comment|/// The flag, which specifies the mode of inlining for the engine.
+name|InliningModes
+name|HowToInline
+block|;
 name|public
 operator|:
 name|ExprEngine
@@ -260,6 +270,8 @@ argument_list|,
 argument|SetOfConstDecls *VisitedCalleesIn
 argument_list|,
 argument|FunctionSummariesTy *FS
+argument_list|,
+argument|InliningModes HowToInlineIn
 argument_list|)
 block|;
 operator|~
@@ -431,26 +443,25 @@ operator|*
 name|N
 argument_list|)
 block|;
-comment|/// ViewGraph - Visualize the ExplodedGraph created by executing the
-comment|///  simulation.
+comment|/// Visualize the ExplodedGraph created by executing the simulation.
 name|void
 name|ViewGraph
 argument_list|(
 argument|bool trim = false
 argument_list|)
 block|;
+comment|/// Visualize a trimmed ExplodedGraph that only contains paths to the given
+comment|/// nodes.
 name|void
 name|ViewGraph
 argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
 name|ExplodedNode
 operator|*
-operator|*
-name|Beg
-argument_list|,
-name|ExplodedNode
-operator|*
-operator|*
-name|End
+operator|>
+name|Nodes
 argument_list|)
 block|;
 comment|/// getInitialState - Return the initial state used for the root vertex
@@ -485,23 +496,30 @@ name|G
 return|;
 block|}
 comment|/// \brief Run the analyzer's garbage collection - remove dead symbols and
-comment|/// bindings.
+comment|/// bindings from the state.
 comment|///
-comment|/// \param Node - The predecessor node, from which the processing should
-comment|/// start.
-comment|/// \param Out - The returned set of output nodes.
-comment|/// \param ReferenceStmt - Run garbage collection using the symbols,
-comment|/// which are live before the given statement.
-comment|/// \param LC - The location context of the ReferenceStmt.
-comment|/// \param DiagnosticStmt - the statement used to associate the diagnostic
-comment|/// message, if any warnings should occur while removing the dead (leaks
-comment|/// are usually reported here).
-comment|/// \param K - In some cases it is possible to use PreStmt kind. (Do
-comment|/// not use it unless you know what you are doing.)
-comment|/// If the ReferenceStmt is NULL, everything is this and parent contexts is
-comment|/// considered live.
-comment|/// If the stack frame context is NULL, everything on stack is considered
-comment|/// dead.
+comment|/// Checkers can participate in this process with two callbacks:
+comment|/// \c checkLiveSymbols and \c checkDeadSymbols. See the CheckerDocumentation
+comment|/// class for more information.
+comment|///
+comment|/// \param Node The predecessor node, from which the processing should start.
+comment|/// \param Out The returned set of output nodes.
+comment|/// \param ReferenceStmt The statement which is about to be processed.
+comment|///        Everything needed for this statement should be considered live.
+comment|///        A null statement means that everything in child LocationContexts
+comment|///        is dead.
+comment|/// \param LC The location context of the \p ReferenceStmt. A null location
+comment|///        context means that we have reached the end of analysis and that
+comment|///        all statements and local variables should be considered dead.
+comment|/// \param DiagnosticStmt Used as a location for any warnings that should
+comment|///        occur while removing the dead (e.g. leaks). By default, the
+comment|///        \p ReferenceStmt is used.
+comment|/// \param K Denotes whether this is a pre- or post-statement purge. This
+comment|///        must only be ProgramPoint::PostStmtPurgeDeadSymbolsKind if an
+comment|///        entire location context is being cleared, in which case the
+comment|///        \p ReferenceStmt must either be a ReturnStmt or \c NULL. Otherwise,
+comment|///        it must be ProgramPoint::PreStmtPurgeDeadSymbolsKind (the default)
+comment|///        and \p ReferenceStmt must be valid (non-null).
 name|void
 name|removeDead
 argument_list|(
@@ -511,9 +529,10 @@ argument|ExplodedNodeSet&Out
 argument_list|,
 argument|const Stmt *ReferenceStmt
 argument_list|,
-argument|const StackFrameContext *LC
+argument|const LocationContext *LC
 argument_list|,
-argument|const Stmt *DiagnosticStmt
+argument|const Stmt *DiagnosticStmt =
+literal|0
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PreStmtPurgeDeadSymbolsKind
 argument_list|)
@@ -653,6 +672,39 @@ operator|*
 name|DstF
 argument_list|)
 block|;
+comment|/// Called by CoreEngine.  Used to processing branching behavior
+comment|/// at static initalizers.
+name|void
+name|processStaticInitializer
+argument_list|(
+specifier|const
+name|DeclStmt
+operator|*
+name|DS
+argument_list|,
+name|NodeBuilderContext
+operator|&
+name|BuilderCtx
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|,
+specifier|const
+name|CFGBlock
+operator|*
+name|DstT
+argument_list|,
+specifier|const
+name|CFGBlock
+operator|*
+name|DstF
+argument_list|)
+block|;
 comment|/// processIndirectGoto - Called by CoreEngine.  Used to generate successor
 comment|///  nodes by processing the 'effects' of a computed goto jump.
 name|void
@@ -673,8 +725,8 @@ operator|&
 name|builder
 argument_list|)
 block|;
-comment|/// ProcessEndPath - Called by CoreEngine.  Used to generate end-of-path
-comment|///  nodes when the control reaches the end of a function.
+comment|/// Called by CoreEngine.  Used to generate end-of-path
+comment|/// nodes when the control reaches the end of a function.
 name|void
 name|processEndOfFunction
 argument_list|(
@@ -757,7 +809,7 @@ name|processRegionChanges
 argument_list|(
 argument|ProgramStateRef state
 argument_list|,
-argument|const StoreManager::InvalidatedSymbols *invalidated
+argument|const InvalidatedSymbols *invalidated
 argument_list|,
 argument|ArrayRef<const MemRegion *> ExplicitRegions
 argument_list|,
@@ -1523,12 +1575,13 @@ name|svalBuilder
 operator|.
 name|evalMinus
 argument_list|(
-name|cast
+name|X
+operator|.
+name|castAs
 operator|<
 name|NonLoc
 operator|>
 operator|(
-name|X
 operator|)
 argument_list|)
 operator|:
@@ -1551,12 +1604,13 @@ name|svalBuilder
 operator|.
 name|evalComplement
 argument_list|(
-name|cast
+name|X
+operator|.
+name|castAs
 operator|<
 name|NonLoc
 operator|>
 operator|(
-name|X
 operator|)
 argument_list|)
 else|:
@@ -1626,12 +1680,13 @@ name|op
 argument_list|,
 name|L
 argument_list|,
-name|cast
+name|R
+operator|.
+name|castAs
 operator|<
 name|NonLoc
 operator|>
 operator|(
-name|R
 operator|)
 argument_list|,
 name|T
@@ -1692,6 +1747,36 @@ argument|bool atDeclInit = false
 argument_list|,
 argument|const ProgramPoint *PP =
 literal|0
+argument_list|)
+block|;
+comment|/// Call PointerEscape callback when a value escapes as a result of bind.
+name|ProgramStateRef
+name|processPointerEscapedOnBind
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|SVal Loc
+argument_list|,
+argument|SVal Val
+argument_list|)
+block|;
+comment|/// Call PointerEscape callback when a value escapes as a result of
+comment|/// region invalidation.
+comment|/// \param[in] IsConst Specifies that the pointer is const.
+name|ProgramStateRef
+name|notifyCheckersOfPointerEscape
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|const InvalidatedSymbols *Invalidated
+argument_list|,
+argument|ArrayRef<const MemRegion *> ExplicitRegions
+argument_list|,
+argument|ArrayRef<const MemRegion *> Regions
+argument_list|,
+argument|const CallEvent *Call
+argument_list|,
+argument|bool IsConst
 argument_list|)
 block|;
 name|public
@@ -1865,14 +1950,21 @@ operator|&
 name|StackDepth
 argument_list|)
 block|;
+comment|/// Checks our policies and decides weither the given call should be inlined.
 name|bool
-name|shouldInlineDecl
+name|shouldInlineCall
 argument_list|(
+specifier|const
+name|CallEvent
+operator|&
+name|Call
+argument_list|,
 specifier|const
 name|Decl
 operator|*
 name|D
 argument_list|,
+specifier|const
 name|ExplodedNode
 operator|*
 name|Pred
@@ -1947,6 +2039,44 @@ name|LocationContext
 operator|*
 name|CalleeLC
 argument_list|)
+block|;
+comment|/// Models a trivial copy or move constructor or trivial assignment operator
+comment|/// call with a simple bind.
+name|void
+name|performTrivialCopy
+argument_list|(
+name|NodeBuilder
+operator|&
+name|Bldr
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+specifier|const
+name|CallEvent
+operator|&
+name|Call
+argument_list|)
+block|;
+comment|/// If the value of the given expression is a NonLoc, copy it into a new
+comment|/// temporary object region, and replace the value of the expression with
+comment|/// that.
+comment|///
+comment|/// If \p ResultE is provided, the new region will be bound to this expression
+comment|/// instead of \p E.
+name|ProgramStateRef
+name|createTemporaryRegionIfNeeded
+argument_list|(
+argument|ProgramStateRef State
+argument_list|,
+argument|const LocationContext *LC
+argument_list|,
+argument|const Expr *E
+argument_list|,
+argument|const Expr *ResultE =
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 comment|/// Traits for storing the call processing policy inside GDM.
@@ -1969,6 +2099,7 @@ operator|:
 name|public
 name|ProgramStatePartialTrait
 operator|<
+specifier|const
 name|void
 operator|*
 operator|>

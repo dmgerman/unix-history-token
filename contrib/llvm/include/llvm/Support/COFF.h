@@ -86,13 +86,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_WIN_COFF_H
+name|LLVM_SUPPORT_COFF_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_WIN_COFF_H
+name|LLVM_SUPPORT_COFF_H
 end_define
 
 begin_include
@@ -1072,6 +1072,8 @@ block|,
 name|IMAGE_COMDAT_SELECT_ASSOCIATIVE
 block|,
 name|IMAGE_COMDAT_SELECT_LARGEST
+block|,
+name|IMAGE_COMDAT_SELECT_NEWEST
 block|}
 enum|;
 comment|// Auxiliary Symbol Formats

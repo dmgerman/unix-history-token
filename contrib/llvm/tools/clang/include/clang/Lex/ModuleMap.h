@@ -102,13 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -137,6 +137,9 @@ name|class
 name|DiagnosticsEngine
 decl_stmt|;
 name|class
+name|HeaderSearch
+decl_stmt|;
+name|class
 name|ModuleMapParser
 decl_stmt|;
 name|class
@@ -161,6 +164,10 @@ specifier|const
 name|TargetInfo
 modifier|*
 name|Target
+decl_stmt|;
+name|HeaderSearch
+modifier|&
+name|HeaderInfo
 decl_stmt|;
 comment|/// \brief The directory used for Clang-supplied, builtin include headers,
 comment|/// such as "stdint.h".
@@ -356,8 +363,6 @@ literal|1
 decl_stmt|;
 comment|/// \brief The names of modules that cannot be inferred within this
 comment|/// directory.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -383,6 +388,20 @@ operator|,
 name|InferredDirectory
 operator|>
 name|InferredDirectories
+expr_stmt|;
+comment|/// \brief Describes whether we haved parsed a particular file as a module
+comment|/// map.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+name|bool
+operator|>
+name|ParsedModuleMap
 expr_stmt|;
 name|friend
 name|class
@@ -411,7 +430,37 @@ argument|const Module::UnresolvedExportDecl&Unresolved
 argument_list|,
 argument|bool Complain
 argument_list|)
+specifier|const
 expr_stmt|;
+comment|/// \brief Resolve the given module id to an actual module.
+comment|///
+comment|/// \param Id The module-id to resolve.
+comment|///
+comment|/// \param Mod The module in which we're resolving the module-id.
+comment|///
+comment|/// \param Complain Whether this routine should complain about unresolvable
+comment|/// module-ids.
+comment|///
+comment|/// \returns The resolved module, or null if the module-id could not be
+comment|/// resolved.
+name|Module
+modifier|*
+name|resolveModuleId
+argument_list|(
+specifier|const
+name|ModuleId
+operator|&
+name|Id
+argument_list|,
+name|Module
+operator|*
+name|Mod
+argument_list|,
+name|bool
+name|Complain
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Construct a new module map.
@@ -432,7 +481,6 @@ name|FileManager
 operator|&
 name|FileMgr
 argument_list|,
-specifier|const
 name|DiagnosticConsumer
 operator|&
 name|DC
@@ -446,6 +494,10 @@ specifier|const
 name|TargetInfo
 operator|*
 name|Target
+argument_list|,
+name|HeaderSearch
+operator|&
+name|HeaderInfo
 argument_list|)
 expr_stmt|;
 comment|/// \brief Destroy the module map.
@@ -500,13 +552,14 @@ comment|/// \brief Determine whether the given header is part of a module
 comment|/// marked 'unavailable'.
 name|bool
 name|isHeaderInUnavailableModule
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|Header
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve a module with the given name.
 comment|///
 comment|/// \param Name The name of the module to look up.
@@ -515,11 +568,12 @@ comment|/// \returns The named module, if known; otherwise, returns null.
 name|Module
 modifier|*
 name|findModule
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve a module with the given name using lexical name lookup,
 comment|/// starting at the given context.
 comment|///
@@ -532,15 +586,16 @@ comment|/// \returns The named module, if known; otherwise, returns null.
 name|Module
 modifier|*
 name|lookupModuleUnqualified
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|Module
-modifier|*
+operator|*
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve a module with the given name within the given context,
 comment|/// using direct (qualified) name lookup.
 comment|///
@@ -553,15 +608,16 @@ comment|/// \returns The named submodule, if known; otherwose, returns null.
 name|Module
 modifier|*
 name|lookupModuleQualified
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|Module
-modifier|*
+operator|*
 name|Context
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Find a new module or submodule, or create it if it does not already
 comment|/// exist.
 comment|///
@@ -611,20 +667,21 @@ comment|/// \returns true if we are allowed to infer a framework module, and fal
 comment|/// otherwise.
 name|bool
 name|canInferFrameworkModule
-parameter_list|(
+argument_list|(
 specifier|const
 name|DirectoryEntry
-modifier|*
+operator|*
 name|ParentDir
-parameter_list|,
+argument_list|,
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|bool
-modifier|&
+operator|&
 name|IsSystem
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Infer the contents of a framework module map from the given
 comment|/// framework directory.
 name|Module
@@ -658,12 +715,13 @@ specifier|const
 name|FileEntry
 modifier|*
 name|getContainingModuleMapFile
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|Module
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Resolve all of the unresolved exports in the given module.
 comment|///
 comment|/// \param Mod The module whose exports should be resolved.
@@ -674,6 +732,25 @@ comment|/// \returns true if any errors were encountered while resolving exports
 comment|/// false otherwise.
 name|bool
 name|resolveExports
+parameter_list|(
+name|Module
+modifier|*
+name|Mod
+parameter_list|,
+name|bool
+name|Complain
+parameter_list|)
+function_decl|;
+comment|/// \brief Resolve all of the unresolved conflicts in the given module.
+comment|///
+comment|/// \param Mod The module whose conflicts should be resolved.
+comment|///
+comment|/// \param Complain Whether to emit diagnostics for failures.
+comment|///
+comment|/// \returns true if any errors were encountered while resolving conflicts,
+comment|/// false otherwise.
+name|bool
+name|resolveConflicts
 parameter_list|(
 name|Module
 modifier|*

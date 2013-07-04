@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/OperatorKinds.h"
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/TokenKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -587,21 +587,6 @@ name|HadMacro
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|void
-name|setHadMacroDefinition
-parameter_list|(
-name|bool
-name|Val
-parameter_list|)
-block|{
-name|HadMacro
-operator|=
-name|Val
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/// getTokenID - If this is a source-language token (e.g. 'for'), this API
@@ -1302,7 +1287,7 @@ comment|/// \brief Determine whether this is the contextual keyword
 end_comment
 
 begin_comment
-comment|/// '__experimental_modules_import'.
+comment|/// 'import'.
 end_comment
 
 begin_expr_stmt
@@ -1322,7 +1307,7 @@ comment|/// \brief Set whether this identifier is the contextual keyword
 end_comment
 
 begin_comment
-comment|/// '__experimental_modules_import'.
+comment|/// 'import'.
 end_comment
 
 begin_function
@@ -1641,11 +1626,10 @@ comment|/// \returns A new iterator into the set of known identifiers. The
 comment|/// caller is responsible for deleting this iterator.
 name|virtual
 name|IdentifierIterator
-operator|*
+modifier|*
 name|getIdentifiers
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -66,13 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Lex/DirectoryLookup.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/ModuleLoader.h"
+file|"clang/Basic/DiagnosticIDs.h"
 end_include
 
 begin_include
@@ -84,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/DiagnosticIDs.h"
+file|"clang/Lex/DirectoryLookup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/ModuleLoader.h"
 end_include
 
 begin_include
@@ -113,7 +113,10 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
-name|MacroInfo
+name|MacroDirective
+decl_stmt|;
+name|class
+name|MacroArgs
 decl_stmt|;
 comment|/// \brief This interface provides a way to observe the actions of the
 comment|/// preprocessor as it does its thing.
@@ -374,8 +377,38 @@ operator|&
 name|Str
 argument_list|)
 block|{   }
+comment|/// \brief Callback invoked when a \#pragma clang __debug directive is read.
+comment|/// \param Loc The location of the debug directive.
+comment|/// \param DebugType The identifier following __debug.
+name|virtual
+name|void
+name|PragmaDebug
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|StringRef
+name|DebugType
+parameter_list|)
+block|{   }
+comment|/// \brief Determines the kind of \#pragma invoking a call to PragmaMessage.
+enum|enum
+name|PragmaMessageKind
+block|{
+comment|/// \brief \#pragma message has been invoked.
+name|PMK_Message
+block|,
+comment|/// \brief \#pragma GCC warning has been invoked.
+name|PMK_Warning
+block|,
+comment|/// \brief \#pragma GCC error has been invoked.
+name|PMK_Error
+block|}
+enum|;
 comment|/// \brief Callback invoked when a \#pragma message directive is read.
 comment|/// \param Loc The location of the message directive.
+comment|/// \param Namespace The namespace of the message directive.
+comment|/// \param Kind The type of the message directive.
 comment|/// \param Str The text of the message directive.
 name|virtual
 name|void
@@ -383,6 +416,12 @@ name|PragmaMessage
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|StringRef
+name|Namespace
+parameter_list|,
+name|PragmaMessageKind
+name|Kind
 parameter_list|,
 name|StringRef
 name|Str
@@ -446,12 +485,17 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|,
 name|SourceRange
 name|Range
+parameter_list|,
+specifier|const
+name|MacroArgs
+modifier|*
+name|Args
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever a macro definition is seen.
@@ -465,14 +509,14 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever a macro \#undef is seen.
 comment|///
-comment|/// MI is released immediately following this callback.
+comment|/// MD is released immediately following this callback.
 name|virtual
 name|void
 name|MacroUndefined
@@ -483,12 +527,13 @@ modifier|&
 name|MacroNameTok
 parameter_list|,
 specifier|const
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever the 'defined' operator is seen.
+comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Defined
@@ -497,6 +542,11 @@ specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called when a source range is skipped.
@@ -548,6 +598,7 @@ block|{   }
 comment|/// \brief Hook called whenever an \#ifdef is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param MacroNameTok Information on the token being tested.
+comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Ifdef
@@ -559,11 +610,17 @@ specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever an \#ifndef is seen.
 comment|/// \param Loc the source location of the directive.
 comment|/// \param MacroNameTok Information on the token being tested.
+comment|/// \param MD The MacroDirective if the name was a macro, null otherwise.
 name|virtual
 name|void
 name|Ifndef
@@ -575,6 +632,11 @@ specifier|const
 name|Token
 modifier|&
 name|MacroNameTok
+parameter_list|,
+specifier|const
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 block|{   }
 comment|/// \brief Hook called whenever an \#else is seen.
@@ -943,6 +1005,10 @@ name|PragmaMessage
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
+argument|StringRef Namespace
+argument_list|,
+argument|PragmaMessageKind Kind
+argument_list|,
 argument|StringRef Str
 argument_list|)
 block|{
@@ -952,6 +1018,10 @@ name|PragmaMessage
 argument_list|(
 name|Loc
 argument_list|,
+name|Namespace
+argument_list|,
+name|Kind
+argument_list|,
 name|Str
 argument_list|)
 block|;
@@ -960,6 +1030,10 @@ operator|->
 name|PragmaMessage
 argument_list|(
 name|Loc
+argument_list|,
+name|Namespace
+argument_list|,
+name|Kind
 argument_list|,
 name|Str
 argument_list|)
@@ -1063,9 +1137,11 @@ name|MacroExpands
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroInfo* MI
+argument|const MacroDirective *MD
 argument_list|,
 argument|SourceRange Range
+argument_list|,
+argument|const MacroArgs *Args
 argument_list|)
 block|{
 name|First
@@ -1074,9 +1150,11 @@ name|MacroExpands
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|,
 name|Range
+argument_list|,
+name|Args
 argument_list|)
 block|;
 name|Second
@@ -1085,9 +1163,11 @@ name|MacroExpands
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|,
 name|Range
+argument_list|,
+name|Args
 argument_list|)
 block|;   }
 name|virtual
@@ -1096,7 +1176,7 @@ name|MacroDefined
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroInfo *MI
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1105,7 +1185,7 @@ name|MacroDefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1114,7 +1194,7 @@ name|MacroDefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;   }
 name|virtual
@@ -1123,7 +1203,7 @@ name|MacroUndefined
 argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
-argument|const MacroInfo *MI
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1132,7 +1212,7 @@ name|MacroUndefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1141,7 +1221,7 @@ name|MacroUndefined
 argument_list|(
 name|MacroNameTok
 argument_list|,
-name|MI
+name|MD
 argument_list|)
 block|;   }
 name|virtual
@@ -1149,6 +1229,8 @@ name|void
 name|Defined
 argument_list|(
 argument|const Token&MacroNameTok
+argument_list|,
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1156,6 +1238,8 @@ operator|->
 name|Defined
 argument_list|(
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1163,6 +1247,8 @@ operator|->
 name|Defined
 argument_list|(
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;   }
 name|virtual
@@ -1256,6 +1342,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
+argument_list|,
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1265,6 +1353,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1274,6 +1364,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#ifndef is seen.
@@ -1284,6 +1376,8 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|,
 argument|const Token&MacroNameTok
+argument_list|,
+argument|const MacroDirective *MD
 argument_list|)
 block|{
 name|First
@@ -1293,6 +1387,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;
 name|Second
@@ -1302,6 +1398,8 @@ argument_list|(
 name|Loc
 argument_list|,
 name|MacroNameTok
+argument_list|,
+name|MD
 argument_list|)
 block|;   }
 comment|/// \brief Hook called whenever an \#else is seen.

@@ -91,6 +91,10 @@ comment|/// ReturnAddrIndex - FrameIndex for return slot.
 name|int
 name|ReturnAddrIndex
 block|;
+comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
+name|int
+name|VarArgsFrameIndex
+block|;
 name|public
 operator|:
 name|MSP430MachineFunctionInfo
@@ -154,6 +158,25 @@ argument|int Index
 argument_list|)
 block|{
 name|ReturnAddrIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getVarArgsFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFrameIndex
+return|;
+block|}
+name|void
+name|setVarArgsFrameIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|VarArgsFrameIndex
 operator|=
 name|Index
 block|; }

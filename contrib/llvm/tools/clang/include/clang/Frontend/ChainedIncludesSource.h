@@ -105,8 +105,6 @@ operator|&
 name|CI
 argument_list|)
 block|;
-name|private
-operator|:
 name|ExternalSemaSource
 operator|&
 name|getFinalReader
@@ -118,6 +116,8 @@ operator|*
 name|FinalReader
 return|;
 block|}
+name|private
+operator|:
 name|std
 operator|::
 name|vector
@@ -175,7 +175,7 @@ argument|uint64_t Offset
 argument_list|)
 block|;
 name|virtual
-name|DeclContextLookupResult
+name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
 argument|const DeclContext *DC

@@ -86,13 +86,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_INTERVAL_PARTITION_H
+name|LLVM_ANALYSIS_INTERVALPARTITION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_INTERVAL_PARTITION_H
+name|LLVM_ANALYSIS_INTERVALPARTITION_H
 end_define
 
 begin_include

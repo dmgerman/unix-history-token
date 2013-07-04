@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Option.h"
+file|"Util.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Util.h"
+file|"clang/Driver/Option.h"
 end_include
 
 begin_include
@@ -152,7 +152,7 @@ comment|/// ArgList.
 name|unsigned
 name|Index
 decl_stmt|;
-comment|/// \brief Was this argument used to effect compilation?
+comment|/// \brief Was this argument used to affect compilation?
 comment|///
 comment|/// This is used for generating "argument unused" diagnostics.
 name|mutable
@@ -227,7 +227,6 @@ operator|~
 name|Arg
 argument_list|()
 expr_stmt|;
-specifier|const
 name|Option
 name|getOption
 argument_list|()

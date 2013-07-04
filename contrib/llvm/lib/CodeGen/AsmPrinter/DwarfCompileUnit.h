@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/DebugInfo.h"
 end_include
 
 begin_decl_stmt
@@ -95,6 +95,9 @@ name|llvm
 block|{
 name|class
 name|DwarfDebug
+decl_stmt|;
+name|class
+name|DwarfUnits
 decl_stmt|;
 name|class
 name|MachineLocation
@@ -106,6 +109,9 @@ name|class
 name|ConstantInt
 decl_stmt|;
 name|class
+name|ConstantFP
+decl_stmt|;
+name|class
 name|DbgVariable
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -114,10 +120,10 @@ comment|/// with a source file.
 name|class
 name|CompileUnit
 block|{
-comment|/// ID - File identifier for source.
+comment|/// UniqueID - a numeric ID unique among all CUs in the module
 comment|///
 name|unsigned
-name|ID
+name|UniqueID
 decl_stmt|;
 comment|/// Language - The DW_AT_language of the compile unit
 comment|///
@@ -138,9 +144,14 @@ name|AsmPrinter
 modifier|*
 name|Asm
 decl_stmt|;
+comment|// Holders for some common dwarf information.
 name|DwarfDebug
 modifier|*
 name|DD
+decl_stmt|;
+name|DwarfUnits
+modifier|*
+name|DU
 decl_stmt|;
 comment|/// IndexTyDie - An anonymous type for index type.  Owned by CUDie.
 name|DIE
@@ -172,6 +183,15 @@ name|DIEEntry
 operator|*
 operator|>
 name|MDNodeToDIEEntryMap
+expr_stmt|;
+comment|/// GlobalNames - A map of globally visible named entities for this unit.
+comment|///
+name|StringMap
+operator|<
+name|DIE
+operator|*
+operator|>
+name|GlobalNames
 expr_stmt|;
 comment|/// GlobalTypes - A map of globally visible types for this unit.
 comment|///
@@ -263,11 +283,22 @@ operator|*
 operator|>
 name|ContainingTypeMap
 expr_stmt|;
+comment|/// Offset of the CUDie from beginning of debug info section.
+name|unsigned
+name|DebugInfoOffset
+decl_stmt|;
+comment|/// getLowerBoundDefault - Return the default lower bound for an array. If the
+comment|/// DWARF version doesn't handle the language, return -1.
+name|int64_t
+name|getDefaultLowerBound
+argument_list|()
+specifier|const
+expr_stmt|;
 name|public
 label|:
 name|CompileUnit
 argument_list|(
-argument|unsigned I
+argument|unsigned UID
 argument_list|,
 argument|unsigned L
 argument_list|,
@@ -276,6 +307,8 @@ argument_list|,
 argument|AsmPrinter *A
 argument_list|,
 argument|DwarfDebug *DW
+argument_list|,
+argument|DwarfUnits *
 argument_list|)
 empty_stmt|;
 operator|~
@@ -284,12 +317,12 @@ argument_list|()
 expr_stmt|;
 comment|// Accessors.
 name|unsigned
-name|getID
+name|getUniqueID
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|UniqueID
 return|;
 block|}
 name|unsigned
@@ -312,6 +345,30 @@ name|CUDie
 operator|.
 name|get
 argument_list|()
+return|;
+block|}
+name|unsigned
+name|getDebugInfoOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DebugInfoOffset
+return|;
+block|}
+specifier|const
+name|StringMap
+operator|<
+name|DIE
+operator|*
+operator|>
+operator|&
+name|getGlobalNames
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GlobalNames
 return|;
 block|}
 specifier|const
@@ -416,6 +473,18 @@ return|return
 name|AccelTypes
 return|;
 block|}
+name|void
+name|setDebugInfoOffset
+parameter_list|(
+name|unsigned
+name|DbgInfoOff
+parameter_list|)
+block|{
+name|DebugInfoOffset
+operator|=
+name|DbgInfoOff
+expr_stmt|;
+block|}
 comment|/// hasContent - Return true if this compile unit has something to write out.
 comment|///
 name|bool
@@ -433,6 +502,27 @@ operator|.
 name|empty
 argument_list|()
 return|;
+block|}
+comment|/// addGlobalName - Add a new global entity to the compile unit.
+comment|///
+name|void
+name|addGlobalName
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|DIE
+modifier|*
+name|Die
+parameter_list|)
+block|{
+name|GlobalNames
+index|[
+name|Name
+index|]
+operator|=
+name|Die
+expr_stmt|;
 block|}
 comment|/// addGlobalType - Add a new global type to the compile unit.
 comment|///
@@ -782,8 +872,6 @@ operator|=
 name|D
 expr_stmt|;
 block|}
-name|public
-label|:
 comment|/// addFlag - Add a flag that is true to the DIE.
 name|void
 name|addFlag
@@ -851,6 +939,23 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
+comment|/// addLocalString - Add a string attribute data and value.
+comment|///
+name|void
+name|addLocalString
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
 comment|/// addLabel - Add a Dwarf label attribute data and value.
 comment|///
 name|void
@@ -867,6 +972,39 @@ name|unsigned
 name|Form
 parameter_list|,
 specifier|const
+name|MCSymbol
+modifier|*
+name|Label
+parameter_list|)
+function_decl|;
+comment|/// addLabelAddress - Add a dwarf label attribute data and value using
+comment|/// either DW_FORM_addr or DW_FORM_GNU_addr_index.
+comment|///
+name|void
+name|addLabelAddress
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|Label
+parameter_list|)
+function_decl|;
+comment|/// addOpAddress - Add a dwarf op address data and value using the
+comment|/// form given and an op of either DW_FORM_addr or DW_FORM_GNU_addr_index.
+comment|///
+name|void
+name|addOpAddress
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
 name|MCSymbol
 modifier|*
 name|Label
@@ -1057,6 +1195,22 @@ name|bool
 name|Unsigned
 parameter_list|)
 function_decl|;
+name|bool
+name|addConstantValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|Val
+parameter_list|,
+name|bool
+name|Unsigned
+parameter_list|)
+function_decl|;
 comment|/// addConstantFPValue - Add constant value entry in variable DIE.
 name|bool
 name|addConstantFPValue
@@ -1069,6 +1223,19 @@ specifier|const
 name|MachineOperand
 modifier|&
 name|MO
+parameter_list|)
+function_decl|;
+name|bool
+name|addConstantFPValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|ConstantFP
+modifier|*
+name|CFP
 parameter_list|)
 function_decl|;
 comment|/// addTemplateParams - Add template parameters in buffer.
@@ -1393,6 +1560,24 @@ name|createMemberDIE
 parameter_list|(
 name|DIDerivedType
 name|DT
+parameter_list|)
+function_decl|;
+comment|/// createStaticMemberDIE - Create new static data member DIE.
+name|DIE
+modifier|*
+name|createStaticMemberDIE
+parameter_list|(
+name|DIDerivedType
+name|DT
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateContextDIE - Get context owner's DIE.
+name|DIE
+modifier|*
+name|getOrCreateContextDIE
+parameter_list|(
+name|DIDescriptor
+name|Context
 parameter_list|)
 function_decl|;
 name|private

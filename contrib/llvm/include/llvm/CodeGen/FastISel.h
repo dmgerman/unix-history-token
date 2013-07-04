@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_decl_stmt
@@ -275,6 +275,13 @@ return|return
 name|DL
 return|;
 block|}
+comment|/// LowerArguments - Do "fast" instruction selection for function arguments
+comment|/// and append machine instructions to the current block. Return true if
+comment|/// it is successful.
+name|bool
+name|LowerArguments
+parameter_list|()
+function_decl|;
 comment|/// SelectInstruction - Do "fast" instruction selection for the given
 comment|/// LLVM IR instruction, and append generated machine instructions to
 comment|/// the current block. Return true if selection was successful.
@@ -347,13 +354,41 @@ operator|*
 name|V
 argument_list|)
 expr_stmt|;
-comment|/// TryToFoldLoad - The specified machine instr operand is a vreg, and that
+comment|/// \brief We're checking to see if we can fold \p LI into \p FoldInst.
+comment|/// Note that we could have a sequence where multiple LLVM IR instructions
+comment|/// are folded into the same machineinstr.  For example we could have:
+comment|///   A: x = load i32 *P
+comment|///   B: y = icmp A, 42
+comment|///   C: br y, ...
+comment|///
+comment|/// In this scenario, \p LI is "A", and \p FoldInst is "C".  We know
+comment|/// about "B" (and any other folded instructions) because it is between
+comment|/// A and C.
+comment|///
+comment|/// If we succeed folding, return true.
+comment|///
+name|bool
+name|tryToFoldLoad
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|FoldInst
+parameter_list|)
+function_decl|;
+comment|/// \brief The specified machine instr operand is a vreg, and that
 comment|/// vreg is being provided by the specified load instruction.  If possible,
 comment|/// try to fold the load as an operand to the instruction, returning true if
 comment|/// possible.
+comment|/// This method should be implemented by targets.
 name|virtual
 name|bool
-name|TryToFoldLoad
+name|tryToFoldLoadIntoMI
 parameter_list|(
 name|MachineInstr
 modifier|*
@@ -378,6 +413,21 @@ name|void
 name|recomputeInsertPt
 parameter_list|()
 function_decl|;
+comment|/// removeDeadCode - Remove all dead instructions between the I and E.
+name|void
+name|removeDeadCode
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|E
+argument_list|)
+decl_stmt|;
 struct|struct
 name|SavePoint
 block|{
@@ -441,6 +491,14 @@ name|I
 parameter_list|)
 init|=
 literal|0
+function_decl|;
+comment|/// FastLowerArguments - This method is called by target-independent code to
+comment|/// do target specific argument lowering. It returns true if it was
+comment|/// successful.
+name|virtual
+name|bool
+name|FastLowerArguments
+parameter_list|()
 function_decl|;
 comment|/// FastEmit_r - This method is called by target-independent code
 comment|/// to request that an instruction with the given type and opcode
@@ -1188,21 +1246,6 @@ operator|*
 name|V
 argument_list|)
 decl|const
-decl_stmt|;
-comment|/// removeDeadCode - Remove all dead instructions between the I and E.
-name|void
-name|removeDeadCode
-argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|E
-argument_list|)
 decl_stmt|;
 block|}
 empty_stmt|;

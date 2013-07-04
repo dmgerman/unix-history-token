@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ilist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -75,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<llvm/ADT/ilist.h>
 end_include
 
 begin_decl_stmt

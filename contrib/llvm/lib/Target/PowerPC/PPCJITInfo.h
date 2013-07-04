@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetJITInfo.h"
+file|"llvm/CodeGen/JITCodeEmitter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/JITCodeEmitter.h"
+file|"llvm/Target/TargetJITInfo.h"
 end_include
 
 begin_decl_stmt

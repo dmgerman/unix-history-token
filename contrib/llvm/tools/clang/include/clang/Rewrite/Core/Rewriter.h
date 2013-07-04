@@ -193,12 +193,17 @@ name|size
 argument_list|()
 return|;
 block|}
+comment|/// \brief Write to \p Stream the result of applying all changes to the
+comment|/// original buffer.
+comment|///
+comment|/// The original buffer is not actually changed.
 name|raw_ostream
 modifier|&
 name|write
 argument_list|(
 name|raw_ostream
 operator|&
+name|Stream
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1012,7 +1017,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// SaveFiles - Save all changed files to disk.
+comment|/// overwriteChangedFiles - Save all changed files to disk.
 comment|///
 comment|/// Returns whether not all changes were saved successfully.
 comment|/// Outputs diagnostics via the source manager's diagnostic engine

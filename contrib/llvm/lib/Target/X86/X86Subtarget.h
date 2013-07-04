@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
@@ -272,6 +272,22 @@ comment|/// HasRTM - Processor has RTM instructions.
 name|bool
 name|HasRTM
 block|;
+comment|/// HasHLE - Processor has HLE.
+name|bool
+name|HasHLE
+block|;
+comment|/// HasADX - Processor has ADX instructions.
+name|bool
+name|HasADX
+block|;
+comment|/// HasPRFCHW - Processor has PRFCHW instructions.
+name|bool
+name|HasPRFCHW
+block|;
+comment|/// HasRDSEED - Processor has RDSEED instructions.
+name|bool
+name|HasRDSEED
+block|;
 comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
@@ -304,6 +320,21 @@ comment|/// PostRAScheduler - True if using post-register-allocation scheduler.
 name|bool
 name|PostRAScheduler
 block|;
+comment|/// PadShortFunctions - True if the short functions should be padded to prevent
+comment|/// a stall when returning too early.
+name|bool
+name|PadShortFunctions
+block|;
+comment|/// CallRegIndirect - True if the Calls with memory reference should be converted
+comment|/// to a register-based indirect call.
+name|bool
+name|CallRegIndirect
+block|;
+comment|/// LEAUsesAG - True if the LEA instruction inputs have to be ready at
+comment|///             address generation (AG) time.
+name|bool
+name|LEAUsesAG
+block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -324,6 +355,10 @@ name|InstrItins
 block|;
 name|private
 operator|:
+comment|/// StackAlignOverride - Override the stack alignment.
+name|unsigned
+name|StackAlignOverride
+block|;
 comment|/// In64BitMode - True if compiling for 64-bit, false for 32-bit.
 name|bool
 name|In64BitMode
@@ -385,6 +420,34 @@ name|void
 name|AutoDetectSubtargetFeatures
 argument_list|()
 block|;
+comment|/// \brief Reset the features for the X86 target.
+name|virtual
+name|void
+name|resetSubtargetFeatures
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|initializeEnvironment
+argument_list|()
+block|;
+name|void
+name|resetSubtargetFeatures
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
+name|public
+operator|:
+comment|/// Is this x86_64? (disregarding specific ABI / programming model)
 name|bool
 name|is64Bit
 argument_list|()
@@ -392,6 +455,48 @@ specifier|const
 block|{
 return|return
 name|In64BitMode
+return|;
+block|}
+comment|/// Is this x86_64 with the ILP32 programming model (x32 ABI)?
+name|bool
+name|isTarget64BitILP32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|In64BitMode
+operator|&&
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|GNUX32
+operator|)
+return|;
+block|}
+comment|/// Is this x86_64 with the LP64 programming model (standard AMD64, no x32)?
+name|bool
+name|isTarget64BitLP64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|In64BitMode
+operator|&&
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|!=
+name|Triple
+operator|::
+name|GNUX32
+operator|)
 return|;
 block|}
 name|PICStyles
@@ -521,6 +626,26 @@ return|return
 name|X86SSELevel
 operator|>=
 name|AVX2
+return|;
+block|}
+name|bool
+name|hasFp256
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAVX
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasInt256
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAVX2
+argument_list|()
 return|;
 block|}
 name|bool
@@ -685,6 +810,42 @@ name|HasRTM
 return|;
 block|}
 name|bool
+name|hasHLE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasHLE
+return|;
+block|}
+name|bool
+name|hasADX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasADX
+return|;
+block|}
+name|bool
+name|hasPRFCHW
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPRFCHW
+return|;
+block|}
+name|bool
+name|hasRDSEED
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRDSEED
+return|;
+block|}
+name|bool
 name|isBTMemSlow
 argument_list|()
 specifier|const
@@ -736,6 +897,33 @@ specifier|const
 block|{
 return|return
 name|HasSlowDivide
+return|;
+block|}
+name|bool
+name|padShortFunctions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PadShortFunctions
+return|;
+block|}
+name|bool
+name|callRegIndirect
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallRegIndirect
+return|;
+block|}
+name|bool
+name|LEAusesAG
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LEAUsesAG
 return|;
 block|}
 name|bool
@@ -856,7 +1044,7 @@ argument_list|()
 operator|==
 name|Triple
 operator|::
-name|NativeClient
+name|NaCl
 return|;
 block|}
 name|bool
@@ -1140,6 +1328,13 @@ specifier|const
 name|char
 operator|*
 name|getBZeroEntry
+argument_list|()
+specifier|const
+block|;
+comment|/// This function returns true if the target has sincos() routine in its
+comment|/// compiler runtime or math libraries.
+name|bool
+name|hasSinCos
 argument_list|()
 specifier|const
 block|;

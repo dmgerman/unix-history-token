@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Rewrite/Core/Rewriter.h"
+file|"clang/Edit/EditedSource.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Edit/EditedSource.h"
+file|"clang/Rewrite/Core/Rewriter.h"
 end_include
 
 begin_decl_stmt
@@ -374,16 +374,6 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
-name|DiagnosticConsumer
-modifier|*
-name|clone
-argument_list|(
-name|DiagnosticsEngine
-operator|&
-name|Diags
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 end_decl_stmt
 

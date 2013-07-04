@@ -228,17 +228,6 @@ name|Diags
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
-name|DiagnosticConsumer
-modifier|*
-name|clone
-argument_list|(
-name|DiagnosticsEngine
-operator|&
-name|Diags
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 end_decl_stmt
 

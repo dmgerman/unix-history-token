@@ -102,35 +102,20 @@ operator|:
 name|explicit
 name|MipsFrameLowering
 argument_list|(
-specifier|const
-name|MipsSubtarget
-operator|&
-name|sti
+argument|const MipsSubtarget&sti
+argument_list|,
+argument|unsigned Alignment
 argument_list|)
 operator|:
 name|TargetFrameLowering
 argument_list|(
 name|StackGrowsDown
 argument_list|,
-name|sti
-operator|.
-name|hasMips64
-argument_list|()
-condition|?
-literal|16
-else|:
-literal|8
+name|Alignment
 argument_list|,
 literal|0
 argument_list|,
-name|sti
-operator|.
-name|hasMips64
-argument_list|()
-condition|?
-literal|16
-else|:
-literal|8
+name|Alignment
 argument_list|)
 block|,
 name|STI
@@ -171,7 +156,7 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
-comment|/// Create MipsInstrInfo objects.
+comment|/// Create MipsFrameLowering objects.
 specifier|const
 name|MipsFrameLowering
 modifier|*

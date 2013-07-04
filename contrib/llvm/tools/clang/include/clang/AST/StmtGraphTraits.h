@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/GraphTraits.h"
+file|"llvm/ADT/DepthFirstIterator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DepthFirstIterator.h"
+file|"llvm/ADT/GraphTraits.h"
 end_include
 
 begin_decl_stmt

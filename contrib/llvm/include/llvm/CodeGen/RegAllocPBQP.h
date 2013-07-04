@@ -116,6 +116,17 @@ decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|class
+name|OwningPtr
+expr_stmt|;
 comment|/// This class wraps up a PBQP instance representing a register allocation
 comment|/// problem, plus the structures necessary to map back from the PBQP solution
 comment|/// to a register allocation solution. (i.e. The PBQP-node<--> vreg map,
@@ -456,12 +467,8 @@ block|{}
 comment|/// Build a PBQP instance to represent the register allocation problem for
 comment|/// the given MachineFunction.
 name|virtual
-name|std
-operator|::
-name|auto_ptr
-operator|<
 name|PBQPRAProblem
-operator|>
+operator|*
 name|build
 argument_list|(
 name|MachineFunction
@@ -544,12 +551,8 @@ operator|:
 comment|/// Build a PBQP instance to represent the register allocation problem for
 comment|/// the given MachineFunction.
 name|virtual
-name|std
-operator|::
-name|auto_ptr
-operator|<
 name|PBQPRAProblem
-operator|>
+operator|*
 name|build
 argument_list|(
 name|MachineFunction
@@ -601,12 +604,11 @@ name|FunctionPass
 modifier|*
 name|createPBQPRegisterAllocator
 argument_list|(
-name|std
-operator|::
-name|auto_ptr
+name|OwningPtr
 operator|<
 name|PBQPBuilder
 operator|>
+operator|&
 name|builder
 argument_list|,
 name|char

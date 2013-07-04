@@ -67,6 +67,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|IdentifierInfo
+decl_stmt|;
 comment|/// \brief Abstract interface for external sources of preprocessor
 comment|/// information.
 comment|///

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_RUNTIME_DYLD_H
+name|LLVM_EXECUTIONENGINE_RUNTIMEDYLD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_RUNTIME_DYLD_H
+name|LLVM_EXECUTIONENGINE_RUNTIMEDYLD_H
 end_define
 
 begin_include
@@ -122,10 +122,10 @@ operator|~
 name|RTDyldMemoryManager
 argument_list|()
 expr_stmt|;
-comment|/// allocateCodeSection - Allocate a memory block of (at least) the given
-comment|/// size suitable for executable code. The SectionID is a unique identifier
-comment|/// assigned by the JIT engine, and optionally recorded by the memory manager
-comment|/// to access a loaded section.
+comment|/// Allocate a memory block of (at least) the given size suitable for
+comment|/// executable code. The SectionID is a unique identifier assigned by the JIT
+comment|/// engine, and optionally recorded by the memory manager to access a loaded
+comment|/// section.
 name|virtual
 name|uint8_t
 modifier|*
@@ -143,10 +143,9 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// allocateDataSection - Allocate a memory block of (at least) the given
-comment|/// size suitable for data. The SectionID is a unique identifier
-comment|/// assigned by the JIT engine, and optionally recorded by the memory manager
-comment|/// to access a loaded section.
+comment|/// Allocate a memory block of (at least) the given size suitable for data.
+comment|/// The SectionID is a unique identifier assigned by the JIT engine, and
+comment|/// optionally recorded by the memory manager to access a loaded section.
 name|virtual
 name|uint8_t
 modifier|*
@@ -160,13 +159,15 @@ name|Alignment
 parameter_list|,
 name|unsigned
 name|SectionID
+parameter_list|,
+name|bool
+name|IsReadOnly
 parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// getPointerToNamedFunction - This method returns the address of the
-comment|/// specified function. As such it is only useful for resolving library
-comment|/// symbols, not code generated symbols.
+comment|/// This method returns the address of the specified function. As such it is
+comment|/// only useful for resolving library symbols, not code generated symbols.
 comment|///
 comment|/// If AbortOnFailure is false and no function with the given name is
 comment|/// found, this function returns a null pointer. Otherwise, it prints a
@@ -191,6 +192,39 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// This method is called when object loading is complete and section page
+comment|/// permissions can be applied.  It is up to the memory manager implementation
+comment|/// to decide whether or not to act on this method.  The memory manager will
+comment|/// typically allocate all sections as read-write and then apply specific
+comment|/// permissions when this method is called.
+comment|///
+comment|/// Returns true if an error occurred, false otherwise.
+name|virtual
+name|bool
+name|applyPermissions
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+operator|=
+literal|0
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// Register the EH frames with the runtime so that c++ exceptions work. The
+comment|/// default implementation does nothing. Look at SectionMemoryManager for one
+comment|/// that uses __register_frame.
+name|virtual
+name|void
+name|registerEHFrames
+parameter_list|(
+name|StringRef
+name|SectionData
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -248,10 +282,10 @@ operator|~
 name|RuntimeDyld
 argument_list|()
 expr_stmt|;
-comment|/// loadObject - prepare the object contained in the input buffer for
-comment|/// execution.  Ownership of the input buffer is transferred to the
-comment|/// ObjectImage instance returned from this function if successful.
-comment|/// In the case of load failure, the input buffer will be deleted.
+comment|/// Prepare the object contained in the input buffer for execution.
+comment|/// Ownership of the input buffer is transferred to the ObjectImage
+comment|/// instance returned from this function if successful. In the case of load
+comment|/// failure, the input buffer will be deleted.
 name|ObjectImage
 modifier|*
 name|loadObject
@@ -286,7 +320,7 @@ name|void
 name|resolveRelocations
 parameter_list|()
 function_decl|;
-comment|/// mapSectionAddress - map a section to its target address space value.
+comment|/// Map a section to its target address space value.
 comment|/// Map the address of a JIT section as returned from the memory manager
 comment|/// to the address in the target process as the running code will see it.
 comment|/// This is the address which will be used for relocation resolution.
@@ -304,6 +338,10 @@ parameter_list|)
 function_decl|;
 name|StringRef
 name|getErrorString
+parameter_list|()
+function_decl|;
+name|StringRef
+name|getEHFrameSection
 parameter_list|()
 function_decl|;
 block|}

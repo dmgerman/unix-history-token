@@ -737,6 +737,11 @@ name|TransformActions
 modifier|&
 name|TA
 decl_stmt|;
+specifier|const
+name|CapturedDiagList
+modifier|&
+name|CapturedDiags
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -746,8 +751,6 @@ operator|>
 operator|&
 name|ARCMTMacroLocs
 expr_stmt|;
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -763,6 +766,8 @@ argument_list|,
 argument|Sema&sema
 argument_list|,
 argument|TransformActions&TA
+argument_list|,
+argument|const CapturedDiagList&capturedDiags
 argument_list|,
 argument|std::vector<SourceLocation>&ARCMTMacroLocs
 argument_list|)
@@ -790,11 +795,27 @@ argument_list|(
 name|TA
 argument_list|)
 operator|,
+name|CapturedDiags
+argument_list|(
+name|capturedDiags
+argument_list|)
+operator|,
 name|ARCMTMacroLocs
 argument_list|(
 argument|ARCMTMacroLocs
 argument_list|)
 block|{ }
+specifier|const
+name|CapturedDiagList
+operator|&
+name|getDiags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CapturedDiags
+return|;
+block|}
 name|bool
 name|isGCMigration
 argument_list|()

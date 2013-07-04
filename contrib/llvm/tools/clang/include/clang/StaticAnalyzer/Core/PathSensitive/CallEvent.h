@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/DeclCXX.h"
 end_include
 
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Analysis/AnalysisContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceManager.h"
 end_include
 
 begin_include
@@ -645,19 +645,17 @@ block|}
 typedef|typedef
 name|SmallVectorImpl
 operator|<
-specifier|const
-name|MemRegion
-operator|*
+name|SVal
 operator|>
-name|RegionList
+name|ValueList
 expr_stmt|;
 comment|/// \brief Used to specify non-argument regions that will be invalidated as a
 comment|/// result of this call.
 name|virtual
 name|void
-name|getExtraInvalidatedRegions
+name|getExtraInvalidatedValues
 argument_list|(
-argument|RegionList&Regions
+argument|ValueList&Values
 argument_list|)
 specifier|const
 block|{}
@@ -701,7 +699,9 @@ operator|)
 return|;
 block|}
 comment|/// \brief The state in which the call is being evaluated.
+specifier|const
 name|ProgramStateRef
+operator|&
 name|getState
 argument_list|()
 specifier|const
@@ -867,6 +867,17 @@ operator|->
 name|isGlobal
 argument_list|()
 return|;
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Returns true if this is a call to a variadic function or method.
+name|virtual
+name|bool
+name|isVariadic
+argument_list|()
+specifier|const
+block|{
 return|return
 name|false
 return|;
@@ -1213,7 +1224,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief Returns the result type of a function, method declaration.
+comment|/// \brief Returns the result type of a function or method declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This will return a null QualType if the result type cannot be determined.
 end_comment
 
 begin_function_decl
@@ -1620,6 +1639,20 @@ return|;
 block|}
 name|virtual
 name|bool
+name|isVariadic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDecl
+argument_list|()
+operator|->
+name|isVariadic
+argument_list|()
+return|;
+block|}
+name|virtual
+name|bool
 name|argumentsMayEscape
 argument_list|()
 specifier|const
@@ -1961,9 +1994,9 @@ argument_list|)
 block|; }
 name|virtual
 name|void
-name|getExtraInvalidatedRegions
+name|getExtraInvalidatedValues
 argument_list|(
-argument|RegionList&Regions
+argument|ValueList&Values
 argument_list|)
 specifier|const
 block|;
@@ -2028,6 +2061,20 @@ argument_list|)
 return|;
 block|}
 name|virtual
+name|bool
+name|isVariadic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getBlockDecl
+argument_list|()
+operator|->
+name|isVariadic
+argument_list|()
+return|;
+block|}
+name|virtual
 name|void
 name|getInitialStackFrameContents
 argument_list|(
@@ -2089,9 +2136,9 @@ name|protected
 operator|:
 name|virtual
 name|void
-name|getExtraInvalidatedRegions
+name|getExtraInvalidatedValues
 argument_list|(
-argument|RegionList&Regions
+argument|ValueList&Values
 argument_list|)
 specifier|const
 block|;
@@ -2824,9 +2871,9 @@ argument_list|)
 block|; }
 name|virtual
 name|void
-name|getExtraInvalidatedRegions
+name|getExtraInvalidatedValues
 argument_list|(
-argument|RegionList&Regions
+argument|ValueList&Values
 argument_list|)
 specifier|const
 block|;
@@ -3217,9 +3264,9 @@ argument_list|)
 block|; }
 name|virtual
 name|void
-name|getExtraInvalidatedRegions
+name|getExtraInvalidatedValues
 argument_list|(
-argument|RegionList&Regions
+argument|ValueList&Values
 argument_list|)
 specifier|const
 block|;
@@ -3305,6 +3352,20 @@ name|getArg
 argument_list|(
 name|Index
 argument_list|)
+return|;
+block|}
+name|virtual
+name|bool
+name|isVariadic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDecl
+argument_list|()
+operator|->
+name|isVariadic
+argument_list|()
 return|;
 block|}
 name|bool
@@ -4127,7 +4188,7 @@ specifier|static
 name|SimpleType
 name|getSimplifiedValue
 argument_list|(
-argument|const clang::ento::CallEventRef<T>& Val
+argument|clang::ento::CallEventRef<T> Val
 argument_list|)
 block|{
 return|return

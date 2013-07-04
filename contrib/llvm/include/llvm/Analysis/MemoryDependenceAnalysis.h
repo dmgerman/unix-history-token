@@ -50,49 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_MEMORY_DEPENDENCE_H
+name|LLVM_ANALYSIS_MEMORYDEPENDENCEANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_MEMORY_DEPENDENCE_H
+name|LLVM_ANALYSIS_MEMORYDEPENDENCEANALYSIS_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/AliasAnalysis.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -105,6 +75,36 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/BasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -1591,7 +1591,15 @@ comment|/// with read-only operations.  If isLoad is false, this routine ignores
 end_comment
 
 begin_comment
-comment|/// may-aliases with reads from read-only locations.
+comment|/// may-aliases with reads from read-only locations. If possible, pass
+end_comment
+
+begin_comment
+comment|/// the query instruction as well; this function may take advantage of
+end_comment
+
+begin_comment
+comment|/// the metadata annotated to the query instruction to refine the result.
 end_comment
 
 begin_comment
@@ -1628,6 +1636,12 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|BB
+argument_list|,
+name|Instruction
+operator|*
+name|QueryInst
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt

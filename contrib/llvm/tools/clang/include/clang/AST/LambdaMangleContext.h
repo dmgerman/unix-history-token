@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_decl_stmt
@@ -83,6 +95,12 @@ comment|/// \brief Keeps track of the mangled names of lambda expressions within
 comment|/// particular context.
 name|class
 name|LambdaMangleContext
+range|:
+name|public
+name|RefCountedBase
+operator|<
+name|LambdaMangleContext
+operator|>
 block|{
 name|llvm
 operator|::
@@ -91,25 +109,24 @@ operator|<
 specifier|const
 name|FunctionProtoType
 operator|*
-operator|,
+block|,
 name|unsigned
 operator|>
 name|ManglingNumbers
-expr_stmt|;
+block|;
 name|public
-label|:
+operator|:
 comment|/// \brief Retrieve the mangling number of a new lambda expression with the
 comment|/// given call operator within this lambda context.
 name|unsigned
 name|getManglingNumber
-parameter_list|(
+argument_list|(
 name|CXXMethodDecl
-modifier|*
+operator|*
 name|CallOperator
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

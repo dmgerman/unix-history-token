@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CommandFlags.h - Register Coalescing Interface ----------*- C++ -*-===//
+comment|//===-- CommandFlags.h - Command Line Flags Interface -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -58,25 +58,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_COMMAND_LINE_FLAGS_H
+name|LLVM_CODEGEN_COMMANDFLAGS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_COMMAND_LINE_FLAGS_H
+name|LLVM_CODEGEN_COMMANDFLAGS_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CodeGen.h"
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_include

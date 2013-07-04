@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"clang/Basic/Diagnostic.h"
 end_include
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -129,9 +135,12 @@ block|,
 name|unknown_command
 block|,
 comment|// Command that does not have an ID.
-name|command
+name|backslash_command
 block|,
-comment|// Command with an ID.
+comment|// Command with an ID, that used backslash marker.
+name|at_command
+block|,
+comment|// Command with an ID, that used 'at' marker.
 name|verbatim_block_begin
 block|,
 name|verbatim_block_line
@@ -469,7 +478,14 @@ name|is
 argument_list|(
 name|tok
 operator|::
-name|command
+name|backslash_command
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|tok
+operator|::
+name|at_command
 argument_list|)
 argument_list|)
 block|;
@@ -490,7 +506,14 @@ name|is
 argument_list|(
 name|tok
 operator|::
-name|command
+name|backslash_command
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|tok
+operator|::
+name|at_command
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -986,6 +1009,10 @@ name|BumpPtrAllocator
 operator|&
 name|Allocator
 expr_stmt|;
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+decl_stmt|;
 specifier|const
 name|CommandTraits
 modifier|&
@@ -1253,6 +1280,27 @@ name|CharNo
 argument_list|)
 return|;
 block|}
+name|DiagnosticBuilder
+name|Diag
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|unsigned
+name|DiagID
+parameter_list|)
+block|{
+return|return
+name|Diags
+operator|.
+name|Report
+argument_list|(
+name|Loc
+argument_list|,
+name|DiagID
+argument_list|)
+return|;
+block|}
 comment|/// Eat string matching regexp \code \s*\* \endcode.
 name|void
 name|skipLineStartingDecorations
@@ -1375,6 +1423,8 @@ label|:
 name|Lexer
 argument_list|(
 argument|llvm::BumpPtrAllocator&Allocator
+argument_list|,
+argument|DiagnosticsEngine&Diags
 argument_list|,
 argument|const CommandTraits&Traits
 argument_list|,

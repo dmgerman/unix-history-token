@@ -62,25 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"CGBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CGCall.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CGValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CodeGenFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CodeGenTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Module.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/TargetInfo.h"
 end_include
 
 begin_include
@@ -110,25 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CodeGenFunction.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CGBuilder.h"
+file|"clang/Basic/TargetInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CGCall.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CGValue.h"
+file|"llvm/IR/Module.h"
 end_include
 
 begin_decl_stmt
@@ -299,6 +299,8 @@ block|{
 name|uint32_t
 name|flags
 decl_stmt|;
+name|public
+label|:
 name|BlockFlags
 argument_list|(
 argument|uint32_t flags
@@ -309,8 +311,6 @@ argument_list|(
 argument|flags
 argument_list|)
 block|{}
-name|public
-label|:
 name|BlockFlags
 argument_list|()
 operator|:
@@ -322,6 +322,16 @@ block|{}
 name|BlockFlags
 argument_list|(
 argument|BlockLiteralFlags flag
+argument_list|)
+operator|:
+name|flags
+argument_list|(
+argument|flag
+argument_list|)
+block|{}
+name|BlockFlags
+argument_list|(
+argument|BlockByrefFlags flag
 argument_list|)
 operator|:
 name|flags
@@ -417,6 +427,24 @@ name|l
 operator|.
 name|flags
 operator|&
+name|r
+operator|.
+name|flags
+operator|)
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+name|BlockFlags
+name|r
+operator|)
+block|{
+return|return
+operator|(
+name|flags
+operator|==
 name|r
 operator|.
 name|flags
@@ -675,11 +703,9 @@ block|{
 name|public
 label|:
 comment|/// Name - The name of the block, kindof.
-name|llvm
-operator|::
 name|StringRef
 name|Name
-expr_stmt|;
+decl_stmt|;
 comment|/// The field index of 'this' within the block, if there is one.
 name|unsigned
 name|CXXThisIndex
@@ -939,6 +965,17 @@ decl_stmt|;
 name|CharUnits
 name|BlockAlign
 decl_stmt|;
+comment|// Offset of the gap caused by block header having a smaller
+comment|// alignment than the alignment of the block descriptor. This
+comment|// is the gap offset before the first capturued field.
+name|CharUnits
+name|BlockHeaderForcedGapOffset
+decl_stmt|;
+comment|// Gap size caused by aligning first field after block header.
+comment|// This could be zero if no forced alignment is required.
+name|CharUnits
+name|BlockHeaderForcedGapSize
+decl_stmt|;
 comment|/// An instruction which dominates the full-expression that the
 comment|/// block is inside.
 name|llvm
@@ -1073,7 +1110,7 @@ name|CGBlockInfo
 argument_list|(
 argument|const BlockDecl *blockDecl
 argument_list|,
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 empty_stmt|;
 block|}

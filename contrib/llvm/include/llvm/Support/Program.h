@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_PROGRAM_H
+name|LLVM_SUPPORT_PROGRAM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_PROGRAM_H
+name|LLVM_SUPPORT_PROGRAM_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
 
 begin_include
 include|#
@@ -112,20 +118,12 @@ name|LLVM_DELETED_FUNCTION
 decl_stmt|;
 comment|/// @name Methods
 comment|/// @{
-name|public
-label|:
 name|Program
 argument_list|()
 expr_stmt|;
 operator|~
 name|Program
 argument_list|()
-expr_stmt|;
-comment|/// Return process ID of this program.
-name|unsigned
-name|GetPid
-argument_list|()
-specifier|const
 expr_stmt|;
 comment|/// This function executes the program using the \p arguments provided.  The
 comment|/// invoked program will inherit the stdin, stdout, and stderr file
@@ -241,26 +239,8 @@ comment|///< instance in which error messages will be returned. If the string
 comment|///< is non-empty upon return an error occurred while waiting.
 argument_list|)
 decl_stmt|;
-comment|/// This function terminates the program.
-comment|/// @returns true if an error occurred.
-comment|/// @see Execute
-comment|/// @brief Terminates the program.
-name|bool
-name|Kill
-argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
-comment|///< If non-zero, provides a pointer to a string
-comment|///< instance in which error messages will be returned. If the string
-comment|///< is non-empty upon return an error occurred while killing the
-comment|///< program.
-argument_list|)
-decl_stmt|;
+name|public
+label|:
 comment|/// This static constructor (factory) will attempt to locate a program in
 comment|/// the operating system's file system using some pre-determined set of
 comment|/// locations to search (e.g. the PATH on Unix). Paths with slashes are
@@ -351,6 +331,12 @@ operator|*
 name|ErrMsg
 operator|=
 literal|0
+argument_list|,
+name|bool
+operator|*
+name|ExecutionFailed
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// A convenience function equivalent to Program prg; prg.Execute(..);
@@ -405,6 +391,20 @@ decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;
+comment|// Return true if the given arguments fit within system-specific
+comment|// argument length limits.
+name|bool
+name|argumentsFitWithinSystemLimits
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|Args
+argument_list|)
+decl_stmt|;
 block|}
 block|}
 end_decl_stmt

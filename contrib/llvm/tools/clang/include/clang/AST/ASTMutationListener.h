@@ -70,15 +70,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Decl
-decl_stmt|;
-name|class
-name|DeclContext
-decl_stmt|;
-name|class
-name|TagDecl
-decl_stmt|;
-name|class
 name|CXXRecordDecl
 decl_stmt|;
 name|class
@@ -86,6 +77,12 @@ name|ClassTemplateDecl
 decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
+decl_stmt|;
+name|class
+name|Decl
+decl_stmt|;
+name|class
+name|DeclContext
 decl_stmt|;
 name|class
 name|FunctionDecl
@@ -97,13 +94,19 @@ name|class
 name|ObjCCategoryDecl
 decl_stmt|;
 name|class
-name|ObjCInterfaceDecl
-decl_stmt|;
-name|class
 name|ObjCContainerDecl
 decl_stmt|;
 name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
 name|ObjCPropertyDecl
+decl_stmt|;
+name|class
+name|TagDecl
+decl_stmt|;
+name|class
+name|VarDecl
 decl_stmt|;
 comment|/// \brief An abstract interface that should be implemented by listeners
 comment|/// that want to be notified when an AST entity gets modified after its

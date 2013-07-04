@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_decl_stmt
@@ -119,6 +119,20 @@ name|TargetFrameLowering
 operator|::
 name|StackGrowsDown
 argument_list|,
+operator|(
+name|sti
+operator|.
+name|hasQPX
+argument_list|()
+operator|||
+name|sti
+operator|.
+name|isBGQ
+argument_list|()
+operator|)
+condition|?
+literal|32
+else|:
 literal|16
 argument_list|,
 literal|0
@@ -129,10 +143,14 @@ argument_list|(
 argument|sti
 argument_list|)
 block|{   }
-name|void
+name|unsigned
 name|determineFrameLayout
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|bool UpdateMF = true
+argument_list|,
+argument|bool UseEstimate = false
 argument_list|)
 specifier|const
 block|;
@@ -169,6 +187,13 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|replaceFPWithRealFP
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
@@ -181,6 +206,17 @@ name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|RegScavenger *RS = NULL
+argument_list|)
+specifier|const
+block|;
+name|void
+name|addScavengingSpillSlot
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|RegScavenger *RS
 argument_list|)
 specifier|const
 block|;
@@ -194,6 +230,17 @@ argument_list|,
 argument|const std::vector<CalleeSavedInfo>&CSI
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;
@@ -239,9 +286,9 @@ name|isDarwinABI
 condition|)
 return|return
 name|isPPC64
-operator|?
+condition|?
 literal|16
-operator|:
+else|:
 literal|8
 return|;
 comment|// SVR4 ABI:
@@ -493,6 +540,8 @@ return|return
 literal|0
 return|;
 block|}
+comment|// Note that the offsets here overlap, but this is fixed up in
+comment|// processFunctionBeforeFrameFinalized.
 specifier|static
 specifier|const
 name|SpillSlot

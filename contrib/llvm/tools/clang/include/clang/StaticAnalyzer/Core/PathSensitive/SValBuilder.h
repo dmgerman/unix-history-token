@@ -78,19 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ExprCXX.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/ExprObjC.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_include
@@ -103,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/MemRegion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_decl_stmt
@@ -321,12 +315,12 @@ operator|||
 operator|(
 name|Ty1
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 operator|&&
 name|Ty2
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 operator|)
 operator|)
@@ -552,8 +546,18 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getContext
+name|Context
+operator|.
+name|getLangOpts
 argument_list|()
+operator|.
+name|CPlusPlus
+operator|?
+name|Context
+operator|.
+name|BoolTy
+operator|:
+name|Context
 operator|.
 name|IntTy
 return|;
@@ -889,6 +893,22 @@ modifier|*
 name|locContext
 parameter_list|)
 function_decl|;
+comment|/// Returns the value of \p E, if it can be determined in a non-path-sensitive
+comment|/// manner.
+comment|///
+comment|/// If \p E is not a constant or cannot be modeled, returns \c None.
+name|Optional
+operator|<
+name|SVal
+operator|>
+name|getConstantVal
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|)
+expr_stmt|;
 name|NonLoc
 name|makeCompoundVal
 argument_list|(

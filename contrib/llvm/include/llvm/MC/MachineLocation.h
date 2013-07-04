@@ -44,7 +44,7 @@ comment|// from a base address plus an offset.  Register indirection can be spec
 end_comment
 
 begin_comment
-comment|// using an offset of zero.
+comment|// explicitly passing an offset to the constructor.
 end_comment
 
 begin_comment
@@ -137,6 +137,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// Create a direct register location.
 name|explicit
 name|MachineLocation
 argument_list|(
@@ -158,6 +159,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// Create a register-indirect location with an offset.
 name|MachineLocation
 argument_list|(
 argument|unsigned R
@@ -212,6 +214,16 @@ name|Offset
 return|;
 block|}
 comment|// Accessors
+name|bool
+name|isIndirect
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|IsRegister
+return|;
+block|}
 name|bool
 name|isReg
 argument_list|()
@@ -275,6 +287,7 @@ operator|=
 name|O
 expr_stmt|;
 block|}
+comment|/// Make this location a direct register location.
 name|void
 name|set
 parameter_list|(
@@ -295,6 +308,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/// Make this location a register-indirect+offset location.
 name|void
 name|set
 parameter_list|(

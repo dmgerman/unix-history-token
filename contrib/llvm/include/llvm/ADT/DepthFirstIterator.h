@@ -144,13 +144,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include

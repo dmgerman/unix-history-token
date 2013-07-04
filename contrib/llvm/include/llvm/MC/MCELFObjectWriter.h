@@ -207,6 +207,14 @@ name|RE
 operator|)
 specifier|const
 block|{
+if|if
+condition|(
+name|RE
+operator|.
+name|r_offset
+operator|!=
+name|r_offset
+condition|)
 return|return
 name|RE
 operator|.
@@ -214,9 +222,53 @@ name|r_offset
 operator|<
 name|r_offset
 return|;
+if|if
+condition|(
+name|Type
+operator|!=
+name|RE
+operator|.
+name|Type
+condition|)
+return|return
+name|Type
+operator|<
+name|RE
+operator|.
+name|Type
+return|;
+if|if
+condition|(
+name|Index
+operator|!=
+name|RE
+operator|.
+name|Index
+condition|)
+return|return
+name|Index
+operator|<
+name|RE
+operator|.
+name|Index
+return|;
+name|llvm_unreachable
+argument_list|(
+literal|"ELFRelocs might be unstable!"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 block|}
-struct|;
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|MCELFObjectTargetWriter
 block|{
@@ -328,12 +380,6 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-expr_stmt|;
-name|virtual
-name|unsigned
-name|getEFlags
-argument_list|()
-specifier|const
 expr_stmt|;
 name|virtual
 specifier|const
@@ -715,12 +761,33 @@ operator|)
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Construct a new ELF writer instance.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param MOTW - The target specific ELF writer subclass.
+end_comment
+
+begin_comment
 comment|/// \param OS - The stream to write to.
+end_comment
+
+begin_comment
 comment|/// \returns The constructed object writer.
+end_comment
+
+begin_function_decl
 name|MCObjectWriter
 modifier|*
 name|createELFObjectWriter
@@ -737,10 +804,10 @@ name|bool
 name|IsLittleEndian
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

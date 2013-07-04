@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APSInt.h"
+file|"llvm/ADT/APFloat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APFloat.h"
+file|"llvm/ADT/APSInt.h"
 end_include
 
 begin_include

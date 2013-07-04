@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/TemplateKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/TokenKinds.h"
+file|"clang/Basic/OperatorKinds.h"
 end_include
 
 begin_include
@@ -80,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/OperatorKinds.h"
+file|"clang/Basic/TemplateKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TokenKinds.h"
 end_include
 
 begin_include
@@ -183,7 +183,12 @@ comment|// Empty macro exists before this token.
 name|HasUDSuffix
 init|=
 literal|0x20
+block|,
 comment|// This string or character literal has a ud-suffix.
+name|HasUCN
+init|=
+literal|0x40
+comment|// This identifier contains a UCN.
 block|}
 enum|;
 name|tok
@@ -934,6 +939,24 @@ operator|(
 name|Flags
 operator|&
 name|HasUDSuffix
+operator|)
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
+comment|/// Returns true if this token contains a universal character name.
+name|bool
+name|hasUCN
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|HasUCN
 operator|)
 operator|?
 name|true

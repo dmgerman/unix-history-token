@@ -347,7 +347,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// \brief Is this runtime basically of the GNUstep family of runtimes?
+comment|/// \brief Is this runtime basically of the GNU family of runtimes?
 name|bool
 name|isGNUFamily
 argument_list|()
@@ -579,6 +579,20 @@ argument_list|(
 literal|6
 argument_list|)
 operator|)
+return|;
+case|case
+name|GNUstep
+case|:
+return|return
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|1
+argument_list|,
+literal|7
+argument_list|)
 return|;
 default|default:
 return|return
@@ -942,6 +956,49 @@ argument_list|(
 literal|"bad kind"
 argument_list|)
 expr_stmt|;
+block|}
+name|bool
+name|hasAtomicCopyHelper
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|FragileMacOSX
+case|:
+case|case
+name|MacOSX
+case|:
+case|case
+name|iOS
+case|:
+return|return
+name|true
+return|;
+case|case
+name|GNUstep
+case|:
+return|return
+name|getVersion
+argument_list|()
+operator|>=
+name|VersionTuple
+argument_list|(
+literal|1
+argument_list|,
+literal|7
+argument_list|)
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
 block|}
 comment|/// \brief Try to parse an Objective-C runtime specification from the given
 comment|/// string.

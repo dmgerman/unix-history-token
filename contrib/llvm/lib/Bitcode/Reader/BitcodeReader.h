@@ -62,25 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/GVMaterializer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Attributes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/OperandTraits.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -98,13 +80,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/GVMaterializer.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/IR/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/OperandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -705,9 +705,20 @@ name|std
 operator|::
 name|vector
 operator|<
-name|AttrListPtr
+name|AttributeSet
 operator|>
 name|MAttributes
+block|;
+comment|/// \brief The set of attribute groups.
+name|std
+operator|::
+name|map
+operator|<
+name|unsigned
+block|,
+name|AttributeSet
+operator|>
+name|MAttributeGroups
 block|;
 comment|/// FunctionBBs - While parsing a function body, this is a list of the basic
 comment|/// blocks for the function.
@@ -1196,7 +1207,7 @@ name|ID
 index|]
 return|;
 block|}
-name|AttrListPtr
+name|AttributeSet
 name|getAttributes
 argument_list|(
 name|unsigned
@@ -1224,7 +1235,7 @@ literal|1
 index|]
 return|;
 return|return
-name|AttrListPtr
+name|AttributeSet
 argument_list|()
 return|;
 block|}
@@ -1615,6 +1626,10 @@ parameter_list|)
 function_decl|;
 name|bool
 name|ParseAttributeBlock
+parameter_list|()
+function_decl|;
+name|bool
+name|ParseAttributeGroupBlock
 parameter_list|()
 function_decl|;
 name|bool

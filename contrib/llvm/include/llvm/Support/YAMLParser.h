@@ -146,13 +146,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_YAML_PARSER_H
+name|LLVM_SUPPORT_YAMLPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_YAML_PARSER_H
+name|LLVM_SUPPORT_YAMLPARSER_H
 end_define
 
 begin_include
@@ -269,6 +269,7 @@ name|Stream
 block|{
 name|public
 label|:
+comment|/// @brief This keeps a reference to the string referenced by \p Input.
 name|Stream
 argument_list|(
 argument|StringRef Input
@@ -276,6 +277,17 @@ argument_list|,
 argument|SourceMgr&
 argument_list|)
 empty_stmt|;
+comment|/// @brief This takes ownership of \p InputBuffer.
+name|Stream
+argument_list|(
+name|MemoryBuffer
+operator|*
+name|InputBuffer
+argument_list|,
+name|SourceMgr
+operator|&
+argument_list|)
+expr_stmt|;
 operator|~
 name|Stream
 argument_list|()
@@ -672,8 +684,6 @@ name|Val
 operator|.
 name|end
 argument_list|()
-operator|-
-literal|1
 argument_list|)
 block|;
 name|SourceRange

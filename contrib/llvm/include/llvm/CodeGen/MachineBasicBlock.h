@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineInstr.h"
+file|"llvm/ADT/GraphTraits.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/GraphTraits.h"
+file|"llvm/CodeGen/MachineInstr.h"
 end_include
 
 begin_include
@@ -369,6 +369,13 @@ comment|/// target of an indirect branch.
 name|bool
 name|AddressTaken
 decl_stmt|;
+comment|/// \brief since getSymbol is a relatively heavy-weight operation, the symbol
+comment|/// is only computed once and is cached.
+name|mutable
+name|MCSymbol
+modifier|*
+name|CachedMCSymbol
+decl_stmt|;
 comment|// Intrusive list support
 name|MachineBasicBlock
 argument_list|()
@@ -531,7 +538,7 @@ argument_list|(
 operator|!
 name|mi
 operator|.
-name|isInsideBundle
+name|isBundledWithPred
 argument_list|()
 operator|&&
 literal|"It's not legal to initialize bundle_iterator with a bundled MI"
@@ -558,7 +565,7 @@ operator|||
 operator|!
 name|mi
 operator|->
-name|isInsideBundle
+name|isBundledWithPred
 argument_list|()
 operator|)
 operator|&&
@@ -696,7 +703,7 @@ do|while
 condition|(
 name|MII
 operator|->
-name|isInsideBundle
+name|isBundledWithPred
 argument_list|()
 condition|)
 do|;
@@ -716,33 +723,19 @@ operator|(
 operator|)
 block|{
 comment|// preincrement - Advance
-name|IterTy
-name|E
-operator|=
+while|while
+condition|(
 name|MII
 operator|->
-name|getParent
+name|isBundledWithSucc
 argument_list|()
-operator|->
-name|instr_end
-argument_list|()
-block|;
-do|do
+condition|)
 operator|++
 name|MII
 expr_stmt|;
-do|while
-condition|(
+operator|++
 name|MII
-operator|!=
-name|E
-operator|&&
-name|MII
-operator|->
-name|isInsideBundle
-argument_list|()
-condition|)
-do|;
+expr_stmt|;
 end_expr_stmt
 
 begin_return
@@ -2413,215 +2406,210 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|IT
-operator|>
-name|void
-name|insert
-argument_list|(
-argument|instr_iterator I
-argument_list|,
-argument|IT S
-argument_list|,
-argument|IT E
-argument_list|)
-block|{
-name|Insts
-operator|.
-name|insert
-argument_list|(
-name|I
-argument_list|,
-name|S
-argument_list|,
-name|E
-argument_list|)
-block|;   }
-name|instr_iterator
-name|insert
-argument_list|(
-argument|instr_iterator I
-argument_list|,
-argument|MachineInstr *M
-argument_list|)
-block|{
-return|return
-name|Insts
-operator|.
-name|insert
-argument_list|(
-name|I
-argument_list|,
-name|M
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|instr_iterator
-name|insertAfter
-parameter_list|(
-name|instr_iterator
-name|I
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|M
-parameter_list|)
-block|{
-return|return
-name|Insts
-operator|.
-name|insertAfter
-argument_list|(
-name|I
-argument_list|,
-name|M
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|IT
-operator|>
-name|void
-name|insert
-argument_list|(
-argument|iterator I
-argument_list|,
-argument|IT S
-argument_list|,
-argument|IT E
-argument_list|)
-block|{
-name|Insts
-operator|.
-name|insert
-argument_list|(
-name|I
-operator|.
-name|getInstrIterator
-argument_list|()
-argument_list|,
-name|S
-argument_list|,
-name|E
-argument_list|)
-block|;   }
-name|iterator
-name|insert
-argument_list|(
-argument|iterator I
-argument_list|,
-argument|MachineInstr *M
-argument_list|)
-block|{
-return|return
-name|Insts
-operator|.
-name|insert
-argument_list|(
-name|I
-operator|.
-name|getInstrIterator
-argument_list|()
-argument_list|,
-name|M
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|iterator
-name|insertAfter
-parameter_list|(
-name|iterator
-name|I
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|M
-parameter_list|)
-block|{
-return|return
-name|Insts
-operator|.
-name|insertAfter
-argument_list|(
-name|I
-operator|.
-name|getInstrIterator
-argument_list|()
-argument_list|,
-name|M
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_comment
-comment|/// erase - Remove the specified element or range from the instruction list.
-end_comment
-
-begin_comment
-comment|/// These functions delete any instructions removed.
+comment|/// Insert MI into the instruction list before I, possibly inside a bundle.
 end_comment
 
 begin_comment
 comment|///
 end_comment
 
-begin_function
+begin_comment
+comment|/// If the insertion point is inside a bundle, MI will be added to the bundle,
+end_comment
+
+begin_comment
+comment|/// otherwise MI will not be added to any bundle. That means this function
+end_comment
+
+begin_comment
+comment|/// alone can't be used to prepend or append instructions to bundles. See
+end_comment
+
+begin_comment
+comment|/// MIBundleBuilder::insert() for a more reliable way of doing that.
+end_comment
+
+begin_function_decl
 name|instr_iterator
-name|erase
+name|insert
 parameter_list|(
 name|instr_iterator
 name|I
+parameter_list|,
+name|MachineInstr
+modifier|*
+name|M
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Insert a range of instructions into the instruction list before I.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|IT
+operator|>
+name|void
+name|insert
+argument_list|(
+argument|iterator I
+argument_list|,
+argument|IT S
+argument_list|,
+argument|IT E
+argument_list|)
 block|{
+name|Insts
+operator|.
+name|insert
+argument_list|(
+name|I
+operator|.
+name|getInstrIterator
+argument_list|()
+argument_list|,
+name|S
+argument_list|,
+name|E
+argument_list|)
+block|;   }
+comment|/// Insert MI into the instruction list before I.
+name|iterator
+name|insert
+argument_list|(
+argument|iterator I
+argument_list|,
+argument|MachineInstr *MI
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|MI
+operator|->
+name|isBundledWithPred
+argument_list|()
+operator|&&
+operator|!
+name|MI
+operator|->
+name|isBundledWithSucc
+argument_list|()
+operator|&&
+literal|"Cannot insert instruction with bundle flags"
+argument_list|)
+block|;
 return|return
 name|Insts
 operator|.
-name|erase
+name|insert
 argument_list|(
 name|I
+operator|.
+name|getInstrIterator
+argument_list|()
+argument_list|,
+name|MI
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Insert MI into the instruction list after I.
+end_comment
+
+begin_function
+name|iterator
+name|insertAfter
+parameter_list|(
+name|iterator
+name|I
+parameter_list|,
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|MI
+operator|->
+name|isBundledWithPred
+argument_list|()
+operator|&&
+operator|!
+name|MI
+operator|->
+name|isBundledWithSucc
+argument_list|()
+operator|&&
+literal|"Cannot insert instruction with bundle flags"
+argument_list|)
+expr_stmt|;
+return|return
+name|Insts
+operator|.
+name|insertAfter
+argument_list|(
+name|I
+operator|.
+name|getInstrIterator
+argument_list|()
+argument_list|,
+name|MI
 argument_list|)
 return|;
 block|}
 end_function
 
-begin_function
+begin_comment
+comment|/// Remove an instruction from the instruction list and delete it.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the instruction is part of a bundle, the other instructions in the
+end_comment
+
+begin_comment
+comment|/// bundle will still be bundled after removing the single instruction.
+end_comment
+
+begin_function_decl
 name|instr_iterator
 name|erase
 parameter_list|(
 name|instr_iterator
 name|I
-parameter_list|,
-name|instr_iterator
-name|E
 parameter_list|)
-block|{
-return|return
-name|Insts
-operator|.
-name|erase
-argument_list|(
-name|I
-argument_list|,
-name|E
-argument_list|)
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Remove an instruction from the instruction list and delete it.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the instruction is part of a bundle, the other instructions in the
+end_comment
+
+begin_comment
+comment|/// bundle will still be bundled after removing the single instruction.
+end_comment
 
 begin_function
 name|instr_iterator
@@ -2632,30 +2620,21 @@ modifier|*
 name|I
 parameter_list|)
 block|{
-name|instr_iterator
-name|MII
-argument_list|(
-name|I
-argument_list|)
-decl_stmt|;
 return|return
 name|erase
 argument_list|(
-name|MII
+name|instr_iterator
+argument_list|(
+name|I
+argument_list|)
 argument_list|)
 return|;
 block|}
 end_function
 
-begin_function_decl
-name|iterator
-name|erase
-parameter_list|(
-name|iterator
-name|I
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/// Remove a range of instructions from the instruction list and delete them.
+end_comment
 
 begin_function
 name|iterator
@@ -2687,6 +2666,58 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Remove an instruction or bundle from the instruction list and delete it.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If I points to a bundle of instructions, they are all erased.
+end_comment
+
+begin_function
+name|iterator
+name|erase
+parameter_list|(
+name|iterator
+name|I
+parameter_list|)
+block|{
+return|return
+name|erase
+argument_list|(
+name|I
+argument_list|,
+name|llvm
+operator|::
+name|next
+argument_list|(
+name|I
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Remove an instruction from the instruction list and delete it.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If I is the head of a bundle of instructions, the whole bundle will be
+end_comment
+
+begin_comment
+comment|/// erased.
+end_comment
+
 begin_function
 name|iterator
 name|erase
@@ -2696,53 +2727,94 @@ modifier|*
 name|I
 parameter_list|)
 block|{
-name|iterator
-name|MII
-argument_list|(
-name|I
-argument_list|)
-decl_stmt|;
 return|return
 name|erase
 argument_list|(
-name|MII
+name|iterator
+argument_list|(
+name|I
+argument_list|)
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/// remove - Remove the instruction from the instruction list. This function
+comment|/// Remove the unbundled instruction from the instruction list without
 end_comment
 
 begin_comment
-comment|/// does not delete the instruction. WARNING: Note, if the specified
+comment|/// deleting it.
 end_comment
 
 begin_comment
-comment|/// instruction is a bundle this function will remove all the bundled
+comment|///
 end_comment
 
 begin_comment
-comment|/// instructions as well. It is up to the caller to keep a list of the
+comment|/// This function can not be used to remove bundled instructions, use
 end_comment
 
 begin_comment
-comment|/// bundled instructions and re-insert them if desired. This function is
+comment|/// remove_instr to remove individual instructions from a bundle.
+end_comment
+
+begin_function
+name|MachineInstr
+modifier|*
+name|remove
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|I
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|I
+operator|->
+name|isBundled
+argument_list|()
+operator|&&
+literal|"Cannot remove bundled instructions"
+argument_list|)
+expr_stmt|;
+return|return
+name|Insts
+operator|.
+name|remove
+argument_list|(
+name|I
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Remove the possibly bundled instruction from the instruction list
 end_comment
 
 begin_comment
-comment|/// *not recommended* for manipulating instructions with bundles. Use
+comment|/// without deleting it.
 end_comment
 
 begin_comment
-comment|/// splice instead.
+comment|///
+end_comment
+
+begin_comment
+comment|/// If the instruction is part of a bundle, the other instructions in the
+end_comment
+
+begin_comment
+comment|/// bundle will still be bundled after removing the single instruction.
 end_comment
 
 begin_function_decl
 name|MachineInstr
 modifier|*
-name|remove
+name|remove_instr
 parameter_list|(
 name|MachineInstr
 modifier|*
@@ -2765,111 +2837,88 @@ block|}
 end_function
 
 begin_comment
-comment|/// splice - Take an instruction from MBB 'Other' at the position From,
+comment|/// Take an instruction from MBB 'Other' at the position From, and insert it
 end_comment
 
 begin_comment
-comment|/// and insert it into this MBB right before 'where'.
+comment|/// into this MBB right before 'Where'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If From points to a bundle of instructions, the whole bundle is moved.
 end_comment
 
 begin_function
 name|void
 name|splice
 parameter_list|(
-name|instr_iterator
-name|where
+name|iterator
+name|Where
 parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|Other
 parameter_list|,
-name|instr_iterator
+name|iterator
 name|From
 parameter_list|)
 block|{
-name|Insts
-operator|.
+comment|// The range splice() doesn't allow noop moves, but this one does.
+if|if
+condition|(
+name|Where
+operator|!=
+name|From
+condition|)
 name|splice
 argument_list|(
-name|where
+name|Where
 argument_list|,
 name|Other
-operator|->
-name|Insts
 argument_list|,
 name|From
+argument_list|,
+name|llvm
+operator|::
+name|next
+argument_list|(
+name|From
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|splice
-parameter_list|(
-name|iterator
-name|where
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|Other
-parameter_list|,
-name|iterator
-name|From
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/// splice - Take a block of instructions from MBB 'Other' in the range [From,
+comment|/// Take a block of instructions from MBB 'Other' in the range [From, To),
 end_comment
 
 begin_comment
-comment|/// To), and insert them into this MBB right before 'where'.
+comment|/// and insert them into this MBB right before 'Where'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The instruction at 'Where' must not be included in the range of
+end_comment
+
+begin_comment
+comment|/// instructions to move.
 end_comment
 
 begin_function
 name|void
 name|splice
 parameter_list|(
-name|instr_iterator
-name|where
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|Other
-parameter_list|,
-name|instr_iterator
-name|From
-parameter_list|,
-name|instr_iterator
-name|To
-parameter_list|)
-block|{
-name|Insts
-operator|.
-name|splice
-argument_list|(
-name|where
-argument_list|,
-name|Other
-operator|->
-name|Insts
-argument_list|,
-name|From
-argument_list|,
-name|To
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|splice
-parameter_list|(
 name|iterator
-name|where
+name|Where
 parameter_list|,
 name|MachineBasicBlock
 modifier|*
@@ -2886,7 +2935,7 @@ name|Insts
 operator|.
 name|splice
 argument_list|(
-name|where
+name|Where
 operator|.
 name|getInstrIterator
 argument_list|()

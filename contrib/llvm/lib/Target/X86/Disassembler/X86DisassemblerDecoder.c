@@ -1026,7 +1026,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/*      * If the first byte is a LOCK prefix break and let it be disassembled      * as a lock "instruction", by creating an<MCInst #xxxx LOCK_PREFIX>.      * FIXME there is currently no way to get the disassembler to print the      * lock prefix if it is not the first byte.      */
+comment|/*      * If the byte is a LOCK/REP/REPNE prefix and not a part of the opcode, then      * break and let it be disassembled as a normal "instruction".      */
 if|if
 condition|(
 name|insn
@@ -1039,11 +1039,108 @@ name|insn
 operator|->
 name|startLocation
 operator|&&
+operator|(
+name|byte
+operator|==
+literal|0xf0
+operator|||
+name|byte
+operator|==
+literal|0xf2
+operator|||
+name|byte
+operator|==
+literal|0xf3
+operator|)
+condition|)
+block|{
+name|uint8_t
+name|nextByte
+decl_stmt|;
+if|if
+condition|(
 name|byte
 operator|==
 literal|0xf0
 condition|)
 break|break;
+if|if
+condition|(
+name|lookAtByte
+argument_list|(
+name|insn
+argument_list|,
+operator|&
+name|nextByte
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+name|insn
+operator|->
+name|mode
+operator|==
+name|MODE_64BIT
+operator|&&
+operator|(
+name|nextByte
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x40
+condition|)
+block|{
+if|if
+condition|(
+name|consumeByte
+argument_list|(
+name|insn
+argument_list|,
+operator|&
+name|nextByte
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+name|lookAtByte
+argument_list|(
+name|insn
+argument_list|,
+operator|&
+name|nextByte
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|unconsumeByte
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|nextByte
+operator|!=
+literal|0x0f
+operator|&&
+name|nextByte
+operator|!=
+literal|0x90
+condition|)
+break|break;
+block|}
 switch|switch
 condition|(
 name|byte
@@ -2928,7 +3025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getID - Determines the ID of an instruction, consuming the ModR/M byte as   *   appropriate for extended and escape opcodes.  Determines the attributes and   *   context for the instruction before doing so.  *  * @param insn  - The instruction whose ID is to be determined.  * @return      - 0 if the ModR/M could be read when needed or was not needed;  *                nonzero otherwise.  */
+comment|/*  * getID - Determines the ID of an instruction, consuming the ModR/M byte as  *   appropriate for extended and escape opcodes.  Determines the attributes and  *   context for the instruction before doing so.  *  * @param insn  - The instruction whose ID is to be determined.  * @return      - 0 if the ModR/M could be read when needed or was not needed;  *                nonzero otherwise.  */
 end_comment
 
 begin_function
@@ -3413,7 +3510,7 @@ name|ATTR_OPSIZE
 argument_list|)
 condition|)
 block|{
-comment|/*         * ModRM required with OpSize but not present; give up and return version        * without OpSize set        */
+comment|/*        * ModRM required with OpSize but not present; give up and return version        * without OpSize set        */
 name|insn
 operator|->
 name|instructionID
@@ -4012,7 +4109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * readDisplacement - Consumes the displacement of an instruction.  *  * @param insn  - The instruction whose displacement is to be read.  * @return      - 0 if the displacement byte was successfully read; nonzero   *                otherwise.  */
+comment|/*  * readDisplacement - Consumes the displacement of an instruction.  *  * @param insn  - The instruction whose displacement is to be read.  * @return      - 0 if the displacement byte was successfully read; nonzero  *                otherwise.  */
 end_comment
 
 begin_function
@@ -5021,7 +5118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * readOpcodeModifier - Reads an operand from the opcode field of an   *   instruction.  Handles AddRegFrm instructions.  *  * @param insn    - The instruction whose opcode field is to be read.  * @param inModRM - Indicates that the opcode field is to be read from the  *                  ModR/M extension; useful for escape opcodes  * @return        - 0 on success; nonzero otherwise.  */
+comment|/*  * readOpcodeModifier - Reads an operand from the opcode field of an  *   instruction.  Handles AddRegFrm instructions.  *  * @param insn    - The instruction whose opcode field is to be read.  * @param inModRM - Indicates that the opcode field is to be read from the  *                  ModR/M extension; useful for escape opcodes  * @return        - 0 on success; nonzero otherwise.  */
 end_comment
 
 begin_function
@@ -5133,7 +5230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * readOpcodeRegister - Reads an operand from the opcode field of an   *   instruction and interprets it appropriately given the operand width.  *   Handles AddRegFrm instructions.  *  * @param insn  - See readOpcodeModifier().  * @param size  - The width (in bytes) of the register being specified.  *                1 means AL and friends, 2 means AX, 4 means EAX, and 8 means  *                RAX.  * @return      - 0 on success; nonzero otherwise.  */
+comment|/*  * readOpcodeRegister - Reads an operand from the opcode field of an  *   instruction and interprets it appropriately given the operand width.  *   Handles AddRegFrm instructions.  *  * @param insn  - See readOpcodeModifier().  * @param size  - The width (in bytes) of the register being specified.  *                1 means AL and friends, 2 means AX, 4 means EAX, and 8 means  *                RAX.  * @return      - 0 on success; nonzero otherwise.  */
 end_comment
 
 begin_function
@@ -6264,7 +6361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * decodeInstruction - Reads and interprets a full instruction provided by the  *   user.  *  * @param insn      - A pointer to the instruction to be populated.  Must be   *                    pre-allocated.  * @param reader    - The function to be used to read the instruction's bytes.  * @param readerArg - A generic argument to be passed to the reader to store  *                    any internal state.  * @param logger    - If non-NULL, the function to be used to write log messages  *                    and warnings.  * @param loggerArg - A generic argument to be passed to the logger to store  *                    any internal state.  * @param startLoc  - The address (in the reader's address space) of the first  *                    byte in the instruction.  * @param mode      - The mode (real mode, IA-32e, or IA-32e in 64-bit mode) to  *                    decode the instruction in.  * @return          - 0 if the instruction's memory could be read; nonzero if  *                    not.  */
+comment|/*  * decodeInstruction - Reads and interprets a full instruction provided by the  *   user.  *  * @param insn      - A pointer to the instruction to be populated.  Must be  *                    pre-allocated.  * @param reader    - The function to be used to read the instruction's bytes.  * @param readerArg - A generic argument to be passed to the reader to store  *                    any internal state.  * @param logger    - If non-NULL, the function to be used to write log messages  *                    and warnings.  * @param loggerArg - A generic argument to be passed to the logger to store  *                    any internal state.  * @param startLoc  - The address (in the reader's address space) of the first  *                    byte in the instruction.  * @param mode      - The mode (real mode, IA-32e, or IA-32e in 64-bit mode) to  *                    decode the instruction in.  * @return          - 0 if the instruction's memory could be read; nonzero if  *                    not.  */
 end_comment
 
 begin_function

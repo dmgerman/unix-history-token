@@ -106,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -145,6 +145,9 @@ name|namespace
 name|ento
 block|{
 name|class
+name|CodeTextRegion
+decl_stmt|;
+name|class
 name|MemRegionManager
 decl_stmt|;
 name|class
@@ -154,10 +157,10 @@ name|class
 name|SValBuilder
 decl_stmt|;
 name|class
-name|VarRegion
+name|SymbolicRegion
 decl_stmt|;
 name|class
-name|CodeTextRegion
+name|VarRegion
 decl_stmt|;
 comment|/// Represent a region's offset within the top level base region.
 name|class
@@ -462,6 +465,15 @@ argument|bool StripBaseCasts = true
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief If this is a symbolic region, returns the region. Otherwise,
+comment|/// goes up the base chain looking for the first symbolic base region.
+specifier|const
+name|SymbolicRegion
+operator|*
+name|getSymbolicBase
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|hasGlobalsOrParametersStorage
 argument_list|()
@@ -520,6 +532,26 @@ comment|/// \brief Print the region for use in diagnostics.
 name|virtual
 name|void
 name|printPretty
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns true if this region's textual representation can be used
+comment|/// as part of a larger expression.
+name|virtual
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Print the region as expression.
+comment|///
+comment|/// When this region represents a subexpression, the method is for printing
+comment|/// an expression containing it.
+name|virtual
+name|void
+name|printPrettyAsExpr
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -2399,51 +2431,11 @@ argument_list|(
 argument|originalR
 argument_list|)
 block|{}
-name|operator
-specifier|const
-name|MemRegion
-operator|*
-specifier|const
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|R
-return|;
-block|}
-specifier|const
-name|MemRegion
-operator|*
-name|getCapturedRegion
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|R
-return|;
-block|}
-specifier|const
-name|MemRegion
-operator|*
-name|getOriginalRegion
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|OriginalR
-return|;
-block|}
 specifier|const
 name|VarRegion
 operator|*
-name|operator
-operator|*
-operator|(
-operator|)
+name|getCapturedRegion
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2454,6 +2446,24 @@ operator|>
 operator|(
 operator|*
 name|R
+operator|)
+return|;
+block|}
+specifier|const
+name|VarRegion
+operator|*
+name|getOriginalRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|VarRegion
+operator|>
+operator|(
+operator|*
+name|OriginalR
 operator|)
 return|;
 block|}
@@ -2468,6 +2478,23 @@ name|I
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|(
+name|R
+operator|==
+literal|0
+operator|)
+operator|==
+operator|(
+name|I
+operator|.
+name|R
+operator|==
+literal|0
+operator|)
+argument_list|)
+block|;
 return|return
 name|I
 operator|.
@@ -2487,6 +2514,23 @@ name|I
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|(
+name|R
+operator|==
+literal|0
+operator|)
+operator|==
+operator|(
+name|I
+operator|.
+name|R
+operator|==
+literal|0
+operator|)
+argument_list|)
+block|;
 return|return
 name|I
 operator|.
@@ -2514,6 +2558,17 @@ name|this
 return|;
 block|}
 expr|}
+block|;
+comment|/// Return the original region for a captured region, if
+comment|/// one exists.
+specifier|const
+name|VarRegion
+operator|*
+name|getOriginalRegion
+argument_list|(
+argument|const VarRegion *VR
+argument_list|)
+specifier|const
 block|;
 name|referenced_vars_iterator
 name|referenced_vars_begin
@@ -2583,6 +2638,26 @@ operator|:
 name|void
 name|LazyInitializeReferencedVars
 argument_list|()
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|VarRegion
+operator|*
+block|,
+specifier|const
+name|VarRegion
+operator|*
+operator|>
+name|getCaptureRegions
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
+argument_list|)
 block|; }
 block|;
 comment|/// SymbolicRegion - A special, "non-concrete" region. Unlike other region
@@ -3334,12 +3409,12 @@ name|VarRegionKind
 return|;
 block|}
 name|bool
-name|canPrintPretty
+name|canPrintPrettyAsExpr
 argument_list|()
 specifier|const
 block|;
 name|void
-name|printPretty
+name|printPrettyAsExpr
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
@@ -3589,6 +3664,18 @@ argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+block|;
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPrettyAsExpr
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
 block|; }
 block|;
 name|class
@@ -3647,6 +3734,18 @@ block|;
 name|QualType
 name|getValueType
 argument_list|()
+specifier|const
+block|;
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPrettyAsExpr
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
 specifier|const
 block|;
 name|void
@@ -3797,28 +3896,28 @@ name|assert
 argument_list|(
 operator|(
 operator|!
-name|isa
+name|Idx
+operator|.
+name|getAs
 operator|<
 name|nonloc
 operator|::
 name|ConcreteInt
 operator|>
 operator|(
-operator|&
-name|Idx
 operator|)
 operator|||
-name|cast
+name|Idx
+operator|.
+name|castAs
 operator|<
 name|nonloc
 operator|::
 name|ConcreteInt
 operator|>
 operator|(
-operator|&
-name|Idx
 operator|)
-operator|->
+operator|.
 name|getValue
 argument_list|()
 operator|.
@@ -4040,55 +4139,54 @@ name|friend
 name|class
 name|MemRegionManager
 block|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 specifier|const
 name|CXXRecordDecl
 operator|*
-name|decl
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|Data
 block|;
 name|CXXBaseObjectRegion
 argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|d
+argument|const CXXRecordDecl *RD
 argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|sReg
+argument|bool IsVirtual
+argument_list|,
+argument|const MemRegion *SReg
 argument_list|)
 operator|:
 name|TypedValueRegion
 argument_list|(
-name|sReg
+name|SReg
 argument_list|,
 name|CXXBaseObjectRegionKind
 argument_list|)
 block|,
-name|decl
+name|Data
 argument_list|(
-argument|d
+argument|RD
+argument_list|,
+argument|IsVirtual
 argument_list|)
 block|{}
 specifier|static
 name|void
 name|ProfileRegion
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|decl
+argument|const CXXRecordDecl *RD
 argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|sReg
+argument|bool IsVirtual
+argument_list|,
+argument|const MemRegion *SReg
 argument_list|)
 block|;
 name|public
@@ -4101,7 +4199,22 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|decl
+name|Data
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|isVirtual
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+operator|.
+name|getInt
+argument_list|()
 return|;
 block|}
 name|QualType
@@ -4139,7 +4252,18 @@ operator|==
 name|CXXBaseObjectRegionKind
 return|;
 block|}
-expr|}
+name|bool
+name|canPrintPrettyAsExpr
+argument_list|()
+specifier|const
+block|;
+name|void
+name|printPrettyAsExpr
+argument_list|(
+argument|raw_ostream&os
+argument_list|)
+specifier|const
+block|; }
 block|;
 name|template
 operator|<
@@ -4649,20 +4773,20 @@ operator|*
 name|LC
 argument_list|)
 block|;
+comment|/// Create a CXXBaseObjectRegion with the given base class for region
+comment|/// \p Super.
+comment|///
+comment|/// The type of \p Super is assumed be a class deriving from \p BaseClass.
 specifier|const
 name|CXXBaseObjectRegion
 operator|*
 name|getCXXBaseObjectRegion
 argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|decl
+argument|const CXXRecordDecl *BaseClass
 argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|superRegion
+argument|const MemRegion *Super
+argument_list|,
+argument|bool IsVirtual
 argument_list|)
 block|;
 comment|/// Create a CXXBaseObjectRegion with the same CXXRecordDecl but a different
@@ -4686,6 +4810,11 @@ name|getDecl
 argument_list|()
 argument_list|,
 name|superRegion
+argument_list|,
+name|baseReg
+operator|->
+name|isVirtual
+argument_list|()
 argument_list|)
 return|;
 block|}

@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -69,7 +69,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 decl_stmt|;
 name|namespace
 name|edit
@@ -158,7 +158,7 @@ modifier|&
 name|LangOpts
 decl_stmt|;
 specifier|const
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 modifier|*
 name|PPRec
 decl_stmt|;
@@ -200,7 +200,7 @@ operator|&
 name|LangOpts
 argument_list|,
 specifier|const
-name|PreprocessingRecord
+name|PPConditionalDirectiveRecord
 operator|*
 name|PPRec
 operator|=

@@ -98,25 +98,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Sema/AttributeList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/Ownership.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/NestedNameSpecifier.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/Token.h"
 end_include
 
 begin_include
@@ -141,6 +123,24 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/Token.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/AttributeList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Ownership.h"
 end_include
 
 begin_include
@@ -718,6 +718,48 @@ block|,
 name|SCS_mutable
 block|}
 enum|;
+comment|// Import thread storage class specifier enumeration and constants.
+comment|// These can be combined with SCS_extern and SCS_static.
+typedef|typedef
+name|ThreadStorageClassSpecifier
+name|TSCS
+typedef|;
+specifier|static
+specifier|const
+name|TSCS
+name|TSCS_unspecified
+init|=
+name|clang
+operator|::
+name|TSCS_unspecified
+decl_stmt|;
+specifier|static
+specifier|const
+name|TSCS
+name|TSCS___thread
+init|=
+name|clang
+operator|::
+name|TSCS___thread
+decl_stmt|;
+specifier|static
+specifier|const
+name|TSCS
+name|TSCS_thread_local
+init|=
+name|clang
+operator|::
+name|TSCS_thread_local
+decl_stmt|;
+specifier|static
+specifier|const
+name|TSCS
+name|TSCS__Thread_local
+init|=
+name|clang
+operator|::
+name|TSCS__Thread_local
+decl_stmt|;
 comment|// Import type specifier width enumeration and constants.
 typedef|typedef
 name|TypeSpecifierWidth
@@ -1025,6 +1067,15 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|TST
+name|TST_decltype_auto
+init|=
+name|clang
+operator|::
+name|TST_decltype_auto
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
 name|TST_underlyingType
 init|=
 name|clang
@@ -1057,6 +1108,78 @@ init|=
 name|clang
 operator|::
 name|TST_atomic
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_image1d_t
+init|=
+name|clang
+operator|::
+name|TST_image1d_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_image1d_array_t
+init|=
+name|clang
+operator|::
+name|TST_image1d_array_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_image1d_buffer_t
+init|=
+name|clang
+operator|::
+name|TST_image1d_buffer_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_image2d_t
+init|=
+name|clang
+operator|::
+name|TST_image2d_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_image2d_array_t
+init|=
+name|clang
+operator|::
+name|TST_image2d_array_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_image3d_t
+init|=
+name|clang
+operator|::
+name|TST_image3d_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_sampler_t
+init|=
+name|clang
+operator|::
+name|TST_sampler_t
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_event_t
+init|=
+name|clang
+operator|::
+name|TST_event_t
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1087,6 +1210,12 @@ block|,
 name|TQ_volatile
 init|=
 literal|4
+block|,
+comment|// This has no corresponding Qualifiers::TQ value, because it's not treated
+comment|// as a qualifier in our type system.
+name|TQ_atomic
+init|=
+literal|8
 block|}
 enum|;
 comment|/// ParsedSpecifiers - Flags to query which specifiers were applied.  This is
@@ -1124,10 +1253,11 @@ name|StorageClassSpec
 range|:
 literal|3
 decl_stmt|;
+comment|/*TSCS*/
 name|unsigned
-name|SCS_thread_specified
+name|ThreadStorageClassSpec
 range|:
-literal|1
+literal|2
 decl_stmt|;
 name|unsigned
 name|SCS_extern_in_linkage_spec
@@ -1157,7 +1287,7 @@ comment|/*TST*/
 name|unsigned
 name|TypeSpecType
 range|:
-literal|5
+literal|6
 decl_stmt|;
 name|unsigned
 name|TypeAltiVecVector
@@ -1183,7 +1313,7 @@ comment|// type-qualifiers
 name|unsigned
 name|TypeQualifiers
 range|:
-literal|3
+literal|4
 decl_stmt|;
 comment|// Bitwise OR of TQ.
 comment|// function-specifier
@@ -1202,6 +1332,11 @@ name|FS_explicit_specified
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|FS_noreturn_specified
+range|:
+literal|1
+decl_stmt|;
 comment|// friend-specifier
 name|unsigned
 name|Friend_specified
@@ -1213,12 +1348,6 @@ name|unsigned
 name|Constexpr_specified
 range|:
 literal|1
-decl_stmt|;
-comment|/*SCS*/
-name|unsigned
-name|StorageClassSpecAsWritten
-range|:
-literal|3
 decl_stmt|;
 union|union
 block|{
@@ -1270,7 +1399,7 @@ decl_stmt|;
 name|SourceLocation
 name|StorageClassSpecLoc
 decl_stmt|,
-name|SCS_threadLoc
+name|ThreadStorageClassSpecLoc
 decl_stmt|;
 name|SourceLocation
 name|TSWLoc
@@ -1299,6 +1428,8 @@ decl_stmt|,
 name|TQ_restrictLoc
 decl_stmt|,
 name|TQ_volatileLoc
+decl_stmt|,
+name|TQ_atomicLoc
 decl_stmt|;
 name|SourceLocation
 name|FS_inlineLoc
@@ -1306,6 +1437,8 @@ decl_stmt|,
 name|FS_virtualLoc
 decl_stmt|,
 name|FS_explicitLoc
+decl_stmt|,
+name|FS_noreturnLoc
 decl_stmt|;
 name|SourceLocation
 name|FriendLoc
@@ -1319,10 +1452,6 @@ name|writtenBS
 decl_stmt|;
 name|void
 name|SaveWrittenBuiltinSpecs
-parameter_list|()
-function_decl|;
-name|void
-name|SaveStorageSpecifierAsWritten
 parameter_list|()
 function_decl|;
 name|ObjCDeclSpec
@@ -1377,6 +1506,24 @@ name|TST_decltype
 operator|)
 return|;
 block|}
+name|DeclSpec
+argument_list|(
+argument|const DeclSpec&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|DeclSpec
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
+name|public
+label|:
 specifier|static
 name|bool
 name|isDeclRep
@@ -1411,24 +1558,6 @@ return|;
 block|}
 name|DeclSpec
 argument_list|(
-argument|const DeclSpec&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|DeclSpec
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-name|public
-label|:
-name|DeclSpec
-argument_list|(
 name|AttributeFactory
 operator|&
 name|attrFactory
@@ -1439,9 +1568,9 @@ argument_list|(
 name|SCS_unspecified
 argument_list|)
 operator|,
-name|SCS_thread_specified
+name|ThreadStorageClassSpec
 argument_list|(
-name|false
+name|TSCS_unspecified
 argument_list|)
 operator|,
 name|SCS_extern_in_linkage_spec
@@ -1509,6 +1638,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|FS_noreturn_specified
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Friend_specified
 argument_list|(
 name|false
@@ -1517,11 +1651,6 @@ operator|,
 name|Constexpr_specified
 argument_list|(
 name|false
-argument_list|)
-operator|,
-name|StorageClassSpecAsWritten
-argument_list|(
-name|SCS_unspecified
 argument_list|)
 operator|,
 name|Attrs
@@ -1577,13 +1706,16 @@ operator|)
 name|StorageClassSpec
 return|;
 block|}
-name|bool
-name|isThreadSpecified
+name|TSCS
+name|getThreadStorageClassSpec
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SCS_thread_specified
+operator|(
+name|TSCS
+operator|)
+name|ThreadStorageClassSpec
 return|;
 block|}
 name|bool
@@ -1617,12 +1749,12 @@ name|StorageClassSpecLoc
 return|;
 block|}
 name|SourceLocation
-name|getThreadSpecLoc
+name|getThreadStorageClassSpecLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SCS_threadLoc
+name|ThreadStorageClassSpecLoc
 return|;
 block|}
 name|void
@@ -1635,9 +1767,11 @@ name|DeclSpec
 operator|::
 name|SCS_unspecified
 expr_stmt|;
-name|SCS_thread_specified
+name|ThreadStorageClassSpec
 operator|=
-name|false
+name|DeclSpec
+operator|::
+name|TSCS_unspecified
 expr_stmt|;
 name|SCS_extern_in_linkage_spec
 operator|=
@@ -1648,7 +1782,7 @@ operator|=
 name|SourceLocation
 argument_list|()
 expr_stmt|;
-name|SCS_threadLoc
+name|ThreadStorageClassSpecLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -1955,6 +2089,21 @@ operator|=
 name|range
 expr_stmt|;
 block|}
+name|bool
+name|containsPlaceholderType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeSpecType
+operator|==
+name|TST_auto
+operator|||
+name|TypeSpecType
+operator|==
+name|TST_decltype_auto
+return|;
+block|}
 comment|/// \brief Turn a type-specifier-type into a string like "_Bool" or "union".
 specifier|static
 specifier|const
@@ -2028,6 +2177,18 @@ name|SCS
 name|S
 argument_list|)
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getSpecifierName
+argument_list|(
+name|DeclSpec
+operator|::
+name|TSCS
+name|S
+argument_list|)
+decl_stmt|;
 comment|// type-qualifiers
 comment|/// getTypeQualifiers - Return a set of TQs.
 name|unsigned
@@ -2066,6 +2227,15 @@ return|return
 name|TQ_volatileLoc
 return|;
 block|}
+name|SourceLocation
+name|getAtomicSpecLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TQ_atomicLoc
+return|;
+block|}
 comment|/// \brief Clear out all of the type qualifiers.
 name|void
 name|ClearTypeQualifiers
@@ -2086,6 +2256,11 @@ name|SourceLocation
 argument_list|()
 expr_stmt|;
 name|TQ_volatileLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|TQ_atomicLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -2146,6 +2321,24 @@ return|return
 name|FS_explicitLoc
 return|;
 block|}
+name|bool
+name|isNoreturnSpecified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FS_noreturn_specified
+return|;
+block|}
+name|SourceLocation
+name|getNoreturnSpecLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FS_noreturnLoc
+return|;
+block|}
 name|void
 name|ClearFunctionSpecs
 parameter_list|()
@@ -2173,6 +2366,15 @@ operator|=
 name|false
 expr_stmt|;
 name|FS_explicitLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
+name|FS_noreturn_specified
+operator|=
+name|false
+expr_stmt|;
+name|FS_noreturnLoc
 operator|=
 name|SourceLocation
 argument_list|()
@@ -2221,18 +2423,6 @@ name|getParsedSpecifiers
 argument_list|()
 specifier|const
 expr_stmt|;
-name|SCS
-name|getStorageClassSpecAsWritten
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|SCS
-operator|)
-name|StorageClassSpecAsWritten
-return|;
-block|}
 comment|/// isEmpty - Return true if this declaration specifier is completely empty:
 comment|/// no tokens were parsed in the production of it.
 name|bool
@@ -2316,6 +2506,9 @@ function_decl|;
 name|bool
 name|SetStorageClassSpecThread
 parameter_list|(
+name|TSCS
+name|TSC
+parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
@@ -2681,54 +2874,31 @@ name|Lang
 parameter_list|)
 function_decl|;
 name|bool
-name|SetFunctionSpecInline
+name|setFunctionSpecInline
 parameter_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|,
-name|unsigned
-modifier|&
-name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
-name|SetFunctionSpecVirtual
+name|setFunctionSpecVirtual
 parameter_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|,
-name|unsigned
-modifier|&
-name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
-name|SetFunctionSpecExplicit
+name|setFunctionSpecExplicit
 parameter_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|PrevSpec
-parameter_list|,
-name|unsigned
-modifier|&
-name|DiagID
+parameter_list|)
+function_decl|;
+name|bool
+name|setFunctionSpecNoreturn
+parameter_list|(
+name|SourceLocation
+name|Loc
 parameter_list|)
 function_decl|;
 name|bool
@@ -3434,19 +3604,8 @@ name|IK_ImplicitSelfParam
 block|}
 name|Kind
 enum|;
-comment|/// \brief Anonymous union that holds extra data associated with the
-comment|/// parsed unqualified-id.
-union|union
-block|{
-comment|/// \brief When Kind == IK_Identifier, the parsed identifier, or when Kind
-comment|/// == IK_UserLiteralId, the identifier suffix.
-name|IdentifierInfo
-modifier|*
-name|Identifier
-decl_stmt|;
-comment|/// \brief When Kind == IK_OperatorFunctionId, the overloaded operator
-comment|/// that we parsed.
 struct|struct
+name|OFI
 block|{
 comment|/// \brief The kind of overloaded operator.
 name|OverloadedOperatorKind
@@ -3466,8 +3625,23 @@ literal|3
 index|]
 decl_stmt|;
 block|}
-name|OperatorFunctionId
 struct|;
+comment|/// \brief Anonymous union that holds extra data associated with the
+comment|/// parsed unqualified-id.
+union|union
+block|{
+comment|/// \brief When Kind == IK_Identifier, the parsed identifier, or when Kind
+comment|/// == IK_UserLiteralId, the identifier suffix.
+name|IdentifierInfo
+modifier|*
+name|Identifier
+decl_stmt|;
+comment|/// \brief When Kind == IK_OperatorFunctionId, the overloaded operator
+comment|/// that we parsed.
+name|struct
+name|OFI
+name|OperatorFunctionId
+decl_stmt|;
 comment|/// \brief When Kind == IK_ConversionFunctionId, the type that the
 comment|/// conversion function names.
 name|UnionParsedType
@@ -3929,11 +4103,11 @@ name|PointerTypeInfo
 range|:
 name|TypeInfoCommon
 block|{
-comment|/// The type qualifiers: const/volatile/restrict.
+comment|/// The type qualifiers: const/volatile/restrict/atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|3
+literal|4
 block|;
 comment|/// The location of the const-qualifier, if any.
 name|unsigned
@@ -3946,6 +4120,10 @@ block|;
 comment|/// The location of the restrict-qualifier, if any.
 name|unsigned
 name|RestrictQualLoc
+block|;
+comment|/// The location of the _Atomic-qualifier, if any.
+name|unsigned
+name|AtomicQualLoc
 block|;
 name|void
 name|destroy
@@ -3981,11 +4159,11 @@ name|ArrayTypeInfo
 range|:
 name|TypeInfoCommon
 block|{
-comment|/// The type qualifiers for the array: const/volatile/restrict.
+comment|/// The type qualifiers for the array: const/volatile/restrict/_Atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|3
+literal|4
 block|;
 comment|/// True if this dimension included the 'static' keyword.
 name|bool
@@ -4484,11 +4662,11 @@ range|:
 name|TypeInfoCommon
 block|{
 comment|/// For now, sema will catch these as invalid.
-comment|/// The type qualifiers: const/volatile/restrict.
+comment|/// The type qualifiers: const/volatile/restrict/_Atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|3
+literal|4
 block|;
 name|void
 name|destroy
@@ -4501,11 +4679,11 @@ name|MemberPointerTypeInfo
 range|:
 name|TypeInfoCommon
 block|{
-comment|/// The type qualifiers: const/volatile/restrict.
+comment|/// The type qualifiers: const/volatile/restrict/_Atomic.
 name|unsigned
 name|TypeQuals
 operator|:
-literal|3
+literal|4
 block|;
 comment|// CXXScopeSpec has a constructor, so it can't be a direct member.
 comment|// So we need some pointer-aligned storage and a bit of trickery.
@@ -5140,6 +5318,17 @@ return|return
 name|I
 return|;
 block|}
+name|bool
+name|isParen
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|Paren
+return|;
+block|}
 expr|}
 block|;
 comment|/// \brief Described the kind of function definition (if any) provided for
@@ -5224,6 +5413,9 @@ comment|// Block literal declarator.
 name|LambdaExprContext
 block|,
 comment|// Lambda-expression declarator.
+name|ConversionIdContext
+block|,
+comment|// C++ conversion-type-id.
 name|TrailingReturnContext
 block|,
 comment|// C++11 trailing-type-specifier.
@@ -5842,6 +6034,9 @@ case|case
 name|LambdaExprContext
 case|:
 case|case
+name|ConversionIdContext
+case|:
+case|case
 name|TemplateTypeArgContext
 case|:
 case|case
@@ -5926,6 +6121,9 @@ name|BlockLiteralContext
 case|:
 case|case
 name|LambdaExprContext
+case|:
+case|case
+name|ConversionIdContext
 case|:
 case|case
 name|TemplateTypeArgContext
@@ -6074,6 +6272,9 @@ name|BlockLiteralContext
 case|:
 case|case
 name|LambdaExprContext
+case|:
+case|case
+name|ConversionIdContext
 case|:
 case|case
 name|TemplateTypeArgContext
@@ -6455,20 +6656,22 @@ block|}
 end_function
 
 begin_comment
-comment|/// isArrayOfUnknownBound - This method returns true if the declarator
+comment|/// Return the innermost (closest to the declarator) chunk of this
 end_comment
 
 begin_comment
-comment|/// is a declarator for an array of unknown bound (looking through
+comment|/// declarator that is not a parens chunk, or null if there are no
 end_comment
 
 begin_comment
-comment|/// parentheses).
+comment|/// non-parens chunks.
 end_comment
 
 begin_expr_stmt
-name|bool
-name|isArrayOfUnknownBound
+specifier|const
+name|DeclaratorChunk
+operator|*
+name|getInnermostNonParenChunk
 argument_list|()
 specifier|const
 block|{
@@ -6494,82 +6697,161 @@ operator|++
 name|i
 control|)
 block|{
-switch|switch
+if|if
 condition|(
-name|DeclTypeInfo
-index|[
-name|i
-index|]
-operator|.
-name|Kind
-condition|)
-block|{
-case|case
-name|DeclaratorChunk
-operator|::
-name|Paren
-case|:
-continue|continue;
-case|case
-name|DeclaratorChunk
-operator|::
-name|Function
-case|:
-case|case
-name|DeclaratorChunk
-operator|::
-name|Pointer
-case|:
-case|case
-name|DeclaratorChunk
-operator|::
-name|Reference
-case|:
-case|case
-name|DeclaratorChunk
-operator|::
-name|BlockPointer
-case|:
-case|case
-name|DeclaratorChunk
-operator|::
-name|MemberPointer
-case|:
-return|return
-name|false
-return|;
-case|case
-name|DeclaratorChunk
-operator|::
-name|Array
-case|:
-return|return
 operator|!
 name|DeclTypeInfo
 index|[
 name|i
 index|]
 operator|.
-name|Arr
-operator|.
-name|NumElts
+name|isParen
+argument_list|()
+condition|)
+return|return
+operator|&
+name|DeclTypeInfo
+index|[
+name|i
+index|]
 return|;
 block|}
-name|llvm_unreachable
-argument_list|(
-literal|"Invalid type chunk"
-argument_list|)
-expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-unit|}     return
-name|false
-expr_stmt|;
-end_expr_stmt
+begin_return
+return|return
+literal|0
+return|;
+end_return
 
 begin_comment
 unit|}
+comment|/// Return the outermost (furthest from the declarator) chunk of
+end_comment
+
+begin_comment
+comment|/// this declarator that is not a parens chunk, or null if there are
+end_comment
+
+begin_comment
+comment|/// no non-parens chunks.
+end_comment
+
+begin_expr_stmt
+unit|const
+name|DeclaratorChunk
+operator|*
+name|getOutermostNonParenChunk
+argument_list|()
+specifier|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+name|DeclTypeInfo
+operator|.
+name|size
+argument_list|()
+init|,
+name|i_end
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+name|i_end
+condition|;
+operator|--
+name|i
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|DeclTypeInfo
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|.
+name|isParen
+argument_list|()
+condition|)
+return|return
+operator|&
+name|DeclTypeInfo
+index|[
+name|i
+operator|-
+literal|1
+index|]
+return|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// isArrayOfUnknownBound - This method returns true if the declarator
+end_comment
+
+begin_comment
+comment|/// is a declarator for an array of unknown bound (looking through
+end_comment
+
+begin_comment
+comment|/// parentheses).
+end_comment
+
+begin_macro
+unit|bool
+name|isArrayOfUnknownBound
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+specifier|const
+name|DeclaratorChunk
+operator|*
+name|chunk
+operator|=
+name|getInnermostNonParenChunk
+argument_list|()
+block|;
+return|return
+operator|(
+name|chunk
+operator|&&
+name|chunk
+operator|->
+name|Kind
+operator|==
+name|DeclaratorChunk
+operator|::
+name|Array
+operator|&&
+operator|!
+name|chunk
+operator|->
+name|Arr
+operator|.
+name|NumElts
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isFunctionDeclarator - This method returns true if the declarator
 end_comment
 
@@ -6585,16 +6867,15 @@ begin_comment
 comment|/// assigned with the index of the declaration chunk.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|isFunctionDeclarator
 argument_list|(
-argument|unsigned& idx
+name|unsigned
+operator|&
+name|idx
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 for|for
 control|(
@@ -6680,16 +6961,14 @@ argument_list|(
 literal|"Invalid type chunk"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}     return
+block|}
+return|return
 name|false
-expr_stmt|;
-end_expr_stmt
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// isFunctionDeclarator - Once this declarator is fully parsed and formed,
 end_comment
 
@@ -6701,13 +6980,10 @@ begin_comment
 comment|/// (looking through parentheses).
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|isFunctionDeclarator
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 name|unsigned
@@ -6834,6 +7110,197 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Return true if this declaration appears in a context where a
+end_comment
+
+begin_comment
+comment|/// function declarator would be a function declaration.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isFunctionDeclarationContext
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getDeclSpec
+argument_list|()
+operator|.
+name|getStorageClassSpec
+argument_list|()
+operator|==
+name|DeclSpec
+operator|::
+name|SCS_typedef
+condition|)
+return|return
+name|false
+return|;
+end_expr_stmt
+
+begin_switch
+switch|switch
+condition|(
+name|Context
+condition|)
+block|{
+case|case
+name|FileContext
+case|:
+case|case
+name|MemberContext
+case|:
+case|case
+name|BlockContext
+case|:
+return|return
+name|true
+return|;
+case|case
+name|ForContext
+case|:
+case|case
+name|ConditionContext
+case|:
+case|case
+name|KNRTypeListContext
+case|:
+case|case
+name|TypeNameContext
+case|:
+case|case
+name|AliasDeclContext
+case|:
+case|case
+name|AliasTemplateContext
+case|:
+case|case
+name|PrototypeContext
+case|:
+case|case
+name|ObjCParameterContext
+case|:
+case|case
+name|ObjCResultContext
+case|:
+case|case
+name|TemplateParamContext
+case|:
+case|case
+name|CXXNewContext
+case|:
+case|case
+name|CXXCatchContext
+case|:
+case|case
+name|ObjCCatchContext
+case|:
+case|case
+name|BlockLiteralContext
+case|:
+case|case
+name|LambdaExprContext
+case|:
+case|case
+name|ConversionIdContext
+case|:
+case|case
+name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
+case|:
+return|return
+name|false
+return|;
+block|}
+end_switch
+
+begin_expr_stmt
+name|llvm_unreachable
+argument_list|(
+literal|"unknown context kind!"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
+comment|/// \brief Return true if a function declarator at this position would be a
+end_comment
+
+begin_comment
+comment|/// function declaration.
+end_comment
+
+begin_macro
+unit|bool
+name|isFunctionDeclaratorAFunctionDeclaration
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|isFunctionDeclarationContext
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|,
+name|N
+init|=
+name|getNumTypeObjects
+argument_list|()
+init|;
+name|I
+operator|!=
+name|N
+condition|;
+operator|++
+name|I
+control|)
+if|if
+condition|(
+name|getTypeObject
+argument_list|(
+name|I
+argument_list|)
+operator|.
+name|Kind
+operator|!=
+name|DeclaratorChunk
+operator|::
+name|Paren
+condition|)
+return|return
+name|false
+return|;
+end_for
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// takeAttributes - Takes attributes from the given parsed-attributes
 end_comment
 
@@ -6869,17 +7336,17 @@ begin_comment
 comment|/// Also extends the range of the declarator.
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|takeAttributes
-parameter_list|(
-name|ParsedAttributes
-modifier|&
-name|attrs
-parameter_list|,
-name|SourceLocation
-name|lastLoc
-parameter_list|)
+argument_list|(
+argument|ParsedAttributes&attrs
+argument_list|,
+argument|SourceLocation lastLoc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Attrs
 operator|.
@@ -6902,7 +7369,7 @@ name|lastLoc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 specifier|const
@@ -7019,22 +7486,85 @@ name|false
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// \brief Return a source range list of C++11 attributes associated
+end_comment
+
+begin_comment
+comment|/// with the declarator.
+end_comment
+
 begin_macro
-unit|}    void
-name|setAsmLabel
+unit|void
+name|getCXX11AttributeRanges
 argument_list|(
-argument|Expr *E
+argument|SmallVector<SourceRange
+argument_list|,
+literal|4
+argument|>&Ranges
 argument_list|)
 end_macro
 
 begin_block
+block|{
+name|AttributeList
+modifier|*
+name|AttrList
+init|=
+name|Attrs
+operator|.
+name|getList
+argument_list|()
+decl_stmt|;
+while|while
+condition|(
+name|AttrList
+condition|)
+block|{
+if|if
+condition|(
+name|AttrList
+operator|->
+name|isCXX11Attribute
+argument_list|()
+condition|)
+name|Ranges
+operator|.
+name|push_back
+argument_list|(
+name|AttrList
+operator|->
+name|getRange
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|AttrList
+operator|=
+name|AttrList
+operator|->
+name|getNext
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_function
+name|void
+name|setAsmLabel
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|)
 block|{
 name|AsmLabel
 operator|=
 name|E
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|Expr
@@ -7553,8 +8083,6 @@ decl_stmt|;
 name|LambdaCaptureDefault
 name|Default
 decl_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|LambdaCapture

@@ -62,25 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Value.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/GlobalVariable.h"
+file|"llvm/IR/GlobalVariable.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"llvm/IR/IntrinsicInst.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IntrinsicInst.h"
+file|"llvm/IR/Value.h"
 end_include
 
 begin_include

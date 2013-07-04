@@ -66,25 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/LLVM.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
@@ -96,7 +78,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -231,27 +231,6 @@ file|"clang/StaticAnalyzer/Core/Analyses.def"
 name|NumPurgeModes
 block|}
 enum|;
-comment|/// AnalysisIPAMode - Set of inter-procedural modes.
-enum|enum
-name|AnalysisIPAMode
-block|{
-define|#
-directive|define
-name|ANALYSIS_IPA
-parameter_list|(
-name|NAME
-parameter_list|,
-name|CMDFLAG
-parameter_list|,
-name|DESC
-parameter_list|)
-value|NAME,
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/Analyses.def"
-name|NumIPAModes
-block|}
-enum|;
 comment|/// AnalysisInlineFunctionSelection - Set of inlining function selection heuristics.
 enum|enum
 name|AnalysisInliningMode
@@ -300,12 +279,45 @@ comment|/// Refers to destructors (implicit or explicit).
 name|CIMK_Destructors
 block|}
 enum|;
+comment|/// \brief Describes the different modes of inter-procedural analysis.
+enum|enum
+name|IPAKind
+block|{
+name|IPAK_NotSet
+init|=
+literal|0
+block|,
+comment|/// Perform only intra-procedural analysis.
+name|IPAK_None
+init|=
+literal|1
+block|,
+comment|/// Inline C functions and blocks when their definitions are available.
+name|IPAK_BasicInlining
+init|=
+literal|2
+block|,
+comment|/// Inline callees(C, C++, ObjC) when their definitions are available.
+name|IPAK_Inlining
+init|=
+literal|3
+block|,
+comment|/// Enable inlining of dynamically dispatched methods.
+name|IPAK_DynamicDispatch
+init|=
+literal|4
+block|,
+comment|/// Enable inlining of dynamically dispatched methods, bifurcate paths when
+comment|/// exact type info is unavailable.
+name|IPAK_DynamicDispatchBifurcate
+init|=
+literal|5
+block|}
+enum|;
 name|class
 name|AnalyzerOptions
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|AnalyzerOptions
@@ -358,19 +370,11 @@ decl_stmt|;
 name|AnalysisPurgeMode
 name|AnalysisPurgeOpt
 decl_stmt|;
-comment|// \brief The interprocedural analysis mode.
-name|AnalysisIPAMode
-name|IPAMode
-decl_stmt|;
 name|std
 operator|::
 name|string
 name|AnalyzeSpecificFunction
 expr_stmt|;
-comment|/// \brief The maximum number of exploded nodes the analyzer will generate.
-name|unsigned
-name|MaxNodes
-decl_stmt|;
 comment|/// \brief The maximum number of times the analyzer visits a block.
 name|unsigned
 name|maxBlockVisitOnPath
@@ -446,22 +450,45 @@ name|unsigned
 name|InlineMaxStackDepth
 decl_stmt|;
 comment|/// \brief The mode of function selection used during inlining.
-name|unsigned
-name|InlineMaxFunctionSize
-decl_stmt|;
-comment|/// \brief The mode of function selection used during inlining.
 name|AnalysisInliningMode
 name|InliningMode
 decl_stmt|;
 name|private
 label|:
+comment|/// \brief Describes the kinds for high-level analyzer mode.
+enum|enum
+name|UserModeKind
+block|{
+name|UMK_NotSet
+init|=
+literal|0
+block|,
+comment|/// Perform shallow but fast analyzes.
+name|UMK_Shallow
+init|=
+literal|1
+block|,
+comment|/// Perform deep analyzes.
+name|UMK_Deep
+init|=
+literal|2
+block|}
+enum|;
+comment|/// Controls the high-level analyzer mode, which influences the default
+comment|/// settings for some of the lower-level config options (such as IPAMode).
+comment|/// \sa getUserMode
+name|UserModeKind
+name|UserMode
+decl_stmt|;
+comment|/// Controls the mode of inter-procedural analysis.
+name|IPAKind
+name|IPAMode
+decl_stmt|;
 comment|/// Controls which C++ member functions will be considered for inlining.
 name|CXXInlineableMemberKind
 name|CXXMemberInliningMode
 decl_stmt|;
 comment|/// \sa includeTemporaryDtorsInCFG
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -469,8 +496,6 @@ operator|>
 name|IncludeTemporaryDtorsInCFG
 expr_stmt|;
 comment|/// \sa mayInlineCXXStandardLibrary
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -478,17 +503,20 @@ operator|>
 name|InlineCXXStandardLibrary
 expr_stmt|;
 comment|/// \sa mayInlineTemplateFunctions
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
 operator|>
 name|InlineTemplateFunctions
 expr_stmt|;
+comment|/// \sa mayInlineCXXContainerCtorsAndDtors
+name|Optional
+operator|<
+name|bool
+operator|>
+name|InlineCXXContainerCtorsAndDtors
+expr_stmt|;
 comment|/// \sa mayInlineObjCMethod
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -497,41 +525,70 @@ name|ObjCInliningMode
 expr_stmt|;
 comment|// Cache of the "ipa-always-inline-size" setting.
 comment|// \sa getAlwaysInlineSize
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
 operator|>
 name|AlwaysInlineSize
 expr_stmt|;
-comment|/// \sa shouldPruneNullReturnPaths
-name|llvm
-operator|::
+comment|/// \sa shouldSuppressNullReturnPaths
 name|Optional
 operator|<
 name|bool
 operator|>
-name|PruneNullReturnPaths
+name|SuppressNullReturnPaths
+expr_stmt|;
+comment|// \sa getMaxInlinableSize
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|MaxInlinableSize
 expr_stmt|;
 comment|/// \sa shouldAvoidSuppressingNullArgumentPaths
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
 operator|>
 name|AvoidSuppressingNullArgumentPaths
 expr_stmt|;
+comment|/// \sa shouldSuppressInlinedDefensiveChecks
+name|Optional
+operator|<
+name|bool
+operator|>
+name|SuppressInlinedDefensiveChecks
+expr_stmt|;
+comment|/// \sa shouldSuppressFromCXXStandardLibrary
+name|Optional
+operator|<
+name|bool
+operator|>
+name|SuppressFromCXXStandardLibrary
+expr_stmt|;
 comment|/// \sa getGraphTrimInterval
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
 operator|>
 name|GraphTrimInterval
 expr_stmt|;
+comment|/// \sa getMaxTimesInlineLarge
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|MaxTimesInlineLarge
+expr_stmt|;
+comment|/// \sa getMaxNodesPerTopLevelFunction
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|MaxNodesPerTopLevelFunction
+expr_stmt|;
+name|public
+label|:
 comment|/// Interprets an option's string value as a boolean.
 comment|///
 comment|/// Accepts the strings "true" and "false".
@@ -550,8 +607,6 @@ comment|/// Variant that accepts a Optional value to cache the result.
 name|bool
 name|getBooleanOption
 argument_list|(
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -569,18 +624,26 @@ decl_stmt|;
 comment|/// Interprets an option's string value as an integer value.
 name|int
 name|getOptionAsInteger
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|,
+parameter_list|,
 name|int
 name|DefaultVal
-argument_list|)
-decl_stmt|;
-name|public
-label|:
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieves and sets the UserMode. This is a high-level option,
+comment|/// which is used to set other low-level options. It is not accessible
+comment|/// outside of AnalyzerOptions.
+name|UserModeKind
+name|getUserMode
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns the inter-procedural analysis mode.
+name|IPAKind
+name|getIPAMode
+parameter_list|()
+function_decl|;
 comment|/// Returns the option controlling which C++ member functions will be
 comment|/// considered for inlining.
 comment|///
@@ -625,6 +688,15 @@ name|bool
 name|mayInlineTemplateFunctions
 parameter_list|()
 function_decl|;
+comment|/// Returns whether or not constructors and destructors of C++ container
+comment|/// objects may be considered for inlining.
+comment|///
+comment|/// This is controlled by the 'c++-container-inlining' config option, which
+comment|/// accepts the values "true" and "false".
+name|bool
+name|mayInlineCXXContainerCtorsAndDtors
+parameter_list|()
+function_decl|;
 comment|/// Returns whether or not paths that go through null returns should be
 comment|/// suppressed.
 comment|///
@@ -634,13 +706,13 @@ comment|///
 comment|/// This is controlled by the 'suppress-null-return-paths' config option,
 comment|/// which accepts the values "true" and "false".
 name|bool
-name|shouldPruneNullReturnPaths
+name|shouldSuppressNullReturnPaths
 parameter_list|()
 function_decl|;
 comment|/// Returns whether a bug report should \em not be suppressed if its path
 comment|/// includes a call with a null argument, even if that call has a null return.
 comment|///
-comment|/// This option has no effect when #shouldPruneNullReturnPaths() is false.
+comment|/// This option has no effect when #shouldSuppressNullReturnPaths() is false.
 comment|///
 comment|/// This is a counter-heuristic to avoid false negatives.
 comment|///
@@ -650,12 +722,53 @@ name|bool
 name|shouldAvoidSuppressingNullArgumentPaths
 parameter_list|()
 function_decl|;
+comment|/// Returns whether or not diagnostics containing inlined defensive NULL
+comment|/// checks should be suppressed.
+comment|///
+comment|/// This is controlled by the 'suppress-inlined-defensive-checks' config
+comment|/// option, which accepts the values "true" and "false".
+name|bool
+name|shouldSuppressInlinedDefensiveChecks
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not diagnostics reported within the C++ standard
+comment|/// library should be suppressed.
+comment|///
+comment|/// This is controlled by the 'suppress-c++-stdlib' config option,
+comment|/// which accepts the values "true" and "false".
+name|bool
+name|shouldSuppressFromCXXStandardLibrary
+parameter_list|()
+function_decl|;
+comment|/// Returns whether irrelevant parts of a bug report path should be pruned
+comment|/// out of the final output.
+comment|///
+comment|/// This is controlled by the 'prune-paths' config option, which accepts the
+comment|/// values "true" and "false".
+name|bool
+name|shouldPrunePaths
+parameter_list|()
+function_decl|;
+comment|/// Returns true if 'static' initializers should be in conditional logic
+comment|/// in the CFG.
+name|bool
+name|shouldConditionalizeStaticInitializers
+parameter_list|()
+function_decl|;
 comment|// Returns the size of the functions (in basic blocks), which should be
 comment|// considered to be small enough to always inline.
 comment|//
 comment|// This is controlled by "ipa-always-inline-size" analyzer-config option.
 name|unsigned
 name|getAlwaysInlineSize
+parameter_list|()
+function_decl|;
+comment|// Returns the bound on the number of basic blocks in an inlined function
+comment|// (50 by default).
+comment|//
+comment|// This is controlled by "-analyzer-config max-inlinable-size" option.
+name|unsigned
+name|getMaxInlinableSize
 parameter_list|()
 function_decl|;
 comment|/// Returns true if the analyzer engine should synthesize fake bodies
@@ -673,91 +786,126 @@ name|unsigned
 name|getGraphTrimInterval
 parameter_list|()
 function_decl|;
+comment|/// Returns the maximum times a large function could be inlined.
+comment|///
+comment|/// This is controlled by the 'max-times-inline-large' config option.
+name|unsigned
+name|getMaxTimesInlineLarge
+parameter_list|()
+function_decl|;
+comment|/// Returns the maximum number of nodes the analyzer can generate while
+comment|/// exploring a top level function (for each exploded graph).
+comment|/// 150000 is default; 0 means no limit.
+comment|///
+comment|/// This is controlled by the 'max-nodes' config option.
+name|unsigned
+name|getMaxNodesPerTopLevelFunction
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|AnalyzerOptions
 argument_list|()
 operator|:
-name|CXXMemberInliningMode
-argument_list|()
-block|{
 name|AnalysisStoreOpt
-operator|=
+argument_list|(
 name|RegionStoreModel
-block|;
+argument_list|)
+operator|,
 name|AnalysisConstraintsOpt
-operator|=
+argument_list|(
 name|RangeConstraintsModel
-block|;
+argument_list|)
+operator|,
 name|AnalysisDiagOpt
-operator|=
+argument_list|(
 name|PD_HTML
-block|;
+argument_list|)
+operator|,
 name|AnalysisPurgeOpt
-operator|=
+argument_list|(
 name|PurgeStmt
-block|;
-name|IPAMode
-operator|=
-name|DynamicDispatchBifurcate
-block|;
+argument_list|)
+operator|,
 name|ShowCheckerHelp
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|AnalyzeAll
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|AnalyzerDisplayProgress
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|AnalyzeNestedBlocks
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|eagerlyAssumeBinOpBifurcation
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|TrimGraph
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|visualizeExplodedGraphWithGraphViz
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|visualizeExplodedGraphWithUbiGraph
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|UnoptimizedCFG
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|PrintStats
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 name|NoRetryExhausted
-operator|=
+argument_list|(
 literal|0
-block|;
+argument_list|)
+operator|,
 comment|// Cap the stack depth at 4 calls (5 stack frames, base + 4 calls).
 name|InlineMaxStackDepth
-operator|=
+argument_list|(
 literal|5
-block|;
-name|InlineMaxFunctionSize
-operator|=
-literal|200
-block|;
+argument_list|)
+operator|,
 name|InliningMode
-operator|=
+argument_list|(
 name|NoRedundancy
-block|;   }
+argument_list|)
+operator|,
+name|UserMode
+argument_list|(
+name|UMK_NotSet
+argument_list|)
+operator|,
+name|IPAMode
+argument_list|(
+name|IPAK_NotSet
+argument_list|)
+operator|,
+name|CXXMemberInliningMode
+argument_list|()
+block|{}
 block|}
 end_decl_stmt
 
@@ -767,8 +915,6 @@ end_empty_stmt
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|AnalyzerOptions

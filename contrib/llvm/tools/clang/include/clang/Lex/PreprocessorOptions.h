@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -64,7 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
 end_include
 
 begin_include
@@ -83,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<set>
 end_include
 
 begin_decl_stmt
@@ -130,8 +142,6 @@ name|class
 name|PreprocessorOptions
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|PreprocessorOptions
@@ -177,30 +187,20 @@ name|string
 operator|>
 name|MacroIncludes
 block|;
+comment|/// \brief Initialize the preprocessor with the compiler and target specific
+comment|/// predefines.
 name|unsigned
 name|UsePredefines
 operator|:
 literal|1
 block|;
-comment|/// Initialize the preprocessor with the compiler
-comment|/// and target specific predefines.
+comment|/// \brief Whether we should maintain a detailed record of all macro
+comment|/// definitions and expansions.
 name|unsigned
 name|DetailedRecord
 operator|:
 literal|1
 block|;
-comment|/// Whether we should maintain a detailed
-comment|/// record of all macro definitions and
-comment|/// expansions.
-name|unsigned
-name|DetailedRecordConditionalDirectives
-operator|:
-literal|1
-block|;
-comment|/// Whether in the
-comment|/// preprocessing record we should also keep
-comment|/// track of locations of conditional directives
-comment|/// in non-system files.
 comment|/// The implicit PCH included at the start of the translation unit, or empty.
 name|std
 operator|::
@@ -338,21 +338,68 @@ comment|/// with support for lifetime-qualified pointers.
 name|ObjCXXARCStandardLibraryKind
 name|ObjCXXARCStandardLibrary
 block|;
-comment|/// \brief The path of modules being build, which is used to detect
-comment|/// cycles in the module dependency graph as modules are being built.
-comment|///
-comment|/// There is no way to set this value from the command line. If we ever need
-comment|/// to do so (e.g., if on-demand module construction moves out-of-process),
-comment|/// we can add a cc1-level option to do so.
-name|SmallVector
+comment|/// \brief Records the set of modules
+name|class
+name|FailedModulesSet
+operator|:
+name|public
+name|RefCountedBase
 operator|<
-name|std
-operator|::
-name|string
-block|,
-literal|2
+name|FailedModulesSet
 operator|>
-name|ModuleBuildPath
+block|{
+name|llvm
+operator|::
+name|StringSet
+operator|<
+operator|>
+name|Failed
+block|;
+name|public
+operator|:
+name|bool
+name|hasAlreadyFailed
+argument_list|(
+argument|StringRef module
+argument_list|)
+block|{
+return|return
+name|Failed
+operator|.
+name|count
+argument_list|(
+name|module
+argument_list|)
+operator|>
+literal|0
+return|;
+block|}
+name|void
+name|addFailed
+argument_list|(
+argument|StringRef module
+argument_list|)
+block|{
+name|Failed
+operator|.
+name|insert
+argument_list|(
+name|module
+argument_list|)
+block|;     }
+expr|}
+block|;
+comment|/// \brief The set of modules that failed to build.
+comment|///
+comment|/// This pointer will be shared among all of the compiler instances created
+comment|/// to (re)build modules, so that once a module fails to build anywhere,
+comment|/// other instances will see that the module has failed and won't try to
+comment|/// build it again.
+name|IntrusiveRefCntPtr
+operator|<
+name|FailedModulesSet
+operator|>
+name|FailedModules
 block|;
 typedef|typedef
 name|std
@@ -400,7 +447,7 @@ name|const_remapped_file_iterator
 expr_stmt|;
 name|remapped_file_iterator
 name|remapped_file_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|RemappedFiles
@@ -423,7 +470,7 @@ return|;
 block|}
 name|remapped_file_iterator
 name|remapped_file_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|RemappedFiles
@@ -549,11 +596,6 @@ name|true
 argument_list|)
 operator|,
 name|DetailedRecord
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|DetailedRecordConditionalDirectives
 argument_list|(
 name|false
 argument_list|)

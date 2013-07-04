@@ -145,7 +145,7 @@ name|uint32_t
 name|Offset
 decl_stmt|;
 name|Header
-name|Header
+name|HeaderData
 decl_stmt|;
 name|DescriptorColl
 name|ArangeDescriptors
@@ -193,7 +193,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Header
+name|HeaderData
 operator|.
 name|CuOffset
 return|;
@@ -206,7 +206,7 @@ block|{
 return|return
 name|Offset
 operator|+
-name|Header
+name|HeaderData
 operator|.
 name|Length
 operator|+
@@ -242,7 +242,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Header
+name|HeaderData
 return|;
 block|}
 specifier|const

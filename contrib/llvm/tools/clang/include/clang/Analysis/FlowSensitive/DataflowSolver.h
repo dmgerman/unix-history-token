@@ -62,19 +62,29 @@ end_define
 begin_include
 include|#
 directive|include
+file|"functional"
+end_include
+
+begin_comment
+comment|// STL
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"clang/Analysis/CFG.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/ProgramPoint.h"
+file|"clang/Analysis/FlowSensitive/DataflowValues.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/FlowSensitive/DataflowValues.h"
+file|"clang/Analysis/ProgramPoint.h"
 end_include
 
 begin_include
@@ -88,16 +98,6 @@ include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"functional"
-end_include
-
-begin_comment
-comment|// STL
-end_comment
 
 begin_decl_stmt
 name|namespace

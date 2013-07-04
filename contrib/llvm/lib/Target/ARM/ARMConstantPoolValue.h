@@ -644,8 +644,9 @@ name|public
 name|ARMConstantPoolValue
 block|{
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
 name|S
 block|;
 comment|// ExtSymbol being loaded.
@@ -666,10 +667,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-operator|~
-name|ARMConstantPoolSymbol
-argument_list|()
-block|;
 specifier|static
 name|ARMConstantPoolSymbol
 operator|*
@@ -693,6 +690,9 @@ specifier|const
 block|{
 return|return
 name|S
+operator|.
+name|c_str
+argument_list|()
 return|;
 block|}
 name|virtual

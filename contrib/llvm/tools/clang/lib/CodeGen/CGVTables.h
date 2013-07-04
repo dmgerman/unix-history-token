@@ -62,24 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/GlobalVariable.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/ABI.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/BaseSubobject.h"
 end_include
 
@@ -99,6 +81,24 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/VTableBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/ABI.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalVariable.h"
 end_include
 
 begin_decl_stmt
@@ -267,17 +267,6 @@ return|return
 name|VTContext
 return|;
 block|}
-comment|/// \brief True if the VTable of this record must be emitted in the
-comment|/// translation unit.
-name|bool
-name|ShouldEmitVTableInThisTU
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
 comment|/// needsVTTParameter - Return whether the given global decl needs a VTT
 comment|/// parameter, which it does if it's a base constructor or destructor with
 comment|/// virtual bases.
@@ -430,27 +419,28 @@ name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
-comment|/// GenerateClassData - Generate all the class data required to be generated
-comment|/// upon definition of a KeyFunction.  This includes the vtable, the
-comment|/// rtti data structure and the VTT.
-comment|///
-comment|/// \param Linkage - The desired linkage of the vtable, the RTTI and the VTT.
+comment|/// GenerateClassData - Generate all the class data required to be
+comment|/// generated upon definition of a KeyFunction.  This includes the
+comment|/// vtable, the RTTI data structure (if RTTI is enabled) and the VTT
+comment|/// (if the class has virtual bases).
 name|void
 name|GenerateClassData
-argument_list|(
-name|llvm
-operator|::
-name|GlobalVariable
-operator|::
-name|LinkageTypes
-name|Linkage
-argument_list|,
+parameter_list|(
 specifier|const
 name|CXXRecordDecl
-operator|*
+modifier|*
 name|RD
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
+name|bool
+name|isVTableExternal
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

@@ -77,18 +77,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -101,6 +89,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -108,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_decl_stmt
@@ -254,17 +254,19 @@ return|;
 block|}
 comment|/// PromotedIntegers - For integer nodes that are below legal width, this map
 comment|/// indicates what promoted value to use.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
 name|SDValue
+operator|,
+literal|8
 operator|>
 name|PromotedIntegers
 expr_stmt|;
 comment|/// ExpandedIntegers - For integer nodes that need to be expanded this map
 comment|/// indicates which operands are the expanded version of the input.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
@@ -276,22 +278,26 @@ name|SDValue
 operator|,
 name|SDValue
 operator|>
-expr|>
+operator|,
+literal|8
+operator|>
 name|ExpandedIntegers
 expr_stmt|;
 comment|/// SoftenedFloats - For floating point nodes converted to integers of
 comment|/// the same size, this map indicates the converted value to use.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
 name|SDValue
+operator|,
+literal|8
 operator|>
 name|SoftenedFloats
 expr_stmt|;
 comment|/// ExpandedFloats - For float nodes that need to be expanded this map
 comment|/// indicates which operands are the expanded version of the input.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
@@ -303,22 +309,26 @@ name|SDValue
 operator|,
 name|SDValue
 operator|>
-expr|>
+operator|,
+literal|8
+operator|>
 name|ExpandedFloats
 expr_stmt|;
 comment|/// ScalarizedVectors - For nodes that are<1 x ty>, this map indicates the
 comment|/// scalar value of type 'ty' to use.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
 name|SDValue
+operator|,
+literal|8
 operator|>
 name|ScalarizedVectors
 expr_stmt|;
 comment|/// SplitVectors - For nodes that need to be split this map indicates
 comment|/// which operands are the expanded version of the input.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
@@ -330,26 +340,32 @@ name|SDValue
 operator|,
 name|SDValue
 operator|>
-expr|>
+operator|,
+literal|8
+operator|>
 name|SplitVectors
 expr_stmt|;
 comment|/// WidenedVectors - For vector nodes that need to be widened, indicates
 comment|/// the widened value to use.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
 name|SDValue
+operator|,
+literal|8
 operator|>
 name|WidenedVectors
 expr_stmt|;
 comment|/// ReplacedValues - For values that have been replaced with another,
 comment|/// indicates the replacement value to use.
-name|DenseMap
+name|SmallDenseMap
 operator|<
 name|SDValue
 operator|,
 name|SDValue
+operator|,
+literal|8
 operator|>
 name|ReplacedValues
 expr_stmt|;
@@ -624,32 +640,6 @@ name|N
 argument_list|,
 name|bool
 name|isSigned
-argument_list|)
-decl_stmt|;
-name|SDValue
-name|MakeLibCall
-argument_list|(
-name|RTLIB
-operator|::
-name|Libcall
-name|LC
-argument_list|,
-name|EVT
-name|RetVT
-argument_list|,
-specifier|const
-name|SDValue
-operator|*
-name|Ops
-argument_list|,
-name|unsigned
-name|NumOps
-argument_list|,
-name|bool
-name|isSigned
-argument_list|,
-name|DebugLoc
-name|dl
 argument_list|)
 decl_stmt|;
 name|std
@@ -1383,14 +1373,6 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|PromoteIntOp_CONCAT_VECTORS
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-name|SDValue
-name|PromoteIntOp_MEMBARRIER
 parameter_list|(
 name|SDNode
 modifier|*
@@ -2707,27 +2689,6 @@ name|unsigned
 name|OpNo
 parameter_list|)
 function_decl|;
-name|void
-name|SoftenSetCCOperands
-argument_list|(
-name|SDValue
-operator|&
-name|NewLHS
-argument_list|,
-name|SDValue
-operator|&
-name|NewRHS
-argument_list|,
-name|ISD
-operator|::
-name|CondCode
-operator|&
-name|CCCode
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|)
-decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Float Expansion Support: LegalizeFloatTypes.cpp
 comment|//===--------------------------------------------------------------------===//
@@ -3083,6 +3044,22 @@ parameter_list|)
 function_decl|;
 name|void
 name|ExpandFloatRes_FPOWI
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
+name|ExpandFloatRes_FREM
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3564,6 +3541,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ScalarizeVecOp_EXTEND
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ScalarizeVecOp_CONCAT_VECTORS
 parameter_list|(
 name|SDNode
@@ -3925,6 +3910,17 @@ name|OpNo
 parameter_list|)
 function_decl|;
 name|SDValue
+name|SplitVecOp_VSELECT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|)
+function_decl|;
+name|SDValue
 name|SplitVecOp_UnaryOp
 parameter_list|(
 name|SDNode
@@ -3969,6 +3965,14 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|SplitVecOp_CONCAT_VECTORS
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SplitVecOp_TRUNCATE
 parameter_list|(
 name|SDNode
 modifier|*

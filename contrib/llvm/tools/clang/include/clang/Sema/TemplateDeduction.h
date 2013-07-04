@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/PartialDiagnostic.h"
+file|"clang/AST/DeclTemplate.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclTemplate.h"
+file|"clang/Basic/PartialDiagnostic.h"
 end_include
 
 begin_include
@@ -153,7 +153,12 @@ argument_list|)
 operator|,
 name|HasSFINAEDiagnostic
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|Expression
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
 comment|/// \brief Returns the location at which template argument is
@@ -427,17 +432,29 @@ comment|///
 comment|///   TDK_SubstitutionFailure: this argument is the template
 comment|///   argument we were instantiating when we encountered an error.
 comment|///
-comment|///   TDK_NonDeducedMismatch: this is the template argument
-comment|///   provided in the source code.
+comment|///   TDK_NonDeducedMismatch: this is the component of the 'parameter'
+comment|///   of the deduction, directly provided in the source code.
 name|TemplateArgument
 name|FirstArg
 decl_stmt|;
 comment|/// \brief The second template argument to which the template
 comment|/// argument deduction failure refers.
 comment|///
+comment|///   TDK_NonDeducedMismatch: this is the mismatching component of the
+comment|///   'argument' of the deduction, from which we are deducing arguments.
+comment|///
 comment|/// FIXME: Finish documenting this.
 name|TemplateArgument
 name|SecondArg
+decl_stmt|;
+comment|/// \brief The expression which caused a deduction failure.
+comment|///
+comment|///   TDK_FailedOverloadResolution: this argument is the reference to
+comment|///   an overloaded function which could not be resolved to a specific
+comment|///   function.
+name|Expr
+modifier|*
+name|Expression
 decl_stmt|;
 block|}
 empty_stmt|;

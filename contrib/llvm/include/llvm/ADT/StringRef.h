@@ -964,7 +964,7 @@ decl|const
 decl_stmt|;
 comment|/// Find the first character in the string that is \p C, or npos if not
 comment|/// found. Same as find.
-name|size_type
+name|size_t
 name|find_first_of
 argument_list|(
 name|char
@@ -990,7 +990,7 @@ comment|/// Find the first character in the string that is in \p Chars, or npos 
 comment|/// not found.
 comment|///
 comment|/// Complexity: O(size() + Chars.size())
-name|size_type
+name|size_t
 name|find_first_of
 argument_list|(
 name|StringRef
@@ -1005,7 +1005,7 @@ decl|const
 decl_stmt|;
 comment|/// Find the first character in the string that is not \p C or npos if not
 comment|/// found.
-name|size_type
+name|size_t
 name|find_first_not_of
 argument_list|(
 name|char
@@ -1022,7 +1022,7 @@ comment|/// Find the first character in the string that is not in the string
 comment|/// \p Chars, or npos if not found.
 comment|///
 comment|/// Complexity: O(size() + Chars.size())
-name|size_type
+name|size_t
 name|find_first_not_of
 argument_list|(
 name|StringRef
@@ -1037,7 +1037,7 @@ decl|const
 decl_stmt|;
 comment|/// Find the last character in the string that is \p C, or npos if not
 comment|/// found.
-name|size_type
+name|size_t
 name|find_last_of
 argument_list|(
 name|char
@@ -1063,7 +1063,7 @@ comment|/// Find the last character in the string that is in \p C, or npos if no
 comment|/// found.
 comment|///
 comment|/// Complexity: O(size() + Chars.size())
-name|size_type
+name|size_t
 name|find_last_of
 argument_list|(
 name|StringRef
@@ -1078,7 +1078,7 @@ decl|const
 decl_stmt|;
 comment|/// Find the last character in the string that is not \p C, or npos if not
 comment|/// found.
-name|size_type
+name|size_t
 name|find_last_not_of
 argument_list|(
 name|char
@@ -1095,7 +1095,7 @@ comment|/// Find the last character in the string that is not in \p Chars, or
 comment|/// npos if not found.
 comment|///
 comment|/// Complexity: O(size() + Chars.size())
-name|size_type
+name|size_t
 name|find_last_not_of
 argument_list|(
 name|StringRef
@@ -1516,7 +1516,7 @@ begin_decl_stmt
 name|StringRef
 name|drop_front
 argument_list|(
-name|unsigned
+name|size_t
 name|N
 operator|=
 literal|1
@@ -1554,7 +1554,7 @@ begin_decl_stmt
 name|StringRef
 name|drop_back
 argument_list|(
-name|unsigned
+name|size_t
 name|N
 operator|=
 literal|1
@@ -2377,8 +2377,6 @@ name|string
 operator|&
 name|buffer
 operator|,
-name|llvm
-operator|::
 name|StringRef
 name|string
 operator|)

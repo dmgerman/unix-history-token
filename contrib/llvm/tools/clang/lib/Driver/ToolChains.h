@@ -46,6 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"Tools.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/VersionTuple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Action.h"
 end_include
 
@@ -58,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/VersionTuple.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Tools.h"
 end_include
 
 begin_decl_stmt
@@ -410,18 +410,6 @@ block|;
 name|GCCInstallationDetector
 name|GCCInstallation
 block|;
-name|mutable
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|unsigned
-block|,
-name|Tool
-operator|*
-operator|>
-name|Tools
-block|;
 name|public
 operator|:
 name|Generic_GCC
@@ -449,19 +437,6 @@ name|Generic_GCC
 argument_list|()
 block|;
 name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|bool
 name|IsUnwindTablesDefault
 argument_list|()
@@ -475,12 +450,41 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
 name|isPICDefaultForced
 argument_list|()
 specifier|const
 block|;
 name|protected
 operator|:
+name|virtual
+name|Tool
+operator|*
+name|getTool
+argument_list|(
+argument|Action::ActionClass AC
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;
 comment|/// \name ToolChain Implementation Helper Functions
 comment|/// @{
 comment|/// \brief Check whether the target triple's architecture is 64-bits.
@@ -512,74 +516,40 @@ argument_list|()
 return|;
 block|}
 comment|/// @}
-expr|}
-block|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Hexagon_TC
-operator|:
-name|public
-name|ToolChain
-block|{
-name|protected
+name|private
 operator|:
 name|mutable
-name|llvm
-operator|::
-name|DenseMap
+name|OwningPtr
 operator|<
-name|unsigned
-block|,
-name|Tool
-operator|*
-operator|>
-name|Tools
-block|;
-name|public
-operator|:
-name|Hexagon_TC
-argument_list|(
-specifier|const
-name|Driver
-operator|&
-name|D
-argument_list|,
-specifier|const
-name|llvm
+name|tools
 operator|::
-name|Triple
-operator|&
-name|Triple
-argument_list|)
+name|gcc
+operator|::
+name|Preprocess
+operator|>
+name|Preprocess
 block|;
-operator|~
-name|Hexagon_TC
-argument_list|()
+name|mutable
+name|OwningPtr
+operator|<
+name|tools
+operator|::
+name|gcc
+operator|::
+name|Precompile
+operator|>
+name|Precompile
 block|;
-name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|isPICDefault
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|bool
-name|isPICDefaultForced
-argument_list|()
-specifier|const
+name|mutable
+name|OwningPtr
+operator|<
+name|tools
+operator|::
+name|gcc
+operator|::
+name|Compile
+operator|>
+name|Compile
 block|; }
 block|;
 comment|/// Darwin - The base Darwin tool chain.
@@ -599,19 +569,65 @@ index|[
 literal|3
 index|]
 block|;
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|getTool
+argument_list|(
+argument|Action::ActionClass AC
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 name|mutable
-name|llvm
-operator|::
-name|DenseMap
+name|OwningPtr
 operator|<
-name|unsigned
-block|,
-name|Tool
-operator|*
+name|tools
+operator|::
+name|darwin
+operator|::
+name|Lipo
 operator|>
-name|Tools
+name|Lipo
+block|;
+name|mutable
+name|OwningPtr
+operator|<
+name|tools
+operator|::
+name|darwin
+operator|::
+name|Dsymutil
+operator|>
+name|Dsymutil
+block|;
+name|mutable
+name|OwningPtr
+operator|<
+name|tools
+operator|::
+name|darwin
+operator|::
+name|VerifyDebug
+operator|>
+name|VerifyDebug
 block|;
 comment|/// Whether the information on the target has been initialized.
 comment|//
@@ -677,6 +693,11 @@ operator|::
 name|Triple
 operator|&
 name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|)
 block|;
 operator|~
@@ -1005,19 +1026,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|bool
 name|IsBlocksDefault
 argument_list|()
@@ -1081,16 +1089,6 @@ specifier|const
 block|{
 return|return
 name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|IsObjCDefaultSynthPropertiesDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
 return|;
 block|}
 name|virtual
@@ -1213,6 +1211,12 @@ specifier|const
 expr_stmt|;
 name|virtual
 name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|bool
 name|isPICDefaultForced
 argument_list|()
 specifier|const
@@ -1273,6 +1277,11 @@ operator|::
 name|Triple
 operator|&
 name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|)
 block|;
 comment|/// @name Darwin ToolChain Implementation
@@ -1295,6 +1304,8 @@ argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|,
 argument|const char *DarwinStaticLib
+argument_list|,
+argument|bool AlwaysLink = false
 argument_list|)
 specifier|const
 block|;
@@ -1391,12 +1402,12 @@ return|return
 name|false
 return|;
 block|}
-block|; }
-decl_stmt|;
+expr|}
+block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Generic_ELF
-range|:
+operator|:
 name|public
 name|Generic_GCC
 block|{
@@ -1455,6 +1466,18 @@ name|llvm
 operator|::
 name|Triple
 operator|::
+name|aarch64
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
 name|x86
 operator|||
 name|getTriple
@@ -1502,17 +1525,20 @@ operator|&
 name|Args
 argument_list|)
 block|;
+name|protected
+operator|:
 name|virtual
 name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
 specifier|const
 block|; }
 block|;
@@ -1546,19 +1572,6 @@ name|Args
 argument_list|)
 block|;
 name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|bool
 name|IsIntegratedAssemblerDefault
 argument_list|()
@@ -1568,7 +1581,22 @@ return|return
 name|true
 return|;
 block|}
-expr|}
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;  }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1619,17 +1647,20 @@ return|return
 name|true
 return|;
 block|}
+name|protected
+operator|:
 name|virtual
 name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
 specifier|const
 block|; }
 block|;
@@ -1693,19 +1724,6 @@ name|false
 return|;
 block|}
 name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
@@ -1737,7 +1755,22 @@ return|return
 literal|1
 return|;
 block|}
-expr|}
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1788,24 +1821,27 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|bool
 name|UseSjLjExceptions
 argument_list|()
 specifier|const
+block|;
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
 block|; }
 block|;
 name|class
@@ -1858,16 +1894,37 @@ name|true
 return|;
 block|}
 name|virtual
-name|Tool
-operator|&
-name|SelectTool
+name|CXXStdlibType
+name|GetCXXStdlibType
 argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
+argument|const ArgList&Args
 argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
 specifier|const
 block|; }
 block|;
@@ -1900,17 +1957,20 @@ operator|&
 name|Args
 argument_list|)
 block|;
+name|protected
+operator|:
 name|virtual
 name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
 specifier|const
 block|; }
 block|;
@@ -1953,17 +2013,20 @@ return|return
 name|false
 return|;
 block|}
+name|protected
+operator|:
 name|virtual
 name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
 specifier|const
 block|; }
 block|;
@@ -2003,19 +2066,6 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|void
 name|AddClangSystemIncludeArgs
 argument_list|(
@@ -2029,6 +2079,8 @@ name|virtual
 name|void
 name|addClangTargetOptions
 argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
 argument|ArgStringList&CC1Args
 argument_list|)
 specifier|const
@@ -2041,6 +2093,12 @@ argument|const ArgList&DriverArgs
 argument_list|,
 argument|ArgStringList&CC1Args
 argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isPIEDefault
+argument_list|()
 specifier|const
 block|;
 name|std
@@ -2058,8 +2116,44 @@ name|string
 operator|>
 name|ExtraOpts
 block|;
+name|bool
+name|IsPIEDefault
+block|;
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
+specifier|static
+name|bool
+name|addLibStdCXXIncludePaths
+argument_list|(
+argument|Twine Base
+argument_list|,
+argument|Twine Suffix
+argument_list|,
+argument|Twine TargetArchDir
+argument_list|,
+argument|Twine MultiLibSuffix
+argument_list|,
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|addLibStdCXXIncludePaths
@@ -2071,6 +2165,131 @@ argument_list|,
 argument|const ArgList&DriverArgs
 argument_list|,
 argument|ArgStringList&CC1Args
+argument_list|)
+block|;
+name|std
+operator|::
+name|string
+name|computeSysRoot
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Hexagon_TC
+operator|:
+name|public
+name|Linux
+block|{
+name|protected
+operator|:
+name|GCCVersion
+name|GCCLibAndIncVersion
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;
+name|public
+operator|:
+name|Hexagon_TC
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+operator|~
+name|Hexagon_TC
+argument_list|()
+block|;
+name|virtual
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+block|;
+name|StringRef
+name|GetGCCLibAndIncVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GCCLibAndIncVersion
+operator|.
+name|Text
+return|;
+block|}
+specifier|static
+name|std
+operator|::
+name|string
+name|GetGnuDir
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|InstalledDir
+argument_list|)
+block|;
+specifier|static
+name|StringRef
+name|GetTargetCPU
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|)
 block|; }
 block|;
@@ -2098,24 +2317,16 @@ operator|::
 name|Triple
 operator|&
 name|Triple
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|)
 block|;
 operator|~
 name|TCEToolChain
 argument_list|()
-block|;
-name|virtual
-name|Tool
-operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
-argument_list|)
-specifier|const
 block|;
 name|bool
 name|IsMathErrnoDefault
@@ -2128,24 +2339,15 @@ argument_list|()
 specifier|const
 block|;
 name|bool
-name|isPICDefaultForced
+name|isPIEDefault
 argument_list|()
 specifier|const
 block|;
-name|private
-operator|:
-name|mutable
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|unsigned
-block|,
-name|Tool
-operator|*
-operator|>
-name|Tools
-block|;  }
+name|bool
+name|isPICDefaultForced
+argument_list|()
+specifier|const
+block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -2154,18 +2356,6 @@ operator|:
 name|public
 name|ToolChain
 block|{
-name|mutable
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|unsigned
-block|,
-name|Tool
-operator|*
-operator|>
-name|Tools
-block|;
 name|public
 operator|:
 name|Windows
@@ -2181,31 +2371,13 @@ operator|::
 name|Triple
 operator|&
 name|Triple
-argument_list|)
-block|;
-name|virtual
-name|Tool
+argument_list|,
+specifier|const
+name|ArgList
 operator|&
-name|SelectTool
-argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const ActionList&Inputs
+name|Args
 argument_list|)
-specifier|const
 block|;
-name|virtual
-name|bool
-name|IsObjCDefaultSynthPropertiesDefault
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 name|virtual
 name|bool
 name|IsIntegratedAssemblerDefault
@@ -2221,6 +2393,12 @@ block|;
 name|virtual
 name|bool
 name|isPICDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isPIEDefault
 argument_list|()
 specifier|const
 block|;
@@ -2249,7 +2427,23 @@ argument_list|,
 argument|ArgStringList&CC1Args
 argument_list|)
 specifier|const
-block|;  }
+block|;
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|; }
 block|;  }
 comment|// end namespace toolchains
 block|}

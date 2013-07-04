@@ -62,13 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
+file|"MCTargetDesc/MipsReginfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/MC/MCInstrItineraries.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
@@ -95,6 +107,9 @@ name|llvm
 block|{
 name|class
 name|StringRef
+decl_stmt|;
+name|class
+name|MipsTargetMachine
 decl_stmt|;
 name|class
 name|MipsSubtarget
@@ -185,15 +200,6 @@ comment|// HasCondMov - Conditional mov (MOVZ, MOVN) instructions.
 name|bool
 name|HasCondMov
 block|;
-comment|// HasMulDivAdd - Multiply add and sub (MADD, MADDu, MSUB, MSUBu)
-comment|// instructions.
-name|bool
-name|HasMulDivAdd
-block|;
-comment|// HasMinMax - MIN and MAX instructions.
-name|bool
-name|HasMinMax
-block|;
 comment|// HasSwap - Byte and half swap instructions.
 name|bool
 name|HasSwap
@@ -202,9 +208,21 @@ comment|// HasBitCount - Count leading '1' and '0' bits.
 name|bool
 name|HasBitCount
 block|;
+comment|// HasFPIdx -- Floating point indexed load/store instructions.
+name|bool
+name|HasFPIdx
+block|;
 comment|// InMips16 -- can process Mips16 instructions
 name|bool
 name|InMips16Mode
+block|;
+comment|// PreviousInMips16 -- the function we just processed was in Mips 16 Mode
+name|bool
+name|PreviousInMips16Mode
+block|;
+comment|// InMicroMips -- can process MicroMips instructions
+name|bool
+name|InMicroMipsMode
 block|;
 comment|// HasDSP, HasDSPR2 -- supports DSP ASE.
 name|bool
@@ -212,12 +230,44 @@ name|HasDSP
 block|,
 name|HasDSPR2
 block|;
-comment|// IsAndroid -- target is android
+comment|// Allow mixed Mips16 and Mips32 in one source file
 name|bool
-name|IsAndroid
+name|AllowMixed16_32
+block|;
+comment|// Optimize for space by compiling all functions as Mips 16 unless
+comment|// it needs floating point. Functions needing floating point are
+comment|// compiled as Mips32
+name|bool
+name|Os16
 block|;
 name|InstrItineraryData
 name|InstrItins
+block|;
+comment|// The instance to the register info section object
+name|MipsReginfo
+name|MRI
+block|;
+comment|// Relocation Model
+name|Reloc
+operator|::
+name|Model
+name|RM
+block|;
+comment|// We can override the determination of whether we are in mips16 mode
+comment|// as from the command line
+block|enum
+block|{
+name|NoOverride
+block|,
+name|Mips16Override
+block|,
+name|NoMips16Override
+block|}
+name|OverrideMode
+block|;
+name|MipsTargetMachine
+operator|*
+name|TM
 block|;
 name|public
 operator|:
@@ -300,6 +350,8 @@ argument_list|,
 argument|bool little
 argument_list|,
 argument|Reloc::Model RM
+argument_list|,
+argument|MipsTargetMachine *TM
 argument_list|)
 block|;
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
@@ -358,19 +410,6 @@ return|return
 name|MipsArchVersion
 operator|==
 name|Mips64r2
-return|;
-block|}
-name|bool
-name|hasMips32r2Or64
-argument_list|()
-specifier|const
-block|{
-return|return
-name|hasMips32r2
-argument_list|()
-operator|||
-name|hasMips64
-argument_list|()
 return|;
 block|}
 name|bool
@@ -443,8 +482,51 @@ name|inMips16Mode
 argument_list|()
 specifier|const
 block|{
+switch|switch
+condition|(
+name|OverrideMode
+condition|)
+block|{
+case|case
+name|NoOverride
+case|:
 return|return
 name|InMips16Mode
+return|;
+case|case
+name|Mips16Override
+case|:
+return|return
+name|true
+return|;
+case|case
+name|NoMips16Override
+case|:
+return|return
+name|false
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected mode"
+argument_list|)
+expr_stmt|;
+block|}
+name|bool
+name|inMips16ModeDefault
+argument_list|()
+block|{
+return|return
+name|InMips16Mode
+return|;
+block|}
+name|bool
+name|inMicroMipsMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InMicroMipsMode
 return|;
 block|}
 name|bool
@@ -463,15 +545,6 @@ specifier|const
 block|{
 return|return
 name|HasDSPR2
-return|;
-block|}
-name|bool
-name|isAndroid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsAndroid
 return|;
 block|}
 name|bool
@@ -523,24 +596,6 @@ name|HasCondMov
 return|;
 block|}
 name|bool
-name|hasMulDivAdd
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasMulDivAdd
-return|;
-block|}
-name|bool
-name|hasMinMax
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasMinMax
-return|;
-block|}
-name|bool
 name|hasSwap
 argument_list|()
 specifier|const
@@ -558,8 +613,70 @@ return|return
 name|HasBitCount
 return|;
 block|}
-expr|}
-block|; }
+name|bool
+name|hasFPIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFPIdx
+return|;
+block|}
+name|bool
+name|allowMixed16_32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllowMixed16_32
+return|;
+block|}
+block|;
+name|bool
+name|os16
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Os16
+return|;
+block|}
+block|;
+comment|// Grab MipsRegInfo object
+specifier|const
+name|MipsReginfo
+operator|&
+name|getMReginfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MRI
+return|;
+block|}
+comment|// Grab relocation model
+name|Reloc
+operator|::
+name|Model
+name|getRelocationModel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RM
+return|;
+block|}
+comment|/// \brief Reset the subtarget for the Mips target.
+name|void
+name|resetSubtarget
+argument_list|(
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;   }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -192,8 +192,6 @@ argument_list|(
 name|StringRef
 name|FileName
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Error

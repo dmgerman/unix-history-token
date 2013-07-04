@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclBase.h"
+file|"clang/AST/CharUnits.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/CharUnits.h"
+file|"clang/AST/DeclBase.h"
 end_include
 
 begin_include
@@ -99,7 +99,16 @@ name|ExternalSemaSource
 decl_stmt|;
 comment|// layering violation required for downcasting
 name|class
+name|FieldDecl
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
 name|NamedDecl
+decl_stmt|;
+name|class
+name|RecordDecl
 decl_stmt|;
 name|class
 name|Selector
@@ -274,16 +283,25 @@ name|uint64_t
 name|Offset
 parameter_list|)
 function_decl|;
-comment|/// \brief Finds all declarations with the given name in the
-comment|/// given context.
-comment|///
-comment|/// Generally the final step of this method is either to call
-comment|/// SetExternalVisibleDeclsForName or to recursively call lookup on
-comment|/// the DeclContext after calling SetExternalVisibleDecls.
-comment|///
-comment|/// The default implementation of this method is a no-op.
+comment|/// \brief Update an out-of-date identifier.
 name|virtual
-name|DeclContextLookupResult
+name|void
+name|updateOutOfDateIdentifier
+parameter_list|(
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|)
+block|{ }
+comment|/// \brief Find all declarations with the given name in the given context,
+comment|/// and add them to the context by calling SetExternalVisibleDeclsForName
+comment|/// or SetNoExternalVisibleDeclsForName.
+comment|/// \return \c true if any declarations might have been found, \c false if
+comment|/// we definitely have no declarations with tbis name.
+comment|///
+comment|/// The default implementation of this method is a no-op returning \c false.
+name|virtual
+name|bool
 name|FindExternalVisibleDeclsByName
 parameter_list|(
 specifier|const
@@ -298,7 +316,7 @@ function_decl|;
 comment|/// \brief Ensures that the table of all visible declarations inside this
 comment|/// context is up to date.
 comment|///
-comment|/// The default implementation of this functino is a no-op.
+comment|/// The default implementation of this function is a no-op.
 name|virtual
 name|void
 name|completeVisibleDeclsMap
@@ -309,6 +327,20 @@ modifier|*
 name|DC
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the module that corresponds to the given module ID.
+name|virtual
+name|Module
+modifier|*
+name|getModule
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
 comment|///

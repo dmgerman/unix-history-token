@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/Analysis/Dominators.h"
 end_include
 
 begin_comment

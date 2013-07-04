@@ -87,13 +87,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/IR/Intrinsics.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Intrinsics.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_decl_stmt
@@ -142,6 +142,11 @@ comment|// 2: For sm_20 and later, ieee-compliant div.rnd.f32 can be generated;
 comment|//    Otherwise, use div.full
 name|int
 name|do_DIVF32_PREC
+block|;
+comment|// If true, generate sqrt.rn, else generate sqrt.approx. If FTZ
+comment|// is true, then generate the corresponding FTZ version.
+name|bool
+name|do_SQRTF32_PREC
 block|;
 comment|// If true, add .ftz to f32 instructions.
 comment|// This is only meaningful for sm_20 and later, as the default
@@ -222,7 +227,34 @@ argument_list|)
 block|;
 name|SDNode
 operator|*
+name|SelectLoadVector
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectLDGLDUVector
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
 name|SelectStore
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectStoreVector
 argument_list|(
 name|SDNode
 operator|*

@@ -267,19 +267,20 @@ comment|/// allUsesAvailableAt - Return true if all registers used by OrigMI at
 comment|/// OrigIdx are also available with the same value at UseIdx.
 name|bool
 name|allUsesAvailableAt
-parameter_list|(
+argument_list|(
 specifier|const
 name|MachineInstr
-modifier|*
+operator|*
 name|OrigMI
-parameter_list|,
+argument_list|,
 name|SlotIndex
 name|OrigIdx
-parameter_list|,
+argument_list|,
 name|SlotIndex
 name|UseIdx
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// foldAsLoad - If LI has a single use and a single def that can be folded as
 comment|/// a load, eliminate the register by folding the def into the use.
 name|bool
@@ -740,12 +741,7 @@ name|unsigned
 operator|>
 name|RegsBeingSpilled
 operator|=
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
 comment|/// calculateRegClassAndHint - Recompute register class and hint for each new

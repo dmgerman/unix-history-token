@@ -69,6 +69,11 @@ name|MCSection
 operator|*
 name|SmallBSSSection
 block|;
+specifier|const
+name|MCSection
+operator|*
+name|ReginfoSection
+block|;
 name|public
 operator|:
 name|void
@@ -122,9 +127,19 @@ argument_list|)
 specifier|const
 block|;
 comment|// TODO: Classify globals as mips wishes.
+specifier|const
+name|MCSection
+operator|*
+name|getReginfoSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReginfoSection
+return|;
 block|}
-decl_stmt|;
-block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_comment

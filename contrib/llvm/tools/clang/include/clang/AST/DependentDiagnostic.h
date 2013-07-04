@@ -78,18 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/PartialDiagnostic.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/SourceLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/DeclBase.h"
 end_include
 
@@ -103,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/PartialDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_decl_stmt
@@ -453,8 +453,6 @@ decl_stmt|;
 name|PartialDiagnostic
 name|Diag
 decl_stmt|;
-union|union
-block|{
 struct|struct
 block|{
 name|unsigned
@@ -485,8 +483,6 @@ decl_stmt|;
 block|}
 name|AccessData
 struct|;
-block|}
-union|;
 block|}
 empty_stmt|;
 comment|///

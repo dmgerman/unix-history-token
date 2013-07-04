@@ -84,6 +84,9 @@ name|class
 name|InputArgList
 decl_stmt|;
 name|class
+name|JobAction
+decl_stmt|;
+name|class
 name|JobList
 decl_stmt|;
 name|class
@@ -154,12 +157,12 @@ name|ArgStringList
 name|TempFiles
 decl_stmt|;
 comment|/// Result files which should be removed on failure.
-name|ArgStringList
+name|ArgStringMap
 name|ResultFiles
 decl_stmt|;
 comment|/// Result files which are generated correctly on failure, and which should
 comment|/// only be removed if we crash.
-name|ArgStringList
+name|ArgStringMap
 name|FailureResultFiles
 decl_stmt|;
 comment|/// Redirection for stdout, stderr, etc.
@@ -324,7 +327,7 @@ name|TempFiles
 return|;
 block|}
 specifier|const
-name|ArgStringList
+name|ArgStringMap
 operator|&
 name|getResultFiles
 argument_list|()
@@ -335,7 +338,7 @@ name|ResultFiles
 return|;
 block|}
 specifier|const
-name|ArgStringList
+name|ArgStringMap
 operator|&
 name|getFailureResultFiles
 argument_list|()
@@ -406,14 +409,19 @@ specifier|const
 name|char
 modifier|*
 name|Name
+parameter_list|,
+specifier|const
+name|JobAction
+modifier|*
+name|JA
 parameter_list|)
 block|{
 name|ResultFiles
-operator|.
-name|push_back
-argument_list|(
+index|[
+name|JA
+index|]
+operator|=
 name|Name
-argument_list|)
 expr_stmt|;
 return|return
 name|Name
@@ -430,19 +438,43 @@ specifier|const
 name|char
 modifier|*
 name|Name
+parameter_list|,
+specifier|const
+name|JobAction
+modifier|*
+name|JA
 parameter_list|)
 block|{
 name|FailureResultFiles
-operator|.
-name|push_back
-argument_list|(
+index|[
+name|JA
+index|]
+operator|=
 name|Name
-argument_list|)
 expr_stmt|;
 return|return
 name|Name
 return|;
 block|}
+comment|/// CleanupFile - Delete a given file.
+comment|///
+comment|/// \param IssueErrors - Report failures as errors.
+comment|/// \return Whether the file was removed successfully.
+name|bool
+name|CleanupFile
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|File
+argument_list|,
+name|bool
+name|IssueErrors
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// CleanupFileList - Remove the files in the given list.
 comment|///
 comment|/// \param IssueErrors - Report failures as errors.
@@ -454,6 +486,32 @@ specifier|const
 name|ArgStringList
 operator|&
 name|Files
+argument_list|,
+name|bool
+name|IssueErrors
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// CleanupFileMap - Remove the files in the given map.
+comment|///
+comment|/// \param JA - If specified, only delete the files associated with this
+comment|/// JobAction.  Otherwise, delete all files in the map.
+comment|/// \param IssueErrors - Report failures as errors.
+comment|/// \return Whether all files were removed successfully.
+name|bool
+name|CleanupFileMap
+argument_list|(
+specifier|const
+name|ArgStringMap
+operator|&
+name|Files
+argument_list|,
+specifier|const
+name|JobAction
+operator|*
+name|JA
 argument_list|,
 name|bool
 name|IssueErrors
@@ -533,10 +591,9 @@ decl|const
 decl_stmt|;
 comment|/// ExecuteJob - Execute a single job.
 comment|///
-comment|/// \param FailingCommand - For non-zero results, this will be set to the
-comment|/// Command which failed.
-comment|/// \return The accumulated result code of the job.
-name|int
+comment|/// \param FailingCommands - For non-zero results, this will be a vector of
+comment|/// failing commands and their associated result code.
+name|void
 name|ExecuteJob
 argument_list|(
 specifier|const
@@ -544,11 +601,21 @@ name|Job
 operator|&
 name|J
 argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+argument_list|,
 specifier|const
 name|Command
 operator|*
+operator|>
+expr|>
 operator|&
-name|FailingCommand
+name|FailingCommands
 argument_list|)
 decl|const
 decl_stmt|;

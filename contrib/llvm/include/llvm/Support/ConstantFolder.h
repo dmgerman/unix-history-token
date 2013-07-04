@@ -74,13 +74,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Constants.h"
+file|"llvm/IR/Constants.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/InstrTypes.h"
+file|"llvm/IR/InstrTypes.h"
 end_include
 
 begin_decl_stmt

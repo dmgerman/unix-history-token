@@ -27,41 +27,51 @@ end_endif
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|__get_cpuid
 parameter_list|(
 name|unsigned
 name|int
-name|level
+name|__level
 parameter_list|,
 name|unsigned
 name|int
 modifier|*
-name|eax
+name|__eax
 parameter_list|,
 name|unsigned
 name|int
 modifier|*
-name|ebx
+name|__ebx
 parameter_list|,
 name|unsigned
 name|int
 modifier|*
-name|ecx
+name|__ecx
 parameter_list|,
 name|unsigned
 name|int
 modifier|*
-name|edx
+name|__edx
 parameter_list|)
 block|{
-asm|__asm("cpuid" : "=a"(*eax), "=b" (*ebx), "=c"(*ecx), "=d"(*edx) : "0"(level));
+asm|__asm("cpuid" : "=a"(*__eax), "=b" (*__ebx), "=c"(*__ecx), "=d"(*__edx)
+block|:
+literal|"0"
+operator|(
+name|__level
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
 return|return
 literal|1
 return|;
-block|}
-end_function
+end_return
 
+unit|}
 end_unit
 

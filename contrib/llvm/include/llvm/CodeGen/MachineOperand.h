@@ -116,6 +116,11 @@ name|MCSymbol
 decl_stmt|;
 comment|/// MachineOperand class - Representation of each machine instruction operand.
 comment|///
+comment|/// This class isn't a POD type because it has a private constructor, but its
+comment|/// destructor must be trivial. Functions like MachineInstr::addOperand(),
+comment|/// MachineRegisterInfo::moveOperands(), and MF::DeleteMachineInstr() depend on
+comment|/// not having to call the MachineOperand destructor.
+comment|///
 name|class
 name|MachineOperand
 block|{
@@ -179,22 +184,15 @@ name|char
 name|OpKind
 decl_stmt|;
 comment|// MachineOperandType
-comment|// This union is discriminated by OpKind.
-union|union
-block|{
-comment|/// SubReg - Subregister number, only valid for MO_Register.  A value of 0
-comment|/// indicates the MO_Register has no subReg.
+comment|/// Subregister number for MO_Register.  A value of 0 indicates the
+comment|/// MO_Register has no subReg.
+comment|///
+comment|/// For all other kinds of operands, this field holds target-specific flags.
 name|unsigned
-name|char
-name|SubReg
+name|SubReg_TargetFlags
+range|:
+literal|12
 decl_stmt|;
-comment|/// TargetFlags - This is a set of target-specific operand flags.
-name|unsigned
-name|char
-name|TargetFlags
-decl_stmt|;
-block|}
-union|;
 comment|/// TiedTo - Non-zero when this register operand is tied to another register
 comment|/// operand. The encoding of this field is described in the block comment
 comment|/// before MachineInstr::tieOperands().
@@ -418,15 +416,16 @@ argument_list|(
 name|K
 argument_list|)
 operator|,
+name|SubReg_TargetFlags
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|ParentMI
 argument_list|(
 literal|0
 argument_list|)
-block|{
-name|TargetFlags
-operator|=
-literal|0
-block|;   }
+block|{}
 name|public
 operator|:
 comment|/// getType - Returns the MachineOperandType for this operand.
@@ -444,7 +443,6 @@ name|OpKind
 return|;
 block|}
 name|unsigned
-name|char
 name|getTargetFlags
 argument_list|()
 specifier|const
@@ -455,14 +453,13 @@ argument_list|()
 operator|?
 literal|0
 operator|:
-name|TargetFlags
+name|SubReg_TargetFlags
 return|;
 block|}
 name|void
 name|setTargetFlags
 parameter_list|(
 name|unsigned
-name|char
 name|F
 parameter_list|)
 block|{
@@ -475,16 +472,24 @@ operator|&&
 literal|"Register operands can't have target flags"
 argument_list|)
 expr_stmt|;
-name|TargetFlags
+name|SubReg_TargetFlags
 operator|=
 name|F
+expr_stmt|;
+name|assert
+argument_list|(
+name|SubReg_TargetFlags
+operator|==
+name|F
+operator|&&
+literal|"Target flags out of range"
+argument_list|)
 expr_stmt|;
 block|}
 name|void
 name|addTargetFlag
 parameter_list|(
 name|unsigned
-name|char
 name|F
 parameter_list|)
 block|{
@@ -497,9 +502,20 @@ operator|&&
 literal|"Register operands can't have target flags"
 argument_list|)
 expr_stmt|;
-name|TargetFlags
+name|SubReg_TargetFlags
 operator||=
 name|F
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|SubReg_TargetFlags
+operator|&
+name|F
+operator|)
+operator|&&
+literal|"Target flags out of range"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// getParent - Return the instruction that this operand belongs to.
@@ -776,10 +792,7 @@ literal|"Wrong MachineOperand accessor"
 argument_list|)
 block|;
 return|return
-operator|(
-name|unsigned
-operator|)
-name|SubReg
+name|SubReg_TargetFlags
 return|;
 block|}
 name|bool
@@ -1018,13 +1031,18 @@ operator|&&
 literal|"Wrong MachineOperand accessor"
 argument_list|)
 expr_stmt|;
-name|SubReg
+name|SubReg_TargetFlags
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
 name|subReg
+expr_stmt|;
+name|assert
+argument_list|(
+name|SubReg_TargetFlags
+operator|==
+name|subReg
+operator|&&
+literal|"SubReg out of range"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// substVirtReg - Substitute the current register with the virtual
@@ -2087,9 +2105,10 @@ literal|0
 expr_stmt|;
 name|Op
 operator|.
+name|setSubReg
+argument_list|(
 name|SubReg
-operator|=
-name|SubReg
+argument_list|)
 expr_stmt|;
 return|return
 name|Op

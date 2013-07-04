@@ -228,22 +228,27 @@ name|AtLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|AtLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|String
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -368,17 +373,24 @@ name|Value
 operator|=
 name|V
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|Loc
-argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
 return|;
 block|}
 name|SourceLocation
@@ -575,6 +587,32 @@ name|getBegin
 argument_list|()
 return|;
 block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -644,7 +682,7 @@ name|ArrayWithObjectsMethod
 block|;
 name|ObjCArrayLiteral
 argument_list|(
-argument|llvm::ArrayRef<Expr *> Elements
+argument|ArrayRef<Expr *> Elements
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -682,7 +720,7 @@ name|Create
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|llvm::ArrayRef<Expr *> Elements
+argument|ArrayRef<Expr *> Elements
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -701,6 +739,32 @@ argument_list|,
 argument|unsigned NumElements
 argument_list|)
 block|;
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -915,8 +979,6 @@ name|EllipsisLoc
 block|;
 comment|/// \brief The number of elements this pack expansion will expand to, if
 comment|/// this is a pack expansion and is known.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -937,7 +999,30 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;
+block|; }
+comment|// end namespace clang
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|ObjCDictionaryElement
+operator|>
+operator|:
+name|llvm
+operator|::
+name|true_type
+block|{}
+block|; }
+name|namespace
+name|clang
+block|{
 comment|/// ObjCDictionaryLiteral - AST node to represent objective-c dictionary
 comment|/// literals; as in:  @{@"name" : NSUserName(), @"date" : [NSDate date] };
 name|class
@@ -1225,14 +1310,7 @@ block|,
 name|SourceLocation
 argument_list|()
 block|,
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 block|}
 block|;
 if|if
@@ -1290,6 +1368,32 @@ specifier|const
 block|{
 return|return
 name|DictWithObjectsMethod
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
 return|;
 block|}
 name|SourceRange
@@ -1539,19 +1643,24 @@ name|EncodedType
 operator|=
 name|EncType
 block|;    }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|AtLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -1714,19 +1823,24 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|AtLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 comment|/// getNumArgs - Return the number of actual arguments to this call.
@@ -1770,9 +1884,13 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCProtocolExpr used for protocol expression in Objective-C.  This is used
-comment|/// as: @protocol(foo), as in:
-comment|///   obj conformsToProtocol:@protocol(foo)]
+comment|/// ObjCProtocolExpr used for protocol expression in Objective-C.
+comment|///
+comment|/// This is used as: \@protocol(foo), as in:
+comment|/// \code
+comment|///   [obj conformsToProtocol:@protocol(foo)]
+comment|/// \endcode
+comment|///
 comment|/// The return type is "Protocol*".
 name|class
 name|ObjCProtocolExpr
@@ -1925,19 +2043,24 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|AtLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -1993,6 +2116,10 @@ block|;
 name|SourceLocation
 name|Loc
 block|;
+comment|/// OpLoc - This is the location of '.' or '->'
+name|SourceLocation
+name|OpLoc
+block|;
 name|bool
 name|IsArrow
 operator|:
@@ -2015,6 +2142,8 @@ argument|QualType t
 argument_list|,
 argument|SourceLocation l
 argument_list|,
+argument|SourceLocation oploc
+argument_list|,
 argument|Expr *base
 argument_list|,
 argument|bool arrow = false
@@ -2030,6 +2159,13 @@ name|t
 argument_list|,
 name|VK_LValue
 argument_list|,
+name|d
+operator|->
+name|isBitField
+argument_list|()
+condition|?
+name|OK_BitField
+else|:
 name|OK_Ordinary
 argument_list|,
 comment|/*TypeDependent=*/
@@ -2064,6 +2200,11 @@ block|,
 name|Loc
 argument_list|(
 name|l
+argument_list|)
+block|,
+name|OpLoc
+argument_list|(
+name|oploc
 argument_list|)
 block|,
 name|IsArrow
@@ -2218,8 +2359,8 @@ name|Loc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -2227,24 +2368,45 @@ block|{
 return|return
 name|isFreeIvar
 argument_list|()
-operator|?
-name|SourceRange
-argument_list|(
+condition|?
 name|Loc
-argument_list|)
-operator|:
-name|SourceRange
-argument_list|(
+else|:
 name|getBase
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
-name|Loc
-argument_list|)
 return|;
 block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|SourceLocation
+name|getOpLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpLoc
+return|;
+block|}
+name|void
+name|setOpLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|OpLoc
+operator|=
+name|L
+block|; }
 specifier|static
 name|bool
 name|classof
@@ -3332,16 +3494,13 @@ operator|(
 operator|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
-operator|(
 name|isObjectReceiver
 argument_list|()
 operator|?
@@ -3353,10 +3512,16 @@ argument_list|()
 operator|:
 name|getReceiverLocation
 argument_list|()
-operator|)
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|IdLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -3799,15 +3964,13 @@ name|RBracket
 operator|=
 name|RB
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|SubExprs
 index|[
 name|BASE
@@ -3815,9 +3978,16 @@ index|]
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RBracket
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -5646,19 +5816,27 @@ block|}
 end_block
 
 begin_expr_stmt
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|LBracLoc
-argument_list|,
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RBracLoc
-argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -5839,6 +6017,10 @@ comment|/// IsaMemberLoc - This is the location of the 'isa'.
 name|SourceLocation
 name|IsaMemberLoc
 block|;
+comment|/// OpLoc - This is the location of '.' or '->'
+name|SourceLocation
+name|OpLoc
+block|;
 comment|/// IsArrow - True if this is "X->F", false if this is "X.F".
 name|bool
 name|IsArrow
@@ -5852,6 +6034,8 @@ argument_list|,
 argument|bool isarrow
 argument_list|,
 argument|SourceLocation l
+argument_list|,
+argument|SourceLocation oploc
 argument_list|,
 argument|QualType ty
 argument_list|)
@@ -5891,6 +6075,11 @@ block|,
 name|IsaMemberLoc
 argument_list|(
 name|l
+argument_list|)
+block|,
+name|OpLoc
+argument_list|(
+name|oploc
 argument_list|)
 block|,
 name|IsArrow
@@ -5978,23 +6167,61 @@ name|IsaMemberLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getOpLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpLoc
+return|;
+block|}
+name|void
+name|setOpLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|OpLoc
+operator|=
+name|L
+block|; }
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getBase
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getBaseLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getBase
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|IsaMemberLoc
-argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -6224,8 +6451,8 @@ argument_list|)
 return|;
 block|}
 comment|// Source locations are determined by the subexpression.
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -6233,7 +6460,20 @@ block|{
 return|return
 name|Operand
 operator|->
-name|getSourceRange
+name|getLocStart
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Operand
+operator|->
+name|getLocEnd
 argument_list|()
 return|;
 block|}
@@ -6409,23 +6649,28 @@ return|return
 name|BridgeKeywordLoc
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|LParenLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getSubExpr
 argument_list|()
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 specifier|static

@@ -71,6 +71,18 @@ directive|define
 name|LLVM_CODEGEN_ALLOCATIONORDER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCRegisterInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -84,35 +96,26 @@ decl_stmt|;
 name|class
 name|AllocationOrder
 block|{
-specifier|const
-name|unsigned
-modifier|*
-name|Begin
-decl_stmt|;
-specifier|const
-name|unsigned
-modifier|*
-name|End
-decl_stmt|;
-specifier|const
-name|unsigned
-modifier|*
+name|SmallVector
+operator|<
+name|MCPhysReg
+operator|,
+literal|16
+operator|>
+name|Hints
+expr_stmt|;
+name|ArrayRef
+operator|<
+name|MCPhysReg
+operator|>
+name|Order
+expr_stmt|;
+name|int
 name|Pos
-decl_stmt|;
-specifier|const
-name|RegisterClassInfo
-modifier|&
-name|RCI
-decl_stmt|;
-name|unsigned
-name|Hint
-decl_stmt|;
-name|bool
-name|OwnedBegin
 decl_stmt|;
 name|public
 label|:
-comment|/// AllocationOrder - Create a new AllocationOrder for VirtReg.
+comment|/// Create a new AllocationOrder for VirtReg.
 comment|/// @param VirtReg      Virtual register to allocate for.
 comment|/// @param VRM          Virtual register map for function.
 comment|/// @param RegClassInfo Information about reserved and allocatable registers.
@@ -125,56 +128,71 @@ argument_list|,
 argument|const RegisterClassInfo&RegClassInfo
 argument_list|)
 empty_stmt|;
-operator|~
-name|AllocationOrder
+comment|/// Get the allocation order without reordered hints.
+name|ArrayRef
+operator|<
+name|MCPhysReg
+operator|>
+name|getOrder
 argument_list|()
-expr_stmt|;
-comment|/// next - Return the next physical register in the allocation order, or 0.
-comment|/// It is safe to call next again after it returned 0.
-comment|/// It will keep returning 0 until rewind() is called.
+specifier|const
+block|{
+return|return
+name|Order
+return|;
+block|}
+comment|/// Return the next physical register in the allocation order, or 0.
+comment|/// It is safe to call next() again after it returned 0, it will keep
+comment|/// returning 0 until rewind() is called.
 name|unsigned
 name|next
 parameter_list|()
 block|{
-comment|// First take the hint.
 if|if
 condition|(
-operator|!
 name|Pos
-condition|)
-block|{
-name|Pos
-operator|=
-name|Begin
-expr_stmt|;
-if|if
-condition|(
-name|Hint
+operator|<
+literal|0
 condition|)
 return|return
-name|Hint
+name|Hints
+operator|.
+name|end
+argument_list|()
+index|[
+name|Pos
+operator|++
+index|]
 return|;
-block|}
-comment|// Then look at the order from TRI.
 while|while
 condition|(
 name|Pos
-operator|!=
-name|End
+operator|<
+name|int
+argument_list|(
+name|Order
+operator|.
+name|size
+argument_list|()
+argument_list|)
 condition|)
 block|{
 name|unsigned
 name|Reg
 init|=
-operator|*
+name|Order
+index|[
 name|Pos
 operator|++
+index|]
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|isHint
+argument_list|(
 name|Reg
-operator|!=
-name|Hint
+argument_list|)
 condition|)
 return|return
 name|Reg
@@ -184,17 +202,83 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// rewind - Start over from the beginning.
+comment|/// As next(), but allow duplicates to be returned, and stop before the
+comment|/// Limit'th register in the RegisterClassInfo allocation order.
+comment|///
+comment|/// This can produce more than Limit registers if there are hints.
+name|unsigned
+name|nextWithDups
+parameter_list|(
+name|unsigned
+name|Limit
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Pos
+operator|<
+literal|0
+condition|)
+return|return
+name|Hints
+operator|.
+name|end
+argument_list|()
+index|[
+name|Pos
+operator|++
+index|]
+return|;
+if|if
+condition|(
+name|Pos
+operator|<
+name|int
+argument_list|(
+name|Limit
+argument_list|)
+condition|)
+return|return
+name|Order
+index|[
+name|Pos
+operator|++
+index|]
+return|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// Start over from the beginning.
 name|void
 name|rewind
 parameter_list|()
 block|{
 name|Pos
 operator|=
-literal|0
+operator|-
+name|int
+argument_list|(
+name|Hints
+operator|.
+name|size
+argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
-comment|/// isHint - Return true if PhysReg is a preferred register.
+comment|/// Return true if the last register returned from next() was a preferred register.
+name|bool
+name|isHint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pos
+operator|<=
+literal|0
+return|;
+block|}
+comment|/// Return true if PhysReg is a preferred register.
 name|bool
 name|isHint
 argument_list|(
@@ -204,9 +288,27 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|std
+operator|::
+name|find
+argument_list|(
+name|Hints
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Hints
+operator|.
+name|end
+argument_list|()
+argument_list|,
 name|PhysReg
-operator|==
-name|Hint
+argument_list|)
+operator|!=
+name|Hints
+operator|.
+name|end
+argument_list|()
 return|;
 block|}
 block|}

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/CallPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/DomPrinter.h"
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/IntervalPartition.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/Lint.h"
 end_include
 
 begin_include
@@ -120,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Lint.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Assembly/PrintModulePass.h"
 end_include
 
@@ -138,13 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Transforms/Instrumentation.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -156,19 +156,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Transforms/Instrumentation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Transforms/ObjCARC.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Transforms/Scalar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Transforms/Vectorize.h"
+file|"llvm/Transforms/Utils/UnifyFunctionExitNodes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Transforms/Utils/UnifyFunctionExitNodes.h"
+file|"llvm/Transforms/Vectorize.h"
 end_include
 
 begin_include
@@ -306,6 +318,22 @@ operator|)
 name|llvm
 operator|::
 name|createBreakCriticalEdgesPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createCallGraphPrinterPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createCallGraphViewerPass
 argument_list|()
 expr_stmt|;
 operator|(
@@ -1039,8 +1067,10 @@ name|void
 operator|)
 name|llvm
 operator|::
-name|createDbgInfoPrinterPass
-argument_list|()
+name|createPrintBasicBlockPass
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1112,6 +1142,14 @@ operator|)
 name|llvm
 operator|::
 name|createLoopVectorizePass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
+name|createSLPVectorizerPass
 argument_list|()
 expr_stmt|;
 operator|(

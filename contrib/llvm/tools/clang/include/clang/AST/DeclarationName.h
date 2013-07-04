@@ -68,18 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/CanonicalType.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/PartialDiagnostic.h"
 end_include
 
@@ -109,13 +97,16 @@ name|namespace
 name|clang
 block|{
 name|class
-name|CXXSpecialName
+name|ASTContext
+decl_stmt|;
+name|class
+name|CXXLiteralOperatorIdName
 decl_stmt|;
 name|class
 name|CXXOperatorIdName
 decl_stmt|;
 name|class
-name|CXXLiteralOperatorIdName
+name|CXXSpecialName
 decl_stmt|;
 name|class
 name|DeclarationNameExtra
@@ -127,11 +118,31 @@ name|class
 name|MultiKeywordSelector
 decl_stmt|;
 name|class
-name|UsingDirectiveDecl
+name|QualType
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|TypeSourceInfo
 decl_stmt|;
+name|class
+name|UsingDirectiveDecl
+decl_stmt|;
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|CanQual
+expr_stmt|;
+typedef|typedef
+name|CanQual
+operator|<
+name|Type
+operator|>
+name|CanQualType
+expr_stmt|;
 comment|/// DeclarationName - The name of a declaration. In the common case,
 comment|/// this just stores an IdentifierInfo pointer to a normal
 comment|/// name. However, it also provides encodings for Objective-C
@@ -1449,21 +1460,7 @@ parameter_list|(
 name|CanQualType
 name|Ty
 parameter_list|)
-block|{
-return|return
-name|getCXXSpecialName
-argument_list|(
-name|DeclarationName
-operator|::
-name|CXXConstructorName
-argument_list|,
-name|Ty
-operator|.
-name|getUnqualifiedType
-argument_list|()
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// getCXXDestructorName - Returns the name of a C++ destructor
 comment|/// for the given Type.
 name|DeclarationName
@@ -1472,21 +1469,7 @@ parameter_list|(
 name|CanQualType
 name|Ty
 parameter_list|)
-block|{
-return|return
-name|getCXXSpecialName
-argument_list|(
-name|DeclarationName
-operator|::
-name|CXXDestructorName
-argument_list|,
-name|Ty
-operator|.
-name|getUnqualifiedType
-argument_list|()
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// getCXXConversionFunctionName - Returns the name of a C++
 comment|/// conversion function for the given Type.
 name|DeclarationName
@@ -1495,18 +1478,7 @@ parameter_list|(
 name|CanQualType
 name|Ty
 parameter_list|)
-block|{
-return|return
-name|getCXXSpecialName
-argument_list|(
-name|DeclarationName
-operator|::
-name|CXXConversionFunctionName
-argument_list|,
-name|Ty
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// getCXXSpecialName - Returns a declaration name for special kind
 comment|/// of C++ name, e.g., for a constructor, destructor, or conversion
 comment|/// function.
@@ -1564,24 +1536,23 @@ begin_struct
 struct|struct
 name|DeclarationNameLoc
 block|{
-union|union
-block|{
 comment|// The source location for identifier stored elsewhere.
 comment|// struct {} Identifier;
 comment|// Type info for constructors, destructors and conversion functions.
 comment|// Locations (if any) for the tilde (destructor) or operator keyword
 comment|// (conversion) are stored elsewhere.
 struct|struct
+name|NT
 block|{
 name|TypeSourceInfo
 modifier|*
 name|TInfo
 decl_stmt|;
 block|}
-name|NamedType
 struct|;
 comment|// The location (if any) of the operator keyword is stored elsewhere.
 struct|struct
+name|CXXOpName
 block|{
 name|unsigned
 name|BeginOpNameLoc
@@ -1590,21 +1561,34 @@ name|unsigned
 name|EndOpNameLoc
 decl_stmt|;
 block|}
-name|CXXOperatorName
 struct|;
 comment|// The location (if any) of the operator keyword is stored elsewhere.
 struct|struct
+name|CXXLitOpName
 block|{
 name|unsigned
 name|OpNameLoc
 decl_stmt|;
 block|}
-name|CXXLiteralOperatorName
 struct|;
 comment|// struct {} CXXUsingDirective;
 comment|// struct {} ObjCZeroArgSelector;
 comment|// struct {} ObjCOneArgSelector;
 comment|// struct {} ObjCMultiArgSelector;
+union|union
+block|{
+name|struct
+name|NT
+name|NamedType
+decl_stmt|;
+name|struct
+name|CXXOpName
+name|CXXOperatorName
+decl_stmt|;
+name|struct
+name|CXXLitOpName
+name|CXXLiteralOperatorName
+decl_stmt|;
 block|}
 union|;
 name|DeclarationNameLoc
@@ -2112,31 +2096,14 @@ argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
-name|SourceLocation
-name|BeginLoc
-operator|=
-name|getBeginLoc
-argument_list|()
-block|;
-name|SourceLocation
-name|EndLoc
-operator|=
-name|getEndLoc
-argument_list|()
-block|;
 return|return
 name|SourceRange
 argument_list|(
-name|BeginLoc
-argument_list|,
-name|EndLoc
-operator|.
-name|isValid
+name|getLocStart
 argument_list|()
-condition|?
-name|EndLoc
-else|:
-name|BeginLoc
+argument_list|,
+name|getLocEnd
+argument_list|()
 argument_list|)
 return|;
 block|}

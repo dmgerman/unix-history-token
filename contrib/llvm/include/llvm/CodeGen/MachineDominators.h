@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/DominatorInternals.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/Dominators.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -79,18 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/Dominators.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/DominatorInternals.h"
 end_include
 
 begin_decl_stmt
@@ -256,9 +256,9 @@ specifier|inline
 name|bool
 name|dominates
 argument_list|(
-argument|MachineDomTreeNode* A
+argument|const MachineDomTreeNode* A
 argument_list|,
-argument|MachineDomTreeNode* B
+argument|const MachineDomTreeNode* B
 argument_list|)
 specifier|const
 block|{
@@ -277,9 +277,9 @@ specifier|inline
 name|bool
 name|dominates
 argument_list|(
-argument|MachineBasicBlock* A
+argument|const MachineBasicBlock* A
 argument_list|,
-argument|MachineBasicBlock* B
+argument|const MachineBasicBlock* B
 argument_list|)
 specifier|const
 block|{
@@ -299,12 +299,13 @@ comment|// special checks necessary if A and B are in the same basic block.
 name|bool
 name|dominates
 argument_list|(
-argument|MachineInstr *A
+argument|const MachineInstr *A
 argument_list|,
-argument|MachineInstr *B
+argument|const MachineInstr *B
 argument_list|)
 specifier|const
 block|{
+specifier|const
 name|MachineBasicBlock
 operator|*
 name|BBA
@@ -341,7 +342,7 @@ return|;
 comment|// Loop through the basic block until we find A or B.
 name|MachineBasicBlock
 operator|::
-name|iterator
+name|const_iterator
 name|I
 operator|=
 name|BBA
@@ -395,6 +396,7 @@ name|MachineDomTreeNode
 operator|*
 name|A
 argument_list|,
+specifier|const
 name|MachineDomTreeNode
 operator|*
 name|B
@@ -419,10 +421,12 @@ specifier|inline
 name|bool
 name|properlyDominates
 argument_list|(
+specifier|const
 name|MachineBasicBlock
 operator|*
 name|A
 argument_list|,
+specifier|const
 name|MachineBasicBlock
 operator|*
 name|B
@@ -713,6 +717,7 @@ begin_function
 name|bool
 name|isReachableFromEntry
 parameter_list|(
+specifier|const
 name|MachineBasicBlock
 modifier|*
 name|A

@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/Store.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState_Fwd.h"
 end_include
 
 begin_include
@@ -98,19 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState_Fwd.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/Store.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/TaintTag.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_include
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ImmutableMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
 end_include
 
 begin_decl_stmt
@@ -559,6 +559,11 @@ comment|//
 comment|// The output of "assume*" is a new ProgramState object with the added constraints.
 comment|// If no new state is feasible, NULL is returned.
 comment|//
+comment|/// Assumes that the value of \p cond is zero (if \p assumption is "false")
+comment|/// or non-zero (if \p assumption is "true").
+comment|///
+comment|/// This returns a new state with the added constraint on \p cond.
+comment|/// If no new state is feasible, NULL is returned.
 name|ProgramStateRef
 name|assume
 argument_list|(
@@ -570,9 +575,11 @@ name|assumption
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// This method assumes both "true" and "false" for 'cond', and
-comment|///  returns both corresponding states.  It's shorthand for doing
-comment|///  'assume' twice.
+comment|/// Assumes both "true" and "false" for \p cond, and returns both
+comment|/// corresponding states (respectively).
+comment|///
+comment|/// This is more efficient than calling assume() twice. Note that one (but not
+comment|/// both) of the returned states may be NULL.
 name|std
 operator|::
 name|pair
@@ -607,6 +614,16 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Check if the given SVal is constrained to zero or is a zero
+comment|///        constant.
+name|ConditionTruthVal
+name|isNull
+argument_list|(
+name|SVal
+name|V
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Utility method for getting regions.
 specifier|const
 name|VarRegion
@@ -628,28 +645,6 @@ decl_stmt|;
 comment|//==---------------------------------------------------------------------==//
 comment|// Binding and retrieving values to/from the environment and symbolic store.
 comment|//==---------------------------------------------------------------------==//
-comment|/// \brief Create a new state with the specified CompoundLiteral binding.
-comment|/// \param CL the compound literal expression (the binding key)
-comment|/// \param LC the LocationContext of the binding
-comment|/// \param V the value to bind.
-name|ProgramStateRef
-name|bindCompoundLiteral
-argument_list|(
-specifier|const
-name|CompoundLiteralExpr
-operator|*
-name|CL
-argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|LC
-argument_list|,
-name|SVal
-name|V
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Create a new state by binding the value 'V' to the statement 'S' in the
 comment|/// state's environment.
 name|ProgramStateRef
@@ -672,29 +667,6 @@ name|bool
 name|Invalidate
 operator|=
 name|true
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Create a new state by binding the value 'V' and location 'locaton' to the
-comment|/// statement 'S' in the state's environment.
-name|ProgramStateRef
-name|bindExprAndLocation
-argument_list|(
-specifier|const
-name|Stmt
-operator|*
-name|S
-argument_list|,
-specifier|const
-name|LocationContext
-operator|*
-name|LCtx
-argument_list|,
-name|SVal
-name|location
-argument_list|,
-name|SVal
-name|V
 argument_list|)
 decl|const
 decl_stmt|;
@@ -744,9 +716,24 @@ name|LV
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// invalidateRegions - Returns the state with bindings for the given regions
-comment|///  cleared from the store. The regions are provided as a continuous array
-comment|///  from Begin to End. Optionally invalidates global regions as well.
+comment|/// \brief Returns the state with bindings for the given regions
+comment|///  cleared from the store.
+comment|///
+comment|/// Optionally invalidates global regions as well.
+comment|///
+comment|/// \param Regions the set of regions to be invalidated.
+comment|/// \param E the expression that caused the invalidation.
+comment|/// \param BlockCount The number of times the current basic block has been
+comment|//         visited.
+comment|/// \param CausesPointerEscape the flag is set to true when
+comment|///        the invalidation entails escape of a symbol (representing a
+comment|///        pointer). For example, due to it being passed as an argument in a
+comment|///        call.
+comment|/// \param IS the set of invalidated symbols.
+comment|/// \param Call if non-null, the invalidated regions represent parameters to
+comment|///        the call and should be considered directly invalidated.
+comment|/// \param ConstRegions the set of regions whose contents are accessible,
+comment|///        even though the regions themselves should not be invalidated.
 name|ProgramStateRef
 name|invalidateRegions
 argument_list|(
@@ -771,8 +758,9 @@ name|LocationContext
 operator|*
 name|LCtx
 argument_list|,
-name|StoreManager
-operator|::
+name|bool
+name|CausesPointerEscape
+argument_list|,
 name|InvalidatedSymbols
 operator|*
 name|IS
@@ -785,6 +773,76 @@ operator|*
 name|Call
 operator|=
 literal|0
+argument_list|,
+name|ArrayRef
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+operator|>
+name|ConstRegions
+operator|=
+name|ArrayRef
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl|const
+decl_stmt|;
+name|ProgramStateRef
+name|invalidateRegions
+argument_list|(
+name|ArrayRef
+operator|<
+name|SVal
+operator|>
+name|Regions
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+name|unsigned
+name|BlockCount
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
+name|bool
+name|CausesPointerEscape
+argument_list|,
+name|InvalidatedSymbols
+operator|*
+name|IS
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|CallEvent
+operator|*
+name|Call
+operator|=
+literal|0
+argument_list|,
+name|ArrayRef
+operator|<
+name|SVal
+operator|>
+name|ConstRegions
+operator|=
+name|ArrayRef
+operator|<
+name|SVal
+operator|>
+operator|(
+operator|)
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1607,16 +1665,16 @@ modifier|*
 name|state
 parameter_list|)
 function_decl|;
+comment|/// \sa invalidateValues()
+comment|/// \sa invalidateRegions()
 name|ProgramStateRef
 name|invalidateRegionsImpl
 argument_list|(
 name|ArrayRef
 operator|<
-specifier|const
-name|MemRegion
-operator|*
+name|SVal
 operator|>
-name|Regions
+name|Values
 argument_list|,
 specifier|const
 name|Expr
@@ -1631,8 +1689,9 @@ name|LocationContext
 operator|*
 name|LCtx
 argument_list|,
-name|StoreManager
-operator|::
+name|bool
+name|ResultsInSymbolEscape
+argument_list|,
 name|InvalidatedSymbols
 operator|&
 name|IS
@@ -1641,6 +1700,12 @@ specifier|const
 name|CallEvent
 operator|*
 name|Call
+argument_list|,
+name|ArrayRef
+operator|<
+name|SVal
+operator|>
+name|ConstValues
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2539,12 +2604,13 @@ name|assume
 argument_list|(
 name|this
 argument_list|,
-name|cast
+name|Cond
+operator|.
+name|castAs
 operator|<
 name|DefinedSVal
 operator|>
 operator|(
-name|Cond
 operator|)
 argument_list|,
 name|Assumption
@@ -2601,12 +2667,13 @@ name|assumeDual
 argument_list|(
 name|this
 argument_list|,
-name|cast
+name|Cond
+operator|.
+name|castAs
 operator|<
 name|DefinedSVal
 operator|>
 operator|(
-name|Cond
 operator|)
 argument_list|)
 return|;
@@ -2625,36 +2692,42 @@ argument|SVal V
 argument_list|)
 specifier|const
 block|{
-return|return
-operator|!
-name|isa
+if|if
+condition|(
+name|Optional
+operator|<
+name|Loc
+operator|>
+name|L
+operator|=
+name|LV
+operator|.
+name|getAs
 operator|<
 name|Loc
 operator|>
 operator|(
-name|LV
 operator|)
-operator|?
-name|this
-operator|:
+condition|)
+return|return
 name|bindLoc
 argument_list|(
-name|cast
-operator|<
-name|Loc
-operator|>
-operator|(
-name|LV
-operator|)
+operator|*
+name|L
 argument_list|,
 name|V
 argument_list|)
 return|;
-block|}
 end_expr_stmt
 
+begin_return
+return|return
+name|this
+return|;
+end_return
+
 begin_expr_stmt
-specifier|inline
+unit|}  inline
 name|Loc
 name|ProgramState
 operator|::
@@ -2863,17 +2936,19 @@ specifier|const
 block|{
 if|if
 condition|(
+name|Optional
+operator|<
 name|NonLoc
-modifier|*
+operator|>
 name|N
-init|=
-name|dyn_cast
+operator|=
+name|Idx
+operator|.
+name|getAs
 operator|<
 name|NonLoc
 operator|>
 operator|(
-operator|&
-name|Idx
 operator|)
 condition|)
 return|return
@@ -2989,7 +3064,7 @@ argument_list|)
 operator|||
 name|T
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 condition|)
 return|return

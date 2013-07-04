@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/AnalysisContext.h"
+file|"clang/AST/Decl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/Decl.h"
+file|"clang/Analysis/AnalysisContext.h"
 end_include
 
 begin_include

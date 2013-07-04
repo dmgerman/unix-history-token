@@ -194,13 +194,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SetVector.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include

@@ -132,7 +132,7 @@ comment|/* Host triple LLVM will be executed on */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_HOSTTRIPLE */
+comment|/* #undef LLVM_HOST_TRIPLE */
 end_comment
 
 begin_comment
@@ -339,9 +339,34 @@ begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LLVM_PREFIX
+value|""
+end_define
+
 begin_comment
-comment|/* #undef LLVM_PREFIX */
+comment|/* Define if we have the Intel JIT API runtime support library */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_USE_INTEL_JITEVENTS
+value|0
+end_define
+
+begin_comment
+comment|/* Define if we have the oprofile JIT-support library */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_USE_OPROFILE
+value|0
+end_define
 
 begin_comment
 comment|/* Major version of the LLVM API */
@@ -362,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|2
+value|3
 end_define
 
 begin_endif

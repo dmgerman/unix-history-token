@@ -89,6 +89,12 @@ directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCInstrInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -195,7 +201,7 @@ name|MO_TLSGD
 block|,
 comment|/// MO_TLSLD - On a symbol operand this indicates that the immediate is
 comment|/// the offset of the GOT entry with the TLS index for the module that
-comment|/// contains the symbol. When this index is passed to a call to to
+comment|/// contains the symbol. When this index is passed to a call to
 comment|/// __tls_get_addr, the function will return the base address of the TLS
 comment|/// block for the symbol. Used in the x86-64 local dynamic TLS access model.
 comment|///
@@ -205,7 +211,7 @@ name|MO_TLSLD
 block|,
 comment|/// MO_TLSLDM - On a symbol operand this indicates that the immediate is
 comment|/// the offset of the GOT entry with the TLS index for the module that
-comment|/// contains the symbol. When this index is passed to a call to to
+comment|/// contains the symbol. When this index is passed to a call to
 comment|/// ___tls_get_addr, the function will return the base address of the TLS
 comment|/// block for the symbol. Used in the IA32 local dynamic TLS access model.
 comment|///
@@ -465,69 +471,81 @@ name|MRM_C9
 init|=
 literal|38
 block|,
-name|MRM_E8
+name|MRM_CA
 init|=
 literal|39
 block|,
-name|MRM_F0
+name|MRM_CB
 init|=
 literal|40
 block|,
-name|MRM_F8
+name|MRM_E8
 init|=
 literal|41
 block|,
-name|MRM_F9
+name|MRM_F0
 init|=
 literal|42
 block|,
-name|MRM_D0
+name|MRM_F8
 init|=
 literal|45
 block|,
-name|MRM_D1
+name|MRM_F9
 init|=
 literal|46
 block|,
-name|MRM_D4
+name|MRM_D0
 init|=
 literal|47
 block|,
-name|MRM_D5
+name|MRM_D1
 init|=
 literal|48
 block|,
-name|MRM_D8
+name|MRM_D4
 init|=
 literal|49
 block|,
-name|MRM_D9
+name|MRM_D5
 init|=
 literal|50
 block|,
-name|MRM_DA
+name|MRM_D6
 init|=
 literal|51
 block|,
-name|MRM_DB
+name|MRM_D8
 init|=
 literal|52
 block|,
-name|MRM_DC
+name|MRM_D9
 init|=
 literal|53
 block|,
-name|MRM_DD
+name|MRM_DA
 init|=
 literal|54
 block|,
-name|MRM_DE
+name|MRM_DB
 init|=
 literal|55
 block|,
-name|MRM_DF
+name|MRM_DC
 init|=
 literal|56
+block|,
+name|MRM_DD
+init|=
+literal|57
+block|,
+name|MRM_DE
+init|=
+literal|58
+block|,
+name|MRM_DF
+init|=
+literal|59
 block|,
 comment|/// RawFrmImm8 - This is used for the ENTER instruction, which has two
 comment|/// immediates, the first of which is a 16-bit immediate (specified by
@@ -1204,6 +1222,106 @@ name|false
 return|;
 block|}
 block|}
+comment|/// getOperandBias - compute any additional adjustment needed to
+comment|///                  the offset to the start of the memory operand
+comment|///                  in this instruction.
+comment|/// If this is a two-address instruction,skip one of the register operands.
+comment|/// FIXME: This should be handled during MCInst lowering.
+specifier|inline
+name|int
+name|getOperandBias
+parameter_list|(
+specifier|const
+name|MCInstrDesc
+modifier|&
+name|Desc
+parameter_list|)
+block|{
+name|unsigned
+name|NumOps
+init|=
+name|Desc
+operator|.
+name|getNumOperands
+argument_list|()
+decl_stmt|;
+name|unsigned
+name|CurOp
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|NumOps
+operator|>
+literal|1
+operator|&&
+name|Desc
+operator|.
+name|getOperandConstraint
+argument_list|(
+literal|1
+argument_list|,
+name|MCOI
+operator|::
+name|TIED_TO
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|++
+name|CurOp
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|NumOps
+operator|>
+literal|3
+operator|&&
+name|Desc
+operator|.
+name|getOperandConstraint
+argument_list|(
+literal|2
+argument_list|,
+name|MCOI
+operator|::
+name|TIED_TO
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|assert
+argument_list|(
+name|Desc
+operator|.
+name|getOperandConstraint
+argument_list|(
+name|NumOps
+operator|-
+literal|1
+argument_list|,
+name|MCOI
+operator|::
+name|TIED_TO
+argument_list|)
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// Special case for GATHER with 2 TIED_TO operands
+comment|// Skip the first 2 operands: dst, mask_wb
+name|CurOp
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+return|return
+name|CurOp
+return|;
+block|}
 comment|/// getMemoryOperandNo - The function returns the MCInst operand # for the
 comment|/// first field of the memory operand.  If the instruction doesn't have a
 comment|/// memory operand, this returns -1.
@@ -1509,6 +1627,16 @@ case|:
 case|case
 name|X86II
 operator|::
+name|MRM_CA
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_CB
+case|:
+case|case
+name|X86II
+operator|::
 name|MRM_E8
 case|:
 case|case
@@ -1545,6 +1673,11 @@ case|case
 name|X86II
 operator|::
 name|MRM_D5
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D6
 case|:
 case|case
 name|X86II

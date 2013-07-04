@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_decl_stmt

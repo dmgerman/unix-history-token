@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -125,8 +125,6 @@ name|LangOptions
 operator|*
 name|LangOpts
 block|;
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticOptions
@@ -213,14 +211,6 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
-block|;
-name|DiagnosticConsumer
-operator|*
-name|clone
-argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|)
-specifier|const
 block|; }
 decl_stmt|;
 block|}

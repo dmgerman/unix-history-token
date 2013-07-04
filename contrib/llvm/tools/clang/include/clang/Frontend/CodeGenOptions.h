@@ -203,6 +203,18 @@ name|InitialExecTLSModel
 block|,
 name|LocalExecTLSModel
 block|}
+block|;    enum
+name|FPContractModeKind
+block|{
+name|FPC_Off
+block|,
+comment|// Form fused FP ops only where result will not be affected.
+name|FPC_On
+block|,
+comment|// Form fused FP ops according to FP_CONTRACT rules.
+name|FPC_Fast
+comment|// Aggressively fuse FP ops (E.g. FMA).
+block|}
 block|;
 comment|/// The code model to use (-mcmodel).
 name|std
@@ -216,6 +228,13 @@ name|std
 operator|::
 name|string
 name|CoverageFile
+block|;
+comment|/// The version string to put into coverage files.
+name|char
+name|CoverageVersion
+index|[
+literal|4
+index|]
 block|;
 comment|/// Enable additional debugging information.
 name|std
@@ -262,11 +281,24 @@ operator|::
 name|string
 name|MainFileName
 block|;
+comment|/// The name for the split debug info file that we'll break out. This is used
+comment|/// in the backend for setting the name in the skeleton cu.
+name|std
+operator|::
+name|string
+name|SplitDwarfFile
+block|;
 comment|/// The name of the relocation model to use.
 name|std
 operator|::
 name|string
 name|RelocationModel
+block|;
+comment|/// Path to blacklist file for sanitizers.
+name|std
+operator|::
+name|string
+name|SanitizerBlacklistFile
 block|;
 comment|/// If not an empty string, trap intrinsics are lowered to calls to this
 comment|/// function instead of to trap instructions.
@@ -350,6 +382,15 @@ file|"clang/Frontend/CodeGenOptions.def"
 name|RelocationModel
 operator|=
 literal|"pic"
+block|;
+name|memcpy
+argument_list|(
+name|CoverageVersion
+argument_list|,
+literal|"402*"
+argument_list|,
+literal|4
+argument_list|)
 block|;   }
 block|}
 decl_stmt|;

@@ -140,6 +140,15 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|uint16_t
 operator|*
@@ -190,6 +199,8 @@ argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
 argument_list|,
+argument|unsigned FIOperandNum
+argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
@@ -198,6 +209,8 @@ name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
@@ -219,6 +232,19 @@ name|unsigned
 name|getEHHandlerRegister
 argument_list|()
 specifier|const
+block|;
+comment|/// \brief Return GPR register class.
+name|virtual
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|intRegClass
+argument_list|(
+argument|unsigned Size
+argument_list|)
+specifier|const
+operator|=
+literal|0
 block|;
 name|private
 operator|:

@@ -31,26 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file defines three classes: Timer, TimeRegion, and TimerGroup,
-end_comment
-
-begin_comment
-comment|// documented below.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -66,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -73,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -96,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<utility>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -326,7 +306,7 @@ comment|/// Timer - This class is used to track the amount of time spent between
 comment|/// invocations of its startTimer()/stopTimer() methods.  Given appropriate OS
 comment|/// support it can also keep track of the RSS of the program at various points.
 comment|/// By default, the Timer will print the amount of time it has captured to
-comment|/// standard error when the laster timer is destroyed, otherwise it is printed
+comment|/// standard error when the last timer is destroyed, otherwise it is printed
 comment|/// when its TimerGroup is destroyed.  Timers do not print their information
 comment|/// if they are never started.
 comment|///
@@ -534,7 +514,7 @@ block|}
 empty_stmt|;
 comment|/// The TimeRegion class is used as a helper class to call the startTimer() and
 comment|/// stopTimer() methods of the Timer class.  When the object is constructed, it
-comment|/// starts the timer specified as it's argument.  When it is destroyed, it stops
+comment|/// starts the timer specified as its argument.  When it is destroyed, it stops
 comment|/// the relevant timer.  This makes it easy to time a region of code.
 comment|///
 name|class
