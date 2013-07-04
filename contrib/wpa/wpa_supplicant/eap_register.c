@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP method registration  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP method registration  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"eap_server/eap_methods.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"wpa_supplicant_i.h"
 end_include
 
 begin_comment
@@ -77,6 +83,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EAP_TLS */
+ifdef|#
+directive|ifdef
+name|EAP_UNAUTH_TLS
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|eap_peer_unauth_tls_register
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_UNAUTH_TLS */
 ifdef|#
 directive|ifdef
 name|EAP_MSCHAPv2
@@ -385,6 +408,23 @@ directive|endif
 comment|/* EAP_TNC */
 ifdef|#
 directive|ifdef
+name|EAP_PWD
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|eap_peer_pwd_register
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_PWD */
+ifdef|#
+directive|ifdef
 name|EAP_SERVER_IDENTITY
 if|if
 condition|(
@@ -434,6 +474,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EAP_SERVER_TLS */
+ifdef|#
+directive|ifdef
+name|EAP_SERVER_UNAUTH_TLS
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|eap_server_unauth_tls_register
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_SERVER_UNAUTH_TLS */
 ifdef|#
 directive|ifdef
 name|EAP_SERVER_MSCHAPV2
@@ -723,6 +780,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EAP_SERVER_TNC */
+ifdef|#
+directive|ifdef
+name|EAP_SERVER_PWD
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|eap_server_pwd_register
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_SERVER_PWD */
 return|return
 name|ret
 return|;

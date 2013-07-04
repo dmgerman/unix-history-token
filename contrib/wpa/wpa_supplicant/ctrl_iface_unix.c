@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / UNIX domain socket -based control interface  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / UNIX domain socket -based control interface  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -32,6 +32,39 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ANDROID
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<cutils/sockets.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ANDROID */
+end_comment
 
 begin_include
 include|#
@@ -551,7 +584,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|256
+literal|4096
 index|]
 decl_stmt|;
 name|int
@@ -1240,6 +1273,9 @@ name|char
 modifier|*
 name|endp
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 name|priv
 operator|=
 name|os_zalloc
@@ -1314,6 +1350,56 @@ condition|)
 goto|goto
 name|fail
 goto|;
+ifdef|#
+directive|ifdef
+name|ANDROID
+name|os_snprintf
+argument_list|(
+name|addr
+operator|.
+name|sun_path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+operator|.
+name|sun_path
+argument_list|)
+argument_list|,
+literal|"wpa_%s"
+argument_list|,
+name|wpa_s
+operator|->
+name|conf
+operator|->
+name|ctrl_interface
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|sock
+operator|=
+name|android_get_control_socket
+argument_list|(
+name|addr
+operator|.
+name|sun_path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|sock
+operator|>=
+literal|0
+condition|)
+goto|goto
+name|havesock
+goto|;
+endif|#
+directive|endif
+comment|/* ANDROID */
 if|if
 condition|(
 name|os_strncmp
@@ -1416,6 +1502,41 @@ name|fail
 goto|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ANDROID
+comment|/* 	 * wpa_supplicant is started from /init.*.rc on Android and that seems 	 * to be using umask 0077 which would leave the control interface 	 * directory without group access. This breaks things since Wi-Fi 	 * framework assumes that this directory can be accessed by other 	 * applications in the wifi group. Fix this by adding group access even 	 * if umask value would prevent this. 	 */
+if|if
+condition|(
+name|chmod
+argument_list|(
+name|dir
+argument_list|,
+name|S_IRWXU
+operator||
+name|S_IRWXG
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"CTRL: Could not chmod directory: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Try to continue anyway */
+block|}
+endif|#
+directive|endif
+comment|/* ANDROID */
 if|if
 condition|(
 name|gid_str
@@ -1851,7 +1972,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"bind(PF_UNIX)"
+literal|"supp-ctrl-iface-init: bind(PF_UNIX)"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1957,6 +2078,61 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ANDROID
+name|havesock
+label|:
+endif|#
+directive|endif
+comment|/* ANDROID */
+comment|/* 	 * Make socket non-blocking so that we don't hang forever if 	 * target dies unexpectedly. 	 */
+name|flags
+operator|=
+name|fcntl
+argument_list|(
+name|priv
+operator|->
+name|sock
+argument_list|,
+name|F_GETFL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|>=
+literal|0
+condition|)
+block|{
+name|flags
+operator||=
+name|O_NONBLOCK
+expr_stmt|;
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|priv
+operator|->
+name|sock
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|flags
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"fcntl(ctrl, O_NONBLOCK)"
+argument_list|)
+expr_stmt|;
+comment|/* Not fatal, continue on.*/
+block|}
+block|}
 name|eloop_register_read_sock
 argument_list|(
 name|priv
@@ -3129,6 +3305,36 @@ condition|)
 return|return
 name|priv
 return|;
+ifdef|#
+directive|ifdef
+name|ANDROID
+name|priv
+operator|->
+name|sock
+operator|=
+name|android_get_control_socket
+argument_list|(
+name|global
+operator|->
+name|params
+operator|.
+name|ctrl_interface
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|sock
+operator|>=
+literal|0
+condition|)
+goto|goto
+name|havesock
+goto|;
+endif|#
+directive|endif
+comment|/* ANDROID */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -3262,6 +3468,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
+literal|"supp-global-ctrl-iface-init (will try fixup): "
 literal|"bind(PF_UNIX)"
 argument_list|)
 expr_stmt|;
@@ -3363,7 +3570,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"bind(PF_UNIX)"
+literal|"supp-glb-iface-init: bind(PF_UNIX)"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3414,6 +3621,14 @@ name|fail
 goto|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ANDROID
+name|havesock
+label|:
+endif|#
+directive|endif
+comment|/* ANDROID */
 name|eloop_register_read_sock
 argument_list|(
 name|priv

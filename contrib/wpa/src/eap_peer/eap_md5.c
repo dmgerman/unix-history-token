@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: EAP-MD5 (RFC 3748 and RFC 1994)  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer method: EAP-MD5 (RFC 3748 and RFC 1994)  * Copyright (c) 2004-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -362,6 +362,8 @@ argument_list|,
 name|CHAP_MD5_LEN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|chap_md5
 argument_list|(
 name|id
@@ -376,7 +378,30 @@ name|challenge_len
 argument_list|,
 name|rpos
 argument_list|)
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"EAP-MD5: CHAP MD5 operation failed"
+argument_list|)
 expr_stmt|;
+name|ret
+operator|->
+name|ignore
+operator|=
+name|TRUE
+expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|resp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|wpa_hexdump
 argument_list|(
 name|MSG_MSGDUMP

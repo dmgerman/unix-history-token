@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ap_drv_ops.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"wmm.h"
 end_include
 
@@ -276,12 +282,28 @@ operator|->
 name|conf
 operator|->
 name|wmm_uapsd
+operator|&&
+operator|(
+name|hapd
+operator|->
+name|iface
+operator|->
+name|drv_flags
+operator|&
+name|WPA_DRIVER_FLAGS_AP_UAPSD
+operator|)
 condition|)
 name|wmm
 operator|->
 name|qos_info
 operator||=
 literal|0x80
+expr_stmt|;
+name|wmm
+operator|->
+name|reserved
+operator|=
+literal|0
 expr_stmt|;
 comment|/* fill in a parameter set record for each AC */
 for|for
@@ -401,7 +423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is called when a station sends an association request with  * WMM info element. The function returns zero on success or non-zero on any  * error in WMM element. eid does not include Element ID and Length octets. */
+comment|/*  * This function is called when a station sends an association request with  * WMM info element. The function returns 1 on success or 0 on any error in WMM  * element. eid does not include Element ID and Length octets.  */
 end_comment
 
 begin_function
@@ -463,8 +485,7 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 name|wmm
@@ -544,12 +565,11 @@ literal|"Unsupported WMM IE Subtype/Version"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function
@@ -786,17 +806,15 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|hapd
-operator|->
-name|drv
-operator|.
-name|send_mgmt_frame
+name|hostapd_drv_send_mlme
 argument_list|(
 name|hapd
 argument_list|,
 name|m
 argument_list|,
 name|len
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0

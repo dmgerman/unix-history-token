@@ -236,6 +236,51 @@ name|x
 parameter_list|)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|mp_digit
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|mp_word
+name|__attribute__
+typedef|((
+name|mode
+typedef|(
+name|TI
+typedef|)));
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|DIGIT_BIT
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|MP_64BIT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -263,6 +308,11 @@ define|#
 directive|define
 name|MP_28BIT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2929,7 +2979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* this is a shell function that calls either the normal or Montgomery  * exptmod functions.  Originally the call to the montgomery code was  * embedded in the normal function but that wasted alot of stack space  * for nothing (since 99% of the time the Montgomery code would be called)  */
+comment|/* this is a shell function that calls either the normal or Montgomery  * exptmod functions.  Originally the call to the montgomery code was  * embedded in the normal function but that wasted a lot of stack space  * for nothing (since 99% of the time the Montgomery code would be called)  */
 end_comment
 
 begin_function
@@ -10757,7 +10807,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-comment|/* grow a to accomodate the single bit */
+comment|/* grow a to accommodate the single bit */
 if|if
 condition|(
 operator|(
@@ -11295,7 +11345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* multiplies |a| * |b| and only computes upto digs digits of result  * HAC pp. 595, Algorithm 14.12  Modified so you can control how   * many digits of output are created.  */
+comment|/* multiplies |a| * |b| and only computes up to digs digits of result  * HAC pp. 595, Algorithm 14.12  Modified so you can control how   * many digits of output are created.  */
 end_comment
 
 begin_function
@@ -13013,6 +13063,7 @@ comment|/* computes xR**-1 == x (mod N) via Montgomery Reduction  *  * This is a
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fast_mp_montgomery_reduce
 parameter_list|(
@@ -13519,7 +13570,7 @@ name|res
 decl_stmt|,
 name|oldused
 decl_stmt|;
-comment|/* grow to accomodate result */
+comment|/* grow to accommodate result */
 if|if
 condition|(
 name|b
@@ -13750,7 +13801,7 @@ name|BN_MP_MONTGOMERY_CALC_NORMALIZATION_C
 end_ifdef
 
 begin_comment
-comment|/*  * shifts with subtractions when the result is greater than b.  *  * The method is slightly modified to shift B unconditionally upto just under  * the leading bit of b.  This saves alot of multiple precision shifting.  */
+comment|/*  * shifts with subtractions when the result is greater than b.  *  * The method is slightly modified to shift B unconditionally up to just under  * the leading bit of b.  This saves a lot of multiple precision shifting.  */
 end_comment
 
 begin_function

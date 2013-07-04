@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLSv1 client - internal structures  * Copyright (c) 2006-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * TLSv1 client - internal structures  * Copyright (c) 2006-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -110,6 +110,12 @@ name|use_session_ticket
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|int
+name|disable_time_checks
+range|:
+literal|1
+decl_stmt|;
 name|struct
 name|crypto_public_key
 modifier|*
@@ -177,6 +183,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|session_ticket_cb_ctx
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|partial_input
 decl_stmt|;
 block|}
 struct|;

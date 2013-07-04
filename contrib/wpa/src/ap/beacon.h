@@ -38,15 +38,12 @@ name|mgmt
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+name|int
+name|ssi_signal
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_AP_MLME
-end_ifdef
 
 begin_function_decl
 name|void
@@ -72,51 +69,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NEED_AP_MLME */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
+begin_function_decl
 name|void
-name|ieee802_11_set_beacon
-parameter_list|(
-name|struct
-name|hostapd_data
-modifier|*
-name|hapd
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ieee802_11_set_beacons
+name|ieee802_11_update_beacons
 parameter_list|(
 name|struct
 name|hostapd_iface
 modifier|*
 name|iface
 parameter_list|)
-block|{ }
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEED_AP_MLME */
-end_comment
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / RADIUS Accounting  * Copyright (c) 2002-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / RADIUS Accounting  * Copyright (c) 2002-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -15,9 +15,17 @@ directive|define
 name|ACCOUNTING_H
 end_define
 
-begin_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_NO_ACCOUNTING
+end_ifdef
+
+begin_function
+specifier|static
+specifier|inline
 name|void
-name|accounting_sta_interim
+name|accounting_sta_get_id
 parameter_list|(
 name|struct
 name|hostapd_data
@@ -29,14 +37,8 @@ name|sta_info
 modifier|*
 name|sta
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_NO_ACCOUNTING
-end_ifdef
+block|{ }
+end_function
 
 begin_function
 specifier|static
@@ -116,6 +118,23 @@ end_else
 begin_comment
 comment|/* CONFIG_NO_ACCOUNTING */
 end_comment
+
+begin_function_decl
+name|void
+name|accounting_sta_get_id
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+name|struct
+name|sta_info
+modifier|*
+name|sta
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

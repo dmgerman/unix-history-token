@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd - IEEE 802.11i-2004 / WPA Authenticator: Internal definitions  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd - IEEE 802.11i-2004 / WPA Authenticator: Internal definitions  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -193,6 +193,7 @@ name|Boolean
 name|Pair
 decl_stmt|;
 struct|struct
+name|wpa_key_replay_counter
 block|{
 name|u8
 name|counter
@@ -205,6 +206,11 @@ name|valid
 decl_stmt|;
 block|}
 name|key_replay
+index|[
+name|RSNA_MAX_EAPOL_RETRIES
+index|]
+struct|,
+name|prev_key_replay
 index|[
 name|RSNA_MAX_EAPOL_RETRIES
 index|]
@@ -262,6 +268,18 @@ name|mgmt_frame_prot
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|int
+name|rx_eapol_key_secure
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|update_snonce
+range|:
+literal|1
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_IEEE80211R
@@ -280,6 +298,12 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211R */
+name|unsigned
+name|int
+name|is_wnmsleep
+range|:
+literal|1
+decl_stmt|;
 name|u8
 name|req_replay_counter
 index|[
@@ -378,6 +402,9 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211R */
+name|int
+name|pending_1_of_4_timeout
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -459,6 +486,12 @@ index|]
 decl_stmt|;
 name|Boolean
 name|changed
+decl_stmt|;
+name|Boolean
+name|first_sta_seen
+decl_stmt|;
+name|Boolean
+name|reject_4way_hs_for_entropy
 decl_stmt|;
 ifdef|#
 directive|ifdef

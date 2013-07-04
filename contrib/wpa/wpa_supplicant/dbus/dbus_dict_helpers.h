@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / dbus-based control interface  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / dbus-based control interface  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|DBUS_DICT_HELPERS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"wpabuf.h"
+end_include
 
 begin_comment
 comment|/*  * Adding a dict to a DBusMessage  */
@@ -310,8 +316,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Manual construction and addition of string array elements */
+comment|/* Manual construction and addition of array elements */
 end_comment
+
+begin_function_decl
+name|dbus_bool_t
+name|wpa_dbus_dict_begin_array
+parameter_list|(
+name|DBusMessageIter
+modifier|*
+name|iter_dict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|type
+parameter_list|,
+name|DBusMessageIter
+modifier|*
+name|iter_dict_entry
+parameter_list|,
+name|DBusMessageIter
+modifier|*
+name|iter_dict_val
+parameter_list|,
+name|DBusMessageIter
+modifier|*
+name|iter_array
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|dbus_bool_t
@@ -359,7 +398,26 @@ end_function_decl
 
 begin_function_decl
 name|dbus_bool_t
-name|wpa_dbus_dict_end_string_array
+name|wpa_dbus_dict_bin_array_add_element
+parameter_list|(
+name|DBusMessageIter
+modifier|*
+name|iter_array
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|value
+parameter_list|,
+name|size_t
+name|value_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dbus_bool_t
+name|wpa_dbus_dict_end_array
 parameter_list|(
 name|DBusMessageIter
 modifier|*
@@ -379,6 +437,44 @@ name|iter_array
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|dbus_bool_t
+name|wpa_dbus_dict_end_string_array
+parameter_list|(
+name|DBusMessageIter
+modifier|*
+name|iter_dict
+parameter_list|,
+name|DBusMessageIter
+modifier|*
+name|iter_dict_entry
+parameter_list|,
+name|DBusMessageIter
+modifier|*
+name|iter_dict_val
+parameter_list|,
+name|DBusMessageIter
+modifier|*
+name|iter_array
+parameter_list|)
+block|{
+return|return
+name|wpa_dbus_dict_end_array
+argument_list|(
+name|iter_dict
+argument_list|,
+name|iter_dict_entry
+argument_list|,
+name|iter_dict_val
+argument_list|,
+name|iter_array
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Convenience function to add a whole string list */
@@ -410,9 +506,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|dbus_bool_t
+name|wpa_dbus_dict_append_wpabuf_array
+parameter_list|(
+name|DBusMessageIter
+modifier|*
+name|iter_dict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+modifier|*
+name|items
+parameter_list|,
+specifier|const
+name|dbus_uint32_t
+name|num_items
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Reading a dict from a DBusMessage  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WPAS_DBUS_TYPE_BINARRAY
+value|(DBUS_NUMBER_OF_TYPES + 100)
+end_define
 
 begin_struct
 struct|struct
@@ -425,7 +555,7 @@ comment|/** the dbus type of the dict entry's value */
 name|int
 name|array_type
 decl_stmt|;
-comment|/** the dbus type of the array elements if the dict 			      entry value contains an array */
+comment|/** the dbus type of the array elements if the dict 			      entry value contains an array, or the special 			      WPAS_DBUS_TYPE_BINARRAY */
 specifier|const
 name|char
 modifier|*
@@ -475,6 +605,12 @@ modifier|*
 modifier|*
 name|strarray_value
 decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+modifier|*
+name|binarray_value
+decl_stmt|;
 block|}
 union|;
 name|dbus_uint32_t
@@ -496,6 +632,10 @@ parameter_list|,
 name|DBusMessageIter
 modifier|*
 name|iter_dict
+parameter_list|,
+name|DBusError
+modifier|*
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl

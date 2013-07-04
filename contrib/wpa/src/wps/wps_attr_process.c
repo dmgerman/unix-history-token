@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Wi-Fi Protected Setup - attribute processing  * Copyright (c) 2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Wi-Fi Protected Setup - attribute processing  * Copyright (c) 2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -1037,7 +1037,59 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
+name|wps_process_cred_ap_channel
+parameter_list|(
+name|struct
+name|wps_credential
+modifier|*
+name|cred
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|ap_channel
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ap_channel
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+comment|/* optional attribute */
+name|cred
+operator|->
+name|ap_channel
+operator|=
+name|WPA_GET_BE16
+argument_list|(
+name|ap_channel
+argument_list|)
+expr_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPS: AP Channel: %u"
+argument_list|,
+name|cred
+operator|->
+name|ap_channel
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|wps_workaround_cred_key
 parameter_list|(
 name|struct
@@ -1084,6 +1136,39 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS_STRICT
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"WPS: WPA/WPA2-Personal passphrase uses "
+literal|"forbidden NULL termination"
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_ascii_key
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"WPS: Network Key"
+argument_list|,
+name|cred
+operator|->
+name|key
+argument_list|,
+name|cred
+operator|->
+name|key_len
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
+comment|/* CONFIG_WPS_STRICT */
 comment|/* 		 * A deployed external registrar is known to encode ASCII 		 * passphrases incorrectly. Remove the extra NULL termination 		 * to fix the encoding. 		 */
 name|wpa_printf
 argument_list|(
@@ -1098,7 +1183,13 @@ operator|->
 name|key_len
 operator|--
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_WPS_STRICT */
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1241,18 +1332,25 @@ name|attr
 operator|->
 name|dot1x_enabled
 argument_list|)
+operator|||
+name|wps_process_cred_ap_channel
+argument_list|(
+name|cred
+argument_list|,
+name|attr
+operator|->
+name|ap_channel
+argument_list|)
 condition|)
 return|return
 operator|-
 literal|1
 return|;
+return|return
 name|wps_workaround_cred_key
 argument_list|(
 name|cred
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function
@@ -1361,13 +1459,11 @@ return|return
 operator|-
 literal|1
 return|;
+return|return
 name|wps_workaround_cred_key
 argument_list|(
 name|cred
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function

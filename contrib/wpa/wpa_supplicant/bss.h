@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * BSS table  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * BSS table  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -63,81 +63,204 @@ name|WPA_BSS_ASSOCIATED
 value|BIT(5)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WPA_BSS_ANQP_FETCH_TRIED
+value|BIT(6)
+end_define
+
 begin_comment
-comment|/**  * struct wpa_bss - BSS table  * @list: List entry for struct wpa_supplicant::bss  * @list_id: List entry for struct wpa_supplicant::bss_id  * @id: Unique identifier for this BSS entry  * @scan_miss_count: Number of counts without seeing this BSS  * @flags: information flags about the BSS/IBSS (WPA_BSS_*)  * @last_update_idx: Index of the last scan update  * @bssid: BSSID  * @freq: frequency of the channel in MHz (e.g., 2412 = channel 1)  * @beacon_int: beacon interval in TUs (host byte order)  * @caps: capability information field in host byte order  * @qual: signal quality  * @noise: noise level  * @level: signal level  * @tsf: Timestamp of last Beacon/Probe Response frame  * @last_update: Time of the last update (i.e., Beacon or Probe Response RX)  * @ie_len: length of the following IE field in octets (from Probe Response)  * @beacon_ie_len: length of the following Beacon IE field in octets  *  * This structure is used to store information about neighboring BSSes in  * generic format. It is mainly updated based on scan results from the driver.  */
+comment|/**  * struct wpa_bss_anqp - ANQP data for a BSS entry (struct wpa_bss)  */
+end_comment
+
+begin_struct
+struct|struct
+name|wpa_bss_anqp
+block|{
+comment|/** Number of BSS entries referring to this ANQP data instance */
+name|unsigned
+name|int
+name|users
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_INTERWORKING
+name|struct
+name|wpabuf
+modifier|*
+name|venue_name
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|network_auth_type
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|roaming_consortium
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|ip_addr_type_availability
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|nai_realm
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|anqp_3gpp
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|domain_name
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_INTERWORKING */
+ifdef|#
+directive|ifdef
+name|CONFIG_HS20
+name|struct
+name|wpabuf
+modifier|*
+name|hs20_operator_friendly_name
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|hs20_wan_metrics
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|hs20_connection_capability
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|hs20_operating_class
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_HS20 */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * struct wpa_bss - BSS table  *  * This structure is used to store information about neighboring BSSes in  * generic format. It is mainly updated based on scan results from the driver.  */
 end_comment
 
 begin_struct
 struct|struct
 name|wpa_bss
 block|{
+comment|/** List entry for struct wpa_supplicant::bss */
 name|struct
 name|dl_list
 name|list
 decl_stmt|;
+comment|/** List entry for struct wpa_supplicant::bss_id */
 name|struct
 name|dl_list
 name|list_id
 decl_stmt|;
+comment|/** Unique identifier for this BSS entry */
 name|unsigned
 name|int
 name|id
 decl_stmt|;
+comment|/** Number of counts without seeing this BSS */
 name|unsigned
 name|int
 name|scan_miss_count
 decl_stmt|;
+comment|/** Index of the last scan update */
 name|unsigned
 name|int
 name|last_update_idx
 decl_stmt|;
+comment|/** Information flags about the BSS/IBSS (WPA_BSS_*) */
 name|unsigned
 name|int
 name|flags
 decl_stmt|;
+comment|/** BSSID */
 name|u8
 name|bssid
 index|[
 name|ETH_ALEN
 index|]
 decl_stmt|;
+comment|/** HESSID */
+name|u8
+name|hessid
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+comment|/** SSID */
 name|u8
 name|ssid
 index|[
 literal|32
 index|]
 decl_stmt|;
+comment|/** Length of SSID */
 name|size_t
 name|ssid_len
 decl_stmt|;
+comment|/** Frequency of the channel in MHz (e.g., 2412 = channel 1) */
 name|int
 name|freq
 decl_stmt|;
+comment|/** Beacon interval in TUs (host byte order) */
 name|u16
 name|beacon_int
 decl_stmt|;
+comment|/** Capability information field in host byte order */
 name|u16
 name|caps
 decl_stmt|;
+comment|/** Signal quality */
 name|int
 name|qual
 decl_stmt|;
+comment|/** Noise level */
 name|int
 name|noise
 decl_stmt|;
+comment|/** Signal level */
 name|int
 name|level
 decl_stmt|;
+comment|/** Timestamp of last Beacon/Probe Response frame */
 name|u64
 name|tsf
 decl_stmt|;
+comment|/** Time of the last update (i.e., Beacon or Probe Response RX) */
 name|struct
 name|os_time
 name|last_update
 decl_stmt|;
+comment|/** ANQP data */
+name|struct
+name|wpa_bss_anqp
+modifier|*
+name|anqp
+decl_stmt|;
+comment|/** Length of the following IE field in octets (from Probe Response) */
 name|size_t
 name|ie_len
 decl_stmt|;
+comment|/** Length of the following Beacon IE field in octets */
 name|size_t
 name|beacon_ie_len
 decl_stmt|;
@@ -221,6 +344,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|wpa_bss_flush
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wpa_bss_flush_by_age
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+name|int
+name|age
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|wpa_bss
 modifier|*
@@ -262,6 +412,25 @@ specifier|const
 name|u8
 modifier|*
 name|bssid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wpa_bss
+modifier|*
+name|wpa_bss_get_p2p_dev_addr
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|dev_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -339,6 +508,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|wpabuf
+modifier|*
+name|wpa_bss_get_vendor_ie_multi_beacon
+parameter_list|(
+specifier|const
+name|struct
+name|wpa_bss
+modifier|*
+name|bss
+parameter_list|,
+name|u32
+name|vendor_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|wpa_bss_get_max_rate
 parameter_list|(
@@ -365,6 +552,29 @@ name|u8
 modifier|*
 modifier|*
 name|rates
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wpa_bss_anqp
+modifier|*
+name|wpa_bss_anqp_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wpa_bss_anqp_unshare_alloc
+parameter_list|(
+name|struct
+name|wpa_bss
+modifier|*
+name|bss
 parameter_list|)
 function_decl|;
 end_function_decl

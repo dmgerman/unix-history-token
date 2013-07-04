@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / wrapper functions for crypto libraries  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file defines the cryptographic functions that need to be implemented  * for wpa_supplicant and hostapd. When TLS is not used, internal  * implementation of MD5, SHA1, and AES is used and no external libraries are  * required. When TLS is enabled (e.g., by enabling EAP-TLS or EAP-PEAP), the  * crypto library used by the TLS implementation is expected to be used for  * non-TLS needs, too, in order to save space by not implementing these  * functions twice.  *  * Wrapper code for using each crypto library is in its own file (crypto*.c)  * and one of these files is build and linked in to provide the functions  * defined here.  */
+comment|/*  * WPA Supplicant / wrapper functions for crypto libraries  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file defines the cryptographic functions that need to be implemented  * for wpa_supplicant and hostapd. When TLS is not used, internal  * implementation of MD5, SHA1, and AES is used and no external libraries are  * required. When TLS is enabled (e.g., by enabling EAP-TLS or EAP-PEAP), the  * crypto library used by the TLS implementation is expected to be used for  * non-TLS needs, too, in order to save space by not implementing these  * functions twice.  *  * Wrapper code for using each crypto library is in its own file (crypto*.c)  * and one of these files is build and linked in to provide the functions  * defined here.  */
 end_comment
 
 begin_ifndef
@@ -72,66 +72,6 @@ name|mac
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_FIPS
-end_ifdef
-
-begin_comment
-comment|/**  * md5_vector_non_fips_allow - MD5 hash for data vector (non-FIPS use allowed)  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for the hash  * Returns: 0 on success, -1 on failure  */
-end_comment
-
-begin_function_decl
-name|int
-name|md5_vector_non_fips_allow
-parameter_list|(
-name|size_t
-name|num_elem
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|addr
-index|[]
-parameter_list|,
-specifier|const
-name|size_t
-modifier|*
-name|len
-parameter_list|,
-name|u8
-modifier|*
-name|mac
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* CONFIG_FIPS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|md5_vector_non_fips_allow
-value|md5_vector
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_FIPS */
-end_comment
 
 begin_comment
 comment|/**  * sha1_vector - SHA-1 hash for data vector  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for the hash  * Returns: 0 on success, -1 on failure  */
@@ -372,6 +312,10 @@ block|,
 name|CRYPTO_HASH_ALG_HMAC_MD5
 block|,
 name|CRYPTO_HASH_ALG_HMAC_SHA1
+block|,
+name|CRYPTO_HASH_ALG_SHA256
+block|,
+name|CRYPTO_HASH_ALG_HMAC_SHA256
 block|}
 enum|;
 end_enum
@@ -926,6 +870,24 @@ name|data
 parameter_list|,
 name|size_t
 name|data_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * crypto_get_random - Generate cryptographically strong pseudy-random bytes  * @buf: Buffer for data  * @len: Number of bytes to generate  * Returns: 0 on success, -1 on failure  *  * If the PRNG does not have enough entropy to ensure unpredictable byte  * sequence, this functions must return -1.  */
+end_comment
+
+begin_function_decl
+name|int
+name|crypto_get_random
+parameter_list|(
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl

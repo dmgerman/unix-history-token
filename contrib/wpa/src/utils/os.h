@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * OS specific functions  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * OS specific functions  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -129,6 +129,53 @@ parameter_list|,
 name|os_time_t
 modifier|*
 name|t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|os_tm
+block|{
+name|int
+name|sec
+decl_stmt|;
+comment|/* 0..59 or 60 for leap seconds */
+name|int
+name|min
+decl_stmt|;
+comment|/* 0..59 */
+name|int
+name|hour
+decl_stmt|;
+comment|/* 0..23 */
+name|int
+name|day
+decl_stmt|;
+comment|/* 1..31 */
+name|int
+name|month
+decl_stmt|;
+comment|/* 1..12 */
+name|int
+name|year
+decl_stmt|;
+comment|/* Four digit year */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|os_gmtime
+parameter_list|(
+name|os_time_t
+name|t
+parameter_list|,
+name|struct
+name|os_tm
+modifier|*
+name|tm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -316,6 +363,54 @@ name|size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * os_calloc - Allocate and zero memory for an array  * @nmemb: Number of members in the array  * @size: Number of bytes in each member  * Returns: Pointer to allocated and zeroed memory or %NULL on failure  *  * This function can be used as a wrapper for os_zalloc(nmemb * size) when an  * allocation is used for an array. The main benefit over os_zalloc() is in  * having an extra check to catch integer overflows in multiplication.  *  * Caller is responsible for freeing the returned buffer with os_free().  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|os_calloc
+parameter_list|(
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+if|if
+condition|(
+name|size
+operator|&&
+name|nmemb
+operator|>
+operator|(
+operator|~
+operator|(
+name|size_t
+operator|)
+literal|0
+operator|)
+operator|/
+name|size
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|os_zalloc
+argument_list|(
+name|nmemb
+operator|*
+name|size
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * The following functions are wrapper for standard ANSI C or POSIX functions.  * By default, they are just defined to use the standard function name and no  * os_*.c implementation is needed for them. This avoids extra function calls  * by allowing the C pre-processor take care of the function name mapping.  *  * If the target system uses a C library that does not provide these functions,  * build_config.h can be used to define the wrappers to use a different  * function name. This can be done on function-by-function basis since the  * defines here are only used if build_config.h does not define the os_* name.  * If needed, os_*.c file can be used to implement the functions that are not  * included in the C library on the target system. Alternatively,  * OS_NO_C_LIB_DEFINES can be defined to skip all defines here in which case  * these functions need to be implemented in os_*.c file for the target system.  */
@@ -1317,6 +1412,56 @@ end_endif
 begin_comment
 comment|/* OS_NO_C_LIB_DEFINES */
 end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|os_realloc_array
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|nmemb
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+if|if
+condition|(
+name|size
+operator|&&
+name|nmemb
+operator|>
+operator|(
+operator|~
+operator|(
+name|size_t
+operator|)
+literal|0
+operator|)
+operator|/
+name|size
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|os_realloc
+argument_list|(
+name|ptr
+argument_list|,
+name|nmemb
+operator|*
+name|size
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/**  * os_strlcpy - Copy a string with size bound and NUL-termination  * @dest: Destination  * @src: Source  * @siz: Size of the target buffer  * Returns: Total length of the target string (length of src) (not including  * NUL-termination)  *  * This function matches in behavior with the strlcpy(3) function in OpenBSD.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: EAP-FAST PAC file processing  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer method: EAP-FAST PAC file processing  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -1866,7 +1866,21 @@ name|pos
 argument_list|)
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
+comment|/* empty file - assume it is fine to overwrite */
+name|eap_fast_deinit_pac_data
+argument_list|(
+operator|&
+name|rc
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
 name|os_strcmp
 argument_list|(
 name|pac_file_hdr
@@ -2317,6 +2331,19 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
+operator|*
+name|pos
+operator|=
+name|nbuf
+operator|+
+operator|(
+operator|*
+name|pos
+operator|-
+operator|*
+name|buf
+operator|)
+expr_stmt|;
 operator|*
 name|buf
 operator|=
