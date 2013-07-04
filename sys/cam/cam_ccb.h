@@ -4741,6 +4741,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+call|(
+name|cam_status
+call|)
+argument_list|(
 name|ccb
 operator|->
 name|ccb_h
@@ -4748,6 +4752,7 @@ operator|.
 name|status
 operator|&
 name|CAM_STATUS_MASK
+argument_list|)
 operator|)
 return|;
 block|}
