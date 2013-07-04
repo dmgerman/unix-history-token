@@ -72,8 +72,23 @@ define|#
 directive|define
 name|LOGPAGE_USAGE
 define|\
-value|"       nvmecontrol logpage<-p page_id> [-x]<controller id|namespace id>\n"  \  void devlist(int argc, char *argv[]);
+value|"       nvmecontrol logpage<-p page_id> [-x]<controller id|namespace id>\n"  \  #define FIRMWARE_USAGE							       \ "       nvmecontrol firmware [-s slot] [-f path_to_firmware] [-a]<controller id>\n"
 end_define
+
+begin_function_decl
+name|void
+name|devlist
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -123,6 +138,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|logpage
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|firmware
 parameter_list|(
 name|int
 name|argc

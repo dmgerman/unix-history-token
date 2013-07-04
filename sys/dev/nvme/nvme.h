@@ -1041,6 +1041,25 @@ block|, }
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|nvme_activate_action
+block|{
+name|NVME_AA_REPLACE_NO_ACTIVATE
+init|=
+literal|0x0
+block|,
+name|NVME_AA_REPLACE_ACTIVATE
+init|=
+literal|0x1
+block|,
+name|NVME_AA_ACTIVATE
+init|=
+literal|0x2
+block|, }
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|nvme_controller_data

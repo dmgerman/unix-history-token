@@ -184,6 +184,14 @@ name|LOGPAGE_USAGE
 block|}
 block|,
 block|{
+literal|"firmware"
+block|,
+name|firmware
+block|,
+name|FIRMWARE_USAGE
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
