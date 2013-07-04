@@ -198,9 +198,9 @@ argument_list|)
 name|vtballoon_pages
 expr_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|vtballoon_kproc
+name|vtballoon_td
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -519,7 +519,7 @@ name|_sc
 parameter_list|,
 name|_name
 parameter_list|)
-value|mtx_init(VTBALLOON_MTX((_sc)), _name, \ 					    "VirtIO Balloon Lock", MTX_SPIN)
+value|mtx_init(VTBALLOON_MTX((_sc)), _name, \ 					    "VirtIO Balloon Lock", MTX_DEF)
 end_define
 
 begin_define
@@ -529,7 +529,7 @@ name|VTBALLOON_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock_spin(VTBALLOON_MTX((_sc)))
+value|mtx_lock(VTBALLOON_MTX((_sc)))
 end_define
 
 begin_define
@@ -539,7 +539,7 @@ name|VTBALLOON_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock_spin(VTBALLOON_MTX((_sc)))
+value|mtx_unlock(VTBALLOON_MTX((_sc)))
 end_define
 
 begin_define
@@ -861,16 +861,18 @@ goto|;
 block|}
 name|error
 operator|=
-name|kproc_create
+name|kthread_add
 argument_list|(
 name|vtballoon_thread
 argument_list|,
 name|sc
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 argument_list|,
 literal|0
 argument_list|,
@@ -888,7 +890,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot create balloon kproc\n"
+literal|"cannot create balloon kthread\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -953,7 +955,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 operator|!=
 name|NULL
 condition|)
@@ -974,16 +976,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|msleep_spin
+name|msleep
 argument_list|(
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 argument_list|,
 name|VTBALLOON_MTX
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"vtbdth"
 argument_list|,
@@ -997,7 +1001,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 operator|=
 name|NULL
 expr_stmt|;
@@ -1317,10 +1321,6 @@ name|sc
 operator|->
 name|vtballoon_inflate_vq
 expr_stmt|;
-name|m
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|npages
@@ -1330,17 +1330,6 @@ condition|)
 name|npages
 operator|=
 name|VTBALLOON_PAGES_PER_REQUEST
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|npages
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"balloon doesn't need inflating?"
-operator|)
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1369,7 +1358,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|sc
+operator|->
+name|vtballoon_timeout
+operator|=
+name|VTBALLOON_LOWMEM_TIMEOUT
+expr_stmt|;
 break|break;
+block|}
 name|sc
 operator|->
 name|vtballoon_page_frames
@@ -1393,7 +1390,11 @@ operator|==
 name|PQ_NONE
 argument_list|,
 operator|(
-literal|"allocated page on queue"
+literal|"%s: allocated page %p on queue"
+operator|,
+name|__func__
+operator|,
+name|m
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1424,18 +1425,6 @@ name|vq
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-name|sc
-operator|->
-name|vtballoon_timeout
-operator|=
-name|VTBALLOON_LOWMEM_TIMEOUT
 expr_stmt|;
 block|}
 end_function
@@ -1494,17 +1483,6 @@ name|npages
 operator|=
 name|VTBALLOON_PAGES_PER_REQUEST
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|npages
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"balloon doesn't need deflating?"
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1536,7 +1514,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"no more pages to deflate"
+literal|"%s: no more pages to deflate"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1664,7 +1644,13 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"balloon empty?"
+literal|"%s: bogus page count %d"
+operator|,
+name|__func__
+operator|,
+name|sc
+operator|->
+name|vtballoon_current_npages
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1801,7 +1787,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|msleep_spin
+name|msleep
 argument_list|(
 name|sc
 argument_list|,
@@ -1809,6 +1795,8 @@ name|VTBALLOON_MTX
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"vtbspf"
 argument_list|,
@@ -2164,7 +2152,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|msleep_spin
+name|msleep
 argument_list|(
 name|sc
 argument_list|,
@@ -2172,6 +2160,8 @@ name|VTBALLOON_MTX
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"vtbslp"
 argument_list|,
@@ -2283,10 +2273,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
+name|kthread_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
