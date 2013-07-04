@@ -3041,9 +3041,19 @@ expr_stmt|;
 name|init_inout
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Exit if a device emulation finds an error in it's initilization 	 */
+if|if
+condition|(
 name|init_pci
 argument_list|(
 name|ctx
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

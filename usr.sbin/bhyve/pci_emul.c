@@ -2955,7 +2955,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pci_emul_init
 parameter_list|(
 name|struct
@@ -2983,6 +2983,9 @@ name|struct
 name|pci_devinst
 modifier|*
 name|pdi
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 name|pdi
 operator|=
@@ -3085,8 +3088,8 @@ operator||
 name|PCIM_CMD_BUSMASTEREN
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|err
+operator|=
 call|(
 modifier|*
 name|pde
@@ -3100,6 +3103,10 @@ name|pdi
 argument_list|,
 name|params
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|!=
 literal|0
 condition|)
@@ -3128,6 +3135,11 @@ operator|=
 name|pdi
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|err
+operator|)
+return|;
 block|}
 end_function
 
@@ -4540,7 +4552,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|init_pci
 parameter_list|(
 name|struct
@@ -4653,6 +4665,8 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|pci_emul_init
 argument_list|(
 name|ctx
@@ -4668,6 +4682,15 @@ operator|->
 name|si_param
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -4806,6 +4829,11 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
