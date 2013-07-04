@@ -262,12 +262,6 @@ decl_stmt|;
 name|uint8_t
 name|id
 decl_stmt|;
-name|uint32_t
-name|ridx
-index|[
-literal|256
-index|]
-decl_stmt|;
 struct|struct
 block|{
 name|uint64_t
