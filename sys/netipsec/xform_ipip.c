@@ -388,7 +388,7 @@ if|#
 directive|if
 literal|0
 comment|/* If we do not accept IP-in-IP explicitly, drop.  */
-block|if (!V_ipip_allow&& ((*m)->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		V_ipipstat.ipips_pdrops++; 		m_freem(*m); 		return IPPROTO_DONE; 	}
+block|if (!V_ipip_allow&& ((*m)->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		IPIPSTAT_INC(ipips_pdrops); 		m_freem(*m); 		return IPPROTO_DONE; 	}
 endif|#
 directive|endif
 name|_ipip_input
@@ -444,7 +444,7 @@ if|#
 directive|if
 literal|0
 comment|/* If we do not accept IP-in-IP explicitly, drop.  */
-block|if (!V_ipip_allow&& (m->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		V_ipipstat.ipips_pdrops++; 		m_freem(m); 		return; 	}
+block|if (!V_ipip_allow&& (m->m_flags& M_IPSEC) == 0) { 		DPRINTF(("%s: dropped due to policy\n", __func__)); 		IPIPSTAT_INC(ipips_pdrops); 		m_freem(m); 		return; 	}
 endif|#
 directive|endif
 name|_ipip_input
@@ -555,10 +555,10 @@ decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_ipackets
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_copydata
 argument_list|(
@@ -615,10 +615,10 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_family
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -664,10 +664,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_hdrops
-operator|++
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -831,10 +831,10 @@ name|ip
 argument_list|)
 condition|)
 block|{
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_hdrops
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -898,10 +898,10 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_family
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -946,10 +946,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_hdrops
-operator|++
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -1187,10 +1187,10 @@ operator|.
 name|s_addr
 condition|)
 block|{
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_spoof
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -1252,10 +1252,10 @@ name|ip6_src
 argument_list|)
 condition|)
 block|{
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_spoof
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -1278,10 +1278,10 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* Statistics */
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_ADD
+argument_list|(
 name|ipips_ibytes
-operator|+=
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -1289,6 +1289,7 @@ operator|.
 name|len
 operator|-
 name|iphlen
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1440,10 +1441,10 @@ argument_list|)
 condition|)
 block|{
 comment|/* (0) on success. */
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_qfull
-operator|++
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1689,10 +1690,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_unspec
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1731,10 +1732,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_hdrops
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2110,10 +2111,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_unspec
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2206,10 +2207,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_hdrops
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2463,10 +2464,10 @@ name|sa_family
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_family
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2477,10 +2478,10 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_INC
+argument_list|(
 name|ipips_opackets
-operator|++
+argument_list|)
 expr_stmt|;
 operator|*
 name|mp
@@ -2509,10 +2510,10 @@ literal|0
 block|if (sav->tdb_xform->xf_type == XF_IP4) 			tdb->tdb_cur_bytes += 			    m->m_pkthdr.len - sizeof(struct ip);
 endif|#
 directive|endif
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_ADD
+argument_list|(
 name|ipips_obytes
-operator|+=
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2523,6 +2524,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2551,10 +2553,10 @@ literal|0
 block|if (sav->tdb_xform->xf_type == XF_IP4) 			tdb->tdb_cur_bytes += 			    m->m_pkthdr.len - sizeof(struct ip6_hdr);
 endif|#
 directive|endif
-name|V_ipipstat
-operator|.
+name|IPIPSTAT_ADD
+argument_list|(
 name|ipips_obytes
-operator|+=
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
@@ -2565,6 +2567,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip6_hdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

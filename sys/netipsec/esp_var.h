@@ -158,6 +158,28 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|ESPSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_espstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESPSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|ESPSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_esp_enable
 value|VNET(esp_enable)
 end_define

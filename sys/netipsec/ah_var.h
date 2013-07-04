@@ -158,6 +158,28 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|AHSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+value|V_ahstat.name += (val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|AHSTAT_ADD(name, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_ah_enable
 value|VNET(ah_enable)
 end_define
