@@ -9158,13 +9158,6 @@ name|cpu_tlb_flushD
 argument_list|()
 expr_stmt|;
 block|}
-name|vm_page_aflag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PGA_WRITEABLE
-argument_list|)
-expr_stmt|;
 name|rw_wunlock
 argument_list|(
 operator|&
