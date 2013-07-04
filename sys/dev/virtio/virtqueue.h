@@ -55,7 +55,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|void
 name|virtqueue_intr_t
 parameter_list|(
 name|void
@@ -217,6 +217,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|virtqueue_intr_filter
+parameter_list|(
+name|struct
+name|virtqueue
+modifier|*
+name|vq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|virtqueue_intr
 parameter_list|(
 name|struct
