@@ -2144,9 +2144,6 @@ index|[
 name|NCHAN
 index|]
 decl_stmt|;
-name|uint32_t
-name|filter_mode
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
