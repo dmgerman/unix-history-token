@@ -653,10 +653,10 @@ operator|->
 name|next
 condition|)
 block|{
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_out_bundlesa
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX-BZ currently only support same AF bundles. */
 switch|switch
@@ -1585,10 +1585,10 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * IPsec processing is required, but no SA found. 		 * I assume that key_acquire() had been called 		 * to get/establish the SA. Here I discard 		 * this packet because it is responsibility for 		 * upper layer to retransmit the packet. 		 */
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_out_nosa
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
@@ -3858,10 +3858,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_inval
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -3884,10 +3884,10 @@ operator|!
 name|m
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_nomem
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4113,10 +4113,10 @@ argument_list|(
 name|ip6s_noroute
 argument_list|)
 expr_stmt|;
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_noroute
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4170,10 +4170,10 @@ operator|!
 name|m
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_nomem
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
