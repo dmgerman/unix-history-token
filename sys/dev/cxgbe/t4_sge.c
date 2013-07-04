@@ -7355,8 +7355,8 @@ condition|(
 name|eq
 operator|->
 name|pending
-operator|>
-literal|16
+operator|>=
+literal|8
 condition|)
 name|ring_eq_db
 argument_list|(
@@ -8066,7 +8066,7 @@ name|eq
 operator|->
 name|pending
 operator|>=
-literal|64
+literal|8
 condition|)
 name|ring_eq_db
 argument_list|(
