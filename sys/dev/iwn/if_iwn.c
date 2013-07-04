@@ -4173,6 +4173,9 @@ directive|endif
 operator||
 name|IEEE80211_C_WME
 comment|/* WME */
+operator||
+name|IEEE80211_C_PMGT
+comment|/* Station-side power mgmt */
 expr_stmt|;
 comment|/* Read MAC address, channels, etc from EEPROM. */
 if|if
@@ -26418,6 +26421,24 @@ name|sc
 operator|->
 name|calib
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|sc_ifp
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ifp
+operator|->
+name|if_l2com
+decl_stmt|;
 name|uint32_t
 name|val
 decl_stmt|;
@@ -26675,14 +26696,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* XXX: not yet */
 comment|/* Enable power-saving mode if requested by user. */
-block|if (sc->sc_ic.ic_flags& IEEE80211_F_PMGTON) 		(void)iwn_set_pslevel(sc, 0, 3, 1);
-endif|#
-directive|endif
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_PMGTON
+condition|)
+operator|(
+name|void
+operator|)
+name|iwn_set_pslevel
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
