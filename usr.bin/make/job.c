@@ -6930,9 +6930,6 @@ name|pid
 operator|=
 name|waitpid
 argument_list|(
-operator|(
-name|pid_t
-operator|)
 operator|-
 literal|1
 argument_list|,
@@ -8708,9 +8705,6 @@ while|while
 condition|(
 name|waitpid
 argument_list|(
-operator|(
-name|pid_t
-operator|)
 operator|-
 literal|1
 argument_list|,
