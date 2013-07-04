@@ -277,6 +277,10 @@ name|disk_gone_t
 modifier|*
 name|d_gone
 decl_stmt|;
+comment|/* new fields in stable - don't use if DISKFLAG_LACKS_DELMAX is set */
+name|off_t
+name|d_delmaxsize
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -321,6 +325,13 @@ define|#
 directive|define
 name|DISKFLAG_UNMAPPED_BIO
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_LACKS_DELMAX
+value|0x40
 end_define
 
 begin_function_decl
@@ -447,8 +458,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_03
+value|0x5856105c
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_02
+value|DISK_VERSION_03
 end_define
 
 begin_endif
