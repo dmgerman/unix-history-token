@@ -7742,11 +7742,6 @@ name|sc
 operator|->
 name|vtnet_ifp
 expr_stmt|;
-name|M_ASSERTPKTHDR
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|ip_offset
 operator|=
 sizeof|sizeof
@@ -8378,7 +8373,11 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"cannot add header to sglist"
+literal|"%s: cannot add header to sglist error %d"
+operator|,
+name|__func__
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8526,6 +8525,11 @@ name|m
 operator|=
 operator|*
 name|m_head
+expr_stmt|;
+name|M_ASSERTPKTHDR
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|txhdr
 operator|=
