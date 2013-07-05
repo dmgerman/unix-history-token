@@ -6337,8 +6337,6 @@ name|CSUM_UDP
 operator||
 name|CSUM_SCTP
 operator||
-name|CSUM_IP_FRAGS
-operator||
 name|CSUM_FRAGMENT
 operator|)
 expr_stmt|;

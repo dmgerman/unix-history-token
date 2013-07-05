@@ -1172,7 +1172,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* will csum IP fragments */
+comment|/* removed, left for compat */
 end_comment
 
 begin_define

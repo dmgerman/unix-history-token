@@ -42002,7 +42002,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 argument_list|,
-literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP\4CSUM_IP_FRAGS"
+literal|"\20\1CSUM_IP\2CSUM_TCP\3CSUM_UDP"
 literal|"\5CSUM_FRAGMENT\6CSUM_TSO\11CSUM_IP_CHECKED"
 literal|"\12CSUM_IP_VALID\13CSUM_DATA_VALID"
 literal|"\14CSUM_PSEUDO_HDR"
