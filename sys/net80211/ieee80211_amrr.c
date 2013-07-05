@@ -1160,6 +1160,7 @@ operator|->
 name|amn_retrycnt
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX This is totally bogus for 11n, as although high MCS 	 * rates for each stream may be failing, the next stream 	 * should be checked. 	 * 	 * Eg, if MCS5 is ok but MCS6/7 isn't, and we can go up to 	 * MCS23, we should skip 6/7 and try 8 onwards. 	 */
 if|if
 condition|(
 name|is_success
