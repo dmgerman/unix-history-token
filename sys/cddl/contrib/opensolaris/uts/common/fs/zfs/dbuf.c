@@ -3611,6 +3611,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Another reader came in while the dbuf was in flight 		 * between UNCACHED and CACHED.  Either a writer will finish 		 * writing the buffer (sending the dbuf to CACHED) or the 		 * first reader's request will reach the read_done callback 		 * and send the dbuf to CACHED.  Otherwise, a failure 		 * occurred and the dbuf went to UNCACHED. 		 */
 name|mutex_exit
 argument_list|(
 operator|&
@@ -3668,6 +3669,7 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+comment|/* Skip the wait per the caller's request. */
 name|mutex_enter
 argument_list|(
 operator|&
@@ -6847,7 +6849,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return TRUE if this evicted the dbuf.  */
+comment|/*  * Undirty a buffer in the transaction group referenced by the given  * transaction.  Return whether this evicted the dbuf.  */
 end_comment
 
 begin_function
@@ -11831,6 +11833,7 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+comment|/* Read the block if it hasn't been read yet. */
 if|if
 condition|(
 name|db
@@ -11901,6 +11904,7 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+comment|/* Indirect block size must match what the dnode thinks it is. */
 name|ASSERT3U
 argument_list|(
 name|db
@@ -11932,6 +11936,7 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+comment|/* Provide the pending dirty record to child dbufs */
 name|db
 operator|->
 name|db_data_pending
@@ -14080,6 +14085,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Issue I/O to commit a dirty buffer to disk. */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -14222,6 +14231,8 @@ operator|->
 name|dn_dbuf
 condition|)
 block|{
+comment|/* Our parent is an indirect block. */
+comment|/* We have a dirty parent that has been scheduled for write. */
 name|ASSERT
 argument_list|(
 name|parent
@@ -14231,6 +14242,7 @@ operator|->
 name|db_data_pending
 argument_list|)
 expr_stmt|;
+comment|/* Our parent's buffer is one level closer to the dnode. */
 name|ASSERT
 argument_list|(
 name|db
@@ -14244,6 +14256,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We're about to modify our parent's db_data by modifying 		 * our block pointer, so the parent must be released. 		 */
 name|ASSERT
 argument_list|(
 name|arc_released
@@ -14265,6 +14278,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Our parent is the dnode itself. */
 name|ASSERT
 argument_list|(
 operator|(

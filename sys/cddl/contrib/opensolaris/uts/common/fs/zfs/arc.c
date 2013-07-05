@@ -666,9 +666,11 @@ decl_stmt|;
 name|kstat_named_t
 name|arcstat_recycle_miss
 decl_stmt|;
+comment|/* 	 * Number of buffers that could not be evicted because the hash lock 	 * was held by another thread.  The lock may not necessarily be held 	 * by something using the same buffer, since hash locks are shared 	 * by multiple buffers. 	 */
 name|kstat_named_t
 name|arcstat_mutex_miss
 decl_stmt|;
+comment|/* 	 * Number of buffers skipped because they have I/O in progress, are 	 * indrect prefetch buffers that have not lived long enough, or are 	 * not from the spa we're trying to evict from. 	 */
 name|kstat_named_t
 name|arcstat_evict_skip
 decl_stmt|;
@@ -14719,6 +14721,7 @@ argument_list|(
 name|hash_lock
 argument_list|)
 expr_stmt|;
+comment|/* 		 * At this point, we have a level 1 cache miss.  Try again in 		 * L2ARC if possible. 		 */
 name|ASSERT3U
 argument_list|(
 name|hdr
@@ -15710,7 +15713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release this buffer from the cache.  This must be done  * after a read and prior to modifying the buffer contents.  * If the buffer has more than one reference, we must make  * a new hdr for the buffer.  */
+comment|/*  * Release this buffer from the cache, making it an anonymous buffer.  This  * must be done after a read and prior to modifying the buffer contents.  * If the buffer has more than one reference, we must make  * a new hdr for the buffer.  */
 end_comment
 
 begin_function

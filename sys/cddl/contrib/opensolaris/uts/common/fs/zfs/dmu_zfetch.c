@@ -292,7 +292,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
+name|boolean_t
 name|dmu_zfetch_colinear
 parameter_list|(
 name|zfetch_t
@@ -350,7 +350,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|boolean_t
 name|dmu_zfetch_find
 parameter_list|(
 name|zfetch_t
@@ -567,12 +567,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Given a zfetch structure and a zstream structure, determine whether the  * blocks to be read are part of a co-linear pair of existing prefetch  * streams.  If a set is found, coalesce the streams, removing one, and  * configure the prefetch so it looks for a strided access pattern.  *  * In other words: if we find two sequential access streams that are  * the same length and distance N appart, and this read is N from the  * last stream, then we are probably in a strided access pattern.  So  * combine the two sequential streams into a single strided stream.  *  * If no co-linear streams are found, return NULL.  */
+comment|/*  * Given a zfetch structure and a zstream structure, determine whether the  * blocks to be read are part of a co-linear pair of existing prefetch  * streams.  If a set is found, coalesce the streams, removing one, and  * configure the prefetch so it looks for a strided access pattern.  *  * In other words: if we find two sequential access streams that are  * the same length and distance N appart, and this read is N from the  * last stream, then we are probably in a strided access pattern.  So  * combine the two sequential streams into a single strided stream.  *  * Returns whether co-linear streams were found.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|boolean_t
 name|dmu_zfetch_colinear
 parameter_list|(
 name|zfetch_t
@@ -1518,7 +1518,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|boolean_t
 name|dmu_zfetch_find
 parameter_list|(
 name|zfetch_t
@@ -2982,7 +2982,7 @@ name|zstream_t
 modifier|*
 name|newstream
 decl_stmt|;
-name|int
+name|boolean_t
 name|fetched
 decl_stmt|;
 name|int
@@ -3101,8 +3101,6 @@ argument_list|(
 name|zfetchstat_misses
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|fetched
 operator|=
 name|dmu_zfetch_colinear
@@ -3112,6 +3110,10 @@ argument_list|,
 operator|&
 name|zst
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fetched
 condition|)
 block|{
 name|ZFETCHSTAT_BUMP
