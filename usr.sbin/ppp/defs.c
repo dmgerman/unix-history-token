@@ -101,19 +101,11 @@ directive|include
 file|<termios.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-operator|||
-name|__FreeBSD__
-operator|<
-literal|3
-end_if
+end_ifndef
 
 begin_include
 include|#
@@ -180,51 +172,17 @@ parameter_list|)
 value|((c) == '\t' || (c) == ' ')
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-operator|||
-name|__FreeBSD__
-operator|<
-literal|3
-end_if
+end_ifdef
 
 begin_function
 name|void
 name|randinit
 parameter_list|()
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-specifier|static
-name|int
-name|initdone
-decl_stmt|;
-comment|/* srandomdev() call is only required once */
-if|if
-condition|(
-operator|!
-name|initdone
-condition|)
-block|{
-name|initdone
-operator|=
-literal|1
-expr_stmt|;
-name|srandomdev
-argument_list|()
-expr_stmt|;
-block|}
-else|#
-directive|else
 name|srandom
 argument_list|(
 operator|(
@@ -241,8 +199,6 @@ name|random
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
