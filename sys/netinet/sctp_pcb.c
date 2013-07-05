@@ -10838,12 +10838,6 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|max_open_streams_intome
-operator|=
-name|MAX_SCTP_STREAMS
-expr_stmt|;
-name|m
-operator|->
 name|max_init_times
 operator|=
 name|SCTP_BASE_SYSCTL
@@ -10924,6 +10918,15 @@ operator|=
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_default_ss_module
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|max_open_streams_intome
+operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_nr_incoming_streams_default
 argument_list|)
 expr_stmt|;
 comment|/* number of streams to pre-open on a association */
