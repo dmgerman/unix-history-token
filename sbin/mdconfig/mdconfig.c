@@ -2436,6 +2436,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|fflag
+operator|!=
+name|NULL
+condition|)
+continue|continue;
 if|if
 condition|(
 name|nflag
