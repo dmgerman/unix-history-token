@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1365,7 +1365,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  * Create "user holds" on snapshots.  If there is a hold on a snapshot,  * the snapshot can not be destroyed.  (However, it can be marked for deletion  * by lzc_destroy_snaps(defer=B_TRUE).)  *  * The keys in the nvlist are snapshot names.  * The snapshots must all be in the same pool.  * The value is the name of the hold (string type).  *  * If cleanup_fd is not -1, it must be the result of open("/dev/zfs", O_EXCL).  * In this case, when the cleanup_fd is closed (including on process  * termination), the holds will be released.  If the system is shut down  * uncleanly, the holds will be released when the pool is next opened  * or imported.  *  * The return value will be 0 if all holds were created. Otherwise the return  * value will be the errno of a (unspecified) hold that failed, no holds will  * be created, and the errlist will have an entry for each hold that  * failed (name = snapshot).  The value in the errlist will be the error  * code (int32).  */
+comment|/*  * Create "user holds" on snapshots.  If there is a hold on a snapshot,  * the snapshot can not be destroyed.  (However, it can be marked for deletion  * by lzc_destroy_snaps(defer=B_TRUE).)  *  * The keys in the nvlist are snapshot names.  * The snapshots must all be in the same pool.  * The value is the name of the hold (string type).  *  * If cleanup_fd is not -1, it must be the result of open("/dev/zfs", O_EXCL).  * In this case, when the cleanup_fd is closed (including on process  * termination), the holds will be released.  If the system is shut down  * uncleanly, the holds will be released when the pool is next opened  * or imported.  *  * Holds for snapshots which don't exist will be skipped and have an entry  * added to errlist, but will not cause an overall failure.  *  * The return value will be 0 if all holds, for snapshots that existed,  * were succesfully created.  *  * Otherwise the return value will be the errno of a (unspecified) hold that  * failed and no holds will be created.  *  * In all cases the errlist will have an entry for each hold that failed  * (name = snapshot), with its value being the error code (int32).  */
 name|int
 name|lzc_hold
 parameter_list|(
@@ -1504,7 +1504,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  * Release "user holds" on snapshots.  If the snapshot has been marked for  * deferred destroy (by lzc_destroy_snaps(defer=B_TRUE)), it does not have  * any clones, and all the user holds are removed, then the snapshot will be  * destroyed.  *  * The keys in the nvlist are snapshot names.  * The snapshots must all be in the same pool.  * The value is a nvlist whose keys are the holds to remove.  *  * The return value will be 0 if all holds were removed.  * Otherwise the return value will be the errno of a (unspecified) release  * that failed, no holds will be released, and the errlist will have an  * entry for each snapshot that has failed releases (name = snapshot).  * The value in the errlist will be the error code (int32) of a failed release.  */
+comment|/*  * Release "user holds" on snapshots.  If the snapshot has been marked for  * deferred destroy (by lzc_destroy_snaps(defer=B_TRUE)), it does not have  * any clones, and all the user holds are removed, then the snapshot will be  * destroyed.  *  * The keys in the nvlist are snapshot names.  * The snapshots must all be in the same pool.  * The value is a nvlist whose keys are the holds to remove.  *  * Holds which failed to release because they didn't exist will have an entry  * added to errlist, but will not cause an overall failure.  *  * The return value will be 0 if the nvl holds was empty or all holds that  * existed, were successfully removed.  *  * Otherwise the return value will be the errno of a (unspecified) hold that  * failed to release and no holds will be released.  *  * In all cases the errlist will have an entry for each hold that failed to  * to release.  */
 name|int
 name|lzc_release
 parameter_list|(
