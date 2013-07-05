@@ -9056,6 +9056,7 @@ block|{
 name|arc_fini
 argument_list|()
 expr_stmt|;
+comment|/* arc depends on l2arc, so arc must go first */
 name|l2arc_fini
 argument_list|()
 expr_stmt|;

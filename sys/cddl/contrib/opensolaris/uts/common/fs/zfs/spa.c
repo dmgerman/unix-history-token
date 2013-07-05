@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights
 end_comment
 
 begin_comment
-comment|/*  * This file contains all the routines used when modifying on-disk SPA state.  * This includes opening, importing, destroying, exporting a pool, and syncing a  * pool.  */
+comment|/*  * SPA: Storage Pool Allocator  *  * This file contains all the routines used when modifying on-disk SPA state.  * This includes opening, importing, destroying, exporting a pool, and syncing a  * pool.  */
 end_comment
 
 begin_include

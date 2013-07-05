@@ -2474,6 +2474,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Gets the full dataset name that corresponds to the given snapshot name  * Example:  * 	zfsctl_snapshot_zname("snap1") -> "mypool/myfs@snap1"  */
+end_comment
+
 begin_function
 specifier|static
 name|int
