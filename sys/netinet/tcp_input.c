@@ -6207,6 +6207,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+elseif|else
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+condition|)
+block|{
+comment|/* 		 * When a listen socket is torn down the SO_ACCEPTCONN 		 * flag is removed first while connections are drained 		 * from the accept queue in a unlock/lock cycle of the 		 * ACCEPT_LOCK, opening a race condition allowing a SYN 		 * attempt go through unhandled. 		 */
+goto|goto
+name|dropunlock
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
