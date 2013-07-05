@@ -2713,6 +2713,32 @@ value|674
 end_define
 
 begin_comment
+comment|/*  * Kernel memory privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_KMEM_READ
+value|680
+end_define
+
+begin_comment
+comment|/* Read from kernel memory. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_KMEM_WRITE
+value|681
+end_define
+
+begin_comment
+comment|/* Write to kernel memory. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
