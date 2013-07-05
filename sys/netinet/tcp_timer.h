@@ -218,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_DELACK
-value|(hz / PR_FASTHZ / 2)
+value|( hz/10 )
 end_define
 
 begin_comment
