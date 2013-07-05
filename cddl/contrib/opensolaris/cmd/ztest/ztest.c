@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -23713,11 +23713,13 @@ name|fatal
 argument_list|(
 literal|0
 argument_list|,
-literal|"user_release_one(%s)"
+literal|"user_release_one(%s, %s) = %d"
 argument_list|,
 name|fullname
 argument_list|,
 name|tag
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|VERIFY3U
