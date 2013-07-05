@@ -239,7 +239,7 @@ name|char
 name|driver_version
 index|[]
 init|=
-literal|"v1.8"
+literal|"v1.9"
 decl_stmt|;
 end_decl_stmt
 
@@ -9942,12 +9942,24 @@ case|case
 literal|0x4520
 case|:
 case|case
+literal|0x4521
+case|:
+case|case
 literal|0x4522
 case|:
 name|sas
 operator|=
 literal|1
 expr_stmt|;
+case|case
+literal|0x3620
+case|:
+case|case
+literal|0x3622
+case|:
+case|case
+literal|0x3640
+case|:
 name|ops
 operator|=
 operator|&
