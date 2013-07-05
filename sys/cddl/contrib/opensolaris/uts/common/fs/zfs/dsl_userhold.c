@@ -2116,6 +2116,9 @@ argument_list|,
 name|FTAG
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|zfs_unmount_snap
 argument_list|(
 name|name
