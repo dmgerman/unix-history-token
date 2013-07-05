@@ -525,10 +525,6 @@ name|u_int
 name|bucket_limit
 decl_stmt|;
 name|u_int
-name|cache_count
-decl_stmt|;
-comment|/* XXX: unprotected */
-name|u_int
 name|cache_limit
 decl_stmt|;
 name|u_int
