@@ -531,11 +531,6 @@ block|,
 comment|/* cluster, jumbo9k, jumbo16k */
 endif|#
 directive|endif
-name|OFLD_BUF_SIZE
-init|=
-name|MJUM16BYTES
-block|,
-comment|/* size of fl buffer for TOE rxq */
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
@@ -880,6 +875,9 @@ name|qsize_rxq
 decl_stmt|;
 name|int
 name|qsize_txq
+decl_stmt|;
+name|int
+name|linkdnrc
 decl_stmt|;
 name|struct
 name|link_config
@@ -2144,9 +2142,6 @@ index|[
 name|NCHAN
 index|]
 decl_stmt|;
-name|uint32_t
-name|filter_mode
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
@@ -3239,6 +3234,8 @@ parameter_list|(
 name|struct
 name|adapter
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
