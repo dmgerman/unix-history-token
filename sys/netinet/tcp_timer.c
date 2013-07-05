@@ -2396,6 +2396,24 @@ if|if
 condition|(
 name|tp
 operator|->
+name|t_state
+operator|==
+name|TCPS_SYN_SENT
+condition|)
+block|{
+comment|/* 		 * If the SYN was retransmitted, indicate CWND to be 		 * limited to 1 segment in cc_conn_init(). 		 */
+name|tp
+operator|->
+name|snd_cwnd
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tp
+operator|->
 name|t_rxtshift
 operator|==
 literal|1

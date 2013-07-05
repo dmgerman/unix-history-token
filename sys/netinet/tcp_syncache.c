@@ -3996,7 +3996,7 @@ operator|->
 name|sc_peer_mss
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the SYN,ACK was retransmitted, reset cwnd to 1 segment. 	 * NB: sc_rxmits counts all SYN,ACK transmits, not just retransmits. 	 */
+comment|/* 	 * If the SYN,ACK was retransmitted, indicate that CWND to be 	 * limited to one segment in cc_conn_init(). 	 * NB: sc_rxmits counts all SYN,ACK transmits, not just retransmits. 	 */
 if|if
 condition|(
 name|sc
@@ -4009,9 +4009,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|tp
-operator|->
-name|t_maxseg
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
