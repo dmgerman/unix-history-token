@@ -2746,7 +2746,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|675
+value|682
 end_define
 
 begin_comment
