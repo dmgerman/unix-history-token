@@ -876,6 +876,9 @@ decl_stmt|;
 name|int
 name|qsize_txq
 decl_stmt|;
+name|int
+name|linkdnrc
+decl_stmt|;
 name|struct
 name|link_config
 name|link_cfg
@@ -3231,6 +3234,8 @@ parameter_list|(
 name|struct
 name|adapter
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
