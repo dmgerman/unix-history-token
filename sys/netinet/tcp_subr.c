@@ -8078,9 +8078,10 @@ name|in_conninfo
 modifier|*
 name|inc
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
-name|flags
+name|cap
 parameter_list|)
 block|{
 name|struct
@@ -8240,7 +8241,7 @@ expr_stmt|;
 comment|/* Report additional interface capabilities. */
 if|if
 condition|(
-name|flags
+name|cap
 operator|!=
 name|NULL
 condition|)
@@ -8259,10 +8260,19 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
-operator|*
-name|flags
+name|cap
+operator|->
+name|ifcap
 operator||=
 name|CSUM_TSO
+expr_stmt|;
+name|cap
+operator|->
+name|tsomax
+operator|=
+name|ifp
+operator|->
+name|if_hw_tsomax
 expr_stmt|;
 block|}
 name|RTFREE
@@ -8305,9 +8315,10 @@ name|in_conninfo
 modifier|*
 name|inc
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
-name|flags
+name|cap
 parameter_list|)
 block|{
 name|struct
@@ -8467,7 +8478,7 @@ expr_stmt|;
 comment|/* Report additional interface capabilities. */
 if|if
 condition|(
-name|flags
+name|cap
 operator|!=
 name|NULL
 condition|)
@@ -8486,10 +8497,19 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
-operator|*
-name|flags
+name|cap
+operator|->
+name|ifcap
 operator||=
 name|CSUM_TSO
+expr_stmt|;
+name|cap
+operator|->
+name|tsomax
+operator|=
+name|ifp
+operator|->
+name|if_hw_tsomax
 expr_stmt|;
 block|}
 name|RTFREE

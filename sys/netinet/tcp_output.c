@@ -2827,19 +2827,23 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Limit a burst to IP_MAXPACKET minus IP, 			 * TCP and options length to keep ip->ip_len 			 * from overflowing. 			 */
+comment|/* 			 * Limit a burst to t_tsomax minus IP, 			 * TCP and options length to keep ip->ip_len 			 * from overflowing or exceeding the maximum 			 * length allowed by the network interface. 			 */
 if|if
 condition|(
 name|len
 operator|>
-name|IP_MAXPACKET
+name|tp
+operator|->
+name|t_tsomax
 operator|-
 name|hdrlen
 condition|)
 block|{
 name|len
 operator|=
-name|IP_MAXPACKET
+name|tp
+operator|->
+name|t_tsomax
 operator|-
 name|hdrlen
 expr_stmt|;

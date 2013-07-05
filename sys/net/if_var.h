@@ -693,10 +693,14 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|u_int
+name|if_hw_tsomax
+decl_stmt|;
+comment|/* tso burst length limit, the minmum 					 * is (IP_MAXPACKET / 8). 					 * XXXAO: Have to find a better place 					 * for it eventually. */
 name|int
 name|if_ispare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 name|void
