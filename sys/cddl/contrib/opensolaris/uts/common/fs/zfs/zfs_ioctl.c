@@ -1065,7 +1065,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_earlier_version  *  *	Return non-zero if the spa version is less than requested version.  */
+comment|/*  * Return non-zero if the spa version is less than requested version.  */
 end_comment
 
 begin_function
@@ -1141,7 +1141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zpl_earlier_version  *  * Return TRUE if the ZPL version is less than requested version.  */
+comment|/*  * Return TRUE if the ZPL version is less than requested version.  */
 end_comment
 
 begin_function
@@ -12806,7 +12806,7 @@ value|((uint64_t)-1)
 end_define
 
 begin_comment
-comment|/*  * inputs:  * createprops		list of properties requested by creator  * default_zplver	zpl version to use if unspecified in createprops  * fuids_ok		fuids allowed in this version of the spa?  * os			parent objset pointer (NULL if root fs)  *  * outputs:  * zplprops	values for the zplprops we attach to the master node object  * is_ci	true if requested file system will be purely case-insensitive  *  * Determine the settings for utf8only, normalization and  * casesensitivity.  Specific values may have been requested by the  * creator and/or we can inherit values from the parent dataset.  If  * the file system is of too early a vintage, a creator can not  * request settings for these properties, even if the requested  * setting is the default value.  We don't actually want to create dsl  * properties for these, so remove them from the source nvlist after  * processing.  */
+comment|/*  * inputs:  * os			parent objset pointer (NULL if root fs)  * fuids_ok		fuids allowed in this version of the spa?  * sa_ok		SAs allowed in this version of the spa?  * createprops		list of properties requested by creator  *  * outputs:  * zplprops	values for the zplprops we attach to the master node object  * is_ci	true if requested file system will be purely case-insensitive  *  * Determine the settings for utf8only, normalization and  * casesensitivity.  Specific values may have been requested by the  * creator and/or we can inherit values from the parent dataset.  If  * the file system is of too early a vintage, a creator can not  * request settings for these properties, even if the requested  * setting is the default value.  We don't actually want to create dsl  * properties for these, so remove them from the source nvlist after  * processing.  */
 end_comment
 
 begin_function

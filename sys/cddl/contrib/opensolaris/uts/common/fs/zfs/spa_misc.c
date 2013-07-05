@@ -5196,7 +5196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is a stripped-down version of strtoull, suitable only for converting  * lowercase hexidecimal numbers that don't overflow.  */
+comment|/*  * This is a stripped-down version of strtoull, suitable only for converting  * lowercase hexadecimal numbers that don't overflow.  */
 end_comment
 
 begin_function

@@ -6497,7 +6497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_check_global_label:  *	Check that the hex label string is appropriate for the dataset  *	being mounted into the global_zone proper.  *  *	Return an error if the hex label string is not default or  *	admin_low/admin_high.  For admin_low labels, the corresponding  *	dataset must be readonly.  */
+comment|/*  * Check that the hex label string is appropriate for the dataset being  * mounted into the global_zone proper.  *  * Return an error if the hex label string is not default or  * admin_low/admin_high.  For admin_low labels, the corresponding  * dataset must be readonly.  */
 end_comment
 
 begin_function
@@ -6610,7 +6610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_mount_label_policy:  *	Determine whether the mount is allowed according to MAC check.  *	by comparing (where appropriate) label of the dataset against  *	the label of the zone being mounted into.  If the dataset has  *	no label, create one.  *  *	Returns:  *		 0 :	access allowed  *>0 :	error code, such as EACCES  */
+comment|/*  * Determine whether the mount is allowed according to MAC check.  * by comparing (where appropriate) label of the dataset against  * the label of the zone being mounted into.  If the dataset has  * no label, create one.  *  * Returns 0 if access allowed, error otherwise (e.g. EACCES)  */
 end_comment
 
 begin_function

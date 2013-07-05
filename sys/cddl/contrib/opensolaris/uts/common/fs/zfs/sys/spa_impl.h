@@ -803,7 +803,7 @@ name|uint64_t
 name|spa_deadman_synctime
 decl_stmt|;
 comment|/* deadman expiration timer */
-comment|/* 	 * spa_refcnt& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
+comment|/* 	 * spa_refcount& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
 name|spa_config_lock_t
 name|spa_config_lock
 index|[

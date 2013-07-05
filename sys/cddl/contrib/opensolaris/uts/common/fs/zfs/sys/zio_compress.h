@@ -41,7 +41,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Common signature for all zio compress/decompress functions.  */
+comment|/* Common signature for all zio compress functions. */
 typedef|typedef
 name|size_t
 name|zio_compress_func_t
@@ -63,6 +63,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/* Common signature for all zio decompress functions. */
 typedef|typedef
 name|int
 name|zio_decompress_func_t

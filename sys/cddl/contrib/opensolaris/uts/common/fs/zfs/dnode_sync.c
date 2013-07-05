@@ -1745,7 +1745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * free_range: Traverse the indicated range of the provided file  * and "free" all the blocks contained there.  */
+comment|/*  * Traverse the indicated range of the provided file  * and "free" all the blocks contained there.  */
 end_comment
 
 begin_function
@@ -2248,7 +2248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to kick all the dnodes dbufs out of the cache...  */
+comment|/*  * Try to kick all the dnode's dbufs out of the cache...  */
 end_comment
 
 begin_function

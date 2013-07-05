@@ -412,7 +412,7 @@ block|}
 name|lr_create_t
 typedef|;
 comment|/*  * FUID ACL record will be an array of ACEs from the original ACL.  * If this array includes ephemeral IDs, the record will also include  * an array of log-specific FUIDs to replace the ephemeral IDs.  * Only one copy of each unique domain will be present, so the log-specific  * FUIDs will use an index into a compressed domain table.  On replay this  * information will be used to construct real FUIDs (and bypass idmap,  * since it may not be available).  */
-comment|/*  * Log record for creates with optional ACL  * This log record is also used for recording any FUID  * information needed for replaying the create.  If the  * file doesn't have any actual ACEs then the lr_aclcnt  * would be zero.  */
+comment|/*  * Log record for creates with optional ACL  * This log record is also used for recording any FUID  * information needed for replaying the create.  If the  * file doesn't have any actual ACEs then the lr_aclcnt  * would be zero.  *  * After lr_acl_flags, there are a lr_acl_bytes number of variable sized ace's.  * If create is also setting xvattr's, then acl data follows xvattr.  * If ACE FUIDs are needed then they will follow the xvattr_t.  Following  * the FUIDs will be the domain table information.  The FUIDs for the owner  * and group will be in lr_create.  Name follows ACL data.  */
 typedef|typedef
 struct|struct
 block|{
@@ -440,13 +440,6 @@ name|uint64_t
 name|lr_acl_flags
 decl_stmt|;
 comment|/* ACL flags */
-comment|/* lr_acl_bytes number of variable sized ace's follows */
-comment|/* if create is also setting xvattr's, then acl data follows xvattr */
-comment|/* if ACE FUIDs are needed then they will follow the xvattr_t */
-comment|/* Following the FUIDs will be the domain table information. */
-comment|/* The FUIDs for the owner and group will be in the lr_create */
-comment|/* portion of the record. */
-comment|/* name follows ACL data */
 block|}
 name|lr_acl_create_t
 typedef|;

@@ -19,13 +19,6 @@ directive|define
 name|_SYS_FS_ZFS_RLOCK_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -107,7 +100,7 @@ comment|/* reader wants to lock this range */
 block|}
 name|rl_t
 typedef|;
-comment|/*  * Lock a range (offset, length) as either shared (READER)  * or exclusive (WRITER or APPEND). APPEND is a special type that  * is converted to WRITER that specified to lock from the start of the  * end of file.  zfs_range_lock() returns the range lock structure.  */
+comment|/*  * Lock a range (offset, length) as either shared (RL_READER)  * or exclusive (RL_WRITER or RL_APPEND).  RL_APPEND is a special type that  * is converted to RL_WRITER that specified to lock from the start of the  * end of file.  Returns the range lock structure.  */
 name|rl_t
 modifier|*
 name|zfs_range_lock
@@ -126,7 +119,7 @@ name|rl_type_t
 name|type
 parameter_list|)
 function_decl|;
-comment|/*  * Unlock range and destroy range lock structure.  */
+comment|/* Unlock range and destroy range lock structure. */
 name|void
 name|zfs_range_unlock
 parameter_list|(
@@ -150,7 +143,7 @@ name|uint64_t
 name|len
 parameter_list|)
 function_decl|;
-comment|/*  * AVL comparison function used to compare range locks  */
+comment|/*  * AVL comparison function used to order range locks  * Locks are ordered on the start offset of the range.  */
 name|int
 name|zfs_range_compare
 parameter_list|(
