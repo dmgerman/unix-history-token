@@ -334,6 +334,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|URTWN_RSSI
+parameter_list|(
+name|r
+parameter_list|)
+value|(r) - 110
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_HAS_ADDR4
 parameter_list|(
 name|wh
@@ -2688,6 +2698,18 @@ operator||
 name|IEEE80211_C_WPA
 comment|/* 802.11i */
 expr_stmt|;
+name|ic
+operator|->
+name|ic_cryptocaps
+operator|=
+name|IEEE80211_CRYPTO_WEP
+operator||
+name|IEEE80211_CRYPTO_AES_CCM
+operator||
+name|IEEE80211_CRYPTO_TKIPMIC
+operator||
+name|IEEE80211_CRYPTO_TKIP
+expr_stmt|;
 name|bands
 operator|=
 literal|0
@@ -3604,6 +3626,14 @@ name|sc
 argument_list|,
 name|rate
 argument_list|,
+name|rssi
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Convert the RSSI to a range that will be accepted 		 * by net80211. 		 */
+name|rssi
+operator|=
+name|URTWN_RSSI
+argument_list|(
 name|rssi
 argument_list|)
 expr_stmt|;
@@ -7134,6 +7164,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -7215,6 +7250,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -7257,9 +7297,19 @@ name|ni_txrate
 operator|=
 name|rs
 operator|->
+name|rs_rates
+index|[
+name|rs
+operator|->
 name|rs_nrates
 operator|-
 literal|1
+index|]
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

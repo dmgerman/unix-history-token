@@ -6268,11 +6268,14 @@ if|if
 condition|(
 name|value
 operator|>
+name|dadeletemaxsize
+argument_list|(
+name|softc
+argument_list|,
 name|softc
 operator|->
-name|disk
-operator|->
-name|d_delmaxsize
+name|delete_method
+argument_list|)
 condition|)
 block|{
 return|return

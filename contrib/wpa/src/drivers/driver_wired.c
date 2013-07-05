@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Wired Ethernet driver interface  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  * Copyright (c) 2004, Gunter Burchardt<tira@isx.de>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Wired Ethernet driver interface  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  * Copyright (c) 2004, Gunter Burchardt<tira@isx.de>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -86,6 +86,27 @@ end_endif
 
 begin_comment
 comment|/* defined(__FreeBSD__) || defined(__DragonFly__) || defined(__FreeBSD_kernel__) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sun__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __sun__ */
 end_comment
 
 begin_include
@@ -1562,6 +1583,9 @@ specifier|const
 name|u8
 modifier|*
 name|own_addr
+parameter_list|,
+name|u32
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -2276,6 +2300,16 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__sun__
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
+comment|/* __sun__ */
 name|s
 operator|=
 name|socket

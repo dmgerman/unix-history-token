@@ -2355,6 +2355,11 @@ name|wire_count
 operator|=
 literal|1
 expr_stmt|;
+name|pmap_page_init
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|memattr
 label|:
 name|pmap_page_set_memattr

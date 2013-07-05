@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * RADIUS authentication server  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * RADIUS authentication server  * Copyright (c) 2005-2009, 2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -98,6 +98,10 @@ comment|/** 	 * tnc - Trusted Network Connect (TNC) 	 * 	 * This controls whethe
 name|int
 name|tnc
 decl_stmt|;
+comment|/** 	 * pwd_group - EAP-pwd D-H group 	 * 	 * This is used to select which D-H group to use with EAP-pwd. 	 */
+name|u16
+name|pwd_group
+decl_stmt|;
 comment|/** 	 * wps - Wi-Fi Protected Setup context 	 * 	 * If WPS is used with an external RADIUS server (which is quite 	 * unlikely configuration), this is used to provide a pointer to WPS 	 * context data. Normally, this can be set to %NULL. 	 */
 name|struct
 name|wps_context
@@ -151,6 +155,17 @@ name|void
 modifier|*
 name|msg_ctx
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_RADIUS_TEST
+specifier|const
+name|char
+modifier|*
+name|dump_msk_file
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_RADIUS_TEST */
 block|}
 struct|;
 end_struct

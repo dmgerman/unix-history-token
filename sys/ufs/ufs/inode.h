@@ -172,7 +172,7 @@ name|u_int32_t
 name|i_flags
 decl_stmt|;
 comment|/* Status flags (chflags). */
-name|int64_t
+name|u_int64_t
 name|i_gen
 decl_stmt|;
 comment|/* Generation number. */

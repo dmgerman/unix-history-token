@@ -20,12 +20,39 @@ comment|/* #undef APU_CRYPT_THREADSAFE */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if modular components are built as DSOs */
+end_comment
+
+begin_comment
+comment|/* #undef APU_DSO_BUILD */
+end_comment
+
+begin_comment
+comment|/* Define to be absolute path to DSO directory */
+end_comment
+
+begin_comment
+comment|/* #undef APU_DSO_LIBDIR */
+end_comment
+
+begin_comment
 comment|/* Define if the inbuf parm to iconv() is const char ** */
 end_comment
 
 begin_comment
 comment|/* #undef APU_ICONV_INBUF_CONST */
 end_comment
+
+begin_comment
+comment|/* Define that OpenSSL uses const buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPTO_OPENSSL_CONST_BUFFERS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if crypt_r has uses CRYPTD */
@@ -63,6 +90,17 @@ comment|/* #undef HAVE_CRYPT_R */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the declaration of `EVP_PKEY_CTX_new', and to 0 if    you don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_EVP_PKEY_CTX_NEW
+value|1
+end_define
+
+begin_comment
 comment|/* Define if expat.h is available */
 end_comment
 
@@ -72,6 +110,14 @@ directive|define
 name|HAVE_EXPAT_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<freetds/sybdb.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_FREETDS_SYBDB_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<iconv.h> header file. */
@@ -128,14 +174,6 @@ comment|/* #undef HAVE_LDAP_SSL_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `lber' library (-llber). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBLBER */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<libpq-fe.h> header file. */
 end_comment
 
@@ -171,6 +209,38 @@ comment|/* #undef HAVE_MYSQL_MYSQL_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<mysql/my_global.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MYSQL_MY_GLOBAL_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<mysql/my_sys.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MYSQL_MY_SYS_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<my_global.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MY_GLOBAL_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<my_sys.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MY_SYS_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `nl_langinfo' function. */
 end_comment
 
@@ -182,11 +252,78 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<nss.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NSS_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<nss/nss.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NSS_NSS_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<nss/pk11pub.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NSS_PK11PUB_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<oci.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OCI_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<odbc/sql.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ODBC_SQL_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<openssl/x509.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_X509_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<pk11pub.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PK11PUB_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<postgresql/libpq-fe.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_POSTGRESQL_LIBPQ_FE_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<prerror.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRERROR_H */
 end_comment
 
 begin_comment
@@ -203,6 +340,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SQLITE_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<sql.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SQL_H */
 end_comment
 
 begin_comment
@@ -248,6 +393,14 @@ directive|define
 name|HAVE_STRING_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sybdb.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYBDB_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/stat.h> header file. */
@@ -307,6 +460,14 @@ comment|/* #undef HAVE_XML_XMLPARSE_H */
 end_comment
 
 begin_comment
+comment|/* Define if ldap_set_rebind_proc takes three arguments */
+end_comment
+
+begin_comment
+comment|/* #undef LDAP_SET_REBIND_PROC_THREE */
+end_comment
+
+begin_comment
 comment|/* Define to the address where bug reports for this package should be sent. */
 end_comment
 
@@ -347,6 +508,17 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
+value|""
+end_define
+
+begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
 value|""
 end_define
 

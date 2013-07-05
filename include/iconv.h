@@ -77,18 +77,7 @@ begin_define
 define|#
 directive|define
 name|iconv
-parameter_list|(
-name|cd
-parameter_list|,
-name|in
-parameter_list|,
-name|insize
-parameter_list|,
-name|out
-parameter_list|,
-name|outsize
-parameter_list|)
-value|libiconv(cd, __DECONST(char **, in), insize, out, outsize)
+value|libiconv
 end_define
 
 begin_define
@@ -135,6 +124,7 @@ name|libiconv
 parameter_list|(
 name|iconv_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -205,6 +195,7 @@ name|__iconv
 parameter_list|(
 name|iconv_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

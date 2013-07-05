@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Doubly-linked list  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Doubly-linked list  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -316,6 +316,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|dl_list_last
+parameter_list|(
+name|list
+parameter_list|,
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+define|\
+value|(dl_list_empty((list)) ? NULL : \ 	 dl_list_entry((list)->prev, type, member))
+end_define
+
+begin_define
+define|#
+directive|define
 name|dl_list_for_each
 parameter_list|(
 name|item
@@ -347,6 +362,34 @@ name|member
 parameter_list|)
 define|\
 value|for (item = dl_list_entry((list)->next, type, member), \ 		     n = dl_list_entry(item->member.next, type, member); \&item->member != (list); \ 	     item = n, n = dl_list_entry(n->member.next, type, member))
+end_define
+
+begin_define
+define|#
+directive|define
+name|dl_list_for_each_reverse
+parameter_list|(
+name|item
+parameter_list|,
+name|list
+parameter_list|,
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+define|\
+value|for (item = dl_list_entry((list)->prev, type, member); \&item->member != (list); \ 	     item = dl_list_entry(item->member.prev, type, member))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFINE_DL_LIST
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|struct dl_list name = {&(name),&(name) }
 end_define
 
 begin_endif

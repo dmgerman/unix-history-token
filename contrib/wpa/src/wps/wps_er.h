@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Wi-Fi Protected Setup - External Registrar  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Wi-Fi Protected Setup - External Registrar  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -250,6 +250,28 @@ end_struct
 
 begin_struct
 struct|struct
+name|wps_er_ap_settings
+block|{
+name|struct
+name|dl_list
+name|list
+decl_stmt|;
+name|u8
+name|uuid
+index|[
+name|WPS_UUID_LEN
+index|]
+decl_stmt|;
+name|struct
+name|wps_credential
+name|ap_settings
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|wps_er
 block|{
 name|struct
@@ -294,6 +316,10 @@ name|dl_list
 name|ap_unsubscribing
 decl_stmt|;
 name|struct
+name|dl_list
+name|ap_settings
+decl_stmt|;
+name|struct
 name|http_server
 modifier|*
 name|http_srv
@@ -326,6 +352,18 @@ function_decl|;
 name|void
 modifier|*
 name|deinit_done_ctx
+decl_stmt|;
+name|struct
+name|in_addr
+name|filter_addr
+decl_stmt|;
+name|int
+name|skip_set_sel_reg
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|set_sel_reg_uuid_filter
 decl_stmt|;
 block|}
 struct|;
@@ -368,6 +406,23 @@ end_function_decl
 begin_function_decl
 name|void
 name|wps_er_ap_remove
+parameter_list|(
+name|struct
+name|wps_er
+modifier|*
+name|er
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wps_er_ap_cache_settings
 parameter_list|(
 name|struct
 name|wps_er

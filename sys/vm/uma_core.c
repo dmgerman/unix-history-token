@@ -2286,11 +2286,7 @@ operator|&
 name|oldhash
 argument_list|)
 expr_stmt|;
-name|KEG_LOCK
-argument_list|(
-name|keg
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 block|}
 name|KEG_UNLOCK

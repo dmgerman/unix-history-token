@@ -1311,6 +1311,9 @@ modifier|*
 name|nv
 parameter_list|)
 block|{
+name|pid_t
+name|pid
+decl_stmt|;
 name|unsigned
 name|int
 name|ii
@@ -1566,6 +1569,30 @@ argument_list|(
 literal|"  status: %s\n"
 argument_list|,
 name|str
+argument_list|)
+expr_stmt|;
+name|pid
+operator|=
+name|nv_get_int32
+argument_list|(
+name|nv
+argument_list|,
+literal|"workerpid%u"
+argument_list|,
+name|ii
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"  workerpid: %d\n"
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 name|printf

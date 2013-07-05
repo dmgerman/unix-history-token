@@ -852,7 +852,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__FreeBSD__
+name|__FreeBSD_kernel__
 end_ifndef
 
 begin_function
@@ -1040,7 +1040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__FreeBSD__ */
+comment|/* !__FreeBSD_kernel__ */
 end_comment
 
 begin_function

@@ -8080,6 +8080,7 @@ name|ha
 operator|->
 name|msg_from_peer
 condition|)
+block|{
 name|qla_send_msg_to_peer
 argument_list|(
 name|ha
@@ -8107,6 +8108,7 @@ argument_list|,
 literal|100
 argument_list|)
 expr_stmt|;
+block|}
 name|ha
 operator|->
 name|msg_from_peer

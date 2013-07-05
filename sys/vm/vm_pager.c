@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -506,32 +512,8 @@ comment|/*  * Kernel address space for mapping pages.  * Used by pagers where KV
 end_comment
 
 begin_decl_stmt
-name|vm_map_t
-name|pager_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bswneeded
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|swapbkva
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* swap buffers kva */
-end_comment
-
-begin_decl_stmt
 name|struct
-name|mtx
+name|mtx_padalign
 name|pbuf_mtx
 decl_stmt|;
 end_decl_stmt
@@ -547,6 +529,23 @@ argument_list|)
 name|bswlist
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bswneeded
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_offset_t
+name|swapbkva
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* swap buffers kva */
+end_comment
 
 begin_function
 name|void
@@ -709,27 +708,6 @@ operator|/
 literal|2
 operator|+
 literal|1
-expr_stmt|;
-name|swapbkva
-operator|=
-name|kmem_alloc_nofault
-argument_list|(
-name|pager_map
-argument_list|,
-name|nswbuf
-operator|*
-name|MAXPHYS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|swapbkva
-condition|)
-name|panic
-argument_list|(
-literal|"Not enough pager_map VM space for physical buffers"
-argument_list|)
 expr_stmt|;
 block|}
 end_function

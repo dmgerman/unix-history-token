@@ -1800,29 +1800,6 @@ expr_stmt|;
 if|if
 condition|(
 name|smp
-operator|==
-name|NULL
-condition|)
-block|{
-name|SMBERROR
-argument_list|(
-literal|"smp == NULL (bug in umount)\n"
-argument_list|)
-expr_stmt|;
-name|vfs_mount_error
-argument_list|(
-name|mp
-argument_list|,
-literal|"smp == NULL (bug in umount)"
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-if|if
-condition|(
-name|smp
 operator|->
 name|sm_root
 condition|)

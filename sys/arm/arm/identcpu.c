@@ -1140,6 +1140,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_CORTEXA15
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A15"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_SA110
 block|,
 name|CPU_CLASS_SA1

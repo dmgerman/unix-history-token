@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: EAP-MSCHAPV2 (draft-kamath-pppext-eap-mschapv2-00.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file implements EAP peer part of EAP-MSCHAPV2 method (EAP type 26).  * draft-kamath-pppext-eap-mschapv2-00.txt defines the Microsoft EAP CHAP  * Extensions Protocol, Version 2, for mutual authentication and key  * derivation. This encapsulates MS-CHAP-v2 protocol which is defined in  * RFC 2759. Use of EAP-MSCHAPV2 derived keys with MPPE cipher is described in  * RFC 3079.  */
+comment|/*  * EAP peer method: EAP-MSCHAPV2 (draft-kamath-pppext-eap-mschapv2-00.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file implements EAP peer part of EAP-MSCHAPV2 method (EAP type 26).  * draft-kamath-pppext-eap-mschapv2-00.txt defines the Microsoft EAP CHAP  * Extensions Protocol, Version 2, for mutual authentication and key  * derivation. This encapsulates MS-CHAP-v2 protocol which is defined in  * RFC 2759. Use of EAP-MSCHAPV2 derived keys with MPPE cipher is described in  * RFC 3079.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/ms_funcs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -842,7 +848,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|peer_challenge
 argument_list|,
@@ -1358,6 +1364,18 @@ operator|->
 name|password
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|config
+operator|->
+name|flags
+operator|&
+name|EAP_CONFIG_FLAGS_EXT_PASSWORD
+condition|)
+block|{
+comment|/* TODO: update external storage */
+block|}
+elseif|else
 if|if
 condition|(
 name|config
@@ -2588,7 +2606,7 @@ block|}
 comment|/* Peer-Challenge */
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|cp
 operator|->

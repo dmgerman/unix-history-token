@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -93,33 +93,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_HERMES
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_hermes_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_hermes.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_HERMES */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_MADWIFI
 end_ifdef
 
@@ -142,114 +115,6 @@ end_endif
 
 begin_comment
 comment|/* CONFIG_DRIVER_MADWIFI */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_ATMEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_atmel_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_atmel.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_ATMEL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_NDISWRAPPER
-end_ifdef
-
-begin_comment
-comment|/* driver_ndiswrapper.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_ndiswrapper_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_NDISWRAPPER */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_BROADCOM
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_broadcom_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_broadcom.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_BROADCOM */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_IPW
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_ipw_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_ipw.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_IPW */
 end_comment
 
 begin_ifdef
@@ -358,87 +223,6 @@ end_endif
 
 begin_comment
 comment|/* CONFIG_DRIVER_TEST */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_RALINK
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_ralink_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_ralink.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_RALINK */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_OSX
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_osx_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_osx.m */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_OSX */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_IPHONE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_iphone_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_iphone.m */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_IPHONE */
 end_comment
 
 begin_ifdef
@@ -559,15 +343,6 @@ directive|endif
 comment|/* CONFIG_DRIVER_HOSTAP */
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_HERMES
-operator|&
-name|wpa_driver_hermes_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_HERMES */
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_MADWIFI
 operator|&
 name|wpa_driver_madwifi_ops
@@ -575,42 +350,6 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_MADWIFI */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_ATMEL
-operator|&
-name|wpa_driver_atmel_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_ATMEL */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_NDISWRAPPER
-operator|&
-name|wpa_driver_ndiswrapper_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_NDISWRAPPER */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_BROADCOM
-operator|&
-name|wpa_driver_broadcom_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_BROADCOM */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_IPW
-operator|&
-name|wpa_driver_ipw_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_IPW */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_BSD
@@ -647,33 +386,6 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_TEST */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_RALINK
-operator|&
-name|wpa_driver_ralink_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_RALINK */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_OSX
-operator|&
-name|wpa_driver_osx_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_OSX */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_IPHONE
-operator|&
-name|wpa_driver_iphone_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_IPHONE */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_ROBOSWITCH

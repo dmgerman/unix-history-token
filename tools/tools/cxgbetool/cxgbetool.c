@@ -4503,6 +4503,14 @@ name|idx
 operator|=
 name|idx
 expr_stmt|;
+name|t
+operator|.
+name|fs
+operator|.
+name|hitcnts
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|start_arg

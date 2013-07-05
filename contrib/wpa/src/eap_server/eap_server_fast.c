@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP-FAST server (RFC 4851)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP-FAST server (RFC 4851)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/tls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -2817,7 +2823,7 @@ name|EAP_TLV_CRYPTO_BINDING_SUBTYPE_REQUEST
 expr_stmt|;
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|binding
 operator|->
@@ -3035,7 +3041,7 @@ name|now
 decl_stmt|;
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|pac_key
 argument_list|,

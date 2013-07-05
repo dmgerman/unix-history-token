@@ -2649,6 +2649,35 @@ argument_list|(
 name|HOST_CALDATA_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AH9300
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_cal_mem
+operator|==
+name|NULL
+condition|)
+block|{
+name|ath_hal_printf
+argument_list|(
+name|ah
+argument_list|,
+literal|"%s: caldata malloc failed!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|ecode
+operator|=
+name|HAL_EIO
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/*      * If eepromdata is not NULL, copy it it into ah_cal_mem.      */
 if|if
 condition|(

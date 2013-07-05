@@ -9158,13 +9158,6 @@ name|cpu_tlb_flushD
 argument_list|()
 expr_stmt|;
 block|}
-name|vm_page_aflag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PGA_WRITEABLE
-argument_list|)
-expr_stmt|;
 name|rw_wunlock
 argument_list|(
 operator|&
@@ -10487,7 +10480,17 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* Write enable */
+comment|/* 			 * Enable write permission if the access type 			 * indicates write intention. Emulate modified 			 * bit otherwise. 			 */
+if|if
+condition|(
+operator|(
+name|access
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|!=
+literal|0
+condition|)
 name|npte
 operator|&=
 operator|~

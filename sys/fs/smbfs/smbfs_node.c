@@ -319,6 +319,8 @@ name|smbnode
 operator|*
 operator|)
 name|vp
+operator|->
+name|v_data
 expr_stmt|;
 name|sc
 operator|=

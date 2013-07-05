@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / UDP socket -based control interface  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / UDP socket -based control interface  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -732,6 +732,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|CONFIG_CTRL_IFACE_UDP_REMOTE
 if|if
 condition|(
 name|from
@@ -770,6 +773,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
 name|buf
 index|[
 name|res
@@ -1217,6 +1223,11 @@ name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
+name|int
+name|port
+init|=
+name|WPA_CTRL_IFACE_PORT
+decl_stmt|;
 name|priv
 operator|=
 name|os_zalloc
@@ -1322,6 +1333,20 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_UDP_REMOTE
+name|addr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+else|#
+directive|else
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
 name|addr
 operator|.
 name|sin_addr
@@ -1339,13 +1364,18 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
+name|try_again
+label|:
 name|addr
 operator|.
 name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|WPA_CTRL_IFACE_PORT
+name|port
 argument_list|)
 expr_stmt|;
 if|if
@@ -1373,6 +1403,22 @@ operator|<
 literal|0
 condition|)
 block|{
+name|port
+operator|--
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|WPA_CTRL_IFACE_PORT
+operator|-
+name|port
+operator|)
+operator|<
+name|WPA_CTRL_IFACE_PORT_LIMIT
+condition|)
+goto|goto
+name|try_again
+goto|;
 name|perror
 argument_list|(
 literal|"bind(AF_INET)"
@@ -1382,6 +1428,23 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_UDP_REMOTE
+name|wpa_msg
+argument_list|(
+name|wpa_s
+argument_list|,
+name|MSG_DEBUG
+argument_list|,
+literal|"ctrl_iface_init UDP port: %d"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
 name|eloop_register_read_sock
 argument_list|(
 name|priv
@@ -2064,6 +2127,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|CONFIG_CTRL_IFACE_UDP_REMOTE
 if|if
 condition|(
 name|from
@@ -2102,6 +2168,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
 name|buf
 index|[
 name|res
@@ -2329,6 +2398,11 @@ name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
+name|int
+name|port
+init|=
+name|WPA_GLOBAL_CTRL_IFACE_PORT
+decl_stmt|;
 name|priv
 operator|=
 name|os_zalloc
@@ -2441,6 +2515,20 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_UDP_REMOTE
+name|addr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+else|#
+directive|else
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
 name|addr
 operator|.
 name|sin_addr
@@ -2458,13 +2546,18 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
+name|try_again
+label|:
 name|addr
 operator|.
 name|sin_port
 operator|=
 name|htons
 argument_list|(
-name|WPA_GLOBAL_CTRL_IFACE_PORT
+name|port
 argument_list|)
 expr_stmt|;
 if|if
@@ -2492,6 +2585,22 @@ operator|<
 literal|0
 condition|)
 block|{
+name|port
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|port
+operator|-
+name|WPA_GLOBAL_CTRL_IFACE_PORT
+operator|)
+operator|<
+name|WPA_GLOBAL_CTRL_IFACE_PORT_LIMIT
+condition|)
+goto|goto
+name|try_again
+goto|;
 name|perror
 argument_list|(
 literal|"bind(AF_INET)"
@@ -2501,6 +2610,21 @@ goto|goto
 name|fail
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_CTRL_IFACE_UDP_REMOTE
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"global_ctrl_iface_init UDP port: %d"
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_CTRL_IFACE_UDP_REMOTE */
 name|eloop_register_read_sock
 argument_list|(
 name|priv

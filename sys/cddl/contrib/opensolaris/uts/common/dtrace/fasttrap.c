@@ -9714,6 +9714,12 @@ name|fasttrap_cleanup_proc
 operator|=
 name|NULL
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|fasttrap_cleanup_mtx
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG

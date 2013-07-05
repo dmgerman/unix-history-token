@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Authentication server setup  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Authentication server setup  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -249,8 +249,6 @@ name|eap_user
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|count
 decl_stmt|;
 name|eap_user
 operator|=
@@ -297,20 +295,6 @@ name|user
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-name|EAP_USER_MAX_METHODS
-expr_stmt|;
-if|if
-condition|(
-name|count
-operator|>
-name|EAP_MAX_METHODS
-condition|)
-name|count
-operator|=
-name|EAP_MAX_METHODS
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -319,7 +303,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|count
+name|EAP_MAX_METHODS
 condition|;
 name|i
 operator|++
@@ -503,7 +487,7 @@ name|srv
 operator|.
 name|conf_ctx
 operator|=
-name|conf
+name|hapd
 expr_stmt|;
 name|srv
 operator|.
@@ -639,6 +623,28 @@ name|conf
 operator|->
 name|eap_req_id_text_len
 expr_stmt|;
+name|srv
+operator|.
+name|pwd_group
+operator|=
+name|conf
+operator|->
+name|pwd_group
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_RADIUS_TEST
+name|srv
+operator|.
+name|dump_msk_file
+operator|=
+name|conf
+operator|->
+name|dump_msk_file
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_RADIUS_TEST */
 name|hapd
 operator|->
 name|radius_srv

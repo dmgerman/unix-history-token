@@ -7231,7 +7231,6 @@ operator|->
 name|nameplus
 index|[
 name|pos
-operator|++
 index|]
 argument_list|)
 operator|<<
@@ -7245,9 +7244,14 @@ operator|->
 name|nameplus
 index|[
 name|pos
-operator|++
+operator|+
+literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|pos
+operator|+=
+literal|2
 expr_stmt|;
 name|buf
 operator|=

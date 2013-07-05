@@ -1495,6 +1495,7 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If parent indirect has just been allocated, try to cluster 		 * immediately following it. 		 */
 if|if
 condition|(
 name|pref
@@ -1870,11 +1871,24 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If allocating metadata at the front of the cylinder 		 * group and parent indirect block has just been allocated, 		 * then cluster next to it if it is the first indirect in 		 * the file. Otherwise it has been allocated in the metadata 		 * area, so we want to find our own place out in the data area. 		 */
 if|if
 condition|(
 name|pref
 operator|==
 literal|0
+operator|||
+operator|(
+name|lbn
+operator|>
+name|NDADDR
+operator|&&
+name|fs
+operator|->
+name|fs_metaspace
+operator|!=
+literal|0
+operator|)
 condition|)
 name|pref
 operator|=
@@ -4806,6 +4820,7 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If parent indirect has just been allocated, try to cluster 		 * immediately following it. 		 */
 if|if
 condition|(
 name|pref
@@ -5181,11 +5196,24 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If allocating metadata at the front of the cylinder 		 * group and parent indirect block has just been allocated, 		 * then cluster next to it if it is the first indirect in 		 * the file. Otherwise it has been allocated in the metadata 		 * area, so we want to find our own place out in the data area. 		 */
 if|if
 condition|(
 name|pref
 operator|==
 literal|0
+operator|||
+operator|(
+name|lbn
+operator|>
+name|NDADDR
+operator|&&
+name|fs
+operator|->
+name|fs_metaspace
+operator|!=
+literal|0
+operator|)
 condition|)
 name|pref
 operator|=

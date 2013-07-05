@@ -1062,10 +1062,6 @@ name|doff_t
 name|slotoffset
 decl_stmt|;
 comment|/* offset of area with free space */
-name|int
-name|slotsize
-decl_stmt|;
-comment|/* size of area at slotoffset */
 name|doff_t
 name|i_diroff
 decl_stmt|;
@@ -1074,6 +1070,10 @@ name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* cached i_offset value */
+name|int
+name|slotsize
+decl_stmt|;
+comment|/* size of area at slotoffset */
 name|int
 name|slotfreespace
 decl_stmt|;
@@ -1751,12 +1751,6 @@ goto|goto
 name|searchloop
 goto|;
 block|}
-name|dp
-operator|->
-name|i_offset
-operator|=
-name|i_offset
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1894,14 +1888,6 @@ name|enduseful
 argument_list|,
 name|DIRBLKSIZ
 argument_list|)
-expr_stmt|;
-name|dp
-operator|->
-name|i_flag
-operator||=
-name|IN_CHANGE
-operator||
-name|IN_UPDATE
 expr_stmt|;
 comment|/* 		 * We return with the directory locked, so that 		 * the parameters we set up above will still be 		 * valid if we actually decide to do a direnter(). 		 * We return ni_vp == NULL to indicate that the entry 		 * does not currently exist; we leave a pointer to 		 * the (locked) directory inode in ndp->ni_dvp. 		 * The pathname buffer is saved so that the name 		 * can be obtained later. 		 * 		 * NB - if the directory is unlocked, then this 		 * information cannot be used. 		 */
 name|cnp
@@ -2048,12 +2034,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|dp
-operator|->
-name|i_offset
-operator|=
-name|i_offset
-expr_stmt|;
 comment|/* 	 * If deleting, and at end of pathname, return 	 * parameters which can be used to remove file. 	 */
 if|if
 condition|(
@@ -2068,6 +2048,19 @@ name|ISLASTCN
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|LOCKPARENT
+condition|)
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vdp
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Write access to directory required to delete files. 		 */
 if|if
 condition|(
@@ -2095,7 +2088,13 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 */
+comment|/* 		 * Return pointer to current entry in dp->i_offset, 		 * and distance past previous entry (if there 		 * is a previous entry in this block) in dp->i_count. 		 * Save directory inode pointer in ndp->ni_dvp for dirremove(). 		 * 		 * Technically we shouldn't be setting these in the 		 * WANTPARENT case (first lookup in rename()), but any 		 * lookups that will result in directory changes will 		 * overwrite these. 		 */
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2292,6 +2291,12 @@ name|error
 operator|)
 return|;
 comment|/* 		 * Careful about locking second inode. 		 * This can only occur if the target is ".". 		 */
+name|dp
+operator|->
+name|i_offset
+operator|=
+name|i_offset
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -2383,28 +2388,11 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|ltype
-operator|=
-name|VOP_ISLOCKED
-argument_list|(
-name|pdp
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|pdp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* race to get the inode */
 name|error
 operator|=
-name|VFS_VGET
+name|vn_vget_ino
 argument_list|(
-name|vdp
-operator|->
-name|v_mount
+name|pdp
 argument_list|,
 name|ino
 argument_list|,
@@ -2414,15 +2402,6 @@ name|cn_lkflags
 argument_list|,
 operator|&
 name|tdp
-argument_list|)
-expr_stmt|;
-name|vn_lock
-argument_list|(
-name|pdp
-argument_list|,
-name|ltype
-operator||
-name|LK_RETRY
 argument_list|)
 expr_stmt|;
 if|if

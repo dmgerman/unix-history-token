@@ -99,12 +99,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIRTIO_BLK_F_FLUSH
+name|VIRTIO_BLK_F_WCE
 value|0x0200
 end_define
 
 begin_comment
-comment|/* Cache flush command support */
+comment|/* Writeback mode enabled after reset */
 end_comment
 
 begin_define
@@ -116,6 +116,17 @@ end_define
 
 begin_comment
 comment|/* Topology information is available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_BLK_F_CONFIG_WCE
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Writeback mode available in config */
 end_comment
 
 begin_define
@@ -145,7 +156,7 @@ comment|/* The maximum number of segments (if VIRTIO_BLK_F_SEG_MAX) */
 name|uint32_t
 name|seg_max
 decl_stmt|;
-comment|/* geometry the device (if VIRTIO_BLK_F_GEOMETRY) */
+comment|/* Geometry of the device (if VIRTIO_BLK_F_GEOMETRY) */
 struct|struct
 name|virtio_blk_geometry
 block|{
@@ -161,9 +172,32 @@ decl_stmt|;
 block|}
 name|geometry
 struct|;
-comment|/* block size of device (if VIRTIO_BLK_F_BLK_SIZE) */
+comment|/* Block size of device (if VIRTIO_BLK_F_BLK_SIZE) */
 name|uint32_t
 name|blk_size
+decl_stmt|;
+comment|/* Topology of the device (if VIRTIO_BLK_F_TOPOLOGY) */
+struct|struct
+name|virtio_blk_topology
+block|{
+name|uint8_t
+name|physical_block_exp
+decl_stmt|;
+name|uint8_t
+name|alignment_offset
+decl_stmt|;
+name|uint16_t
+name|min_io_size
+decl_stmt|;
+name|uint16_t
+name|opt_io_size
+decl_stmt|;
+block|}
+name|topology
+struct|;
+comment|/* Writeback mode (if VIRTIO_BLK_F_CONFIG_WCE) */
+name|uint8_t
+name|writeback
 decl_stmt|;
 block|}
 name|__packed

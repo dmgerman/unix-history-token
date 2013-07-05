@@ -385,6 +385,9 @@ decl_stmt|;
 name|int
 name|ddp_thres
 decl_stmt|;
+name|int
+name|rx_coalesce
+decl_stmt|;
 block|}
 struct|;
 end_struct

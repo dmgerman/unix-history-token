@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / IEEE 802.11 authentication (ACL)  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / IEEE 802.11 authentication (ACL)  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -70,6 +70,22 @@ parameter_list|,
 name|int
 modifier|*
 name|vlan_id
+parameter_list|,
+name|struct
+name|hostapd_sta_wpa_psk_short
+modifier|*
+modifier|*
+name|psk
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|identity
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|radius_cui
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -94,6 +110,18 @@ name|struct
 name|hostapd_data
 modifier|*
 name|hapd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hostapd_free_psk_list
+parameter_list|(
+name|struct
+name|hostapd_sta_wpa_psk_short
+modifier|*
+name|psk
 parameter_list|)
 function_decl|;
 end_function_decl

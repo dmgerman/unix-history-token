@@ -3058,6 +3058,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|in6_ifaddr
+modifier|*
+name|in6ifa_llaonifp
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|ip6_sprintf

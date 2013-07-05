@@ -8996,12 +8996,6 @@ name|tsn
 argument_list|,
 name|protocol_id
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|context
-argument_list|,
 name|strmno
 argument_list|,
 name|strmseq
@@ -9684,12 +9678,6 @@ argument_list|,
 name|tsn
 argument_list|,
 name|protocol_id
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|context
 argument_list|,
 name|strmno
 argument_list|,

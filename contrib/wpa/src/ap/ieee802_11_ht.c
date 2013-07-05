@@ -98,6 +98,12 @@ operator|->
 name|iface
 operator|->
 name|current_mode
+operator|||
+name|hapd
+operator|->
+name|conf
+operator|->
+name|disable_11n
 condition|)
 return|return
 name|eid
@@ -233,6 +239,12 @@ operator|->
 name|iconf
 operator|->
 name|ieee80211n
+operator|||
+name|hapd
+operator|->
+name|conf
+operator|->
+name|disable_11n
 condition|)
 return|return
 name|eid
@@ -350,7 +362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* op_mode Set to 0 (HT pure) under the followign conditions 	- all STAs in the BSS are 20/40 MHz HT in 20/40 MHz BSS or 	- all STAs in the BSS are 20 MHz HT in 20 MHz BSS Set to 1 (HT non-member protection) if there may be non-HT STAs 	in both the primary and the secondary channel Set to 2 if only HT STAs are associated in BSS, 	however and at least one 20 MHz HT STA is associated Set to 3 (HT mixed mode) when one or more non-HT STAs are associated 	(currently non-GF HT station is considered as non-HT STA also) */
+comment|/* op_mode Set to 0 (HT pure) under the followign conditions 	- all STAs in the BSS are 20/40 MHz HT in 20/40 MHz BSS or 	- all STAs in the BSS are 20 MHz HT in 20 MHz BSS Set to 1 (HT non-member protection) if there may be non-HT STAs 	in both the primary and the secondary channel Set to 2 if only HT STAs are associated in BSS, 	however and at least one 20 MHz HT STA is associated Set to 3 (HT mixed mode) when one or more non-HT STAs are associated */
 end_comment
 
 begin_function
@@ -527,7 +539,6 @@ name|op_mode_changes
 operator|++
 expr_stmt|;
 block|}
-comment|/* Note: currently we switch to the MIXED op mode if HT non-greenfield 	 * station is associated. Probably it's a theoretical case, since 	 * it looks like all known HT STAs support greenfield. 	 */
 name|new_op_mode
 operator|=
 literal|0
@@ -537,14 +548,6 @@ condition|(
 name|iface
 operator|->
 name|num_sta_no_ht
-operator|||
-operator|(
-name|iface
-operator|->
-name|ht_op_mode
-operator|&
-name|HT_INFO_OPERATION_MODE_NON_GF_DEVS_PRESENT
-operator|)
 condition|)
 name|new_op_mode
 operator|=
@@ -645,6 +648,11 @@ name|u16
 name|copy_sta_ht_capab
 parameter_list|(
 name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+name|struct
 name|sta_info
 modifier|*
 name|sta
@@ -658,6 +666,7 @@ name|size_t
 name|ht_capab_len
 parameter_list|)
 block|{
+comment|/* Disable HT caps for STAs associated to no-HT BSSes. */
 if|if
 condition|(
 operator|!
@@ -670,6 +679,12 @@ argument_list|(
 expr|struct
 name|ieee80211_ht_capabilities
 argument_list|)
+operator|||
+name|hapd
+operator|->
+name|conf
+operator|->
+name|disable_11n
 condition|)
 block|{
 name|sta
@@ -1120,24 +1135,21 @@ operator|->
 name|ht_capabilities_info
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Mask out HT features we don't support, but don't overwrite 	 * non-symmetric features like STBC and SMPS. Just because 	 * we're not in dynamic SMPS mode the STA might still be. 	 */
 name|cap
 operator|&=
-name|hapd
-operator|->
-name|iconf
-operator|->
-name|ht_capab
-expr_stmt|;
-name|cap
-operator||=
 operator|(
 name|hapd
 operator|->
 name|iconf
 operator|->
 name|ht_capab
-operator|&
-name|HT_CAP_INFO_SMPS_DISABLED
+operator||
+name|HT_CAP_INFO_RX_STBC_MASK
+operator||
+name|HT_CAP_INFO_TX_STBC
+operator||
+name|HT_CAP_INFO_SMPS_MASK
 operator|)
 expr_stmt|;
 comment|/* 	 * STBC needs to be handled specially 	 * if we don't support RX STBC, mask out TX STBC in the STA's HT caps 	 * if we don't support TX STBC, mask out RX STBC in the STA's HT caps 	 */

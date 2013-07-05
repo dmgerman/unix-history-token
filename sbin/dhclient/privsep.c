@@ -457,6 +457,11 @@ begin_function
 name|void
 name|dispatch_imsg
 parameter_list|(
+name|struct
+name|interface_info
+modifier|*
+name|ifi
+parameter_list|,
 name|int
 name|fd
 parameter_list|)
@@ -1386,6 +1391,20 @@ condition|)
 name|error
 argument_list|(
 literal|"buf_close: %m"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IMSG_SEND_PACKET
+case|:
+name|send_packet_priv
+argument_list|(
+name|ifi
+argument_list|,
+operator|&
+name|hdr
+argument_list|,
+name|fd
 argument_list|)
 expr_stmt|;
 break|break;

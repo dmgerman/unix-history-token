@@ -335,6 +335,7 @@ name|wchar_t
 modifier|*
 name|pwc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -352,6 +353,7 @@ modifier|*
 name|nresult
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s0

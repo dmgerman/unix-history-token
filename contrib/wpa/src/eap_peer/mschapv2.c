@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * MSCHAPV2 (RFC 2759)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * MSCHAPV2 (RFC 2759)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -245,6 +245,8 @@ argument_list|,
 name|password_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|generate_nt_response_pwhash
 argument_list|(
 name|auth_challenge
@@ -259,7 +261,7 @@ name|password
 argument_list|,
 name|nt_response
 argument_list|)
-expr_stmt|;
+operator|||
 name|generate_authenticator_response_pwhash
 argument_list|(
 name|password
@@ -276,7 +278,11 @@ name|nt_response
 argument_list|,
 name|auth_response
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 else|else
 block|{
@@ -291,6 +297,8 @@ argument_list|,
 name|password_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|generate_nt_response
 argument_list|(
 name|auth_challenge
@@ -307,7 +315,7 @@ name|password_len
 argument_list|,
 name|nt_response
 argument_list|)
-expr_stmt|;
+operator|||
 name|generate_authenticator_response
 argument_list|(
 name|password
@@ -326,7 +334,11 @@ name|nt_response
 argument_list|,
 name|auth_response
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|wpa_hexdump
 argument_list|(
@@ -395,6 +407,8 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
 name|get_master_key
 argument_list|(
 name|password_hash_hash
@@ -403,7 +417,11 @@ name|nt_response
 argument_list|,
 name|master_key
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG
