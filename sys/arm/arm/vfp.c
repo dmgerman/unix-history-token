@@ -684,6 +684,30 @@ name|vfpscr
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Work around an issue with GCC where the asm it generates is 	 * not unified syntax and fails to assemble because it expects 	 * the ldcleq instruction in the form ldc<c>l, not in the UAL 	 * form ldcl<c>, and similar for stcleq. 	 */
+ifdef|#
+directive|ifdef
+name|__clang__
+define|#
+directive|define
+name|ldcleq
+value|"ldcleq"
+define|#
+directive|define
+name|stcleq
+value|"stcleq"
+else|#
+directive|else
+define|#
+directive|define
+name|ldcleq
+value|"ldceql"
+define|#
+directive|define
+name|stcleq
+value|"stceql"
+endif|#
+directive|endif
 if|if
 condition|(
 name|vfpsave
@@ -691,9 +715,10 @@ condition|)
 block|{
 asm|__asm __volatile("ldc	p10, c0, [%0], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%0, 0\n"
+literal|"cmp	%0, #0\n"
 comment|/* -D16 or -D32? */
-literal|"ldcleq	p11, c0, [%0], #128\n"
+name|ldcleq
+literal|"	p11, c0, [%0], #128\n"
 comment|/* d16-d31 */
 literal|"addne	%0, %0, #128\n"
 comment|/* skip missing regs */
@@ -773,9 +798,10 @@ condition|)
 block|{
 asm|__asm __volatile("stc	p11, c0, [%1], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%0, 0\n"
+literal|"cmp	%0, #0\n"
 comment|/* -D16 or -D32? */
-literal|"stcleq	p11, c0, [%1], #128\n"
+name|stcleq
+literal|"	p11, c0, [%1], #128\n"
 comment|/* d16-d31 */
 literal|"addne	%1, %1, #128\n"
 comment|/* skip missing regs */
@@ -804,6 +830,18 @@ block|)
 empty_stmt|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|ldcleq
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|stcleq
+end_undef
 
 begin_ifndef
 ifndef|#
