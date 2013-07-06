@@ -318,7 +318,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_videodev.h>
+file|<contrib/v4l/videodev.h>
 end_include
 
 begin_include
@@ -330,7 +330,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_videodev2.h>
+file|<contrib/v4l/videodev2.h>
 end_include
 
 begin_include
