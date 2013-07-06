@@ -2713,7 +2713,7 @@ value|674
 end_define
 
 begin_comment
-comment|/*  * Kernel memory privileges.  */
+comment|/*  * mem(4) privileges.  */
 end_comment
 
 begin_define
@@ -2724,7 +2724,7 @@ value|680
 end_define
 
 begin_comment
-comment|/* Read from kernel memory. */
+comment|/* Open mem/kmem for reading. */
 end_comment
 
 begin_define
@@ -2735,7 +2735,7 @@ value|681
 end_define
 
 begin_comment
-comment|/* Write to kernel memory. */
+comment|/* Open mem/kmem for writing. */
 end_comment
 
 begin_comment

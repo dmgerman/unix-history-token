@@ -374,7 +374,7 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* 	 * Writes to kernel memory are a typical root-only operation, 	 * but non-root users are expected to be able to read it. 	 */
+comment|/* 	 * Writes to kernel/physical memory are a typical root-only operation, 	 * but non-root users are expected to be able to read it (provided they 	 * have permission to access /dev/[k]mem). 	 */
 if|if
 condition|(
 name|priv
