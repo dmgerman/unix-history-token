@@ -895,6 +895,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDT_PROBE_DEFINE0
+parameter_list|(
+name|prov
+parameter_list|,
+name|mod
+parameter_list|,
+name|func
+parameter_list|,
+name|name
+parameter_list|,
+name|sname
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDT_PROBE_DEFINE1
 parameter_list|(
 name|prov
