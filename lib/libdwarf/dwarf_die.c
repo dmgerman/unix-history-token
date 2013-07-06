@@ -15,17 +15,6 @@ directive|include
 file|"_libdwarf.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|anon_name
-init|=
-literal|"__anon__"
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|dwarf_die_add
@@ -160,7 +149,7 @@ name|die
 operator|->
 name|die_name
 operator|=
-name|anon_name
+literal|""
 expr_stmt|;
 comment|/* Initialise the list of attribute values. */
 name|STAILQ_INIT
