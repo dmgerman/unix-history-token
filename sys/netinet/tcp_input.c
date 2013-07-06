@@ -939,10 +939,17 @@ operator|=
 literal|1024
 operator|*
 literal|64
+expr_stmt|;
+end_expr_stmt
+
+begin_define
 define|#
 directive|define
 name|V_tcp_recvspace
 value|VNET(tcp_recvspace)
+end_define
+
+begin_expr_stmt
 name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_tcp
