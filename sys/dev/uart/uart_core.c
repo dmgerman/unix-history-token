@@ -2560,5 +2560,36 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|uart_bus_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|uart_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|UART_ATTACH
+argument_list|(
+name|sc
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
