@@ -4510,6 +4510,8 @@ name|capa
 decl_stmt|;
 name|uint32_t
 name|con
+decl_stmt|,
+name|sysconfig
 decl_stmt|;
 comment|/* 1: Enable the controller and interface/functional clocks */
 name|clk
@@ -4565,13 +4567,26 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 2: Issue a softreset to the controller */
+name|sysconfig
+operator|=
+name|ti_mmchs_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|MMCHS_SYSCONFIG
+argument_list|)
+expr_stmt|;
+name|sysconfig
+operator||=
+name|MMCHS_SYSCONFIG_SRST
+expr_stmt|;
 name|ti_mmchs_write_4
 argument_list|(
 name|sc
 argument_list|,
 name|MMCHS_SYSCONFIG
 argument_list|,
-literal|0x0002
+name|sysconfig
 argument_list|)
 expr_stmt|;
 name|timeout

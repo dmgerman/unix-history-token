@@ -223,6 +223,48 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MMCHS_SYSCONFIG_CLK_FUN
+value|(2<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SYSCONFIG_CLK_IFC
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SYSCONFIG_SIDL
+value|(2<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SYSCONFIG_ENW
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SYSCONFIG_SRST
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SYSCONFIG_AIDL
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMCHS_STAT_BADA
 value|(1UL<< 29)
 end_define
