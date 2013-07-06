@@ -1632,7 +1632,7 @@ name|SCTP_HEADER_LEN
 parameter_list|(
 name|m
 parameter_list|)
-value|(m->m_pkthdr.len)
+value|((m)->m_pkthdr.len)
 end_define
 
 begin_define

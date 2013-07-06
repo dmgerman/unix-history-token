@@ -1617,9 +1617,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|length
 parameter_list|)
 block|{
 name|int
@@ -1635,6 +1632,9 @@ decl_stmt|;
 name|uint32_t
 modifier|*
 name|tick_tock
+decl_stmt|;
+name|int
+name|length
 decl_stmt|;
 name|int
 name|total_len
@@ -1654,6 +1654,13 @@ decl_stmt|,
 name|thisbegin
 decl_stmt|;
 comment|/* 	 * Buffer layout. -sizeof this entry (total_len) -previous end 	 * (value) -ticks of log      (ticks) o -ip packet o -as logged - 	 * where this started (thisbegin) x<--end points here 	 */
+name|length
+operator|=
+name|SCTP_HEADER_LEN
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|total_len
 operator|=
 name|SCTP_SIZE32
