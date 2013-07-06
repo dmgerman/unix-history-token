@@ -653,11 +653,6 @@ operator|->
 name|p_fd
 argument_list|)
 expr_stmt|;
-name|EVENTHANDLER_INVOKE
-argument_list|(
-name|mountroot
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4629,6 +4624,11 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|mountroot
 argument_list|)
 expr_stmt|;
 block|}
