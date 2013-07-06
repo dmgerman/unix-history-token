@@ -610,7 +610,7 @@ name|probe
 operator|->
 name|name
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|probe
 argument_list|)
