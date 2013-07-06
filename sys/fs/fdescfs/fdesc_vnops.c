@@ -2213,7 +2213,7 @@ name|dp
 operator|->
 name|d_type
 operator|=
-name|DT_UNKNOWN
+name|DT_CHR
 expr_stmt|;
 name|dp
 operator|->
