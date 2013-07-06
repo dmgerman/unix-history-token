@@ -1546,7 +1546,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|from
+name|to
 argument_list|,
 operator|(
 expr|struct
@@ -1554,7 +1554,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|to
+name|from
 argument_list|,
 operator|&
 name|inp
@@ -1784,7 +1784,7 @@ argument_list|(
 operator|&
 name|addrs
 index|[
-literal|0
+literal|1
 index|]
 argument_list|)
 argument_list|,
@@ -1793,7 +1793,7 @@ argument_list|(
 operator|&
 name|addrs
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 argument_list|,

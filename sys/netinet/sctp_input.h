@@ -59,6 +59,14 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
 name|sctphdr
 modifier|*
 parameter_list|,
