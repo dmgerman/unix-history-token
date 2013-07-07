@@ -523,16 +523,6 @@ parameter_list|()
 value|armadaxp_idcache_wbinv_all
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|armadaxp_idcache_wbinv_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -650,6 +640,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|void
+name|armadaxp_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
