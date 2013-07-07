@@ -12335,7 +12335,7 @@ condition|(
 name|lport
 condition|)
 block|{
-comment|/* 		 * Did the caller specify a port? if so we must see if a ep 		 * already has this one bound. 		 */
+comment|/* 		 * Did the caller specify a port? if so we must see if an ep 		 * already has this one bound. 		 */
 comment|/* got to be root to get at low ports */
 if|if
 condition|(
@@ -13342,10 +13342,12 @@ name|sctp_ifap
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ifa
 operator|=
 name|sctp_ifap
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 			 * Note for BSD we hit here always other O/S's will 			 * pass things in via the sctp_ifap argument 			 * (Panda). 			 */
