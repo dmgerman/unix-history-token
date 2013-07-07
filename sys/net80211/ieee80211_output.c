@@ -4192,7 +4192,7 @@ operator|<=
 name|MHLEN
 argument_list|,
 operator|(
-literal|"not enough room, need %u got %zu\n"
+literal|"not enough room, need %u got %d\n"
 operator|,
 name|needed_space
 operator|,

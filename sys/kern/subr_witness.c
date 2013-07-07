@@ -5203,7 +5203,8 @@ name|NULL
 condition|)
 name|kassert_panic
 argument_list|(
-literal|"interlock (%s) %s not locked @ %s:%d"
+literal|"interlock (%s) %s not locked while locking"
+literal|" %s @ %s:%d"
 argument_list|,
 name|iclass
 operator|->
@@ -5244,7 +5245,8 @@ literal|0
 condition|)
 name|kassert_panic
 argument_list|(
-literal|"interlock (%s) %s recursed @ %s:%d"
+literal|"interlock (%s) %s recursed while locking %s"
+literal|" @ %s:%d"
 argument_list|,
 name|iclass
 operator|->

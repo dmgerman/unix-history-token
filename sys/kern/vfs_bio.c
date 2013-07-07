@@ -18426,7 +18426,7 @@ operator|->
 name|b_npages
 argument_list|,
 operator|(
-literal|"Buffer %p too short: %d %d %d"
+literal|"Buffer %p too short: %d %lld %d"
 operator|,
 name|bp
 operator|,
@@ -18434,6 +18434,10 @@ name|bip
 operator|->
 name|bio_ma_offset
 operator|,
+operator|(
+name|long
+name|long
+operator|)
 name|bip
 operator|->
 name|bio_length
