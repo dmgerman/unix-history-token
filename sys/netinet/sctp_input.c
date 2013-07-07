@@ -9506,7 +9506,7 @@ index|[
 name|i
 index|]
 operator|.
-name|next_sequence_sent
+name|next_sequence_send
 operator|=
 literal|0
 expr_stmt|;
@@ -16892,7 +16892,7 @@ index|[
 name|i
 index|]
 operator|.
-name|next_sequence_sent
+name|next_sequence_send
 operator|=
 literal|0
 expr_stmt|;
@@ -16954,7 +16954,7 @@ index|[
 name|temp
 index|]
 operator|.
-name|next_sequence_sent
+name|next_sequence_send
 operator|=
 literal|0
 expr_stmt|;
