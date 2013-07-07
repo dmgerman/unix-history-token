@@ -36,6 +36,24 @@ begin_comment
 comment|/*  * Note: All the 64-bit atomic operations are only atomic when running  * in 64-bit mode.  It is assumed that code compiled for n32 and n64  * fits into this definition and no further safeties are needed.  *  * It is also assumed that the add, subtract and other arithmetic is  * done on numbers not pointers.  The special rules for n32 pointers  * do not have atomic operations defined for them, but generally shouldn't  * need atomic operations.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__MIPS_PLATFORM_SYNC_NOPS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__MIPS_PLATFORM_SYNC_NOPS
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -45,16 +63,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile (".set noreorder\n\t"
-literal|"sync\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
-literal|"nop\n\t"
+asm|__asm __volatile (".set noreorder\n"
+literal|"\tsync\n"
+name|__MIPS_PLATFORM_SYNC_NOPS
 literal|".set reorder\n"
 operator|:
 operator|:
