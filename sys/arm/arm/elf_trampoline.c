@@ -132,6 +132,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|cpufunc_id
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|armv6_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|do_call
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -152,6 +192,16 @@ name|cpu_idcache_wbinv_all
 value|arm7tdmi_cache_flushID
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|arm7tdmi_cache_flushID
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -168,6 +218,16 @@ name|cpu_idcache_wbinv_all
 value|arm8_cache_purgeID
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|arm8_cache_purgeID
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -183,6 +243,16 @@ directive|define
 name|cpu_idcache_wbinv_all
 value|arm9_idcache_wbinv_all
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|arm9_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_elif
 elif|#
@@ -205,6 +275,16 @@ name|cpu_idcache_wbinv_all
 value|fa526_idcache_wbinv_all
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|fa526_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -221,6 +301,16 @@ name|cpu_idcache_wbinv_all
 value|armv5_ec_idcache_wbinv_all
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|armv5_ec_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -236,6 +326,16 @@ directive|define
 name|cpu_idcache_wbinv_all
 value|arm10_idcache_wbinv_all
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|arm10_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_elif
 elif|#
@@ -290,6 +390,16 @@ name|cpu_idcache_wbinv_all
 value|sa1_cache_purgeID
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|sa1_cache_purgeID
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -328,6 +438,16 @@ name|cpu_idcache_wbinv_all
 value|xscale_cache_purgeID
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|xscale_cache_purgeID
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -343,6 +463,16 @@ directive|define
 name|cpu_idcache_wbinv_all
 value|xscalec3_cache_purgeID
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|xscalec3_cache_purgeID
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_elif
 elif|#
@@ -370,6 +500,16 @@ name|cpu_idcache_wbinv_all
 value|armv6_idcache_wbinv_all
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|armv6_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -382,6 +522,16 @@ name|cpu_idcache_wbinv_all
 parameter_list|()
 value|armadaxp_idcache_wbinv_all
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|armadaxp_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -410,6 +560,16 @@ name|cpu_l2cache_wbinv_all
 value|xscalec3_l2cache_purge
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|xscalec3_l2cache_purge
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -431,6 +591,16 @@ name|cpu_l2cache_wbinv_all
 value|sheeva_l2cache_wbinv_all
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|sheeva_l2cache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_elif
 elif|#
 directive|elif
@@ -446,6 +616,16 @@ directive|define
 name|cpu_idcache_wbinv_all
 value|armv7_idcache_wbinv_all
 end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|armv7_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -470,16 +650,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|static
-name|void
-name|armadaxp_idcache_wbinv_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|int
@@ -2036,6 +2206,7 @@ name|struct
 name|inflate
 name|infl
 decl_stmt|;
+name|unsigned
 name|char
 name|slide
 index|[
@@ -2055,6 +2226,7 @@ expr_stmt|;
 name|i_input
 operator|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -3178,6 +3350,16 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/* NOTREACHED */
+end_comment
+
+begin_return
+return|return
+name|NULL
+return|;
+end_return
 
 begin_decl_stmt
 unit|}  extern
