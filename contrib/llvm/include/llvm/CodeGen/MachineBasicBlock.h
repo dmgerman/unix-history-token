@@ -1665,6 +1665,33 @@ block|}
 end_function
 
 begin_comment
+comment|/// Add PhysReg as live in to this block, and ensure that there is a copy of
+end_comment
+
+begin_comment
+comment|/// PhysReg to a virtual register of class RC. Return the virtual register
+end_comment
+
+begin_comment
+comment|/// that is a copy of the live in PhysReg.
+end_comment
+
+begin_function_decl
+name|unsigned
+name|addLiveIn
+parameter_list|(
+name|unsigned
+name|PhysReg
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// removeLiveIn - Remove the specified register from the live in set.
 end_comment
 

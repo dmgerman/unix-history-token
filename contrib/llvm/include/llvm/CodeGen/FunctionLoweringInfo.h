@@ -400,6 +400,14 @@ operator|>
 expr|>
 name|PHINodesToUpdate
 expr_stmt|;
+comment|/// If the current MBB is a landing pad, the exception pointer and exception
+comment|/// selector registers are copied into these virtual registers by
+comment|/// SelectionDAGISel::PrepareEHLandingPad().
+name|unsigned
+name|ExceptionPointerVirtReg
+decl_stmt|,
+name|ExceptionSelectorVirtReg
+decl_stmt|;
 name|explicit
 name|FunctionLoweringInfo
 parameter_list|(
