@@ -4764,13 +4764,6 @@ else|else
 block|{
 comment|/* no outstanding data to send, so move on... */
 comment|/* send SHUTDOWN-ACK */
-name|sctp_send_shutdown_ack
-argument_list|(
-name|stcb
-argument_list|,
-name|net
-argument_list|)
-expr_stmt|;
 comment|/* move to SHUTDOWN-ACK-SENT state */
 if|if
 condition|(
@@ -4816,6 +4809,13 @@ expr_stmt|;
 name|sctp_stop_timers_for_shutdown
 argument_list|(
 name|stcb
+argument_list|)
+expr_stmt|;
+name|sctp_send_shutdown_ack
+argument_list|(
+name|stcb
+argument_list|,
+name|net
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
