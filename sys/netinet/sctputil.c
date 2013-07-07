@@ -18682,9 +18682,6 @@ return|return;
 block|}
 if|if
 condition|(
-name|stcb
-operator|&&
-operator|(
 operator|(
 name|stcb
 operator|->
@@ -18703,7 +18700,6 @@ operator|.
 name|state
 operator|&
 name|SCTP_STATE_COOKIE_ECHOED
-operator|)
 operator|)
 condition|)
 block|{
@@ -19069,11 +19065,6 @@ case|:
 if|if
 condition|(
 operator|(
-name|stcb
-operator|)
-operator|&&
-operator|(
-operator|(
 operator|(
 name|stcb
 operator|->
@@ -19099,7 +19090,6 @@ name|SCTP_STATE_MASK
 operator|)
 operator|==
 name|SCTP_STATE_COOKIE_ECHOED
-operator|)
 operator|)
 condition|)
 block|{
@@ -19144,11 +19134,6 @@ case|:
 if|if
 condition|(
 operator|(
-name|stcb
-operator|)
-operator|&&
-operator|(
-operator|(
 operator|(
 name|stcb
 operator|->
@@ -19174,7 +19159,6 @@ name|SCTP_STATE_MASK
 operator|)
 operator|==
 name|SCTP_STATE_COOKIE_ECHOED
-operator|)
 operator|)
 condition|)
 block|{
