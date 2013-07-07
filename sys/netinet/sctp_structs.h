@@ -1600,6 +1600,9 @@ name|union
 name|scheduling_parameters
 name|ss_params
 decl_stmt|;
+name|uint32_t
+name|chunks_on_queues
+decl_stmt|;
 name|uint16_t
 name|stream_no
 decl_stmt|;
