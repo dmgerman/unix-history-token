@@ -1713,7 +1713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to lookup an directory entry in HTree index  */
+comment|/*  * Try to lookup a directory entry in HTree index  */
 end_comment
 
 begin_function
@@ -2457,7 +2457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare two entry sort descriptiors by name hash value.  * This is used together with qsort.  */
+comment|/*  * Compare two entry sort descriptors by name hash value.  * This is used together with qsort.  */
 end_comment
 
 begin_function
@@ -3096,7 +3096,7 @@ operator|->
 name|e2d_ino
 condition|)
 block|{
-comment|/* trim the existing slot */
+comment|/* Trim the existing slot */
 name|last
 operator|->
 name|e2d_reclen
