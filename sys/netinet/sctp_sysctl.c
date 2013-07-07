@@ -865,6 +865,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|loopback_scope
 expr_stmt|;
 name|ipv4_local_scope
@@ -873,6 +875,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|ipv4_local_scope
 expr_stmt|;
 name|local_scope
@@ -881,6 +885,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|local_scope
 expr_stmt|;
 name|site_scope
@@ -889,12 +895,34 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|site_scope
+expr_stmt|;
+name|ipv4_addr_legal
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|scope
+operator|.
+name|ipv4_addr_legal
+expr_stmt|;
+name|ipv6_addr_legal
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|scope
+operator|.
+name|ipv6_addr_legal
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* use generic values for endpoints */
+comment|/* Use generic values for endpoints. */
 name|loopback_scope
 operator|=
 literal|1
@@ -911,8 +939,6 @@ name|site_scope
 operator|=
 literal|1
 expr_stmt|;
-block|}
-comment|/* use only address families of interest */
 if|if
 condition|(
 name|inp
@@ -949,14 +975,15 @@ block|}
 block|}
 else|else
 block|{
-name|ipv4_addr_legal
-operator|=
-literal|1
-expr_stmt|;
 name|ipv6_addr_legal
 operator|=
 literal|0
 expr_stmt|;
+name|ipv4_addr_legal
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* neither Mac OS X nor FreeBSD support mulitple routing functions */
 if|if

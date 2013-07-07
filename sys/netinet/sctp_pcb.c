@@ -371,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Addresses are added to VRF's (Virtual Router's). For BSD we  * have only the default VRF 0. We maintain a hash list of  * VRF's. Each VRF has its own list of sctp_ifn's. Each of  * these has a list of addresses. When we add a new address  * to a VRF we lookup the ifn/ifn_index, if the ifn does  * not exist we create it and add it to the list of IFN's  * within the VRF. Once we have the sctp_ifn, we add the  * address to the list. So we look something like:  *  * hash-vrf-table  *   vrf-> ifn-> ifn -> ifn  *   vrf    |  *    ...   +--ifa-> ifa -> ifa  *   vrf  *  * We keep these separate lists since the SCTP subsystem will  * point to these from its source address selection nets structure.  * When an address is deleted it does not happen right away on  * the SCTP side, it gets scheduled. What we do when a  * delete happens is immediately remove the address from  * the master list and decrement the refcount. As our  * addip iterator works through and frees the src address  * selection pointing to the sctp_ifa, eventually the refcount  * will reach 0 and we will delete it. Note that it is assumed  * that any locking on system level ifn/ifa is done at the  * caller of these functions and these routines will only  * lock the SCTP structures as they add or delete things.  *  * Other notes on VRF concepts.  *  - An endpoint can be in multiple VRF's  *  - An association lives within a VRF and only one VRF.  *  - Any incoming packet we can deduce the VRF for by  *    looking at the mbuf/pak inbound (for BSD its VRF=0 :D)  *  - Any downward send call or connect call must supply the  *    VRF via ancillary data or via some sort of set default  *    VRF socket option call (again for BSD no brainer since  *    the VRF is always 0).  *  - An endpoint may add multiple VRF's to it.  *  - Listening sockets can accept associations in any  *    of the VRF's they are in but the assoc will end up  *    in only one VRF (gotten from the packet or connect/send).  *  */
+comment|/*-  * Addresses are added to VRF's (Virtual Router's). For BSD we  * have only the default VRF 0. We maintain a hash list of  * VRF's. Each VRF has its own list of sctp_ifn's. Each of  * these has a list of addresses. When we add a new address  * to a VRF we lookup the ifn/ifn_index, if the ifn does  * not exist we create it and add it to the list of IFN's  * within the VRF. Once we have the sctp_ifn, we add the  * address to the list. So we look something like:  *  * hash-vrf-table  *   vrf-> ifn-> ifn -> ifn  *   vrf    |  *    ...   +--ifa-> ifa -> ifa  *   vrf  *  * We keep these separate lists since the SCTP subsystem will  * point to these from its source address selection nets structure.  * When an address is deleted it does not happen right away on  * the SCTP side, it gets scheduled. What we do when a  * delete happens is immediately remove the address from  * the master list and decrement the refcount. As our  * addip iterator works through and frees the src address  * selection pointing to the sctp_ifa, eventually the refcount  * will reach 0 and we will delete it. Note that it is assumed  * that any locking on system level ifn/ifa is done at the  * caller of these functions and these routines will only  * lock the SCTP structures as they add or delete things.  *  * Other notes on VRF concepts.  *  - An endpoint can be in multiple VRF's  *  - An association lives within a VRF and only one VRF.  *  - Any incoming packet we can deduce the VRF for by  *    looking at the mbuf/pak inbound (for BSD its VRF=0 :D)  *  - Any downward send call or connect call must supply the  *    VRF via ancillary data or via some sort of set default  *    VRF socket option call (again for BSD no brainer since  *    the VRF is always 0).  *  - An endpoint may add multiple VRF's to it.  *  - Listening sockets can accept associations in any  *    of the VRF's they are in but the assoc will end up  *    in only one VRF (gotten from the packet or connect/send).  *  */
 end_comment
 
 begin_function
@@ -1136,8 +1136,6 @@ name|struct
 name|sctp_ifa
 modifier|*
 name|sctp_ifap
-init|=
-name|NULL
 decl_stmt|;
 name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
@@ -1349,8 +1347,6 @@ name|struct
 name|sctp_ifa
 modifier|*
 name|sctp_ifap
-init|=
-name|NULL
 decl_stmt|;
 name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
@@ -4427,6 +4423,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|loopback_scope
 expr_stmt|;
 name|ipv4_local_scope
@@ -4435,6 +4433,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|ipv4_local_scope
 expr_stmt|;
 name|local_scope
@@ -4443,6 +4443,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|local_scope
 expr_stmt|;
 name|site_scope
@@ -4451,54 +4453,30 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|site_scope
 expr_stmt|;
 name|ipv4_addr_legal
 operator|=
-name|ipv6_addr_legal
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 name|stcb
 operator|->
-name|sctp_ep
-operator|->
-name|sctp_flags
-operator|&
-name|SCTP_PCB_FLAGS_BOUND_V6
-condition|)
-block|{
+name|asoc
+operator|.
+name|scope
+operator|.
+name|ipv4_addr_legal
+expr_stmt|;
 name|ipv6_addr_legal
 operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|SCTP_IPV6_V6ONLY
-argument_list|(
 name|stcb
 operator|->
-name|sctp_ep
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|ipv4_addr_legal
-operator|=
-literal|1
+name|asoc
+operator|.
+name|scope
+operator|.
+name|ipv6_addr_legal
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|ipv4_addr_legal
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|SCTP_IPI_ADDR_RLOCK
 argument_list|()
 expr_stmt|;
@@ -6492,6 +6470,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Endpoint probe expects that the INP_INFO is locked.  */
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -6554,7 +6536,6 @@ directive|endif
 name|int
 name|fnd
 decl_stmt|;
-comment|/* 	 * Endpoint probe expects that the INP_INFO is locked. 	 */
 ifdef|#
 directive|ifdef
 name|INET
@@ -16518,6 +16499,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|ipv4_local_scope
 operator|=
 literal|1
@@ -16546,6 +16529,8 @@ operator|(
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|ipv4_local_scope
 operator|==
@@ -16637,6 +16622,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|loopback_scope
 operator|=
 literal|1
@@ -16644,6 +16631,8 @@ expr_stmt|;
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|local_scope
 operator|=
@@ -16653,6 +16642,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|ipv4_local_scope
 operator|=
 literal|1
@@ -16660,6 +16651,8 @@ expr_stmt|;
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|site_scope
 operator|=
@@ -16683,6 +16676,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|ipv4_local_scope
 operator|=
 literal|1
@@ -16690,6 +16685,8 @@ expr_stmt|;
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|site_scope
 operator|=
@@ -16712,6 +16709,8 @@ comment|/* 					 * If the new destination is 					 * SITE_LOCAL then we must hav
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|site_scope
 operator|=
@@ -16737,6 +16736,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|loopback_scope
 operator|==
 literal|0
@@ -16764,6 +16765,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|local_scope
 operator|==
 literal|0
@@ -16790,6 +16793,8 @@ operator|(
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|site_scope
 operator|==
@@ -16990,6 +16995,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|loopback_scope
 operator|=
 literal|1
@@ -16997,6 +17004,8 @@ expr_stmt|;
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|ipv4_local_scope
 operator|=
@@ -17006,6 +17015,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|local_scope
 operator|=
 literal|0
@@ -17013,6 +17024,8 @@ expr_stmt|;
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|site_scope
 operator|=
@@ -27545,6 +27558,8 @@ name|stcb
 operator|->
 name|asoc
 operator|.
+name|scope
+operator|.
 name|ipv4_addr_legal
 condition|)
 block|{
@@ -27586,6 +27601,8 @@ condition|(
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|ipv6_addr_legal
 condition|)
@@ -27773,6 +27790,8 @@ condition|(
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|ipv4_addr_legal
 condition|)
@@ -28155,6 +28174,8 @@ condition|(
 name|stcb
 operator|->
 name|asoc
+operator|.
+name|scope
 operator|.
 name|ipv6_addr_legal
 condition|)

@@ -10342,6 +10342,8 @@ expr_stmt|;
 comment|/* get scope variables out of cookie */
 name|asoc
 operator|->
+name|scope
+operator|.
 name|ipv4_local_scope
 operator|=
 name|cookie
@@ -10350,6 +10352,8 @@ name|ipv4_scope
 expr_stmt|;
 name|asoc
 operator|->
+name|scope
+operator|.
 name|site_scope
 operator|=
 name|cookie
@@ -10358,6 +10362,8 @@ name|site_scope
 expr_stmt|;
 name|asoc
 operator|->
+name|scope
+operator|.
 name|local_scope
 operator|=
 name|cookie
@@ -10366,6 +10372,8 @@ name|local_scope
 expr_stmt|;
 name|asoc
 operator|->
+name|scope
+operator|.
 name|loopback_scope
 operator|=
 name|cookie
@@ -10377,6 +10385,8 @@ condition|(
 operator|(
 name|asoc
 operator|->
+name|scope
+operator|.
 name|ipv4_addr_legal
 operator|!=
 name|cookie
@@ -10387,6 +10397,8 @@ operator|||
 operator|(
 name|asoc
 operator|->
+name|scope
+operator|.
 name|ipv6_addr_legal
 operator|!=
 name|cookie
