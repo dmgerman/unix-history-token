@@ -22981,6 +22981,14 @@ name|adap_bits
 operator|->
 name|ssb_adaptation_ind
 expr_stmt|;
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|adaptation_layer_indicator_provided
+operator|=
+literal|1
+expr_stmt|;
 name|SCTP_INP_WUNLOCK
 argument_list|(
 name|inp

@@ -23033,7 +23033,15 @@ name|parameter_len
 expr_stmt|;
 block|}
 comment|/* Adaptation layer indication parameter */
-comment|/* XXX: Should we include this always? */
+if|if
+condition|(
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|adaptation_layer_indicator_provided
+condition|)
+block|{
 if|if
 condition|(
 name|padding_len
@@ -23134,6 +23142,7 @@ name|chunk_len
 operator|+=
 name|parameter_len
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|SCTP_BASE_SYSCTL
@@ -28769,6 +28778,15 @@ name|max_open_streams_intome
 argument_list|)
 expr_stmt|;
 comment|/* adaptation layer indication parameter */
+if|if
+condition|(
+name|inp
+operator|->
+name|sctp_ep
+operator|.
+name|adaptation_layer_indicator_provided
+condition|)
+block|{
 name|ali
 operator|=
 operator|(
@@ -28859,6 +28877,30 @@ name|ali
 argument_list|)
 operator|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ecn
+operator|=
+operator|(
+expr|struct
+name|sctp_ecn_supported_param
+operator|*
+operator|)
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|initack
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|initack
+argument_list|)
+operator|)
+expr_stmt|;
+block|}
 comment|/* ECN parameter */
 if|if
 condition|(

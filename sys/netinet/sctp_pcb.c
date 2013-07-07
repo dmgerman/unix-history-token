@@ -10911,7 +10911,13 @@ name|m
 operator|->
 name|adaptation_layer_indicator
 operator|=
-literal|0x504C5253
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|adaptation_layer_indicator_provided
+operator|=
+literal|0
 expr_stmt|;
 comment|/* seed random number generator */
 name|m
