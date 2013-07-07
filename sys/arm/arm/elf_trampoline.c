@@ -156,6 +156,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|armv7_idcache_wbinv_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|do_call
 parameter_list|(
 name|void
@@ -606,16 +616,6 @@ directive|define
 name|cpu_idcache_wbinv_all
 value|armv7_idcache_wbinv_all
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|armv7_idcache_wbinv_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
