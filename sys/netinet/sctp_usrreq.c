@@ -4632,11 +4632,24 @@ expr_stmt|;
 comment|/* For UDP model this is a invalid call */
 if|if
 condition|(
+operator|!
+operator|(
+operator|(
 name|inp
 operator|->
 name|sctp_flags
 operator|&
-name|SCTP_PCB_FLAGS_UDPTYPE
+name|SCTP_PCB_FLAGS_TCPTYPE
+operator|)
+operator|||
+operator|(
+name|inp
+operator|->
+name|sctp_flags
+operator|&
+name|SCTP_PCB_FLAGS_IN_TCPPOOL
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Restore the flags that the soshutdown took away. */
