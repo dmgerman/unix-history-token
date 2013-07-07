@@ -220,6 +220,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -2258,7 +2264,7 @@ expr_stmt|;
 name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;
-comment|/* 	 * The accept socket may be tearing down but we just 	 * won a race on the ACCEPT_LOCK. 	 */
+comment|/* 	 * The accept socket may be tearing down but we just 	 * won a race on the ACCEPT_LOCK. 	 * However, if sctp_peeloff() is called on a 1-to-many 	 * style socket, the SO_ACCEPTCONN doesn't need to be set. 	 */
 if|if
 condition|(
 operator|!
@@ -2268,6 +2274,26 @@ operator|->
 name|so_options
 operator|&
 name|SO_ACCEPTCONN
+operator|)
+operator|&&
+operator|(
+operator|(
+name|head
+operator|->
+name|so_proto
+operator|->
+name|pr_protocol
+operator|!=
+name|IPPROTO_SCTP
+operator|)
+operator|||
+operator|(
+name|head
+operator|->
+name|so_type
+operator|!=
+name|SOCK_SEQPACKET
+operator|)
 operator|)
 condition|)
 block|{
