@@ -49614,11 +49614,21 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|at
 operator|->
 name|sent
 operator|!=
 name|SCTP_FORWARD_TSN_SKIP
+operator|)
+operator|&&
+operator|(
+name|at
+operator|->
+name|sent
+operator|!=
+name|SCTP_DATAGRAM_NR_MARKED
+operator|)
 condition|)
 block|{
 comment|/* no more to look at */
