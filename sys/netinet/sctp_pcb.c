@@ -20026,15 +20026,6 @@ name|SCTP_STACK_VTAG_HASH_SIZE
 operator|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -20158,7 +20149,6 @@ condition|)
 break|break;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
@@ -20211,15 +20201,6 @@ name|SCTP_STACK_VTAG_HASH_SIZE
 operator|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -20297,7 +20278,6 @@ condition|(
 name|found
 condition|)
 break|break;
-block|}
 block|}
 name|SCTP_INP_INFO_WUNLOCK
 argument_list|()
@@ -20384,16 +20364,6 @@ name|set
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
-comment|/* Block(s) present, lets find space, and expire on the fly */
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -20403,6 +20373,7 @@ argument_list|,
 argument|sctp_nxt_tagblock
 argument_list|)
 block|{
+comment|/* Block(s) present, lets find space, and expire on the fly */
 for|for
 control|(
 name|i
@@ -20635,9 +20606,8 @@ condition|(
 name|set
 condition|)
 block|{
-comment|/* 				 * We only do up to the block where we can 				 * place our tag for audits 				 */
+comment|/* 			 * We only do up to the block where we can place our 			 * tag for audits 			 */
 break|break;
-block|}
 block|}
 block|}
 comment|/* Need to add a new block to chain */
@@ -30610,16 +30580,6 @@ operator|)
 index|]
 expr_stmt|;
 comment|/* Now what about timed wait ? */
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Block(s) are present, lets see if we have this tag in the 		 * list 		 */
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -30629,6 +30589,7 @@ argument_list|,
 argument|sctp_nxt_tagblock
 argument_list|)
 block|{
+comment|/* 		 * Block(s) are present, lets see if we have this tag in the 		 * list 		 */
 for|for
 control|(
 name|i
@@ -30778,7 +30739,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 block|}
 block|}
