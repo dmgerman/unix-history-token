@@ -3000,25 +3000,6 @@ define|\
 value|if ((var)< (min)) { (var) = (min); } \ 	else if ((var)> (max)) { (var) = (max); }
 end_define
 
-begin_comment
-comment|/* XXX: Remove the #if after tunneling over IPv6 works also on FreeBSD. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -3148,11 +3129,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -6931,25 +6907,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* XXX: Remove the #if after tunneling over IPv6 works also on FreeBSD. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-end_if
-
 begin_expr_stmt
 name|SYSCTL_VNET_PROC
 argument_list|(
@@ -6979,11 +6936,6 @@ name|SCTPCTL_UDP_TUNNELING_PORT_DESC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|SYSCTL_VNET_PROC

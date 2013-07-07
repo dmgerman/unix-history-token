@@ -73,6 +73,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sctp6_input_with_port
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sctp6_output
 parameter_list|(
 name|struct
