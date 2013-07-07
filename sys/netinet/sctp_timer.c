@@ -2052,7 +2052,7 @@ name|chk
 operator|->
 name|sent
 operator|!=
-name|SCTP_DATAGRAM_NR_MARKED
+name|SCTP_DATAGRAM_NR_ACKED
 condition|)
 block|{
 if|if
