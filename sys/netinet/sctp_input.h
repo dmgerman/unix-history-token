@@ -130,7 +130,7 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|int
+name|uint32_t
 name|number_entries
 parameter_list|,
 name|uint16_t
