@@ -22208,13 +22208,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|ip6buf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
 switch|switch
