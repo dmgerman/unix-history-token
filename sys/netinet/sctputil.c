@@ -13781,6 +13781,13 @@ operator|)
 operator|)
 condition|)
 block|{
+name|SOCK_LOCK
+argument_list|(
+name|stcb
+operator|->
+name|sctp_socket
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|from_peer
@@ -14001,7 +14008,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|socantrcvmore
+name|socantrcvmore_locked
 argument_list|(
 name|stcb
 operator|->
