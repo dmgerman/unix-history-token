@@ -14069,6 +14069,10 @@ literal|"num preferred:%d on interface:%p cur_addr_num:%d\n"
 argument_list|,
 name|num_preferred
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifn
 argument_list|,
 name|cur_addr_num
@@ -14246,6 +14250,10 @@ name|SCTP_DEBUG_OUTPUT2
 argument_list|,
 literal|"ifa:%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sctp_ifa
 argument_list|)
 expr_stmt|;
@@ -14459,6 +14467,10 @@ name|SCTP_DEBUG_OUTPUT2
 argument_list|,
 literal|"Trying Plan D looked_at is %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|looked_at
 argument_list|)
 expr_stmt|;
@@ -18342,6 +18354,10 @@ name|SCTP_DEBUG_OUTPUT1
 argument_list|,
 literal|"no route takes interface %p down\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|net
 argument_list|)
 expr_stmt|;
@@ -19873,6 +19889,10 @@ name|SCTP_DEBUG_OUTPUT3
 argument_list|,
 literal|"RTP route is %p through\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ro
 operator|->
 name|ro_rt
@@ -60710,6 +60730,10 @@ name|SCTP_DEBUG_OUTPUT1
 argument_list|,
 literal|"Send called addr:%p send length %d\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|sndlen
