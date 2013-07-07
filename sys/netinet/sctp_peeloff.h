@@ -68,24 +68,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|struct
-name|socket
-modifier|*
-name|sctp_get_peeloff
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|,
-name|sctp_assoc_t
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -99,6 +81,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NETINET_SCTP_PEELOFF_H_ */
+end_comment
 
 end_unit
 
