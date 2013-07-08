@@ -665,9 +665,27 @@ literal|1
 decl_stmt|;
 comment|/* disk support greater 2TB */
 name|u_int32_t
+name|IoctlBuf
+range|:
+literal|1
+decl_stmt|;
+comment|/* ARCIOCTL call support */
+name|u_int32_t
+name|AIFSupport
+range|:
+literal|1
+decl_stmt|;
+comment|/* AIF support */
+name|u_int32_t
+name|JBODSupport
+range|:
+literal|1
+decl_stmt|;
+comment|/* fw + driver support JBOD */
+name|u_int32_t
 name|fReserved
 range|:
-literal|31
+literal|28
 decl_stmt|;
 block|}
 name|fBits
