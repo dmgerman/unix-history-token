@@ -8077,7 +8077,7 @@ argument_list|(
 operator|&
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|request_ccb
 operator|->
@@ -8975,7 +8975,7 @@ argument_list|(
 operator|&
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|scan_info
 operator|->
@@ -9118,7 +9118,7 @@ argument_list|(
 operator|&
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|path_id
 argument_list|,
@@ -9416,7 +9416,7 @@ argument_list|(
 operator|&
 name|new_path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|path
 operator|->
