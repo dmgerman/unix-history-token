@@ -6079,8 +6079,9 @@ name|kt_ret
 operator|=
 name|cred_ret
 operator|=
-literal|0
+literal|1
 expr_stmt|;
+comment|/* anything non-zero */
 name|princ_ret
 operator|=
 name|ret
