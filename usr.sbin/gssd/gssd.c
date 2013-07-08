@@ -6071,6 +6071,16 @@ operator|(
 name|ret
 operator|)
 return|;
+name|opt_ret
+operator|=
+name|cc_ret
+operator|=
+name|kt_ret
+operator|=
+name|cred_ret
+operator|=
+literal|0
+expr_stmt|;
 name|princ_ret
 operator|=
 name|ret
