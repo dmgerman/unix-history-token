@@ -22178,6 +22178,12 @@ operator|->
 name|ro_rt
 argument_list|)
 expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 else|else
