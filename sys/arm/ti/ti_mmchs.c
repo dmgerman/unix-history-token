@@ -650,8 +650,17 @@ operator||
 name|bit
 argument_list|)
 expr_stmt|;
+comment|/*  	 * AM335x and OMAP4 ES2 and greater has an updated reset logic. 	 * Monitor a 0->1 transition first 	 */
 if|if
 condition|(
+operator|(
+name|ti_chip
+argument_list|()
+operator|==
+name|CHIP_AM335X
+operator|)
+operator|||
+operator|(
 operator|(
 name|ti_chip
 argument_list|()
@@ -665,9 +674,9 @@ argument_list|()
 operator|>
 name|OMAP4430_REV_ES1_0
 operator|)
+operator|)
 condition|)
 block|{
-comment|/* OMAP4 ES2 and greater has an updated reset logic. 		 * Monitor a 0->1 transition first 		 */
 name|attempts
 operator|=
 literal|10000
