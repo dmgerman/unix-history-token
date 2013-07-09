@@ -4395,7 +4395,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,
