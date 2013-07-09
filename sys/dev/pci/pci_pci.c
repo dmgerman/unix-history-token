@@ -397,9 +397,9 @@ name|pcib_driver
 argument_list|,
 name|pcib_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3181,6 +3181,19 @@ operator|->
 name|flags
 operator||=
 name|PCIB_DISABLE_MSI
+expr_stmt|;
+if|if
+condition|(
+name|pci_msix_device_blacklisted
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|flags
+operator||=
+name|PCIB_DISABLE_MSIX
 expr_stmt|;
 comment|/*      * Intel 815, 845 and other chipsets say they are PCI-PCI bridges,      * but have a ProgIF of 0x80.  The 82801 family (AA, AB, BAM/CAM,      * BA/CA/DB and E) PCI bridges are HUB-PCI bridges, in Intelese.      * This means they act as if they were subtractively decoding      * bridges and pass all transactions.  Mark them and real ProgIf 1      * parts as subtractive.      */
 if|if
@@ -6866,7 +6879,7 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCIB_DISABLE_MSI
+name|PCIB_DISABLE_MSIX
 condition|)
 return|return
 operator|(

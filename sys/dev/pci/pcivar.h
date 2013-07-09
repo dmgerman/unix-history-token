@@ -2015,6 +2015,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|pci_msix_device_blacklisted
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pci_ht_map_msi
 parameter_list|(

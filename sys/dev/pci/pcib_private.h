@@ -276,6 +276,10 @@ define|#
 directive|define
 name|PCIB_DISABLE_MSI
 value|0x2
+define|#
+directive|define
+name|PCIB_DISABLE_MSIX
+value|0x4
 name|uint16_t
 name|command
 decl_stmt|;
