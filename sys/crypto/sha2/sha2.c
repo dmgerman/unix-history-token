@@ -82,6 +82,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
 name|__bsdi__
 argument_list|)
 operator|||
@@ -89,6 +95,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -99,6 +106,17 @@ parameter_list|(
 name|x
 parameter_list|)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
 
 begin_endif
 endif|#
