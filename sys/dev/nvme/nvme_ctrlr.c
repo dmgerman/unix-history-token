@@ -2803,16 +2803,13 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
+name|nvme_completion_is_error
+argument_list|(
 name|cpl
-operator|->
-name|status
-operator|.
-name|sc
-operator|==
-name|NVME_SC_ABORTED_SQ_DELETION
+argument_list|)
 condition|)
 block|{
-comment|/* 		 *  This is simulated when controller is being shut down, to 		 *  effectively abort outstanding asynchronous event requests 		 *  and make sure all memory is freed.  Do not repost the 		 *  request in this case. 		 */
+comment|/* 		 *  Do not retry failed async event requests.  This avoids 		 *  infinite loops where a new async event request is submitted 		 *  to replace the one just failed, only to fail again and 		 *  perpetuate the loop. 		 */
 return|return;
 block|}
 comment|/* Associated log page is in bits 23:16 of completion entry dw0. */
