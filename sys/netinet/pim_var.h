@@ -90,7 +90,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_pimstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct pimstat, pimstat, name, (val))
 end_define
 
 begin_define

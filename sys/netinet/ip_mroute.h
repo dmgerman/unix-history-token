@@ -678,7 +678,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_mrtstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct mrtstat, mrtstat, name, (val))
 end_define
 
 begin_define

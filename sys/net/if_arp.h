@@ -389,6 +389,35 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|arpstat
+argument_list|,
+name|arpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
 end_comment
@@ -402,7 +431,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_arpstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct arpstat, arpstat, name, (val))
 end_define
 
 begin_define
@@ -414,7 +444,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_arpstat.name -= (val)
+value|ARPSTAT_ADD(name, -(val))
 end_define
 
 begin_define
@@ -436,6 +466,15 @@ name|name
 parameter_list|)
 value|ARPSTAT_SUB(name, 1)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

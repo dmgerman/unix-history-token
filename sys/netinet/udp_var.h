@@ -276,6 +276,23 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|udpstat
+argument_list|,
+name|udpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
 end_comment
@@ -289,7 +306,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_udpstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct udpstat, udpstat, name, (val))
 end_define
 
 begin_define
@@ -324,7 +342,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_udpstat_inc(offsetof(struct udpstat, name) / sizeof(u_long))
+value|kmod_udpstat_inc(offsetof(struct udpstat, name) / sizeof(uint64_t))
 end_define
 
 begin_endif
@@ -490,17 +508,6 @@ end_expr_stmt
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-expr|struct
-name|udpstat
-argument_list|,
-name|udpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|int
 argument_list|,
 name|udp_blackhole
@@ -513,13 +520,6 @@ define|#
 directive|define
 name|V_udp_cksum
 value|VNET(udp_cksum)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_udpstat
-value|VNET(udpstat)
 end_define
 
 begin_define
