@@ -481,6 +481,19 @@ argument_list|,
 name|UQ_CFG_INDEX_1
 argument_list|)
 block|,
+name|USB_QUIRK
+argument_list|(
+name|PLANEX2
+argument_list|,
+name|MZKUE150N
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_CFG_INDEX_1
+argument_list|)
+block|,
 comment|/* Quirks for printer devices */
 name|USB_QUIRK
 argument_list|(
