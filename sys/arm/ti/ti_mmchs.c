@@ -650,7 +650,7 @@ operator||
 name|bit
 argument_list|)
 expr_stmt|;
-comment|/*  	 * AM335x and OMAP4 ES2 and greater has an updated reset logic. 	 * Monitor a 0->1 transition first 	 */
+comment|/*  	 * AM335x and OMAP4>= ES2 have an updated reset logic. 	 * Monitor a 0->1 transition first. 	 */
 if|if
 condition|(
 operator|(
