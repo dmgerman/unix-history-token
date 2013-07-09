@@ -1849,24 +1849,6 @@ parameter_list|()
 value|rw_wunlock(&in6_ifaddr_lock)
 end_define
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|icmp6stat
-argument_list|,
-name|icmp6stat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_icmp6stat
-value|VNET(icmp6stat)
-end_define
-
 begin_define
 define|#
 directive|define

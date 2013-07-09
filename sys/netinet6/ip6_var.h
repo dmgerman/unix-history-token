@@ -599,6 +599,23 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|ip6stat
+argument_list|,
+name|ip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -608,7 +625,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ip6stat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ip6stat, ip6stat, name, (val))
 end_define
 
 begin_define
@@ -620,7 +638,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ip6stat.name -= (val)
+value|IP6STAT_ADD(name, -(val))
 end_define
 
 begin_define
@@ -815,21 +833,6 @@ end_endif
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-expr|struct
-name|ip6stat
-argument_list|,
-name|ip6stat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* statistics */
-end_comment
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|int
 argument_list|,
 name|ip6_defhlim
@@ -920,13 +923,6 @@ name|ip6_v6only
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ip6stat
-value|VNET(ip6stat)
-end_define
 
 begin_define
 define|#
