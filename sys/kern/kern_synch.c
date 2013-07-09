@@ -2459,11 +2459,17 @@ parameter_list|)
 block|{
 return|return
 operator|(
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|ticks
 operator|-
 name|curthread
 operator|->
 name|td_swvoltick
+argument_list|)
 operator|>=
 name|hogticks
 operator|)
