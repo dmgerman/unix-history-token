@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -81,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -252,7 +246,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -607,25 +601,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|err
 argument_list|(
-literal|"Identify request failed. errno=%d (%s)\n"
+literal|1
 argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"identify request failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|nvme_completion_is_error
@@ -636,18 +618,13 @@ operator|.
 name|cpl
 argument_list|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Passthrough command returned error.\n"
+literal|1
+argument_list|,
+literal|"identify request returned error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -736,25 +713,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|err
 argument_list|(
-literal|"Identify request failed. errno=%d (%s)\n"
+literal|1
 argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"identify request failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|nvme_completion_is_error
@@ -765,18 +730,13 @@ operator|.
 name|cpl
 argument_list|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Passthrough command returned error.\n"
+literal|1
+argument_list|,
+literal|"identify request returned error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -830,11 +790,9 @@ if|if
 condition|(
 name|show_error
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Controller/namespace IDs must begin with '%s'.\n"
+literal|"controller/namespace ids must begin with '%s'"
 argument_list|,
 name|NVME_CTRLR_PREFIX
 argument_list|)
@@ -845,13 +803,13 @@ name|exit_on_error
 condition|)
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
 return|return
 operator|(
-name|EX_USAGE
+literal|1
 operator|)
 return|;
 block|}
@@ -886,20 +844,11 @@ if|if
 condition|(
 name|show_error
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not stat %s. errno=%d (%s)\n"
+literal|"could not stat %s"
 argument_list|,
 name|full_path
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -908,13 +857,13 @@ name|exit_on_error
 condition|)
 name|exit
 argument_list|(
-name|EX_NOINPUT
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
 return|return
 operator|(
-name|EX_NOINPUT
+literal|1
 operator|)
 return|;
 block|}
@@ -940,20 +889,11 @@ if|if
 condition|(
 name|show_error
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not open %s. errno=%d (%s)\n"
+literal|"could not open %s"
 argument_list|,
 name|full_path
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -962,19 +902,19 @@ name|exit_on_error
 condition|)
 name|exit
 argument_list|(
-name|EX_NOPERM
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
 return|return
 operator|(
-name|EX_NOPERM
+literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|EX_OK
+literal|0
 operator|)
 return|;
 block|}
