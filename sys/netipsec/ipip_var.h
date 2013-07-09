@@ -31,40 +31,40 @@ begin_struct
 struct|struct
 name|ipipstat
 block|{
-name|u_int32_t
+name|uint64_t
 name|ipips_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|u_int32_t
+name|uint64_t
 name|ipips_opackets
 decl_stmt|;
 comment|/* total output packets */
-name|u_int32_t
+name|uint64_t
 name|ipips_hdrops
 decl_stmt|;
 comment|/* packet shorter than header shows */
-name|u_int32_t
+name|uint64_t
 name|ipips_qfull
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ipips_ibytes
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ipips_obytes
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipips_pdrops
 decl_stmt|;
 comment|/* packet dropped due to policy */
-name|u_int32_t
+name|uint64_t
 name|ipips_spoof
 decl_stmt|;
 comment|/* IP spoofing attempts */
-name|u_int32_t
+name|uint64_t
 name|ipips_family
 decl_stmt|;
 comment|/* Protocol family mismatch */
-name|u_int32_t
+name|uint64_t
 name|ipips_unspec
 decl_stmt|;
 comment|/* Missing tunnel endpoint address */

@@ -1528,7 +1528,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, mrtstat.f, plural(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plural(mrtstat.f))
 define|#
 directive|define
 name|p2
@@ -1537,96 +1537,96 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, mrtstat.f, plurales(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plurales(mrtstat.f))
 name|p
 argument_list|(
 name|mrts_mfc_lookups
 argument_list|,
-literal|"\t%lu multicast forwarding cache lookup%s\n"
+literal|"\t%ju multicast forwarding cache lookup%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|mrts_mfc_misses
 argument_list|,
-literal|"\t%lu multicast forwarding cache miss%s\n"
+literal|"\t%ju multicast forwarding cache miss%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_upcalls
 argument_list|,
-literal|"\t%lu upcall%s to multicast routing daemon\n"
+literal|"\t%ju upcall%s to multicast routing daemon\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_upq_ovflw
 argument_list|,
-literal|"\t%lu upcall queue overflow%s\n"
+literal|"\t%ju upcall queue overflow%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_upq_sockfull
 argument_list|,
-literal|"\t%lu upcall%s dropped due to full socket buffer\n"
+literal|"\t%ju upcall%s dropped due to full socket buffer\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_cache_cleanups
 argument_list|,
-literal|"\t%lu cache cleanup%s\n"
+literal|"\t%ju cache cleanup%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_no_route
 argument_list|,
-literal|"\t%lu datagram%s with no route for origin\n"
+literal|"\t%ju datagram%s with no route for origin\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_bad_tunnel
 argument_list|,
-literal|"\t%lu datagram%s arrived with bad tunneling\n"
+literal|"\t%ju datagram%s arrived with bad tunneling\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_cant_tunnel
 argument_list|,
-literal|"\t%lu datagram%s could not be tunneled\n"
+literal|"\t%ju datagram%s could not be tunneled\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_wrong_if
 argument_list|,
-literal|"\t%lu datagram%s arrived on wrong interface\n"
+literal|"\t%ju datagram%s arrived on wrong interface\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_drop_sel
 argument_list|,
-literal|"\t%lu datagram%s selectively dropped\n"
+literal|"\t%ju datagram%s selectively dropped\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_q_overflow
 argument_list|,
-literal|"\t%lu datagram%s dropped due to queue overflow\n"
+literal|"\t%ju datagram%s dropped due to queue overflow\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_pkt2large
 argument_list|,
-literal|"\t%lu datagram%s dropped for being too large\n"
+literal|"\t%ju datagram%s dropped for being too large\n"
 argument_list|)
 expr_stmt|;
 undef|#

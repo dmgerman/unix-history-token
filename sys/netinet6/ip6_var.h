@@ -395,95 +395,95 @@ begin_struct
 struct|struct
 name|ip6stat
 block|{
-name|u_quad_t
+name|uint64_t
 name|ip6s_total
 decl_stmt|;
 comment|/* total packets received */
-name|u_quad_t
+name|uint64_t
 name|ip6s_tooshort
 decl_stmt|;
 comment|/* packet too short */
-name|u_quad_t
+name|uint64_t
 name|ip6s_toosmall
 decl_stmt|;
 comment|/* not enough data */
-name|u_quad_t
+name|uint64_t
 name|ip6s_fragments
 decl_stmt|;
 comment|/* fragments received */
-name|u_quad_t
+name|uint64_t
 name|ip6s_fragdropped
 decl_stmt|;
 comment|/* frags dropped(dups, out of space) */
-name|u_quad_t
+name|uint64_t
 name|ip6s_fragtimeout
 decl_stmt|;
 comment|/* fragments timed out */
-name|u_quad_t
+name|uint64_t
 name|ip6s_fragoverflow
 decl_stmt|;
 comment|/* fragments that exceeded limit */
-name|u_quad_t
+name|uint64_t
 name|ip6s_forward
 decl_stmt|;
 comment|/* packets forwarded */
-name|u_quad_t
+name|uint64_t
 name|ip6s_cantforward
 decl_stmt|;
 comment|/* packets rcvd for unreachable dest */
-name|u_quad_t
+name|uint64_t
 name|ip6s_redirectsent
 decl_stmt|;
 comment|/* packets forwarded on same net */
-name|u_quad_t
+name|uint64_t
 name|ip6s_delivered
 decl_stmt|;
 comment|/* datagrams delivered to upper level*/
-name|u_quad_t
+name|uint64_t
 name|ip6s_localout
 decl_stmt|;
 comment|/* total ip packets generated here */
-name|u_quad_t
+name|uint64_t
 name|ip6s_odropped
 decl_stmt|;
 comment|/* lost packets due to nobufs, etc. */
-name|u_quad_t
+name|uint64_t
 name|ip6s_reassembled
 decl_stmt|;
 comment|/* total packets reassembled ok */
-name|u_quad_t
+name|uint64_t
 name|ip6s_fragmented
 decl_stmt|;
 comment|/* datagrams successfully fragmented */
-name|u_quad_t
+name|uint64_t
 name|ip6s_ofragments
 decl_stmt|;
 comment|/* output fragments created */
-name|u_quad_t
+name|uint64_t
 name|ip6s_cantfrag
 decl_stmt|;
 comment|/* don't fragment flag was set, etc. */
-name|u_quad_t
+name|uint64_t
 name|ip6s_badoptions
 decl_stmt|;
 comment|/* error in option processing */
-name|u_quad_t
+name|uint64_t
 name|ip6s_noroute
 decl_stmt|;
 comment|/* packets discarded due to no route */
-name|u_quad_t
+name|uint64_t
 name|ip6s_badvers
 decl_stmt|;
 comment|/* ip6 version != 6 */
-name|u_quad_t
+name|uint64_t
 name|ip6s_rawout
 decl_stmt|;
 comment|/* total raw ip packets generated */
-name|u_quad_t
+name|uint64_t
 name|ip6s_badscope
 decl_stmt|;
 comment|/* scope error */
-name|u_quad_t
+name|uint64_t
 name|ip6s_notmember
 decl_stmt|;
 comment|/* don't join this multicast group */
@@ -492,14 +492,14 @@ directive|define
 name|IP6S_HDRCNT
 value|256
 comment|/* headers count */
-name|u_quad_t
+name|uint64_t
 name|ip6s_nxthist
 index|[
 name|IP6S_HDRCNT
 index|]
 decl_stmt|;
 comment|/* next header history */
-name|u_quad_t
+name|uint64_t
 name|ip6s_m1
 decl_stmt|;
 comment|/* one mbuf */
@@ -507,30 +507,30 @@ define|#
 directive|define
 name|IP6S_M2MMAX
 value|32
-name|u_quad_t
+name|uint64_t
 name|ip6s_m2m
 index|[
 name|IP6S_M2MMAX
 index|]
 decl_stmt|;
 comment|/* two or more mbuf */
-name|u_quad_t
+name|uint64_t
 name|ip6s_mext1
 decl_stmt|;
 comment|/* one ext mbuf */
-name|u_quad_t
+name|uint64_t
 name|ip6s_mext2m
 decl_stmt|;
 comment|/* two or more ext mbuf */
-name|u_quad_t
+name|uint64_t
 name|ip6s_exthdrtoolong
 decl_stmt|;
 comment|/* ext hdr are not contiguous */
-name|u_quad_t
+name|uint64_t
 name|ip6s_nogif
 decl_stmt|;
 comment|/* no match gif found */
-name|u_quad_t
+name|uint64_t
 name|ip6s_toomanyhdr
 decl_stmt|;
 comment|/* discarded due to too many headers */
@@ -544,46 +544,46 @@ directive|define
 name|IP6S_SCOPECNT
 value|16
 comment|/* number of times that address selection fails */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_none
 decl_stmt|;
 comment|/* number of times that an address on the outgoing I/F is chosen */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_sameif
 index|[
 name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* number of times that an address on a non-outgoing I/F is chosen */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_otherif
 index|[
 name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* 	 * number of times that an address that has the same scope 	 * from the destination is chosen. 	 */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_samescope
 index|[
 name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* 	 * number of times that an address that has a different scope 	 * from the destination is chosen. 	 */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_otherscope
 index|[
 name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* number of times that a deprecated address is chosen */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_deprecated
 index|[
 name|IP6S_SCOPECNT
 index|]
 decl_stmt|;
 comment|/* number of times that each rule of source selection is applied. */
-name|u_quad_t
+name|uint64_t
 name|ip6s_sources_rule
 index|[
 name|IP6S_RULESMAX

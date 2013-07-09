@@ -344,27 +344,27 @@ struct|struct
 name|arpstat
 block|{
 comment|/* Normal things that happen: */
-name|u_long
+name|uint64_t
 name|txrequests
 decl_stmt|;
 comment|/* # of ARP requests sent by this host. */
-name|u_long
+name|uint64_t
 name|txreplies
 decl_stmt|;
 comment|/* # of ARP replies sent by this host. */
-name|u_long
+name|uint64_t
 name|rxrequests
 decl_stmt|;
 comment|/* # of ARP requests received by this host. */
-name|u_long
+name|uint64_t
 name|rxreplies
 decl_stmt|;
 comment|/* # of ARP replies received by this host. */
-name|u_long
+name|uint64_t
 name|received
 decl_stmt|;
 comment|/* # of ARP packets received by this host. */
-name|u_long
+name|uint64_t
 name|arp_spares
 index|[
 literal|4
@@ -372,16 +372,16 @@ index|]
 decl_stmt|;
 comment|/* For either the upper or lower half. */
 comment|/* Abnormal event and error  counting: */
-name|u_long
+name|uint64_t
 name|dropped
 decl_stmt|;
 comment|/* # of packets dropped waiting for a reply. */
-name|u_long
+name|uint64_t
 name|timeouts
 decl_stmt|;
 comment|/* # of times with entries removed */
 comment|/* due to timeout. */
-name|u_long
+name|uint64_t
 name|dupips
 decl_stmt|;
 comment|/* # of duplicate IPs detected. */

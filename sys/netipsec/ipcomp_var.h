@@ -38,84 +38,80 @@ begin_define
 define|#
 directive|define
 name|IPCOMPSTAT_VERSION
-value|1
+value|2
 end_define
 
 begin_struct
 struct|struct
 name|ipcompstat
 block|{
-name|u_int32_t
+name|uint64_t
 name|ipcomps_hdrops
 decl_stmt|;
 comment|/* Packet shorter than header shows */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_nopf
 decl_stmt|;
 comment|/* Protocol family not supported */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_notdb
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipcomps_badkcr
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipcomps_qfull
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipcomps_noxform
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipcomps_wrap
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipcomps_input
 decl_stmt|;
 comment|/* Input IPcomp packets */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_output
 decl_stmt|;
 comment|/* Output IPcomp packets */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_invalid
 decl_stmt|;
 comment|/* Trying to use an invalid TDB */
-name|u_int64_t
+name|uint64_t
 name|ipcomps_ibytes
 decl_stmt|;
 comment|/* Input bytes */
-name|u_int64_t
+name|uint64_t
 name|ipcomps_obytes
 decl_stmt|;
 comment|/* Output bytes */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_toobig
 decl_stmt|;
 comment|/* Packet got> IP_MAXPACKET */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_pdrops
 decl_stmt|;
 comment|/* Packet blocked due to policy */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_crypto
 decl_stmt|;
 comment|/* "Crypto" processing failure */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_hist
 index|[
 name|IPCOMP_ALG_MAX
 index|]
 decl_stmt|;
 comment|/* Per-algorithm op count */
-name|u_int32_t
-name|version
-decl_stmt|;
-comment|/* Version of this structure. */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_threshold
 decl_stmt|;
 comment|/* Packet< comp. algo. threshold. */
-name|u_int32_t
+name|uint64_t
 name|ipcomps_uncompr
 decl_stmt|;
 comment|/* Compression was useles. */

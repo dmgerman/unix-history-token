@@ -4080,7 +4080,7 @@ init|=
 sizeof|sizeof
 name|udpstat
 decl_stmt|;
-name|u_long
+name|uint64_t
 name|delivered
 decl_stmt|;
 ifdef|#
@@ -4182,7 +4182,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (udpstat.f || sflag<= 1) \     printf(m, udpstat.f, plural(udpstat.f))
+value|if (udpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)udpstat.f, plural(udpstat.f))
 define|#
 directive|define
 name|p1a
@@ -4191,68 +4191,68 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (udpstat.f || sflag<= 1) \     printf(m, udpstat.f)
+value|if (udpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)udpstat.f)
 name|p
 argument_list|(
 name|udps_ipackets
 argument_list|,
-literal|"\t%lu datagram%s received\n"
+literal|"datagram%s received\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_hdrops
 argument_list|,
-literal|"\t%lu with incomplete header\n"
+literal|"with incomplete header\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_badlen
 argument_list|,
-literal|"\t%lu with bad data length field\n"
+literal|"with bad data length field\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_badsum
 argument_list|,
-literal|"\t%lu with bad checksum\n"
+literal|"with bad checksum\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_nosum
 argument_list|,
-literal|"\t%lu with no checksum\n"
+literal|"with no checksum\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_noport
 argument_list|,
-literal|"\t%lu dropped due to no socket\n"
+literal|"dropped due to no socket\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|udps_noportbcast
 argument_list|,
-literal|"\t%lu broadcast/multicast datagram%s undelivered\n"
+literal|"broadcast/multicast datagram%s undelivered\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udps_fullsock
 argument_list|,
-literal|"\t%lu dropped due to full socket buffers\n"
+literal|"dropped due to full socket buffers\n"
 argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
 name|udpps_pcbhashmiss
 argument_list|,
-literal|"\t%lu not for hashed pcb\n"
+literal|"not for hashed pcb\n"
 argument_list|)
 expr_stmt|;
 name|delivered
@@ -4295,8 +4295,11 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"\t%lu delivered\n"
+literal|"\t%ju delivered\n"
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|delivered
 argument_list|)
 expr_stmt|;
@@ -4304,7 +4307,7 @@ name|p
 argument_list|(
 name|udps_opackets
 argument_list|,
-literal|"\t%lu datagram%s output\n"
+literal|"datagram%s output\n"
 argument_list|)
 expr_stmt|;
 comment|/* the next statistic is cumulative in udps_noportbcast */
@@ -4312,7 +4315,7 @@ name|p
 argument_list|(
 name|udps_filtermcast
 argument_list|,
-literal|"\t%lu time%s multicast source filter matched\n"
+literal|"time%s multicast source filter matched\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -5103,7 +5106,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (arpstat.f || sflag<= 1) \     printf(m, arpstat.f, plural(arpstat.f))
+value|if (arpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)arpstat.f, plural(arpstat.f))
 define|#
 directive|define
 name|p2
@@ -5112,61 +5115,61 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (arpstat.f || sflag<= 1) \     printf(m, arpstat.f, pluralies(arpstat.f))
+value|if (arpstat.f || sflag<= 1) \     printf("\t%ju " m, (uintmax_t)arpstat.f, pluralies(arpstat.f))
 name|p
 argument_list|(
 name|txrequests
 argument_list|,
-literal|"\t%lu ARP request%s sent\n"
+literal|"ARP request%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|txreplies
 argument_list|,
-literal|"\t%lu ARP repl%s sent\n"
+literal|"ARP repl%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|rxrequests
 argument_list|,
-literal|"\t%lu ARP request%s received\n"
+literal|"ARP request%s received\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|rxreplies
 argument_list|,
-literal|"\t%lu ARP repl%s received\n"
+literal|"ARP repl%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|received
 argument_list|,
-literal|"\t%lu ARP packet%s received\n"
+literal|"ARP packet%s received\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|dropped
 argument_list|,
-literal|"\t%lu total packet%s dropped due to no ARP entry\n"
+literal|"total packet%s dropped due to no ARP entry\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|timeouts
 argument_list|,
-literal|"\t%lu ARP entry%s timed out\n"
+literal|"ARP entry%s timed out\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|dupips
 argument_list|,
-literal|"\t%lu Duplicate IP%s seen\n"
+literal|"Duplicate IP%s seen\n"
 argument_list|)
 expr_stmt|;
 undef|#

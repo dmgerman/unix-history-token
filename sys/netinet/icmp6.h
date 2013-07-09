@@ -2574,44 +2574,44 @@ begin_struct
 struct|struct
 name|icmp6errstat
 block|{
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_noroute
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_admin
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_beyondscope
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_addr
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_noport
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_packet_too_big
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_time_exceed_transit
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_time_exceed_reassembly
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_paramprob_header
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_paramprob_nextheader
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_paramprob_option
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_redirect
 decl_stmt|;
 comment|/* we regard redirect as an error here */
-name|u_quad_t
+name|uint64_t
 name|icp6errs_unknown
 decl_stmt|;
 block|}
@@ -2623,52 +2623,52 @@ struct|struct
 name|icmp6stat
 block|{
 comment|/* statistics related to icmp6 packets generated */
-name|u_quad_t
+name|uint64_t
 name|icp6s_error
 decl_stmt|;
 comment|/* # of calls to icmp6_error */
-name|u_quad_t
+name|uint64_t
 name|icp6s_canterror
 decl_stmt|;
 comment|/* no error 'cuz old was icmp */
-name|u_quad_t
+name|uint64_t
 name|icp6s_toofreq
 decl_stmt|;
 comment|/* no error 'cuz rate limitation */
-name|u_quad_t
+name|uint64_t
 name|icp6s_outhist
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* statistics related to input message processed */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badcode
 decl_stmt|;
 comment|/* icmp6_code out of range */
-name|u_quad_t
+name|uint64_t
 name|icp6s_tooshort
 decl_stmt|;
 comment|/* packet< sizeof(struct icmp6_hdr) */
-name|u_quad_t
+name|uint64_t
 name|icp6s_checksum
 decl_stmt|;
 comment|/* bad checksum */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badlen
 decl_stmt|;
 comment|/* calculated bound mismatch */
 comment|/* 	 * number of responses: this member is inherited from netinet code, but 	 * for netinet6 code, it is already available in icp6s_outhist[]. 	 */
-name|u_quad_t
+name|uint64_t
 name|icp6s_reflect
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6s_inhist
 index|[
 literal|256
 index|]
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6s_nd_toomanyopt
 decl_stmt|;
 comment|/* too many ND options */
@@ -2733,31 +2733,31 @@ define|#
 directive|define
 name|icp6s_ounknown
 value|icp6s_outerrhist.icp6errs_unknown
-name|u_quad_t
+name|uint64_t
 name|icp6s_pmtuchg
 decl_stmt|;
 comment|/* path MTU changes */
-name|u_quad_t
+name|uint64_t
 name|icp6s_nd_badopt
 decl_stmt|;
 comment|/* bad ND options */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badns
 decl_stmt|;
 comment|/* bad neighbor solicitation */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badna
 decl_stmt|;
 comment|/* bad neighbor advertisement */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badrs
 decl_stmt|;
 comment|/* bad router advertisement */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badra
 decl_stmt|;
 comment|/* bad router advertisement */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badredirect
 decl_stmt|;
 comment|/* bad redirect message */

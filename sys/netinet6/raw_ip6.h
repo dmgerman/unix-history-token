@@ -23,31 +23,31 @@ begin_struct
 struct|struct
 name|rip6stat
 block|{
-name|u_quad_t
+name|uint64_t
 name|rip6s_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|u_quad_t
+name|uint64_t
 name|rip6s_isum
 decl_stmt|;
 comment|/* input checksum computations */
-name|u_quad_t
+name|uint64_t
 name|rip6s_badsum
 decl_stmt|;
 comment|/* of above, checksum error */
-name|u_quad_t
+name|uint64_t
 name|rip6s_nosock
 decl_stmt|;
 comment|/* no matching socket */
-name|u_quad_t
+name|uint64_t
 name|rip6s_nosockmcast
 decl_stmt|;
 comment|/* of above, arrived as multicast */
-name|u_quad_t
+name|uint64_t
 name|rip6s_fullsock
 decl_stmt|;
 comment|/* not delivered, input socket full */
-name|u_quad_t
+name|uint64_t
 name|rip6s_opackets
 decl_stmt|;
 comment|/* total output packets */

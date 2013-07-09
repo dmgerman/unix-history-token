@@ -42,82 +42,82 @@ begin_struct
 struct|struct
 name|espstat
 block|{
-name|u_int32_t
+name|uint64_t
 name|esps_hdrops
 decl_stmt|;
 comment|/* Packet shorter than header shows */
-name|u_int32_t
+name|uint64_t
 name|esps_nopf
 decl_stmt|;
 comment|/* Protocol family not supported */
-name|u_int32_t
+name|uint64_t
 name|esps_notdb
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|esps_badkcr
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|esps_qfull
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|esps_noxform
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|esps_badilen
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|esps_wrap
 decl_stmt|;
 comment|/* Replay counter wrapped around */
-name|u_int32_t
+name|uint64_t
 name|esps_badenc
 decl_stmt|;
 comment|/* Bad encryption detected */
-name|u_int32_t
+name|uint64_t
 name|esps_badauth
 decl_stmt|;
 comment|/* Only valid for transforms with auth */
-name|u_int32_t
+name|uint64_t
 name|esps_replay
 decl_stmt|;
 comment|/* Possible packet replay detected */
-name|u_int32_t
+name|uint64_t
 name|esps_input
 decl_stmt|;
 comment|/* Input ESP packets */
-name|u_int32_t
+name|uint64_t
 name|esps_output
 decl_stmt|;
 comment|/* Output ESP packets */
-name|u_int32_t
+name|uint64_t
 name|esps_invalid
 decl_stmt|;
 comment|/* Trying to use an invalid TDB */
-name|u_int64_t
+name|uint64_t
 name|esps_ibytes
 decl_stmt|;
 comment|/* Input bytes */
-name|u_int64_t
+name|uint64_t
 name|esps_obytes
 decl_stmt|;
 comment|/* Output bytes */
-name|u_int32_t
+name|uint64_t
 name|esps_toobig
 decl_stmt|;
 comment|/* Packet got larger than IP_MAXPACKET */
-name|u_int32_t
+name|uint64_t
 name|esps_pdrops
 decl_stmt|;
 comment|/* Packet blocked due to policy */
-name|u_int32_t
+name|uint64_t
 name|esps_crypto
 decl_stmt|;
 comment|/* Crypto processing failure */
-name|u_int32_t
+name|uint64_t
 name|esps_tunnel
 decl_stmt|;
 comment|/* Tunnel sanity check failure */
-name|u_int32_t
+name|uint64_t
 name|esps_hist
 index|[
 name|ESP_ALG_MAX

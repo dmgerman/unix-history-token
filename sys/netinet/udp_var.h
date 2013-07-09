@@ -209,60 +209,60 @@ struct|struct
 name|udpstat
 block|{
 comment|/* input statistics: */
-name|u_long
+name|uint64_t
 name|udps_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|u_long
+name|uint64_t
 name|udps_hdrops
 decl_stmt|;
 comment|/* packet shorter than header */
-name|u_long
+name|uint64_t
 name|udps_badsum
 decl_stmt|;
 comment|/* checksum error */
-name|u_long
+name|uint64_t
 name|udps_nosum
 decl_stmt|;
 comment|/* no checksum */
-name|u_long
+name|uint64_t
 name|udps_badlen
 decl_stmt|;
 comment|/* data length larger than packet */
-name|u_long
+name|uint64_t
 name|udps_noport
 decl_stmt|;
 comment|/* no socket on port */
-name|u_long
+name|uint64_t
 name|udps_noportbcast
 decl_stmt|;
 comment|/* of above, arrived as broadcast */
-name|u_long
+name|uint64_t
 name|udps_fullsock
 decl_stmt|;
 comment|/* not delivered, input socket full */
-name|u_long
+name|uint64_t
 name|udpps_pcbcachemiss
 decl_stmt|;
 comment|/* input packets missing pcb cache */
-name|u_long
+name|uint64_t
 name|udpps_pcbhashmiss
 decl_stmt|;
 comment|/* input packets not for hashed pcb */
 comment|/* output statistics: */
-name|u_long
+name|uint64_t
 name|udps_opackets
 decl_stmt|;
 comment|/* total output packets */
-name|u_long
+name|uint64_t
 name|udps_fastout
 decl_stmt|;
 comment|/* output packets on fast path */
 comment|/* of no socket on port, arrived as multicast */
-name|u_long
+name|uint64_t
 name|udps_noportmcast
 decl_stmt|;
-name|u_long
+name|uint64_t
 name|udps_filtermcast
 decl_stmt|;
 comment|/* blocked by multicast filter */

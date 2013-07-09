@@ -3015,15 +3015,7 @@ modifier|*
 name|unused
 name|__unused
 parameter_list|)
-block|{
-comment|/* XXX */
-name|V_ipcompstat
-operator|.
-name|version
-operator|=
-name|IPCOMPSTAT_VERSION
-expr_stmt|;
-block|}
+block|{  }
 end_function
 
 begin_expr_stmt
