@@ -675,7 +675,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Current LBA Format:          LBA Format #%d\n"
+literal|"Current LBA Format:          LBA Format #%02d\n"
 argument_list|,
 name|nsdata
 operator|->
@@ -699,17 +699,11 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
-literal|"LBA Format #%d:\n"
+literal|"LBA Format #%02d: Data Size: %5d  Metadata Size: %5d\n"
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  LBA Data Size:             %d\n"
 argument_list|,
 literal|1
 operator|<<
@@ -721,9 +715,17 @@ name|i
 index|]
 operator|.
 name|lbads
+argument_list|,
+name|nsdata
+operator|->
+name|lbaf
+index|[
+name|i
+index|]
+operator|.
+name|ms
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
