@@ -2899,6 +2899,24 @@ name|DA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * OCZ Vertex 4 SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"OCZ-VERTEX4*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * Samsung 830 Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
