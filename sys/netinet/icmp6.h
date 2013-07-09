@@ -3258,7 +3258,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|do {								\ 	if (ifp)						\ 		((struct in6_ifextra *)((ifp)->if_afdata[AF_INET6]))->icmp6_ifstat->tag++; \ } while (
+value|do {								\ 	if (ifp)						\ 		counter_u64_add(((struct in6_ifextra *)		\ 		    ((ifp)->if_afdata[AF_INET6]))->icmp6_ifstat[\ 		    offsetof(struct icmp6_ifstat, tag) / sizeof(uint64_t)], 1);\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
