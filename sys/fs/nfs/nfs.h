@@ -2110,6 +2110,10 @@ name|__rpc_client
 modifier|*
 name|nr_client
 decl_stmt|;
+name|AUTH
+modifier|*
+name|nr_auth
+decl_stmt|;
 block|}
 struct|;
 end_struct
