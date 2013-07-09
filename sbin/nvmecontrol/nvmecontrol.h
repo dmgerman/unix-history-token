@@ -189,6 +189,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|parse_ns_str
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ns_str
+parameter_list|,
+name|char
+modifier|*
+name|ctrlr_str
+parameter_list|,
+name|int
+modifier|*
+name|nsid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|read_controller_data
 parameter_list|(
 name|int
