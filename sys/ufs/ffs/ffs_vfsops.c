@@ -1246,6 +1246,8 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -6373,6 +6375,8 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
