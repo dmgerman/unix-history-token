@@ -146,6 +146,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_struct
 struct|struct
 name|keycb
@@ -168,7 +174,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|pfkeystat
@@ -187,7 +193,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_pfkeystat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct pfkeystat, pfkeystat, name, (val))
 end_define
 
 begin_define
@@ -198,13 +205,6 @@ parameter_list|(
 name|name
 parameter_list|)
 value|PFKEYSTAT_ADD(name, 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_pfkeystat
-value|VNET(pfkeystat)
 end_define
 
 begin_function_decl

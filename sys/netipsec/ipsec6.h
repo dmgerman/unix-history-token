@@ -45,8 +45,14 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|ipsecstat
@@ -113,14 +119,8 @@ name|IPSEC6STAT_INC
 parameter_list|(
 name|name
 parameter_list|)
-value|V_ipsec6stat.name += 1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ipsec6stat
-value|VNET(ipsec6stat)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ipsecstat, ipsec6stat, name, 1)
 end_define
 
 begin_define

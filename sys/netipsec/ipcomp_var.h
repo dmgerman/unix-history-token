@@ -125,6 +125,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -136,7 +142,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|ipcompstat
@@ -155,7 +161,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ipcompstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ipcompstat, ipcompstat, name, (val))
 end_define
 
 begin_define
@@ -173,13 +180,6 @@ define|#
 directive|define
 name|V_ipcomp_enable
 value|VNET(ipcomp_enable)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ipcompstat
-value|VNET(ipcompstat)
 end_define
 
 begin_endif

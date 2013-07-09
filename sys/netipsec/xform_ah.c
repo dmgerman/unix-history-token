@@ -246,7 +246,7 @@ comment|/* clear ip_tos when doing AH calc */
 end_comment
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|ahstat
@@ -255,6 +255,37 @@ name|ahstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|ahstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|ahstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -319,7 +350,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet_ah
 argument_list|,
@@ -327,17 +358,12 @@ name|IPSECCTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|ahstat
-argument_list|)
 argument_list|,
 name|ahstat
 argument_list|,
-literal|""
+literal|"AH statistics (struct ahstat, netipsec/ah_var.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

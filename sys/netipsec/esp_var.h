@@ -134,6 +134,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -145,7 +151,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|espstat
@@ -164,7 +170,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_espstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct espstat, espstat, name, (val))
 end_define
 
 begin_define
@@ -182,13 +189,6 @@ define|#
 directive|define
 name|V_esp_enable
 value|VNET(esp_enable)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_espstat
-value|VNET(espstat)
 end_define
 
 begin_endif

@@ -258,7 +258,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|ipipstat
@@ -267,6 +267,37 @@ name|ipipstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|ipipstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|ipipstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -301,7 +332,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet_ipip
 argument_list|,
@@ -309,17 +340,12 @@ name|IPSECCTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|ipipstat
-argument_list|)
 argument_list|,
 name|ipipstat
 argument_list|,
-literal|""
+literal|"IPIP statistics (struct ipipstat, netipsec/ipip_var.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
