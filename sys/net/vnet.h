@@ -217,7 +217,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|static int								\ array##_sysctl(SYSCTL_HANDLER_ARGS)					\ {									\ 	type s;								\ 	CTASSERT(sizeof(type) == sizeof(VNET(array)));			\ 	COUNTER_ARRAY_COPY(VNET(array),&s, sizeof(type) / sizeof(uint64_t));\ 	if (req->newptr)						\ 		COUNTER_ARRAY_ZERO(VNET(array),				\ 		    sizeof(type) / sizeof(uint64_t));			\ 	return (SYSCTL_OUT(req,&s, sizeof(type)));			\ }									\ SYSCTL_VNET_PROC(parent, nbr, name, CTLTYPE_OPAQUE | CTLFLAG_RW, NULL,	\     0, array ## _sysctl, "I", desc)
+value|static int								\ array##_sysctl(SYSCTL_HANDLER_ARGS)					\ {									\ 	type s;								\ 	CTASSERT((sizeof(type) / sizeof(uint64_t)) ==			\ 	    (sizeof(VNET(array)) / sizeof(counter_u64_t)));		\ 	COUNTER_ARRAY_COPY(VNET(array),&s, sizeof(type) / sizeof(uint64_t));\ 	if (req->newptr)						\ 		COUNTER_ARRAY_ZERO(VNET(array),				\ 		    sizeof(type) / sizeof(uint64_t));			\ 	return (SYSCTL_OUT(req,&s, sizeof(type)));			\ }									\ SYSCTL_VNET_PROC(parent, nbr, name, CTLTYPE_OPAQUE | CTLFLAG_RW, NULL,	\     0, array ## _sysctl, "I", desc)
 end_define
 
 begin_ifdef
