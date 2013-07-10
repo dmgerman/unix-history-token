@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:CdEfFm:npry"
+literal|"b:Bc:CdEfFm:npryZ"
 argument_list|)
 operator|)
 operator|!=
@@ -501,6 +501,13 @@ expr_stmt|;
 name|nflag
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|Zflag
+operator|++
 expr_stmt|;
 break|break;
 default|default:
