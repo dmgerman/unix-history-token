@@ -2229,6 +2229,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_ARM_EXIDX
+value|0x70000001
+end_define
+
+begin_comment
+comment|/* Exception index table. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_PREEMPTMAP
+value|0x70000002
+end_define
+
+begin_comment
+comment|/* BPABI DLL dynamic linking  						   pre-emption map. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_ATTRIBUTES
+value|0x70000003
+end_define
+
+begin_comment
+comment|/* Object file compatibility  						   attributes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_DEBUGOVERLAY
+value|0x70000004
+end_define
+
+begin_comment
+comment|/* See DBGOVL for details. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_OVERLAYSECTION
+value|0x70000005
+end_define
+
+begin_comment
+comment|/* See DBGOVL for details. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHT_MIPS_REGINFO
 value|0x70000006
 end_define
