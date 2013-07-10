@@ -161,17 +161,6 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Maximum number of virtqueues per device.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VIRTIO_MAX_VIRTQUEUES
-value|8
-end_define
-
-begin_comment
 comment|/*  * Each virtqueue indirect descriptor list must be physically contiguous.  * To allow us to malloc(9) each list individually, limit the number  * supported to what will fit in one page. With 4KB pages, this is a limit  * of 256 descriptors. If there is ever a need for more, we can switch to  * contigmalloc(9) for the larger allocations, similar to what  * bus_dmamem_alloc(9) does.  *  * Note the sizeof(struct vring_desc) is 16 bytes.  */
 end_comment
 
@@ -235,6 +224,7 @@ block|{
 name|uint64_t
 name|vfd_val
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|vfd_str
