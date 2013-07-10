@@ -210,6 +210,13 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|type_info
+operator|*
+name|__cxa_current_exception_type
+argument_list|()
+expr_stmt|;
 comment|/**  * Throws an exception returned by __cxa_current_primary_exception().  This  * exception may have been caught in another thread.  */
 name|void
 name|__cxa_rethrow_primary_exception
