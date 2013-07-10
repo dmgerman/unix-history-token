@@ -1894,6 +1894,7 @@ name|v4l2_frmsize_stepwise
 name|stepwise
 decl_stmt|;
 block|}
+name|x
 union|;
 name|__u32
 name|reserved
@@ -1988,6 +1989,7 @@ name|v4l2_frmival_stepwise
 name|stepwise
 decl_stmt|;
 block|}
+name|x
 union|;
 name|__u32
 name|reserved
@@ -3477,6 +3479,7 @@ literal|32
 index|]
 decl_stmt|;
 block|}
+name|x
 union|;
 block|}
 name|__attribute__
@@ -3923,6 +3926,7 @@ modifier|*
 name|string
 decl_stmt|;
 block|}
+name|x
 union|;
 block|}
 name|__attribute__
@@ -6433,6 +6437,7 @@ block|}
 name|raw
 struct|;
 block|}
+name|x
 union|;
 block|}
 struct|;
@@ -6817,6 +6822,7 @@ name|v4l2_mpeg_vbi_ITV0
 name|ITV0
 decl_stmt|;
 block|}
+name|x
 union|;
 block|}
 name|__attribute__
@@ -6989,6 +6995,7 @@ literal|32
 index|]
 decl_stmt|;
 block|}
+name|x
 union|;
 block|}
 name|__attribute__
