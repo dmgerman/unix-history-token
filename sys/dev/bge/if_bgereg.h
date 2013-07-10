@@ -15640,6 +15640,13 @@ begin_comment
 comment|/* impossible value */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BGE_TX_TIMEOUT
+value|5
+end_define
+
 begin_struct
 struct|struct
 name|bge_bcom_hack
