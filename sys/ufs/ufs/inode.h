@@ -520,7 +520,7 @@ name|uint32_t
 name|ufid_ino
 decl_stmt|;
 comment|/* File number (ino). */
-name|int32_t
+name|uint32_t
 name|ufid_gen
 decl_stmt|;
 comment|/* Generation number. */
