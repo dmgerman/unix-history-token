@@ -4602,6 +4602,7 @@ goto|goto
 name|failed
 goto|;
 block|}
+comment|/* 	 * If timestamps were not negotiated during SYN/ACK they 	 * must not appear on any segment during this session. 	 */
 if|if
 condition|(
 operator|!
@@ -4654,6 +4655,57 @@ expr_stmt|;
 goto|goto
 name|failed
 goto|;
+block|}
+comment|/* 	 * If timestamps were negotiated during SYN/ACK they should 	 * appear on every segment during this session. 	 * XXXAO: This is only informal as there have been unverified 	 * reports of non-compliants stacks. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|SCF_TIMESTAMP
+operator|)
+operator|&&
+operator|!
+operator|(
+name|to
+operator|->
+name|to_flags
+operator|&
+name|TOF_TS
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|tcp_log_addrs
+argument_list|(
+name|inc
+argument_list|,
+name|th
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"%s; %s: Timestamp missing, "
+literal|"no action\n"
+argument_list|,
+name|s
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * If timestamps were negotiated the reflected timestamp 	 * must be equal to what we actually sent in the SYN|ACK. 	 */
 if|if
