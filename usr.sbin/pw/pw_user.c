@@ -2951,23 +2951,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|now
-operator|==
-name|expire
-condition|)
-name|errx
-argument_list|(
-name|EX_DATAERR
-argument_list|,
-literal|"invalid password change date `%s'"
-argument_list|,
-name|arg
-operator|->
-name|val
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|pwd
 operator|->
 name|pw_change
@@ -3068,23 +3051,6 @@ operator|->
 name|val
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|now
-operator|==
-name|expire
-condition|)
-name|errx
-argument_list|(
-name|EX_DATAERR
-argument_list|,
-literal|"invalid account expiry date `%s'"
-argument_list|,
-name|arg
-operator|->
-name|val
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pwd
@@ -3393,7 +3359,7 @@ name|login_setcryptfmt
 argument_list|(
 name|lc
 argument_list|,
-literal|"md5"
+literal|"sha512"
 argument_list|,
 name|NULL
 argument_list|)
