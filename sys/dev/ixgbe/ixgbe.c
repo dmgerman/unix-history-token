@@ -17671,6 +17671,12 @@ name|buf
 operator|=
 name|NULL
 expr_stmt|;
+name|rxbuf
+operator|->
+name|flag
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 block|}
