@@ -112,6 +112,11 @@ begin_enum
 enum|enum
 name|dwarf_data_encoding
 block|{
+comment|/// Absolute pointer value
+name|DW_EH_PE_absptr
+init|=
+literal|0x00
+block|,
 comment|/// Unsigned, little-endian, base 128-encoded (variable length).
 name|DW_EH_PE_uleb128
 init|=
@@ -205,11 +210,6 @@ comment|/// Value is omitted
 name|DW_EH_PE_omit
 init|=
 literal|0xff
-block|,
-comment|/// Absolute pointer value
-name|DW_EH_PE_absptr
-init|=
-literal|0x00
 block|,
 comment|/// Value relative to program counter
 name|DW_EH_PE_pcrel
