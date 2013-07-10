@@ -11904,7 +11904,7 @@ literal|40
 argument_list|)
 expr_stmt|;
 comment|/* Set misc. local control, enable interrupts on attentions */
-name|CSR_WRITE_4
+name|BGE_SETBIT
 argument_list|(
 name|sc
 argument_list|,
