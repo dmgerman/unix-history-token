@@ -198,6 +198,38 @@ name|mbstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|quad_t
+name|maxmbufmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* overall real memory limit for all mbufs */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxmbufmem
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|maxmbufmem
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum real memory allocateable to various mbuf types"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * tunable_mbinit() has to be run before any mbuf allocations are done.  */
 end_comment
@@ -214,8 +246,6 @@ parameter_list|)
 block|{
 name|quad_t
 name|realmem
-decl_stmt|,
-name|maxmbufmem
 decl_stmt|;
 comment|/* 	 * The default limit for all mbuf related memory is 1/2 of all 	 * available kernel memory (physical or kmem). 	 * At most it can be 3/4 of available kernel memory. 	 */
 name|realmem
@@ -248,7 +278,7 @@ literal|2
 expr_stmt|;
 name|TUNABLE_QUAD_FETCH
 argument_list|(
-literal|"kern.maxmbufmem"
+literal|"kern.ipc.maxmbufmem"
 argument_list|,
 operator|&
 name|maxmbufmem
@@ -994,7 +1024,7 @@ name|_kern_ipc
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nmbuf
+name|nmbufs
 argument_list|,
 name|CTLTYPE_INT
 operator||
