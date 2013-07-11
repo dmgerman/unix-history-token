@@ -1766,6 +1766,26 @@ name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
+literal|0x91a01b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE91Ax"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x92151b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9215"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
 literal|0x92201b4b
 block|,
 literal|0x00
