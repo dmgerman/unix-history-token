@@ -3007,12 +3007,11 @@ name|va
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|va
-operator|)
-return|;
-comment|/* Out of memory */
+name|panic
+argument_list|(
+literal|"pmap_ptelist_alloc: exhausted ptelist KVA"
+argument_list|)
+expr_stmt|;
 name|pte
 operator|=
 name|vtopte
