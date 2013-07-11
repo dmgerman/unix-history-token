@@ -6742,6 +6742,15 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmap_page_wired_mappings
+argument_list|(
+name|m
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|vm_page_set_invalid
 argument_list|(
 name|m
