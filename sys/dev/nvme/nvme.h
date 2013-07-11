@@ -1916,7 +1916,7 @@ comment|/* 	 * len is the length of the data buffer associated with this 	 *  pa
 name|uint32_t
 name|len
 decl_stmt|;
-comment|/* 	 * is_read = 1 if the passthrough command will read data into the 	 *  supplied buffer. 	 * 	 * is_read = 0 if the passthrough command will write data into the 	 *  supplied buffer. 	 */
+comment|/* 	 * is_read = 1 if the passthrough command will read data into the 	 *  supplied buffer from the controller. 	 * 	 * is_read = 0 if the passthrough command will write data from the 	 *  supplied buffer to the controller. 	 */
 name|uint32_t
 name|is_read
 decl_stmt|;
