@@ -26059,11 +26059,10 @@ expr_stmt|;
 comment|/* 	 * Set the number of good frames to receive after RX MBUF 	 * Low Watermark has been reached. After the RX MAC receives 	 * this number of frames, it will drop subsequent incoming 	 * frames until the MBUF High Watermark is reached. 	 */
 if|if
 condition|(
+name|BGE_IS_57765_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM57765
+argument_list|)
 condition|)
 name|CSR_WRITE_4
 argument_list|(
