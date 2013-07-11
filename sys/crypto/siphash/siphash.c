@@ -517,7 +517,9 @@ parameter_list|)
 block|{
 name|uint64_t
 name|m
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|uint64_t
 modifier|*
 name|p
 decl_stmt|;
@@ -620,6 +622,7 @@ control|(
 name|p
 operator|=
 operator|(
+specifier|const
 name|uint64_t
 operator|*
 operator|)
@@ -673,6 +676,7 @@ block|}
 name|s
 operator|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
