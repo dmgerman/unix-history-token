@@ -173,6 +173,12 @@ directive|include
 file|"spinup_ap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rtc.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3040,6 +3046,11 @@ argument_list|()
 expr_stmt|;
 name|init_inout
 argument_list|()
+expr_stmt|;
+name|rtc_init
+argument_list|(
+name|ctx
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Exit if a device emulation finds an error in it's initilization 	 */
 if|if
