@@ -229,10 +229,21 @@ name|ch
 decl_stmt|,
 name|login
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|euid
 operator|=
 name|geteuid
 argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+name|warnx
+argument_list|(
+literal|"need root permissions to function properly, check setuid bit"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
