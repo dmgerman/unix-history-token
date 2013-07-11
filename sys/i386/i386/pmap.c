@@ -10092,6 +10092,12 @@ name|m_pc
 operator|->
 name|object
 expr_stmt|;
+name|m_pc
+operator|->
+name|object
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Recycle a freed page table page. */
 name|m_pc
 operator|->
