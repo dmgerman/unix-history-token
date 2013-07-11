@@ -6155,6 +6155,16 @@ argument_list|(
 name|swap_zone
 argument_list|,
 name|M_NOWAIT
+operator||
+operator|(
+name|curproc
+operator|==
+name|pageproc
+condition|?
+name|M_USE_RESERVE
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
