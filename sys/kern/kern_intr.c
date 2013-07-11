@@ -4102,13 +4102,17 @@ operator||=
 name|IH_DEAD
 expr_stmt|;
 comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|ie
 operator|->
 name|ie_thread
 operator|->
 name|it_need
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4405,11 +4409,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|it
 operator|->
 name|it_need
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|thread_lock
 argument_list|(
@@ -4746,11 +4754,15 @@ operator||=
 name|IH_DEAD
 expr_stmt|;
 comment|/* 		 * Ensure that the thread will process the handler list 		 * again and remove this handler if it has already passed 		 * it on the list. 		 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|it
 operator|->
 name|it_need
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5054,11 +5066,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set it_need to tell the thread to keep running if it is already 	 * running.  Then, lock the thread and see if we actually need to 	 * put it on the runqueue. 	 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|it
 operator|->
 name|it_need
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|thread_lock
 argument_list|(
@@ -5888,10 +5904,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|ih
 operator|->
 name|ih_need
+argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 else|else
@@ -6267,9 +6288,15 @@ block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
 while|while
 condition|(
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|ithd
 operator|->
 name|it_need
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
@@ -6316,10 +6343,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|ithd
 operator|->
 name|it_need
+argument_list|)
+operator|==
+literal|0
+operator|)
 operator|&&
 operator|!
 operator|(
@@ -6930,9 +6964,15 @@ block|}
 comment|/* 		 * Service interrupts.  If another interrupt arrives while 		 * we are running, it will set it_need to note that we 		 * should make another pass. 		 */
 while|while
 condition|(
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|ithd
 operator|->
 name|it_need
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * This might need a full read and write barrier 			 * to make sure that this write posts before any 			 * of the memory or device accesses in the 			 * handlers. 			 */
@@ -6991,10 +7031,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|ithd
 operator|->
 name|it_need
+argument_list|)
+operator|==
+literal|0
+operator|)
 operator|&&
 operator|!
 operator|(
