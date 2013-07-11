@@ -17673,7 +17673,7 @@ name|NULL
 expr_stmt|;
 name|rxbuf
 operator|->
-name|flag
+name|flags
 operator|=
 literal|0
 expr_stmt|;
