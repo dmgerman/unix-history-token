@@ -373,6 +373,11 @@ directive|if
 name|__STDC_VERSION__
 operator|>=
 literal|201112L
+operator|&&
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
 end_if
 
 begin_define
@@ -396,7 +401,7 @@ elif|#
 directive|elif
 name|__GNUC_PREREQ__
 argument_list|(
-literal|5
+literal|3
 operator|,
 literal|1
 argument_list|)
@@ -453,7 +458,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|__fp_type_select(x, __fpclassifyf, __fpclassifyd, __fpclassifyd)
+value|__fp_type_select(x, __fpclassifyf, __fpclassifyd, __fpclassifyl)
 end_define
 
 begin_define
