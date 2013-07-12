@@ -189,7 +189,7 @@ specifier|const
 name|u_int32_t
 name|CH_TIMEOUT_READ_ELEMENT_STATUS
 init|=
-literal|10000
+literal|60000
 decl_stmt|;
 end_decl_stmt
 
@@ -260,6 +260,10 @@ block|,
 name|CH_Q_NO_DBD
 init|=
 literal|0x01
+block|,
+name|CH_Q_NO_DVCID
+init|=
+literal|0x02
 block|}
 name|ch_quirks
 typedef|;
@@ -270,7 +274,7 @@ define|#
 directive|define
 name|CH_Q_BIT_STRING
 define|\
-value|"\020"		\ 	"\001NO_DBD"
+value|"\020"		\ 	"\001NO_DBD"	\ 	"\002NO_DVCID"
 end_define
 
 begin_define
@@ -1314,6 +1318,23 @@ operator|->
 name|quirks
 operator|=
 name|CH_Q_NONE
+expr_stmt|;
+comment|/* 	 * The DVCID and CURDATA bits were not introduced until the SMC 	 * spec.  If this device claims SCSI-2 or earlier support, then it 	 * very likely does not support these bits. 	 */
+if|if
+condition|(
+name|cgd
+operator|->
+name|inq_data
+operator|.
+name|version
+operator|<=
+name|SCSI_REV_2
+condition|)
+name|softc
+operator|->
+name|quirks
+operator||=
+name|CH_Q_NO_DVCID
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -4853,6 +4874,18 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|curdata
+decl_stmt|,
+name|dvcid
+decl_stmt|,
+name|sense_flags
+decl_stmt|;
+name|int
+name|try_no_dvcid
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|changer_element_status
 modifier|*
@@ -4978,6 +5011,46 @@ argument_list|,
 name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
+name|sense_flags
+operator|=
+name|SF_RETRY_UA
+expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|CH_Q_NO_DVCID
+condition|)
+block|{
+name|dvcid
+operator|=
+literal|0
+expr_stmt|;
+name|curdata
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dvcid
+operator|=
+literal|1
+expr_stmt|;
+name|curdata
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 		 * Don't print anything for an Illegal Request, because 		 * these flags can cause some changers to complain.  We'll 		 * retry without them if we get an error. 		 */
+name|sense_flags
+operator||=
+name|SF_QUIET_IR
+expr_stmt|;
+block|}
+name|retry_einval
+label|:
 name|scsi_read_element_status
 argument_list|(
 operator|&
@@ -5006,10 +5079,10 @@ name|chet
 index|]
 argument_list|,
 comment|/* dvcid */
-literal|1
+name|dvcid
 argument_list|,
 comment|/* curdata */
-literal|1
+name|curdata
 argument_list|,
 comment|/* count */
 literal|1
@@ -5039,12 +5112,75 @@ comment|/*cam_flags*/
 name|CAM_RETRY_SELTO
 argument_list|,
 comment|/*sense_flags*/
-name|SF_RETRY_UA
+name|sense_flags
 argument_list|,
 name|softc
 operator|->
 name|device_stats
 argument_list|)
+expr_stmt|;
+comment|/* 	 * An Illegal Request sense key (only used if there is no asc/ascq) 	 * or 0x24,0x00 for an ASC/ASCQ both map to EINVAL.  If dvcid or 	 * curdata are set (we set both or neither), try turning them off 	 * and see if the command is successful. 	 */
+if|if
+condition|(
+operator|(
+name|error
+operator|==
+name|EINVAL
+operator|)
+operator|&&
+operator|(
+name|dvcid
+operator|||
+name|curdata
+operator|)
+condition|)
+block|{
+name|dvcid
+operator|=
+literal|0
+expr_stmt|;
+name|curdata
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* At this point we want to report any Illegal Request */
+name|sense_flags
+operator|&=
+operator|~
+name|SF_QUIET_IR
+expr_stmt|;
+name|try_no_dvcid
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|retry_einval
+goto|;
+block|}
+comment|/* 	 * In this case, we tried a read element status with dvcid and 	 * curdata set, and it failed.  We retried without those bits, and 	 * it succeeded.  Suggest to the user that he set a quirk, so we 	 * don't go through the retry process the first time in the future. 	 * This should only happen on changers that claim SCSI-3 or higher, 	 * but don't support these bits. 	 */
+if|if
+condition|(
+operator|(
+name|try_no_dvcid
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|error
+operator|==
+literal|0
+operator|)
+condition|)
+name|softc
+operator|->
+name|quirks
+operator||=
+name|CH_Q_NO_DVCID
 expr_stmt|;
 if|if
 condition|(
@@ -5177,10 +5313,10 @@ operator|->
 name|cesr_element_base
 argument_list|,
 comment|/* dvcid */
-literal|1
+name|dvcid
 argument_list|,
 comment|/* curdata */
-literal|1
+name|curdata
 argument_list|,
 comment|/* count */
 name|cesr
