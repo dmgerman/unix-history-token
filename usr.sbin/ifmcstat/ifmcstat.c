@@ -3279,7 +3279,7 @@ name|mli
 operator|->
 name|mli_flags
 argument_list|,
-literal|"\020\1SILENT"
+literal|"\020\1SILENT\2USEALLOW"
 argument_list|)
 expr_stmt|;
 if|if
