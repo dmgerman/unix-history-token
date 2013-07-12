@@ -3782,6 +3782,19 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Initialization sequence. The numbered steps below correspond 	 * to the sequence outlined in section 6.3.5.1 in the Ethernet 	 * Channel Engine manual (part of the PCIO manual). 	 * See also the STP2002-STQ document from Sun Microsystems. 	 */
 comment|/* step 1& 2. Reset the Ethernet Channel */
 name|hme_stop
@@ -6691,6 +6704,15 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
+expr_stmt|;
 name|hme_init_locked
 argument_list|(
 name|sc
@@ -6917,6 +6939,13 @@ operator|++
 name|ifp
 operator|->
 name|if_oerrors
+expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|hme_init_locked
 argument_list|(
