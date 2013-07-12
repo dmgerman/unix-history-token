@@ -370,6 +370,7 @@ end_define
 begin_if
 if|#
 directive|if
+operator|(
 name|__STDC_VERSION__
 operator|>=
 literal|201112L
@@ -377,6 +378,13 @@ operator|&&
 name|defined
 argument_list|(
 name|__clang__
+argument_list|)
+operator|)
+operator|||
+expr|\
+name|__has_extension
+argument_list|(
+name|c_generic_selections
 argument_list|)
 end_if
 
@@ -404,6 +412,12 @@ argument_list|(
 literal|3
 operator|,
 literal|1
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
 argument_list|)
 end_elif
 
