@@ -857,6 +857,9 @@ comment|/* Bochs */
 literal|"Xen"
 block|,
 comment|/* Xen */
+literal|"BHYVE"
+block|,
+comment|/* bhyve */
 literal|"Seabios"
 block|,
 comment|/* KVM */
