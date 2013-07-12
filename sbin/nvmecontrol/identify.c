@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -757,7 +757,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -926,7 +926,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -937,9 +937,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"-v not currently supported without -x.\n"
+name|stderr
+argument_list|,
+literal|"-v not currently supported without -x\n"
 argument_list|)
 expr_stmt|;
 name|identify_usage
@@ -954,7 +956,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1136,10 +1138,11 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Invalid namespace ID %s.\n"
+literal|1
+argument_list|,
+literal|"invalid namespace ID '%s'"
 argument_list|,
 name|argv
 index|[
@@ -1147,12 +1150,6 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * We send IDENTIFY commands to the controller, not the namespace, 	 *  since it is an admin cmd.  So the path should only include the 	 *  nvmeX part of the nvmeXnsY string. 	 */
 name|snprintf
 argument_list|(
@@ -1244,7 +1241,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1255,9 +1252,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"-v not currently supported without -x.\n"
+name|stderr
+argument_list|,
+literal|"-v not currently supported without -x\n"
 argument_list|)
 expr_stmt|;
 name|identify_usage
@@ -1272,7 +1271,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

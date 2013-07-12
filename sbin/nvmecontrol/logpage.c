@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -75,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -133,7 +133,7 @@ name|void
 modifier|*
 name|get_log_buffer
 parameter_list|(
-name|size_t
+name|uint32_t
 name|size
 parameter_list|)
 block|{
@@ -154,22 +154,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unable to malloc %zd bytes\n"
+literal|"unable to malloc %u bytes"
 argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 name|memset
 argument_list|(
 name|buf
@@ -302,25 +295,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|err
 argument_list|(
-literal|"Get log page request failed. errno=%d (%s)\n"
+literal|1
 argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"get log page request failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|nvme_completion_is_error
@@ -331,18 +312,13 @@ operator|.
 name|cpl
 argument_list|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Passthrough command returned error.\n"
+literal|1
+argument_list|,
+literal|"get log page request returned error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1170,7 +1146,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1232,7 +1208,7 @@ name|cname
 init|=
 name|NULL
 decl_stmt|;
-name|size_t
+name|uint32_t
 name|size
 decl_stmt|;
 name|void
@@ -1500,17 +1476,15 @@ name|log_page
 operator|!=
 name|NVME_LOG_HEALTH_INFORMATION
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Namespace ID not valid for log page %d.\n"
+literal|"log page %d valid only at controller level"
 argument_list|,
 name|log_page
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1522,24 +1496,12 @@ name|ns_smart
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Controller does not support per "
-literal|"namespace SMART/Health information.\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
+literal|"controller does not support per "
+literal|"namespace smart/health information"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1592,12 +1554,11 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Invalid namespace ID %s.\n"
+literal|"invalid namespace id '%s'"
 argument_list|,
 name|argv
 index|[
@@ -1605,17 +1566,6 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 * User is asking for per namespace log page information 		 * so close the controller and open up the namespace. 		 */
 name|close
 argument_list|(
@@ -1782,7 +1732,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
