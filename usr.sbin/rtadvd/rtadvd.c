@@ -389,14 +389,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
-init|=
-literal|0
 decl_stmt|,
 name|sflag
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -628,6 +625,7 @@ value|(1<< 6)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|uint32_t
 name|ndopt_flags
 index|[]
@@ -7547,6 +7545,32 @@ name|ifinfo
 modifier|*
 name|ifi
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|,
+name|name0
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* Check if the interface has a valid name or not. */
+if|if
+condition|(
+name|if_indextoname
+argument_list|(
+name|idx
+argument_list|,
+name|name0
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifi
