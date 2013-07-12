@@ -517,11 +517,19 @@ block|{
 comment|/* 			 * Treat SO_REUSEADDR as SO_REUSEPORT for multicast; 			 * allow compepte duplication of binding if 			 * SO_REUSEPORT is set, or if SO_REUSEADDR is set 			 * and a multicast address is bound on both 			 * new and duplicated sockets. 			 */
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_options
 operator|&
+operator|(
 name|SO_REUSEADDR
+operator||
+name|SO_REUSEPORT
+operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|reuseport
 operator|=
