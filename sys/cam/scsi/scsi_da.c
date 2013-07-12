@@ -474,6 +474,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|void
 modifier|*
 name|da_delete_functions
@@ -6558,12 +6559,6 @@ argument_list|,
 name|delete_method
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|delete_method
-operator|<=
-name|DA_DELETE_MAX
-condition|)
 name|softc
 operator|->
 name|delete_func
@@ -6572,13 +6567,6 @@ name|da_delete_functions
 index|[
 name|delete_method
 index|]
-expr_stmt|;
-else|else
-name|softc
-operator|->
-name|delete_func
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
