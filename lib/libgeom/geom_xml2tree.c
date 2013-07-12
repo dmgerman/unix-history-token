@@ -261,7 +261,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|strtoul
+name|strtoumax
 argument_list|(
 name|attr
 index|[
@@ -302,7 +302,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|strtoul
+name|strtoumax
 argument_list|(
 name|attr
 index|[
