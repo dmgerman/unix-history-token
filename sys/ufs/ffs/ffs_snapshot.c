@@ -4497,9 +4497,12 @@ index|[
 name|loc
 index|]
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_sbsize
 argument_list|)
 expr_stmt|;
 name|bawrite
