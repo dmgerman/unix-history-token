@@ -116,7 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -172,6 +184,12 @@ begin_include
 include|#
 directive|include
 file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -1700,6 +1718,14 @@ name|sc_debug
 operator|=
 name|NG_UBT_WARN_LEVEL
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*  	 * Create Netgraph node 	 */
 if|if
 condition|(
@@ -1723,6 +1749,9 @@ name|sc
 argument_list|,
 literal|"could not create Netgraph node\n"
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1762,6 +1791,9 @@ operator|->
 name|sc_node
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1783,6 +1815,9 @@ name|sc
 operator|->
 name|sc_node
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize device softc structure 	 */
 comment|/* initialize locks */
@@ -2246,6 +2281,13 @@ name|sc_node
 operator|=
 name|NULL
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|node
+operator|->
+name|nd_vnet
+argument_list|)
+expr_stmt|;
 name|NG_NODE_REALLY_DIE
 argument_list|(
 name|node
@@ -2255,6 +2297,9 @@ name|ng_rmnode_self
 argument_list|(
 name|node
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* Make sure ubt_task in gone */
