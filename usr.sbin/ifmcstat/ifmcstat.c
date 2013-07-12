@@ -1188,6 +1188,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|igi
+operator|->
+name|igi_flags
+condition|)
 name|printb
 argument_list|(
 literal|" flags"
@@ -3271,6 +3277,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|mli
+operator|->
+name|mli_flags
+condition|)
 name|printb
 argument_list|(
 literal|" flags"
