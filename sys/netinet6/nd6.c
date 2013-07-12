@@ -923,10 +923,18 @@ name|flags
 operator|=
 name|ND6_IFF_PERFORMNUD
 expr_stmt|;
-comment|/* A loopback interface always has ND6_IFF_AUTO_LINKLOCAL. */
+comment|/* A loopback interface always has ND6_IFF_AUTO_LINKLOCAL. 	 * XXXHRS: Clear ND6_IFF_AUTO_LINKLOCAL on an IFT_BRIDGE interface by 	 * default regardless of the V_ip6_auto_linklocal configuration to 	 * give a reasonable default behavior. 	 */
 if|if
 condition|(
+operator|(
 name|V_ip6_auto_linklocal
+operator|&&
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
+operator|)
 operator|||
 operator|(
 name|ifp
@@ -942,7 +950,7 @@ name|flags
 operator||=
 name|ND6_IFF_AUTO_LINKLOCAL
 expr_stmt|;
-comment|/* A loopback interface does not need to accept RTADV. */
+comment|/* 	 * A loopback interface does not need to accept RTADV. 	 * XXXHRS: Clear ND6_IFF_ACCEPT_RTADV on an IFT_BRIDGE interface by 	 * default regardless of the V_ip6_accept_rtadv configuration to 	 * prevent the interface from accepting RA messages arrived 	 * on one of the member interfaces with ND6_IFF_ACCEPT_RTADV. 	 */
 if|if
 condition|(
 name|V_ip6_accept_rtadv
@@ -954,6 +962,14 @@ operator|->
 name|if_flags
 operator|&
 name|IFF_LOOPBACK
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
 operator|)
 condition|)
 name|nd
@@ -5282,48 +5298,6 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-comment|/* 		 * Try to clear ifdisabled flag when enabling 		 * accept_rtadv or auto_linklocal. 		 */
-if|if
-condition|(
-operator|(
-name|ND_IFINFO
-argument_list|(
-name|ifp
-argument_list|)
-operator|->
-name|flags
-operator|&
-name|ND6_IFF_IFDISABLED
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-name|ND6_IFF_IFDISABLED
-operator|)
-operator|&&
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-operator|(
-name|ND6_IFF_ACCEPT_RTADV
-operator||
-name|ND6_IFF_AUTO_LINKLOCAL
-operator|)
-operator|)
-condition|)
-name|ND
-operator|.
-name|flags
-operator|&=
-operator|~
-name|ND6_IFF_IFDISABLED
-expr_stmt|;
 if|if
 condition|(
 operator|(

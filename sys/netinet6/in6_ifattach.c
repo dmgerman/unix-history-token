@@ -1169,6 +1169,9 @@ name|if_type
 condition|)
 block|{
 case|case
+name|IFT_BRIDGE
+case|:
+case|case
 name|IFT_ETHER
 case|:
 case|case
@@ -3187,9 +3190,25 @@ case|:
 case|case
 name|IFT_PFSYNC
 case|:
-case|case
-name|IFT_CARP
-case|:
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ND6_IFF_AUTO_LINKLOCAL
+expr_stmt|;
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator||=
+name|ND6_IFF_IFDISABLED
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * quirks based on interface type 	 */
@@ -3200,18 +3219,21 @@ operator|->
 name|if_type
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IFT_STF
 case|case
 name|IFT_STF
 case|:
 comment|/* 		 * 6to4 interface is a very special kind of beast. 		 * no multicast, no linklocal.  RFC2529 specifies how to make 		 * linklocals for 6to4 interface, but there's no use and 		 * it is rather harmful to have one. 		 */
-goto|goto
-name|statinit
-goto|;
-endif|#
-directive|endif
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ND6_IFF_AUTO_LINKLOCAL
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -3312,12 +3334,6 @@ block|}
 comment|/* 	 * assign a link-local address, if there's none. 	 */
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_type
-operator|!=
-name|IFT_BRIDGE
-operator|&&
 operator|!
 operator|(
 name|ND_IFINFO
@@ -3385,14 +3401,6 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IFT_STF
-comment|/* XXX */
-name|statinit
-label|:
-endif|#
-directive|endif
 comment|/* update dynamically. */
 if|if
 condition|(
