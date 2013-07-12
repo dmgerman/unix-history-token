@@ -329,6 +329,10 @@ name|NVME_MAX_AER_LOG_SIZE
 value|(4096)
 end_define
 
+begin_comment
+comment|/*  * Define CACHE_LINE_SIZE here for older FreeBSD versions that do not define  *  it.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
