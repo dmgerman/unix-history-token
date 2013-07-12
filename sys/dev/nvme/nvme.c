@@ -1009,6 +1009,11 @@ argument_list|(
 name|ctrlr
 argument_list|)
 expr_stmt|;
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|ctrlr
 operator|->
 name|config_hook
@@ -1064,6 +1069,11 @@ name|nvme_ctrlr_destruct
 argument_list|(
 name|ctrlr
 argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|pci_disable_busmaster
+argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
