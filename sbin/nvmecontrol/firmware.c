@@ -306,7 +306,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unable to malloc %zd bytes"
+literal|"unable to malloc %d bytes"
 argument_list|,
 name|filesize
 argument_list|)
