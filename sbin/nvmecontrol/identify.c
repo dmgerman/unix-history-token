@@ -1240,6 +1240,16 @@ operator|-
 literal|1
 condition|)
 empty_stmt|;
+comment|/* Check that a controller or namespace was specified. */
+if|if
+condition|(
+name|optind
+operator|>=
+name|argc
+condition|)
+name|identify_usage
+argument_list|()
+expr_stmt|;
 name|target
 operator|=
 name|argv

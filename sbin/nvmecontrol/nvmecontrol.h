@@ -48,7 +48,7 @@ define|#
 directive|define
 name|IDENTIFY_USAGE
 define|\
-value|"       nvmecontrol identify<controller id|namespace id>\n"
+value|"       nvmecontrol identify [-x [-v]]<controller id|namespace id>\n"
 end_define
 
 begin_define
