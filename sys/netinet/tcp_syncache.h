@@ -513,7 +513,7 @@ decl_stmt|;
 name|struct
 name|vnet
 modifier|*
-name|sch_vnet
+name|vnet
 decl_stmt|;
 name|struct
 name|syncookie_secret
