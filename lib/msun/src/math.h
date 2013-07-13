@@ -401,7 +401,7 @@ name|d
 parameter_list|,
 name|ld
 parameter_list|)
-value|_Generic((x),     \ 	float: f(x),                                    \ 	double: d(x),                                   \ 	long double: ld(x))
+value|_Generic((x),			\     float: f(x),							\     double: d(x),							\     long double: ld(x),							\     volatile float: f(x),						\     volatile double: d(x),						\     volatile long double: ld(x),					\     volatile const float: f(x),						\     volatile const double: d(x),					\     volatile const long double: ld(x),					\     const float: f(x),							\     const double: d(x),							\     const long double: ld(x))
 end_define
 
 begin_elif
@@ -434,7 +434,7 @@ name|d
 parameter_list|,
 name|ld
 parameter_list|)
-value|__builtin_choose_expr(              \ 	__builtin_types_compatible_p(__typeof(x), long double), ld(x),    \ 	__builtin_choose_expr(                                            \ 	__builtin_types_compatible_p(__typeof(x), double), d(x),          \ 	__builtin_choose_expr(                                            \ 	__builtin_types_compatible_p(__typeof(x), float), f(x), (void)0)))
+value|__builtin_choose_expr(		\     __builtin_types_compatible_p(__typeof(x), long double), ld(x),	\     __builtin_choose_expr(						\     __builtin_types_compatible_p(__typeof(x), double), d(x),		\     __builtin_choose_expr(						\     __builtin_types_compatible_p(__typeof(x), float), f(x), (void)0)))
 end_define
 
 begin_else
@@ -456,7 +456,7 @@ parameter_list|,
 name|ld
 parameter_list|)
 define|\
-value|((sizeof(x) == sizeof(float)) ? f(x)                   \ 	: (sizeof(x) == sizeof(double)) ? d(x)                 \ 	: ld(x))
+value|((sizeof(x) == sizeof(float)) ? f(x)				\     : (sizeof(x) == sizeof(double)) ? d(x)				\     : ld(x))
 end_define
 
 begin_endif
@@ -1107,6 +1107,7 @@ name|__inline
 name|int
 name|__inline_isnan
 parameter_list|(
+name|__const
 name|double
 name|__x
 parameter_list|)
@@ -1127,6 +1128,7 @@ name|__inline
 name|int
 name|__inline_isnanf
 parameter_list|(
+name|__const
 name|float
 name|__x
 parameter_list|)
@@ -1147,6 +1149,7 @@ name|__inline
 name|int
 name|__inline_isnanl
 parameter_list|(
+name|__const
 name|long
 name|double
 name|__x
