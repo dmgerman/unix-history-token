@@ -2568,8 +2568,9 @@ operator|>
 name|hirunningspace
 condition|)
 block|{
-operator|++
 name|runningbufreq
+operator|=
+literal|1
 expr_stmt|;
 name|msleep
 argument_list|(
