@@ -3379,6 +3379,17 @@ name|pd_type
 operator|=
 name|T_DIRECT
 expr_stmt|;
+comment|/* Map NODEVICE to Direct Access Device to handle REPORT LUNS, etc. */
+if|if
+condition|(
+name|pd_type
+operator|==
+name|T_NODEVICE
+condition|)
+name|pd_type
+operator|=
+name|T_DIRECT
+expr_stmt|;
 name|opmask
 operator|=
 literal|1
