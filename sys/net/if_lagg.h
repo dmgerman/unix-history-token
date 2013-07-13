@@ -746,6 +746,14 @@ name|u_int
 name|sc_count
 decl_stmt|;
 comment|/* number of ports */
+name|u_int
+name|sc_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|sc_flapping
+decl_stmt|;
+comment|/* number of flapping 							 * events */
 name|struct
 name|lagg_port
 modifier|*
@@ -1230,6 +1238,14 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_link_lagg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
