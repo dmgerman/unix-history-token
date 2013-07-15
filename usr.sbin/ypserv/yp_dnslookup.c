@@ -1910,7 +1910,7 @@ name|debug
 condition|)
 name|yp_error
 argument_list|(
-literal|"queueing async DNS name lookup (%d)"
+literal|"queueing async DNS name lookup (%lu)"
 argument_list|,
 name|q
 operator|->
@@ -2432,7 +2432,7 @@ name|debug
 condition|)
 name|yp_error
 argument_list|(
-literal|"queueing async DNS address lookup (%d)"
+literal|"queueing async DNS address lookup (%lu)"
 argument_list|,
 name|q
 operator|->
