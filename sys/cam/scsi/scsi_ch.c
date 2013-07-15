@@ -5078,11 +5078,11 @@ index|[
 name|chet
 index|]
 argument_list|,
-comment|/* dvcid */
-name|dvcid
-argument_list|,
 comment|/* curdata */
 name|curdata
+argument_list|,
+comment|/* dvcid */
+name|dvcid
 argument_list|,
 comment|/* count */
 literal|1
@@ -5312,11 +5312,11 @@ name|cesr
 operator|->
 name|cesr_element_base
 argument_list|,
-comment|/* dvcid */
-name|dvcid
-argument_list|,
 comment|/* curdata */
 name|curdata
+argument_list|,
+comment|/* dvcid */
+name|dvcid
 argument_list|,
 comment|/* count */
 name|cesr
