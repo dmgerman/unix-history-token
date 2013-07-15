@@ -14308,7 +14308,7 @@ else|else
 block|{
 name|mbs
 operator|.
-name|ibits
+name|ibitm
 operator|=
 literal|3
 expr_stmt|;
@@ -39234,6 +39234,19 @@ operator||=
 name|mbp
 operator|->
 name|obits
+expr_stmt|;
+comment|/* 	 * Mask any bits that the caller wants us to mask 	 */
+name|ibits
+operator|&=
+name|mbp
+operator|->
+name|ibitm
+expr_stmt|;
+name|obits
+operator|&=
+name|mbp
+operator|->
+name|obitm
 expr_stmt|;
 if|if
 condition|(
