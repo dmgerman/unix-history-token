@@ -7552,8 +7552,7 @@ operator|.
 name|path
 argument_list|)
 argument_list|,
-operator|-
-literal|1
+name|CAM_LUN_WILDCARD
 argument_list|)
 operator|==
 name|CAM_REQ_CMP
@@ -7564,6 +7563,13 @@ operator|=
 name|xpt_alloc_ccb_nowait
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|scan_ccb
+operator|!=
+name|NULL
+condition|)
+block|{
 name|scan_ccb
 operator|->
 name|ccb_h
@@ -7578,7 +7584,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|=
-name|XPT_SCAN_BUS
+name|XPT_SCAN_TGT
 expr_stmt|;
 name|scan_ccb
 operator|->
@@ -7591,6 +7597,15 @@ expr_stmt|;
 name|xpt_rescan
 argument_list|(
 name|scan_ccb
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|xpt_print
+argument_list|(
+name|newpath
+argument_list|,
+literal|"Can't allocate CCB to rescan target\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -17335,6 +17335,13 @@ operator|=
 name|xpt_alloc_ccb_nowait
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|scan_ccb
+operator|!=
+name|NULL
+condition|)
+block|{
 name|scan_ccb
 operator|->
 name|ccb_h
@@ -17362,6 +17369,15 @@ expr_stmt|;
 name|xpt_rescan
 argument_list|(
 name|scan_ccb
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|xpt_print
+argument_list|(
+name|path
+argument_list|,
+literal|"Can't allocate CCB to scan bus\n"
 argument_list|)
 expr_stmt|;
 block|}
