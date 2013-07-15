@@ -1193,7 +1193,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adF:fLlo:prt:uvw"
+literal|"adF:fLlno:prt:uvw"
 argument_list|)
 operator|)
 operator|!=
@@ -1257,6 +1257,11 @@ name|late
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* For compatibility with the Linux version of mount. */
 break|break;
 case|case
 literal|'o'
