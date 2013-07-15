@@ -15332,10 +15332,6 @@ init|=
 name|S_IRUSR
 operator||
 name|S_IWUSR
-operator||
-name|S_IRGRP
-operator||
-name|S_IWGRP
 decl_stmt|;
 name|int
 name|vfslocked
