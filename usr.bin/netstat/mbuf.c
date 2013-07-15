@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -264,8 +270,8 @@ decl_stmt|,
 name|nsfbufsused
 decl_stmt|;
 name|struct
-name|mbstat
-name|mbstat
+name|sfstat
+name|sfstat
 decl_stmt|;
 name|size_t
 name|mlen
@@ -1238,17 +1244,17 @@ name|mlen
 operator|=
 sizeof|sizeof
 argument_list|(
-name|mbstat
+name|sfstat
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"kern.ipc.mbstat"
+literal|"kern.ipc.sfstat"
 argument_list|,
 operator|&
-name|mbstat
+name|sfstat
 argument_list|,
 operator|&
 name|mlen
@@ -1261,7 +1267,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"kern.ipc.mbstat"
+literal|"kern.ipc.sfstat"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1273,7 +1279,7 @@ else|else
 block|{
 if|if
 condition|(
-name|kread
+name|kread_counters
 argument_list|(
 name|mbaddr
 argument_list|,
@@ -1282,10 +1288,10 @@ name|char
 operator|*
 operator|)
 operator|&
-name|mbstat
+name|sfstat
 argument_list|,
 sizeof|sizeof
-name|mbstat
+name|sfstat
 argument_list|)
 operator|!=
 literal|0
@@ -1296,38 +1302,38 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"%lu requests for sfbufs denied\n"
+literal|"%ju requests for sfbufs denied\n"
 argument_list|,
-name|mbstat
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
 operator|.
 name|sf_allocfail
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%lu requests for sfbufs delayed\n"
+literal|"%ju requests for sfbufs delayed\n"
 argument_list|,
-name|mbstat
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
 operator|.
 name|sf_allocwait
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%lu requests for I/O initiated by sendfile\n"
+literal|"%ju requests for I/O initiated by sendfile\n"
 argument_list|,
-name|mbstat
+operator|(
+name|uintmax_t
+operator|)
+name|sfstat
 operator|.
 name|sf_iocnt
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%lu calls to protocol drain routines\n"
-argument_list|,
-name|mbstat
-operator|.
-name|m_drain
 argument_list|)
 expr_stmt|;
 name|out

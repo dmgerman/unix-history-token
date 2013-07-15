@@ -1698,22 +1698,6 @@ name|m_mpfail
 operator|=
 literal|0
 expr_stmt|;
-name|mbstat
-operator|.
-name|sf_iocnt
-operator|=
-literal|0
-expr_stmt|;
-name|mbstat
-operator|.
-name|sf_allocwait
-operator|=
-name|mbstat
-operator|.
-name|sf_allocfail
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 

@@ -2236,10 +2236,10 @@ break|break;
 name|sf_buf_alloc_want
 operator|++
 expr_stmt|;
-name|mbstat
-operator|.
+name|SFSTAT_INC
+argument_list|(
 name|sf_allocwait
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

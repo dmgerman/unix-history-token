@@ -841,6 +841,17 @@ operator|=
 literal|"unp_sphead"
 block|}
 block|,
+define|#
+directive|define
+name|N_SFSTAT
+value|57
+block|{
+operator|.
+name|n_name
+operator|=
+literal|"_sfstat"
+block|}
+block|,
 block|{
 operator|.
 name|n_name
@@ -2936,7 +2947,7 @@ name|kvmd
 argument_list|,
 name|nl
 index|[
-name|N_MBSTAT
+name|N_SFSTAT
 index|]
 operator|.
 name|n_value

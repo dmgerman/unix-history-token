@@ -15,12 +15,6 @@ directive|define
 name|_SYS_SF_BUF_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/sf_buf.h>
-end_include
-
 begin_comment
 comment|/*  * Options to sf_buf_alloc() are specified through its flags argument.  This  * argument's value should be the result of a bitwise or'ing of one or more  * of the following values.  */
 end_comment
@@ -102,6 +96,96 @@ end_decl_stmt
 
 begin_comment
 comment|/* Number of sendfile(2) bufs in use */
+end_comment
+
+begin_struct
+struct|struct
+name|sfstat
+block|{
+comment|/* sendfile statistics */
+name|uint64_t
+name|sf_iocnt
+decl_stmt|;
+comment|/* times sendfile had to do disk I/O */
+name|uint64_t
+name|sf_allocfail
+decl_stmt|;
+comment|/* times sfbuf allocation failed */
+name|uint64_t
+name|sf_allocwait
+decl_stmt|;
+comment|/* times sfbuf allocation had to wait */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|counter_u64_t
+name|sfstat
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sfstat
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SFSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|counter_u64_add(sfstat[offsetof(struct sfstat, name) / sizeof(uint64_t)],\ 	(val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|SFSTAT_ADD(name, 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_function_decl
