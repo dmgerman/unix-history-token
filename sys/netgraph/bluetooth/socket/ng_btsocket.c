@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -1051,7 +1057,7 @@ comment|/* ng_btsocket_modevent */
 end_comment
 
 begin_expr_stmt
-name|DOMAIN_SET
+name|VNET_DOMAIN_SET
 argument_list|(
 name|ng_btsocket_
 argument_list|)
