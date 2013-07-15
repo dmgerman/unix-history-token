@@ -5043,9 +5043,13 @@ operator|<
 name|parentpath_len
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"make_dev_physpath_alias: WARNING - Unable to alias %s "
+literal|"WARNING: Unable to alias %s "
 literal|"to %s/%s - path too long\n"
 argument_list|,
 name|pdev
