@@ -1392,68 +1392,6 @@ comment|/* no tags attached to mbuf */
 end_comment
 
 begin_comment
-comment|/*  * General mbuf allocator statistics structure.  *  * Many of these statistics are no longer used; we instead track many  * allocator statistics through UMA's built in statistics mechanism.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mbstat
-block|{
-name|u_long
-name|m_mbufs
-decl_stmt|;
-comment|/* XXX */
-name|u_long
-name|m_mclusts
-decl_stmt|;
-comment|/* XXX */
-name|u_long
-name|m_drain
-decl_stmt|;
-comment|/* times drained protocols for space */
-name|u_long
-name|m_mcfail
-decl_stmt|;
-comment|/* XXX: times m_copym failed */
-name|u_long
-name|m_mpfail
-decl_stmt|;
-comment|/* XXX: times m_pullup failed */
-name|u_long
-name|m_msize
-decl_stmt|;
-comment|/* length of an mbuf */
-name|u_long
-name|m_mclbytes
-decl_stmt|;
-comment|/* length of an mbuf cluster */
-name|u_long
-name|m_minclsize
-decl_stmt|;
-comment|/* min length of data to allocate a cluster */
-name|u_long
-name|m_mlen
-decl_stmt|;
-comment|/* length of data in an mbuf */
-name|u_long
-name|m_mhlen
-decl_stmt|;
-comment|/* length of data in a header mbuf */
-comment|/* Number of mbtypes (gives # elems in mbtypes[] array) */
-name|short
-name|m_numtypes
-decl_stmt|;
-name|u_long
-name|spare
-index|[
-literal|3
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Compatibility with historic mbuf allocator.  */
 end_comment
 
@@ -2981,18 +2919,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Largest protocol header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mbstat
-name|mbstat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* General mbuf stats/infos */
 end_comment
 
 begin_decl_stmt
