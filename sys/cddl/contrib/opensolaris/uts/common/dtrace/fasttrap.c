@@ -8973,22 +8973,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Install our hooks into fork(2), exec(2), and exit(2). 	 */
-name|dtrace_fasttrap_fork
-operator|=
-operator|&
-name|fasttrap_fork
-expr_stmt|;
-name|dtrace_fasttrap_exit
-operator|=
-operator|&
-name|fasttrap_exec_exit
-expr_stmt|;
-name|dtrace_fasttrap_exec
-operator|=
-operator|&
-name|fasttrap_exec_exit
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -9433,6 +9417,22 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Install our hooks into fork(2), exec(2), and exit(2). 	 */
+name|dtrace_fasttrap_fork
+operator|=
+operator|&
+name|fasttrap_fork
+expr_stmt|;
+name|dtrace_fasttrap_exit
+operator|=
+operator|&
+name|fasttrap_exec_exit
+expr_stmt|;
+name|dtrace_fasttrap_exec
+operator|=
+operator|&
+name|fasttrap_exec_exit
+expr_stmt|;
 operator|(
 name|void
 operator|)
