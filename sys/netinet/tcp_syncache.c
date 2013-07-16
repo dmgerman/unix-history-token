@@ -4889,6 +4889,7 @@ name|NULL
 argument_list|)
 operator|)
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -4901,6 +4902,18 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|s
+argument_list|,
+name|M_TCPLOG
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If timestamps were negotiated the reflected timestamp 	 * must be equal to what we actually sent in the SYN|ACK. 	 */
 if|if
