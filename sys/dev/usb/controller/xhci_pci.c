@@ -508,6 +508,26 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|xhci_use_msi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.xhci.msi"
+argument_list|,
+operator|&
+name|xhci_use_msi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -716,6 +736,11 @@ name|sc_irq_rid
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|xhci_use_msi
+condition|)
+block|{
 name|count
 operator|=
 name|pci_msi_count
@@ -764,6 +789,7 @@ name|sc_irq_rid
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 block|}
 name|sc
