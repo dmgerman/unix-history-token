@@ -690,22 +690,22 @@ directive|ifdef
 name|__clang__
 define|#
 directive|define
-name|ldcleq
-value|"ldcleq"
+name|ldclne
+value|"ldclne"
 define|#
 directive|define
-name|stcleq
-value|"stcleq"
+name|stclne
+value|"stclne"
 else|#
 directive|else
 define|#
 directive|define
-name|ldcleq
-value|"ldceql"
+name|ldclne
+value|"ldcnel"
 define|#
 directive|define
-name|stcleq
-value|"stceql"
+name|stclne
+value|"stcnel"
 endif|#
 directive|endif
 if|if
@@ -713,27 +713,27 @@ condition|(
 name|vfpsave
 condition|)
 block|{
-asm|__asm __volatile("ldc	p10, c0, [%0], #128\n"
+asm|__asm __volatile("ldc	p10, c0, [%1], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%0, #0\n"
+literal|"cmp	%2, #0\n"
 comment|/* -D16 or -D32? */
-name|ldcleq
-literal|"	p11, c0, [%0], #128\n"
+name|ldclne
+literal|"	p11, c0, [%1], #128\n"
 comment|/* d16-d31 */
-literal|"addne	%0, %0, #128\n"
+literal|"addeq	%1, %1, #128\n"
 comment|/* skip missing regs */
-literal|"ldr	%1, [%0]\n"
+literal|"ldr	%0, [%1]\n"
 comment|/* set old vfpscr */
-literal|"mcr	p10, 7, %1, cr1, c0, 0\n"
-operator|::
+literal|"mcr	p10, 7, %0, cr1, c0, 0\n"
+operator|:
+literal|"=&r"
+operator|(
+name|vfpscr
+operator|)
+operator|:
 literal|"r"
 operator|(
 name|vfpsave
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|vfpscr
 operator|)
 operator|,
 literal|"r"
@@ -798,12 +798,12 @@ condition|)
 block|{
 asm|__asm __volatile("stc	p11, c0, [%1], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%0, #0\n"
+literal|"cmp	%2, #0\n"
 comment|/* -D16 or -D32? */
-name|stcleq
+name|stclne
 literal|"	p11, c0, [%1], #128\n"
 comment|/* d16-d31 */
-literal|"addne	%1, %1, #128\n"
+literal|"addeq	%1, %1, #128\n"
 comment|/* skip missing regs */
 literal|"mrc	p10, 7, %0, cr1, c0, 0\n"
 comment|/* fmxr(VFPSCR) */
