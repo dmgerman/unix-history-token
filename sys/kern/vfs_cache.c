@@ -231,7 +231,7 @@ name|hit
 argument_list|,
 literal|"struct vnode *"
 argument_list|,
-literal|"struct char *"
+literal|"char *"
 argument_list|,
 literal|"struct vnode *"
 argument_list|)
@@ -273,7 +273,7 @@ literal|"int"
 argument_list|,
 literal|"struct vnode *"
 argument_list|,
-literal|"struct char *"
+literal|"char *"
 argument_list|)
 end_macro
 
