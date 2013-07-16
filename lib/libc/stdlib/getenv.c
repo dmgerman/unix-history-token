@@ -1901,7 +1901,7 @@ expr_stmt|;
 comment|/* Save name of name/value pair. */
 name|env
 operator|=
-name|stpcpy
+name|stpncpy
 argument_list|(
 name|envVars
 index|[
@@ -1911,6 +1911,8 @@ operator|.
 name|name
 argument_list|,
 name|name
+argument_list|,
+name|nameLen
 argument_list|)
 expr_stmt|;
 if|if
