@@ -1077,6 +1077,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|a_flag
+operator|&&
+operator|!
+name|f_flag
+operator|&&
 operator|!
 name|slot_has_valid_firmware
 argument_list|(
