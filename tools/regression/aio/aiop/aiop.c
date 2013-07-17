@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -677,7 +683,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"File: %s; File size %qd bytes\n"
+literal|"File: %s; File size %"
+name|PRId64
+literal|" bytes\n"
 argument_list|,
 name|fn
 argument_list|,
