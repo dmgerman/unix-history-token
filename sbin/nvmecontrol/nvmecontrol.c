@@ -776,6 +776,11 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+operator|*
+name|fd
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
