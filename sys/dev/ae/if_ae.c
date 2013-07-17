@@ -3336,7 +3336,7 @@ name|AE_RXD_COUNT_DEFAULT
 operator|*
 literal|1536
 operator|+
-literal|120
+name|AE_RXD_PADDING
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -5988,7 +5988,7 @@ name|AE_RXD_COUNT_DEFAULT
 operator|*
 literal|1536
 operator|+
-literal|120
+name|AE_RXD_PADDING
 argument_list|,
 literal|1
 argument_list|,
@@ -5996,7 +5996,7 @@ name|AE_RXD_COUNT_DEFAULT
 operator|*
 literal|1536
 operator|+
-literal|120
+name|AE_RXD_PADDING
 argument_list|,
 literal|0
 argument_list|,
@@ -6329,7 +6329,7 @@ name|AE_RXD_COUNT_DEFAULT
 operator|*
 literal|1536
 operator|+
-literal|120
+name|AE_RXD_PADDING
 argument_list|,
 name|ae_dmamap_cb
 argument_list|,
@@ -6371,7 +6371,7 @@ name|dma_rxd_busaddr
 operator|=
 name|busaddr
 operator|+
-literal|120
+name|AE_RXD_PADDING
 expr_stmt|;
 name|sc
 operator|->
@@ -6386,7 +6386,7 @@ name|sc
 operator|->
 name|rxd_base_dma
 operator|+
-literal|120
+name|AE_RXD_PADDING
 operator|)
 expr_stmt|;
 return|return
