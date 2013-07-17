@@ -1942,7 +1942,15 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Journal overflow (joffset=%jd active=%jd inactive=%jd)"
+literal|"Journal overflow "
+literal|"(id = %u joffset=%jd active=%jd inactive=%jd)"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|sc
+operator|->
+name|sc_id
 argument_list|,
 operator|(
 name|intmax_t
