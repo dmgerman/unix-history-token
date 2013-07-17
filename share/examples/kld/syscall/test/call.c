@@ -115,7 +115,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"mostat"
+literal|"modstat"
 argument_list|)
 expr_stmt|;
 name|syscall_num
