@@ -1222,6 +1222,7 @@ name|DISKFLAG_UNMAPPED_BIO
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * d_ident and d_descr are both far bigger than the length of either 	 *  the serial or model number strings. 	 */
 name|strlcpy
 argument_list|(
 name|disk
@@ -1233,11 +1234,16 @@ argument_list|(
 name|ns
 argument_list|)
 argument_list|,
+name|min
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|disk
 operator|->
 name|d_ident
+argument_list|)
+argument_list|,
+name|NVME_SERIAL_NUMBER_LENGTH
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1257,11 +1263,16 @@ argument_list|(
 name|ns
 argument_list|)
 argument_list|,
+name|min
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|disk
 operator|->
 name|d_descr
+argument_list|)
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
 argument_list|)
 argument_list|)
 expr_stmt|;
