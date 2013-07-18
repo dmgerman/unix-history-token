@@ -2892,7 +2892,7 @@ name|strcmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"ib"
+literal|"ib\n"
 argument_list|)
 condition|)
 name|info
@@ -2909,7 +2909,7 @@ name|strcmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"eth"
+literal|"eth\n"
 argument_list|)
 condition|)
 name|info
@@ -2926,7 +2926,7 @@ name|strcmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"auto"
+literal|"auto\n"
 argument_list|)
 condition|)
 name|info
