@@ -41550,7 +41550,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_VMMAP: (vmmap data)"
+literal|"NT_PROCSTAT_VMMAP (vmmap data)"
 argument_list|)
 return|;
 case|case
@@ -41559,7 +41559,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_GROUPS: (groups data)"
+literal|"NT_PROCSTAT_GROUPS (groups data)"
 argument_list|)
 return|;
 case|case
@@ -41568,7 +41568,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_UMASK: (umask data)"
+literal|"NT_PROCSTAT_UMASK (umask data)"
 argument_list|)
 return|;
 case|case
@@ -41577,7 +41577,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_RLIMIT: (rlimit data)"
+literal|"NT_PROCSTAT_RLIMIT (rlimit data)"
 argument_list|)
 return|;
 case|case
@@ -41586,7 +41586,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_OSREL: (osreldate data)"
+literal|"NT_PROCSTAT_OSREL (osreldate data)"
 argument_list|)
 return|;
 case|case
@@ -41595,7 +41595,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_PSSTRINGS: (ps_strings data)"
+literal|"NT_PROCSTAT_PSSTRINGS (ps_strings data)"
 argument_list|)
 return|;
 case|case
@@ -41604,7 +41604,7 @@ case|:
 return|return
 name|_
 argument_list|(
-literal|"NT_PROCSTAT_AUXV: (auxv data)"
+literal|"NT_PROCSTAT_AUXV (auxv data)"
 argument_list|)
 return|;
 default|default:
