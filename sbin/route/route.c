@@ -7737,7 +7737,7 @@ parameter_list|,
 name|u
 parameter_list|)
 define|\
-value|if (rtm_addrs& (w)) {						\ 		l = SA_SIZE((struct sockaddr *)&(u));			\ 		memmove(cp, (char *)&(u), l);				\ 		cp += l;						\ 		if (verbose)						\ 			sodump((struct sockaddr *)&(u), #w);		\ 	}
+value|if (rtm_addrs& (w)) {						\ 		l = (((struct sockaddr *)&(u))->sa_len == 0) ?		\ 		    sizeof(long) :					\ 		    1 + ((((struct sockaddr *)&(u))->sa_len - 1)	\ 			| (sizeof(long) - 1));				\ 		memmove(cp, (char *)&(u), l);				\ 		cp += l;						\ 		if (verbose)						\ 			sodump((struct sockaddr *)&(u), #w);		\ 	}
 name|errno
 operator|=
 literal|0
