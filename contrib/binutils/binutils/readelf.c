@@ -41887,7 +41887,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %s\t\t0x%08lx\t%s\n"
+literal|"  %-13s 0x%08lx\t%s\n"
 argument_list|,
 name|pnote
 operator|->
