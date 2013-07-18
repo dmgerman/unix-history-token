@@ -683,12 +683,13 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"File: %s; File size %"
-name|PRId64
-literal|" bytes\n"
+literal|"File: %s; File size %jd bytes\n"
 argument_list|,
 name|fn
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|file_size
 argument_list|)
 expr_stmt|;
