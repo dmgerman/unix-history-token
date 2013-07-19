@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD: vendor-sys/ipfilter/dist/sys/contrib/ipfilter/netinet/ip_rules.c 145516 2005-04-25 18:15:41Z darrenr $	*/
 end_comment
 
 begin_comment
