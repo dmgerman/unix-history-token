@@ -257,39 +257,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CARPSTATS_ADD
-parameter_list|(
-name|name
-parameter_list|,
-name|val
-parameter_list|)
-value|carpstats.name += (val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARPSTATS_INC
-parameter_list|(
-name|name
-parameter_list|)
-value|CARPSTATS_ADD(name, 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Configuration structure for SIOCSVH SIOCGVH  */
 end_comment

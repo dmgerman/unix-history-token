@@ -374,6 +374,22 @@ block|}
 break|break;
 block|}
 block|}
+comment|/* 	 * Writes to kernel/physical memory are a typical root-only operation, 	 * but non-root users are expected to be able to read it (provided they 	 * have permission to access /dev/[k]mem). 	 */
+if|if
+condition|(
+name|priv
+operator|==
+name|PRIV_KMEM_READ
+condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 	 * Now check with MAC, if enabled, to see if a policy module grants 	 * privilege. 	 */
 ifdef|#
 directive|ifdef

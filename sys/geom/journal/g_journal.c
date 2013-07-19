@@ -1942,7 +1942,15 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"Journal overflow (joffset=%jd active=%jd inactive=%jd)"
+literal|"Journal overflow "
+literal|"(id = %u joffset=%jd active=%jd inactive=%jd)"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|sc
+operator|->
+name|sc_id
 argument_list|,
 operator|(
 name|intmax_t
@@ -14526,6 +14534,8 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
+argument_list|,
+name|VS_SKIP_UNMOUNT
 argument_list|)
 expr_stmt|;
 name|GJ_TIMER_STOP

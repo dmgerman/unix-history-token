@@ -4532,6 +4532,9 @@ decl_stmt|;
 name|u_int32_t
 name|adapter_bus_speed
 decl_stmt|;
+name|u_int32_t
+name|maxOutstanding
+decl_stmt|;
 block|}
 struct|;
 end_struct

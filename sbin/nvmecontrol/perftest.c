@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -75,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -266,7 +260,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -788,32 +782,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"NVME_IO_TEST failed. errno=%d (%s)\n"
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ioctl NVME_IO_TEST failed"
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|fd
@@ -829,7 +804,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

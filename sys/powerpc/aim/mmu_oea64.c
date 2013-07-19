@@ -9030,7 +9030,7 @@ operator|&&
 operator|!
 operator|(
 name|prot
-operator|&&
+operator|&
 name|VM_PROT_WRITE
 operator|)
 condition|)

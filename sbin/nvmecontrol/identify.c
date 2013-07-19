@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -124,7 +118,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Serial Number:              %s\n"
+literal|"Serial Number:              %.*s\n"
+argument_list|,
+name|NVME_SERIAL_NUMBER_LENGTH
 argument_list|,
 name|cdata
 operator|->
@@ -133,7 +129,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Model Number:               %s\n"
+literal|"Model Number:               %.*s\n"
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
 argument_list|,
 name|cdata
 operator|->
@@ -142,7 +140,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Firmware Version:           %s\n"
+literal|"Firmware Version:           %.*s\n"
+argument_list|,
+name|NVME_FIRMWARE_REVISION_LENGTH
 argument_list|,
 name|cdata
 operator|->
@@ -681,7 +681,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Current LBA Format:          LBA Format #%d\n"
+literal|"Current LBA Format:          LBA Format #%02d\n"
 argument_list|,
 name|nsdata
 operator|->
@@ -705,17 +705,11 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
-literal|"LBA Format #%d:\n"
+literal|"LBA Format #%02d: Data Size: %5d  Metadata Size: %5d\n"
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  LBA Data Size:             %d\n"
 argument_list|,
 literal|1
 operator|<<
@@ -727,9 +721,17 @@ name|i
 index|]
 operator|.
 name|lbads
+argument_list|,
+name|nsdata
+operator|->
+name|lbaf
+index|[
+name|i
+index|]
+operator|.
+name|ms
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -757,7 +759,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -926,7 +928,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -937,9 +939,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"-v not currently supported without -x.\n"
+name|stderr
+argument_list|,
+literal|"-v not currently supported without -x\n"
 argument_list|)
 expr_stmt|;
 name|identify_usage
@@ -954,7 +958,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -983,10 +987,6 @@ name|path
 index|[
 literal|64
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|nsloc
 decl_stmt|;
 name|int
 name|ch
@@ -1086,93 +1086,18 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Pull the namespace id from the string. +2 skips past the "ns" part 	 *  of the string.  Don't search past 10 characters into the string, 	 *  otherwise we know it is malformed. 	 */
-name|nsloc
-operator|=
-name|strnstr
+comment|/* 	 * We send IDENTIFY commands to the controller, not the namespace, 	 *  since it is an admin cmd.  The namespace ID will be specified in 	 *  the IDENTIFY command itself.  So parse the namespace's device node 	 *  string to get the controller substring and namespace ID. 	 */
+name|parse_ns_str
 argument_list|(
 name|argv
 index|[
 name|optind
 index|]
 argument_list|,
-name|NVME_NS_PREFIX
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nsloc
-operator|!=
-name|NULL
-condition|)
-name|nsid
-operator|=
-name|strtol
-argument_list|(
-name|nsloc
-operator|+
-literal|2
-argument_list|,
-name|NULL
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nsloc
-operator|==
-name|NULL
-operator|||
-operator|(
-name|nsid
-operator|==
-literal|0
-operator|&&
-name|errno
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Invalid namespace ID %s.\n"
-argument_list|,
-name|argv
-index|[
-name|optind
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * We send IDENTIFY commands to the controller, not the namespace, 	 *  since it is an admin cmd.  So the path should only include the 	 *  nvmeX part of the nvmeXnsY string. 	 */
-name|snprintf
-argument_list|(
 name|path
 argument_list|,
-name|nsloc
-operator|-
-name|argv
-index|[
-name|optind
-index|]
-operator|+
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|argv
-index|[
-name|optind
-index|]
+operator|&
+name|nsid
 argument_list|)
 expr_stmt|;
 name|open_dev
@@ -1244,7 +1169,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1255,9 +1180,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"-v not currently supported without -x.\n"
+name|stderr
+argument_list|,
+literal|"-v not currently supported without -x\n"
 argument_list|)
 expr_stmt|;
 name|identify_usage
@@ -1272,7 +1199,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1319,6 +1246,16 @@ operator|-
 literal|1
 condition|)
 empty_stmt|;
+comment|/* Check that a controller or namespace was specified. */
+if|if
+condition|(
+name|optind
+operator|>=
+name|argc
+condition|)
+name|identify_usage
+argument_list|()
+expr_stmt|;
 name|target
 operator|=
 name|argv

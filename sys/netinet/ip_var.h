@@ -361,122 +361,16 @@ directive|include
 file|<net/vnet.h>
 end_include
 
-begin_comment
-comment|/* Should match 'struct ipstat' above. */
-end_comment
-
-begin_struct
-struct|struct
-name|ipstat_p
-block|{
-name|counter_u64_t
-name|ips_total
-decl_stmt|;
-name|counter_u64_t
-name|ips_badsum
-decl_stmt|;
-name|counter_u64_t
-name|ips_tooshort
-decl_stmt|;
-name|counter_u64_t
-name|ips_toosmall
-decl_stmt|;
-name|counter_u64_t
-name|ips_badhlen
-decl_stmt|;
-name|counter_u64_t
-name|ips_badlen
-decl_stmt|;
-name|counter_u64_t
-name|ips_fragments
-decl_stmt|;
-name|counter_u64_t
-name|ips_fragdropped
-decl_stmt|;
-name|counter_u64_t
-name|ips_fragtimeout
-decl_stmt|;
-name|counter_u64_t
-name|ips_forward
-decl_stmt|;
-name|counter_u64_t
-name|ips_fastforward
-decl_stmt|;
-name|counter_u64_t
-name|ips_cantforward
-decl_stmt|;
-name|counter_u64_t
-name|ips_redirectsent
-decl_stmt|;
-name|counter_u64_t
-name|ips_noproto
-decl_stmt|;
-name|counter_u64_t
-name|ips_delivered
-decl_stmt|;
-name|counter_u64_t
-name|ips_localout
-decl_stmt|;
-name|counter_u64_t
-name|ips_odropped
-decl_stmt|;
-name|counter_u64_t
-name|ips_reassembled
-decl_stmt|;
-name|counter_u64_t
-name|ips_fragmented
-decl_stmt|;
-name|counter_u64_t
-name|ips_ofragments
-decl_stmt|;
-name|counter_u64_t
-name|ips_cantfrag
-decl_stmt|;
-name|counter_u64_t
-name|ips_badoptions
-decl_stmt|;
-name|counter_u64_t
-name|ips_noroute
-decl_stmt|;
-name|counter_u64_t
-name|ips_badvers
-decl_stmt|;
-name|counter_u64_t
-name|ips_rawout
-decl_stmt|;
-name|counter_u64_t
-name|ips_toolong
-decl_stmt|;
-name|counter_u64_t
-name|ips_notmember
-decl_stmt|;
-name|counter_u64_t
-name|ips_nogif
-decl_stmt|;
-name|counter_u64_t
-name|ips_badaddr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
-name|ipstat_p
+name|ipstat
 argument_list|,
-name|ipstatp
+name|ipstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ipstatp
-value|VNET(ipstatp)
-end_define
 
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
@@ -491,7 +385,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|counter_u64_add(V_ipstatp.name, (val))
+define|\
+value|VNET_PCPUSTAT_ADD(struct ipstat, ipstat, name, (val))
 end_define
 
 begin_define
@@ -548,7 +443,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_ipstat_inc(offsetof(struct ipstat_p, name) / sizeof(counter_u64_t))
+value|kmod_ipstat_inc(offsetof(struct ipstat, name) / sizeof(uint64_t))
 end_define
 
 begin_function_decl
@@ -569,7 +464,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_ipstat_dec(offsetof(struct ipstat_p, name) / sizeof(counter_u64_t))
+value|kmod_ipstat_dec(offsetof(struct ipstat, name) / sizeof(uint64_t))
 end_define
 
 begin_comment

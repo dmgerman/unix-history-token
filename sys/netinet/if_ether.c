@@ -345,7 +345,7 @@ comment|/* keep incomplete entries for 						 * 20 seconds */
 end_comment
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|arpstat
@@ -357,6 +357,37 @@ end_expr_stmt
 
 begin_comment
 comment|/* ARP statistics, see if_arp.h */
+end_comment
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|arpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|arpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
 end_comment
 
 begin_expr_stmt
@@ -398,13 +429,6 @@ define|#
 directive|define
 name|V_arp_proxyall
 value|VNET(arp_proxyall)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_arpstat
-value|VNET(arpstat)
 end_define
 
 begin_define
@@ -535,7 +559,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_link_ether_arp
 argument_list|,
@@ -543,13 +567,8 @@ name|OID_AUTO
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|arpstat
-argument_list|)
 argument_list|,
 name|arpstat
 argument_list|,

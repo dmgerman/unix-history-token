@@ -3247,7 +3247,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"mps_user_command: req %p %d  rpl %p %d\n"
 argument_list|,
@@ -3322,7 +3322,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"mps_user_command: Function %02X  "
 literal|"MsgFlags %02X\n"
@@ -3597,7 +3597,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"mps_user_command: reply size %d\n"
 argument_list|,
@@ -3722,7 +3722,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"%s: Only one passthru command "
 literal|"allowed at a single time."
@@ -3852,7 +3852,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"%s: req 0x%jx %d  rpl 0x%jx %d "
 literal|"data in 0x%jx %d data out 0x%jx %d data dir %d\n"
@@ -3961,7 +3961,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"%s: Function %02X MsgFlags %02X\n"
 argument_list|,
@@ -5802,7 +5802,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"%s: This buffer type is not supported "
 literal|"by the IOC"
@@ -7874,7 +7874,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"%s: Only one FW diag command "
 literal|"allowed at a single time."
@@ -8534,7 +8534,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"IO access is not supported. "
 literal|"Use memory access."
@@ -9382,7 +9382,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_USER
 argument_list|,
 literal|"Hard Reset with Port Enable completed in %d seconds.\n"
 argument_list|,

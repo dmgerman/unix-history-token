@@ -285,15 +285,14 @@ name|int
 name|kread_counters
 parameter_list|(
 name|u_long
-modifier|*
 name|addr
 parameter_list|,
-name|uint64_t
+name|void
 modifier|*
-name|rval
+name|buf
 parameter_list|,
 name|size_t
-name|count
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1102,6 +1101,8 @@ name|void
 name|routepr
 parameter_list|(
 name|u_long
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -652,6 +652,8 @@ name|EV_EXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|state4
+label|:
 if|if
 condition|(
 name|sflag
@@ -661,9 +663,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|state4
-label|:
-comment|/* XXX ??? - why isn't this before the "if" statement */
 name|cmdloop
 argument_list|(
 literal|1

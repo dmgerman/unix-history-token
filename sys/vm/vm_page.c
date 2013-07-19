@@ -9210,25 +9210,6 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"vm_page_set_invalid: page %p is busy"
-operator|,
-name|m
-operator|)
-argument_list|)
-expr_stmt|;
 name|bits
 operator|=
 name|vm_page_bits

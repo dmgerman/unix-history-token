@@ -2275,11 +2275,15 @@ name|space
 decl_stmt|,
 name|bspace
 decl_stmt|;
-if|if
-condition|(
+name|bspace
+operator|=
 name|bp
 operator|->
 name|b_runningbufspace
+expr_stmt|;
+if|if
+condition|(
+name|bspace
 operator|==
 literal|0
 condition|)
@@ -2292,16 +2296,23 @@ operator|&
 name|runningbufspace
 argument_list|,
 operator|-
-name|bp
-operator|->
-name|b_runningbufspace
+name|bspace
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|space
+operator|>=
 name|bspace
-operator|=
-name|bp
-operator|->
-name|b_runningbufspace
+argument_list|,
+operator|(
+literal|"runningbufspace underflow %ld %ld"
+operator|,
+name|space
+operator|,
+name|bspace
+operator|)
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -2568,8 +2579,9 @@ operator|>
 name|hirunningspace
 condition|)
 block|{
-operator|++
 name|runningbufreq
+operator|=
+literal|1
 expr_stmt|;
 name|msleep
 argument_list|(
@@ -6742,6 +6754,15 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmap_page_wired_mappings
+argument_list|(
+name|m
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|vm_page_set_invalid
 argument_list|(
 name|m
@@ -18426,7 +18447,7 @@ operator|->
 name|b_npages
 argument_list|,
 operator|(
-literal|"Buffer %p too short: %d %d %d"
+literal|"Buffer %p too short: %d %lld %d"
 operator|,
 name|bp
 operator|,
@@ -18434,6 +18455,10 @@ name|bip
 operator|->
 name|bio_ma_offset
 operator|,
+operator|(
+name|long
+name|long
+operator|)
 name|bip
 operator|->
 name|bio_length

@@ -48,7 +48,7 @@ define|#
 directive|define
 name|IDENTIFY_USAGE
 define|\
-value|"       nvmecontrol identify<controller id|namespace id>\n"
+value|"       nvmecontrol identify [-x [-v]]<controller id|namespace id>\n"
 end_define
 
 begin_define
@@ -183,6 +183,26 @@ name|show_error
 parameter_list|,
 name|int
 name|exit_on_error
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|parse_ns_str
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ns_str
+parameter_list|,
+name|char
+modifier|*
+name|ctrlr_str
+parameter_list|,
+name|int
+modifier|*
+name|nsid
 parameter_list|)
 function_decl|;
 end_function_decl

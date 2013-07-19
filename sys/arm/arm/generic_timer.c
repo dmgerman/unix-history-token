@@ -144,119 +144,119 @@ end_include
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CTRL_ENABLE
+name|GT_CTRL_ENABLE
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CTRL_INT_MASK
+name|GT_CTRL_INT_MASK
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CTRL_INT_STAT
+name|GT_CTRL_INT_STAT
 value|(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_REG_CTRL
+name|GT_REG_CTRL
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_REG_TVAL
+name|GT_REG_TVAL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_PL0PTEN
+name|GT_CNTKCTL_PL0PTEN
 value|(1<< 9)
 end_define
 
 begin_comment
-comment|/* Physical timer registers 						    access from PL0 */
+comment|/* PL0 Physical timer reg access */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_PL0VTEN
+name|GT_CNTKCTL_PL0VTEN
 value|(1<< 8)
 end_define
 
 begin_comment
-comment|/* Virtual timer registers 						    access from PL0 */
+comment|/* PL0 Virtual timer reg access */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_EVNTI
+name|GT_CNTKCTL_EVNTI
 value|(1<< 4)
 end_define
 
 begin_comment
-comment|/* Virtual counter 						    event bits */
+comment|/* Virtual counter event bits */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_EVNTDIR
+name|GT_CNTKCTL_EVNTDIR
 value|(1<< 3)
 end_define
 
 begin_comment
-comment|/* Virtual counter 						    event transition */
+comment|/* Virtual counter event transition */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_EVNTEN
+name|GT_CNTKCTL_EVNTEN
 value|(1<< 2)
 end_define
 
 begin_comment
-comment|/* Enables events from 						    the virtual counter */
+comment|/* Enables virtual counter events */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_PL0VCTEN
+name|GT_CNTKCTL_PL0VCTEN
 value|(1<< 1)
 end_define
 
 begin_comment
-comment|/* CNTVCT and CNTFRQ 						    access from PL0 */
+comment|/* PL0 CNTVCT and CNTFRQ access */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTKCTL_PL0PCTEN
+name|GT_CNTKCTL_PL0PCTEN
 value|(1<< 0)
 end_define
 
 begin_comment
-comment|/* CNTPCT and CNTFRQ 						    access from PL0 */
+comment|/* PL0 CNTPCT and CNTFRQ access */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GENERIC_TIMER_CNTPSIRQ
+name|GT_CNTPSIRQ
 value|29
 end_define
 
@@ -548,15 +548,15 @@ name|cntkctl
 operator|&=
 operator|~
 operator|(
-name|GENERIC_TIMER_CNTKCTL_PL0PTEN
+name|GT_CNTKCTL_PL0PTEN
 operator||
-name|GENERIC_TIMER_CNTKCTL_PL0VTEN
+name|GT_CNTKCTL_PL0VTEN
 operator||
-name|GENERIC_TIMER_CNTKCTL_EVNTEN
+name|GT_CNTKCTL_EVNTEN
 operator||
-name|GENERIC_TIMER_CNTKCTL_PL0VCTEN
+name|GT_CNTKCTL_PL0VCTEN
 operator||
-name|GENERIC_TIMER_CNTKCTL_PL0PCTEN
+name|GT_CNTKCTL_PL0PCTEN
 operator|)
 expr_stmt|;
 asm|__asm volatile("mcr p15, 0, %0, c14, c1, 0" : : "r" (cntkctl));
@@ -654,11 +654,11 @@ expr_stmt|;
 name|ctrl
 operator|&=
 operator|~
-name|GENERIC_TIMER_CTRL_INT_MASK
+name|GT_CTRL_INT_MASK
 expr_stmt|;
 name|ctrl
 operator||=
-name|GENERIC_TIMER_CTRL_ENABLE
+name|GT_CTRL_ENABLE
 expr_stmt|;
 name|set_tval
 argument_list|(
@@ -705,7 +705,7 @@ argument_list|()
 expr_stmt|;
 name|ctrl
 operator|&=
-name|GENERIC_TIMER_CTRL_ENABLE
+name|GT_CTRL_ENABLE
 expr_stmt|;
 name|set_ctrl
 argument_list|(
@@ -756,12 +756,12 @@ if|if
 condition|(
 name|ctrl
 operator|&
-name|GENERIC_TIMER_CTRL_INT_STAT
+name|GT_CTRL_INT_STAT
 condition|)
 block|{
 name|ctrl
 operator||=
-name|GENERIC_TIMER_CTRL_INT_MASK
+name|GT_CTRL_INT_MASK
 expr_stmt|;
 name|set_ctrl
 argument_list|(
@@ -960,9 +960,9 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|GENERIC_TIMER_CNTPSIRQ
+name|GT_CNTPSIRQ
 argument_list|,
-name|GENERIC_TIMER_CNTPSIRQ
+name|GT_CNTPSIRQ
 argument_list|,
 literal|1
 argument_list|,

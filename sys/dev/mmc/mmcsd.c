@@ -811,7 +811,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"task: mmc/sd card"
+literal|"%s: mmc/sd card"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1096,7 +1101,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"task: mmc/sd card"
+literal|"%s: mmc/sd card"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

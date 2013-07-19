@@ -50,13 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
 end_include
 
 begin_include
@@ -87,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -184,7 +184,7 @@ modifier|*
 modifier|*
 name|buf
 parameter_list|,
-name|ssize_t
+name|int32_t
 modifier|*
 name|size
 parameter_list|)
@@ -192,6 +192,9 @@ block|{
 name|struct
 name|stat
 name|sb
+decl_stmt|;
+name|int32_t
+name|filesize
 decl_stmt|;
 name|int
 name|fd
@@ -221,22 +224,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unable to open '%s'.\n"
+literal|"unable to open '%s'"
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fstat
@@ -249,27 +245,49 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unable to stat '%s'.\n"
+literal|"unable to stat '%s'"
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-name|close
+comment|/* 	 * The NVMe spec does not explicitly state a maximum firmware image 	 *  size, although one can be inferred from the dword size limitation 	 *  for the size and offset fields in the Firmware Image Download 	 *  command. 	 * 	 * Technically, the max is UINT32_MAX * sizeof(uint32_t), since the 	 *  size and offsets are specified in terms of dwords (not bytes), but 	 *  realistically INT32_MAX is sufficient here and simplifies matters 	 *  a bit. 	 */
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|>
+name|INT32_MAX
+condition|)
+name|errx
 argument_list|(
-name|fd
+literal|1
+argument_list|,
+literal|"size of file '%s' is too large (%jd bytes)"
+argument_list|,
+name|path
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|sb
+operator|.
+name|st_size
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
+name|filesize
+operator|=
+operator|(
+name|int32_t
+operator|)
+name|sb
+operator|.
+name|st_size
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -278,37 +296,21 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-name|sb
-operator|.
-name|st_size
+name|filesize
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unable to malloc %jd bytes.\n"
+literal|"unable to malloc %d bytes"
 argument_list|,
-name|sb
-operator|.
-name|st_size
+name|filesize
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -322,80 +324,43 @@ argument_list|,
 operator|*
 name|buf
 argument_list|,
-name|sb
-operator|.
-name|st_size
+name|filesize
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Error reading '%s', errno=%d (%s)\n"
+literal|"error reading '%s'"
 argument_list|,
 name|path
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* XXX assuming no short reads */
 if|if
 condition|(
 operator|*
 name|size
 operator|!=
-name|sb
-operator|.
-name|st_size
+name|filesize
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Error reading '%s', "
-literal|"read %zd bytes, requested %jd bytes\n"
+literal|"error reading '%s' (read %d bytes, requested %d bytes)"
 argument_list|,
 name|path
 argument_list|,
 operator|*
 name|size
 argument_list|,
-name|sb
-operator|.
-name|st_size
+name|filesize
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -411,7 +376,7 @@ name|uint8_t
 modifier|*
 name|payload
 parameter_list|,
-name|uint32_t
+name|int32_t
 name|payload_size
 parameter_list|)
 block|{
@@ -419,22 +384,16 @@ name|struct
 name|nvme_pt_command
 name|pt
 decl_stmt|;
-name|size_t
+name|int32_t
+name|off
+decl_stmt|,
+name|resid
+decl_stmt|,
 name|size
 decl_stmt|;
 name|void
 modifier|*
 name|chunk
-decl_stmt|;
-name|uint32_t
-name|off
-decl_stmt|,
-name|resid
-decl_stmt|;
-name|int
-name|exit_code
-init|=
-name|EX_OK
 decl_stmt|;
 name|off
 operator|=
@@ -451,29 +410,21 @@ name|chunk
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|NVME_MAX_XFER_SIZE
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Unable to malloc %d bytes.\n"
+literal|1
+argument_list|,
+literal|"unable to malloc %d bytes"
 argument_list|,
 name|NVME_MAX_XFER_SIZE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|resid
@@ -589,26 +540,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|err
 argument_list|(
-literal|"Firmware image download request failed. "
-literal|"errno=%d (%s)\n"
+literal|1
 argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"firmware download request failed"
 argument_list|)
 expr_stmt|;
-name|exit_code
-operator|=
-name|EX_IOERR
-expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|nvme_completion_is_error
@@ -619,18 +557,13 @@ operator|.
 name|cpl
 argument_list|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Passthrough command returned error.\n"
+literal|1
+argument_list|,
+literal|"firmware download request returned error"
 argument_list|)
 expr_stmt|;
-name|exit_code
-operator|=
-name|EX_IOERR
-expr_stmt|;
-break|break;
-block|}
 name|resid
 operator|-=
 name|size
@@ -640,17 +573,6 @@ operator|+=
 name|size
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|exit_code
-operator|!=
-name|EX_OK
-condition|)
-name|exit
-argument_list|(
-name|exit_code
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -728,25 +650,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|err
 argument_list|(
-literal|"Firmware activate request failed. errno=%d (%s)\n"
+literal|1
 argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"firmware activate request failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|nvme_completion_is_error
@@ -757,18 +667,13 @@ operator|.
 name|cpl
 argument_list|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Passthrough command returned error.\n"
+literal|1
+argument_list|,
+literal|"firmware activate request returned error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -796,7 +701,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -860,8 +765,10 @@ name|buf
 init|=
 name|NULL
 decl_stmt|;
-name|ssize_t
+name|int32_t
 name|size
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|nvme_controller_data
@@ -1113,21 +1020,13 @@ name|firmware
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Controller does not support firmware "
-literal|"activate/download.\n"
+literal|"controller does not support firmware activate/download"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|f_flag
@@ -1142,22 +1041,15 @@ name|frmw
 operator|.
 name|slot1_ro
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Slot %d is marked as read only.\n"
+literal|"slot %d is marked as read only"
 argument_list|,
 name|slot
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|slot
@@ -1168,13 +1060,11 @@ name|frmw
 operator|.
 name|num_slots
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Slot %d was specified but controller only "
-literal|"supports %d firmware slots.\n"
+literal|"slot %d specified but controller only supports %d slots"
 argument_list|,
 name|slot
 argument_list|,
@@ -1185,14 +1075,13 @@ operator|.
 name|num_slots
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
+name|a_flag
+operator|&&
+operator|!
+name|f_flag
+operator|&&
 operator|!
 name|slot_has_valid_firmware
 argument_list|(
@@ -1201,26 +1090,34 @@ argument_list|,
 name|slot
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Slot %d does not contain valid firmware.\n"
-literal|"Try 'nvmecontrol logpage -p 3 %s' to get a list "
-literal|"of available firmware images.\n"
+literal|"slot %d does not contain valid firmware,\n"
+literal|"try 'nvmecontrol logpage -p 3 %s' to get a list "
+literal|"of available images\n"
 argument_list|,
 name|slot
 argument_list|,
 name|controller
 argument_list|)
 expr_stmt|;
-name|exit
+if|if
+condition|(
+name|f_flag
+condition|)
+name|read_image_file
 argument_list|(
-name|EX_IOERR
+name|image
+argument_list|,
+operator|&
+name|buf
+argument_list|,
+operator|&
+name|size
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|f_flag
@@ -1321,7 +1218,7 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-name|EX_OK
+literal|1
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1335,17 +1232,6 @@ condition|(
 name|f_flag
 condition|)
 block|{
-name|read_image_file
-argument_list|(
-name|image
-argument_list|,
-operator|&
-name|buf
-argument_list|,
-operator|&
-name|size
-argument_list|)
-expr_stmt|;
 name|update_firmware
 argument_list|(
 name|fd
@@ -1414,7 +1300,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -3379,6 +3379,17 @@ name|pd_type
 operator|=
 name|T_DIRECT
 expr_stmt|;
+comment|/* Map NODEVICE to Direct Access Device to handle REPORT LUNS, etc. */
+if|if
+condition|(
+name|pd_type
+operator|==
+name|T_NODEVICE
+condition|)
+name|pd_type
+operator|=
+name|T_DIRECT
+expr_stmt|;
 name|opmask
 operator|=
 literal|1
@@ -8245,7 +8256,7 @@ literal|0x25
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_FATAL | ENXIO
+argument|SS_FATAL | ENXIO | SSQ_LOST
 argument_list|,
 literal|"Logical unit not supported"
 argument_list|)
@@ -10712,9 +10723,8 @@ literal|0x3F
 argument_list|,
 literal|0x0E
 argument_list|,
-argument|SS_RDEF
+argument|SS_RDEF | SSQ_RESCAN
 argument_list|,
-comment|/* XXX TBD */
 literal|"Reported LUNs data has changed"
 argument_list|)
 block|}
@@ -15959,6 +15969,10 @@ operator||
 name|SSQ_PRINT_SENSE
 expr_stmt|;
 block|}
+name|action
+operator||=
+name|SSQ_UA
+expr_stmt|;
 block|}
 block|}
 if|if

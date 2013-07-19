@@ -6942,7 +6942,7 @@ name|ctx
 operator|->
 name|msg_ctx
 argument_list|,
-name|MSG_INFO
+name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Group rekeying "
 literal|"completed with "

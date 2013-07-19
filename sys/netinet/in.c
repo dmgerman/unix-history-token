@@ -349,28 +349,6 @@ name|V_ripcbinfo
 value|VNET(ripcbinfo)
 end_define
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|arpstat
-argument_list|,
-name|arpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* ARP statistics, see if_arp.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_arpstat
-value|VNET(arpstat)
-end_define
-
 begin_comment
 comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  */
 end_comment

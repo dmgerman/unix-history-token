@@ -976,7 +976,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,
@@ -1008,7 +1008,7 @@ name|void
 name|ipsec_hist_new
 parameter_list|(
 specifier|const
-name|u_int32_t
+name|uint64_t
 modifier|*
 name|hist
 parameter_list|,
@@ -1081,7 +1081,7 @@ name|void
 name|ipsec_hist_new
 parameter_list|(
 specifier|const
-name|u_int32_t
+name|uint64_t
 modifier|*
 name|hist
 parameter_list|,
@@ -1197,12 +1197,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\t%s: %u\n"
+literal|"\t\t%s: %ju\n"
 argument_list|,
 name|p
 operator|->
 name|str
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|hist
 index|[
 name|proto
@@ -1214,7 +1217,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\t\t#%lu: %u\n"
+literal|"\t\t#%lu: %ju\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -1222,6 +1225,9 @@ name|long
 operator|)
 name|proto
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|hist
 index|[
 name|proto
@@ -1247,16 +1253,7 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|p32
-parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|)
-value|if (ahstat->f || sflag<= 1) \     printf("\t%u" m, (unsigned int)ahstat->f, plural(ahstat->f))
-define|#
-directive|define
-name|p64
+name|p
 parameter_list|(
 name|f
 parameter_list|,
@@ -1275,133 +1272,133 @@ name|t
 parameter_list|)
 define|\
 value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
-name|p32
+name|p
 argument_list|(
 name|ahs_hdrops
 argument_list|,
 literal|" packet%s shorter than header shows\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_nopf
 argument_list|,
 literal|" packet%s dropped; protocol family not supported\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_notdb
 argument_list|,
 literal|" packet%s dropped; no TDB\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_badkcr
 argument_list|,
 literal|" packet%s dropped; bad KCR\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_qfull
 argument_list|,
 literal|" packet%s dropped; queue full\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_noxform
 argument_list|,
 literal|" packet%s dropped; no transform\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_wrap
 argument_list|,
 literal|" replay counter wrap%s\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_badauth
 argument_list|,
 literal|" packet%s dropped; bad authentication detected\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_badauthl
 argument_list|,
 literal|" packet%s dropped; bad authentication length\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_replay
 argument_list|,
 literal|" possible replay packet%s detected\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_input
 argument_list|,
 literal|" packet%s in\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_output
 argument_list|,
 literal|" packet%s out\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_invalid
 argument_list|,
 literal|" packet%s dropped; invalid TDB\n"
 argument_list|)
 expr_stmt|;
-name|p64
+name|p
 argument_list|(
 name|ahs_ibytes
 argument_list|,
 literal|" byte%s in\n"
 argument_list|)
 expr_stmt|;
-name|p64
+name|p
 argument_list|(
 name|ahs_obytes
 argument_list|,
 literal|" byte%s out\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_toobig
 argument_list|,
 literal|" packet%s dropped; larger than IP_MAXPACKET\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_pdrops
 argument_list|,
 literal|" packet%s blocked due to policy\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_crypto
 argument_list|,
 literal|" crypto processing failure%s\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ahs_tunnel
 argument_list|,
@@ -1421,10 +1418,7 @@ argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
-name|p32
-undef|#
-directive|undef
-name|p64
+name|p
 undef|#
 directive|undef
 name|hist
@@ -1470,7 +1464,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,
@@ -1510,16 +1504,7 @@ parameter_list|)
 block|{
 define|#
 directive|define
-name|p32
-parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|)
-value|if (espstat->f || sflag<= 1) \     printf("\t%u" m, (unsigned int)espstat->f, plural(espstat->f))
-define|#
-directive|define
-name|p64
+name|p
 parameter_list|(
 name|f
 parameter_list|,
@@ -1538,140 +1523,140 @@ name|t
 parameter_list|)
 define|\
 value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
-name|p32
+name|p
 argument_list|(
 name|esps_hdrops
 argument_list|,
 literal|" packet%s shorter than header shows\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_nopf
 argument_list|,
 literal|" packet%s dropped; protocol family not supported\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_notdb
 argument_list|,
 literal|" packet%s dropped; no TDB\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_badkcr
 argument_list|,
 literal|" packet%s dropped; bad KCR\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_qfull
 argument_list|,
 literal|" packet%s dropped; queue full\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_noxform
 argument_list|,
 literal|" packet%s dropped; no transform\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_badilen
 argument_list|,
 literal|" packet%s dropped; bad ilen\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_wrap
 argument_list|,
 literal|" replay counter wrap%s\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_badenc
 argument_list|,
 literal|" packet%s dropped; bad encryption detected\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_badauth
 argument_list|,
 literal|" packet%s dropped; bad authentication detected\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_replay
 argument_list|,
 literal|" possible replay packet%s detected\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_input
 argument_list|,
 literal|" packet%s in\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_output
 argument_list|,
 literal|" packet%s out\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_invalid
 argument_list|,
 literal|" packet%s dropped; invalid TDB\n"
 argument_list|)
 expr_stmt|;
-name|p64
+name|p
 argument_list|(
 name|esps_ibytes
 argument_list|,
 literal|" byte%s in\n"
 argument_list|)
 expr_stmt|;
-name|p64
+name|p
 argument_list|(
 name|esps_obytes
 argument_list|,
 literal|" byte%s out\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_toobig
 argument_list|,
 literal|" packet%s dropped; larger than IP_MAXPACKET\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_pdrops
 argument_list|,
 literal|" packet%s blocked due to policy\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_crypto
 argument_list|,
 literal|" crypto processing failure%s\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|esps_tunnel
 argument_list|,
@@ -1691,10 +1676,7 @@ argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
-name|p32
-undef|#
-directive|undef
-name|p64
+name|p
 undef|#
 directive|undef
 name|hist
@@ -1740,7 +1722,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,
@@ -1778,21 +1760,9 @@ modifier|*
 name|ipcompstat
 parameter_list|)
 block|{
-name|uint32_t
-name|version
-decl_stmt|;
 define|#
 directive|define
-name|p32
-parameter_list|(
-name|f
-parameter_list|,
-name|m
-parameter_list|)
-value|if (ipcompstat->f || sflag<= 1) \     printf("\t%u" m, (unsigned int)ipcompstat->f, plural(ipcompstat->f))
-define|#
-directive|define
-name|p64
+name|p
 parameter_list|(
 name|f
 parameter_list|,
@@ -1811,122 +1781,105 @@ name|t
 parameter_list|)
 define|\
 value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
-ifndef|#
-directive|ifndef
-name|IPCOMPSTAT_VERSION
-name|version
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
-name|version
-operator|=
-name|ipcompstat
-operator|->
-name|version
-expr_stmt|;
-endif|#
-directive|endif
-name|p32
+name|p
 argument_list|(
 name|ipcomps_hdrops
 argument_list|,
 literal|" packet%s shorter than header shows\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_nopf
 argument_list|,
 literal|" packet%s dropped; protocol family not supported\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_notdb
 argument_list|,
 literal|" packet%s dropped; no TDB\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_badkcr
 argument_list|,
 literal|" packet%s dropped; bad KCR\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_qfull
 argument_list|,
 literal|" packet%s dropped; queue full\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_noxform
 argument_list|,
 literal|" packet%s dropped; no transform\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_wrap
 argument_list|,
 literal|" replay counter wrap%s\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_input
 argument_list|,
 literal|" packet%s in\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_output
 argument_list|,
 literal|" packet%s out\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_invalid
 argument_list|,
 literal|" packet%s dropped; invalid TDB\n"
 argument_list|)
 expr_stmt|;
-name|p64
+name|p
 argument_list|(
 name|ipcomps_ibytes
 argument_list|,
 literal|" byte%s in\n"
 argument_list|)
 expr_stmt|;
-name|p64
+name|p
 argument_list|(
 name|ipcomps_obytes
 argument_list|,
 literal|" byte%s out\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_toobig
 argument_list|,
 literal|" packet%s dropped; larger than IP_MAXPACKET\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_pdrops
 argument_list|,
 literal|" packet%s blocked due to policy\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_crypto
 argument_list|,
@@ -1944,34 +1897,23 @@ argument_list|,
 literal|"COMP output"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|version
-operator|>=
-literal|1
-condition|)
-block|{
-name|p32
+name|p
 argument_list|(
 name|ipcomps_threshold
 argument_list|,
 literal|" packet%s sent uncompressed; size< compr. algo. threshold\n"
 argument_list|)
 expr_stmt|;
-name|p32
+name|p
 argument_list|(
 name|ipcomps_uncompr
 argument_list|,
 literal|" packet%s sent uncompressed; compression was useless\n"
 argument_list|)
 expr_stmt|;
-block|}
 undef|#
 directive|undef
-name|p32
-undef|#
-directive|undef
-name|p64
+name|p
 undef|#
 directive|undef
 name|hist
@@ -2017,7 +1959,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,

@@ -367,6 +367,103 @@ name|FP_ZERO
 value|0x10
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__STDC_VERSION__
+operator|>=
+literal|201112L
+operator|&&
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|)
+operator|||
+expr|\
+name|__has_extension
+argument_list|(
+name|c_generic_selections
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__fp_type_select
+parameter_list|(
+name|x
+parameter_list|,
+name|f
+parameter_list|,
+name|d
+parameter_list|,
+name|ld
+parameter_list|)
+value|_Generic((0,(x)),			\     float: f(x),							\     double: d(x),							\     long double: ld(x))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__GNUC_PREREQ__
+argument_list|(
+literal|3
+operator|,
+literal|1
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__fp_type_select
+parameter_list|(
+name|x
+parameter_list|,
+name|f
+parameter_list|,
+name|d
+parameter_list|,
+name|ld
+parameter_list|)
+value|__builtin_choose_expr(		\     __builtin_types_compatible_p(__typeof(x), long double), ld(x),	\     __builtin_choose_expr(						\     __builtin_types_compatible_p(__typeof(x), double), d(x),		\     __builtin_choose_expr(						\     __builtin_types_compatible_p(__typeof(x), float), f(x), (void)0)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__fp_type_select
+parameter_list|(
+name|x
+parameter_list|,
+name|f
+parameter_list|,
+name|d
+parameter_list|,
+name|ld
+parameter_list|)
+define|\
+value|((sizeof(x) == sizeof(float)) ? f(x)				\     : (sizeof(x) == sizeof(double)) ? d(x)				\     : ld(x))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -375,7 +472,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((sizeof (x) == sizeof (float)) ? __fpclassifyf(x) \     : (sizeof (x) == sizeof (double)) ? __fpclassifyd(x) \     : __fpclassifyl(x))
+value|__fp_type_select(x, __fpclassifyf, __fpclassifyd, __fpclassifyl)
 end_define
 
 begin_define
@@ -385,8 +482,7 @@ name|isfinite
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|((sizeof (x) == sizeof (float)) ? __isfinitef(x)	\     : (sizeof (x) == sizeof (double)) ? __isfinite(x)	\     : __isfinitel(x))
+value|__fp_type_select(x, __isfinitef, __isfinite, __isfinitel)
 end_define
 
 begin_define
@@ -396,8 +492,7 @@ name|isinf
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|((sizeof (x) == sizeof (float)) ? __isinff(x)	\     : (sizeof (x) == sizeof (double)) ? isinf(x)	\     : __isinfl(x))
+value|__fp_type_select(x, __isinff, __isinf, __isinfl)
 end_define
 
 begin_define
@@ -408,7 +503,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((sizeof (x) == sizeof (float)) ? __isnanf(x)	\     : (sizeof (x) == sizeof (double)) ? isnan(x)	\     : __isnanl(x))
+value|__fp_type_select(x, __inline_isnanf, __inline_isnan, __inline_isnanl)
 end_define
 
 begin_define
@@ -418,8 +513,7 @@ name|isnormal
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|((sizeof (x) == sizeof (float)) ? __isnormalf(x)	\     : (sizeof (x) == sizeof (double)) ? __isnormal(x)	\     : __isnormall(x))
+value|__fp_type_select(x, __isnormalf, __isnormal, __isnormall)
 end_define
 
 begin_ifdef
@@ -593,8 +687,7 @@ name|signbit
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|((sizeof (x) == sizeof (float)) ? __signbitf(x)	\     : (sizeof (x) == sizeof (double)) ? __signbit(x)	\     : __signbitl(x))
+value|__fp_type_select(x, __signbitf, __signbit, __signbitl)
 end_define
 
 begin_typedef
@@ -927,9 +1020,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|__isinfl
+name|__isinf
 argument_list|(
-name|long
 name|double
 argument_list|)
 name|__pure2
@@ -938,17 +1030,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|__isnanf
-argument_list|(
-name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|__isnanl
+name|__isinfl
 argument_list|(
 name|long
 name|double
@@ -1018,6 +1100,70 @@ argument_list|)
 name|__pure2
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__inline_isnan
+parameter_list|(
+name|__const
+name|double
+name|__x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__x
+operator|!=
+name|__x
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__inline_isnanf
+parameter_list|(
+name|__const
+name|float
+name|__x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__x
+operator|!=
+name|__x
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|__inline_isnanl
+parameter_list|(
+name|__const
+name|long
+name|double
+name|__x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|__x
+operator|!=
+name|__x
+operator|)
+return|;
+block|}
+end_function
 
 begin_function_decl
 name|double
@@ -1361,36 +1507,6 @@ argument_list|)
 name|__pure2
 decl_stmt|;
 end_decl_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|isinf
-argument_list|)
-end_macro
-
-begin_expr_stmt
-operator|(
-name|double
-operator|)
-name|__pure2
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
-name|int
-argument_list|(
-argument|isnan
-argument_list|)
-end_macro
-
-begin_expr_stmt
-operator|(
-name|double
-operator|)
-name|__pure2
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 name|double

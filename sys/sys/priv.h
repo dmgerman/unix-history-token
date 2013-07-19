@@ -2713,6 +2713,32 @@ value|674
 end_define
 
 begin_comment
+comment|/*  * mem(4) privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_KMEM_READ
+value|680
+end_define
+
+begin_comment
+comment|/* Open mem/kmem for reading. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_KMEM_WRITE
+value|681
+end_define
+
+begin_comment
+comment|/* Open mem/kmem for writing. */
+end_comment
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2720,7 +2746,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|675
+value|682
 end_define
 
 begin_comment

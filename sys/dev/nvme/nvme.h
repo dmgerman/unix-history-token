@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2012-2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -1060,6 +1060,27 @@ block|, }
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|NVME_SERIAL_NUMBER_LENGTH
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MODEL_NUMBER_LENGTH
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_FIRMWARE_REVISION_LENGTH
+value|8
+end_define
+
 begin_struct
 struct|struct
 name|nvme_controller_data
@@ -1077,21 +1098,21 @@ comment|/** serial number */
 name|int8_t
 name|sn
 index|[
-literal|20
+name|NVME_SERIAL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** model number */
 name|int8_t
 name|mn
 index|[
-literal|40
+name|NVME_MODEL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** firmware revision */
 name|uint8_t
 name|fr
 index|[
-literal|8
+name|NVME_FIRMWARE_REVISION_LENGTH
 index|]
 decl_stmt|;
 comment|/** recommended arbitration burst */
@@ -1916,7 +1937,7 @@ comment|/* 	 * len is the length of the data buffer associated with this 	 *  pa
 name|uint32_t
 name|len
 decl_stmt|;
-comment|/* 	 * is_read = 1 if the passthrough command will read data into the 	 *  supplied buffer. 	 * 	 * is_read = 0 if the passthrough command will write data into the 	 *  supplied buffer. 	 */
+comment|/* 	 * is_read = 1 if the passthrough command will read data into the 	 *  supplied buffer from the controller. 	 * 	 * is_read = 0 if the passthrough command will write data from the 	 *  supplied buffer to the controller. 	 */
 name|uint32_t
 name|is_read
 decl_stmt|;

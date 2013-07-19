@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -339,7 +345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|rip6stat
@@ -348,6 +354,37 @@ name|rip6stat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|rip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|rip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_comment
 comment|/*  * Hooks for multicast routing. They all default to NULL, so leave them not  * initialized and rely on BSS being set to 0.  */

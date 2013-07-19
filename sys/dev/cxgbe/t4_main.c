@@ -2870,6 +2870,13 @@ literal|"Chelsio T520-CR"
 block|}
 block|,
 block|{
+literal|0x5403
+block|,
+literal|"Chelsio T540-CR"
+block|}
+block|,
+comment|/* 4 x 10G */
+block|{
 literal|0x5407
 block|,
 literal|"Chelsio T520-SO"
@@ -2901,12 +2908,6 @@ block|{
 literal|0x5402
 block|,
 literal|"Chelsio T522-CR"
-block|}
-block|,
-block|{
-literal|0x5403
-block|,
-literal|"Chelsio T540-CR"
 block|}
 block|,
 block|{

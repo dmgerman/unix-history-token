@@ -12648,7 +12648,7 @@ name|KERNBASE
 argument_list|,
 operator|(
 literal|"Trying to access non-existent page "
-literal|"va %x pte %x in %s"
+literal|"va %x pte %x"
 operator|,
 name|va
 operator|,

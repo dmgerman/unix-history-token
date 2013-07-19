@@ -8279,18 +8279,6 @@ comment|/* capable of bg scanning */
 name|IEEE80211_C_WPA
 expr_stmt|;
 comment|/* 802.11i */
-name|ic
-operator|->
-name|ic_cryptocaps
-operator|=
-name|IEEE80211_CRYPTO_WEP
-operator||
-name|IEEE80211_CRYPTO_AES_CCM
-operator||
-name|IEEE80211_CRYPTO_TKIPMIC
-operator||
-name|IEEE80211_CRYPTO_TKIP
-expr_stmt|;
 name|bands
 operator|=
 literal|0

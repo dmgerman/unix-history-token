@@ -332,6 +332,11 @@ name|void
 name|mps_complete_command
 parameter_list|(
 name|struct
+name|mps_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
 name|mps_command
 modifier|*
 name|cm
@@ -881,15 +886,9 @@ name|int
 name|sleep_flag
 parameter_list|)
 block|{
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mps_regwrite
@@ -968,15 +967,9 @@ decl_stmt|;
 name|int
 name|sleep_flags
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* If we are in attach call, do not sleep */
@@ -1019,7 +1012,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_INIT
 argument_list|,
 literal|"Doorbell= 0x%x\n"
 argument_list|,
@@ -1112,9 +1105,9 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_FAULT
 argument_list|,
-literal|"IOC in fault state 0x%x\n"
+literal|"IOC in fault state 0x%x, resetting\n"
 argument_list|,
 name|state
 operator|&
@@ -1231,15 +1224,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|error
@@ -1259,7 +1246,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_INIT
 argument_list|,
 literal|"Doorbell= 0x%x\n"
 argument_list|,
@@ -1346,14 +1333,8 @@ decl_stmt|;
 name|uint32_t
 name|db
 decl_stmt|;
-name|mps_printf
+name|MPS_FUNCTRACE
 argument_list|(
-name|sc
-argument_list|,
-literal|"%s sc %p\n"
-argument_list|,
-name|__func__
-argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
@@ -1376,9 +1357,11 @@ operator|&
 name|MPS_FLAGS_DIAGRESET
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s reset already in progress\n"
 argument_list|,
@@ -1389,6 +1372,15 @@ return|return
 literal|0
 return|;
 block|}
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_INFO
+argument_list|,
+literal|"Reinitializing controller,\n"
+argument_list|)
+expr_stmt|;
 comment|/* make sure the completion callbacks can recognize they're getting 	 * a NULL cm_reply due to a reset. 	 */
 name|sc
 operator|->
@@ -1396,9 +1388,11 @@ name|mps_flags
 operator||=
 name|MPS_FLAGS_DIAGRESET
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s mask interrupts\n"
 argument_list|,
@@ -1426,6 +1420,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* XXXSL No need to panic here */
 name|panic
 argument_list|(
 literal|"%s hard reset failed with error %d\n"
@@ -1481,6 +1476,7 @@ name|error
 operator|!=
 literal|0
 condition|)
+comment|/* XXXSL No need to panic here */
 name|panic
 argument_list|(
 literal|"%s transition operational failed with error %d\n"
@@ -1528,9 +1524,11 @@ argument_list|,
 name|MPI2_DOORBELL_OFFSET
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s doorbell 0x%08x\n"
 argument_list|,
@@ -1539,9 +1537,11 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s unmask interrupts post %u free %u\n"
 argument_list|,
@@ -1561,9 +1561,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s restarting post %u free %u\n"
 argument_list|,
@@ -1585,9 +1587,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* the end of discovery will release the simq, so we're done. */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"%s finished sc %p post %u free %u\n"
 argument_list|,
@@ -1694,7 +1698,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_INIT
 argument_list|,
 literal|"%s: successfull count(%d), timeout(%d)\n"
 argument_list|,
@@ -2346,7 +2350,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Driver error, throwing away %d "
 literal|"residual message words\n"
@@ -2554,15 +2558,18 @@ block|{
 name|reply_descriptor
 name|rd
 decl_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
 name|MPS_TRACE
 argument_list|,
-literal|"%s SMID %u cm %p ccb %p\n"
-argument_list|,
-name|__func__
+literal|"SMID %u cm %p ccb %p\n"
 argument_list|,
 name|cm
 operator|->
@@ -2724,15 +2731,9 @@ name|req_sz
 decl_stmt|,
 name|reply_sz
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|req_sz
@@ -2831,15 +2832,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -3031,15 +3026,9 @@ name|reply_sz
 decl_stmt|,
 name|error
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|req_sz
@@ -3283,7 +3272,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_INIT
 argument_list|,
 literal|"IOCInit status= 0x%x\n"
 argument_list|,
@@ -4865,6 +4854,8 @@ name|sc
 operator|->
 name|mps_debug
 operator|=
+name|MPS_INFO
+operator||
 name|MPS_FAULT
 expr_stmt|;
 name|sc
@@ -5519,15 +5510,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -6405,7 +6390,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Cannot establish MPS config hook\n"
 argument_list|)
@@ -6443,7 +6428,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"shutdown event registration "
 literal|"failed\n"
@@ -6585,11 +6570,11 @@ operator|==
 name|MPI2_IOC_STATE_FAULT
 condition|)
 block|{
-name|device_printf
+name|mps_dprint
 argument_list|(
 name|sc
-operator|->
-name|mps_dev
+argument_list|,
+name|MPS_FAULT
 argument_list|,
 literal|"IOC Fault 0x%08x, Resetting\n"
 argument_list|,
@@ -6660,15 +6645,23 @@ block|{
 case|case
 name|MPI2_EVENT_LOG_DATA
 case|:
-name|device_printf
+name|mps_dprint
 argument_list|(
 name|sc
-operator|->
-name|mps_dev
+argument_list|,
+name|MPS_EVENT
 argument_list|,
 literal|"MPI2_EVENT_LOG_DATA:\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mps_debug
+operator|&
+name|MPS_EVENT
+condition|)
 name|hexdump
 argument_list|(
 name|event
@@ -6702,7 +6695,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"MPI2_EVENT_LOG_ENTRY_ADDED event "
 literal|"0x%x Sequence %d:\n"
@@ -7416,11 +7409,39 @@ name|void
 name|mps_complete_command
 parameter_list|(
 name|struct
+name|mps_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
 name|mps_command
 modifier|*
 name|cm
 parameter_list|)
 block|{
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|==
+name|NULL
+condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_ERROR
+argument_list|,
+literal|"Completing NULL command\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|cm
@@ -7446,9 +7467,7 @@ condition|)
 block|{
 name|mps_dprint
 argument_list|(
-name|cm
-operator|->
-name|cm_sc
+name|sc
 argument_list|,
 name|MPS_TRACE
 argument_list|,
@@ -7475,9 +7494,7 @@ name|cm
 operator|->
 name|cm_complete
 argument_list|(
-name|cm
-operator|->
-name|cm_sc
+name|sc
 argument_list|,
 name|cm
 argument_list|)
@@ -7494,15 +7511,11 @@ condition|)
 block|{
 name|mps_dprint
 argument_list|(
-name|cm
-operator|->
-name|cm_sc
+name|sc
 argument_list|,
 name|MPS_TRACE
 argument_list|,
-literal|"%s: waking up %p\n"
-argument_list|,
-name|__func__
+literal|"waking up %p\n"
 argument_list|,
 name|cm
 argument_list|)
@@ -7536,11 +7549,9 @@ else|else
 block|{
 name|mps_dprint
 argument_list|(
-name|cm
-operator|->
-name|cm_sc
+name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_ERROR
 argument_list|,
 literal|"Warning: io_cmds_active is "
 literal|"out of sync - resynching to 0\n"
@@ -7689,7 +7700,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_LOG
 argument_list|,
 literal|"log_info(0x%08x): originator(%s), "
 literal|"code(0x%02x), sub_code(0x%04x)\n"
@@ -8363,11 +8374,11 @@ name|MPI2_RPY_DESCRIPT_FLAGS_RAID_ACCELERATOR_SUCCESS
 case|:
 default|default:
 comment|/* Unhandled */
-name|device_printf
+name|mps_dprint
 argument_list|(
 name|sc
-operator|->
-name|mps_dev
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"Unhandled reply 0x%x\n"
 argument_list|,
@@ -8409,6 +8420,8 @@ argument_list|)
 expr_stmt|;
 name|mps_complete_command
 argument_list|(
+name|sc
+argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
@@ -8554,11 +8567,11 @@ name|handled
 operator|==
 literal|0
 condition|)
-name|device_printf
+name|mps_dprint
 argument_list|(
 name|sc
-operator|->
-name|mps_dev
+argument_list|,
+name|MPS_EVENT
 argument_list|,
 literal|"Unhandled event 0x%x\n"
 argument_list|,
@@ -10373,9 +10386,11 @@ name|cm_max_segs
 operator|)
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: warning: busdma returned %d segments, "
 literal|"more than the %d allowed\n"
@@ -10522,7 +10537,8 @@ name|sc
 argument_list|,
 name|MPS_INFO
 argument_list|,
-literal|"out of chain frames\n"
+literal|"Out of chain frames, "
+literal|"consider increasing hw.mps.max_chains.\n"
 argument_list|)
 expr_stmt|;
 name|cm
@@ -10533,6 +10549,8 @@ name|MPS_CM_FLAGS_CHAIN_FAILED
 expr_stmt|;
 name|mps_complete_command
 argument_list|(
+name|sc
+argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
@@ -11532,6 +11550,11 @@ name|mps_config_params
 modifier|*
 name|params
 decl_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|params
 operator|=
 name|cm

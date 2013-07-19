@@ -453,7 +453,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|ip6stat
@@ -462,6 +462,37 @@ name|ip6stat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|ip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|ip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_decl_stmt
 name|struct

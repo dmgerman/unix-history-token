@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -57,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -101,7 +95,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -194,33 +188,21 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
+name|err
 argument_list|(
-literal|"Reset request to %s failed. errno=%d (%s)\n"
+literal|1
+argument_list|,
+literal|"reset request to %s failed"
 argument_list|,
 name|argv
 index|[
 name|optind
 index|]
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_IOERR
-argument_list|)
-expr_stmt|;
-block|}
-name|exit
-argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

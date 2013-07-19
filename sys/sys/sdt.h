@@ -242,6 +242,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDT_PROBE_DEFINE0
+parameter_list|(
+name|prov
+parameter_list|,
+name|mod
+parameter_list|,
+name|func
+parameter_list|,
+name|name
+parameter_list|,
+name|sname
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDT_PROBE_DEFINE1
 parameter_list|(
 name|prov
@@ -890,6 +907,25 @@ name|type
 parameter_list|)
 define|\
 value|static struct sdt_argtype sdt_##prov##_##mod##_##func##_##name##num[1]	\ 	    = { { num, type, { NULL, NULL },					\ 	    sdt_##prov##_##mod##_##func##_##name }				\ 	};									\ 	SYSINIT(sdt_##prov##_##mod##_##func##_##name##num##_init,		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 2, sdt_argtype_register, 		\ 	    sdt_##prov##_##mod##_##func##_##name##num );			\ 	SYSUNINIT(sdt_##prov##_##mod##_##func##_##name##num##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 2, sdt_argtype_deregister,	\ 	    sdt_##prov##_##mod##_##func##_##name##num )
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDT_PROBE_DEFINE0
+parameter_list|(
+name|prov
+parameter_list|,
+name|mod
+parameter_list|,
+name|func
+parameter_list|,
+name|name
+parameter_list|,
+name|sname
+parameter_list|)
+define|\
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname)
 end_define
 
 begin_define

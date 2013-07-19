@@ -1568,6 +1568,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VS_SKIP_UNMOUNT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* vfs_write_suspend: fail if the 				   filesystem is being unmounted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VREF
 parameter_list|(
 name|vp
@@ -4037,6 +4048,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

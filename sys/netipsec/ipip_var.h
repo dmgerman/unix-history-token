@@ -31,40 +31,40 @@ begin_struct
 struct|struct
 name|ipipstat
 block|{
-name|u_int32_t
+name|uint64_t
 name|ipips_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|u_int32_t
+name|uint64_t
 name|ipips_opackets
 decl_stmt|;
 comment|/* total output packets */
-name|u_int32_t
+name|uint64_t
 name|ipips_hdrops
 decl_stmt|;
 comment|/* packet shorter than header shows */
-name|u_int32_t
+name|uint64_t
 name|ipips_qfull
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ipips_ibytes
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ipips_obytes
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ipips_pdrops
 decl_stmt|;
 comment|/* packet dropped due to policy */
-name|u_int32_t
+name|uint64_t
 name|ipips_spoof
 decl_stmt|;
 comment|/* IP spoofing attempts */
-name|u_int32_t
+name|uint64_t
 name|ipips_family
 decl_stmt|;
 comment|/* Protocol family mismatch */
-name|u_int32_t
+name|uint64_t
 name|ipips_unspec
 decl_stmt|;
 comment|/* Missing tunnel endpoint address */
@@ -78,6 +78,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -89,7 +95,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|ipipstat
@@ -108,7 +114,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ipipstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ipipstat, ipipstat, name, (val))
 end_define
 
 begin_define
@@ -126,13 +133,6 @@ define|#
 directive|define
 name|V_ipip_allow
 value|VNET(ipip_allow)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ipipstat
-value|VNET(ipipstat)
 end_define
 
 begin_endif

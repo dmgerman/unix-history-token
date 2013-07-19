@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -33,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -57,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -101,7 +107,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -171,16 +177,12 @@ name|ch
 decl_stmt|,
 name|ctrlr
 decl_stmt|,
-name|exit_code
-decl_stmt|,
 name|fd
 decl_stmt|,
 name|found
+decl_stmt|,
+name|ret
 decl_stmt|;
-name|exit_code
-operator|=
-name|EX_OK
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -242,7 +244,7 @@ argument_list|,
 name|ctrlr
 argument_list|)
 expr_stmt|;
-name|exit_code
+name|ret
 operator|=
 name|open_dev
 argument_list|(
@@ -258,34 +260,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|exit_code
-operator|==
-name|EX_NOINPUT
-condition|)
-break|break;
-elseif|else
-if|if
-condition|(
-name|exit_code
-operator|==
-name|EX_NOPERM
+name|ret
+operator|!=
+literal|0
 condition|)
 block|{
-name|printf
+if|if
+condition|(
+name|ret
+operator|==
+name|EACCES
+condition|)
+block|{
+name|warnx
 argument_list|(
-literal|"Could not open /dev/%s, errno = %d (%s)\n"
+literal|"could not open "
+name|_PATH_DEV
+literal|"%s\n"
 argument_list|,
 name|name
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+else|else
+break|break;
 block|}
 name|found
 operator|++
@@ -300,9 +299,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6s: %s\n"
+literal|"%6s: %.*s\n"
 argument_list|,
 name|name
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
 argument_list|,
 name|cdata
 operator|.
@@ -401,7 +402,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

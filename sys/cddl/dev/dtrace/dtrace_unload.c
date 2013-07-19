@@ -368,13 +368,6 @@ operator|&
 name|dtrace_errlock
 argument_list|)
 expr_stmt|;
-comment|/* XXX Hack */
-name|mutex_destroy
-argument_list|(
-operator|&
-name|mod_lock
-argument_list|)
-expr_stmt|;
 comment|/* Reset our hook for exceptions. */
 name|dtrace_invop_uninit
 argument_list|()

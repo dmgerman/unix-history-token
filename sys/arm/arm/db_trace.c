@@ -2011,7 +2011,7 @@ directive|ifdef
 name|__PROG26
 name|db_printf
 argument_list|(
-literal|"scp=0x%08x rlv=0x%08x ("
+literal|"\tscp=0x%08x rlv=0x%08x ("
 argument_list|,
 name|scp
 argument_list|,
@@ -2044,7 +2044,7 @@ else|#
 directive|else
 name|db_printf
 argument_list|(
-literal|"scp=0x%08x rlv=0x%08x ("
+literal|"\tscp=0x%08x rlv=0x%08x ("
 argument_list|,
 name|scp
 argument_list|,

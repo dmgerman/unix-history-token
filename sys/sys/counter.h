@@ -65,6 +65,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|COUNTER_ARRAY_ALLOC
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|,
+name|wait
+parameter_list|)
+value|do {			\ 	for (int i = 0; i< (n); i++)				\ 		(a)[i] = counter_u64_alloc(wait);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COUNTER_ARRAY_FREE
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|do {			\ 	for (int i = 0; i< (n); i++)				\ 		counter_u64_free((a)[i]);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COUNTER_ARRAY_COPY
+parameter_list|(
+name|a
+parameter_list|,
+name|dstp
+parameter_list|,
+name|n
+parameter_list|)
+value|do {			\ 	for (int i = 0; i< (n); i++)				\ 		((uint64_t *)(dstp))[i] = counter_u64_fetch((a)[i]);\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|COUNTER_ARRAY_ZERO
+parameter_list|(
+name|a
+parameter_list|,
+name|n
+parameter_list|)
+value|do {			\ 	for (int i = 0; i< (n); i++)				\ 		counter_u64_zero((a)[i]);			\ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

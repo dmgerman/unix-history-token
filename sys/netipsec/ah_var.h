@@ -38,76 +38,76 @@ begin_struct
 struct|struct
 name|ahstat
 block|{
-name|u_int32_t
+name|uint64_t
 name|ahs_hdrops
 decl_stmt|;
 comment|/* Packet shorter than header shows */
-name|u_int32_t
+name|uint64_t
 name|ahs_nopf
 decl_stmt|;
 comment|/* Protocol family not supported */
-name|u_int32_t
+name|uint64_t
 name|ahs_notdb
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_badkcr
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_badauth
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_noxform
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_qfull
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_wrap
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_replay
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ahs_badauthl
 decl_stmt|;
 comment|/* Bad authenticator length */
-name|u_int32_t
+name|uint64_t
 name|ahs_input
 decl_stmt|;
 comment|/* Input AH packets */
-name|u_int32_t
+name|uint64_t
 name|ahs_output
 decl_stmt|;
 comment|/* Output AH packets */
-name|u_int32_t
+name|uint64_t
 name|ahs_invalid
 decl_stmt|;
 comment|/* Trying to use an invalid TDB */
-name|u_int64_t
+name|uint64_t
 name|ahs_ibytes
 decl_stmt|;
 comment|/* Input bytes */
-name|u_int64_t
+name|uint64_t
 name|ahs_obytes
 decl_stmt|;
 comment|/* Output bytes */
-name|u_int32_t
+name|uint64_t
 name|ahs_toobig
 decl_stmt|;
 comment|/* Packet got larger than IP_MAXPACKET */
-name|u_int32_t
+name|uint64_t
 name|ahs_pdrops
 decl_stmt|;
 comment|/* Packet blocked due to policy */
-name|u_int32_t
+name|uint64_t
 name|ahs_crypto
 decl_stmt|;
 comment|/* Crypto processing failure */
-name|u_int32_t
+name|uint64_t
 name|ahs_tunnel
 decl_stmt|;
 comment|/* Tunnel sanity check failure */
-name|u_int32_t
+name|uint64_t
 name|ahs_hist
 index|[
 name|AH_ALG_MAX
@@ -123,6 +123,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -145,7 +151,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|ahstat
@@ -164,7 +170,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ahstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ahstat, ahstat, name , (val))
 end_define
 
 begin_define
@@ -189,13 +196,6 @@ define|#
 directive|define
 name|V_ah_cleartos
 value|VNET(ah_cleartos)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ahstat
-value|VNET(ahstat)
 end_define
 
 begin_endif

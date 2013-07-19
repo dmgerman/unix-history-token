@@ -3196,7 +3196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_RESERVE() - reserve swap blocks in object  *  *	Assigns swap blocks to the specified range within the object.  The  *	swap blocks are not zerod.  Any previous swap assignment is destroyed.  *  *	Returns 0 on success, -1 on failure.  */
+comment|/*  * SWAP_PAGER_RESERVE() - reserve swap blocks in object  *  *	Assigns swap blocks to the specified range within the object.  The  *	swap blocks are not zeroed.  Any previous swap assignment is destroyed.  *  *	Returns 0 on success, -1 on failure.  */
 end_comment
 
 begin_function
@@ -6155,6 +6155,16 @@ argument_list|(
 name|swap_zone
 argument_list|,
 name|M_NOWAIT
+operator||
+operator|(
+name|curproc
+operator|==
+name|pageproc
+condition|?
+name|M_USE_RESERVE
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -1182,7 +1182,7 @@ name|int
 name|s
 parameter_list|)
 block|{
-name|u_char
+name|char
 name|ntopbuf
 index|[
 name|INET6_ADDRSTRLEN

@@ -684,31 +684,56 @@ name|vfpscr
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Work around an issue with GCC where the asm it generates is 	 * not unified syntax and fails to assemble because it expects 	 * the ldcleq instruction in the form ldc<c>l, not in the UAL 	 * form ldcl<c>, and similar for stcleq. 	 */
+ifdef|#
+directive|ifdef
+name|__clang__
+define|#
+directive|define
+name|ldclne
+value|"ldclne"
+define|#
+directive|define
+name|stclne
+value|"stclne"
+else|#
+directive|else
+define|#
+directive|define
+name|ldclne
+value|"ldcnel"
+define|#
+directive|define
+name|stclne
+value|"stcnel"
+endif|#
+directive|endif
 if|if
 condition|(
 name|vfpsave
 condition|)
 block|{
-asm|__asm __volatile("ldc	p10, c0, [%0], #128\n"
+asm|__asm __volatile("ldc	p10, c0, [%1], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%0, 0\n"
+literal|"cmp	%2, #0\n"
 comment|/* -D16 or -D32? */
-literal|"ldcleq	p11, c0, [%0], #128\n"
+name|ldclne
+literal|"	p11, c0, [%1], #128\n"
 comment|/* d16-d31 */
-literal|"addne	%0, %0, #128\n"
+literal|"addeq	%1, %1, #128\n"
 comment|/* skip missing regs */
-literal|"ldr	%1, [%0]\n"
+literal|"ldr	%0, [%1]\n"
 comment|/* set old vfpscr */
-literal|"mcr	p10, 7, %1, cr1, c0, 0\n"
-operator|::
+literal|"mcr	p10, 7, %0, cr1, c0, 0\n"
+operator|:
+literal|"=&r"
+operator|(
+name|vfpscr
+operator|)
+operator|:
 literal|"r"
 operator|(
 name|vfpsave
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|vfpscr
 operator|)
 operator|,
 literal|"r"
@@ -773,11 +798,12 @@ condition|)
 block|{
 asm|__asm __volatile("stc	p11, c0, [%1], #128\n"
 comment|/* d0-d15 */
-literal|"cmp	%0, 0\n"
+literal|"cmp	%2, #0\n"
 comment|/* -D16 or -D32? */
-literal|"stcleq	p11, c0, [%1], #128\n"
+name|stclne
+literal|"	p11, c0, [%1], #128\n"
 comment|/* d16-d31 */
-literal|"addne	%1, %1, #128\n"
+literal|"addeq	%1, %1, #128\n"
 comment|/* skip missing regs */
 literal|"mrc	p10, 7, %0, cr1, c0, 0\n"
 comment|/* fmxr(VFPSCR) */
@@ -804,6 +830,18 @@ block|)
 empty_stmt|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|ldcleq
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|stcleq
+end_undef
 
 begin_ifndef
 ifndef|#

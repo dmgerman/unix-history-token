@@ -17556,7 +17556,7 @@ decl_stmt|;
 name|uint_t
 name|c
 decl_stmt|;
-comment|/* 	 * If the pool was faulted then we may not have been able to 	 * obtain the config. Otherwise, if have anything in the dedup 	 * table continue processing the stats. 	 */
+comment|/* 	 * If the pool was faulted then we may not have been able to 	 * obtain the config. Otherwise, if we have anything in the dedup 	 * table continue processing the stats. 	 */
 if|if
 condition|(
 name|nvlist_lookup_uint64_array

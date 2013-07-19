@@ -2404,18 +2404,6 @@ comment|/* capable of bg scanning */
 name|IEEE80211_C_TXFRAG
 expr_stmt|;
 comment|/* handle tx frags */
-name|ic
-operator|->
-name|ic_cryptocaps
-operator|=
-name|IEEE80211_CRYPTO_WEP
-operator||
-name|IEEE80211_CRYPTO_AES_CCM
-operator||
-name|IEEE80211_CRYPTO_TKIPMIC
-operator||
-name|IEEE80211_CRYPTO_TKIP
-expr_stmt|;
 comment|/* put a regulatory domain to reveal informations.  */
 name|uath_regdomain
 operator|=

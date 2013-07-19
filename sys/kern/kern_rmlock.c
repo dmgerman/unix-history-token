@@ -3090,6 +3090,23 @@ directive|ifdef
 name|INVARIANT_SUPPORT
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVARIANTS
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|_rm_assert
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Note that this does not need to use witness_assert() for read lock  * assertions since an exact count of read locks held by this thread  * is computable.  */
 end_comment

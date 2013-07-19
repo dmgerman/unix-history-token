@@ -660,18 +660,11 @@ parameter_list|)
 value|((x) ? (1 + (((x) - 1) | (sizeof(long) - 1))) : sizeof(long))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-operator|||
-name|__FreeBSD__
-operator|<
-literal|3
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|extern
