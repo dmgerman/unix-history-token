@@ -1000,7 +1000,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"WhoInit: %s\n"
 argument_list|,
@@ -1055,7 +1055,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"IOCCapabilities: %b\n"
 argument_list|,
@@ -1083,7 +1083,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"FWVersion= %d-%d-%d-%d\n"
 argument_list|,
@@ -1184,7 +1184,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"ProtocolFlags: %b\n"
 argument_list|,
@@ -1466,7 +1466,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"SASAddress: 0x%jx\n"
 argument_list|,
@@ -1559,7 +1559,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"DeviceInfo: %b,%s\n"
 argument_list|,
@@ -1634,7 +1634,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"DeviceName: 0x%jx\n"
 argument_list|,
@@ -2334,7 +2334,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"ProgrammedLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2362,7 +2362,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"HwLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2403,7 +2403,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"PhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2431,7 +2431,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"AttachedDeviceInfo: %b,%s\n"
 argument_list|,
@@ -2494,7 +2494,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"NegotiatedLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2568,7 +2568,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"AttachedPhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2679,7 +2679,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"AttachedPhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2703,7 +2703,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"ProgrammedLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2731,7 +2731,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"HwLinkRate: %s (0x%x)\n"
 argument_list|,
@@ -2784,7 +2784,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"PhyInfo Reason: %s (0x%x)\n"
 argument_list|,
@@ -2812,7 +2812,7 @@ name|mps_dprint_field
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"NegotiatedLinkRate: %s (0x%x)\n"
 argument_list|,

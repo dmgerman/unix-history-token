@@ -1429,6 +1429,13 @@ modifier|*
 name|sassc
 parameter_list|)
 block|{
+name|MPS_FUNCTRACE
+argument_list|(
+name|sassc
+operator|->
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1459,7 +1466,7 @@ name|sassc
 operator|->
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_INIT
 argument_list|,
 literal|"%s freezing simq\n"
 argument_list|,
@@ -1482,7 +1489,7 @@ name|sassc
 operator|->
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_INIT
 argument_list|,
 literal|"%s refcount %u\n"
 argument_list|,
@@ -1507,6 +1514,13 @@ modifier|*
 name|sassc
 parameter_list|)
 block|{
+name|MPS_FUNCTRACE
+argument_list|(
+name|sassc
+operator|->
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1537,7 +1551,7 @@ name|sassc
 operator|->
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_INIT
 argument_list|,
 literal|"%s releasing simq\n"
 argument_list|,
@@ -1576,7 +1590,7 @@ name|sassc
 operator|->
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_INIT
 argument_list|,
 literal|"%s refcount %u\n"
 argument_list|,
@@ -1612,6 +1626,11 @@ name|mps_command
 modifier|*
 name|tm
 decl_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|tm
 operator|=
 name|mps_alloc_high_priority_command
@@ -1638,9 +1657,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"%s freezing simq\n"
 argument_list|,
@@ -1663,7 +1684,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_RECOVERY
 argument_list|,
 literal|"%s tm_count %u\n"
 argument_list|,
@@ -1698,6 +1719,17 @@ modifier|*
 name|tm
 parameter_list|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_TRACE
+argument_list|,
+literal|"%s"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tm
@@ -1718,9 +1750,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"%s releasing simq\n"
 argument_list|,
@@ -1743,7 +1777,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_RECOVERY
 argument_list|,
 literal|"%s tm_count %u\n"
 argument_list|,
@@ -1801,6 +1835,11 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|pathid
 operator|=
 name|cam_sim_path
@@ -1846,7 +1885,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"unable to alloc CCB for rescan\n"
 argument_list|)
@@ -1880,7 +1919,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"unable to create path for rescan\n"
 argument_list|)
@@ -1947,6 +1986,9 @@ name|struct
 name|mps_command
 modifier|*
 name|cm
+parameter_list|,
+name|u_int
+name|level
 parameter_list|,
 specifier|const
 name|char
@@ -2177,8 +2219,14 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-name|printf
+name|mps_dprint_field
 argument_list|(
+name|cm
+operator|->
+name|cm_sc
+argument_list|,
+name|level
+argument_list|,
 literal|"%s"
 argument_list|,
 name|sbuf_data
@@ -2224,15 +2272,9 @@ decl_stmt|;
 name|uint16_t
 name|handle
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|reply
@@ -2271,9 +2313,11 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX retry the remove after the diag reset completes? */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_FAULT
 argument_list|,
 literal|"%s NULL reply reseting device 0x%04x\n"
 argument_list|,
@@ -2300,9 +2344,11 @@ operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_FAULT
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting device 0x%x\n"
 argument_list|,
@@ -2322,9 +2368,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"Reset aborted %u commands\n"
 argument_list|,
@@ -2349,9 +2397,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Ensures the reply won't get re-freed */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"clearing target %u handle 0x%04x\n"
 argument_list|,
@@ -2475,17 +2525,11 @@ name|targ
 init|=
 name|NULL
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sassc
 operator|->
 name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2538,8 +2582,12 @@ condition|)
 block|{
 comment|/* FIXME: what is the action? */
 comment|/* We don't know about this device? */
-name|printf
+name|mps_dprint
 argument_list|(
+name|sc
+argument_list|,
+name|MPS_ERROR
+argument_list|,
 literal|"%s %d : invalid handle 0x%x \n"
 argument_list|,
 name|__func__
@@ -2571,9 +2619,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: command alloc failure\n"
 argument_list|,
@@ -2715,17 +2765,11 @@ name|targ
 init|=
 name|NULL
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sassc
 operator|->
 name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2754,13 +2798,15 @@ condition|)
 block|{
 comment|/* FIXME: what is the action? */
 comment|/* We don't know about this device? */
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s %d : invalid handle 0x%x \n"
+name|sc
+argument_list|,
+name|MPS_ERROR
+argument_list|,
+literal|"%s : invalid handle 0x%x \n"
 argument_list|,
 name|__func__
-argument_list|,
-name|__LINE__
 argument_list|,
 name|handle
 argument_list|)
@@ -2787,9 +2833,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: command alloc failure\n"
 argument_list|,
@@ -2946,15 +2994,9 @@ decl_stmt|;
 name|uint16_t
 name|handle
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|reply
@@ -2999,9 +3041,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for remove of handle %#04x! "
 literal|"This should not happen!\n"
@@ -3032,9 +3076,11 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX retry the remove after the diag reset completes? */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_FAULT
 argument_list|,
 literal|"%s NULL reply reseting device 0x%04x\n"
 argument_list|,
@@ -3064,9 +3110,11 @@ operator|!=
 name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_FAULT
 argument_list|,
 literal|"IOCStatus = 0x%x while resetting device 0x%x\n"
 argument_list|,
@@ -3093,7 +3141,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Reset aborted %u commands\n"
 argument_list|,
@@ -3212,7 +3260,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"clearing target %u handle 0x%04x\n"
 argument_list|,
@@ -3243,7 +3291,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Completing missed command %p\n"
 argument_list|,
@@ -3308,15 +3356,9 @@ name|mpssas_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|reply
@@ -3355,9 +3397,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"%s: cm_flags = %#x for remove of handle %#04x! "
 literal|"This should not happen!\n"
@@ -3388,9 +3432,11 @@ name|NULL
 condition|)
 block|{
 comment|/* most likely a chip reset */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_FAULT
 argument_list|,
 literal|"%s NULL reply removing device 0x%04x\n"
 argument_list|,
@@ -3408,9 +3454,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"%s on handle 0x%04x, IOCStatus= 0x%x\n"
 argument_list|,
@@ -3710,15 +3758,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|sassc
@@ -3856,7 +3898,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Cannot allocate SIMQ\n"
 argument_list|)
@@ -3925,7 +3967,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Cannot allocate SIM\n"
 argument_list|)
@@ -4089,7 +4131,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Error %d registering SCSI bus\n"
 argument_list|,
@@ -4179,9 +4221,11 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"Error %#x registering async handler for "
 literal|"AC_ADVINFO_CHANGED events\n"
@@ -4252,15 +4296,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4438,19 +4476,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_dprint
-argument_list|(
-name|sc
-argument_list|,
-name|MPS_INFO
-argument_list|,
-literal|"%s:%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sassc
@@ -4563,15 +4588,9 @@ name|sassc
 operator|->
 name|sc
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4621,15 +4640,9 @@ name|sassc
 operator|->
 name|sc
 expr_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mps_lock
@@ -4637,9 +4650,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"Timeout waiting for discovery, interrupts may not be working!\n"
 argument_list|)
@@ -4657,11 +4672,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sassc
 operator|->
 name|sc
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"Finished polling after discovery timeout at %d\n"
 argument_list|,
@@ -4789,6 +4806,13 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sassc
+operator|->
+name|sc
+argument_list|)
+expr_stmt|;
 name|mps_dprint
 argument_list|(
 name|sassc
@@ -4797,9 +4821,7 @@ name|sc
 argument_list|,
 name|MPS_TRACE
 argument_list|,
-literal|"%s func 0x%x\n"
-argument_list|,
-name|__func__
+literal|"ccb func_code 0x%x\n"
 argument_list|,
 name|ccb
 operator|->
@@ -5228,11 +5250,13 @@ break|break;
 case|case
 name|XPT_RESET_DEV
 case|:
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sassc
 operator|->
 name|sc
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"mpssas_action XPT_RESET_DEV\n"
 argument_list|)
@@ -5254,14 +5278,15 @@ case|:
 case|case
 name|XPT_TERM_IO
 case|:
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sassc
 operator|->
 name|sc
 argument_list|,
-literal|"mpssas_action faking success for "
-literal|"abort or reset\n"
+name|MPS_XINFO
+argument_list|,
+literal|"mpssas_action faking success for abort or reset\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -5358,9 +5383,11 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"%s code %x target %d lun %d\n"
 argument_list|,
@@ -5392,9 +5419,11 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"unable to create path for reset "
 literal|"notification\n"
@@ -5441,13 +5470,9 @@ decl_stmt|;
 name|int
 name|completed
 decl_stmt|;
-name|mps_printf
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -5524,6 +5549,8 @@ name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"completing cm %p state %x ccb %p for diag reset\n"
 argument_list|,
 name|cm
@@ -5563,6 +5590,8 @@ block|{
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"waking up cm %p state %x ccb %p for diag reset\n"
 argument_list|,
@@ -5609,6 +5638,8 @@ name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"cm %p state %x flags 0x%x ccb %p during diag "
 literal|"reset\n"
 argument_list|,
@@ -5646,9 +5677,11 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Go back into startup mode and freeze the simq, so that CAM 	 * doesn't send any commands until after we've rediscovered all 	 * targets and found the proper device handles for them. 	 * 	 * After the reset, portenable will trigger discovery, and after all 	 * discovery-related activities have finished, the simq will be 	 * released. 	 */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s startup\n"
 argument_list|,
@@ -5700,9 +5733,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"%s startup %u tm %u after command completion\n"
 argument_list|,
@@ -5764,9 +5799,11 @@ name|outstanding
 operator|!=
 literal|0
 condition|)
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INIT
 argument_list|,
 literal|"target %u outstanding %u\n"
 argument_list|,
@@ -5880,6 +5917,10 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_INFO
+operator||
+name|MPS_RECOVERY
+argument_list|,
 literal|"task mgmt %p timed out\n"
 argument_list|,
 name|tm
@@ -5967,7 +6008,7 @@ name|tm
 operator|->
 name|cm_targ
 expr_stmt|;
-comment|/* 	 * Currently there should be no way we can hit this case.  It only 	 * happens when we have a failure to allocate chain frames, and 	 * task management commands don't have S/G lists. 	 */
+comment|/* 	 * Currently there should be no way we can hit this case.  It only 	 * happens when we have a failure to allocate chain frames, and 	 * task management commands don't have S/G lists. 	 * XXXSL So should it be an assertion? 	 */
 if|if
 condition|(
 operator|(
@@ -5981,9 +6022,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for LUN reset! "
 literal|"This should not happen!\n"
@@ -6014,6 +6057,8 @@ block|{
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"NULL reset reply for tm %p\n"
 argument_list|,
@@ -6069,6 +6114,8 @@ block|}
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"logical unit reset status 0x%x code 0x%x count %u\n"
 argument_list|,
@@ -6128,6 +6175,10 @@ block|{
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
+operator||
+name|MPS_INFO
 argument_list|,
 literal|"logical unit %u finished recovery after reset\n"
 argument_list|,
@@ -6204,6 +6255,8 @@ comment|/* if we still have commands for this LUN, the reset 		 * effectively fa
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"logical unit reset complete for tm %p, but still have %u command(s)\n"
 argument_list|,
@@ -6302,9 +6355,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for target reset! "
 literal|"This should not happen!\n"
@@ -6335,6 +6390,8 @@ block|{
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"NULL reset reply for tm %p\n"
 argument_list|,
@@ -6391,6 +6448,8 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"target reset status 0x%x code 0x%x count %u\n"
 argument_list|,
 name|le16toh
@@ -6436,6 +6495,10 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+operator||
+name|MPS_INFO
+argument_list|,
 literal|"recovery finished after target reset\n"
 argument_list|)
 expr_stmt|;
@@ -6474,6 +6537,8 @@ comment|/* after a target reset, if this target still has 		 * outstanding comma
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"target reset complete for tm %p, but still have %u command(s)\n"
 argument_list|,
@@ -6546,9 +6611,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s null devhandle for target_id %d\n"
 argument_list|,
@@ -6627,6 +6694,10 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+operator||
+name|MPS_INFO
+argument_list|,
 literal|"sending logical unit reset\n"
 argument_list|)
 expr_stmt|;
@@ -6671,6 +6742,10 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+operator||
+name|MPS_INFO
+argument_list|,
 literal|"sending target reset\n"
 argument_list|)
 expr_stmt|;
@@ -6683,9 +6758,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"unexpected reset type 0x%x\n"
 argument_list|,
@@ -6755,6 +6832,8 @@ condition|)
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"error %d sending reset type %u\n"
 argument_list|,
@@ -6855,6 +6934,8 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"cm_flags = %#x for abort %p TaskMID %u!\n"
 argument_list|,
 name|tm
@@ -6890,6 +6971,8 @@ block|{
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"NULL abort reply for tm %p TaskMID %u\n"
 argument_list|,
@@ -6946,6 +7029,8 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"abort TaskMID %u status 0x%x code 0x%x count %u\n"
 argument_list|,
 name|le16toh
@@ -7001,6 +7086,8 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"finished recovery after aborting TaskMID %u\n"
 argument_list|,
 name|le16toh
@@ -7049,6 +7136,8 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"continuing recovery after aborting TaskMID %u\n"
 argument_list|,
 name|le16toh
@@ -7075,6 +7164,8 @@ comment|/* we didn't get a command completion, so the abort 		 * failed as far a
 name|mpssas_log_command
 argument_list|(
 name|tm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"abort failed for TaskMID %u tm %p\n"
 argument_list|,
@@ -7156,9 +7247,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s null devhandle for target_id %d\n"
 argument_list|,
@@ -7178,6 +7271,19 @@ operator|-
 literal|1
 return|;
 block|}
+name|mpssas_log_command
+argument_list|(
+name|tm
+argument_list|,
+name|MPS_RECOVERY
+operator||
+name|MPS_INFO
+argument_list|,
+literal|"Aborting command %p\n"
+argument_list|,
+name|cm
+argument_list|)
+expr_stmt|;
 name|req
 operator|=
 operator|(
@@ -7328,6 +7434,8 @@ name|mpssas_log_command
 argument_list|(
 name|tm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"error %d sending abort for cm %p SMID %u\n"
 argument_list|,
 name|err
@@ -7385,6 +7493,11 @@ name|cm
 operator|->
 name|cm_sc
 expr_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -7395,17 +7508,15 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s checking sc %p cm %p\n"
+name|MPS_XINFO
 argument_list|,
-name|__func__
+literal|"Timeout checking cm %p\n"
 argument_list|,
 name|sc
-argument_list|,
-name|cm
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Run the interrupt handler to make sure it's not pending.  This 	 * isn't perfect because the command could have already completed 	 * and been re-used, though this is unlikely. 	 */
@@ -7423,15 +7534,15 @@ operator|==
 name|MPS_CM_STATE_FREE
 condition|)
 block|{
-name|mps_printf
+name|mpssas_log_command
 argument_list|(
-name|sc
-argument_list|,
-literal|"SCSI command %p sc %p almost timed out\n"
-argument_list|,
 name|cm
 argument_list|,
-name|sc
+name|MPS_XINFO
+argument_list|,
+literal|"SCSI command %p almost timed out\n"
+argument_list|,
+name|cm
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7445,9 +7556,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"command timeout with NULL ccb\n"
 argument_list|)
@@ -7457,6 +7570,8 @@ block|}
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"command timeout cm %p ccb %p\n"
 argument_list|,
@@ -7517,9 +7632,11 @@ name|NULL
 condition|)
 block|{
 comment|/* target already in recovery, just queue up another 		 * timedout command to be processed later. 		 */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"queued timedout cm %p for processing by tm %p\n"
 argument_list|,
@@ -7548,9 +7665,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"timedout cm %p allocated tm %p\n"
 argument_list|,
@@ -7577,9 +7696,11 @@ block|}
 else|else
 block|{
 comment|/* XXX queue this target up for recovery once a TM becomes 		 * available.  The firmware only has a limited number of 		 * HighPriority credits for the high priority requests used 		 * for task management, and we ran out. 		 *  		 * Isilon: don't worry about this for now, since we have 		 * more credits than disks in an enclosure, and limit 		 * ourselves to one TM per target for recovery. 		 */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"timedout cm %p failed to allocate a tm\n"
 argument_list|,
@@ -7655,6 +7776,11 @@ name|sassc
 operator|->
 name|sc
 expr_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -7692,9 +7818,7 @@ name|sc
 argument_list|,
 name|MPS_TRACE
 argument_list|,
-literal|"%s ccb %p target flag %x\n"
-argument_list|,
-name|__func__
+literal|"ccb %p target flag %x\n"
 argument_list|,
 name|ccb
 argument_list|,
@@ -7716,7 +7840,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_ERROR
 argument_list|,
 literal|"%s NULL handle for target %u\n"
 argument_list|,
@@ -7757,7 +7881,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_ERROR
 argument_list|,
 literal|"%s Raid component no SCSI IO supported %u\n"
 argument_list|,
@@ -7844,7 +7968,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_INFO
 argument_list|,
 literal|"%s shutting down\n"
 argument_list|,
@@ -8779,21 +8903,11 @@ argument_list|,
 name|cm_link
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|mps_debug
-operator|&
-name|MPS_TRACE
-operator|)
-operator|!=
-literal|0
-condition|)
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"%s cm %p ccb %p outstanding %u\n"
 argument_list|,
@@ -8917,7 +9031,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"response_code(0x%01x): %s\n"
 argument_list|,
@@ -9356,9 +9470,9 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
-literal|"\thandle(0x%04x), ioc_status(%s)(0x%04x), \n"
+literal|"\thandle(0x%04x), ioc_status(%s)(0x%04x)\n"
 argument_list|,
 name|le16toh
 argument_list|(
@@ -9377,7 +9491,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"\tscsi_status(%s)(0x%02x), "
 literal|"scsi_state(%s)(0x%02x)\n"
@@ -9397,7 +9511,7 @@ name|sc
 operator|->
 name|mps_debug
 operator|&
-name|MPS_INFO
+name|MPS_XINFO
 operator|&&
 name|scsi_state
 operator|&
@@ -9408,7 +9522,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"-> Sense Buffer Data : Start :\n"
 argument_list|)
@@ -9422,7 +9536,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"-> Sense Buffer Data : End :\n"
 argument_list|)
@@ -9525,15 +9639,18 @@ decl_stmt|;
 name|u16
 name|alloc_len
 decl_stmt|;
+name|MPS_FUNCTRACE
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
 name|MPS_TRACE
 argument_list|,
-literal|"%s cm %p SMID %u ccb %p reply %p outstanding %u\n"
-argument_list|,
-name|__func__
+literal|"cm %p SMID %u ccb %p reply %p outstanding %u\n"
 argument_list|,
 name|cm
 argument_list|,
@@ -9730,6 +9847,8 @@ name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"completed timedout cm %p ccb %p during recovery "
 literal|"ioc %x scsi %x state %x xfer %u\n"
 argument_list|,
@@ -9767,6 +9886,8 @@ name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"completed timedout cm %p ccb %p during recovery\n"
 argument_list|,
 name|cm
@@ -9800,6 +9921,8 @@ condition|)
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"completed cm %p ccb %p during recovery "
 literal|"ioc %x scsi %x state %x xfer %u\n"
@@ -9838,6 +9961,8 @@ name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
+name|MPS_RECOVERY
+argument_list|,
 literal|"completed cm %p ccb %p during recovery\n"
 argument_list|,
 name|cm
@@ -9865,6 +9990,8 @@ block|{
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_RECOVERY
 argument_list|,
 literal|"reset completed cm %p ccb %p\n"
 argument_list|,
@@ -9931,7 +10058,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Error sending command, "
 literal|"freezing SIM queue\n"
@@ -10031,7 +10158,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Unfreezing SIM queue\n"
 argument_list|)
@@ -10090,17 +10217,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|mps_debug
-operator|&
-name|MPS_TRACE
-condition|)
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"ioc %x scsi %x state %x xfer %u\n"
 argument_list|,
@@ -10216,6 +10337,8 @@ condition|)
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"recovered error\n"
 argument_list|)
@@ -10841,6 +10964,8 @@ name|mpssas_log_command
 argument_list|(
 name|cm
 argument_list|,
+name|MPS_INFO
+argument_list|,
 literal|"terminated ioc %x scsi %x state %x xfer %u\n"
 argument_list|,
 name|le16toh
@@ -10901,6 +11026,8 @@ default|default:
 name|mpssas_log_command
 argument_list|(
 name|cm
+argument_list|,
+name|MPS_XINFO
 argument_list|,
 literal|"completed ioc %x scsi %x state %x xfer %u\n"
 argument_list|,
@@ -10982,7 +11109,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Command completed, "
 literal|"unfreezing SIM queue\n"
@@ -12346,9 +12473,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x on SMP request!\n"
 argument_list|,
@@ -12392,7 +12521,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_ERROR
 argument_list|,
 literal|"%s: NULL cm_reply!\n"
 argument_list|,
@@ -12478,7 +12607,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"%s: IOCStatus %04x SASStatus %02x\n"
 argument_list|,
@@ -12512,7 +12641,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"%s: SMP request to SAS address "
 literal|"%#jx completed successfully\n"
@@ -12681,9 +12810,11 @@ case|:
 case|case
 name|CAM_DATA_SG_PADDR
 case|:
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: physical addresses not supported\n"
 argument_list|,
@@ -12731,9 +12862,11 @@ literal|1
 operator|)
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: multiple request or response "
 literal|"buffer segments not supported for SMP\n"
@@ -12914,9 +13047,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cannot allocate command\n"
 argument_list|,
@@ -12997,7 +13132,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"%s: sending SMP request to SAS "
 literal|"address %#jx\n"
@@ -13227,9 +13362,11 @@ name|EINPROGRESS
 operator|)
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: error %d returned from mps_map_command()\n"
 argument_list|,
@@ -13330,9 +13467,11 @@ operator|==
 literal|0x0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: target %d does not exist!\n"
 argument_list|,
@@ -13413,9 +13552,11 @@ operator|==
 literal|0x0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: handle %d does not have a valid "
 literal|"parent handle!\n"
@@ -13462,9 +13603,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: handle %d does not have a valid "
 literal|"parent target!\n"
@@ -13501,9 +13644,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: handle %d parent %d does not "
 literal|"have an SMP target!\n"
@@ -13553,9 +13698,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: handle %d parent %d does not "
 literal|"have an SMP target!\n"
@@ -13592,9 +13739,11 @@ operator|==
 literal|0x0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: handle %d parent handle %d does "
 literal|"not have a valid SAS address!\n"
@@ -13639,9 +13788,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"%s: unable to find SAS address for handle %d\n"
 argument_list|,
@@ -13728,15 +13879,11 @@ name|mpssas_target
 modifier|*
 name|targ
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sassc
 operator|->
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -13771,9 +13918,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"comand alloc failure in mpssas_action_resetdev\n"
 argument_list|)
@@ -13916,13 +14065,9 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -13979,9 +14124,11 @@ name|tm
 operator|->
 name|cm_req
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for reset of handle %#04x! "
 literal|"This should not happen!\n"
@@ -14009,8 +14156,12 @@ goto|goto
 name|bailout
 goto|;
 block|}
-name|printf
+name|mps_dprint
 argument_list|(
+name|sc
+argument_list|,
+name|MPS_XINFO
+argument_list|,
 literal|"%s: IOCStatus = 0x%x ResponseCode = 0x%x\n"
 argument_list|,
 name|__func__
@@ -14239,7 +14390,7 @@ name|sassc
 operator|->
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Completing rescan for %s\n"
 argument_list|,
@@ -14320,15 +14471,9 @@ name|sassc
 operator|->
 name|sc
 expr_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mps_lock
@@ -14377,7 +14522,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_XINFO
 argument_list|,
 literal|"Scanner shutting down\n"
 argument_list|)
@@ -14445,7 +14590,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_XINFO
 argument_list|,
 literal|"Scanner shutting down\n"
 argument_list|)
@@ -14519,17 +14664,11 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sassc
 operator|->
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -14573,7 +14712,7 @@ name|sassc
 operator|->
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Queueing rescan for %s\n"
 argument_list|,
@@ -14856,7 +14995,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Unable to alloc "
 literal|"LUN for EEDP support.\n"
@@ -15217,7 +15356,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Unable to alloc CCB "
 literal|"for EEDP support.\n"
@@ -15252,7 +15391,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Unable to create "
 literal|"path for EEDP support\n"
@@ -15350,7 +15489,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Unable to alloc LUN for "
 literal|"EEDP support.\n"
@@ -15482,7 +15621,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"Sending read cap: path %s"
 literal|" handle %d\n"
@@ -15523,7 +15662,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_FAULT
+name|MPS_ERROR
 argument_list|,
 literal|"Unable to alloc read "
 literal|"capacity buffer for EEDP support.\n"
@@ -16091,15 +16230,9 @@ name|mps_command
 modifier|*
 name|cm
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -16187,7 +16320,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_TRACE
+name|MPS_XINFO
 argument_list|,
 literal|"mps_send_portenable finished cm %p req %p complete %p\n"
 argument_list|,
@@ -16235,15 +16368,9 @@ name|mpssas_softc
 modifier|*
 name|sassc
 decl_stmt|;
-name|mps_dprint
+name|MPS_FUNCTRACE
 argument_list|(
 name|sc
-argument_list|,
-name|MPS_TRACE
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|sassc
@@ -16266,9 +16393,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_ERROR
 argument_list|,
 literal|"%s: cm_flags = %#x for port enable! "
 literal|"This should not happen!\n"
@@ -16351,7 +16480,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_XINFO
 argument_list|,
 literal|"disestablish config intrhook\n"
 argument_list|)

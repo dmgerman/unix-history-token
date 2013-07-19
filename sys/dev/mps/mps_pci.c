@@ -996,9 +996,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot enable PCI busmaster\n"
 argument_list|)
@@ -1020,9 +1020,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"PCI memory window not available\n"
 argument_list|)
@@ -1068,9 +1068,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate PCI registers\n"
 argument_list|)
@@ -1154,9 +1154,9 @@ name|mps_parent_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate parent DMA tag\n"
 argument_list|)
@@ -1358,9 +1358,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate INTx interrupt\n"
 argument_list|)
@@ -1407,9 +1407,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot setup INTx interrupt\n"
 argument_list|)
@@ -1484,9 +1484,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate MSI interrupt\n"
 argument_list|)
@@ -1534,9 +1534,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot setup MSI interrupt %d\n"
 argument_list|,

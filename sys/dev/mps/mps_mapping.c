@@ -4077,10 +4077,9 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
-literal|"SAS Address for SATA "
-literal|"device = %jx\n"
+literal|"SAS Address for SATA device = %jx\n"
 argument_list|,
 name|sas_address
 argument_list|)

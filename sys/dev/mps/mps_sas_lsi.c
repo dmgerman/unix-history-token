@@ -831,7 +831,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"(%d)->(%s) Working on  Event: [%x]\n"
 argument_list|,
@@ -1521,7 +1521,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"Received IR Volume event:\n"
 argument_list|)
@@ -1540,7 +1540,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Volume Settings "
 literal|"changed from 0x%x to 0x%x for Volome with "
@@ -1576,7 +1576,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Volume Status "
 literal|"changed from 0x%x to 0x%x for Volome with "
@@ -1612,7 +1612,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Volume State "
 literal|"changed from 0x%x to 0x%x for Volome with "
@@ -1783,7 +1783,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"Received IR Phys Disk event:\n"
 argument_list|)
@@ -1802,7 +1802,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Phys Disk Settings "
 literal|"changed from 0x%x to 0x%x for Phys Disk Number "
@@ -1857,7 +1857,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Phys Disk Status changed "
 literal|"from 0x%x to 0x%x for Phys Disk Number %d and "
@@ -1911,7 +1911,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Phys Disk State changed "
 literal|"from 0x%x to 0x%x for Phys Disk Number %d and "
@@ -2152,7 +2152,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"Received IR Op Status event:\n"
 argument_list|)
@@ -2161,7 +2161,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   RAID Operation of %d is %d "
 literal|"percent complete for Volume with handle 0x%x"
@@ -2314,7 +2314,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"(%d)->(%s) Event Free: [%x]\n"
 argument_list|,
@@ -2809,7 +2809,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"SAS Address from SAS device page0 = %jx\n"
 argument_list|,
@@ -3033,7 +3033,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"Found device<%s><%s><0x%04x><%d/%d>\n"
 argument_list|,
@@ -3084,7 +3084,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"Target id 0x%x added\n"
 argument_list|,
@@ -3267,7 +3267,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"%s: got SATA identify successfully "
 literal|"for handle = 0x%x with try_count = %d\n"
@@ -3286,7 +3286,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"%s: handle = 0x%x failed\n"
 argument_list|,
@@ -4245,7 +4245,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"RAID target id %d added (WWID = 0x%jx)\n"
 argument_list|,
