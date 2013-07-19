@@ -1401,6 +1401,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x23a38086
+block|,
+literal|0x00
+block|,
+literal|"Intel Coleto Creek"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x8c028086
 block|,
 literal|0x00
