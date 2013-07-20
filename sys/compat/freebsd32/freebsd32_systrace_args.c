@@ -6296,31 +6296,41 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* clock_getcpuclockid2 */
+comment|/* freebsd32_clock_getcpuclockid2 */
 case|case
 literal|247
 case|:
 block|{
 name|struct
-name|clock_getcpuclockid2_args
+name|freebsd32_clock_getcpuclockid2_args
 modifier|*
 name|p
 init|=
 name|params
 decl_stmt|;
-name|iarg
+name|uarg
 index|[
 literal|0
 index|]
 operator|=
 name|p
 operator|->
-name|id
+name|id1
 expr_stmt|;
-comment|/* id_t */
-name|iarg
+comment|/* uint32_t */
+name|uarg
 index|[
 literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|id2
+expr_stmt|;
+comment|/* uint32_t */
+name|iarg
+index|[
+literal|2
 index|]
 operator|=
 name|p
@@ -6330,7 +6340,7 @@ expr_stmt|;
 comment|/* int */
 name|uarg
 index|[
-literal|2
+literal|3
 index|]
 operator|=
 operator|(
@@ -6344,7 +6354,7 @@ comment|/* clockid_t * */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -22256,7 +22266,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* clock_getcpuclockid2 */
+comment|/* freebsd32_clock_getcpuclockid2 */
 case|case
 literal|247
 case|:
@@ -22270,7 +22280,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"id_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -22278,11 +22288,19 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
 literal|2
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|3
 case|:
 name|p
 operator|=
@@ -33141,7 +33159,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* clock_getcpuclockid2 */
+comment|/* freebsd32_clock_getcpuclockid2 */
 case|case
 literal|247
 case|:
