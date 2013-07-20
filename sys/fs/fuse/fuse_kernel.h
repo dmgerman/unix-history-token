@@ -600,7 +600,7 @@ begin_define
 define|#
 directive|define
 name|FUSE_COMPAT_ENTRY_OUT_SIZE
-value|122
+value|128
 end_define
 
 begin_struct
@@ -669,7 +669,7 @@ begin_define
 define|#
 directive|define
 name|FUSE_COMPAT_ATTR_OUT_SIZE
-value|98
+value|104
 end_define
 
 begin_struct
