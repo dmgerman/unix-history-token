@@ -127,9 +127,6 @@ decl_stmt|;
 name|__u64
 name|ctime
 decl_stmt|;
-name|__u64
-name|crtime
-decl_stmt|;
 name|__u32
 name|atimensec
 decl_stmt|;
@@ -138,9 +135,6 @@ name|mtimensec
 decl_stmt|;
 name|__u32
 name|ctimensec
-decl_stmt|;
-name|__u32
-name|crtimensec
 decl_stmt|;
 name|__u32
 name|mode
@@ -159,6 +153,9 @@ name|rdev
 decl_stmt|;
 name|__u32
 name|blksize
+decl_stmt|;
+name|__u32
+name|padding
 decl_stmt|;
 block|}
 struct|;
@@ -600,7 +597,7 @@ begin_define
 define|#
 directive|define
 name|FUSE_COMPAT_ENTRY_OUT_SIZE
-value|128
+value|120
 end_define
 
 begin_struct
@@ -669,7 +666,7 @@ begin_define
 define|#
 directive|define
 name|FUSE_COMPAT_ATTR_OUT_SIZE
-value|104
+value|96
 end_define
 
 begin_struct
