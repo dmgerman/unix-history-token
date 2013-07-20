@@ -6454,7 +6454,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 argument_list|,
-name|MAP_SHARED
+name|MAP_INHERIT_SHARE
 argument_list|)
 expr_stmt|;
 if|if
