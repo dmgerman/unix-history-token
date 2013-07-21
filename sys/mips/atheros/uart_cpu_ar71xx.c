@@ -150,7 +150,7 @@ name|freq
 decl_stmt|;
 name|freq
 operator|=
-name|ar71xx_ahb_freq
+name|ar71xx_uart_freq
 argument_list|()
 expr_stmt|;
 name|di
