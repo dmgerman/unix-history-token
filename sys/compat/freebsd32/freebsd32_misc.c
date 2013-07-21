@@ -14126,7 +14126,7 @@ name|dst
 operator|->
 name|si_value
 operator|.
-name|sigval_int
+name|sival_int
 operator|=
 name|src
 operator|->
