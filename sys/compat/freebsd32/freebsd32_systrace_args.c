@@ -6155,6 +6155,226 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
+comment|/* freebsd32_ktimer_create */
+case|case
+literal|235
+case|:
+block|{
+name|struct
+name|freebsd32_ktimer_create_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|clock_id
+expr_stmt|;
+comment|/* clockid_t */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|evp
+expr_stmt|;
+comment|/* struct sigevent32 * */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int * */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
+comment|/* ktimer_delete */
+case|case
+literal|236
+case|:
+block|{
+name|struct
+name|ktimer_delete_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_ktimer_settime */
+case|case
+literal|237
+case|:
+block|{
+name|struct
+name|freebsd32_ktimer_settime_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|value
+expr_stmt|;
+comment|/* const struct itimerspec32 * */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|ovalue
+expr_stmt|;
+comment|/* struct itimerspec32 * */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_ktimer_gettime */
+case|case
+literal|238
+case|:
+block|{
+name|struct
+name|freebsd32_ktimer_gettime_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|value
+expr_stmt|;
+comment|/* struct itimerspec32 * */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* ktimer_getoverrun */
+case|case
+literal|239
+case|:
+block|{
+name|struct
+name|ktimer_getoverrun_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* freebsd32_nanosleep */
 case|case
 literal|240
@@ -6676,7 +6896,7 @@ name|p
 operator|->
 name|sig
 expr_stmt|;
-comment|/* struct sigevent * */
+comment|/* struct sigevent32 * */
 operator|*
 name|n_args
 operator|=
@@ -12775,13 +12995,13 @@ literal|5
 expr_stmt|;
 break|break;
 block|}
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
 block|{
 name|struct
-name|kmq_notify_args
+name|freebsd32_kmq_notify_args
 modifier|*
 name|p
 init|=
@@ -12809,7 +13029,7 @@ name|p
 operator|->
 name|sigev
 expr_stmt|;
-comment|/* const struct sigevent * */
+comment|/* const struct sigevent32 * */
 operator|*
 name|n_args
 operator|=
@@ -22170,6 +22390,164 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+comment|/* freebsd32_ktimer_create */
+case|case
+literal|235
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"clockid_t"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"struct sigevent32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* ktimer_delete */
+case|case
+literal|236
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_settime */
+case|case
+literal|237
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"const struct itimerspec32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"struct itimerspec32 *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_gettime */
+case|case
+literal|238
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"struct itimerspec32 *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* ktimer_getoverrun */
+case|case
+literal|239
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 comment|/* freebsd32_nanosleep */
 case|case
 literal|240
@@ -22535,7 +22913,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct sigevent *"
+literal|"struct sigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26855,7 +27233,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
@@ -26877,7 +27255,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sigevent *"
+literal|"const struct sigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
@@ -33083,6 +33461,101 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+comment|/* freebsd32_ktimer_create */
+case|case
+literal|235
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* ktimer_delete */
+case|case
+literal|236
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_settime */
+case|case
+literal|237
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_gettime */
+case|case
+literal|238
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* ktimer_getoverrun */
+case|case
+literal|239
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* freebsd32_nanosleep */
 case|case
 literal|240
@@ -35801,7 +36274,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
