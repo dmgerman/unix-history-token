@@ -7690,6 +7690,17 @@ expr_stmt|;
 if|if
 condition|(
 name|purl
+operator|&&
+name|strcasecmp
+argument_list|(
+name|URL
+operator|->
+name|scheme
+argument_list|,
+name|SCHEME_HTTPS
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|http_cmd
