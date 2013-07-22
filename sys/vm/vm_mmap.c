@@ -5024,9 +5024,14 @@ decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
 name|vm_map_t
 name|map
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
