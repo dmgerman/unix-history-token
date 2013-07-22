@@ -1897,7 +1897,12 @@ comment|/* Do bus scans sequentially, not in parallel */
 name|PIM_UNMAPPED
 init|=
 literal|0x02
-block|, }
+block|,
+name|PIM_NOSCAN
+init|=
+literal|0x01
+comment|/* SIM does its own scanning */
+block|}
 name|pi_miscflag
 typedef|;
 end_typedef
