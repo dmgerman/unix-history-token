@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"14.00.00.02-fbsd"
+value|"16.00.00.00-fbsd"
 end_define
 
 begin_define
@@ -1001,10 +1001,6 @@ decl_stmt|;
 name|MPI2_IOC_FACTS_REPLY
 modifier|*
 name|facts
-decl_stmt|;
-name|MPI2_PORT_FACTS_REPLY
-modifier|*
-name|pfacts
 decl_stmt|;
 name|int
 name|num_reqs
@@ -2998,6 +2994,9 @@ name|cm
 parameter_list|,
 name|int
 name|timeout
+parameter_list|,
+name|int
+name|sleep_flag
 parameter_list|)
 function_decl|;
 end_function_decl

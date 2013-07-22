@@ -7920,7 +7920,8 @@ name|sc
 argument_list|,
 name|MPS_ERROR
 argument_list|,
-literal|"%s Raid component no SCSI IO supported %u\n"
+literal|"%s Raid component no SCSI IO "
+literal|"supported %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7938,6 +7939,43 @@ operator|.
 name|status
 operator|=
 name|CAM_TID_INVALID
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Sometimes, it is possible to get a command that is not "In 	 * Progress" and was actually aborted by the upper layer.  Check for 	 * this here and complete the command without error. 	 */
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|!=
+name|CAM_REQ_INPROG
+condition|)
+block|{
+name|mps_dprint
+argument_list|(
+name|sc
+argument_list|,
+name|MPS_TRACE
+argument_list|,
+literal|"%s Command is not in progress for "
+literal|"target %u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|target_id
+argument_list|)
 expr_stmt|;
 name|xpt_done
 argument_list|(
@@ -8940,6 +8978,14 @@ argument_list|,
 name|cm_link
 argument_list|)
 expr_stmt|;
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator||=
+name|CAM_SIM_QUEUED
+expr_stmt|;
 name|mpssas_log_command
 argument_list|(
 name|cm
@@ -9848,6 +9894,19 @@ name|cm
 argument_list|,
 name|cm_link
 argument_list|)
+expr_stmt|;
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator||=
+operator|~
+operator|(
+name|CAM_STATUS_MASK
+operator||
+name|CAM_SIM_QUEUED
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -15571,6 +15630,31 @@ operator|&
 literal|0x01
 condition|)
 block|{
+name|mps_dprint
+argument_list|(
+name|sassc
+operator|->
+name|sc
+argument_list|,
+name|MPS_INFO
+argument_list|,
+literal|"LUN %d for "
+literal|"target ID %d is formatted for EEDP "
+literal|"support.\n"
+argument_list|,
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|target_lun
+argument_list|,
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|target_id
+argument_list|)
+expr_stmt|;
 name|lun
 operator|->
 name|eedp_formatted

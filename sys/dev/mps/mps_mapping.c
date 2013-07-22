@@ -5406,13 +5406,18 @@ name|is_processed
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to add the "
-literal|"device with handle 0x%04x "
-literal|"to persistent table "
-literal|"because there is no free "
-literal|"space available\n"
+name|sc
+argument_list|,
+name|MPS_INFO
+argument_list|,
+literal|"%s: "
+literal|"failed to add the device "
+literal|"with handle 0x%04x to "
+literal|"persistent table because "
+literal|"there is no free space "
+literal|"available\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5914,13 +5919,18 @@ name|is_processed
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|mps_dprint
 argument_list|(
-literal|"%s: failed to add the "
-literal|"device with handle 0x%04x "
-literal|"to persistent table "
-literal|"because there is no free "
-literal|"space available\n"
+name|sc
+argument_list|,
+name|MPS_INFO
+argument_list|,
+literal|"%s: "
+literal|"failed to add the device "
+literal|"with handle 0x%04x to "
+literal|"persistent table because "
+literal|"there is no free space "
+literal|"available\n"
 argument_list|,
 name|__func__
 argument_list|,
