@@ -2962,9 +2962,22 @@ return|;
 block|}
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|_GLIBCXX_END_NAMESPACE
-end_macro
+name|using
+name|std
+operator|::
+name|isnan
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|using
+name|std
+operator|::
+name|isinf
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
