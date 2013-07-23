@@ -250,6 +250,8 @@ literal|"mode"
 block|,
 literal|"export"
 block|,
+literal|"union"
+block|,
 name|NULL
 block|}
 decl_stmt|;
