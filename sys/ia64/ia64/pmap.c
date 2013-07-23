@@ -10418,7 +10418,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+operator|(
+name|void
+operator|*
+operator|)
+name|IA64_PHYS_TO_RR6
+argument_list|(
+name|pa
+argument_list|)
 operator|)
 return|;
 block|}
