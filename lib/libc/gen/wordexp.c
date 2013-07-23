@@ -1233,6 +1233,12 @@ block|{
 case|case
 literal|'\\'
 case|:
+if|if
+condition|(
+name|squote
+operator|==
+literal|0
+condition|)
 name|quote
 operator|^=
 literal|1
