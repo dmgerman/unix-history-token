@@ -3593,6 +3593,8 @@ name|RTL8366RB_VMCR_VID
 argument_list|(
 name|vmcr
 argument_list|)
+operator||
+name|ETHERSWITCH_VID_VALID
 expr_stmt|;
 name|vg
 operator|->
