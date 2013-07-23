@@ -50,12 +50,6 @@ define|\
 value|(!!((_sc)->sc_switchtype == AR8X16_SWITCH_ ## _type))
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|arswitch_softc
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|arswitch_softc

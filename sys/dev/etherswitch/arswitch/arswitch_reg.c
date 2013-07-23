@@ -253,7 +253,15 @@ operator|)
 operator|&
 literal|0x1f
 expr_stmt|;
-comment|/* 	 * The earlier code would only switch the page 	 * over if the page were different.  Experiments have 	 * shown that this is unstable. 	 * 	 * Hence, the page is always set here. 	 * 	 * See PR kern/172968 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|page
+operator|!=
+name|page
+condition|)
+block|{
 name|MDIO_WRITEREG
 argument_list|(
 name|device_get_parent
@@ -274,6 +282,7 @@ name|page
 operator|=
 name|page
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -612,7 +621,7 @@ name|value
 parameter_list|)
 block|{
 comment|/* XXX Check the first write too? */
-name|arswitch_writereg_lsb
+name|arswitch_writereg_msb
 argument_list|(
 name|dev
 argument_list|,
@@ -623,7 +632,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|arswitch_writereg_msb
+name|arswitch_writereg_lsb
 argument_list|(
 name|dev
 argument_list|,

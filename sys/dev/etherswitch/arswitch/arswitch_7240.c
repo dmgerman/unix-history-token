@@ -222,12 +222,6 @@ operator||
 name|AR8X16_CPU_MIRROR_DIS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Let things settle; probing PHY4 doesn't seem reliable 	 * without a litle delay. 	 */
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
