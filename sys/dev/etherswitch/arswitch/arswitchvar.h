@@ -112,6 +112,16 @@ decl_stmt|;
 name|etherswitch_info_t
 name|info
 decl_stmt|;
+comment|/* VLANs support */
+name|int
+name|vid
+index|[
+name|AR8X16_MAX_VLANS
+index|]
+decl_stmt|;
+name|uint32_t
+name|vlan_mode
+decl_stmt|;
 struct|struct
 block|{
 name|int
