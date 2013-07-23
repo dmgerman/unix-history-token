@@ -392,7 +392,7 @@ condition|)
 block|{
 name|IPSEC6STAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -601,7 +601,7 @@ condition|)
 block|{
 name|IPSEC6STAT_INC
 argument_list|(
-name|out_inval
+name|ips_out_inval
 argument_list|)
 expr_stmt|;
 name|IP6STAT_INC
@@ -653,7 +653,7 @@ case|:
 comment|/* 		 * This packet is just discarded. 		 */
 name|IPSEC6STAT_INC
 argument_list|(
-name|out_polvio
+name|ips_out_polvio
 argument_list|)
 expr_stmt|;
 name|IP6STAT_INC

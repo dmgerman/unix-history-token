@@ -979,7 +979,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC6STAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 comment|/* Do not inject data into pcb. */
@@ -1132,7 +1132,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC6STAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 name|IP6STAT_DEC

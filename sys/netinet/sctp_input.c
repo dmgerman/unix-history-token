@@ -28775,7 +28775,7 @@ condition|)
 block|{
 name|IPSECSTAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR
@@ -28813,7 +28813,7 @@ condition|)
 block|{
 name|IPSEC6STAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR
