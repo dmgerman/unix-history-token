@@ -3628,13 +3628,15 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"port unit must be between 0 and %d"
+literal|"vlangroup unit must be between 0 and %d"
 argument_list|,
 name|cfg
 operator|.
 name|info
 operator|.
 name|es_nvlangroups
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|newmode
