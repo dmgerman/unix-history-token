@@ -491,13 +491,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|vm_pageout_algorithm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|defer_swap_pageouts
 decl_stmt|;
 end_decl_stmt
@@ -563,27 +556,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|VM_PAGEOUT_ALGORITHM
-argument_list|,
-name|pageout_algorithm
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|vm_pageout_algorithm
-argument_list|,
-literal|0
-argument_list|,
-literal|"LRU page mgmt"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -3087,15 +3059,11 @@ condition|(
 operator|!
 name|remove_mode
 operator|&&
-operator|(
-name|vm_pageout_algorithm
-operator|||
 name|p
 operator|->
 name|act_count
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|pmap_remove_all
@@ -5098,8 +5066,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vm_pageout_algorithm
-operator|||
 name|object
 operator|->
 name|ref_count
