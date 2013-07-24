@@ -133,7 +133,11 @@ name|nsdata
 operator|->
 name|lbaf
 index|[
-literal|0
+name|nsdata
+operator|->
+name|flbas
+operator|.
+name|format
 index|]
 operator|.
 name|lbads
