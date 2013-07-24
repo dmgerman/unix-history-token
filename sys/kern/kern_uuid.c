@@ -903,7 +903,7 @@ name|i
 decl_stmt|,
 name|sum
 decl_stmt|;
-comment|/* 	 * Validate input. No multicast addresses and no addresses that 	 * are all zeroes. 	 */
+comment|/* 	 * Validate input. No multicast (flag 0x1), no locally administered 	 * (flag 0x2) and no 'all-zeroes' addresses. 	 */
 if|if
 condition|(
 name|addr
@@ -911,7 +911,7 @@ index|[
 literal|0
 index|]
 operator|&
-literal|0x01
+literal|0x03
 condition|)
 return|return
 operator|(
