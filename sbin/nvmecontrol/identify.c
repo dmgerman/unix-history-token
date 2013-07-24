@@ -118,7 +118,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Serial Number:              %s\n"
+literal|"Serial Number:              %.*s\n"
+argument_list|,
+name|NVME_SERIAL_NUMBER_LENGTH
 argument_list|,
 name|cdata
 operator|->
@@ -127,7 +129,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Model Number:               %s\n"
+literal|"Model Number:               %.*s\n"
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
 argument_list|,
 name|cdata
 operator|->
@@ -136,7 +140,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Firmware Version:           %s\n"
+literal|"Firmware Version:           %.*s\n"
+argument_list|,
+name|NVME_FIRMWARE_REVISION_LENGTH
 argument_list|,
 name|cdata
 operator|->

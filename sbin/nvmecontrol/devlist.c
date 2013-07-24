@@ -291,9 +291,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6s: %s\n"
+literal|"%6s: %.*s\n"
 argument_list|,
 name|name
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
 argument_list|,
 name|cdata
 operator|.

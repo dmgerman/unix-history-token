@@ -1060,6 +1060,27 @@ block|, }
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|NVME_SERIAL_NUMBER_LENGTH
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MODEL_NUMBER_LENGTH
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_FIRMWARE_REVISION_LENGTH
+value|8
+end_define
+
 begin_struct
 struct|struct
 name|nvme_controller_data
@@ -1077,21 +1098,21 @@ comment|/** serial number */
 name|int8_t
 name|sn
 index|[
-literal|20
+name|NVME_SERIAL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** model number */
 name|int8_t
 name|mn
 index|[
-literal|40
+name|NVME_MODEL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** firmware revision */
 name|uint8_t
 name|fr
 index|[
-literal|8
+name|NVME_FIRMWARE_REVISION_LENGTH
 index|]
 decl_stmt|;
 comment|/** recommended arbitration burst */
