@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -255,9 +261,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|fd
-operator|<
-literal|0
+name|ret
+operator|==
+name|EACCES
 condition|)
 block|{
 name|warnx
