@@ -9005,7 +9005,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|rtm
@@ -9018,6 +9017,7 @@ operator|<<
 name|i
 operator|)
 condition|)
+block|{
 name|sp
 index|[
 name|i
@@ -9045,15 +9045,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|rtm
 operator|->
 name|rtm_addrs
 operator|&
 name|RTA_IFP
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|sp
 index|[
 name|RTAX_IFP
@@ -9082,6 +9082,7 @@ operator|->
 name|sdl_nlen
 operator|==
 literal|0
+operator|)
 condition|)
 name|sp
 index|[
@@ -9090,7 +9091,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sp
