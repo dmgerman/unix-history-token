@@ -1278,13 +1278,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disk_create
-argument_list|(
-name|disk
-argument_list|,
-name|DISK_VERSION
-argument_list|)
-expr_stmt|;
 name|ndisk
 operator|->
 name|ns
@@ -1391,6 +1384,13 @@ argument_list|,
 name|ndisk
 argument_list|,
 name|ctrlr_tailq
+argument_list|)
+expr_stmt|;
+name|disk_create
+argument_list|(
+name|disk
+argument_list|,
+name|DISK_VERSION
 argument_list|)
 expr_stmt|;
 return|return
