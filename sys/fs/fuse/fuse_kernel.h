@@ -3,22 +3,6 @@ begin_comment
 comment|/*-  * This file defines the kernel interface of FUSE  * Copyright (C) 2001-2007  Miklos Szeredi<miklos@szeredi.hu>  *  * This program can be distributed under the terms of the GNU GPL.  * See the file COPYING.  *  * This -- and only this -- header file may also be distributed under  * the terms of the BSD Licence as follows:  *  * Copyright (C) 2001-2007 Miklos Szeredi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_comment
-comment|/*  * This file defines the kernel interface of FUSE  *  * Protocol changelog:  *  * 7.9:  *  - new fuse_getattr_in input argument of GETATTR  *  - add lk_flags in fuse_lk_in  *  - add lock_owner field to fuse_setattr_in, fuse_read_in and fuse_write_in  *  - add blksize field to fuse_attr  *  - add file flags field to fuse_read_in and fuse_write_in  *  * 7.10  *  - add nonseekable open flag  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_FS_FUSE_FUSE_KERNEL_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_FS_FUSE_FUSE_KERNEL_H_
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -60,7 +44,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<linux/types.h>
+file|<asm/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/major.h>
 end_include
 
 begin_endif
@@ -99,6 +89,28 @@ define|#
 directive|define
 name|FUSE_ROOT_ID
 value|1
+end_define
+
+begin_comment
+comment|/** The major number of the fuse character device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUSE_MAJOR
+value|MISC_MAJOR
+end_define
+
+begin_comment
+comment|/** The minor number of the fuse character device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUSE_MINOR
+value|229
 end_define
 
 begin_comment
@@ -150,12 +162,6 @@ name|gid
 decl_stmt|;
 name|__u32
 name|rdev
-decl_stmt|;
-name|__u32
-name|blksize
-decl_stmt|;
-name|__u32
-name|padding
 decl_stmt|;
 block|}
 struct|;
@@ -276,29 +282,8 @@ name|FATTR_FH
 value|(1<< 6)
 end_define
 
-begin_define
-define|#
-directive|define
-name|FATTR_ATIME_NOW
-value|(1<< 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FATTR_MTIME_NOW
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FATTR_LOCKOWNER
-value|(1<< 9)
-end_define
-
 begin_comment
-comment|/**  * Flags returned by the OPEN request  *  * FOPEN_DIRECT_IO: bypass page cache for this open file  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open  * FOPEN_NONSEEKABLE: the file is not seekable  */
+comment|/**  * Flags returned by the OPEN request  *  * FOPEN_DIRECT_IO: bypass page cache for this open file  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open  */
 end_comment
 
 begin_define
@@ -315,15 +300,8 @@ name|FOPEN_KEEP_CACHE
 value|(1<< 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|FOPEN_NONSEEKABLE
-value|(1<< 2)
-end_define
-
 begin_comment
-comment|/**  * INIT request/reply flags  *  * FUSE_EXPORT_SUPPORT: filesystem handles lookups of "." and ".."  */
+comment|/**  * INIT request/reply flags  */
 end_comment
 
 begin_define
@@ -340,34 +318,6 @@ name|FUSE_POSIX_LOCKS
 value|(1<< 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|FUSE_FILE_OPS
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUSE_ATOMIC_O_TRUNC
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUSE_EXPORT_SUPPORT
-value|(1<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUSE_BIG_WRITES
-value|(1<< 5)
-end_define
-
 begin_comment
 comment|/**  * Release flags  */
 end_comment
@@ -377,57 +327,6 @@ define|#
 directive|define
 name|FUSE_RELEASE_FLUSH
 value|(1<< 0)
-end_define
-
-begin_comment
-comment|/**  * Getattr flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUSE_GETATTR_FH
-value|(1<< 0)
-end_define
-
-begin_comment
-comment|/**  * Lock flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUSE_LK_FLOCK
-value|(1<< 0)
-end_define
-
-begin_comment
-comment|/**  * WRITE flags  *  * FUSE_WRITE_CACHE: delayed write from page cache, file handle is guessed  * FUSE_WRITE_LOCKOWNER: lock_owner field is valid  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUSE_WRITE_CACHE
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUSE_WRITE_LOCKOWNER
-value|(1<< 1)
-end_define
-
-begin_comment
-comment|/**  * Read flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUSE_READ_LOCKOWNER
-value|(1<< 1)
 end_define
 
 begin_enum
@@ -593,13 +492,6 @@ name|FUSE_MIN_READ_BUFFER
 value|8192
 end_define
 
-begin_define
-define|#
-directive|define
-name|FUSE_COMPAT_ENTRY_OUT_SIZE
-value|120
-end_define
-
 begin_struct
 struct|struct
 name|fuse_entry_out
@@ -647,30 +539,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|fuse_getattr_in
-block|{
-name|__u32
-name|getattr_flags
-decl_stmt|;
-name|__u32
-name|dummy
-decl_stmt|;
-name|__u64
-name|fh
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|FUSE_COMPAT_ATTR_OUT_SIZE
-value|96
-end_define
-
-begin_struct
-struct|struct
 name|fuse_attr_out
 block|{
 name|__u64
@@ -686,20 +554,6 @@ decl_stmt|;
 name|struct
 name|fuse_attr
 name|attr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|fuse_mknod_in
-block|{
-name|__u32
-name|mode
-decl_stmt|;
-name|__u32
-name|rdev
 decl_stmt|;
 block|}
 struct|;
@@ -758,7 +612,7 @@ name|__u64
 name|size
 decl_stmt|;
 name|__u64
-name|lock_owner
+name|unused1
 decl_stmt|;
 name|__u64
 name|atime
@@ -882,27 +736,11 @@ name|__u32
 name|size
 decl_stmt|;
 name|__u32
-name|read_flags
-decl_stmt|;
-name|__u64
-name|lock_owner
-decl_stmt|;
-name|__u32
-name|flags
-decl_stmt|;
-name|__u32
 name|padding
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|FUSE_COMPAT_WRITE_IN_SIZE
-value|24
-end_define
 
 begin_struct
 struct|struct
@@ -919,15 +757,6 @@ name|size
 decl_stmt|;
 name|__u32
 name|write_flags
-decl_stmt|;
-name|__u64
-name|lock_owner
-decl_stmt|;
-name|__u32
-name|flags
-decl_stmt|;
-name|__u32
-name|padding
 decl_stmt|;
 block|}
 struct|;
@@ -1038,12 +867,6 @@ decl_stmt|;
 name|struct
 name|fuse_file_lock
 name|lk
-decl_stmt|;
-name|__u32
-name|lk_flags
-decl_stmt|;
-name|__u32
-name|padding
 decl_stmt|;
 block|}
 struct|;
@@ -1227,7 +1050,9 @@ name|type
 decl_stmt|;
 name|char
 name|name
-index|[]
+index|[
+literal|0
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1260,15 +1085,6 @@ parameter_list|)
 define|\
 value|FUSE_DIRENT_ALIGN(FUSE_NAME_OFFSET + (d)->namelen)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_FS_FUSE_FUSE_KERNEL_H_ */
-end_comment
 
 end_unit
 
