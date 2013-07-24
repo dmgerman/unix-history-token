@@ -388,6 +388,22 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x0887
+block|,
+literal|"Intel Centrino Wireless-N 2230"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x0888
+block|,
+literal|"Intel Centrino Wireless-N 2230"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x0896
 block|,
 literal|"Intel Centrino Wireless-N 130"
