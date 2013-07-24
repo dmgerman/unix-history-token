@@ -900,9 +900,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|;
-name|uint8_t
-name|c
+decl_stmt|,
+name|sum
 decl_stmt|;
 comment|/* 	 * Validate input. No multicast addresses and no addresses that 	 * are all zeroes. 	 */
 if|if
@@ -919,7 +918,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|c
+name|sum
 operator|=
 literal|0
 expr_stmt|;
@@ -936,7 +935,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|c
+name|sum
 operator|+=
 name|addr
 index|[
@@ -945,7 +944,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|c
+name|sum
 operator|==
 literal|0
 condition|)
