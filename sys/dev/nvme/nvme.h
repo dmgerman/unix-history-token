@@ -1095,14 +1095,14 @@ name|uint16_t
 name|ssvid
 decl_stmt|;
 comment|/** serial number */
-name|int8_t
+name|uint8_t
 name|sn
 index|[
 name|NVME_SERIAL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** model number */
-name|int8_t
+name|uint8_t
 name|mn
 index|[
 name|NVME_MODEL_NUMBER_LENGTH
@@ -1961,6 +1961,28 @@ parameter_list|)
 define|\
 value|((cpl)->status.sc != 0 || (cpl)->status.sct != 0)
 end_define
+
+begin_function_decl
+name|void
+name|nvme_strvis
+parameter_list|(
+name|uint8_t
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|dstlen
+parameter_list|,
+name|int
+name|srclen
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

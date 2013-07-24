@@ -88,6 +88,12 @@ modifier|*
 name|cdata
 parameter_list|)
 block|{
+name|uint8_t
+name|str
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Controller Capabilities/Features\n"
@@ -116,37 +122,73 @@ operator|->
 name|ssvid
 argument_list|)
 expr_stmt|;
-name|printf
+name|nvme_strvis
 argument_list|(
-literal|"Serial Number:              %.*s\n"
-argument_list|,
-name|NVME_SERIAL_NUMBER_LENGTH
+name|str
 argument_list|,
 name|cdata
 operator|->
 name|sn
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|NVME_SERIAL_NUMBER_LENGTH
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Model Number:               %.*s\n"
+literal|"Serial Number:              %s\n"
 argument_list|,
-name|NVME_MODEL_NUMBER_LENGTH
+name|str
+argument_list|)
+expr_stmt|;
+name|nvme_strvis
+argument_list|(
+name|str
 argument_list|,
 name|cdata
 operator|->
 name|mn
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Firmware Version:           %.*s\n"
+literal|"Model Number:               %s\n"
 argument_list|,
-name|NVME_FIRMWARE_REVISION_LENGTH
+name|str
+argument_list|)
+expr_stmt|;
+name|nvme_strvis
+argument_list|(
+name|str
 argument_list|,
 name|cdata
 operator|->
 name|fr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|str
+argument_list|)
+argument_list|,
+name|NVME_FIRMWARE_REVISION_LENGTH
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Firmware Version:           %s\n"
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|printf

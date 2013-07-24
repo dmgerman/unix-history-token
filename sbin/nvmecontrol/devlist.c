@@ -173,6 +173,12 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|uint8_t
+name|mn
+index|[
+literal|64
+index|]
+decl_stmt|;
 name|uint32_t
 name|i
 decl_stmt|;
@@ -301,16 +307,28 @@ operator|&
 name|cdata
 argument_list|)
 expr_stmt|;
-name|printf
+name|nvme_strvis
 argument_list|(
-literal|"%6s: %.*s\n"
-argument_list|,
-name|name
-argument_list|,
-name|NVME_MODEL_NUMBER_LENGTH
+name|mn
 argument_list|,
 name|cdata
 operator|.
+name|mn
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mn
+argument_list|)
+argument_list|,
+name|NVME_MODEL_NUMBER_LENGTH
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%6s: %s\n"
+argument_list|,
+name|name
+argument_list|,
 name|mn
 argument_list|)
 expr_stmt|;
