@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|RAND_MAX
-value|0x7fffffff
+value|0x7ffffffd
 end_define
 
 begin_decl_stmt
