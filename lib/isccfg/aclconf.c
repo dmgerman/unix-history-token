@@ -952,7 +952,7 @@ argument_list|(
 name|txtname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009, 2012, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -422,6 +422,15 @@ block|{
 case|case
 name|DST_ALG_HMACMD5
 case|:
+case|case
+name|DST_ALG_HMACSHA1
+case|:
+case|case
+name|DST_ALG_HMACSHA224
+case|:
+case|case
+name|DST_ALG_HMACSHA256
+case|:
 if|if
 condition|(
 name|keysize
@@ -441,7 +450,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DST_ALG_HMACSHA256
+name|DST_ALG_HMACSHA384
+case|:
+case|case
+name|DST_ALG_HMACSHA512
 case|:
 if|if
 condition|(
@@ -451,11 +463,11 @@ literal|1
 operator|||
 name|keysize
 operator|>
-literal|256
+literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"keysize %d out of range (must be 1-256)\n"
+literal|"keysize %d out of range (must be 1-1024)\n"
 argument_list|,
 name|keysize
 argument_list|)

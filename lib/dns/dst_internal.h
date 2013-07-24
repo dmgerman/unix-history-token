@@ -462,6 +462,10 @@ name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
+name|isc_logcategory_t
+modifier|*
+name|category
+decl_stmt|;
 union|union
 block|{
 name|void

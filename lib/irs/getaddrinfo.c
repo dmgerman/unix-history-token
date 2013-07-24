@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009, 2012, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<isc/sockaddr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/string.h>
 end_include
 
 begin_include
@@ -1907,11 +1913,17 @@ name|ai_list
 operator|!=
 name|NULL
 condition|)
+block|{
 name|freeaddrinfo
 argument_list|(
 name|ai_list
 argument_list|)
 expr_stmt|;
+name|ai_list
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -2180,7 +2192,7 @@ argument_list|(
 name|domain
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -2262,7 +2274,7 @@ argument_list|(
 name|hostname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -3429,6 +3441,8 @@ operator|&
 name|rdata
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -3438,6 +3452,13 @@ operator|&
 name|rdata_a
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|SIN
@@ -3493,6 +3514,8 @@ operator|&
 name|rdata
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|dns_rdata_tostruct
 argument_list|(
 operator|&
@@ -3502,6 +3525,13 @@ operator|&
 name|rdata_aaaa
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|SIN6
@@ -5238,19 +5268,11 @@ name|ai
 operator|==
 name|NULL
 condition|)
-block|{
-name|freeaddrinfo
-argument_list|(
-operator|*
-name|aip
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EAI_MEMORY
 operator|)
 return|;
-block|}
 operator|*
 name|aip
 operator|=
@@ -5451,7 +5473,7 @@ operator|->
 name|ai_addr
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|slocal
 operator|->

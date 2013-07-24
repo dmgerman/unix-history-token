@@ -426,7 +426,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -970,7 +970,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|buffer
@@ -1335,7 +1335,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -1800,7 +1800,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -4303,7 +4303,7 @@ argument_list|(
 name|exclude
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -4607,7 +4607,7 @@ argument_list|)
 condition|)
 continue|continue;
 block|}
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -4769,7 +4769,7 @@ argument_list|(
 name|anchor
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -5126,7 +5126,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -5255,7 +5255,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -6212,7 +6212,7 @@ argument_list|(
 name|identity
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -6313,7 +6313,7 @@ argument_list|(
 name|dname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -7674,7 +7674,7 @@ operator|&
 name|fixedname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -8942,7 +8942,7 @@ operator|&
 name|fixed_sname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b2
@@ -9890,7 +9890,7 @@ name|char
 modifier|*
 name|keyname
 decl_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -10829,7 +10829,7 @@ operator|&
 name|fname
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -11086,7 +11086,7 @@ literal|"name"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b

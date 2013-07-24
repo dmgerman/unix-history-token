@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -6826,7 +6826,7 @@ name|DNS_LOGMODULE_CACHE
 argument_list|,
 name|ISC_LOG_WARNING
 argument_list|,
-literal|"delete_nsecnode(): "
+literal|"delete_node(): "
 literal|"dns_rbt_deletenode(nsecnode): %s"
 argument_list|,
 name|isc_result_totext
@@ -6837,6 +6837,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|BIND9
+if|if
+condition|(
+name|rbtdb
+operator|->
+name|rpz_cidr
+operator|!=
+name|NULL
+condition|)
+name|dns_rpz_cidr_deleteip
+argument_list|(
+name|rbtdb
+operator|->
+name|rpz_cidr
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|result
 operator|=
 name|dns_rbt_deletenode
@@ -6850,20 +6872,6 @@ argument_list|,
 name|ISC_FALSE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BIND9
-name|dns_rpz_cidr_deleteip
-argument_list|(
-name|rbtdb
-operator|->
-name|rpz_cidr
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|DNS_RBT_NSEC_NSEC
@@ -6917,7 +6925,7 @@ name|DNS_LOGMODULE_CACHE
 argument_list|,
 name|ISC_LOG_WARNING
 argument_list|,
-literal|"delete_nsecnode(): "
+literal|"delete_cnode(): "
 literal|"dns_rbt_deletenode: %s"
 argument_list|,
 name|isc_result_totext
@@ -18959,7 +18967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark a database for response policy rewriting.  */
+comment|/*  * Mark a database for response policy rewriting  * or find which RPZ data is available.  */
 end_comment
 
 begin_ifdef
@@ -18970,8 +18978,8 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
-name|get_rpz_enabled
+name|isc_result_t
+name|rpz_enabled
 parameter_list|(
 name|dns_db_t
 modifier|*
@@ -18986,6 +18994,13 @@ name|dns_rbtdb_t
 modifier|*
 name|rbtdb
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|ISC_R_SUCCESS
+expr_stmt|;
 name|rbtdb
 operator|=
 operator|(
@@ -19012,7 +19027,14 @@ argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
 expr_stmt|;
-name|dns_rpz_enabled
+if|if
+condition|(
+name|st
+operator|!=
+name|NULL
+condition|)
+block|{
+name|dns_rpz_enabled_get
 argument_list|(
 name|rbtdb
 operator|->
@@ -19021,6 +19043,33 @@ argument_list|,
 name|st
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|result
+operator|=
+name|dns_rpz_new_cidr
+argument_list|(
+name|rbtdb
+operator|->
+name|common
+operator|.
+name|mctx
+argument_list|,
+operator|&
+name|rbtdb
+operator|->
+name|common
+operator|.
+name|origin
+argument_list|,
+operator|&
+name|rbtdb
+operator|->
+name|rpz_cidr
+argument_list|)
+expr_stmt|;
+block|}
 name|RWUNLOCK
 argument_list|(
 operator|&
@@ -19031,6 +19080,11 @@ argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
 block|}
 end_function
 
@@ -26555,6 +26609,15 @@ name|link
 argument_list|)
 expr_stmt|;
 comment|/* 				 * XXXMLG We don't check the return value 				 * here.  If it fails, we will not do TTL 				 * based expiry on this node.  However, we 				 * will do it on the LRU side, so memory 				 * will not leak... for long. 				 */
+name|INSIST
+argument_list|(
+name|rbtdb
+operator|->
+name|heaps
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|isc_heap_insert
 argument_list|(
 name|rbtdb
@@ -27194,6 +27257,12 @@ operator|&
 name|negsig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|noqname
+operator|!=
+name|NULL
+condition|)
 name|free_noqname
 argument_list|(
 name|mctx
@@ -27484,6 +27553,12 @@ operator|&
 name|negsig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|closest
+operator|!=
+name|NULL
+condition|)
 name|free_noqname
 argument_list|(
 name|mctx
@@ -29854,6 +29929,12 @@ condition|(
 name|noderesult
 operator|==
 name|ISC_R_SUCCESS
+operator|&&
+name|rbtdb
+operator|->
+name|rpz_cidr
+operator|!=
+name|NULL
 condition|)
 name|dns_rpz_cidr_addip
 argument_list|(
@@ -32775,9 +32856,10 @@ block|,
 ifdef|#
 directive|ifdef
 name|BIND9
-name|get_rpz_enabled
+name|rpz_enabled
 block|,
 name|rpz_findips
+block|,
 else|#
 directive|else
 name|NULL
@@ -33897,64 +33979,6 @@ name|result
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|BIND9
-comment|/* 	 * Get ready for response policy IP address searching if at least one 	 * zone has been configured as a response policy zone and this 	 * is not a cache zone. 	 * It would be better to know that this database is for a policy 	 * zone named for a view, but that would require knowledge from 	 * above such as an argv[] set from data in the zone. 	 */
-if|if
-condition|(
-name|type
-operator|==
-name|dns_dbtype_zone
-operator|&&
-operator|!
-name|dns_name_equal
-argument_list|(
-name|origin
-argument_list|,
-name|dns_rootname
-argument_list|)
-condition|)
-block|{
-name|result
-operator|=
-name|dns_rpz_new_cidr
-argument_list|(
-name|mctx
-argument_list|,
-name|origin
-argument_list|,
-operator|&
-name|rbtdb
-operator|->
-name|rpz_cidr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-block|{
-name|free_rbtdb
-argument_list|(
-name|rbtdb
-argument_list|,
-name|ISC_FALSE
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|result
-operator|)
-return|;
-block|}
-block|}
-endif|#
-directive|endif
 comment|/* 	 * In order to set the node callback bit correctly in zone databases, 	 * we need to know if the node has the origin name of the zone. 	 * In loading_addrdataset() we could simply compare the new name 	 * to the origin name, but this is expensive.  Also, we don't know the 	 * node name in addrdataset(), so we need another way of knowing the 	 * zone's top. 	 * 	 * We now explicitly create a node for the zone's origin, and then 	 * we simply remember the node's address.  This is safe, because 	 * the top-of-zone node can never be deleted, nor can its address 	 * change. 	 */
 if|if
 condition|(
@@ -35198,11 +35222,29 @@ operator|&
 name|cloned_node
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+operator|!
+name|ISC_LINK_LINKED
+argument_list|(
+name|target
+argument_list|,
+name|link
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|target
 operator|=
 operator|*
 name|source
+expr_stmt|;
+name|ISC_LINK_INIT
+argument_list|(
+name|target
+argument_list|,
+name|link
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset iterator state. 	 */
 name|target
@@ -40143,22 +40185,6 @@ operator|==
 name|cbarg
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
-argument_list|(
-name|rbtdb
-operator|->
-name|common
-operator|.
-name|mctx
-argument_list|,
-name|cbarg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|acache_cbarg_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|acarray
 index|[
 name|count
@@ -40168,8 +40194,6 @@ name|cbarg
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-else|else
 name|isc_mem_put
 argument_list|(
 name|rbtdb
@@ -40192,6 +40216,7 @@ operator|&
 name|entry
 argument_list|)
 expr_stmt|;
+block|}
 name|NODE_UNLOCK
 argument_list|(
 name|nodelock
@@ -40306,11 +40331,14 @@ operator|=
 operator|*
 name|cbargp
 expr_stmt|;
+if|if
+condition|(
 name|dns_acache_cancelentry
 argument_list|(
 name|entry
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|dns_db_detachnode
 argument_list|(
 name|cbarg
@@ -40331,6 +40359,7 @@ operator|->
 name|db
 argument_list|)
 expr_stmt|;
+block|}
 name|isc_mem_put
 argument_list|(
 name|mctx
