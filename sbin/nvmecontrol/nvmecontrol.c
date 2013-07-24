@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdbool.h>
 end_include
 
@@ -824,7 +830,8 @@ argument_list|(
 name|full_path
 argument_list|)
 argument_list|,
-literal|"/dev/%s"
+name|_PATH_DEV
+literal|"%s"
 argument_list|,
 name|str
 argument_list|)

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -268,7 +274,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"could not open /dev/%s\n"
+literal|"could not open "
+name|_PATH_DEV
+literal|"%s\n"
 argument_list|,
 name|name
 argument_list|)
