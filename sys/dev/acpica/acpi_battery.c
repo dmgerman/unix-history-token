@@ -1417,6 +1417,13 @@ decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
+comment|/*      * Giant is acquired to work around a reference counting bug in ACPICA      * versions prior to 20130328.  If not for that bug this function could      * be executed concurrently without any problems.      * The bug is in acpi_BatteryIsPresent -> AcpiGetObjectInfo call tree,      * where AcpiUtExecute_HID, AcpiUtExecute_UID, etc are executed without      * protection of any ACPICA lock and may concurrently call      * AcpiUtRemoveReference on a battery object.      */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* For commands that use the ioctl_arg struct, validate it first. */
 name|error
 operator|=
@@ -1701,6 +1708,12 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
