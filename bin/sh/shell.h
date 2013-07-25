@@ -100,16 +100,6 @@ name|pointer
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|MKINIT
-end_define
-
-begin_comment
-comment|/* empty */
-end_comment
-
 begin_include
 include|#
 directive|include

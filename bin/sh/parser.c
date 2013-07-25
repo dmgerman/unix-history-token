@@ -329,7 +329,6 @@ comment|/* last token read */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
 name|int
 name|tokpushback
 decl_stmt|;
@@ -352,7 +351,7 @@ comment|/* text of last word returned by readtoken */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|int
 name|checkkwd
 decl_stmt|;

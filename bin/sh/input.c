@@ -281,7 +281,7 @@ comment|/* copy of parsefile->nleft */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|int
 name|parselleft
 decl_stmt|;

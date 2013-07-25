@@ -246,7 +246,7 @@ comment|/* number of levels to skip */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|int
 name|loopnest
 decl_stmt|;

@@ -172,10 +172,6 @@ begin_comment
 comment|/* fd was not open before redir */
 end_comment
 
-begin_macro
-name|MKINIT
-end_macro
-
 begin_struct
 struct|struct
 name|redirtab
@@ -196,7 +192,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|struct
 name|redirtab
 modifier|*
