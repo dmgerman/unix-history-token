@@ -357,10 +357,6 @@ name|checkkwd
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* 1 == check for kwds, 2 == also eat newlines */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
