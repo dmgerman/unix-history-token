@@ -662,6 +662,17 @@ begin_comment
 comment|/* radix node head is locked */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTF_GWFLAG_COMPAT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* a compatibility bit for interacting 					   with existing routing apps */
+end_comment
+
 begin_comment
 comment|/* Mask of RTF flags that are allowed to be modified by RTM_CHANGE. */
 end_comment

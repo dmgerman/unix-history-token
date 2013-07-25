@@ -213,6 +213,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|AcpiGetoptArgument
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -229,11 +244,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|AcpiGbl_SubOptChar
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|AcpiGbl_Optarg
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_DUMP_APP
+end_ifndef
 
 begin_comment
 comment|/*  * adisasm  */
@@ -522,6 +550,11 @@ name|OemTableId
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

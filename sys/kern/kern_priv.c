@@ -78,7 +78,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_comment
-comment|/*  * `suser_enabled' (which can be set by the security.bsd.suser_enabled  * sysctl) determines whether the system 'super-user' policy is in effect.  If  * it is nonzero, an effective uid of 0 connotes special privilege,  * overriding many mandatory and discretionary protections.  If it is zero,  * uid 0 is offered no special privilege in the kernel security policy.  * Setting it to zero may seriously impact the functionality of many existing  * userland programs, and should not be done without careful consideration of  * the consequences.   */
+comment|/*  * `suser_enabled' (which can be set by the security.bsd.suser_enabled  * sysctl) determines whether the system 'super-user' policy is in effect.  If  * it is nonzero, an effective uid of 0 connotes special privilege,  * overriding many mandatory and discretionary protections.  If it is zero,  * uid 0 is offered no special privilege in the kernel security policy.  * Setting it to zero may seriously impact the functionality of many existing  * userland programs, and should not be done without careful consideration of  * the consequences.  */
 end_comment
 
 begin_decl_stmt
@@ -374,6 +374,22 @@ block|}
 break|break;
 block|}
 block|}
+comment|/* 	 * Writes to kernel/physical memory are a typical root-only operation, 	 * but non-root users are expected to be able to read it (provided they 	 * have permission to access /dev/[k]mem). 	 */
+if|if
+condition|(
+name|priv
+operator|==
+name|PRIV_KMEM_READ
+condition|)
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 	 * Now check with MAC, if enabled, to see if a policy module grants 	 * privilege. 	 */
 ifdef|#
 directive|ifdef
@@ -411,8 +427,7 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|priv
 argument_list|,
@@ -423,20 +438,10 @@ argument_list|,
 name|priv_err
 argument_list|,
 name|priv
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|SDT_PROBE
+name|SDT_PROBE1
 argument_list|(
 name|priv
 argument_list|,
@@ -447,17 +452,8 @@ argument_list|,
 name|priv_ok
 argument_list|,
 name|priv
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error

@@ -74,7 +74,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineCodeEmitter.h"
 end_include
 
 begin_include
@@ -92,13 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineCodeEmitter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -975,23 +975,17 @@ argument_list|)
 block|{
 for|for
 control|(
-name|unsigned
+name|size_t
 name|i
 init|=
 literal|0
 init|,
 name|N
 init|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|String
 operator|.
 name|size
 argument_list|()
-operator|)
 init|;
 name|i
 operator|<

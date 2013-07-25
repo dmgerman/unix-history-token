@@ -49,6 +49,12 @@ directive|include
 file|"clang/Driver/Phases.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -211,27 +217,30 @@ modifier|*
 name|Name
 parameter_list|)
 function_decl|;
-comment|/// getNumCompilationPhases - Return the complete number of phases
-comment|/// to be done for this type.
-name|unsigned
-name|getNumCompilationPhases
-parameter_list|(
+comment|/// getCompilationPhases - Get the list of compilation phases ('Phases') to be
+comment|/// done for type 'Id'.
+name|void
+name|getCompilationPhases
+argument_list|(
 name|ID
 name|Id
-parameter_list|)
-function_decl|;
-comment|/// getCompilationPhase - Return the \p N th compilation phase to
-comment|/// be done for this type.
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|phases
 operator|::
 name|ID
-name|getCompilationPhase
-argument_list|(
-argument|ID Id
 argument_list|,
-argument|unsigned N
+name|phases
+operator|::
+name|MaxNumberOfPhases
+operator|>
+operator|&
+name|Phases
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// lookupCXXTypeForCType - Lookup CXX input type that corresponds to given
 comment|/// C type (used for clang++ emulation of g++ behaviour)
 name|ID

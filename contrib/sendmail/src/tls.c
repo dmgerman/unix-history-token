@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2006, 2008, 2009, 2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2006, 2008, 2009, 2011, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.118 2011/03/07 23:20:47 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.121 2013/01/02 23:54:17 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1344,14 +1344,22 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  INIT_TLS_LIBRARY -- Calls functions which setup TLS library for global use. ** **	Parameters: **		none. ** **	Returns: **		succeeded? */
+comment|/* **  INIT_TLS_LIBRARY -- Calls functions which setup TLS library for global use. ** **	Parameters: **		fipsmode -- use FIPS? ** **	Returns: **		succeeded? */
 end_comment
 
 begin_function
 name|bool
 name|init_tls_library
-parameter_list|()
+parameter_list|(
+name|fipsmode
+parameter_list|)
+name|bool
+name|fipsmode
+decl_stmt|;
 block|{
+name|bool
+name|bv
+decl_stmt|;
 comment|/* basic TLS initialization, ignore result for now */
 name|SSL_library_init
 argument_list|()
@@ -1367,13 +1375,93 @@ block|SSLeay_add_ssl_algorithms();
 endif|#
 directive|endif
 comment|/* 0 */
-return|return
+name|bv
+operator|=
 name|tls_rand_init
 argument_list|(
 name|RandFile
 argument_list|,
 literal|7
 argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_FIPSMODE
+if|if
+condition|(
+name|bv
+operator|&&
+name|fipsmode
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|FIPS_mode_set
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+block|{
+name|unsigned
+name|long
+name|err
+decl_stmt|;
+name|err
+operator|=
+name|ERR_get_error
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=init, FIPSMode=%s"
+argument_list|,
+name|ERR_error_string
+argument_list|(
+name|err
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=init, FIPSMode=ok"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_FIPSMODE  */
+return|return
+name|bv
 return|;
 block|}
 end_function
@@ -2916,6 +3004,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3251,6 +3341,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3313,6 +3405,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3381,6 +3475,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3452,6 +3548,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3524,6 +3622,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3580,6 +3680,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3637,6 +3739,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3811,6 +3915,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -3846,6 +3952,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -4246,6 +4354,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -4339,6 +4449,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|who
 argument_list|)
 expr_stmt|;
@@ -5439,6 +5551,8 @@ argument_list|)
 expr_stmt|;
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|side
 argument_list|)
 expr_stmt|;
@@ -5488,6 +5602,8 @@ argument_list|)
 expr_stmt|;
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 name|side
 argument_list|)
 expr_stmt|;
@@ -6218,15 +6334,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  TLSLOGERR -- log the errors from the TLS error stack ** **	Parameters: **		who -- server/client (for logging). ** **	Returns: **		none. */
+comment|/* **  TLSLOGERR -- log the errors from the TLS error stack ** **	Parameters: **		level -- syslog level **		who -- server/client (for logging). ** **	Returns: **		none. */
 end_comment
 
 begin_function
 name|void
 name|tlslogerr
 parameter_list|(
+name|level
+parameter_list|,
 name|who
 parameter_list|)
+name|int
+name|level
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -6296,7 +6417,7 @@ condition|)
 block|{
 name|sm_syslog
 argument_list|(
-name|LOG_WARNING
+name|level
 argument_list|,
 name|NOQID
 argument_list|,

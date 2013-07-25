@@ -82,6 +82,7 @@ comment|/*  * Name of the file currently being read, used to print error message
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|curfile

@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"CodeGenTarget.h"
+file|"CodeGenIntrinsics.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CodeGenIntrinsics.h"
+file|"CodeGenTarget.h"
 end_include
 
 begin_include
@@ -96,25 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<set>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -195,16 +195,12 @@ argument_list|)
 empty_stmt|;
 name|TypeSet
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|MVT
 operator|::
 name|SimpleValueType
 operator|>
-operator|&
 name|VTList
 argument_list|)
 expr_stmt|;
@@ -1313,6 +1309,19 @@ operator|~
 name|TreePatternNode
 argument_list|()
 expr_stmt|;
+name|bool
+name|hasName
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|Name
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -2026,6 +2035,24 @@ name|TP
 argument_list|)
 return|;
 block|}
+comment|// Update node type with types inferred from an instruction operand or result
+comment|// def from the ins/outs lists.
+comment|// Return true if the type changed.
+name|bool
+name|UpdateNodeTypeFromInst
+parameter_list|(
+name|unsigned
+name|ResNo
+parameter_list|,
+name|Record
+modifier|*
+name|Operand
+parameter_list|,
+name|TreePattern
+modifier|&
+name|TP
+parameter_list|)
+function_decl|;
 comment|/// ContainsUnresolvedType - Return true if this tree contains any
 comment|/// unresolved types.
 name|bool

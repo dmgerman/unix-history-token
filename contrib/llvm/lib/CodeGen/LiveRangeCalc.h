@@ -136,6 +136,11 @@ name|class
 name|LiveRangeCalc
 block|{
 specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+decl_stmt|;
+specifier|const
 name|MachineRegisterInfo
 modifier|*
 name|MRI
@@ -277,15 +282,17 @@ literal|16
 operator|>
 name|LiveIn
 expr_stmt|;
-comment|/// findReachingDefs - Assuming that LI is live-in to KillMBB and killed at
-comment|/// Kill, search for values that can reach KillMBB.  All blocks that need LI
-comment|/// to be live-in are added to LiveIn.  If a unique reaching def is found,
-comment|/// its value is returned, if Kill is jointly dominated by multiple values,
-comment|/// NULL is returned.
+comment|/// Assuming that LI is live-in to KillMBB and killed at Kill, find the set
+comment|/// of defs that can reach it.
+comment|///
+comment|/// If only one def can reach Kill, all paths from the def to kill are added
+comment|/// to LI, and the function returns true.
+comment|///
+comment|/// If multiple values can reach Kill, the blocks that need LI to be live in
+comment|/// are added to the LiveIn array, and the function returns false.
 comment|///
 comment|/// PhysReg, when set, is used to verify live-in lists on basic blocks.
-name|VNInfo
-modifier|*
+name|bool
 name|findReachingDefs
 parameter_list|(
 name|LiveInterval
@@ -312,21 +319,21 @@ name|void
 name|updateSSA
 parameter_list|()
 function_decl|;
-comment|/// updateLiveIns - Add liveness as specified in the LiveIn vector, using VNI
-comment|/// as a wildcard value for LiveIn entries without a value.
+comment|/// Add liveness as specified in the LiveIn vector.
 name|void
 name|updateLiveIns
-parameter_list|(
-name|VNInfo
-modifier|*
-name|VNI
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|public
 label|:
 name|LiveRangeCalc
 argument_list|()
 operator|:
+name|MF
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|MRI
 argument_list|(
 literal|0

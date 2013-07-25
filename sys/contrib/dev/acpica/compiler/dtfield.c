@@ -1017,13 +1017,9 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ByteLength
-operator|-
-name|Count
-operator|)
-return|;
+goto|goto
+name|Exit
+goto|;
 block|}
 name|Buffer
 index|[
@@ -1036,6 +1032,8 @@ operator|)
 name|Value
 expr_stmt|;
 block|}
+name|Exit
+label|:
 name|ACPI_FREE
 argument_list|(
 name|StringValue

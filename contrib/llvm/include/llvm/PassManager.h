@@ -77,6 +77,12 @@ directive|include
 file|"llvm/Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -241,6 +247,13 @@ operator|*
 name|M
 block|; }
 decl_stmt|;
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+name|DEFINE_STDCXX_CONVERSION_FUNCTIONS
+argument_list|(
+argument|PassManagerBase
+argument_list|,
+argument|LLVMPassManagerRef
+argument_list|)
 block|}
 end_decl_stmt
 

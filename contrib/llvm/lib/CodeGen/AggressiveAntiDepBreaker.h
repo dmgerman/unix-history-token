@@ -80,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -110,25 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include

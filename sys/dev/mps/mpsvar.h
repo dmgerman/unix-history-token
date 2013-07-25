@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"14.00.00.02-fbsd"
+value|"16.00.00.00-fbsd"
 end_define
 
 begin_define
@@ -1001,10 +1001,6 @@ decl_stmt|;
 name|MPI2_IOC_FACTS_REPLY
 modifier|*
 name|facts
-decl_stmt|;
-name|MPI2_PORT_FACTS_REPLY
-modifier|*
-name|pfacts
 decl_stmt|;
 name|int
 name|num_reqs
@@ -2198,33 +2194,119 @@ name|MPS_INFO
 value|(1<< 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MPS_TRACE
-value|(1<< 1)
-end_define
+begin_comment
+comment|/* Basic info */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MPS_FAULT
-value|(1<< 2)
+value|(1<< 1)
 end_define
+
+begin_comment
+comment|/* Hardware faults */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MPS_EVENT
-value|(1<< 3)
+value|(1<< 2)
 end_define
+
+begin_comment
+comment|/* Event data from the controller */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MPS_LOG
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Log data from the controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_RECOVERY
 value|(1<< 4)
 end_define
+
+begin_comment
+comment|/* Command error recovery tracing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_ERROR
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Parameter errors, programming bugs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_INIT
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Things related to system init */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_XINFO
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* More detailed/noisy info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_USER
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* Trace user-generated commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_MAPPING
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* Trace device mappings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_TRACE
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* Function-by-function trace */
+end_comment
 
 begin_define
 define|#
@@ -2269,7 +2351,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 	if (sc->mps_debug& level)			\ 		device_printf(sc->mps_dev, msg, ##args);	\ } while (0)
+value|do {							\ 	if ((sc)->mps_debug& (level))			\ 		device_printf((sc)->mps_dev, msg, ##args);	\ } while (0)
 end_define
 
 begin_define
@@ -2287,7 +2369,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {								\ 	if (sc->mps_debug& level)				\ 		printf("\t" msg, ##args);			\ } while (0)
+value|do {								\ 	if ((sc)->mps_debug& (level))				\ 		printf("\t" msg, ##args);			\ } while (0)
 end_define
 
 begin_define
@@ -2301,7 +2383,7 @@ name|tag
 modifier|...
 parameter_list|)
 define|\
-value|mps_dprint((sc), MPS_INFO, ##tag);	\ 	mps_dprint_field((sc), MPS_INFO, ":\n")
+value|mps_dprint((sc), MPS_XINFO, ##tag);	\ 	mps_dprint_field((sc), MPS_XINFO, ":\n")
 end_define
 
 begin_define
@@ -2314,7 +2396,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|mps_dprint((sc), MPS_INFO, tag "\n")
+value|mps_dprint((sc), MPS_XINFO, tag "\n")
 end_define
 
 begin_define
@@ -2331,7 +2413,7 @@ parameter_list|,
 name|fmt
 parameter_list|)
 define|\
-value|mps_dprint_field((sc), MPS_INFO, #attr ": " #fmt "\n", (facts)->attr)
+value|mps_dprint_field((sc), MPS_XINFO, #attr ": " #fmt "\n", (facts)->attr)
 end_define
 
 begin_define
@@ -2363,6 +2445,17 @@ name|fmt
 parameter_list|)
 define|\
 value|mps_dprint_field((sc), MPS_EVENT, #attr ": " #fmt "\n", (facts)->attr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_FUNCTRACE
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|mps_dprint((sc), MPS_TRACE, "%s\n", __func__)
 end_define
 
 begin_define
@@ -2901,6 +2994,9 @@ name|cm
 parameter_list|,
 name|int
 name|timeout
+parameter_list|,
+name|int
+name|sleep_flag
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Wi-Fi Protected Setup - message definitions  * Copyright (c) 2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Wi-Fi Protected Setup - message definitions  * Copyright (c) 2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -15,12 +15,88 @@ directive|define
 name|WPS_DEFS_H
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS_TESTING
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|wps_version_number
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|wps_testing_dummy_cred
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|WPS_VERSION
+value|wps_version_number
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CONFIG_WPS_TESTING */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WPS_VERSION
+value|0x20
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CONFIG_WPS2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WPS_VERSION
 value|0x10
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_WPS2 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_WPS_TESTING */
+end_comment
 
 begin_comment
 comment|/* Diffie-Hellman 1536-bit MODP Group; RFC 3526, Group 5 */
@@ -127,8 +203,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPS_OOB_DEVICE_PASSWORD_ATTR_LEN
-value|54
+name|WPS_OOB_DEVICE_PASSWORD_MIN_LEN
+value|16
 end_define
 
 begin_define
@@ -496,6 +572,52 @@ block|,
 name|ATTR_WEPTRANSMITKEY
 init|=
 literal|0x1064
+block|,
+name|ATTR_REQUESTED_DEV_TYPE
+init|=
+literal|0x106a
+block|,
+name|ATTR_EXTENSIBILITY_TEST
+init|=
+literal|0x10fa
+comment|/* _NOT_ defined in the spec */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|WPS_VENDOR_ID_WFA
+value|14122
+end_define
+
+begin_comment
+comment|/* WFA Vendor Extension subelements */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|WFA_ELEM_VERSION2
+init|=
+literal|0x00
+block|,
+name|WFA_ELEM_AUTHORIZEDMACS
+init|=
+literal|0x01
+block|,
+name|WFA_ELEM_NETWORK_KEY_SHAREABLE
+init|=
+literal|0x02
+block|,
+name|WFA_ELEM_REQUEST_TO_ENROLL
+init|=
+literal|0x03
+block|,
+name|WFA_ELEM_SETTINGS_DELAY_TIME
+init|=
+literal|0x04
 block|}
 enum|;
 end_enum
@@ -786,6 +908,25 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Vendor specific Error Indication for WPS event messages */
+end_comment
+
+begin_enum
+enum|enum
+name|wps_error_indication
+block|{
+name|WPS_EI_NO_ERROR
+block|,
+name|WPS_EI_SECURITY_TKIP_ONLY_PROHIBITED
+block|,
+name|WPS_EI_SECURITY_WEP_PROHIBITED
+block|,
+name|NUM_WPS_EI_VALUES
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/* RF Bands */
 end_comment
 
@@ -869,6 +1010,49 @@ directive|define
 name|WPS_CONFIG_KEYPAD
 value|0x0100
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|WPS_CONFIG_VIRT_PUSHBUTTON
+value|0x0280
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_CONFIG_PHY_PUSHBUTTON
+value|0x0480
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_CONFIG_VIRT_DISPLAY
+value|0x2008
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_CONFIG_PHY_DISPLAY
+value|0x4008
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_WPS2 */
+end_comment
 
 begin_comment
 comment|/* Connection Type Flags */
@@ -1142,6 +1326,13 @@ define|#
 directive|define
 name|WPS_PBC_WALK_TIME
 value|120
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPS_MAX_AUTHORIZED_MACS
+value|5
 end_define
 
 begin_endif

@@ -1650,6 +1650,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5762_A0
+value|0x05762000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM57765_A0
 value|0x57785000
 end_define
@@ -1819,6 +1826,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_ASICREV_BCM5762
+value|0x5762
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_ASICREV_BCM5784
 value|0x5784
 end_define
@@ -1951,6 +1965,13 @@ define|#
 directive|define
 name|BGE_CHIPREV_5761_AX
 value|0x57611
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_57765_AX
+value|0x577850
 end_define
 
 begin_define
@@ -4644,7 +4665,7 @@ begin_define
 define|#
 directive|define
 name|BGE_TX_BACKOFF_SEED_MASK
-value|0x3F
+value|0x3FF
 end_define
 
 begin_comment
@@ -7461,6 +7482,13 @@ name|BGE_CPMU_PHY_STRAP
 value|0x3664
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CPMU_PADRNG_CTL
+value|0x3668
+end_define
+
 begin_comment
 comment|/* Central Power Management Unit (CPMU) register */
 end_comment
@@ -7638,6 +7666,17 @@ define|#
 directive|define
 name|BGE_CPMU_PHY_STRAP_IS_SERDES
 value|0x00000020
+end_define
+
+begin_comment
+comment|/* CPMU Padring Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_CPMU_PADRNG_CTL_RDIV2
+value|0x00040000
 end_define
 
 begin_comment
@@ -8920,6 +8959,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_RDMA_RSRVCTRL_REG2
+value|0x4890
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL_REG2
+value|0x48A0
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_RDMA_RSRVCTRL
 value|0x4900
 end_define
@@ -9209,6 +9262,20 @@ name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_LSO_4K
 value|0x000C0000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_TX_LENGTH_WA_5719
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_TX_LENGTH_WA_5720
+value|0x00200000
+end_define
+
 begin_comment
 comment|/* BD Read DMA Mode register */
 end_comment
@@ -9279,6 +9346,20 @@ define|#
 directive|define
 name|BGE_RDMA_NON_LSO_MODE_ENABLE
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LENGTH
+value|0x4BE0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_NUM_RDMA_CHANNELS
+value|4
 end_define
 
 begin_comment
@@ -13753,6 +13834,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5725
+value|0x1643
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5727
+value|0x16F3
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5750
 value|0x1676
 end_define
@@ -13881,6 +13976,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5761SE
 value|0x1689
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5762
+value|0x1687
 end_define
 
 begin_define
@@ -15583,6 +15685,13 @@ begin_comment
 comment|/* impossible value */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BGE_TX_TIMEOUT
+value|5
+end_define
+
 begin_struct
 struct|struct
 name|bge_bcom_hack
@@ -15791,6 +15900,10 @@ define|#
 directive|define
 name|BGE_FLAG_MBOX_REORDER
 value|0x20000000
+define|#
+directive|define
+name|BGE_FLAG_RDMA_BUG
+value|0x40000000
 name|uint32_t
 name|bge_mfw_flags
 decl_stmt|;

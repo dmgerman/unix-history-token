@@ -1221,6 +1221,13 @@ argument_list|,
 name|EV_TESTED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|evalskip
+condition|)
+goto|goto
+name|out
+goto|;
 name|exitstatus
 operator|=
 operator|!
@@ -2664,6 +2671,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|prevfd
+operator|>=
+literal|0
+condition|)
 name|close
 argument_list|(
 name|prevfd

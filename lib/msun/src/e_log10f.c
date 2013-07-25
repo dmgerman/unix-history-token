@@ -84,6 +84,16 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|float
+name|vzero
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|float
 name|__ieee754_log10f
@@ -145,7 +155,7 @@ return|return
 operator|-
 name|two25
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* log(+-0)=-inf */
 if|if

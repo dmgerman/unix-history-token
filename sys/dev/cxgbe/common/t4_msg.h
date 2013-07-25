@@ -298,6 +298,10 @@ name|CPL_RX_DATA_DIF
 init|=
 literal|0x4B
 block|,
+name|CPL_ERR_NOTIFY
+init|=
+literal|0x4D
+block|,
 name|CPL_RDMA_READ_REQ
 init|=
 literal|0x60
@@ -365,6 +369,10 @@ block|,
 name|CPL_TRACE_PKT
 init|=
 literal|0xB0
+block|,
+name|CPL_TRACE_PKT_T5
+init|=
+literal|0x48
 block|,
 name|CPL_RX2TX_DATA
 init|=
@@ -2051,6 +2059,40 @@ parameter_list|)
 value|(((x)>> S_CONN_POLICY)& M_CONN_POLICY)
 end_define
 
+begin_define
+define|#
+directive|define
+name|S_FILT_INFO
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FILT_INFO
+value|0xfffffffffULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FILT_INFO
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FILT_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FILT_INFO
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_FILT_INFO)& M_FILT_INFO)
+end_define
+
 begin_comment
 comment|/* option 2 fields */
 end_comment
@@ -2511,6 +2553,30 @@ define|#
 directive|define
 name|F_SACK_EN
 value|V_SACK_EN(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_T5_OPT_2_VALID
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_T5_OPT_2_VALID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_T5_OPT_2_VALID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_T5_OPT_2_VALID
+value|V_T5_OPT_2_VALID(1U)
 end_define
 
 begin_struct
@@ -3055,6 +3121,32 @@ end_struct
 
 begin_struct
 struct|struct
+name|cpl_t5_pass_accept_rpl
+block|{
+name|WR_HDR
+expr_stmt|;
+name|union
+name|opcode_tid
+name|ot
+decl_stmt|;
+name|__be32
+name|opt2
+decl_stmt|;
+name|__be64
+name|opt0
+decl_stmt|;
+name|__be32
+name|iss
+decl_stmt|;
+name|__be32
+name|rsvd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|cpl_act_open_req
 block|{
 name|WR_HDR
@@ -3088,6 +3180,40 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|S_FILTER_TUPLE
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FILTER_TUPLE
+value|0xFFFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_FILTER_TUPLE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_FILTER_TUPLE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_FILTER_TUPLE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_FILTER_TUPLE)& M_FILTER_TUPLE)
+end_define
+
 begin_struct
 struct|struct
 name|cpl_t5_act_open_req
@@ -3114,7 +3240,7 @@ name|__be64
 name|opt0
 decl_stmt|;
 name|__be32
-name|rsvd
+name|iss
 decl_stmt|;
 name|__be32
 name|opt2
@@ -3199,7 +3325,7 @@ name|__be64
 name|opt0
 decl_stmt|;
 name|__be32
-name|rsvd
+name|iss
 decl_stmt|;
 name|__be32
 name|opt2
@@ -4690,6 +4816,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|S_TXPKT_T5_OVLAN_IDX
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_TXPKT_T5_OVLAN_IDX
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_TXPKT_T5_OVLAN_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_TXPKT_T5_OVLAN_IDX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TXPKT_T5_OVLAN_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_TXPKT_T5_OVLAN_IDX)& \ 				M_TXPKT_T5_OVLAN_IDX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_TXPKT_INTF
 value|16
 end_define
@@ -4748,6 +4908,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|S_TXPKT_T5_FCS_DIS
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_TXPKT_T5_FCS_DIS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_TXPKT_T5_FCS_DIS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_TXPKT_T5_FCS_DIS
+value|V_TXPKT_T5_FCS_DIS(1U)
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_TXPKT_INS_OVLAN
 value|21
 end_define
@@ -4767,6 +4951,30 @@ define|#
 directive|define
 name|F_TXPKT_INS_OVLAN
 value|V_TXPKT_INS_OVLAN(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_TXPKT_T5_INS_OVLAN
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_TXPKT_T5_INS_OVLAN
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_TXPKT_T5_INS_OVLAN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_TXPKT_T5_INS_OVLAN
+value|V_TXPKT_T5_INS_OVLAN(1U)
 end_define
 
 begin_define
@@ -5562,6 +5770,40 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)>> S_LSO_OPCODE)& M_LSO_OPCODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_LSO_T5_XFER_SIZE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_LSO_T5_XFER_SIZE
+value|0xFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_LSO_T5_XFER_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_LSO_T5_XFER_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_LSO_T5_XFER_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> S_LSO_T5_XFER_SIZE)& M_LSO_T5_XFER_SIZE)
 end_define
 
 begin_comment
@@ -8887,7 +9129,7 @@ begin_define
 define|#
 directive|define
 name|M_L2T_W_PORT
-value|0xF
+value|0x3
 end_define
 
 begin_define
@@ -8913,6 +9155,54 @@ end_define
 begin_define
 define|#
 directive|define
+name|S_L2T_W_LPBK
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_L2T_W_LPBK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_L2T_W_LPBK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_L2T_W_PKBK
+value|V_L2T_W_LPBK(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_L2T_W_ARPMISS
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_L2T_W_ARPMISS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_L2T_W_ARPMISS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_L2T_W_ARPMISS
+value|V_L2T_W_ARPMISS(1U)
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_L2T_W_NOREPLY
 value|15
 end_define
@@ -8932,6 +9222,13 @@ define|#
 directive|define
 name|F_L2T_W_NOREPLY
 value|V_L2T_W_NOREPLY(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPL_L2T_VLAN_NONE
+value|0xfff
 end_define
 
 begin_struct
@@ -10959,6 +11256,54 @@ name|F_ULP_MEMIO_ORDER
 value|V_ULP_MEMIO_ORDER(1U)
 end_define
 
+begin_define
+define|#
+directive|define
+name|S_T5_ULP_MEMIO_IMM
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_T5_ULP_MEMIO_IMM
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_T5_ULP_MEMIO_IMM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_T5_ULP_MEMIO_IMM
+value|V_T5_ULP_MEMIO_IMM(1U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_T5_ULP_MEMIO_ORDER
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_T5_ULP_MEMIO_ORDER
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< S_T5_ULP_MEMIO_ORDER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_T5_ULP_MEMIO_ORDER
+value|V_T5_ULP_MEMIO_ORDER(1U)
+end_define
+
 begin_comment
 comment|/* ulp_mem_io.lock_addr fields */
 end_comment
@@ -11038,6 +11383,26 @@ name|x
 parameter_list|)
 value|((x)<< S_ULP_MEMIO_DATA_LEN)
 end_define
+
+begin_comment
+comment|/* ULP_TXPKT field values */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|ULP_TXPKT_DEST_TP
+init|=
+literal|0
+block|,
+name|ULP_TXPKT_DEST_SGE
+block|,
+name|ULP_TXPKT_DEST_UP
+block|,
+name|ULP_TXPKT_DEST_DEVNULL
+block|, }
+enum|;
+end_enum
 
 begin_struct
 struct|struct

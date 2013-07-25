@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -77,14 +83,11 @@ name|Ovl_Best
 comment|///< Show just the "best" overload candidates.
 block|}
 enum|;
-comment|/// DiagnosticOptions - Options for controlling the compiler diagnostics
-comment|/// engine.
+comment|/// \brief Options for controlling the compiler diagnostics engine.
 name|class
 name|DiagnosticOptions
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|DiagnosticOptions
@@ -185,20 +188,13 @@ directive|include
 file|"clang/Basic/DiagnosticOptions.def"
 name|public
 operator|:
-comment|/// If non-empty, a file to log extended build information to, for development
-comment|/// testing and analysis.
-name|std
-operator|::
-name|string
-name|DumpBuildInformation
-block|;
-comment|/// The file to log diagnostic output to.
+comment|/// \brief The file to log diagnostic output to.
 name|std
 operator|::
 name|string
 name|DiagnosticLogFile
 block|;
-comment|/// The file to serialize diagnostics to (non-appending).
+comment|/// \brief The file to serialize diagnostics to (non-appending).
 name|std
 operator|::
 name|string

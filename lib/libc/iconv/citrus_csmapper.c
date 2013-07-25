@@ -178,6 +178,15 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|pthread_rwlock_t
+name|ma_lock
+init|=
+name|PTHREAD_RWLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1551,6 +1560,10 @@ name|int
 name|ret
 decl_stmt|;
 name|WLOCK
+argument_list|(
+operator|&
+name|ma_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1608,6 +1621,10 @@ expr_stmt|;
 name|quit
 label|:
 name|UNLOCK
+argument_list|(
+operator|&
+name|ma_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

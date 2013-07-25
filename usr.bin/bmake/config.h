@@ -803,7 +803,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"bmake 20121212"
+value|"bmake 20130303"
 end_define
 
 begin_comment
@@ -836,7 +836,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"20121212"
+value|"20130303"
 end_define
 
 begin_comment

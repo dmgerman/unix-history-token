@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -310,7 +310,7 @@ file|<vm/vm_pageout.h>
 end_include
 
 begin_comment
-comment|/*  * Programming rules.  *  * Each vnode op performs some logical unit of work.  To do this, the ZPL must  * properly lock its in-core state, create a DMU transaction, do the work,  * record this work in the intent log (ZIL), commit the DMU transaction,  * and wait for the intent log to commit if it is a synchronous operation.  * Moreover, the vnode ops must work in both normal and log replay context.  * The ordering of events is important to avoid deadlocks and references  * to freed memory.  The example below illustrates the following Big Rules:  *  *  (1) A check must be made in each zfs thread for a mounted file system.  *	This is done avoiding races using ZFS_ENTER(zfsvfs).  *      A ZFS_EXIT(zfsvfs) is needed before all returns.  Any znodes  *      must be checked with ZFS_VERIFY_ZP(zp).  Both of these macros  *      can return EIO from the calling function.  *  *  (2)	VN_RELE() should always be the last thing except for zil_commit()  *	(if necessary) and ZFS_EXIT(). This is for 3 reasons:  *	First, if it's the last reference, the vnode/znode  *	can be freed, so the zp may point to freed memory.  Second, the last  *	reference will call zfs_zinactive(), which may induce a lot of work --  *	pushing cached pages (which acquires range locks) and syncing out  *	cached atime changes.  Third, zfs_zinactive() may require a new tx,  *	which could deadlock the system if you were already holding one.  *	If you must call VN_RELE() within a tx then use VN_RELE_ASYNC().  *  *  (3)	All range locks must be grabbed before calling dmu_tx_assign(),  *	as they can span dmu_tx_assign() calls.  *  *  (4)	Always pass TXG_NOWAIT as the second argument to dmu_tx_assign().  *	This is critical because we don't want to block while holding locks.  *	Note, in particular, that if a lock is sometimes acquired before  *	the tx assigns, and sometimes after (e.g. z_lock), then failing to  *	use a non-blocking assign can deadlock the system.  The scenario:  *  *	Thread A has grabbed a lock before calling dmu_tx_assign().  *	Thread B is in an already-assigned tx, and blocks for this lock.  *	Thread A calls dmu_tx_assign(TXG_WAIT) and blocks in txg_wait_open()  *	forever, because the previous txg can't quiesce until B's tx commits.  *  *	If dmu_tx_assign() returns ERESTART and zfsvfs->z_assign is TXG_NOWAIT,  *	then drop all locks, call dmu_tx_wait(), and try again.  *  *  (5)	If the operation succeeded, generate the intent log entry for it  *	before dropping locks.  This ensures that the ordering of events  *	in the intent log matches the order in which they actually occurred.  *      During ZIL replay the zfs_log_* functions will update the sequence  *	number to indicate the zil transaction has replayed.  *  *  (6)	At the end of each vnode op, the DMU tx must always commit,  *	regardless of whether there were any errors.  *  *  (7)	After dropping all locks, invoke zil_commit(zilog, foid)  *	to ensure that synchronous semantics are provided when necessary.  *  * In general, this is how things should be ordered in each vnode op:  *  *	ZFS_ENTER(zfsvfs);		// exit if unmounted  * top:  *	zfs_dirent_lock(&dl, ...)	// lock directory entry (may VN_HOLD())  *	rw_enter(...);			// grab any other locks you need  *	tx = dmu_tx_create(...);	// get DMU tx  *	dmu_tx_hold_*();		// hold each object you might modify  *	error = dmu_tx_assign(tx, TXG_NOWAIT);	// try to assign  *	if (error) {  *		rw_exit(...);		// drop locks  *		zfs_dirent_unlock(dl);	// unlock directory entry  *		VN_RELE(...);		// release held vnodes  *		if (error == ERESTART) {  *			dmu_tx_wait(tx);  *			dmu_tx_abort(tx);  *			goto top;  *		}  *		dmu_tx_abort(tx);	// abort DMU tx  *		ZFS_EXIT(zfsvfs);	// finished in zfs  *		return (error);		// really out of space  *	}  *	error = do_real_work();		// do whatever this VOP does  *	if (error == 0)  *		zfs_log_*(...);		// on success, make ZIL entry  *	dmu_tx_commit(tx);		// commit DMU tx -- error or not  *	rw_exit(...);			// drop locks  *	zfs_dirent_unlock(dl);		// unlock directory entry  *	VN_RELE(...);			// release held vnodes  *	zil_commit(zilog, foid);	// synchronous when necessary  *	ZFS_EXIT(zfsvfs);		// finished in zfs  *	return (error);			// done, report error  */
+comment|/*  * Programming rules.  *  * Each vnode op performs some logical unit of work.  To do this, the ZPL must  * properly lock its in-core state, create a DMU transaction, do the work,  * record this work in the intent log (ZIL), commit the DMU transaction,  * and wait for the intent log to commit if it is a synchronous operation.  * Moreover, the vnode ops must work in both normal and log replay context.  * The ordering of events is important to avoid deadlocks and references  * to freed memory.  The example below illustrates the following Big Rules:  *  *  (1)	A check must be made in each zfs thread for a mounted file system.  *	This is done avoiding races using ZFS_ENTER(zfsvfs).  *	A ZFS_EXIT(zfsvfs) is needed before all returns.  Any znodes  *	must be checked with ZFS_VERIFY_ZP(zp).  Both of these macros  *	can return EIO from the calling function.  *  *  (2)	VN_RELE() should always be the last thing except for zil_commit()  *	(if necessary) and ZFS_EXIT(). This is for 3 reasons:  *	First, if it's the last reference, the vnode/znode  *	can be freed, so the zp may point to freed memory.  Second, the last  *	reference will call zfs_zinactive(), which may induce a lot of work --  *	pushing cached pages (which acquires range locks) and syncing out  *	cached atime changes.  Third, zfs_zinactive() may require a new tx,  *	which could deadlock the system if you were already holding one.  *	If you must call VN_RELE() within a tx then use VN_RELE_ASYNC().  *  *  (3)	All range locks must be grabbed before calling dmu_tx_assign(),  *	as they can span dmu_tx_assign() calls.  *  *  (4)	Always pass TXG_NOWAIT as the second argument to dmu_tx_assign().  *	This is critical because we don't want to block while holding locks.  *	Note, in particular, that if a lock is sometimes acquired before  *	the tx assigns, and sometimes after (e.g. z_lock), then failing to  *	use a non-blocking assign can deadlock the system.  The scenario:  *  *	Thread A has grabbed a lock before calling dmu_tx_assign().  *	Thread B is in an already-assigned tx, and blocks for this lock.  *	Thread A calls dmu_tx_assign(TXG_WAIT) and blocks in txg_wait_open()  *	forever, because the previous txg can't quiesce until B's tx commits.  *  *	If dmu_tx_assign() returns ERESTART and zfsvfs->z_assign is TXG_NOWAIT,  *	then drop all locks, call dmu_tx_wait(), and try again.  *  *  (5)	If the operation succeeded, generate the intent log entry for it  *	before dropping locks.  This ensures that the ordering of events  *	in the intent log matches the order in which they actually occurred.  *	During ZIL replay the zfs_log_* functions will update the sequence  *	number to indicate the zil transaction has replayed.  *  *  (6)	At the end of each vnode op, the DMU tx must always commit,  *	regardless of whether there were any errors.  *  *  (7)	After dropping all locks, invoke zil_commit(zilog, foid)  *	to ensure that synchronous semantics are provided when necessary.  *  * In general, this is how things should be ordered in each vnode op:  *  *	ZFS_ENTER(zfsvfs);		// exit if unmounted  * top:  *	zfs_dirent_lock(&dl, ...)	// lock directory entry (may VN_HOLD())  *	rw_enter(...);			// grab any other locks you need  *	tx = dmu_tx_create(...);	// get DMU tx  *	dmu_tx_hold_*();		// hold each object you might modify  *	error = dmu_tx_assign(tx, TXG_NOWAIT);	// try to assign  *	if (error) {  *		rw_exit(...);		// drop locks  *		zfs_dirent_unlock(dl);	// unlock directory entry  *		VN_RELE(...);		// release held vnodes  *		if (error == ERESTART) {  *			dmu_tx_wait(tx);  *			dmu_tx_abort(tx);  *			goto top;  *		}  *		dmu_tx_abort(tx);	// abort DMU tx  *		ZFS_EXIT(zfsvfs);	// finished in zfs  *		return (error);		// really out of space  *	}  *	error = do_real_work();		// do whatever this VOP does  *	if (error == 0)  *		zfs_log_*(...);		// on success, make ZIL entry  *	dmu_tx_commit(tx);		// commit DMU tx -- error or not  *	rw_exit(...);			// drop locks  *	zfs_dirent_unlock(dl);		// unlock directory entry  *	VN_RELE(...);			// release held vnodes  *	zil_commit(zilog, foid);	// synchronous when necessary  *	ZFS_EXIT(zfsvfs);		// finished in zfs  *	return (error);			// done, report error  */
 end_comment
 
 begin_comment
@@ -401,7 +401,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -466,7 +469,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -736,7 +742,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -810,7 +819,10 @@ return|;
 block|}
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -945,7 +957,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
 else|#
@@ -1037,7 +1052,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
 else|#
@@ -1061,7 +1079,10 @@ return|;
 block|}
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTTY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1161,7 +1182,13 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|pp
+operator|==
+name|NULL
+condition|)
 block|{
 name|pp
 operator|=
@@ -1180,6 +1207,25 @@ name|VM_ALLOC_IFCACHED
 operator||
 name|VM_ALLOC_NOBUSY
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ASSERT
+argument_list|(
+name|pp
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|pp
+operator|->
+name|valid
+argument_list|)
+expr_stmt|;
+name|pp
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2083,6 +2129,35 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|pp
+operator|->
+name|wire_count
+operator|==
+literal|0
+operator|&&
+name|pp
+operator|->
+name|valid
+operator|==
+literal|0
+operator|&&
+name|pp
+operator|->
+name|busy
+operator|==
+literal|0
+operator|&&
+operator|!
+operator|(
+name|pp
+operator|->
+name|oflags
+operator|&
+name|VPO_BUSY
+operator|)
+condition|)
 name|vm_page_free
 argument_list|(
 name|pp
@@ -2145,7 +2220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When a file is memory mapped, we must keep the IO data synchronized  * between the DMU cache and the memory mapped pages.  What this means:  *  * On Read:	We "read" preferentially from memory mapped pages,  *		else we default from the dmu buffer.  *  * NOTE: We will always "break up" the IO into PAGESIZE uiomoves when  *	the file is memory mapped.  */
+comment|/*  * When a file is memory mapped, we must keep the IO data synchronized  * between the DMU cache and the memory mapped pages.  What this means:  *  * On Read:	We "read" preferentially from memory mapped pages,  *		else we default from the dmu buffer.  *  * NOTE: We will always "break up" the IO into PAGESIZE uiomoves when  *	 the file is memory mapped.  */
 end_comment
 
 begin_function
@@ -2411,7 +2486,7 @@ comment|/* Tunable */
 end_comment
 
 begin_comment
-comment|/*  * Read bytes from specified file into supplied buffer.  *  *	IN:	vp	- vnode of file to be read from.  *		uio	- structure supplying read location, range info,  *			  and return buffer.  *		ioflag	- SYNC flags; used to provide FRSYNC semantics.  *		cr	- credentials of caller.  *		ct	- caller context  *  *	OUT:	uio	- updated offset and range, buffer filled.  *  *	RETURN:	0 if success  *		error code if failure  *  * Side Effects:  *	vp - atime updated if byte count> 0  */
+comment|/*  * Read bytes from specified file into supplied buffer.  *  *	IN:	vp	- vnode of file to be read from.  *		uio	- structure supplying read location, range info,  *			  and return buffer.  *		ioflag	- SYNC flags; used to provide FRSYNC semantics.  *		cr	- credentials of caller.  *		ct	- caller context  *  *	OUT:	uio	- updated offset and range, buffer filled.  *  *	RETURN:	0 on success, error code on failure.  *  * Side Effects:  *	vp - atime updated if byte count> 0  */
 end_comment
 
 begin_comment
@@ -2516,7 +2591,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2540,7 +2618,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2970,7 +3051,10 @@ name|ECKSUM
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -3007,7 +3091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write the bytes to a file.  *  *	IN:	vp	- vnode of file to be written to.  *		uio	- structure supplying write location, range info,  *			  and data buffer.  *		ioflag	- FAPPEND flag set if in append mode.  *		cr	- credentials of caller.  *		ct	- caller context (NFS/CIFS fem monitor only)  *  *	OUT:	uio	- updated offset and range.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - ctime|mtime updated if byte count> 0  */
+comment|/*  * Write the bytes to a file.  *  *	IN:	vp	- vnode of file to be written to.  *		uio	- structure supplying write location, range info,  *			  and data buffer.  *		ioflag	- FAPPEND, FSYNC, and/or FDSYNC.  FAPPEND is  *			  set if in append mode.  *		cr	- credentials of caller.  *		ct	- caller context (NFS/CIFS fem monitor only)  *  *	OUT:	uio	- updated offset and range.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - ctime|mtime updated if byte count> 0  */
 end_comment
 
 begin_comment
@@ -3337,7 +3421,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3376,7 +3463,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3598,7 +3688,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3706,7 +3799,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4974,7 +5070,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 if|if
@@ -5003,7 +5102,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5073,7 +5175,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5196,7 +5301,10 @@ name|z_size
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5208,7 +5316,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 name|zil_fault_io
 operator|=
@@ -5568,7 +5679,10 @@ name|NULL
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOSYS
+argument_list|)
 expr_stmt|;
 operator|*
 name|vpp
@@ -5585,7 +5699,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup an entry in a directory, or an extended attribute directory.  * If it exists, return a held vnode reference for it.  *  *	IN:	dvp	- vnode of directory to search.  *		nm	- name of entry to lookup.  *		pnp	- full pathname to lookup [UNUSED].  *		flags	- LOOKUP_XATTR set if looking for an attribute.  *		rdir	- root directory vnode [UNUSED].  *		cr	- credentials of caller.  *		ct	- caller context  *		direntflags - directory lookup flags  *		realpnp - returned pathname.  *  *	OUT:	vpp	- vnode of located entry, NULL if not found.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	NA  */
+comment|/*  * Lookup an entry in a directory, or an extended attribute directory.  * If it exists, return a held vnode reference for it.  *  *	IN:	dvp	- vnode of directory to search.  *		nm	- name of entry to lookup.  *		pnp	- full pathname to lookup [UNUSED].  *		flags	- LOOKUP_XATTR set if looking for an attribute.  *		rdir	- root directory vnode [UNUSED].  *		cr	- credentials of caller.  *		ct	- caller context  *		direntflags - directory lookup flags  *		realpnp - returned pathname.  *  *	OUT:	vpp	- vnode of located entry, NULL if not found.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	NA  */
 end_comment
 
 begin_comment
@@ -5690,7 +5804,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTDIR
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5706,7 +5823,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5831,7 +5951,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5918,7 +6041,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5941,7 +6067,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6037,7 +6166,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTDIR
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6104,7 +6236,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6411,7 +6546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to create a new entry in a directory.  If the entry  * already exists, truncate the file if permissible, else return  * an error.  Return the vp of the created or trunc'd file.  *  *	IN:	dvp	- vnode of directory to put new file entry in.  *		name	- name of new file entry.  *		vap	- attributes of new file.  *		excl	- flag indicating exclusive or non-exclusive mode.  *		mode	- mode to open file with.  *		cr	- credentials of caller.  *		flag	- large file flag [UNUSED].  *		ct	- caller context  *		vsecp 	- ACL to be set  *  *	OUT:	vpp	- vnode of created or trunc'd entry.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	dvp - ctime|mtime updated if new entry created  *	 vp - ctime|mtime always, atime if new  */
+comment|/*  * Attempt to create a new entry in a directory.  If the entry  * already exists, truncate the file if permissible, else return  * an error.  Return the vp of the created or trunc'd file.  *  *	IN:	dvp	- vnode of directory to put new file entry in.  *		name	- name of new file entry.  *		vap	- attributes of new file.  *		excl	- flag indicating exclusive or non-exclusive mode.  *		mode	- mode to open file with.  *		cr	- credentials of caller.  *		flag	- large file flag [UNUSED].  *		ct	- caller context  *		vsecp 	- ACL to be set  *  *	OUT:	vpp	- vnode of created or trunc'd entry.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime updated if new entry created  *	 vp - ctime|mtime always, atime if new  */
 end_comment
 
 begin_comment
@@ -6592,7 +6727,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -6650,7 +6788,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6829,7 +6970,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EISDIR
+argument_list|)
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -6918,7 +7062,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -6977,7 +7124,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -7278,7 +7428,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -7307,7 +7460,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EISDIR
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -7515,7 +7671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove an entry from a directory.  *  *	IN:	dvp	- vnode of directory to remove entry from.  *		name	- name of entry to remove.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	dvp - ctime|mtime  *	 vp - ctime (if nlink> 0)  */
+comment|/*  * Remove an entry from a directory.  *  *	IN:	dvp	- vnode of directory to remove entry from.  *		name	- name of entry to remove.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime  *	 vp - ctime (if nlink> 0)  */
 end_comment
 
 begin_decl_stmt
@@ -7775,7 +7931,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -8578,7 +8737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new directory and insert it into dvp using the name  * provided.  Return a pointer to the inserted directory.  *  *	IN:	dvp	- vnode of directory to add subdir to.  *		dirname	- name of new directory.  *		vap	- attributes of new directory.  *		cr	- credentials of caller.  *		ct	- caller context  *		vsecp	- ACL to be set  *  *	OUT:	vpp	- vnode of created directory.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	dvp - ctime|mtime updated  *	 vp - ctime|mtime|atime updated  */
+comment|/*  * Create a new directory and insert it into dvp using the name  * provided.  Return a pointer to the inserted directory.  *  *	IN:	dvp	- vnode of directory to add subdir to.  *		dirname	- name of new directory.  *		vap	- attributes of new directory.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *		vsecp	- ACL to be set  *  *	OUT:	vpp	- vnode of created directory.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime updated  *	 vp - ctime|mtime|atime updated  */
 end_comment
 
 begin_comment
@@ -8757,7 +8916,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -8792,7 +8954,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8829,7 +8994,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9049,7 +9217,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9356,7 +9527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a directory subdir entry.  If the current working  * directory is the same as the subdir to be removed, the  * remove will fail.  *  *	IN:	dvp	- vnode of directory to remove from.  *		name	- name of directory to be removed.  *		cwd	- vnode of current working directory.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	dvp - ctime|mtime updated  */
+comment|/*  * Remove a directory subdir entry.  If the current working  * directory is the same as the subdir to be removed, the  * remove will fail.  *  *	IN:	dvp	- vnode of directory to remove from.  *		name	- name of directory to be removed.  *		cwd	- vnode of current working directory.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime updated  */
 end_comment
 
 begin_comment
@@ -9541,7 +9712,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTDIR
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -9556,7 +9730,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -9869,7 +10046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read as many directory entries as will fit into the provided  * buffer from the given directory cursor position (specified in  * the uio structure.  *  *	IN:	vp	- vnode of directory to read.  *		uio	- structure supplying read location, range info,  *			  and return buffer.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	OUT:	uio	- updated offset and range, buffer filled.  *		eofp	- set to true if end-of-file detected.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - atime updated  *  * Note that the low 4 bits of the cookie returned by zap is always zero.  * This allows us to use the low range for "special" directory entries:  * We use 0 for '.', and 1 for '..'.  If this is the root of the filesystem,  * we use the offset 2 for the '.zfs' directory.  */
+comment|/*  * Read as many directory entries as will fit into the provided  * buffer from the given directory cursor position (specified in  * the uio structure).  *  *	IN:	vp	- vnode of directory to read.  *		uio	- structure supplying read location, range info,  *			  and return buffer.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	OUT:	uio	- updated offset and range, buffer filled.  *		eofp	- set to true if end-of-file detected.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - atime updated  *  * Note that the low 4 bits of the cookie returned by zap is always zero.  * This allows us to use the low range for "special" directory entries:  * We use 0 for '.', and 1 for '..'.  If this is the root of the filesystem,  * we use the offset 2 for the '.zfs' directory.  */
 end_comment
 
 begin_comment
@@ -10075,7 +10252,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10566,7 +10746,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 goto|goto
 name|update
@@ -10743,7 +10926,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|update
@@ -11281,7 +11467,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the requested file attributes and place them in the provided  * vattr structure.  *  *	IN:	vp	- vnode of file.  *		vap	- va_mask identifies requested attributes.  *			  If AT_XVATTR set, then optional attrs are requested  *		flags	- ATTR_NOACLCHECK (CIFS server context)  *		cr	- credentials of caller.  *		ct	- caller context  *  *	OUT:	vap	- attribute values.  *  *	RETURN:	0 (always succeeds)  */
+comment|/*  * Get the requested file attributes and place them in the provided  * vattr structure.  *  *	IN:	vp	- vnode of file.  *		vap	- va_mask identifies requested attributes.  *			  If AT_XVATTR set, then optional attrs are requested  *		flags	- ATTR_NOACLCHECK (CIFS server context)  *		cr	- credentials of caller.  *		ct	- caller context  *  *	OUT:	vap	- attribute values.  *  *	RETURN:	0 (always succeeds).  */
 end_comment
 
 begin_comment
@@ -12496,7 +12682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the file attributes to the values contained in the  * vattr structure.  *  *	IN:	vp	- vnode of file to be modified.  *		vap	- new attribute values.  *			  If AT_XVATTR set, then optional attrs are being set  *		flags	- ATTR_UTIME set if non-default time values provided.  *			- ATTR_NOACLCHECK (CIFS context only).  *		cr	- credentials of caller.  *		ct	- caller context  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - ctime updated, mtime updated if size changed.  */
+comment|/*  * Set the file attributes to the values contained in the  * vattr structure.  *  *	IN:	vp	- vnode of file to be modified.  *		vap	- new attribute values.  *			  If AT_XVATTR set, then optional attrs are being set  *		flags	- ATTR_UTIME set if non-default time values provided.  *			- ATTR_NOACLCHECK (CIFS context only).  *		cr	- credentials of caller.  *		ct	- caller context  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - ctime updated, mtime updated if size changed.  */
 end_comment
 
 begin_comment
@@ -12697,7 +12883,10 @@ name|AT_NOSET
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -12771,7 +12960,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12795,7 +12987,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EISDIR
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12825,7 +13020,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12895,7 +13093,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12923,7 +13124,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12981,7 +13185,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 block|}
@@ -13015,7 +13222,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 block|}
@@ -13729,7 +13939,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -14090,7 +14303,10 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out2
@@ -14157,7 +14373,10 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out2
@@ -14230,7 +14449,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -15868,7 +16090,10 @@ condition|)
 comment|/* We're a descendant of szp */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -15979,7 +16204,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move an entry from the provided source directory to the target  * directory.  Change the entry name as indicated.  *  *	IN:	sdvp	- Source directory containing the "old entry".  *		snm	- Old entry name.  *		tdvp	- Target directory to contain the "new entry".  *		tnm	- New entry name.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	sdvp,tdvp - ctime|mtime updated  */
+comment|/*  * Move an entry from the provided source directory to the target  * directory.  Change the entry name as indicated.  *  *	IN:	sdvp	- Source directory containing the "old entry".  *		snm	- Old entry name.  *		tdvp	- Target directory to contain the "new entry".  *		tnm	- New entry name.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	sdvp,tdvp - ctime|mtime updated  */
 end_comment
 
 begin_comment
@@ -16144,7 +16369,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -16193,7 +16421,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 block|}
@@ -16248,7 +16479,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -16600,7 +16834,10 @@ literal|0
 condition|)
 name|serr
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -16658,7 +16895,10 @@ literal|0
 condition|)
 name|terr
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
@@ -16758,7 +16998,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTDIR
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -16781,7 +17024,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EISDIR
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -17416,7 +17662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert the indicated symbolic reference entry into the directory.  *  *	IN:	dvp	- Directory to contain new symbolic link.  *		link	- Name for new symlink entry.  *		vap	- Attributes of new entry.  *		target	- Target path of new symlink.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	dvp - ctime|mtime updated  */
+comment|/*  * Insert the indicated symbolic reference entry into the directory.  *  *	IN:	dvp	- Directory to contain new symbolic link.  *		link	- Name for new symlink entry.  *		vap	- Attributes of new entry.  *		cr	- credentials of caller.  *		ct	- caller context  *		flags	- case flags  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime updated  */
 end_comment
 
 begin_comment
@@ -17580,7 +17826,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17608,7 +17857,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 block|}
@@ -17763,7 +18015,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18159,7 +18414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return, in the buffer contained in the provided uio structure,  * the symbolic path referred to by vp.  *  *	IN:	vp	- vnode of symbolic link.  *		uoip	- structure to contain the link path.  *		cr	- credentials of caller.  *		ct	- caller context  *  *	OUT:	uio	- structure to contain the link path.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - atime updated  */
+comment|/*  * Return, in the buffer contained in the provided uio structure,  * the symbolic path referred to by vp.  *  *	IN:	vp	- vnode of symbolic link.  *		uio	- structure to contain the link path.  *		cr	- credentials of caller.  *		ct	- caller context  *  *	OUT:	uio	- structure containing the link path.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - atime updated  */
 end_comment
 
 begin_comment
@@ -18287,7 +18542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert a new entry into directory tdvp referencing svp.  *  *	IN:	tdvp	- Directory to contain new entry.  *		svp	- vnode of new entry.  *		name	- name of new entry.  *		cr	- credentials of caller.  *		ct	- caller context  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	tdvp - ctime|mtime updated  *	 svp - ctime updated  */
+comment|/*  * Insert a new entry into directory tdvp referencing svp.  *  *	IN:	tdvp	- Directory to contain new entry.  *		svp	- vnode of new entry.  *		name	- name of new entry.  *		cr	- credentials of caller.  *		ct	- caller context  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	tdvp - ctime|mtime updated  *	 svp - ctime updated  */
 end_comment
 
 begin_comment
@@ -18437,7 +18692,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18464,7 +18722,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EXDEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18537,7 +18798,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18574,7 +18838,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18615,7 +18882,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -18660,7 +18930,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -19005,7 +19278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Push a page out to disk, klustering if possible.  *  *	IN:	vp	- file to push page to.  *		pp	- page to push.  *		flags	- additional flags.  *		cr	- credentials of caller.  *  *	OUT:	offp	- start of range pushed.  *		lenp	- len of range pushed.  *  *	RETURN:	0 if success  *		error code if failure  *  * NOTE: callers must have locked the page to be pushed.  On  * exit, the page (and all other pages in the kluster) must be  * unlocked.  */
+comment|/*  * Push a page out to disk, klustering if possible.  *  *	IN:	vp	- file to push page to.  *		pp	- page to push.  *		flags	- additional flags.  *		cr	- credentials of caller.  *  *	OUT:	offp	- start of range pushed.  *		lenp	- len of range pushed.  *  *	RETURN:	0 on success, error code on failure.  *  * NOTE: callers must have locked the page to be pushed.  On  * exit, the page (and all other pages in the kluster) must be  * unlocked.  */
 end_comment
 
 begin_comment
@@ -19308,7 +19581,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EDQUOT
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -19651,7 +19927,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy the portion of the file indicated from pages into the file.  * The pages are stored in a page list attached to the files vnode.  *  *	IN:	vp	- vnode of file to push page data to.  *		off	- position in file to put data.  *		len	- amount of data to write.  *		flags	- flags to control the operation.  *		cr	- credentials of caller.  *		ct	- caller context.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - ctime|mtime updated  */
+comment|/*  * Copy the portion of the file indicated from pages into the file.  * The pages are stored in a page list attached to the files vnode.  *  *	IN:	vp	- vnode of file to push page data to.  *		off	- position in file to put data.  *		len	- amount of data to write.  *		flags	- flags to control the operation.  *		cr	- credentials of caller.  *		ct	- caller context.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - ctime|mtime updated  */
 end_comment
 
 begin_comment
@@ -20355,7 +20631,7 @@ name|sun
 end_ifdef
 
 begin_comment
-comment|/*  * Bounds-check the seek operation.  *  *	IN:	vp	- vnode seeking within  *		ooff	- old file offset  *		noffp	- pointer to new file offset  *		ct	- caller context  *  *	RETURN:	0 if success  *		EINVAL if new offset invalid  */
+comment|/*  * Bounds-check the seek operation.  *  *	IN:	vp	- vnode seeking within  *		ooff	- old file offset  *		noffp	- pointer to new file offset  *		ct	- caller context  *  *	RETURN:	0 on success, EINVAL if new offset invalid.  */
 end_comment
 
 begin_comment
@@ -20508,7 +20784,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -20799,7 +21078,10 @@ name|ECKSUM
 condition|)
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -20855,7 +21137,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return pointers to the pages for the file region [off, off + len]  * in the pl array.  If plsz is greater than len, this function may  * also return page pointers from after the specified region  * (i.e. the region [off, off + plsz]).  These additional pages are  * only returned if they are already in the cache, or were created as  * part of a klustered read.  *  *	IN:	vp	- vnode of file to get data from.  *		off	- position in file to get data from.  *		len	- amount of data to retrieve.  *		plsz	- length of provided page list.  *		seg	- segment to obtain pages for.  *		addr	- virtual address of fault.  *		rw	- mode of created pages.  *		cr	- credentials of caller.  *		ct	- caller context.  *  *	OUT:	protp	- protection mode of created pages.  *		pl	- list of pages created.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - atime updated  */
+comment|/*  * Return pointers to the pages for the file region [off, off + len]  * in the pl array.  If plsz is greater than len, this function may  * also return page pointers from after the specified region  * (i.e. the region [off, off + plsz]).  These additional pages are  * only returned if they are already in the cache, or were created as  * part of a klustered read.  *  *	IN:	vp	- vnode of file to get data from.  *		off	- position in file to get data from.  *		len	- amount of data to retrieve.  *		plsz	- length of provided page list.  *		seg	- segment to obtain pages for.  *		addr	- virtual address of fault.  *		rw	- mode of created pages.  *		cr	- credentials of caller.  *		ct	- caller context.  *  *	OUT:	protp	- protection mode of created pages.  *		pl	- list of pages created.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - atime updated  */
 end_comment
 
 begin_comment
@@ -21204,7 +21486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Request a memory map for a section of a file.  This code interacts  * with common code and the VM system as follows:  *  *	common code calls mmap(), which ends up in smmap_common()  *  *	this calls VOP_MAP(), which takes you into (say) zfs  *  *	zfs_map() calls as_map(), passing segvn_create() as the callback  *  *	segvn_create() creates the new segment and calls VOP_ADDMAP()  *  *	zfs_addmap() updates z_mapcnt  */
+comment|/*  * Request a memory map for a section of a file.  This code interacts  * with common code and the VM system as follows:  *  * - common code calls mmap(), which ends up in smmap_common()  * - this calls VOP_MAP(), which takes you into (say) zfs  * - zfs_map() calls as_map(), passing segvn_create() as the callback  * - segvn_create() creates the new segment and calls VOP_ADDMAP()  * - zfs_addmap() updates z_mapcnt  */
 end_comment
 
 begin_comment
@@ -21316,7 +21598,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21348,7 +21633,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21368,7 +21656,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSYS
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21392,7 +21683,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21412,7 +21706,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENODEV
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21439,7 +21736,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21796,7 +22096,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free or allocate space in a file.  Currently, this function only  * supports the `F_FREESP' command.  However, this command is somewhat  * misnamed, as its functionality includes the ability to allocate as  * well as free space.  *  *	IN:	vp	- vnode of file to free data in.  *		cmd	- action to take (only F_FREESP supported).  *		bfp	- section of file to free/alloc.  *		flag	- current file open mode flags.  *		offset	- current file offset.  *		cr	- credentials of caller [UNUSED].  *		ct	- caller context.  *  *	RETURN:	0 if success  *		error code if failure  *  * Timestamps:  *	vp - ctime|mtime updated  */
+comment|/*  * Free or allocate space in a file.  Currently, this function only  * supports the `F_FREESP' command.  However, this command is somewhat  * misnamed, as its functionality includes the ability to allocate as  * well as free space.  *  *	IN:	vp	- vnode of file to free data in.  *		cmd	- action to take (only F_FREESP supported).  *		bfp	- section of file to free/alloc.  *		flag	- current file open mode flags.  *		offset	- current file offset.  *		cr	- credentials of caller [UNUSED].  *		ct	- caller context.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	vp - ctime|mtime updated  */
 end_comment
 
 begin_comment
@@ -21883,7 +22183,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -21930,7 +22233,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -22154,12 +22460,48 @@ name|LONG_FID_LEN
 else|:
 name|SHORT_FID_LEN
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+if|if
+condition|(
+name|fidp
+operator|->
+name|fid_len
+operator|<
+name|size
+condition|)
+block|{
 name|fidp
 operator|->
 name|fid_len
 operator|=
 name|size
 expr_stmt|;
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENOSPC
+argument_list|)
+operator|)
+return|;
+block|}
+else|#
+directive|else
+name|fidp
+operator|->
+name|fid_len
+operator|=
+name|size
+expr_stmt|;
+endif|#
+directive|endif
 name|zfid
 operator|=
 operator|(
@@ -22952,7 +23294,7 @@ name|sun
 end_ifdef
 
 begin_comment
-comment|/*  * Tunable, both must be a power of 2.  *  * zcr_blksz_min: the smallest read we may consider to loan out an arcbuf  * zcr_blksz_max: if set to less than the file block size, allow loaning out of  *                an arcbuf for a partial block read  */
+comment|/*  * The smallest read we may consider to loan out an arcbuf.  * This must be a power of 2.  */
 end_comment
 
 begin_decl_stmt
@@ -22969,6 +23311,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* 1K */
+end_comment
+
+begin_comment
+comment|/*  * If set to less than the file block size, allow loaning out of an  * arcbuf for a partial block read.  This must be a power of 2.  */
 end_comment
 
 begin_decl_stmt
@@ -23094,7 +23440,10 @@ name|UIOTYPE_ZEROCOPY
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -23140,7 +23489,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -23433,7 +23785,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -23476,7 +23831,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -23489,7 +23847,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -23654,7 +24015,10 @@ parameter_list|()
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -23668,7 +24032,10 @@ parameter_list|()
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EISDIR
+argument_list|)
 operator|)
 return|;
 block|}
@@ -24396,7 +24763,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Extended attribute directory vnode operations template  *	This template is identical to the directory vnodes  *	operation template except for restricted operations:  *		VOP_MKDIR()  *		VOP_SYMLINK()  * Note that there are other restrictions embedded in:  *	zfs_create()	- restrict type to VREG  *	zfs_link()	- no links into/out of attribute space  *	zfs_rename()	- no moves into/out of attribute space  */
+comment|/*  * Extended attribute directory vnode operations template  *  * This template is identical to the directory vnodes  * operation template except for restricted operations:  *	VOP_MKDIR()  *	VOP_SYMLINK()  *  * Note that there are other restrictions embedded in:  *	zfs_create()	- restrict type to VREG  *	zfs_link()	- no links into/out of attribute space  *	zfs_rename()	- no moves into/out of attribute space  */
 end_comment
 
 begin_decl_stmt

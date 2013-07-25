@@ -116,6 +116,8 @@ operator|.
 name|slave
 operator|=
 name|DDC_ADDR
+operator|<<
+literal|1
 block|,
 operator|.
 name|flags
@@ -138,6 +140,8 @@ operator|.
 name|slave
 operator|=
 name|DDC_ADDR
+operator|<<
+literal|1
 block|,
 operator|.
 name|flags

@@ -1518,6 +1518,8 @@ modifier|*
 name|BB
 parameter_list|)
 block|{
+name|std
+operator|::
 name|copy
 argument_list|(
 name|po_begin
@@ -1530,6 +1532,8 @@ argument_list|(
 name|BB
 argument_list|)
 argument_list|,
+name|std
+operator|::
 name|back_inserter
 argument_list|(
 name|Blocks

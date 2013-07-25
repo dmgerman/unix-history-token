@@ -38,6 +38,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ASSEMBLY__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -48,15 +65,11 @@ name|__XEN_INTERFACE_VERSION__
 argument_list|)
 end_if
 
-begin_comment
-comment|/*   * Can update to a more recent version when we implement   * the hypercall page   */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|__XEN_INTERFACE_VERSION__
-value|0x00030204
+value|0x00030208
 end_define
 
 begin_endif
@@ -64,11 +77,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|GRANT_REF_INVALID
+value|0xffffffff
+end_define
+
 begin_include
 include|#
 directive|include
 file|<xen/interface/xen.h>
 end_include
+
+begin_comment
+comment|/* Everything below this point is not included by assembler (.S) files. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASSEMBLY__
+end_ifndef
 
 begin_comment
 comment|/* Force a proper event-channel callback from Xen. */
@@ -361,16 +391,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Everything below this point is not included by assembler (.S) files. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__ASSEMBLY__
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -580,6 +600,63 @@ define|#
 directive|define
 name|spin_unlock_irqrestore
 value|mtx_unlock_irqrestore
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|xen_mb
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|xen_mb
+parameter_list|()
+value|mb()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|xen_rmb
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|xen_rmb
+parameter_list|()
+value|rmb()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|xen_wmb
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|xen_wmb
+parameter_list|()
+value|wmb()
 end_define
 
 begin_endif

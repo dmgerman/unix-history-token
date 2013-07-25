@@ -50,25 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_IMLIST_H
+name|LLVM_ADT_IMMUTABLELIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_IMLIST_H
+name|LLVM_ADT_IMMUTABLELIST_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include

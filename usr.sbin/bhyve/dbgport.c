@@ -378,6 +378,8 @@ literal|"bvmdbg"
 block|,
 name|BVM_DBG_PORT
 block|,
+literal|1
+block|,
 name|IOPORT_F_INOUT
 block|,
 name|dbg_handler

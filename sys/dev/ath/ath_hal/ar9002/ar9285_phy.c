@@ -78,8 +78,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|struct
-name|ar9285_antcomb_conf
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 name|antconf
 parameter_list|)
@@ -132,6 +131,12 @@ operator|)
 operator|>>
 name|AR_PHY_9285_FAST_DIV_BIAS_S
 expr_stmt|;
+name|antconf
+operator|->
+name|antdiv_configgroup
+operator|=
+name|DEFAULT_ANTDIV_CONFIG_GROUP
+expr_stmt|;
 block|}
 end_function
 
@@ -144,8 +149,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|struct
-name|ar9285_antcomb_conf
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 name|antconf
 parameter_list|)
@@ -267,10 +271,13 @@ name|ee_base
 operator|.
 name|modalHeader
 decl_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* For now, simply disable this until it's better debugged. -adrian */
-return|return
-name|AH_FALSE
-return|;
+block|return AH_FALSE;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

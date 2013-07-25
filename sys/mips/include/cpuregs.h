@@ -1895,13 +1895,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIPS_MAX_TLB_ENTRIES
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
 name|MIPS_CONFIG1_IS_MASK
 value|0x01C00000
 end_define

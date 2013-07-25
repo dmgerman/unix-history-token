@@ -72,13 +72,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_DDP
-value|M_PROTO1
-end_define
-
-begin_define
-define|#
-directive|define
 name|USE_DDP_RX_FLOW_CONTROL
 end_define
 
@@ -658,6 +651,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|clip_head
+argument_list|,
+name|clip_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|tom_data
@@ -719,13 +722,13 @@ name|struct
 name|mtx
 name|clip_table_lock
 decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|clip_entry
-argument_list|)
+name|struct
+name|clip_head
 name|clip_table
-expr_stmt|;
+decl_stmt|;
+name|int
+name|clip_gen
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -998,7 +1001,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint32_t
+name|uint64_t
 name|select_ntuple
 parameter_list|(
 name|struct
@@ -1008,8 +1011,6 @@ parameter_list|,
 name|struct
 name|l2t_entry
 modifier|*
-parameter_list|,
-name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1419,6 +1420,8 @@ name|struct
 name|toepcb
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|uint16_t
 parameter_list|,
 name|uint64_t
@@ -1491,6 +1494,17 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|get_ddp_mbuf
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

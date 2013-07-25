@@ -1286,18 +1286,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void ldns_dnssec_rrsets_print_soa(FILE *out, 		ldns_dnssec_rrsets *rrsets, 		bool follow, 		bool show_soa) { 	ldns_dnssec_rrsets_print_soa_fmt(out, ldns_output_format_default, 		       	rrsets, follow, show_soa); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|ldns_dnssec_rrsets_print_fmt
@@ -1690,18 +1678,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static ldns_rr * ldns_dnssec_name_nsec(ldns_dnssec_name *rrset) { 	if (rrset) { 		return rrset->nsec; 	} 	return NULL; }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -2355,18 +2331,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void ldns_dnssec_name_print_soa(FILE *out, ldns_dnssec_name *name, bool show_soa) { 	ldns_dnssec_name_print_soa_fmt(out, ldns_output_format_default, 		       name, show_soa); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -3318,7 +3282,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* use for dname comparison in tree */
-specifier|static
 name|int
 name|ldns_dname_compare_v
 parameter_list|(

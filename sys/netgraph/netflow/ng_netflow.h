@@ -268,7 +268,7 @@ define|#
 directive|define
 name|MAXDLTNAMELEN
 value|20
-name|u_int16_t
+name|uint16_t
 name|ifinfo_index
 decl_stmt|;
 comment|/* connected iface index */
@@ -307,11 +307,11 @@ begin_struct
 struct|struct
 name|ng_netflow_setifindex
 block|{
-name|u_int16_t
+name|uint16_t
 name|iface
 decl_stmt|;
 comment|/* which iface index change */
-name|u_int16_t
+name|uint16_t
 name|index
 decl_stmt|;
 comment|/* new index */
@@ -427,11 +427,11 @@ begin_struct
 struct|struct
 name|ng_netflow_setconfig
 block|{
-name|u_int16_t
+name|uint16_t
 name|iface
 decl_stmt|;
 comment|/* which iface config change */
-name|u_int32_t
+name|uint32_t
 name|conf
 decl_stmt|;
 comment|/* new config */
@@ -494,7 +494,7 @@ comment|/* current hash index */
 name|uint32_t
 name|list_id
 decl_stmt|;
-comment|/* current record number in given hash */
+comment|/* current record number in hash */
 name|uint32_t
 name|nentries
 decl_stmt|;
@@ -542,7 +542,6 @@ block|{
 name|uint16_t
 name|flow_type
 decl_stmt|;
-comment|/* IPv4 L4/L3 flow, see NETFLOW_V9_FLOW* */
 name|uint16_t
 name|fib
 decl_stmt|;
@@ -615,7 +614,6 @@ block|{
 name|uint16_t
 name|flow_type
 decl_stmt|;
-comment|/* IPv4 L4/L3 Ipv6 L4/L3 flow, see NETFLOW_V9_FLOW* */
 name|uint16_t
 name|fib
 decl_stmt|;
@@ -880,14 +878,14 @@ begin_define
 define|#
 directive|define
 name|NREC6_AT_ONCE
-value|(NREC_AT_ONCE * sizeof(struct flow_entry_data) / \ 				sizeof(struct flow6_entry_data))
+value|(NREC_AT_ONCE * sizeof(struct flow_entry_data) / \ 			sizeof(struct flow6_entry_data))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NGRESP_SIZE
-value|(sizeof(struct ngnf_show_header) + (NREC_AT_ONCE * \ 				sizeof(struct flow_entry_data)))
+value|(sizeof(struct ngnf_show_header) + (NREC_AT_ONCE * \ 			sizeof(struct flow_entry_data)))
 end_define
 
 begin_define
@@ -957,7 +955,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_INFO_TYPE
-value|{			\ 	{ "IPv4 bytes",&ng_parse_uint64_type },	\ 	{ "IPv4 packets",&ng_parse_uint32_type },	\ 	{ "IPv6 bytes",&ng_parse_uint64_type },	\ 	{ "IPv6 packets",&ng_parse_uint32_type },	\ 	{ "IPv4 skipped bytes",&ng_parse_uint64_type },	\ 	{ "IPv4 skipped packets",&ng_parse_uint32_type },	\ 	{ "IPv6 skipped bytes",&ng_parse_uint64_type },	\ 	{ "IPv6 skipped packets",&ng_parse_uint32_type },	\ 	{ "IPv4 records used",&ng_parse_uint32_type },\ 	{ "IPv6 records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "V5 failed exports",&ng_parse_uint32_type },\ 	{ "V9 failed exports",&ng_parse_uint32_type },\ 	{ "mbuf reallocations",&ng_parse_uint32_type },\ 	{ "fibs allocated",&ng_parse_uint32_type },\ 	{ "Active expiries",&ng_parse_uint32_type },\ 	{ "Inactive expiries",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }					\ }
+value|{					\ 	{ "IPv4 bytes",&ng_parse_uint64_type },\ 	{ "IPv4 packets",&ng_parse_uint32_type },\ 	{ "IPv6 bytes",&ng_parse_uint64_type },\ 	{ "IPv6 packets",&ng_parse_uint32_type },\ 	{ "IPv4 skipped bytes",&ng_parse_uint64_type },\ 	{ "IPv4 skipped packets",&ng_parse_uint32_type },\ 	{ "IPv6 skipped bytes",&ng_parse_uint64_type },\ 	{ "IPv6 skipped packets",&ng_parse_uint32_type },\ 	{ "IPv4 records used",&ng_parse_uint32_type },\ 	{ "IPv6 records used",&ng_parse_uint32_type },\ 	{ "Failed allocations",&ng_parse_uint32_type },\ 	{ "V5 failed exports",&ng_parse_uint32_type },\ 	{ "V9 failed exports",&ng_parse_uint32_type },\ 	{ "mbuf reallocations",&ng_parse_uint32_type },\ 	{ "fibs allocated",&ng_parse_uint32_type },\ 	{ "Active expiries",&ng_parse_uint32_type },\ 	{ "Inactive expiries",&ng_parse_uint32_type },\ 	{ "Inactive timeout",&ng_parse_uint32_type },\ 	{ "Active timeout",&ng_parse_uint32_type },\ 	{ NULL }						\ }
 end_define
 
 begin_comment
@@ -968,7 +966,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_IFINFO_TYPE
-value|{			\ 	{ "packets",&ng_parse_uint32_type },	\ 	{ "data link type",&ng_parse_uint8_type },	\ 	{ "index",&ng_parse_uint16_type },		\ 	{ "conf",&ng_parse_uint32_type },		\ 	{ NULL }					\ }
+value|{			\ 	{ "packets",&ng_parse_uint32_type },\ 	{ "data link type",&ng_parse_uint8_type },	\ 	{ "index",&ng_parse_uint16_type },\ 	{ "conf",&ng_parse_uint32_type },\ 	{ NULL }					\ }
 end_define
 
 begin_comment
@@ -979,7 +977,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_SETDLT_TYPE
-value|{			\ 	{ "iface",&ng_parse_uint16_type },	\ 	{ "dlt",&ng_parse_uint8_type  },	\ 	{ NULL }					\ }
+value|{			\ 	{ "iface",&ng_parse_uint16_type },	\ 	{ "dlt",&ng_parse_uint8_type },		\ 	{ NULL }					\ }
 end_define
 
 begin_comment
@@ -1045,7 +1043,7 @@ begin_define
 define|#
 directive|define
 name|NG_NETFLOW_V9INFO_TYPE
-value|{			\ 	{ "v9 template packets",&ng_parse_uint16_type },\ 	{ "v9 template time",&ng_parse_uint16_type },\ 	{ "v9 MTU",&ng_parse_uint16_type },\ 	{ NULL }					\ }
+value|{				\ 	{ "v9 template packets",&ng_parse_uint16_type },\ 	{ "v9 template time",&ng_parse_uint16_type },\ 	{ "v9 MTU",&ng_parse_uint16_type },\ 	{ NULL }						\ }
 end_define
 
 begin_comment
@@ -1121,11 +1119,11 @@ name|uint32_t
 name|fib
 decl_stmt|;
 comment|/* kernel fib id */
+comment|/* Various data used for export */
 name|struct
 name|netflow_export_item
 name|exp
 decl_stmt|;
-comment|/* Various data used for export */
 name|struct
 name|mtx
 name|export_mtx
@@ -1156,17 +1154,17 @@ comment|/* unixtime of last template announce */
 name|uint32_t
 name|templ_last_pkt
 decl_stmt|;
-comment|/* packets count on last template announce */
+comment|/* packet count on last announce */
 name|uint32_t
 name|sent_packets
 decl_stmt|;
 comment|/* packets sent by exporter; */
+comment|/* Current packet specific options */
 name|struct
 name|netflow_v9_packet_opt
 modifier|*
 name|export9_opt
 decl_stmt|;
-comment|/* current packet specific options */
 block|}
 struct|;
 end_struct
@@ -1250,7 +1248,7 @@ name|fib_export_p
 modifier|*
 name|fib_data
 decl_stmt|;
-comment|/* array of pointers to per-fib data */
+comment|/* vector to per-fib data */
 name|uint16_t
 name|maxfibs
 decl_stmt|;
@@ -1273,6 +1271,7 @@ name|u_char
 name|flowsets_count
 decl_stmt|;
 comment|/* current flowsets used */
+comment|/* Count of records in each flowset */
 name|u_char
 name|flowset_records
 index|[
@@ -1281,11 +1280,11 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-comment|/* Count of records in each flowset */
 name|uint16_t
 name|mtu
 decl_stmt|;
 comment|/* export interface MTU */
+comment|/* Pointers to pre-compiled flowsets */
 name|struct
 name|netflow_v9_flowset_header
 modifier|*
@@ -1296,7 +1295,6 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-comment|/* Pointers to pre-compiled flowsets */
 name|struct
 name|ng_netflow_iface
 name|ifaces

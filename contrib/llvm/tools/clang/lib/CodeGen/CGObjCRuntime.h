@@ -70,22 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/IdentifierTable.h"
-end_include
-
-begin_comment
-comment|// Selector
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/DeclObjC.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CGBuilder.h"
 end_include
 
@@ -100,6 +84,22 @@ include|#
 directive|include
 file|"CGValue.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclObjC.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/IdentifierTable.h"
+end_include
+
+begin_comment
+comment|// Selector
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -402,7 +402,7 @@ name|Value
 operator|*
 name|GetSelector
 argument_list|(
-argument|CGBuilderTy&Builder
+argument|CodeGenFunction&CGF
 argument_list|,
 argument|Selector Sel
 argument_list|,
@@ -419,9 +419,9 @@ name|Value
 operator|*
 name|GetSelector
 argument_list|(
-name|CGBuilderTy
+name|CodeGenFunction
 operator|&
-name|Builder
+name|CGF
 argument_list|,
 specifier|const
 name|ObjCMethodDecl
@@ -578,9 +578,9 @@ name|Value
 operator|*
 name|GenerateProtocolRef
 argument_list|(
-name|CGBuilderTy
+name|CodeGenFunction
 operator|&
-name|Builder
+name|CGF
 argument_list|,
 specifier|const
 name|ObjCProtocolDecl
@@ -688,14 +688,26 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
-comment|// API for atomic copying of qualified aggregates with non-trivial copy
-comment|// assignment (c++) in setter/getter.
+comment|/// API for atomic copying of qualified aggregates with non-trivial copy
+comment|/// assignment (c++) in setter.
 name|virtual
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GetCppAtomicObjectFunction
+name|GetCppAtomicObjectSetFunction
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|/// API for atomic copying of qualified aggregates with non-trivial copy
+comment|/// assignment (c++) in getter.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetCppAtomicObjectGetFunction
 argument_list|()
 operator|=
 literal|0
@@ -709,9 +721,9 @@ name|Value
 operator|*
 name|GetClass
 argument_list|(
-name|CGBuilderTy
+name|CodeGenFunction
 operator|&
-name|Builder
+name|CGF
 argument_list|,
 specifier|const
 name|ObjCInterfaceDecl
@@ -728,7 +740,7 @@ name|Value
 operator|*
 name|EmitNSAutoreleasePoolClassRef
 argument_list|(
-argument|CGBuilderTy&Builder
+argument|CodeGenFunction&CGF
 argument_list|)
 block|{
 name|llvm_unreachable
@@ -798,6 +810,11 @@ specifier|const
 name|ObjCAtThrowStmt
 operator|&
 name|S
+argument_list|,
+name|bool
+name|ClearInsertionPoint
+operator|=
+name|true
 argument_list|)
 init|=
 literal|0
@@ -1064,6 +1081,20 @@ operator|::
 name|CGBlockInfo
 operator|&
 name|blockInfo
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BuildByrefLayout
+argument_list|(
+argument|CodeGen::CodeGenModule&CGM
+argument_list|,
+argument|QualType T
 argument_list|)
 operator|=
 literal|0

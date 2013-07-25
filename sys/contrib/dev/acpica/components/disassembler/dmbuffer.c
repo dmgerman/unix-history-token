@@ -344,7 +344,7 @@ operator|*
 operator|)
 name|ByteData
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1386,12 +1386,12 @@ name|Integer
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Write every other byte as an ASCII character */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\""
 argument_list|)
 expr_stmt|;
-comment|/* Write every other byte as an ASCII character */
 for|for
 control|(
 name|i

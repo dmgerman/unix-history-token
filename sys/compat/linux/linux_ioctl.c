@@ -318,7 +318,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_videodev.h>
+file|<contrib/v4l/videodev.h>
 end_include
 
 begin_include
@@ -330,7 +330,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_videodev2.h>
+file|<contrib/v4l/videodev2.h>
 end_include
 
 begin_include
@@ -18209,6 +18209,36 @@ operator|->
 name|cmd
 operator|=
 name|USB_SET_TEMPLATE
+expr_stmt|;
+break|break;
+case|case
+name|FBSD_LUSB_FS_OPEN_STREAM
+case|:
+name|args
+operator|->
+name|cmd
+operator|=
+name|USB_FS_OPEN_STREAM
+expr_stmt|;
+break|break;
+case|case
+name|FBSD_LUSB_GET_DEV_PORT_PATH
+case|:
+name|args
+operator|->
+name|cmd
+operator|=
+name|USB_GET_DEV_PORT_PATH
+expr_stmt|;
+break|break;
+case|case
+name|FBSD_LUSB_GET_POWER_USAGE
+case|:
+name|args
+operator|->
+name|cmd
+operator|=
+name|USB_GET_POWER_USAGE
 expr_stmt|;
 break|break;
 default|default:

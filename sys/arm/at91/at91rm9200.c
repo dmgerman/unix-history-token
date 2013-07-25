@@ -480,7 +480,7 @@ argument_list|)
 block|,
 name|DEVICE
 argument_list|(
-literal|"af91_cfata"
+literal|"at91_cfata"
 argument_list|,
 name|CF
 argument_list|,

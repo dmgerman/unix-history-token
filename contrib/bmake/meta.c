@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.26 2013/01/19 04:23:37 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.30 2013/05/16 21:56:56 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -2311,9 +2311,44 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialization we need before reading makefiles.  */
+end_comment
+
 begin_function
 name|void
 name|meta_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|USE_FILEMON
+comment|/* this allows makefiles to test if we have filemon support */
+name|Var_Set
+argument_list|(
+literal|".MAKE.PATH_FILEMON"
+argument_list|,
+name|_PATH_FILEMON
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialization we need after reading makefiles.  */
+end_comment
+
+begin_function
+name|void
+name|meta_mode_init
 parameter_list|(
 specifier|const
 name|char
@@ -4479,6 +4514,11 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|ln
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* we're done with it */
 block|}
 block|}
 break|break;
@@ -5169,12 +5209,11 @@ argument_list|(
 name|ln
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|needOODATE
-condition|)
-block|{
+name|Boolean
+name|hasOODATE
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 name|strstr
@@ -5184,7 +5223,7 @@ argument_list|,
 literal|"$?"
 argument_list|)
 condition|)
-name|needOODATE
+name|hasOODATE
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5203,7 +5242,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* check for $[{(].OODATE[)}] */
+comment|/* check for $[{(].OODATE[:)}] */
 if|if
 condition|(
 name|cp
@@ -5220,15 +5259,22 @@ index|]
 operator|==
 literal|'$'
 condition|)
-name|needOODATE
+name|hasOODATE
 operator|=
 name|TRUE
 expr_stmt|;
 block|}
 if|if
 condition|(
+name|hasOODATE
+condition|)
+block|{
 name|needOODATE
-operator|&&
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
 name|DEBUG
 argument_list|(
 name|META
@@ -5238,7 +5284,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"%s: %d: cannot compare commands using .OODATE\n"
+literal|"%s: %d: cannot compare command using .OODATE\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -5384,7 +5430,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|needOODATE
+name|hasOODATE
 operator|&&
 operator|!
 operator|(

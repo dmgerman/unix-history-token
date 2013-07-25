@@ -74,13 +74,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|OPROFILE_WRAPPER_H
+name|LLVM_EXECUTIONENGINE_OPROFILEWRAPPER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|OPROFILE_WRAPPER_H
+name|LLVM_EXECUTIONENGINE_OPROFILEWRAPPER_H
 end_define
 
 begin_include
@@ -184,9 +184,7 @@ function_decl|(
 modifier|*
 name|op_major_version_ptr_t
 function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// This is not a part of the opagent API, but is useful nonetheless
 typedef|typedef
@@ -195,9 +193,7 @@ function_decl|(
 modifier|*
 name|IsOProfileRunningPtrT
 function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|op_agent_t
 name|Agent
@@ -362,15 +358,11 @@ parameter_list|)
 function_decl|;
 name|int
 name|op_major_version
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|int
 name|op_minor_version
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// Returns true if the oprofiled process is running, the opagent library is
 comment|// loaded and a connection to the agent has been established, and false
@@ -412,7 +404,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//OPROFILE_WRAPPER_H
+comment|// LLVM_EXECUTIONENGINE_OPROFILEWRAPPER_H
 end_comment
 
 end_unit

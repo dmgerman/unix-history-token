@@ -2640,6 +2640,9 @@ name|printf
 argument_list|(
 literal|"\tBase Address=0x%016jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|alloc
 operator|->
 name|Address
@@ -2720,8 +2723,11 @@ name|sdp
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tLocality Count=%jd\n"
+literal|"\tLocality Count=%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|slit
 operator|->
 name|LocalityCount
@@ -2749,8 +2755,11 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %3jd"
+literal|" %3ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -2802,8 +2811,11 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"\t %3jd |"
+literal|"\t %3ju |"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -3907,6 +3919,9 @@ name|printf
 argument_list|(
 literal|"\tAddress=0x%0jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|drhd
 operator|->
 name|Address
@@ -4037,6 +4052,9 @@ name|printf
 argument_list|(
 literal|"\tBaseAddress=0x%0jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rmrr
 operator|->
 name|BaseAddress
@@ -4046,6 +4064,9 @@ name|printf
 argument_list|(
 literal|"\tLimitAddress=0x%0jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rmrr
 operator|->
 name|EndAddress
@@ -4308,6 +4329,9 @@ name|printf
 argument_list|(
 literal|"\tBaseAddress=0x%0jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rhsa
 operator|->
 name|BaseAddress

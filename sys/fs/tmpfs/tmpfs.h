@@ -857,6 +857,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|tmpfs_destroy_vobject
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|vm_object_t
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|tmpfs_alloc_vp
 parameter_list|(

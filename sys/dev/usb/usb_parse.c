@@ -150,6 +150,25 @@ directive|include
 file|<dev/usb/usbdi_util.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|USB_DEBUG_VAR
+value|usb_debug
+end_define
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_core.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_debug.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -472,7 +491,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* first time */
+comment|/* first time or zero descriptors */
 block|}
 elseif|else
 if|if
@@ -500,6 +519,38 @@ name|ps
 operator|->
 name|iface_index_alt
 operator|++
+expr_stmt|;
+block|}
+if|#
+directive|if
+operator|(
+name|USB_IFACE_MAX
+operator|<=
+literal|0
+operator|)
+error|#
+directive|error
+literal|"USB_IFACE_MAX must be defined greater than zero"
+endif|#
+directive|endif
+comment|/* check for too many interfaces */
+if|if
+condition|(
+name|ps
+operator|->
+name|iface_index
+operator|>=
+name|USB_IFACE_MAX
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Interface limit reached\n"
+argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* store and return current descriptor */

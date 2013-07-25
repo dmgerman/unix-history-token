@@ -96,6 +96,7 @@ block|{
 specifier|extern
 name|sigset_t
 name|_sigintr
+name|__hidden
 decl_stmt|;
 name|struct
 name|sigaction

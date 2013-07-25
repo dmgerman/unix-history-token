@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -2220,6 +2226,8 @@ argument_list|(
 name|vp
 operator|->
 name|v_mount
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -4489,9 +4497,12 @@ index|[
 name|loc
 index|]
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_sbsize
 argument_list|)
 expr_stmt|;
 name|bawrite
@@ -12602,19 +12613,6 @@ name|nbp
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|BO_MTX
-argument_list|(
-name|bo
-argument_list|)
-operator|!=
-name|VI_MTX
-argument_list|(
-name|vp
-argument_list|)
-condition|)
-block|{
 name|VI_UNLOCK
 argument_list|(
 name|devvp
@@ -12625,7 +12623,6 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
-block|}
 name|BUF_UNLOCK
 argument_list|(
 name|nbp

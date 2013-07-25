@@ -1387,18 +1387,6 @@ argument_list|,
 name|IMSC_MASK_ALL
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_rxfifosz
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
-name|sc_txfifosz
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1755,6 +1743,18 @@ name|sc_dev
 argument_list|,
 literal|"PrimeCell UART (PL011)"
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rxfifosz
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_txfifosz
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(

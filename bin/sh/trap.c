@@ -609,6 +609,7 @@ name|trapcmd
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*

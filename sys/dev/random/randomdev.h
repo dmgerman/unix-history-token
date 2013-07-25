@@ -139,6 +139,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|random_systat
+modifier|*
 name|random_systat
 decl_stmt|;
 end_decl_stmt
@@ -150,6 +151,7 @@ name|random_ident_hardware
 parameter_list|(
 name|struct
 name|random_systat
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

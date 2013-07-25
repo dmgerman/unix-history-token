@@ -73,6 +73,9 @@ decl_stmt|;
 name|class
 name|BasicBlockPass
 decl_stmt|;
+name|class
+name|Pass
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// @brief Vectorize configuration.
 struct|struct
@@ -155,6 +158,10 @@ comment|/// @brief The maximum number of pairable instructions per group.
 name|unsigned
 name|MaxInsts
 decl_stmt|;
+comment|/// @brief The maximum number of candidate instruction pairs per group.
+name|unsigned
+name|MaxPairs
+decl_stmt|;
 comment|/// @brief The maximum number of pairing iterations.
 name|unsigned
 name|MaxIter
@@ -201,6 +208,15 @@ comment|//
 name|Pass
 modifier|*
 name|createLoopVectorizePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// SLPVectorizer - Create a bottom-up SLP vectorizer pass.
+comment|//
+name|Pass
+modifier|*
+name|createSLPVectorizerPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

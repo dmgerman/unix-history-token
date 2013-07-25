@@ -1760,6 +1760,9 @@ decl_stmt|;
 name|uint8_t
 name|trb_running
 decl_stmt|;
+name|uint8_t
+name|trb_ep_mode
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1977,6 +1980,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|usb_callout
+name|sc_callout
+decl_stmt|;
 name|union
 name|xhci_hub_desc
 name|sc_hub_desc
@@ -2001,6 +2008,9 @@ name|struct
 name|resource
 modifier|*
 name|sc_io_res
+decl_stmt|;
+name|int
+name|sc_irq_rid
 decl_stmt|;
 name|struct
 name|resource
@@ -2145,6 +2155,15 @@ end_comment
 begin_function_decl
 name|uint32_t
 name|xhci_get_port_route
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+name|xhci_use_polling
 parameter_list|(
 name|void
 parameter_list|)

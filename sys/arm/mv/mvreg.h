@@ -1234,6 +1234,31 @@ name|CPU_TIMER_WD_AUTO
 value|0x00000020
 end_define
 
+begin_comment
+comment|/* 25MHz mode is Armada XP - specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_TIMER_WD_25MHZ_EN
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_TIMER0_25MHZ_EN
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_TIMER1_25MHZ_EN
+value|0x00001000
+end_define
+
 begin_define
 define|#
 directive|define

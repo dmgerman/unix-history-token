@@ -1696,18 +1696,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|ssize_t
 name|cur_mb_len
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Byte length of the current scanning 				   multibyte character.  */
+comment|/* Byte length of the current scanning 				   multibyte character.  Must also handle 				   negative result from mbrlen().  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|ssize_t
 name|cur_mb_index
 decl_stmt|;
 end_decl_stmt
@@ -1799,7 +1799,7 @@ specifier|const
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -11975,7 +11975,7 @@ name|int
 name|match_len
 decl_stmt|;
 comment|/* Length of the character (or collating element) 			   with which this operator match.  */
-name|int
+name|size_t
 name|op_len
 decl_stmt|;
 comment|/* Length of the operator.  */

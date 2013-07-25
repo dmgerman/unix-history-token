@@ -475,12 +475,31 @@ block|,
 literal|"Translation Fault (S)"
 block|}
 block|,
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|!=
+literal|0
+block|{
+name|NULL
+block|,
+literal|"Translation Flag Fault"
+block|}
+block|,
+else|#
+directive|else
 block|{
 name|dab_buserr
 block|,
 literal|"External Linefetch Abort (P)"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -828,7 +847,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("data abort: %p (from %p %p)\n", (void*)far, (void*)tf->tf_pc, 	    (void*)tf->tf_svc_lr);
+block|printf("data abort: fault address=%p (from pc=%p lr=%p)\n", 	       (void*)far, (void*)tf->tf_pc, (void*)tf->tf_svc_lr);
 endif|#
 directive|endif
 comment|/* Update vmmeter statistics */
@@ -1271,12 +1290,10 @@ argument_list|(
 name|fsr
 argument_list|)
 condition|)
-block|{
 name|ftype
 operator|=
 name|VM_PROT_WRITE
 expr_stmt|;
-block|}
 else|else
 block|{
 name|u_int
@@ -1323,14 +1340,15 @@ operator|==
 literal|0x08000000
 operator|)
 condition|)
-comment|/* STM/CDT */
 block|{
+comment|/* STM/CDT */
 name|ftype
 operator|=
 name|VM_PROT_WRITE
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -1353,6 +1371,7 @@ name|ftype
 operator|=
 name|VM_PROT_READ
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * See if the fault is as a result of ref/mod emulation, 	 * or domain mismatch. 	 */
 ifdef|#

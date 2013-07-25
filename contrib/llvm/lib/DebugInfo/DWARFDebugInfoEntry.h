@@ -170,37 +170,42 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Extracts a debug info entry, which is a child of a given compile unit,
+comment|/// starting at a given offset. If DIE can't be extracted, returns false and
+comment|/// doesn't change OffsetPtr.
 name|bool
 name|extractFast
 parameter_list|(
 specifier|const
 name|DWARFCompileUnit
 modifier|*
-name|cu
+name|CU
 parameter_list|,
 specifier|const
 name|uint8_t
 modifier|*
-name|fixed_form_sizes
+name|FixedFormSizes
 parameter_list|,
 name|uint32_t
 modifier|*
-name|offset_ptr
+name|OffsetPtr
 parameter_list|)
 function_decl|;
 comment|/// Extract a debug info entry for a given compile unit from the
 comment|/// .debug_info and .debug_abbrev data starting at the given offset.
+comment|/// If compile unit can't be parsed, returns false and doesn't change
+comment|/// OffsetPtr.
 name|bool
 name|extract
 parameter_list|(
 specifier|const
 name|DWARFCompileUnit
 modifier|*
-name|cu
+name|CU
 parameter_list|,
 name|uint32_t
 modifier|*
-name|offset_ptr
+name|OffsetPtr
 parameter_list|)
 function_decl|;
 name|uint32_t

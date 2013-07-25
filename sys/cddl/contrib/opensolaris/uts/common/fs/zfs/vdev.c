@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1598,7 +1598,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1616,7 +1619,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If this is a load, get the vdev guid from the nvlist. 	 * Otherwise, vdev_alloc_common() will generate one for us. 	 */
@@ -1648,7 +1654,10 @@ name|id
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1667,7 +1676,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1695,7 +1707,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1723,7 +1738,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1751,7 +1769,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1771,7 +1792,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Determine whether we're a log vdev. 	 */
@@ -1805,7 +1829,10 @@ name|SPA_VERSION_SLOGS
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1824,7 +1851,10 @@ name|SPA_VERSION_HOLES
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Set the nparity property for RAID-Z vdevs. 	 */
@@ -1868,7 +1898,10 @@ name|VDEV_RAIDZ_MAXPARITY
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 			 * Previous versions could only support 1 or 2 parity 			 * device. 			 */
@@ -1887,7 +1920,10 @@ name|SPA_VERSION_RAIDZ2
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 if|if
@@ -1905,7 +1941,10 @@ name|SPA_VERSION_RAIDZ3
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1923,7 +1962,10 @@ name|SPA_VERSION_RAIDZ2
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 comment|/* 			 * Otherwise, we default to 1 parity device for RAID-Z. 			 */
@@ -4563,7 +4605,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 block|}
 name|mutex_enter
@@ -4624,7 +4669,10 @@ name|pio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
@@ -4642,7 +4690,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether this device is accessible by reading and writing  * to several known locations: the pad regions of each vdev label  * but the first (which we leave alone in case it contains a VTOC).  */
+comment|/*  * Determine whether this device is accessible.  *  * Read and write to several known locations: the pad regions of each  * vdev label but the first, which we leave alone in case it contains  * a VTOC.  */
 end_comment
 
 begin_function
@@ -5372,7 +5420,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5406,7 +5457,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5555,7 +5609,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5745,7 +5802,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5808,7 +5868,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5854,7 +5917,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5896,7 +5962,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Make sure the alignment requirement hasn't increased. 		 */
+comment|/* 		 * Detect if the alignment requirement has increased. 		 * We don't want to make the pool unavailable, just 		 * issue a warning instead. 		 */
 if|if
 condition|(
 name|ashift
@@ -5906,24 +5972,26 @@ operator|->
 name|vdev_top
 operator|->
 name|vdev_ashift
+operator|&&
+name|vd
+operator|->
+name|vdev_ops
+operator|->
+name|vdev_op_leaf
 condition|)
 block|{
-name|vdev_set_state
+name|cmn_err
 argument_list|(
+name|CE_WARN
+argument_list|,
+literal|"Disk, '%s', has a block alignment that is "
+literal|"larger than the pool's alignment\n"
+argument_list|,
 name|vd
-argument_list|,
-name|B_TRUE
-argument_list|,
-name|VDEV_STATE_CANT_OPEN
-argument_list|,
-name|VDEV_AUX_BAD_LABEL
+operator|->
+name|vdev_path
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 block|}
 name|vd
 operator|->
@@ -6121,7 +6189,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBADF
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If the device has already failed, or was marked offline, don't do 	 * any further validation.  Otherwise, label I/O will fail and we will 	 * overwrite the previous state. 	 */
@@ -6469,7 +6540,10 @@ name|POOL_STATE_ACTIVE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBADF
+argument_list|)
 operator|)
 return|;
 comment|/* 		 * If we were able to open and validate a vdev that was 		 * previously marked permanently unavailable, clear that state 		 * now. 		 */
@@ -8348,6 +8422,17 @@ name|vdev_top
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|&
+name|smlock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|smlock
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mutex_init
 argument_list|(
 operator|&
@@ -10082,7 +10167,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Online the given vdev.  If 'unspare' is set, it implies two things.  First,  * any attached spare device should be detached when the device finishes  * resilvering.  Second, the online should be treated like a 'test' online case,  * so no FMA events are generated if the device fails to open.  */
+comment|/*  * Online the given vdev.  *  * If 'ZFS_ONLINE_UNSPARE' is set, it implies two things.  First, any attached  * spare device should be detached when the device finishes resilvering.  * Second, the online should be treated like a 'test' online case, so no FMA  * events are generated if the device fails to open.  */
 end_comment
 
 begin_function
@@ -14187,7 +14272,7 @@ argument_list|)
 expr_stmt|;
 name|delta
 operator|=
-name|ddi_get_lbolt64
+name|gethrtime
 argument_list|()
 operator|-
 name|fio
@@ -14198,19 +14283,16 @@ if|if
 condition|(
 name|delta
 operator|>
-name|NSEC_TO_TICK
-argument_list|(
 name|spa_deadman_synctime
 argument_list|(
 name|spa
-argument_list|)
 argument_list|)
 condition|)
 block|{
 name|zfs_dbgmsg
 argument_list|(
-literal|"SLOW IO: zio timestamp %llu, "
-literal|"delta %llu, last io %llu"
+literal|"SLOW IO: zio timestamp %lluns, "
+literal|"delta %lluns, last io %lluns"
 argument_list|,
 name|fio
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - test code for pre-authentication  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * IEEE 802.1X Supplicant test code (to be used in place of wpa_supplicant.c.  * Not used in production version.  */
+comment|/*  * WPA Supplicant - test code for pre-authentication  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * IEEE 802.1X Supplicant test code (to be used in place of wpa_supplicant.c.  * Not used in production version.  */
 end_comment
 
 begin_include
@@ -130,29 +130,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function
-specifier|static
-name|void
-name|_wpa_supplicant_disassociate
-parameter_list|(
-name|void
-modifier|*
-name|wpa_s
-parameter_list|,
-name|int
-name|reason_code
-parameter_list|)
-block|{
-name|wpa_supplicant_disassociate
-argument_list|(
-name|wpa_s
-argument_list|,
-name|reason_code
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -1044,12 +1021,6 @@ operator|->
 name|deauthenticate
 operator|=
 name|_wpa_supplicant_deauthenticate
-expr_stmt|;
-name|ctx
-operator|->
-name|disassociate
-operator|=
-name|_wpa_supplicant_disassociate
 expr_stmt|;
 name|ctx
 operator|->

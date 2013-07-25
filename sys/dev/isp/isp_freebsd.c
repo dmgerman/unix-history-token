@@ -27595,7 +27595,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|cam_sim_path
 argument_list|(
@@ -32594,6 +32594,8 @@ operator|->
 name|hba_misc
 operator|=
 name|PIM_NOBUSRESET
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 comment|/* 			 * Because our loop ID can shift from time to time, 			 * make our initiator ID out of range of our bus. 			 */
 name|cpi
@@ -32759,7 +32761,7 @@ name|cpi
 operator|->
 name|hba_misc
 operator|=
-literal|0
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->

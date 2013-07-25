@@ -207,7 +207,7 @@ name|at91_pio_use_periph_a
 argument_list|(
 name|AT91RM92_PIOA_BASE
 argument_list|,
-name|AT91C_PIO_PA19
+name|AT91C_PIO_PA18
 argument_list|,
 literal|0
 argument_list|)

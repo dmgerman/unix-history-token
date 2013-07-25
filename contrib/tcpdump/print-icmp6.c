@@ -693,6 +693,12 @@ literal|"rdnss"
 block|}
 block|,
 block|{
+name|ND_OPT_DNSSL
+block|,
+literal|"dnssl"
+block|}
+block|,
+block|{
 name|ND_OPT_ADVINTERVAL
 block|,
 literal|"advertisement interval"
@@ -869,7 +875,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u"
+literal|"%us"
 argument_list|,
 name|v
 argument_list|)
@@ -2111,7 +2117,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"v2 "
+literal|" v2"
 argument_list|)
 expr_stmt|;
 name|mldv2_query_print
@@ -3314,6 +3320,12 @@ name|oprd
 decl_stmt|;
 specifier|const
 name|struct
+name|nd_opt_dnssl
+modifier|*
+name|opds
+decl_stmt|;
+specifier|const
+name|struct
 name|nd_opt_advinterval
 modifier|*
 name|opa
@@ -3337,6 +3349,9 @@ name|cp
 decl_stmt|,
 modifier|*
 name|ep
+decl_stmt|,
+modifier|*
+name|domp
 decl_stmt|;
 name|struct
 name|in6_addr
@@ -3551,7 +3566,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s/%u%s, Flags [%s], valid time %ss"
+literal|"%s/%u%s, Flags [%s], valid time %s"
 argument_list|,
 name|ip6addr_string
 argument_list|(
@@ -3602,7 +3617,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", pref. time %ss"
+literal|", pref. time %s"
 argument_list|,
 name|get_lifetime
 argument_list|(
@@ -3766,6 +3781,83 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
+case|case
+name|ND_OPT_DNSSL
+case|:
+name|opds
+operator|=
+operator|(
+expr|struct
+name|nd_opt_dnssl
+operator|*
+operator|)
+name|op
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" lifetime %us, domain(s):"
+argument_list|,
+name|EXTRACT_32BITS
+argument_list|(
+operator|&
+name|opds
+operator|->
+name|nd_opt_dnssl_lifetime
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|domp
+operator|=
+name|cp
+operator|+
+literal|8
+expr_stmt|;
+comment|/* domain names, variable-sized, RFC1035-encoded */
+while|while
+condition|(
+name|domp
+operator|<
+name|cp
+operator|+
+operator|(
+name|op
+operator|->
+name|nd_opt_len
+operator|<<
+literal|3
+operator|)
+operator|&&
+operator|*
+name|domp
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|domp
+operator|=
+name|ns_nprint
+argument_list|(
+name|domp
+argument_list|,
+name|bp
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|trunc
+goto|;
 block|}
 break|break;
 case|case

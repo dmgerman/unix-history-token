@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.205 2013/01/26 15:53:00 christos Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.210 2013/03/23 05:31:29 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.205 2013/01/26 15:53:00 christos Exp $"
+literal|"$NetBSD: main.c,v 1.210 2013/03/23 05:31:29 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.205 2013/01/26 15:53:00 christos Exp $"
+literal|"$NetBSD: main.c,v 1.210 2013/03/23 05:31:29 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -146,22 +146,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAKE_NATIVE
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/utsname.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3221,7 +3210,7 @@ argument_list|,
 literal|"meta"
 argument_list|)
 condition|)
-name|meta_init
+name|meta_mode_init
 argument_list|(
 name|mode
 argument_list|)
@@ -3280,10 +3269,16 @@ name|p1
 decl_stmt|,
 modifier|*
 name|path
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PWD_OVERRIDE
+name|char
 modifier|*
 name|pwd
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|mdpath
 index|[
@@ -3368,15 +3363,10 @@ name|timeval
 name|rightnow
 decl_stmt|;
 comment|/* to initialize random seed */
-ifdef|#
-directive|ifdef
-name|MAKE_NATIVE
 name|struct
 name|utsname
 name|utsname
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* default to writing debug to stderr */
 name|debug_file
 operator|=
@@ -3446,9 +3436,24 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MAKE_NATIVE
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|HAVE_SETRLIMIT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|RLIMIT_NOFILE
+argument_list|)
+operator|)
 comment|/* 	 * get rid of resource limit on file descriptors 	 */
 block|{
 name|struct
@@ -3500,16 +3505,6 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that both MACHINE and MACHINE_ARCH are decided at 	 * run-time. 	 */
-if|if
-condition|(
-operator|!
-name|machine
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|MAKE_NATIVE
 if|if
 condition|(
 name|uname
@@ -3545,6 +3540,16 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Get the name of this type of MACHINE from utsname 	 * so we can share an executable for similar machines. 	 * (i.e. m68k: amiga hp300, mac68k, sun3, ...) 	 * 	 * Note that both MACHINE and MACHINE_ARCH are decided at 	 * run-time. 	 */
+if|if
+condition|(
+operator|!
+name|machine
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|MAKE_NATIVE
 name|machine
 operator|=
 name|utsname
@@ -3615,6 +3620,19 @@ name|Var_Init
 argument_list|()
 expr_stmt|;
 comment|/* Initialize the lists of variables for 				 * parsing arguments */
+name|Var_Set
+argument_list|(
+literal|".MAKE.OS"
+argument_list|,
+name|utsname
+operator|.
+name|sysname
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|Var_Set
 argument_list|(
 literal|"MACHINE"
@@ -4063,6 +4081,14 @@ block|}
 name|Job_SetPrefix
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_META
+name|meta_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * First snag any flags out of the MAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
 ifdef|#
 directive|ifdef
@@ -6753,7 +6779,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * enunlink --  *	Remove a file carefully, avoiding directories.  */
+comment|/*  * eunlink --  *	Remove a file carefully, avoiding directories.  */
 end_comment
 
 begin_function

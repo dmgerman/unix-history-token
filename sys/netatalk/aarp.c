@@ -429,6 +429,7 @@ name|at_ifaddr
 modifier|*
 name|at_ifawithnet_locked
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -543,6 +544,7 @@ name|at_ifaddr
 modifier|*
 name|at_ifawithnet
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -599,6 +601,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -1163,6 +1166,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr_at
 modifier|*
@@ -2763,6 +2767,7 @@ name|aarptab
 modifier|*
 name|aarptnew
 parameter_list|(
+specifier|const
 name|struct
 name|at_addr
 modifier|*

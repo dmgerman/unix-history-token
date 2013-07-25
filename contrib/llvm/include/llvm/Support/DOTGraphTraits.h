@@ -227,6 +227,26 @@ return|return
 name|false
 return|;
 block|}
+name|template
+operator|<
+name|typename
+name|GraphType
+operator|>
+specifier|static
+name|std
+operator|::
+name|string
+name|getNodeDescription
+argument_list|(
+argument|const void *
+argument_list|,
+argument|const GraphType&
+argument_list|)
+block|{
+return|return
+literal|""
+return|;
+block|}
 comment|/// If you want to specify custom node attributes, this is the place to do so
 comment|///
 name|template

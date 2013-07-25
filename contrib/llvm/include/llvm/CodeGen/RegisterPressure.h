@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SparseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
@@ -75,18 +81,15 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SparseSet.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|LiveIntervals
+decl_stmt|;
+name|class
+name|LiveInterval
 decl_stmt|;
 name|class
 name|RegisterClassInfo
@@ -107,7 +110,7 @@ name|unsigned
 operator|>
 name|MaxSetPressure
 expr_stmt|;
-comment|/// List of live in registers.
+comment|/// List of live in virtual registers or physical register units.
 name|SmallVector
 operator|<
 name|unsigned
@@ -127,34 +130,44 @@ expr_stmt|;
 comment|/// Increase register pressure for each pressure set impacted by this register
 comment|/// class. Normally called by RegPressureTracker, but may be called manually
 comment|/// to account for live through (global liveness).
+comment|///
+comment|/// \param Reg is either a virtual register number or register unit number.
 name|void
 name|increase
 parameter_list|(
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
+name|unsigned
+name|Reg
 parameter_list|,
 specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|*
+name|MRI
 parameter_list|)
 function_decl|;
 comment|/// Decrease register pressure for each pressure set impacted by this register
 comment|/// class. This is only useful to account for spilling or rematerialization.
+comment|///
+comment|/// \param Reg is either a virtual register number or register unit number.
 name|void
 name|decrease
 parameter_list|(
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RC
+name|unsigned
+name|Reg
 parameter_list|,
 specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|TRI
+parameter_list|,
+specifier|const
+name|MachineRegisterInfo
+modifier|*
+name|MRI
 parameter_list|)
 function_decl|;
 name|void
@@ -330,6 +343,132 @@ argument_list|()
 block|{}
 block|}
 struct|;
+comment|/// \brief A set of live virtual registers and physical register units.
+comment|///
+comment|/// Virtual and physical register numbers require separate sparse sets, but most
+comment|/// of the RegisterPressureTracker handles them uniformly.
+struct|struct
+name|LiveRegSet
+block|{
+name|SparseSet
+operator|<
+name|unsigned
+operator|>
+name|PhysRegs
+expr_stmt|;
+name|SparseSet
+operator|<
+name|unsigned
+operator|,
+name|VirtReg2IndexFunctor
+operator|>
+name|VirtRegs
+expr_stmt|;
+name|bool
+name|contains
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|VirtRegs
+operator|.
+name|count
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+return|return
+name|PhysRegs
+operator|.
+name|count
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+name|bool
+name|insert
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|VirtRegs
+operator|.
+name|insert
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|second
+return|;
+return|return
+name|PhysRegs
+operator|.
+name|insert
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|second
+return|;
+block|}
+name|bool
+name|erase
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|TargetRegisterInfo
+operator|::
+name|isVirtualRegister
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|VirtRegs
+operator|.
+name|erase
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+return|return
+name|PhysRegs
+operator|.
+name|erase
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+block|}
+struct|;
 comment|/// Track the current register pressure at some position in the instruction
 comment|/// stream, and remember the high water mark within the region traversed. This
 comment|/// does not automatically consider live-through ranges. The client may
@@ -391,7 +530,8 @@ name|bool
 name|RequireIntervals
 decl_stmt|;
 comment|/// Register pressure corresponds to liveness before this instruction
-comment|/// iterator. It may point to the end of the block rather than an instruction.
+comment|/// iterator. It may point to the end of the block or a DebugValue rather than
+comment|/// an instruction.
 name|MachineBasicBlock
 operator|::
 name|const_iterator
@@ -406,21 +546,10 @@ name|unsigned
 operator|>
 name|CurrSetPressure
 expr_stmt|;
-comment|/// List of live registers.
-name|SparseSet
-operator|<
-name|unsigned
-operator|>
-name|LivePhysRegs
-expr_stmt|;
-name|SparseSet
-operator|<
-name|unsigned
-operator|,
-name|VirtReg2IndexFunctor
-operator|>
-name|LiveVirtRegs
-expr_stmt|;
+comment|/// Set of live registers.
+name|LiveRegSet
+name|LiveRegs
+decl_stmt|;
 name|public
 label|:
 name|RegPressureTracker
@@ -521,8 +650,9 @@ argument_list|,
 argument|MachineBasicBlock::const_iterator pos
 argument_list|)
 expr_stmt|;
-comment|/// Force liveness of registers. Particularly useful to initialize the
-comment|/// livein/out state of the tracker before the first call to advance/recede.
+comment|/// Force liveness of virtual registers or physical register
+comment|/// units. Particularly useful to initialize the livein/out state of the
+comment|/// tracker before the first call to advance/recede.
 name|void
 name|addLiveRegs
 argument_list|(
@@ -563,6 +693,13 @@ operator|=
 name|Pos
 expr_stmt|;
 block|}
+comment|/// \brief Get the SlotIndex for the first nondebug instruction including or
+comment|/// after the current position.
+name|SlotIndex
+name|getCurrSlot
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Recede across the previous instruction.
 name|bool
 name|recede
@@ -618,28 +755,14 @@ name|CurrSetPressure
 return|;
 block|}
 name|void
-name|discoverPhysLiveIn
+name|discoverLiveOut
 parameter_list|(
 name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
 name|void
-name|discoverPhysLiveOut
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
-name|void
-name|discoverVirtLiveIn
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
-name|void
-name|discoverVirtLiveOut
+name|discoverLiveIn
 parameter_list|(
 name|unsigned
 name|Reg
@@ -904,10 +1027,25 @@ name|MaxPressureResult
 argument_list|)
 return|;
 block|}
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
+specifier|const
+name|LiveInterval
+modifier|*
+name|getInterval
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
-name|increasePhysRegPressure
+name|increaseRegPressure
 argument_list|(
 name|ArrayRef
 operator|<
@@ -917,27 +1055,7 @@ name|Regs
 argument_list|)
 decl_stmt|;
 name|void
-name|decreasePhysRegPressure
-argument_list|(
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|Regs
-argument_list|)
-decl_stmt|;
-name|void
-name|increaseVirtRegPressure
-argument_list|(
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-name|Regs
-argument_list|)
-decl_stmt|;
-name|void
-name|decreaseVirtRegPressure
+name|decreaseRegPressure
 argument_list|(
 name|ArrayRef
 operator|<

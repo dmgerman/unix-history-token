@@ -1334,6 +1334,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1381,16 +1382,23 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* link level on table 0 XXX MRT */
 name|rt
 operator|=
 name|RTALLOC1
 argument_list|(
+name|__DECONST
+argument_list|(
+expr|struct
+name|sockaddr
+operator|*
+argument_list|,
 name|dst
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* link level on table 0 XXX MRT */
 if|if
 condition|(
 name|rt

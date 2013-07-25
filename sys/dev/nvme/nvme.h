@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2012-2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -32,39 +32,38 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|NVME_IDENTIFY_CONTROLLER
-value|_IOR('n', 0, struct nvme_controller_data)
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_define
 define|#
 directive|define
-name|NVME_IDENTIFY_NAMESPACE
-value|_IOR('n', 1, struct nvme_namespace_data)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVME_IO_TEST
-value|_IOWR('n', 2, struct nvme_io_test)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NVME_BIO_TEST
-value|_IOWR('n', 4, struct nvme_io_test)
+name|NVME_PASSTHROUGH_CMD
+value|_IOWR('n', 0, struct nvme_pt_command)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NVME_RESET_CONTROLLER
-value|_IO('n', 5)
+value|_IO('n', 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_IO_TEST
+value|_IOWR('n', 100, struct nvme_io_test)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_BIO_TEST
+value|_IOWR('n', 101, struct nvme_io_test)
 end_define
 
 begin_comment
@@ -76,6 +75,13 @@ define|#
 directive|define
 name|NVME_GLOBAL_NAMESPACE_TAG
 value|((uint32_t)0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MAX_XFER_SIZE
+value|MAXPHYS
 end_define
 
 begin_union
@@ -1035,6 +1041,46 @@ block|, }
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|nvme_activate_action
+block|{
+name|NVME_AA_REPLACE_NO_ACTIVATE
+init|=
+literal|0x0
+block|,
+name|NVME_AA_REPLACE_ACTIVATE
+init|=
+literal|0x1
+block|,
+name|NVME_AA_ACTIVATE
+init|=
+literal|0x2
+block|, }
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|NVME_SERIAL_NUMBER_LENGTH
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_MODEL_NUMBER_LENGTH
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_FIRMWARE_REVISION_LENGTH
+value|8
+end_define
+
 begin_struct
 struct|struct
 name|nvme_controller_data
@@ -1049,24 +1095,24 @@ name|uint16_t
 name|ssvid
 decl_stmt|;
 comment|/** serial number */
-name|int8_t
+name|uint8_t
 name|sn
 index|[
-literal|20
+name|NVME_SERIAL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** model number */
-name|int8_t
+name|uint8_t
 name|mn
 index|[
-literal|40
+name|NVME_MODEL_NUMBER_LENGTH
 index|]
 decl_stmt|;
 comment|/** firmware revision */
 name|uint8_t
 name|fr
 index|[
-literal|8
+name|NVME_FIRMWARE_REVISION_LENGTH
 index|]
 decl_stmt|;
 comment|/** recommended arbitration burst */
@@ -1868,6 +1914,43 @@ block|, }
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|nvme_pt_command
+block|{
+comment|/* 	 * cmd is used to specify a passthrough command to a controller or 	 *  namespace. 	 * 	 * The following fields from cmd may be specified by the caller: 	 *	* opc  (opcode) 	 *	* nsid (namespace id) - for admin commands only 	 *	* cdw10-cdw15 	 * 	 * Remaining fields must be set to 0 by the caller. 	 */
+name|struct
+name|nvme_command
+name|cmd
+decl_stmt|;
+comment|/* 	 * cpl returns completion status for the passthrough command 	 *  specified by cmd. 	 * 	 * The following fields will be filled out by the driver, for 	 *  consumption by the caller: 	 *	* cdw0 	 *	* status (except for phase) 	 * 	 * Remaining fields will be set to 0 by the driver. 	 */
+name|struct
+name|nvme_completion
+name|cpl
+decl_stmt|;
+comment|/* buf is the data buffer associated with this passthrough command. */
+name|void
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* 	 * len is the length of the data buffer associated with this 	 *  passthrough command. 	 */
+name|uint32_t
+name|len
+decl_stmt|;
+comment|/* 	 * is_read = 1 if the passthrough command will read data into the 	 *  supplied buffer from the controller. 	 * 	 * is_read = 0 if the passthrough command will write data from the 	 *  supplied buffer to the controller. 	 */
+name|uint32_t
+name|is_read
+decl_stmt|;
+comment|/* 	 * driver_lock is used by the driver only.  It must be set to 0 	 *  by the caller. 	 */
+name|struct
+name|mtx
+modifier|*
+name|driver_lock
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1878,6 +1961,28 @@ parameter_list|)
 define|\
 value|((cpl)->status.sc != 0 || (cpl)->status.sct != 0)
 end_define
+
+begin_function_decl
+name|void
+name|nvme_strvis
+parameter_list|(
+name|uint8_t
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|dstlen
+parameter_list|,
+name|int
+name|srclen
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -2018,6 +2123,32 @@ block|, }
 enum|;
 end_enum
 
+begin_function_decl
+name|int
+name|nvme_ctrlr_passthrough_cmd
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+name|struct
+name|nvme_pt_command
+modifier|*
+name|pt
+parameter_list|,
+name|uint32_t
+name|nsid
+parameter_list|,
+name|int
+name|is_user_buffer
+parameter_list|,
+name|int
+name|is_admin_cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Admin functions */
 end_comment
@@ -2153,6 +2284,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|nvme_ns_cmd_write_bio
+parameter_list|(
+name|struct
+name|nvme_namespace
+modifier|*
+name|ns
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|,
+name|nvme_cb_fn_t
+name|cb_fn
+parameter_list|,
+name|void
+modifier|*
+name|cb_arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|nvme_ns_cmd_read
 parameter_list|(
 name|struct
@@ -2169,6 +2324,30 @@ name|lba
 parameter_list|,
 name|uint32_t
 name|lba_count
+parameter_list|,
+name|nvme_cb_fn_t
+name|cb_fn
+parameter_list|,
+name|void
+modifier|*
+name|cb_arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nvme_ns_cmd_read_bio
+parameter_list|(
+name|struct
+name|nvme_namespace
+modifier|*
+name|ns
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
 parameter_list|,
 name|nvme_cb_fn_t
 name|cb_fn

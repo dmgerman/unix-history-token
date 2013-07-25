@@ -100,13 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Constants.h"
+file|"llvm/IR/Constants.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Instructions.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_decl_stmt

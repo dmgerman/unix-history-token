@@ -46,6 +46,8 @@ block|,
 name|ATH_AGGR_ERROR
 block|,
 name|ATH_AGGR_NONAGGR
+block|,
+name|ATH_AGGR_LEAK_CLOSED
 block|, }
 name|ATH_AGGR_STATUS
 typedef|;

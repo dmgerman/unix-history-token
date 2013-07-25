@@ -153,7 +153,7 @@ operator|||
 operator|(
 name|mc
 operator|->
-name|mc_flags
+name|_mc_flags
 operator|&
 operator|(
 operator|(
@@ -206,7 +206,7 @@ condition|)
 block|{
 name|mc
 operator|->
-name|mc_flags
+name|_mc_flags
 operator|=
 literal|0
 expr_stmt|;
@@ -318,7 +318,7 @@ argument_list|)
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tnpc
+name|_mc_tnpc
 operator|=
 operator|(
 name|uint64_t
@@ -329,7 +329,7 @@ literal|4
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tpc
+name|_mc_tpc
 operator|=
 operator|(
 name|uint64_t
@@ -367,7 +367,7 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_flags
+name|_mc_flags
 operator|=
 literal|0
 expr_stmt|;

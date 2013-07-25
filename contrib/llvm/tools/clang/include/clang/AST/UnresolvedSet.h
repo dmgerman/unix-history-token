@@ -66,7 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<iterator>
+file|"clang/AST/DeclAccessPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -78,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclAccessPair.h"
+file|<iterator>
 end_include
 
 begin_decl_stmt
@@ -93,7 +105,9 @@ block|{
 name|private
 label|:
 typedef|typedef
-name|SmallVectorImpl
+name|llvm
+operator|::
+name|MutableArrayRef
 operator|<
 name|DeclAccessPair
 operator|>
@@ -111,6 +125,10 @@ decl_stmt|;
 name|friend
 name|class
 name|UnresolvedSetImpl
+decl_stmt|;
+name|friend
+name|class
+name|ASTUnresolvedSet
 decl_stmt|;
 name|friend
 name|class
@@ -547,9 +565,10 @@ name|class
 name|UnresolvedSetImpl
 block|{
 typedef|typedef
-name|UnresolvedSetIterator
-operator|::
-name|DeclsTy
+name|SmallVectorImpl
+operator|<
+name|DeclAccessPair
+operator|>
 name|DeclsTy
 expr_stmt|;
 comment|// Don't allow direct construction, and only permit subclassing by

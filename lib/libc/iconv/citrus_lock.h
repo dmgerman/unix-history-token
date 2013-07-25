@@ -13,25 +13,24 @@ directive|include
 file|<pthread.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|pthread_rwlock_t
-name|lock
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|WLOCK
-value|if (__isthreaded)		\ 		    pthread_rwlock_wrlock(&lock);
+parameter_list|(
+name|lock
+parameter_list|)
+value|if (__isthreaded)		\ 			    pthread_rwlock_wrlock(lock);
 end_define
 
 begin_define
 define|#
 directive|define
 name|UNLOCK
-value|if (__isthreaded)		\ 		    pthread_rwlock_unlock(&lock);
+parameter_list|(
+name|lock
+parameter_list|)
+value|if (__isthreaded)		\ 			    pthread_rwlock_unlock(lock);
 end_define
 
 end_unit

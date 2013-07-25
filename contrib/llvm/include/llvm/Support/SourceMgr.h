@@ -58,25 +58,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SUPPORT_SOURCEMGR_H
+name|LLVM_SUPPORT_SOURCEMGR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SUPPORT_SOURCEMGR_H
+name|LLVM_SUPPORT_SOURCEMGR_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SMLoc.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
@@ -97,6 +109,9 @@ name|SourceMgr
 decl_stmt|;
 name|class
 name|SMDiagnostic
+decl_stmt|;
+name|class
+name|SMFixIt
 decl_stmt|;
 name|class
 name|Twine
@@ -356,6 +371,18 @@ operator|.
 name|Buffer
 return|;
 block|}
+name|unsigned
+name|getNumBuffers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffers
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 name|SMLoc
 name|getParentIncludeLoc
 argument_list|(
@@ -534,12 +561,15 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
+name|None
+argument_list|,
 name|ArrayRef
 operator|<
-name|SMRange
+name|SMFixIt
 operator|>
-operator|(
-operator|)
+name|FixIts
+operator|=
+name|None
 argument_list|,
 name|bool
 name|ShowColors
@@ -573,12 +603,15 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
+name|None
+argument_list|,
 name|ArrayRef
 operator|<
-name|SMRange
+name|SMFixIt
 operator|>
-operator|(
-operator|)
+name|FixIts
+operator|=
+name|None
 argument_list|)
 decl|const
 decl_stmt|;
@@ -602,8 +635,197 @@ decl|const
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// Represents a single fixit, a replacement of one range of text with another.
+name|class
+name|SMFixIt
+block|{
+name|SMRange
+name|Range
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|Text
+expr_stmt|;
+name|public
+label|:
+comment|// FIXME: Twine.str() is not very efficient.
+name|SMFixIt
+argument_list|(
+argument|SMLoc Loc
+argument_list|,
+argument|const Twine&Insertion
+argument_list|)
+block|:
+name|Range
+argument_list|(
+name|Loc
+argument_list|,
+name|Loc
+argument_list|)
+operator|,
+name|Text
+argument_list|(
+argument|Insertion.str()
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;   }
+comment|// FIXME: Twine.str() is not very efficient.
+name|SMFixIt
+argument_list|(
+argument|SMRange R
+argument_list|,
+argument|const Twine&Replacement
+argument_list|)
+operator|:
+name|Range
+argument_list|(
+name|R
+argument_list|)
+operator|,
+name|Text
+argument_list|(
+argument|Replacement.str()
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|R
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;   }
+name|StringRef
+name|getText
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Text
+return|;
+block|}
+name|SMRange
+name|getRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Range
+return|;
+block|}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|SMFixIt
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+if|if
+condition|(
+name|Range
+operator|.
+name|Start
+operator|.
+name|getPointer
+argument_list|()
+operator|!=
+name|Other
+operator|.
+name|Range
+operator|.
+name|Start
+operator|.
+name|getPointer
+argument_list|()
+condition|)
+return|return
+name|Range
+operator|.
+name|Start
+operator|.
+name|getPointer
+argument_list|()
+operator|<
+name|Other
+operator|.
+name|Range
+operator|.
+name|Start
+operator|.
+name|getPointer
+argument_list|()
+return|;
+if|if
+condition|(
+name|Range
+operator|.
+name|End
+operator|.
+name|getPointer
+argument_list|()
+operator|!=
+name|Other
+operator|.
+name|Range
+operator|.
+name|End
+operator|.
+name|getPointer
+argument_list|()
+condition|)
+return|return
+name|Range
+operator|.
+name|End
+operator|.
+name|getPointer
+argument_list|()
+operator|<
+name|Other
+operator|.
+name|Range
+operator|.
+name|End
+operator|.
+name|getPointer
+argument_list|()
+return|;
+return|return
+name|Text
+operator|<
+name|Other
+operator|.
+name|Text
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// SMDiagnostic - Instances of this class encapsulate one diagnostic report,
+end_comment
+
+begin_comment
 comment|/// allowing printing to a raw_ostream as a caret diagnostic.
+end_comment
+
+begin_decl_stmt
 name|class
 name|SMDiagnostic
 block|{
@@ -652,6 +874,14 @@ operator|>
 expr|>
 name|Ranges
 expr_stmt|;
+name|SmallVector
+operator|<
+name|SMFixIt
+operator|,
+literal|4
+operator|>
+name|FixIts
+expr_stmt|;
 name|public
 label|:
 comment|// Null diagnostic.
@@ -681,11 +911,11 @@ block|{}
 comment|// Diagnostic with no location (e.g. file not found, command line arg error).
 name|SMDiagnostic
 argument_list|(
-argument|const std::string&filename
+argument|StringRef filename
 argument_list|,
 argument|SourceMgr::DiagKind Knd
 argument_list|,
-argument|const std::string&Msg
+argument|StringRef Msg
 argument_list|)
 operator|:
 name|SM
@@ -727,7 +957,7 @@ argument|const SourceMgr&sm
 argument_list|,
 argument|SMLoc L
 argument_list|,
-argument|const std::string&FN
+argument|StringRef FN
 argument_list|,
 argument|int Line
 argument_list|,
@@ -735,13 +965,15 @@ argument|int Col
 argument_list|,
 argument|SourceMgr::DiagKind Kind
 argument_list|,
-argument|const std::string&Msg
+argument|StringRef Msg
 argument_list|,
-argument|const std::string&LineStr
+argument|StringRef LineStr
 argument_list|,
 argument|ArrayRef<std::pair<unsigned
 argument_list|,
 argument|unsigned>> Ranges
+argument_list|,
+argument|ArrayRef<SMFixIt> FixIts = None
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -764,11 +996,7 @@ return|return
 name|Loc
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getFilename
 argument_list|()
 specifier|const
@@ -806,11 +1034,7 @@ return|return
 name|Kind
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getMessage
 argument_list|()
 specifier|const
@@ -819,11 +1043,7 @@ return|return
 name|Message
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getLineContents
 argument_list|()
 specifier|const
@@ -832,10 +1052,7 @@ return|return
 name|LineContents
 return|;
 block|}
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|std
 operator|::
@@ -846,13 +1063,41 @@ operator|,
 name|unsigned
 operator|>
 expr|>
-operator|&
 name|getRanges
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Ranges
+return|;
+block|}
+name|void
+name|addFixIt
+parameter_list|(
+specifier|const
+name|SMFixIt
+modifier|&
+name|Hint
+parameter_list|)
+block|{
+name|FixIts
+operator|.
+name|push_back
+argument_list|(
+name|Hint
+argument_list|)
+expr_stmt|;
+block|}
+name|ArrayRef
+operator|<
+name|SMFixIt
+operator|>
+name|getFixIts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FixIts
 return|;
 block|}
 name|void
@@ -875,11 +1120,14 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end llvm namespace
 end_comment
 

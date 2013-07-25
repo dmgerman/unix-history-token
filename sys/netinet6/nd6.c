@@ -290,7 +290,7 @@ name|SIN6
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct sockaddr_in6 *)s)
+value|((const struct sockaddr_in6 *)(s))
 end_define
 
 begin_comment
@@ -867,10 +867,18 @@ name|flags
 operator|=
 name|ND6_IFF_PERFORMNUD
 expr_stmt|;
-comment|/* A loopback interface always has ND6_IFF_AUTO_LINKLOCAL. */
+comment|/* A loopback interface always has ND6_IFF_AUTO_LINKLOCAL. 	 * XXXHRS: Clear ND6_IFF_AUTO_LINKLOCAL on an IFT_BRIDGE interface by 	 * default regardless of the V_ip6_auto_linklocal configuration to 	 * give a reasonable default behavior. 	 */
 if|if
 condition|(
+operator|(
 name|V_ip6_auto_linklocal
+operator|&&
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
+operator|)
 operator|||
 operator|(
 name|ifp
@@ -886,7 +894,7 @@ name|flags
 operator||=
 name|ND6_IFF_AUTO_LINKLOCAL
 expr_stmt|;
-comment|/* A loopback interface does not need to accept RTADV. */
+comment|/* 	 * A loopback interface does not need to accept RTADV. 	 * XXXHRS: Clear ND6_IFF_ACCEPT_RTADV on an IFT_BRIDGE interface by 	 * default regardless of the V_ip6_accept_rtadv configuration to 	 * prevent the interface from accepting RA messages arrived 	 * on one of the member interfaces with ND6_IFF_ACCEPT_RTADV. 	 */
 if|if
 condition|(
 name|V_ip6_accept_rtadv
@@ -898,6 +906,14 @@ operator|->
 name|if_flags
 operator|&
 name|IFF_LOOPBACK
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
 operator|)
 condition|)
 name|nd
@@ -8070,6 +8086,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*

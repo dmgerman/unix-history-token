@@ -3007,12 +3007,11 @@ name|va
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|va
-operator|)
-return|;
-comment|/* Out of memory */
+name|panic
+argument_list|(
+literal|"pmap_ptelist_alloc: exhausted ptelist KVA"
+argument_list|)
+expr_stmt|;
 name|pte
 operator|=
 name|vtopte
@@ -8136,7 +8135,7 @@ expr_stmt|;
 comment|/* Find least significant set bit. */
 name|lsb
 operator|=
-name|cpusetobj_ffs
+name|CPU_FFS
 argument_list|(
 operator|&
 name|mask
@@ -10091,6 +10090,12 @@ operator|)
 name|m_pc
 operator|->
 name|object
+expr_stmt|;
+name|m_pc
+operator|->
+name|object
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Recycle a freed page table page. */
 name|m_pc
@@ -16201,7 +16206,7 @@ name|diff
 decl_stmt|,
 name|psize
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m_start
 operator|->

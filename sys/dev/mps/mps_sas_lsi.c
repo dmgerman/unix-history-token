@@ -831,7 +831,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"(%d)->(%s) Working on  Event: [%x]\n"
 argument_list|,
@@ -1521,7 +1521,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"Received IR Volume event:\n"
 argument_list|)
@@ -1540,7 +1540,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Volume Settings "
 literal|"changed from 0x%x to 0x%x for Volome with "
@@ -1576,7 +1576,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Volume Status "
 literal|"changed from 0x%x to 0x%x for Volome with "
@@ -1612,7 +1612,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Volume State "
 literal|"changed from 0x%x to 0x%x for Volome with "
@@ -1783,7 +1783,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"Received IR Phys Disk event:\n"
 argument_list|)
@@ -1802,7 +1802,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Phys Disk Settings "
 literal|"changed from 0x%x to 0x%x for Phys Disk Number "
@@ -1857,7 +1857,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Phys Disk Status changed "
 literal|"from 0x%x to 0x%x for Phys Disk Number %d and "
@@ -1911,7 +1911,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   Phys Disk State changed "
 literal|"from 0x%x to 0x%x for Phys Disk Number %d and "
@@ -2152,7 +2152,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"Received IR Op Status event:\n"
 argument_list|)
@@ -2161,7 +2161,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"   RAID Operation of %d is %d "
 literal|"percent complete for Volume with handle 0x%x"
@@ -2314,7 +2314,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_EVENT
 argument_list|,
 literal|"(%d)->(%s) Event Free: [%x]\n"
 argument_list|,
@@ -2809,7 +2809,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"SAS Address from SAS device page0 = %jx\n"
 argument_list|,
@@ -3033,7 +3033,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"Found device<%s><%s><0x%04x><%d/%d>\n"
 argument_list|,
@@ -3061,6 +3061,11 @@ operator|->
 name|encl_slot
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000039
 if|if
 condition|(
 operator|(
@@ -3073,6 +3078,8 @@ operator|)
 operator|==
 literal|0
 condition|)
+endif|#
+directive|endif
 name|mpssas_rescan_target
 argument_list|(
 name|sc
@@ -3084,7 +3091,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"Target id 0x%x added\n"
 argument_list|,
@@ -3267,7 +3274,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"%s: got SATA identify successfully "
 literal|"for handle = 0x%x with try_count = %d\n"
@@ -3286,7 +3293,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"%s: handle = 0x%x failed\n"
 argument_list|,
@@ -3876,11 +3883,15 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -3905,10 +3916,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/*  		 * If the request returns an error then we need to do a diag  		 * reset  		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request for page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4245,7 +4256,7 @@ name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-name|MPS_INFO
+name|MPS_MAPPING
 argument_list|,
 literal|"RAID target id %d added (WWID = 0x%jx)\n"
 argument_list|,
@@ -4522,11 +4533,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|5
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|mps_unlock

@@ -53,10 +53,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|float
-name|huge
-init|=
-literal|0x1p100f
-decl_stmt|,
 name|redux
 init|=
 literal|0x1
@@ -100,6 +96,10 @@ begin_decl_stmt
 specifier|static
 specifier|volatile
 name|float
+name|huge
+init|=
+literal|0x1p100f
+decl_stmt|,
 name|twom100
 init|=
 literal|0x1p

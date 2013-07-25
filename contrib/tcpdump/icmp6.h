@@ -1285,6 +1285,13 @@ name|ND_OPT_RDNSS
 value|25
 end_define
 
+begin_define
+define|#
+directive|define
+name|ND_OPT_DNSSL
+value|31
+end_define
+
 begin_struct
 struct|struct
 name|nd_opt_prefix_info
@@ -1400,7 +1407,7 @@ begin_struct
 struct|struct
 name|nd_opt_rdnss
 block|{
-comment|/* RDNSS RFC 5006 */
+comment|/* RDNSS RFC 6106 5.1 */
 name|u_int8_t
 name|nd_opt_rdnss_type
 decl_stmt|;
@@ -1421,6 +1428,28 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* variable-length */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_opt_dnssl
+block|{
+comment|/* DNSSL RFC 6106 5.2 */
+name|u_int8_t
+name|nd_opt_dnssl_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_dnssl_len
+decl_stmt|;
+name|u_int16_t
+name|nd_opt_dnssl_reserved
+decl_stmt|;
+name|u_int32_t
+name|nd_opt_dnssl_lifetime
+decl_stmt|;
+comment|/* followed by list of DNS search domains, variable-length */
 block|}
 struct|;
 end_struct

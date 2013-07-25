@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: praliases.c,v 8.96 2008/07/10 20:13:10 ca Exp $"
+literal|"@(#)$Id: praliases.c,v 8.97 2013/03/12 15:24:51 ca Exp $"
 argument_list|)
 end_macro
 
@@ -557,8 +557,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 specifier|register

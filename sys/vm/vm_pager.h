@@ -314,13 +314,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|vm_map_t
-name|pager_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|pagerops
 modifier|*
@@ -332,7 +325,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mtx
+name|mtx_padalign
 name|pbuf_mtx
 decl_stmt|;
 end_decl_stmt

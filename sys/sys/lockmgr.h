@@ -785,6 +785,17 @@ name|LK_ADAPTIVE
 value|0x000040
 end_define
 
+begin_define
+define|#
+directive|define
+name|LK_IS_VNODE
+value|0x000080
+end_define
+
+begin_comment
+comment|/* Tell WITNESS about a VNODE lock */
+end_comment
+
 begin_comment
 comment|/*  * Additional attributes to be used in lockmgr().  */
 end_comment

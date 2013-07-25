@@ -1804,6 +1804,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_STBCFrame
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_RxAntenna
 value|0xffffff00
 end_define

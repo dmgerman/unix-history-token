@@ -2999,6 +2999,27 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* 	 * If we're looking up the last component and we need an exclusive 	 * lock, adjust our lkflags. 	 */
 if|if
 condition|(

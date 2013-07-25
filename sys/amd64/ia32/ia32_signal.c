@@ -373,6 +373,9 @@ operator|&
 name|mcp
 operator|->
 name|mc_fpstate
+index|[
+literal|0
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -440,7 +443,7 @@ name|mcp
 operator|->
 name|mc_flags
 operator||=
-name|_MC_HASFPXSTATE
+name|_MC_IA32_HASFPXSTATE
 expr_stmt|;
 name|mcp
 operator|->
@@ -898,13 +901,6 @@ name|mcp
 operator|->
 name|mc_spare2
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
 argument_list|)
 expr_stmt|;
 return|return
@@ -5979,13 +5975,6 @@ argument_list|,
 name|PCB_32BIT
 operator||
 name|PCB_FULL_IRET
-argument_list|)
-expr_stmt|;
-name|clear_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_GS32BIT
 argument_list|)
 expr_stmt|;
 name|td

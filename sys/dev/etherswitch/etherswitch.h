@@ -104,6 +104,83 @@ name|ETHERSWITCH_NAMEMAX
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VID_MASK
+value|0xfff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VID_VALID
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VLAN_ISL
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* ISL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VLAN_PORT
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Port based vlan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VLAN_DOT1Q
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* 802.1q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VLAN_DOT1Q_4K
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* 4k support on 802.1q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VLAN_DOUBLE_TAG
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Q-in-Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VLAN_CAPS_BITS
+define|\
+value|"\020\1ISL\2PORT\3DOT1Q\4DOT1Q4K\5QinQ"
+end_define
+
 begin_struct
 struct|struct
 name|etherswitch_info
@@ -120,6 +197,9 @@ index|[
 name|ETHERSWITCH_NAMEMAX
 index|]
 decl_stmt|;
+name|uint32_t
+name|es_vlan_caps
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -132,6 +212,108 @@ name|etherswitch_info_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_CONF_FLAGS
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_CONF_MIRROR
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_CONF_VLAN_MODE
+value|(1<< 2)
+end_define
+
+begin_struct
+struct|struct
+name|etherswitch_conf
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+comment|/* What to configure */
+name|uint32_t
+name|vlan_mode
+decl_stmt|;
+comment|/* Switch VLAN mode */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|etherswitch_conf
+name|etherswitch_conf_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_CPU
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_STRIPTAG
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_ADDTAG
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_FIRSTLOCK
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_DROPUNTAGGED
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_DOUBLE_TAG
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_INGRESS
+value|(1<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_PORT_FLAGS_BITS
+define|\
+value|"\020\1CPUPORT\2STRIPTAG\3ADDTAG\4FIRSTLOCK\5DROPUNTAGGED\6QinQ\7INGRESS"
+end_define
+
 begin_struct
 struct|struct
 name|etherswitch_port
@@ -140,7 +322,10 @@ name|int
 name|es_port
 decl_stmt|;
 name|int
-name|es_vlangroup
+name|es_pvid
+decl_stmt|;
+name|uint32_t
+name|es_flags
 decl_stmt|;
 union|union
 block|{
@@ -277,6 +462,20 @@ define|#
 directive|define
 name|IOETHERSWITCHSETPHYREG
 value|_IOW('i', 9, etherswitch_phyreg_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOETHERSWITCHGETCONF
+value|_IOR('i', 10, etherswitch_conf_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOETHERSWITCHSETCONF
+value|_IOW('i', 11, etherswitch_conf_t)
 end_define
 
 begin_endif

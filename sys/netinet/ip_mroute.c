@@ -161,6 +161,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -407,7 +413,7 @@ end_comment
 
 begin_expr_stmt
 specifier|static
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|mrtstat
@@ -417,15 +423,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_mrtstat
-value|VNET(mrtstat)
-end_define
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|mrtstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|mrtstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -433,13 +448,8 @@ name|OID_AUTO
 argument_list|,
 name|mrtstat
 argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|mrtstat
-argument_list|)
 argument_list|,
 name|mrtstat
 argument_list|,
@@ -923,7 +933,7 @@ end_comment
 
 begin_expr_stmt
 specifier|static
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|pimstat
@@ -933,12 +943,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_pimstat
-value|VNET(pimstat)
-end_define
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|pimstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|pimstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -959,7 +978,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet_pim
 argument_list|,
@@ -967,13 +986,8 @@ name|PIMCTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|pimstat
-argument_list|)
 argument_list|,
 name|pimstat
 argument_list|,
@@ -3646,6 +3660,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|MFC_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|apival
 operator|=
@@ -12109,7 +12126,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_mroute: unable to ifnet_deperture_even handler\n"
+literal|"ip_mroute: unable to register "
+literal|"ifnet_departure_event handler\n"
 argument_list|)
 expr_stmt|;
 name|MROUTER_LOCK_DESTROY

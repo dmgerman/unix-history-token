@@ -140,7 +140,7 @@ name|resource
 modifier|*
 name|index_res
 decl_stmt|;
-comment|/* index resouce */
+comment|/* index resource */
 name|bus_space_tag_t
 name|index_tag
 decl_stmt|;
@@ -159,7 +159,7 @@ name|resource
 modifier|*
 name|data_res
 decl_stmt|;
-comment|/* data resouce */
+comment|/* data resource */
 name|bus_space_tag_t
 name|data_tag
 decl_stmt|;

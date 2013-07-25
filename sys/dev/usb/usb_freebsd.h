@@ -121,6 +121,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_FIXED_ENDPOINT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_FIXED_IFACE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_FIXED_CONFIG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_FIXED_PORT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_TD_GET_PROC
 parameter_list|(
 name|td
@@ -166,6 +194,41 @@ directive|undef
 name|USB_HOST_ALIGN
 end_undef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USB_HOST_ALIGN
+value|32
+end_define
+
+begin_comment
+comment|/* Arm and MIPS need at least this much, if not more */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -176,6 +239,11 @@ end_define
 begin_comment
 comment|/* bytes, must be power of two */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -248,6 +316,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_CONFIG_MAX
+value|65535
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_IFACE_MAX
 value|32
 end_define
@@ -272,6 +351,28 @@ define|#
 directive|define
 name|USB_MAX_EP_STREAMS
 value|8
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_EP_UNITS
+value|32
+end_define
+
+begin_comment
+comment|/* units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_PORTS
+value|255
 end_define
 
 begin_comment

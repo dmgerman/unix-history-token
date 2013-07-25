@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: argv.c,v 1.1 2011/03/02 09:56:39 tom Exp $  *  *  argv - Reusable functions for argv-parsing.  *  *  Copyright 2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  * $Id: argv.c,v 1.2 2012/11/30 20:28:23 tom Exp $  *  *  argv - Reusable functions for argv-parsing.  *  *  Copyright 2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -188,31 +188,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|inparm
-condition|)
-block|{
-if|if
-condition|(
-name|pass
-condition|)
-name|result
-index|[
-name|count
-index|]
-operator|=
-name|param
-expr_stmt|;
-operator|++
-name|count
-expr_stmt|;
-name|inparm
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|pass

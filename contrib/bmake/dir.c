@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: dir.c,v 1.65 2012/06/12 19:21:50 joerg Exp $	*/
+comment|/*	$NetBSD: dir.c,v 1.67 2013/03/05 22:01:43 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: dir.c,v 1.65 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: dir.c,v 1.67 2013/03/05 22:01:43 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: dir.c,v 1.65 2012/06/12 19:21:50 joerg Exp $"
+literal|"$NetBSD: dir.c,v 1.67 2013/03/05 22:01:43 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|"dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"job.h"
 end_include
 
 begin_comment
@@ -4329,13 +4335,34 @@ argument_list|(
 name|fullName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Job_RunTarget
+argument_list|(
+literal|".STALE"
+argument_list|,
+name|gn
+operator|->
+name|fname
+argument_list|)
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s: ignoring stale %s for %s, found %s\n"
+literal|"%s: %s, %d: ignoring stale %s for %s, "
+literal|"found %s\n"
 argument_list|,
 name|progname
+argument_list|,
+name|gn
+operator|->
+name|fname
+argument_list|,
+name|gn
+operator|->
+name|lineno
 argument_list|,
 name|makeDependfile
 argument_list|,

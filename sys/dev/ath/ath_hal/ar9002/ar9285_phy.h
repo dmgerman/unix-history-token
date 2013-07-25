@@ -19,23 +19,6 @@ begin_comment
 comment|/*  * Manipulate AR9285 antenna diversity configuration  */
 end_comment
 
-begin_struct
-struct|struct
-name|ar9285_antcomb_conf
-block|{
-name|uint8_t
-name|main_lna_conf
-decl_stmt|;
-name|uint8_t
-name|alt_lna_conf
-decl_stmt|;
-name|uint8_t
-name|fast_div_bias
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 specifier|extern
 name|void
@@ -46,8 +29,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|struct
-name|ar9285_antcomb_conf
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 name|antconf
 parameter_list|)
@@ -64,8 +46,7 @@ name|ath_hal
 modifier|*
 name|ah
 parameter_list|,
-name|struct
-name|ar9285_antcomb_conf
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 name|antconf
 parameter_list|)

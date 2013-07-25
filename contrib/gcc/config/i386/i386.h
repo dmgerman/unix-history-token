@@ -499,6 +499,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_AMDFAM10
+value|(ix86_tune == PROCESSOR_AMDFAM10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TUNEMASK
 value|(1<< ix86_tune)
 end_define
@@ -683,6 +690,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|int
+name|x86_sse_unaligned_move_optimal
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
 name|x86_sse_typeless_stores
 decl_stmt|,
 name|x86_sse_load0_by_pxor
@@ -723,8 +738,6 @@ name|x86_cmpxchg
 decl_stmt|,
 name|x86_cmpxchg8b
 decl_stmt|,
-name|x86_cmpxchg16b
-decl_stmt|,
 name|x86_xadd
 decl_stmt|;
 end_decl_stmt
@@ -757,6 +770,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|x86_prefetch_sse
+decl_stmt|,
+name|x86_cmpxchg16b
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,6 +1028,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_SSE_UNALIGNED_MOVE_OPTIMAL
+define|\
+value|(x86_sse_unaligned_move_optimal& TUNEMASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_SSE_SPLIT_REGS
 value|(x86_sse_split_regs& TUNEMASK)
 end_define
@@ -1189,7 +1212,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CMPXCHG16B
-value|(x86_cmpxchg16b& (1<< ix86_arch))
+value|(x86_cmpxchg16b)
 end_define
 
 begin_define
@@ -1439,11 +1462,11 @@ value|\       if (TARGET_386)						\ 	builtin_define ("__tune_i386__");			\     
 comment|/* FALLTHRU */
 value|\ 	    case '2':						\ 	      builtin_define ("__tune_pentium2__");		\ 	      break;						\ 	    }							\ 	}							\       else if (TARGET_GEODE)					\ 	{							\ 	  builtin_define ("__tune_geode__");			\ 	}							\       else if (TARGET_K6)					\ 	{							\ 	  builtin_define ("__tune_k6__");			\ 	  if (last_tune_char == '2')				\ 	    builtin_define ("__tune_k6_2__");			\ 	  else if (last_tune_char == '3')			\ 	    builtin_define ("__tune_k6_3__");			\ 	}							\       else if (TARGET_ATHLON)					\ 	{							\ 	  builtin_define ("__tune_athlon__");			\
 comment|/* Plain "athlon"& "athlon-tbird" lacks SSE.  */
-value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_K8)					\ 	builtin_define ("__tune_k8__");				\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\       else if (TARGET_NOCONA)					\ 	builtin_define ("__tune_nocona__");			\       else if (TARGET_CORE2)					\ 	builtin_define ("__tune_core2__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE3)						\ 	builtin_define ("__SSE3__");				\       if (TARGET_SSSE3)						\ 	builtin_define ("__SSSE3__");				\       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
+value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__tune_athlon_sse__");		\ 	}							\       else if (TARGET_K8)					\ 	builtin_define ("__tune_k8__");				\       else if (TARGET_AMDFAM10)					\ 	builtin_define ("__tune_amdfam10__");			\       else if (TARGET_PENTIUM4)					\ 	builtin_define ("__tune_pentium4__");			\       else if (TARGET_NOCONA)					\ 	builtin_define ("__tune_nocona__");			\       else if (TARGET_CORE2)					\ 	builtin_define ("__tune_core2__");			\ 								\       if (TARGET_MMX)						\ 	builtin_define ("__MMX__");				\       if (TARGET_3DNOW)						\ 	builtin_define ("__3dNOW__");				\       if (TARGET_3DNOW_A)					\ 	builtin_define ("__3dNOW_A__");				\       if (TARGET_SSE)						\ 	builtin_define ("__SSE__");				\       if (TARGET_SSE2)						\ 	builtin_define ("__SSE2__");				\       if (TARGET_SSE3)						\ 	builtin_define ("__SSE3__");				\       if (TARGET_SSSE3)						\ 	builtin_define ("__SSSE3__");				\       if (TARGET_SSE4A)					\  	builtin_define ("__SSE4A__");		                \       if (TARGET_SSE_MATH&& TARGET_SSE)			\ 	builtin_define ("__SSE_MATH__");			\       if (TARGET_SSE_MATH&& TARGET_SSE2)			\ 	builtin_define ("__SSE2_MATH__");			\ 								\
 comment|/* Built-ins based on -march=.  */
 value|\       if (ix86_arch == PROCESSOR_I486)				\ 	{							\ 	  builtin_define ("__i486");				\ 	  builtin_define ("__i486__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM)			\ 	{							\ 	  builtin_define ("__i586");				\ 	  builtin_define ("__i586__");				\ 	  builtin_define ("__pentium");				\ 	  builtin_define ("__pentium__");			\ 	  if (last_arch_char == 'x')				\ 	    builtin_define ("__pentium_mmx__");			\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUMPRO)		\ 	{							\ 	  builtin_define ("__i686");				\ 	  builtin_define ("__i686__");				\ 	  builtin_define ("__pentiumpro");			\ 	  builtin_define ("__pentiumpro__");			\ 	}							\       else if (ix86_arch == PROCESSOR_GEODE)			\ 	{							\ 	  builtin_define ("__geode");				\ 	  builtin_define ("__geode__");				\ 	}							\       else if (ix86_arch == PROCESSOR_K6)			\ 	{							\ 								\ 	  builtin_define ("__k6");				\ 	  builtin_define ("__k6__");				\ 	  if (last_arch_char == '2')				\ 	    builtin_define ("__k6_2__");			\ 	  else if (last_arch_char == '3')			\ 	    builtin_define ("__k6_3__");			\ 	}							\       else if (ix86_arch == PROCESSOR_ATHLON)			\ 	{							\ 	  builtin_define ("__athlon");				\ 	  builtin_define ("__athlon__");			\
 comment|/* Plain "athlon"& "athlon-tbird" lacks SSE.  */
-value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__athlon_sse__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K8)			\ 	{							\ 	  builtin_define ("__k8");				\ 	  builtin_define ("__k8__");				\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM4)			\ 	{							\ 	  builtin_define ("__pentium4");			\ 	  builtin_define ("__pentium4__");			\ 	}							\       else if (ix86_arch == PROCESSOR_NOCONA)			\ 	{							\ 	  builtin_define ("__nocona");				\ 	  builtin_define ("__nocona__");			\ 	}							\       else if (ix86_arch == PROCESSOR_CORE2)			\ 	{							\ 	  builtin_define ("__core2");				\ 	  builtin_define ("__core2__");				\ 	}							\     }								\   while (0)
+value|\ 	  if (last_tune_char != 'n'&& last_tune_char != 'd')	\ 	    builtin_define ("__athlon_sse__");			\ 	}							\       else if (ix86_arch == PROCESSOR_K8)			\ 	{							\ 	  builtin_define ("__k8");				\ 	  builtin_define ("__k8__");				\ 	}							\       else if (ix86_arch == PROCESSOR_AMDFAM10)			\ 	{							\ 	  builtin_define ("__amdfam10");			\ 	  builtin_define ("__amdfam10__");			\ 	}							\       else if (ix86_arch == PROCESSOR_PENTIUM4)			\ 	{							\ 	  builtin_define ("__pentium4");			\ 	  builtin_define ("__pentium4__");			\ 	}							\       else if (ix86_arch == PROCESSOR_NOCONA)			\ 	{							\ 	  builtin_define ("__nocona");				\ 	  builtin_define ("__nocona__");			\ 	}							\       else if (ix86_arch == PROCESSOR_CORE2)			\ 	{							\ 	  builtin_define ("__core2");				\ 	  builtin_define ("__core2__");				\ 	}							\     }								\   while (0)
 end_define
 
 begin_define
@@ -1589,8 +1612,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|TARGET_CPU_DEFAULT_amdfam10
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
 name|TARGET_CPU_DEFAULT_NAMES
-value|{"i386", "i486", "pentium", "pentium-mmx",\ 				  "pentiumpro", "pentium2", "pentium3", \                                   "pentium4", "geode", "k6", "k6-2", "k6-3", \ 				  "athlon", "athlon-4", "k8", \ 				  "pentium-m", "prescott", "nocona", \ 				  "core2", "generic"}
+value|{"i386", "i486", "pentium", "pentium-mmx",\ 				  "pentiumpro", "pentium2", "pentium3", \                                   "pentium4", "geode", "k6", "k6-2", "k6-3", \ 				  "athlon", "athlon-4", "k8", \ 				  "pentium-m", "prescott", "nocona", \ 				  "core2", "generic", "amdfam10"}
 end_define
 
 begin_ifndef
@@ -4937,6 +4967,8 @@ block|,
 name|PROCESSOR_GENERIC32
 block|,
 name|PROCESSOR_GENERIC64
+block|,
+name|PROCESSOR_AMDFAM10
 block|,
 name|PROCESSOR_max
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mouse.c,v 1.18 2007/02/22 21:51:38 tom Exp $  *  * mouse.c -- mouse support for dialog  *  * Copyright 2002-2006,2007	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  * $Id: mouse.c,v 1.20 2012/12/21 10:00:30 tom Exp $  *  * mouse.c -- mouse support for dialog  *  * Copyright 2002-2007,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -27,6 +27,8 @@ name|int
 name|basex
 decl_stmt|,
 name|basey
+decl_stmt|,
+name|basecode
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +109,21 @@ expr_stmt|;
 name|basey
 operator|=
 name|y
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dlg_mouse_setcode
+parameter_list|(
+name|int
+name|code
+parameter_list|)
+block|{
+name|basecode
+operator|=
+name|code
 expr_stmt|;
 block|}
 end_function
@@ -259,6 +276,8 @@ name|butPtr
 operator|=
 name|find_region_by_code
 argument_list|(
+name|basecode
+operator|+
 name|code
 argument_list|)
 operator|)
@@ -359,6 +378,8 @@ name|butPtr
 operator|->
 name|code
 operator|=
+name|basecode
+operator|+
 name|code
 expr_stmt|;
 block|}
@@ -419,7 +440,9 @@ operator|>=
 literal|0
 operator|)
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|y
@@ -434,7 +457,9 @@ name|butPtr
 operator|->
 name|Y
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|x
@@ -449,7 +474,9 @@ name|butPtr
 operator|->
 name|X
 condition|)
+block|{
 continue|continue;
+block|}
 break|break;
 comment|/* found */
 block|}

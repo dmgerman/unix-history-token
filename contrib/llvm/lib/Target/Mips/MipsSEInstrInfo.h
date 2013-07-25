@@ -156,11 +156,11 @@ specifier|const
 block|;
 name|virtual
 name|void
-name|storeRegToStackSlot
+name|storeRegToStack
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MBBI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
@@ -171,16 +171,18 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;
 name|virtual
 name|void
-name|loadRegFromStackSlot
+name|loadRegFromStack
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MBBI
+argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
@@ -189,6 +191,8 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;
@@ -272,6 +276,15 @@ specifier|const
 block|;
 name|void
 name|ExpandBuildPairF64
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
+name|void
+name|ExpandEhReturn
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,

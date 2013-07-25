@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Constants.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/APInt.h"
 end_include
 
@@ -86,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/SelectionDAG.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Constants.h"
 end_include
 
 begin_include
@@ -1064,7 +1064,7 @@ argument|const Value* SV
 argument_list|,
 argument|unsigned Rg
 argument_list|,
-argument|EVT RgVT
+argument|MVT RgVT
 argument_list|,
 argument|bool E
 argument_list|,
@@ -1134,7 +1134,7 @@ decl_stmt|;
 name|unsigned
 name|Reg
 decl_stmt|;
-name|EVT
+name|MVT
 name|RegVT
 decl_stmt|;
 name|bool
@@ -2655,60 +2655,6 @@ name|I
 parameter_list|,
 name|unsigned
 name|Intrinsic
-parameter_list|)
-function_decl|;
-name|void
-name|visitPow
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitExp2
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitExp
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitLog
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitLog2
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
-name|void
-name|visitLog10
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
 parameter_list|)
 function_decl|;
 name|void

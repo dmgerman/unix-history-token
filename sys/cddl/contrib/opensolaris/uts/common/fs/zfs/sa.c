@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -110,7 +110,7 @@ file|<sys/zfs_context.h>
 end_include
 
 begin_comment
-comment|/*  * ZFS System attributes:  *  * A generic mechanism to allow for arbitrary attributes  * to be stored in a dnode.  The data will be stored in the bonus buffer of  * the dnode and if necessary a special "spill" block will be used to handle  * overflow situations.  The spill block will be sized to fit the data  * from 512 - 128K.  When a spill block is used the BP (blkptr_t) for the  * spill block is stored at the end of the current bonus buffer.  Any  * attributes that would be in the way of the blkptr_t will be relocated  * into the spill block.  *  * Attribute registration:  *  * Stored persistently on a per dataset basis  * a mapping between attribute "string" names and their actual attribute  * numeric values, length, and byteswap function.  The names are only used  * during registration.  All  attributes are known by their unique attribute  * id value.  If an attribute can have a variable size then the value  * 0 will be used to indicate this.  *  * Attribute Layout:  *  * Attribute layouts are a way to compactly store multiple attributes, but  * without taking the overhead associated with managing each attribute  * individually.  Since you will typically have the same set of attributes  * stored in the same order a single table will be used to represent that  * layout.  The ZPL for example will usually have only about 10 different  * layouts (regular files, device files, symlinks,  * regular files + scanstamp, files/dir with extended attributes, and then  * you have the possibility of all of those minus ACL, because it would  * be kicked out into the spill block)  *  * Layouts are simply an array of the attributes and their  * ordering i.e. [0, 1, 4, 5, 2]  *  * Each distinct layout is given a unique layout number and that is whats  * stored in the header at the beginning of the SA data buffer.  *  * A layout only covers a single dbuf (bonus or spill).  If a set of  * attributes is split up between the bonus buffer and a spill buffer then  * two different layouts will be used.  This allows us to byteswap the  * spill without looking at the bonus buffer and keeps the on disk format of  * the bonus and spill buffer the same.  *  * Adding a single attribute will cause the entire set of attributes to  * be rewritten and could result in a new layout number being constructed  * as part of the rewrite if no such layout exists for the new set of  * attribues.  The new attribute will be appended to the end of the already  * existing attributes.  *  * Both the attribute registration and attribute layout information are  * stored in normal ZAP attributes.  Their should be a small number of  * known layouts and the set of attributes is assumed to typically be quite  * small.  *  * The registered attributes and layout "table" information is maintained  * in core and a special "sa_os_t" is attached to the objset_t.  *  * A special interface is provided to allow for quickly applying  * a large set of attributes at once.  sa_replace_all_by_template() is  * used to set an array of attributes.  This is used by the ZPL when  * creating a brand new file.  The template that is passed into the function  * specifies the attribute, size for variable length attributes, location of  * data and special "data locator" function if the data isn't in a contiguous  * location.  *  * Byteswap implications:  * Since the SA attributes are not entirely self describing we can't do  * the normal byteswap processing.  The special ZAP layout attribute and  * attribute registration attributes define the byteswap function and the  * size of the attributes, unless it is variable sized.  * The normal ZFS byteswapping infrastructure assumes you don't need  * to read any objects in order to do the necessary byteswapping.  Whereas  * SA attributes can only be properly byteswapped if the dataset is opened  * and the layout/attribute ZAP attributes are available.  Because of this  * the SA attributes will be byteswapped when they are first accessed by  * the SA code that will read the SA data.  */
+comment|/*  * ZFS System attributes:  *  * A generic mechanism to allow for arbitrary attributes  * to be stored in a dnode.  The data will be stored in the bonus buffer of  * the dnode and if necessary a special "spill" block will be used to handle  * overflow situations.  The spill block will be sized to fit the data  * from 512 - 128K.  When a spill block is used the BP (blkptr_t) for the  * spill block is stored at the end of the current bonus buffer.  Any  * attributes that would be in the way of the blkptr_t will be relocated  * into the spill block.  *  * Attribute registration:  *  * Stored persistently on a per dataset basis  * a mapping between attribute "string" names and their actual attribute  * numeric values, length, and byteswap function.  The names are only used  * during registration.  All  attributes are known by their unique attribute  * id value.  If an attribute can have a variable size then the value  * 0 will be used to indicate this.  *  * Attribute Layout:  *  * Attribute layouts are a way to compactly store multiple attributes, but  * without taking the overhead associated with managing each attribute  * individually.  Since you will typically have the same set of attributes  * stored in the same order a single table will be used to represent that  * layout.  The ZPL for example will usually have only about 10 different  * layouts (regular files, device files, symlinks,  * regular files + scanstamp, files/dir with extended attributes, and then  * you have the possibility of all of those minus ACL, because it would  * be kicked out into the spill block)  *  * Layouts are simply an array of the attributes and their  * ordering i.e. [0, 1, 4, 5, 2]  *  * Each distinct layout is given a unique layout number and that is whats  * stored in the header at the beginning of the SA data buffer.  *  * A layout only covers a single dbuf (bonus or spill).  If a set of  * attributes is split up between the bonus buffer and a spill buffer then  * two different layouts will be used.  This allows us to byteswap the  * spill without looking at the bonus buffer and keeps the on disk format of  * the bonus and spill buffer the same.  *  * Adding a single attribute will cause the entire set of attributes to  * be rewritten and could result in a new layout number being constructed  * as part of the rewrite if no such layout exists for the new set of  * attribues.  The new attribute will be appended to the end of the already  * existing attributes.  *  * Both the attribute registration and attribute layout information are  * stored in normal ZAP attributes.  Their should be a small number of  * known layouts and the set of attributes is assumed to typically be quite  * small.  *  * The registered attributes and layout "table" information is maintained  * in core and a special "sa_os_t" is attached to the objset_t.  *  * A special interface is provided to allow for quickly applying  * a large set of attributes at once.  sa_replace_all_by_template() is  * used to set an array of attributes.  This is used by the ZPL when  * creating a brand new file.  The template that is passed into the function  * specifies the attribute, size for variable length attributes, location of  * data and special "data locator" function if the data isn't in a contiguous  * location.  *  * Byteswap implications:  *  * Since the SA attributes are not entirely self describing we can't do  * the normal byteswap processing.  The special ZAP layout attribute and  * attribute registration attributes define the byteswap function and the  * size of the attributes, unless it is variable sized.  * The normal ZFS byteswapping infrastructure assumes you don't need  * to read any objects in order to do the necessary byteswapping.  Whereas  * SA attributes can only be properly byteswapped if the dataset is opened  * and the layout/attribute ZAP attributes are available.  Because of this  * the SA attributes will be byteswapped when they are first accessed by  * the SA code that will read the SA data.  */
 end_comment
 
 begin_typedef
@@ -534,7 +534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ZPL legacy layout  * This is only used for objects of type DMU_OT_ZNODE  */
+comment|/*  * This is only used for objects of type DMU_OT_ZNODE  */
 end_comment
 
 begin_decl_stmt
@@ -1513,7 +1513,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 if|if
@@ -2340,7 +2343,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3076,7 +3082,10 @@ name|SPA_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 name|VERIFY
@@ -3217,7 +3226,10 @@ name|SPA_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 operator|)
 return|;
 name|buf_space
@@ -4162,7 +4174,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|bail
@@ -4313,7 +4328,10 @@ expr_stmt|;
 else|else
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -5272,7 +5290,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 goto|goto
 name|fail

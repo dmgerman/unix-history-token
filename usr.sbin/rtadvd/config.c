@@ -6252,7 +6252,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> Prefix added interface No.%d doesn't"
+literal|"<%s> Prefix added interface No.%d doesn't "
 literal|"exist. This should not happen! %s"
 argument_list|,
 name|__func__

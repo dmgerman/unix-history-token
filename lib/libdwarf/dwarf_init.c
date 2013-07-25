@@ -965,7 +965,7 @@ if|if
 condition|(
 name|shift
 operator|<
-literal|32
+literal|64
 operator|&&
 operator|(
 name|b

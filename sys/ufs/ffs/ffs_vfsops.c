@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -1240,6 +1246,8 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -6367,6 +6375,8 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -9897,18 +9907,17 @@ argument_list|(
 literal|"backgroundwritedone: lost buffer"
 argument_list|)
 expr_stmt|;
-comment|/* Grab an extra reference to be dropped by the bufdone() below. */
-name|bufobj_wrefl
-argument_list|(
-name|bufobj
-argument_list|)
-expr_stmt|;
 name|BO_UNLOCK
 argument_list|(
 name|bufobj
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process dependencies then return any unfinished ones. 	 */
+name|pbrelvp
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -10043,15 +10052,13 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
-name|oldflags
-decl_stmt|,
-name|s
-decl_stmt|;
 name|struct
 name|buf
 modifier|*
 name|newbp
+decl_stmt|;
+name|int
+name|oldflags
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -10109,11 +10116,6 @@ argument_list|(
 literal|"bufwrite: buffer is not busy???"
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If a background write is already in progress, delay 	 * writing this block if it is asynchronous. Otherwise 	 * wait for the background write to complete. 	 */
 name|BO_LOCK
 argument_list|(
@@ -10147,11 +10149,6 @@ operator|->
 name|b_bufobj
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|bdwrite
 argument_list|(
 name|bp
@@ -10176,7 +10173,7 @@ name|bp
 operator|->
 name|b_xflags
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bp
 operator|->
@@ -10279,7 +10276,6 @@ condition|)
 goto|goto
 name|normal_write
 goto|;
-comment|/* 		 * set it to be identical to the old block.  We have to 		 * set b_lblkno and BKGRDMARKER before calling bgetvp() 		 * to avoid confusing the splay tree and gbincore(). 		 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -10312,20 +10308,6 @@ operator|->
 name|b_bufsize
 argument_list|)
 expr_stmt|;
-name|newbp
-operator|->
-name|b_lblkno
-operator|=
-name|bp
-operator|->
-name|b_lblkno
-expr_stmt|;
-name|newbp
-operator|->
-name|b_xflags
-operator||=
-name|BX_BKGRDMARKER
-expr_stmt|;
 name|BO_LOCK
 argument_list|(
 name|bp
@@ -10339,15 +10321,6 @@ name|b_vflags
 operator||=
 name|BV_BKGRDINPROG
 expr_stmt|;
-name|bgetvp
-argument_list|(
-name|bp
-operator|->
-name|b_vp
-argument_list|,
-name|newbp
-argument_list|)
-expr_stmt|;
 name|BO_UNLOCK
 argument_list|(
 name|bp
@@ -10357,14 +10330,17 @@ argument_list|)
 expr_stmt|;
 name|newbp
 operator|->
-name|b_bufobj
+name|b_xflags
+operator||=
+name|BX_BKGRDMARKER
+expr_stmt|;
+name|newbp
+operator|->
+name|b_lblkno
 operator|=
-operator|&
 name|bp
 operator|->
-name|b_vp
-operator|->
-name|v_bufobj
+name|b_lblkno
 expr_stmt|;
 name|newbp
 operator|->
@@ -10400,6 +10376,15 @@ name|b_flags
 operator|&=
 operator|~
 name|B_INVAL
+expr_stmt|;
+name|pbgetvp
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
+name|newbp
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -10438,7 +10423,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * Initiate write on the copy, release the original to 		 * the B_LOCKED queue so that it cannot go away until 		 * the background write completes. If not locked it could go 		 * away and then be reconstituted while it was being written. 		 * If the reconstituted buffer were written, we could end up 		 * with two background copies being written at the same time. 		 */
+comment|/* 		 * Initiate write on the copy, release the original.  The 		 * BKGRDINPROG flag prevents it from going away until  		 * the background write completes. 		 */
 name|bqrelse
 argument_list|(
 name|bp

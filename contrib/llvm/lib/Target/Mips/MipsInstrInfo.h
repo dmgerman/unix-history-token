@@ -122,6 +122,28 @@ name|UncondBrOpc
 block|;
 name|public
 operator|:
+expr|enum
+name|BranchType
+block|{
+name|BT_None
+block|,
+comment|// Couldn't analyze branch.
+name|BT_NoBranch
+block|,
+comment|// No branches found.
+name|BT_Uncond
+block|,
+comment|// One unconditional branch.
+name|BT_Cond
+block|,
+comment|// One conditional branch.
+name|BT_CondUncond
+block|,
+comment|// A conditional branch followed by an unconditional branch.
+name|BT_Indirect
+comment|// One indirct branch.
+block|}
+block|;
 name|explicit
 name|MipsInstrInfo
 argument_list|(
@@ -190,6 +212,23 @@ argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
 block|;
+name|BranchType
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
+argument_list|,
+argument|SmallVectorImpl<MachineInstr*>&BranchInstrs
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|MachineInstr
 operator|*
@@ -249,6 +288,126 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|void
+name|storeRegToStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{
+name|storeRegToStack
+argument_list|(
+name|MBB
+argument_list|,
+name|MBBI
+argument_list|,
+name|SrcReg
+argument_list|,
+name|isKill
+argument_list|,
+name|FrameIndex
+argument_list|,
+name|RC
+argument_list|,
+name|TRI
+argument_list|,
+literal|0
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|loadRegFromStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|{
+name|loadRegFromStack
+argument_list|(
+name|MBB
+argument_list|,
+name|MBBI
+argument_list|,
+name|DestReg
+argument_list|,
+name|FrameIndex
+argument_list|,
+name|RC
+argument_list|,
+name|TRI
+argument_list|,
+literal|0
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|storeRegToStack
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|loadRegFromStack
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+operator|=
+literal|0
 block|;
 name|protected
 operator|:

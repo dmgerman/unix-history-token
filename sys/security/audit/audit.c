@@ -2595,6 +2595,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ar
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
 name|path
 operator|!=
 name|NULL

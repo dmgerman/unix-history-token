@@ -1776,7 +1776,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize for scan, set ni_startdir and bump ref on dp again 	 * becuase lookup() will dereference ni_startdir. 	 */
+comment|/* 	 * Initialize for scan, set ni_startdir and bump ref on dp again 	 * because lookup() will dereference ni_startdir. 	 */
 name|cnp
 operator|->
 name|cn_thread
@@ -6476,7 +6476,7 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
@@ -7749,6 +7749,25 @@ block|if (!nd->nd_repstat&& toff&& verf != at.na_filerev) 			nd->nd_repstat = NF
 endif|#
 directive|endif
 block|}
+if|if
+condition|(
+operator|!
+name|nd
+operator|->
+name|nd_repstat
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VDIR
+condition|)
+name|nd
+operator|->
+name|nd_repstat
+operator|=
+name|NFSERR_NOTDIR
+expr_stmt|;
 if|if
 condition|(
 name|nd
@@ -13558,6 +13577,7 @@ if|if
 condition|(
 name|startwrite
 condition|)
+block|{
 name|vn_start_write
 argument_list|(
 name|NULL
@@ -13567,6 +13587,25 @@ argument_list|,
 name|V_WAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lktype
+operator|==
+name|LK_SHARED
+operator|&&
+operator|!
+operator|(
+name|MNT_SHARED_WRITES
+argument_list|(
+name|mp
+argument_list|)
+operator|)
+condition|)
+name|lktype
+operator|=
+name|LK_EXCLUSIVE
+expr_stmt|;
+block|}
 name|nd
 operator|->
 name|nd_repstat

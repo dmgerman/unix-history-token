@@ -103,6 +103,13 @@ name|T4_REGDUMP_SIZE
 value|(160 * 1024)
 end_define
 
+begin_define
+define|#
+directive|define
+name|T5_REGDUMP_SIZE
+value|(332 * 1024)
+end_define
+
 begin_struct
 struct|struct
 name|t4_regdump

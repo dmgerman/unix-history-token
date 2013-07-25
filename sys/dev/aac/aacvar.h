@@ -398,8 +398,7 @@ name|u_int64_t
 name|cm_fibphys
 decl_stmt|;
 comment|/* bus address of the FIB */
-name|struct
-name|bio
+name|void
 modifier|*
 name|cm_data
 decl_stmt|;
@@ -418,7 +417,7 @@ modifier|*
 name|cm_sgtable
 decl_stmt|;
 comment|/* pointer to s/g table in 						 * command */
-name|int
+name|u_int
 name|cm_flags
 decl_stmt|;
 define|#
@@ -475,6 +474,14 @@ directive|define
 name|AAC_QUEUE_FRZN
 value|(1<<9)
 comment|/* Freeze the processing of 						 * commands on the queue. */
+define|#
+directive|define
+name|AAC_REQ_BIO
+value|(1<< 11)
+define|#
+directive|define
+name|AAC_REQ_CCB
+value|(1<< 12)
 name|void
 function_decl|(
 modifier|*

@@ -222,6 +222,19 @@ name|getAllFiles
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Returns all compile commands for all the files in the compilation
+comment|/// database.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|CompileCommand
+operator|>
+name|getAllCompileCommands
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// \brief Constructs a JSON compilation database on a memory buffer.
@@ -283,6 +296,16 @@ operator|*
 operator|>
 name|CompileCommandRef
 expr_stmt|;
+comment|/// \brief Converts the given array of CompileCommandRefs to CompileCommands.
+name|void
+name|getCommands
+argument_list|(
+argument|ArrayRef<CompileCommandRef> CommandsRef
+argument_list|,
+argument|std::vector<CompileCommand>&Commands
+argument_list|)
+specifier|const
+decl_stmt|;
 comment|// Maps file paths to the compile command lines for that file.
 name|llvm
 operator|::
@@ -294,14 +317,12 @@ name|vector
 operator|<
 name|CompileCommandRef
 operator|>
-block|>
+expr|>
 name|IndexByFile
-decl_stmt|;
+expr_stmt|;
 name|FileMatchTrie
 name|MatchTrie
 decl_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|llvm

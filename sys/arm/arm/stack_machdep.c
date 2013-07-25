@@ -59,6 +59,10 @@ directive|include
 file|<machine/stack.h>
 end_include
 
+begin_comment
+comment|/*  * This code makes assumptions about the stack layout. These are correct  * when using APCS (the old ABI), but are no longer true with AAPCS and the  * ARM EABI. There is also an issue with clang and llvm when building for  * APCS where it lays out the stack incorrectly. Because of this we disable  * this when building for ARM EABI or when building with clang.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -74,28 +78,30 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
 name|vm_offset_t
 name|callpc
 decl_stmt|;
-name|stack_zero
-argument_list|(
-name|st
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-operator|!
 name|INKERNEL
 argument_list|(
 name|frame
 argument_list|)
 condition|)
-break|break;
+block|{
 name|callpc
 operator|=
 name|frame
@@ -130,6 +136,8 @@ index|]
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -176,6 +184,7 @@ argument_list|(
 literal|"stack_save_td: running"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This register, the frame pointer, is incorrect for the ARM EABI 	 * as it doesn't have a frame pointer, however it's value is not used 	 * when building for EABI. 	 */
 name|frame
 operator|=
 operator|(
@@ -189,6 +198,11 @@ operator|->
 name|un_32
 operator|.
 name|pcb32_r11
+expr_stmt|;
+name|stack_zero
+argument_list|(
+name|st
+argument_list|)
 expr_stmt|;
 name|stack_capture
 argument_list|(
@@ -223,6 +237,11 @@ operator|)
 name|__builtin_frame_address
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|stack_zero
+argument_list|(
+name|st
 argument_list|)
 expr_stmt|;
 name|stack_capture

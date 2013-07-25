@@ -674,6 +674,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Compiler/Clibrary-dependent debug initialization. Used for ACPICA  * utilities only.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_DEBUG_INITIALIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_INITIALIZE
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
 end_comment
 
@@ -2200,31 +2222,6 @@ define|#
 directive|define
 name|ACPI_EVENT_FLAG_SET
 value|(ACPI_EVENT_STATUS) 0x04
-end_define
-
-begin_comment
-comment|/*  * General Purpose Events (GPE)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_INVALID
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_MAX
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_GPE
-value|256
 end_define
 
 begin_comment

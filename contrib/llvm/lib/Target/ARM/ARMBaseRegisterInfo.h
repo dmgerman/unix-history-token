@@ -367,6 +367,15 @@ block|;
 specifier|const
 name|uint32_t
 operator|*
+name|getThisReturnPreservedMask
+argument_list|(
+argument|CallingConv::ID
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
 name|getNoPreservedMask
 argument_list|()
 specifier|const
@@ -417,30 +426,18 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|ArrayRef
-operator|<
-name|uint16_t
-operator|>
-name|getRawAllocationOrder
+name|void
+name|getRegAllocationHints
 argument_list|(
-argument|const TargetRegisterClass *RC
+argument|unsigned VirtReg
 argument_list|,
-argument|unsigned HintType
+argument|ArrayRef<MCPhysReg> Order
 argument_list|,
-argument|unsigned HintReg
+argument|SmallVectorImpl<MCPhysReg>&Hints
 argument_list|,
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|ResolveRegAllocHint
-argument_list|(
-argument|unsigned Type
 argument_list|,
-argument|unsigned Reg
-argument_list|,
-argument|const MachineFunction&MF
+argument|const VirtRegMap *VRM
 argument_list|)
 specifier|const
 block|;
@@ -639,45 +636,15 @@ specifier|const
 block|;
 name|virtual
 name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
 argument_list|,
+argument|unsigned FIOperandNum
+argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|private
-operator|:
-name|unsigned
-name|getRegisterPairEven
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getRegisterPairOdd
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|; }

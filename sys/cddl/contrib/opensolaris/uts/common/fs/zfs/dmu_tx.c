@@ -710,7 +710,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 name|err
@@ -1785,7 +1788,10 @@ name|DMU_MAX_ACCESS
 condition|)
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EFBIG
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4365,12 +4371,18 @@ name|TXG_WAIT
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4490,7 +4502,10 @@ name|txh
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ERESTART
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4797,6 +4812,7 @@ operator|->
 name|tx_txgh
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Walk the transaction's hold list, removing the hold on the 	 * associated dnode, and notifying waiters if the refcount drops to 0. 	 */
 for|for
 control|(
 name|txh
@@ -5322,6 +5338,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Go through the transaction's hold list and remove holds on 	 * associated dnodes, notifying waiters if no holds remain. 	 */
 while|while
 condition|(
 name|txh

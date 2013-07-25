@@ -215,6 +215,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|wdayom
+parameter_list|(
+name|int
+name|day
+parameter_list|,
+name|int
+name|offset
+parameter_list|,
+name|int
+name|month
+parameter_list|,
+name|int
+name|year
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Expected styles:  *  * Date			::=	Month . ' ' . DayOfMonth |  *				Month . ' ' . DayOfWeek . ModifierIndex |  *				Month . '/' . DayOfMonth |  *				Month . '/' . DayOfWeek . ModifierIndex |  *				DayOfMonth . ' ' . Month |  *				DayOfMonth . '/' . Month |  *				DayOfWeek . ModifierIndex . ' ' .Month |  *				DayOfWeek . ModifierIndex . '/' .Month |  *				DayOfWeek . ModifierIndex |  *				SpecialDay . ModifierOffset  *  * Month		::=	MonthName | MonthNumber | '*'  * MonthNumber		::=	'0' ... '9' | '00' ... '09' | '10' ... '12'  * MonthName		::=	MonthNameShort | MonthNameLong  * MonthNameLong	::=	'January' ... 'December'  * MonthNameShort	::=	'Jan' ... 'Dec' | 'Jan.' ... 'Dec.'  *  * DayOfWeek		::=	DayOfWeekShort | DayOfWeekLong  * DayOfWeekShort	::=	'Mon' .. 'Sun'  * DayOfWeekLong	::=	'Monday' .. 'Sunday'  * DayOfMonth		::=	'0' ... '9' | '00' ... '09' | '10' ... '29' |  *				'30' ... '31' | '*'  *  * ModifierOffset	::=	'' | '+' . ModifierNumber | '-' . ModifierNumber  * ModifierNumber	::=	'0' ... '9' | '00' ... '99' | '000' ... '299' |  *				'300' ... '359' | '360' ... '365'  * ModifierIndex	::=	'Second' | 'Third' | 'Fourth' | 'Fifth' |  *				'First' | 'Last'  *  * SpecialDay		::=	'Easter' | 'Paskha' | 'ChineseNewYear'  *  */
 end_comment
@@ -826,7 +846,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * AFTER this, leave by goto-ing to "allfine" or "fail" to restore the 	 * original data in `date'. 	 */
+comment|/* 	 * After this, leave by goto-ing to "allfine" or "fail" to restore the 	 * original data in `date'. 	 */
 name|pold
 operator|=
 operator|*
@@ -908,7 +928,6 @@ operator||=
 name|F_YEAR
 expr_stmt|;
 block|}
-comment|/* 	printf("p1: %s\n", p1); 	printf("p2: %s\n", p2); 	printf("year: %s\n", year); 	*/
 comment|/* Check if there is a month-string in the date */
 if|if
 condition|(
@@ -1530,8 +1549,48 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|remember
+parameter_list|(
+name|int
+modifier|*
+name|rememberindex
+parameter_list|,
+name|int
+modifier|*
+name|y
+parameter_list|,
+name|int
+modifier|*
+name|m
+parameter_list|,
+name|int
+modifier|*
+name|d
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|ed
+parameter_list|,
+name|int
+name|yy
+parameter_list|,
+name|int
+name|mm
+parameter_list|,
+name|int
+name|dd
+parameter_list|,
+name|char
+modifier|*
+name|extra
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
-specifier|static
 name|void
 name|remember
 parameter_list|(
@@ -1879,6 +1938,7 @@ block|}
 end_function
 
 begin_struct
+specifier|static
 struct|struct
 name|yearinfo
 block|{
@@ -1933,7 +1993,7 @@ index|]
 decl_stmt|;
 name|int
 modifier|*
-name|mondays
+name|monthdays
 decl_stmt|;
 name|struct
 name|yearinfo
@@ -1941,8 +2001,163 @@ modifier|*
 name|next
 decl_stmt|;
 block|}
+modifier|*
+name|years
+struct|,
+modifier|*
+name|yearinfo
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Calculate dates with offset from weekdays, like Thurs-3, Wed+2, etc.  * day is the day of the week,  * offset the ordinal number of the weekday in the month.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|wdayom
+parameter_list|(
+name|int
+name|day
+parameter_list|,
+name|int
+name|offset
+parameter_list|,
+name|int
+name|month
+parameter_list|,
+name|int
+name|year
+parameter_list|)
+block|{
+comment|/* Weekday of first day in month */
+name|int
+name|wday1
+decl_stmt|;
+comment|/* first day of month */
+comment|/* Weekday of last day in month */
+name|int
+name|wdayn
+decl_stmt|;
+name|int
+name|d
+decl_stmt|;
+name|wday1
+operator|=
+name|first_dayofweek_of_month
+argument_list|(
+name|year
+argument_list|,
+name|month
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wday1
+operator|<
+literal|0
+condition|)
+comment|/* not set */
+return|return
+operator|(
+name|wday1
+operator|)
+return|;
+comment|/* 	 * Date of zeroth or first of our weekday in month, depending on the 	 * relationship with the first of the month.  The range is -6:6. 	 */
+name|d
+operator|=
+operator|(
+name|day
+operator|-
+name|wday1
+operator|+
+literal|1
+operator|)
+operator|%
+literal|7
+expr_stmt|;
+comment|/* 	 * Which way are we counting?  Offset 0 is invalid, abs (offset)> 5 is 	 * meaningless, but that's OK.  Offset 5 may or may not be meaningless, 	 * so there's no point in complaining for complaining's sake. 	 */
+if|if
+condition|(
+name|offset
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* back from end of month */
+comment|/* FIXME */
+name|wdayn
+operator|=
+name|d
+expr_stmt|;
+while|while
+condition|(
+name|wdayn
+operator|<=
+name|yearinfo
+operator|->
+name|monthdays
+index|[
+name|month
+index|]
+condition|)
+name|wdayn
+operator|+=
+literal|7
+expr_stmt|;
+name|d
+operator|=
+name|offset
+operator|*
+literal|7
+operator|+
+name|wdayn
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|offset
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|d
+operator|>
+literal|0
+condition|)
+name|d
+operator|+=
+name|offset
+operator|*
+literal|7
+operator|-
+literal|7
+expr_stmt|;
+else|else
+name|d
+operator|+=
+name|offset
+operator|*
+literal|7
+expr_stmt|;
+block|}
+else|else
+name|warnx
+argument_list|(
+literal|"Invalid offset 0"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|d
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Possible date formats include any combination of:  *	3-charmonth			(January, Jan, Jan)  *	3-charweekday			(Friday, Monday, mon.)  *	numeric month or day		(1, 2, 04)  *  * Any character may separate them, or they may not be separated.  Any line,  * following a line that is matched, that starts with "whitespace", is shown  * along with the matched line.  */
@@ -2063,15 +2278,6 @@ name|int
 name|retvalsign
 init|=
 literal|1
-decl_stmt|;
-specifier|static
-name|struct
-name|yearinfo
-modifier|*
-name|years
-decl_stmt|,
-modifier|*
-name|yearinfo
 decl_stmt|;
 comment|/* 	 * CONVENTION 	 * 	 * Month:     1-12 	 * Monthname: Jan .. Dec 	 * Day:	      1-31 	 * Weekday:   Mon .. Sun 	 * 	 */
 operator|*
@@ -2335,9 +2541,9 @@ name|yearinfo
 expr_stmt|;
 name|yearinfo
 operator|->
-name|mondays
+name|monthdays
 operator|=
-name|mondaytab
+name|monthdaytab
 index|[
 name|isleap
 argument_list|(
@@ -2663,7 +2869,7 @@ name|d
 operator|<=
 name|yearinfo
 operator|->
-name|mondays
+name|monthdays
 index|[
 name|imonth
 index|]
@@ -2856,7 +3062,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* Every so-manied dayofweek of every month of the year */
+comment|/* 	         * Every so-manied dayofweek of every month of the year: 	         * Thu-3 	         */
 if|if
 condition|(
 name|lflags
@@ -2884,43 +3090,25 @@ operator|=
 literal|0
 init|;
 name|m
-operator|<
+operator|<=
 literal|12
 condition|;
 name|m
 operator|++
 control|)
 block|{
-name|dow
+name|d
 operator|=
-name|first_dayofweek_of_month
+name|wdayom
 argument_list|(
-name|year
+name|idayofweek
+argument_list|,
+name|offset
 argument_list|,
 name|m
+argument_list|,
+name|year
 argument_list|)
-expr_stmt|;
-name|d
-operator|=
-operator|(
-name|idayofweek
-operator|-
-name|dow
-operator|+
-literal|8
-operator|)
-operator|%
-literal|7
-expr_stmt|;
-name|d
-operator|+=
-operator|(
-name|offset
-operator|-
-literal|1
-operator|)
-operator|*
-literal|7
 expr_stmt|;
 if|if
 condition|(
@@ -2961,7 +3149,7 @@ block|}
 block|}
 continue|continue;
 block|}
-comment|/* A certain dayofweek of a month */
+comment|/* 	         * A certain dayofweek of a month 	         * Jan/Thu-3 	         */
 if|if
 condition|(
 name|lflags
@@ -3018,7 +3206,7 @@ name|d
 operator|<=
 name|yearinfo
 operator|->
-name|mondays
+name|monthdays
 index|[
 name|imonth
 index|]
@@ -3085,7 +3273,7 @@ name|d
 operator|<=
 name|yearinfo
 operator|->
-name|mondays
+name|monthdays
 index|[
 name|imonth
 index|]
@@ -3187,7 +3375,7 @@ name|d
 operator|<=
 name|yearinfo
 operator|->
-name|mondays
+name|monthdays
 index|[
 name|imonth
 index|]

@@ -90,7 +90,7 @@ comment|/// can only be done for small integers: typically up to 3 bits, but it 
 comment|/// on the number of bits available according to PointerLikeTypeTraits for the
 comment|/// type.
 comment|///
-comment|/// Note that PointerIntPair always puts the Int part in the highest bits
+comment|/// Note that PointerIntPair always puts the IntVal part in the highest bits
 comment|/// possible.  For example, PointerIntPair<void*, 1, bool> will put the bit for
 comment|/// the bool into bit #2, not bit #0, which allows the low two bits to be used
 comment|/// for something else.  For example, this allows:
@@ -204,14 +204,9 @@ argument_list|)
 block|{}
 name|PointerIntPair
 argument_list|(
-argument|PointerTy Ptr
+argument|PointerTy PtrVal
 argument_list|,
-argument|IntType Int
-argument_list|)
-operator|:
-name|Value
-argument_list|(
-literal|0
+argument|IntType IntVal
 argument_list|)
 block|{
 name|assert
@@ -225,14 +220,22 @@ operator|&&
 literal|"PointerIntPair formed with integer size too large for pointer"
 argument_list|)
 block|;
-name|setPointer
+name|setPointerAndInt
 argument_list|(
-name|Ptr
+name|PtrVal
+argument_list|,
+name|IntVal
 argument_list|)
-block|;
-name|setInt
+block|;   }
+name|explicit
+name|PointerIntPair
 argument_list|(
-name|Int
+argument|PointerTy PtrVal
+argument_list|)
+block|{
+name|initWithPointer
+argument_list|(
+name|PtrVal
 argument_list|)
 block|;   }
 name|PointerTy
@@ -281,11 +284,11 @@ block|}
 name|void
 name|setPointer
 argument_list|(
-argument|PointerTy Ptr
+argument|PointerTy PtrVal
 argument_list|)
 block|{
 name|intptr_t
-name|PtrVal
+name|PtrWord
 operator|=
 name|reinterpret_cast
 operator|<
@@ -296,14 +299,14 @@ name|PtrTraits
 operator|::
 name|getAsVoidPointer
 argument_list|(
-name|Ptr
+name|PtrVal
 argument_list|)
 operator|)
 block|;
 name|assert
 argument_list|(
 operator|(
-name|PtrVal
+name|PtrWord
 operator|&
 operator|(
 operator|(
@@ -326,7 +329,7 @@ block|;
 comment|// Preserve all low bits, just update the pointer.
 name|Value
 operator|=
-name|PtrVal
+name|PtrWord
 operator||
 operator|(
 name|Value
@@ -338,17 +341,23 @@ block|;   }
 name|void
 name|setInt
 argument_list|(
-argument|IntType Int
+argument|IntType IntVal
 argument_list|)
 block|{
 name|intptr_t
-name|IntVal
+name|IntWord
 operator|=
-name|Int
+name|static_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|IntVal
+operator|)
 block|;
 name|assert
 argument_list|(
-name|IntVal
+name|IntWord
 operator|<
 operator|(
 literal|1
@@ -368,12 +377,142 @@ block|;
 comment|// Remove integer field.
 name|Value
 operator||=
-name|IntVal
+name|IntWord
 operator|<<
 name|IntShift
 block|;
 comment|// Set new integer.
 block|}
+name|void
+name|initWithPointer
+argument_list|(
+argument|PointerTy PtrVal
+argument_list|)
+block|{
+name|intptr_t
+name|PtrWord
+operator|=
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|PtrTraits
+operator|::
+name|getAsVoidPointer
+argument_list|(
+name|PtrVal
+argument_list|)
+operator|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|PtrWord
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|PtrTraits
+operator|::
+name|NumLowBitsAvailable
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Pointer is not sufficiently aligned"
+argument_list|)
+block|;
+name|Value
+operator|=
+name|PtrWord
+block|;   }
+name|void
+name|setPointerAndInt
+argument_list|(
+argument|PointerTy PtrVal
+argument_list|,
+argument|IntType IntVal
+argument_list|)
+block|{
+name|intptr_t
+name|PtrWord
+operator|=
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|PtrTraits
+operator|::
+name|getAsVoidPointer
+argument_list|(
+name|PtrVal
+argument_list|)
+operator|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|PtrWord
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|PtrTraits
+operator|::
+name|NumLowBitsAvailable
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Pointer is not sufficiently aligned"
+argument_list|)
+block|;
+name|intptr_t
+name|IntWord
+operator|=
+name|static_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|IntVal
+operator|)
+block|;
+name|assert
+argument_list|(
+name|IntWord
+operator|<
+operator|(
+literal|1
+operator|<<
+name|IntBits
+operator|)
+operator|&&
+literal|"Integer too large for field"
+argument_list|)
+block|;
+name|Value
+operator|=
+name|PtrWord
+operator||
+operator|(
+name|IntWord
+operator|<<
+name|IntShift
+operator|)
+block|;   }
 name|PointerTy
 specifier|const
 operator|*

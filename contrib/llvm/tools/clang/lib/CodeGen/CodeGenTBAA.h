@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MDBuilder.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/IR/MDBuilder.h"
 end_include
 
 begin_decl_stmt
@@ -122,6 +122,50 @@ block|{
 name|class
 name|CGRecordLayout
 decl_stmt|;
+struct|struct
+name|TBAAPathTag
+block|{
+name|TBAAPathTag
+argument_list|(
+argument|const Type *B
+argument_list|,
+argument|const llvm::MDNode *A
+argument_list|,
+argument|uint64_t O
+argument_list|)
+block|:
+name|BaseT
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|AccessN
+argument_list|(
+name|A
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+argument|O
+argument_list|)
+block|{}
+specifier|const
+name|Type
+operator|*
+name|BaseT
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|AccessN
+expr_stmt|;
+name|uint64_t
+name|Offset
+decl_stmt|;
+block|}
+struct|;
 comment|/// CodeGenTBAA - This class organizes the cross-module state that is used
 comment|/// while lowering AST types to LLVM types.
 name|class
@@ -151,7 +195,8 @@ operator|::
 name|MDBuilder
 name|MDHelper
 expr_stmt|;
-comment|/// MetadataCache - This maps clang::Types to llvm::MDNodes describing them.
+comment|/// MetadataCache - This maps clang::Types to scalar llvm::MDNodes describing
+comment|/// them.
 name|llvm
 operator|::
 name|DenseMap
@@ -166,6 +211,54 @@ name|MDNode
 operator|*
 operator|>
 name|MetadataCache
+expr_stmt|;
+comment|/// This maps clang::Types to a struct node in the type DAG.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|,
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|>
+name|StructTypeMetadataCache
+expr_stmt|;
+comment|/// This maps TBAAPathTags to a tag node.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|TBAAPathTag
+operator|,
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|>
+name|StructTagMetadataCache
+expr_stmt|;
+comment|/// This maps a scalar type to a scalar tag node.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|,
+name|llvm
+operator|::
+name|MDNode
+operator|*
+operator|>
+name|ScalarTagMetadataCache
 expr_stmt|;
 comment|/// StructMetadataCache - This maps clang::Types to llvm::MDNodes describing
 comment|/// them for struct assignments.
@@ -240,6 +333,20 @@ name|bool
 name|MayAlias
 argument_list|)
 decl_stmt|;
+comment|/// A wrapper function to create a scalar type. For struct-path aware TBAA,
+comment|/// the scalar type has the same format as the struct type: name, offset,
+comment|/// pointer to another node in the type DAG.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|createTBAAScalarType
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|llvm::MDNode *Parent
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 name|CodeGenTBAA
@@ -304,6 +411,45 @@ argument_list|(
 argument|QualType QTy
 argument_list|)
 expr_stmt|;
+comment|/// Get the MDNode in the type DAG for given struct type QType.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAStructTypeInfo
+argument_list|(
+argument|QualType QType
+argument_list|)
+expr_stmt|;
+comment|/// Get the tag MDNode for a given base type, the actual scalar access MDNode
+comment|/// and offset into the base type.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAStructTagInfo
+argument_list|(
+argument|QualType BaseQType
+argument_list|,
+argument|llvm::MDNode *AccessNode
+argument_list|,
+argument|uint64_t Offset
+argument_list|)
+expr_stmt|;
+comment|/// Get the sclar tag MDNode for a given scalar type.
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|getTBAAScalarTagInfo
+argument_list|(
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|AccessNode
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}
@@ -313,6 +459,213 @@ end_decl_stmt
 
 begin_comment
 comment|// end namespace clang
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|TBAAPathTag
+operator|>
+block|{
+specifier|static
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|TBAAPathTag
+name|getEmptyKey
+argument_list|()
+block|{
+return|return
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|TBAAPathTag
+argument_list|(
+name|DenseMapInfo
+operator|<
+specifier|const
+name|clang
+operator|::
+name|Type
+operator|*
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|,
+name|DenseMapInfo
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|,
+name|DenseMapInfo
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|getEmptyKey
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|TBAAPathTag
+name|getTombstoneKey
+argument_list|()
+block|{
+return|return
+name|clang
+operator|::
+name|CodeGen
+operator|::
+name|TBAAPathTag
+argument_list|(
+name|DenseMapInfo
+operator|<
+specifier|const
+name|clang
+operator|::
+name|Type
+operator|*
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|,
+name|DenseMapInfo
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|,
+name|DenseMapInfo
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|getTombstoneKey
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+argument|const clang::CodeGen::TBAAPathTag&Val
+argument_list|)
+block|{
+return|return
+name|DenseMapInfo
+operator|<
+specifier|const
+name|clang
+operator|::
+name|Type
+operator|*
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Val
+operator|.
+name|BaseT
+argument_list|)
+operator|^
+name|DenseMapInfo
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Val
+operator|.
+name|AccessN
+argument_list|)
+operator|^
+name|DenseMapInfo
+operator|<
+name|uint64_t
+operator|>
+operator|::
+name|getHashValue
+argument_list|(
+name|Val
+operator|.
+name|Offset
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+argument|const clang::CodeGen::TBAAPathTag&LHS
+argument_list|,
+argument|const clang::CodeGen::TBAAPathTag&RHS
+argument_list|)
+block|{
+return|return
+name|LHS
+operator|.
+name|BaseT
+operator|==
+name|RHS
+operator|.
+name|BaseT
+operator|&&
+name|LHS
+operator|.
+name|AccessN
+operator|==
+name|RHS
+operator|.
+name|AccessN
+operator|&&
+name|LHS
+operator|.
+name|Offset
+operator|==
+name|RHS
+operator|.
+name|Offset
+return|;
+block|}
+expr|}
+block|;  }
+end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
 end_comment
 
 begin_endif

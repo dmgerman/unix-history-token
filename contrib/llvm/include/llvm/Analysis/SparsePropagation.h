@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_SPARSE_PROPAGATION_H
+name|LLVM_ANALYSIS_SPARSEPROPAGATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_SPARSE_PROPAGATION_H
+name|LLVM_ANALYSIS_SPARSEPROPAGATION_H
 end_define
 
 begin_include
@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<set>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<set>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -701,7 +701,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_ANALYSIS_SPARSE_PROPAGATION_H
+comment|// LLVM_ANALYSIS_SPARSEPROPAGATION_H
 end_comment
 
 end_unit

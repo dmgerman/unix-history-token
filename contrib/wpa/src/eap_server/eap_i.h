@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP Authenticator state machine internal structures (RFC 4137)  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / EAP Authenticator state machine internal structures (RFC 4137)  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -363,7 +363,7 @@ name|eap_eapol_interface
 name|eap_if
 decl_stmt|;
 comment|/* Full authenticator state machine local variables */
-comment|/* Long-term (maintained betwen packets) */
+comment|/* Long-term (maintained between packets) */
 name|EapType
 name|currentMethod
 decl_stmt|;
@@ -480,7 +480,8 @@ name|void
 modifier|*
 name|ssl_ctx
 decl_stmt|;
-name|void
+name|struct
+name|eap_sim_db_data
 modifier|*
 name|eap_sim_db_priv
 decl_stmt|;
@@ -553,6 +554,9 @@ decl_stmt|;
 name|int
 name|tnc
 decl_stmt|;
+name|u16
+name|pwd_group
+decl_stmt|;
 name|struct
 name|wps_context
 modifier|*
@@ -563,6 +567,11 @@ name|wpabuf
 modifier|*
 name|assoc_wps_ie
 decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|assoc_p2p_ie
+decl_stmt|;
 name|Boolean
 name|start_reauth
 decl_stmt|;
@@ -571,6 +580,13 @@ name|peer_addr
 index|[
 name|ETH_ALEN
 index|]
+decl_stmt|;
+comment|/* Fragmentation size for EAP method init() handler */
+name|int
+name|fragment_size
+decl_stmt|;
+name|int
+name|pbc_in_m1
 decl_stmt|;
 block|}
 struct|;

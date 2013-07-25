@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCASMOPERAND_H
+name|LLVM_MC_MCPARSER_MCPARSEDASMOPERAND_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCASMOPERAND_H
+name|LLVM_MC_MCPARSER_MCPARSEDASMOPERAND_H
 end_define
 
 begin_decl_stmt
@@ -123,62 +123,24 @@ return|return
 name|MCOperandNum
 return|;
 block|}
-name|unsigned
-name|getNameLen
+name|virtual
+name|StringRef
+name|getSymName
 parameter_list|()
 block|{
-name|assert
-argument_list|(
-name|getStartLoc
-argument_list|()
-operator|.
-name|isValid
-argument_list|()
-operator|&&
-literal|"Invalid StartLoc!"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|getEndLoc
-argument_list|()
-operator|.
-name|isValid
-argument_list|()
-operator|&&
-literal|"Invalid EndLoc!"
-argument_list|)
-expr_stmt|;
 return|return
-name|getEndLoc
-argument_list|()
-operator|.
-name|getPointer
-argument_list|()
-operator|-
-name|getStartLoc
-argument_list|()
-operator|.
-name|getPointer
+name|StringRef
 argument_list|()
 return|;
 block|}
-name|StringRef
-name|getName
+name|virtual
+name|void
+modifier|*
+name|getOpDecl
 parameter_list|()
 block|{
 return|return
-name|StringRef
-argument_list|(
-name|getStartLoc
-argument_list|()
-operator|.
-name|getPointer
-argument_list|()
-argument_list|,
-name|getNameLen
-argument_list|()
-argument_list|)
+literal|0
 return|;
 block|}
 comment|/// isToken - Is this a token operand?
@@ -225,16 +187,6 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-name|virtual
-name|unsigned
-name|getMemSize
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// getStartLoc - Get the location of the first token of this operand.
 name|virtual
 name|SMLoc
@@ -253,18 +205,16 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// needAsmRewrite - AsmRewrites happen in both the target-independent and
-comment|/// target-dependent parsers.  The target-independent parser calls this
-comment|/// function to determine if the target-dependent parser has already taken
-comment|/// care of the rewrites.  Only valid when parsing MS-style inline assembly.
+comment|/// needAddressOf - Do we need to emit code to get the address of the
+comment|/// variable/label?   Only valid when parsing MS-style inline assembly.
 name|virtual
 name|bool
-name|needAsmRewrite
+name|needAddressOf
 argument_list|()
 specifier|const
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
 comment|/// isOffsetOf - Do we need to emit code to get the offset of the variable,
@@ -290,18 +240,6 @@ block|{
 return|return
 name|SMLoc
 argument_list|()
-return|;
-block|}
-comment|/// needSizeDirective - Do we need to emit a sizing directive for this
-comment|/// operand?  Only valid when parsing MS-style inline assembly.
-name|virtual
-name|bool
-name|needSizeDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
 return|;
 block|}
 comment|/// print - Print a debug representation of the operand to the given stream.

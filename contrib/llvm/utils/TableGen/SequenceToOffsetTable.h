@@ -76,19 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<functional>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_include
@@ -101,6 +89,18 @@ begin_include
 include|#
 directive|include
 file|<cctype>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt

@@ -23,31 +23,31 @@ begin_struct
 struct|struct
 name|rip6stat
 block|{
-name|u_quad_t
+name|uint64_t
 name|rip6s_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|u_quad_t
+name|uint64_t
 name|rip6s_isum
 decl_stmt|;
 comment|/* input checksum computations */
-name|u_quad_t
+name|uint64_t
 name|rip6s_badsum
 decl_stmt|;
 comment|/* of above, checksum error */
-name|u_quad_t
+name|uint64_t
 name|rip6s_nosock
 decl_stmt|;
 comment|/* no matching socket */
-name|u_quad_t
+name|uint64_t
 name|rip6s_nosockmcast
 decl_stmt|;
 comment|/* of above, arrived as multicast */
-name|u_quad_t
+name|uint64_t
 name|rip6s_fullsock
 decl_stmt|;
 comment|/* not delivered, input socket full */
-name|u_quad_t
+name|uint64_t
 name|rip6s_opackets
 decl_stmt|;
 comment|/* total output packets */
@@ -61,8 +61,14 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|rip6stat
@@ -75,14 +81,34 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_rip6stat
-value|VNET(rip6stat)
+name|RIP6STAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|VNET_PCPUSTAT_ADD(struct rip6stat, rip6stat, name, (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIP6STAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|RIP6STAT_ADD(name, 1)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

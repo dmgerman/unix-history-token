@@ -1014,6 +1014,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|watch_address
@@ -1023,6 +1024,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|watch_length
 init|=

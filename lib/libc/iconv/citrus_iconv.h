@@ -111,6 +111,7 @@ modifier|*
 name|__restrict
 name|cv
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|__restrict

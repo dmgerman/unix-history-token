@@ -77,7 +77,7 @@ parameter_list|(
 name|_e_
 parameter_list|)
 define|\
-value|static int	 _citrus_##_e_##_stdenc_init				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    const void * __restrict, size_t,			\ 		    struct _citrus_stdenc_traits * __restrict);		\ static void	 _citrus_##_e_##_stdenc_uninit(struct _citrus_stdenc *);\ static int	 _citrus_##_e_##_stdenc_init_state			\ 		    (struct _citrus_stdenc * __restrict,		\ 		    void * __restrict);					\ static int	 _citrus_##_e_##_stdenc_mbtocs				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    _citrus_csid_t * __restrict,			\ 		    _citrus_index_t * __restrict,			\ 		    char ** __restrict, size_t,				\ 		    void * __restrict, size_t * __restrict,		\ 		    struct iconv_hooks *);				\ static int	 _citrus_##_e_##_stdenc_cstomb				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    char * __restrict, size_t, _citrus_csid_t,		\ 		    _citrus_index_t, void * __restrict,			\ 		    size_t * __restrict, struct iconv_hooks *);		\ static int	 _citrus_##_e_##_stdenc_mbtowc				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    _citrus_wc_t * __restrict,				\ 		    char ** __restrict, size_t,				\ 		    void * __restrict, size_t * __restrict,		\ 		    struct iconv_hooks *);				\ static int	 _citrus_##_e_##_stdenc_wctomb				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    char * __restrict, size_t, _citrus_wc_t,		\ 		    void * __restrict, size_t * __restrict,		\ 		    struct iconv_hooks *);				\ static int	 _citrus_##_e_##_stdenc_put_state_reset			\ 		    (struct _citrus_stdenc * __restrict,		\ 		    char * __restrict, size_t, void * __restrict,	\ 		    size_t * __restrict);				\ static int	 _citrus_##_e_##_stdenc_get_state_desc			\ 		    (struct _citrus_stdenc * __restrict,		\ 		    void * __restrict, int,				\ 		    struct _citrus_stdenc_state_desc * __restrict)
+value|static int	 _citrus_##_e_##_stdenc_init				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    const void * __restrict, size_t,			\ 		    struct _citrus_stdenc_traits * __restrict);		\ static void	 _citrus_##_e_##_stdenc_uninit(struct _citrus_stdenc *);\ static int	 _citrus_##_e_##_stdenc_init_state			\ 		    (struct _citrus_stdenc * __restrict,		\ 		    void * __restrict);					\ static int	 _citrus_##_e_##_stdenc_mbtocs				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    _citrus_csid_t * __restrict,			\ 		    _citrus_index_t * __restrict,			\ 		    const char ** __restrict, size_t,			\ 		    void * __restrict, size_t * __restrict,		\ 		    struct iconv_hooks *);				\ static int	 _citrus_##_e_##_stdenc_cstomb				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    char * __restrict, size_t, _citrus_csid_t,		\ 		    _citrus_index_t, void * __restrict,			\ 		    size_t * __restrict, struct iconv_hooks *);		\ static int	 _citrus_##_e_##_stdenc_mbtowc				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    _citrus_wc_t * __restrict,				\ 		    const char ** __restrict, size_t,				\ 		    void * __restrict, size_t * __restrict,		\ 		    struct iconv_hooks *);				\ static int	 _citrus_##_e_##_stdenc_wctomb				\ 		    (struct _citrus_stdenc * __restrict,		\ 		    char * __restrict, size_t, _citrus_wc_t,		\ 		    void * __restrict, size_t * __restrict,		\ 		    struct iconv_hooks *);				\ static int	 _citrus_##_e_##_stdenc_put_state_reset			\ 		    (struct _citrus_stdenc * __restrict,		\ 		    char * __restrict, size_t, void * __restrict,	\ 		    size_t * __restrict);				\ static int	 _citrus_##_e_##_stdenc_get_state_desc			\ 		    (struct _citrus_stdenc * __restrict,		\ 		    void * __restrict, int,				\ 		    struct _citrus_stdenc_state_desc * __restrict)
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ parameter_list|(
 name|_e_
 parameter_list|)
 define|\
-value|struct _citrus_stdenc_ops _citrus_##_e_##_stdenc_ops = {		\
+value|extern struct _citrus_stdenc_ops _citrus_##_e_##_stdenc_ops;		\ struct _citrus_stdenc_ops _citrus_##_e_##_stdenc_ops = {		\
 comment|/* eo_init */
 value|&_citrus_##_e_##_stdenc_init,		\
 comment|/* eo_uninit */
@@ -194,6 +194,7 @@ name|_citrus_index_t
 modifier|*
 name|__restrict
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -271,6 +272,7 @@ name|_citrus_wc_t
 modifier|*
 name|__restrict
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

@@ -599,6 +599,8 @@ name|void
 parameter_list|)
 block|{
 name|int
+name|i
+decl_stmt|,
 name|nirqs
 decl_stmt|;
 comment|/* Get the number of interrupts */
@@ -625,9 +627,8 @@ operator|)
 expr_stmt|;
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|0
 init|;
 name|i
@@ -650,12 +651,49 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Set all the interrupts to be in Group 0 (secure) */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nirqs
+condition|;
+name|i
+operator|+=
+literal|32
+control|)
+block|{
+name|gic_d_write_4
+argument_list|(
+name|GICD_IGROUPR
+argument_list|(
+name|i
+operator|>>
+literal|5
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Enable CPU interface */
 name|gic_c_write_4
 argument_list|(
 name|GICC_CTLR
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Set priority mask register. */
+name|gic_c_write_4
+argument_list|(
+name|GICC_PMR
+argument_list|,
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Enable interrupt distribution */
@@ -703,11 +741,6 @@ name|struct
 name|arm_gic_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|i
@@ -727,6 +760,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_alloc_resources
@@ -990,12 +1030,49 @@ literal|0xffffffff
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set all the interrupts to be in Group 0 (secure) */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nirqs
+condition|;
+name|i
+operator|+=
+literal|32
+control|)
+block|{
+name|gic_d_write_4
+argument_list|(
+name|GICD_IGROUPR
+argument_list|(
+name|i
+operator|>>
+literal|5
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Enable CPU interface */
 name|gic_c_write_4
 argument_list|(
 name|GICC_CTLR
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Set priority mask register. */
+name|gic_c_write_4
+argument_list|(
+name|GICC_PMR
+argument_list|,
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* Enable interrupt distribution */
@@ -1134,7 +1211,7 @@ argument_list|(
 name|GICC_IAR
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Immediatly EOIR the SGIs, because doing so requires the other 	 * bits (ie CPU number), not just the IRQ number, and we do not 	 * have this information later. 	 */
+comment|/* 	 * Immediatly EOIR the SGIs, because doing so requires the other 	 * bits (ie CPU number), not just the IRQ number, and we do not 	 * have this information later. 	 */
 if|if
 condition|(
 operator|(

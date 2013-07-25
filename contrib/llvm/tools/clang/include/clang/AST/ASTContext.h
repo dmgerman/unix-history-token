@@ -66,6 +66,72 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CanonicalType.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CommentCommandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/LambdaMangleContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/NestedNameSpecifier.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/PrettyPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/RawCommentList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/RecursiveASTVisitor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/TemplateName.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/AddressSpaces.h"
 end_include
 
@@ -97,60 +163,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/VersionTuple.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Decl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/LambdaMangleContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/NestedNameSpecifier.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/PrettyPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/TemplateName.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/CanonicalType.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/RawCommentList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/CommentCommandTraits.h"
 end_include
 
 begin_include
@@ -253,70 +265,22 @@ name|CXXABI
 decl_stmt|;
 comment|// Decls
 name|class
-name|DeclContext
-decl_stmt|;
-name|class
-name|CXXConversionDecl
-decl_stmt|;
-name|class
-name|CXXMethodDecl
-decl_stmt|;
-name|class
-name|CXXRecordDecl
-decl_stmt|;
-name|class
-name|Decl
-decl_stmt|;
-name|class
-name|FieldDecl
-decl_stmt|;
-name|class
 name|MangleContext
 decl_stmt|;
 name|class
 name|ObjCIvarDecl
 decl_stmt|;
 name|class
-name|ObjCIvarRefExpr
-decl_stmt|;
-name|class
 name|ObjCPropertyDecl
 decl_stmt|;
 name|class
-name|ParmVarDecl
-decl_stmt|;
-name|class
-name|RecordDecl
-decl_stmt|;
-name|class
-name|StoredDeclsMap
-decl_stmt|;
-name|class
-name|TagDecl
-decl_stmt|;
-name|class
-name|TemplateTemplateParmDecl
-decl_stmt|;
-name|class
-name|TemplateTypeParmDecl
-decl_stmt|;
-name|class
-name|TranslationUnitDecl
-decl_stmt|;
-name|class
-name|TypeDecl
-decl_stmt|;
-name|class
-name|TypedefNameDecl
+name|UnresolvedSetIterator
 decl_stmt|;
 name|class
 name|UsingDecl
 decl_stmt|;
 name|class
 name|UsingShadowDecl
-decl_stmt|;
-name|class
-name|UnresolvedSetIterator
 decl_stmt|;
 name|namespace
 name|Builtin
@@ -354,12 +318,12 @@ name|this
 return|;
 block|}
 name|mutable
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|Type
 operator|*
+block|,
+literal|0
 operator|>
 name|Types
 block|;
@@ -995,6 +959,10 @@ name|RecordDecl
 modifier|*
 name|CFConstantStringTypeDecl
 decl_stmt|;
+name|mutable
+name|QualType
+name|ObjCSuperType
+decl_stmt|;
 name|QualType
 name|ObjCNSStringType
 decl_stmt|;
@@ -1206,6 +1174,30 @@ name|LambdaMangleContext
 operator|>
 name|LambdaMangleContexts
 expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|DeclContext
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|UnnamedMangleContexts
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|TagDecl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|UnnamedMangleNumbers
+expr_stmt|;
 comment|/// \brief Mapping that stores parameterIndex values for ParmVarDecls when
 comment|/// that value exceeds the bitfield size of ParmVarDeclBits.ParameterIndex.
 typedef|typedef
@@ -1344,6 +1336,164 @@ name|ASTMutationListener
 modifier|*
 name|Listener
 decl_stmt|;
+comment|/// \brief Contains parents of a node.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|,
+literal|1
+operator|>
+name|ParentVector
+expr_stmt|;
+comment|/// \brief Maps from a node to its parents.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|void
+operator|*
+operator|,
+name|ParentVector
+operator|>
+name|ParentMap
+expr_stmt|;
+comment|/// \brief Returns the parents of the given node.
+comment|///
+comment|/// Note that this will lazily compute the parents of all nodes
+comment|/// and store them for later retrieval. Thus, the first call is O(n)
+comment|/// in the number of AST nodes.
+comment|///
+comment|/// Caveats and FIXMEs:
+comment|/// Calculating the parent map over all AST nodes will need to load the
+comment|/// full AST. This can be undesirable in the case where the full AST is
+comment|/// expensive to create (for example, when using precompiled header
+comment|/// preambles). Thus, there are good opportunities for optimization here.
+comment|/// One idea is to walk the given node downwards, looking for references
+comment|/// to declaration contexts - once a declaration context is found, compute
+comment|/// the parent map for the declaration context; if that can satisfy the
+comment|/// request, loading the whole AST can be avoided. Note that this is made
+comment|/// more complex by statements in templates having multiple parents - those
+comment|/// problems can be solved by building closure over the templated parts of
+comment|/// the AST, which also avoids touching large parts of the AST.
+comment|/// Additionally, we will want to add an interface to already give a hint
+comment|/// where to search for the parents, for example when looking at a statement
+comment|/// inside a certain function.
+comment|///
+comment|/// 'NodeT' can be one of Decl, Stmt, Type, TypeLoc,
+comment|/// NestedNameSpecifier or NestedNameSpecifierLoc.
+name|template
+operator|<
+name|typename
+name|NodeT
+operator|>
+name|ParentVector
+name|getParents
+argument_list|(
+argument|const NodeT&Node
+argument_list|)
+block|{
+return|return
+name|getParents
+argument_list|(
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|::
+name|create
+argument_list|(
+name|Node
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|ParentVector
+name|getParents
+argument_list|(
+specifier|const
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|&
+name|Node
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Node
+operator|.
+name|getMemoizationData
+argument_list|()
+operator|&&
+literal|"Invariant broken: only nodes that support memoization may be "
+literal|"used in the parent map."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AllParents
+condition|)
+block|{
+comment|// We always need to run over the whole translation unit, as
+comment|// hasAncestor can escape any subtree.
+name|AllParents
+operator|.
+name|reset
+argument_list|(
+name|ParentMapASTVisitor
+operator|::
+name|buildMap
+argument_list|(
+operator|*
+name|getTranslationUnitDecl
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|ParentMap
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|AllParents
+operator|->
+name|find
+argument_list|(
+name|Node
+operator|.
+name|getMemoizationData
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|I
+operator|==
+name|AllParents
+operator|->
+name|end
+argument_list|()
+condition|)
+block|{
+return|return
+name|ParentVector
+argument_list|()
+return|;
+block|}
+return|return
+name|I
+operator|->
+name|second
+return|;
+block|}
 specifier|const
 name|clang
 operator|::
@@ -2570,6 +2720,38 @@ name|ObjCBuiltinBoolTy
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|CanQualType
+name|OCLImage1dTy
+decl_stmt|,
+name|OCLImage1dArrayTy
+decl_stmt|,
+name|OCLImage1dBufferTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OCLImage2dTy
+decl_stmt|,
+name|OCLImage2dArrayTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OCLImage3dTy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|OCLSamplerTy
+decl_stmt|,
+name|OCLEventTy
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// Types for deductions in C++0x [stmt.ranged]'s desugaring. Built on demand.
 end_comment
@@ -2770,9 +2952,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|const
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|Type
 operator|*
@@ -3097,6 +3277,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Change the result type of a function type once it is deduced.
+end_comment
+
+begin_function_decl
+name|void
+name|adjustDeducedFunctionResultType
+parameter_list|(
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|QualType
+name|ResultType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Return the uniqued reference to the type for a complex
 end_comment
 
@@ -3285,33 +3483,52 @@ block|}
 end_function
 
 begin_comment
-comment|/// Builds the struct used for __block variables.
+comment|/// Returns true iff we need copy/dispose helpers for the given type.
 end_comment
 
-begin_decl_stmt
-name|QualType
-name|BuildByRefType
-argument_list|(
-name|StringRef
-name|DeclName
-argument_list|,
+begin_function_decl
+name|bool
+name|BlockRequiresCopying
+parameter_list|(
 name|QualType
 name|Ty
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+specifier|const
+name|VarDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/// Returns true iff we need copy/dispose helpers for the given type.
+comment|/// Returns true, if given type has a known lifetime. HasByrefExtendedLayout is set
+end_comment
+
+begin_comment
+comment|/// to false in this case. If HasByrefExtendedLayout returns true, byref variable
+end_comment
+
+begin_comment
+comment|/// has extended lifetime.
 end_comment
 
 begin_decl_stmt
 name|bool
-name|BlockRequiresCopying
+name|getByrefLifetime
 argument_list|(
 name|QualType
 name|Ty
+argument_list|,
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+operator|&
+name|Lifetime
+argument_list|,
+name|bool
+operator|&
+name|HasByrefExtendedLayout
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3707,13 +3924,11 @@ argument_list|(
 name|QualType
 name|ResultTy
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|QualType
-operator|*
+operator|>
 name|Args
-argument_list|,
-name|unsigned
-name|NumArgs
 argument_list|,
 specifier|const
 name|FunctionProtoType
@@ -4166,8 +4381,6 @@ argument_list|(
 name|QualType
 name|Pattern
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -4310,6 +4523,14 @@ name|getAutoType
 argument_list|(
 name|QualType
 name|DeducedType
+argument_list|,
+name|bool
+name|IsDecltypeAuto
+argument_list|,
+name|bool
+name|IsDependent
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4501,6 +4722,38 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Return a type compatible with "intptr_t" (C99 7.18.1.4),
+end_comment
+
+begin_comment
+comment|/// as defined by the target.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getIntPtrType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return a type compatible with "uintptr_t" (C99 7.18.1.4),
+end_comment
+
+begin_comment
+comment|/// as defined by the target.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getUIntPtrType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Return the unique type for "ptrdiff_t" (C99 7.17) defined in
 end_comment
 
@@ -4543,6 +4796,33 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Returns the C struct type for objc_super
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getObjCSuperType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|setObjCSuperType
+parameter_list|(
+name|QualType
+name|ST
+parameter_list|)
+block|{
+name|ObjCSuperType
+operator|=
+name|ST
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// Get the structure type used to representation CFStrings, or NULL
@@ -5869,6 +6149,73 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// getUnqualifiedObjCPointerType - Returns version of
+end_comment
+
+begin_comment
+comment|/// Objective-C pointer type with lifetime qualifier removed.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getUnqualifiedObjCPointerType
+argument_list|(
+name|QualType
+name|type
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|type
+operator|.
+name|getTypePtr
+argument_list|()
+operator|->
+name|isObjCObjectPointerType
+argument_list|()
+operator|||
+operator|!
+name|type
+operator|.
+name|getQualifiers
+argument_list|()
+operator|.
+name|hasObjCLifetime
+argument_list|()
+condition|)
+return|return
+name|type
+return|;
+name|Qualifiers
+name|Qs
+init|=
+name|type
+operator|.
+name|getQualifiers
+argument_list|()
+decl_stmt|;
+name|Qs
+operator|.
+name|removeObjCLifetime
+argument_list|()
+expr_stmt|;
+return|return
+name|getQualifiedType
+argument_list|(
+name|type
+operator|.
+name|getUnqualifiedType
+argument_list|()
+argument_list|,
+name|Qs
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|DeclarationNameInfo
 name|getNameForTemplate
@@ -6553,6 +6900,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Return the alignment in bits that should be given to a
+end_comment
+
+begin_comment
+comment|/// global variable with type \p T.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getAlignOfGlobalVar
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return the alignment in characters that should be given to a
+end_comment
+
+begin_comment
+comment|/// global variable with type \p T.
+end_comment
+
+begin_decl_stmt
+name|CharUnits
+name|getAlignOfGlobalVarInChars
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return a conservative estimate of the alignment of the specified
 end_comment
 
@@ -6706,11 +7091,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Get the key function for the given record decl, or NULL if there
+comment|/// \brief Get our current best idea for the key function of the
 end_comment
 
 begin_comment
-comment|/// isn't one.
+comment|/// given record decl, or NULL if there isn't one.
 end_comment
 
 begin_comment
@@ -6722,27 +7107,83 @@ comment|/// The key function is, according to the Itanium C++ ABI section 5.2.3:
 end_comment
 
 begin_comment
+comment|///   ...the first non-pure virtual function that is not inline at the
+end_comment
+
+begin_comment
+comment|///   point of class definition.
+end_comment
+
+begin_comment
 comment|///
 end_comment
 
 begin_comment
-comment|/// ...the first non-pure virtual function that is not inline at the point
+comment|/// Other ABIs use the same idea.  However, the ARM C++ ABI ignores
 end_comment
 
 begin_comment
-comment|/// of class definition.
+comment|/// virtual functions that are defined 'inline', which means that
+end_comment
+
+begin_comment
+comment|/// the result of this computation can change.
 end_comment
 
 begin_function_decl
 specifier|const
 name|CXXMethodDecl
 modifier|*
-name|getKeyFunction
+name|getCurrentKeyFunction
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
 modifier|*
 name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Observe that the given method cannot be a key function.
+end_comment
+
+begin_comment
+comment|/// Checks the key-function cache for the method's class and clears it
+end_comment
+
+begin_comment
+comment|/// if matches the given declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used in ABIs where out-of-line definitions marked
+end_comment
+
+begin_comment
+comment|/// inline are not considered to be key functions.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param method should be the declaration from the class definition
+end_comment
+
+begin_function_decl
+name|void
+name|setNonKeyFunction
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|method
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8477,9 +8918,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|Type
 operator|*
@@ -8492,9 +8931,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|Type
 operator|*
@@ -8812,10 +9249,12 @@ comment|/// otherwise returns null.
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|ObjCInterfaceDecl
 modifier|*
 name|getObjContainingInterface
 argument_list|(
+specifier|const
 name|NamedDecl
 operator|*
 name|ND
@@ -9076,6 +9515,31 @@ name|D
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|addUnnamedTag
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|Tag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|int
+name|getUnnamedTagManglingNumber
+argument_list|(
+specifier|const
+name|TagDecl
+operator|*
+name|Tag
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the lambda mangling number for a lambda expression.
@@ -9456,6 +9920,11 @@ name|bool
 name|EncodeClassNames
 operator|=
 name|false
+argument_list|,
+name|bool
+name|EncodePointerToObjCTypedef
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -9641,6 +10110,350 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief A \c RecursiveASTVisitor that builds a map from nodes to their
+end_comment
+
+begin_comment
+comment|/// parents as defined by the \c RecursiveASTVisitor.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that the relationship described here is purely in terms of AST
+end_comment
+
+begin_comment
+comment|/// traversal - there are other relationships (for example declaration context)
+end_comment
+
+begin_comment
+comment|/// in the AST that are better modeled by special matchers.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// FIXME: Currently only builds up the map using \c Stmt and \c Decl nodes.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ParentMapASTVisitor
+range|:
+name|public
+name|RecursiveASTVisitor
+operator|<
+name|ParentMapASTVisitor
+operator|>
+block|{
+name|public
+operator|:
+comment|/// \brief Builds and returns the translation unit's parent map.
+comment|///
+comment|///  The caller takes ownership of the returned \c ParentMap.
+specifier|static
+name|ParentMap
+operator|*
+name|buildMap
+argument_list|(
+argument|TranslationUnitDecl&TU
+argument_list|)
+block|{
+name|ParentMapASTVisitor
+name|Visitor
+argument_list|(
+argument|new ParentMap
+argument_list|)
+block|;
+name|Visitor
+operator|.
+name|TraverseDecl
+argument_list|(
+operator|&
+name|TU
+argument_list|)
+block|;
+return|return
+name|Visitor
+operator|.
+name|Parents
+return|;
+block|}
+name|private
+operator|:
+typedef|typedef
+name|RecursiveASTVisitor
+operator|<
+name|ParentMapASTVisitor
+operator|>
+name|VisitorBase
+expr_stmt|;
+name|ParentMapASTVisitor
+argument_list|(
+name|ParentMap
+operator|*
+name|Parents
+argument_list|)
+operator|:
+name|Parents
+argument_list|(
+argument|Parents
+argument_list|)
+block|{     }
+name|bool
+name|shouldVisitTemplateInstantiations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|shouldVisitImplicitCode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Disables data recursion. We intercept Traverse* methods in the RAV, which
+end_comment
+
+begin_comment
+comment|// are not triggered during data recursion.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|shouldUseDataRecursionFor
+argument_list|(
+name|clang
+operator|::
+name|Stmt
+operator|*
+name|S
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|bool
+name|TraverseNode
+argument_list|(
+argument|T *Node
+argument_list|,
+argument|bool(VisitorBase:: *traverse) (T *)
+argument_list|)
+block|{
+if|if
+condition|(
+name|Node
+operator|==
+name|NULL
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|ParentStack
+operator|.
+name|size
+argument_list|()
+operator|>
+literal|0
+condition|)
+comment|// FIXME: Currently we add the same parent multiple times, for example
+comment|// when we visit all subexpressions of template instantiations; this is
+comment|// suboptimal, bug benign: the only way to visit those is with
+comment|// hasAncestor / hasParent, and those do not create new matches.
+comment|// The plan is to enable DynTypedNode to be storable in a map or hash
+comment|// map. The main problem there is to implement hash functions /
+comment|// comparison operators for all types that DynTypedNode supports that
+comment|// do not have pointer identity.
+operator|(
+operator|*
+name|Parents
+operator|)
+index|[
+name|Node
+index|]
+operator|.
+name|push_back
+argument_list|(
+name|ParentStack
+operator|.
+name|back
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|ParentStack
+operator|.
+name|push_back
+argument_list|(
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|::
+name|create
+argument_list|(
+operator|*
+name|Node
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|Result
+init|=
+operator|(
+name|this
+operator|->*
+name|traverse
+operator|)
+operator|(
+name|Node
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|ParentStack
+operator|.
+name|pop_back
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Result
+return|;
+end_return
+
+begin_macro
+unit|}      bool
+name|TraverseDecl
+argument_list|(
+argument|Decl *DeclNode
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|TraverseNode
+argument_list|(
+name|DeclNode
+argument_list|,
+operator|&
+name|VisitorBase
+operator|::
+name|TraverseDecl
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_function
+name|bool
+name|TraverseStmt
+parameter_list|(
+name|Stmt
+modifier|*
+name|StmtNode
+parameter_list|)
+block|{
+return|return
+name|TraverseNode
+argument_list|(
+name|StmtNode
+argument_list|,
+operator|&
+name|VisitorBase
+operator|::
+name|TraverseStmt
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|ParentMap
+modifier|*
+name|Parents
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|,
+literal|16
+operator|>
+name|ParentStack
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|class
+name|RecursiveASTVisitor
+operator|<
+name|ParentMapASTVisitor
+operator|>
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|ParentMap
+operator|>
+name|AllParents
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 unit|};
 comment|/// \brief Utility function for constructing a nullary selector.
 end_comment
@@ -9767,11 +10580,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// IMPORTANT: These are also declared in clang/AST/Attr.h! Any changes here
+comment|/// IMPORTANT: These are also declared in clang/AST/AttrIterator.h! Any changes
 end_comment
 
 begin_comment
-comment|/// need to also be made there.
+comment|/// here need to also be made there.
 end_comment
 
 begin_comment

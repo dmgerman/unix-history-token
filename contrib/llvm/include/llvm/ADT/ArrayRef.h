@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/None.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -96,6 +102,15 @@ typedef|typedef
 name|size_t
 name|size_type
 typedef|;
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|iterator
+operator|>
+name|reverse_iterator
+expr_stmt|;
 name|private
 label|:
 comment|/// The start of the array, in an external buffer.
@@ -116,6 +131,23 @@ comment|/// Construct an empty ArrayRef.
 comment|/*implicit*/
 name|ArrayRef
 argument_list|()
+operator|:
+name|Data
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Length
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// Construct an empty ArrayRef from None.
+comment|/*implicit*/
+name|ArrayRef
+argument_list|(
+name|NoneType
+argument_list|)
 operator|:
 name|Data
 argument_list|(
@@ -324,6 +356,32 @@ return|return
 name|Data
 operator|+
 name|Length
+return|;
+block|}
+name|reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reverse_iterator
+argument_list|(
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reverse_iterator
+argument_list|(
+name|begin
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// empty - Check if the array is empty.
@@ -707,10 +765,24 @@ name|T
 modifier|*
 name|iterator
 typedef|;
-comment|/// Construct an empty ArrayRef.
+comment|/// Construct an empty MutableArrayRef.
 comment|/*implicit*/
 name|MutableArrayRef
 argument_list|()
+operator|:
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+block|{}
+comment|/// Construct an empty MutableArrayRef from None.
+comment|/*implicit*/
+name|MutableArrayRef
+argument_list|(
+name|NoneType
+argument_list|)
 operator|:
 name|ArrayRef
 operator|<

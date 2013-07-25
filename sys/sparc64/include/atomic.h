@@ -221,26 +221,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_load
-parameter_list|(
-name|p
-parameter_list|,
-name|sz
-parameter_list|)
-define|\
-value|atomic_cas((p), 0, 0, sz)
-end_define
-
-begin_define
-define|#
-directive|define
 name|atomic_load_acq
 parameter_list|(
 name|p
 parameter_list|,
 name|sz
 parameter_list|)
-value|({					\ 	itype(sz) v;							\ 	v = atomic_load((p), sz);					\ 	__compiler_membar();						\ 	v;								\ })
+value|({					\ 	itype(sz) v;							\ 	v = atomic_cas((p), 0, 0, sz);					\ 	__compiler_membar();						\ 	v;								\ })
 end_define
 
 begin_define
@@ -258,20 +245,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_store
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|,
-name|sz
-parameter_list|)
-value|do {					\ 	itype(sz) e, r;							\ 	for (e = *(volatile itype(sz) *)(p);; e = r) {			\ 		r = atomic_cas((p), e, (v), sz);			\ 		if (r == e)						\ 			break;						\ 	}								\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|atomic_store_rel
 parameter_list|(
 name|p
@@ -280,7 +253,7 @@ name|v
 parameter_list|,
 name|sz
 parameter_list|)
-value|do {					\ 	membar(LoadStore | StoreStore);					\ 	atomic_store((p), (v), sz);					\ } while (0)
+value|do {					\ 	itype(sz) e, r;							\ 	membar(LoadStore | StoreStore);					\ 	for (e = *(volatile itype(sz) *)(p);; e = r) {			\ 		r = atomic_cas((p), e, (v), sz);			\ 		if (r == e)						\ 			break;						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -299,7 +272,7 @@ parameter_list|,
 name|sz
 parameter_list|)
 define|\ 									\
-value|static __inline vtype							\ atomic_add_ ## name(volatile ptype p, atype v)				\ {									\ 	return ((vtype)atomic_op((p), +, (v), sz));			\ }									\ static __inline vtype							\ atomic_add_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p), +, (v), sz));			\ }									\ static __inline vtype							\ atomic_add_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p), +, (v), sz));			\ }									\ 									\ static __inline vtype							\ atomic_clear_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op((p),&, ~(v), sz));			\ }									\ static __inline vtype							\ atomic_clear_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p),&, ~(v), sz));		\ }									\ static __inline vtype							\ atomic_clear_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p),&, ~(v), sz));		\ }									\ 									\ static __inline int							\ atomic_cmpset_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas((p), (e), (s), sz)) == (e));		\ }									\ static __inline int							\ atomic_cmpset_acq_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_acq((p), (e), (s), sz)) == (e));	\ }									\ static __inline int							\ atomic_cmpset_rel_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_rel((p), (e), (s), sz)) == (e));	\ }									\ 									\ static __inline vtype							\ atomic_load_ ## name(volatile ptype p)					\ {									\ 	return ((vtype)atomic_cas((p), 0, 0, sz));			\ }									\ static __inline vtype							\ atomic_load_acq_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_cas_acq((p), 0, 0, sz));			\ }									\ 									\ static __inline vtype							\ atomic_readandclear_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_load_clear((p), sz));			\ }									\ 									\ static __inline vtype							\ atomic_set_ ## name(volatile ptype p, atype v)				\ {									\ 	return ((vtype)atomic_op((p), |, (v), sz));			\ }									\ static __inline vtype							\ atomic_set_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p), |, (v), sz));			\ }									\ static __inline vtype							\ atomic_set_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p), |, (v), sz));			\ }									\ 									\ static __inline vtype							\ atomic_subtract_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op((p), -, (v), sz));			\ }									\ static __inline vtype							\ atomic_subtract_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p), -, (v), sz));			\ }									\ static __inline vtype							\ atomic_subtract_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p), -, (v), sz));			\ }									\ 									\ static __inline void							\ atomic_store_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store((p), (v), sz);					\ }									\ static __inline void							\ atomic_store_rel_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store_rel((p), (v), sz);					\ }
+value|static __inline vtype							\ atomic_add_ ## name(volatile ptype p, atype v)				\ {									\ 	return ((vtype)atomic_op((p), +, (v), sz));			\ }									\ static __inline vtype							\ atomic_add_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p), +, (v), sz));			\ }									\ static __inline vtype							\ atomic_add_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p), +, (v), sz));			\ }									\ 									\ static __inline vtype							\ atomic_clear_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op((p),&, ~(v), sz));			\ }									\ static __inline vtype							\ atomic_clear_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p),&, ~(v), sz));		\ }									\ static __inline vtype							\ atomic_clear_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p),&, ~(v), sz));		\ }									\ 									\ static __inline int							\ atomic_cmpset_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas((p), (e), (s), sz)) == (e));		\ }									\ static __inline int							\ atomic_cmpset_acq_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_acq((p), (e), (s), sz)) == (e));	\ }									\ static __inline int							\ atomic_cmpset_rel_ ## name(volatile ptype p, vtype e, vtype s)		\ {									\ 	return (((vtype)atomic_cas_rel((p), (e), (s), sz)) == (e));	\ }									\ 									\ static __inline vtype							\ atomic_load_ ## name(volatile ptype p)					\ {									\ 	return ((vtype)atomic_cas((p), 0, 0, sz));			\ }									\ static __inline vtype							\ atomic_load_acq_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_cas_acq((p), 0, 0, sz));			\ }									\ 									\ static __inline vtype							\ atomic_readandclear_ ## name(volatile ptype p)				\ {									\ 	return ((vtype)atomic_load_clear((p), sz));			\ }									\ 									\ static __inline vtype							\ atomic_set_ ## name(volatile ptype p, atype v)				\ {									\ 	return ((vtype)atomic_op((p), |, (v), sz));			\ }									\ static __inline vtype							\ atomic_set_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p), |, (v), sz));			\ }									\ static __inline vtype							\ atomic_set_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p), |, (v), sz));			\ }									\ 									\ static __inline vtype							\ atomic_subtract_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op((p), -, (v), sz));			\ }									\ static __inline vtype							\ atomic_subtract_acq_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_acq((p), -, (v), sz));			\ }									\ static __inline vtype							\ atomic_subtract_rel_ ## name(volatile ptype p, atype v)			\ {									\ 	return ((vtype)atomic_op_rel((p), -, (v), sz));			\ }									\ 									\ static __inline void							\ atomic_store_rel_ ## name(volatile ptype p, vtype v)			\ {									\ 	atomic_store_rel((p), (v), sz);					\ }
 end_define
 
 begin_expr_stmt

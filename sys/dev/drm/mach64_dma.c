@@ -2044,12 +2044,6 @@ condition|(
 name|ring
 operator|->
 name|head
-operator|>=
-literal|0
-operator|&&
-name|ring
-operator|->
-name|head
 operator|<
 name|ring
 operator|->
@@ -5267,10 +5261,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|offset
-operator|>=
-literal|0
-operator|&&
 name|offset
 operator|<
 name|MACH64_BUFFER_SIZE

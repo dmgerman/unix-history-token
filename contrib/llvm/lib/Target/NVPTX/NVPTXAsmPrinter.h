@@ -72,19 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"NVPTXTargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"NVPTXSubtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"NVPTXTargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringExtras.h"
 end_include
 
 begin_include
@@ -96,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -114,13 +120,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/MC/MCSymbol.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_include
@@ -138,13 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringExtras.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_include
@@ -301,7 +301,7 @@ name|fstr
 operator|.
 name|close
 argument_list|()
-block|;   }
+block|; }
 name|std
 operator|::
 name|string
@@ -364,6 +364,7 @@ name|symbolPosInBuffer
 block|;
 name|SmallVector
 operator|<
+specifier|const
 name|Value
 operator|*
 block|,
@@ -433,7 +434,7 @@ block|{
 name|delete
 index|[]
 name|buffer
-block|;     }
+block|; }
 name|unsigned
 name|addBytes
 argument_list|(
@@ -575,7 +576,7 @@ block|}
 name|void
 name|addSymbol
 argument_list|(
-argument|Value *GVar
+argument|const Value *GVar
 argument_list|)
 block|{
 name|symbolPosInBuffer
@@ -716,6 +717,7 @@ operator|==
 name|nextSymbolPos
 condition|)
 block|{
+specifier|const
 name|Value
 modifier|*
 name|v
@@ -727,6 +729,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+specifier|const
 name|GlobalValue
 modifier|*
 name|GVar
@@ -762,6 +765,7 @@ block|}
 elseif|else
 if|if
 condition|(
+specifier|const
 name|ConstantExpr
 modifier|*
 name|Cexpr
@@ -945,7 +949,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier=
+argument|const char *Modifier =
 literal|0
 argument_list|)
 block|;
@@ -958,7 +962,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier=
+argument|const char *Modifier =
 literal|0
 argument_list|)
 block|;
@@ -989,7 +993,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier=
+argument|const char *Modifier =
 literal|0
 argument_list|)
 block|;
@@ -1019,6 +1023,7 @@ block|;
 name|void
 name|printModuleLevelGV
 argument_list|(
+specifier|const
 name|GlobalVariable
 operator|*
 name|GVar
@@ -1051,6 +1056,15 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|emitGlobals
+argument_list|(
+specifier|const
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|void
 name|emitHeader
 argument_list|(
 name|Module
@@ -1065,7 +1079,7 @@ block|;
 name|void
 name|emitKernelFunctionDirectives
 argument_list|(
-argument|const Function& F
+argument|const Function&F
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -1224,6 +1238,9 @@ operator|::
 name|string
 name|CurrentBankselLabelInBasicBlock
 block|;
+name|bool
+name|GlobalsEmitted
+block|;
 comment|// This is specific per MachineFunction.
 specifier|const
 name|MachineRegisterInfo
@@ -1279,6 +1296,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|GlobalVariable
 operator|*
 operator|>
@@ -1334,13 +1352,14 @@ name|getPTXFundamentalTypeStr
 argument_list|(
 argument|const Type *Ty
 argument_list|,
-argument|bool=true
+argument|bool = true
 argument_list|)
 specifier|const
 block|;
 name|void
 name|printScalarConstant
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|CPV
@@ -1366,7 +1385,7 @@ block|;
 name|void
 name|bufferLEByte
 argument_list|(
-argument|Constant *CPV
+argument|const Constant *CPV
 argument_list|,
 argument|int Bytes
 argument_list|,
@@ -1376,6 +1395,7 @@ block|;
 name|void
 name|bufferAggregateConstant
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|CV
@@ -1410,6 +1430,7 @@ block|;
 name|void
 name|emitDeclarations
 argument_list|(
+specifier|const
 name|Module
 operator|&
 argument_list|,

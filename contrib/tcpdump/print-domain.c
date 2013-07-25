@@ -749,7 +749,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|u_char
 modifier|*

@@ -548,6 +548,16 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|MRT6STAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|mrt6stat.name += 1
+end_define
+
+begin_define
+define|#
+directive|define
 name|NO_RTE_FOUND
 value|0x1
 end_define
@@ -976,10 +986,20 @@ name|pim6stat
 argument_list|,
 name|pim6stat
 argument_list|,
-literal|"PIM Statistics (struct pim6stat, netinet6/pim_var.h)"
+literal|"PIM Statistics (struct pim6stat, netinet6/pim6_var.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|PIM6STAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|pim6stat.name += 1
+end_define
 
 begin_expr_stmt
 specifier|static
@@ -1030,7 +1050,7 @@ name|g
 parameter_list|,
 name|rt
 parameter_list|)
-value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	mrt6stat.mrt6s_mfc_lookups++; \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		mrt6stat.mrt6s_mfc_misses++; \ 	} \ } while (
+value|do { \ 	struct mf6c *_rt = mf6ctable[MF6CHASH(o,g)]; \ 	rt = NULL; \ 	MRT6STAT_INC(mrt6s_mfc_lookups); \ 	while (_rt) { \ 		if (IN6_ARE_ADDR_EQUAL(&_rt->mf6c_origin.sin6_addr,&(o))&& \ 		    IN6_ARE_ADDR_EQUAL(&_rt->mf6c_mcastgrp.sin6_addr,&(g))&& \ 		    (_rt->mf6c_stall == NULL)) { \ 			rt = _rt; \ 			break; \ 		} \ 		_rt = _rt->mf6c_next; \ 	} \ 	if (rt == NULL) { \ 		MRT6STAT_INC(mrt6s_mfc_misses); \ 	} \ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -4392,10 +4412,10 @@ name|ip6_src
 argument_list|)
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_cantforward
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4529,10 +4549,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* UPCALL_TIMING */
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_no_route
-operator|++
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5092,10 +5112,10 @@ literal|"ip6_mforward: ip6_mrouter "
 literal|"socket queue full\n"
 argument_list|)
 expr_stmt|;
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upq_sockfull
-operator|++
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -5125,10 +5145,10 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upcalls
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* insert new entry at head of hash chain */
 name|bzero
@@ -5291,10 +5311,10 @@ operator|>
 name|MAX_UPQ6
 condition|)
 block|{
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upq_ovflw
-operator|++
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -5565,10 +5585,10 @@ operator|!=
 name|NULL
 condition|)
 do|;
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_cache_cleanups
-operator|++
+argument_list|)
 expr_stmt|;
 name|n6expire
 index|[
@@ -5775,10 +5795,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_wrong_if
-operator|++
+argument_list|)
 expr_stmt|;
 name|rt
 operator|->
@@ -6075,10 +6095,10 @@ name|im6_src
 expr_stmt|;
 break|break;
 block|}
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upcalls
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6111,10 +6131,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|++
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upq_sockfull
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6244,10 +6264,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badscope
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6362,10 +6382,10 @@ operator|!=
 name|odzone
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_badscope
-operator|++
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -6957,10 +6977,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_snd_registers
+argument_list|)
 expr_stmt|;
 comment|/* Make a copy of the packet to send to the user level process. */
 name|mm
@@ -7125,10 +7145,10 @@ operator|-
 name|mif6table
 expr_stmt|;
 comment|/* iif info is not given for reg. encap.n */
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upcalls
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7161,10 +7181,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|++
-name|mrt6stat
-operator|.
+name|MRT6STAT_INC
+argument_list|(
 name|mrt6s_upq_sockfull
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7292,10 +7312,10 @@ init|=
 operator|*
 name|offp
 decl_stmt|;
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_total
+argument_list|)
 expr_stmt|;
 name|ip6
 operator|=
@@ -7327,10 +7347,10 @@ operator|<
 name|PIM_MINLEN
 condition|)
 block|{
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_tooshort
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7442,10 +7462,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_tooshort
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7497,10 +7517,10 @@ name|cksumlen
 argument_list|)
 condition|)
 block|{
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_badsum
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7545,10 +7565,10 @@ operator|!=
 name|PIM_VERSION
 condition|)
 block|{
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_badversion
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7636,10 +7656,10 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_registers
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7726,15 +7746,15 @@ operator|<
 name|PIM6_REG_MINLEN
 condition|)
 block|{
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_tooshort
+argument_list|)
 expr_stmt|;
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_badregisters
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7845,10 +7865,10 @@ operator|!=
 name|IPV6_VERSION
 condition|)
 block|{
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_badregisters
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7895,10 +7915,10 @@ name|ip6_dst
 argument_list|)
 condition|)
 block|{
-operator|++
-name|pim6stat
-operator|.
+name|PIM6STAT_INC
+argument_list|(
 name|pim6s_rcv_badregisters
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

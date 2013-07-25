@@ -59,34 +59,16 @@ directive|define
 name|LLVM_ANALYSIS_CAPTURETRACKING_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Constants.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Instructions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/AliasAnalysis.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Value
+decl_stmt|;
+name|class
+name|Use
+decl_stmt|;
 comment|/// PointerMayBeCaptured - Return true if this pointer value may be captured
 comment|/// by the enclosing function (which is required to exist).  This routine can
 comment|/// be expensive, so consider caching the results.  The boolean ReturnCaptures

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Dynamic data buffer  * Copyright (c) 2007-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Dynamic data buffer  * Copyright (c) 2007-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -317,7 +317,9 @@ if|if
 condition|(
 name|buf
 operator|->
-name|ext_data
+name|flags
+operator|&
+name|WPABUF_FLAG_EXT_DATA
 condition|)
 block|{
 name|nbuf
@@ -326,7 +328,7 @@ name|os_realloc
 argument_list|(
 name|buf
 operator|->
-name|ext_data
+name|buf
 argument_list|,
 name|buf
 operator|->
@@ -360,7 +362,7 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|->
-name|ext_data
+name|buf
 operator|=
 name|nbuf
 expr_stmt|;
@@ -515,6 +517,20 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* WPA_TRACE */
+name|buf
+operator|->
+name|buf
+operator|=
+operator|(
+name|u8
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 operator|*
 name|_buf
 operator|=
@@ -647,6 +663,20 @@ name|size
 operator|=
 name|len
 expr_stmt|;
+name|buf
+operator|->
+name|buf
+operator|=
+operator|(
+name|u8
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+literal|1
+operator|)
+expr_stmt|;
 return|return
 name|buf
 return|;
@@ -766,9 +796,15 @@ name|len
 expr_stmt|;
 name|buf
 operator|->
-name|ext_data
+name|buf
 operator|=
 name|data
+expr_stmt|;
+name|buf
+operator|->
+name|flags
+operator||=
+name|WPABUF_FLAG_EXT_DATA
 expr_stmt|;
 return|return
 name|buf
@@ -936,11 +972,19 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|buf
+operator|->
+name|flags
+operator|&
+name|WPABUF_FLAG_EXT_DATA
+condition|)
 name|os_free
 argument_list|(
 name|buf
 operator|->
-name|ext_data
+name|buf
 argument_list|)
 expr_stmt|;
 name|os_free
@@ -958,11 +1002,19 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|buf
+operator|->
+name|flags
+operator|&
+name|WPABUF_FLAG_EXT_DATA
+condition|)
 name|os_free
 argument_list|(
 name|buf
 operator|->
-name|ext_data
+name|buf
 argument_list|)
 expr_stmt|;
 name|os_free

@@ -1071,7 +1071,7 @@ argument_list|)
 operator|->
 name|ah_ini_bank6
 argument_list|,
-name|ar9160Bank6
+name|ar9160Bank6TPC
 argument_list|,
 literal|3
 argument_list|)

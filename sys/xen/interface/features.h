@@ -81,6 +81,72 @@ name|XENFEAT_mmu_pt_update_preserve_ad
 value|5
 end_define
 
+begin_comment
+comment|/* x86: Does this Xen host support the MMU_{CLEAR,COPY}_PAGE hypercall? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_highmem_assist
+value|6
+end_define
+
+begin_comment
+comment|/*  * If set, GNTTABOP_map_grant_ref honors flags to be placed into guest kernel  * available pte bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_gnttab_map_avail_bits
+value|7
+end_define
+
+begin_comment
+comment|/* x86: Does this Xen host support the HVM callback vector type? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_hvm_callback_vector
+value|8
+end_define
+
+begin_comment
+comment|/* x86: pvclock algorithm is safe to use on HVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_hvm_safe_pvclock
+value|9
+end_define
+
+begin_comment
+comment|/* x86: pirq can be used by HVM guests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_hvm_pirqs
+value|10
+end_define
+
+begin_comment
+comment|/* operation as Dom0 is supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENFEAT_dom0
+value|11
+end_define
+
 begin_define
 define|#
 directive|define

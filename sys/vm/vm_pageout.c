@@ -491,13 +491,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|vm_pageout_algorithm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|defer_swap_pageouts
 decl_stmt|;
 end_decl_stmt
@@ -563,27 +556,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vm
-argument_list|,
-name|VM_PAGEOUT_ALGORITHM
-argument_list|,
-name|pageout_algorithm
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|vm_pageout_algorithm
-argument_list|,
-literal|0
-argument_list|,
-literal|"LRU page mgmt"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2822,7 +2794,7 @@ name|actcount
 decl_stmt|,
 name|remove_mode
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|first_object
 argument_list|)
@@ -2864,7 +2836,7 @@ condition|)
 goto|goto
 name|unlock_return
 goto|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
@@ -3087,15 +3059,11 @@ condition|(
 operator|!
 name|remove_mode
 operator|&&
-operator|(
-name|vm_pageout_algorithm
-operator|||
 name|p
 operator|->
 name|act_count
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|pmap_remove_all
@@ -3181,7 +3149,7 @@ condition|)
 goto|goto
 name|unlock_return
 goto|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -3192,7 +3160,7 @@ name|object
 operator|!=
 name|first_object
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3206,7 +3174,7 @@ name|object
 operator|!=
 name|first_object
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -3308,7 +3276,7 @@ name|obj
 operator|!=
 name|NULL
 operator|&&
-name|VM_OBJECT_TRYWLOCK
+name|VM_OBJECT_TRYRLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3343,7 +3311,7 @@ name|bigobj
 operator|!=
 name|NULL
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|bigobj
 argument_list|)
@@ -3354,7 +3322,7 @@ name|obj
 expr_stmt|;
 block|}
 else|else
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3398,7 +3366,7 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|bigobj
 argument_list|)
@@ -3464,7 +3432,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3480,7 +3448,7 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -3981,9 +3949,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock
+name|VM_OBJECT_WUNLOCK
 argument_list|(
-name|m
+name|object
 argument_list|)
 expr_stmt|;
 name|m
@@ -3994,9 +3962,9 @@ name|actcount
 operator|+
 name|ACT_ADVANCE
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|vm_page_unlock
 argument_list|(
-name|object
+name|m
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4036,9 +4004,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock
+name|VM_OBJECT_WUNLOCK
 argument_list|(
-name|m
+name|object
 argument_list|)
 expr_stmt|;
 name|m
@@ -4051,9 +4019,9 @@ name|ACT_ADVANCE
 operator|+
 literal|1
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|vm_page_unlock
 argument_list|(
-name|object
+name|m
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5098,8 +5066,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vm_pageout_algorithm
-operator|||
 name|object
 operator|->
 name|ref_count

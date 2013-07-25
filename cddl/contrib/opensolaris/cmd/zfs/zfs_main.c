@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -24693,8 +24693,6 @@ name|tag
 argument_list|,
 name|recursive
 argument_list|,
-name|B_FALSE
-argument_list|,
 operator|-
 literal|1
 argument_list|)
@@ -26432,8 +26430,8 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"use share(1M) to "
-literal|"share this filesystem, or set "
+literal|"to "
+literal|"share this filesystem set "
 literal|"sharenfs property on\n"
 argument_list|)
 argument_list|)
@@ -26497,7 +26495,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"use %s(1M) to "
+literal|"use %s(8) to "
 literal|"%s this filesystem\n"
 argument_list|)
 argument_list|,
@@ -28534,6 +28532,9 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -28548,6 +28549,8 @@ literal|"unshare(1M) to unshare this filesystem\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -28682,7 +28685,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"use umount(1M) "
+literal|"use umount(8) "
 literal|"to unmount this filesystem\n"
 argument_list|)
 argument_list|)
@@ -29638,6 +29641,9 @@ name|zhp
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -29653,6 +29659,8 @@ literal|"filesystem\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 literal|1
@@ -29755,7 +29763,7 @@ argument_list|,
 name|gettext
 argument_list|(
 literal|"use "
-literal|"umount(1M) to unmount this "
+literal|"umount(8) to unmount this "
 literal|"filesystem\n"
 argument_list|)
 argument_list|)
@@ -30562,7 +30570,7 @@ argument_list|,
 name|gettext
 argument_list|(
 literal|"filesystem '%s' cannot be "
-literal|"mounted using 'mount -F zfs'\n"
+literal|"mounted using 'mount -t zfs'\n"
 argument_list|)
 argument_list|,
 name|dataset
@@ -30593,8 +30601,8 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"If you must use 'mount -F zfs' "
-literal|"or /etc/vfstab, use 'zfs set mountpoint=legacy'.\n"
+literal|"If you must use 'mount -t zfs' "
+literal|"or /etc/fstab, use 'zfs set mountpoint=legacy'.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -30607,7 +30615,7 @@ name|stderr
 argument_list|,
 name|gettext
 argument_list|(
-literal|"See zfs(1M) for more "
+literal|"See zfs(8) for more "
 literal|"information.\n"
 argument_list|)
 argument_list|)

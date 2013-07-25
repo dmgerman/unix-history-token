@@ -19,57 +19,112 @@ directive|define
 name|__ASLMESSAGES_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|ASL_WARNING
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_WARNING2
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_WARNING3
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_ERROR
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_REMARK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|ASL_OPTIMIZATION
-value|5
-end_define
+init|=
+literal|0
+block|,
+name|ASL_REMARK
+block|,
+name|ASL_WARNING
+block|,
+name|ASL_WARNING2
+block|,
+name|ASL_WARNING3
+block|,
+name|ASL_ERROR
+block|,
+name|ASL_NUM_REPORT_LEVELS
+block|}
+name|ASL_MESSAGE_TYPES
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ASL_EXCEPTIONS
+end_ifdef
+
+begin_comment
+comment|/* Strings for message reporting levels, must match values above */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AslErrorLevel
+index|[
+name|ASL_NUM_REPORT_LEVELS
+index|]
+init|=
+block|{
+literal|"Optimize"
+block|,
+literal|"Remark  "
+block|,
+literal|"Warning "
+block|,
+literal|"Warning "
+block|,
+literal|"Warning "
+block|,
+literal|"Error   "
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* All lowercase versions for IDEs */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AslErrorLevelIde
+index|[
+name|ASL_NUM_REPORT_LEVELS
+index|]
+init|=
+block|{
+literal|"optimize"
+block|,
+literal|"remark  "
+block|,
+literal|"warning "
+block|,
+literal|"warning "
+block|,
+literal|"warning "
+block|,
+literal|"error   "
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|ASL_NUM_REPORT_LEVELS
-value|6
+name|ASL_ERROR_LEVEL_LENGTH
+value|8
 end_define
 
 begin_comment
-comment|/* Values for all compiler messages */
+comment|/* Length of strings above */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Values for all compiler messages.  *  * NOTE: With the introduction of the -vw option to disable specific messages,  * new messages should only be added to the end of this list, so that values  * for existing messages are not disturbed.  */
 end_comment
 
 begin_typedef
@@ -318,6 +373,8 @@ name|ASL_MSG_SEEK
 block|,
 name|ASL_MSG_SERIALIZED
 block|,
+name|ASL_MSG_SERIALIZED_REQUIRED
+block|,
 name|ASL_MSG_SINGLE_NAME_OPTIMIZATION
 block|,
 name|ASL_MSG_SOME_NO_RETVAL
@@ -377,6 +434,8 @@ name|ASL_MSG_UNKNOWN_DIRECTIVE
 block|,
 name|ASL_MSG_UNKNOWN_PRAGMA
 block|,
+name|ASL_MSG_WARNING_DIRECTIVE
+block|,
 comment|/* These messages are used by the data table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 block|,
@@ -415,7 +474,7 @@ name|ASL_EXCEPTIONS
 end_ifdef
 
 begin_comment
-comment|/* Actual message strings for each compiler message */
+comment|/*  * Actual message strings for each compiler message.  *  * NOTE: With the introduction of the -vw option to disable specific messages,  * new messages should only be added to the end of this list, so that values  * for existing messages are not disturbed.  */
 end_comment
 
 begin_decl_stmt
@@ -785,6 +844,9 @@ block|,
 comment|/*    ASL_MSG_SERIALIZED */
 literal|"Control Method marked Serialized"
 block|,
+comment|/*    ASL_MSG_SERIALIZED_REQUIRED */
+literal|"Control Method should be made Serialized"
+block|,
 comment|/*    ASL_MSG_SINGLE_NAME_OPTIMIZATION */
 literal|"NamePath optimized to NameSeg (uses run-time search path)"
 block|,
@@ -873,6 +935,9 @@ block|,
 comment|/*    ASL_MSG_UNKNOWN_PRAGMA */
 literal|"Unknown pragma"
 block|,
+comment|/*    ASL_MSG_WARNING_DIRECTIVE */
+literal|"#warning"
+block|,
 comment|/* Table compiler */
 comment|/*    ASL_MSG_BUFFER_ELEMENT */
 literal|"Invalid element in buffer initializer list"
@@ -915,67 +980,6 @@ literal|"Value must be non-zero"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|AslErrorLevel
-index|[
-name|ASL_NUM_REPORT_LEVELS
-index|]
-init|=
-block|{
-literal|"Warning "
-block|,
-literal|"Warning "
-block|,
-literal|"Warning "
-block|,
-literal|"Error   "
-block|,
-literal|"Remark  "
-block|,
-literal|"Optimize"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|AslErrorLevelIde
-index|[
-name|ASL_NUM_REPORT_LEVELS
-index|]
-init|=
-block|{
-literal|"warning "
-block|,
-literal|"warning "
-block|,
-literal|"warning "
-block|,
-literal|"error   "
-block|,
-literal|"remark  "
-block|,
-literal|"optimize"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ASL_ERROR_LEVEL_LENGTH
-value|8
-end_define
-
-begin_comment
-comment|/* Length of strings above */
-end_comment
 
 begin_endif
 endif|#

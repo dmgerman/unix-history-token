@@ -155,6 +155,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -1753,7 +1759,7 @@ name|devvp
 operator|->
 name|v_bufobj
 expr_stmt|;
-name|ASSERT_BO_LOCKED
+name|ASSERT_BO_WLOCKED
 argument_list|(
 name|bo
 argument_list|)
@@ -2202,7 +2208,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|D_SENTINAL
+name|D_SENTINEL
 value|27
 end_define
 
@@ -2210,7 +2216,7 @@ begin_define
 define|#
 directive|define
 name|D_LAST
-value|D_SENTINAL
+value|D_SENTINEL
 end_define
 
 begin_decl_stmt
@@ -2668,6 +2674,19 @@ begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(
+name|M_SENTINEL
+argument_list|,
+literal|"sentinel"
+argument_list|,
+literal|"Worklist sentinel"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
 name|M_SAVEDINO
 argument_list|,
 literal|"savedino"
@@ -2756,6 +2775,8 @@ block|,
 name|M_JTRUNC
 block|,
 name|M_JFSYNC
+block|,
+name|M_SENTINEL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2987,7 +3008,7 @@ name|buf
 modifier|*
 parameter_list|,
 name|struct
-name|mtx
+name|rwlock
 modifier|*
 parameter_list|,
 name|int
@@ -5875,13 +5896,13 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|rwlock
 name|lk
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|MTX_SYSINIT
+name|RW_SYSINIT
 argument_list|(
 name|softdep_lock
 argument_list|,
@@ -5889,8 +5910,6 @@ operator|&
 name|lk
 argument_list|,
 literal|"Softdep Lock"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5902,7 +5921,7 @@ name|TRY_ACQUIRE_LOCK
 parameter_list|(
 name|lk
 parameter_list|)
-value|mtx_trylock(lk)
+value|rw_try_wlock(lk)
 end_define
 
 begin_define
@@ -5912,7 +5931,7 @@ name|ACQUIRE_LOCK
 parameter_list|(
 name|lk
 parameter_list|)
-value|mtx_lock(lk)
+value|rw_wlock(lk)
 end_define
 
 begin_define
@@ -5922,7 +5941,7 @@ name|FREE_LOCK
 parameter_list|(
 name|lk
 parameter_list|)
-value|mtx_unlock(lk)
+value|rw_wunlock(lk)
 end_define
 
 begin_define
@@ -6106,12 +6125,12 @@ if|if
 condition|(
 name|locked
 condition|)
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6180,12 +6199,12 @@ if|if
 condition|(
 name|locked
 condition|)
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6514,12 +6533,12 @@ name|freedep
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 while|while
@@ -6784,12 +6803,12 @@ name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8350,12 +8369,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -8449,12 +8468,12 @@ name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|ump
@@ -8982,12 +9001,12 @@ decl_stmt|;
 name|ino_t
 name|inum
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|mp
@@ -9183,12 +9202,12 @@ decl_stmt|;
 name|int
 name|cgwait
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|mp
@@ -9493,7 +9512,7 @@ decl_stmt|;
 block|{
 name|struct
 name|worklist
-name|sintenel
+name|sentinel
 decl_stmt|;
 name|struct
 name|worklist
@@ -9511,12 +9530,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -9562,17 +9581,17 @@ name|matchcnt
 operator|=
 literal|0
 expr_stmt|;
-name|sintenel
+name|sentinel
 operator|.
 name|wk_mp
 operator|=
 name|NULL
 expr_stmt|;
-name|sintenel
+name|sentinel
 operator|.
 name|wk_type
 operator|=
-name|D_SENTINAL
+name|D_SENTINEL
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -9582,7 +9601,7 @@ operator|->
 name|softdep_workitem_pending
 argument_list|,
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9594,7 +9613,7 @@ operator|=
 name|LIST_NEXT
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9608,7 +9627,7 @@ operator|=
 name|LIST_NEXT
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9620,13 +9639,13 @@ name|wk
 operator|->
 name|wk_type
 operator|==
-name|D_SENTINAL
+name|D_SENTINEL
 condition|)
 block|{
 name|LIST_REMOVE
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9636,7 +9655,7 @@ argument_list|(
 name|wk
 argument_list|,
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9836,7 +9855,7 @@ block|}
 name|LIST_REMOVE
 argument_list|(
 operator|&
-name|sintenel
+name|sentinel
 argument_list|,
 name|wk_list
 argument_list|)
@@ -9849,7 +9868,7 @@ operator|->
 name|softdep_worklist_tail
 operator|==
 operator|&
-name|sintenel
+name|sentinel
 condition|)
 name|ump
 operator|->
@@ -9860,7 +9879,7 @@ expr|struct
 name|worklist
 operator|*
 operator|)
-name|sintenel
+name|sentinel
 operator|.
 name|wk_list
 operator|.
@@ -10854,12 +10873,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -11333,12 +11352,12 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|fs
@@ -14123,12 +14142,12 @@ name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|ump
@@ -14253,12 +14272,12 @@ name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|ump
@@ -14877,12 +14896,12 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Nothing to do if we have sufficient journal space. 	 * If we currently hold the snapshot lock, we must avoid 	 * handling other resources that could cause deadlock. 	 */
@@ -16661,17 +16680,6 @@ name|size
 expr_stmt|;
 name|bp
 operator|->
-name|b_bufobj
-operator|=
-operator|&
-name|ump
-operator|->
-name|um_devvp
-operator|->
-name|v_bufobj
-expr_stmt|;
-name|bp
-operator|->
 name|b_flags
 operator|&=
 operator|~
@@ -17083,27 +17091,13 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|BO_LOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
-argument_list|)
-expr_stmt|;
-name|bgetvp
+name|pbgetvp
 argument_list|(
 name|ump
 operator|->
 name|um_devvp
 argument_list|,
 name|bp
-argument_list|)
-expr_stmt|;
-name|BO_UNLOCK
-argument_list|(
-name|bp
-operator|->
-name|b_bufobj
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We only do the blocking wait once we find the journal 		 * entry we're looking for. 		 */
@@ -17674,6 +17668,11 @@ operator||=
 name|B_INVAL
 operator||
 name|B_NOCACHE
+expr_stmt|;
+name|pbrelvp
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 name|complete_jsegs
 argument_list|(
@@ -23964,18 +23963,25 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|bp
-condition|)
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"bmsafemap_lookup: missing buffer"
+operator|)
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|wk
@@ -23984,6 +23990,7 @@ argument|&bp->b_dep
 argument_list|,
 argument|wk_list
 argument_list|)
+block|{
 if|if
 condition|(
 name|wk
@@ -24012,6 +24019,7 @@ name|wk
 argument_list|)
 operator|)
 return|;
+block|}
 block|}
 name|fs
 operator|=
@@ -25134,12 +25142,12 @@ name|freefrag
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -27344,12 +27352,12 @@ decl_stmt|;
 name|ufs2_daddr_t
 name|blkno
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|indirdep
@@ -27791,12 +27799,12 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|mp
@@ -29586,12 +29594,12 @@ name|lk
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|freework
@@ -33147,7 +33155,7 @@ name|getdirtybuf
 argument_list|(
 name|bp
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
@@ -33271,7 +33279,7 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
@@ -33295,19 +33303,9 @@ name|b_vflags
 operator||=
 name|BV_SCANNED
 expr_stmt|;
-name|BO_LOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
 name|bremfree
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|BO_UNLOCK
-argument_list|(
-name|bo
 argument_list|)
 expr_stmt|;
 if|if
@@ -34467,12 +34465,12 @@ name|nb_jnewblk
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|newblk_freefrag
@@ -34637,12 +34635,12 @@ name|worklist
 modifier|*
 name|wk
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|WORKLIST_REMOVE
@@ -35088,12 +35086,12 @@ modifier|*
 name|inodedep
 decl_stmt|;
 block|{
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -35357,12 +35355,12 @@ modifier|*
 name|inodedep
 decl_stmt|;
 block|{
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -35588,12 +35586,12 @@ decl_stmt|;
 name|int
 name|needj
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Handle partial truncate separately. 	 */
@@ -38681,6 +38679,10 @@ argument_list|,
 name|D_MKDIR
 argument_list|)
 expr_stmt|;
+name|mkdir2
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -40600,12 +40602,12 @@ decl_stmt|,
 modifier|*
 name|nextmd
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -43396,12 +43398,12 @@ name|inodedep
 modifier|*
 name|idp
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 for|for
@@ -43624,12 +43626,12 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|fs
@@ -43811,12 +43813,12 @@ name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -43967,12 +43969,12 @@ init|;
 condition|;
 control|)
 block|{
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -44098,6 +44100,7 @@ name|pino
 operator|==
 literal|0
 condition|)
+block|{
 name|bp
 operator|=
 name|getblk
@@ -44127,7 +44130,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|error
 operator|=
 name|bread
@@ -44161,6 +44166,16 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -53715,6 +53730,9 @@ name|ino_t
 name|ino
 decl_stmt|;
 name|int
+name|foreground
+decl_stmt|;
+name|int
 name|chgs
 decl_stmt|;
 if|if
@@ -53755,6 +53773,18 @@ name|sm_state
 operator|&=
 operator|~
 name|IOSTARTED
+expr_stmt|;
+name|foreground
+operator|=
+operator|(
+name|bp
+operator|->
+name|b_xflags
+operator|&
+name|BX_BKGRDMARKER
+operator|)
+operator|==
+literal|0
 expr_stmt|;
 comment|/* 	 * Release journal work that was waiting on the write. 	 */
 name|handle_jwork
@@ -53858,17 +53888,10 @@ literal|"handle_written_bmsafemap: "
 literal|"re-allocated inode"
 argument_list|)
 expr_stmt|;
+comment|/* Do the roll-forward only if it's a real copy. */
 if|if
 condition|(
-operator|(
-name|bp
-operator|->
-name|b_xflags
-operator|&
-name|BX_BKGRDMARKER
-operator|)
-operator|==
-literal|0
+name|foreground
 condition|)
 block|{
 if|if
@@ -53998,17 +54021,10 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* Do the roll-forward only if it's a real copy. */
 if|if
 condition|(
-operator|(
-name|bp
-operator|->
-name|b_xflags
-operator|&
-name|BX_BKGRDMARKER
-operator|)
-operator|==
-literal|0
+name|foreground
 operator|&&
 name|jnewblk_rollforward
 argument_list|(
@@ -54291,6 +54307,10 @@ argument_list|,
 name|sm_next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|foreground
+condition|)
 name|bdirty
 argument_list|(
 name|bp
@@ -56834,7 +56854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sync all cylinder groups that were dirty at the time this function is  * called.  Newly dirtied cgs will be inserted before the sintenel.  This  * is used to flush freedep activity that may be holding up writes to a  * indirect block.  */
+comment|/*  * Sync all cylinder groups that were dirty at the time this function is  * called.  Newly dirtied cgs will be inserted before the sentinel.  This  * is used to flush freedep activity that may be holding up writes to a  * indirect block.  */
 end_comment
 
 begin_function
@@ -56863,7 +56883,7 @@ decl_stmt|;
 name|struct
 name|bmsafemap
 modifier|*
-name|sintenel
+name|sentinel
 decl_stmt|;
 name|struct
 name|ufsmount
@@ -56878,14 +56898,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|sintenel
+name|sentinel
 operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sintenel
+name|sentinel
 argument_list|)
 argument_list|,
 name|M_BMSAFEMAP
@@ -56895,7 +56915,7 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|sintenel
+name|sentinel
 operator|->
 name|sm_cg
 operator|=
@@ -56926,7 +56946,7 @@ name|ump
 operator|->
 name|softdep_dirtycg
 argument_list|,
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -56937,7 +56957,7 @@ name|bmsafemap
 operator|=
 name|LIST_NEXT
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -56950,13 +56970,13 @@ name|bmsafemap
 operator|=
 name|LIST_NEXT
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
 control|)
 block|{
-comment|/* Skip sintenels and cgs with no work to release. */
+comment|/* Skip sentinels and cgs with no work to release. */
 if|if
 condition|(
 name|bmsafemap
@@ -56987,7 +57007,7 @@ condition|)
 block|{
 name|LIST_REMOVE
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -56996,7 +57016,7 @@ name|LIST_INSERT_AFTER
 argument_list|(
 name|bmsafemap
 argument_list|,
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57031,7 +57051,7 @@ condition|)
 continue|continue;
 name|LIST_REMOVE
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57040,7 +57060,7 @@ name|LIST_INSERT_AFTER
 argument_list|(
 name|bmsafemap
 argument_list|,
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57091,7 +57111,7 @@ break|break;
 block|}
 name|LIST_REMOVE
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|sm_next
 argument_list|)
@@ -57104,7 +57124,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|sintenel
+name|sentinel
 argument_list|,
 name|M_BMSAFEMAP
 argument_list|)
@@ -58055,12 +58075,12 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -58485,7 +58505,7 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
@@ -60003,12 +60023,12 @@ name|ufsmount
 modifier|*
 name|ump
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We never hold up the filesystem syncer or buf daemon. 	 */
@@ -60321,12 +60341,12 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 for|for
@@ -60336,7 +60356,7 @@ operator|=
 literal|0
 init|;
 name|cnt
-operator|<
+operator|<=
 name|pagedep_hash
 condition|;
 name|cnt
@@ -60355,7 +60375,7 @@ expr_stmt|;
 if|if
 condition|(
 name|next
-operator|>=
+operator|>
 name|pagedep_hash
 condition|)
 name|next
@@ -60598,12 +60618,12 @@ name|lastino
 decl_stmt|,
 name|ino
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
 operator|&
 name|lk
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pick a random inode dependency to be cleared. 	 * We will then gather up all the inodes in its block  	 * that have dependencies and flush them out. 	 */
@@ -60614,7 +60634,7 @@ operator|=
 literal|0
 init|;
 name|cnt
-operator|<
+operator|<=
 name|inodedep_hash
 condition|;
 name|cnt
@@ -60633,7 +60653,7 @@ expr_stmt|;
 if|if
 condition|(
 name|next
-operator|>=
+operator|>
 name|inodedep_hash
 condition|)
 name|next
@@ -61116,6 +61136,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|bqrelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|softdep_freework
 argument_list|(
 name|wkhd
@@ -61761,7 +61786,7 @@ name|getdirtybuf
 parameter_list|(
 name|bp
 parameter_list|,
-name|mtx
+name|lock
 parameter_list|,
 name|waitfor
 parameter_list|)
@@ -61771,9 +61796,9 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|mtx
+name|rwlock
 modifier|*
-name|mtx
+name|lock
 decl_stmt|;
 name|int
 name|waitfor
@@ -61782,11 +61807,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|mtx_assert
+name|rw_assert
 argument_list|(
-name|mtx
+name|lock
 argument_list|,
-name|MA_OWNED
+name|RA_WLOCKED
 argument_list|)
 expr_stmt|;
 if|if
@@ -61828,10 +61853,10 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|mtx
+name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Even if we sucessfully acquire bp here, we have dropped 		 * mtx, which may violates our guarantee. 		 */
+comment|/* 		 * Even if we sucessfully acquire bp here, we have dropped 		 * lock, which may violates our guarantee. 		 */
 if|if
 condition|(
 name|error
@@ -61857,9 +61882,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|rw_wlock
 argument_list|(
-name|mtx
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -61883,7 +61908,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|mtx
+name|lock
 operator|==
 operator|&
 name|lk
@@ -61893,9 +61918,9 @@ operator|==
 name|MNT_WAIT
 condition|)
 block|{
-name|mtx_unlock
+name|rw_wunlock
 argument_list|(
-name|mtx
+name|lock
 argument_list|)
 expr_stmt|;
 name|BO_LOCK
@@ -61936,7 +61961,7 @@ name|bp
 operator|->
 name|b_xflags
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bp
 operator|->
@@ -61961,9 +61986,9 @@ operator|->
 name|b_bufobj
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|rw_wlock
 argument_list|(
-name|mtx
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -61988,7 +62013,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 		 * The mtx argument must be bp->b_vp's mutex in 		 * this case. 		 */
+comment|/* 		 * The lock argument must be bp->b_vp's mutex in 		 * this case. 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG_VFS_LOCKS
@@ -62002,7 +62027,7 @@ name|v_type
 operator|!=
 name|VCHR
 condition|)
-name|ASSERT_BO_LOCKED
+name|ASSERT_BO_WLOCKED
 argument_list|(
 name|bp
 operator|->
@@ -62017,14 +62042,14 @@ name|b_vflags
 operator||=
 name|BV_BKGRDWAIT
 expr_stmt|;
-name|msleep
+name|rw_sleep
 argument_list|(
 operator|&
 name|bp
 operator|->
 name|b_xflags
 argument_list|,
-name|mtx
+name|lock
 argument_list|,
 name|PRIBIO
 argument_list|,
@@ -62134,7 +62159,7 @@ name|devvp
 operator|->
 name|v_bufobj
 expr_stmt|;
-name|ASSERT_BO_LOCKED
+name|ASSERT_BO_WLOCKED
 argument_list|(
 name|bo
 argument_list|)
@@ -62413,7 +62438,7 @@ argument_list|,
 literal|"drain_output"
 argument_list|)
 expr_stmt|;
-name|ASSERT_BO_LOCKED
+name|ASSERT_BO_WLOCKED
 argument_list|(
 name|bo
 argument_list|)
@@ -62441,7 +62466,7 @@ name|bo
 operator|->
 name|bo_numoutput
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)

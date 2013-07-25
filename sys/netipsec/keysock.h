@@ -32,86 +32,86 @@ struct|struct
 name|pfkeystat
 block|{
 comment|/* kernel -> userland */
-name|u_quad_t
+name|uint64_t
 name|out_total
 decl_stmt|;
 comment|/* # of total calls */
-name|u_quad_t
+name|uint64_t
 name|out_bytes
 decl_stmt|;
 comment|/* total bytecount */
-name|u_quad_t
+name|uint64_t
 name|out_msgtype
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* message type histogram */
-name|u_quad_t
+name|uint64_t
 name|out_invlen
 decl_stmt|;
 comment|/* invalid length field */
-name|u_quad_t
+name|uint64_t
 name|out_invver
 decl_stmt|;
 comment|/* invalid version field */
-name|u_quad_t
+name|uint64_t
 name|out_invmsgtype
 decl_stmt|;
 comment|/* invalid message type field */
-name|u_quad_t
+name|uint64_t
 name|out_tooshort
 decl_stmt|;
 comment|/* msg too short */
-name|u_quad_t
+name|uint64_t
 name|out_nomem
 decl_stmt|;
 comment|/* memory allocation failure */
-name|u_quad_t
+name|uint64_t
 name|out_dupext
 decl_stmt|;
 comment|/* duplicate extension */
-name|u_quad_t
+name|uint64_t
 name|out_invexttype
 decl_stmt|;
 comment|/* invalid extension type */
-name|u_quad_t
+name|uint64_t
 name|out_invsatype
 decl_stmt|;
 comment|/* invalid sa type */
-name|u_quad_t
+name|uint64_t
 name|out_invaddr
 decl_stmt|;
 comment|/* invalid address extension */
 comment|/* userland -> kernel */
-name|u_quad_t
+name|uint64_t
 name|in_total
 decl_stmt|;
 comment|/* # of total calls */
-name|u_quad_t
+name|uint64_t
 name|in_bytes
 decl_stmt|;
 comment|/* total bytecount */
-name|u_quad_t
+name|uint64_t
 name|in_msgtype
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* message type histogram */
-name|u_quad_t
+name|uint64_t
 name|in_msgtarget
 index|[
 literal|3
 index|]
 decl_stmt|;
 comment|/* one/all/registered */
-name|u_quad_t
+name|uint64_t
 name|in_nomem
 decl_stmt|;
 comment|/* memory allocation failure */
 comment|/* others */
-name|u_quad_t
+name|uint64_t
 name|sockerr
 decl_stmt|;
 comment|/* # of socket related errors */
@@ -146,6 +146,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_struct
 struct|struct
 name|keycb
@@ -168,7 +174,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|pfkeystat
@@ -181,8 +187,24 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_pfkeystat
-value|VNET(pfkeystat)
+name|PFKEYSTAT_ADD
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|VNET_PCPUSTAT_ADD(struct pfkeystat, pfkeystat, name, (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFKEYSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+value|PFKEYSTAT_ADD(name, 1)
 end_define
 
 begin_function_decl

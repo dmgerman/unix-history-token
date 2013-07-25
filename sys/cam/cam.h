@@ -162,26 +162,16 @@ name|CAM_PRIORITY_DEV
 value|((CAM_RL_DEV<< 8) + 0x80)
 define|#
 directive|define
+name|CAM_PRIORITY_OOB
+value|(CAM_RL_DEV<< 8)
+define|#
+directive|define
 name|CAM_PRIORITY_NORMAL
 value|((CAM_RL_NORMAL<< 8) + 0x80)
 define|#
 directive|define
 name|CAM_PRIORITY_NONE
 value|(u_int32_t)-1
-define|#
-directive|define
-name|CAM_PRIORITY_TO_RL
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)>> 8)
-define|#
-directive|define
-name|CAM_RL_TO_PRIORITY
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)<< 8)
 name|u_int32_t
 name|generation
 decl_stmt|;
@@ -613,6 +603,24 @@ name|int
 name|num_cam_status_entries
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cam_sort_io_queues
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_union_decl
 union_decl|union

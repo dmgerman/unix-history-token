@@ -74,13 +74,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CRSBUILDER_H_
+name|LLVM_SUPPORT_INTEGERSSUBSETMAPPING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CRSBUILDER_H_
+name|LLVM_SUPPORT_INTEGERSSUBSETMAPPING_H
 end_define
 
 begin_include
@@ -3203,7 +3203,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CRSBUILDER_H_ */
+comment|/* LLVM_SUPPORT_INTEGERSSUBSETMAPPING_CRSBUILDER_H */
 end_comment
 
 end_unit

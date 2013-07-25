@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLSv1 credentials  * Copyright (c) 2006-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * TLSv1 credentials  * Copyright (c) 2006-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -154,6 +154,9 @@ name|struct
 name|x509_certificate
 modifier|*
 name|cert
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|char
 name|name
@@ -191,6 +194,56 @@ operator|-
 literal|1
 return|;
 block|}
+name|p
+operator|=
+operator|*
+name|chain
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|&&
+name|p
+operator|->
+name|next
+condition|)
+name|p
+operator|=
+name|p
+operator|->
+name|next
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|&&
+name|x509_name_compare
+argument_list|(
+operator|&
+name|cert
+operator|->
+name|subject
+argument_list|,
+operator|&
+name|p
+operator|->
+name|issuer
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * The new certificate is the issuer of the last certificate in 		 * the chain - add the new certificate to the end. 		 */
+name|p
+operator|->
+name|next
+operator|=
+name|cert
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Add to the beginning of the chain */
 name|cert
 operator|->
 name|next
@@ -203,6 +256,7 @@ name|chain
 operator|=
 name|cert
 expr_stmt|;
+block|}
 name|x509_name_string
 argument_list|(
 operator|&
@@ -980,6 +1034,11 @@ return|;
 block|}
 else|else
 block|{
+specifier|const
+name|u8
+modifier|*
+name|pos2
+decl_stmt|;
 name|pos
 operator|+=
 name|os_strlen
@@ -1010,6 +1069,36 @@ condition|)
 return|return
 name|NULL
 return|;
+name|pos2
+operator|=
+name|search_tag
+argument_list|(
+literal|"Proc-Type: 4,ENCRYPTED"
+argument_list|,
+name|pos
+argument_list|,
+name|end
+operator|-
+name|pos
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pos2
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"TLSv1: Unsupported private key "
+literal|"format (Proc-Type/DEK-Info)"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 block|}
 name|der
 operator|=

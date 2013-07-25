@@ -181,6 +181,7 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/* preceding string on stack */
+specifier|const
 name|char
 modifier|*
 name|prevstring
@@ -231,6 +232,7 @@ name|int
 name|lleft
 decl_stmt|;
 comment|/* number of lines left in this buffer */
+specifier|const
 name|char
 modifier|*
 name|nextc
@@ -290,6 +292,7 @@ comment|/* copy of parsefile->lleft */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|parsenextc
@@ -657,7 +660,9 @@ name|BUFSIZ
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|parsenextc
+name|parsefile
+operator|->
+name|buf
 argument_list|,
 name|rl_cp
 argument_list|,
@@ -698,7 +703,9 @@ name|parsefile
 operator|->
 name|fd
 argument_list|,
-name|parsenextc
+name|parsefile
+operator|->
+name|buf
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -921,7 +928,17 @@ name|q
 operator|=
 name|p
 operator|=
+name|parsefile
+operator|->
+name|buf
+operator|+
+operator|(
 name|parsenextc
+operator|-
+name|parsefile
+operator|->
+name|buf
+operator|)
 expr_stmt|;
 comment|/* delete nul characters */
 name|something
@@ -1422,6 +1439,8 @@ argument_list|(
 name|fname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<
@@ -1452,7 +1471,7 @@ name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|F_DUPFD
+name|F_DUPFD_CLOEXEC
 argument_list|,
 literal|10
 argument_list|)
@@ -1491,7 +1510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like setinputfile, but takes an open file descriptor.  Call this with  * interrupts off.  */
+comment|/*  * Like setinputfile, but takes an open file descriptor (which should have  * its FD_CLOEXEC flag already set).  Call this with interrupts off.  */
 end_comment
 
 begin_function
@@ -1505,18 +1524,6 @@ name|int
 name|push
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|push
@@ -1598,6 +1605,7 @@ begin_function
 name|void
 name|setinputstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|string

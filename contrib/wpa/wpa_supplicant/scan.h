@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Scanning  * Copyright (c) 2003-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - Scanning  * Copyright (c) 2003-2010, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -20,9 +20,9 @@ name|int
 name|wpa_supplicant_enabled_networks
 parameter_list|(
 name|struct
-name|wpa_config
+name|wpa_supplicant
 modifier|*
-name|conf
+name|wpa_s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -46,8 +46,50 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|wpa_supplicant_delayed_sched_scan
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+name|int
+name|sec
+parameter_list|,
+name|int
+name|usec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wpa_supplicant_req_sched_scan
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|wpa_supplicant_cancel_scan
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wpa_supplicant_cancel_sched_scan
 parameter_list|(
 name|struct
 name|wpa_supplicant
@@ -184,13 +226,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|wpa_scan_results_free
+name|int
+name|wpa_supplicant_filter_bssid_match
 parameter_list|(
 name|struct
-name|wpa_scan_results
+name|wpa_supplicant
 modifier|*
-name|res
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|bssid
 parameter_list|)
 function_decl|;
 end_function_decl

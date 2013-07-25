@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * AES (Rijndael) cipher  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * AES (Rijndael) cipher  * Copyright (c) 2003-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -313,6 +313,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|TE411
+parameter_list|(
+name|i
+parameter_list|)
+value|(Te4[((i)>> 24)& 0xff]& 0xff000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TE422
+parameter_list|(
+name|i
+parameter_list|)
+value|(Te4[((i)>> 16)& 0xff]& 0x00ff0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TE433
+parameter_list|(
+name|i
+parameter_list|)
+value|(Te4[((i)>> 8)& 0xff]& 0x0000ff00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TE444
+parameter_list|(
+name|i
+parameter_list|)
+value|(Te4[(i)& 0xff]& 0x000000ff)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TE4
 parameter_list|(
 name|i
@@ -615,6 +655,46 @@ end_define
 begin_define
 define|#
 directive|define
+name|TE411
+parameter_list|(
+name|i
+parameter_list|)
+value|((Te0[((i)>> 24)& 0xff]<< 8)& 0xff000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TE422
+parameter_list|(
+name|i
+parameter_list|)
+value|(Te0[((i)>> 16)& 0xff]& 0x00ff0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TE433
+parameter_list|(
+name|i
+parameter_list|)
+value|(Te0[((i)>> 8)& 0xff]& 0x0000ff00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TE444
+parameter_list|(
+name|i
+parameter_list|)
+value|((Te0[(i)& 0xff]>> 8)& 0x000000ff)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TE4
 parameter_list|(
 name|i
@@ -825,23 +905,31 @@ begin_define
 define|#
 directive|define
 name|AES_PRIV_SIZE
-value|(4 * 44)
+value|(4 * 4 * 15 + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AES_PRIV_NR_POS
+value|(4 * 15)
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|rijndaelKeySetupEnc
 parameter_list|(
 name|u32
 name|rk
-index|[
-comment|/*44*/
-index|]
+index|[]
 parameter_list|,
 specifier|const
 name|u8
 name|cipherKey
 index|[]
+parameter_list|,
+name|int
+name|keyBits
 parameter_list|)
 function_decl|;
 end_function_decl

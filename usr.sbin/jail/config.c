@@ -401,6 +401,8 @@ block|{
 literal|"mount"
 block|,
 name|PF_INTERNAL
+operator||
+name|PF_REV
 block|}
 block|,
 index|[
@@ -460,6 +462,8 @@ block|,
 name|PF_INTERNAL
 operator||
 name|PF_CONV
+operator||
+name|PF_REV
 block|}
 block|,
 endif|#
@@ -477,6 +481,8 @@ block|,
 name|PF_INTERNAL
 operator||
 name|PF_CONV
+operator||
+name|PF_REV
 block|}
 block|,
 endif|#
@@ -491,6 +497,8 @@ block|,
 name|PF_INTERNAL
 operator||
 name|PF_CONV
+operator||
+name|PF_REV
 block|}
 block|,
 index|[

@@ -2064,6 +2064,62 @@ name|e2fs_maxfilesize
 operator|=
 literal|0x7fffffffffffffff
 expr_stmt|;
+if|if
+condition|(
+name|es
+operator|->
+name|e4fs_flags
+operator|&
+name|E2FS_UNSIGNED_HASH
+condition|)
+block|{
+name|fs
+operator|->
+name|e2fs_uhash
+operator|=
+literal|3
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|es
+operator|->
+name|e4fs_flags
+operator|&
+name|E2FS_SIGNED_HASH
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__CHAR_UNSIGNED__
+name|es
+operator|->
+name|e4fs_flags
+operator||=
+name|E2FS_UNSIGNED_HASH
+expr_stmt|;
+name|fs
+operator|->
+name|e2fs_uhash
+operator|=
+literal|3
+expr_stmt|;
+else|#
+directive|else
+name|es
+operator|->
+name|e4fs_flags
+operator||=
+name|E2FS_SIGNED_HASH
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 literal|0
@@ -3951,7 +4007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file system statistics.  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function
@@ -4483,7 +4539,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Force stale file system control information to be flushed. 	 */
+comment|/* 	 * Force stale filesystem control information to be flushed. 	 */
 if|if
 condition|(
 name|waitfor
@@ -5115,8 +5171,6 @@ name|i_gen
 operator|=
 name|random
 argument_list|()
-operator|/
-literal|2
 operator|+
 literal|1
 expr_stmt|;

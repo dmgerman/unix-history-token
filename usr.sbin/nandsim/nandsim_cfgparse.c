@@ -792,6 +792,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nandsim_section
 name|sections
@@ -3244,7 +3245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function tries to get appropriate value for given key, convert it to  * array of ints (of given size), and perform all the neccesary checks and  * conversions.  */
+comment|/*  * Function tries to get appropriate value for given key, convert it to  * array of ints (of given size), and perform all the necessary checks and  * conversions.  */
 end_comment
 
 begin_function

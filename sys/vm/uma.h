@@ -189,6 +189,63 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Import new memory into a cache zone.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|uma_import
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|store
+parameter_list|,
+name|int
+name|count
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Free memory from a cache zone.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|uma_release
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|store
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * What's the difference between initializing and constructing?  *  * The item is initialized when it is cached, and this is the state that the  * object should be in when returned to the allocator. The purpose of this is  * to remove some code which would otherwise be called on each allocation by  * utilizing a known, stable state.  This differs from the constructor which  * will be called on EVERY allocation.  *  * For example, in the initializer you may want to initialize embedded locks,  * NULL list pointers, set up initial states, magic numbers, etc.  This way if  * the object is held in the allocator and re-used it won't be necessary to  * re-initialize it.  *  * The constructor may be used to lock a data structure, link it on to lists,  * bump reference counts or total counts of outstanding structures, etc.  *  */
 end_comment
 
@@ -227,7 +284,7 @@ parameter_list|,
 name|int
 name|align
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -276,6 +333,49 @@ name|zone
 parameter_list|,
 name|uma_zone_t
 name|master
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Create cache-only zones.  *  * This allows uma's per-cpu cache facilities to handle arbitrary  * pointers.  Consumers must specify the import and release functions to  * fill and destroy caches.  UMA does not allocate any memory for these  * zones.  The 'arg' parameter is passed to import/release and is caller  * specific.  */
+end_comment
+
+begin_function_decl
+name|uma_zone_t
+name|uma_zcache_create
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|uma_ctor
+name|ctor
+parameter_list|,
+name|uma_dtor
+name|dtor
+parameter_list|,
+name|uma_init
+name|zinit
+parameter_list|,
+name|uma_fini
+name|zfini
+parameter_list|,
+name|uma_import
+name|zimport
+parameter_list|,
+name|uma_release
+name|zrelease
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -449,6 +549,17 @@ begin_comment
 comment|/* 					 * Zone's pages will not be included in 					 * mini-dumps. 					 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_PCPU
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 					 * Allocates mp_ncpus slabs sized to 					 * sizeof(struct pcpu). 					 */
+end_comment
+
 begin_comment
 comment|/*  * These flags are shared between the keg and zone.  In zones wishing to add  * new kegs these flags must be compatible.  Some are determined based on  * physical parameters of the request and may not be provided by the consumer.  */
 end_comment
@@ -458,7 +569,7 @@ define|#
 directive|define
 name|UMA_ZONE_INHERIT
 define|\
-value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB)
+value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB | UMA_ZONE_PCPU)
 end_define
 
 begin_comment
@@ -705,7 +816,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|pflag
 parameter_list|,
@@ -734,7 +845,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|pflag
 parameter_list|)
 function_decl|;
@@ -794,6 +905,23 @@ name|uma_set_align
 parameter_list|(
 name|int
 name|align
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set a reserved number of items to hold for M_USE_RESERVE allocations.  All  * other requests must allocate new backing pages.  */
+end_comment
+
+begin_function_decl
+name|void
+name|uma_zone_reserve
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|int
+name|nitems
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1065,11 +1193,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  *	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  *	A pointer to a u_int32_t reference counter.  */
+comment|/*  * Used to lookup the reference counter allocated for an item  * from a UMA_ZONE_REFCNT zone.  For UMA_ZONE_REFCNT zones,  * reference counters are allocated for items and stored in  * the underlying slab header.  *  * Arguments:  *	zone  The UMA_ZONE_REFCNT zone to which the item belongs.  *	item  The address of the item for which we want a refcnt.  *  * Returns:  *	A pointer to a uint32_t reference counter.  */
 end_comment
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|uma_find_refcnt
 parameter_list|(
@@ -1122,19 +1250,19 @@ begin_struct
 struct|struct
 name|uma_stream_header
 block|{
-name|u_int32_t
+name|uint32_t
 name|ush_version
 decl_stmt|;
 comment|/* Stream format version. */
-name|u_int32_t
+name|uint32_t
 name|ush_maxcpus
 decl_stmt|;
 comment|/* Value of MAXCPU for stream. */
-name|u_int32_t
+name|uint32_t
 name|ush_count
 decl_stmt|;
 comment|/* Number of records. */
-name|u_int32_t
+name|uint32_t
 name|_ush_pad
 decl_stmt|;
 comment|/* Pad/reserved field. */
@@ -1167,64 +1295,64 @@ index|[
 name|UTH_MAX_NAME
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|uth_align
 decl_stmt|;
 comment|/* Keg: alignment. */
-name|u_int32_t
+name|uint32_t
 name|uth_size
 decl_stmt|;
 comment|/* Keg: requested size of item. */
-name|u_int32_t
+name|uint32_t
 name|uth_rsize
 decl_stmt|;
 comment|/* Keg: real size of item. */
-name|u_int32_t
+name|uint32_t
 name|uth_maxpages
 decl_stmt|;
 comment|/* Keg: maximum number of pages. */
-name|u_int32_t
+name|uint32_t
 name|uth_limit
 decl_stmt|;
 comment|/* Keg: max items to allocate. */
 comment|/* 	 * Current dynamic zone/keg-derived statistics. 	 */
-name|u_int32_t
+name|uint32_t
 name|uth_pages
 decl_stmt|;
 comment|/* Keg: pages allocated. */
-name|u_int32_t
+name|uint32_t
 name|uth_keg_free
 decl_stmt|;
 comment|/* Keg: items free. */
-name|u_int32_t
+name|uint32_t
 name|uth_zone_free
 decl_stmt|;
 comment|/* Zone: items free. */
-name|u_int32_t
+name|uint32_t
 name|uth_bucketsize
 decl_stmt|;
 comment|/* Zone: desired bucket size. */
-name|u_int32_t
+name|uint32_t
 name|uth_zone_flags
 decl_stmt|;
 comment|/* Zone: flags. */
-name|u_int64_t
+name|uint64_t
 name|uth_allocs
 decl_stmt|;
 comment|/* Zone: number of allocations. */
-name|u_int64_t
+name|uint64_t
 name|uth_frees
 decl_stmt|;
 comment|/* Zone: number of frees. */
-name|u_int64_t
+name|uint64_t
 name|uth_fails
 decl_stmt|;
 comment|/* Zone: number of alloc failures. */
-name|u_int64_t
+name|uint64_t
 name|uth_sleeps
 decl_stmt|;
 comment|/* Zone: number of alloc sleeps. */
-name|u_int64_t
+name|uint64_t
 name|_uth_reserved1
 index|[
 literal|2
@@ -1239,19 +1367,19 @@ begin_struct
 struct|struct
 name|uma_percpu_stat
 block|{
-name|u_int64_t
+name|uint64_t
 name|ups_allocs
 decl_stmt|;
 comment|/* Cache: number of allocations. */
-name|u_int64_t
+name|uint64_t
 name|ups_frees
 decl_stmt|;
 comment|/* Cache: number of frees. */
-name|u_int64_t
+name|uint64_t
 name|ups_cache_free
 decl_stmt|;
 comment|/* Cache: free items in cache. */
-name|u_int64_t
+name|uint64_t
 name|_ups_reserved
 index|[
 literal|5

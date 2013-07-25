@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1024,7 +1024,10 @@ name|FWRITE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 return|return
@@ -1109,7 +1112,10 @@ name|ACE_ALL_WRITE_PERMS
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1125,7 +1131,10 @@ name|VWRITE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 ifdef|#
@@ -1337,12 +1346,48 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+if|if
+condition|(
+name|fidp
+operator|->
+name|fid_len
+operator|<
+name|SHORT_FID_LEN
+condition|)
+block|{
 name|fidp
 operator|->
 name|fid_len
 operator|=
 name|SHORT_FID_LEN
 expr_stmt|;
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENOSPC
+argument_list|)
+operator|)
+return|;
+block|}
+else|#
+directive|else
+name|fidp
+operator|->
+name|fid_len
+operator|=
+name|SHORT_FID_LEN
+expr_stmt|;
+endif|#
+directive|endif
 name|zfid
 operator|=
 operator|(
@@ -1512,7 +1557,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1831,7 +1879,10 @@ name|LOOKUP_XATTR
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -2423,6 +2474,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Gets the full dataset name that corresponds to the given snapshot name  * Example:  * 	zfsctl_snapshot_zname("snap1") -> "mypool/myfs@snap1"  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2482,7 +2537,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 name|dmu_objset_name
@@ -2510,7 +2568,10 @@ name|len
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -3333,7 +3394,10 @@ name|tdvp
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3403,7 +3467,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3740,7 +3807,10 @@ else|else
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 name|mutex_exit
@@ -3862,7 +3932,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EILSEQ
+argument_list|)
 operator|)
 return|;
 name|dmu_objset_name
@@ -4136,7 +4209,10 @@ name|LOOKUP_XATTR
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ASSERT
@@ -4199,7 +4275,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -4531,6 +4610,25 @@ operator|->
 name|sd_lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENOENT
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
+comment|/* !illumos */
 comment|/* Translate errors and add SAVENAME when needed. */
 if|if
 condition|(
@@ -4564,7 +4662,10 @@ else|else
 block|{
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 name|ZFS_EXIT
@@ -4577,6 +4678,9 @@ operator|(
 name|err
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* !illumos */
 block|}
 name|sep
 operator|=
@@ -4984,7 +5088,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5379,7 +5486,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -5458,7 +5568,10 @@ literal|1
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 name|ZFS_EXIT
@@ -5475,7 +5588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pvp is the '.zfs' directory (zfsctl_node_t).  * Creates vp, which is '.zfs/snapshot' (zfsctl_snapdir_t).  *  * This function is the callback to create a GFS vnode for '.zfs/snapshot'  * when a lookup is performed on .zfs for "snapshot".  */
+comment|/*  * pvp is the '.zfs' directory (zfsctl_node_t).  *  * Creates vp, which is '.zfs/snapshot' (zfsctl_snapdir_t).  *  * This function is the callback to create a GFS vnode for '.zfs/snapshot'  * when a lookup is performed on .zfs for "snapshot".  */
 end_comment
 
 begin_function
@@ -5772,7 +5885,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7810,7 +7926,10 @@ name|se_root
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 else|else
 operator|*
@@ -7854,7 +7973,10 @@ else|else
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 name|mutex_exit
 argument_list|(

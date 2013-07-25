@@ -567,7 +567,7 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|random_systat
-operator|.
+operator|->
 name|seeded
 argument_list|,
 literal|1
@@ -1589,12 +1589,12 @@ if|if
 condition|(
 operator|!
 name|random_systat
-operator|.
+operator|->
 name|seeded
 condition|)
 block|{
 name|random_systat
-operator|.
+operator|->
 name|seeded
 operator|=
 literal|1
@@ -1603,7 +1603,7 @@ name|selwakeuppri
 argument_list|(
 operator|&
 name|random_systat
-operator|.
+operator|->
 name|rsel
 argument_list|,
 name|PUSER
@@ -1611,11 +1611,23 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|&
 name|random_systat
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|arc4rand_iniseed_state
+argument_list|,
+name|ARC4_ENTR_NONE
+argument_list|,
+name|ARC4_ENTR_HAVE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1647,7 +1659,7 @@ expr_stmt|;
 if|if
 condition|(
 name|random_systat
-operator|.
+operator|->
 name|seeded
 condition|)
 name|revents
@@ -1667,7 +1679,7 @@ name|td
 argument_list|,
 operator|&
 name|random_systat
-operator|.
+operator|->
 name|rsel
 argument_list|)
 expr_stmt|;
@@ -1708,7 +1720,7 @@ while|while
 condition|(
 operator|!
 name|random_systat
-operator|.
+operator|->
 name|seeded
 operator|&&
 operator|!
@@ -1736,7 +1748,6 @@ name|error
 operator|=
 name|msleep
 argument_list|(
-operator|&
 name|random_systat
 argument_list|,
 operator|&

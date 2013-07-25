@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|__XEN_LATEST_INTERFACE_VERSION__
-value|0x00030209
+value|0x00040200
 end_define
 
 begin_if

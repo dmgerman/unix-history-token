@@ -508,7 +508,7 @@ index|[
 name|NCHAR
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -1536,7 +1536,8 @@ name|eolbyte
 decl_stmt|;
 name|int
 name|backref
-decl_stmt|,
+decl_stmt|;
+name|ptrdiff_t
 name|start
 decl_stmt|,
 name|len

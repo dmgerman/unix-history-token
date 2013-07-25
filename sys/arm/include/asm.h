@@ -25,12 +25,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -40,54 +34,6 @@ name|x
 parameter_list|)
 value|x
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_C_LABEL
-parameter_list|(
-name|x
-parameter_list|)
-value|_ ## x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_C_LABEL
-parameter_list|(
-name|x
-parameter_list|)
-value|_
-comment|/**/
-value|x
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -98,31 +44,6 @@ name|x
 parameter_list|)
 value|x
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_JB_MAGIC__SETJMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_JB_MAGIC__SETJMP
-value|0x4278f500
-end_define
-
-begin_define
-define|#
-directive|define
-name|_JB_MAGIC_SETJMP
-value|0x4278f501
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -242,7 +163,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here  * Instead it recognised the # instead of an @ symbols in .type directives  * We define a couple of macros so that assembly code will not be dependant  * on one or the other.  */
+comment|/*  * gas/arm uses @ as a single comment character and thus cannot be used here  * Instead it recognised the # instead of an @ symbols in .type directives  * We define a couple of macros so that assembly code will not be dependent  * on one or the other.  */
 end_comment
 
 begin_define
@@ -283,7 +204,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|END
+name|_END
 parameter_list|(
 name|x
 parameter_list|)
@@ -343,6 +264,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|END
+parameter_list|(
+name|y
+parameter_list|)
+value|_END(_C_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASENTRY
 parameter_list|(
 name|y
@@ -363,6 +294,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASEND
+parameter_list|(
+name|y
+parameter_list|)
+value|_END(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASMSTR
 value|.asciz
 end_define
@@ -372,14 +313,72 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__ELF__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|PIC
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|PLT_SYM
+parameter_list|(
+name|x
+parameter_list|)
+value|PIC_SYM(x, PLT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_SYM
+parameter_list|(
+name|x
+parameter_list|)
+value|PIC_SYM(x, GOT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_GET
+parameter_list|(
+name|x
+parameter_list|,
+name|got
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|ldr	x, sym;		\ 	ldr	x, [x, got]
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_INIT
+parameter_list|(
+name|got
+parameter_list|,
+name|gotsym
+parameter_list|,
+name|pclabel
+parameter_list|)
+define|\
+value|ldr	got, gotsym;	\ 	add	got, got, pc;	\ 	pclabel:
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_INITSYM
+parameter_list|(
+name|gotsym
+parameter_list|,
+name|pclabel
+parameter_list|)
+define|\
+value|gotsym: .word _C_LABEL(_GLOBAL_OFFSET_TABLE_) + (. - (pclabel+4))
+end_define
 
 begin_ifdef
 ifdef|#
@@ -435,6 +434,65 @@ end_else
 begin_define
 define|#
 directive|define
+name|PLT_SYM
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_SYM
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_GET
+parameter_list|(
+name|x
+parameter_list|,
+name|got
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|ldr	x, sym;
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_INIT
+parameter_list|(
+name|got
+parameter_list|,
+name|gotsym
+parameter_list|,
+name|pclabel
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GOT_INITSYM
+parameter_list|(
+name|gotsym
+parameter_list|,
+name|pclabel
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PIC_SYM
 parameter_list|(
 name|x
@@ -448,6 +506,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* PIC */
+end_comment
 
 begin_undef
 undef|#
@@ -504,12 +566,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -522,11 +578,6 @@ parameter_list|)
 define|\
 value|.weak alias;							\ 	alias = sym
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -547,28 +598,6 @@ define|\
 value|.stabs msg ## ,30,0,0,0 ;					\ 	.stabs __STRING(_C_LABEL(sym)) ## ,1,0,0,0
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__ELF__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|WARN_REFERENCES
-parameter_list|(
-name|sym
-parameter_list|,
-name|msg
-parameter_list|)
-define|\
-value|.stabs msg,30,0,0,0 ;						\ 	.stabs __STRING(sym),1,0,0,0
-end_define
-
 begin_else
 else|#
 directive|else
@@ -584,9 +613,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|.stabs msg,30,0,0,0 ;						\ 	.stabs __STRING(_
-comment|/**/
-value|sym),1,0,0,0
+value|.stabs msg,30,0,0,0 ;						\ 	.stabs __STRING(sym),1,0,0,0
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP-MSCHAPv2 (draft-kamath-pppext-eap-mschapv2-00.txt) server  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / EAP-MSCHAPv2 (draft-kamath-pppext-eap-mschapv2-00.txt) server  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/ms_funcs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -426,7 +432,7 @@ name|data
 operator|->
 name|auth_challenge_from_tls
 operator|&&
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|data
 operator|->
@@ -1919,6 +1925,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|nt_password_hash
 argument_list|(
 name|sm
@@ -1935,7 +1943,18 @@ name|password_len
 argument_list|,
 name|pw_hash_buf
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|data
+operator|->
+name|state
+operator|=
+name|FAILURE
 expr_stmt|;
+return|return;
+block|}
 name|pw_hash
 operator|=
 name|pw_hash_buf

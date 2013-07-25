@@ -382,13 +382,13 @@ name|TSPTYPES
 end_ifdef
 
 begin_decl_stmt
-specifier|const
+specifier|static
 name|char
+specifier|const
 modifier|*
+specifier|const
 name|tsptype
-index|[
-name|TSPTYPENUMBER
-index|]
+index|[]
 init|=
 block|{
 literal|"ANY"
@@ -443,6 +443,28 @@ literal|"LOOP"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|tsptype
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+operator|==
+name|TSPTYPENUMBER
+argument_list|,
+literal|"Size of tsptype does not match TSPTYPENUMBER"
+argument_list|)
+assert|;
+end_assert
 
 begin_endif
 endif|#

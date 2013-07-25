@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -217,7 +217,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -368,7 +371,10 @@ name|ZFS_DELEG_USER_SETS
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -391,7 +397,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1084,7 +1093,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1773,7 +1785,10 @@ name|ENOENT
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -1988,7 +2003,10 @@ return|;
 block|}
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2457,7 +2475,10 @@ name|B_FALSE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ECANCELED
+argument_list|)
 operator|)
 return|;
 if|if
@@ -2476,7 +2497,10 @@ name|SPA_VERSION_DELEGATED_PERMS
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -2782,7 +2806,10 @@ goto|;
 block|}
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 expr_stmt|;
 name|success
 label|:

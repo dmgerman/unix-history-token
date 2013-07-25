@@ -5004,7 +5004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine the number of bytes neccesary for Win95 names  */
+comment|/*  * Determine the number of bytes neccessary for Win95 names  */
 end_comment
 
 begin_function
@@ -5058,7 +5058,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store an area with multi byte string instr, and reterns left  * byte of instr and moves pointer forward. The area's size is  * inlen or outlen.  */
+comment|/*  * Store an area with multi byte string instr, and returns left  * byte of instr and moves pointer forward. The area's size is  * inlen or outlen.  */
 end_comment
 
 begin_function

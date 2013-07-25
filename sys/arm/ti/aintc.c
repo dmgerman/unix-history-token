@@ -613,6 +613,13 @@ argument_list|,
 name|active_irq
 argument_list|)
 expr_stmt|;
+name|aintc_write_4
+argument_list|(
+name|INTC_SIR_IRQ
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1

@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/TemplateBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -149,6 +149,92 @@ name|Data
 decl_stmt|;
 name|public
 label|:
+comment|/// \brief Convert to the specified TypeLoc type, asserting that this TypeLoc
+comment|/// is of the desired type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|castAs
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|T
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
+name|T
+name|t
+block|;
+name|TypeLoc
+operator|&
+name|tl
+operator|=
+name|t
+block|;
+name|tl
+operator|=
+operator|*
+name|this
+block|;
+return|return
+name|t
+return|;
+block|}
+comment|/// \brief Convert to the specified TypeLoc type, returning a null TypeLoc if
+comment|/// this TypeLoc is not of the desired type.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+name|getAs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|T
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+condition|)
+return|return
+name|T
+argument_list|()
+return|;
+name|T
+name|t
+expr_stmt|;
+name|TypeLoc
+modifier|&
+name|tl
+init|=
+name|t
+decl_stmt|;
+name|tl
+operator|=
+operator|*
+name|this
+expr_stmt|;
+return|return
+name|t
+return|;
+block|}
 comment|/// The kinds of TypeLocs.  Equivalent to the Type::TypeClass enum,
 comment|/// except it also defines a Qualified enum that corresponds to the
 comment|/// QualifiedLoc class.
@@ -261,6 +347,9 @@ name|getTypeClass
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|isNull
 argument_list|()
@@ -271,6 +360,9 @@ operator|!
 name|Ty
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|operator
 name|bool
 argument_list|()
@@ -280,7 +372,13 @@ return|return
 name|Ty
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns the size of type source info data block for the given type.
+end_comment
+
+begin_function_decl
 specifier|static
 name|unsigned
 name|getFullDataSizeForType
@@ -289,8 +387,17 @@ name|QualType
 name|Ty
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Get the type for which this source info wrapper provides
+end_comment
+
+begin_comment
 comment|/// information.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getType
 argument_list|()
@@ -305,6 +412,9 @@ name|Ty
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Type
 operator|*
@@ -324,7 +434,13 @@ name|getTypePtr
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the pointer where source information is stored.
+end_comment
+
+begin_expr_stmt
 name|void
 operator|*
 name|getOpaqueData
@@ -335,19 +451,37 @@ return|return
 name|Data
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the begin source location.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getBeginLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the end source location.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getEndLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the full source range.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -365,6 +499,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -376,6 +513,9 @@ name|getBeginLoc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -387,7 +527,13 @@ name|getEndLoc
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the local source range.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getLocalSourceRange
 argument_list|()
@@ -401,7 +547,13 @@ name|this
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns the size of the type source info data block.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getFullDataSize
 argument_list|()
@@ -415,8 +567,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Get the next TypeLoc pointed by this TypeLoc, e.g for "int*" the
+end_comment
+
+begin_comment
 comment|/// TypeLoc is a PointerLoc and next TypeLoc is for "int".
+end_comment
+
+begin_expr_stmt
 name|TypeLoc
 name|getNextTypeLoc
 argument_list|()
@@ -430,41 +591,31 @@ name|this
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Skips past any qualifiers, if this is qualified.
+end_comment
+
+begin_expr_stmt
 name|UnqualTypeLoc
 name|getUnqualifiedLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// implemented in this header
+end_comment
+
+begin_expr_stmt
 name|TypeLoc
 name|IgnoreParens
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|isa
-operator|<
-name|ParenTypeLoc
-operator|>
-operator|(
-name|this
-operator|)
-condition|)
-return|return
-name|IgnoreParensImpl
-argument_list|(
-operator|*
-name|this
-argument_list|)
-return|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Initializes this to state that every location in this
@@ -691,6 +842,22 @@ name|private
 label|:
 end_label
 
+begin_function
+specifier|static
+name|bool
+name|isKind
+parameter_list|(
+specifier|const
+name|TypeLoc
+modifier|&
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_function
+
 begin_function_decl
 specifier|static
 name|void
@@ -858,17 +1025,23 @@ name|getTypeClass
 argument_list|()
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|TypeLoc
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const TypeLoc *TL
+argument|const TypeLoc&TL
 argument_list|)
 block|{
 return|return
 operator|!
 name|TL
-operator|->
+operator|.
 name|getType
 argument_list|()
 operator|.
@@ -971,16 +1144,22 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|private
+operator|:
+name|friend
+name|class
+name|TypeLoc
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const TypeLoc *TL
+argument|const TypeLoc&TL
 argument_list|)
 block|{
 return|return
 name|TL
-operator|->
+operator|.
 name|getType
 argument_list|()
 operator|.
@@ -1000,34 +1179,28 @@ specifier|const
 block|{
 if|if
 condition|(
-name|isa
+name|QualifiedTypeLoc
+name|Loc
+init|=
+name|getAs
 operator|<
 name|QualifiedTypeLoc
 operator|>
 operator|(
-name|this
 operator|)
 condition|)
 return|return
-name|cast
-operator|<
-name|QualifiedTypeLoc
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
+name|Loc
+operator|.
 name|getUnqualifiedLoc
 argument_list|()
 return|;
 return|return
-name|cast
+name|castAs
 operator|<
 name|UnqualTypeLoc
 operator|>
 operator|(
-operator|*
-name|this
 operator|)
 return|;
 block|}
@@ -1101,6 +1274,45 @@ name|this
 operator|)
 return|;
 block|}
+name|friend
+name|class
+name|TypeLoc
+block|;
+specifier|static
+name|bool
+name|isKind
+argument_list|(
+argument|const TypeLoc&TL
+argument_list|)
+block|{
+return|return
+name|Derived
+operator|::
+name|classofType
+argument_list|(
+name|TL
+operator|.
+name|getTypePtr
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofType
+argument_list|(
+argument|const Type *Ty
+argument_list|)
+block|{
+return|return
+name|TypeClass
+operator|::
+name|classof
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 name|unsigned
@@ -1136,60 +1348,6 @@ argument_list|()
 operator|+
 name|getInnerTypeSize
 argument_list|()
-return|;
-block|}
-specifier|static
-name|bool
-name|classofType
-argument_list|(
-argument|const Type *Ty
-argument_list|)
-block|{
-return|return
-name|TypeClass
-operator|::
-name|classof
-argument_list|(
-name|Ty
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|Derived
-operator|::
-name|classofType
-argument_list|(
-name|TL
-operator|->
-name|getTypePtr
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const UnqualTypeLoc *TL
-argument_list|)
-block|{
-return|return
-name|Derived
-operator|::
-name|classofType
-argument_list|(
-name|TL
-operator|->
-name|getTypePtr
-argument_list|()
-argument_list|)
 return|;
 block|}
 name|TypeLoc
@@ -1427,8 +1585,10 @@ operator|:
 name|public
 name|Base
 block|{
-name|public
-operator|:
+name|friend
+name|class
+name|TypeLoc
+block|;
 specifier|static
 name|bool
 name|classofType
@@ -1447,9 +1607,9 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const TypeLoc *TL
+argument|const TypeLoc&TL
 argument_list|)
 block|{
 return|return
@@ -1458,7 +1618,7 @@ operator|::
 name|classofType
 argument_list|(
 name|TL
-operator|->
+operator|.
 name|getTypePtr
 argument_list|()
 argument_list|)
@@ -1466,9 +1626,9 @@ return|;
 block|}
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
-argument|const UnqualTypeLoc *TL
+argument|const UnqualTypeLoc&TL
 argument_list|)
 block|{
 return|return
@@ -1477,12 +1637,14 @@ operator|::
 name|classofType
 argument_list|(
 name|TL
-operator|->
+operator|.
 name|getTypePtr
 argument_list|()
 argument_list|)
 return|;
 block|}
+name|public
+operator|:
 specifier|const
 name|TypeClass
 operator|*
@@ -1598,13 +1760,19 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;   }
+name|private
+operator|:
+name|friend
+name|class
+name|TypeLoc
+block|;
 specifier|static
 name|bool
-name|classof
+name|isKind
 argument_list|(
 specifier|const
 name|TypeLoc
-operator|*
+operator|&
 name|TL
 argument_list|)
 block|; }
@@ -3361,7 +3529,38 @@ argument_list|()
 return|;
 block|}
 expr|}
-block|;   struct
+block|;
+specifier|inline
+name|TypeLoc
+name|TypeLoc
+operator|::
+name|IgnoreParens
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ParenTypeLoc
+operator|::
+name|isKind
+argument_list|(
+operator|*
+name|this
+argument_list|)
+condition|)
+return|return
+name|IgnoreParensImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+expr|struct
 name|PointerLikeLocInfo
 block|{
 name|SourceLocation

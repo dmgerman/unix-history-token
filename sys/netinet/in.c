@@ -349,28 +349,6 @@ name|V_ripcbinfo
 value|VNET(ripcbinfo)
 end_define
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|arpstat
-argument_list|,
-name|arpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* ARP statistics, see if_arp.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_arpstat
-value|VNET(arpstat)
-end_define
-
 begin_comment
 comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  */
 end_comment
@@ -6877,11 +6855,6 @@ argument_list|,
 name|LLENTRY_DELETED
 argument_list|)
 expr_stmt|;
-name|LLE_WUNLOCK
-argument_list|(
-name|lle
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -6889,13 +6862,40 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"ifaddr cache = %p  is deleted\n"
+literal|"ifaddr cache = %p is deleted\n"
 argument_list|,
 name|lle
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|lle
+operator|->
+name|la_flags
+operator|&
+operator|(
+name|LLE_STATIC
+operator||
+name|LLE_IFADDR
+operator|)
+operator|)
+operator|==
+name|LLE_STATIC
+condition|)
+name|llentry_free
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+else|else
+name|LLE_WUNLOCK
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
 block|}
 name|lle
 operator|=

@@ -135,6 +135,18 @@ comment|///
 comment|/// The line number may be absolute (as above), or relative to the current
 comment|/// line by prefixing the number with either '+' or '-'.
 comment|///
+comment|/// If the diagnostic is generated in a separate file, for example in a shared
+comment|/// header file, it may be beneficial to be able to declare the file in which
+comment|/// the diagnostic will appear, rather than placing the expected-* directive in
+comment|/// the actual file itself.  This can be done using the following syntax:
+comment|///
+comment|/// \code
+comment|///   // expected-error@path/include.h:15 {{error message}}
+comment|/// \endcode
+comment|///
+comment|/// The path can be absolute or relative and the same search paths will be used
+comment|/// as for #include directives.
+comment|///
 comment|/// The simple syntax above allows each specification to match exactly one
 comment|/// error.  You can use the extended syntax to customize this. The extended
 comment|/// syntax is "expected-<type><n> {{diag text}}", where \<type> is one of
@@ -702,17 +714,6 @@ name|Diagnostic
 operator|&
 name|Info
 argument_list|)
-decl_stmt|;
-name|virtual
-name|DiagnosticConsumer
-modifier|*
-name|clone
-argument_list|(
-name|DiagnosticsEngine
-operator|&
-name|Diags
-argument_list|)
-decl|const
 decl_stmt|;
 block|}
 empty_stmt|;

@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//                     The LLVM Compiler Infrastructure
+comment|//		       The LLVM Compiler Infrastructure
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Object/ObjectFile.h"
+file|"llvm/ExecutionEngine/ObjectBuffer.h"
 end_include
 
 begin_include
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ObjectBuffer.h"
+file|"llvm/Object/ObjectFile.h"
 end_include
 
 begin_decl_stmt
@@ -256,6 +256,19 @@ name|ObjFile
 operator|->
 name|getData
 argument_list|()
+return|;
+block|}
+name|virtual
+name|object
+operator|::
+name|ObjectFile
+operator|*
+name|getObjectFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjFile
 return|;
 block|}
 comment|// Subclasses can override these methods to update the image with loaded

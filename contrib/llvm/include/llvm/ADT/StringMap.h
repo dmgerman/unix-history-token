@@ -179,7 +179,7 @@ block|{
 name|protected
 label|:
 comment|// Array of NumBuckets pointers to entries, null pointers are holes.
-comment|// TheTable[NumBuckets] contains a sentinel value for easy iteration. Follwed
+comment|// TheTable[NumBuckets] contains a sentinel value for easy iteration. Followed
 comment|// by an array of the actual hash values as unsigned integers.
 name|StringMapEntryBase
 modifier|*
@@ -974,6 +974,34 @@ argument_list|)
 block|{}
 name|StringMap
 argument_list|(
+argument|unsigned InitialSize
+argument_list|,
+argument|AllocatorTy A
+argument_list|)
+operator|:
+name|StringMapImpl
+argument_list|(
+name|InitialSize
+argument_list|,
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+sizeof|sizeof
+argument_list|(
+name|MapEntryTy
+argument_list|)
+operator|)
+argument_list|)
+block|,
+name|Allocator
+argument_list|(
+argument|A
+argument_list|)
+block|{}
+name|StringMap
+argument_list|(
 specifier|const
 name|StringMap
 operator|&
@@ -1458,11 +1486,11 @@ argument_list|(
 name|Allocator
 argument_list|)
 expr_stmt|;
+block|}
 name|Bucket
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 name|NumItems
 operator|=

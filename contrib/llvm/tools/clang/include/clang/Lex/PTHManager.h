@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Lex/PTHLexer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/LangOptions.h"
+file|"clang/Basic/Diagnostic.h"
 end_include
 
 begin_include
@@ -80,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/Diagnostic.h"
+file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PTHLexer.h"
 end_include
 
 begin_include

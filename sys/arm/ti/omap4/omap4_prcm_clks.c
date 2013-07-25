@@ -3361,7 +3361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	omap4_clk_hsusbhost_activate - activates the USB clocks for the given module  *	@clkdev: pointer to the clock device structure.  *	@mem_res: array of memory resouces allocated by the top level PRCM driver.  *	  *	The USB clocking setup seems to be a bit more tricky than the other modules,  *	to start with the clocking diagram for the HS host module shows 13 different  *	clocks.  So to try and make it easier to follow the clocking activation  *	and deactivation is handled in it's own set of callbacks.  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 on success or a positive error code on failure.  */
+comment|/**  *	omap4_clk_hsusbhost_activate - activates the USB clocks for the given module  *	@clkdev: pointer to the clock device structure.  *	@mem_res: array of memory resources allocated by the top level PRCM driver.  *	  *	The USB clocking setup seems to be a bit more tricky than the other modules,  *	to start with the clocking diagram for the HS host module shows 13 different  *	clocks.  So to try and make it easier to follow the clocking activation  *	and deactivation is handled in it's own set of callbacks.  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 on success or a positive error code on failure.  */
 end_comment
 
 begin_struct
@@ -3933,7 +3933,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	omap4_clk_generic_deactivate - checks if a module is accessible  *	@clkdev: pointer to the clock device structure.  *	@mem_res: array of memory resouces allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 on success or a positive error code on failure.  */
+comment|/**  *	omap4_clk_generic_deactivate - checks if a module is accessible  *	@clkdev: pointer to the clock device structure.  *	@mem_res: array of memory resources allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 on success or a positive error code on failure.  */
 end_comment
 
 begin_function
@@ -4198,7 +4198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	omap4_clk_hsusbhost_accessible - checks if a module is accessible  *	@clkdev: pointer to the clock device structure.  *	@mem_res: array of memory resouces allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 if module is not enable, 1 if module is enabled or a negative  *	error code on failure.  */
+comment|/**  *	omap4_clk_hsusbhost_accessible - checks if a module is accessible  *	@clkdev: pointer to the clock device structure.  *	@mem_res: array of memory resources allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 if module is not enable, 1 if module is enabled or a negative  *	error code on failure.  */
 end_comment
 
 begin_function
@@ -4334,7 +4334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	omap4_clk_hsusbhost_set_source - sets the source clocks  *	@clkdev: pointer to the clock device structure.  *	@clksrc: the clock source ID for the given clock.  *	@mem_res: array of memory resouces allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 if sucessful otherwise a negative error code on failure.  */
+comment|/**  *	omap4_clk_hsusbhost_set_source - sets the source clocks  *	@clkdev: pointer to the clock device structure.  *	@clksrc: the clock source ID for the given clock.  *	@mem_res: array of memory resources allocated by the top level PRCM driver.  *	  *	  *  *	LOCKING:  *	Inherits the locks from the omap_prcm driver, no internal locking.  *  *	RETURNS:  *	Returns 0 if sucessful otherwise a negative error code on failure.  */
 end_comment
 
 begin_function

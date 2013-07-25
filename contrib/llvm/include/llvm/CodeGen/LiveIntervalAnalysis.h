@@ -86,7 +86,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/ADT/IndexedMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LiveInterval.h"
 end_include
 
 begin_include
@@ -104,43 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/LiveInterval.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/IndexedMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
@@ -161,6 +149,9 @@ name|llvm
 block|{
 name|class
 name|AliasAnalysis
+decl_stmt|;
+name|class
+name|BitVector
 decl_stmt|;
 name|class
 name|LiveRangeCalc
@@ -221,10 +212,6 @@ block|;
 name|AliasAnalysis
 operator|*
 name|AA
-block|;
-name|LiveVariables
-operator|*
-name|LV
 block|;
 name|SlotIndexes
 operator|*
@@ -726,6 +713,54 @@ name|index
 argument_list|)
 return|;
 block|}
+name|void
+name|insertMBBInMaps
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|)
+block|{
+name|Indexes
+operator|->
+name|insertMBBInMaps
+argument_list|(
+name|MBB
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|MBB
+operator|->
+name|getNumber
+argument_list|()
+argument_list|)
+operator|==
+name|RegMaskBlocks
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Blocks must be added in order."
+argument_list|)
+block|;
+name|RegMaskBlocks
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|RegMaskSlots
+operator|.
+name|size
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+block|;     }
 name|SlotIndex
 name|InsertMachineInstrInMaps
 argument_list|(
@@ -902,6 +937,28 @@ argument_list|,
 argument|MachineInstr* BundleStart
 argument_list|,
 argument|bool UpdateFlags = false
+argument_list|)
+block|;
+comment|/// repairIntervalsInRange - Update live intervals for instructions in a
+comment|/// range of iterators. It is intended for use after target hooks that may
+comment|/// insert or remove instructions, and is only efficient for a small number
+comment|/// of instructions.
+comment|///
+comment|/// OrigRegs is a vector of registers that were originally used by the
+comment|/// instructions in the range between the two iterators.
+comment|///
+comment|/// Currently, the only only changes that are supported are simple removal
+comment|/// and addition of uses.
+name|void
+name|repairIntervalsInRange
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|MachineBasicBlock::iterator Begin
+argument_list|,
+argument|MachineBasicBlock::iterator End
+argument_list|,
+argument|ArrayRef<unsigned> OrigRegs
 argument_list|)
 block|;
 comment|// Register mask functions.
@@ -1128,13 +1185,24 @@ name|Unit
 index|]
 return|;
 block|}
+specifier|const
+name|LiveInterval
+operator|*
+name|getCachedRegUnit
+argument_list|(
+argument|unsigned Unit
+argument_list|)
+specifier|const
+block|{
+return|return
+name|RegUnitIntervals
+index|[
+name|Unit
+index|]
+return|;
+block|}
 name|private
 operator|:
-comment|/// computeIntervals - Compute live intervals.
-name|void
-name|computeIntervals
-argument_list|()
-block|;
 comment|/// Compute live intervals for all virtual registers.
 name|void
 name|computeVirtRegs
@@ -1144,53 +1212,6 @@ comment|/// Compute RegMaskSlots and RegMaskBits.
 name|void
 name|computeRegMasks
 argument_list|()
-block|;
-comment|/// handleRegisterDef - update intervals for a register def
-comment|/// (calls handleVirtualRegisterDef)
-name|void
-name|handleRegisterDef
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|SlotIndex MIIdx
-argument_list|,
-argument|MachineOperand& MO
-argument_list|,
-argument|unsigned MOIdx
-argument_list|)
-block|;
-comment|/// isPartialRedef - Return true if the specified def at the specific index
-comment|/// is partially re-defining the specified live interval. A common case of
-comment|/// this is a definition of the sub-register.
-name|bool
-name|isPartialRedef
-argument_list|(
-argument|SlotIndex MIIdx
-argument_list|,
-argument|MachineOperand&MO
-argument_list|,
-argument|LiveInterval&interval
-argument_list|)
-block|;
-comment|/// handleVirtualRegisterDef - update intervals for a virtual
-comment|/// register def
-name|void
-name|handleVirtualRegisterDef
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|SlotIndex MIIdx
-argument_list|,
-argument|MachineOperand& MO
-argument_list|,
-argument|unsigned MOIdx
-argument_list|,
-argument|LiveInterval& interval
-argument_list|)
 block|;
 specifier|static
 name|LiveInterval

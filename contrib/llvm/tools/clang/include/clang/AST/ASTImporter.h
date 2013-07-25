@@ -180,6 +180,10 @@ comment|/// \brief Whether to perform a minimal import.
 name|bool
 name|Minimal
 decl_stmt|;
+comment|/// \brief Whether the last diagnostic came from the "from" context.
+name|bool
+name|LastDiagFromFrom
+decl_stmt|;
 comment|/// \brief Mapping from the already-imported types in the "from" context
 comment|/// to the corresponding types in the "to" context.
 name|llvm

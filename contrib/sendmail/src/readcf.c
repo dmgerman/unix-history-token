@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008-2010, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.684 2011/03/15 17:29:29 guenther Exp $"
+literal|"@(#)$Id: readcf.c,v 8.690 2013/03/15 17:54:12 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4423,8 +4423,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 if|#
@@ -9697,6 +9697,44 @@ comment|/* reserved for FFR_QOS */
 block|{ "InetQoS",			O_INETQOS,	OI_NONE },
 endif|#
 directive|endif
+if|#
+directive|if
+name|STARTTLS
+operator|&&
+name|_FFR_FIPSMODE
+define|#
+directive|define
+name|O_FIPSMODE
+value|0xe8
+block|{
+literal|"FIPSMode"
+block|,
+name|O_FIPSMODE
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* STARTTLS&& _FFR_FIPSMODE  */
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+define|#
+directive|define
+name|O_REJECTNUL
+value|0xe9
+block|{
+literal|"RejectNUL"
+block|,
+name|O_REJECTNUL
+block|,
+name|OI_SAFE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 block|{
 name|NULL
 block|,
@@ -15569,6 +15607,25 @@ break|break;
 endif|#
 directive|endif
 comment|/* STARTTLS */
+if|#
+directive|if
+name|STARTTLS
+operator|&&
+name|_FFR_FIPSMODE
+case|case
+name|O_FIPSMODE
+case|:
+name|FipsMode
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* STARTTLS&& _FFR_FIPSMODE  */
 case|case
 name|O_CLIENTPORT
 case|:
@@ -16037,6 +16094,23 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_BADRCPT_SHUTDOWN */
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+case|case
+name|O_REJECTNUL
+case|:
+name|RejectNUL
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 default|default:
 if|if
 condition|(

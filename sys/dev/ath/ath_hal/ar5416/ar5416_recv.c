@@ -887,6 +887,26 @@ name|rs_flags
 operator||=
 name|HAL_RX_2040
 expr_stmt|;
+comment|/* 	 * Only the AR9280 and later chips support STBC RX, so 	 * ensure we only set this bit for those chips. 	 */
+if|if
+condition|(
+name|AR_SREV_MERLIN_10_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+operator|&&
+name|ads
+operator|->
+name|ds_rxstatus3
+operator|&
+name|AR_STBCFrame
+condition|)
+name|rs
+operator|->
+name|rs_flags
+operator||=
+name|HAL_RX_STBC
+expr_stmt|;
 if|if
 condition|(
 name|ads

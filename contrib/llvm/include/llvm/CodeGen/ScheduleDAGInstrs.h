@@ -54,25 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SCHEDULEDAGINSTRS_H
+name|LLVM_CODEGEN_SCHEDULEDAGINSTRS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SCHEDULEDAGINSTRS_H
+name|LLVM_CODEGEN_SCHEDULEDAGINSTRS_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineDominators.h"
+file|"llvm/ADT/SparseSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineLoopInfo.h"
+file|"llvm/ADT/SparseMultiSet.h"
 end_include
 
 begin_include
@@ -99,28 +99,13 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SparseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineFrameInfo
+decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
@@ -189,11 +174,16 @@ decl_stmt|;
 name|int
 name|OpIdx
 decl_stmt|;
+name|unsigned
+name|Reg
+decl_stmt|;
 name|PhysRegSUOper
 argument_list|(
 argument|SUnit *su
 argument_list|,
 argument|int op
+argument_list|,
+argument|unsigned R
 argument_list|)
 block|:
 name|SU
@@ -203,205 +193,44 @@ argument_list|)
 operator|,
 name|OpIdx
 argument_list|(
-argument|op
+name|op
+argument_list|)
+operator|,
+name|Reg
+argument_list|(
+argument|R
 argument_list|)
 block|{}
+name|unsigned
+name|getSparseSetIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Reg
+return|;
+block|}
 block|}
 struct|;
-comment|/// Combine a SparseSet with a 1x1 vector to track physical registers.
-comment|/// The SparseSet allows iterating over the (few) live registers for quickly
-comment|/// comparing against a regmask or clearing the set.
-comment|///
-comment|/// Storage for the map is allocated once for the pass. The map can be
-comment|/// cleared between scheduling regions without freeing unused entries.
-name|class
-name|Reg2SUnitsMap
-block|{
-name|SparseSet
-operator|<
-name|unsigned
-operator|>
-name|PhysRegSet
-expr_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|PhysRegSUOper
-operator|>
-expr|>
-name|SUnits
-expr_stmt|;
-name|public
-label|:
+comment|/// Use a SparseMultiSet to track physical registers. Storage is only
+comment|/// allocated once for the pass. It can be cleared in constant time and reused
+comment|/// without any frees.
 typedef|typedef
-name|SparseSet
-operator|<
-name|unsigned
-operator|>
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
-comment|// Allow iteration over register numbers (keys) in the map. If needed, we
-comment|// can provide an iterator over SUnits (values) as well.
-name|const_iterator
-name|reg_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PhysRegSet
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|const_iterator
-name|reg_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PhysRegSet
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-comment|/// Initialize the map with the number of registers.
-comment|/// If the map is already large enough, no allocation occurs.
-comment|/// For simplicity we expect the map to be empty().
-name|void
-name|setRegLimit
-parameter_list|(
-name|unsigned
-name|Limit
-parameter_list|)
-function_decl|;
-comment|/// Returns true if the map is empty.
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|PhysRegSet
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-comment|/// Clear the map without deallocating storage.
-name|void
-name|clear
-parameter_list|()
-function_decl|;
-name|bool
-name|contains
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-block|{
-return|return
-name|PhysRegSet
-operator|.
-name|count
-argument_list|(
-name|Reg
-argument_list|)
-return|;
-block|}
-comment|/// If this register is mapped, return its existing SUnits vector.
-comment|/// Otherwise map the register and return an empty SUnits vector.
-name|std
-operator|::
-name|vector
+name|SparseMultiSet
 operator|<
 name|PhysRegSUOper
+operator|,
+name|llvm
+operator|::
+name|identity
+operator|<
+name|unsigned
 operator|>
-operator|&
-name|operator
-index|[]
-operator|(
-name|unsigned
-name|Reg
-operator|)
-block|{
-name|bool
-name|New
-operator|=
-name|PhysRegSet
-operator|.
-name|insert
-argument_list|(
-name|Reg
-argument_list|)
-operator|.
-name|second
-block|;
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|New
-operator|||
-name|SUnits
-index|[
-name|Reg
-index|]
-operator|.
-name|empty
-argument_list|()
-operator|)
-operator|&&
-literal|"stale SUnits vector"
-argument_list|)
-block|;
-operator|(
-name|void
-operator|)
-name|New
-block|;
-return|return
-name|SUnits
-index|[
-name|Reg
-index|]
-return|;
-block|}
-comment|/// Erase an existing element without freeing memory.
-name|void
-name|erase
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-block|{
-name|PhysRegSet
-operator|.
-name|erase
-argument_list|(
-name|Reg
-argument_list|)
+operator|,
+name|uint16_t
+operator|>
+name|Reg2SUnitsMap
 expr_stmt|;
-name|SUnits
-index|[
-name|Reg
-index|]
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 comment|/// Use SparseSet as a SparseMap by relying on the fact that it never
 comment|/// compares ValueT's, only unsigned keys. This allows the set to be cleared
 comment|/// between scheduling regions in constant time as long as ValueT does not
@@ -486,6 +315,10 @@ name|iterator
 name|RegionEnd
 block|;
 comment|/// The index in BB of RegionEnd.
+comment|///
+comment|/// This is the instruction number from the top of the current block, not
+comment|/// the SlotIndex. It is only used by the AntiDepBreaker and should be
+comment|/// removed once that client is obsolete.
 name|unsigned
 name|EndIndex
 block|;
@@ -591,6 +424,17 @@ operator|~
 name|ScheduleDAGInstrs
 argument_list|()
 block|{}
+comment|/// \brief Expose LiveIntervals for use in DAG mutators and such.
+name|LiveIntervals
+operator|*
+name|getLIS
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LIS
+return|;
+block|}
 comment|/// \brief Get the machine model for instruction scheduling.
 specifier|const
 name|TargetSchedModel

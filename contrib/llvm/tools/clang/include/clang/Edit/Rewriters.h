@@ -53,6 +53,9 @@ decl_stmt|;
 name|class
 name|NSAPI
 decl_stmt|;
+name|class
+name|ParentMap
+decl_stmt|;
 name|namespace
 name|edit
 block|{
@@ -93,6 +96,11 @@ parameter_list|,
 name|Commit
 modifier|&
 name|commit
+parameter_list|,
+specifier|const
+name|ParentMap
+modifier|*
+name|PMap
 parameter_list|)
 function_decl|;
 name|bool

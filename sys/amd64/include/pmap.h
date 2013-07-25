@@ -555,34 +555,6 @@ name|pml4_entry_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|PML4ESHIFT
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PDPESHIFT
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTESHIFT
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PDESHIFT
-value|(3)
-end_define
-
 begin_comment
 comment|/*  * Address of current address space page table maps and directories.  */
 end_comment

@@ -222,8 +222,13 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
+modifier|*
 name|res
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+comment|/* size of 'res' array */
 name|int
 name|reg
 decl_stmt|;
@@ -276,6 +281,10 @@ define|#
 directive|define
 name|PCIB_DISABLE_MSI
 value|0x2
+define|#
+directive|define
+name|PCIB_DISABLE_MSIX
+value|0x4
 name|uint16_t
 name|command
 decl_stmt|;

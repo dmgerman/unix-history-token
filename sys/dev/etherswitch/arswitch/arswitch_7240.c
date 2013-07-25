@@ -208,26 +208,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Enable CPU port; disable mirror port */
-name|arswitch_writereg
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-name|AR8X16_REG_CPU_PORT
-argument_list|,
-name|AR8X16_CPU_PORT_EN
-operator||
-name|AR8X16_CPU_MIRROR_DIS
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Let things settle; probing PHY4 doesn't seem reliable 	 * without a litle delay. 	 */
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -251,6 +231,20 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+comment|/* Enable CPU port; disable mirror port */
+name|arswitch_writereg
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+name|AR8X16_REG_CPU_PORT
+argument_list|,
+name|AR8X16_CPU_PORT_EN
+operator||
+name|AR8X16_CPU_MIRROR_DIS
+argument_list|)
+expr_stmt|;
 comment|/* Setup TAG priority mapping */
 name|arswitch_writereg
 argument_list|(
@@ -406,6 +400,27 @@ operator|.
 name|arswitch_hw_global_setup
 operator|=
 name|ar7240_hw_global_setup
+expr_stmt|;
+comment|/* Set the switch vlan capabilities. */
+name|sc
+operator|->
+name|info
+operator|.
+name|es_vlan_caps
+operator|=
+name|ETHERSWITCH_VLAN_DOT1Q
+operator||
+name|ETHERSWITCH_VLAN_PORT
+operator||
+name|ETHERSWITCH_VLAN_DOUBLE_TAG
+expr_stmt|;
+name|sc
+operator|->
+name|info
+operator|.
+name|es_nvlangroups
+operator|=
+name|AR8X16_MAX_VLANS
 expr_stmt|;
 block|}
 end_function

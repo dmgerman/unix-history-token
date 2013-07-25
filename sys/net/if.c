@@ -251,10 +251,6 @@ name|INET6
 argument_list|)
 end_if
 
-begin_comment
-comment|/*XXX*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -270,8 +266,35 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_carp.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -296,27 +319,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
+begin_comment
+comment|/* INET6 */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* INET || INET6 */
+end_comment
 
 begin_include
 include|#
@@ -684,6 +698,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2479,6 +2494,13 @@ operator||=
 name|IFF_DYING
 expr_stmt|;
 comment|/* XXX: Locking */
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|IFNET_WLOCK
 argument_list|()
 expr_stmt|;
@@ -2514,7 +2536,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|refcount_release
 argument_list|(
 operator|&
@@ -2523,11 +2544,13 @@ operator|->
 name|if_refcount
 argument_list|)
 condition|)
-return|return;
 name|if_free_internal
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3155,6 +3178,57 @@ name|if_broadcastaddr
 operator|=
 name|NULL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+comment|/* Initialize to max value. */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|==
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|=
+name|IP_MAXPACKET
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|<=
+name|IP_MAXPACKET
+operator|&&
+name|ifp
+operator|->
+name|if_hw_tsomax
+operator|>=
+name|IP_MAXPACKET
+operator|/
+literal|8
+argument_list|,
+operator|(
+literal|"%s: tsomax outside of range"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -3708,12 +3782,22 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|CURVNET_SET_QUIET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|if_detach_internal
 argument_list|(
 name|ifp
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

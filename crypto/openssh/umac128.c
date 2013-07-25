@@ -10,12 +10,24 @@ name|UMAC_OUTPUT_LEN
 value|16
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|umac_new
+end_undef
+
 begin_define
 define|#
 directive|define
 name|umac_new
 value|ssh_umac128_new
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|umac_update
+end_undef
 
 begin_define
 define|#
@@ -24,12 +36,24 @@ name|umac_update
 value|ssh_umac128_update
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|umac_final
+end_undef
+
 begin_define
 define|#
 directive|define
 name|umac_final
 value|ssh_umac128_final
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|umac_delete
+end_undef
 
 begin_define
 define|#

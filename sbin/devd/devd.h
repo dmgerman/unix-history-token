@@ -230,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|DEVCTL_MAXBUF
-value|1025
+value|8192
 end_define
 
 begin_endif

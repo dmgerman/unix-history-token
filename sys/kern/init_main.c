@@ -329,11 +329,29 @@ name|initproc
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTHOWTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BOOTHOWTO
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|boothowto
 init|=
-literal|0
+name|BOOTHOWTO
 decl_stmt|;
 end_decl_stmt
 
@@ -362,9 +380,29 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BOOTVERBOSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BOOTVERBOSE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|bootverbose
+init|=
+name|BOOTVERBOSE
 decl_stmt|;
 end_decl_stmt
 
@@ -940,7 +978,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* 	 * Traverse the (now) ordered list of system initialization tasks. 	 * Perform each task, and continue on to the next task. 	 * 	 * The last item on the list is expected to be the scheduler, 	 * which will not return. 	 */
+comment|/* 	 * Traverse the (now) ordered list of system initialization tasks. 	 * Perform each task, and continue on to the next task. 	 */
 for|for
 control|(
 name|sipp
@@ -1230,10 +1268,25 @@ name|restart
 goto|;
 block|}
 block|}
-name|panic
+name|mtx_assert
 argument_list|(
-literal|"Shouldn't get here!"
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+operator||
+name|MA_NOTRECURSED
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now hand over this thread to swapper. 	 */
+name|swapper
+argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED*/
 block|}
@@ -1415,7 +1468,7 @@ name|SYSINIT
 argument_list|(
 name|witwarn2
 argument_list|,
-name|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_LAST
 argument_list|,
 name|SI_ORDER_THIRD
 operator|+
@@ -1472,7 +1525,7 @@ name|SYSINIT
 argument_list|(
 name|diagwarn2
 argument_list|,
-name|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_LAST
 argument_list|,
 name|SI_ORDER_THIRD
 operator|+

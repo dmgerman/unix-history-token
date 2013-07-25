@@ -32,7 +32,7 @@ comment|/*  * Notifications after enqueuing any type of message should be condit
 end_comment
 
 begin_comment
-comment|/*  * This is the 'wire' format for packets:  *  Request 1: netif_tx_request -- NETTXF_* (any flags)  * [Request 2: netif_tx_extra]  (only if request 1 has NETTXF_extra_info)  * [Request 3: netif_tx_extra] (only if request 2 has XEN_NETIF_EXTRA_FLAG_MORE)  *  Request 4: netif_tx_request -- NETTXF_more_data  *  Request 5: netif_tx_request -- NETTXF_more_data  *  ...  *  Request N: netif_tx_request -- 0  */
+comment|/*  * This is the 'wire' format for packets:  *  Request 1: netif_tx_request -- NETTXF_* (any flags)  * [Request 2: netif_tx_extra] (only if request 1 has NETTXF_extra_info)  * [Request 3: netif_tx_extra] (only if request 2 has XEN_NETIF_EXTRA_FLAG_MORE)  *  Request 4: netif_tx_request -- NETTXF_more_data  *  Request 5: netif_tx_request -- NETTXF_more_data  *  ...  *  Request N: netif_tx_request -- 0  */
 end_comment
 
 begin_comment

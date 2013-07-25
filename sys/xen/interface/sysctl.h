@@ -58,19 +58,16 @@ begin_define
 define|#
 directive|define
 name|XEN_SYSCTL_INTERFACE_VERSION
-value|0x00000006
+value|0x00000009
 end_define
 
 begin_comment
 comment|/*  * Read console content from Xen buffer ring.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_readconsole
-value|1
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_readconsole */
+end_comment
 
 begin_struct
 struct|struct
@@ -128,12 +125,9 @@ begin_comment
 comment|/* Get trace buffers machine base address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_tbuf_op
-value|2
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_tbuf_op */
+end_comment
 
 begin_struct
 struct|struct
@@ -182,6 +176,7 @@ decl_stmt|;
 name|uint32_t
 name|size
 decl_stmt|;
+comment|/* Also an IN variable! */
 block|}
 struct|;
 end_struct
@@ -206,12 +201,9 @@ begin_comment
 comment|/*  * Get physical information about the host machine  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_physinfo
-value|3
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_physinfo */
+end_comment
 
 begin_comment
 comment|/* (x86) The platform supports HVM guests. */
@@ -262,9 +254,19 @@ decl_stmt|;
 name|uint32_t
 name|nr_cpus
 decl_stmt|;
+comment|/* # CPUs currently online */
+name|uint32_t
+name|max_cpu_id
+decl_stmt|;
+comment|/* Largest possible CPU ID on this host */
 name|uint32_t
 name|nr_nodes
 decl_stmt|;
+comment|/* # nodes currently online */
+name|uint32_t
+name|max_node_id
+decl_stmt|;
+comment|/* Largest possible node ID on this host */
 name|uint32_t
 name|cpu_khz
 decl_stmt|;
@@ -283,17 +285,6 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/*      * IN: maximum addressable entry in the caller-provided cpu_to_node array.      * OUT: largest cpu identifier in the system.      * If OUT is greater than IN then the cpu_to_node array is truncated!      */
-name|uint32_t
-name|max_cpu_id
-decl_stmt|;
-comment|/*      * If not NULL, this array is filled with node identifier for each cpu.      * If a cpu has no node information (e.g., cpu not present) then the      * sentinel value ~0u is written.      * The size of this array is specified by the caller in @max_cpu_id.      * If the actual @max_cpu_id is smaller than the array then the trailing      * elements of the array will not be written by the sysctl.      */
-name|XEN_GUEST_HANDLE_64
-argument_list|(
-argument|uint32
-argument_list|)
-name|cpu_to_node
-expr_stmt|;
 comment|/* XEN_SYSCTL_PHYSCAP_??? */
 name|uint32_t
 name|capabilities
@@ -322,12 +313,9 @@ begin_comment
 comment|/*  * Get the ID of the current scheduler.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_sched_id
-value|4
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_sched_id */
+end_comment
 
 begin_struct
 struct|struct
@@ -361,12 +349,9 @@ begin_comment
 comment|/* Interface for controlling Xen software performance counters. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_perfc_op
-value|5
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_perfc_op */
+end_comment
 
 begin_comment
 comment|/* Sub-operations: */
@@ -496,12 +481,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_getdomaininfolist
-value|6
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_getdomaininfolist */
+end_comment
 
 begin_struct
 struct|struct
@@ -548,12 +530,9 @@ begin_comment
 comment|/* Inject debug keys into Xen. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_debug_keys
-value|7
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_debug_keys */
+end_comment
 
 begin_struct
 struct|struct
@@ -593,12 +572,9 @@ begin_comment
 comment|/* Get physical CPU information. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_getcpuinfo
-value|8
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_getcpuinfo */
+end_comment
 
 begin_struct
 struct|struct
@@ -665,12 +641,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_availheap
-value|9
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_availheap */
+end_comment
 
 begin_struct
 struct|struct
@@ -714,12 +687,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_get_pmstat
-value|10
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_get_pmstat */
+end_comment
 
 begin_struct
 struct|struct
@@ -840,6 +810,27 @@ argument_list|)
 name|residencies
 expr_stmt|;
 comment|/* Cx residencies */
+name|uint64_aligned_t
+name|pc2
+decl_stmt|;
+name|uint64_aligned_t
+name|pc3
+decl_stmt|;
+name|uint64_aligned_t
+name|pc6
+decl_stmt|;
+name|uint64_aligned_t
+name|pc7
+decl_stmt|;
+name|uint64_aligned_t
+name|cc3
+decl_stmt|;
+name|uint64_aligned_t
+name|cc6
+decl_stmt|;
+name|uint64_aligned_t
+name|cc7
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -924,12 +915,9 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|XEN_SYSCTL_cpu_hotplug
-value|11
-end_define
+begin_comment
+comment|/* XEN_SYSCTL_cpu_hotplug */
+end_comment
 
 begin_struct
 struct|struct
@@ -972,6 +960,1129 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Get/set xen power management, include   * 1. cpufreq governors and related parameters  */
+end_comment
+
+begin_comment
+comment|/* XEN_SYSCTL_pm_op */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_userspace
+block|{
+name|uint32_t
+name|scaling_setspeed
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_userspace
+name|xen_userspace_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|xen_ondemand
+block|{
+name|uint32_t
+name|sampling_rate_max
+decl_stmt|;
+name|uint32_t
+name|sampling_rate_min
+decl_stmt|;
+name|uint32_t
+name|sampling_rate
+decl_stmt|;
+name|uint32_t
+name|up_threshold
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_ondemand
+name|xen_ondemand_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*   * cpufreq para name of this structure named   * same as sysfs file name of native linux  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUFREQ_NAME_LEN
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|xen_get_cpufreq_para
+block|{
+comment|/* IN/OUT variable */
+name|uint32_t
+name|cpu_num
+decl_stmt|;
+name|uint32_t
+name|freq_num
+decl_stmt|;
+name|uint32_t
+name|gov_num
+decl_stmt|;
+comment|/* for all governors */
+comment|/* OUT variable */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|affected_cpus
+expr_stmt|;
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|scaling_available_frequencies
+expr_stmt|;
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|char
+argument_list|)
+name|scaling_available_governors
+expr_stmt|;
+name|char
+name|scaling_driver
+index|[
+name|CPUFREQ_NAME_LEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|cpuinfo_cur_freq
+decl_stmt|;
+name|uint32_t
+name|cpuinfo_max_freq
+decl_stmt|;
+name|uint32_t
+name|cpuinfo_min_freq
+decl_stmt|;
+name|uint32_t
+name|scaling_cur_freq
+decl_stmt|;
+name|char
+name|scaling_governor
+index|[
+name|CPUFREQ_NAME_LEN
+index|]
+decl_stmt|;
+name|uint32_t
+name|scaling_max_freq
+decl_stmt|;
+name|uint32_t
+name|scaling_min_freq
+decl_stmt|;
+comment|/* for specific governor */
+union|union
+block|{
+name|struct
+name|xen_userspace
+name|userspace
+decl_stmt|;
+name|struct
+name|xen_ondemand
+name|ondemand
+decl_stmt|;
+block|}
+name|u
+union|;
+name|int32_t
+name|turbo_enabled
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xen_set_cpufreq_gov
+block|{
+name|char
+name|scaling_governor
+index|[
+name|CPUFREQ_NAME_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xen_set_cpufreq_para
+block|{
+define|#
+directive|define
+name|SCALING_MAX_FREQ
+value|1
+define|#
+directive|define
+name|SCALING_MIN_FREQ
+value|2
+define|#
+directive|define
+name|SCALING_SETSPEED
+value|3
+define|#
+directive|define
+name|SAMPLING_RATE
+value|4
+define|#
+directive|define
+name|UP_THRESHOLD
+value|5
+name|uint32_t
+name|ctrl_type
+decl_stmt|;
+name|uint32_t
+name|ctrl_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|xen_sysctl_pm_op
+block|{
+define|#
+directive|define
+name|PM_PARA_CATEGORY_MASK
+value|0xf0
+define|#
+directive|define
+name|CPUFREQ_PARA
+value|0x10
+comment|/* cpufreq command type */
+define|#
+directive|define
+name|GET_CPUFREQ_PARA
+value|(CPUFREQ_PARA | 0x01)
+define|#
+directive|define
+name|SET_CPUFREQ_GOV
+value|(CPUFREQ_PARA | 0x02)
+define|#
+directive|define
+name|SET_CPUFREQ_PARA
+value|(CPUFREQ_PARA | 0x03)
+define|#
+directive|define
+name|GET_CPUFREQ_AVGFREQ
+value|(CPUFREQ_PARA | 0x04)
+comment|/* set/reset scheduler power saving option */
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_set_sched_opt_smt
+value|0x21
+comment|/* cpuidle max_cstate access command */
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_get_max_cstate
+value|0x22
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_set_max_cstate
+value|0x23
+comment|/* set scheduler migration cost value */
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_set_vcpu_migration_delay
+value|0x24
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_get_vcpu_migration_delay
+value|0x25
+comment|/* enable/disable turbo mode when in dbs governor */
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_enable_turbo
+value|0x26
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op_disable_turbo
+value|0x27
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|cpuid
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|xen_get_cpufreq_para
+name|get_para
+decl_stmt|;
+name|struct
+name|xen_set_cpufreq_gov
+name|set_gov
+decl_stmt|;
+name|struct
+name|xen_set_cpufreq_para
+name|set_para
+decl_stmt|;
+name|uint64_aligned_t
+name|get_avgfreq
+decl_stmt|;
+name|uint32_t
+name|set_sched_opt_smt
+decl_stmt|;
+name|uint32_t
+name|get_max_cstate
+decl_stmt|;
+name|uint32_t
+name|set_max_cstate
+decl_stmt|;
+name|uint32_t
+name|get_vcpu_migration_delay
+decl_stmt|;
+name|uint32_t
+name|set_vcpu_migration_delay
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* XEN_SYSCTL_page_offline_op */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_sysctl_page_offline_op
+block|{
+comment|/* IN: range of page to be offlined */
+define|#
+directive|define
+name|sysctl_page_offline
+value|1
+define|#
+directive|define
+name|sysctl_page_online
+value|2
+define|#
+directive|define
+name|sysctl_query_page_offline
+value|3
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|start
+decl_stmt|;
+name|uint32_t
+name|end
+decl_stmt|;
+comment|/* OUT: result of page offline request */
+comment|/*      * bit 0~15: result flags      * bit 16~31: owner      */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|uint32
+argument_list|)
+name|status
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_STATUS_MASK
+value|(0xFFUL)
+end_define
+
+begin_comment
+comment|/* The result is invalid, i.e. HV does not handle it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_INVALID
+value|(0x1UL<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_OFFLINED
+value|(0x1UL<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_PENDING
+value|(0x1UL<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_FAILED
+value|(0x1UL<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_AGAIN
+value|(0x1UL<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_ONLINE_FAILED
+value|PG_OFFLINE_FAILED
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_ONLINE_ONLINED
+value|PG_OFFLINE_OFFLINED
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_STATUS_OFFLINED
+value|(0x1UL<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_STATUS_ONLINE
+value|(0x1UL<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_STATUS_OFFLINE_PENDING
+value|(0x1UL<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_STATUS_BROKEN
+value|(0x1UL<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_MISC_MASK
+value|(0xFFUL<< 4)
+end_define
+
+begin_comment
+comment|/* valid when PG_OFFLINE_FAILED or PG_OFFLINE_PENDING */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_XENPAGE
+value|(0x1UL<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_DOM0PAGE
+value|(0x1UL<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_ANONYMOUS
+value|(0x1UL<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_NOT_CONV_RAM
+value|(0x1UL<< 11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_OWNED
+value|(0x1UL<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_BROKEN
+value|(0x1UL<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_ONLINE_BROKEN
+value|PG_OFFLINE_BROKEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_OFFLINE_OWNER_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* XEN_SYSCTL_lockprof_op */
+end_comment
+
+begin_comment
+comment|/* Sub-operations: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_LOCKPROF_reset
+value|1
+end_define
+
+begin_comment
+comment|/* Reset all profile data to zero. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_LOCKPROF_query
+value|2
+end_define
+
+begin_comment
+comment|/* Get lock profile information. */
+end_comment
+
+begin_comment
+comment|/* Record-type: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKPROF_TYPE_GLOBAL
+value|0
+end_define
+
+begin_comment
+comment|/* global lock, idx meaningless */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKPROF_TYPE_PERDOM
+value|1
+end_define
+
+begin_comment
+comment|/* per-domain lock, idx is domid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKPROF_TYPE_N
+value|2
+end_define
+
+begin_comment
+comment|/* number of types */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_sysctl_lockprof_data
+block|{
+name|char
+name|name
+index|[
+literal|40
+index|]
+decl_stmt|;
+comment|/* lock name (may include up to 2 %d specifiers) */
+name|int32_t
+name|type
+decl_stmt|;
+comment|/* LOCKPROF_TYPE_??? */
+name|int32_t
+name|idx
+decl_stmt|;
+comment|/* index (e.g. domain id) */
+name|uint64_aligned_t
+name|lock_cnt
+decl_stmt|;
+comment|/* # of locking succeeded */
+name|uint64_aligned_t
+name|block_cnt
+decl_stmt|;
+comment|/* # of wait for lock */
+name|uint64_aligned_t
+name|lock_time
+decl_stmt|;
+comment|/* nsecs lock held */
+name|uint64_aligned_t
+name|block_time
+decl_stmt|;
+comment|/* nsecs waited for lock */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_lockprof_data
+name|xen_sysctl_lockprof_data_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_lockprof_data_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|xen_sysctl_lockprof_op
+block|{
+comment|/* IN variables. */
+name|uint32_t
+name|cmd
+decl_stmt|;
+comment|/* XEN_SYSCTL_LOCKPROF_??? */
+name|uint32_t
+name|max_elem
+decl_stmt|;
+comment|/* size of output buffer */
+comment|/* OUT variables (query only). */
+name|uint32_t
+name|nr_elem
+decl_stmt|;
+comment|/* number of elements available */
+name|uint64_aligned_t
+name|time
+decl_stmt|;
+comment|/* nsecs of profile measurement */
+comment|/* profile information (or NULL) */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|xen_sysctl_lockprof_data_t
+argument_list|)
+name|data
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_lockprof_op
+name|xen_sysctl_lockprof_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_lockprof_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XEN_SYSCTL_topologyinfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INVALID_TOPOLOGY_ID
+value|(~0U)
+end_define
+
+begin_struct
+struct|struct
+name|xen_sysctl_topologyinfo
+block|{
+comment|/*      * IN: maximum addressable entry in the caller-provided arrays.      * OUT: largest cpu identifier in the system.      * If OUT is greater than IN then the arrays are truncated!      * If OUT is leass than IN then the array tails are not written by sysctl.      */
+name|uint32_t
+name|max_cpu_index
+decl_stmt|;
+comment|/*      * If not NULL, these arrays are filled with core/socket/node identifier      * for each cpu.      * If a cpu has no core/socket/node information (e.g., cpu not present)       * then the sentinel value ~0u is written to each array.      * The number of array elements written by the sysctl is:      *   min(@max_cpu_index_IN,@max_cpu_index_OUT)+1      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|cpu_to_core
+expr_stmt|;
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|cpu_to_socket
+expr_stmt|;
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|cpu_to_node
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_topologyinfo
+name|xen_sysctl_topologyinfo_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_topologyinfo_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XEN_SYSCTL_numainfo */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INVALID_NUMAINFO_ID
+value|(~0U)
+end_define
+
+begin_struct
+struct|struct
+name|xen_sysctl_numainfo
+block|{
+comment|/*      * IN: maximum addressable entry in the caller-provided arrays.      * OUT: largest node identifier in the system.      * If OUT is greater than IN then the arrays are truncated!      */
+name|uint32_t
+name|max_node_index
+decl_stmt|;
+comment|/* NB. Entries are 0 if node is not present. */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint64
+argument_list|)
+name|node_to_memsize
+expr_stmt|;
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint64
+argument_list|)
+name|node_to_memfree
+expr_stmt|;
+comment|/*      * Array, of size (max_node_index+1)^2, listing memory access distances      * between nodes. If an entry has no node distance information (e.g., node       * not present) then the value ~0u is written.      *       * Note that the array rows must be indexed by multiplying by the minimum       * of the caller-provided max_node_index and the returned value of      * max_node_index. That is, if the largest node index in the system is      * smaller than the caller can handle, a smaller 2-d array is constructed      * within the space provided by the caller. When this occurs, trailing      * space provided by the caller is not modified. If the largest node index      * in the system is larger than the caller can handle, then a 2-d array of      * the maximum size handleable by the caller is constructed.      */
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|uint32
+argument_list|)
+name|node_to_node_distance
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_numainfo
+name|xen_sysctl_numainfo_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_numainfo_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XEN_SYSCTL_cpupool_op */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_CREATE
+value|1
+end_define
+
+begin_comment
+comment|/* C */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_DESTROY
+value|2
+end_define
+
+begin_comment
+comment|/* D */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_INFO
+value|3
+end_define
+
+begin_comment
+comment|/* I */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_ADDCPU
+value|4
+end_define
+
+begin_comment
+comment|/* A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_RMCPU
+value|5
+end_define
+
+begin_comment
+comment|/* R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_MOVEDOMAIN
+value|6
+end_define
+
+begin_comment
+comment|/* M */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_OP_FREEINFO
+value|7
+end_define
+
+begin_comment
+comment|/* F */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_CPUPOOL_PAR_ANY
+value|0xFFFFFFFF
+end_define
+
+begin_struct
+struct|struct
+name|xen_sysctl_cpupool_op
+block|{
+name|uint32_t
+name|op
+decl_stmt|;
+comment|/* IN */
+name|uint32_t
+name|cpupool_id
+decl_stmt|;
+comment|/* IN: CDIARM OUT: CI */
+name|uint32_t
+name|sched_id
+decl_stmt|;
+comment|/* IN: C      OUT: I  */
+name|uint32_t
+name|domid
+decl_stmt|;
+comment|/* IN: M              */
+name|uint32_t
+name|cpu
+decl_stmt|;
+comment|/* IN: AR             */
+name|uint32_t
+name|n_dom
+decl_stmt|;
+comment|/*            OUT: I  */
+name|struct
+name|xenctl_cpumap
+name|cpumap
+decl_stmt|;
+comment|/*     OUT: IF */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_cpupool_op
+name|xen_sysctl_cpupool_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_cpupool_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|ARINC653_MAX_DOMAINS_PER_SCHEDULE
+value|64
+end_define
+
+begin_comment
+comment|/*  * This structure is used to pass a new ARINC653 schedule from a  * privileged domain (ie dom0) to Xen.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xen_sysctl_arinc653_schedule
+block|{
+comment|/* major_frame holds the time for the new schedule's major frame      * in nanoseconds. */
+name|uint64_aligned_t
+name|major_frame
+decl_stmt|;
+comment|/* num_sched_entries holds how many of the entries in the      * sched_entries[] array are valid. */
+name|uint8_t
+name|num_sched_entries
+decl_stmt|;
+comment|/* The sched_entries array holds the actual schedule entries. */
+struct|struct
+block|{
+comment|/* dom_handle must match a domain's UUID */
+name|xen_domain_handle_t
+name|dom_handle
+decl_stmt|;
+comment|/* If a domain has multiple VCPUs, vcpu_id specifies which one          * this schedule entry applies to. It should be set to 0 if          * there is only one VCPU for the domain. */
+name|unsigned
+name|int
+name|vcpu_id
+decl_stmt|;
+comment|/* runtime specifies the amount of time that should be allocated          * to this VCPU per major frame. It is specified in nanoseconds */
+name|uint64_aligned_t
+name|runtime
+decl_stmt|;
+block|}
+name|sched_entries
+index|[
+name|ARINC653_MAX_DOMAINS_PER_SCHEDULE
+index|]
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_arinc653_schedule
+name|xen_sysctl_arinc653_schedule_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_arinc653_schedule_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|xen_sysctl_credit_schedule
+block|{
+comment|/* Length of timeslice in milliseconds */
+define|#
+directive|define
+name|XEN_SYSCTL_CSCHED_TSLICE_MAX
+value|1000
+define|#
+directive|define
+name|XEN_SYSCTL_CSCHED_TSLICE_MIN
+value|1
+name|unsigned
+name|tslice_ms
+decl_stmt|;
+comment|/* Rate limit (minimum timeslice) in microseconds */
+define|#
+directive|define
+name|XEN_SYSCTL_SCHED_RATELIMIT_MAX
+value|500000
+define|#
+directive|define
+name|XEN_SYSCTL_SCHED_RATELIMIT_MIN
+value|100
+name|unsigned
+name|ratelimit_us
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_credit_schedule
+name|xen_sysctl_credit_schedule_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_credit_schedule_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* XEN_SYSCTL_scheduler_op */
+end_comment
+
+begin_comment
+comment|/* Set or get info? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_SCHEDOP_putinfo
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_SYSCTL_SCHEDOP_getinfo
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|xen_sysctl_scheduler_op
+block|{
+name|uint32_t
+name|cpupool_id
+decl_stmt|;
+comment|/* Cpupool whose scheduler is to be targetted. */
+name|uint32_t
+name|sched_id
+decl_stmt|;
+comment|/* XEN_SCHEDULER_* (domctl.h) */
+name|uint32_t
+name|cmd
+decl_stmt|;
+comment|/* XEN_SYSCTL_SCHEDOP_* */
+union|union
+block|{
+struct|struct
+name|xen_sysctl_sched_arinc653
+block|{
+name|XEN_GUEST_HANDLE_64
+argument_list|(
+argument|xen_sysctl_arinc653_schedule_t
+argument_list|)
+name|schedule
+expr_stmt|;
+block|}
+name|sched_arinc653
+struct|;
+name|struct
+name|xen_sysctl_credit_schedule
+name|sched_credit
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_sysctl_scheduler_op
+name|xen_sysctl_scheduler_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_sysctl_scheduler_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|xen_sysctl
@@ -979,6 +2090,78 @@ block|{
 name|uint32_t
 name|cmd
 decl_stmt|;
+define|#
+directive|define
+name|XEN_SYSCTL_readconsole
+value|1
+define|#
+directive|define
+name|XEN_SYSCTL_tbuf_op
+value|2
+define|#
+directive|define
+name|XEN_SYSCTL_physinfo
+value|3
+define|#
+directive|define
+name|XEN_SYSCTL_sched_id
+value|4
+define|#
+directive|define
+name|XEN_SYSCTL_perfc_op
+value|5
+define|#
+directive|define
+name|XEN_SYSCTL_getdomaininfolist
+value|6
+define|#
+directive|define
+name|XEN_SYSCTL_debug_keys
+value|7
+define|#
+directive|define
+name|XEN_SYSCTL_getcpuinfo
+value|8
+define|#
+directive|define
+name|XEN_SYSCTL_availheap
+value|9
+define|#
+directive|define
+name|XEN_SYSCTL_get_pmstat
+value|10
+define|#
+directive|define
+name|XEN_SYSCTL_cpu_hotplug
+value|11
+define|#
+directive|define
+name|XEN_SYSCTL_pm_op
+value|12
+define|#
+directive|define
+name|XEN_SYSCTL_page_offline_op
+value|14
+define|#
+directive|define
+name|XEN_SYSCTL_lockprof_op
+value|15
+define|#
+directive|define
+name|XEN_SYSCTL_topologyinfo
+value|16
+define|#
+directive|define
+name|XEN_SYSCTL_numainfo
+value|17
+define|#
+directive|define
+name|XEN_SYSCTL_cpupool_op
+value|18
+define|#
+directive|define
+name|XEN_SYSCTL_scheduler_op
+value|19
 name|uint32_t
 name|interface_version
 decl_stmt|;
@@ -996,6 +2179,14 @@ decl_stmt|;
 name|struct
 name|xen_sysctl_physinfo
 name|physinfo
+decl_stmt|;
+name|struct
+name|xen_sysctl_topologyinfo
+name|topologyinfo
+decl_stmt|;
+name|struct
+name|xen_sysctl_numainfo
+name|numainfo
 decl_stmt|;
 name|struct
 name|xen_sysctl_sched_id
@@ -1028,6 +2219,26 @@ decl_stmt|;
 name|struct
 name|xen_sysctl_cpu_hotplug
 name|cpu_hotplug
+decl_stmt|;
+name|struct
+name|xen_sysctl_pm_op
+name|pm_op
+decl_stmt|;
+name|struct
+name|xen_sysctl_page_offline_op
+name|page_offline
+decl_stmt|;
+name|struct
+name|xen_sysctl_lockprof_op
+name|lockprof_op
+decl_stmt|;
+name|struct
+name|xen_sysctl_cpupool_op
+name|cpupool_op
+decl_stmt|;
+name|struct
+name|xen_sysctl_scheduler_op
+name|scheduler_op
 decl_stmt|;
 name|uint8_t
 name|pad

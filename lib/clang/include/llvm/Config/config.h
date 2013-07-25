@@ -24,6 +24,16 @@ name|CONFIG_H
 end_define
 
 begin_comment
+comment|/* Get __FreeBSD_version. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_comment
 comment|/* Bug report URL. */
 end_comment
 
@@ -241,7 +251,7 @@ comment|/* #undef HAVE_CRASHREPORTERCLIENT_H */
 end_comment
 
 begin_comment
-comment|/* Define if __crashreporter_info__ exists. */
+comment|/* can use __crashreporter_info__ */
 end_comment
 
 begin_define
@@ -259,6 +269,39 @@ begin_define
 define|#
 directive|define
 name|HAVE_CTYPE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<cxxabi.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CXXABI_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `FE_ALL_EXCEPT', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FE_ALL_EXCEPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `FE_INEXACT', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_FE_INEXACT
 value|1
 end_define
 
@@ -391,6 +434,28 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_EXECINFO_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `exp' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `exp2' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXP2
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
@@ -687,6 +752,17 @@ comment|/* #undef HAVE_LIBUDIS86 */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `z' library (-lz). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBZ
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
 end_comment
 
@@ -729,6 +805,62 @@ directive|define
 name|HAVE_LINK_R
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `log' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOG
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `log10' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOG10
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `log2' function. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|900027
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|900000
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|802502
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOG2
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `longjmp' function. */
@@ -1582,6 +1714,17 @@ comment|/* #undef HAVE_XDOT_PY */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<zlib.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ZLIB_H
+value|1
+end_define
+
+begin_comment
 comment|/* Have host's _alloca */
 end_comment
 
@@ -1780,6 +1923,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* Define if zlib is enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_ZLIB
+value|1
+end_define
+
+begin_comment
 comment|/* Installation directory for config files */
 end_comment
 
@@ -1803,7 +1957,7 @@ comment|/* Host triple LLVM will be executed on */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_HOSTTRIPLE */
+comment|/* #undef LLVM_HOST_TRIPLE */
 end_comment
 
 begin_comment
@@ -2010,9 +2164,12 @@ begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
-begin_comment
-comment|/* #undef LLVM_PREFIX */
-end_comment
+begin_define
+define|#
+directive|define
+name|LLVM_PREFIX
+value|""
+end_define
 
 begin_comment
 comment|/* Define if we have the Intel JIT API runtime support library */
@@ -2055,7 +2212,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|2
+value|3
 end_define
 
 begin_comment
@@ -2159,7 +2316,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.2svn"
+value|"LLVM 3.3"
 end_define
 
 begin_comment
@@ -2181,7 +2338,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.2svn"
+value|"3.3"
 end_define
 
 begin_comment

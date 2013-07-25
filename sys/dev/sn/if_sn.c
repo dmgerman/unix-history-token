@@ -1496,7 +1496,7 @@ operator||
 name|numPages
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait a short amount of time to see if the allocation request 	 * completes.  Otherwise, I enable the interrupt and wait for 	 * completion asyncronously. 	 */
+comment|/* 	 * Wait a short amount of time to see if the allocation request 	 * completes.  Otherwise, I enable the interrupt and wait for 	 * completion asynchronously. 	 */
 name|time_out
 operator|=
 name|MEMORY_WAIT_TIME

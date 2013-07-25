@@ -62,25 +62,6 @@ directive|include
 file|"openpam_impl.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENPAM_DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|openpam_debug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|openpam_debug
@@ -88,11 +69,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#

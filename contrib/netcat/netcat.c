@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.109 2012/07/07 15:33:02 haesbaert Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.111 2013/03/20 09:27:56 sthen Exp $ */
 end_comment
 
 begin_comment
@@ -258,6 +258,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Bind to local port */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Nflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* shutdown() network socket */
 end_comment
 
 begin_decl_stmt
@@ -868,7 +878,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46DdEe:hI:i:klnoO:P:p:rSs:tT:UuV:vw:X:x:z"
+literal|"46DdEe:hI:i:klNnoO:P:p:rSs:tT:UuV:vw:X:x:z"
 argument_list|,
 name|longopts
 argument_list|,
@@ -1092,6 +1102,14 @@ case|case
 literal|'l'
 case|:
 name|lflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|Nflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2175,6 +2193,8 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* For now, all errnos are fatal */
 name|err
 argument_list|(
 literal|1
@@ -2182,6 +2202,7 @@ argument_list|,
 literal|"accept"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|vflag
@@ -4254,6 +4275,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|Nflag
+condition|)
 name|shutdown
 argument_list|(
 name|nfd
@@ -5503,7 +5528,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ 	\t-h		This help text\n\ 	\t-I length	TCP receive buffer length\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t--no-tcpopt	Disable TCP options\n\ 	\t-O length	TCP send buffer length\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T toskeyword\tSet IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-V rtable	Specify alternate routing table\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
+literal|"\ 	\t-h		This help text\n\ 	\t-I length	TCP receive buffer length\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-N		Shutdown the network socket after EOF on stdin\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t--no-tcpopt	Disable TCP options\n\ 	\t-O length	TCP send buffer length\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T toskeyword\tSet IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-V rtable	Specify alternate routing table\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5658,10 +5683,10 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|IPSEC
-literal|"usage: nc [-46DdEhklnrStUuvz] [-e policy] [-I length] [-i interval] [-O length]\n"
+literal|"usage: nc [-46DdEhklNnrStUuvz] [-e policy] [-I length] [-i interval] [-O length]\n"
 else|#
 directive|else
-literal|"usage: nc [-46DdhklnrStUuvz] [-I length] [-i interval] [-O length]\n"
+literal|"usage: nc [-46DdhklNnrStUuvz] [-I length] [-i interval] [-O length]\n"
 endif|#
 directive|endif
 literal|"\t  [-P proxy_username] [-p source_port] [-s source] [-T ToS]\n"

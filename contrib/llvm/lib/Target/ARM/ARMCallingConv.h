@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
@@ -467,6 +467,30 @@ operator|::
 name|R1
 block|}
 decl_stmt|;
+specifier|static
+specifier|const
+name|uint16_t
+name|GPRArgRegs
+index|[]
+init|=
+block|{
+name|ARM
+operator|::
+name|R0
+block|,
+name|ARM
+operator|::
+name|R1
+block|,
+name|ARM
+operator|::
+name|R2
+block|,
+name|ARM
+operator|::
+name|R3
+block|}
+decl_stmt|;
 name|unsigned
 name|Reg
 init|=
@@ -488,6 +512,34 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|// If we had R3 unallocated only, now we still must to waste it.
+name|Reg
+operator|=
+name|State
+operator|.
+name|AllocateReg
+argument_list|(
+name|GPRArgRegs
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Reg
+operator|||
+name|Reg
+operator|==
+name|ARM
+operator|::
+name|R3
+operator|)
+operator|&&
+literal|"Wrong GPRs usage for f64"
+argument_list|)
+expr_stmt|;
 comment|// For the 2nd half of a v2f64, do not just fail.
 if|if
 condition|(

@@ -2650,11 +2650,13 @@ name|MPI_SGE_FLAGS_END_OF_BUFFER
 operator||
 name|MPI_SGE_FLAGS_END_OF_LIST
 operator||
+operator|(
 name|write
 condition|?
 name|MPI_SGE_FLAGS_HOST_TO_IOC
 else|:
 name|MPI_SGE_FLAGS_IOC_TO_HOST
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3050,7 +3052,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|cam_sim_path
 argument_list|(
@@ -7260,7 +7262,7 @@ argument_list|(
 operator|&
 name|path
 argument_list|,
-name|xpt_periph
+name|NULL
 argument_list|,
 name|cam_sim_path
 argument_list|(

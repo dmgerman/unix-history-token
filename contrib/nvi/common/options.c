@@ -302,7 +302,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* O_DIRECTORY	    4BSD */
+comment|/* O_TMP_DIRECTORY  4BSD */
 block|{
 literal|"directory"
 block|,
@@ -1144,7 +1144,7 @@ comment|/*   4.4BSD */
 block|{
 literal|"dir"
 block|,
-name|O_DIRECTORY
+name|O_TMP_DIRECTORY
 block|}
 block|,
 comment|/*     4BSD */
@@ -1684,7 +1684,7 @@ argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
-name|O_DIRECTORY
+name|O_TMP_DIRECTORY
 argument_list|,
 name|b1
 argument_list|)

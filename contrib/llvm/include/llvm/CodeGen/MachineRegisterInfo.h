@@ -62,7 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IndexedMap.h"
 end_include
 
 begin_include
@@ -74,13 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/IndexedMap.h"
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
@@ -294,11 +294,10 @@ comment|/// started.
 name|BitVector
 name|ReservedRegs
 decl_stmt|;
-comment|/// LiveIns/LiveOuts - Keep track of the physical registers that are
-comment|/// livein/liveout of the function.  Live in values are typically arguments in
-comment|/// registers, live out values are typically return values in registers.
-comment|/// LiveIn values are allowed to have virtual registers associated with them,
-comment|/// stored in the second element.
+comment|/// Keep track of the physical registers that are live in to the function.
+comment|/// Live in values are typically arguments in registers.  LiveIn values are
+comment|/// allowed to have virtual registers associated with them, stored in the
+comment|/// second element.
 name|std
 operator|::
 name|vector
@@ -313,14 +312,6 @@ name|unsigned
 operator|>
 expr|>
 name|LiveIns
-expr_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|LiveOuts
 expr_stmt|;
 name|MachineRegisterInfo
 argument_list|(
@@ -434,6 +425,37 @@ modifier|*
 name|MO
 parameter_list|)
 function_decl|;
+comment|// Strictly for use by MachineInstr.cpp.
+name|void
+name|moveOperands
+parameter_list|(
+name|MachineOperand
+modifier|*
+name|Dst
+parameter_list|,
+name|MachineOperand
+modifier|*
+name|Src
+parameter_list|,
+name|unsigned
+name|NumOps
+parameter_list|)
+function_decl|;
+comment|/// Verify the sanity of the use list for Reg.
+name|void
+name|verifyUseList
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Verify the use list of all registers.
+name|void
+name|verifyUseLists
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// reg_begin/reg_end - Provide iteration support to walk over all definitions
 comment|/// and uses of a register within the MachineFunction that corresponds to this
 comment|/// MachineRegisterInfo object.
@@ -1218,6 +1240,23 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Mark the specified register unit as used in this function.
+comment|/// This should only be called during and after register allocation.
+name|void
+name|setRegUnitUsed
+parameter_list|(
+name|unsigned
+name|RegUnit
+parameter_list|)
+block|{
+name|UsedRegUnits
+operator|.
+name|set
+argument_list|(
+name|RegUnit
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// setPhysRegUsed - Mark the specified register used in this function.
 comment|/// This should only be called during and after register allocation.
 name|void
@@ -1452,9 +1491,9 @@ argument_list|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
-comment|// LiveIn/LiveOut Management
+comment|// LiveIn Management
 comment|//===--------------------------------------------------------------------===//
-comment|/// addLiveIn/Out - Add the specified register as a live in/out.  Note that it
+comment|/// addLiveIn - Add the specified register as a live-in.  Note that it
 comment|/// is an error to add the same register to the same set more than once.
 name|void
 name|addLiveIn
@@ -1483,23 +1522,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|addLiveOut
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-block|{
-name|LiveOuts
-operator|.
-name|push_back
-argument_list|(
-name|Reg
-argument_list|)
-expr_stmt|;
-block|}
-comment|// Iteration support for live in/out sets.  These sets are kept in sorted
-comment|// order by their register number.
+comment|// Iteration support for the live-ins set.  It's kept in sorted order
+comment|// by register number.
 typedef|typedef
 name|std
 operator|::
@@ -1517,17 +1541,6 @@ expr|>
 operator|::
 name|const_iterator
 name|livein_iterator
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-operator|::
-name|const_iterator
-name|liveout_iterator
 expr_stmt|;
 name|livein_iterator
 name|livein_begin
@@ -1565,52 +1578,8 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|liveout_iterator
-name|liveout_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LiveOuts
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|liveout_iterator
-name|liveout_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LiveOuts
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|bool
-name|liveout_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LiveOuts
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
 name|bool
 name|isLiveIn
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isLiveOut
 argument_list|(
 name|unsigned
 name|Reg

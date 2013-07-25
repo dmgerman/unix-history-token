@@ -138,13 +138,6 @@ name|DirCharacteristic
 range|:
 literal|2
 decl_stmt|;
-comment|/// UserSupplied - True if this is a user-supplied directory.
-comment|///
-name|bool
-name|UserSupplied
-range|:
-literal|1
-decl_stmt|;
 comment|/// LookupType - This indicates whether this DirectoryLookup object is a
 comment|/// normal directory, a framework, or a headermap.
 name|unsigned
@@ -158,6 +151,13 @@ name|IsIndexHeaderMap
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether we've performed an exhaustive search for module maps
+comment|/// within the subdirectories of this directory.
+name|unsigned
+name|SearchedAllModuleMaps
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 comment|/// DirectoryLookup ctor - Note that this ctor *does not take ownership* of
@@ -168,19 +168,12 @@ argument|const DirectoryEntry *dir
 argument_list|,
 argument|SrcMgr::CharacteristicKind DT
 argument_list|,
-argument|bool isUser
-argument_list|,
 argument|bool isFramework
 argument_list|)
 block|:
 name|DirCharacteristic
 argument_list|(
 name|DT
-argument_list|)
-operator|,
-name|UserSupplied
-argument_list|(
-name|isUser
 argument_list|)
 operator|,
 name|LookupType
@@ -193,6 +186,11 @@ name|LT_NormalDir
 argument_list|)
 operator|,
 name|IsIndexHeaderMap
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|SearchedAllModuleMaps
 argument_list|(
 argument|false
 argument_list|)
@@ -211,19 +209,12 @@ argument|const HeaderMap *map
 argument_list|,
 argument|SrcMgr::CharacteristicKind DT
 argument_list|,
-argument|bool isUser
-argument_list|,
 argument|bool isIndexHeaderMap
 argument_list|)
 operator|:
 name|DirCharacteristic
 argument_list|(
 name|DT
-argument_list|)
-operator|,
-name|UserSupplied
-argument_list|(
-name|isUser
 argument_list|)
 operator|,
 name|LookupType
@@ -233,7 +224,12 @@ argument_list|)
 operator|,
 name|IsIndexHeaderMap
 argument_list|(
-argument|isIndexHeaderMap
+name|isIndexHeaderMap
+argument_list|)
+operator|,
+name|SearchedAllModuleMaps
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|u
@@ -365,6 +361,31 @@ operator|==
 name|LT_HeaderMap
 return|;
 block|}
+comment|/// \brief Determine whether we have already searched this entire
+comment|/// directory for module maps.
+name|bool
+name|haveSearchedAllModuleMaps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchedAllModuleMaps
+return|;
+block|}
+comment|/// \brief Specify whether we have already searched all of the subdirectories
+comment|/// for module maps.
+name|void
+name|setSearchedAllModuleMaps
+parameter_list|(
+name|bool
+name|SAMM
+parameter_list|)
+block|{
+name|SearchedAllModuleMaps
+operator|=
+name|SAMM
+expr_stmt|;
+block|}
 comment|/// DirCharacteristic - The type of directory this is, one of the DirType enum
 comment|/// values.
 name|SrcMgr
@@ -381,17 +402,6 @@ operator|::
 name|CharacteristicKind
 operator|)
 name|DirCharacteristic
-return|;
-block|}
-comment|/// isUserSupplied - True if this is a user-supplied directory.
-comment|///
-name|bool
-name|isUserSupplied
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UserSupplied
 return|;
 block|}
 comment|/// \brief Whether this header map is building a framework or not.

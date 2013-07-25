@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/BlockCounter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/ExplodedGraph.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/WorkList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/BlockCounter.h"
 end_include
 
 begin_include
@@ -327,6 +327,25 @@ specifier|const
 name|Stmt
 modifier|*
 name|Term
+parameter_list|,
+specifier|const
+name|CFGBlock
+modifier|*
+name|B
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|)
+function_decl|;
+comment|/// Handle conditional logic for running static initializers.
+name|void
+name|HandleStaticInit
+parameter_list|(
+specifier|const
+name|DeclStmt
+modifier|*
+name|DS
 parameter_list|,
 specifier|const
 name|CFGBlock
@@ -2065,8 +2084,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|LabelStmt
@@ -2326,8 +2343,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|CaseStmt
@@ -2395,8 +2410,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|SwitchStmt

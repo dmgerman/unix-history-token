@@ -46,13 +46,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Util.h"
+file|"clang/Driver/Action.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/Driver/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Driver/Util.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -156,6 +168,11 @@ operator|::
 name|Triple
 name|Triple
 expr_stmt|;
+specifier|const
+name|ArgList
+modifier|&
+name|Args
+decl_stmt|;
 comment|/// The list of toolchain specific path prefixes to search for
 comment|/// files.
 name|path_list
@@ -166,6 +183,51 @@ comment|/// programs.
 name|path_list
 name|ProgramPaths
 decl_stmt|;
+name|mutable
+name|OwningPtr
+operator|<
+name|Tool
+operator|>
+name|Clang
+expr_stmt|;
+name|mutable
+name|OwningPtr
+operator|<
+name|Tool
+operator|>
+name|Assemble
+expr_stmt|;
+name|mutable
+name|OwningPtr
+operator|<
+name|Tool
+operator|>
+name|Link
+expr_stmt|;
+name|Tool
+operator|*
+name|getClang
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Tool
+operator|*
+name|getAssemble
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Tool
+operator|*
+name|getLink
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Tool
+operator|*
+name|getClangAs
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|ToolChain
@@ -181,8 +243,39 @@ operator|::
 name|Triple
 operator|&
 name|T
+argument_list|,
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|)
 expr_stmt|;
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+name|Tool
+modifier|*
+name|getTool
+argument_list|(
+name|Action
+operator|::
+name|ActionClass
+name|AC
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \name Utilities for implementing subclasses.
 comment|///@{
 specifier|static
@@ -207,6 +300,25 @@ function_decl|;
 specifier|static
 name|void
 name|addExternCSystemInclude
+parameter_list|(
+specifier|const
+name|ArgList
+modifier|&
+name|DriverArgs
+parameter_list|,
+name|ArgStringList
+modifier|&
+name|CC1Args
+parameter_list|,
+specifier|const
+name|Twine
+modifier|&
+name|Path
+parameter_list|)
+function_decl|;
+specifier|static
+name|void
+name|addExternCSystemIncludeIfExists
 parameter_list|(
 specifier|const
 name|ArgList
@@ -414,31 +526,17 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// SelectTool - Choose a tool to use to handle the action \p JA with the
-comment|/// given \p Inputs.
-name|virtual
+comment|/// Choose a tool to use to handle the action \p JA.
 name|Tool
-modifier|&
+modifier|*
 name|SelectTool
 argument_list|(
-specifier|const
-name|Compilation
-operator|&
-name|C
-argument_list|,
 specifier|const
 name|JobAction
 operator|&
 name|JA
-argument_list|,
-specifier|const
-name|ActionList
-operator|&
-name|Inputs
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 comment|// Helper methods
 name|std
@@ -503,6 +601,12 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Check if the toolchain should use the integrated assembler.
+name|bool
+name|useIntegratedAs
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// IsStrictAliasingDefault - Does this tool chain use -fstrict-aliasing by
 comment|/// default.
 name|virtual
@@ -535,7 +639,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|true
 return|;
 block|}
 comment|/// IsEncodeExtendedBlockSignatureDefault - Does this tool chain enable
@@ -619,9 +723,19 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// \brief Tests whether this toolchain forces its default for PIC or non-PIC.
-comment|/// If this returns true, any PIC related flags should be ignored and instead
-comment|/// the result of \c isPICDefault() is used exclusively.
+comment|/// \brief Test whether this toolchain defaults to PIE.
+name|virtual
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Tests whether this toolchain forces its default for PIC, PIE or
+comment|/// non-PIC.  If this returns true, any PIC related flags should be ignored
+comment|/// and instead the results of \c isPICDefault() and \c isPIEDefault() are
+comment|/// used exclusively.
 name|virtual
 name|bool
 name|isPICDefaultForced
@@ -760,12 +874,16 @@ name|CC1Args
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// addClangTargetOptions - Add options that need to be passed to cc1 for
-comment|// this target.
+comment|/// \brief Add options that need to be passed to cc1 for this target.
 name|virtual
 name|void
 name|addClangTargetOptions
 argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|DriverArgs
+argument_list|,
 name|ArgStringList
 operator|&
 name|CC1Args

@@ -309,6 +309,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|read_min
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|read_min
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|read_min
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cluster read min block count"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Page expended to mark partially backed buffers */
 end_comment
@@ -556,7 +586,7 @@ operator|&=
 operator|~
 name|B_RAM
 expr_stmt|;
-name|BO_LOCK
+name|BO_RLOCK
 argument_list|(
 name|bo
 argument_list|)
@@ -663,7 +693,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|BO_UNLOCK
+name|BO_RUNLOCK
 argument_list|(
 name|bo
 argument_list|)
@@ -704,6 +734,9 @@ decl_stmt|;
 name|int
 name|nblks
 decl_stmt|;
+name|long
+name|minread
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|bp
@@ -720,6 +753,23 @@ expr_stmt|;
 name|ncontig
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 		 * Adjust totread if needed 		 */
+name|minread
+operator|=
+name|read_min
+operator|*
+name|size
+expr_stmt|;
+if|if
+condition|(
+name|minread
+operator|>
+name|totread
+condition|)
+name|totread
+operator|=
+name|minread
 expr_stmt|;
 comment|/* 		 * Compute the total number of blocks that we should read 		 * synchronously. 		 */
 if|if
@@ -1741,12 +1791,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 			 * Stop scanning if the buffer is fully valid 			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers. 			 */
-name|BO_LOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Stop scanning if the buffer is fully valid 			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers.  The bo lock is not 			 * required for the BKGRDINPROG check since it 			 * can not be set without the buf lock. 			 */
 if|if
 condition|(
 operator|(
@@ -1776,11 +1821,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|BO_UNLOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
 name|bqrelse
 argument_list|(
 name|tbp
@@ -1788,11 +1828,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|BO_UNLOCK
-argument_list|(
-name|bo
-argument_list|)
-expr_stmt|;
 comment|/* 			 * The buffer must be completely invalid in order to 			 * take part in the cluster.  If it is partially valid 			 * then we stop. 			 */
 name|off
 operator|=
@@ -3415,7 +3450,7 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)
@@ -3822,7 +3857,7 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)

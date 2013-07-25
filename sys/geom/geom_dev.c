@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -301,6 +307,68 @@ name|g_dev_attrchanged
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * We target 262144 (8 x 32768) sectors by default as this significantly  * increases the throughput on commonly used SSD's with a marginal  * increase in non-interruptible request latency.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|uint64_t
+name|g_dev_del_max_sectors
+init|=
+literal|262144
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_geom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern_geom
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dev
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"GEOM_DEV stuff"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_kern_geom_dev
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|delete_max_sectors
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|g_dev_del_max_sectors
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of sectors in a single "
+literal|"delete request sent to the provider. Larger requests are chunked "
+literal|"so they can be interrupted. (0 = disable chunking)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -2173,9 +2241,13 @@ name|length
 expr_stmt|;
 if|if
 condition|(
+name|g_dev_del_max_sectors
+operator|!=
+literal|0
+operator|&&
 name|chunk
 operator|>
-literal|65536
+name|g_dev_del_max_sectors
 operator|*
 name|cp
 operator|->
@@ -2183,9 +2255,10 @@ name|provider
 operator|->
 name|sectorsize
 condition|)
+block|{
 name|chunk
 operator|=
-literal|65536
+name|g_dev_del_max_sectors
 operator|*
 name|cp
 operator|->
@@ -2193,6 +2266,7 @@ name|provider
 operator|->
 name|sectorsize
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|g_delete_data
@@ -2217,7 +2291,7 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* 			 * Since the request size is unbounded, the service 			 * time is likewise.  We make this ioctl interruptible 			 * by checking for signals for each bio. 			 */
+comment|/* 			 * Since the request size can be large, the service 			 * time can be is likewise.  We make this ioctl 			 * interruptible by checking for signals for each bio. 			 */
 if|if
 condition|(
 name|SIGPENDING
@@ -2665,6 +2739,12 @@ operator|->
 name|bio_cmd
 operator|==
 name|BIO_DELETE
+operator|||
+name|bp
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_FLUSH
 argument_list|,
 operator|(
 literal|"Wrong bio_cmd bio=%p cmd=%d"

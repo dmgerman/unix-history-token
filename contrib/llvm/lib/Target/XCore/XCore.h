@@ -83,6 +83,9 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
+name|ModulePass
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -91,6 +94,14 @@ decl_stmt|;
 name|class
 name|formatted_raw_ostream
 decl_stmt|;
+name|void
+name|initializeXCoreLowerThreadLocalPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+name|p
+parameter_list|)
+function_decl|;
 name|FunctionPass
 modifier|*
 name|createXCoreISelDag
@@ -105,6 +116,11 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
+name|ModulePass
+modifier|*
+name|createXCoreLowerThreadLocalPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

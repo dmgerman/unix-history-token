@@ -2229,6 +2229,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_ARM_EXIDX
+value|0x70000001
+end_define
+
+begin_comment
+comment|/* Exception index table. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_PREEMPTMAP
+value|0x70000002
+end_define
+
+begin_comment
+comment|/* BPABI DLL dynamic linking  						   pre-emption map. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_ATTRIBUTES
+value|0x70000003
+end_define
+
+begin_comment
+comment|/* Object file compatibility  						   attributes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_DEBUGOVERLAY
+value|0x70000004
+end_define
+
+begin_comment
+comment|/* See DBGOVL for details. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_ARM_OVERLAYSECTION
+value|0x70000005
+end_define
+
+begin_comment
+comment|/* See DBGOVL for details. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHT_MIPS_REGINFO
 value|0x70000006
 end_define
@@ -3716,6 +3771,105 @@ end_define
 
 begin_comment
 comment|/* Thread miscellaneous info. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_PROC
+value|8
+end_define
+
+begin_comment
+comment|/* Procstat proc data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_FILES
+value|9
+end_define
+
+begin_comment
+comment|/* Procstat files data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_VMMAP
+value|10
+end_define
+
+begin_comment
+comment|/* Procstat vmmap data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_GROUPS
+value|11
+end_define
+
+begin_comment
+comment|/* Procstat groups data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_UMASK
+value|12
+end_define
+
+begin_comment
+comment|/* Procstat umask data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_RLIMIT
+value|13
+end_define
+
+begin_comment
+comment|/* Procstat rlimit data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_OSREL
+value|14
+end_define
+
+begin_comment
+comment|/* Procstat osreldate data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_PSSTRINGS
+value|15
+end_define
+
+begin_comment
+comment|/* Procstat ps_strings data. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_PROCSTAT_AUXV
+value|16
+end_define
+
+begin_comment
+comment|/* Procstat auxv data. */
 end_comment
 
 begin_comment

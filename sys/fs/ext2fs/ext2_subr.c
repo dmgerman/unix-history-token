@@ -154,7 +154,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|int32_t
+name|e2fs_lbn_t
 name|lbn
 decl_stmt|;
 name|int

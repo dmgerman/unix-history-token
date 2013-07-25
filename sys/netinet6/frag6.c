@@ -788,10 +788,10 @@ return|return
 name|IPPROTO_DONE
 return|;
 block|}
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_fragments
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -825,10 +825,10 @@ literal|0
 condition|)
 block|{
 comment|/* XXX-BZ we want dedicated counters for this. */
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_reassembled
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -2336,10 +2336,10 @@ operator|=
 name|plen
 expr_stmt|;
 block|}
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_reassembled
-operator|++
+argument_list|)
 expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
@@ -2377,10 +2377,10 @@ argument_list|,
 name|ifs6_reass_fail
 argument_list|)
 expr_stmt|;
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_fragdropped
-operator|++
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -2820,10 +2820,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_fragtimeout
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX in6_ifstat_inc(ifp, ifs6_reass_fail) */
 name|frag6_freef
@@ -2850,10 +2850,10 @@ operator|.
 name|ip6q_prev
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_fragoverflow
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX in6_ifstat_inc(ifp, ifs6_reass_fail) */
 name|frag6_freef
@@ -2929,10 +2929,10 @@ operator|&
 name|V_ip6q
 condition|)
 block|{
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_fragdropped
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX in6_ifstat_inc(ifp, ifs6_reass_fail) */
 name|frag6_freef

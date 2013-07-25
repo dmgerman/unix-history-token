@@ -2666,9 +2666,19 @@ decl_stmt|;
 name|uint32_t
 name|ibits
 decl_stmt|;
+comment|/* bits to add for register copyin */
 name|uint32_t
 name|obits
 decl_stmt|;
+comment|/* bits to add for register copyout */
+name|uint32_t
+name|ibitm
+decl_stmt|;
+comment|/* bits to mask for register copyin */
+name|uint32_t
+name|obitm
+decl_stmt|;
+comment|/* bits to mask for register copyout */
 name|uint32_t
 name|lineno
 range|:
@@ -2708,7 +2718,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|ISP_MEMZERO((mbxp), sizeof (mbreg_t));	\ 	(mbxp)->param[0] = code;		\ 	(mbxp)->lineno = __LINE__;		\ 	(mbxp)->func = __func__;		\ 	(mbxp)->logval = loglev;		\ 	(mbxp)->timeout = timo
+value|ISP_MEMZERO((mbxp), sizeof (mbreg_t));	\ 	(mbxp)->ibitm = ~0;			\ 	(mbxp)->obitm = ~0;			\ 	(mbxp)->param[0] = code;		\ 	(mbxp)->lineno = __LINE__;		\ 	(mbxp)->func = __func__;		\ 	(mbxp)->logval = loglev;		\ 	(mbxp)->timeout = timo
 end_define
 
 begin_comment

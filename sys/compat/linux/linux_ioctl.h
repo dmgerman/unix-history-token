@@ -4559,6 +4559,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|FBSD_LUSB_FS_OPEN_STREAM
+value|0xffdf
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBSD_LUSB_GET_DEV_PORT_PATH
+value|0xffde
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBSD_LUSB_GET_POWER_USAGE
+value|0xffdd
+end_define
+
+begin_define
+define|#
+directive|define
 name|FBSD_LUSB_MAX
 value|0xffff
 end_define
@@ -4567,7 +4588,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_LUSB_MIN
-value|0xffe0
+value|0xffdd
 end_define
 
 begin_comment

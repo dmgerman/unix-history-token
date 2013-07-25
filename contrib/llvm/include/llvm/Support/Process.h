@@ -32,15 +32,59 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// This file declares the llvm::sys::Process class.
+comment|///
 end_comment
 
 begin_comment
-comment|//
+comment|/// Provides a library for accessing information about this process and other
+end_comment
+
+begin_comment
+comment|/// processes on the operating system. Also provides means of spawning
+end_comment
+
+begin_comment
+comment|/// subprocess for commands. The design of this library is modeled after the
+end_comment
+
+begin_comment
+comment|/// proposed design of the Boost.Process library, and is design specifically to
+end_comment
+
+begin_comment
+comment|/// follow the style of standard libraries and potentially become a proposal
+end_comment
+
+begin_comment
+comment|/// for a standard library.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This file declares the llvm::sys::Process class which contains a collection
+end_comment
+
+begin_comment
+comment|/// of legacy static interfaces for extracting various information about the
+end_comment
+
+begin_comment
+comment|/// current process. The goal is to migrate users of this API over to the new
+end_comment
+
+begin_comment
+comment|/// interfaces.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -50,14 +94,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_PROCESS_H
+name|LLVM_SUPPORT_PROCESS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_PROCESS_H
+name|LLVM_SUPPORT_PROCESS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/Config/llvm-config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
 
 begin_include
 include|#
@@ -72,44 +128,211 @@ block|{
 name|namespace
 name|sys
 block|{
-comment|/// This class provides an abstraction for getting information about the
-comment|/// currently executing process.
-comment|/// @since 1.4
-comment|/// @brief An abstraction for operating system processes.
+name|class
+name|self_process
+decl_stmt|;
+comment|/// \brief Generic base class which exposes information about an operating
+comment|/// system process.
+comment|///
+comment|/// This base class is the core interface behind any OS process. It exposes
+comment|/// methods to query for generic information about a particular process.
+comment|///
+comment|/// Subclasses implement this interface based on the mechanisms available, and
+comment|/// can optionally expose more interfaces unique to certain process kinds.
+name|class
+name|process
+block|{
+name|protected
+label|:
+comment|/// \brief Only specific subclasses of process objects can be destroyed.
+name|virtual
+operator|~
+name|process
+argument_list|()
+expr_stmt|;
+name|public
+label|:
+comment|/// \brief Operating system specific type to identify a process.
+comment|///
+comment|/// Note that the windows one is defined to 'void *' as this is the
+comment|/// documented type for HANDLE on windows, and we don't want to pull in the
+comment|/// Windows headers here.
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LLVM_ON_UNIX
+argument_list|)
+typedef|typedef
+name|pid_t
+name|id_type
+typedef|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|LLVM_ON_WIN32
+argument_list|)
+typedef|typedef
+name|void
+modifier|*
+name|id_type
+typedef|;
+comment|// Must match the type of HANDLE.
+else|#
+directive|else
+error|#
+directive|error
+error|Unsupported operating system.
+endif|#
+directive|endif
+comment|/// \brief Get the operating system specific identifier for this process.
+name|virtual
+name|id_type
+name|get_id
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Get the user time consumed by this process.
+comment|///
+comment|/// Note that this is often an approximation and may be zero on platforms
+comment|/// where we don't have good support for the functionality.
+name|virtual
+name|TimeValue
+name|get_user_time
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Get the system time consumed by this process.
+comment|///
+comment|/// Note that this is often an approximation and may be zero on platforms
+comment|/// where we don't have good support for the functionality.
+name|virtual
+name|TimeValue
+name|get_system_time
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \brief Get the wall time consumed by this process.
+comment|///
+comment|/// Note that this is often an approximation and may be zero on platforms
+comment|/// where we don't have good support for the functionality.
+name|virtual
+name|TimeValue
+name|get_wall_time
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// \name Static factory routines for processes.
+comment|/// @{
+comment|/// \brief Get the process object for the current process.
+specifier|static
+name|self_process
+modifier|*
+name|get_self
+parameter_list|()
+function_decl|;
+comment|/// @}
+block|}
+empty_stmt|;
+comment|/// \brief The specific class representing the current process.
+comment|///
+comment|/// The current process can both specialize the implementation of the routines
+comment|/// and can expose certain information not available for other OS processes.
+name|class
+name|self_process
+range|:
+name|public
+name|process
+block|{
+name|friend
+name|class
+name|process
+block|;
+comment|/// \brief Private destructor, as users shouldn't create objects of this
+comment|/// type.
+name|virtual
+operator|~
+name|self_process
+argument_list|()
+block|;
+name|public
+operator|:
+name|virtual
+name|id_type
+name|get_id
+argument_list|()
+block|;
+name|virtual
+name|TimeValue
+name|get_user_time
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|TimeValue
+name|get_system_time
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|TimeValue
+name|get_wall_time
+argument_list|()
+specifier|const
+block|;
+comment|/// \name Process configuration (sysconf on POSIX)
+comment|/// @{
+comment|/// \brief Get the virtual memory page size.
+comment|///
+comment|/// Query the operating system for this process's page size.
+name|size_t
+name|page_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PageSize
+return|;
+block|}
+block|;
+comment|/// @}
+name|private
+operator|:
+comment|/// \name Cached process state.
+comment|/// @{
+comment|/// \brief Cached page size, this cannot vary during the life of the process.
+name|size_t
+name|PageSize
+block|;
+comment|/// @}
+comment|/// \brief Constructor, used by \c process::get_self() only.
+name|self_process
+argument_list|()
+block|; }
+decl_stmt|;
+comment|/// \brief A collection of legacy interfaces for querying information about the
+comment|/// current executing process.
 name|class
 name|Process
 block|{
-comment|/// @name Accessors
-comment|/// @{
 name|public
 label|:
-comment|/// This static function will return the operating system's virtual memory
-comment|/// page size.
-comment|/// @returns The number of bytes in a virtual memory page.
-comment|/// @brief Get the virtual memory page size
-specifier|static
-name|unsigned
-name|GetPageSize
-parameter_list|()
-function_decl|;
+comment|/// \brief Return process memory usage.
 comment|/// This static function will return the total amount of memory allocated
 comment|/// by the process. This only counts the memory allocated via the malloc,
 comment|/// calloc and realloc functions and includes any "free" holes in the
 comment|/// allocated space.
-comment|/// @brief Return process memory usage.
 specifier|static
 name|size_t
 name|GetMallocUsage
-parameter_list|()
-function_decl|;
-comment|/// This static function will return the total memory usage of the
-comment|/// process. This includes code, data, stack and mapped pages usage. Notei
-comment|/// that the value returned here is not necessarily the Running Set Size,
-comment|/// it is the total virtual memory usage, regardless of mapped state of
-comment|/// that memory.
-specifier|static
-name|size_t
-name|GetTotalMemoryUsage
 parameter_list|()
 function_decl|;
 comment|/// This static function will set \p user_time to the amount of CPU time
@@ -117,6 +340,9 @@ comment|/// spent in user (non-kernel) mode and \p sys_time to the amount of CPU
 comment|/// time spent in system (kernel) mode.  If the operating system does not
 comment|/// support collection of these metrics, a zero TimeValue will be for both
 comment|/// values.
+comment|/// \param elapsed Returns the TimeValue::now() giving current time
+comment|/// \param user_time Returns the current amount of user time for the process
+comment|/// \param sys_time Returns the current amount of system time for the process
 specifier|static
 name|void
 name|GetTimeUsage
@@ -125,16 +351,13 @@ name|TimeValue
 modifier|&
 name|elapsed
 parameter_list|,
-comment|///< Returns the TimeValue::now() giving current time
 name|TimeValue
 modifier|&
 name|user_time
 parameter_list|,
-comment|///< Returns the current amount of user time for the process
 name|TimeValue
 modifier|&
 name|sys_time
-comment|///< Returns the current amount of system time for the process
 parameter_list|)
 function_decl|;
 comment|/// This static function will return the process' current user id number.
@@ -307,7 +530,6 @@ name|unsigned
 name|GetRandomNumber
 parameter_list|()
 function_decl|;
-comment|/// @}
 block|}
 empty_stmt|;
 block|}

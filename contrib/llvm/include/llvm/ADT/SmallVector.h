@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MathExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -718,6 +724,13 @@ name|reference
 name|front
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+operator|!
+name|empty
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|begin
 argument_list|()
@@ -731,6 +744,13 @@ name|front
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|empty
+argument_list|()
+argument_list|)
+block|;
 return|return
 name|begin
 argument_list|()
@@ -743,6 +763,13 @@ name|reference
 name|back
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+operator|!
+name|empty
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|end
 argument_list|()
@@ -757,6 +784,13 @@ name|back
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|empty
+argument_list|()
+argument_list|)
+block|;
 return|return
 name|end
 argument_list|()
@@ -865,7 +899,7 @@ argument_list|)
 block|{
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 for|for
 control|(
 init|;
@@ -964,7 +998,7 @@ argument_list|)
 block|{
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 while|while
 condition|(
 name|I
@@ -1050,7 +1084,7 @@ argument_list|)
 block|{
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 for|for
 control|(
 init|;
@@ -1221,7 +1255,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_decl_stmt
@@ -1364,16 +1398,20 @@ operator|->
 name|size
 argument_list|()
 block|;
+comment|// Always grow, even from zero.
 name|size_t
 name|NewCapacity
 operator|=
-literal|2
-operator|*
+name|size_t
+argument_list|(
+name|NextPowerOf2
+argument_list|(
 name|CurCapacity
 operator|+
-literal|1
+literal|2
+argument_list|)
+argument_list|)
 block|;
-comment|// Always grow, even from zero.
 if|if
 condition|(
 name|NewCapacity
@@ -1913,16 +1951,11 @@ name|SuperClass
 expr_stmt|;
 name|SmallVectorImpl
 argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|&
+argument|const SmallVectorImpl&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// DISABLED.
-end_comment
 
 begin_label
 name|public
@@ -2324,7 +2357,7 @@ parameter_list|()
 block|{
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 name|T
 name|Result
 init|=
@@ -2782,7 +2815,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_decl_stmt
@@ -3805,7 +3838,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_decl_stmt
@@ -4710,7 +4743,7 @@ begin_if
 unit|}
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_expr_stmt
@@ -5378,7 +5411,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_expr_stmt

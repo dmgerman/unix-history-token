@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20130214
+value|0x20130626
 end_define
 
 begin_include
@@ -179,6 +179,13 @@ begin_decl_stmt
 specifier|extern
 name|UINT8
 name|AcpiGbl_DisableAutoRepair
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_DisableSsdtTableLoad
 decl_stmt|;
 end_decl_stmt
 

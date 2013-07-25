@@ -8,7 +8,7 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -2978,7 +2978,7 @@ comment|/* reference count */
 block|}
 name|dtrace_ecbdesc_t
 typedef|;
-comment|/*  * DTrace Metadata Description Structures  *  * DTrace separates the trace data stream from the metadata stream.  The only  * metadata tokens placed in the data stream are enabled probe identifiers  * (EPIDs) or (in the case of aggregations) aggregation identifiers.  In order  * to determine the structure of the data, DTrace consumers pass the token to  * the kernel, and receive in return a corresponding description of the enabled  * probe (via the dtrace_eprobedesc structure) or the aggregation (via the  * dtrace_aggdesc structure).  Both of these structures are expressed in terms  * of record descriptions (via the dtrace_recdesc structure) that describe the  * exact structure of the data.  Some record descriptions may also contain a  * format identifier; this additional bit of metadata can be retrieved from the  * kernel, for which a format description is returned via the dtrace_fmtdesc  * structure.  Note that all four of these structures must be bitness-neutral  * to allow for a 32-bit DTrace consumer on a 64-bit kernel.  */
+comment|/*  * DTrace Metadata Description Structures  *  * DTrace separates the trace data stream from the metadata stream.  The only  * metadata tokens placed in the data stream are the dtrace_rechdr_t (EPID +  * timestamp) or (in the case of aggregations) aggregation identifiers.  To  * determine the structure of the data, DTrace consumers pass the token to the  * kernel, and receive in return a corresponding description of the enabled  * probe (via the dtrace_eprobedesc structure) or the aggregation (via the  * dtrace_aggdesc structure).  Both of these structures are expressed in terms  * of record descriptions (via the dtrace_recdesc structure) that describe the  * exact structure of the data.  Some record descriptions may also contain a  * format identifier; this additional bit of metadata can be retrieved from the  * kernel, for which a format description is returned via the dtrace_fmtdesc  * structure.  Note that all four of these structures must be bitness-neutral  * to allow for a 32-bit DTrace consumer on a 64-bit kernel.  */
 typedef|typedef
 struct|struct
 name|dtrace_recdesc
@@ -3275,8 +3275,13 @@ value|26
 comment|/* agg. key position to sort on */
 define|#
 directive|define
-name|DTRACEOPT_MAX
+name|DTRACEOPT_TEMPORAL
 value|27
+comment|/* temporally ordered output */
+define|#
+directive|define
+name|DTRACEOPT_MAX
+value|28
 comment|/* number of options */
 define|#
 directive|define
@@ -3308,7 +3313,7 @@ directive|define
 name|DTRACEOPT_BUFRESIZE_MANUAL
 value|1
 comment|/* manual resizing */
-comment|/*  * DTrace Buffer Interface  *  * In order to get a snapshot of the principal or aggregation buffer,  * user-level passes a buffer description to the kernel with the dtrace_bufdesc  * structure.  This describes which CPU user-level is interested in, and  * where user-level wishes the kernel to snapshot the buffer to (the  * dtbd_data field).  The kernel uses the same structure to pass back some  * information regarding the buffer:  the size of data actually copied out, the  * number of drops, the number of errors, and the offset of the oldest record.  * If the buffer policy is a "switch" policy, taking a snapshot of the  * principal buffer has the additional effect of switching the active and  * inactive buffers.  Taking a snapshot of the aggregation buffer _always_ has  * the additional effect of switching the active and inactive buffers.  */
+comment|/*  * DTrace Buffer Interface  *  * In order to get a snapshot of the principal or aggregation buffer,  * user-level passes a buffer description to the kernel with the dtrace_bufdesc  * structure.  This describes which CPU user-level is interested in, and  * where user-level wishes the kernel to snapshot the buffer to (the  * dtbd_data field).  The kernel uses the same structure to pass back some  * information regarding the buffer:  the size of data actually copied out, the  * number of drops, the number of errors, the offset of the oldest record,  * and the time of the snapshot.  *  * If the buffer policy is a "switch" policy, taking a snapshot of the  * principal buffer has the additional effect of switching the active and  * inactive buffers.  Taking a snapshot of the aggregation buffer _always_ has  * the additional effect of switching the active and inactive buffers.  */
 typedef|typedef
 struct|struct
 name|dtrace_bufdesc
@@ -3341,9 +3346,50 @@ name|uint64_t
 name|dtbd_oldest
 decl_stmt|;
 comment|/* offset of oldest record */
+name|uint64_t
+name|dtbd_timestamp
+decl_stmt|;
+comment|/* hrtime of snapshot */
 block|}
 name|dtrace_bufdesc_t
 typedef|;
+comment|/*  * Each record in the buffer (dtbd_data) begins with a header that includes  * the epid and a timestamp.  The timestamp is split into two 4-byte parts  * so that we do not require 8-byte alignment.  */
+typedef|typedef
+struct|struct
+name|dtrace_rechdr
+block|{
+name|dtrace_epid_t
+name|dtrh_epid
+decl_stmt|;
+comment|/* enabled probe id */
+name|uint32_t
+name|dtrh_timestamp_hi
+decl_stmt|;
+comment|/* high bits of hrtime_t */
+name|uint32_t
+name|dtrh_timestamp_lo
+decl_stmt|;
+comment|/* low bits of hrtime_t */
+block|}
+name|dtrace_rechdr_t
+typedef|;
+define|#
+directive|define
+name|DTRACE_RECORD_LOAD_TIMESTAMP
+parameter_list|(
+name|dtrh
+parameter_list|)
+define|\
+value|((dtrh)->dtrh_timestamp_lo +				\ 	((uint64_t)(dtrh)->dtrh_timestamp_hi<< 32))
+define|#
+directive|define
+name|DTRACE_RECORD_STORE_TIMESTAMP
+parameter_list|(
+name|dtrh
+parameter_list|,
+name|hrtime
+parameter_list|)
+value|{		\ 	(dtrh)->dtrh_timestamp_lo = (uint32_t)hrtime;		\ 	(dtrh)->dtrh_timestamp_hi = hrtime>> 32;		\ }
 comment|/*  * DTrace Status  *  * The status of DTrace is relayed via the dtrace_status structure.  This  * structure contains members to count drops other than the capacity drops  * available via the buffer interface (see above).  This consists of dynamic  * drops (including capacity dynamic drops, rinsing drops and dirty drops), and  * speculative drops (including capacity speculative drops, drops due to busy  * speculative buffers and drops due to unavailable speculative buffers).  * Additionally, the status structure contains a field to indicate the number  * of "fill"-policy buffers have been filled and a boolean field to indicate  * that exit() has been called.  If the dtst_exiting field is non-zero, no  * further data will be generated until tracing is stopped (at which time any  * enablings of the END action will be processed); if user-level sees that  * this field is non-zero, tracing should be stopped as soon as possible.  */
 typedef|typedef
 struct|struct

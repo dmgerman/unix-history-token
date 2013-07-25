@@ -235,7 +235,7 @@ decl_stmt|;
 name|uint64_t
 name|bf_mftmirrcn
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|bf_mftrecsz
 decl_stmt|;
 name|uint32_t
@@ -297,9 +297,10 @@ decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;
-name|char
+name|int8_t
 name|mftrecsz
-decl_stmt|,
+decl_stmt|;
+name|char
 name|vnchar
 decl_stmt|;
 name|int
@@ -371,9 +372,6 @@ name|done
 goto|;
 name|mftrecsz
 operator|=
-operator|(
-name|char
-operator|)
 name|bf
 operator|->
 name|bf_mftrecsz

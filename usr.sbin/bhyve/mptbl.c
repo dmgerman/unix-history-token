@@ -1881,11 +1881,9 @@ name|mpt_compute_checksum
 argument_list|(
 name|mpch
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
 name|mpch
-argument_list|)
+operator|->
+name|base_table_length
 argument_list|)
 expr_stmt|;
 return|return

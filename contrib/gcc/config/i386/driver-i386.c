@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines for the gcc driver.    Copyright (C) 2006 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Subroutines for the gcc driver.    Copyright (C) 2006, 2007 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -123,6 +123,13 @@ define|#
 directive|define
 name|bit_SSSE3
 value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bit_SSE4a
+value|(1<< 6)
 end_define
 
 begin_define
@@ -251,6 +258,10 @@ init|=
 literal|0
 decl_stmt|,
 name|has_cmpxchg8b
+init|=
+literal|0
+decl_stmt|,
+name|has_sse4a
 init|=
 literal|0
 decl_stmt|;
@@ -538,6 +549,16 @@ operator|&
 name|bit_LM
 operator|)
 expr_stmt|;
+name|has_sse4a
+operator|=
+operator|!
+operator|!
+operator|(
+name|ecx
+operator|&
+name|bit_SSE4a
+operator|)
+expr_stmt|;
 block|}
 name|is_amd
 operator|=
@@ -581,6 +602,14 @@ condition|)
 name|processor
 operator|=
 name|PROCESSOR_K8
+expr_stmt|;
+if|if
+condition|(
+name|has_sse4a
+condition|)
+name|processor
+operator|=
+name|PROCESSOR_AMDFAM10
 expr_stmt|;
 block|}
 else|else
@@ -908,6 +937,14 @@ case|:
 name|cpu
 operator|=
 literal|"nocona"
+expr_stmt|;
+break|break;
+case|case
+name|PROCESSOR_AMDFAM10
+case|:
+name|cpu
+operator|=
+literal|"amdfam10"
 expr_stmt|;
 break|break;
 case|case

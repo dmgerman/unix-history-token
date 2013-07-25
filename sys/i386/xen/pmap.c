@@ -6891,7 +6891,7 @@ expr_stmt|;
 comment|/* Find least significant set bit. */
 name|lsb
 operator|=
-name|cpusetobj_ffs
+name|CPU_FFS
 argument_list|(
 operator|&
 name|mask
@@ -12475,7 +12475,7 @@ name|count
 init|=
 literal|0
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m_start
 operator|->

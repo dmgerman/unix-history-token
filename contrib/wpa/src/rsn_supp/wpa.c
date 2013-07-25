@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - WPA state machine and EAPOL-Key processing  * Copyright (c) 2003-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - WPA state machine and EAPOL-Key processing  * Copyright (c) 2003-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/crypto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -152,8 +158,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Failed to read BSSID for "
@@ -169,8 +181,14 @@ name|sm
 operator|->
 name|bssid
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Use BSSID ("
@@ -203,8 +221,14 @@ name|key_mic
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_ERROR
 argument_list|,
 literal|"WPA: Failed to generate EAPOL-Key "
@@ -217,6 +241,28 @@ goto|goto
 name|out
 goto|;
 block|}
+name|wpa_hexdump_key
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPA: KCK"
+argument_list|,
+name|kck
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPA: Derived Key MIC"
+argument_list|,
+name|key_mic
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 name|wpa_hexdump
 argument_list|(
 name|MSG_MSGDUMP
@@ -326,8 +372,8 @@ condition|(
 name|sm
 operator|->
 name|pairwise_cipher
-operator|==
-name|WPA_CIPHER_CCMP
+operator|!=
+name|WPA_CIPHER_TKIP
 condition|)
 name|ver
 operator|=
@@ -350,12 +396,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"Failed to read BSSID for EAPOL-Key "
-literal|"request"
+literal|"Failed to read BSSID for EAPOL-Key request"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -489,8 +540,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: Sending EAPOL-Key Request (error=%d "
@@ -596,6 +653,8 @@ argument_list|,
 name|src_addr
 argument_list|,
 name|pmkid
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -605,19 +664,30 @@ operator|->
 name|cur_pmksa
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: found matching PMKID from "
-literal|"PMKSA cache"
+literal|"RSN: found matching PMKID from PMKSA cache"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: no matching PMKID found"
@@ -843,6 +913,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|struct
+name|rsn_pmksa_cache_entry
+modifier|*
+name|sa
+init|=
+name|NULL
+decl_stmt|;
 name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG
@@ -870,8 +947,18 @@ operator|->
 name|proto
 operator|==
 name|WPA_PROTO_RSN
+operator|&&
+operator|!
+name|wpa_key_mgmt_ft
+argument_list|(
+name|sm
+operator|->
+name|key_mgmt
+argument_list|)
 condition|)
 block|{
+name|sa
+operator|=
 name|pmksa_cache_add
 argument_list|(
 name|sm
@@ -918,15 +1005,23 @@ argument_list|,
 name|src_addr
 argument_list|,
 name|pmkid
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: the new PMK "
-literal|"matches with the PMKID"
+literal|"RSN: the new PMK matches with the "
+literal|"PMKID"
 argument_list|)
 expr_stmt|;
 name|abort_cached
@@ -934,6 +1029,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|sm
+operator|->
+name|cur_pmksa
+condition|)
+name|sm
+operator|->
+name|cur_pmksa
+operator|=
+name|sa
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -948,20 +1056,8 @@ argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Failed to get master session key from "
-literal|"EAPOL state machines"
-argument_list|)
-expr_stmt|;
-name|wpa_msg
-argument_list|(
-name|sm
-operator|->
-name|ctx
-operator|->
-name|msg_ctx
-argument_list|,
-name|MSG_WARNING
-argument_list|,
-literal|"WPA: Key handshake aborted"
+literal|"EAPOL state machines - key handshake "
+literal|"aborted"
 argument_list|)
 expr_stmt|;
 if|if
@@ -971,12 +1067,18 @@ operator|->
 name|cur_pmksa
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: Cancelled PMKSA "
-literal|"caching attempt"
+literal|"RSN: Cancelled PMKSA caching "
+literal|"attempt"
 argument_list|)
 expr_stmt|;
 name|sm
@@ -1014,6 +1116,14 @@ name|sm
 operator|->
 name|key_mgmt
 argument_list|)
+operator|&&
+operator|!
+name|wpa_key_mgmt_ft
+argument_list|(
+name|sm
+operator|->
+name|key_mgmt
+argument_list|)
 condition|)
 block|{
 comment|/* Send EAPOL-Start to trigger full EAP authentication. */
@@ -1024,8 +1134,14 @@ decl_stmt|;
 name|size_t
 name|buflen
 decl_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: no PMKSA entry found - trigger "
@@ -1163,12 +1279,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: No wpa_ie set - cannot "
-literal|"generate msg 2/4"
+literal|"WPA: No wpa_ie set - "
+literal|"cannot generate msg 2/4"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1428,6 +1550,19 @@ argument_list|,
 name|WPA_REPLAY_COUNTER_LEN
 argument_list|)
 expr_stmt|;
+name|wpa_hexdump
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"WPA: Replay Counter"
+argument_list|,
+name|reply
+operator|->
+name|replay_counter
+argument_list|,
+name|WPA_REPLAY_COUNTER_LEN
+argument_list|)
+expr_stmt|;
 name|WPA_PUT_BE16
 argument_list|(
 name|reply
@@ -1464,8 +1599,14 @@ argument_list|,
 name|WPA_NONCE_LEN
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Sending EAPOL-Key 2/4"
@@ -1534,8 +1675,8 @@ init|=
 name|sm
 operator|->
 name|pairwise_cipher
-operator|==
-name|WPA_CIPHER_CCMP
+operator|!=
+name|WPA_CIPHER_TKIP
 condition|?
 literal|48
 else|:
@@ -1674,12 +1815,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: No SSID info found (msg 1 of "
-literal|"4)."
+literal|"WPA: No SSID info "
+literal|"found (msg 1 of 4)"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1691,11 +1838,18 @@ argument_list|,
 name|WPA_4WAY_HANDSHAKE
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: RX message 1 of 4-Way Handshake from "
+literal|"WPA: RX message 1 of 4-Way "
+literal|"Handshake from "
 name|MACSTR
 literal|" (ver=%d)"
 argument_list|,
@@ -1770,6 +1924,8 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|wpa_supplicant_parse_ies
 argument_list|(
 name|_buf
@@ -1779,7 +1935,12 @@ argument_list|,
 operator|&
 name|ie
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|ie
@@ -1827,12 +1988,18 @@ operator|-
 literal|2
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: Do not reply to msg 1/4 - "
-literal|"requesting full EAP authentication"
+literal|"RSN: Do not reply to "
+literal|"msg 1/4 - requesting full EAP authentication"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1853,7 +2020,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|sm
 operator|->
@@ -2172,7 +2339,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Start preauthentication after a short wait to avoid a 		 * possible race condition between the data receive and key 		 * configuration after the 4-Way Handshake. This increases the 		 * likelyhood of the first preauth EAPOL-Start frame getting to 		 * the target AP. 		 */
+comment|/* 		 * Start preauthentication after a short wait to avoid a 		 * possible race condition between the data receive and key 		 * configuration after the 4-Way Handshake. This increases the 		 * likelihood of the first preauth EAPOL-Start frame getting to 		 * the target AP. 		 */
 name|eloop_register_timeout
 argument_list|(
 literal|1
@@ -2200,8 +2367,14 @@ operator|->
 name|opportunistic
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: Authenticator accepted "
@@ -2266,8 +2439,14 @@ name|sm
 init|=
 name|eloop_ctx
 decl_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Request PTK rekeying"
@@ -2340,69 +2519,65 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: Installing PTK to the driver."
+literal|"WPA: Installing PTK to the driver"
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|sm
 operator|->
 name|pairwise_cipher
+operator|==
+name|WPA_CIPHER_NONE
 condition|)
 block|{
-case|case
-name|WPA_CIPHER_CCMP
-case|:
-name|alg
-operator|=
-name|WPA_ALG_CCMP
-expr_stmt|;
-name|keylen
-operator|=
-literal|16
-expr_stmt|;
-name|rsclen
-operator|=
-literal|6
-expr_stmt|;
-break|break;
-case|case
-name|WPA_CIPHER_TKIP
-case|:
-name|alg
-operator|=
-name|WPA_ALG_TKIP
-expr_stmt|;
-name|keylen
-operator|=
-literal|32
-expr_stmt|;
-name|rsclen
-operator|=
-literal|6
-expr_stmt|;
-break|break;
-case|case
-name|WPA_CIPHER_NONE
-case|:
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: Pairwise Cipher Suite: "
-literal|"NONE - do not use pairwise keys"
+literal|"WPA: Pairwise Cipher "
+literal|"Suite: NONE - do not use pairwise keys"
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
-default|default:
-name|wpa_printf
+block|}
+if|if
+condition|(
+operator|!
+name|wpa_cipher_valid_pairwise
 argument_list|(
+name|sm
+operator|->
+name|pairwise_cipher
+argument_list|)
+condition|)
+block|{
+name|wpa_msg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Unsupported pairwise cipher %d"
@@ -2417,6 +2592,33 @@ operator|-
 literal|1
 return|;
 block|}
+name|alg
+operator|=
+name|wpa_cipher_to_alg
+argument_list|(
+name|sm
+operator|->
+name|pairwise_cipher
+argument_list|)
+expr_stmt|;
+name|keylen
+operator|=
+name|wpa_cipher_key_len
+argument_list|(
+name|sm
+operator|->
+name|pairwise_cipher
+argument_list|)
+expr_stmt|;
+name|rsclen
+operator|=
+name|wpa_cipher_rsc_len
+argument_list|(
+name|sm
+operator|->
+name|pairwise_cipher
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sm
@@ -2487,8 +2689,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Failed to set PTK to the "
@@ -2556,6 +2764,11 @@ specifier|static
 name|int
 name|wpa_supplicant_check_group_cipher
 parameter_list|(
+name|struct
+name|wpa_sm
+modifier|*
+name|sm
+parameter_list|,
 name|int
 name|group_cipher
 parameter_list|,
@@ -2576,146 +2789,32 @@ name|alg
 parameter_list|)
 block|{
 name|int
-name|ret
-init|=
-literal|0
+name|klen
 decl_stmt|;
-switch|switch
-condition|(
-name|group_cipher
-condition|)
-block|{
-case|case
-name|WPA_CIPHER_CCMP
-case|:
-if|if
-condition|(
-name|keylen
-operator|!=
-literal|16
-operator|||
-name|maxkeylen
-operator|<
-literal|16
-condition|)
-block|{
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
-operator|*
-name|key_rsc_len
-operator|=
-literal|6
-expr_stmt|;
 operator|*
 name|alg
 operator|=
-name|WPA_ALG_CCMP
-expr_stmt|;
-break|break;
-case|case
-name|WPA_CIPHER_TKIP
-case|:
-if|if
-condition|(
-name|keylen
-operator|!=
-literal|32
-operator|||
-name|maxkeylen
-operator|<
-literal|32
-condition|)
-block|{
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
-operator|*
-name|key_rsc_len
-operator|=
-literal|6
-expr_stmt|;
-operator|*
-name|alg
-operator|=
-name|WPA_ALG_TKIP
-expr_stmt|;
-break|break;
-case|case
-name|WPA_CIPHER_WEP104
-case|:
-if|if
-condition|(
-name|keylen
-operator|!=
-literal|13
-operator|||
-name|maxkeylen
-operator|<
-literal|13
-condition|)
-block|{
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
-operator|*
-name|key_rsc_len
-operator|=
-literal|0
-expr_stmt|;
-operator|*
-name|alg
-operator|=
-name|WPA_ALG_WEP
-expr_stmt|;
-break|break;
-case|case
-name|WPA_CIPHER_WEP40
-case|:
-if|if
-condition|(
-name|keylen
-operator|!=
-literal|5
-operator|||
-name|maxkeylen
-operator|<
-literal|5
-condition|)
-block|{
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-break|break;
-block|}
-operator|*
-name|key_rsc_len
-operator|=
-literal|0
-expr_stmt|;
-operator|*
-name|alg
-operator|=
-name|WPA_ALG_WEP
-expr_stmt|;
-break|break;
-default|default:
-name|wpa_printf
+name|wpa_cipher_to_alg
 argument_list|(
+name|group_cipher
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|alg
+operator|==
+name|WPA_ALG_NONE
+condition|)
+block|{
+name|wpa_msg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Unsupported Group Cipher %d"
@@ -2728,19 +2827,43 @@ operator|-
 literal|1
 return|;
 block|}
+operator|*
+name|key_rsc_len
+operator|=
+name|wpa_cipher_rsc_len
+argument_list|(
+name|group_cipher
+argument_list|)
+expr_stmt|;
+name|klen
+operator|=
+name|wpa_cipher_key_len
+argument_list|(
+name|group_cipher
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ret
+name|keylen
+operator|!=
+name|klen
+operator|||
+name|maxkeylen
 operator|<
-literal|0
+name|klen
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Unsupported %s Group Cipher key "
-literal|"length %d (%d)."
+literal|"WPA: Unsupported %s Group Cipher key length %d (%d)"
 argument_list|,
 name|wpa_cipher_txt
 argument_list|(
@@ -2752,9 +2875,13 @@ argument_list|,
 name|maxkeylen
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 return|return
-name|ret
+literal|0
 return|;
 block|}
 end_function
@@ -2839,12 +2966,17 @@ operator|->
 name|gtk_len
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: Installing GTK to the driver "
-literal|"(keyidx=%d tx=%d len=%d)."
+literal|"WPA: Installing GTK to the driver (keyidx=%d tx=%d len=%d)"
 argument_list|,
 name|gd
 operator|->
@@ -2947,11 +3079,7 @@ name|gd
 operator|->
 name|alg
 argument_list|,
-operator|(
-name|u8
-operator|*
-operator|)
-literal|"\xff\xff\xff\xff\xff\xff"
+name|NULL
 argument_list|,
 name|gd
 operator|->
@@ -2975,12 +3103,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Failed to set "
-literal|"GTK to the driver (Group only)."
+literal|"WPA: Failed to set GTK to the driver "
+literal|"(Group only)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3000,11 +3134,7 @@ name|gd
 operator|->
 name|alg
 argument_list|,
-operator|(
-name|u8
-operator|*
-operator|)
-literal|"\xff\xff\xff\xff\xff\xff"
+name|broadcast_ether_addr
 argument_list|,
 name|gd
 operator|->
@@ -3030,8 +3160,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Failed to set GTK to "
@@ -3088,8 +3224,14 @@ name|WPA_CIPHER_NONE
 condition|)
 block|{
 comment|/* Ignore Tx bit for GTK if a pairwise key is used. One AP 		 * seemed to set this bit (incorrectly, since Tx is only when 		 * doing Group Key only APs) and without this workaround, the 		 * data connection does not work because wpa_supplicant 		 * configured non-zero keyidx to be used for unicast. */
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: Tx bit set for GTK, but pairwise "
@@ -3251,6 +3393,8 @@ condition|(
 name|wpa_supplicant_check_group_cipher
 argument_list|(
 name|sm
+argument_list|,
+name|sm
 operator|->
 name|group_cipher
 argument_list|,
@@ -3282,8 +3426,14 @@ name|key_rsc
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: Failed to install GTK"
@@ -3406,8 +3556,14 @@ operator|->
 name|keyid
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: IGTK keyid %d "
@@ -3443,8 +3599,14 @@ operator|>
 literal|4095
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Invalid IGTK KeyID %d"
@@ -3465,11 +3627,7 @@ name|sm
 argument_list|,
 name|WPA_ALG_IGTK
 argument_list|,
-operator|(
-name|u8
-operator|*
-operator|)
-literal|"\xff\xff\xff\xff\xff\xff"
+name|broadcast_ether_addr
 argument_list|,
 name|keyidx
 argument_list|,
@@ -3496,12 +3654,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Failed to configure IGTK"
-literal|" to the driver"
+literal|"WPA: Failed to configure IGTK to the driver"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3620,12 +3783,17 @@ operator|->
 name|ap_wpa_ie
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"WPA: No WPA IE in "
-literal|"Beacon/ProbeResp"
+literal|"WPA: No WPA IE in Beacon/ProbeResp"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3677,12 +3845,17 @@ operator|->
 name|ap_rsn_ie
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"WPA: No RSN IE in "
-literal|"Beacon/ProbeResp"
+literal|"WPA: No RSN IE in Beacon/ProbeResp"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3698,7 +3871,7 @@ name|rsn_ie_len
 argument_list|)
 expr_stmt|;
 block|}
-name|wpa_sm_disassociate
+name|wpa_sm_deauthenticate
 argument_list|(
 name|sm
 argument_list|,
@@ -3797,12 +3970,18 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"FT: MDIE in msg 3/4 did not "
-literal|"match with the current mobility domain"
+literal|"FT: MDIE in msg 3/4 did "
+literal|"not match with the current mobility domain"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3849,8 +4028,14 @@ literal|0
 operator|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"FT: MDIE mismatch"
@@ -3939,8 +4124,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"FT: No FTIE in EAPOL-Key msg 3/4"
@@ -3995,8 +4186,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"FT: FTIE mismatch"
@@ -4117,8 +4314,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"FT: No PMKR1Name in "
@@ -4148,8 +4351,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"FT: PMKR1Name mismatch in "
@@ -4406,8 +4615,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: No WPA/RSN IE for this AP known. "
@@ -4424,8 +4639,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Could not find AP from "
@@ -4435,8 +4656,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Found the current AP from "
@@ -4914,8 +5141,14 @@ argument_list|,
 name|kde_len
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Sending EAPOL-Key 4/4"
@@ -4993,11 +5226,18 @@ argument_list|,
 name|WPA_4WAY_HANDSHAKE
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: RX message 3 of 4-Way Handshake from "
+literal|"WPA: RX message 3 of 4-Way "
+literal|"Handshake from "
 name|MACSTR
 literal|" (ver=%d)"
 argument_list|,
@@ -5053,6 +5293,8 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|wpa_supplicant_parse_ies
 argument_list|(
 name|pos
@@ -5062,7 +5304,12 @@ argument_list|,
 operator|&
 name|ie
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|ie
@@ -5077,8 +5324,14 @@ name|WPA_KEY_INFO_ENCR_KEY_DATA
 operator|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: GTK IE in unencrypted key data"
@@ -5105,12 +5358,17 @@ name|WPA_KEY_INFO_ENCR_KEY_DATA
 operator|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: IGTK KDE in unencrypted key "
-literal|"data"
+literal|"WPA: IGTK KDE in unencrypted key data"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5134,8 +5392,14 @@ name|wpa_igtk_kde
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Invalid IGTK KDE length %lu"
@@ -5193,13 +5457,18 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: ANonce from message 1 of 4-Way "
-literal|"Handshake differs from 3 of 4-Way Handshake - drop"
-literal|" packet (src="
+literal|"WPA: ANonce from message 1 of 4-Way Handshake "
+literal|"differs from 3 of 4-Way Handshake - drop packet (src="
 name|MACSTR
 literal|")"
 argument_list|,
@@ -5224,31 +5493,38 @@ operator|->
 name|key_length
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
+name|keylen
+operator|!=
+name|wpa_cipher_key_len
+argument_list|(
 name|sm
 operator|->
 name|pairwise_cipher
+argument_list|)
 condition|)
 block|{
-case|case
-name|WPA_CIPHER_CCMP
-case|:
-if|if
-condition|(
-name|keylen
-operator|!=
-literal|16
-condition|)
-block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Invalid CCMP key length "
-literal|"%d (src="
+literal|"WPA: Invalid %s key length %d (src="
 name|MACSTR
 literal|")"
+argument_list|,
+name|wpa_cipher_txt
+argument_list|(
+name|sm
+operator|->
+name|pairwise_cipher
+argument_list|)
 argument_list|,
 name|keylen
 argument_list|,
@@ -5263,42 +5539,6 @@ expr_stmt|;
 goto|goto
 name|failed
 goto|;
-block|}
-break|break;
-case|case
-name|WPA_CIPHER_TKIP
-case|:
-if|if
-condition|(
-name|keylen
-operator|!=
-literal|32
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_WARNING
-argument_list|,
-literal|"WPA: Invalid TKIP key length "
-literal|"%d (src="
-name|MACSTR
-literal|")"
-argument_list|,
-name|keylen
-argument_list|,
-name|MAC2STR
-argument_list|(
-name|sm
-operator|->
-name|bssid
-argument_list|)
-argument_list|)
-expr_stmt|;
-goto|goto
-name|failed
-goto|;
-block|}
-break|break;
 block|}
 if|if
 condition|(
@@ -5421,8 +5661,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"RSN: Failed to configure GTK"
@@ -5445,8 +5691,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"RSN: Failed to configure IGTK"
@@ -5456,6 +5708,11 @@ goto|goto
 name|failed
 goto|;
 block|}
+name|wpa_sm_set_rekey_offload
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
 return|return;
 name|failed
 label|:
@@ -5514,6 +5771,8 @@ argument_list|,
 name|keydatalen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|wpa_supplicant_parse_ies
 argument_list|(
 name|keydata
@@ -5523,7 +5782,13 @@ argument_list|,
 operator|&
 name|ie
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|ie
@@ -5538,8 +5803,14 @@ name|WPA_KEY_INFO_ENCR_KEY_DATA
 operator|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: GTK IE in unencrypted key data"
@@ -5559,8 +5830,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: No GTK IE in Group Key msg 1/2"
@@ -5587,6 +5864,8 @@ if|if
 condition|(
 name|wpa_supplicant_check_group_cipher
 argument_list|(
+name|sm
+argument_list|,
 name|sm
 operator|->
 name|group_cipher
@@ -5681,12 +5960,17 @@ name|gtk
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"RSN: Too long GTK in GTK IE "
-literal|"(len=%lu)"
+literal|"RSN: Too long GTK in GTK IE (len=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -5735,8 +6019,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"RSN: Failed to configure IGTK"
@@ -5813,12 +6103,18 @@ operator|>
 name|extra_len
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"WPA: Truncated EAPOL-Key packet:"
-literal|" key_data_length=%lu> extra_len=%lu"
+literal|"WPA: Truncated EAPOL-Key packet: "
+literal|"key_data_length=%lu> extra_len=%lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -5852,8 +6148,14 @@ operator|<
 literal|8
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: Too short maxkeylen (%lu)"
@@ -5879,6 +6181,8 @@ if|if
 condition|(
 name|wpa_supplicant_check_group_cipher
 argument_list|(
+name|sm
+argument_list|,
 name|sm
 operator|->
 name|group_cipher
@@ -5961,12 +6265,17 @@ name|gtk
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: RC4 key data "
-literal|"too long (%lu)"
+literal|"WPA: RC4 key data too long (%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -6011,8 +6320,14 @@ name|keydatalen
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_ERROR
 argument_list|,
 literal|"WPA: RC4 failed"
@@ -6039,12 +6354,17 @@ operator|%
 literal|8
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Unsupported AES-WRAP "
-literal|"len %lu"
+literal|"WPA: Unsupported AES-WRAP len %lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -6070,8 +6390,14 @@ name|gtk
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: AES-WRAP key data "
@@ -6126,12 +6452,18 @@ name|gtk
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: AES unwrap "
-literal|"failed - could not decrypt GTK"
+literal|"WPA: AES unwrap failed - could not decrypt "
+literal|"GTK"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6142,8 +6474,14 @@ block|}
 block|}
 else|else
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Unsupported key_info type %d"
@@ -6339,8 +6677,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Sending EAPOL-Key 2/2"
@@ -6444,11 +6788,18 @@ argument_list|)
 operator|==
 name|WPA_COMPLETED
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: RX message 1 of Group Key Handshake from "
+literal|"WPA: RX message 1 of Group Key "
+literal|"Handshake from "
 name|MACSTR
 literal|" (ver=%d)"
 argument_list|,
@@ -6591,7 +6942,7 @@ name|ctx
 operator|->
 name|msg_ctx
 argument_list|,
-name|MSG_INFO
+name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Group rekeying "
 literal|"completed with "
@@ -6623,6 +6974,11 @@ argument_list|(
 name|sm
 argument_list|,
 name|WPA_COMPLETED
+argument_list|)
+expr_stmt|;
+name|wpa_sm_set_rekey_offload
+argument_list|(
+name|sm
 argument_list|)
 expr_stmt|;
 block|}
@@ -6757,8 +7113,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Invalid EAPOL-Key MIC "
@@ -6862,12 +7224,18 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Invalid EAPOL-Key MIC "
-literal|"- dropping packet"
+literal|"WPA: Invalid EAPOL-Key MIC - "
+literal|"dropping packet"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6886,12 +7254,18 @@ operator|!
 name|ok
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Could not verify EAPOL-Key MIC "
-literal|"- dropping packet"
+literal|"WPA: Could not verify EAPOL-Key MIC - "
+literal|"dropping packet"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6984,12 +7358,18 @@ operator|->
 name|ptk_set
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: PTK not available, "
-literal|"cannot decrypt EAPOL-Key key data."
+literal|"WPA: PTK not available, cannot decrypt EAPOL-Key Key "
+literal|"Data"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7061,8 +7441,14 @@ name|keydatalen
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_ERROR
 argument_list|,
 literal|"WPA: RC4 failed"
@@ -7097,12 +7483,17 @@ operator|%
 literal|8
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Unsupported "
-literal|"AES-WRAP len %d"
+literal|"WPA: Unsupported AES-WRAP len %d"
 argument_list|,
 name|keydatalen
 argument_list|)
@@ -7131,12 +7522,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: No memory for "
-literal|"AES-UNWRAP buffer"
+literal|"WPA: No memory for AES-UNWRAP buffer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7177,8 +7573,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: AES unwrap failed - "
@@ -7218,8 +7620,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Unsupported key_info type %d"
@@ -7280,8 +7688,14 @@ operator|->
 name|cur_pmksa
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: Cancelling PMKSA caching attempt"
@@ -7302,6 +7716,11 @@ specifier|static
 name|void
 name|wpa_eapol_key_dump
 parameter_list|(
+name|struct
+name|wpa_sm
+modifier|*
+name|sm
+parameter_list|,
 specifier|const
 name|struct
 name|wpa_eapol_key
@@ -7322,8 +7741,14 @@ operator|->
 name|key_info
 argument_list|)
 decl_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"  EAPOL-Key type=%d"
@@ -7333,12 +7758,17 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"  key_info 0x%x (ver=%d keyidx=%d rsvd=%d %s"
-literal|"%s%s%s%s%s%s%s)"
+literal|"  key_info 0x%x (ver=%d keyidx=%d rsvd=%d %s%s%s%s%s%s%s%s)"
 argument_list|,
 name|key_info
 argument_list|,
@@ -7442,8 +7872,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"  key_length=%u key_data_length=%u"
@@ -7642,8 +8078,14 @@ name|key
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: EAPOL frame too short to be a WPA "
@@ -7743,8 +8185,14 @@ operator|*
 name|hdr
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"IEEE 802.1X RX: version=%d type=%d length=%lu"
@@ -7784,8 +8232,14 @@ operator|!=
 name|IEEE802_1X_TYPE_EAPOL_KEY
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: EAPOL frame (type %u) discarded, "
@@ -7825,8 +8279,14 @@ name|key
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: EAPOL frame payload size %lu "
@@ -7868,12 +8328,17 @@ operator|!=
 name|EAPOL_KEY_TYPE_RSN
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: EAPOL-Key type (%d) unknown, "
-literal|"discarded"
+literal|"WPA: EAPOL-Key type (%d) unknown, discarded"
 argument_list|,
 name|key
 operator|->
@@ -7890,6 +8355,8 @@ goto|;
 block|}
 name|wpa_eapol_key_dump
 argument_list|(
+name|sm
+argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
@@ -7920,12 +8387,17 @@ operator|<
 name|len
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: ignoring %lu bytes after the IEEE "
-literal|"802.1X data"
+literal|"WPA: ignoring %lu bytes after the IEEE 802.1X data"
 argument_list|,
 operator|(
 name|unsigned
@@ -7981,12 +8453,17 @@ operator|!=
 name|WPA_KEY_INFO_TYPE_HMAC_SHA1_AES
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"WPA: Unsupported EAPOL-Key descriptor "
-literal|"version %d."
+literal|"WPA: Unsupported EAPOL-Key descriptor version %d"
 argument_list|,
 name|ver
 argument_list|)
@@ -8016,12 +8493,17 @@ operator|!=
 name|WPA_KEY_INFO_TYPE_AES_128_CMAC
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"FT: AP did not use "
-literal|"AES-128-CMAC."
+literal|"FT: AP did not use AES-128-CMAC"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8053,12 +8535,18 @@ operator|!=
 name|WPA_KEY_INFO_TYPE_AES_128_CMAC
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: AP did not use the "
-literal|"negotiated AES-128-CMAC."
+literal|"negotiated AES-128-CMAC"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8083,12 +8571,18 @@ operator|!=
 name|WPA_KEY_INFO_TYPE_HMAC_SHA1_AES
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: CCMP is used, but EAPOL-Key "
-literal|"descriptor version (%d) is not 2."
+literal|"descriptor version (%d) is not 2"
 argument_list|,
 name|ver
 argument_list|)
@@ -8110,17 +8604,55 @@ operator|)
 condition|)
 block|{
 comment|/* Earlier versions of IEEE 802.11i did not explicitly 			 * require version 2 descriptor for all EAPOL-Key 			 * packets, so allow group keys to use version 1 if 			 * CCMP is not used for them. */
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"WPA: Backwards compatibility: "
-literal|"allow invalid version for non-CCMP group "
-literal|"keys"
+literal|"WPA: Backwards compatibility: allow invalid "
+literal|"version for non-CCMP group keys"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|sm
+operator|->
+name|pairwise_cipher
+operator|==
+name|WPA_CIPHER_GCMP
+operator|&&
+name|ver
+operator|!=
+name|WPA_KEY_INFO_TYPE_HMAC_SHA1_AES
+condition|)
+block|{
+name|wpa_msg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_INFO
+argument_list|,
+literal|"WPA: GCMP is used, but EAPOL-Key "
+literal|"descriptor version (%d) is not 2"
+argument_list|,
+name|ver
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -8201,13 +8733,18 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"RSN: EAPOL-Key Replay "
-literal|"Counter did not increase (STK) - dropping "
-literal|"packet"
+literal|"RSN: EAPOL-Key Replay Counter did not "
+literal|"increase (STK) - dropping packet"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8262,8 +8799,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: EAPOL-Key Replay "
@@ -8292,8 +8835,14 @@ name|WPA_KEY_INFO_ACK
 operator|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"RSN: Ack bit in key_info from STK peer"
@@ -8331,12 +8880,18 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: EAPOL-Key Replay Counter did not"
-literal|" increase - dropping packet"
+literal|"WPA: EAPOL-Key Replay Counter did not increase - "
+literal|"dropping packet"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8374,8 +8929,14 @@ directive|endif
 comment|/* CONFIG_PEERKEY */
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
 literal|"WPA: No Ack bit in key_info"
@@ -8392,12 +8953,17 @@ operator|&
 name|WPA_KEY_INFO_REQUEST
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_INFO
 argument_list|,
-literal|"WPA: EAPOL-Key with Request bit - "
-literal|"dropped"
+literal|"WPA: EAPOL-Key with Request bit - dropped"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8586,12 +9152,18 @@ operator|&
 name|WPA_KEY_INFO_KEY_INDEX_MASK
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: Ignored EAPOL-Key "
-literal|"(Pairwise) with non-zero key index"
+literal|"WPA: Ignored EAPOL-Key (Pairwise) with "
+literal|"non-zero key index"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -8704,12 +9276,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_WARNING
 argument_list|,
-literal|"WPA: EAPOL-Key (Group) "
-literal|"without Mic bit - dropped"
+literal|"WPA: EAPOL-Key (Group) without Mic bit - "
+literal|"dropped"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8736,52 +9314,6 @@ ifdef|#
 directive|ifdef
 name|CONFIG_CTRL_IFACE
 end_ifdef
-
-begin_function
-specifier|static
-name|int
-name|wpa_cipher_bits
-parameter_list|(
-name|int
-name|cipher
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|cipher
-condition|)
-block|{
-case|case
-name|WPA_CIPHER_CCMP
-case|:
-return|return
-literal|128
-return|;
-case|case
-name|WPA_CIPHER_TKIP
-case|:
-return|return
-literal|256
-return|;
-case|case
-name|WPA_CIPHER_WEP104
-case|:
-return|return
-literal|104
-return|;
-case|case
-name|WPA_CIPHER_WEP40
-case|:
-return|return
-literal|40
-return|;
-default|default:
-return|return
-literal|0
-return|;
-block|}
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -8870,117 +9402,26 @@ endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211W */
 case|case
+name|WPA_KEY_MGMT_CCKM
+case|:
+return|return
+operator|(
+name|sm
+operator|->
+name|proto
+operator|==
+name|WPA_PROTO_RSN
+condition|?
+name|RSN_AUTH_KEY_MGMT_CCKM
+else|:
+name|WPA_AUTH_KEY_MGMT_CCKM
+operator|)
+return|;
+case|case
 name|WPA_KEY_MGMT_WPA_NONE
 case|:
 return|return
 name|WPA_AUTH_KEY_MGMT_NONE
-return|;
-default|default:
-return|return
-literal|0
-return|;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|u32
-name|wpa_cipher_suite
-parameter_list|(
-name|struct
-name|wpa_sm
-modifier|*
-name|sm
-parameter_list|,
-name|int
-name|cipher
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|cipher
-condition|)
-block|{
-case|case
-name|WPA_CIPHER_CCMP
-case|:
-return|return
-operator|(
-name|sm
-operator|->
-name|proto
-operator|==
-name|WPA_PROTO_RSN
-condition|?
-name|RSN_CIPHER_SUITE_CCMP
-else|:
-name|WPA_CIPHER_SUITE_CCMP
-operator|)
-return|;
-case|case
-name|WPA_CIPHER_TKIP
-case|:
-return|return
-operator|(
-name|sm
-operator|->
-name|proto
-operator|==
-name|WPA_PROTO_RSN
-condition|?
-name|RSN_CIPHER_SUITE_TKIP
-else|:
-name|WPA_CIPHER_SUITE_TKIP
-operator|)
-return|;
-case|case
-name|WPA_CIPHER_WEP104
-case|:
-return|return
-operator|(
-name|sm
-operator|->
-name|proto
-operator|==
-name|WPA_PROTO_RSN
-condition|?
-name|RSN_CIPHER_SUITE_WEP104
-else|:
-name|WPA_CIPHER_SUITE_WEP104
-operator|)
-return|;
-case|case
-name|WPA_CIPHER_WEP40
-case|:
-return|return
-operator|(
-name|sm
-operator|->
-name|proto
-operator|==
-name|WPA_PROTO_RSN
-condition|?
-name|RSN_CIPHER_SUITE_WEP40
-else|:
-name|WPA_CIPHER_SUITE_WEP40
-operator|)
-return|;
-case|case
-name|WPA_CIPHER_NONE
-case|:
-return|return
-operator|(
-name|sm
-operator|->
-name|proto
-operator|==
-name|WPA_PROTO_RSN
-condition|?
-name|RSN_CIPHER_SUITE_NONE
-else|:
-name|WPA_CIPHER_SUITE_NONE
-operator|)
 return|;
 default|default:
 return|return
@@ -9148,12 +9589,14 @@ literal|"FALSE"
 argument_list|,
 name|RSN_VERSION
 argument_list|,
-name|wpa_cipher_bits
+name|wpa_cipher_key_len
 argument_list|(
 name|sm
 operator|->
 name|group_cipher
 argument_list|)
+operator|*
+literal|8
 argument_list|,
 name|sm
 operator|->
@@ -9232,9 +9675,11 @@ argument_list|)
 argument_list|,
 name|RSN_SUITE_ARG
 argument_list|(
-name|wpa_cipher_suite
+name|wpa_cipher_to_suite
 argument_list|(
 name|sm
+operator|->
+name|proto
 argument_list|,
 name|sm
 operator|->
@@ -9244,9 +9689,11 @@ argument_list|)
 argument_list|,
 name|RSN_SUITE_ARG
 argument_list|(
-name|wpa_cipher_suite
+name|wpa_cipher_to_suite
 argument_list|(
 name|sm
+operator|->
+name|proto
 argument_list|,
 name|sm
 operator|->
@@ -9266,9 +9713,11 @@ argument_list|)
 argument_list|,
 name|RSN_SUITE_ARG
 argument_list|(
-name|wpa_cipher_suite
+name|wpa_cipher_to_suite
 argument_list|(
 name|sm
+operator|->
+name|proto
 argument_list|,
 name|sm
 operator|->
@@ -9278,9 +9727,11 @@ argument_list|)
 argument_list|,
 name|RSN_SUITE_ARG
 argument_list|(
-name|wpa_cipher_suite
+name|wpa_cipher_to_suite
 argument_list|(
 name|sm
+operator|->
+name|proto
 argument_list|,
 name|sm
 operator|->
@@ -9342,8 +9793,9 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
-name|int
-name|replace
+name|enum
+name|pmksa_free_reason
+name|reason
 parameter_list|)
 block|{
 name|struct
@@ -9353,6 +9805,35 @@ name|sm
 init|=
 name|ctx
 decl_stmt|;
+name|int
+name|deauth
+init|=
+literal|0
+decl_stmt|;
+name|wpa_dbg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: PMKSA cache entry free_cb: "
+name|MACSTR
+literal|" reason=%d"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|entry
+operator|->
+name|aa
+argument_list|)
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sm
@@ -9360,7 +9841,52 @@ operator|->
 name|cur_pmksa
 operator|==
 name|entry
-operator|||
+condition|)
+block|{
+name|wpa_dbg
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: %s current PMKSA entry"
+argument_list|,
+name|reason
+operator|==
+name|PMKSA_REPLACE
+condition|?
+literal|"replaced"
+else|:
+literal|"removed"
+argument_list|)
+expr_stmt|;
+name|pmksa_cache_clear_current
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If an entry is simply being replaced, there's no need to 		 * deauthenticate because it will be immediately re-added. 		 * This happens when EAP authentication is completed again 		 * (reauth or failed PMKSA caching attempt). 		 */
+if|if
+condition|(
+name|reason
+operator|!=
+name|PMKSA_REPLACE
+condition|)
+name|deauth
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|reason
+operator|==
+name|PMKSA_EXPIRE
+operator|&&
 operator|(
 name|sm
 operator|->
@@ -9389,27 +9915,34 @@ literal|0
 operator|)
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"RSN: removed current PMKSA entry"
-argument_list|)
-expr_stmt|;
 name|sm
 operator|->
-name|cur_pmksa
-operator|=
-name|NULL
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: deauthenticating due to expired PMK"
+argument_list|)
 expr_stmt|;
+name|pmksa_cache_clear_current
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
+name|deauth
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
-name|replace
+name|deauth
 condition|)
 block|{
-comment|/* A new entry is being added, so no need to 			 * deauthenticate in this case. This happens when EAP 			 * authentication is completed again (reauth or failed 			 * PMKSA caching attempt). */
-return|return;
-block|}
 name|os_memset
 argument_list|(
 name|sm
@@ -9538,12 +10071,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_msg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_ERROR
 argument_list|,
-literal|"RSN: PMKSA cache initialization "
-literal|"failed"
+literal|"RSN: PMKSA cache initialization failed"
 argument_list|)
 expr_stmt|;
 name|os_free
@@ -9692,8 +10230,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Association event - clear replay counter"
@@ -9807,8 +10351,14 @@ name|clear_ptk
 condition|)
 block|{
 comment|/* 		 * IEEE 802.11, 8.4.10: Delete PTK SA on (re)association if 		 * this is not part of a Fast BSS Transition. 		 */
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Clear old PTK"
@@ -9827,6 +10377,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_TDLS
+name|wpa_tdls_assoc
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_TDLS */
 block|}
 end_function
 
@@ -9849,6 +10410,11 @@ argument_list|(
 name|sm
 argument_list|)
 expr_stmt|;
+name|pmksa_cache_clear_current
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wpa_sm_get_state
@@ -9863,6 +10429,17 @@ operator|->
 name|dot11RSNA4WayHandshakeFailures
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_TDLS
+name|wpa_tdls_disassoc
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_TDLS */
 block|}
 end_function
 
@@ -10273,27 +10850,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|config
-operator|==
-name|NULL
-operator|||
-name|config
-operator|->
-name|network_ctx
-operator|!=
-name|sm
-operator|->
-name|network_ctx
-condition|)
-name|pmksa_cache_notify_reconfig
-argument_list|(
-name|sm
-operator|->
-name|pmksa
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -10828,6 +11384,100 @@ name|pos
 operator|+=
 name|ret
 expr_stmt|;
+if|if
+condition|(
+name|sm
+operator|->
+name|mfp
+operator|!=
+name|NO_MGMT_FRAME_PROTECTION
+operator|&&
+name|sm
+operator|->
+name|ap_rsn_ie
+condition|)
+block|{
+name|struct
+name|wpa_ie_data
+name|rsn
+decl_stmt|;
+if|if
+condition|(
+name|wpa_parse_wpa_ie_rsn
+argument_list|(
+name|sm
+operator|->
+name|ap_rsn_ie
+argument_list|,
+name|sm
+operator|->
+name|ap_rsn_ie_len
+argument_list|,
+operator|&
+name|rsn
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|rsn
+operator|.
+name|capabilities
+operator|&
+operator|(
+name|WPA_CAPABILITY_MFPR
+operator||
+name|WPA_CAPABILITY_MFPC
+operator|)
+condition|)
+block|{
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
+argument_list|,
+name|end
+operator|-
+name|pos
+argument_list|,
+literal|"pmf=%d\n"
+argument_list|,
+operator|(
+name|rsn
+operator|.
+name|capabilities
+operator|&
+name|WPA_CAPABILITY_MFPR
+operator|)
+condition|?
+literal|2
+else|:
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+operator|||
+name|ret
+operator|>=
+name|end
+operator|-
+name|pos
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+block|}
+block|}
 return|return
 name|pos
 operator|-
@@ -11018,8 +11668,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: clearing own WPA/RSN IE"
@@ -11146,8 +11802,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: clearing AP WPA IE"
@@ -11274,8 +11936,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: clearing AP RSN IE"
@@ -11376,7 +12044,13 @@ condition|(
 name|sm
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 name|sm
 operator|->
 name|assoc_wpa_ie
@@ -11384,12 +12058,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
-literal|"WPA: No WPA/RSN IE available from "
-literal|"association info"
+literal|"WPA: No WPA/RSN IE available from association info"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11477,8 +12156,14 @@ modifier|*
 name|sm
 parameter_list|)
 block|{
-name|wpa_printf
+name|wpa_dbg
 argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|msg_ctx
+argument_list|,
 name|MSG_DEBUG
 argument_list|,
 literal|"WPA: Clear old PMK and PTK"
@@ -11575,6 +12260,499 @@ name|ptk_set
 return|;
 block|}
 end_function
+
+begin_function
+name|void
+name|wpa_sm_update_replay_ctr
+parameter_list|(
+name|struct
+name|wpa_sm
+modifier|*
+name|sm
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|replay_ctr
+parameter_list|)
+block|{
+name|os_memcpy
+argument_list|(
+name|sm
+operator|->
+name|rx_replay_counter
+argument_list|,
+name|replay_ctr
+argument_list|,
+name|WPA_REPLAY_COUNTER_LEN
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|wpa_sm_pmksa_cache_flush
+parameter_list|(
+name|struct
+name|wpa_sm
+modifier|*
+name|sm
+parameter_list|,
+name|void
+modifier|*
+name|network_ctx
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_WPA2
+name|pmksa_cache_flush
+argument_list|(
+name|sm
+operator|->
+name|pmksa
+argument_list|,
+name|network_ctx
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_WPA2 */
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_WNM
+end_ifdef
+
+begin_function
+name|int
+name|wpa_wnmsleep_install_key
+parameter_list|(
+name|struct
+name|wpa_sm
+modifier|*
+name|sm
+parameter_list|,
+name|u8
+name|subelem_id
+parameter_list|,
+name|u8
+modifier|*
+name|buf
+parameter_list|)
+block|{
+name|struct
+name|wpa_gtk_data
+name|gd
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211W
+name|struct
+name|wpa_igtk_kde
+name|igd
+decl_stmt|;
+name|u16
+name|keyidx
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_IEEE80211W */
+name|u16
+name|keyinfo
+decl_stmt|;
+name|u8
+name|keylen
+decl_stmt|;
+comment|/* plaintext key len */
+name|u8
+modifier|*
+name|key_rsc
+decl_stmt|;
+name|os_memset
+argument_list|(
+operator|&
+name|gd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gd
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211W
+name|os_memset
+argument_list|(
+operator|&
+name|igd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|igd
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_IEEE80211W */
+name|keylen
+operator|=
+name|wpa_cipher_key_len
+argument_list|(
+name|sm
+operator|->
+name|group_cipher
+argument_list|)
+expr_stmt|;
+name|gd
+operator|.
+name|key_rsc_len
+operator|=
+name|wpa_cipher_rsc_len
+argument_list|(
+name|sm
+operator|->
+name|group_cipher
+argument_list|)
+expr_stmt|;
+name|gd
+operator|.
+name|alg
+operator|=
+name|wpa_cipher_to_alg
+argument_list|(
+name|sm
+operator|->
+name|group_cipher
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gd
+operator|.
+name|alg
+operator|==
+name|WPA_ALG_NONE
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Unsupported group cipher suite"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|subelem_id
+operator|==
+name|WNM_SLEEP_SUBELEM_GTK
+condition|)
+block|{
+name|key_rsc
+operator|=
+name|buf
+operator|+
+literal|5
+expr_stmt|;
+name|keyinfo
+operator|=
+name|WPA_GET_LE16
+argument_list|(
+name|buf
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|gd
+operator|.
+name|gtk_len
+operator|=
+name|keylen
+expr_stmt|;
+if|if
+condition|(
+name|gd
+operator|.
+name|gtk_len
+operator|!=
+name|buf
+index|[
+literal|4
+index|]
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"GTK len mismatch len %d vs %d"
+argument_list|,
+name|gd
+operator|.
+name|gtk_len
+argument_list|,
+name|buf
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|gd
+operator|.
+name|keyidx
+operator|=
+name|keyinfo
+operator|&
+literal|0x03
+expr_stmt|;
+comment|/* B0 - B1 */
+name|gd
+operator|.
+name|tx
+operator|=
+name|wpa_supplicant_gtk_tx_bit_workaround
+argument_list|(
+name|sm
+argument_list|,
+operator|!
+operator|!
+operator|(
+name|keyinfo
+operator|&
+name|WPA_KEY_INFO_TXRX
+operator|)
+argument_list|)
+expr_stmt|;
+name|os_memcpy
+argument_list|(
+name|gd
+operator|.
+name|gtk
+argument_list|,
+name|buf
+operator|+
+literal|13
+argument_list|,
+name|gd
+operator|.
+name|gtk_len
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_key
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Install GTK (WNM SLEEP)"
+argument_list|,
+name|gd
+operator|.
+name|gtk
+argument_list|,
+name|gd
+operator|.
+name|gtk_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wpa_supplicant_install_gtk
+argument_list|(
+name|sm
+argument_list|,
+operator|&
+name|gd
+argument_list|,
+name|key_rsc
+argument_list|)
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Failed to install the GTK in "
+literal|"WNM mode"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_IEEE80211W
+block|}
+elseif|else
+if|if
+condition|(
+name|subelem_id
+operator|==
+name|WNM_SLEEP_SUBELEM_IGTK
+condition|)
+block|{
+name|os_memcpy
+argument_list|(
+name|igd
+operator|.
+name|keyid
+argument_list|,
+name|buf
+operator|+
+literal|2
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|os_memcpy
+argument_list|(
+name|igd
+operator|.
+name|pn
+argument_list|,
+name|buf
+operator|+
+literal|4
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+name|keyidx
+operator|=
+name|WPA_GET_LE16
+argument_list|(
+name|igd
+operator|.
+name|keyid
+argument_list|)
+expr_stmt|;
+name|os_memcpy
+argument_list|(
+name|igd
+operator|.
+name|igtk
+argument_list|,
+name|buf
+operator|+
+literal|10
+argument_list|,
+name|WPA_IGTK_LEN
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_key
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Install IGTK (WNM SLEEP)"
+argument_list|,
+name|igd
+operator|.
+name|igtk
+argument_list|,
+name|WPA_IGTK_LEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wpa_sm_set_key
+argument_list|(
+name|sm
+argument_list|,
+name|WPA_ALG_IGTK
+argument_list|,
+name|broadcast_ether_addr
+argument_list|,
+name|keyidx
+argument_list|,
+literal|0
+argument_list|,
+name|igd
+operator|.
+name|pn
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|igd
+operator|.
+name|pn
+argument_list|)
+argument_list|,
+name|igd
+operator|.
+name|igtk
+argument_list|,
+name|WPA_IGTK_LEN
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Failed to install the IGTK in "
+literal|"WNM mode"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_IEEE80211W */
+block|}
+else|else
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"Unknown element id"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_WNM */
+end_comment
 
 end_unit
 

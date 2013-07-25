@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_mount.h>
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_comment
@@ -245,10 +245,10 @@ decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;
-name|int32_t
+name|daddr_t
 name|daddr
 decl_stmt|;
-name|long
+name|e2fs_lbn_t
 name|metalbn
 decl_stmt|;
 name|int
@@ -635,7 +635,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|!
@@ -999,7 +999,8 @@ parameter_list|)
 block|{
 name|long
 name|blockcnt
-decl_stmt|,
+decl_stmt|;
+name|e2fs_lbn_t
 name|metalbn
 decl_stmt|,
 name|realbn

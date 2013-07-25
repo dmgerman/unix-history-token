@@ -277,8 +277,6 @@ name|Major
 return|;
 block|}
 comment|/// \brief Retrieve the minor version number, if provided.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -293,22 +291,13 @@ operator|!
 name|HasMinor
 condition|)
 return|return
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 return|;
 return|return
 name|Minor
 return|;
 block|}
 comment|/// \brief Retrieve the subminor version number, if provided.
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|unsigned
@@ -323,14 +312,7 @@ operator|!
 name|HasSubminor
 condition|)
 return|return
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|unsigned
-operator|>
-operator|(
-operator|)
+name|None
 return|;
 return|return
 name|Subminor

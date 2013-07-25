@@ -2902,6 +2902,12 @@ case|:
 case|case
 name|AR71XX_SOC_AR7242
 case|:
+case|case
+name|AR71XX_SOC_AR9330
+case|:
+case|case
+name|AR71XX_SOC_AR9331
+case|:
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -4381,6 +4387,12 @@ name|AR71XX_SOC_AR7241
 case|:
 case|case
 name|AR71XX_SOC_AR7242
+case|:
+case|case
+name|AR71XX_SOC_AR9330
+case|:
+case|case
+name|AR71XX_SOC_AR9331
 case|:
 name|fifo_tx
 operator|=

@@ -1111,7 +1111,7 @@ decl_stmt|;
 name|uint64_t
 name|io_deadline
 decl_stmt|;
-name|uint64_t
+name|hrtime_t
 name|io_timestamp
 decl_stmt|;
 name|avl_node_t

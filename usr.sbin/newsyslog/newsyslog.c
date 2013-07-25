@@ -5053,8 +5053,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5127,8 +5128,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5322,8 +5324,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5543,8 +5546,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5633,8 +5637,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5705,8 +5710,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -5814,8 +5820,9 @@ name|missing_field
 argument_list|(
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 argument_list|,
 name|errline
@@ -6054,8 +6061,9 @@ name|parse
 operator|=
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Optional field */
@@ -6289,8 +6297,9 @@ name|parse
 operator|=
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Optional field */
@@ -6386,8 +6395,9 @@ name|parse
 operator|=
 name|sob
 argument_list|(
-operator|++
 name|parse
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Optional field */
@@ -6750,6 +6760,9 @@ specifier|static
 name|int
 name|validate_old_timelog
 parameter_list|(
+name|int
+name|fd
+parameter_list|,
 specifier|const
 name|struct
 name|dirent
@@ -6767,6 +6780,10 @@ modifier|*
 name|tm
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|size_t
 name|logfname_len
 decl_stmt|;
@@ -6792,11 +6809,46 @@ name|d_type
 operator|!=
 name|DT_REG
 condition|)
+block|{
+comment|/* 		 * Some filesystems (e.g. NFS) don't fill out the d_type field 		 * and leave it set to DT_UNKNOWN; in this case we must obtain 		 * the file type ourselves. 		 */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|DT_UNKNOWN
+operator|||
+name|fstatat
+argument_list|(
+name|fd
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+operator|&
+name|sb
+argument_list|,
+name|AT_SYMLINK_NOFOLLOW
+argument_list|)
+operator|!=
+literal|0
+operator|||
+operator|!
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Ignore everything but files with our logfile prefix. */
 if|if
 condition|(
@@ -7248,6 +7300,8 @@ if|if
 condition|(
 name|validate_old_timelog
 argument_list|(
+name|dir_fd
+argument_list|,
 name|dp
 argument_list|,
 name|logfname
@@ -10821,6 +10875,8 @@ if|if
 condition|(
 name|validate_old_timelog
 argument_list|(
+name|dir_fd
+argument_list|,
 name|dp
 argument_list|,
 name|logfname
@@ -10838,12 +10894,14 @@ name|fstatat
 argument_list|(
 name|dir_fd
 argument_list|,
-name|logfname
+name|dp
+operator|->
+name|d_name
 argument_list|,
 operator|&
 name|sb
 argument_list|,
-literal|0
+name|AT_SYMLINK_NOFOLLOW
 argument_list|)
 operator|==
 operator|-

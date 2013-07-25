@@ -280,6 +280,7 @@ specifier|static
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -651,6 +652,8 @@ name|EV_EXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|state4
+label|:
 if|if
 condition|(
 name|sflag
@@ -660,9 +663,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|state4
-label|:
-comment|/* XXX ??? - why isn't this before the "if" statement */
 name|cmdloop
 argument_list|(
 literal|1
@@ -906,6 +906,7 @@ specifier|static
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -945,6 +946,8 @@ argument_list|(
 name|expandedname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|>=

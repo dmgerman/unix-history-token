@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/InstrTypes.h"
+file|"llvm/IR/InstrTypes.h"
 end_include
 
 begin_decl_stmt
@@ -112,6 +112,12 @@ operator|,
 name|Ptr
 operator|,
 name|ptrdiff_t
+operator|,
+name|Ptr
+operator|*
+operator|,
+name|Ptr
+operator|*
 operator|>
 block|{
 typedef|typedef
@@ -126,6 +132,12 @@ operator|,
 name|Ptr
 operator|,
 name|ptrdiff_t
+operator|,
+name|Ptr
+operator|*
+operator|,
+name|Ptr
+operator|*
 operator|>
 name|super
 expr_stmt|;
@@ -177,6 +189,13 @@ name|super
 operator|::
 name|pointer
 name|pointer
+expr_stmt|;
+typedef|typedef
+name|typename
+name|super
+operator|::
+name|reference
+name|reference
 expr_stmt|;
 name|PredIterator
 argument_list|()
@@ -255,7 +274,7 @@ operator|)
 return|;
 block|}
 specifier|inline
-name|pointer
+name|reference
 name|operator
 operator|*
 operator|(
@@ -562,6 +581,12 @@ operator|,
 name|BB_
 operator|,
 name|ptrdiff_t
+operator|,
+name|BB_
+operator|*
+operator|,
+name|BB_
+operator|*
 operator|>
 block|{
 specifier|const
@@ -583,6 +608,12 @@ operator|,
 name|BB_
 operator|,
 name|ptrdiff_t
+operator|,
+name|BB_
+operator|*
+operator|,
+name|BB_
+operator|*
 operator|>
 name|super
 expr_stmt|;
@@ -639,6 +670,16 @@ name|super
 operator|::
 name|pointer
 name|pointer
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|super
+operator|::
+name|reference
+name|reference
 expr_stmt|;
 end_typedef
 
@@ -814,7 +855,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|pointer
+name|reference
 name|operator
 operator|*
 operator|(

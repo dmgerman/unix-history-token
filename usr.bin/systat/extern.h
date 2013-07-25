@@ -351,16 +351,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|closembufs
-parameter_list|(
-name|WINDOW
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|closenetstat
 parameter_list|(
 name|WINDOW
@@ -611,15 +601,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|fetchmbufs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|fetchnetstat
 parameter_list|(
 name|void
@@ -752,15 +733,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|initmbufs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|initnetstat
 parameter_list|(
 name|void
@@ -876,15 +848,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|labelkre
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|labelmbufs
 parameter_list|(
 name|void
 parameter_list|)
@@ -1035,16 +998,6 @@ begin_function_decl
 name|WINDOW
 modifier|*
 name|openkre
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|WINDOW
-modifier|*
-name|openmbufs
 parameter_list|(
 name|void
 parameter_list|)
@@ -1208,15 +1161,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|showkre
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|showmbufs
 parameter_list|(
 name|void
 parameter_list|)

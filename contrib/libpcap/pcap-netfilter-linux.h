@@ -9,7 +9,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|netfilter_platform_finddevs
+name|netfilter_findalldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
@@ -26,7 +26,7 @@ end_function_decl
 begin_function_decl
 name|pcap_t
 modifier|*
-name|nflog_create
+name|netfilter_create
 parameter_list|(
 specifier|const
 name|char
@@ -36,6 +36,10 @@ parameter_list|,
 name|char
 modifier|*
 name|ebuf
+parameter_list|,
+name|int
+modifier|*
+name|is_ours
 parameter_list|)
 function_decl|;
 end_function_decl

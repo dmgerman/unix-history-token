@@ -78,7 +78,6 @@ name|CheckerManager
 modifier|*
 name|createCheckerManager
 argument_list|(
-specifier|const
 name|AnalyzerOptions
 operator|&
 name|opts

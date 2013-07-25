@@ -114,6 +114,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NLPID_SPB
+value|0xc1
+end_define
+
+begin_comment
+comment|/* IEEE 802.1aq/D4.5 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NLPID_IP
 value|0xcc
 end_define

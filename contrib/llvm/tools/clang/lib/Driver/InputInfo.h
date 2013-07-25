@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Arg.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Types.h"
 end_include
 

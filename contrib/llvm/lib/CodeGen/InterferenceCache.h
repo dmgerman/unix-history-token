@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"LiveIntervalUnion.h"
+file|"llvm/CodeGen/LiveIntervalUnion.h"
 end_include
 
 begin_decl_stmt

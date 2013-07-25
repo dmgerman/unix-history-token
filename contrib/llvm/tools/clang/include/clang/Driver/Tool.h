@@ -193,6 +193,16 @@ return|return
 name|false
 return|;
 block|}
+name|virtual
+name|bool
+name|isDsymutilJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Does this tool have "good" standardized diagnostics, or should the
 comment|/// driver add an additional "command failed" diagnostic on failures.
 name|virtual

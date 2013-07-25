@@ -2895,7 +2895,7 @@ operator|->
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* 	 * --Original comment-- 	 * On a cloned socket we may have already received one or more 	 * upcalls which we couldn't handle without a hook.  Handle 	 * those now. 	 * We cannot call the upcall function directly 	 * from here, because until this function has returned our 	 * hook isn't connected. 	 * 	 * ---meta comment for -current --- 	 * XXX This is dubius. 	 * Upcalls between the time that the hook was 	 * first created and now (on another processesor) will 	 * be earlier on the queue than the request to finalise the hook. 	 * By the time the hook is finalised, 	 * The queued upcalls will have happenned and the code 	 * will have discarded them because of a lack of a hook. 	 * (socket not open). 	 * 	 * This is a bad byproduct of the complicated way in which hooks 	 * are now created (3 daisy chained async events). 	 * 	 * Since we are a netgraph operation  	 * We know that we hold a lock on this node. This forces the 	 * request we make below to be queued rather than implemented 	 * immediatly which will cause the upcall function to be called a bit 	 * later. 	 * However, as we will run any waiting queued operations immediatly 	 * after doing this one, if we have not finalised the other end 	 * of the hook, those queued operations will fail. 	 */
+comment|/* 	 * --Original comment-- 	 * On a cloned socket we may have already received one or more 	 * upcalls which we couldn't handle without a hook.  Handle 	 * those now. 	 * We cannot call the upcall function directly 	 * from here, because until this function has returned our 	 * hook isn't connected. 	 * 	 * ---meta comment for -current --- 	 * XXX This is dubius. 	 * Upcalls between the time that the hook was 	 * first created and now (on another processesor) will 	 * be earlier on the queue than the request to finalise the hook. 	 * By the time the hook is finalised, 	 * The queued upcalls will have happenned and the code 	 * will have discarded them because of a lack of a hook. 	 * (socket not open). 	 * 	 * This is a bad byproduct of the complicated way in which hooks 	 * are now created (3 daisy chained async events). 	 * 	 * Since we are a netgraph operation 	 * We know that we hold a lock on this node. This forces the 	 * request we make below to be queued rather than implemented 	 * immediatly which will cause the upcall function to be called a bit 	 * later. 	 * However, as we will run any waiting queued operations immediatly 	 * after doing this one, if we have not finalised the other end 	 * of the hook, those queued operations will fail. 	 */
 if|if
 condition|(
 name|priv
@@ -4492,7 +4492,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*   * You should not "just call" a netgraph node function from an external  * asynchronous event. This is because in doing so you are ignoring the  * locking on the netgraph nodes. Instead call your function via ng_send_fn().  * This will call the function you chose, but will first do all the   * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  *  * To decouple stack, we use queue version of ng_send_fn().  */
+comment|/*  * You should not "just call" a netgraph node function from an external  * asynchronous event. This is because in doing so you are ignoring the  * locking on the netgraph nodes. Instead call your function via ng_send_fn().  * This will call the function you chose, but will first do all the  * locking rigmarole. Your function MAY only be called at some distant future  * time (several millisecs away) so don't give it any arguments  * that may be revoked soon (e.g. on your stack).  *  * To decouple stack, we use queue version of ng_send_fn().  */
 end_comment
 
 begin_function
@@ -4597,7 +4597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When incoming data is appended to the socket, we get notified here.  * This is also called whenever a significant event occurs for the socket.  * Our original caller may have queued this even some time ago and   * we cannot trust that he even still exists. The node however is being  * held with a reference by the queueing code and guarantied to be valid.  */
+comment|/*  * When incoming data is appended to the socket, we get notified here.  * This is also called whenever a significant event occurs for the socket.  * Our original caller may have queued this even some time ago and  * we cannot trust that he even still exists. The node however is being  * held with a reference by the queueing code and guarantied to be valid.  */
 end_comment
 
 begin_function
@@ -4636,11 +4636,6 @@ name|node
 argument_list|)
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|struct
 name|ng_mesg
 modifier|*
 name|response
@@ -4654,8 +4649,6 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
-comment|/* so = priv->so; */
-comment|/* XXX could have derived this like so */
 name|KASSERT
 argument_list|(
 name|so
@@ -4783,7 +4776,7 @@ name|data
 operator|=
 name|error
 expr_stmt|;
-comment|/*  				 * send an async "response" message 				 * to the node that set us up 				 * (if it still exists) 				 */
+comment|/* 				 * send an async "response" message 				 * to the node that set us up 				 * (if it still exists) 				 */
 name|NG_SEND_MSG_ID
 argument_list|(
 name|error
@@ -4872,8 +4865,9 @@ name|auio
 operator|.
 name|uio_resid
 operator|=
-literal|1000000000
+name|MJUMPAGESIZE
 expr_stmt|;
+comment|/* XXXGL: sane limit? */
 name|flags
 operator|=
 name|MSG_DONTWAIT
@@ -4893,7 +4887,7 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|n
+name|m
 decl_stmt|;
 comment|/* Try to get next packet from socket */
 if|if
@@ -4924,13 +4918,7 @@ argument_list|,
 operator|&
 name|m
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|flags
@@ -4963,55 +4951,102 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Don't trust the various socket layers to get the 		 * packet header and length correct (e.g. kern/15175). 		 * 		 * Also, do not trust that soreceive() will clear m_nextpkt 		 * for us (e.g. kern/84952, kern/82413). 		 */
+name|KASSERT
+argument_list|(
 name|m
 operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
+name|m_nextpkt
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: nextpkt"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Stream sockets do not have packet boundaries, so 		 * we have to allocate a header mbuf and attach the 		 * stream of data to it. 		 */
+if|if
+condition|(
+name|so
+operator|->
+name|so_type
+operator|==
+name|SOCK_STREAM
+condition|)
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|mh
+decl_stmt|;
+name|mh
 operator|=
-literal|0
+name|m_gethdr
+argument_list|(
+name|M_NOWAIT
+argument_list|,
+name|MT_DATA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mh
+operator|==
+name|NULL
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sa
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|sa
+argument_list|,
+name|M_SONAME
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|mh
+operator|->
+name|m_next
+operator|=
+name|m
 expr_stmt|;
 for|for
 control|(
-name|n
-operator|=
-name|m
-operator|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
-literal|0
 init|;
-name|n
-operator|!=
-name|NULL
+name|m
 condition|;
-name|n
+name|m
 operator|=
-name|n
+name|m
 operator|->
 name|m_next
 control|)
-block|{
-name|m
+name|mh
 operator|->
 name|m_pkthdr
 operator|.
 name|len
 operator|+=
-name|n
+name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|n
-operator|->
-name|m_nextpkt
+name|m
 operator|=
-name|NULL
+name|mh
 expr_stmt|;
 block|}
 comment|/* Put peer's socket address (if any) into a tag */
@@ -5147,10 +5182,15 @@ name|KSF_EOFSEEN
 operator|)
 condition|)
 block|{
-name|MGETHDR
-argument_list|(
+name|struct
+name|mbuf
+modifier|*
 name|m
-argument_list|,
+decl_stmt|;
+name|m
+operator|=
+name|m_gethdr
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
@@ -5162,19 +5202,6 @@ name|m
 operator|!=
 name|NULL
 condition|)
-block|{
-name|m
-operator|->
-name|m_len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
-literal|0
-expr_stmt|;
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
@@ -5186,7 +5213,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|priv
 operator|->
 name|flags

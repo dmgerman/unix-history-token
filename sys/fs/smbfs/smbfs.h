@@ -213,6 +213,11 @@ modifier|*
 name|sm_root
 decl_stmt|;
 name|struct
+name|smb_dev
+modifier|*
+name|sm_dev
+decl_stmt|;
+name|struct
 name|ucred
 modifier|*
 name|sm_owner

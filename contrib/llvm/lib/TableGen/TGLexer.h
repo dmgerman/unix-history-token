@@ -68,19 +68,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -188,6 +194,8 @@ block|,
 comment|// !keywords.
 name|XConcat
 block|,
+name|XADD
+block|,
 name|XSRA
 block|,
 name|XSRL
@@ -270,17 +278,27 @@ comment|/// by the SourceMgr object.
 name|int
 name|CurBuffer
 decl_stmt|;
-comment|/// Dependencies - This is the list of all included files.
+name|public
+label|:
+typedef|typedef
 name|std
 operator|::
-name|vector
+name|map
 operator|<
 name|std
 operator|::
 name|string
+operator|,
+name|SMLoc
 operator|>
-name|Dependencies
+name|DependenciesMapTy
 expr_stmt|;
+name|private
+label|:
+comment|/// Dependencies - This is the list of all included files.
+name|DependenciesMapTy
+name|Dependencies
+decl_stmt|;
 name|public
 label|:
 name|TGLexer
@@ -308,14 +326,7 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
+name|DependenciesMapTy
 operator|&
 name|getDependencies
 argument_list|()

@@ -126,18 +126,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Twine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/FileManager.h"
 end_include
 
@@ -169,6 +157,18 @@ begin_include
 include|#
 directive|include
 file|"clang/Tooling/CompilationDatabase.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -461,15 +461,6 @@ operator|::
 name|CompilerInvocation
 operator|*
 name|Invocation
-argument_list|,
-specifier|const
-name|clang
-operator|::
-name|driver
-operator|::
-name|ArgStringList
-operator|&
-name|CC1Args
 argument_list|)
 decl_stmt|;
 name|std
@@ -482,8 +473,6 @@ name|string
 operator|>
 name|CommandLine
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|FrontendAction
@@ -539,20 +528,23 @@ operator|>
 name|SourcePaths
 argument_list|)
 expr_stmt|;
+name|virtual
+operator|~
+name|ClangTool
+argument_list|()
+block|{}
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
 comment|/// \param Content A null terminated buffer of the file's content.
 name|void
 name|mapVirtualFile
-parameter_list|(
-name|StringRef
-name|FilePath
-parameter_list|,
-name|StringRef
-name|Content
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef FilePath
+argument_list|,
+argument|StringRef Content
+argument_list|)
+expr_stmt|;
 comment|/// \brief Install command line arguments adjuster.
 comment|///
 comment|/// \param Adjuster Command line arguments adjuster.
@@ -569,6 +561,7 @@ comment|///
 comment|/// \param ActionFactory Factory generating the frontend actions. The function
 comment|/// takes ownership of this parameter. A new action is generated for every
 comment|/// processed translation unit.
+name|virtual
 name|int
 name|run
 parameter_list|(
@@ -628,8 +621,6 @@ operator|>
 expr|>
 name|MappedFileContents
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|ArgumentsAdjuster
@@ -780,7 +771,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|clang::CompilerInstance&
 argument_list|,
-argument|llvm::StringRef
+argument|StringRef
 argument_list|)
 block|{
 return|return

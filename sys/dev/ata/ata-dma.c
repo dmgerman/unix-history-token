@@ -1800,9 +1800,6 @@ name|dma
 operator|->
 name|sg
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 if|if
 condition|(
 name|request
@@ -1844,8 +1841,6 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|error
 operator|=
 name|bus_dmamap_load

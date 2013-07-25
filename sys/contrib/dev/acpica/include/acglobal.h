@@ -211,6 +211,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Optionally do not load any SSDTs from the RSDT/XSDT during initialization.  * This can be useful for debugging ACPI problems on some machines.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_DisableSsdtTableLoad
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
@@ -493,6 +508,13 @@ end_decl_stmt
 begin_comment
 comment|/* For ACPI H/W except GPE registers */
 end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_SPINLOCK
+name|AcpiGbl_ReferenceCountLock
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Mutex for _OSI support */

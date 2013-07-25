@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -104,7 +98,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|VM_NDOMAIN
+name|MAXMEMDOM
 operator|>
 literal|1
 end_if
@@ -1144,8 +1138,6 @@ name|VM_PHYSSEG_MAX
 index|]
 decl_stmt|;
 name|int
-name|ndomain
-decl_stmt|,
 name|i
 decl_stmt|,
 name|j
@@ -1153,7 +1145,7 @@ decl_stmt|,
 name|slot
 decl_stmt|;
 comment|/* Enumerate all the domains. */
-name|ndomain
+name|vm_ndomains
 operator|=
 literal|0
 expr_stmt|;
@@ -1180,7 +1172,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|ndomain
+name|vm_ndomains
 condition|;
 name|j
 operator|++
@@ -1206,7 +1198,7 @@ if|if
 condition|(
 name|j
 operator|<
-name|ndomain
+name|vm_ndomains
 operator|&&
 name|domains
 index|[
@@ -1230,7 +1222,7 @@ for|for
 control|(
 name|j
 operator|=
-name|ndomain
+name|vm_ndomains
 init|;
 name|j
 operator|>
@@ -1263,16 +1255,20 @@ index|]
 operator|.
 name|domain
 expr_stmt|;
-name|ndomain
+name|vm_ndomains
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ndomain
+name|vm_ndomains
 operator|>
-name|VM_NDOMAIN
+name|MAXMEMDOM
 condition|)
 block|{
+name|vm_ndomains
+operator|=
+literal|1
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"SRAT: Too many memory domains\n"
@@ -1294,7 +1290,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ndomain
+name|vm_ndomains
 condition|;
 name|i
 operator|++
@@ -1392,6 +1388,17 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|vm_ndomains
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"renumber_domains: invalid final vm_ndomains setup"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1715,7 +1722,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VM_NDOMAIN> 1 */
+comment|/* MAXMEMDOM> 1 */
 end_comment
 
 end_unit

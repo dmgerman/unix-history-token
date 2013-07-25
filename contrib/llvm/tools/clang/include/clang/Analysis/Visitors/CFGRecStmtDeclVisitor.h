@@ -74,13 +74,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/Visitors/CFGRecStmtVisitor.h"
+file|"clang/AST/Decl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/Decl.h"
+file|"clang/AST/DeclCXX.h"
 end_include
 
 begin_include
@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclCXX.h"
+file|"clang/Analysis/Visitors/CFGRecStmtVisitor.h"
 end_include
 
 begin_define
@@ -310,6 +310,10 @@ argument|Typedef
 argument_list|)
 name|DISPATCH_CASE
 argument_list|(
+argument|TypeAlias
+argument_list|)
+name|DISPATCH_CASE
+argument_list|(
 argument|Record
 argument_list|)
 comment|// FIXME: Refine.  VisitStructDecl?
@@ -372,6 +376,10 @@ argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(
 argument|Typedef
+argument_list|)
+name|DEFAULT_DISPATCH
+argument_list|(
+argument|TypeAlias
 argument_list|)
 name|DEFAULT_DISPATCH
 argument_list|(

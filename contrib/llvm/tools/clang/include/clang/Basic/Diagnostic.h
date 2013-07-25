@@ -114,13 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<list>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<list>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -237,15 +237,12 @@ operator|.
 name|RemoveRange
 operator|=
 name|CharSourceRange
-argument_list|(
-name|SourceRange
+operator|::
+name|getCharRange
 argument_list|(
 name|InsertionLoc
 argument_list|,
 name|InsertionLoc
-argument_list|)
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 name|Hint
@@ -290,15 +287,12 @@ operator|.
 name|RemoveRange
 operator|=
 name|CharSourceRange
-argument_list|(
-name|SourceRange
+operator|::
+name|getCharRange
 argument_list|(
 name|InsertionLoc
 argument_list|,
 name|InsertionLoc
-argument_list|)
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 name|Hint
@@ -1018,6 +1012,20 @@ end_comment
 begin_decl_stmt
 name|bool
 name|ErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Sticky flag set to \c true when an "uncompilable error" occurs.
+end_comment
+
+begin_comment
+comment|/// I.e. an error that was not upgraded from a warning by -Werror.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UncompilableErrorOccurred
 decl_stmt|;
 end_decl_stmt
 
@@ -1746,7 +1754,7 @@ end_function
 
 begin_expr_stmt
 name|bool
-name|getEnableAllWarnngs
+name|getEnableAllWarnings
 argument_list|()
 specifier|const
 block|{
@@ -2448,6 +2456,26 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Errors that actually prevent compilation, not those that are
+end_comment
+
+begin_comment
+comment|/// upgraded from a warning by -Werror.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUncompilableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UncompilableErrorOccurred
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|bool
 name|hasFatalErrorOccurred
@@ -2516,7 +2544,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// If this is the first request for this diagnosic, it is registered and
+comment|/// If this is the first request for this diagnostic, it is registered and
 end_comment
 
 begin_comment
@@ -2656,6 +2684,33 @@ expr_stmt|;
 name|ArgToStringCookie
 operator|=
 name|Cookie
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Note that the prior diagnostic was emitted by some other
+end_comment
+
+begin_comment
+comment|/// \c DiagnosticsEngine, and we may be attaching a note to that diagnostic.
+end_comment
+
+begin_function
+name|void
+name|notePriorDiagnosticFrom
+parameter_list|(
+specifier|const
+name|DiagnosticsEngine
+modifier|&
+name|Other
+parameter_list|)
+block|{
+name|LastDiagLevel
+operator|=
+name|Other
+operator|.
+name|LastDiagLevel
 expr_stmt|;
 block|}
 end_function
@@ -5590,21 +5645,6 @@ operator|&
 name|Info
 argument_list|)
 decl_stmt|;
-comment|/// \brief Clone the diagnostic consumer, producing an equivalent consumer
-comment|/// that can be used in a different context.
-name|virtual
-name|DiagnosticConsumer
-modifier|*
-name|clone
-argument_list|(
-name|DiagnosticsEngine
-operator|&
-name|Diags
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -5638,70 +5678,138 @@ argument_list|)
 block|{
 comment|// Just ignore it.
 block|}
-name|DiagnosticConsumer
-operator|*
-name|clone
-argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|)
-specifier|const
-block|{
-return|return
-name|new
-name|IgnoringDiagConsumer
-argument_list|()
-return|;
 block|}
-expr|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Diagnostic consumer that forwards diagnostics along to an
+end_comment
+
+begin_comment
+comment|/// existing, already-initialized diagnostic consumer.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|ForwardingDiagnosticConsumer
+range|:
+name|public
+name|DiagnosticConsumer
+block|{
+name|DiagnosticConsumer
+operator|&
+name|Target
 block|;
+name|public
+operator|:
+name|ForwardingDiagnosticConsumer
+argument_list|(
+name|DiagnosticConsumer
+operator|&
+name|Target
+argument_list|)
+operator|:
+name|Target
+argument_list|(
+argument|Target
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|ForwardingDiagnosticConsumer
+argument_list|()
+block|;
+name|virtual
+name|void
+name|HandleDiagnostic
+argument_list|(
+argument|DiagnosticsEngine::Level DiagLevel
+argument_list|,
+argument|const Diagnostic&Info
+argument_list|)
+block|;
+name|virtual
+name|void
+name|clear
+argument_list|()
+block|;
+name|virtual
+name|bool
+name|IncludeInDiagnosticCounts
+argument_list|()
+specifier|const
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Struct used for sending info about how a type should be printed.
-block|struct
+end_comment
+
+begin_struct
+struct|struct
 name|TemplateDiffTypes
 block|{
 name|intptr_t
 name|FromType
-block|;
+decl_stmt|;
 name|intptr_t
 name|ToType
-block|;
+decl_stmt|;
 name|unsigned
 name|PrintTree
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|unsigned
 name|PrintFromType
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|unsigned
 name|ElideType
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|unsigned
 name|ShowColors
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 comment|// The printer sets this variable to true if the template diff was used.
 name|unsigned
 name|TemplateDiffUsed
-operator|:
+range|:
 literal|1
-block|; }
-block|;
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/// Special character that the diagnostic printer will use to toggle the bold
+end_comment
+
+begin_comment
 comment|/// attribute.  The character itself will be not be printed.
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|char
 name|ToggleHighlight
-operator|=
+init|=
 literal|127
-block|;  }
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

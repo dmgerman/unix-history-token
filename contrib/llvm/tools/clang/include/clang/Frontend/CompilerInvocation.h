@@ -46,13 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LangOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/TargetOptions.h"
+file|"clang/Basic/DiagnosticOptions.h"
 end_include
 
 begin_include
@@ -64,31 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/DiagnosticOptions.h"
+file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Lex/HeaderSearchOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PreprocessorOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/AnalyzerOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Frontend/MigratorOptions.h"
+file|"clang/Basic/TargetOptions.h"
 end_include
 
 begin_include
@@ -118,7 +94,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/MigratorOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Frontend/PreprocessorOutputOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/HeaderSearchOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PreprocessorOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/AnalyzerOptions.h"
 end_include
 
 begin_include
@@ -130,13 +130,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include

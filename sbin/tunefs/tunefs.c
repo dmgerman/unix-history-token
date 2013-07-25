@@ -291,6 +291,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|avalue
@@ -313,6 +314,7 @@ decl_stmt|,
 modifier|*
 name|nvalue
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tvalue
@@ -770,7 +772,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mvalue
+name|kvalue
 operator|<
 literal|0
 condition|)
@@ -3532,6 +3534,7 @@ specifier|static
 name|void
 name|dir_clear_block
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|block

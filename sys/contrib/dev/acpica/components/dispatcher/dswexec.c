@@ -1917,7 +1917,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unimplemented opcode, class=0x%X type=0x%X Opcode=-0x%X Op=%p"
+literal|"Unimplemented opcode, class=0x%X type=0x%X Opcode=0x%X Op=%p"
 operator|,
 name|OpClass
 operator|,

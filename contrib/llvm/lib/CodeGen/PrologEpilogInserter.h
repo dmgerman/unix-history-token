@@ -94,7 +94,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/Passes.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SparseBitVector.h"
 end_include
 
 begin_include
@@ -112,13 +118,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SparseBitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/CodeGen/Passes.h"
 end_include
 
 begin_include

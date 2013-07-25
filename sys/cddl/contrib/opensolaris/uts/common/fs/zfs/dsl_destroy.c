@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_include
@@ -143,7 +143,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -155,7 +158,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Only allow deferred destroy on pools that support it. 	 * NOTE: deferred destroy is only supported on snapshots. 	 */
@@ -181,7 +187,10 @@ name|SPA_VERSION_USERREFS
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 return|return
@@ -201,7 +210,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Can't delete a branch point. 	 */
@@ -217,7 +229,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 return|return
@@ -2841,7 +2856,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -2858,7 +2876,10 @@ name|expected_holds
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 name|mos
@@ -2894,7 +2915,10 @@ name|ds_object
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * Can't delete if there are children of this fs. 	 */
@@ -2935,7 +2959,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 if|if
@@ -2989,7 +3016,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3734,6 +3764,14 @@ name|async_destroy
 argument_list|)
 condition|)
 block|{
+name|dsl_scan_t
+modifier|*
+name|scn
+init|=
+name|dp
+operator|->
+name|dp_scan
+decl_stmt|;
 name|spa_feature_incr
 argument_list|(
 name|dp
@@ -3781,6 +3819,20 @@ argument_list|,
 name|tx
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|scn
+operator|->
+name|scn_async_destroying
+argument_list|)
+expr_stmt|;
+name|scn
+operator|->
+name|scn_async_destroying
+operator|=
+name|B_TRUE
 expr_stmt|;
 block|}
 name|used

@@ -542,6 +542,8 @@ name|AE_OK
 decl_stmt|;
 name|ACPI_SIZE
 name|Length
+init|=
+literal|0
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_STR
 argument_list|(
@@ -721,10 +723,6 @@ case|:
 comment|/* ToString (Buffer, Length, Result) (ACPI 2.0) */
 comment|/*          * Input object is guaranteed to be a buffer at this point (it may have          * been converted.)  Copy the raw buffer data to a new object of          * type String.          */
 comment|/*          * Get the length of the new string. It is the smallest of:          * 1) Length of the input buffer          * 2) Max length as specified in the ToString operator          * 3) Length of input buffer up to a zero byte (null terminator)          *          * NOTE: A length of zero is ok, and will create a zero-length, null          *       terminated string.          */
-name|Length
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -930,6 +928,17 @@ operator|.
 name|Length
 condition|)
 block|{
+name|Length
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|String
+operator|.
+name|Length
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_STRING_LIMIT
@@ -961,6 +970,17 @@ operator|.
 name|Length
 condition|)
 block|{
+name|Length
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Buffer
+operator|.
+name|Length
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_BUFFER_LIMIT
@@ -992,6 +1012,17 @@ operator|.
 name|Count
 condition|)
 block|{
+name|Length
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Package
+operator|.
+name|Count
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_PACKAGE_LIMIT
@@ -1050,12 +1081,17 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Index (0x%8.8X%8.8X) is beyond end of object"
+literal|"Index (0x%X%8.8X) is beyond end of object (length 0x%X)"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Index
 argument_list|)
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|Length
 operator|)
 argument_list|)
 expr_stmt|;

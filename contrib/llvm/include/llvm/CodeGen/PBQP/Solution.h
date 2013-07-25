@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Math.h"
+file|"Graph.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Graph.h"
+file|"Math.h"
 end_include
 
 begin_include

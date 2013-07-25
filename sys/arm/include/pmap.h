@@ -294,6 +294,12 @@ name|pv_entry
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pv_chunk
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|md_page
@@ -391,11 +397,6 @@ index|[
 name|L2_SIZE
 index|]
 decl_stmt|;
-name|pd_entry_t
-modifier|*
-name|pm_pdir
-decl_stmt|;
-comment|/* KVA of page directory */
 name|cpuset_t
 name|pm_active
 decl_stmt|;
@@ -405,6 +406,25 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statictics */
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|!=
+literal|0
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|pv_chunk
+argument_list|)
+name|pm_pvchunk
+expr_stmt|;
+comment|/* list of mappings in pmap */
+else|#
+directive|else
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -413,6 +433,8 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -550,10 +572,6 @@ typedef|typedef
 struct|struct
 name|pv_entry
 block|{
-name|pmap_t
-name|pv_pmap
-decl_stmt|;
-comment|/* pmap where mapping lies */
 name|vm_offset_t
 name|pv_va
 decl_stmt|;
@@ -564,21 +582,98 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|int
+name|pv_flags
+decl_stmt|;
+comment|/* flags (wired, etc...) */
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|==
+literal|0
+name|pmap_t
+name|pv_pmap
+decl_stmt|;
+comment|/* pmap where mapping lies */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pv_entry
 argument_list|)
 name|pv_plist
 expr_stmt|;
-name|int
-name|pv_flags
-decl_stmt|;
-comment|/* flags (wired, etc...) */
+endif|#
+directive|endif
 block|}
 typedef|*
 name|pv_entry_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * pv_entries are allocated in chunks per-process.  This avoids the  * need to track per-pmap assignments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_NPCM
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NPCPV
+value|252
+end_define
+
+begin_struct
+struct|struct
+name|pv_chunk
+block|{
+name|pmap_t
+name|pc_pmap
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_list
+expr_stmt|;
+name|uint32_t
+name|pc_map
+index|[
+name|_NPCM
+index|]
+decl_stmt|;
+comment|/* bitmap; 1 = free */
+name|uint32_t
+name|pc_dummy
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* aligns pv_chunk to 4KB */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pv_chunk
+argument_list|)
+name|pc_lru
+expr_stmt|;
+name|struct
+name|pv_entry
+name|pc_pventry
+index|[
+name|_NPCPV
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -1409,6 +1504,21 @@ operator|!=
 literal|0
 end_elif
 
+begin_comment
+comment|/*  * AP[2:1] access permissions model:  *  * AP[2](APX)	- Write Disable  * AP[1]	- User Enable  * AP[0]	- Reference Flag  *  * AP[2]     AP[1]     Kernel     User  *  0          0        R/W        N  *  0          1        R/W       R/W  *  1          0         R         N  *  1          1         R         R  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2_S_PROT_R
+value|(0)
+end_define
+
+begin_comment
+comment|/* kernel read */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1417,18 +1527,18 @@ value|(L2_AP0(2))
 end_define
 
 begin_comment
-comment|/* user access */
+comment|/* user read */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|L2_S_PROT_R
-value|(L2_APX|L2_AP0(1))
+name|L2_S_REF
+value|(L2_AP0(1))
 end_define
 
 begin_comment
-comment|/* read access */
+comment|/* reference flag */
 end_comment
 
 begin_define
@@ -1441,11 +1551,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|L2_S_EXECUTABLE
+parameter_list|(
+name|pte
+parameter_list|)
+value|(!(pte& L2_XN))
+end_define
+
+begin_define
+define|#
+directive|define
 name|L2_S_WRITABLE
 parameter_list|(
 name|pte
 parameter_list|)
 value|(!(pte& L2_APX))
+end_define
+
+begin_define
+define|#
+directive|define
+name|L2_S_REFERENCED
+parameter_list|(
+name|pte
+parameter_list|)
+value|(!!(pte& L2_S_REF))
 end_define
 
 begin_ifndef

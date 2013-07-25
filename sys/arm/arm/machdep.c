@@ -836,6 +836,33 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|vfp_exists
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw
+argument_list|,
+name|HW_FLOATINGPT
+argument_list|,
+name|floatingpoint
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|vfp_exists
+argument_list|,
+literal|0
+argument_list|,
+literal|"Floating point support enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|board_set_serial

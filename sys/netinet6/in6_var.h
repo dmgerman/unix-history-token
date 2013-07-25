@@ -104,17 +104,27 @@ name|mld_ifinfo
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_struct
 struct|struct
 name|in6_ifextra
 block|{
-name|struct
-name|in6_ifstat
+name|counter_u64_t
 modifier|*
 name|in6_ifstat
 decl_stmt|;
-name|struct
-name|icmp6_ifstat
+name|counter_u64_t
 modifier|*
 name|icmp6_ifstat
 decl_stmt|;
@@ -141,6 +151,56 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|in6_ifextra
+block|{
+name|void
+modifier|*
+name|in6_ifstat
+decl_stmt|;
+name|void
+modifier|*
+name|icmp6_ifstat
+decl_stmt|;
+name|struct
+name|nd_ifinfo
+modifier|*
+name|nd_ifinfo
+decl_stmt|;
+name|struct
+name|scope6_id
+modifier|*
+name|scope6_id
+decl_stmt|;
+name|struct
+name|lltable
+modifier|*
+name|lltable
+decl_stmt|;
+name|struct
+name|mld_ifinfo
+modifier|*
+name|mld_ifinfo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_define
 define|#
@@ -305,94 +365,94 @@ begin_struct
 struct|struct
 name|in6_ifstat
 block|{
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_receive
 decl_stmt|;
 comment|/* # of total input datagram */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_hdrerr
 decl_stmt|;
 comment|/* # of datagrams with invalid hdr */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_toobig
 decl_stmt|;
 comment|/* # of datagrams exceeded MTU */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_noroute
 decl_stmt|;
 comment|/* # of datagrams with no route */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_addrerr
 decl_stmt|;
 comment|/* # of datagrams with invalid dst */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_protounknown
 decl_stmt|;
 comment|/* # of datagrams with unknown proto */
 comment|/* NOTE: increment on final dst if */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_truncated
 decl_stmt|;
 comment|/* # of truncated datagrams */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_discard
 decl_stmt|;
 comment|/* # of discarded datagrams */
 comment|/* NOTE: fragment timeout is not here */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_deliver
 decl_stmt|;
 comment|/* # of datagrams delivered to ULP */
 comment|/* NOTE: increment on final dst if */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_forward
 decl_stmt|;
 comment|/* # of datagrams forwarded */
 comment|/* NOTE: increment on outgoing if */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_request
 decl_stmt|;
 comment|/* # of outgoing datagrams from ULP */
 comment|/* NOTE: does not include forwrads */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_discard
 decl_stmt|;
 comment|/* # of discarded datagrams */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_fragok
 decl_stmt|;
 comment|/* # of datagrams fragmented */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_fragfail
 decl_stmt|;
 comment|/* # of datagrams failed on fragment */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_fragcreat
 decl_stmt|;
 comment|/* # of fragment datagrams */
 comment|/* NOTE: this is # after fragment */
-name|u_quad_t
+name|uint64_t
 name|ifs6_reass_reqd
 decl_stmt|;
 comment|/* # of incoming fragmented packets */
 comment|/* NOTE: increment on final dst if */
-name|u_quad_t
+name|uint64_t
 name|ifs6_reass_ok
 decl_stmt|;
 comment|/* # of reassembled packets */
 comment|/* NOTE: this is # after reass */
 comment|/* NOTE: increment on final dst if */
-name|u_quad_t
+name|uint64_t
 name|ifs6_reass_fail
 decl_stmt|;
 comment|/* # of reass failures */
 comment|/* NOTE: may not be packet count */
 comment|/* NOTE: increment on final dst if */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_mcast
 decl_stmt|;
 comment|/* # of inbound multicast datagrams */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_mcast
 decl_stmt|;
 comment|/* # of outbound multicast datagrams */
@@ -410,140 +470,140 @@ name|icmp6_ifstat
 block|{
 comment|/* 	 * Input statistics 	 */
 comment|/* ipv6IfIcmpInMsgs, total # of input messages */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_msg
 decl_stmt|;
 comment|/* ipv6IfIcmpInErrors, # of input error messages */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_error
 decl_stmt|;
 comment|/* ipv6IfIcmpInDestUnreachs, # of input dest unreach errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_dstunreach
 decl_stmt|;
 comment|/* ipv6IfIcmpInAdminProhibs, # of input administratively prohibited errs */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_adminprohib
 decl_stmt|;
 comment|/* ipv6IfIcmpInTimeExcds, # of input time exceeded errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_timeexceed
 decl_stmt|;
 comment|/* ipv6IfIcmpInParmProblems, # of input parameter problem errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_paramprob
 decl_stmt|;
 comment|/* ipv6IfIcmpInPktTooBigs, # of input packet too big errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_pkttoobig
 decl_stmt|;
 comment|/* ipv6IfIcmpInEchos, # of input echo requests */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_echo
 decl_stmt|;
 comment|/* ipv6IfIcmpInEchoReplies, # of input echo replies */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_echoreply
 decl_stmt|;
 comment|/* ipv6IfIcmpInRouterSolicits, # of input router solicitations */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_routersolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpInRouterAdvertisements, # of input router advertisements */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_routeradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpInNeighborSolicits, # of input neighbor solicitations */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_neighborsolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpInNeighborAdvertisements, # of input neighbor advertisements */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_neighboradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpInRedirects, # of input redirects */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_redirect
 decl_stmt|;
 comment|/* ipv6IfIcmpInGroupMembQueries, # of input MLD queries */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_mldquery
 decl_stmt|;
 comment|/* ipv6IfIcmpInGroupMembResponses, # of input MLD reports */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_mldreport
 decl_stmt|;
 comment|/* ipv6IfIcmpInGroupMembReductions, # of input MLD done */
-name|u_quad_t
+name|uint64_t
 name|ifs6_in_mlddone
 decl_stmt|;
 comment|/* 	 * Output statistics. We should solve unresolved routing problem... 	 */
 comment|/* ipv6IfIcmpOutMsgs, total # of output messages */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_msg
 decl_stmt|;
 comment|/* ipv6IfIcmpOutErrors, # of output error messages */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_error
 decl_stmt|;
 comment|/* ipv6IfIcmpOutDestUnreachs, # of output dest unreach errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_dstunreach
 decl_stmt|;
 comment|/* ipv6IfIcmpOutAdminProhibs, # of output administratively prohibited errs */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_adminprohib
 decl_stmt|;
 comment|/* ipv6IfIcmpOutTimeExcds, # of output time exceeded errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_timeexceed
 decl_stmt|;
 comment|/* ipv6IfIcmpOutParmProblems, # of output parameter problem errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_paramprob
 decl_stmt|;
 comment|/* ipv6IfIcmpOutPktTooBigs, # of output packet too big errors */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_pkttoobig
 decl_stmt|;
 comment|/* ipv6IfIcmpOutEchos, # of output echo requests */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_echo
 decl_stmt|;
 comment|/* ipv6IfIcmpOutEchoReplies, # of output echo replies */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_echoreply
 decl_stmt|;
 comment|/* ipv6IfIcmpOutRouterSolicits, # of output router solicitations */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_routersolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpOutRouterAdvertisements, # of output router advertisements */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_routeradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpOutNeighborSolicits, # of output neighbor solicitations */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_neighborsolicit
 decl_stmt|;
 comment|/* ipv6IfIcmpOutNeighborAdvertisements, # of output neighbor advertisements */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_neighboradvert
 decl_stmt|;
 comment|/* ipv6IfIcmpOutRedirects, # of output redirects */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_redirect
 decl_stmt|;
 comment|/* ipv6IfIcmpOutGroupMembQueries, # of output MLD queries */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_mldquery
 decl_stmt|;
 comment|/* ipv6IfIcmpOutGroupMembResponses, # of output MLD reports */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_mldreport
 decl_stmt|;
 comment|/* ipv6IfIcmpOutGroupMembReductions, # of output MLD done */
-name|u_quad_t
+name|uint64_t
 name|ifs6_out_mlddone
 decl_stmt|;
 block|}
@@ -1849,24 +1909,6 @@ parameter_list|()
 value|rw_wunlock(&in6_ifaddr_lock)
 end_define
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|icmp6stat
-argument_list|,
-name|icmp6stat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_icmp6stat
-value|VNET(icmp6stat)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1877,18 +1919,10 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|do {								\ 	if (ifp)						\ 		((struct in6_ifextra *)((ifp)->if_afdata[AF_INET6]))->in6_ifstat->tag++; \ } while (
+value|do {								\ 	if (ifp)						\ 		counter_u64_add(((struct in6_ifextra *)		\ 		    ((ifp)->if_afdata[AF_INET6]))->in6_ifstat[	\ 		    offsetof(struct in6_ifstat, tag) / sizeof(uint64_t)], 1);\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|in6_addr
-name|zeroin6_addr
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -3060,6 +3094,19 @@ modifier|*
 parameter_list|,
 name|struct
 name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|in6_ifaddr
+modifier|*
+name|in6ifa_llaonifp
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

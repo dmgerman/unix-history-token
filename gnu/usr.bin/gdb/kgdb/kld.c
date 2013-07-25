@@ -241,6 +241,8 @@ init|=
 block|{
 literal|".debug"
 block|,
+literal|".symbols"
+block|,
 literal|""
 block|,
 name|NULL
@@ -1594,6 +1596,31 @@ name|path
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Try to read the pathname (if it exists) and store 		 * it in so_name. 		 */
+if|if
+condition|(
+name|find_kld_path
+argument_list|(
+name|new
+operator|->
+name|so_original_name
+argument_list|,
+name|new
+operator|->
+name|so_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|new
+operator|->
+name|so_name
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* we found the kld */
+empty_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|off_pathname

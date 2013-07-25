@@ -189,6 +189,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    show foreign              - display detected foreign volumes\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    show logstate             - display event log sequence numbers\n"
 argument_list|)
 expr_stmt|;
@@ -350,7 +357,56 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    foreign scan              - scan for foreign configurations\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    foreign clear [volume]    - clear foreign configurations (default all)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    foreign diag [volume]     - diagnostic display foreign configurations (default all)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    foreign preview [volume]  - preview foreign configurations (default all)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    foreign import [volume]   - import foreign configurations (default all)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    flash<firmware>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    start learn               - start a BBU relearn\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    bbu<setting><value>     - set BBU properties\n"
 argument_list|)
 expr_stmt|;
 ifdef|#

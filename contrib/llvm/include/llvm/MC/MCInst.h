@@ -769,11 +769,9 @@ argument_list|()
 return|;
 block|}
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|MCOperand
-operator|,
-literal|8
 operator|>
 operator|::
 name|iterator

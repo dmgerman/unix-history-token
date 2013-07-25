@@ -305,10 +305,19 @@ name|MOInvariant
 init|=
 literal|16
 block|,
+comment|// Target hints allow target passes to annotate memory operations.
+name|MOTargetStartBit
+init|=
+literal|5
+block|,
+name|MOTargetNumBits
+init|=
+literal|3
+block|,
 comment|// This is the number of bits we need to represent flags.
 name|MOMaxBits
 init|=
-literal|5
+literal|8
 block|}
 enum|;
 comment|/// MachineMemOperand - Construct an MachineMemOperand object with the
@@ -381,6 +390,31 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+comment|/// Bitwise OR the current flags with the given flags.
+name|void
+name|setFlags
+parameter_list|(
+name|unsigned
+name|f
+parameter_list|)
+block|{
+name|Flags
+operator||=
+operator|(
+name|f
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|MOMaxBits
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+expr_stmt|;
 block|}
 comment|/// getOffset - For normal values, this is a byte offset added to the base
 comment|/// address. For PseudoSourceValue::FPRel values, this is the FrameIndex

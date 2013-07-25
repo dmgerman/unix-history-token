@@ -4124,7 +4124,7 @@ name|SYSINIT
 argument_list|(
 name|periodic_resettodr
 argument_list|,
-name|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_LAST
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,

@@ -1269,7 +1269,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|bool
 name|arena_prof_accum_impl
 parameter_list|(
 name|arena_t
@@ -1283,7 +1283,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|bool
 name|arena_prof_accum_locked
 parameter_list|(
 name|arena_t
@@ -1297,7 +1297,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|bool
 name|arena_prof_accum
 parameter_list|(
 name|arena_t
@@ -2376,7 +2376,7 @@ end_function
 
 begin_function
 name|JEMALLOC_INLINE
-name|void
+name|bool
 name|arena_prof_accum_impl
 parameter_list|(
 name|arena_t
@@ -2414,22 +2414,29 @@ operator|>=
 name|prof_interval
 condition|)
 block|{
-name|prof_idump
-argument_list|()
-expr_stmt|;
 name|arena
 operator|->
 name|prof_accumbytes
 operator|-=
 name|prof_interval
 expr_stmt|;
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 name|JEMALLOC_INLINE
-name|void
+name|bool
 name|arena_prof_accum_locked
 parameter_list|(
 name|arena_t
@@ -2451,20 +2458,27 @@ name|prof_interval
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
+return|return
+operator|(
 name|arena_prof_accum_impl
 argument_list|(
 name|arena
 argument_list|,
 name|accumbytes
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 name|JEMALLOC_INLINE
-name|void
+name|bool
 name|arena_prof_accum
 parameter_list|(
 name|arena_t
@@ -2486,7 +2500,15 @@ name|prof_interval
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
+block|{
+name|bool
+name|ret
+decl_stmt|;
 name|malloc_mutex_lock
 argument_list|(
 operator|&
@@ -2495,6 +2517,8 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|arena_prof_accum_impl
 argument_list|(
 name|arena
@@ -2510,6 +2534,12 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
 block|}
 end_function
 

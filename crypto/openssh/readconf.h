@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.91 2011/09/23 07:45:05 markus Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.93 2013/02/22 04:45:09 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -320,6 +320,12 @@ index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]
 decl_stmt|;
+name|int
+name|identity_file_userprovided
+index|[
+name|SSH_MAX_IDENTITY_FILES
+index|]
+decl_stmt|;
 name|Key
 modifier|*
 name|identity_keys
@@ -522,6 +528,28 @@ name|REQUEST_TTY_FORCE
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSHCONF_CHECKPERM
+value|1
+end_define
+
+begin_comment
+comment|/* check permissions on config file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSHCONF_USERCONF
+value|2
+end_define
+
+begin_comment
+comment|/* user provided config file not system */
+end_comment
+
 begin_function_decl
 name|void
 name|initialize_options
@@ -602,6 +630,8 @@ name|int
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -630,6 +660,26 @@ parameter_list|,
 specifier|const
 name|Forward
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|add_identity_file
+parameter_list|(
+name|Options
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -51,12 +51,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ALL_STD_EXCEPT
-value|(FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \ 			 FE_OVERFLOW | FE_UNDERFLOW)
-end_define
+begin_include
+include|#
+directive|include
+file|"test-utils.h"
+end_include
 
 begin_pragma
 pragma|#
@@ -89,7 +88,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)((x), (y), (z)), (result)));		\ 	assert(((func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
+value|do {		\ 	volatile long double _vx = (x), _vy = (y), _vz = (z);		\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal((func)(_vx, _vy, _vz), (result)));		\ 	assert(((void)(func), fetestexcept(exceptmask) == (excepts)));	\ } while (0)
 end_define
 
 begin_define
@@ -109,7 +108,7 @@ name|exceptmask
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	test(fma, (x), (y), (z), (double)(result), (exceptmask), (excepts)); \ 	test(fmaf, (x), (y), (z), (float)(result), (exceptmask), (excepts)); \ 	test(fmal, (x), (y), (z), (result), (exceptmask), (excepts));	\ } while (0)
+value|do {		\ 	test(fma, (double)(x), (double)(y), (double)(z),		\ 		(double)(result), (exceptmask), (excepts));		\ 	test(fmaf, (float)(x), (float)(y), (float)(z),			\ 		(float)(result), (exceptmask), (excepts));		\ 	test(fmal, (x), (y), (z), (result), (exceptmask), (excepts));	\ } while (0)
 end_define
 
 begin_comment
@@ -145,57 +144,17 @@ value|do { \ 	fesetround(FE_TONEAREST);					\ 	test((func), (x), (y), (z), (rn),
 end_define
 
 begin_comment
-comment|/*  * Determine whether x and y are equal, with two special rules:  *	+0.0 != -0.0  *	 NaN == NaN  */
+comment|/*  * This is needed because clang constant-folds fma in ways that are incorrect  * in rounding modes other than FE_TONEAREST.  */
 end_comment
 
-begin_function
-name|int
-name|fpequal
-parameter_list|(
-name|long
+begin_decl_stmt
+specifier|volatile
 name|double
-name|x
-parameter_list|,
-name|long
-name|double
-name|y
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|x
-operator|==
-name|y
-operator|&&
-operator|!
-name|signbit
-argument_list|(
-name|x
-argument_list|)
-operator|==
-operator|!
-name|signbit
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|isnan
-argument_list|(
-name|x
-argument_list|)
-operator|&&
-name|isnan
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|)
-return|;
-block|}
-end_function
+name|one
+init|=
+literal|1.0
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -418,32 +377,11 @@ expr_stmt|;
 name|testall
 argument_list|(
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
-argument_list|,
-name|rd
-condition|?
-operator|-
-literal|0.0
-else|:
-literal|0.0
-argument_list|,
-name|ALL_STD_EXCEPT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|testall
-argument_list|(
-literal|1.0
-argument_list|,
-operator|-
-literal|1.0
-argument_list|,
-literal|1.0
+name|one
 argument_list|,
 name|rd
 condition|?
@@ -459,14 +397,35 @@ argument_list|)
 expr_stmt|;
 name|testall
 argument_list|(
-operator|-
-literal|1.0
+name|one
 argument_list|,
 operator|-
-literal|1.0
+name|one
+argument_list|,
+name|one
+argument_list|,
+name|rd
+condition|?
+operator|-
+literal|0.0
+else|:
+literal|0.0
+argument_list|,
+name|ALL_STD_EXCEPT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|testall
+argument_list|(
+operator|-
+name|one
 argument_list|,
 operator|-
-literal|1.0
+name|one
+argument_list|,
+operator|-
+name|one
 argument_list|,
 name|rd
 condition|?
@@ -1138,9 +1097,9 @@ name|test
 argument_list|(
 name|fmaf
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1160,9 +1119,9 @@ name|test
 argument_list|(
 name|fma
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1182,9 +1141,9 @@ name|test
 argument_list|(
 name|fmal
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1208,7 +1167,7 @@ argument_list|(
 literal|0x1
 literal|.0p100
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1238,9 +1197,9 @@ argument_list|(
 name|fmaf
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1265,9 +1224,9 @@ argument_list|(
 name|fma
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1292,9 +1251,9 @@ argument_list|(
 name|fmal
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1323,7 +1282,7 @@ literal|0x1
 literal|.0p100
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1359,9 +1318,9 @@ name|test
 argument_list|(
 name|fmaf
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1384,9 +1343,9 @@ name|test
 argument_list|(
 name|fma
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1409,9 +1368,9 @@ name|test
 argument_list|(
 name|fmal
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1438,7 +1397,7 @@ argument_list|(
 literal|0x1
 literal|.0p100
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 operator|-
 literal|0x1
@@ -1474,9 +1433,9 @@ argument_list|(
 name|fmaf
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1500,9 +1459,9 @@ argument_list|(
 name|fma
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1526,9 +1485,9 @@ argument_list|(
 name|fmal
 argument_list|,
 operator|-
-literal|1.0
+name|one
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p
@@ -1556,7 +1515,7 @@ operator|-
 literal|0x1
 literal|.0p100
 argument_list|,
-literal|1.0
+name|one
 argument_list|,
 literal|0x1
 literal|.0p

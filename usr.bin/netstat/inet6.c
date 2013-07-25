@@ -936,7 +936,7 @@ return|return;
 block|}
 block|}
 else|else
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,
@@ -1144,7 +1144,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|256
+name|IP6S_HDRCNT
 condition|;
 name|i
 operator|++
@@ -1226,7 +1226,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|IP6S_M2MMAX
 condition|;
 name|i
 operator|++
@@ -1345,7 +1345,7 @@ name|i
 parameter_list|)
 value|do {\ 		switch(i) {
 comment|/* XXX hardcoding in each case */
-value|\ 		case 1:\ 			p(s, "\t\t%ju node-local%s\n");\ 			break;\ 		case 2:\ 			p(s,"\t\t%ju link-local%s\n");\ 			break;\ 		case 5:\ 			p(s,"\t\t%ju site-local%s\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t%ju global%s\n");\ 			break;\ 		default:\ 			printf("\t\t%ju addresses scope=%x\n",\ 			    (uintmax_t)ip6stat.s, i);\ 		}\ 	} while (0);
+value|\ 		case 1:\ 			p(s, "\t\t%ju interface-local%s\n");\ 			break;\ 		case 2:\ 			p(s,"\t\t%ju link-local%s\n");\ 			break;\ 		case 5:\ 			p(s,"\t\t%ju site-local%s\n");\ 			break;\ 		case 14:\ 			p(s,"\t\t%ju global%s\n");\ 			break;\ 		default:\ 			printf("\t\t%ju addresses scope=%x\n",\ 			    (uintmax_t)ip6stat.s, i);\ 		}\ 	} while (0);
 name|p
 argument_list|(
 name|ip6s_sources_none
@@ -1365,7 +1365,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|IP6S_SCOPECNT
 condition|;
 name|i
 operator|++
@@ -1420,7 +1420,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|IP6S_SCOPECNT
 condition|;
 name|i
 operator|++
@@ -1475,7 +1475,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|IP6S_SCOPECNT
 condition|;
 name|i
 operator|++
@@ -1530,7 +1530,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|IP6S_SCOPECNT
 condition|;
 name|i
 operator|++
@@ -1585,7 +1585,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|IP6S_SCOPECNT
 condition|;
 name|i
 operator|++
@@ -1641,7 +1641,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+name|IP6S_RULESMAX
 condition|;
 name|i
 operator|++
@@ -2592,7 +2592,7 @@ return|return;
 block|}
 block|}
 else|else
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,
@@ -3645,7 +3645,7 @@ return|return;
 block|}
 block|}
 else|else
-name|kread
+name|kread_counters
 argument_list|(
 name|off
 argument_list|,

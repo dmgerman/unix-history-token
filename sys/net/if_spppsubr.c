@@ -1409,6 +1409,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -4616,6 +4617,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -18322,7 +18324,6 @@ name|suggestaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|suggestaddr
 argument_list|)
 argument_list|)

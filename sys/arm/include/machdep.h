@@ -23,6 +23,12 @@ begin_comment
 comment|/* Structs that need to be initialised by initarm */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|pv_addr
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -76,6 +82,12 @@ begin_comment
 comment|/* misc prototypes used by the many arm machdeps */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|arm_lock_cache_line
@@ -108,7 +120,8 @@ begin_function_decl
 name|void
 name|data_abort_handler
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -118,7 +131,8 @@ begin_function_decl
 name|void
 name|prefetch_abort_handler
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;
@@ -138,7 +152,8 @@ begin_function_decl
 name|void
 name|undefinedinstruction_bounce
 parameter_list|(
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;

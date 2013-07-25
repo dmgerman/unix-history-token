@@ -6889,7 +6889,7 @@ name|object
 operator|.
 name|vm_object
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -6920,7 +6920,7 @@ name|tobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -6931,7 +6931,7 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
@@ -6969,7 +6969,7 @@ argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -6997,12 +6997,12 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -7037,12 +7037,12 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -7090,12 +7090,12 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)
@@ -8785,13 +8785,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmc
-operator|!=
-name|NULL
-condition|)
-block|{
 name|pmc
 operator|->
 name|pm_owner
@@ -8806,7 +8799,6 @@ operator|->
 name|pm_targets
 argument_list|)
 expr_stmt|;
-block|}
 name|PMCDBG
 argument_list|(
 name|PMC
@@ -17543,13 +17535,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|md
-operator|!=
-name|NULL
-condition|)
-block|{
 name|md
 operator|->
 name|pmd_nclass
@@ -17562,7 +17547,6 @@ argument_list|(
 name|md
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|md
 return|;
@@ -18625,19 +18609,6 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pmc_pmcdisp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"[pmc,%d] pmcdisp allocation returned NULL"
-operator|,
-name|__LINE__
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* mark all PMCs as available */

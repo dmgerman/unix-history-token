@@ -4,7 +4,7 @@ comment|/* $OpenBSD: sshconnect.c,v 1.236 2012/09/14 16:51:34 markus Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $OpenBSD: sshconnect.c,v 1.237 2013/02/22 19:13:56 markus Exp $ */
 end_comment
 
 begin_comment
@@ -421,6 +421,39 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|proxy_command
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+block|{
+name|packet_set_connection
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|STDOUT_FILENO
+argument_list|)
+expr_stmt|;
+name|packet_set_timeout
+argument_list|(
+name|options
+operator|.
+name|server_alive_interval
+argument_list|,
+name|options
+operator|.
+name|server_alive_count_max
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|(

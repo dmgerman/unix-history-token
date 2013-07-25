@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IKEv2 initiator (RFC 4306) for EAP-IKEV2  * Copyright (c) 2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * IKEv2 initiator (RFC 4306) for EAP-IKEV2  * Copyright (c) 2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/dh_groups.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -1885,7 +1891,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* RFC 4306, Section 3.4: 	 * The length of DH public value MUST be equal to the lenght of the 	 * prime modulus. 	 */
+comment|/* RFC 4306, Section 3.4: 	 * The length of DH public value MUST be equal to the length of the 	 * prime modulus. 	 */
 if|if
 condition|(
 name|ker_len
@@ -5347,7 +5353,7 @@ name|IKEV2_NONCE_MIN_LEN
 expr_stmt|;
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|data
 operator|->
@@ -5594,7 +5600,7 @@ literal|16
 expr_stmt|;
 if|if
 condition|(
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|data
 operator|->

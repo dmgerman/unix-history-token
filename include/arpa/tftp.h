@@ -15,6 +15,12 @@ directive|define
 name|_ARPA_TFTP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/*  * Trivial File Transfer Protocol (IEN-133)  */
 end_comment

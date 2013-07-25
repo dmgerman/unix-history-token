@@ -557,7 +557,7 @@ begin_struct
 struct|struct
 name|ucom_softc
 block|{
-comment|/* 	 * NOTE: To avoid loosing level change information we use two 	 * tasks instead of one for all commands. 	 * 	 * Level changes are transitions like: 	 * 	 * ON->OFF 	 * OFF->ON 	 * OPEN->CLOSE 	 * CLOSE->OPEN 	 */
+comment|/* 	 * NOTE: To avoid losing level change information we use two 	 * tasks instead of one for all commands. 	 * 	 * Level changes are transitions like: 	 * 	 * ON->OFF 	 * OFF->ON 	 * OPEN->CLOSE 	 * CLOSE->OPEN 	 */
 name|struct
 name|ucom_cfg_task
 name|sc_start_task

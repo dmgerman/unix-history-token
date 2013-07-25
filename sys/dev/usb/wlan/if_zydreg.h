@@ -805,7 +805,7 @@ value|0x9b28
 end_define
 
 begin_comment
-comment|/*  * Miscellanous registers.  */
+comment|/*  * Miscellaneous registers.  */
 end_comment
 
 begin_define

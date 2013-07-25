@@ -204,11 +204,7 @@ name|links
 expr_stmt|;
 name|struct
 name|cam_ed_qinfo
-name|alloc_ccb_entry
-decl_stmt|;
-name|struct
-name|cam_ed_qinfo
-name|send_ccb_entry
+name|devq_entry
 decl_stmt|;
 name|struct
 name|cam_et
@@ -247,12 +243,6 @@ name|u_int
 name|generation
 decl_stmt|;
 comment|/* Generation number */
-name|struct
-name|cam_periph
-modifier|*
-name|owner
-decl_stmt|;
-comment|/* Peripheral driver's ownership tag */
 name|void
 modifier|*
 name|quirk

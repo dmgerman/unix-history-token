@@ -656,23 +656,10 @@ condition|(
 operator|*
 name|Start
 operator|==
-literal|' '
-condition|)
-block|{
-name|Start
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* Found left bracket, go to the right bracket */
-if|if
-condition|(
-operator|*
-name|Start
-operator|==
 literal|'['
 condition|)
 block|{
+comment|/* Found left bracket, go to the right bracket */
 while|while
 condition|(
 name|Start
@@ -689,11 +676,14 @@ name|Start
 operator|++
 expr_stmt|;
 block|}
+block|}
+elseif|else
 if|if
 condition|(
+operator|*
 name|Start
-operator|==
-name|Colon
+operator|!=
+literal|' '
 condition|)
 block|{
 break|break;
@@ -701,9 +691,6 @@ block|}
 name|Start
 operator|++
 expr_stmt|;
-continue|continue;
-block|}
-break|break;
 block|}
 comment|/*      * There are two column values. One for the field name,      * and one for the field value.      */
 name|Column
@@ -1004,7 +991,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 for|for
@@ -1030,9 +1017,6 @@ expr_stmt|;
 block|}
 name|c
 operator|=
-operator|(
-name|char
-operator|)
 name|getc
 argument_list|(
 name|Handle
@@ -1105,6 +1089,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 switch|switch
@@ -1245,6 +1232,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|i
@@ -1301,6 +1291,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|i
@@ -1358,6 +1351,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|i
@@ -2522,6 +2518,11 @@ expr_stmt|;
 name|AcpiOsRedirectOutput
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Buffer
 argument_list|)
 expr_stmt|;
 block|}

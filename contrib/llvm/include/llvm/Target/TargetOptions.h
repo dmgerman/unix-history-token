@@ -88,7 +88,7 @@ name|ABIType
 block|{
 name|Default
 block|,
-comment|// Target-specific (either soft or hard depending on triple, etc).
+comment|// Target-specific (either soft or hard depending on triple,etc).
 name|Soft
 block|,
 comment|// Soft float.
@@ -205,6 +205,11 @@ operator|,
 name|RealignStack
 argument_list|(
 name|true
+argument_list|)
+operator|,
+name|SSPBufferSize
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|EnableFastISel
@@ -480,14 +485,23 @@ comment|/// may be added.
 comment|/// Strict mode - allow fusion only if/when it can be proven that the excess
 comment|/// precision won't effect the result.
 comment|///
-comment|/// Note: This option only controls formation of fused ops by the optimizers.
-comment|/// Fused operations that are explicitly specified (e.g. FMA via the
-comment|/// llvm.fma.* intrinsic) will always be honored, regardless of the value of
-comment|/// this option.
+comment|/// Note: This option only controls formation of fused ops by the
+comment|/// optimizers.  Fused operations that are explicitly specified (e.g. FMA
+comment|/// via the llvm.fma.* intrinsic) will always be honored, regardless of
+comment|/// the value of this option.
 name|FPOpFusion
 operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
+expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|TargetOptions
+operator|&
+operator|)
 expr_stmt|;
 block|}
 empty_stmt|;

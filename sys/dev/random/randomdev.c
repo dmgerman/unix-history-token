@@ -233,6 +233,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|random_systat
+modifier|*
 name|random_systat
 decl_stmt|;
 end_decl_stmt
@@ -327,13 +328,13 @@ block|{
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|reseed
 call|)
 argument_list|()
 expr_stmt|;
 name|random_systat
-operator|.
+operator|->
 name|seeded
 operator|=
 literal|1
@@ -397,7 +398,7 @@ if|if
 condition|(
 operator|!
 name|random_systat
-operator|.
+operator|->
 name|seeded
 condition|)
 name|error
@@ -405,7 +406,7 @@ operator|=
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|block
 call|)
 argument_list|(
@@ -462,7 +463,7 @@ operator|=
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|read
 call|)
 argument_list|(
@@ -592,7 +593,7 @@ break|break;
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|write
 call|)
 argument_list|(
@@ -725,7 +726,7 @@ block|{
 if|if
 condition|(
 name|random_systat
-operator|.
+operator|->
 name|seeded
 condition|)
 name|revents
@@ -744,7 +745,7 @@ operator|=
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|poll
 call|)
 argument_list|(
@@ -806,7 +807,7 @@ expr_stmt|;
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|init
 call|)
 argument_list|()
@@ -820,7 +821,7 @@ argument_list|(
 literal|"random:<entropy source, %s>\n"
 argument_list|,
 name|random_systat
-operator|.
+operator|->
 name|ident
 argument_list|)
 expr_stmt|;
@@ -861,7 +862,7 @@ case|:
 call|(
 modifier|*
 name|random_systat
-operator|.
+operator|->
 name|deinit
 call|)
 argument_list|()

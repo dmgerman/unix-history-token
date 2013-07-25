@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/inode.h>
 end_include
 
@@ -77,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<fs/ext2fs/ext2fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fs/ext2fs/fs.h>
 end_include
 
 begin_include
@@ -226,7 +226,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate a block in the file system.  *  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *        available block is located.  * If no block preference is given the following hierarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *        inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *        available block is located.  */
+comment|/*  * Allocate a block in the filesystem.  *  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *        available block is located.  * If no block preference is given the following hierarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *        inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *        available block is located.  */
 end_comment
 
 begin_function
@@ -302,7 +302,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 operator|(
@@ -367,7 +367,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
+comment|/* INVARIANTS */
 if|if
 condition|(
 name|size
@@ -536,12 +536,12 @@ name|cred
 operator|->
 name|cr_uid
 argument_list|,
-literal|"file system full"
+literal|"filesystem full"
 argument_list|)
 expr_stmt|;
 name|uprintf
 argument_list|(
-literal|"\n%s: write failed, file system is full\n"
+literal|"\n%s: write failed, filesystem is full\n"
 argument_list|,
 name|fs
 operator|->
@@ -713,11 +713,12 @@ decl_stmt|,
 modifier|*
 name|idp
 decl_stmt|;
-name|int32_t
+name|e2fs_lbn_t
 name|start_lbn
 decl_stmt|,
 name|end_lbn
-decl_stmt|,
+decl_stmt|;
+name|int32_t
 name|soff
 decl_stmt|,
 name|newblk
@@ -819,7 +820,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 for|for
 control|(
 name|i
@@ -1023,7 +1024,7 @@ block|}
 name|sbap
 operator|=
 operator|(
-name|int32_t
+name|u_int
 operator|*
 operator|)
 name|sbp
@@ -1072,7 +1073,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|start_ap
@@ -1136,7 +1137,7 @@ goto|;
 name|ebap
 operator|=
 operator|(
-name|int32_t
+name|u_int
 operator|*
 operator|)
 name|ebp
@@ -1282,7 +1283,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|buflist
@@ -1550,7 +1551,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an inode in the file system.  *   */
+comment|/*  * Allocate an inode in the filesystem.  *   */
 end_comment
 
 begin_function
@@ -2001,7 +2002,7 @@ name|dirsize
 decl_stmt|,
 name|cgsize
 decl_stmt|;
-name|int
+name|u_int
 name|avgifree
 decl_stmt|,
 name|avgbfree
@@ -2010,19 +2011,19 @@ name|avgndir
 decl_stmt|,
 name|curdirsize
 decl_stmt|;
-name|int
+name|u_int
 name|minifree
 decl_stmt|,
 name|minbfree
 decl_stmt|,
 name|maxndir
 decl_stmt|;
-name|int
+name|u_int
 name|mincg
 decl_stmt|,
 name|minndir
 decl_stmt|;
-name|int
+name|u_int
 name|maxcontigdirs
 decl_stmt|;
 name|mtx_assert
@@ -2633,7 +2634,7 @@ name|inode
 modifier|*
 name|ip
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 name|lbn
 parameter_list|,
 name|int
@@ -3496,7 +3497,7 @@ name|gotit
 label|:
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|isset
@@ -3759,12 +3760,6 @@ operator|)
 name|bp
 operator|->
 name|b_data
-expr_stmt|;
-name|bp
-operator|->
-name|b_xflags
-operator||=
-name|BX_BKGRDWRITE
 expr_stmt|;
 name|EXT2_LOCK
 argument_list|(
@@ -5381,7 +5376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fserr prints the name of a file system with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
+comment|/*  * Fserr prints the name of a filesystem with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
 end_comment
 
 begin_function

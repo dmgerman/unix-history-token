@@ -25,11 +25,6 @@ decl_stmt|;
 name|int
 name|stacknleft
 decl_stmt|;
-name|struct
-name|stackmark
-modifier|*
-name|marknext
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -171,7 +166,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|,
 name|char
@@ -255,7 +250,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|{ if (sstrend - p< n) p = makestrspace(n, p); }
+value|{ if ((size_t)(sstrend - p)< n) p = makestrspace(n, p); }
 end_define
 
 begin_define

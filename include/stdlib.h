@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|RAND_MAX
-value|0x7fffffff
+value|0x7ffffffd
 end_define
 
 begin_decl_stmt
@@ -875,18 +875,75 @@ comment|/* __ISO_C_VISIBLE>= 2011 */
 end_comment
 
 begin_comment
-comment|/*  * Extensions made by POSIX relative to C.  We don't know yet which edition  * of POSIX made these extensions, so assume they've always been there until  * research can be done.  */
+comment|/*  * Extensions made by POSIX relative to C.  */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|__POSIX_VISIBLE
+operator|>=
+literal|199506
+operator|||
+name|__XSI_VISIBLE
 end_if
 
+begin_function_decl
+name|char
+modifier|*
+name|realpath
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|char
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199506
+end_if
+
+begin_function_decl
+name|int
+name|rand_r
+parameter_list|(
+name|unsigned
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*>= ??? */
+comment|/* (TSF) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
 
 begin_function_decl
 name|int
@@ -906,37 +963,6 @@ end_function_decl
 begin_comment
 comment|/* (ADV) */
 end_comment
-
-begin_function_decl
-name|int
-name|rand_r
-parameter_list|(
-name|unsigned
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* (TSF) */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|realpath
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|__restrict
-parameter_list|,
-name|char
-modifier|*
-name|__restrict
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

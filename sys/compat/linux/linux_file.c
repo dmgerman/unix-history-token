@@ -231,31 +231,6 @@ directive|include
 file|<compat/linux/linux_file.h>
 end_include
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_function_decl
-name|int
-name|do_pipe
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|fildes
-index|[
-literal|2
-index|]
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|linux_creat
@@ -8201,7 +8176,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|do_pipe
+name|kern_pipe2
 argument_list|(
 name|td
 argument_list|,
@@ -8352,7 +8327,7 @@ name|O_CLOEXEC
 expr_stmt|;
 name|error
 operator|=
-name|do_pipe
+name|kern_pipe2
 argument_list|(
 name|td
 argument_list|,

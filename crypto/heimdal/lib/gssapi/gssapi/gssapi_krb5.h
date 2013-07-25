@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<gssapi.h>
+file|<gssapi/gssapi.h>
 end_include
 
 begin_decl_stmt

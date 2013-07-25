@@ -62,7 +62,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"CGBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CGDebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CGValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"CodeGenModule.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CharUnits.h"
 end_include
 
 begin_include
@@ -80,13 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/CharUnits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Frontend/CodeGenOptions.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -99,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/TargetInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/CodeGenOptions.h"
 end_include
 
 begin_include
@@ -122,37 +146,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CodeGenModule.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CGBuilder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CGDebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CGValue.h"
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -289,6 +289,21 @@ decl_stmt|;
 name|class
 name|BlockFieldFlags
 decl_stmt|;
+comment|/// The kind of evaluation to perform on values of a particular
+comment|/// type.  Basically, is the code in CGExprScalar, CGExprComplex, or
+comment|/// CGExprAgg?
+comment|///
+comment|/// TODO: should vectors maybe be split out into their own thing?
+enum|enum
+name|TypeEvaluationKind
+block|{
+name|TEK_Scalar
+block|,
+name|TEK_Complex
+block|,
+name|TEK_Aggregate
+block|}
+enum|;
 comment|/// A branch fixup.  These are required when emitting a goto to a
 comment|/// label which hasn't been emitted yet.  The goto is optimistically
 comment|/// emitted as a branch to the basic block for the label, and (if it
@@ -2708,6 +2723,17 @@ return|return
 name|Index
 return|;
 block|}
+comment|// This should be used cautiously.
+name|void
+name|setScopeDepth
+argument_list|(
+argument|EHScopeStack::stable_iterator depth
+argument_list|)
+block|{
+name|ScopeDepth
+operator|=
+name|depth
+block|;     }
 name|private
 operator|:
 name|llvm
@@ -2758,11 +2784,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// CurFuncDecl - Holds the Decl for the current function or ObjC method.
+comment|/// CurFuncDecl - Holds the Decl for the current outermost
 end_comment
 
 begin_comment
-comment|/// This excludes BlockDecls.
+comment|/// non-closure context.
 end_comment
 
 begin_decl_stmt
@@ -2908,6 +2934,18 @@ end_comment
 begin_decl_stmt
 name|bool
 name|SanitizePerformTypeCheck
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Sanitizer options to use for this function.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|SanitizerOptions
+modifier|*
+name|SanOpts
 decl_stmt|;
 end_decl_stmt
 
@@ -3906,6 +3944,10 @@ begin_comment
 comment|/// process all branch fixups.
 end_comment
 
+begin_comment
+comment|/// \param EHLoc - Optional debug location for EH code.
+end_comment
+
 begin_function_decl
 name|void
 name|PopCleanupBlock
@@ -3914,6 +3956,12 @@ name|bool
 name|FallThroughIsBranchThrough
 init|=
 name|false
+parameter_list|,
+name|SourceLocation
+name|EHLoc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4034,9 +4082,13 @@ expr_stmt|;
 name|bool
 name|OldDidCallStackSave
 decl_stmt|;
+name|protected
+label|:
 name|bool
 name|PerformCleanup
 decl_stmt|;
+name|private
+label|:
 name|RunCleanupsScope
 argument_list|(
 argument|const RunCleanupsScope&
@@ -4192,8 +4244,19 @@ block|{
 name|SourceRange
 name|Range
 block|;
-name|bool
-name|PopDebugStack
+name|SmallVector
+operator|<
+specifier|const
+name|LabelDecl
+operator|*
+block|,
+literal|4
+operator|>
+name|Labels
+block|;
+name|LexicalScope
+operator|*
+name|ParentScope
 block|;
 name|LexicalScope
 argument_list|(
@@ -4232,11 +4295,17 @@ argument_list|(
 name|Range
 argument_list|)
 block|,
-name|PopDebugStack
+name|ParentScope
 argument_list|(
-argument|true
+argument|CGF.CurLexicalScope
 argument_list|)
 block|{
+name|CGF
+operator|.
+name|CurLexicalScope
+operator|=
+name|this
+block|;
 if|if
 condition|(
 name|CGDebugInfo
@@ -4263,6 +4332,26 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|addLabel
+argument_list|(
+argument|const LabelDecl *label
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|PerformCleanup
+operator|&&
+literal|"adding label to dead scope?"
+argument_list|)
+block|;
+name|Labels
+operator|.
+name|push_back
+argument_list|(
+name|label
+argument_list|)
+block|;     }
 comment|/// \brief Exit this cleanup scope, emitting any accumulated
 comment|/// cleanups.
 operator|~
@@ -4271,9 +4360,6 @@ argument_list|()
 block|{
 if|if
 condition|(
-name|PopDebugStack
-condition|)
-block|{
 name|CGDebugInfo
 modifier|*
 name|DI
@@ -4282,10 +4368,6 @@ name|CGF
 operator|.
 name|getDebugInfo
 argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|DI
 condition|)
 name|DI
 operator|->
@@ -4301,61 +4383,95 @@ name|getEnd
 argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/// \brief Force the emission of cleanups now, instead of waiting
-comment|/// until this object is destroyed.
-name|void
+comment|// If we should perform a cleanup, force them now.  Note that
+comment|// this ends the cleanup scope before rescoping any labels.
+if|if
+condition|(
+name|PerformCleanup
+condition|)
 name|ForceCleanup
 argument_list|()
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Force the emission of cleanups now, instead of waiting
+end_comment
+
+begin_comment
+comment|/// until this object is destroyed.
+end_comment
+
+begin_function
+name|void
+name|ForceCleanup
+parameter_list|()
 block|{
+name|CGF
+operator|.
+name|CurLexicalScope
+operator|=
+name|ParentScope
+expr_stmt|;
 name|RunCleanupsScope
 operator|::
 name|ForceCleanup
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
-name|CGDebugInfo
-modifier|*
-name|DI
-init|=
-name|CGF
+operator|!
+name|Labels
 operator|.
-name|getDebugInfo
+name|empty
 argument_list|()
 condition|)
-block|{
-name|DI
-operator|->
-name|EmitLexicalBlockEnd
-argument_list|(
-name|CGF
-operator|.
-name|Builder
-argument_list|,
-name|Range
-operator|.
-name|getEnd
+name|rescopeLabels
 argument_list|()
-argument_list|)
-expr_stmt|;
-name|PopDebugStack
-operator|=
-name|false
 expr_stmt|;
 block|}
-block|}
-expr|}
-block|;
+end_function
+
+begin_function_decl
+name|void
+name|rescopeLabels
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+unit|};
 comment|/// PopCleanupBlocks - Takes the old cleanup stack size and emits
+end_comment
+
+begin_comment
 comment|/// the cleanup blocks that have been added.
+end_comment
+
+begin_comment
+comment|/// \param EHLoc - Optional debug location for EH code.
+end_comment
+
+begin_decl_stmt
 name|void
 name|PopCleanupBlocks
 argument_list|(
-argument|EHScopeStack::stable_iterator OldCleanupStackSize
+name|EHScopeStack
+operator|::
+name|stable_iterator
+name|OldCleanupStackSize
+argument_list|,
+name|SourceLocation
+name|EHLoc
+operator|=
+name|SourceLocation
+argument_list|()
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|ResolveBranchFixups
 argument_list|(
@@ -4365,14 +4481,30 @@ name|BasicBlock
 operator|*
 name|Target
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// The given basic block lies in the current EH scope, but may be a
+end_comment
+
+begin_comment
 comment|/// target of a potentially scope-crossing jump; get a stable handle
+end_comment
+
+begin_comment
 comment|/// to which we can perform this jump later.
+end_comment
+
+begin_decl_stmt
 name|JumpDest
 name|getJumpDestInCurrentScope
 argument_list|(
-argument|llvm::BasicBlock *Target
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Target
 argument_list|)
 block|{
 return|return
@@ -4390,14 +4522,30 @@ operator|++
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// The given basic block lies in the current EH scope, but may be a
+end_comment
+
+begin_comment
 comment|/// target of a potentially scope-crossing jump; get a stable handle
+end_comment
+
+begin_comment
 comment|/// to which we can perform this jump later.
+end_comment
+
+begin_function
 name|JumpDest
 name|getJumpDestInCurrentScope
-argument_list|(
-argument|StringRef Name = StringRef()
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Name
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
 block|{
 return|return
 name|getJumpDestInCurrentScope
@@ -4409,32 +4557,73 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// EmitBranchThroughCleanup - Emit a branch from the current insert
+end_comment
+
+begin_comment
 comment|/// block through the normal cleanup handling code (if any) and then
+end_comment
+
+begin_comment
 comment|/// on to \arg Dest.
+end_comment
+
+begin_function_decl
 name|void
 name|EmitBranchThroughCleanup
-argument_list|(
-argument|JumpDest Dest
-argument_list|)
-block|;
+parameter_list|(
+name|JumpDest
+name|Dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// isObviouslyBranchWithoutCleanups - Return true if a branch to the
+end_comment
+
+begin_comment
 comment|/// specified destination obviously has no cleanups to run.  'false' is always
+end_comment
+
+begin_comment
 comment|/// a conservatively correct answer for this method.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isObviouslyBranchWithoutCleanups
 argument_list|(
-argument|JumpDest Dest
+name|JumpDest
+name|Dest
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// popCatchScope - Pops the catch scope at the top of the EHScope
+end_comment
+
+begin_comment
 comment|/// stack, emitting any required code (other than the catch handlers
+end_comment
+
+begin_comment
 comment|/// themselves).
+end_comment
+
+begin_function_decl
 name|void
 name|popCatchScope
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
@@ -4443,7 +4632,10 @@ name|getEHResumeBlock
 argument_list|(
 argument|bool isCleanup
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
@@ -4452,8 +4644,14 @@ name|getEHDispatchBlock
 argument_list|(
 argument|EHScopeStack::stable_iterator scope
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// An object to manage conditionally-evaluated expressions.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ConditionalEvaluation
 block|{
@@ -4462,9 +4660,9 @@ operator|::
 name|BasicBlock
 operator|*
 name|StartBB
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|ConditionalEvaluation
 argument_list|(
 name|CodeGenFunction
@@ -4508,9 +4706,11 @@ expr_stmt|;
 block|}
 name|void
 name|end
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|)
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -4520,7 +4720,7 @@ name|OutermostConditional
 operator|!=
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|CGF
@@ -4550,10 +4750,22 @@ return|return
 name|StartBB
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// isInConditionalBranch - Return true if we're currently emitting
+end_comment
+
+begin_comment
 comment|/// one branch or the other of a conditional expression.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isInConditionalBranch
 argument_list|()
@@ -4565,12 +4777,23 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|setBeforeOutermostConditional
 argument_list|(
-argument|llvm::Value *value
+name|llvm
+operator|::
+name|Value
+operator|*
+name|value
 argument_list|,
-argument|llvm::Value *addr
+name|llvm
+operator|::
+name|Value
+operator|*
+name|addr
 argument_list|)
 block|{
 name|assert
@@ -4578,7 +4801,7 @@ argument_list|(
 name|isInConditionalBranch
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|llvm
 operator|::
 name|BasicBlock
@@ -4589,7 +4812,7 @@ name|OutermostConditional
 operator|->
 name|getStartingBlock
 argument_list|()
-block|;
+expr_stmt|;
 name|new
 name|llvm
 operator|::
@@ -4605,25 +4828,35 @@ operator|->
 name|back
 argument_list|()
 argument_list|)
-block|;       }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// An RAII object to record that we're evaluating a statement
+end_comment
+
+begin_comment
 comment|/// expression.
+end_comment
+
+begin_decl_stmt
 name|class
 name|StmtExprEvaluation
 block|{
 name|CodeGenFunction
-operator|&
+modifier|&
 name|CGF
-block|;
+decl_stmt|;
 comment|/// We have to save the outermost conditional: cleanups in a
 comment|/// statement expression aren't conditional just because the
 comment|/// StmtExpr is.
 name|ConditionalEvaluation
-operator|*
+modifier|*
 name|SavedOutermostConditional
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|StmtExprEvaluation
 argument_list|(
 name|CodeGenFunction
@@ -4635,7 +4868,7 @@ name|CGF
 argument_list|(
 name|CGF
 argument_list|)
-block|,
+operator|,
 name|SavedOutermostConditional
 argument_list|(
 argument|CGF.OutermostConditional
@@ -4663,10 +4896,25 @@ name|EnsureInsertPoint
 argument_list|()
 block|;     }
 block|}
-block|;
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// An object which temporarily prevents a value from being
+end_comment
+
+begin_comment
 comment|/// destroyed by aggressive peephole optimizations that assume that
+end_comment
+
+begin_comment
 comment|/// all uses of a value have been realized in the IR.
+end_comment
+
+begin_decl_stmt
 name|class
 name|PeepholeProtection
 block|{
@@ -4675,13 +4923,13 @@ operator|::
 name|Instruction
 operator|*
 name|Inst
-block|;
+expr_stmt|;
 name|friend
 name|class
 name|CodeGenFunction
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|PeepholeProtection
 argument_list|()
 operator|:
@@ -4691,41 +4939,65 @@ literal|0
 argument_list|)
 block|{}
 block|}
-block|;
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// A non-RAII class containing all the information about a bound
+end_comment
+
+begin_comment
 comment|/// opaque value.  OpaqueValueMapping, below, is a RAII wrapper for
+end_comment
+
+begin_comment
 comment|/// this which makes individual mappings very simple; using this
+end_comment
+
+begin_comment
 comment|/// class directly is useful when you have a variable number of
+end_comment
+
+begin_comment
 comment|/// opaque values or don't want the RAII functionality for some
+end_comment
+
+begin_comment
 comment|/// reason.
+end_comment
+
+begin_decl_stmt
 name|class
 name|OpaqueValueMappingData
 block|{
 specifier|const
 name|OpaqueValueExpr
-operator|*
+modifier|*
 name|OpaqueValue
-block|;
+decl_stmt|;
 name|bool
 name|BoundLValue
-block|;
+decl_stmt|;
 name|CodeGenFunction
 operator|::
 name|PeepholeProtection
 name|Protection
-block|;
+expr_stmt|;
 name|OpaqueValueMappingData
 argument_list|(
 argument|const OpaqueValueExpr *ov
 argument_list|,
 argument|bool boundLValue
 argument_list|)
-operator|:
+block|:
 name|OpaqueValue
 argument_list|(
 name|ov
 argument_list|)
-block|,
+operator|,
 name|BoundLValue
 argument_list|(
 argument|boundLValue
@@ -4779,13 +5051,21 @@ block|}
 specifier|static
 name|OpaqueValueMappingData
 name|bind
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|const OpaqueValueExpr *ov
-argument_list|,
-argument|const Expr *e
-argument_list|)
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OpaqueValueExpr
+modifier|*
+name|ov
+parameter_list|,
+specifier|const
+name|Expr
+modifier|*
+name|e
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4828,13 +5108,21 @@ block|}
 specifier|static
 name|OpaqueValueMappingData
 name|bind
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|const OpaqueValueExpr *ov
-argument_list|,
-argument|const LValue&lv
-argument_list|)
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OpaqueValueExpr
+modifier|*
+name|ov
+parameter_list|,
+specifier|const
+name|LValue
+modifier|&
+name|lv
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -4843,7 +5131,7 @@ argument_list|(
 name|ov
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|CGF
 operator|.
 name|OpaqueLValues
@@ -4859,7 +5147,7 @@ argument_list|,
 name|lv
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|OpaqueValueMappingData
 argument_list|(
@@ -4872,13 +5160,21 @@ block|}
 specifier|static
 name|OpaqueValueMappingData
 name|bind
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|,
-argument|const OpaqueValueExpr *ov
-argument_list|,
-argument|const RValue&rv
-argument_list|)
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|OpaqueValueExpr
+modifier|*
+name|ov
+parameter_list|,
+specifier|const
+name|RValue
+modifier|&
+name|rv
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -4888,7 +5184,7 @@ argument_list|(
 name|ov
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|CGF
 operator|.
 name|OpaqueRValues
@@ -4904,7 +5200,7 @@ argument_list|,
 name|rv
 argument_list|)
 argument_list|)
-block|;
+expr_stmt|;
 name|OpaqueValueMappingData
 name|data
 argument_list|(
@@ -4912,7 +5208,7 @@ name|ov
 argument_list|,
 name|false
 argument_list|)
-block|;
+decl_stmt|;
 comment|// Work around an extremely aggressive peephole optimization in
 comment|// EmitScalarConversion which assumes that all other uses of a
 comment|// value are extant.
@@ -4926,7 +5222,7 @@ name|protectFromPeepholes
 argument_list|(
 name|rv
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|data
 return|;
@@ -4944,17 +5240,20 @@ return|;
 block|}
 name|void
 name|clear
-argument_list|()
+parameter_list|()
 block|{
 name|OpaqueValue
 operator|=
 literal|0
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|unbind
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|)
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -4962,7 +5261,7 @@ name|OpaqueValue
 operator|&&
 literal|"no data to unbind!"
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|BoundLValue
@@ -4998,27 +5297,39 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// An RAII object to set (and then clear) a mapping for an OpaqueValueExpr.
+end_comment
+
+begin_decl_stmt
 name|class
 name|OpaqueValueMapping
 block|{
 name|CodeGenFunction
-operator|&
+modifier|&
 name|CGF
-block|;
+decl_stmt|;
 name|OpaqueValueMappingData
 name|Data
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 specifier|static
 name|bool
 name|shouldBindAsLValue
-argument_list|(
-argument|const Expr *expr
-argument_list|)
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|expr
+parameter_list|)
 block|{
 return|return
 name|OpaqueValueMappingData
@@ -5075,7 +5386,7 @@ operator|>
 operator|(
 name|op
 operator|)
-block|;
+expr_stmt|;
 name|Data
 operator|=
 name|OpaqueValueMappingData
@@ -5094,7 +5405,11 @@ operator|->
 name|getCommon
 argument_list|()
 argument_list|)
-block|;     }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_macro
 name|OpaqueValueMapping
 argument_list|(
 argument|CodeGenFunction&CGF
@@ -5103,12 +5418,15 @@ argument|const OpaqueValueExpr *opaqueValue
 argument_list|,
 argument|LValue lvalue
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|CGF
 argument_list|(
 name|CGF
 argument_list|)
-block|,
+operator|,
 name|Data
 argument_list|(
 argument|OpaqueValueMappingData::bind(CGF, opaqueValue, lvalue)
@@ -5127,7 +5445,7 @@ name|CGF
 argument_list|(
 name|CGF
 argument_list|)
-block|,
+operator|,
 name|Data
 argument_list|(
 argument|OpaqueValueMappingData::bind(CGF, opaqueValue, rvalue)
@@ -5168,19 +5486,39 @@ name|CGF
 argument_list|)
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|/// getByrefValueFieldNumber - Given a declaration, returns the LLVM field
+end_comment
+
+begin_comment
 comment|/// number that holds the value.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|getByRefValueLLVMField
 argument_list|(
-argument|const ValueDecl *VD
-argument_list|)
 specifier|const
-block|;
+name|ValueDecl
+operator|*
+name|VD
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// BuildBlockByrefAddress - Computes address location of the
+end_comment
+
+begin_comment
 comment|/// variable which is declared as __block.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
@@ -5198,33 +5536,92 @@ name|VarDecl
 operator|*
 name|V
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_decl_stmt
 name|CGDebugInfo
-operator|*
+modifier|*
 name|DebugInfo
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bool
 name|DisableDebugInfo
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// If the current function returns 'this', use the field to keep track of
+end_comment
+
+begin_comment
+comment|/// the callee that returns 'this'.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CalleeWithThisReturn
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// DidCallStackSave - Whether llvm.stacksave has been called. Used to avoid
+end_comment
+
+begin_comment
 comment|/// calling llvm.stacksave for multiple VLAs in the same scope.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|DidCallStackSave
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// IndirectBranch - The first time an indirect goto is seen we create a block
+end_comment
+
+begin_comment
 comment|/// with an indirect branch.  Every time we see the address of a label taken,
+end_comment
+
+begin_comment
 comment|/// we add the label to the indirect goto.  Every subsequent indirect goto is
+end_comment
+
+begin_comment
 comment|/// codegen'd as a jump to the IndirectBranch's basic block.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|IndirectBrInst
 operator|*
 name|IndirectBranch
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// LocalDeclMap - This keeps track of the LLVM allocas or globals for local C
+end_comment
+
+begin_comment
 comment|/// decls.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -5241,10 +5638,19 @@ operator|*
 operator|>
 name|DeclMapTy
 expr_stmt|;
+end_typedef
+
+begin_decl_stmt
 name|DeclMapTy
 name|LocalDeclMap
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// LabelMap - This keeps track of the LLVM basic block for each C label.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -5252,14 +5658,23 @@ operator|<
 specifier|const
 name|LabelDecl
 operator|*
-block|,
+operator|,
 name|JumpDest
 operator|>
 name|LabelMap
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// BreakContinueStack - This keeps track of where break and continue
+end_comment
+
+begin_comment
 comment|// statements should jump to.
-block|struct
+end_comment
+
+begin_struct
+struct|struct
 name|BreakContinue
 block|{
 name|BreakContinue
@@ -5268,12 +5683,12 @@ argument|JumpDest Break
 argument_list|,
 argument|JumpDest Continue
 argument_list|)
-operator|:
+block|:
 name|BreakBlock
 argument_list|(
 name|Break
 argument_list|)
-block|,
+operator|,
 name|ContinueBlock
 argument_list|(
 argument|Continue
@@ -5281,37 +5696,68 @@ argument_list|)
 block|{}
 name|JumpDest
 name|BreakBlock
-block|;
+expr_stmt|;
 name|JumpDest
 name|ContinueBlock
-block|;   }
-block|;
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
 name|SmallVector
 operator|<
 name|BreakContinue
-block|,
+operator|,
 literal|8
 operator|>
 name|BreakContinueStack
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// SwitchInsn - This is nearest current switch instruction. It is null if
+end_comment
+
+begin_comment
 comment|/// current context is not in a switch.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|SwitchInst
 operator|*
 name|SwitchInsn
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// CaseRangeBlock - This block holds if condition check for last case
+end_comment
+
+begin_comment
 comment|/// statement range in current switch instruction.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|CaseRangeBlock
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// OpaqueLValues - Keeps track of the current set of opaque value
+end_comment
+
+begin_comment
 comment|/// expressions.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -5319,11 +5765,14 @@ operator|<
 specifier|const
 name|OpaqueValueExpr
 operator|*
-block|,
+operator|,
 name|LValue
 operator|>
 name|OpaqueLValues
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -5331,17 +5780,38 @@ operator|<
 specifier|const
 name|OpaqueValueExpr
 operator|*
-block|,
+operator|,
 name|RValue
 operator|>
 name|OpaqueRValues
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// VLASizeMap - This keeps track of the associated size for each VLA type.
+end_comment
+
+begin_comment
 comment|// We track this by the size expression rather than the type itself because
+end_comment
+
+begin_comment
 comment|// in certain situations, like a const qualifier applied to an VLA typedef,
+end_comment
+
+begin_comment
 comment|// multiple VLA types can share the same size expression.
+end_comment
+
+begin_comment
 comment|// FIXME: Maybe this could be a stack of maps that is pushed/popped as we
+end_comment
+
+begin_comment
 comment|// enter/leave scopes.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -5349,62 +5819,330 @@ operator|<
 specifier|const
 name|Expr
 operator|*
-block|,
+operator|,
 name|llvm
 operator|::
 name|Value
 operator|*
 operator|>
 name|VLASizeMap
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// A block containing a single 'unreachable' instruction.  Created
+end_comment
+
+begin_comment
 comment|/// lazily by getUnreachableBlock().
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|UnreachableBlock
-block|;
-comment|/// CXXThisDecl - When generating code for a C++ member function,
-comment|/// this will hold the implicit 'this' declaration.
-name|ImplicitParamDecl
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Counts of the number return expressions in the function.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|NumReturnExprs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Count the number of simple (constant) return expressions in the function.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|NumSimpleReturnExprs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// The last regular (non-return) debug location (breakpoint) in the function.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|LastStopPoint
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_comment
+comment|/// A scope within which we are constructing the fields of an object which
+end_comment
+
+begin_comment
+comment|/// might use a CXXDefaultInitExpr. This stashes away a 'this' value to use
+end_comment
+
+begin_comment
+comment|/// if we need to evaluate a CXXDefaultInitExpr within the evaluation.
+end_comment
+
+begin_decl_stmt
+name|class
+name|FieldConstructionScope
+block|{
+name|public
+label|:
+name|FieldConstructionScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
 operator|*
+name|This
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|OldCXXDefaultInitExprThis
+argument_list|(
+argument|CGF.CXXDefaultInitExprThis
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+operator|=
+name|This
+block|;     }
+operator|~
+name|FieldConstructionScope
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+operator|=
+name|OldCXXDefaultInitExprThis
+block|;     }
+name|private
+operator|:
+name|CodeGenFunction
+operator|&
+name|CGF
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OldCXXDefaultInitExprThis
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// The scope of a CXXDefaultInitExpr. Within this scope, the value of 'this'
+end_comment
+
+begin_comment
+comment|/// is overridden to be the object under construction.
+end_comment
+
+begin_decl_stmt
+name|class
+name|CXXDefaultInitExprScope
+block|{
+name|public
+label|:
+name|CXXDefaultInitExprScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|OldCXXThisValue
+argument_list|(
+argument|CGF.CXXThisValue
+argument_list|)
+block|{
+name|CGF
+operator|.
+name|CXXThisValue
+operator|=
+name|CGF
+operator|.
+name|CXXDefaultInitExprThis
+block|;     }
+operator|~
+name|CXXDefaultInitExprScope
+argument_list|()
+block|{
+name|CGF
+operator|.
+name|CXXThisValue
+operator|=
+name|OldCXXThisValue
+block|;     }
+name|public
+operator|:
+name|CodeGenFunction
+operator|&
+name|CGF
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|OldCXXThisValue
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_comment
+comment|/// CXXThisDecl - When generating code for a C++ member function,
+end_comment
+
+begin_comment
+comment|/// this will hold the implicit 'this' declaration.
+end_comment
+
+begin_decl_stmt
+name|ImplicitParamDecl
+modifier|*
 name|CXXABIThisDecl
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
 name|CXXABIThisValue
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
 name|CXXThisValue
-block|;
-comment|/// CXXVTTDecl - When generating code for a base object constructor or
-comment|/// base object destructor with virtual bases, this will hold the implicit
-comment|/// VTT parameter.
-name|ImplicitParamDecl
-operator|*
-name|CXXVTTDecl
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// The value of 'this' to use when evaluating CXXDefaultInitExprs within
+end_comment
+
+begin_comment
+comment|/// this expression.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
-name|CXXVTTValue
-block|;
-comment|/// OutermostConditional - Points to the outermost active
-comment|/// conditional control.  This is used so that we know if a
-comment|/// temporary should be destroyed conditionally.
-name|ConditionalEvaluation
+name|CXXDefaultInitExprThis
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// CXXStructorImplicitParamDecl - When generating code for a constructor or
+end_comment
+
+begin_comment
+comment|/// destructor, this will hold the implicit argument (e.g. VTT).
+end_comment
+
+begin_decl_stmt
+name|ImplicitParamDecl
+modifier|*
+name|CXXStructorImplicitParamDecl
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
 operator|*
+name|CXXStructorImplicitParamValue
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// OutermostConditional - Points to the outermost active
+end_comment
+
+begin_comment
+comment|/// conditional control.  This is used so that we know if a
+end_comment
+
+begin_comment
+comment|/// temporary should be destroyed conditionally.
+end_comment
+
+begin_decl_stmt
+name|ConditionalEvaluation
+modifier|*
 name|OutermostConditional
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// The current lexical scope.
+end_comment
+
+begin_decl_stmt
+name|LexicalScope
+modifier|*
+name|CurLexicalScope
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// ByrefValueInfoMap - For each __block variable, contains a pair of the LLVM
+end_comment
+
+begin_comment
 comment|/// type as well as the field number that contains the actual data.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -5412,7 +6150,7 @@ operator|<
 specifier|const
 name|ValueDecl
 operator|*
-block|,
+operator|,
 name|std
 operator|::
 name|pair
@@ -5421,37 +6159,82 @@ name|llvm
 operator|::
 name|Type
 operator|*
-block|,
+operator|,
 name|unsigned
 operator|>
 expr|>
 name|ByRefValueInfo
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|TerminateLandingPad
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|TerminateHandler
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|TrapBB
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Add a kernel metadata node to the named metadata node 'opencl.kernels'.
+end_comment
+
+begin_comment
 comment|/// In the kernel metadata node, reference the kernel function and metadata
+end_comment
+
+begin_comment
 comment|/// nodes for its optional attribute qualifiers (OpenCL 1.1 6.7.2):
+end_comment
+
+begin_comment
+comment|/// - A node for the vec_type_hint(<type>) qualifier contains string
+end_comment
+
+begin_comment
+comment|///   "vec_type_hint", an undefined value of the<type> data type,
+end_comment
+
+begin_comment
+comment|///   and a Boolean that is true if the<type> is integer and signed.
+end_comment
+
+begin_comment
 comment|/// - A node for the work_group_size_hint(X,Y,Z) qualifier contains string
+end_comment
+
+begin_comment
 comment|///   "work_group_size_hint", and three 32-bit integers X, Y and Z.
+end_comment
+
+begin_comment
 comment|/// - A node for the reqd_work_group_size(X,Y,Z) qualifier contains string
+end_comment
+
+begin_comment
 comment|///   "reqd_work_group_size", and three 32-bit integers X, Y and Z.
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitOpenCLKernelMetadata
 argument_list|(
@@ -5466,20 +6249,35 @@ name|Function
 operator|*
 name|Fn
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_macro
 name|CodeGenFunction
 argument_list|(
 argument|CodeGenModule&cgm
 argument_list|,
 argument|bool suppressNewContext=false
 argument_list|)
-block|;
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 operator|~
 name|CodeGenFunction
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CodeGenTypes
 operator|&
 name|getTypes
@@ -5493,6 +6291,9 @@ name|getTypes
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ASTContext
 operator|&
 name|getContext
@@ -5506,10 +6307,16 @@ name|getContext
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns true if DebugInfo is actually initialized.
+end_comment
+
+begin_function
 name|bool
 name|maybeInitializeDebugInfo
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -5534,10 +6341,13 @@ return|return
 name|false
 return|;
 block|}
+end_function
+
+begin_function
 name|CGDebugInfo
-operator|*
+modifier|*
 name|getDebugInfo
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -5550,7 +6360,7 @@ return|return
 name|DebugInfo
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|void
@@ -5747,7 +6557,21 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    llvm
+unit|}    const
+name|TargetInfo
+operator|&
+name|getTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Target
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
 operator|::
 name|LLVMContext
 operator|&
@@ -5851,6 +6675,27 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|pushDestroy
+argument_list|(
+name|QualType
+operator|::
+name|DestructionKind
+name|dtorKind
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|addr
+argument_list|,
+name|QualType
+name|type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pushEHDestroy
 argument_list|(
 name|QualType
 operator|::
@@ -6353,8 +7198,6 @@ argument|GlobalDecl GD
 argument_list|,
 argument|const CGBlockInfo&Info
 argument_list|,
-argument|const Decl *OuterFuncDecl
-argument_list|,
 argument|const DeclMapTy&ldm
 argument_list|,
 argument|bool IsLambdaConversionToBlock
@@ -6623,6 +7466,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|EmitDestructorBody
+parameter_list|(
+name|FunctionArgList
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|emitImplicitAssignmentOperatorBody
 parameter_list|(
 name|FunctionArgList
 modifier|&
@@ -7103,6 +7957,9 @@ specifier|const
 name|CGFunctionInfo
 modifier|&
 name|FI
+parameter_list|,
+name|bool
+name|EmitRetDbgLoc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7263,14 +8120,54 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|bool
-name|hasAggregateLLVMType
+name|TypeEvaluationKind
+name|getEvaluationKind
 parameter_list|(
 name|QualType
 name|T
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|bool
+name|hasScalarEvaluationKind
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|getEvaluationKind
+argument_list|(
+name|T
+argument_list|)
+operator|==
+name|TEK_Scalar
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|hasAggregateEvaluationKind
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+return|return
+name|getEvaluationKind
+argument_list|(
+name|T
+argument_list|)
+operator|==
+name|TEK_Aggregate
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// createBasicBlock - Create an LLVM basic block.
@@ -8115,7 +9012,69 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitAggregateCopy - Emit an aggrate assignment.
+comment|/// hasVolatileMember - returns true if aggregate type has a volatile
+end_comment
+
+begin_comment
+comment|/// member.
+end_comment
+
+begin_function
+name|bool
+name|hasVolatileMember
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+if|if
+condition|(
+specifier|const
+name|RecordType
+modifier|*
+name|RT
+init|=
+name|T
+operator|->
+name|getAs
+operator|<
+name|RecordType
+operator|>
+operator|(
+operator|)
+condition|)
+block|{
+specifier|const
+name|RecordDecl
+modifier|*
+name|RD
+init|=
+name|cast
+operator|<
+name|RecordDecl
+operator|>
+operator|(
+name|RT
+operator|->
+name|getDecl
+argument_list|()
+operator|)
+decl_stmt|;
+return|return
+name|RD
+operator|->
+name|hasVolatileMember
+argument_list|()
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// EmitAggregateCopy - Emit an aggregate assignment.
 end_comment
 
 begin_comment
@@ -8148,21 +9107,16 @@ name|SrcPtr
 argument_list|,
 name|QualType
 name|EltTy
-argument_list|,
-name|bool
-name|isVolatile
-operator|=
-name|false
-argument_list|,
-name|CharUnits
-name|Alignment
-operator|=
-name|CharUnits
-operator|::
-name|Zero
-argument_list|()
 argument_list|)
 block|{
+name|bool
+name|IsVolatile
+init|=
+name|hasVolatileMember
+argument_list|(
+name|EltTy
+argument_list|)
+decl_stmt|;
 name|EmitAggregateCopy
 argument_list|(
 name|DestPtr
@@ -8171,9 +9125,12 @@ name|SrcPtr
 argument_list|,
 name|EltTy
 argument_list|,
-name|isVolatile
+name|IsVolatile
 argument_list|,
-name|Alignment
+name|CharUnits
+operator|::
+name|Zero
+argument_list|()
 argument_list|,
 name|true
 argument_list|)
@@ -8182,7 +9139,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// EmitAggregateCopy - Emit an aggrate copy.
+comment|/// EmitAggregateCopy - Emit an aggregate copy.
 end_comment
 
 begin_comment
@@ -8264,37 +9221,6 @@ name|N
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// GetAddrOfStaticLocalVar - Return the address of a static local variable.
-end_comment
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetAddrOfStaticLocalVar
-argument_list|(
-argument|const VarDecl *BVD
-argument_list|)
-block|{
-return|return
-name|cast
-operator|<
-name|llvm
-operator|::
-name|Constant
-operator|>
-operator|(
-name|GetAddrOfLocalVar
-argument_list|(
-name|BVD
-argument_list|)
-operator|)
-return|;
-block|}
-end_expr_stmt
 
 begin_comment
 comment|/// GetAddrOfLocalVar - Return the address of a local variable.
@@ -8740,6 +9666,14 @@ begin_comment
 comment|/// virtual bases.
 end_comment
 
+begin_comment
+comment|// FIXME: Every place that calls LoadCXXVTT is something
+end_comment
+
+begin_comment
+comment|// that needs to be abstracted properly.
+end_comment
+
 begin_expr_stmt
 name|llvm
 operator|::
@@ -8750,13 +9684,42 @@ argument_list|()
 block|{
 name|assert
 argument_list|(
-name|CXXVTTValue
+name|CXXStructorImplicitParamValue
 operator|&&
 literal|"no VTT value for this function"
 argument_list|)
 block|;
 return|return
-name|CXXVTTValue
+name|CXXStructorImplicitParamValue
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// LoadCXXStructorImplicitParam - Load the implicit parameter
+end_comment
+
+begin_comment
+comment|/// for a constructor/destructor.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LoadCXXStructorImplicitParam
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|CXXStructorImplicitParamValue
+operator|&&
+literal|"no implicit argument value for this function"
+argument_list|)
+block|;
+return|return
+name|CXXStructorImplicitParamValue
 return|;
 block|}
 end_expr_stmt
@@ -8861,6 +9824,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// GetVTTParameter - Return the VTT parameter that should be passed to a
+end_comment
+
+begin_comment
+comment|/// base constructor/destructor with virtual bases.
+end_comment
+
+begin_comment
+comment|/// FIXME: VTTs are Itanium ABI-specific, so the definition should move
+end_comment
+
+begin_comment
+comment|/// to ItaniumCXXABI.cpp together with all the references to VTT.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetVTTParameter
+argument_list|(
+argument|GlobalDecl GD
+argument_list|,
+argument|bool ForVirtualBase
+argument_list|,
+argument|bool Delegating
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 name|void
 name|EmitDelegateCXXConstructorCall
@@ -8928,6 +9923,9 @@ name|Type
 argument_list|,
 name|bool
 name|ForVirtualBase
+argument_list|,
+name|bool
+name|Delegating
 argument_list|,
 name|llvm
 operator|::
@@ -9080,6 +10078,9 @@ name|Type
 argument_list|,
 name|bool
 name|ForVirtualBase
+argument_list|,
+name|bool
+name|Delegating
 argument_list|,
 name|llvm
 operator|::
@@ -9306,6 +10307,14 @@ name|TCK_MemberCall
 block|,
 comment|/// Checking the 'this' pointer for a constructor call.
 name|TCK_ConstructorCall
+block|,
+comment|/// Checking the operand of a static_cast to a derived pointer type. Must be
+comment|/// null or an object within its lifetime.
+name|TCK_DowncastPointer
+block|,
+comment|/// Checking the operand of a static_cast to a derived reference type. Must
+comment|/// be an object within its lifetime.
+name|TCK_DowncastReference
 block|}
 enum|;
 end_enum
@@ -9344,6 +10353,47 @@ name|CharUnits
 operator|::
 name|Zero
 argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit a check that \p Base points into an array object, which
+end_comment
+
+begin_comment
+comment|/// we can access at index \p Index. \p Accessed should be \c false if we
+end_comment
+
+begin_comment
+comment|/// this expression is used as an lvalue, for instance in "&Arr[Idx]".
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitBoundsCheck
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Base
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Index
+argument_list|,
+name|QualType
+name|IndexType
+argument_list|,
+name|bool
+name|Accessed
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -9573,6 +10623,13 @@ comment|/// initializer.
 name|bool
 name|IsConstantAggregate
 decl_stmt|;
+comment|/// Non-null if we should use lifetime annotations.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|SizeForLifetimeMarkers
+expr_stmt|;
 struct|struct
 name|Invalid
 block|{}
@@ -9618,7 +10675,12 @@ argument_list|)
 operator|,
 name|IsConstantAggregate
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|SizeForLifetimeMarkers
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|bool
@@ -9645,6 +10707,49 @@ argument_list|(
 name|Invalid
 argument_list|()
 argument_list|)
+return|;
+block|}
+name|bool
+name|useLifetimeMarkers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SizeForLifetimeMarkers
+operator|!=
+literal|0
+return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getSizeForLifetimeMarkers
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|useLifetimeMarkers
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|SizeForLifetimeMarkers
+return|;
+block|}
+comment|/// Returns the raw, allocated address, which is not necessarily
+comment|/// the address of the object itself.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getAllocatedAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Address
 return|;
 block|}
 comment|/// Returns the address of the object within this declaration.
@@ -9972,6 +11077,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|RValue
+name|EmitCompoundStmtWithoutScope
+parameter_list|(
+specifier|const
+name|CompoundStmt
+modifier|&
+name|S
+parameter_list|,
+name|bool
+name|GetLast
+init|=
+name|false
+parameter_list|,
+name|AggValueSlot
+name|AVS
+init|=
+name|AggValueSlot
+operator|::
+name|ignored
+argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// EmitLabel - Emit the block for the given label. It is legal to call this
 end_comment
@@ -10194,6 +11324,18 @@ name|EmitAsmStmt
 parameter_list|(
 specifier|const
 name|AsmStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitCapturedStmt
+parameter_list|(
+specifier|const
+name|CapturedStmt
 modifier|&
 name|S
 parameter_list|)
@@ -10521,6 +11663,70 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|RValue
+name|convertTempToRValue
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|addr
+argument_list|,
+name|QualType
+name|type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|EmitAtomicInit
+parameter_list|(
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+name|LValue
+name|lvalue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
+name|EmitAtomicLoad
+parameter_list|(
+name|LValue
+name|lvalue
+parameter_list|,
+name|AggValueSlot
+name|slot
+init|=
+name|AggValueSlot
+operator|::
+name|ignored
+argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|EmitAtomicStore
+parameter_list|(
+name|RValue
+name|rvalue
+parameter_list|,
+name|LValue
+name|lvalue
+parameter_list|,
+name|bool
+name|isInit
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// EmitToMemory - Change a scalar value from its value
 end_comment
@@ -10593,6 +11799,11 @@ argument_list|,
 argument|QualType Ty
 argument_list|,
 argument|llvm::MDNode *TBAAInfo =
+literal|0
+argument_list|,
+argument|QualType TBAABaseTy = QualType()
+argument_list|,
+argument|uint64_t TBAAOffset =
 literal|0
 argument_list|)
 expr_stmt|;
@@ -10675,6 +11886,17 @@ name|bool
 name|isInit
 operator|=
 name|false
+argument_list|,
+name|QualType
+name|TBAABaseTy
+operator|=
+name|QualType
+argument_list|()
+argument_list|,
+name|uint64_t
+name|TBAAOffset
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -11007,6 +12229,11 @@ specifier|const
 name|ArraySubscriptExpr
 modifier|*
 name|E
+parameter_list|,
+name|bool
+name|Accessed
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11393,6 +12620,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|LValue
+name|EmitLValueForLambdaField
+parameter_list|(
+specifier|const
+name|FieldDecl
+modifier|*
+name|Field
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// EmitLValueForFieldInitialization - Like EmitLValueForField, except that
 end_comment
@@ -11717,6 +12956,116 @@ end_function_decl
 begin_expr_stmt
 name|llvm
 operator|::
+name|CallInst
+operator|*
+name|EmitRuntimeCall
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallInst
+operator|*
+name|EmitRuntimeCall
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallInst
+operator|*
+name|EmitNounwindRuntimeCall
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallInst
+operator|*
+name|EmitNounwindRuntimeCall
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
 name|CallSite
 name|EmitCallOrInvoke
 argument_list|(
@@ -11766,6 +13115,81 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallSite
+name|EmitRuntimeCallOrInvoke
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallSite
+name|EmitRuntimeCallOrInvoke
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|EmitNoreturnRuntimeCallOrInvoke
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|callee
+argument_list|,
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|args
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|llvm
@@ -11884,7 +13308,10 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|VTT
+name|ImplicitParam
+argument_list|,
+name|QualType
+name|ImplicitParamTy
 argument_list|,
 name|CallExpr
 operator|::
@@ -12039,6 +13466,20 @@ operator|::
 name|Value
 operator|*
 name|EmitTargetBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitAArch64BuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
@@ -12486,7 +13927,7 @@ argument|LValue lvalue
 argument_list|,
 argument|llvm::Value *value
 argument_list|,
-argument|bool ignored
+argument|bool resultIgnored
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12502,7 +13943,7 @@ argument|llvm::Value *addr
 argument_list|,
 argument|llvm::Value *value
 argument_list|,
-argument|bool ignored
+argument|bool resultIgnored
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12561,7 +14002,7 @@ name|Value
 operator|*
 name|addr
 argument_list|,
-name|bool
+name|ARCPreciseLifetime_t
 name|precise
 argument_list|)
 decl_stmt|;
@@ -12577,7 +14018,7 @@ name|Value
 operator|*
 name|value
 argument_list|,
-name|bool
+name|ARCPreciseLifetime_t
 name|precise
 argument_list|)
 decl_stmt|;
@@ -12791,6 +14232,24 @@ name|expr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|EmitARCIntrinsicUse
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|values
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -13116,76 +14575,64 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// EmitComplexExprIntoAddr - Emit the computation of the specified expression
+comment|/// EmitComplexExprIntoLValue - Emit the given expression of complex
 end_comment
 
 begin_comment
-comment|/// of complex type, storing into the specified Value*.
+comment|/// type and place its result into the specified l-value.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
-name|EmitComplexExprIntoAddr
-argument_list|(
+name|EmitComplexExprIntoLValue
+parameter_list|(
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestAddr
-argument_list|,
+parameter_list|,
+name|LValue
+name|dest
+parameter_list|,
 name|bool
-name|DestIsVolatile
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|isInit
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/// StoreComplexToAddr - Store a complex number into the specified address.
+comment|/// EmitStoreOfComplex - Store a complex number into the specified l-value.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
-name|StoreComplexToAddr
-argument_list|(
+name|EmitStoreOfComplex
+parameter_list|(
 name|ComplexPairTy
 name|V
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestAddr
-argument_list|,
+parameter_list|,
+name|LValue
+name|dest
+parameter_list|,
 name|bool
-name|DestIsVolatile
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|isInit
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/// LoadComplexFromAddr - Load a complex number from the specified address.
+comment|/// EmitLoadOfComplex - Load a complex number from the specified l-value.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ComplexPairTy
-name|LoadComplexFromAddr
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcAddr
-argument_list|,
-name|bool
-name|SrcIsVolatile
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|EmitLoadOfComplex
+parameter_list|(
+name|LValue
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// CreateStaticVarDecl - Create a zero-initialized LLVM global for
@@ -13363,15 +14810,22 @@ name|Function
 operator|*
 name|Fn
 argument_list|,
+name|ArrayRef
+operator|<
 name|llvm
 operator|::
 name|Constant
 operator|*
-operator|*
+operator|>
 name|Decls
 argument_list|,
-name|unsigned
-name|NumDecls
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|Guard
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -13533,6 +14987,11 @@ specifier|const
 name|CXXThrowExpr
 modifier|*
 name|E
+parameter_list|,
+name|bool
+name|KeepInsertionPoint
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13598,7 +15057,7 @@ argument|llvm::Value *AnnotationFn
 argument_list|,
 argument|llvm::Value *AnnotatedVal
 argument_list|,
-argument|llvm::StringRef AnnotationStr
+argument|StringRef AnnotationStr
 argument_list|,
 argument|SourceLocation Location
 argument_list|)
@@ -13882,6 +15341,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Specify under what conditions this check can be recovered
+end_comment
+
+begin_enum
+enum|enum
+name|CheckRecoverableKind
+block|{
+comment|/// Always terminate program execution if this check fails
+name|CRK_Unrecoverable
+block|,
+comment|/// Check supports recovering, allows user to specify which
+name|CRK_Recoverable
+block|,
+comment|/// Runtime conditionally aborts, always need to support recovery.
+name|CRK_AlwaysRecoverable
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/// \brief Create a basic block that will call a handler function in a
 end_comment
 
@@ -13906,8 +15385,6 @@ argument_list|,
 name|StringRef
 name|CheckName
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|llvm
@@ -13917,8 +15394,6 @@ operator|*
 operator|>
 name|StaticArgs
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|llvm
@@ -13928,10 +15403,8 @@ operator|*
 operator|>
 name|DynamicArgs
 argument_list|,
-name|bool
+name|CheckRecoverableKind
 name|Recoverable
-operator|=
-name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -13946,7 +15419,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|EmitTrapvCheck
+name|EmitTrapCheck
 argument_list|(
 name|llvm
 operator|::

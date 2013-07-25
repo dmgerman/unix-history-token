@@ -2291,17 +2291,6 @@ value|60000
 end_define
 
 begin_comment
-comment|/* resource limit of streams */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_SCTP_STREAMS
-value|2048
-end_define
-
-begin_comment
 comment|/* Maximum the mapping array will  grow to (TSN mapping array) */
 end_comment
 
@@ -2842,6 +2831,13 @@ define|#
 directive|define
 name|SCTP_OSTREAM_INITIAL
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ISTREAM_INITIAL
+value|2048
 end_define
 
 begin_comment
@@ -4395,6 +4391,17 @@ name|a
 parameter_list|)
 define|\
 value|((((uint8_t *)&(a)->s_addr)[0] == 127)&& \      (((uint8_t *)&(a)->s_addr)[1] == 0)&& \      (((uint8_t *)&(a)->s_addr)[2] == 0)&& \      (((uint8_t *)&(a)->s_addr)[3] == 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN4_ISLINKLOCAL_ADDRESS
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((((uint8_t *)&(a)->s_addr)[0] == 169)&& \      (((uint8_t *)&(a)->s_addr)[1] == 254))
 end_define
 
 begin_if

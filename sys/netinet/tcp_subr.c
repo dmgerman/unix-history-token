@@ -730,7 +730,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Minmum TCP Maximum Segment Size"
+literal|"Minimum TCP Maximum Segment Size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4626,7 +4626,7 @@ name|tcpcb
 modifier|*
 name|tcpb
 decl_stmt|;
-comment|/* 	 * Walk the tcpbs, if existing, and flush the reassembly queue, 	 * if there is one... 	 * XXX: The "Net/3" implementation doesn't imply that the TCP 	 *      reassembly queue should be flushed, but in a situation 	 *	where we're really low on mbufs, this is potentially 	 *	usefull. 	 */
+comment|/* 	 * Walk the tcpbs, if existing, and flush the reassembly queue, 	 * if there is one... 	 * XXX: The "Net/3" implementation doesn't imply that the TCP 	 *      reassembly queue should be flushed, but in a situation 	 *	where we're really low on mbufs, this is potentially 	 *	useful. 	 */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -8224,9 +8224,10 @@ name|in_conninfo
 modifier|*
 name|inc
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
-name|flags
+name|cap
 parameter_list|)
 block|{
 name|struct
@@ -8386,7 +8387,7 @@ expr_stmt|;
 comment|/* Report additional interface capabilities. */
 if|if
 condition|(
-name|flags
+name|cap
 operator|!=
 name|NULL
 condition|)
@@ -8405,10 +8406,19 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
-operator|*
-name|flags
+name|cap
+operator|->
+name|ifcap
 operator||=
 name|CSUM_TSO
+expr_stmt|;
+name|cap
+operator|->
+name|tsomax
+operator|=
+name|ifp
+operator|->
+name|if_hw_tsomax
 expr_stmt|;
 block|}
 name|RTFREE
@@ -8451,9 +8461,10 @@ name|in_conninfo
 modifier|*
 name|inc
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
-name|flags
+name|cap
 parameter_list|)
 block|{
 name|struct
@@ -8613,7 +8624,7 @@ expr_stmt|;
 comment|/* Report additional interface capabilities. */
 if|if
 condition|(
-name|flags
+name|cap
 operator|!=
 name|NULL
 condition|)
@@ -8632,10 +8643,19 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
-operator|*
-name|flags
+name|cap
+operator|->
+name|ifcap
 operator||=
 name|CSUM_TSO
+expr_stmt|;
+name|cap
+operator|->
+name|tsomax
+operator|=
+name|ifp
+operator|->
+name|if_hw_tsomax
 expr_stmt|;
 block|}
 name|RTFREE

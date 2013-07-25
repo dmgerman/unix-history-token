@@ -569,10 +569,11 @@ name|readtoken1
 parameter_list|(
 name|int
 parameter_list|,
-name|char
 specifier|const
+name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -4859,7 +4860,7 @@ name|savehandler
 init|=
 name|handler
 decl_stmt|;
-name|int
+name|size_t
 name|savelen
 decl_stmt|;
 name|int
@@ -6336,6 +6337,7 @@ specifier|const
 modifier|*
 name|initialsyntax
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|eofmark
@@ -7451,6 +7453,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -9685,6 +9688,7 @@ name|char
 modifier|*
 name|expandstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|ps

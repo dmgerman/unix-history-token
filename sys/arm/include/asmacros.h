@@ -369,6 +369,49 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UNWINDSVCFRAME
+define|\
+value|.save {r13-r15};
+comment|/* Restore sp, lr, pc */
+value|\ 	.pad #(2*4);
+comment|/* Skip user sp and lr */
+value|\ 	.save {r0-r12};
+comment|/* Restore r0-r12 */
+value|\ 	.pad #(4)
+end_define
+
+begin_comment
+comment|/* Skip spsr */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UNWINDSVCFRAME
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

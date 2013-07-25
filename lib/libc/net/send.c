@@ -54,12 +54,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -73,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"un-namespace.h"
 end_include
 
 begin_function
@@ -107,9 +95,10 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
+comment|/* 	 * POSIX says send() shall be a cancellation point, so call the 	 * cancellation-enabled sendto() and not _sendto(). 	 */
 return|return
 operator|(
-name|_sendto
+name|sendto
 argument_list|(
 name|s
 argument_list|,

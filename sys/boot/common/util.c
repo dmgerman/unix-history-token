@@ -284,6 +284,10 @@ block|{
 for|for
 control|(
 init|;
+name|len
+operator|>
+literal|0
+operator|&&
 operator|*
 name|s1
 operator|==
@@ -294,10 +298,6 @@ operator|*
 name|s1
 operator|!=
 literal|'\0'
-operator|&&
-name|len
-operator|>
-literal|0
 condition|;
 name|len
 operator|--
@@ -311,6 +311,12 @@ control|)
 empty_stmt|;
 return|return
 operator|(
+name|len
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
 operator|(
 name|unsigned
 name|char

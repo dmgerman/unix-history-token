@@ -1186,6 +1186,12 @@ name|MOD_LOAD
 case|:
 name|rpc_gss_entries
 operator|.
+name|rpc_gss_refresh_auth
+operator|=
+name|rpc_gss_refresh_auth
+expr_stmt|;
+name|rpc_gss_entries
+operator|.
 name|rpc_gss_secfind
 operator|=
 name|rpc_gss_secfind

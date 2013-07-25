@@ -112,10 +112,15 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__ARM_ARCH_6Z__
+name|__ARM_ARCH_6T2__
 argument_list|)
 operator|||
 expr|\
+name|defined
+argument_list|(
+name|__ARM_ARCH_6Z__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__ARM_ARCH_6ZK__
@@ -284,6 +289,12 @@ operator|||
 expr|\
 name|defined
 argument_list|(
+name|__ARM_ARCH_6T2__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
 name|__ARM_ARCH_6Z__
 argument_list|)
 operator|||
@@ -375,6 +386,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"orr %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -433,6 +445,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"orr %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -491,6 +504,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"bic %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -549,6 +563,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"bic %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -604,12 +619,14 @@ name|ret
 decl_stmt|;
 asm|__asm __volatile("1: ldrex %0, [%1]\n"
 literal|"cmp %0, %2\n"
+literal|"it ne\n"
 literal|"movne %0, #0\n"
 literal|"bne 2f\n"
 literal|"strex %0, %3, [%1]\n"
 literal|"cmp %0, #0\n"
-literal|"bne	1b\n"
+literal|"ite eq\n"
 literal|"moveq %0, #1\n"
+literal|"bne	1b\n"
 literal|"2:"
 operator|:
 literal|"=&r"
@@ -673,12 +690,14 @@ name|ret
 decl_stmt|;
 asm|__asm __volatile("1: ldrex %0, [%1]\n"
 literal|"cmp %0, %2\n"
+literal|"itt ne\n"
 literal|"movne %0, #0\n"
 literal|"bne 2f\n"
 literal|"strex %0, %3, [%1]\n"
 literal|"cmp %0, #0\n"
-literal|"bne	1b\n"
+literal|"ite eq\n"
 literal|"moveq %0, #1\n"
+literal|"bne	1b\n"
 literal|"2:"
 operator|:
 literal|"=&r"
@@ -907,6 +926,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"add %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -965,6 +985,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"add %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -1023,6 +1044,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"sub %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -1081,6 +1103,7 @@ asm|__asm __volatile("1: ldrex %0, [%2]\n"
 literal|"sub %0, %0, %3\n"
 literal|"strex %1, %0, [%2]\n"
 literal|"cmp %1, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"=&r"
@@ -1185,6 +1208,7 @@ asm|__asm __volatile("1: ldrex %0, [%3]\n"
 literal|"add %1, %0, %4\n"
 literal|"strex %2, %1, [%3]\n"
 literal|"cmp %2, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"+r"
@@ -1255,6 +1279,7 @@ asm|__asm __volatile("1: ldrex %0, [%3]\n"
 literal|"mov %1, #0\n"
 literal|"strex %2, %1, [%3]\n"
 literal|"cmp %2, #0\n"
+literal|"it ne\n"
 literal|"bne 1b\n"
 operator|:
 literal|"=r"
@@ -1382,6 +1407,7 @@ asm|__asm __volatile("1: ldrex %0, [%3]\n"
 literal|"add %1, %0, %4\n"
 literal|"strex %2, %1, [%3]\n"
 literal|"cmp %2, #0\n"
+literal|"it ne\n"
 literal|"bne	1b\n"
 operator|:
 literal|"+r"
@@ -1452,6 +1478,7 @@ asm|__asm __volatile("1: ldrex %0, [%3]\n"
 literal|"mov %1, #0\n"
 literal|"strex %2, %1, [%3]\n"
 literal|"cmp %2, #0\n"
+literal|"it ne\n"
 literal|"bne 1b\n"
 operator|:
 literal|"=r"

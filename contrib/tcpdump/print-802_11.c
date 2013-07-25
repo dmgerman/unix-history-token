@@ -4762,6 +4762,36 @@ parameter_list|)
 value|(\ 	(v) == 0 ? printf("Request") : \ 	(v) == 1 ? printf("Report") : \ 	(v) == 2 ? printf("Error") : \ 	(v) == 3 ? printf("RootAnnouncement") : \ 		   printf("Act#%d", (v)) \ )
 end_define
 
+begin_define
+define|#
+directive|define
+name|PRINT_MESH_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("MeshLink") : \ 	(v) == 1 ? printf("HWMP") : \ 	(v) == 2 ? printf("Gate Announcement") : \ 	(v) == 3 ? printf("Congestion Control") : \ 	(v) == 4 ? printf("MCCA Setup Request") : \ 	(v) == 5 ? printf("MCCA Setup Reply") : \ 	(v) == 6 ? printf("MCCA Advertisement Request") : \ 	(v) == 7 ? printf("MCCA Advertisement") : \ 	(v) == 8 ? printf("MCCA Teardown") : \ 	(v) == 9 ? printf("TBTT Adjustment Request") : \ 	(v) == 10 ? printf("TBTT Adjustment Response") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MULTIHOP_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Proxy Update") : \ 	(v) == 1 ? printf("Proxy Update Confirmation") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_SELFPROT_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 1 ? printf("Peering Open") : \ 	(v) == 2 ? printf("Peering Confirm") : \ 	(v) == 3 ? printf("Peering Close") : \ 	(v) == 4 ? printf("Group Key Inform") : \ 	(v) == 5 ? printf("Group Key Acknowledge") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -4920,10 +4950,27 @@ literal|13
 case|:
 name|printf
 argument_list|(
-literal|"MeshLMetric "
+literal|"MeshAction "
 argument_list|)
 expr_stmt|;
-name|PRINT_MESHLINK_ACTION
+name|PRINT_MESH_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|14
+case|:
+name|printf
+argument_list|(
+literal|"MultiohopAction "
+argument_list|)
+expr_stmt|;
+name|PRINT_MULTIHOP_ACTION
 argument_list|(
 name|p
 index|[
@@ -4937,69 +4984,10 @@ literal|15
 case|:
 name|printf
 argument_list|(
-literal|"Interwork Act#%d"
-argument_list|,
-name|p
-index|[
-literal|1
-index|]
+literal|"SelfprotectAction "
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|16
-case|:
-name|printf
-argument_list|(
-literal|"Resource Act#%d"
-argument_list|,
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|17
-case|:
-name|printf
-argument_list|(
-literal|"Proxy Act#%d"
-argument_list|,
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|30
-case|:
-name|printf
-argument_list|(
-literal|"MeshPeering "
-argument_list|)
-expr_stmt|;
-name|PRINT_MESHPEERING_ACTION
-argument_list|(
-name|p
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|32
-case|:
-name|printf
-argument_list|(
-literal|"MeshPath "
-argument_list|)
-expr_stmt|;
-name|PRINT_MESHPATH_ACTION
+name|PRINT_SELFPROT_ACTION
 argument_list|(
 name|p
 index|[

@@ -993,6 +993,15 @@ name|ACPI_BTYPE_ALL_OBJECTS
 value|0x0000FFFF
 end_define
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
 begin_comment
 comment|/*  * Information structure for ACPI predefined names.  * Each entry in the table contains the following items:  *  * Name                 - The ACPI reserved name  * ParamCount           - Number of arguments to the method  * ExpectedReturnBtypes - Allowed type(s) for the return value  */
 end_comment
@@ -1008,8 +1017,8 @@ index|[
 name|ACPI_NAME_SIZE
 index|]
 decl_stmt|;
-name|UINT8
-name|ParamCount
+name|UINT16
+name|ArgumentList
 decl_stmt|;
 name|UINT8
 name|ExpectedBtypes
@@ -1047,7 +1056,7 @@ decl_stmt|;
 name|UINT8
 name|Count2
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
@@ -1075,6 +1084,9 @@ name|ObjectType
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|UINT8
+name|Reserved
 decl_stmt|;
 block|}
 name|ACPI_PACKAGE_INFO2
@@ -1105,7 +1117,7 @@ decl_stmt|;
 name|UINT8
 name|TailObjectType
 decl_stmt|;
-name|UINT8
+name|UINT16
 name|Reserved
 decl_stmt|;
 block|}
@@ -1136,63 +1148,16 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Data block used during object validation */
+comment|/* Reset to default packing */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_predefined_data
-block|{
-name|char
-modifier|*
-name|Pathname
-decl_stmt|;
-specifier|const
-name|ACPI_PREDEFINED_INFO
-modifier|*
-name|Predefined
-decl_stmt|;
-name|union
-name|acpi_operand_object
-modifier|*
-name|ParentPackage
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-decl_stmt|;
-name|UINT32
-name|Flags
-decl_stmt|;
-name|UINT32
-name|ReturnBtype
-decl_stmt|;
-name|UINT8
-name|NodeFlags
-decl_stmt|;
-block|}
-name|ACPI_PREDEFINED_DATA
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Defines for Flags field above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_OBJECT_REPAIRED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OBJECT_WRAPPED
-value|2
-end_define
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
 
 begin_comment
 comment|/* Return object auto-repair info */

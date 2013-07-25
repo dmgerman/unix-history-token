@@ -3225,6 +3225,7 @@ name|__restrict
 name|ei
 name|__unused
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|__restrict
@@ -3233,6 +3234,7 @@ parameter_list|,
 name|size_t
 name|n
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -4722,6 +4724,7 @@ modifier|*
 name|__restrict
 name|pwc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -4742,6 +4745,7 @@ name|__restrict
 name|nresult
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p

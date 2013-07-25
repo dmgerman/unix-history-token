@@ -73,10 +73,10 @@ name|MCSymbolData
 decl_stmt|;
 comment|/// Encapsulates the layout of an assembly file at a particular point in time.
 comment|///
-comment|/// Assembly may requiring compute multiple layouts for a particular assembly
+comment|/// Assembly may require computing multiple layouts for a particular assembly
 comment|/// file as part of the relaxation process. This class encapsulates the layout
 comment|/// at a single point in time in such a way that it is always possible to
-comment|/// efficiently compute the exact addresses of any symbol in the assembly file,
+comment|/// efficiently compute the exact address of any symbol in the assembly file,
 comment|/// even during the relaxation process.
 name|class
 name|MCAsmLayout
@@ -127,7 +127,7 @@ name|SectionOrder
 expr_stmt|;
 comment|/// The last fragment which was laid out, or 0 if nothing has been laid
 comment|/// out. Fragments are always laid out in order, so all fragments with a
-comment|/// lower ordinal will be up to date.
+comment|/// lower ordinal will be valid.
 name|mutable
 name|DenseMap
 operator|<
@@ -143,7 +143,7 @@ expr_stmt|;
 comment|/// \brief Make sure that the layout for the given fragment is valid, lazily
 comment|/// computing it if necessary.
 name|void
-name|EnsureValid
+name|ensureValid
 argument_list|(
 specifier|const
 name|MCFragment
@@ -152,8 +152,9 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Is the layout for this fragment valid?
 name|bool
-name|isFragmentUpToDate
+name|isFragmentValid
 argument_list|(
 specifier|const
 name|MCFragment
@@ -162,6 +163,23 @@ name|F
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Compute the amount of padding required before this fragment to
+comment|/// obey bundling restrictions.
+name|uint64_t
+name|computeBundlePadding
+parameter_list|(
+specifier|const
+name|MCFragment
+modifier|*
+name|F
+parameter_list|,
+name|uint64_t
+name|FOffset
+parameter_list|,
+name|uint64_t
+name|FSize
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|MCAsmLayout
@@ -182,10 +200,11 @@ return|return
 name|Assembler
 return|;
 block|}
-comment|/// \brief Invalidate all following fragments because a fragment has been
-comment|/// resized. The fragments size should have already been updated.
+comment|/// \brief Invalidate the fragments starting with F because it has been
+comment|/// resized. The fragment's size should have already been updated, but
+comment|/// its bundle padding will be recomputed.
 name|void
-name|Invalidate
+name|invalidateFragmentsFrom
 parameter_list|(
 name|MCFragment
 modifier|*
@@ -196,7 +215,7 @@ comment|/// \brief Perform layout for a single fragment, assuming that the previ
 comment|/// fragment has already been laid out correctly, and the parent section has
 comment|/// been initialized.
 name|void
-name|LayoutFragment
+name|layoutFragment
 parameter_list|(
 name|MCFragment
 modifier|*

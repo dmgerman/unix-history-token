@@ -4111,6 +4111,12 @@ name|SYNCHRONIZE_CACHE_16
 case|:
 name|beio
 operator|->
+name|bio_cmd
+operator|=
+name|BIO_FLUSH
+expr_stmt|;
+name|beio
+operator|->
 name|ds_trans_type
 operator|=
 name|DEVSTAT_NO_DATA
@@ -7392,7 +7398,7 @@ index|[
 name|i
 index|]
 operator|.
-name|name
+name|kname
 argument_list|,
 literal|"file"
 argument_list|)
@@ -7471,7 +7477,7 @@ operator|*
 operator|)
 name|file_arg
 operator|->
-name|value
+name|kvalue
 argument_list|,
 name|file_arg
 operator|->
@@ -7596,7 +7602,7 @@ index|[
 name|i
 index|]
 operator|.
-name|name
+name|kname
 argument_list|,
 literal|"num_threads"
 argument_list|)
@@ -7638,7 +7644,7 @@ operator|*
 operator|)
 name|thread_arg
 operator|->
-name|value
+name|kvalue
 argument_list|,
 name|min
 argument_list|(

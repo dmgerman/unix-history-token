@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/CompilerInvocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -59,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/CompilerInvocation.h"
 end_include
 
 begin_include
@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -313,9 +313,17 @@ name|LastModuleImportLoc
 block|;
 comment|/// \brief The result of the last module import.
 comment|///
-name|Module
-operator|*
+name|ModuleLoadResult
 name|LastModuleImportResult
+block|;
+comment|/// \brief Whether we should (re)build the global module index once we
+comment|/// have finished with this translation unit.
+name|bool
+name|BuildGlobalModuleIndex
+block|;
+comment|/// \brief One or more modules failed to build.
+name|bool
+name|ModuleBuildFailed
 block|;
 comment|/// \brief Holds information about the output file.
 comment|///
@@ -491,6 +499,24 @@ operator|*
 name|Value
 argument_list|)
 block|;
+comment|/// \brief Indicates whether we should (re)build the global module index.
+name|bool
+name|shouldBuildGlobalModuleIndex
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Set the flag indicating whether we should (re)build the global
+comment|/// module index.
+name|void
+name|setBuildGlobalModuleIndex
+argument_list|(
+argument|bool Build
+argument_list|)
+block|{
+name|BuildGlobalModuleIndex
+operator|=
+name|Build
+block|;   }
 comment|/// }
 comment|/// @name Forwarding Methods
 comment|/// {
@@ -1190,6 +1216,16 @@ return|return
 name|ModuleManager
 return|;
 block|}
+name|void
+name|setModuleManager
+argument_list|(
+argument|ASTReader *Reader
+argument_list|)
+block|{
+name|ModuleManager
+operator|=
+name|Reader
+block|; }
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1320,29 +1356,16 @@ comment|/// unit.
 comment|///
 comment|/// \param ShouldOwnClient If Client is non-NULL, specifies whether
 comment|/// the diagnostic object should take ownership of the client.
-comment|///
-comment|/// \param ShouldCloneClient If Client is non-NULL, specifies whether that
-comment|/// client should be cloned.
 name|void
 name|createDiagnostics
 argument_list|(
-argument|int Argc
-argument_list|,
-argument|const char* const *Argv
-argument_list|,
 argument|DiagnosticConsumer *Client =
 literal|0
 argument_list|,
 argument|bool ShouldOwnClient = true
-argument_list|,
-argument|bool ShouldCloneClient = true
 argument_list|)
 block|;
 comment|/// Create a DiagnosticsEngine object with a the TextDiagnosticPrinter.
-comment|///
-comment|/// The \p Argc and \p Argv arguments are used only for logging purposes,
-comment|/// when the diagnostic options indicate that the compiler should output
-comment|/// logging information.
 comment|///
 comment|/// If no diagnostic client is provided, this creates a
 comment|/// DiagnosticConsumer that is owned by the returned diagnostic
@@ -1369,16 +1392,10 @@ name|createDiagnostics
 argument_list|(
 argument|DiagnosticOptions *Opts
 argument_list|,
-argument|int Argc
-argument_list|,
-argument|const char* const *Argv
-argument_list|,
 argument|DiagnosticConsumer *Client =
 literal|0
 argument_list|,
 argument|bool ShouldOwnClient = true
-argument_list|,
-argument|bool ShouldCloneClient = true
 argument_list|,
 argument|const CodeGenOptions *CodeGenOpts =
 literal|0
@@ -1446,6 +1463,8 @@ argument_list|,
 argument|void *DeserializationListener
 argument_list|,
 argument|bool Preamble
+argument_list|,
+argument|bool UseGlobalModuleIndex
 argument_list|)
 block|;
 comment|/// Create a code completion consumer using the invocation; note that this
@@ -1645,8 +1664,7 @@ argument_list|)
 block|;
 comment|/// }
 name|virtual
-name|Module
-operator|*
+name|ModuleLoadResult
 name|loadModule
 argument_list|(
 argument|SourceLocation ImportLoc
@@ -1657,7 +1675,20 @@ argument|Module::NameVisibilityKind Visibility
 argument_list|,
 argument|bool IsInclusionDirective
 argument_list|)
-block|; }
+block|;
+name|virtual
+name|void
+name|makeModuleVisible
+argument_list|(
+argument|Module *Mod
+argument_list|,
+argument|Module::NameVisibilityKind Visibility
+argument_list|,
+argument|SourceLocation ImportLoc
+argument_list|,
+argument|bool Complain
+argument_list|)
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

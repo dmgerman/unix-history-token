@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/hvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/xenstore/xenstorevar.h>
 end_include
 
@@ -515,6 +521,12 @@ modifier|*
 name|ret
 decl_stmt|;
 comment|/* Protect against unterminated buffers. */
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
 name|strings
 index|[
 name|len

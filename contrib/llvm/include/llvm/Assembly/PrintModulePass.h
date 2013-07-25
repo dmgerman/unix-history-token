@@ -92,6 +92,9 @@ name|class
 name|ModulePass
 decl_stmt|;
 name|class
+name|BasicBlockPass
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// createPrintModulePass - Create and return a pass that writes the
@@ -140,6 +143,31 @@ name|bool
 name|DeleteStream
 operator|=
 name|false
+argument_list|)
+decl_stmt|;
+comment|/// createPrintBasicBlockPass - Create and return a pass that writes the
+comment|/// BB to the specified raw_ostream.
+name|BasicBlockPass
+modifier|*
+name|createPrintBasicBlockPass
+argument_list|(
+name|raw_ostream
+operator|*
+name|OS
+argument_list|,
+name|bool
+name|DeleteStream
+operator|=
+name|false
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+operator|=
+literal|""
 argument_list|)
 decl_stmt|;
 block|}

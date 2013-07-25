@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.24 2004/03/03 19:14:49 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002, 2004, 2013 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.25 2013/03/12 15:24:49 ca Exp $  */
 end_comment
 
 begin_comment
@@ -1138,8 +1138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|int
 name|sm_io_fgets
 name|__P
 argument_list|(

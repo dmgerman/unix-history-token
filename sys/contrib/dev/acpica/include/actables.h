@@ -30,6 +30,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * tbxfroot - Root pointer utilities  */
+end_comment
+
+begin_function_decl
+name|UINT8
+modifier|*
+name|AcpiTbScanMemoryForRsdp
+parameter_list|(
+name|UINT8
+modifier|*
+name|StartAddress
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * tbfadt - FADT parse/convert/validate  */
 end_comment
 

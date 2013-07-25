@@ -7747,17 +7747,6 @@ operator|->
 name|transaction_id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DPT_HANDLE_TIMEOUTS
-name|dccb
-operator|->
-name|state
-operator||=
-name|DPT_CCB_STATE_MARKED_LOST
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* This CLEARS the interrupt! */
 name|status
 operator|=
@@ -9059,89 +9048,8 @@ unit|ccb->state |= DPT_CCB_STATE_COMPLETED; 	dpt_Qpush_free(dpt, ccb);
 comment|/* Free allocated memory */
 end_comment
 
-begin_ifdef
+begin_endif
 unit|return; }
-ifdef|#
-directive|ifdef
-name|DPT_HANDLE_TIMEOUTS
-end_ifdef
-
-begin_comment
-comment|/**  * This function walks down the SUBMITTED queue.  * Every request that is too old gets aborted and marked.  * Since the DPT will complete (interrupt) immediately (what does that mean?),  * We just walk the list, aborting old commands and marking them as such.  * The dpt_complete function will get rid of the that were interrupted in the  * normal manner.  *  * This function needs to run at splcam(), as it interacts with the submitted  * queue, as well as the completed and free queues.  Just like dpt_intr() does.  * To run it at any ISPL other than that of dpt_intr(), will mean that dpt_intr  * willbe able to pre-empt it, grab a transaction in progress (towards  * destruction) and operate on it.  The state of this transaction will be not  * very clear.  * The only other option, is to lock it only as long as necessary but have  * dpt_intr() spin-wait on it. In a UP environment this makes no sense and in  * a SMP environment, the advantage is dubvious for a function that runs once  * every ten seconds for few microseconds and, on systems with healthy  * hardware, does not do anything anyway.  */
-end_comment
-
-begin_comment
-unit|static void dpt_handle_timeouts(dpt_softc_t * dpt) { 	dpt_ccb_t      *ccb;  	if (dpt->state& DPT_HA_TIMEOUTS_ACTIVE) { 		device_printf(dpt->dev, "WARNING: Timeout Handling Collision\n"); 		return; 	} 	dpt->state |= DPT_HA_TIMEOUTS_ACTIVE;
-comment|/* Loop through the entire submitted queue, looking for lost souls */
-end_comment
-
-begin_define
-unit|TAILQ_FIRST(ccb,&&dpt->submitted_ccbs, links) { 		struct scsi_xfer *xs; 		u_int32_t       age, max_age;  		xs = ccb->xs; 		age = dpt_time_delta(ccb->command_started, microtime_now);
-define|#
-directive|define
-name|TenSec
-value|10000000
-end_define
-
-begin_comment
-unit|if (xs == NULL) {
-comment|/* Local, non-kernel call */
-end_comment
-
-begin_comment
-unit|max_age = TenSec; 		} else { 			max_age = (((xs->timeout * (dpt->submitted_ccbs_count 						    + DPT_TIMEOUT_FACTOR))> TenSec) 				 ? (xs->timeout * (dpt->submitted_ccbs_count 						   + DPT_TIMEOUT_FACTOR)) 				   : TenSec); 		}
-comment|/* 		 * If a transaction is marked lost and is TWICE as old as we 		 * care, then, and only then do we destroy it! 		 */
-end_comment
-
-begin_comment
-unit|if (ccb->state& DPT_CCB_STATE_MARKED_LOST) {
-comment|/* Remember who is next */
-end_comment
-
-begin_define
-unit|if (age> (max_age * 2)) { 				dpt_Qremove_submitted(dpt, ccb); 				ccb->state&= ~DPT_CCB_STATE_MARKED_LOST; 				ccb->state |= DPT_CCB_STATE_ABORTED;
-define|#
-directive|define
-name|cmd_name
-value|scsi_cmd_name(ccb->eata_ccb.cp_scsi_cmd)
-end_define
-
-begin_define
-unit|if (ccb->retries++> DPT_RETRIES) { 					device_printf(dpt->dev, 					       "ERROR: Destroying stale " 					       "%d (%s)\n" 					       "		on " 					       "c%db%dt%du%d (%d/%d)\n", 					       ccb->transaction_id, 					       cmd_name, 					       device_get_unit(dpt->dev), 					       ccb->eata_ccb.cp_channel, 					       ccb->eata_ccb.cp_id, 					       ccb->eata_ccb.cp_LUN, age, 					       ccb->retries);
-define|#
-directive|define
-name|send_ccb
-value|&ccb->eata_ccb
-end_define
-
-begin_define
-define|#
-directive|define
-name|ESA
-value|EATA_SPECIFIC_ABORT
-end_define
-
-begin_comment
-unit|(void) dpt_send_immediate(dpt, 								  send_ccb, 								  ESA, 								  0, 0); 					dpt_Qpush_free(dpt, ccb);
-comment|/* The SCSI layer should re-try */
-end_comment
-
-begin_comment
-unit|xs->error |= XS_TIMEOUT; 					xs->flags |= SCSI_ITSDONE; 					scsi_done(xs); 				} else { 					device_printf(dpt->dev, 					       "ERROR: Stale %d (%s) on " 					       "c%db%dt%du%d (%d)\n" 					     "		gets another " 					       "chance(%d/%d)\n", 					       ccb->transaction_id, 					       cmd_name, 					       device_get_unit(dpt->dev), 					       ccb->eata_ccb.cp_channel, 					       ccb->eata_ccb.cp_id, 					       ccb->eata_ccb.cp_LUN, 					    age, ccb->retries, DPT_RETRIES);  					dpt_Qpush_waiting(dpt, ccb); 					dpt_sched_queue(dpt); 				} 			} 		} else {
-comment|/* 			 * This is a transaction that is not to be destroyed 			 * (yet) But it is too old for our liking. We wait as 			 * long as the upper layer thinks. Not really, we 			 * multiply that by the number of commands in the 			 * submitted queue + 1. 			 */
-end_comment
-
-begin_endif
-unit|if (!(ccb->state& DPT_CCB_STATE_MARKED_LOST)&& 			    (age != ~0)&& (age> max_age)) { 				device_printf(dpt->dev, 				       "ERROR: Marking %d (%s) on " 				       "c%db%dt%du%d \n" 				       "            as late after %dusec\n", 				       ccb->transaction_id, 				       cmd_name, 				       device_get_unit(dpt->dev), 				       ccb->eata_ccb.cp_channel, 				       ccb->eata_ccb.cp_id, 				       ccb->eata_ccb.cp_LUN, age); 				ccb->state |= DPT_CCB_STATE_MARKED_LOST; 			} 		} 	}  	dpt->state&= ~DPT_HA_TIMEOUTS_ACTIVE; }  static void dpt_timeout(void *arg) { 	dpt_softc_t    *dpt = (dpt_softc_t *) arg;  	mtx_assert(&dpt->lock, MA_OWNED); 	if (!(dpt->state& DPT_HA_TIMEOUTS_ACTIVE)) 		dpt_handle_timeouts(dpt);  	callout_reset(&dpt->timer, hz * 10, dpt_timeout, dpt); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DPT_HANDLE_TIMEOUTS */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
 end_endif

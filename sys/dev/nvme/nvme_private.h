@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (C) 2012-2013 Intel Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bio.h>
 end_include
 
 begin_include
@@ -158,13 +164,6 @@ begin_comment
 comment|/* 8 channel board */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NVME_MAX_PRP_LIST_ENTRIES
-value|(32)
-end_define
-
 begin_comment
 comment|/*  * For commands requiring more than 2 PRP entries, one PRP will be  *  embedded in the command (prp1), and the rest of the PRP entries  *  will be in a list pointed to by the command (prp2).  This means  *  that real max number of PRP entries we support is 32+1, which  *  results in a max xfer size of 32*PAGE_SIZE.  */
 end_comment
@@ -172,8 +171,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NVME_MAX_XFER_SIZE
-value|NVME_MAX_PRP_LIST_ENTRIES * PAGE_SIZE
+name|NVME_MAX_PRP_LIST_ENTRIES
+value|(NVME_MAX_XFER_SIZE / PAGE_SIZE)
 end_define
 
 begin_define
@@ -330,6 +329,10 @@ name|NVME_MAX_AER_LOG_SIZE
 value|(4096)
 end_define
 
+begin_comment
+comment|/*  * Define CACHE_LINE_SIZE here for older FreeBSD versions that do not define  *  it.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -341,6 +344,27 @@ define|#
 directive|define
 name|CACHE_LINE_SIZE
 value|(64)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Use presence of the BIO_UNMAPPED flag to determine whether unmapped I/O  *  support and the bus_dmamap_load_bio API are available on the target  *  kernel.  This will ease porting back to earlier stable branches at a  *  later point.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIO_UNMAPPED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NVME_UNMAPPED_BIO_SUPPORT
 end_define
 
 begin_endif
@@ -377,6 +401,49 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_VADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_NULL
+value|2
+end_define
+
+begin_comment
+comment|/* For requests with no payload. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_UIO
+value|3
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NVME_UNMAPPED_BIO_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NVME_REQUEST_BIO
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|nvme_request
@@ -390,20 +457,28 @@ name|nvme_qpair
 modifier|*
 name|qpair
 decl_stmt|;
+union|union
+block|{
 name|void
 modifier|*
 name|payload
+decl_stmt|;
+name|struct
+name|bio
+modifier|*
+name|bio
+decl_stmt|;
+block|}
+name|u
+union|;
+name|uint32_t
+name|type
 decl_stmt|;
 name|uint32_t
 name|payload_size
 decl_stmt|;
 name|boolean_t
 name|timeout
-decl_stmt|;
-name|struct
-name|uio
-modifier|*
-name|uio
 decl_stmt|;
 name|nvme_cb_fn_t
 name|cb_fn
@@ -536,9 +611,6 @@ modifier|*
 name|tag
 decl_stmt|;
 name|uint32_t
-name|max_xfer_size
-decl_stmt|;
-name|uint32_t
 name|num_entries
 decl_stmt|;
 name|uint32_t
@@ -667,6 +739,10 @@ index|[
 name|NVME_MAX_CONSUMERS
 index|]
 decl_stmt|;
+name|struct
+name|mtx
+name|lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -681,6 +757,10 @@ name|nvme_controller
 block|{
 name|device_t
 name|dev
+decl_stmt|;
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
 name|uint32_t
 name|ready_timeout_in_ms
@@ -854,10 +934,6 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|is_resetting
-decl_stmt|;
-name|struct
-name|mtx
-name|fail_req_lock
 decl_stmt|;
 name|boolean_t
 name|is_failed
@@ -1368,51 +1444,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|nvme_payload_map
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|seg
-parameter_list|,
-name|int
-name|nseg
-parameter_list|,
-name|int
-name|error
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|nvme_payload_map_uio
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-name|seg
-parameter_list|,
-name|int
-name|nseg
-parameter_list|,
-name|bus_size_t
-name|mapsize
-parameter_list|,
-name|int
-name|error
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|nvme_completion_poll_cb
 parameter_list|(
 name|void
@@ -1568,9 +1599,6 @@ name|num_entries
 parameter_list|,
 name|uint32_t
 name|num_trackers
-parameter_list|,
-name|uint32_t
-name|max_xfer_size
 parameter_list|,
 name|struct
 name|nvme_controller
@@ -1781,26 +1809,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|nvme_ns_physio
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|nvme_sysctl_initialize_ctrlr
 parameter_list|(
@@ -1950,7 +1958,7 @@ name|__inline
 name|struct
 name|nvme_request
 modifier|*
-name|nvme_allocate_request
+name|nvme_allocate_request_vaddr
 parameter_list|(
 name|void
 modifier|*
@@ -1990,6 +1998,14 @@ condition|)
 block|{
 name|req
 operator|->
+name|type
+operator|=
+name|NVME_REQUEST_VADDR
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
 name|payload
 operator|=
 name|payload
@@ -2015,10 +2031,8 @@ name|__inline
 expr|struct
 name|nvme_request
 operator|*
-name|nvme_allocate_request_uio
+name|nvme_allocate_request_null
 argument_list|(
-argument|struct uio *uio
-argument_list|,
 argument|nvme_cb_fn_t cb_fn
 argument_list|,
 argument|void *cb_arg
@@ -2045,9 +2059,9 @@ name|NULL
 condition|)
 name|req
 operator|->
-name|uio
+name|type
 operator|=
-name|uio
+name|NVME_REQUEST_NULL
 expr_stmt|;
 end_expr_stmt
 
@@ -2059,8 +2073,103 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|struct
+name|nvme_request
+modifier|*
+name|nvme_allocate_request_bio
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bio
+parameter_list|,
+name|nvme_cb_fn_t
+name|cb_fn
+parameter_list|,
+name|void
+modifier|*
+name|cb_arg
+parameter_list|)
+block|{
+name|struct
+name|nvme_request
+modifier|*
+name|req
+decl_stmt|;
+name|req
+operator|=
+name|_nvme_allocate_request
+argument_list|(
+name|cb_fn
+argument_list|,
+name|cb_arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|!=
+name|NULL
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NVME_UNMAPPED_BIO_SUPPORT
+name|req
+operator|->
+name|type
+operator|=
+name|NVME_REQUEST_BIO
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
+name|bio
+operator|=
+name|bio
+expr_stmt|;
+else|#
+directive|else
+name|req
+operator|->
+name|type
+operator|=
+name|NVME_REQUEST_VADDR
+expr_stmt|;
+name|req
+operator|->
+name|u
+operator|.
+name|payload
+operator|=
+name|bio
+operator|->
+name|bio_data
+expr_stmt|;
+name|req
+operator|->
+name|payload_size
+operator|=
+name|bio
+operator|->
+name|bio_bcount
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+return|return
+operator|(
+name|req
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
-unit|}
 define|#
 directive|define
 name|nvme_free_request
@@ -2070,25 +2179,33 @@ parameter_list|)
 value|uma_zfree(nvme_request_zone, req)
 end_define
 
-begin_macro
-unit|void
+begin_function_decl
+name|void
 name|nvme_notify_async_consumers
-argument_list|(
-argument|struct nvme_controller *ctrlr
-argument_list|,
-argument|const struct nvme_completion *async_cpl
-argument_list|,
-argument|uint32_t log_page_id
-argument_list|,
-argument|void *log_page_buffer
-argument_list|,
-argument|uint32_t log_page_size
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+parameter_list|(
+name|struct
+name|nvme_controller
+modifier|*
+name|ctrlr
+parameter_list|,
+specifier|const
+name|struct
+name|nvme_completion
+modifier|*
+name|async_cpl
+parameter_list|,
+name|uint32_t
+name|log_page_id
+parameter_list|,
+name|void
+modifier|*
+name|log_page_buffer
+parameter_list|,
+name|uint32_t
+name|log_page_size
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

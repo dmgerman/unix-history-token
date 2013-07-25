@@ -62,14 +62,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_REGISTER_SCAVENGING_H
+name|LLVM_CODEGEN_REGISTERSCAVENGING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_REGISTER_SCAVENGING_H
+name|LLVM_CODEGEN_REGISTERSCAVENGING_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
 
 begin_include
 include|#
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/BitVector.h"
 end_include
 
 begin_decl_stmt
@@ -139,30 +139,57 @@ comment|/// registers.
 name|bool
 name|Tracking
 decl_stmt|;
-comment|/// ScavengingFrameIndex - Special spill slot used for scavenging a register
-comment|/// post register allocation.
+comment|/// Information on scavenged registers (held in a spill slot).
+struct|struct
+name|ScavengedInfo
+block|{
+name|ScavengedInfo
+argument_list|(
+argument|int FI = -
+literal|1
+argument_list|)
+block|:
+name|FrameIndex
+argument_list|(
+name|FI
+argument_list|)
+operator|,
+name|Reg
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Restore
+argument_list|(
+argument|NULL
+argument_list|)
+block|{}
+comment|/// A spill slot used for scavenging a register post register allocation.
 name|int
-name|ScavengingFrameIndex
-decl_stmt|;
-comment|/// ScavengedReg - If none zero, the specific register is currently being
-comment|/// scavenged. That is, it is spilled to the special scavenging stack slot.
+name|FrameIndex
+expr_stmt|;
+comment|/// If non-zero, the specific register is currently being
+comment|/// scavenged. That is, it is spilled to this scavenging stack slot.
 name|unsigned
-name|ScavengedReg
+name|Reg
 decl_stmt|;
-comment|/// ScavengedRC - Register class of the scavenged register.
-comment|///
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|ScavengedRC
-decl_stmt|;
-comment|/// ScavengeRestore - Instruction that restores the scavenged register from
-comment|/// stack.
+comment|/// The instruction that restores the scavenged register from stack.
 specifier|const
 name|MachineInstr
 modifier|*
-name|ScavengeRestore
+name|Restore
 decl_stmt|;
+block|}
+struct|;
+comment|/// A vector of information on scavenged registers.
+name|SmallVector
+operator|<
+name|ScavengedInfo
+operator|,
+literal|2
+operator|>
+name|Scavenged
+expr_stmt|;
 comment|/// CalleeSavedrRegs - A bitvector of callee saved registers for the target.
 comment|///
 name|BitVector
@@ -198,23 +225,7 @@ argument_list|)
 operator|,
 name|Tracking
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ScavengingFrameIndex
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|,
-name|ScavengedReg
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ScavengedRC
-argument_list|(
-argument|NULL
+argument|false
 argument_list|)
 block|{}
 comment|/// enterBasicBlock - Start tracking liveness from the begin of the specific
@@ -274,8 +285,33 @@ name|forward
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// Invert the behavior of forward() on the current instruction (undo the
+comment|/// changes to the available registers made by forward()).
+name|void
+name|unprocess
+parameter_list|()
+function_decl|;
+comment|/// Unprocess instructions until you reach the provided iterator.
+name|void
+name|unprocess
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|)
+block|{
+while|while
+condition|(
+name|MBBI
+operator|!=
+name|I
+condition|)
+name|unprocess
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// skipTo - Move the internal MBB iterator but do not update register states.
-comment|///
 name|void
 name|skipTo
 argument_list|(
@@ -285,10 +321,36 @@ name|iterator
 name|I
 argument_list|)
 block|{
+if|if
+condition|(
+name|I
+operator|==
+name|MachineBasicBlock
+operator|::
+name|iterator
+argument_list|(
+name|NULL
+argument_list|)
+condition|)
+name|Tracking
+operator|=
+name|false
+expr_stmt|;
 name|MBBI
 operator|=
 name|I
 expr_stmt|;
+block|}
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|getCurrentPosition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MBBI
+return|;
 block|}
 comment|/// getRegsUsed - return all registers currently in use in used.
 name|void
@@ -325,28 +387,141 @@ name|RegClass
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// setScavengingFrameIndex / getScavengingFrameIndex - accessor and setter of
-comment|/// ScavengingFrameIndex.
+comment|/// Add a scavenging frame index.
 name|void
-name|setScavengingFrameIndex
+name|addScavengingFrameIndex
 parameter_list|(
 name|int
 name|FI
 parameter_list|)
 block|{
-name|ScavengingFrameIndex
-operator|=
+name|Scavenged
+operator|.
+name|push_back
+argument_list|(
+name|ScavengedInfo
+argument_list|(
 name|FI
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
+comment|/// Query whether a frame index is a scavenging frame index.
+name|bool
+name|isScavengingFrameIndex
+argument_list|(
 name|int
-name|getScavengingFrameIndex
-argument_list|()
-specifier|const
+name|FI
+argument_list|)
+decl|const
 block|{
+for|for
+control|(
+name|SmallVector
+operator|<
+name|ScavengedInfo
+operator|,
+literal|2
+operator|>
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Scavenged
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|IE
+operator|=
+name|Scavenged
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|IE
+condition|;
+operator|++
+name|I
+control|)
+if|if
+condition|(
+name|I
+operator|->
+name|FrameIndex
+operator|==
+name|FI
+condition|)
 return|return
-name|ScavengingFrameIndex
+name|true
 return|;
+return|return
+name|false
+return|;
+block|}
+comment|/// Get an array of scavenging frame indices.
+name|void
+name|getScavengingFrameIndices
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|&
+name|A
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|SmallVector
+operator|<
+name|ScavengedInfo
+operator|,
+literal|2
+operator|>
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Scavenged
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|IE
+operator|=
+name|Scavenged
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|IE
+condition|;
+operator|++
+name|I
+control|)
+if|if
+condition|(
+name|I
+operator|->
+name|FrameIndex
+operator|>=
+literal|0
+condition|)
+name|A
+operator|.
+name|push_back
+argument_list|(
+name|I
+operator|->
+name|FrameIndex
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// scavengeRegister - Make a register of the specific register class
 comment|/// available and do the appropriate bookkeeping. SPAdj is the stack
@@ -421,13 +596,20 @@ name|Reg
 argument_list|)
 return|;
 block|}
-comment|/// isUsed / isUnused - Test if a register is currently being used.
+comment|/// isUsed - Test if a register is currently being used.  When called by the
+comment|/// isAliasUsed function, we only check isReserved if this is the original
+comment|/// register, not an alias register.
 comment|///
 name|bool
 name|isUsed
 argument_list|(
 name|unsigned
 name|Reg
+argument_list|,
+name|bool
+name|CheckReserved
+operator|=
+name|true
 argument_list|)
 decl|const
 block|{
@@ -440,10 +622,14 @@ argument_list|(
 name|Reg
 argument_list|)
 operator|||
+operator|(
+name|CheckReserved
+operator|&&
 name|isReserved
 argument_list|(
 name|Reg
 argument_list|)
+operator|)
 return|;
 block|}
 comment|/// isAliasUsed - Is Reg or an alias currently in use?
@@ -486,6 +672,12 @@ operator||=
 name|Regs
 expr_stmt|;
 block|}
+comment|/// Processes the current instruction and fill the KillRegs and DefRegs bit
+comment|/// vectors.
+name|void
+name|determineKillsAndDefs
+parameter_list|()
+function_decl|;
 comment|/// Add Reg and all its sub-registers to BV.
 name|void
 name|addRegWithSubRegs

@@ -922,6 +922,12 @@ name|uint16_t
 name|crc
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
 struct|;
 end_struct
 

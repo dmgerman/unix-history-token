@@ -761,6 +761,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sysctl_handle_counter_u64
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sysctl_dpcpu_int
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
@@ -1613,6 +1622,56 @@ name|descr
 parameter_list|)
 define|\
 value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT64, ptr), 0,			\ 	    sysctl_handle_64, "QU", __DESCR(descr))
+end_define
+
+begin_comment
+comment|/* Oid for a 64-bin unsigned counter(9).  The pointer must be non NULL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_COUNTER_U64
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|val
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_ASSERT_TYPE(UINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_counter_u64, "QU", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_COUNTER_U64
+parameter_list|(
+name|ctx
+parameter_list|,
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT64, ptr), 0,			\ 	    sysctl_handle_counter_u64, "QU", __DESCR(descr))
 end_define
 
 begin_comment

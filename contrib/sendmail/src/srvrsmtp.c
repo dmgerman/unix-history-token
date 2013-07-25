@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2010, 2012 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2010, 2012, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.1011 2012/12/19 02:49:21 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.1015 2013/03/12 15:24:54 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7208,6 +7208,8 @@ literal|8
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"server"
 argument_list|)
 expr_stmt|;
@@ -7461,6 +7463,8 @@ literal|9
 condition|)
 name|tlslogerr
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"server"
 argument_list|)
 expr_stmt|;
@@ -17681,6 +17685,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -17717,31 +17725,6 @@ comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
-name|strchr
-argument_list|(
-name|vp
-argument_list|,
-literal|';'
-argument_list|)
-operator|==
-name|NULL
-operator|||
-operator|!
-name|xtextok
-argument_list|(
-name|vp
-argument_list|)
-condition|)
-block|{
-name|usrerr
-argument_list|(
-literal|"501 5.5.4 Syntax error in ORCPT parameter value"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-if|if
-condition|(
 name|a
 operator|->
 name|q_orcpt
@@ -17756,6 +17739,68 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|vp
+argument_list|,
+literal|';'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 5.5.4 Syntax error in ORCPT parameter value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isatom
+argument_list|(
+name|vp
+argument_list|)
+operator|||
+operator|!
+name|xtextok
+argument_list|(
+name|p
+operator|+
+literal|1
+argument_list|)
+condition|)
+block|{
+operator|*
+name|p
+operator|=
+literal|';'
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"501 5.5.4 Syntax error in ORCPT parameter value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+operator|*
+name|p
+operator|=
+literal|';'
+expr_stmt|;
 name|a
 operator|->
 name|q_orcpt
@@ -19219,8 +19264,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 if|if

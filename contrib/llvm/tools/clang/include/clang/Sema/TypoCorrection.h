@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/DeclSpec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -730,8 +736,6 @@ name|CorrectionRange
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|NamedDecl
@@ -774,8 +778,6 @@ argument_list|()
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|NamedDecl
@@ -848,8 +850,6 @@ name|NestedNameSpecifier
 modifier|*
 name|CorrectionNameSpec
 decl_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|NamedDecl
@@ -933,17 +933,20 @@ comment|/// This can be overrided by validators that only need to determine if a
 comment|/// candidate is viable, without ranking potentially viable candidates.
 comment|/// Only ValidateCandidate or RankCandidate need to be overriden by a
 comment|/// callback wishing to check the viability of correction candidates.
+comment|/// The default predicate always returns true if the candidate is not a type
+comment|/// name or keyword, true for types if WantTypeSpecifiers is true, and true
+comment|/// for keywords if WantTypeSpecifiers, WantExpressionKeywords,
+comment|/// WantCXXNamedCasts, WantRemainingKeywords, or WantObjCSuper is true.
 name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
-argument|const TypoCorrection&candidate
+specifier|const
+name|TypoCorrection
+operator|&
+name|candidate
 argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
+expr_stmt|;
 comment|/// \brief Method used by Sema::CorrectTypo to assign an "edit distance" rank
 comment|/// to a candidate (where a lower value represents a better candidate), or
 comment|/// returning InvalidDistance if the candidate is not at all viable. For

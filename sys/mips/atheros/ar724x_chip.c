@@ -293,6 +293,18 @@ name|u_ar71xx_cpu_freq
 operator|/
 name|div
 expr_stmt|;
+name|u_ar71xx_wdt_freq
+operator|=
+name|u_ar71xx_cpu_freq
+operator|/
+name|div
+expr_stmt|;
+name|u_ar71xx_uart_freq
+operator|=
+name|u_ar71xx_cpu_freq
+operator|/
+name|div
+expr_stmt|;
 block|}
 end_function
 

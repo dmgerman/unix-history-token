@@ -63,6 +63,12 @@ directive|define
 name|LLVM_SUPPORT_COMPILER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Config/llvm-config.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -85,7 +91,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// LLVM_HAS_RVALUE_REFERENCES - Does the compiler provide r-value references?
+comment|/// \brief Does the compiler support r-value references?
 end_comment
 
 begin_comment
@@ -128,7 +134,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 value|1
 end_define
 
@@ -140,7 +146,255 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \brief Does the compiler support r-value reference *this?
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Sadly, this is separate from just r-value reference support because GCC
+end_comment
+
+begin_comment
+comment|/// implemented everything but this thus far. No release of GCC yet has support
+end_comment
+
+begin_comment
+comment|/// for this feature so it is enabled with Clang only.
+end_comment
+
+begin_comment
+comment|/// FIXME: This should change to a version check when GCC grows support for it.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|cxx_rvalue_references
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_RVALUE_REFERENCE_THIS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_RVALUE_REFERENCE_THIS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_HAS_CXX11_TYPETRAITS
+end_comment
+
+begin_comment
+comment|/// \brief Does the compiler have the C++11 type traits.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// #include<type_traits>
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// * enable_if
+end_comment
+
+begin_comment
+comment|/// * {true,false}_type
+end_comment
+
+begin_comment
+comment|/// * is_constructible
+end_comment
+
+begin_comment
+comment|/// * etc...
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GXX_EXPERIMENTAL_CXX0X__
+argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1700
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_CXX11_TYPETRAITS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_CXX11_TYPETRAITS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_HAS_CXX11_STDLIB
+end_comment
+
+begin_comment
+comment|/// \brief Does the compiler have the C++11 standard library.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Implies LLVM_HAS_RVALUE_REFERENCES, LLVM_HAS_CXX11_TYPETRAITS
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GXX_EXPERIMENTAL_CXX0X__
+argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1700
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_CXX11_STDLIB
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_CXX11_STDLIB
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_HAS_VARIADIC_TEMPLATES
+end_comment
+
+begin_comment
+comment|/// \brief Does this compiler support variadic templates.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Implies LLVM_HAS_RVALUE_REFERENCES and the existence of std::forward.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|cxx_variadic_templates
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_VARIADIC_TEMPLATES
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_VARIADIC_TEMPLATES
 value|0
 end_define
 
@@ -160,7 +414,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|LLVM_USE_RVALUE_REFERENCES
+name|LLVM_HAS_RVALUE_REFERENCES
 end_if
 
 begin_define
@@ -186,6 +440,51 @@ parameter_list|(
 name|value
 parameter_list|)
 value|(value)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// Expands to '&' if r-value references are supported.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This can be used to provide l-value/r-value overrides of member functions.
+end_comment
+
+begin_comment
+comment|/// The r-value override should be guarded by LLVM_HAS_RVALUE_REFERENCE_THIS
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LLVM_HAS_RVALUE_REFERENCE_THIS
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_LVALUE_FUNCTION
+value|&
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_LVALUE_FUNCTION
 end_define
 
 begin_endif
@@ -292,11 +591,21 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|__has_feature
 argument_list|(
 name|cxx_override_control
 argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1700
 operator|)
 end_if
 
@@ -334,11 +643,21 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|__has_feature
 argument_list|(
 name|cxx_override_control
 argument_list|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1700
 operator|)
 end_if
 
@@ -358,6 +677,43 @@ begin_define
 define|#
 directive|define
 name|LLVM_OVERRIDE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|cxx_constexpr
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GXX_EXPERIMENTAL_CXX0X__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_CONSTEXPR
+value|constexpr
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_CONSTEXPR
 end_define
 
 begin_endif
@@ -790,11 +1146,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_ATTRIBUTE_NOINLINE - On compilers where we have a directive to do so,
+comment|/// LLVM_ATTRIBUTE_NOINLINE - On compilers where we have a directive to do so,
 end_comment
 
 begin_comment
-comment|// mark a method "not for inlining".
+comment|/// mark a method "not for inlining".
 end_comment
 
 begin_if
@@ -857,19 +1213,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_ATTRIBUTE_ALWAYS_INLINE - On compilers where we have a directive to do
+comment|/// LLVM_ATTRIBUTE_ALWAYS_INLINE - On compilers where we have a directive to do
 end_comment
 
 begin_comment
-comment|// so, mark a method "always inline" because it is performance sensitive. GCC
+comment|/// so, mark a method "always inline" because it is performance sensitive. GCC
 end_comment
 
 begin_comment
-comment|// 3.4 supported this but is buggy in various cases and produces unimplemented
+comment|/// 3.4 supported this but is buggy in various cases and produces unimplemented
 end_comment
 
 begin_comment
-comment|// errors, just use it in GCC 4.0 and later.
+comment|/// errors, just use it in GCC 4.0 and later.
 end_comment
 
 begin_if
@@ -965,11 +1321,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_EXTENSION - Support compilers where we have a keyword to suppress
+comment|/// LLVM_EXTENSION - Support compilers where we have a keyword to suppress
 end_comment
 
 begin_comment
-comment|// pedantic diagnostics.
+comment|/// pedantic diagnostics.
 end_comment
 
 begin_ifdef
@@ -1095,15 +1451,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_BUILTIN_UNREACHABLE - On compilers which support it, expands
+comment|/// LLVM_BUILTIN_UNREACHABLE - On compilers which support it, expands
 end_comment
 
 begin_comment
-comment|// to an expression which states that it is undefined behavior for the
+comment|/// to an expression which states that it is undefined behavior for the
 end_comment
 
 begin_comment
-comment|// compiler to reach this point.  Otherwise is not defined.
+comment|/// compiler to reach this point.  Otherwise is not defined.
 end_comment
 
 begin_if
@@ -1139,17 +1495,33 @@ name|LLVM_BUILTIN_UNREACHABLE
 value|__builtin_unreachable()
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_BUILTIN_UNREACHABLE
+value|__assume(false)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_BUILTIN_TRAP - On compilers which support it, expands to an expression
+comment|/// LLVM_BUILTIN_TRAP - On compilers which support it, expands to an expression
 end_comment
 
 begin_comment
-comment|// which causes the program to exit abnormally.
+comment|/// which causes the program to exit abnormally.
 end_comment
 
 begin_if
@@ -1195,6 +1567,500 @@ define|#
 directive|define
 name|LLVM_BUILTIN_TRAP
 value|*(volatile int*)0x11 = 0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_ASSUME_ALIGNED
+end_comment
+
+begin_comment
+comment|/// \brief Returns a pointer with an assumed alignment.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|__GNUC__
+operator|>
+literal|4
+operator|)
+expr|\
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|7
+operator|)
+operator|)
+end_if
+
+begin_comment
+comment|// FIXME: Enable on clang when it supports it.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ASSUME_ALIGNED
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|__builtin_assume_aligned(p, a)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|LLVM_BUILTIN_UNREACHABLE
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ASSUME_ALIGNED
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|(((uintptr_t(p) % (a)) == 0) ? (p) : (LLVM_BUILTIN_UNREACHABLE, (p)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ASSUME_ALIGNED
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|(p)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_FUNCTION_NAME
+end_comment
+
+begin_comment
+comment|/// \brief Expands to __func__ on compilers which support it.  Otherwise,
+end_comment
+
+begin_comment
+comment|/// expands to a compiler-dependent replacement.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_FUNCTION_NAME
+value|__FUNCTION__
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_FUNCTION_NAME
+value|__func__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SANITIZER_MSAN_INTERFACE_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sanitizer/msan_interface.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__msan_allocated_memory
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__msan_unpoison
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_MEMORY_SANITIZER_BUILD
+end_comment
+
+begin_comment
+comment|/// \brief Whether LLVM itself is built with MemorySanitizer instrumentation.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|memory_sanitizer
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_MEMORY_SANITIZER_BUILD
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_MEMORY_SANITIZER_BUILD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_ADDRESS_SANITIZER_BUILD
+end_comment
+
+begin_comment
+comment|/// \brief Whether LLVM itself is built with AddressSanitizer instrumentation.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|address_sanitizer
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SANITIZE_ADDRESS__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_ADDRESS_SANITIZER_BUILD
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ADDRESS_SANITIZER_BUILD
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_IS_UNALIGNED_ACCESS_FAST
+end_comment
+
+begin_comment
+comment|/// \brief Is unaligned memory access fast on the host machine.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Don't specialize on alignment for platforms where unaligned memory accesses
+end_comment
+
+begin_comment
+comment|/// generates the same code as aligned memory accesses for common types.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_M_AMD64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_M_IX86
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|_X86_
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_IS_UNALIGNED_ACCESS_FAST
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_IS_UNALIGNED_ACCESS_FAST
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_EXPLICIT
+end_comment
+
+begin_comment
+comment|/// \brief Expands to explicit on compilers which support explicit conversion
+end_comment
+
+begin_comment
+comment|/// operators. Otherwise expands to nothing.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__has_feature
+argument_list|(
+name|cxx_explicit_conversions
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__GXX_EXPERIMENTAL_CXX0X__
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_EXPLICIT
+value|explicit
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_EXPLICIT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \macro LLVM_STATIC_ASSERT
+end_comment
+
+begin_comment
+comment|/// \brief Expands to C/C++'s static_assert on compilers which support it.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|cxx_static_assert
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_STATIC_ASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|)
+value|static_assert(expr, msg)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__has_feature
+argument_list|(
+name|c_static_assert
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_STATIC_ASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|)
+value|_Static_assert(expr, msg)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_STATIC_ASSERT
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|)
 end_define
 
 begin_endif

@@ -74,6 +74,11 @@ name|void
 name|procstat_vm
 parameter_list|(
 name|struct
+name|procstat
+modifier|*
+name|procstat
+parameter_list|,
+name|struct
 name|kinfo_proc
 modifier|*
 name|kipp
@@ -150,11 +155,11 @@ argument_list|)
 expr_stmt|;
 name|freep
 operator|=
-name|kinfo_getvmmap
+name|procstat_getvmmap
 argument_list|(
+name|procstat
+argument_list|,
 name|kipp
-operator|->
-name|ki_pid
 argument_list|,
 operator|&
 name|cnt

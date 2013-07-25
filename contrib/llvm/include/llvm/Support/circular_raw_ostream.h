@@ -156,9 +156,7 @@ comment|/// flushBuffer - Dump the contents of the buffer to Stream.
 comment|///
 name|void
 name|flushBuffer
-argument_list|(
-argument|void
-argument_list|)
+argument_list|()
 block|{
 if|if
 condition|(
@@ -413,9 +411,7 @@ comment|/// a small header.
 comment|///
 name|void
 name|flushBufferWithBanner
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

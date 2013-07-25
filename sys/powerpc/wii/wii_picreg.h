@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|WIIPIC_REG_LEN
-value|0x08
+value|0x28
 end_define
 
 begin_define
@@ -34,6 +34,13 @@ define|#
 directive|define
 name|WIIPIC_ICR
 value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIIPIC_RBS
+value|0x10000
 end_define
 
 begin_define

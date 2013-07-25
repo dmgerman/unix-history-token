@@ -610,6 +610,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SS_IPM_DEVSLEEP
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SERROR
 value|14
 end_define
@@ -1258,6 +1265,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|AHCI_CAP2_SDS
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_CAP2_SADM
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_CAP2_DESO
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHCI_OFFSET
 value|0x100
 end_define
@@ -1624,6 +1652,13 @@ define|#
 directive|define
 name|AHCI_P_CMD_SLUMBER
 value|0x60000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_DEVSLEEP
+value|0x80000000
 end_define
 
 begin_define
@@ -2035,10 +2070,6 @@ name|bus_dma_tag_t
 name|data_tag
 decl_stmt|;
 comment|/* data DMA tag */
-name|u_int64_t
-name|max_address
-decl_stmt|;
-comment|/* highest DMA'able address */
 block|}
 struct|;
 end_struct
@@ -2457,6 +2488,9 @@ name|ahci_controller
 block|{
 name|device_t
 name|dev
+decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag
 decl_stmt|;
 name|int
 name|r_rid

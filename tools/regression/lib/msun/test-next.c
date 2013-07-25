@@ -68,12 +68,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ALL_STD_EXCEPT
-value|(FE_DIVBYZERO | FE_INEXACT | FE_INVALID |\ 			 FE_OVERFLOW | FE_UNDERFLOW)
-end_define
+begin_include
+include|#
+directive|include
+file|"test-utils.h"
+end_include
 
 begin_define
 define|#
@@ -1491,22 +1490,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|actual
-operator|!=
-name|expected
-operator|&&
 operator|!
-operator|(
-name|isnan
+name|fpequal
 argument_list|(
 name|actual
-argument_list|)
-operator|&&
-name|isnan
-argument_list|(
+argument_list|,
 name|expected
 argument_list|)
-operator|)
 condition|)
 block|{
 name|fprintf

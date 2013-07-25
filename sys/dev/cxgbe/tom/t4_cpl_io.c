@@ -413,7 +413,7 @@ name|wr
 operator|=
 name|alloc_wrqe
 argument_list|(
-name|roundup
+name|roundup2
 argument_list|(
 name|flowclen
 argument_list|,
@@ -3482,7 +3482,7 @@ name|wr
 operator|=
 name|alloc_wrqe
 argument_list|(
-name|roundup
+name|roundup2
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3623,7 +3623,7 @@ name|wr
 operator|=
 name|alloc_wrqe
 argument_list|(
-name|roundup
+name|roundup2
 argument_list|(
 name|wr_len
 argument_list|,
@@ -4609,28 +4609,8 @@ condition|)
 block|{
 name|m
 operator|=
-name|m_get
+name|get_ddp_mbuf
 argument_list|(
-name|M_NOWAIT
-argument_list|,
-name|MT_DATA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-name|CXGBE_UNIMPLEMENTED
-argument_list|(
-literal|"mbuf alloc failure"
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|=
 name|be32toh
 argument_list|(
 name|cpl
@@ -4641,19 +4621,7 @@ operator|-
 name|tp
 operator|->
 name|rcv_nxt
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_DDP
-expr_stmt|;
-comment|/* Data is already where it should be */
-name|m
-operator|->
-name|m_data
-operator|=
-literal|"nothing to see here"
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -7740,6 +7708,9 @@ name|toepcb
 modifier|*
 name|toep
 parameter_list|,
+name|int
+name|ctrl
+parameter_list|,
 name|uint16_t
 name|word
 parameter_list|,
@@ -7770,9 +7741,15 @@ operator|*
 name|req
 argument_list|)
 argument_list|,
+name|ctrl
+condition|?
 name|toep
 operator|->
 name|ctrlq
+else|:
+name|toep
+operator|->
+name|ofld_txq
 argument_list|)
 expr_stmt|;
 if|if

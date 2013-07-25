@@ -2067,6 +2067,7 @@ name|struct
 name|bce_softc
 modifier|*
 parameter_list|,
+specifier|const
 name|u32
 modifier|*
 parameter_list|,
@@ -2322,15 +2323,9 @@ name|struct
 name|bce_softc
 modifier|*
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
+name|u16
 parameter_list|,
 name|u16
-modifier|*
-parameter_list|,
-name|u16
-modifier|*
 parameter_list|,
 name|u32
 modifier|*
@@ -2383,15 +2378,9 @@ name|struct
 name|bce_softc
 modifier|*
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
+name|u16
 parameter_list|,
 name|u16
-modifier|*
-parameter_list|,
-name|u16
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6684,44 +6673,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Trip points control how many BDs 	 * should be ready before generating an 	 * interrupt while ticks control how long 	 * a BD can sit in the chain before 	 * generating an interrupt.  Set the default 	 * values for the RX and TX chains. 	 */
-comment|/* Not used for L2. */
-name|sc
-operator|->
-name|bce_comp_prod_trip_int
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_comp_prod_trip
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_com_ticks_int
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_com_ticks
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_cmd_ticks_int
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|bce_cmd_ticks
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Update statistics once every second. */
 name|sc
 operator|->
@@ -9929,6 +9880,12 @@ argument_list|,
 name|BCE_EMAC_RX_MODE_FLOW_EN
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|bce_flags
+operator||=
+name|BCE_USING_RX_FLOW_CONTROL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -9951,6 +9908,13 @@ name|BCE_EMAC_RX_MODE
 argument_list|,
 name|BCE_EMAC_RX_MODE_FLOW_EN
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bce_flags
+operator|&=
+operator|~
+name|BCE_USING_RX_FLOW_CONTROL
 expr_stmt|;
 block|}
 if|if
@@ -13700,12 +13664,6 @@ name|sc
 operator|->
 name|rx_bd_mbuf_align_pad
 expr_stmt|;
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|=
-name|MCLBYTES
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -15591,7 +15549,6 @@ operator|->
 name|ds_addr
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -15936,6 +15893,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|status_block_paddr
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16114,6 +16077,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|stats_block_paddr
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16380,6 +16349,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|ctx_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16597,6 +16575,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|tx_bd_chain_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -16962,6 +16949,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|rx_bd_chain_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -17016,8 +17012,6 @@ name|TRUE
 condition|)
 name|max_size
 operator|=
-name|max_seg_size
-operator|=
 operator|(
 operator|(
 name|sc
@@ -17037,13 +17031,7 @@ expr_stmt|;
 else|else
 name|max_size
 operator|=
-name|max_seg_size
-operator|=
 name|MJUM9BYTES
-expr_stmt|;
-name|max_segments
-operator|=
-literal|1
 expr_stmt|;
 name|DBPRINT
 argument_list|(
@@ -17052,8 +17040,7 @@ argument_list|,
 name|BCE_INFO_LOAD
 argument_list|,
 literal|"%s(): Creating rx_mbuf_tag "
-literal|"(max size = 0x%jX max segments = %d, max segment "
-literal|"size = 0x%jX)\n"
+literal|"(max size = 0x%jX)\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -17061,13 +17048,6 @@ operator|(
 name|uintmax_t
 operator|)
 name|max_size
-argument_list|,
-name|max_segments
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|max_seg_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -17094,9 +17074,9 @@ name|NULL
 argument_list|,
 name|max_size
 argument_list|,
-name|max_segments
+literal|1
 argument_list|,
-name|max_seg_size
+name|max_size
 argument_list|,
 literal|0
 argument_list|,
@@ -17360,6 +17340,15 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+name|sc
+operator|->
+name|pg_bd_chain_paddr
+index|[
+name|i
+index|]
+operator|==
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
@@ -17406,26 +17395,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Create a DMA tag for page mbufs. 		 */
-name|max_size
-operator|=
-name|max_seg_size
-operator|=
-operator|(
-operator|(
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|<
-name|MCLBYTES
-operator|)
-condition|?
-name|MCLBYTES
-else|:
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -17448,11 +17417,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|max_size
+name|MCLBYTES
 argument_list|,
 literal|1
 argument_list|,
-name|max_seg_size
+name|MCLBYTES
 argument_list|,
 literal|0
 argument_list|,
@@ -18085,6 +18054,7 @@ name|bce_softc
 modifier|*
 name|sc
 parameter_list|,
+specifier|const
 name|u32
 modifier|*
 name|rv2p_code
@@ -23505,7 +23475,7 @@ name|stats_block_paddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Program various host coalescing parameters. */
+comment|/* 	 * Program various host coalescing parameters. 	 * Trip points control how many BDs should be ready before generating 	 * an interrupt while ticks control how long a BD can sit in the chain 	 * before generating an interrupt. 	 */
 name|REG_WR
 argument_list|(
 name|sc
@@ -23542,25 +23512,6 @@ operator||
 name|sc
 operator|->
 name|bce_rx_quick_cons_trip
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_HC_COMP_PROD_TRIP
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|bce_comp_prod_trip_int
-operator|<<
-literal|16
-operator|)
-operator||
-name|sc
-operator|->
-name|bce_comp_prod_trip
 argument_list|)
 expr_stmt|;
 name|REG_WR
@@ -23605,53 +23556,13 @@ name|REG_WR
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_HC_COM_TICKS
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|bce_com_ticks_int
-operator|<<
-literal|16
-operator|)
-operator||
-name|sc
-operator|->
-name|bce_com_ticks
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_HC_CMD_TICKS
-argument_list|,
-operator|(
-name|sc
-operator|->
-name|bce_cmd_ticks_int
-operator|<<
-literal|16
-operator|)
-operator||
-name|sc
-operator|->
-name|bce_cmd_ticks
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
 name|BCE_HC_STATS_TICKS
 argument_list|,
-operator|(
 name|sc
 operator|->
 name|bce_stats_ticks
 operator|&
 literal|0xffff00
-operator|)
 argument_list|)
 expr_stmt|;
 name|REG_WR
@@ -23664,6 +23575,34 @@ literal|0xbb8
 argument_list|)
 expr_stmt|;
 comment|/* 3ms */
+comment|/* Not used for L2. */
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_COMP_PROD_TRIP
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_COM_TICKS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_CMD_TICKS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Configure the Host Coalescing block. */
 name|val
 operator|=
@@ -23956,17 +23895,10 @@ name|bce_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
 name|u16
-modifier|*
 name|prod
 parameter_list|,
 name|u16
-modifier|*
 name|chain_prod
 parameter_list|,
 name|u32
@@ -23974,13 +23906,10 @@ modifier|*
 name|prod_bseq
 parameter_list|)
 block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
-name|BCE_MAX_SEGMENTS
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -24010,7 +23939,6 @@ name|BCE_DEBUG
 name|u16
 name|debug_chain_prod
 init|=
-operator|*
 name|chain_prod
 decl_stmt|;
 endif|#
@@ -24028,7 +23956,6 @@ comment|/* Make sure the inputs are valid. */
 name|DBRUNIF
 argument_list|(
 operator|(
-operator|*
 name|chain_prod
 operator|>
 name|MAX_RX_BD_ALLOC
@@ -24043,7 +23970,6 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-operator|*
 name|chain_prod
 argument_list|,
 operator|(
@@ -24064,10 +23990,8 @@ literal|"chain_prod = 0x%04X, prod_bseq = 0x%08X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|chain_prod
 argument_list|,
 operator|*
@@ -24114,20 +24038,12 @@ name|rx_empty_count
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Check whether this is a new mbuf allocation. */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(mbuf_alloc_failed_sim_control)
 argument_list|,
-argument|sc->mbuf_alloc_failed_count++; 		    sc->mbuf_alloc_failed_sim_count++; 		    rc = ENOBUFS; 		    goto bce_get_rx_buf_exit
+argument|sc->mbuf_alloc_failed_count++; 	    sc->mbuf_alloc_failed_sim_count++; 	    rc = ENOBUFS; 	    goto bce_get_rx_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -24190,15 +24106,6 @@ name|debug_rx_mbuf_alloc
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Reuse an existing mbuf. */
-name|m_new
-operator|=
-name|m
-expr_stmt|;
-block|}
 comment|/* Make sure we have a valid packet header. */
 name|M_ASSERTPKTHDR
 argument_list|(
@@ -24231,16 +24138,6 @@ argument_list|)
 expr_stmt|;
 comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
-name|map
-operator|=
-name|sc
-operator|->
-name|rx_mbuf_map
-index|[
-operator|*
-name|chain_prod
-index|]
-expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
@@ -24249,7 +24146,12 @@ name|sc
 operator|->
 name|rx_mbuf_tag
 argument_list|,
-name|map
+name|sc
+operator|->
+name|rx_mbuf_map
+index|[
+name|chain_prod
+index|]
 argument_list|,
 name|m_new
 argument_list|,
@@ -24331,14 +24233,12 @@ name|rx_bd_chain
 index|[
 name|RX_PAGE
 argument_list|(
-operator|*
 name|chain_prod
 argument_list|)
 index|]
 index|[
 name|RX_IDX
 argument_list|(
-operator|*
 name|chain_prod
 argument_list|)
 index|]
@@ -24417,7 +24317,6 @@ name|sc
 operator|->
 name|rx_mbuf_ptr
 index|[
-operator|*
 name|chain_prod
 index|]
 operator|=
@@ -24454,10 +24353,8 @@ literal|"chain_prod = 0x%04X, prod_bseq = 0x%08X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|chain_prod
 argument_list|,
 operator|*
@@ -24517,25 +24414,18 @@ name|bce_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
 name|u16
-modifier|*
 name|prod
 parameter_list|,
 name|u16
-modifier|*
 name|prod_idx
 parameter_list|)
 block|{
-name|bus_dmamap_t
-name|map
-decl_stmt|;
-name|bus_addr_t
-name|busaddr
+name|bus_dma_segment_t
+name|segs
+index|[
+literal|1
+index|]
 decl_stmt|;
 name|struct
 name|mbuf
@@ -24552,6 +24442,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|nsegs
+decl_stmt|,
 name|rc
 init|=
 literal|0
@@ -24562,7 +24454,6 @@ name|BCE_DEBUG
 name|u16
 name|debug_prod_idx
 init|=
-operator|*
 name|prod_idx
 decl_stmt|;
 endif|#
@@ -24580,7 +24471,6 @@ comment|/* Make sure the inputs are valid. */
 name|DBRUNIF
 argument_list|(
 operator|(
-operator|*
 name|prod_idx
 operator|>
 name|MAX_PG_BD_ALLOC
@@ -24595,7 +24485,6 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-operator|*
 name|prod_idx
 argument_list|,
 operator|(
@@ -24616,10 +24505,8 @@ literal|"chain_prod = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|prod_idx
 argument_list|)
 expr_stmt|;
@@ -24663,20 +24550,12 @@ name|pg_empty_count
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Check whether this is a new mbuf allocation. */
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
 comment|/* Simulate an mbuf allocation failure. */
 name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(mbuf_alloc_failed_sim_control)
 argument_list|,
-argument|sc->mbuf_alloc_failed_count++; 		    sc->mbuf_alloc_failed_sim_count++; 		    rc = ENOBUFS; 		    goto bce_get_pg_buf_exit
+argument|sc->mbuf_alloc_failed_count++; 	    sc->mbuf_alloc_failed_sim_count++; 	    rc = ENOBUFS; 	    goto bce_get_pg_buf_exit
 argument_list|)
 empty_stmt|;
 comment|/* This is a new mbuf allocation. */
@@ -24719,71 +24598,35 @@ name|debug_pg_mbuf_alloc
 operator|++
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Reuse an existing mbuf. */
-name|m_new
-operator|=
-name|m
-expr_stmt|;
-name|m_new
-operator|->
-name|m_data
-operator|=
-name|m_new
-operator|->
-name|m_ext
-operator|.
-name|ext_buf
-expr_stmt|;
-block|}
 name|m_new
 operator|->
 name|m_len
 operator|=
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 expr_stmt|;
 comment|/* ToDo: Consider calling m_fragment() to test error handling. */
 comment|/* Map the mbuf cluster into device memory. */
-name|map
-operator|=
-name|sc
-operator|->
-name|pg_mbuf_map
-index|[
-operator|*
-name|prod_idx
-index|]
-expr_stmt|;
 name|error
 operator|=
-name|bus_dmamap_load
+name|bus_dmamap_load_mbuf_sg
 argument_list|(
 name|sc
 operator|->
 name|pg_mbuf_tag
 argument_list|,
-name|map
-argument_list|,
-name|mtod
-argument_list|(
-name|m_new
-argument_list|,
-name|void
-operator|*
-argument_list|)
-argument_list|,
 name|sc
 operator|->
-name|pg_bd_mbuf_alloc_size
+name|pg_mbuf_map
+index|[
+name|prod_idx
+index|]
 argument_list|,
-name|bce_dma_map_addr
+name|m_new
+argument_list|,
+name|segs
 argument_list|,
 operator|&
-name|busaddr
+name|nsegs
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
@@ -24824,6 +24667,22 @@ goto|goto
 name|bce_get_pg_buf_exit
 goto|;
 block|}
+comment|/* All mbufs must map to a single segment. */
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s(): Too many segments returned (%d)!"
+operator|,
+name|__FUNCTION__
+operator|,
+name|nsegs
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* ToDo: Do we need bus_dmamap_sync(,,BUS_DMASYNC_PREREAD) here? */
 comment|/* 	 * The page chain uses the same rx_bd data structure 	 * as the receive chain but doesn't require a byte sequence (bseq). 	 */
 name|pgbd
@@ -24835,14 +24694,12 @@ name|pg_bd_chain
 index|[
 name|PG_PAGE
 argument_list|(
-operator|*
 name|prod_idx
 argument_list|)
 index|]
 index|[
 name|PG_IDX
 argument_list|(
-operator|*
 name|prod_idx
 argument_list|)
 index|]
@@ -24855,7 +24712,12 @@ name|htole32
 argument_list|(
 name|BCE_ADDR_LO
 argument_list|(
-name|busaddr
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -24867,7 +24729,12 @@ name|htole32
 argument_list|(
 name|BCE_ADDR_HI
 argument_list|(
-name|busaddr
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -24877,9 +24744,7 @@ name|rx_bd_len
 operator|=
 name|htole32
 argument_list|(
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 argument_list|)
 expr_stmt|;
 name|pgbd
@@ -24898,7 +24763,6 @@ name|sc
 operator|->
 name|pg_mbuf_ptr
 index|[
-operator|*
 name|prod_idx
 index|]
 operator|=
@@ -24934,10 +24798,8 @@ literal|"prod_idx = 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-operator|*
 name|prod
 argument_list|,
-operator|*
 name|prod_idx
 argument_list|)
 expr_stmt|;
@@ -26324,12 +26186,8 @@ name|bce_get_rx_buf
 argument_list|(
 name|sc
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
 name|prod
 argument_list|,
-operator|&
 name|prod_idx
 argument_list|,
 operator|&
@@ -26380,8 +26238,6 @@ literal|"%s(): Invalid rx_prod value: 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|sc
-operator|->
 name|rx_prod
 argument_list|)
 argument_list|)
@@ -26398,9 +26254,7 @@ argument_list|)
 operator|+
 name|BCE_L2MQ_RX_HOST_BDIDX
 argument_list|,
-name|sc
-operator|->
-name|rx_prod
+name|prod
 argument_list|)
 expr_stmt|;
 name|REG_WR
@@ -26414,9 +26268,7 @@ argument_list|)
 operator|+
 name|BCE_L2MQ_RX_HOST_BSEQ
 argument_list|,
-name|sc
-operator|->
-name|rx_prod_bseq
+name|prod_bseq
 argument_list|)
 expr_stmt|;
 name|DBEXIT
@@ -26590,7 +26442,6 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
 name|bzero
 argument_list|(
 operator|(
@@ -26607,7 +26458,6 @@ argument_list|,
 name|BCE_RX_CHAIN_PAGE_SZ
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|free_rx_bd
@@ -26896,9 +26746,7 @@ operator|<<
 literal|16
 operator|)
 operator||
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 expr_stmt|;
 name|CTX_WR
 argument_list|(
@@ -27141,12 +26989,8 @@ name|bce_get_pg_buf
 argument_list|(
 name|sc
 argument_list|,
-name|NULL
-argument_list|,
-operator|&
 name|prod
 argument_list|,
-operator|&
 name|prod_idx
 argument_list|)
 condition|)
@@ -27187,8 +27031,6 @@ literal|"%s(): Invalid pg_prod value: 0x%04X\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|sc
-operator|->
 name|pg_prod
 argument_list|)
 argument_list|)
@@ -27205,9 +27047,7 @@ argument_list|)
 operator|+
 name|BCE_L2MQ_RX_HOST_PG_BDIDX
 argument_list|,
-name|sc
-operator|->
-name|pg_prod
+name|prod
 argument_list|)
 expr_stmt|;
 name|DBEXIT
@@ -29369,31 +29209,6 @@ operator|->
 name|free_rx_bd
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|m0
-operator|==
-name|NULL
-condition|)
-block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_EXTREME_RECV
-argument_list|,
-literal|"%s(): Oops! Empty mbuf pointer "
-literal|"found in sc->rx_mbuf_ptr[0x%04X]!\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|sw_rx_cons_idx
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bce_rx_int_next_rx
-goto|;
-block|}
 comment|/*  		 * Frames received on the NetXteme II are prepended  		 * with an l2_fhdr structure which provides status  		 * information about the received frame (including  		 * VLAN tags and checksum info).  The frames are 		 * also automatically adjusted to word align the IP  		 * header (i.e. two null bytes are inserted before  		 * the Ethernet	header).  As a result the data  		 * DMA'd by the controller into	the mbuf looks 		 * like this: 		 * 		 * +---------+-----+---------------------+-----+ 		 * | l2_fhdr | pad | packet data         | FCS | 		 * +---------+-----+---------------------+-----+ 		 *  		 * The l2_fhdr needs to be checked and skipped and  		 * the FCS needs to be stripped before sending the 		 * packet up the stack. 		 */
 name|l2fhdr
 operator|=
@@ -29767,7 +29582,7 @@ operator|=
 name|NULL
 expr_stmt|;
 goto|goto
-name|bce_rx_int_next_rx
+name|bce_rx_intr_next_rx
 goto|;
 block|}
 comment|/* Send the packet to the appropriate interface. */
@@ -29917,9 +29732,20 @@ block|}
 comment|/* Attach the VLAN tag.	*/
 if|if
 condition|(
+operator|(
 name|status
 operator|&
 name|L2_FHDR_STATUS_L2_VLAN_TAG
+operator|)
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|rx_mode
+operator|&
+name|BCE_EMAC_RX_MODE_KEEP_VLAN_TAG
+operator|)
 condition|)
 block|{
 name|DBRUN
@@ -30071,7 +29897,7 @@ operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-name|bce_rx_int_next_rx
+name|bce_rx_intr_next_rx
 label|:
 name|sw_rx_cons
 operator|=
@@ -31189,15 +31015,11 @@ name|ifp
 operator|->
 name|if_mtu
 operator|<=
-operator|(
 name|sc
 operator|->
 name|rx_bd_mbuf_data_len
 operator|+
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-operator|)
+name|MCLBYTES
 condition|)
 name|ether_mtu
 operator|=
@@ -31205,9 +31027,7 @@ name|sc
 operator|->
 name|rx_bd_mbuf_data_len
 operator|+
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
+name|MCLBYTES
 expr_stmt|;
 else|else
 name|ether_mtu
@@ -31315,21 +31135,6 @@ operator|==
 name|TRUE
 condition|)
 block|{
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO_LOAD
-argument_list|,
-literal|"%s(): pg_bd_mbuf_alloc_size = %d\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|sc
-operator|->
-name|pg_bd_mbuf_alloc_size
-argument_list|)
-expr_stmt|;
 comment|/* Init page buffer descriptor chain. */
 name|bce_init_pg_chain
 argument_list|(
@@ -33395,7 +33200,6 @@ operator||
 name|BCE_VERBOSE_CTX
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -34165,6 +33969,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|uint32_t
+name|status
+decl_stmt|;
 name|DBENTER
 argument_list|(
 name|BCE_EXTREME_SEND
@@ -34174,6 +33981,10 @@ name|BCE_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|status
+operator|=
+literal|0
 expr_stmt|;
 comment|/* If the watchdog timer hasn't expired then just exit. */
 if|if
@@ -34192,22 +34003,84 @@ condition|)
 goto|goto
 name|bce_watchdog_exit
 goto|;
-comment|/* If pause frames are active then don't reset the hardware. */
-comment|/* ToDo: Should we reset the timer here? */
-if|if
-condition|(
+name|status
+operator|=
 name|REG_RD
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_EMAC_TX_STATUS
+name|BCE_EMAC_RX_STATUS
 argument_list|)
+expr_stmt|;
+comment|/* If pause frames are active then don't reset the hardware. */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|bce_flags
 operator|&
-name|BCE_EMAC_TX_STATUS_XOFFED
+name|BCE_USING_RX_FLOW_CONTROL
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|BCE_EMAC_RX_STATUS_FFED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * If link partner has us in XOFF state then wait for 			 * the condition to clear. 			 */
+name|sc
+operator|->
+name|watchdog_timer
+operator|=
+name|BCE_TX_TIMEOUT
+expr_stmt|;
 goto|goto
 name|bce_watchdog_exit
 goto|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|BCE_EMAC_RX_STATUS_FF_RECEIVED
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|status
+operator|&
+name|BCE_EMAC_RX_STATUS_N_RECEIVED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * If we're not currently XOFF'ed but have recently 			 * been XOFF'd/XON'd then assume that's delaying TX 			 * this time around. 			 */
+name|sc
+operator|->
+name|watchdog_timer
+operator|=
+name|BCE_TX_TIMEOUT
+expr_stmt|;
+goto|goto
+name|bce_watchdog_exit
+goto|;
+block|}
+comment|/* 		 * Any other condition is unexpected and the controller 		 * should be reset. 		 */
+block|}
 name|BCE_PRINTF
 argument_list|(
 literal|"%s(%d): Watchdog timeout occurred, resetting!\n"
@@ -34265,6 +34138,15 @@ operator|++
 expr_stmt|;
 name|bce_watchdog_exit
 label|:
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EMAC_RX_STATUS
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 name|DBEXIT
 argument_list|(
 name|BCE_EXTREME_SEND
@@ -34302,7 +34184,7 @@ comment|/* Returns:                                                             
 end_comment
 
 begin_comment
-comment|/*   0 for success, positive value for failure.                             */
+comment|/*   Nothing.                                                               */
 end_comment
 
 begin_comment
@@ -34403,10 +34285,23 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the hardware status block index 	 * matches the last value read by the 	 * driver and we haven't asserted our 	 * interrupt then there's nothing to do. 	 */
+comment|/* 	 * If the hardware status block index matches the last value read 	 * by the driver and we haven't asserted our interrupt then there's 	 * nothing to do.  This may only happen in case of INTx due to the 	 * interrupt arriving at the CPU before the status block is updated. 	 */
 if|if
 condition|(
 operator|(
+name|sc
+operator|->
+name|bce_flags
+operator|&
+operator|(
+name|BCE_USING_MSI_FLAG
+operator||
+name|BCE_USING_MSIX_FLAG
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|status_block
@@ -34416,7 +34311,6 @@ operator|==
 name|sc
 operator|->
 name|last_status_idx
-operator|)
 operator|&&
 operator|(
 name|REG_RD
@@ -35240,6 +35134,19 @@ operator|=
 name|sc
 operator|->
 name|bce_ifp
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|stats_tag
+argument_list|,
+name|sc
+operator|->
+name|stats_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
 expr_stmt|;
 name|stats
 operator|=
@@ -36268,8 +36175,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * ToDo: This is a safety measure.  Need to re-evaluate  	 * high	level processing logic and eliminate this code.  	 */
-comment|/* Top off the receive and page chains. */
+comment|/* Ensure page and RX chains get refilled in low-memory situations. */
 if|if
 condition|(
 name|bce_hdr_split
@@ -36521,7 +36427,6 @@ argument_list|(
 name|BCE_EXTREME_MISC
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -37220,6 +37125,21 @@ argument_list|(
 expr|struct
 name|statistics_block
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|stats_tag
+argument_list|,
+name|sc
+operator|->
+name|stats_map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Clear the internal H/W statistics counters. */
@@ -46152,6 +46072,19 @@ name|status_block
 modifier|*
 name|sblk
 decl_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|status_tag
+argument_list|,
+name|sc
+operator|->
+name|status_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
 name|sblk
 operator|=
 name|sc
@@ -46387,6 +46320,19 @@ block|{ 	struct
 name|statistics_block
 operator|*
 name|sblk
+block|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|stats_tag
+argument_list|,
+name|sc
+operator|->
+name|stats_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
 block|;
 name|sblk
 operator|=
@@ -50176,10 +50122,6 @@ name|breakpoint
 argument_list|()
 expr_stmt|;
 end_expr_stmt
-
-begin_return
-return|return;
-end_return
 
 begin_endif
 unit|}

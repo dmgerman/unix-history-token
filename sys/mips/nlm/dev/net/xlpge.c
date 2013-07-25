@@ -5426,7 +5426,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|mii
-operator|==
+operator|!=
 name|NULL
 argument_list|,
 operator|(
@@ -6309,7 +6309,7 @@ name|temp1
 operator|+
 literal|1536
 operator|)
-operator|!=
+operator|==
 name|temp2
 argument_list|,
 operator|(

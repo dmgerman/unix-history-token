@@ -63,12 +63,27 @@ directive|define
 name|LLVM_EXECUTION_ENGINE_JIT_DWARFEMITTER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|Function
+decl_stmt|;
+name|class
+name|JIT
 decl_stmt|;
 name|class
 name|JITCodeEmitter

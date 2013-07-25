@@ -410,6 +410,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+name|sim
+operator|->
+name|mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|sim
 operator|->
 name|refcount

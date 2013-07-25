@@ -151,7 +151,7 @@ name|PCPU_XEN_FIELDS
 define|\
 value|;								\ 	u_int	pc_cr3;
 comment|/* track cr3 for R1/R3*/
-value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\ 	int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS]
+value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\ 	int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS];					\ 	char	__pad[77]
 end_define
 
 begin_elif
@@ -168,7 +168,7 @@ define|#
 directive|define
 name|PCPU_XEN_FIELDS
 define|\
-value|;								\ 	unsigned int pc_last_processed_l1i;				\ 	unsigned int pc_last_processed_l2i
+value|;								\ 	unsigned int pc_last_processed_l1i;				\ 	unsigned int pc_last_processed_l2i;				\ 	char	__pad[229]
 end_define
 
 begin_else
@@ -184,6 +184,8 @@ begin_define
 define|#
 directive|define
 name|PCPU_XEN_FIELDS
+define|\
+value|;								\ 	char	__pad[237]
 end_define
 
 begin_endif

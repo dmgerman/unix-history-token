@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -531,18 +531,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pools
-operator|==
-name|NULL
-operator|||
-name|nvlist_next_nvpair
+name|nvlist_empty
 argument_list|(
 name|pools
-argument_list|,
-name|NULL
 argument_list|)
-operator|==
-name|NULL
 condition|)
 block|{
 if|if

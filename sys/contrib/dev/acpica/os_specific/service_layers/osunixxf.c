@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * These interfaces are required in order to compile the ASL compiler and the  * various ACPICA tools under Linux or other Unix-like system.  *  * Note: Use #define __APPLE__ for OS X generation.  */
+comment|/*  * These interfaces are required in order to compile the ASL compiler and the  * various ACPICA tools under Linux or other Unix-like system.  */
 end_comment
 
 begin_include
@@ -172,28 +172,6 @@ directive|define
 name|ACPI_VPRINTF_BUFFER_SIZE
 value|512
 end_define
-
-begin_comment
-comment|/* Apple-specific */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__APPLE__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|sem_destroy
-value|sem_close
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInitialize, AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and terminate. Nothing to do.  *  *****************************************************************************/

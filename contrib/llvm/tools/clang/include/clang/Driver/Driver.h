@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Phases.h"
 end_include
 
@@ -116,21 +122,6 @@ include|#
 directive|include
 file|<string>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|ArrayRef
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -493,8 +484,6 @@ argument|StringRef _DefaultTargetTriple
 argument_list|,
 argument|StringRef _DefaultImageName
 argument_list|,
-argument|bool IsProduction
-argument_list|,
 argument|DiagnosticsEngine&_Diags
 argument_list|)
 empty_stmt|;
@@ -797,11 +786,21 @@ name|Compilation
 operator|&
 name|C
 argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+argument_list|,
 specifier|const
 name|Command
 operator|*
+operator|>
+expr|>
 operator|&
-name|FailingCommand
+name|FailingCommands
 argument_list|)
 decl|const
 decl_stmt|;
@@ -970,6 +969,9 @@ argument_list|,
 name|bool
 name|AtTopLevel
 argument_list|,
+name|bool
+name|MultipleArchs
+argument_list|,
 specifier|const
 name|char
 operator|*
@@ -989,7 +991,9 @@ comment|/// \param C - The compilation.
 comment|/// \param JA - The action of interest.
 comment|/// \param BaseInput - The original input file that this action was
 comment|/// triggered by.
+comment|/// \param BoundArch - The bound architecture.
 comment|/// \param AtTopLevel - Whether this is a "top-level" action.
+comment|/// \param MultipleArchs - Whether multiple -arch options were supplied.
 specifier|const
 name|char
 modifier|*
@@ -1009,8 +1013,16 @@ name|char
 operator|*
 name|BaseInput
 argument_list|,
+specifier|const
+name|char
+operator|*
+name|BoundArch
+argument_list|,
 name|bool
 name|AtTopLevel
+argument_list|,
+name|bool
+name|MultipleArchs
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1029,27 +1041,15 @@ argument|const char *Suffix
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// ShouldUseClangCompilar - Should the clang compiler be used to
+comment|/// ShouldUseClangCompiler - Should the clang compiler be used to
 comment|/// handle this action.
 name|bool
 name|ShouldUseClangCompiler
 argument_list|(
 specifier|const
-name|Compilation
-operator|&
-name|C
-argument_list|,
-specifier|const
 name|JobAction
 operator|&
 name|JA
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Triple
-operator|&
-name|ArchName
 argument_list|)
 decl|const
 decl_stmt|;

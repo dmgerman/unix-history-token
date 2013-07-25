@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/CodeGen/MachineFrameInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFrameInfo.h"
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetCallingConv.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CallingConv.h"
+file|"llvm/Target/TargetCallingConv.h"
 end_include
 
 begin_decl_stmt
@@ -157,13 +157,13 @@ name|unsigned
 name|Loc
 decl_stmt|;
 comment|/// isMem - True if this is a memory loc, false if it is a register loc.
-name|bool
+name|unsigned
 name|isMem
 range|:
 literal|1
 decl_stmt|;
 comment|/// isCustom - True if this arg/retval requires special handling.
-name|bool
+name|unsigned
 name|isCustom
 range|:
 literal|1
@@ -669,11 +669,91 @@ literal|16
 operator|>
 name|UsedRegs
 expr_stmt|;
+comment|// ByValInfo and SmallVector<ByValInfo, 4> ByValRegs:
+comment|//
+comment|// Vector of ByValInfo instances (ByValRegs) is introduced for byval registers
+comment|// tracking.
+comment|// Or, in another words it tracks byval parameters that are stored in
+comment|// general purpose registers.
+comment|//
+comment|// For 4 byte stack alignment,
+comment|// instance index means byval parameter number in formal
+comment|// arguments set. Assume, we have some "struct_type" with size = 4 bytes,
+comment|// then, for function "foo":
+comment|//
+comment|// i32 foo(i32 %p, %struct_type* %r, i32 %s, %struct_type* %t)
+comment|//
+comment|// ByValRegs[0] describes how "%r" is stored (Begin == r1, End == r2)
+comment|// ByValRegs[1] describes how "%t" is stored (Begin == r3, End == r4).
+comment|//
+comment|// In case of 8 bytes stack alignment,
+comment|// ByValRegs may also contain information about wasted registers.
+comment|// In function shown above, r3 would be wasted according to AAPCS rules.
+comment|// And in that case ByValRegs[1].Waste would be "true".
+comment|// ByValRegs vector size still would be 2,
+comment|// while "%t" goes to the stack: it wouldn't be described in ByValRegs.
+comment|//
+comment|// Supposed use-case for this collection:
+comment|// 1. Initially ByValRegs is empty, InRegsParamsProceed is 0.
+comment|// 2. HandleByVal fillups ByValRegs.
+comment|// 3. Argument analysis (LowerFormatArguments, for example). After
+comment|// some byval argument was analyzed, InRegsParamsProceed is increased.
+struct|struct
+name|ByValInfo
+block|{
+name|ByValInfo
+argument_list|(
+argument|unsigned B
+argument_list|,
+argument|unsigned E
+argument_list|,
+argument|bool IsWaste = false
+argument_list|)
+block|:
+name|Begin
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|End
+argument_list|(
+name|E
+argument_list|)
+operator|,
+name|Waste
+argument_list|(
+argument|IsWaste
+argument_list|)
+block|{}
+comment|// First register allocated for current parameter.
 name|unsigned
-name|FirstByValReg
+name|Begin
+expr_stmt|;
+comment|// First after last register allocated for current parameter.
+name|unsigned
+name|End
 decl_stmt|;
+comment|// Means that current range of registers doesn't belong to any
+comment|// parameters. It was wasted due to stack alignment rules.
+comment|// For more information see:
+comment|// AAPCS, 5.5 Parameter Passing, Stage C, C.3.
 name|bool
-name|FirstByValRegValid
+name|Waste
+decl_stmt|;
+block|}
+struct|;
+name|SmallVector
+operator|<
+name|ByValInfo
+operator|,
+literal|4
+operator|>
+name|ByValRegs
+expr_stmt|;
+comment|// InRegsParamsProceed - shows how many instances of ByValRegs was proceed
+comment|// during argument analysis.
+name|unsigned
+name|InRegsParamsProceed
 decl_stmt|;
 name|protected
 label|:
@@ -1303,58 +1383,151 @@ name|ArgFlagsTy
 name|ArgFlags
 argument_list|)
 decl_stmt|;
-comment|// First GPR that carries part of a byval aggregate that's split
-comment|// between registers and memory.
+comment|// Returns count of byval arguments that are to be stored (even partly)
+comment|// in registers.
 name|unsigned
-name|getFirstByValReg
+name|getInRegsParamsCount
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FirstByValRegValid
-operator|?
-name|FirstByValReg
-operator|:
-literal|0
+name|ByValRegs
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
+comment|// Returns count of byval in-regs arguments proceed.
+name|unsigned
+name|getInRegsParamsProceed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InRegsParamsProceed
+return|;
+block|}
+comment|// Get information about N-th byval parameter that is stored in registers.
+comment|// Here "ByValParamIndex" is N.
 name|void
-name|setFirstByValReg
+name|getInRegsParamInfo
+argument_list|(
+name|unsigned
+name|InRegsParamRecordIndex
+argument_list|,
+name|unsigned
+operator|&
+name|BeginReg
+argument_list|,
+name|unsigned
+operator|&
+name|EndReg
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|InRegsParamRecordIndex
+operator|<
+name|ByValRegs
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Wrong ByVal parameter index"
+argument_list|)
+expr_stmt|;
+specifier|const
+name|ByValInfo
+modifier|&
+name|info
+init|=
+name|ByValRegs
+index|[
+name|InRegsParamRecordIndex
+index|]
+decl_stmt|;
+name|BeginReg
+operator|=
+name|info
+operator|.
+name|Begin
+expr_stmt|;
+name|EndReg
+operator|=
+name|info
+operator|.
+name|End
+expr_stmt|;
+block|}
+comment|// Add information about parameter that is kept in registers.
+name|void
+name|addInRegsParamInfo
 parameter_list|(
 name|unsigned
-name|r
+name|RegBegin
+parameter_list|,
+name|unsigned
+name|RegEnd
 parameter_list|)
 block|{
-name|FirstByValReg
-operator|=
-name|r
-expr_stmt|;
-name|FirstByValRegValid
-operator|=
-name|true
+name|ByValRegs
+operator|.
+name|push_back
+argument_list|(
+name|ByValInfo
+argument_list|(
+name|RegBegin
+argument_list|,
+name|RegEnd
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|clearFirstByValReg
+comment|// Goes either to next byval parameter (excluding "waste" record), or
+comment|// to the end of collection.
+comment|// Returns false, if end is reached.
+name|bool
+name|nextInRegsParam
 parameter_list|()
 block|{
-name|FirstByValReg
+name|unsigned
+name|e
+init|=
+name|ByValRegs
+operator|.
+name|size
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|InRegsParamsProceed
+operator|<
+name|e
+condition|)
+operator|++
+name|InRegsParamsProceed
+expr_stmt|;
+return|return
+name|InRegsParamsProceed
+operator|<
+name|e
+return|;
+block|}
+comment|// Clear byval registers tracking info.
+name|void
+name|clearByValRegsInfo
+parameter_list|()
+block|{
+name|InRegsParamsProceed
 operator|=
 literal|0
 expr_stmt|;
-name|FirstByValRegValid
-operator|=
-name|false
-expr_stmt|;
-block|}
-name|bool
-name|isFirstByValRegValid
+name|ByValRegs
+operator|.
+name|clear
 argument_list|()
-specifier|const
-block|{
-return|return
-name|FirstByValRegValid
-return|;
+expr_stmt|;
 block|}
 name|ParmContext
 name|getCallOrPrologue

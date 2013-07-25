@@ -245,6 +245,16 @@ directive|define
 name|__BIG_ENDIAN_BITFIELD
 end_define
 
+begin_define
+define|#
+directive|define
+name|htobe32_const
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -257,6 +267,16 @@ begin_define
 define|#
 directive|define
 name|__LITTLE_ENDIAN_BITFIELD
+end_define
+
+begin_define
+define|#
+directive|define
+name|htobe32_const
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 24) | (((x)>> 8)& 0xff00) |	\     ((((x)& 0xffffff)<< 8)& 0xff0000) | ((((x)& 0xff)<< 24)& 0xff000000))
 end_define
 
 begin_else
@@ -552,6 +572,13 @@ define|#
 directive|define
 name|SPEED_10000
 value|10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEED_40000
+value|40000
 end_define
 
 begin_define

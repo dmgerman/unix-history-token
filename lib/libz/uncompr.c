@@ -64,6 +64,7 @@ operator|.
 name|next_in
 operator|=
 operator|(
+name|z_const
 name|Bytef
 operator|*
 operator|)

@@ -259,6 +259,7 @@ name|kvm_t
 modifier|*
 name|kvm
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|kvm_pointer
@@ -687,6 +688,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|flaginfo
 index|[
 name|i

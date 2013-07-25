@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2776,7 +2776,10 @@ name|B_TRUE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 switch|switch
@@ -3338,7 +3341,10 @@ name|B_TRUE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4824,7 +4830,10 @@ name|ECKSUM
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 goto|goto
 name|done
@@ -7775,7 +7784,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|__FreeBSD_kernel__
 name|gid
 operator|=
 name|acl_ids
@@ -8216,7 +8225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieve a files ACL  */
+comment|/*  * Retrieve a file's ACL  */
 end_comment
 
 begin_function
@@ -8283,7 +8292,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSYS
+argument_list|)
 operator|)
 return|;
 if|if
@@ -8765,7 +8777,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|aclp
@@ -9012,7 +9027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set a files ACL  */
+comment|/*  * Set a file's ACL  */
 end_comment
 
 begin_function
@@ -9095,7 +9110,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOSYS
+argument_list|)
 operator|)
 return|;
 if|if
@@ -9108,7 +9126,10 @@ name|ZFS_IMMUTABLE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -9589,7 +9610,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EROFS
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9651,7 +9675,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9681,7 +9708,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9738,7 +9768,10 @@ condition|)
 block|{
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10082,7 +10115,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10202,7 +10238,10 @@ name|deny_mask
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10477,7 +10516,10 @@ name|ACE_WRITE_DATA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 return|return
@@ -10548,7 +10590,10 @@ name|ZFS_AV_QUARANTINED
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 name|is_attr
@@ -10836,7 +10881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether Access should be granted/denied.  * The least priv subsytem is always consulted as a basic privilege  * can define any form of access.  */
+comment|/*  * Determine whether Access should be granted/denied.  *  * The least priv subsytem is always consulted as a basic privilege  * can define any form of access.  */
 end_comment
 
 begin_function
@@ -10914,7 +10959,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|__FreeBSD_kernel__
 comment|/* 	 * In FreeBSD, we don't care about permissions of individual ADS. 	 * Note that not checking them is not just an optimization - without 	 * this shortcut, EA operations may bogusly fail with EACCES. 	 */
 if|if
 condition|(
@@ -11526,7 +11571,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -11764,7 +11812,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether Access should be granted/deny, without  * consulting least priv subsystem.  *  *  * The following chart is the recommended NFSv4 enforcement for  * ability to delete an object.  *  *      -------------------------------------------------------  *      |   Parent Dir  |           Target Object Permissions |  *      |  permissions  |                                     |  *      -------------------------------------------------------  *      |               | ACL Allows | ACL Denies| Delete     |  *      |               |  Delete    |  Delete   | unspecified|  *      -------------------------------------------------------  *      |  ACL Allows   | Permit     | Permit    | Permit     |  *      |  DELETE_CHILD |                                     |  *      -------------------------------------------------------  *      |  ACL Denies   | Permit     | Deny      | Deny       |  *      |  DELETE_CHILD |            |           |            |  *      -------------------------------------------------------  *      | ACL specifies |            |           |            |  *      | only allow    | Permit     | Permit    | Permit     |  *      | write and     |            |           |            |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *      | ACL denies    |            |           |            |  *      | write and     | Permit     | Deny      | Deny       |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *         ^  *         |  *         No search privilege, can't even look up file?  *  */
+comment|/*  * Determine whether Access should be granted/deny, without  * consulting least priv subsystem.  *  * The following chart is the recommended NFSv4 enforcement for  * ability to delete an object.  *  *      -------------------------------------------------------  *      |   Parent Dir  |           Target Object Permissions |  *      |  permissions  |                                     |  *      -------------------------------------------------------  *      |               | ACL Allows | ACL Denies| Delete     |  *      |               |  Delete    |  Delete   | unspecified|  *      -------------------------------------------------------  *      |  ACL Allows   | Permit     | Permit    | Permit     |  *      |  DELETE_CHILD |                                     |  *      -------------------------------------------------------  *      |  ACL Denies   | Permit     | Deny      | Deny       |  *      |  DELETE_CHILD |            |           |            |  *      -------------------------------------------------------  *      | ACL specifies |            |           |            |  *      | only allow    | Permit     | Permit    | Permit     |  *      | write and     |            |           |            |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *      | ACL denies    |            |           |            |  *      | write and     | Permit     | Deny      | Deny       |  *      | execute       |            |           |            |  *      -------------------------------------------------------  *         ^  *         |  *         No search privilege, can't even look up file?  *  */
 end_comment
 
 begin_function
@@ -11827,7 +11875,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * First row 	 * If the directory permissions allow the delete, we are done. 	 */
@@ -12059,7 +12110,10 @@ name|ZFS_AV_QUARANTINED
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 name|add_perm

@@ -583,7 +583,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"stack_save: curthread == NULL)"
+literal|"stack_save: curthread == NULL"
 argument_list|)
 expr_stmt|;
 name|pc

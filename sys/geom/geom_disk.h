@@ -45,6 +45,13 @@ directive|include
 file|<sys/disk.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|G_DISK_CLASS_NAME
+value|"DISK"
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|disk
@@ -240,6 +247,9 @@ name|d_fwheads
 decl_stmt|;
 name|u_int
 name|d_maxsize
+decl_stmt|;
+name|off_t
+name|d_delmaxsize
 decl_stmt|;
 name|u_int
 name|d_stripeoffset
@@ -454,8 +464,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_03
+value|0x5856105c
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_02
+value|DISK_VERSION_03
 end_define
 
 begin_endif

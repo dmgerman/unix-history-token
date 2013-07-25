@@ -62,25 +62,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RuntimeDyldImpl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IndexedMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Object/MachOObject.h"
+file|"llvm/Object/MachO.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Format.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"RuntimeDyldImpl.h"
 end_include
 
 begin_decl_stmt
@@ -109,8 +109,6 @@ range|:
 name|public
 name|RuntimeDyldImpl
 block|{
-name|protected
-operator|:
 name|bool
 name|resolveI386Relocation
 argument_list|(
@@ -165,36 +163,6 @@ argument_list|,
 argument|int64_t Addend
 argument_list|)
 block|;
-name|virtual
-name|void
-name|processRelocationRef
-argument_list|(
-specifier|const
-name|ObjRelocationInfo
-operator|&
-name|Rel
-argument_list|,
-name|ObjectImage
-operator|&
-name|Obj
-argument_list|,
-name|ObjSectionToIDMap
-operator|&
-name|ObjSectionToID
-argument_list|,
-specifier|const
-name|SymbolTableMap
-operator|&
-name|Symbols
-argument_list|,
-name|StubMap
-operator|&
-name|Stubs
-argument_list|)
-block|;
-name|public
-operator|:
-name|virtual
 name|void
 name|resolveRelocation
 argument_list|(
@@ -207,8 +175,14 @@ argument_list|,
 argument|uint32_t Type
 argument_list|,
 argument|int64_t Addend
+argument_list|,
+argument|bool isPCRel
+argument_list|,
+argument|unsigned Size
 argument_list|)
 block|;
+name|public
+operator|:
 name|RuntimeDyldMachO
 argument_list|(
 name|RTDyldMemoryManager
@@ -221,12 +195,44 @@ argument_list|(
 argument|mm
 argument_list|)
 block|{}
+name|virtual
+name|void
+name|resolveRelocation
+argument_list|(
+argument|const RelocationEntry&RE
+argument_list|,
+argument|uint64_t Value
+argument_list|)
+block|;
+name|virtual
+name|void
+name|processRelocationRef
+argument_list|(
+argument|unsigned SectionID
+argument_list|,
+argument|RelocationRef RelI
+argument_list|,
+argument|ObjectImage&Obj
+argument_list|,
+argument|ObjSectionToIDMap&ObjSectionToID
+argument_list|,
+argument|const SymbolTableMap&Symbols
+argument_list|,
+argument|StubMap&Stubs
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|isCompatibleFormat
 argument_list|(
 argument|const ObjectBuffer *Buffer
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|StringRef
+name|getEHFrameSection
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

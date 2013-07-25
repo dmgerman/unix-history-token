@@ -1828,6 +1828,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|act_tbl
 name|act_tbl

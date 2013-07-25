@@ -233,6 +233,7 @@ parameter_list|(
 name|struct
 name|random_systat
 modifier|*
+modifier|*
 name|systat
 parameter_list|)
 block|{
@@ -240,6 +241,7 @@ comment|/* Set default to software */
 operator|*
 name|systat
 operator|=
+operator|&
 name|random_yarrow
 expr_stmt|;
 comment|/* Then go looking for hardware */
@@ -294,6 +296,7 @@ condition|)
 operator|*
 name|systat
 operator|=
+operator|&
 name|random_nehemiah
 expr_stmt|;
 block|}
@@ -331,6 +334,7 @@ condition|)
 operator|*
 name|systat
 operator|=
+operator|&
 name|random_ivy
 expr_stmt|;
 block|}

@@ -70,19 +70,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/APSIntType.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
 end_include
 
 begin_decl_stmt
@@ -490,7 +496,7 @@ name|assert
 argument_list|(
 name|T
 operator|->
-name|isIntegerType
+name|isIntegralOrEnumerationType
 argument_list|()
 operator|||
 name|Loc

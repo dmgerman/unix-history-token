@@ -248,10 +248,13 @@ block|,
 comment|///< Block Pointer conversions
 name|ICK_TransparentUnionConversion
 block|,
-comment|/// Transparent Union Conversions
+comment|///< Transparent Union Conversions
 name|ICK_Writeback_Conversion
 block|,
 comment|///< Objective-C ARC writeback conversion
+name|ICK_Zero_Event_Conversion
+block|,
+comment|///< Zero constant to event (OpenCL1.2 6.12.10)
 name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
@@ -1950,6 +1953,13 @@ modifier|*
 name|getSecondArg
 parameter_list|()
 function_decl|;
+comment|/// \brief Return the expression this deduction failure refers to,
+comment|/// if any.
+name|Expr
+modifier|*
+name|getExpr
+parameter_list|()
+function_decl|;
 comment|/// \brief Free any memory associated with this deduction failure.
 name|void
 name|Destroy
@@ -2429,8 +2439,6 @@ argument_list|,
 name|OverloadCandidateDisplayKind
 name|OCD
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|Expr

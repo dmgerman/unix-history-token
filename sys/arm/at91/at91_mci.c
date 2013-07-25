@@ -4244,19 +4244,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|count
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Had to soak up %d words after read\n"
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
 block|}
 name|cmd
 operator|->

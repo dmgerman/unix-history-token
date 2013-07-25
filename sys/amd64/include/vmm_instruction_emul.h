@@ -293,6 +293,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Decode the instruction fetched into 'vie' so it can be emulated.  *  * 'gla' is the guest linear address provided by the hardware assist  * that caused the nested page table fault. It is used to verify that  * the software instruction decoding is in agreement with the hardware.  *   * Some hardware assists do not provide the 'gla' to the hypervisor.  * To skip the 'gla' verification for this or any other reason pass  * in VIE_INVALID_GLA instead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIE_INVALID_GLA
+value|(1UL<< 63)
+end_define
+
+begin_comment
+comment|/* a non-canonical address */
+end_comment
+
 begin_function_decl
 name|int
 name|vmm_decode_instruction

@@ -1169,6 +1169,24 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__aarch64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LG_QUANTUM
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__hppa__
 end_ifdef
 
@@ -1223,7 +1241,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__s390x__
+name|__s390__
 end_ifdef
 
 begin_define
@@ -1722,6 +1740,8 @@ name|rzB
 parameter_list|,
 name|is_zeroed
 parameter_list|)
+define|\
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1737,6 +1757,8 @@ name|newSizeB
 parameter_list|,
 name|rzB
 parameter_list|)
+define|\
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1748,6 +1770,19 @@ name|addr
 parameter_list|,
 name|rzB
 parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALGRIND_MAKE_MEM_NOACCESS
+parameter_list|(
+name|_qzz_addr
+parameter_list|,
+name|_qzz_len
+parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1759,6 +1794,7 @@ name|_qzz_addr
 parameter_list|,
 name|_qzz_len
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1770,6 +1806,7 @@ name|_qzz_addr
 parameter_list|,
 name|_qzz_len
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1785,6 +1822,7 @@ name|usize
 parameter_list|,
 name|zero
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1804,6 +1842,7 @@ name|old_rzsize
 parameter_list|,
 name|zero
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_define
@@ -1815,6 +1854,7 @@ name|ptr
 parameter_list|,
 name|rzsize
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif

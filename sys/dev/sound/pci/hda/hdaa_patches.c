@@ -1269,6 +1269,23 @@ operator|=
 literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
+comment|/*  		 * Group onboard mic and headphone mic 		 * together.  Fixes onboard mic. 		 */
+case|case
+literal|27
+case|:
+name|patch
+operator|=
+literal|"as=2 seq=15"
+expr_stmt|;
+break|break;
+case|case
+literal|35
+case|:
+name|patch
+operator|=
+literal|"as=2"
+expr_stmt|;
+break|break;
 block|}
 block|}
 elseif|else
@@ -1304,6 +1321,33 @@ condition|)
 block|{
 case|case
 literal|21
+case|:
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
+name|HDA_CODEC_ALC269
+operator|&&
+name|subid
+operator|==
+name|ASUS_UX31A_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|33
 case|:
 name|patch
 operator|=

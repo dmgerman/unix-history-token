@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -2072,6 +2066,24 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hpkt
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Cannot allocate HPKT\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failnfree
+goto|;
+block|}
 name|mtx_init
 argument_list|(
 operator|&

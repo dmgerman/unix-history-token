@@ -43,6 +43,17 @@ end_union_decl
 begin_define
 define|#
 directive|define
+name|SID_DMA48
+value|0x01
+end_define
+
+begin_comment
+comment|/* Abuse inq_flags bit to track enabled DMA48. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SID_AEN
 value|0x04
 end_define

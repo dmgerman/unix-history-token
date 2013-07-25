@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTUnresolvedSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
 end_include
 
@@ -78,19 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Decl.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/TypeLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/UnresolvedSet.h"
 end_include
 
 begin_include
@@ -261,65 +261,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// Implement simplify_type for AnyFunctionDecl, so that we can dyn_cast from
-comment|/// AnyFunctionDecl to any function or function template declaration.
-name|template
-operator|<
-operator|>
-expr|struct
-name|simplify_type
-operator|<
-specifier|const
-operator|::
-name|clang
-operator|::
-name|AnyFunctionDecl
-operator|>
-block|{
-typedef|typedef
-operator|::
-name|clang
-operator|::
-name|NamedDecl
-operator|*
-name|SimpleType
-expr_stmt|;
-specifier|static
-name|SimpleType
-name|getSimplifiedValue
-argument_list|(
-argument|const ::clang::AnyFunctionDecl&Val
-argument_list|)
-block|{
-return|return
-name|Val
-return|;
-block|}
-block|}
-empty_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|simplify_type
-operator|<
-operator|::
-name|clang
-operator|::
-name|AnyFunctionDecl
-operator|>
-operator|:
-name|public
-name|simplify_type
-operator|<
-specifier|const
-operator|::
-name|clang
-operator|::
-name|AnyFunctionDecl
-operator|>
-block|{}
-expr_stmt|;
 comment|// Provide PointerLikeTypeTraits for non-cvr pointers.
 name|template
 operator|<
@@ -913,6 +854,23 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// The inheritance model to use for member pointers of a given CXXRecordDecl.
+block|enum
+name|MSInheritanceModel
+block|{
+name|MSIM_Single
+block|,
+name|MSIM_SinglePolymorphic
+block|,
+name|MSIM_Multiple
+block|,
+name|MSIM_MultiplePolymorphic
+block|,
+name|MSIM_Virtual
+block|,
+name|MSIM_Unspecified
+block|}
+block|;
 comment|/// CXXRecordDecl - Represents a C++ struct/union/class.
 comment|/// FIXME: This class will disappear once we've properly taught RecordDecl
 comment|/// to deal with C++-specific things.
@@ -928,6 +886,39 @@ name|TagDecl
 operator|::
 name|startDefinition
 argument_list|()
+block|;
+comment|/// Values used in DefinitionData fields to represent special members.
+block|enum
+name|SpecialMemberFlags
+block|{
+name|SMF_DefaultConstructor
+operator|=
+literal|0x1
+block|,
+name|SMF_CopyConstructor
+operator|=
+literal|0x2
+block|,
+name|SMF_MoveConstructor
+operator|=
+literal|0x4
+block|,
+name|SMF_CopyAssignment
+operator|=
+literal|0x8
+block|,
+name|SMF_MoveAssignment
+operator|=
+literal|0x10
+block|,
+name|SMF_Destructor
+operator|=
+literal|0x20
+block|,
+name|SMF_All
+operator|=
+literal|0x3f
+block|}
 block|;    struct
 name|DefinitionData
 block|{
@@ -938,47 +929,17 @@ operator|*
 name|D
 argument_list|)
 block|;
-comment|/// UserDeclaredConstructor - True when this class has a
-comment|/// user-declared constructor.
+comment|/// \brief True if this class has any user-declared constructors.
 name|bool
 name|UserDeclaredConstructor
 operator|:
 literal|1
 block|;
-comment|/// UserDeclaredCopyConstructor - True when this class has a
-comment|/// user-declared copy constructor.
-name|bool
-name|UserDeclaredCopyConstructor
+comment|/// The user-declared special members which this class has.
+name|unsigned
+name|UserDeclaredSpecialMembers
 operator|:
-literal|1
-block|;
-comment|/// UserDeclareMoveConstructor - True when this class has a
-comment|/// user-declared move constructor.
-name|bool
-name|UserDeclaredMoveConstructor
-operator|:
-literal|1
-block|;
-comment|/// UserDeclaredCopyAssignment - True when this class has a
-comment|/// user-declared copy assignment operator.
-name|bool
-name|UserDeclaredCopyAssignment
-operator|:
-literal|1
-block|;
-comment|/// UserDeclareMoveAssignment - True when this class has a
-comment|/// user-declared move assignment.
-name|bool
-name|UserDeclaredMoveAssignment
-operator|:
-literal|1
-block|;
-comment|/// UserDeclaredDestructor - True when this class has a
-comment|/// user-declared destructor.
-name|bool
-name|UserDeclaredDestructor
-operator|:
-literal|1
+literal|6
 block|;
 comment|/// Aggregate - True when this class is an aggregate.
 name|bool
@@ -1080,22 +1041,78 @@ name|HasInClassInitializer
 operator|:
 literal|1
 block|;
-comment|/// HasTrivialDefaultConstructor - True when, if this class has a default
-comment|/// constructor, this default constructor is trivial.
-comment|///
-comment|/// C++0x [class.ctor]p5
-comment|///    A default constructor is trivial if it is not user-provided and if
-comment|///     -- its class has no virtual functions and no virtual base classes,
-comment|///        and
-comment|///     -- no non-static data member of its class has a
-comment|///        brace-or-equal-initializer, and
-comment|///     -- all the direct base classes of its class have trivial
-comment|///        default constructors, and
-comment|///     -- for all the nonstatic data members of its class that are of class
-comment|///        type (or array thereof), each such class has a trivial
-comment|///        default constructor.
+comment|/// \brief True if any field is of reference type, and does not have an
+comment|/// in-class initializer. In this case, value-initialization of this class
+comment|/// is illegal in C++98 even if the class has a trivial default constructor.
 name|bool
-name|HasTrivialDefaultConstructor
+name|HasUninitializedReferenceMember
+operator|:
+literal|1
+block|;
+comment|/// \brief These flags are \c true if a defaulted corresponding special
+comment|/// member can't be fully analyzed without performing overload resolution.
+comment|/// @{
+name|bool
+name|NeedOverloadResolutionForMoveConstructor
+operator|:
+literal|1
+block|;
+name|bool
+name|NeedOverloadResolutionForMoveAssignment
+operator|:
+literal|1
+block|;
+name|bool
+name|NeedOverloadResolutionForDestructor
+operator|:
+literal|1
+block|;
+comment|/// @}
+comment|/// \brief These flags are \c true if an implicit defaulted corresponding
+comment|/// special member would be defined as deleted.
+comment|/// @{
+name|bool
+name|DefaultedMoveConstructorIsDeleted
+operator|:
+literal|1
+block|;
+name|bool
+name|DefaultedMoveAssignmentIsDeleted
+operator|:
+literal|1
+block|;
+name|bool
+name|DefaultedDestructorIsDeleted
+operator|:
+literal|1
+block|;
+comment|/// @}
+comment|/// \brief The trivial special members which this class has, per
+comment|/// C++11 [class.ctor]p5, C++11 [class.copy]p12, C++11 [class.copy]p25,
+comment|/// C++11 [class.dtor]p5, or would have if the member were not suppressed.
+comment|///
+comment|/// This excludes any user-declared but not user-provided special members
+comment|/// which have been declared but not yet defined.
+name|unsigned
+name|HasTrivialSpecialMembers
+operator|:
+literal|6
+block|;
+comment|/// \brief The declared special members of this class which are known to be
+comment|/// non-trivial.
+comment|///
+comment|/// This excludes any user-declared but not user-provided special members
+comment|/// which have been declared but not yet defined, and any implicit special
+comment|/// members which have not yet been declared.
+name|unsigned
+name|DeclaredNonTrivialSpecialMembers
+operator|:
+literal|6
+block|;
+comment|/// HasIrrelevantDestructor - True when this class has a destructor with no
+comment|/// semantic effect.
+name|bool
+name|HasIrrelevantDestructor
 operator|:
 literal|1
 block|;
@@ -1121,98 +1138,6 @@ name|HasConstexprDefaultConstructor
 operator|:
 literal|1
 block|;
-comment|/// HasTrivialCopyConstructor - True when this class has a trivial copy
-comment|/// constructor.
-comment|///
-comment|/// C++0x [class.copy]p13:
-comment|///   A copy/move constructor for class X is trivial if it is neither
-comment|///   user-provided and if
-comment|///    -- class X has no virtual functions and no virtual base classes, and
-comment|///    -- the constructor selected to copy/move each direct base class
-comment|///       subobject is trivial, and
-comment|///    -- for each non-static data member of X that is of class type (or an
-comment|///       array thereof), the constructor selected to copy/move that member
-comment|///       is trivial;
-comment|///   otherwise the copy/move constructor is non-trivial.
-name|bool
-name|HasTrivialCopyConstructor
-operator|:
-literal|1
-block|;
-comment|/// HasTrivialMoveConstructor - True when this class has a trivial move
-comment|/// constructor.
-comment|///
-comment|/// C++0x [class.copy]p13:
-comment|///   A copy/move constructor for class X is trivial if it is neither
-comment|///   user-provided and if
-comment|///    -- class X has no virtual functions and no virtual base classes, and
-comment|///    -- the constructor selected to copy/move each direct base class
-comment|///       subobject is trivial, and
-comment|///    -- for each non-static data member of X that is of class type (or an
-comment|///       array thereof), the constructor selected to copy/move that member
-comment|///       is trivial;
-comment|///   otherwise the copy/move constructor is non-trivial.
-name|bool
-name|HasTrivialMoveConstructor
-operator|:
-literal|1
-block|;
-comment|/// HasTrivialCopyAssignment - True when this class has a trivial copy
-comment|/// assignment operator.
-comment|///
-comment|/// C++0x [class.copy]p27:
-comment|///   A copy/move assignment operator for class X is trivial if it is
-comment|///   neither user-provided nor deleted and if
-comment|///    -- class X has no virtual functions and no virtual base classes, and
-comment|///    -- the assignment operator selected to copy/move each direct base
-comment|///       class subobject is trivial, and
-comment|///    -- for each non-static data member of X that is of class type (or an
-comment|///       array thereof), the assignment operator selected to copy/move
-comment|///       that member is trivial;
-comment|///   otherwise the copy/move assignment operator is non-trivial.
-name|bool
-name|HasTrivialCopyAssignment
-operator|:
-literal|1
-block|;
-comment|/// HasTrivialMoveAssignment - True when this class has a trivial move
-comment|/// assignment operator.
-comment|///
-comment|/// C++0x [class.copy]p27:
-comment|///   A copy/move assignment operator for class X is trivial if it is
-comment|///   neither user-provided nor deleted and if
-comment|///    -- class X has no virtual functions and no virtual base classes, and
-comment|///    -- the assignment operator selected to copy/move each direct base
-comment|///       class subobject is trivial, and
-comment|///    -- for each non-static data member of X that is of class type (or an
-comment|///       array thereof), the assignment operator selected to copy/move
-comment|///       that member is trivial;
-comment|///   otherwise the copy/move assignment operator is non-trivial.
-name|bool
-name|HasTrivialMoveAssignment
-operator|:
-literal|1
-block|;
-comment|/// HasTrivialDestructor - True when this class has a trivial destructor.
-comment|///
-comment|/// C++ [class.dtor]p3.  A destructor is trivial if it is an
-comment|/// implicitly-declared destructor and if:
-comment|/// * all of the direct base classes of its class have trivial destructors
-comment|///   and
-comment|/// * for all of the non-static data members of its class that are of class
-comment|///   type (or array thereof), each such class has a trivial destructor.
-name|bool
-name|HasTrivialDestructor
-operator|:
-literal|1
-block|;
-comment|/// HasIrrelevantDestructor - True when this class has a destructor with no
-comment|/// semantic effect.
-name|bool
-name|HasIrrelevantDestructor
-operator|:
-literal|1
-block|;
 comment|/// HasNonLiteralTypeFieldsOrBases - True when this class contains at least
 comment|/// one non-static data member or base class of non-literal or volatile
 comment|/// type.
@@ -1228,46 +1153,45 @@ name|ComputedVisibleConversions
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether we have a C++0x user-provided default constructor (not
+comment|/// \brief Whether we have a C++11 user-provided default constructor (not
 comment|/// explicitly deleted or defaulted).
 name|bool
 name|UserProvidedDefaultConstructor
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether we have already declared the default constructor.
+comment|/// \brief The special members which have been declared for this class,
+comment|/// either by the user or implicitly.
+name|unsigned
+name|DeclaredSpecialMembers
+operator|:
+literal|6
+block|;
+comment|/// \brief Whether an implicit copy constructor would have a const-qualified
+comment|/// parameter.
 name|bool
-name|DeclaredDefaultConstructor
+name|ImplicitCopyConstructorHasConstParam
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether we have already declared the copy constructor.
+comment|/// \brief Whether an implicit copy assignment operator would have a
+comment|/// const-qualified parameter.
 name|bool
-name|DeclaredCopyConstructor
+name|ImplicitCopyAssignmentHasConstParam
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether we have already declared the move constructor.
+comment|/// \brief Whether any declared copy constructor has a const-qualified
+comment|/// parameter.
 name|bool
-name|DeclaredMoveConstructor
+name|HasDeclaredCopyConstructorWithConstParam
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether we have already declared the copy-assignment operator.
+comment|/// \brief Whether any declared copy assignment operator has either a
+comment|/// const-qualified reference parameter or a non-reference parameter.
 name|bool
-name|DeclaredCopyAssignment
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether we have already declared the move-assignment operator.
-name|bool
-name|DeclaredMoveAssignment
-operator|:
-literal|1
-block|;
-comment|/// \brief Whether we have already declared a destructor within the class.
-name|bool
-name|DeclaredDestructor
+name|HasDeclaredCopyAssignmentWithConstParam
 operator|:
 literal|1
 block|;
@@ -1312,10 +1236,7 @@ comment|/// Conversions - Overload set containing the conversion functions
 comment|/// of this C++ class (but not its inherited conversion
 comment|/// functions). Each of the entries in this overload set is a
 comment|/// CXXConversionDecl.
-name|UnresolvedSet
-operator|<
-literal|4
-operator|>
+name|ASTUnresolvedSet
 name|Conversions
 block|;
 comment|/// VisibleConversions - Overload set containing the conversion
@@ -1323,10 +1244,7 @@ comment|/// functions of this C++ class and all those inherited conversion
 comment|/// functions that are visible in this class. Each of the entries
 comment|/// in this overload set is a CXXConversionDecl or a
 comment|/// FunctionTemplateDecl.
-name|UnresolvedSet
-operator|<
-literal|4
-operator|>
+name|ASTUnresolvedSet
 name|VisibleConversions
 block|;
 comment|/// Definition - The declaration which defines this record.
@@ -1632,6 +1550,16 @@ name|friend
 name|class
 name|LambdaExpr
 decl_stmt|;
+comment|/// \brief Called from setBases and addedMember to notify the class that a
+comment|/// direct or virtual base class or a member of class type has been added.
+name|void
+name|addedClassSubobject
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|Base
+parameter_list|)
+function_decl|;
 comment|/// \brief Notify the class that member has been added.
 comment|///
 comment|/// This routine helps maintain information about the class based on which
@@ -1654,23 +1582,6 @@ name|void
 name|FunctionDecl
 operator|::
 name|setPure
-argument_list|(
-name|bool
-argument_list|)
-expr_stmt|;
-name|void
-name|markedConstructorConstexpr
-parameter_list|(
-name|CXXConstructorDecl
-modifier|*
-name|CD
-parameter_list|)
-function_decl|;
-name|friend
-name|void
-name|FunctionDecl
-operator|::
-name|setConstexpr
 argument_list|(
 name|bool
 argument_list|)
@@ -2323,7 +2234,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this class has any dependent base classes.
+comment|/// \brief Determine whether this class has any dependent base classes which
+end_comment
+
+begin_comment
+comment|/// are not the current instantiation.
 end_comment
 
 begin_expr_stmt
@@ -2509,6 +2424,110 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief \c true if we know for sure that this class has a single,
+end_comment
+
+begin_comment
+comment|/// accessible, unambiguous move constructor that is not deleted.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasSimpleMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|hasUserDeclaredMoveConstructor
+argument_list|()
+operator|&&
+name|hasMoveConstructor
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief \c true if we know for sure that this class has a single,
+end_comment
+
+begin_comment
+comment|/// accessible, unambiguous move assignment operator that is not deleted.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasSimpleMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|hasUserDeclaredMoveAssignment
+argument_list|()
+operator|&&
+name|hasMoveAssignment
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief \c true if we know for sure that this class has an accessible
+end_comment
+
+begin_comment
+comment|/// destructor that is not deleted.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasSimpleDestructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|hasUserDeclaredDestructor
+argument_list|()
+operator|&&
+operator|!
+name|data
+argument_list|()
+operator|.
+name|DefaultedDestructorIsDeleted
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has any default constructors.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDefaultConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_DefaultConstructor
+operator|)
+operator|||
+name|needsImplicitDefaultConstructor
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine if we need to declare a default constructor for
 end_comment
 
@@ -2538,149 +2557,16 @@ operator|.
 name|UserDeclaredConstructor
 operator|&&
 operator|!
+operator|(
 name|data
 argument_list|()
 operator|.
-name|DeclaredDefaultConstructor
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_DefaultConstructor
+operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// hasDeclaredDefaultConstructor - Whether this class's default constructor
-end_comment
-
-begin_comment
-comment|/// has been declared (either explicitly or implicitly).
-end_comment
-
-begin_expr_stmt
-name|bool
-name|hasDeclaredDefaultConstructor
-argument_list|()
-specifier|const
-block|{
-return|return
-name|data
-argument_list|()
-operator|.
-name|DeclaredDefaultConstructor
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// hasConstCopyConstructor - Determines whether this class has a
-end_comment
-
-begin_comment
-comment|/// copy constructor that accepts a const-qualified argument.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|hasConstCopyConstructor
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getCopyConstructor - Returns the copy constructor for this class
-end_comment
-
-begin_decl_stmt
-name|CXXConstructorDecl
-modifier|*
-name|getCopyConstructor
-argument_list|(
-name|unsigned
-name|TypeQuals
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getMoveConstructor - Returns the move constructor for this class
-end_comment
-
-begin_expr_stmt
-name|CXXConstructorDecl
-operator|*
-name|getMoveConstructor
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Retrieve the copy-assignment operator for this class, if available.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This routine attempts to find the copy-assignment operator for this
-end_comment
-
-begin_comment
-comment|/// class, using a simplistic form of overload resolution.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \param ArgIsConst Whether the argument to the copy-assignment operator
-end_comment
-
-begin_comment
-comment|/// is const-qualified.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \returns The copy-assignment operator that can be invoked, or NULL if
-end_comment
-
-begin_comment
-comment|/// a unique copy-assignment operator could not be found.
-end_comment
-
-begin_decl_stmt
-name|CXXMethodDecl
-modifier|*
-name|getCopyAssignmentOperator
-argument_list|(
-name|bool
-name|ArgIsConst
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getMoveAssignmentOperator - Returns the move assignment operator for this
-end_comment
-
-begin_comment
-comment|/// class
-end_comment
-
-begin_expr_stmt
-name|CXXMethodDecl
-operator|*
-name|getMoveAssignmentOperator
-argument_list|()
-specifier|const
-expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -2755,30 +2641,52 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredCopyConstructor
+name|UserDeclaredSpecialMembers
+operator|&
+name|SMF_CopyConstructor
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this class has had its copy constructor
+comment|/// \brief Determine whether this class needs an implicit copy
 end_comment
 
 begin_comment
-comment|/// declared, either via the user or via an implicit declaration.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This value is used for lazy creation of copy constructors.
+comment|/// constructor to be lazily declared.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasDeclaredCopyConstructor
+name|needsImplicitCopyConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_CopyConstructor
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether we need to eagerly declare a defaulted copy
+end_comment
+
+begin_comment
+comment|/// constructor for this class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsOverloadResolutionForCopyConstructor
 argument_list|()
 specifier|const
 block|{
@@ -2786,7 +2694,61 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|DeclaredCopyConstructor
+name|HasMutableFields
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether an implicit copy constructor for this type
+end_comment
+
+begin_comment
+comment|/// would have a parameter with a const-qualified reference type.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|implicitCopyConstructorHasConstParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|ImplicitCopyConstructorHasConstParam
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a copy constructor with
+end_comment
+
+begin_comment
+comment|/// a parameter type which is a reference to a const-qualified type.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasCopyConstructorWithConstParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasDeclaredCopyConstructorWithConstParam
+operator|||
+operator|(
+name|needsImplicitCopyConstructor
+argument_list|()
+operator|&&
+name|implicitCopyConstructorHasConstParam
+argument_list|()
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2813,12 +2775,13 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredMoveConstructor
-operator|||
-name|data
-argument_list|()
-operator|.
-name|UserDeclaredMoveAssignment
+name|UserDeclaredSpecialMembers
+operator|&
+operator|(
+name|SMF_MoveConstructor
+operator||
+name|SMF_MoveAssignment
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2841,30 +2804,35 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredMoveConstructor
+name|UserDeclaredSpecialMembers
+operator|&
+name|SMF_MoveConstructor
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this class has had a move constructor
-end_comment
-
-begin_comment
-comment|/// declared.
+comment|/// \brief Determine whether this class has a move constructor.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasDeclaredMoveConstructor
+name|hasMoveConstructor
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|data
 argument_list|()
 operator|.
-name|DeclaredMoveConstructor
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_MoveConstructor
+operator|)
+operator|||
+name|needsImplicitMoveConstructor
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2928,22 +2896,6 @@ begin_comment
 comment|/// constructor or if any existing special member function inhibits this.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Covers all bullets of C++0x [class.copy]p9 except the last, that the
-end_comment
-
-begin_comment
-comment|/// constructor wouldn't be deleted, which is only looked up from a cached
-end_comment
-
-begin_comment
-comment|/// result.
-end_comment
-
 begin_expr_stmt
 name|bool
 name|needsImplicitMoveConstructor
@@ -2956,8 +2908,14 @@ name|hasFailedImplicitMoveConstructor
 argument_list|()
 operator|&&
 operator|!
-name|hasDeclaredMoveConstructor
+operator|(
+name|data
 argument_list|()
+operator|.
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_MoveConstructor
+operator|)
 operator|&&
 operator|!
 name|hasUserDeclaredCopyConstructor
@@ -2974,6 +2932,35 @@ operator|&&
 operator|!
 name|hasUserDeclaredDestructor
 argument_list|()
+operator|&&
+operator|!
+name|data
+argument_list|()
+operator|.
+name|DefaultedMoveConstructorIsDeleted
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether we need to eagerly declare a defaulted move
+end_comment
+
+begin_comment
+comment|/// constructor for this class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsOverloadResolutionForMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|NeedOverloadResolutionForMoveConstructor
 return|;
 block|}
 end_expr_stmt
@@ -3000,30 +2987,52 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredCopyAssignment
+name|UserDeclaredSpecialMembers
+operator|&
+name|SMF_CopyAssignment
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this class has had its copy assignment operator
+comment|/// \brief Determine whether this class needs an implicit copy
 end_comment
 
 begin_comment
-comment|/// declared, either via the user or via an implicit declaration.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This value is used for lazy creation of copy assignment operators.
+comment|/// assignment operator to be lazily declared.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasDeclaredCopyAssignment
+name|needsImplicitCopyAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_CopyAssignment
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether we need to eagerly declare a defaulted copy
+end_comment
+
+begin_comment
+comment|/// assignment operator for this class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsOverloadResolutionForCopyAssignment
 argument_list|()
 specifier|const
 block|{
@@ -3031,7 +3040,65 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|DeclaredCopyAssignment
+name|HasMutableFields
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether an implicit copy assignment operator for this
+end_comment
+
+begin_comment
+comment|/// type would have a parameter with a const-qualified reference type.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|implicitCopyAssignmentHasConstParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|ImplicitCopyAssignmentHasConstParam
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a copy assignment operator with
+end_comment
+
+begin_comment
+comment|/// a parameter type which is a reference to a const-qualified type or is not
+end_comment
+
+begin_comment
+comment|/// a reference..
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasCopyAssignmentWithConstParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|HasDeclaredCopyAssignmentWithConstParam
+operator|||
+operator|(
+name|needsImplicitCopyAssignment
+argument_list|()
+operator|&&
+name|implicitCopyAssignmentHasConstParam
+argument_list|()
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -3054,30 +3121,35 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredMoveAssignment
+name|UserDeclaredSpecialMembers
+operator|&
+name|SMF_MoveAssignment
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasDeclaredMoveAssignment - Whether this class has a
-end_comment
-
-begin_comment
-comment|/// declared move assignment operator.
+comment|/// \brief Determine whether this class has a move assignment operator.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasDeclaredMoveAssignment
+name|hasMoveAssignment
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|data
 argument_list|()
 operator|.
-name|DeclaredMoveAssignment
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_MoveAssignment
+operator|)
+operator|||
+name|needsImplicitMoveAssignment
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -3145,18 +3217,6 @@ begin_comment
 comment|/// this.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Covers all bullets of C++0x [class.copy]p20 except the last, that the
-end_comment
-
-begin_comment
-comment|/// constructor wouldn't be deleted.
-end_comment
-
 begin_expr_stmt
 name|bool
 name|needsImplicitMoveAssignment
@@ -3169,8 +3229,14 @@ name|hasFailedImplicitMoveAssignment
 argument_list|()
 operator|&&
 operator|!
-name|hasDeclaredMoveAssignment
+operator|(
+name|data
 argument_list|()
+operator|.
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_MoveAssignment
+operator|)
 operator|&&
 operator|!
 name|hasUserDeclaredCopyConstructor
@@ -3187,6 +3253,35 @@ operator|&&
 operator|!
 name|hasUserDeclaredDestructor
 argument_list|()
+operator|&&
+operator|!
+name|data
+argument_list|()
+operator|.
+name|DefaultedMoveAssignmentIsDeleted
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether we need to eagerly declare a move assignment
+end_comment
+
+begin_comment
+comment|/// operator for this class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsOverloadResolutionForMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|NeedOverloadResolutionForMoveAssignment
 return|;
 block|}
 end_expr_stmt
@@ -3213,30 +3308,52 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredDestructor
+name|UserDeclaredSpecialMembers
+operator|&
+name|SMF_Destructor
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this class has had its destructor declared,
+comment|/// \brief Determine whether this class needs an implicit destructor to
 end_comment
 
 begin_comment
-comment|/// either via the user or via an implicit declaration.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This value is used for lazy creation of destructors.
+comment|/// be lazily declared.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasDeclaredDestructor
+name|needsImplicitDestructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredSpecialMembers
+operator|&
+name|SMF_Destructor
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether we need to eagerly declare a destructor for this
+end_comment
+
+begin_comment
+comment|/// class.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsOverloadResolutionForDestructor
 argument_list|()
 specifier|const
 block|{
@@ -3244,7 +3361,7 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|DeclaredDestructor
+name|NeedOverloadResolutionForDestructor
 return|;
 block|}
 end_expr_stmt
@@ -3388,55 +3505,11 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/// getConversions - Retrieve the overload set containing all of the
-end_comment
-
-begin_comment
-comment|/// conversion functions in this class.
-end_comment
-
-begin_function
-name|UnresolvedSetImpl
-modifier|*
-name|getConversionFunctions
-parameter_list|()
-block|{
-return|return
-operator|&
-name|data
-argument_list|()
-operator|.
-name|Conversions
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|const
-name|UnresolvedSetImpl
-operator|*
-name|getConversionFunctions
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|data
-argument_list|()
-operator|.
-name|Conversions
-return|;
-block|}
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
-name|UnresolvedSetImpl
-operator|::
-name|iterator
+name|UnresolvedSetIterator
 name|conversion_iterator
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_expr_stmt
@@ -3446,9 +3519,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getConversionFunctions
+name|data
 argument_list|()
-operator|->
+operator|.
+name|Conversions
+operator|.
 name|begin
 argument_list|()
 return|;
@@ -3462,9 +3537,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getConversionFunctions
+name|data
 argument_list|()
-operator|->
+operator|.
+name|Conversions
+operator|.
 name|end
 argument_list|()
 return|;
@@ -3503,14 +3580,19 @@ begin_comment
 comment|/// in current class; including conversion function templates.
 end_comment
 
-begin_function_decl
-specifier|const
-name|UnresolvedSetImpl
-modifier|*
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|conversion_iterator
+operator|,
+name|conversion_iterator
+operator|>
 name|getVisibleConversionFunctions
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// isAggregate - Whether this class is an aggregate (C++
@@ -3567,6 +3649,65 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Whether this class or any of its subobjects has any members of
+end_comment
+
+begin_comment
+comment|/// reference type which would make value-initialization ill-formed, per
+end_comment
+
+begin_comment
+comment|/// C++03 [dcl.init]p5:
+end_comment
+
+begin_comment
+comment|///  -- if T is a non-union class type without a user-declared constructor,
+end_comment
+
+begin_comment
+comment|///     then every non-static data member and base-class component of T is
+end_comment
+
+begin_comment
+comment|///     value-initialized
+end_comment
+
+begin_comment
+comment|/// [...]
+end_comment
+
+begin_comment
+comment|/// A program that calls for [...] value-initialization of an entity of
+end_comment
+
+begin_comment
+comment|/// reference type is ill-formed.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUninitializedReferenceMember
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isUnion
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredConstructor
+argument_list|()
+operator|&&
+name|data
+argument_list|()
+operator|.
+name|HasUninitializedReferenceMember
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isPOD - Whether this class is a POD-type (C++ [class]p4), which is a class
 end_comment
 
@@ -3580,6 +3721,14 @@ end_comment
 
 begin_comment
 comment|/// user-defined destructor.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that this is the C++ TR1 definition of POD.
 end_comment
 
 begin_expr_stmt
@@ -3737,11 +3886,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasTrivialDefaultConstructor - Whether this class has a trivial default
+comment|/// \brief Determine whether this class has a trivial default constructor
 end_comment
 
 begin_comment
-comment|/// constructor (C++11 [class.ctor]p5).
+comment|/// (C++11 [class.ctor]p5).
 end_comment
 
 begin_expr_stmt
@@ -3751,33 +3900,69 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|data
+name|hasDefaultConstructor
 argument_list|()
-operator|.
-name|HasTrivialDefaultConstructor
 operator|&&
 operator|(
-operator|!
 name|data
 argument_list|()
 operator|.
-name|UserDeclaredConstructor
-operator|||
-name|data
-argument_list|()
-operator|.
-name|DeclaredDefaultConstructor
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_DefaultConstructor
 operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasConstexprNonCopyMoveConstructor - Whether this class has at least one
+comment|/// \brief Determine whether this class has a non-trivial default constructor
 end_comment
 
 begin_comment
-comment|/// constexpr constructor other than the copy or move constructors.
+comment|/// (C++11 [class.ctor]p5).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialDefaultConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredNonTrivialSpecialMembers
+operator|&
+name|SMF_DefaultConstructor
+operator|)
+operator|||
+operator|(
+name|needsImplicitDefaultConstructor
+argument_list|()
+operator|&&
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_DefaultConstructor
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has at least one constexpr constructor
+end_comment
+
+begin_comment
+comment|/// other than the copy or move constructors.
 end_comment
 
 begin_expr_stmt
@@ -3793,8 +3978,7 @@ operator|.
 name|HasConstexprNonCopyMoveConstructor
 operator|||
 operator|(
-operator|!
-name|hasUserDeclaredConstructor
+name|needsImplicitDefaultConstructor
 argument_list|()
 operator|&&
 name|defaultedDefaultConstructorIsConstexpr
@@ -3805,11 +3989,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// defaultedDefaultConstructorIsConstexpr - Whether a defaulted default
+comment|/// \brief Determine whether a defaulted default constructor for this class
 end_comment
 
 begin_comment
-comment|/// constructor for this class would be constexpr.
+comment|/// would be constexpr.
 end_comment
 
 begin_expr_stmt
@@ -3837,11 +4021,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// hasConstexprDefaultConstructor - Whether this class has a constexpr
-end_comment
-
-begin_comment
-comment|/// default constructor.
+comment|/// \brief Determine whether this class has a constexpr default constructor.
 end_comment
 
 begin_expr_stmt
@@ -3857,11 +4037,8 @@ operator|.
 name|HasConstexprDefaultConstructor
 operator|||
 operator|(
-operator|!
-name|data
+name|needsImplicitDefaultConstructor
 argument_list|()
-operator|.
-name|UserDeclaredConstructor
 operator|&&
 name|defaultedDefaultConstructorIsConstexpr
 argument_list|()
@@ -3871,11 +4048,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasTrivialCopyConstructor - Whether this class has a trivial copy
+comment|/// \brief Determine whether this class has a trivial copy constructor
 end_comment
 
 begin_comment
-comment|// constructor (C++ [class.copy]p6, C++0x [class.copy]p13)
+comment|/// (C++ [class.copy]p6, C++11 [class.copy]p12)
 end_comment
 
 begin_expr_stmt
@@ -3888,17 +4065,48 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|HasTrivialCopyConstructor
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_CopyConstructor
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasTrivialMoveConstructor - Whether this class has a trivial move
+comment|/// \brief Determine whether this class has a non-trivial copy constructor
 end_comment
 
 begin_comment
-comment|// constructor (C++0x [class.copy]p13)
+comment|/// (C++ [class.copy]p6, C++11 [class.copy]p12)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialCopyConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredNonTrivialSpecialMembers
+operator|&
+name|SMF_CopyConstructor
+operator|||
+operator|!
+name|hasTrivialCopyConstructor
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a trivial move constructor
+end_comment
+
+begin_comment
+comment|/// (C++11 [class.copy]p12)
 end_comment
 
 begin_expr_stmt
@@ -3908,20 +4116,69 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|hasMoveConstructor
+argument_list|()
+operator|&&
+operator|(
 name|data
 argument_list|()
 operator|.
-name|HasTrivialMoveConstructor
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_MoveConstructor
+operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasTrivialCopyAssignment - Whether this class has a trivial copy
+comment|/// \brief Determine whether this class has a non-trivial move constructor
 end_comment
 
 begin_comment
-comment|// assignment operator (C++ [class.copy]p11, C++0x [class.copy]p27)
+comment|/// (C++11 [class.copy]p12)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredNonTrivialSpecialMembers
+operator|&
+name|SMF_MoveConstructor
+operator|)
+operator|||
+operator|(
+name|needsImplicitMoveConstructor
+argument_list|()
+operator|&&
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_MoveConstructor
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a trivial copy assignment operator
+end_comment
+
+begin_comment
+comment|/// (C++ [class.copy]p11, C++11 [class.copy]p25)
 end_comment
 
 begin_expr_stmt
@@ -3934,17 +4191,48 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|HasTrivialCopyAssignment
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_CopyAssignment
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasTrivialMoveAssignment - Whether this class has a trivial move
+comment|/// \brief Determine whether this class has a non-trivial copy assignment
 end_comment
 
 begin_comment
-comment|// assignment operator (C++0x [class.copy]p27)
+comment|/// operator (C++ [class.copy]p11, C++11 [class.copy]p25)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialCopyAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredNonTrivialSpecialMembers
+operator|&
+name|SMF_CopyAssignment
+operator|||
+operator|!
+name|hasTrivialCopyAssignment
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a trivial move assignment operator
+end_comment
+
+begin_comment
+comment|/// (C++11 [class.copy]p25)
 end_comment
 
 begin_expr_stmt
@@ -3954,20 +4242,69 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|hasMoveAssignment
+argument_list|()
+operator|&&
+operator|(
 name|data
 argument_list|()
 operator|.
-name|HasTrivialMoveAssignment
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_MoveAssignment
+operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasTrivialDestructor - Whether this class has a trivial destructor
+comment|/// \brief Determine whether this class has a non-trivial move assignment
 end_comment
 
 begin_comment
-comment|// (C++ [class.dtor]p3)
+comment|/// operator (C++11 [class.copy]p25)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|data
+argument_list|()
+operator|.
+name|DeclaredNonTrivialSpecialMembers
+operator|&
+name|SMF_MoveAssignment
+operator|)
+operator|||
+operator|(
+name|needsImplicitMoveAssignment
+argument_list|()
+operator|&&
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_MoveAssignment
+operator|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a trivial destructor
+end_comment
+
+begin_comment
+comment|/// (C++ [class.dtor]p3)
 end_comment
 
 begin_expr_stmt
@@ -3980,7 +4317,37 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|HasTrivialDestructor
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_Destructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class has a non-trivial destructor
+end_comment
+
+begin_comment
+comment|/// (C++ [class.dtor]p3)
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasNonTrivialDestructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+name|data
+argument_list|()
+operator|.
+name|HasTrivialSpecialMembers
+operator|&
+name|SMF_Destructor
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -4278,7 +4645,19 @@ operator|*
 name|getMemberSpecializationInfo
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|TemplateOrInstantiation
+operator|.
+name|dyn_cast
+operator|<
+name|MemberSpecializationInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -4486,6 +4865,27 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Determine whether this dependent class is a current instantiation,
+end_comment
+
+begin_comment
+comment|/// when viewed from within the given context.
+end_comment
+
+begin_macro
+unit|bool
+name|isCurrentInstantiation
+argument_list|(
+argument|const DeclContext *CurContext
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this class is derived from the class \p Base.
 end_comment
 
@@ -4525,16 +4925,16 @@ begin_comment
 comment|/// \returns true if this class is derived from Base, false otherwise.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|isDerivedFrom
 argument_list|(
-argument|const CXXRecordDecl *Base
-argument_list|)
-end_macro
-
-begin_decl_stmt
 specifier|const
+name|CXXRecordDecl
+operator|*
+name|Base
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 
@@ -5328,6 +5728,25 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Indicates that the declaration of a defaulted or deleted special
+end_comment
+
+begin_comment
+comment|/// member function is now complete.
+end_comment
+
+begin_function_decl
+name|void
+name|finishedDefaultedOrDeletedMember
+parameter_list|(
+name|CXXMethodDecl
+modifier|*
+name|MD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Indicates that the definition of this class is now complete.
 end_comment
 
@@ -5559,6 +5978,18 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Returns the inheritance model used for this record.
+end_comment
+
+begin_expr_stmt
+name|MSInheritanceModel
+name|getMSInheritanceModel
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this lambda expression was known to be dependent
 end_comment
 
@@ -5745,9 +6176,7 @@ argument|QualType T
 argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
-argument|bool isStatic
-argument_list|,
-argument|StorageClass SCAsWritten
+argument|StorageClass SC
 argument_list|,
 argument|bool isInline
 argument_list|,
@@ -5770,9 +6199,7 @@ argument|T
 argument_list|,
 argument|TInfo
 argument_list|,
-argument|(isStatic ? SC_Static : SC_None)
-argument_list|,
-argument|SCAsWritten
+argument|SC
 argument_list|,
 argument|isInline
 argument_list|,
@@ -5811,9 +6238,7 @@ argument|QualType T
 argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
-argument|bool isStatic
-argument_list|,
-argument|StorageClass SCAsWritten
+argument|StorageClass SC
 argument_list|,
 argument|bool isInline
 argument_list|,
@@ -5836,14 +6261,7 @@ name|bool
 name|isStatic
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getStorageClass
-argument_list|()
-operator|==
-name|SC_Static
-return|;
-block|}
+block|;
 name|bool
 name|isInstance
 argument_list|()
@@ -6570,8 +6988,6 @@ name|MemberOrEllipsisLocation
 decl_stmt|;
 comment|/// \brief The argument used to initialize the base or member, which may
 comment|/// end up constructing an object (when multiple arguments are involved).
-comment|/// If 0, this is a field initializer, and the in-class member initializer
-comment|/// will be used.
 name|Stmt
 modifier|*
 name|Init
@@ -6857,8 +7273,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
+name|isa
+operator|<
+name|CXXDefaultInitExpr
+operator|>
+operator|(
 name|Init
+operator|)
 return|;
 block|}
 comment|/// isDelegatingInitializer - Returns true when this initializer is creating
@@ -7464,11 +7885,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Get the initializer. This is 0 if this is an in-class initializer
-end_comment
-
-begin_comment
-comment|/// for a non-static data member which has not yet been parsed.
+comment|/// \brief Get the initializer.
 end_comment
 
 begin_expr_stmt
@@ -7478,21 +7895,6 @@ name|getInit
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-operator|!
-name|Init
-condition|)
-return|return
-name|getAnyMember
-argument_list|()
-operator|->
-name|getInClassInitializer
-argument_list|()
-return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|static_cast
 operator|<
@@ -7503,14 +7905,11 @@ operator|(
 name|Init
 operator|)
 return|;
-end_return
-
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+block|}
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// CXXConstructorDecl - Represents a C++ constructor within a
 end_comment
 
@@ -7621,8 +8020,6 @@ argument_list|,
 name|T
 argument_list|,
 name|TInfo
-argument_list|,
-name|false
 argument_list|,
 name|SC_None
 argument_list|,
@@ -8085,7 +8482,7 @@ comment|/// argument type. For example, @p TypeQuals would be set to @c
 end_comment
 
 begin_comment
-comment|/// QualType::Const for the following copy constructor:
+comment|/// Qualifiers::Const for the following copy constructor:
 end_comment
 
 begin_comment
@@ -8540,8 +8937,6 @@ name|T
 argument_list|,
 name|TInfo
 argument_list|,
-name|false
-argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
@@ -8799,8 +9194,6 @@ name|T
 argument_list|,
 name|TInfo
 argument_list|,
-name|false
-argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
@@ -9009,8 +9402,19 @@ enum|;
 name|private
 label|:
 comment|/// Language - The language for this linkage specification.
-name|LanguageIDs
+name|unsigned
 name|Language
+range|:
+literal|3
+decl_stmt|;
+comment|/// True if this linkage spec has brances. This is needed so that hasBraces()
+comment|/// returns the correct result while the linkage spec body is being parsed.
+comment|/// Once RBraceLoc has been set this is not used, so it doesn't need to be
+comment|/// serialized.
+name|unsigned
+name|HasBraces
+range|:
+literal|1
 decl_stmt|;
 comment|/// ExternLoc - The source location for the extern keyword.
 name|SourceLocation
@@ -9030,7 +9434,7 @@ argument|SourceLocation LangLoc
 argument_list|,
 argument|LanguageIDs lang
 argument_list|,
-argument|SourceLocation RBLoc
+argument|bool HasBraces
 argument_list|)
 block|:
 name|Decl
@@ -9052,6 +9456,11 @@ argument_list|(
 name|lang
 argument_list|)
 operator|,
+name|HasBraces
+argument_list|(
+name|HasBraces
+argument_list|)
+operator|,
 name|ExternLoc
 argument_list|(
 name|ExternLoc
@@ -9059,7 +9468,7 @@ argument_list|)
 operator|,
 name|RBraceLoc
 argument_list|(
-argument|RBLoc
+argument|SourceLocation()
 argument_list|)
 block|{ }
 name|public
@@ -9079,7 +9488,7 @@ argument|SourceLocation LangLoc
 argument_list|,
 argument|LanguageIDs Lang
 argument_list|,
-argument|SourceLocation RBraceLoc = SourceLocation()
+argument|bool HasBraces
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -9102,7 +9511,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|LanguageIDs
+argument_list|(
 name|Language
+argument_list|)
 return|;
 block|}
 comment|/// \brief Set the language specified by this linkage specification.
@@ -9125,11 +9537,19 @@ name|hasBraces
 argument_list|()
 specifier|const
 block|{
-return|return
+name|assert
+argument_list|(
+operator|!
 name|RBraceLoc
 operator|.
 name|isValid
 argument_list|()
+operator|||
+name|HasBraces
+argument_list|)
+block|;
+return|return
+name|HasBraces
 return|;
 block|}
 name|SourceLocation
@@ -9172,6 +9592,13 @@ block|{
 name|RBraceLoc
 operator|=
 name|L
+expr_stmt|;
+name|HasBraces
+operator|=
+name|RBraceLoc
+operator|.
+name|isValid
+argument_list|()
 expr_stmt|;
 block|}
 name|SourceLocation
@@ -11685,6 +12112,167 @@ return|return
 name|K
 operator|==
 name|StaticAssert
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+block|; }
+block|;
+comment|/// An instance of this class represents the declaration of a property
+comment|/// member.  This is a Microsoft extension to C++, first introduced in
+comment|/// Visual Studio .NET 2003 as a parallel to similar features in C#
+comment|/// and Managed C++.
+comment|///
+comment|/// A property must always be a non-static class member.
+comment|///
+comment|/// A property member superficially resembles a non-static data
+comment|/// member, except preceded by a property attribute:
+comment|///   __declspec(property(get=GetX, put=PutX)) int x;
+comment|/// Either (but not both) of the 'get' and 'put' names may be omitted.
+comment|///
+comment|/// A reference to a property is always an lvalue.  If the lvalue
+comment|/// undergoes lvalue-to-rvalue conversion, then a getter name is
+comment|/// required, and that member is called with no arguments.
+comment|/// If the lvalue is assigned into, then a setter name is required,
+comment|/// and that member is called with one argument, the value assigned.
+comment|/// Both operations are potentially overloaded.  Compound assignments
+comment|/// are permitted, as are the increment and decrement operators.
+comment|///
+comment|/// The getter and putter methods are permitted to be overloaded,
+comment|/// although their return and parameter types are subject to certain
+comment|/// restrictions according to the type of the property.
+comment|///
+comment|/// A property declared using an incomplete array type may
+comment|/// additionally be subscripted, adding extra parameters to the getter
+comment|/// and putter methods.
+name|class
+name|MSPropertyDecl
+operator|:
+name|public
+name|DeclaratorDecl
+block|{
+name|IdentifierInfo
+operator|*
+name|GetterId
+block|,
+operator|*
+name|SetterId
+block|;
+name|public
+operator|:
+name|MSPropertyDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName N
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *TInfo
+argument_list|,
+argument|SourceLocation StartL
+argument_list|,
+argument|IdentifierInfo *Getter
+argument_list|,
+argument|IdentifierInfo *Setter
+argument_list|)
+operator|:
+name|DeclaratorDecl
+argument_list|(
+name|MSProperty
+argument_list|,
+name|DC
+argument_list|,
+name|L
+argument_list|,
+name|N
+argument_list|,
+name|T
+argument_list|,
+name|TInfo
+argument_list|,
+name|StartL
+argument_list|)
+block|,
+name|GetterId
+argument_list|(
+name|Getter
+argument_list|)
+block|,
+name|SetterId
+argument_list|(
+argument|Setter
+argument_list|)
+block|{}
+specifier|static
+name|MSPropertyDecl
+operator|*
+name|CreateDeserialized
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|D
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MSProperty
+return|;
+block|}
+name|bool
+name|hasGetter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterId
+operator|!=
+name|NULL
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getGetterId
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterId
+return|;
+block|}
+name|bool
+name|hasSetter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterId
+operator|!=
+name|NULL
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getSetterId
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterId
 return|;
 block|}
 name|friend

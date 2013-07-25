@@ -19,12 +19,6 @@ directive|define
 name|_NET_LAGG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_comment
 comment|/*  * Global definitions  */
 end_comment
@@ -530,6 +524,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_comment
 comment|/*  * Internal kernel part  */
 end_comment
@@ -746,6 +746,14 @@ name|u_int
 name|sc_count
 decl_stmt|;
 comment|/* number of ports */
+name|u_int
+name|sc_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|sc_flapping
+decl_stmt|;
+comment|/* number of flapping 							 * events */
 name|struct
 name|lagg_port
 modifier|*
@@ -767,6 +775,18 @@ decl_stmt|;
 comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
+decl_stmt|;
+name|counter_u64_t
+name|sc_ipackets
+decl_stmt|;
+name|counter_u64_t
+name|sc_opackets
+decl_stmt|;
+name|counter_u64_t
+name|sc_ibytes
+decl_stmt|;
+name|counter_u64_t
+name|sc_obytes
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -943,6 +963,10 @@ name|eventhandler_tag
 name|vlan_detach
 decl_stmt|;
 name|struct
+name|callout
+name|sc_callout
+decl_stmt|;
+name|struct
 name|sysctl_ctx_list
 name|ctx
 decl_stmt|;
@@ -1045,6 +1069,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1213,6 +1238,14 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_link_lagg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

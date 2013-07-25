@@ -277,6 +277,10 @@ name|nclasses
 operator|=
 literal|2
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|model
 operator|=
 operator|(
@@ -449,11 +453,11 @@ case|:
 case|case
 literal|0x1E
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x1F
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x2E
 case|:
@@ -533,6 +537,19 @@ expr_stmt|;
 name|nclasses
 operator|=
 literal|3
+expr_stmt|;
+break|break;
+case|case
+literal|0x3C
+case|:
+comment|/* Per Intel document 325462-045US 01/2013. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_HASWELL
+expr_stmt|;
+name|nclasses
+operator|=
+literal|5
 expr_stmt|;
 break|break;
 block|}
@@ -687,6 +704,9 @@ case|:
 case|case
 name|PMC_CPU_INTEL_IVYBRIDGE_XEON
 case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
+case|:
 name|error
 operator|=
 name|pmc_core_initialize
@@ -778,9 +798,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|pmc_tsc_finalize
+argument_list|(
+name|pmc_mdep
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 comment|/* 	 * Init the uncore class. 	 */
 if|#
 directive|if
@@ -801,6 +828,9 @@ block|{
 comment|/* 		 * Intel Corei7 and Westmere processors. 		 */
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE
@@ -830,11 +860,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|free
+name|pmc_mdep_free
 argument_list|(
 name|pmc_mdep
-argument_list|,
-name|M_PMC
 argument_list|)
 expr_stmt|;
 name|pmc_mdep
@@ -897,6 +925,9 @@ name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_IVYBRIDGE
@@ -1002,6 +1033,9 @@ condition|)
 block|{
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE

@@ -93,7 +93,7 @@ literal|"_ADR"
 argument_list|,
 literal|"Address"
 argument_list|,
-literal|"Returns the address of a device on its parent bus"
+literal|"Returns address of a device on parent bus, and resource field"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -561,7 +561,7 @@ literal|"_DMA"
 argument_list|,
 literal|"Direct Memory Access"
 argument_list|,
-literal|"Returns a device's current resources for DMA transactions"
+literal|"Returns device current resources for DMA transactions, and resource field"
 argument_list|)
 block|,
 name|AH_PREDEF

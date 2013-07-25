@@ -206,6 +206,8 @@ operator|&
 name|nd
 operator|.
 name|nd_mrep
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|nd

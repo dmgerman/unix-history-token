@@ -154,7 +154,20 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// Grow the denseset so that it has at least Size buckets. Does not shrink
+name|size_t
+name|getMemorySize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheMap
+operator|.
+name|getMemorySize
+argument_list|()
+return|;
+block|}
+comment|/// Grow the DenseSet so that it has at least Size buckets. Will not shrink
+comment|/// the Size of the set.
 name|void
 name|resize
 parameter_list|(

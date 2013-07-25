@@ -692,7 +692,13 @@ operator|*
 operator|--
 name|argv
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 name|_PATH_BSHELL
+argument_list|)
 expr_stmt|;
 name|execve
 argument_list|(
@@ -752,7 +758,7 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 if|if

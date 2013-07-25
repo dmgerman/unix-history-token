@@ -408,6 +408,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ddr_disable
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ddr_is_active
 parameter_list|(

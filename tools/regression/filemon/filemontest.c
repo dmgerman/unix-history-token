@@ -69,6 +69,24 @@ begin_comment
 comment|/*  * This simple test of filemon expects a test script called  * "test_script.sh" in the cwd.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BIT
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|main
@@ -80,7 +98,9 @@ name|char
 name|log_name
 index|[]
 init|=
-literal|"filemon_log.XXXXXX"
+literal|"filemon_log"
+name|BIT
+literal|".XXXXXX"
 decl_stmt|;
 name|pid_t
 name|child
@@ -225,7 +245,9 @@ argument_list|)
 expr_stmt|;
 name|system
 argument_list|(
-literal|"./test_script.sh"
+literal|"env BIT="
+name|BIT
+literal|"	./test_script.sh"
 argument_list|)
 expr_stmt|;
 break|break;

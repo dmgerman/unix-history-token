@@ -1538,7 +1538,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"<%s> pkt too short. left len = %d. "
-literal|"gabage at end of pkt?"
+literal|"garbage at end of pkt?"
 argument_list|,
 name|__func__
 argument_list|,

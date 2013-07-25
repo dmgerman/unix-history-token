@@ -507,8 +507,9 @@ name|p
 operator|=
 name|parse_time
 argument_list|(
-operator|++
 name|p
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|m

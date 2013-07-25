@@ -55,17 +55,6 @@ directive|include
 file|"opt_kdtrace.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NO_REG_DEFS
-value|1
-end_define
-
-begin_comment
-comment|/* Prevent asm.h from including regdef.h */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -281,12 +270,6 @@ directive|include
 file|<machine/tls.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/asm.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -426,6 +409,215 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|lbu_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lbu %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lb_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lb %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lwl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lwl %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|lwr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("lwr %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ldl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("ldl %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ldr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("ldr %0, 0x0(%1)"				\ 			: "=r" (data)
+comment|/* outputs */
+value|\ 			: "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sb_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("sb %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|swl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("swl %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|swr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("swr %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sdl_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("sdl %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sdr_macro
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|__asm __volatile ("sdr %0, 0x0(%1)"				\ 			:
+comment|/* outputs */
+value|\ 			: "r" (data), "r" (addr));
+end_define
+
+begin_comment
+comment|/* inputs */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -1399,7 +1591,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t4
+name|a4
 expr_stmt|;
 name|sa
 operator|->
@@ -1410,7 +1602,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t5
+name|a5
 expr_stmt|;
 name|sa
 operator|->
@@ -1421,7 +1613,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t6
+name|a6
 expr_stmt|;
 name|sa
 operator|->
@@ -1432,7 +1624,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t7
+name|a7
 expr_stmt|;
 name|nsaved
 operator|+=
@@ -1536,7 +1728,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t4
+name|a4
 expr_stmt|;
 name|sa
 operator|->
@@ -1547,7 +1739,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t5
+name|a5
 expr_stmt|;
 name|sa
 operator|->
@@ -1558,7 +1750,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t6
+name|a6
 expr_stmt|;
 name|sa
 operator|->
@@ -1569,7 +1761,7 @@ index|]
 operator|=
 name|locr0
 operator|->
-name|t7
+name|a7
 expr_stmt|;
 name|nsaved
 operator|+=
@@ -5638,6 +5830,89 @@ operator|->
 name|a3
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"\ta4: %#jx\ta5: %#jx\ta6: %#jx\ta6: %#jx\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a4
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a5
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a6
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a7
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"\tt0: %#jx\tt1: %#jx\tt2: %#jx\tt3: %#jx\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t0
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t1
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t2
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t3
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|log
 argument_list|(
 name|LOG_ERR
@@ -5708,6 +5983,8 @@ operator|->
 name|t7
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|log
 argument_list|(
 name|LOG_ERR
@@ -6028,6 +6305,85 @@ operator|->
 name|a3
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+name|printf
+argument_list|(
+literal|"\ta4: %#jx\ta5: %#jx\ta6: %#jx\ta7: %#jx\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a4
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a5
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a6
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|a7
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tt0: %#jx\tt1: %#jx\tt2: %#jx\tt3: %#jx\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t0
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t1
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t2
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|frame
+operator|->
+name|t3
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"\tt0: %#jx\tt1: %#jx\tt2: %#jx\tt3: %#jx\n"
@@ -6094,6 +6450,8 @@ operator|->
 name|t7
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\tt8: %#jx\tt9: %#jx\ts0: %#jx\ts1: %#jx\n"

@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MSP430InstrInfo.h"
+file|"MSP430FrameLowering.h"
 end_include
 
 begin_include
@@ -74,13 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MSP430FrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MSP430SelectionDAGInfo.h"
+file|"MSP430InstrInfo.h"
 end_include
 
 begin_include
@@ -92,13 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MSP430SelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MSP430Subtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -111,12 +111,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetTransformImpl.h"
 end_include
 
 begin_decl_stmt
@@ -150,12 +144,6 @@ name|TSInfo
 block|;
 name|MSP430FrameLowering
 name|FrameLowering
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -270,32 +258,6 @@ block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
 return|;
 block|}
 name|virtual

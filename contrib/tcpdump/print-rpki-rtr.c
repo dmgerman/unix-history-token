@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2011 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * support for the The RPKI/Router Protocol Protocol as per draft-ietf-sidr-rpki-rtr-12  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
+comment|/*  * Copyright (c) 1998-2011 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * support for the The RPKI/Router Protocol as RFC6810  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
 begin_ifndef
@@ -105,12 +105,12 @@ comment|/* PDU type */
 union|union
 block|{
 name|u_char
-name|cache_nonce
+name|session_id
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Cache Nonce */
+comment|/* Session id */
 name|u_char
 name|error_code
 index|[
@@ -701,7 +701,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sCache-Nonce: 0x%04x, Serial: %u"
+literal|"%sSession ID: 0x%04x, Serial: %u"
 argument_list|,
 name|indent_string
 argument_list|(
@@ -716,7 +716,7 @@ name|pdu_header
 operator|->
 name|u
 operator|.
-name|cache_nonce
+name|session_id
 argument_list|)
 argument_list|,
 name|EXTRACT_32BITS
@@ -740,7 +740,7 @@ name|RPKI_RTR_CACHE_RESPONSE_PDU
 case|:
 name|printf
 argument_list|(
-literal|"%sCache-Nonce: 0x%04x"
+literal|"%sSession ID: 0x%04x"
 argument_list|,
 name|indent_string
 argument_list|(
@@ -755,7 +755,7 @@ name|pdu_header
 operator|->
 name|u
 operator|.
-name|cache_nonce
+name|session_id
 argument_list|)
 argument_list|)
 expr_stmt|;

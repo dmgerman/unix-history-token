@@ -58,6 +58,10 @@ block|,
 name|XS_RESUME
 block|,
 name|XS_SET_TARGET
+block|,
+name|XS_RESTRICT
+block|,
+name|XS_RESET_WATCHES
 block|}
 enum|;
 end_enum
@@ -102,6 +106,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EINVAL
+end_ifdef
 
 begin_define
 define|#
@@ -211,6 +221,11 @@ argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
