@@ -7161,7 +7161,7 @@ name|lacp_dprintf
 argument_list|(
 name|lp
 argument_list|,
-literal|"Interface stopped DISTRIBUTING, possible flaping\n"
+literal|"Interface stopped DISTRIBUTING, possible flapping\n"
 argument_list|)
 expr_stmt|;
 name|sc
