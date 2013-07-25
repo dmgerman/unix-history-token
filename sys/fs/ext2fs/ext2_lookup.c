@@ -526,6 +526,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_offset
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|ip
 operator|=
 name|VTOI
@@ -646,7 +659,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Avoid complications for partial directory entries by adjusting 	 * the i/o to end at a block boundary.  Don't give up (like ufs 	 * does) if the initial adjustment gives a negative count, since 	 * many callers don't supply a large enough buffer.  The correct 	 * size is a little larger than DIRBLKSIZ to allow for expansion 	 * of directory entries, but some callers just use 512. 	 */
 name|offset
 operator|=
 name|startoffset
