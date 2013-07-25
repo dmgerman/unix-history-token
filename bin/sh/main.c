@@ -211,12 +211,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"init.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mystring.h"
 end_include
 
@@ -230,6 +224,12 @@ begin_include
 include|#
 directive|include
 file|"cd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"redir.h"
 end_include
 
 begin_include
@@ -264,6 +264,16 @@ decl_stmt|,
 name|initial_localeisutf8
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -678,6 +688,29 @@ comment|/*NOTREACHED*/
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|reset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|reseteval
+argument_list|()
+expr_stmt|;
+name|resetinput
+argument_list|()
+expr_stmt|;
+name|resetparser
+argument_list|()
+expr_stmt|;
+name|resetredir
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

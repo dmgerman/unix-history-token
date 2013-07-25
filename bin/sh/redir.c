@@ -1525,16 +1525,12 @@ begin_comment
 comment|/*  * Undo all redirections.  Called on error or interrupt.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_expr_stmt
-name|INCLUDE
-literal|"redir.h"
-name|RESET
+begin_function
+name|void
+name|resetredir
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -1544,12 +1540,7 @@ name|popredir
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function
 
 begin_comment
 comment|/* Return true if fd 0 has already been redirected at least once.  */

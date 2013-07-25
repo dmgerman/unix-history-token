@@ -8933,17 +8933,12 @@ begin_comment
 comment|/* end of readtoken */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_macro
-name|RESET
-end_macro
-
-begin_block
+begin_function
+name|void
+name|resetparser
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tokpushback
 operator|=
@@ -8954,12 +8949,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function
 
 begin_comment
 comment|/*  * Returns true if the text contains nothing to expand (no dollar signs  * or backquotes).  */

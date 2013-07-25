@@ -469,53 +469,58 @@ begin_comment
 comment|/*  * Called to reset things after an exception.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_expr_stmt
-name|INCLUDE
-literal|"eval.h"
-name|RESET
+begin_function
+name|void
+name|reseteval
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|evalskip
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|loopnest
 operator|=
 literal|0
-block|;
+expr_stmt|;
 name|funcnest
 operator|=
 literal|0
-block|; }
-endif|#
-directive|endif
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * The eval command.  */
+end_comment
+
+begin_function
 name|int
 name|evalcmd
-argument_list|(
-argument|int argc
-argument_list|,
-argument|char **argv
-argument_list|)
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
 block|{
 name|char
-operator|*
+modifier|*
 name|p
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|concat
-block|;
+decl_stmt|;
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|ap
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -589,9 +594,6 @@ argument_list|,
 name|concat
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|p
 operator|=
 name|grabstackstr
@@ -599,48 +601,41 @@ argument_list|(
 name|concat
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}                 evalstring
-operator|(
+block|}
+name|evalstring
+argument_list|(
 name|p
-operator|,
+argument_list|,
 name|builtin_flags
-operator|)
+argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|} else
+block|}
+else|else
 name|exitstatus
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|exitstatus
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Execute a command or commands contained in a string.  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|evalstring
-argument_list|(
-argument|char *s
-argument_list|,
-argument|int flags
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
 block|{
 name|union
 name|node
@@ -779,7 +774,7 @@ name|EXEXIT
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Evaluate a parse tree.  The value is left in the global variable  * exitstatus.  */
