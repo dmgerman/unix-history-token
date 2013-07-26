@@ -967,10 +967,10 @@ name|ex_anon
 operator|.
 name|cr_ngroups
 argument_list|,
-name|np
+name|argp
 operator|->
-name|netc_anon
-operator|->
+name|ex_anon
+operator|.
 name|cr_groups
 argument_list|)
 expr_stmt|;
