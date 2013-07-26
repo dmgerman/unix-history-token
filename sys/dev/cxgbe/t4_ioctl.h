@@ -75,6 +75,15 @@ comment|/* read from i2c addressible device */
 name|T4_CLEAR_STATS
 block|,
 comment|/* clear a port's MAC statistics */
+name|T4_SET_OFLD_POLICY
+block|,
+comment|/* Set offload policy */
+name|T4_SET_SCHED_CLASS
+block|,
+comment|/* set sched class */
+name|T4_SET_SCHED_QUEUE
+block|,
+comment|/* set queue class */
 block|}
 enum|;
 end_enum
