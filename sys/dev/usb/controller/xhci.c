@@ -7513,10 +7513,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|npkt
-operator|=
-literal|0
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -7585,6 +7581,7 @@ name|buf_res
 operator|.
 name|length
 expr_stmt|;
+block|}
 comment|/* setup npkt */
 name|npkt
 operator|=
@@ -7607,6 +7604,17 @@ expr_stmt|;
 if|if
 condition|(
 name|npkt
+operator|==
+literal|0
+condition|)
+name|npkt
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|npkt
 operator|>
 literal|31
 condition|)
@@ -7614,7 +7622,6 @@ name|npkt
 operator|=
 literal|31
 expr_stmt|;
-block|}
 comment|/* fill out TRB's */
 name|td
 operator|->
@@ -7678,14 +7685,11 @@ block|{
 case|case
 name|XHCI_TRB_TYPE_ISOCH
 case|:
-comment|/* BEI: Interrupts are inhibited until EOT */
 name|dword
 operator|=
 name|XHCI_TRB_3_CHAIN_BIT
 operator||
 name|XHCI_TRB_3_CYCLE_BIT
-operator||
-name|XHCI_TRB_3_BEI_BIT
 operator||
 name|XHCI_TRB_3_TBC_SET
 argument_list|(
@@ -7864,7 +7868,6 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* XHCI_TRB_TYPE_NORMAL */
-comment|/* BEI: Interrupts are inhibited until EOT */
 name|dword
 operator|=
 name|XHCI_TRB_3_CHAIN_BIT
@@ -7875,8 +7878,6 @@ name|XHCI_TRB_3_TYPE_SET
 argument_list|(
 name|XHCI_TRB_TYPE_NORMAL
 argument_list|)
-operator||
-name|XHCI_TRB_3_BEI_BIT
 operator||
 name|XHCI_TRB_3_TBC_SET
 argument_list|(
@@ -8198,6 +8199,7 @@ name|page_cache
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* clear TD SIZE to zero, hence this is the last TRB */
 comment|/* remove chain bit because this is the last TRB in the chain */
 name|td
 operator|->
