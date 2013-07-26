@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|BASE_XSDT_TABLES
-value|8
+value|10
 end_define
 
 begin_define
@@ -483,6 +483,33 @@ name|ACPI_PTR_TO_PHYSADDR
 argument_list|(
 operator|&
 name|EcdtCode
+argument_list|)
+expr_stmt|;
+comment|/* Install two UEFIs to test multiple table support */
+name|LocalXSDT
+operator|->
+name|TableOffsetEntry
+index|[
+literal|8
+index|]
+operator|=
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+operator|&
+name|Uefi1Code
+argument_list|)
+expr_stmt|;
+name|LocalXSDT
+operator|->
+name|TableOffsetEntry
+index|[
+literal|9
+index|]
+operator|=
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+operator|&
+name|Uefi2Code
 argument_list|)
 expr_stmt|;
 comment|/*      * Install the user tables. The DSDT must be installed in the FADT.      * All other tables are installed directly into the XSDT.      */

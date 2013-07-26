@@ -963,10 +963,6 @@ name|AcpiGbl_DbOutputFlags
 operator|=
 name|ACPI_DB_CONSOLE_OUTPUT
 expr_stmt|;
-name|AcpiGbl_OsiData
-operator|=
-literal|0
-expr_stmt|;
 name|AcpiGbl_OsiMutex
 operator|=
 name|NULL

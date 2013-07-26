@@ -151,6 +151,23 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* ACPI 5.0A: PM Timer is optional */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_FADT
+operator|.
+name|XPmTimerBlock
+operator|.
+name|Address
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_SUPPORT
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiHwRead
@@ -220,6 +237,23 @@ block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* ACPI 5.0A: PM Timer is optional */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_FADT
+operator|.
+name|XPmTimerBlock
+operator|.
+name|Address
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_SUPPORT
 argument_list|)
 expr_stmt|;
 block|}

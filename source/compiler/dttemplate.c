@@ -173,22 +173,34 @@ decl_stmt|;
 name|AslInitializeGlobals
 argument_list|()
 expr_stmt|;
+comment|/* Default (no signature) is DSDT */
+if|if
+condition|(
+operator|!
+name|Signature
+condition|)
+block|{
+name|Signature
+operator|=
+literal|"DSDT"
+expr_stmt|;
+goto|goto
+name|GetTemplate
+goto|;
+block|}
 name|AcpiUtStrupr
 argument_list|(
 name|Signature
 argument_list|)
 expr_stmt|;
-comment|/* Create all known templates if requested */
 if|if
 condition|(
 operator|!
-name|ACPI_STRNCMP
+name|ACPI_STRCMP
 argument_list|(
 name|Signature
 argument_list|,
 literal|"ALL"
-argument_list|,
-literal|3
 argument_list|)
 operator|||
 operator|!
@@ -200,6 +212,7 @@ literal|"*"
 argument_list|)
 condition|)
 block|{
+comment|/* Create all available/known templates */
 name|Status
 operator|=
 name|DtCreateAllTemplates
@@ -226,7 +239,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, Invalid ACPI table signature\n"
+literal|"%s: Invalid ACPI table signature (length must be 4 characters)\n"
 argument_list|,
 name|Signature
 argument_list|)
@@ -271,6 +284,8 @@ operator|=
 literal|"FACP"
 expr_stmt|;
 block|}
+name|GetTemplate
+label|:
 name|TableData
 operator|=
 name|AcpiDmGetTableData
@@ -295,7 +310,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%4.4s, No template available\n"
+literal|"%4.4s: No template available\n"
 argument_list|,
 name|Signature
 argument_list|)
@@ -321,7 +336,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%4.4s, Unrecognized ACPI table signature\n"
+literal|"%4.4s: Unrecognized ACPI table signature\n"
 argument_list|,
 name|Signature
 argument_list|)

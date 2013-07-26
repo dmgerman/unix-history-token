@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T:G^v^w|x:z"
+value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T+G^v^w|x:z"
 end_define
 
 begin_comment

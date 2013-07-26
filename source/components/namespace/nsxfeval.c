@@ -990,7 +990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              PreOrderVisit       - Called during tree pre-order visit  *                                    when an object of "Type" is found  *              PostOrderVisit      - Called during tree post-order visit  *                                    when an object of "Type" is found  *              Context             - Passed to user function(s) above  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The callback function is called whenever an object that matches  *              the type parameter is found. If the callback function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services; the callback function(s) can be  *              tailored to each task, whether it is a print function,  *              a compare function, etc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              DescendingCallback  - Called during tree descent  *                                    when an object of "Type" is found  *              AscendingCallback   - Called during tree ascent  *                                    when an object of "Type" is found  *              Context             - Passed to user function(s) above  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The callback function is called whenever an object that matches  *              the type parameter is found. If the callback function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services; the callback function(s) can be  *              tailored to each task, whether it is a print function,  *              a compare function, etc.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1007,10 +1007,10 @@ name|UINT32
 name|MaxDepth
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PreOrderVisit
+name|DescendingCallback
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PostOrderVisit
+name|AscendingCallback
 parameter_list|,
 name|void
 modifier|*
@@ -1046,10 +1046,10 @@ operator|)
 operator|||
 operator|(
 operator|!
-name|PreOrderVisit
+name|DescendingCallback
 operator|&&
 operator|!
-name|PostOrderVisit
+name|AscendingCallback
 operator|)
 condition|)
 block|{
@@ -1114,9 +1114,9 @@ name|MaxDepth
 argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
-name|PreOrderVisit
+name|DescendingCallback
 argument_list|,
-name|PostOrderVisit
+name|AscendingCallback
 argument_list|,
 name|Context
 argument_list|,

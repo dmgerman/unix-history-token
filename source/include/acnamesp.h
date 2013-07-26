@@ -240,10 +240,10 @@ name|UINT32
 name|Flags
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PreOrderVisit
+name|DescendingCallback
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PostOrderVisit
+name|AscendingCallback
 parameter_list|,
 name|void
 modifier|*
