@@ -6728,6 +6728,8 @@ name|fetch_ssl
 argument_list|(
 name|conn
 argument_list|,
+name|URL
+argument_list|,
 name|verbose
 argument_list|)
 operator|==
