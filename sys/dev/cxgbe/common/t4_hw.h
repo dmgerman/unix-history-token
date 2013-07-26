@@ -84,6 +84,11 @@ init|=
 literal|64
 block|,
 comment|/* mailbox size in bytes */
+name|NTRACE
+init|=
+literal|4
+block|,
+comment|/* # of tracing filters */
 name|TRACE_LEN
 init|=
 literal|112

@@ -84,6 +84,12 @@ comment|/* set sched class */
 name|T4_SET_SCHED_QUEUE
 block|,
 comment|/* set queue class */
+name|T4_GET_TRACER
+block|,
+comment|/* get information about a tracer */
+name|T4_SET_TRACER
+block|,
+comment|/* program a tracer */
 block|}
 enum|;
 end_enum
@@ -764,6 +770,76 @@ end_struct
 begin_define
 define|#
 directive|define
+name|T4_TRACE_LEN
+value|112
+end_define
+
+begin_struct
+struct|struct
+name|t4_trace_params
+block|{
+name|uint32_t
+name|data
+index|[
+name|T4_TRACE_LEN
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|mask
+index|[
+name|T4_TRACE_LEN
+operator|/
+literal|4
+index|]
+decl_stmt|;
+name|uint16_t
+name|snap_len
+decl_stmt|;
+name|uint16_t
+name|min_len
+decl_stmt|;
+name|uint8_t
+name|skip_ofst
+decl_stmt|;
+name|uint8_t
+name|skip_len
+decl_stmt|;
+name|uint8_t
+name|invert
+decl_stmt|;
+name|uint8_t
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|t4_tracer
+block|{
+name|uint8_t
+name|idx
+decl_stmt|;
+name|uint8_t
+name|enabled
+decl_stmt|;
+name|uint8_t
+name|valid
+decl_stmt|;
+name|struct
+name|t4_trace_params
+name|tp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
 name|CHELSIO_T4_GETREG
 value|_IOWR('f', T4_GETREG, struct t4_reg)
 end_define
@@ -850,6 +926,20 @@ define|#
 directive|define
 name|CHELSIO_T4_CLEAR_STATS
 value|_IOW('f', T4_CLEAR_STATS, uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_TRACER
+value|_IOWR('f', T4_GET_TRACER, struct t4_tracer)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_SET_TRACER
+value|_IOW('f', T4_SET_TRACER, struct t4_tracer)
 end_define
 
 begin_endif
