@@ -2488,6 +2488,7 @@ operator|.
 name|String
 argument_list|)
 expr_stmt|;
+comment|/*          * Convert anything non-alphanumeric to an underscore. This          * allows us to use the TableID to generate unique C symbols.          */
 for|for
 control|(
 name|i
@@ -2504,12 +2505,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|isalnum
+argument_list|(
+operator|(
+name|int
+operator|)
 name|Gbl_TableId
 index|[
 name|i
 index|]
-operator|==
-literal|' '
+argument_list|)
 condition|)
 block|{
 name|Gbl_TableId
@@ -2517,9 +2523,8 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+literal|'_'
 expr_stmt|;
-break|break;
 block|}
 block|}
 block|}

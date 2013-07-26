@@ -306,9 +306,10 @@ argument_list|)
 block|,
 name|ACPI_PM_TIMER_WIDTH
 block|,
-name|ACPI_FADT_REQUIRED
+name|ACPI_FADT_SEPARATE_LENGTH
 block|}
 block|,
+comment|/* ACPI 5.0A: Timer is optional */
 block|{
 literal|"Gpe0Block"
 block|,
@@ -1332,7 +1333,7 @@ operator|&
 name|ACPI_FADT_REQUIRED
 condition|)
 block|{
-comment|/*              * Field is required (PM1aEvent, PM1aControl, PmTimer).              * Both the address and length must be non-zero.              */
+comment|/*              * Field is required (PM1aEvent, PM1aControl).              * Both the address and length must be non-zero.              */
 if|if
 condition|(
 operator|!

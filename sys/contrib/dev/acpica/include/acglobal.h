@@ -226,6 +226,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * We keep track of the latest version of Windows that has been requested by  * the BIOS.  */
+end_comment
+
+begin_decl_stmt
+name|UINT8
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|AcpiGbl_OsiData
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
@@ -747,13 +762,6 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_EventsInitialized
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|UINT8
-name|AcpiGbl_OsiData
 decl_stmt|;
 end_decl_stmt
 
