@@ -735,6 +735,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_INLINE_FLSLL
+end_ifndef
+
+begin_function_decl
+name|int
+name|flsll
+parameter_list|(
+name|long
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|fnmatch
