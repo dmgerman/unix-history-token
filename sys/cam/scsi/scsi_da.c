@@ -1510,16 +1510,24 @@ comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
-if|#
-directive|if
-literal|0
 block|{
 comment|/* 		 * PNY USB Flash keys 		 * PR: usb/75578, usb/72344, usb/65436  		 */
-block|{T_DIRECT, SIP_MEDIA_REMOVABLE, "*" , "USB DISK*", 		"*"},
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"*"
+block|,
+literal|"USB DISK*"
+block|,
+literal|"*"
+block|}
+block|,
 comment|/*quirks*/
-block|DA_Q_NO_SYNC_CACHE 	},
-endif|#
-directive|endif
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
 block|{
 comment|/* 		 * Genesys 6-in-1 Card Reader 		 * PR: usb/94647 		 */
 block|{
