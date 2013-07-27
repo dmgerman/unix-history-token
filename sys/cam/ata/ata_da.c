@@ -285,6 +285,10 @@ block|,
 name|ADA_FLAG_CAN_DMA48
 init|=
 literal|0x1000
+block|,
+name|ADA_FLAG_DIRTY
+init|=
+literal|0x2000
 block|}
 name|ada_flags
 typedef|;
@@ -2283,6 +2287,9 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|periph
 operator|=
 operator|(
@@ -2356,6 +2363,16 @@ expr_stmt|;
 comment|/* We only sync the cache if the drive is capable of it. */
 if|if
 condition|(
+operator|(
+name|softc
+operator|->
+name|flags
+operator|&
+name|ADA_FLAG_DIRTY
+operator|)
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|softc
 operator|->
@@ -2451,6 +2468,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|cam_periph_runccb
 argument_list|(
 name|ccb
@@ -2472,17 +2491,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|&
-name|CAM_STATUS_MASK
-operator|)
+name|error
 operator|!=
-name|CAM_REQ_CMP
+literal|0
 condition|)
 name|xpt_print
 argument_list|(
@@ -2492,6 +2503,14 @@ name|path
 argument_list|,
 literal|"Synchronize cache failed\n"
 argument_list|)
+expr_stmt|;
+else|else
+name|softc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ADA_FLAG_DIRTY
 expr_stmt|;
 name|xpt_release_ccb
 argument_list|(
@@ -7027,10 +7046,17 @@ name|bio_cmd
 condition|)
 block|{
 case|case
-name|BIO_READ
-case|:
-case|case
 name|BIO_WRITE
+case|:
+name|softc
+operator|->
+name|flags
+operator||=
+name|ADA_FLAG_DIRTY
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|BIO_READ
 case|:
 block|{
 name|uint64_t
