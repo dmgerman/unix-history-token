@@ -3027,6 +3027,13 @@ operator|&
 name|ng_deadnode
 condition|)
 return|return;
+name|CURVNET_SET
+argument_list|(
+name|node
+operator|->
+name|nd_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|refcount_release
@@ -3104,6 +3111,9 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
