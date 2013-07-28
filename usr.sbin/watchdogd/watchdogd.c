@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -1079,7 +1085,7 @@ name|printf
 argument_list|(
 literal|"Timeout for %s%s "
 literal|"is 2^%d nanoseconds "
-literal|"(in: %s sec -> out: %ld sec %ld ns -> %d ticks)\n"
+literal|"(in: %s sec -> out: %jd sec %ld ns -> %d ticks)\n"
 argument_list|,
 name|longopt
 condition|?
@@ -1097,6 +1103,9 @@ name|rv
 argument_list|,
 name|myoptarg
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ts
 operator|.
 name|tv_sec
