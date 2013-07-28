@@ -144,6 +144,16 @@ modifier|*
 name|stream
 parameter_list|)
 function_decl|;
+comment|/** Return the underlying file, if any, associated with the stream, or  * NULL if not available.  Accessing the file bypasses the stream.  */
+name|apr_file_t
+modifier|*
+name|svn_stream__aprfile
+parameter_list|(
+name|svn_stream_t
+modifier|*
+name|stream
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

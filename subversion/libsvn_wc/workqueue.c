@@ -547,6 +547,9 @@ argument_list|,
 name|TRUE
 comment|/* queue_deletes */
 argument_list|,
+name|FALSE
+comment|/* remove_locks */
+argument_list|,
 name|not_present_rev
 argument_list|,
 name|NULL

@@ -2313,8 +2313,6 @@ argument_list|(
 name|handler
 operator|->
 name|sline
-operator|.
-name|code
 argument_list|,
 name|req_url
 argument_list|,

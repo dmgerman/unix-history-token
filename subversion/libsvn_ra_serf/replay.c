@@ -3091,8 +3091,6 @@ argument_list|(
 name|handler
 operator|->
 name|sline
-operator|.
-name|code
 argument_list|,
 name|handler
 operator|->
@@ -3772,8 +3770,6 @@ argument_list|(
 name|done_handler
 operator|->
 name|sline
-operator|.
-name|code
 argument_list|,
 name|done_handler
 operator|->

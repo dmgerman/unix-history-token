@@ -6892,6 +6892,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Ignore LOG_MSG, per the protocol.  See ra_svn_commit(). */
 if|if
 condition|(
 name|revprop_list

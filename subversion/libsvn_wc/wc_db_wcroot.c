@@ -1610,6 +1610,14 @@ name|char
 modifier|*
 name|adm_relpath
 decl_stmt|;
+comment|/* Non-NULL if WCROOT is found through a symlink: */
+specifier|const
+name|char
+modifier|*
+name|symlink_wcroot_abspath
+init|=
+name|NULL
+decl_stmt|;
 comment|/* ### we need more logic for finding the database (if it is located      ### outside of the wcroot) and then managing all of that within DB.      ### for now: play quick& dirty. */
 name|probe_wcroot
 operator|=
@@ -2032,6 +2040,10 @@ condition|(
 name|found_wcroot
 condition|)
 break|break;
+name|symlink_wcroot_abspath
+operator|=
+name|local_abspath
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|read_link_target
@@ -2099,6 +2111,10 @@ expr_stmt|;
 name|moved_upwards
 operator|=
 name|TRUE
+expr_stmt|;
+name|symlink_wcroot_abspath
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Is the parent directory recorded in our hash?  */
 name|found_wcroot
@@ -2218,6 +2234,10 @@ name|db
 operator|->
 name|state_pool
 argument_list|,
+name|symlink_wcroot_abspath
+condition|?
+name|symlink_wcroot_abspath
+else|:
 name|local_abspath
 argument_list|)
 argument_list|,
@@ -2468,6 +2488,10 @@ name|db
 operator|->
 name|state_pool
 argument_list|,
+name|symlink_wcroot_abspath
+condition|?
+name|symlink_wcroot_abspath
+else|:
 name|local_abspath
 argument_list|)
 argument_list|,
@@ -2505,6 +2529,17 @@ name|char
 modifier|*
 name|dir_relpath
 decl_stmt|;
+if|if
+condition|(
+name|symlink_wcroot_abspath
+condition|)
+block|{
+comment|/* The WCROOT was found through a symlink pointing at the root of            * the WC. Cache the WCROOT under the symlink's path. */
+name|local_dir_abspath
+operator|=
+name|symlink_wcroot_abspath
+expr_stmt|;
+block|}
 comment|/* The subdirectory's relpath is easily computed relative to the          wcroot that we just found.  */
 name|dir_relpath
 operator|=
@@ -2723,6 +2758,10 @@ operator|==
 name|svn_node_dir
 condition|)
 block|{
+name|symlink_wcroot_abspath
+operator|=
+name|original_abspath
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|read_link_target

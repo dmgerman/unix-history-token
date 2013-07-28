@@ -17894,6 +17894,28 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+comment|/* Special-case the root node (for performance reasons) */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|path
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|revision
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
 comment|/* If we have support for the node-origins table, we'll try to use      it. */
 if|if
 condition|(

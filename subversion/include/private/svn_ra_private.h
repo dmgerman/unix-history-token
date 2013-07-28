@@ -64,7 +64,7 @@ block|{
 endif|#
 directive|endif
 comment|/* __cplusplus */
-comment|/* Return an error with code SVN_ERR_UNSUPPORTED_FEATURE, and an error    message referencing PATH_OR_URL, if the "server" pointed to by    RA_SESSION doesn't support Merge Tracking (e.g. is pre-1.5).    Perform temporary allocations in POOL. */
+comment|/* Equivalent to svn_ra__assert_capable_server()    for SVN_RA_CAPABILITY_MERGEINFO. */
 name|svn_error_t
 modifier|*
 name|svn_ra__assert_mergeinfo_capable_server
@@ -72,6 +72,30 @@ parameter_list|(
 name|svn_ra_session_t
 modifier|*
 name|ra_session
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path_or_url
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
+comment|/* Return an error with code SVN_ERR_UNSUPPORTED_FEATURE, and an error    message referencing PATH_OR_URL, if the "server" pointed to by    RA_SESSION doesn't support CAPABILITY (an SVN_RA_CAPABILITY_* constant).    Perform temporary allocations in POOL. */
+name|svn_error_t
+modifier|*
+name|svn_ra__assert_capable_server
+parameter_list|(
+name|svn_ra_session_t
+modifier|*
+name|ra_session
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|capability
 parameter_list|,
 specifier|const
 name|char
