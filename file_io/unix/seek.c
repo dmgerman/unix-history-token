@@ -490,6 +490,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|file_unlock
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rc
@@ -499,11 +504,6 @@ return|return
 name|rc
 return|;
 block|}
-name|file_unlock
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

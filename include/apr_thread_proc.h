@@ -580,7 +580,7 @@ operator|*
 name|thd
 argument_list|)
 expr_stmt|;
-comment|/**  * Return the pool associated with the current thread.  * @param data The user data associated with the thread.  * @param key The key to associate with the data  * @param thread The currently open thread.  */
+comment|/**  * Return user data associated with the current thread.  * @param data The user data associated with the thread.  * @param key The key to associate with the data  * @param thread The currently open thread.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -602,7 +602,7 @@ operator|*
 name|thread
 argument_list|)
 expr_stmt|;
-comment|/**  * Return the pool associated with the current thread.  * @param data The user data to associate with the thread.  * @param key The key to use for associating the data with the thread  * @param cleanup The cleanup routine to use when the thread is destroyed.  * @param thread The currently open thread.  */
+comment|/**  * Set user data associated with the current thread.  * @param data The user data to associate with the thread.  * @param key The key to use for associating the data with the thread  * @param cleanup The cleanup routine to use when the thread is destroyed.  * @param thread The currently open thread.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t

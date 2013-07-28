@@ -943,6 +943,22 @@ return|return
 name|errno
 return|;
 block|}
+comment|/*      * Check if we have a valid address. recvfrom() with MSG_PEEK may return      * success without filling in the address.      */
+if|if
+condition|(
+name|from
+operator|->
+name|salen
+operator|>
+name|APR_OFFSETOF
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|,
+name|sin_port
+argument_list|)
+condition|)
+block|{
 name|apr_sockaddr_vars_set
 argument_list|(
 name|from
@@ -967,6 +983,7 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 operator|*
 name|len
@@ -1308,10 +1325,17 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -1457,11 +1481,6 @@ operator|&
 name|no_hdtr
 expr_stmt|;
 block|}
-comment|/* Ignore flags for now. */
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|hdtr
