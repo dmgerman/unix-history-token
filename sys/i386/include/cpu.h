@@ -37,12 +37,6 @@ directive|include
 file|<machine/segments.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -119,6 +113,12 @@ name|framep
 parameter_list|)
 value|((framep)->tf_eip)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_decl_stmt
 specifier|extern

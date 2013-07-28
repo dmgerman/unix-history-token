@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_CPU_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_comment
 comment|/*  * Definitions unique to i386 cpu support.  */
 end_comment
@@ -119,6 +113,12 @@ name|framep
 parameter_list|)
 value|((framep)->tf_rip)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_decl_stmt
 specifier|extern

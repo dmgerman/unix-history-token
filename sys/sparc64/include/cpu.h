@@ -27,12 +27,6 @@ directive|include
 file|<machine/tstate.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -85,6 +79,12 @@ end_define
 begin_comment
 comment|/* nothing */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
