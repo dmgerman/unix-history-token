@@ -599,6 +599,8 @@ name|NULL
 expr_stmt|;
 name|apr_pool_cleanup_run
 argument_list|(
+name|res
+operator|->
 name|pool
 argument_list|,
 name|res
