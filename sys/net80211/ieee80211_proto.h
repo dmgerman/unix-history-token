@@ -509,6 +509,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ieee80211_vap_pkt_send_dest
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ieee80211_raw_output
 parameter_list|(
 name|struct
