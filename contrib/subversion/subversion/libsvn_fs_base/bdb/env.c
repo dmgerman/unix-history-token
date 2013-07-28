@@ -432,7 +432,7 @@ name|new_err
 operator|=
 name|svn_error_createf
 argument_list|(
-name|APR_SUCCESS
+name|SVN_ERR_FS_BERKELEY_DB
 argument_list|,
 name|NULL
 argument_list|,

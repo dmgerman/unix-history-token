@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|PPC405_ERR77_SYNC
-value|"	sync\n"
+value|"    sync\n"
 end_define
 
 begin_else
@@ -140,17 +140,17 @@ name|temp
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%3\n"
+asm|"    lwarx   %0,0,%3\n"
 comment|/* load and reserve     */
-asm|"	add     %1,%0,%4\n"
+asm|"    add     %1,%0,%4\n"
 comment|/* add val and prev     */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %1,0,%3\n"
+asm|"    stwcx.  %1,0,%3\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
 asm|: "=&r" (prev), "=&r" (temp), "=m" (*mem)                   : "b" (mem), "r" (val)                   : "cc", "memory");
 return|return
@@ -182,17 +182,17 @@ name|temp
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%2\n"
+asm|"    lwarx   %0,0,%2\n"
 comment|/* load and reserve     */
-asm|"	subf    %0,%3,%0\n"
+asm|"    subf    %0,%3,%0\n"
 comment|/* subtract val         */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %0,0,%2\n"
+asm|"    stwcx.  %0,0,%2\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
 asm|: "=&r" (temp), "=m" (*mem)                   : "b" (mem), "r" (val)                   : "cc", "memory");
 block|}
@@ -219,19 +219,19 @@ name|prev
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%2\n"
+asm|"    lwarx   %0,0,%2\n"
 comment|/* load and reserve     */
-asm|"	addi    %0,%0,1\n"
+asm|"    addi    %0,%0,1\n"
 comment|/* add immediate        */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %0,0,%2\n"
+asm|"    stwcx.  %0,0,%2\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
-asm|"	subi    %0,%0,1\n"
+asm|"    subi    %0,%0,1\n"
 comment|/* return old value     */
 asm|: "=&b" (prev), "=m" (*mem)                   : "b" (mem), "m" (*mem)                   : "cc", "memory");
 return|return
@@ -261,17 +261,17 @@ name|prev
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%2\n"
+asm|"    lwarx   %0,0,%2\n"
 comment|/* load and reserve     */
-asm|"	subi    %0,%0,1\n"
+asm|"    subi    %0,%0,1\n"
 comment|/* subtract immediate   */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %0,0,%2\n"
+asm|"    stwcx.  %0,0,%2\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
 asm|: "=&b" (prev), "=m" (*mem)                   : "b" (mem), "m" (*mem)                   : "cc", "memory");
 return|return
@@ -305,19 +305,19 @@ name|prev
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%1\n"
+asm|"    lwarx   %0,0,%1\n"
 comment|/* load and reserve     */
-asm|"	cmpw    %0,%3\n"
+asm|"    cmpw    %0,%3\n"
 comment|/* compare operands     */
-asm|"	bne-    exit_%=\n"
+asm|"    bne-    exit_%=\n"
 comment|/* skip if not equal    */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %2,0,%1\n"
+asm|"    stwcx.  %2,0,%1\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
 asm|"exit_%=:\n"
 comment|/* not equal            */
@@ -351,15 +351,15 @@ name|prev
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%1\n"
+asm|"    lwarx   %0,0,%1\n"
 comment|/* load and reserve     */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %2,0,%1\n"
+asm|"    stwcx.  %2,0,%1\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%="
+asm|"    bne-    1b"
 comment|/* loop if lost         */
 asm|: "=&r" (prev)                   : "b" (mem), "r" (val)                   : "cc", "memory");
 return|return
@@ -399,21 +399,21 @@ operator|==
 literal|4
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%1\n"
+asm|"    lwarx   %0,0,%1\n"
 comment|/* load and reserve     */
-asm|"	cmpw    %0,%3\n"
+asm|"    cmpw    %0,%3\n"
 comment|/* compare operands     */
-asm|"	bne-    exit_%=\n"
+asm|"    bne-    2f\n"
 comment|/* skip if not equal    */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %2,0,%1\n"
+asm|"    stwcx.  %2,0,%1\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
-asm|"exit_%=:\n"
+asm|"2:\n"
 comment|/* not equal            */
 asm|: "=&r" (prev)                   : "b" (mem), "r" (with), "r" (cmp)                   : "cc", "memory");
 elif|#
@@ -423,21 +423,21 @@ operator|==
 literal|8
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	ldarx   %0,0,%1\n"
+asm|"    ldarx   %0,0,%1\n"
 comment|/* load and reserve     */
-asm|"	cmpd    %0,%3\n"
+asm|"    cmpd    %0,%3\n"
 comment|/* compare operands     */
-asm|"	bne-    exit_%=\n"
+asm|"    bne-    2f\n"
 comment|/* skip if not equal    */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stdcx.  %2,0,%1\n"
+asm|"    stdcx.  %2,0,%1\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
-asm|"exit_%=:\n"
+asm|"2:\n"
 comment|/* not equal            */
 asm|: "=&r" (prev)                   : "b" (mem), "r" (with), "r" (cmp)                   : "cc", "memory");
 else|#
@@ -482,17 +482,17 @@ operator|==
 literal|4
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	lwarx   %0,0,%1\n"
+asm|"    lwarx   %0,0,%1\n"
 comment|/* load and reserve     */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stwcx.  %2,0,%1\n"
+asm|"    stwcx.  %2,0,%1\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
-asm|"	isync\n"
+asm|"    isync\n"
 comment|/* memory barrier       */
 asm|: "=&r" (prev)                   : "b" (mem), "r" (with)                   : "cc", "memory");
 elif|#
@@ -502,17 +502,17 @@ operator|==
 literal|8
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"
+asm|("1:\n"
 comment|/* lost reservation     */
-asm|"	ldarx   %0,0,%1\n"
+asm|"    ldarx   %0,0,%1\n"
 comment|/* load and reserve     */
 asm|PPC405_ERR77_SYNC
 comment|/* ppc405 Erratum 77    */
-asm|"	stdcx.  %2,0,%1\n"
+asm|"    stdcx.  %2,0,%1\n"
 comment|/* store new value      */
-asm|"	bne-    loop_%=\n"
+asm|"    bne-    1b\n"
 comment|/* loop if lost         */
-asm|"	isync\n"
+asm|"    isync\n"
 comment|/* memory barrier       */
 asm|: "=&r" (prev)                   : "b" (mem), "r" (with)                   : "cc", "memory");
 else|#

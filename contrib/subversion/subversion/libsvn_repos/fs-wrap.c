@@ -692,6 +692,16 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
+comment|/* Allow deleting any property, even a property we don't allow to set. */
+if|if
+condition|(
+name|value
+operator|==
+name|NULL
+condition|)
+return|return
+name|SVN_NO_ERROR
+return|;
 comment|/* Disallow setting non-regular properties. */
 if|if
 condition|(

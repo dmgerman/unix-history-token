@@ -3,9 +3,6 @@ begin_comment
 comment|/*  * client.h :  shared stuff internal to the client library.  *  * ====================================================================  *    Licensed to the Apache Software Foundation (ASF) under one  *    or more contributor license agreements.  See the NOTICE file  *    distributed with this work for additional information  *    regarding copyright ownership.  The ASF licenses this file  *    to you under the Apache License, Version 2.0 (the  *    "License"); you may not use this file except in compliance  *    with the License.  You may obtain a copy of the License at  *  *      http://www.apache.org/licenses/LICENSE-2.0  *  *    Unless required by applicable law or agreed to in writing,  *    software distributed under the License is distributed on an  *    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY  *    KIND, either express or implied.  See the License for the  *    specific language governing permissions and limitations  *    under the License.  * ====================================================================  */
 end_comment
 
-begin_escape
-end_escape
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -301,7 +298,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Find the common ancestor of two locations in a repository.    Ancestry is determined by the 'copy-from' relationship and the normal    successor relationship.     Set *ANCESTOR_P to the location of the youngest common ancestor of    LOC1 and LOC2.  If the locations have no common ancestor (including if    they don't have the same repository root URL), set *ANCESTOR_P to NULL.     If SESSION is not NULL, use it for retrieving the common ancestor instead    of creating a new session.     Use the authentication baton cached in CTX to authenticate against    the repository.  Use POOL for all allocations.     See also svn_client__youngest_common_ancestor(). */
+comment|/* Find the common ancestor of two locations in a repository.    Ancestry is determined by the 'copy-from' relationship and the normal    successor relationship.     Set *ANCESTOR_P to the location of the youngest common ancestor of    LOC1 and LOC2.  If the locations have no common ancestor (including if    they don't have the same repository root URL), set *ANCESTOR_P to NULL.     If SESSION is not NULL, use it for retrieving the common ancestor instead    of creating a new session.     Use the authentication baton cached in CTX to authenticate against    the repository.  Use POOL for all allocations.     See also svn_client__calc_youngest_common_ancestor() to find youngest    common ancestor for already fetched history-as-mergeinfo information.     See also svn_client__youngest_common_ancestor(). */
 name|svn_error_t
 modifier|*
 name|svn_client__get_youngest_common_ancestor
@@ -328,6 +325,49 @@ parameter_list|,
 name|svn_client_ctx_t
 modifier|*
 name|ctx
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
+comment|/* Find the common ancestor of two locations in a repository using already    fetched history-as-mergeinfo information.     Ancestry is determined by the 'copy-from' relationship and the normal    successor relationship.     Set *ANCESTOR_P to the location of the youngest common ancestor of    LOC1 and LOC2.  If the locations have no common ancestor (including if    they don't have the same repository root URL), set *ANCESTOR_P to NULL.     HISTORY1, HAS_REV_ZERO_HISTORY1, HISTORY2, HAS_REV_ZERO_HISTORY2 are    history-as-mergeinfo information as returned by    svn_client__get_history_as_mergeinfo() for LOC1 and LOC2 respectively.     See also svn_client__get_youngest_common_ancestor().  */
+name|svn_error_t
+modifier|*
+name|svn_client__calc_youngest_common_ancestor
+parameter_list|(
+name|svn_client__pathrev_t
+modifier|*
+modifier|*
+name|ancestor_p
+parameter_list|,
+specifier|const
+name|svn_client__pathrev_t
+modifier|*
+name|loc1
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|history1
+parameter_list|,
+name|svn_boolean_t
+name|has_rev_zero_history1
+parameter_list|,
+specifier|const
+name|svn_client__pathrev_t
+modifier|*
+name|loc2
+parameter_list|,
+name|apr_hash_t
+modifier|*
+name|history2
+parameter_list|,
+name|svn_boolean_t
+name|has_rev_zero_history2
 parameter_list|,
 name|apr_pool_t
 modifier|*

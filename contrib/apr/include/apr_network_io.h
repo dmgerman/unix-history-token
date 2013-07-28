@@ -1077,7 +1077,7 @@ name|defined
 argument_list|(
 name|DOXYGEN
 argument_list|)
-comment|/**  * Set an OS level accept filter.  * @param sock The socket to put the accept filter on.  * @param name The accept filter  * @param args Any extra args to the accept filter.  Passing NULL here removes  *             the accept filter.   */
+comment|/**  * Set an OS level accept filter.  * @param sock The socket to put the accept filter on.  * @param name The accept filter  * @param args Any extra args to the accept filter.  Passing NULL here removes  *             the accept filter.   * @bug name and args should have been declared as const char *, as they are in  * APR 2.0  */
 name|apr_status_t
 name|apr_socket_accept_filter
 parameter_list|(

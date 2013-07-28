@@ -155,6 +155,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_io_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"svn_private_config.h"
 end_include
 
@@ -2880,7 +2886,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* ### Do we want to add git diff headers here too? I'd say no. The        * ### 'Index' and '===' line is something subversion has added. The rest        * ### is up to the external diff application. We may be dealing with        * ### a non-git compatible diff application.*/
-comment|/* We deal in streams, but svn_io_run_diff2() deals in file handles,          unfortunately, so we need to make these temporary files, and then          copy the contents to our stream. */
+comment|/* We deal in streams, but svn_io_run_diff2() deals in file handles,          so we may need to make temporary files and then copy the contents          to our stream. */
+name|outfile
+operator|=
+name|svn_stream__aprfile
+argument_list|(
+name|outstream
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|outfile
+condition|)
+name|outfilename
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 name|SVN_ERR
 argument_list|(
 name|svn_io_open_unique_file3
@@ -2901,6 +2923,22 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|errfile
+operator|=
+name|svn_stream__aprfile
+argument_list|(
+name|errstream
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errfile
+condition|)
+name|errfilename
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 name|SVN_ERR
 argument_list|(
 name|svn_io_open_unique_file3
@@ -2966,6 +3004,12 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Now, open and copy our files to our output streams. */
+if|if
+condition|(
+name|outfilename
+condition|)
+block|{
 name|SVN_ERR
 argument_list|(
 name|svn_io_file_close
@@ -2976,17 +3020,6 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SVN_ERR
-argument_list|(
-name|svn_io_file_close
-argument_list|(
-name|errfile
-argument_list|,
-name|scratch_pool
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Now, open and copy our files to our output streams. */
 name|SVN_ERR
 argument_list|(
 name|svn_stream_open_readonly
@@ -3018,6 +3051,22 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|scratch_pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|errfilename
+condition|)
+block|{
+name|SVN_ERR
+argument_list|(
+name|svn_io_file_close
+argument_list|(
+name|errfile
 argument_list|,
 name|scratch_pool
 argument_list|)
@@ -3059,6 +3108,7 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* We have a printed a diff for this path, mark it as visited. */
 operator|*
 name|wrote_header

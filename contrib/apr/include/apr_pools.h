@@ -188,7 +188,16 @@ argument|apr_abortfunc_t abort_fn
 argument_list|,
 argument|apr_allocator_t *allocator
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/**  * Create a new pool.  * @deprecated @see apr_pool_create_unmanaged_ex.  */
 name|APR_DECLARE
 argument_list|(
@@ -216,7 +225,16 @@ argument|apr_abortfunc_t abort_fn
 argument_list|,
 argument|apr_allocator_t *allocator
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/**  * Debug version of apr_pool_create_ex.  * @param newpool @see apr_pool_create.  * @param parent @see apr_pool_create.  * @param abort_fn @see apr_pool_create.  * @param allocator @see apr_pool_create.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_create_ex  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_create_ex in a wrapper, trust the macro  *         and don't call apr_pool_create_ex_debug directly.  */
 name|APR_DECLARE
 argument_list|(
@@ -234,7 +252,16 @@ argument|apr_allocator_t *allocator
 argument_list|,
 argument|const char *file_line
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|APR_POOL_DEBUG
@@ -285,7 +312,16 @@ argument|apr_allocator_t *allocator
 argument_list|,
 argument|const char *file_line
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|APR_POOL_DEBUG
@@ -450,9 +486,16 @@ argument|apr_allocator_t *
 argument_list|)
 name|apr_pool_allocator_get
 argument_list|(
-name|apr_pool_t
-operator|*
-name|pool
+argument|apr_pool_t *pool
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Clear all memory in the pool and run all the cleanups. This also destroys all  * subpools.  * @param p The pool to clear  * @remark This does not actually free the memory, it just allows the pool  *         to re-use this memory for the next allocation.  * @see apr_pool_destroy()  */
@@ -462,9 +505,16 @@ argument|void
 argument_list|)
 name|apr_pool_clear
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Debug version of apr_pool_clear.  * @param p See: apr_pool_clear.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_clear  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_clear in a wrapper, trust the macro  *         and don't call apr_pool_destroy_clear directly.  */
@@ -474,14 +524,18 @@ argument|void
 argument_list|)
 name|apr_pool_clear_debug
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|file_line
+argument|const char *file_line
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -504,9 +558,16 @@ argument|void
 argument_list|)
 name|apr_pool_destroy
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Debug version of apr_pool_destroy.  * @param p See: apr_pool_destroy.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_destroy  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_destroy in a wrapper, trust the macro  *         and don't call apr_pool_destroy_debug directly.  */
@@ -516,14 +577,18 @@ argument|void
 argument_list|)
 name|apr_pool_destroy_debug
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|file_line
+argument|const char *file_line
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -551,7 +616,46 @@ argument|apr_pool_t *p
 argument_list|,
 argument|apr_size_t size
 argument_list|)
-empty_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|(
+name|__GNUC__
+operator|>
+literal|4
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|4
+operator|)
+operator|)
+name|__attribute__
+argument_list|(
+argument|(alloc_size(
+literal|2
+argument|))
+argument_list|)
+endif|#
+directive|endif
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/**  * Debug version of apr_palloc  * @param p See: apr_palloc  * @param size See: apr_palloc  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @return See: apr_palloc  */
 name|APR_DECLARE
 argument_list|(
@@ -565,7 +669,46 @@ argument|apr_size_t size
 argument_list|,
 argument|const char *file_line
 argument_list|)
-empty_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|(
+name|__GNUC__
+operator|>
+literal|4
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|4
+operator|&&
+name|__GNUC_MINOR__
+operator|>=
+literal|4
+operator|)
+operator|)
+name|__attribute__
+argument_list|(
+argument|(alloc_size(
+literal|2
+argument|))
+argument_list|)
+endif|#
+directive|endif
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|APR_POOL_DEBUG
@@ -627,7 +770,16 @@ argument|apr_size_t size
 argument_list|,
 argument|const char *file_line
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|APR_POOL_DEBUG
@@ -655,7 +807,16 @@ argument|apr_abortfunc_t abortfunc
 argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|2
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/**  * Get the abort function associated with the specified pool.  * @param pool The pool for retrieving the abort function.  * @return The abort function for the given pool.  */
 name|APR_DECLARE
 argument_list|(
@@ -663,9 +824,16 @@ argument|apr_abortfunc_t
 argument_list|)
 name|apr_pool_abort_get
 argument_list|(
-name|apr_pool_t
-operator|*
-name|pool
+argument|apr_pool_t *pool
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Get the parent pool of the specified pool.  * @param pool The pool for retrieving the parent pool.  * @return The parent of the given pool.  */
@@ -675,9 +843,16 @@ argument|apr_pool_t *
 argument_list|)
 name|apr_pool_parent_get
 argument_list|(
-name|apr_pool_t
-operator|*
-name|pool
+argument|apr_pool_t *pool
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Determine if pool a is an ancestor of pool b.  * @param a The pool to search  * @param b The pool to search for  * @return True if a is an ancestor of b, NULL is considered an ancestor  *         of all pools.  * @remark if compiled with APR_POOL_DEBUG, this function will also  * return true if A is a pool which has been guaranteed by the caller  * (using apr_pool_join) to have a lifetime at least as long as some  * ancestor of pool B.  */
@@ -703,14 +878,18 @@ argument|void
 argument_list|)
 name|apr_pool_tag
 argument_list|(
-name|apr_pool_t
-operator|*
-name|pool
+argument|apr_pool_t *pool
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|tag
+argument|const char *tag
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*  * User data management  */
@@ -721,29 +900,24 @@ argument|apr_status_t
 argument_list|)
 name|apr_pool_userdata_set
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|data
+argument|const void *data
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|key
+argument|const char *key
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|cleanup
+argument|apr_status_t (*cleanup)(void *)
+argument_list|,
+argument|apr_pool_t *pool
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
-argument_list|)
+operator|(
+name|nonnull
+argument_list|(
+literal|2
 argument_list|,
-name|apr_pool_t
-operator|*
-name|pool
+literal|4
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Set the data associated with the current pool  * @param data The user data associated with the pool.  * @param key The key to use for association  * @param cleanup The cleanup program to use to cleanup the data (NULL if none)  * @param pool The current pool  * @note same as apr_pool_userdata_set(), except that this version doesn't  *       make a copy of the key (this function is useful, for example, when  *       the key is a string literal)  * @warning This should NOT be used if the key could change addresses by  *       any means between the apr_pool_userdata_setn() call and a  *       subsequent apr_pool_userdata_get() on that key, such as if a  *       static string is used as a userdata key in a DSO and the DSO could  *       be unloaded and reloaded between the _setn() and the _get().  You  *       MUST use apr_pool_userdata_set() in such cases.  * @warning More generally, the key and the data to be attached to the  *       pool should have a life span at least as long as the pool itself.  *  */
@@ -753,29 +927,24 @@ argument|apr_status_t
 argument_list|)
 name|apr_pool_userdata_setn
 argument_list|(
-specifier|const
-name|void
-operator|*
-name|data
+argument|const void *data
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|key
+argument|const char *key
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|cleanup
+argument|apr_status_t (*cleanup)(void *)
+argument_list|,
+argument|apr_pool_t *pool
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
-argument_list|)
+operator|(
+name|nonnull
+argument_list|(
+literal|2
 argument_list|,
-name|apr_pool_t
-operator|*
-name|pool
+literal|4
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Return the data associated with the current pool.  * @param data The user data associated with the pool.  * @param key The key for the data to retrieve  * @param pool The current pool.  */
@@ -785,19 +954,24 @@ argument|apr_status_t
 argument_list|)
 name|apr_pool_userdata_get
 argument_list|(
-name|void
-operator|*
-operator|*
-name|data
+argument|void **data
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|key
+argument|const char *key
 argument_list|,
-name|apr_pool_t
-operator|*
-name|pool
+argument|apr_pool_t *pool
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * @defgroup PoolCleanup  Pool Cleanup Functions  *  * Cleanups are performed in the reverse order they were registered.  That is:  * Last In, First Out.  A cleanup function can safely allocate memory from  * the pool that is being cleaned up. It can also safely register additional  * cleanups which will be run LIFO, directly after the current cleanup  * terminates.  Cleanups have to take caution in calling functions that  * create subpools. Subpools, created during cleanup will NOT automatically  * be cleaned up.  In other words, cleanups are to clean up after themselves.  *  * @{  */
@@ -808,34 +982,24 @@ argument|void
 argument_list|)
 name|apr_pool_cleanup_register
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-specifier|const
-name|void
-operator|*
-name|data
+argument|const void *data
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|plain_cleanup
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
+argument|apr_status_t (*plain_cleanup)(void *)
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|child_cleanup
+argument|apr_status_t (*child_cleanup)(void *)
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
+operator|(
+name|nonnull
+argument_list|(
+literal|3
+argument_list|,
+literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Register a function to be called when a pool is cleared or destroyed.  *  * Unlike apr_pool_cleanup_register which register a cleanup  * that is called AFTER all subpools are destroyed this function register  * a function that will be called before any of the subpool is destoryed.  *  * @param p The pool register the cleanup with  * @param data The data to pass to the cleanup function.  * @param plain_cleanup The function to call when the pool is cleared  *                      or destroyed  */
@@ -845,24 +1009,20 @@ argument|void
 argument_list|)
 name|apr_pool_pre_cleanup_register
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-specifier|const
-name|void
-operator|*
-name|data
+argument|const void *data
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|plain_cleanup
+argument|apr_status_t (*plain_cleanup)(void *)
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
+operator|(
+name|nonnull
+argument_list|(
+literal|3
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Remove a previously registered cleanup function.  *   * The cleanup most recently registered with @a p having the same values of  * @a data and @a cleanup will be removed.  *  * @param p The pool to remove the cleanup from  * @param data The data of the registered cleanup  * @param cleanup The function to remove from cleanup  * @remarks For some strange reason only the plain_cleanup is handled by this  *          function  */
@@ -872,24 +1032,20 @@ argument|void
 argument_list|)
 name|apr_pool_cleanup_kill
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-specifier|const
-name|void
-operator|*
-name|data
+argument|const void *data
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|cleanup
+argument|apr_status_t (*cleanup)(void *)
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
+operator|(
+name|nonnull
+argument_list|(
+literal|3
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Replace the child cleanup function of a previously registered cleanup.  *   * The cleanup most recently registered with @a p having the same values of  * @a data and @a plain_cleanup will have the registered child cleanup  * function replaced with @a child_cleanup.  *  * @param p The pool of the registered cleanup  * @param data The data of the registered cleanup  * @param plain_cleanup The plain cleanup function of the registered cleanup  * @param child_cleanup The function to register as the child cleanup  */
@@ -899,34 +1055,24 @@ argument|void
 argument_list|)
 name|apr_pool_child_cleanup_set
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-specifier|const
-name|void
-operator|*
-name|data
+argument|const void *data
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|plain_cleanup
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
+argument|apr_status_t (*plain_cleanup)(void *)
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|child_cleanup
+argument|apr_status_t (*child_cleanup)(void *)
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
+operator|(
+name|nonnull
+argument_list|(
+literal|3
+argument_list|,
+literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Run the specified cleanup function immediately and unregister it.  *  * The cleanup most recently registered with @a p having the same values of  * @a data and @a cleanup will be removed and @a cleanup will be called  * with @a data as the argument.  *  * @param p The pool to remove the cleanup from  * @param data The data to remove from cleanup  * @param cleanup The function to remove from cleanup  */
@@ -936,23 +1082,20 @@ argument|apr_status_t
 argument_list|)
 name|apr_pool_cleanup_run
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-name|void
-operator|*
-name|data
+argument|void *data
 argument_list|,
-name|apr_status_t
-argument_list|(
-operator|*
-name|cleanup
+argument|apr_status_t (*cleanup)(void *)
 argument_list|)
+name|__attribute__
 argument_list|(
-name|void
-operator|*
+operator|(
+name|nonnull
+argument_list|(
+literal|3
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * An empty cleanup function.  *   * Passed to apr_pool_cleanup_register() when no cleanup is required.  *  * @param data The data to cleanup, will not be used by this function.  */
@@ -994,13 +1137,18 @@ argument|void
 argument_list|)
 name|apr_pool_join
 argument_list|(
-name|apr_pool_t
-operator|*
-name|p
+argument|apr_pool_t *p
 argument_list|,
-name|apr_pool_t
-operator|*
-name|sub
+argument|apr_pool_t *sub
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|2
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Find a pool from something allocated in it.  * @param mem The thing allocated in the pool  * @return The pool it is allocated in  */
@@ -1027,7 +1175,16 @@ argument|apr_pool_t *p
 argument_list|,
 argument|int recurse
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/**  * Lock a pool  * @param pool The pool to lock  * @param flag  The flag  */
 name|APR_DECLARE
 argument_list|(

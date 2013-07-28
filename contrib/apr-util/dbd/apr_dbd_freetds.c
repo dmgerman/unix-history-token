@@ -1513,6 +1513,8 @@ name|NO_MORE_ROWS
 case|:
 name|apr_pool_cleanup_run
 argument_list|(
+name|res
+operator|->
 name|pool
 argument_list|,
 name|res
@@ -3098,7 +3100,7 @@ return|;
 block|}
 name|sql
 operator|=
-name|apr_palloc
+name|apr_pcalloc
 argument_list|(
 name|pool
 argument_list|,

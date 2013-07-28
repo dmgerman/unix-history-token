@@ -380,6 +380,9 @@ argument_list|,
 name|FALSE
 comment|/* queue_deletes */
 argument_list|,
+name|TRUE
+comment|/* remove_locks */
+argument_list|,
 operator|(
 operator|!
 name|via_recurse

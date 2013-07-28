@@ -1869,7 +1869,7 @@ literal|"r"
 block|,
 name|N_
 argument_list|(
-literal|"resolved"
+literal|"mark resolved"
 argument_list|)
 block|,
 name|N_
@@ -1998,23 +1998,6 @@ name|svn_wc_conflict_choose_unspecified
 block|}
 block|,
 block|{
-literal|"p"
-block|,
-name|N_
-argument_list|(
-literal|"postpone"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"mark the conflict to be resolved later"
-literal|"  [postpone]"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_postpone
-block|}
-block|,
-block|{
 literal|"m"
 block|,
 name|N_
@@ -2048,6 +2031,23 @@ argument_list|)
 block|,
 operator|-
 literal|1
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+name|N_
+argument_list|(
+literal|"postpone"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"mark the conflict to be resolved later"
+literal|"  [postpone]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
 block|}
 block|,
 block|{
@@ -2102,23 +2102,6 @@ name|prop_conflict_options
 index|[]
 init|=
 block|{
-block|{
-literal|"p"
-block|,
-name|N_
-argument_list|(
-literal|"postpone"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"mark the conflict to be resolved later"
-literal|"  [postpone]"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_postpone
-block|}
-block|,
 block|{
 literal|"mf"
 block|,
@@ -2193,7 +2176,7 @@ literal|"r"
 block|,
 name|N_
 argument_list|(
-literal|"resolved"
+literal|"mark resolved"
 argument_list|)
 block|,
 name|N_
@@ -2202,6 +2185,23 @@ literal|"accept edited version of property"
 argument_list|)
 block|,
 name|svn_wc_conflict_choose_merged
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+name|N_
+argument_list|(
+literal|"postpone"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"mark the conflict to be resolved later"
+literal|"  [postpone]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
 block|}
 block|,
 block|{
@@ -2257,23 +2257,6 @@ index|[]
 init|=
 block|{
 block|{
-literal|"p"
-block|,
-name|N_
-argument_list|(
-literal|"postpone"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"mark the conflict to be resolved later"
-literal|"  [postpone]"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_postpone
-block|}
-block|,
-block|{
 literal|"mf"
 block|,
 name|N_
@@ -2305,6 +2288,23 @@ literal|"pre-existing item)  [theirs-full]"
 argument_list|)
 block|,
 name|svn_wc_conflict_choose_theirs_full
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+name|N_
+argument_list|(
+literal|"postpone"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"mark the conflict to be resolved later"
+literal|"  [postpone]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
 block|}
 block|,
 block|{
@@ -2360,6 +2360,22 @@ index|[]
 init|=
 block|{
 block|{
+literal|"r"
+block|,
+name|N_
+argument_list|(
+literal|"mark resolved"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"accept current working copy state"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_merged
+block|}
+block|,
+block|{
 literal|"p"
 block|,
 name|N_
@@ -2373,22 +2389,6 @@ literal|"resolve the conflict later  [postpone]"
 argument_list|)
 block|,
 name|svn_wc_conflict_choose_postpone
-block|}
-block|,
-block|{
-literal|"r"
-block|,
-name|N_
-argument_list|(
-literal|"resolved"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"accept current working copy state"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_merged
 block|}
 block|,
 block|{
@@ -2440,27 +2440,11 @@ index|[]
 init|=
 block|{
 block|{
-literal|"p"
-block|,
-name|N_
-argument_list|(
-literal|"postpone"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"resolve the conflict later  [postpone]"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_postpone
-block|}
-block|,
-block|{
 literal|"mc"
 block|,
 name|N_
 argument_list|(
-literal|"my side of conflict"
+literal|"apply update (recommended)"
 argument_list|)
 block|,
 name|N_
@@ -2477,16 +2461,114 @@ literal|"r"
 block|,
 name|N_
 argument_list|(
-literal|"resolved"
+literal|"discard update (breaks move)"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"mark resolved "
-literal|"(the move will become a copy)"
+literal|"discard update, mark "
+literal|"resolved, the move will "
+literal|"will become a copy"
 argument_list|)
 block|,
 name|svn_wc_conflict_choose_merged
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+name|N_
+argument_list|(
+literal|"postpone"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"resolve the conflict later  [postpone]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
+block|}
+block|,
+block|{
+literal|"q"
+block|,
+name|N_
+argument_list|(
+literal|"quit resolution"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"postpone all remaining conflicts"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
+block|}
+block|,
+block|{
+literal|"h"
+block|,
+name|N_
+argument_list|(
+literal|"help"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"show this help (also '?')"
+argument_list|)
+block|,
+operator|-
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|resolver_option_t
+name|tree_conflict_options_update_edit_moved_away
+index|[]
+init|=
+block|{
+block|{
+literal|"mc"
+block|,
+name|N_
+argument_list|(
+literal|"apply update to move destination"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"apply incoming update to move destination"
+literal|"  [mine-conflict]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_mine_conflict
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+name|N_
+argument_list|(
+literal|"postpone"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"resolve the conflict later  [postpone]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
 block|}
 block|,
 block|{
@@ -2538,6 +2620,40 @@ index|[]
 init|=
 block|{
 block|{
+literal|"mc"
+block|,
+name|N_
+argument_list|(
+literal|"keep affected local moves"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"keep any local moves affected "
+literal|"by this deletion  [mine-conflict]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_mine_conflict
+block|}
+block|,
+block|{
+literal|"r"
+block|,
+name|N_
+argument_list|(
+literal|"mark resolved (breaks moves)"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"mark resolved, any affected "
+literal|"moves will become copies"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_merged
+block|}
+block|,
+block|{
 literal|"p"
 block|,
 name|N_
@@ -2551,40 +2667,6 @@ literal|"resolve the conflict later  [postpone]"
 argument_list|)
 block|,
 name|svn_wc_conflict_choose_postpone
-block|}
-block|,
-block|{
-literal|"mc"
-block|,
-name|N_
-argument_list|(
-literal|"my side of conflict"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"keep any moves affected "
-literal|"by this deletion  [mine-conflict]"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_mine_conflict
-block|}
-block|,
-block|{
-literal|"r"
-block|,
-name|N_
-argument_list|(
-literal|"resolved"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"mark resolved (any affected moves will "
-literal|"become copies)"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_merged
 block|}
 block|,
 block|{
@@ -2636,27 +2718,11 @@ index|[]
 init|=
 block|{
 block|{
-literal|"p"
-block|,
-name|N_
-argument_list|(
-literal|"postpone"
-argument_list|)
-block|,
-name|N_
-argument_list|(
-literal|"resolve the conflict later  [postpone]"
-argument_list|)
-block|,
-name|svn_wc_conflict_choose_postpone
-block|}
-block|,
-block|{
 literal|"mc"
 block|,
 name|N_
 argument_list|(
-literal|"my side of conflict"
+literal|"keep affected local moves"
 argument_list|)
 block|,
 name|N_
@@ -2673,16 +2739,32 @@ literal|"r"
 block|,
 name|N_
 argument_list|(
-literal|"resolved"
+literal|"mark resolved (breaks moves)"
 argument_list|)
 block|,
 name|N_
 argument_list|(
-literal|"mark resolved (any affected moves will "
-literal|"become copies)"
+literal|"mark resolved (any affected "
+literal|"moves will become copies)"
 argument_list|)
 block|,
 name|svn_wc_conflict_choose_merged
+block|}
+block|,
+block|{
+literal|"p"
+block|,
+name|N_
+argument_list|(
+literal|"postpone"
+argument_list|)
+block|,
+name|N_
+argument_list|(
+literal|"resolve the conflict later  [postpone]"
+argument_list|)
+block|,
+name|svn_wc_conflict_choose_postpone
 block|}
 block|,
 block|{
@@ -4240,7 +4322,7 @@ argument_list|,
 name|_
 argument_list|(
 literal|"Invalid option; use diff/edit/merge/launch "
-literal|"before choosing 'resolved'.\n\n"
+literal|"before choosing 'mark resolved'.\n\n"
 argument_list|)
 argument_list|)
 argument_list|)
@@ -4873,10 +4955,25 @@ name|reason
 operator|==
 name|svn_wc_conflict_reason_moved_away
 condition|)
+block|{
+if|if
+condition|(
+name|desc
+operator|->
+name|action
+operator|==
+name|svn_wc_conflict_action_edit
+condition|)
+name|tc_opts
+operator|=
+name|tree_conflict_options_update_edit_moved_away
+expr_stmt|;
+else|else
 name|tc_opts
 operator|=
 name|tree_conflict_options_update_moved_away
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

@@ -1228,6 +1228,12 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+comment|/* destroy the pool - the sorted hooks were already copied */
+name|apr_pool_destroy
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 name|pNew
 return|;
@@ -2096,7 +2102,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void main() {     const char *aszAPre[]={"b","c",NULL};     const char *aszBPost[]={"a",NULL};     const char *aszCPost[]={"b",NULL};     TSortData t1[]=     { 	{ "a",aszAPre,NULL }, 	{ "b",NULL,aszBPost }, 	{ "c",NULL,aszCPost }     };     TSort *pResult;      pResult=prepare(t1,3);     pResult=tsort(pResult,3);      for( ; pResult ; pResult=pResult->pNext) 	printf("%s\n",pResult->pData->szName); }
+unit|void main() {     const char *aszAPre[]={"b","c",NULL};     const char *aszBPost[]={"a",NULL};     const char *aszCPost[]={"b",NULL};     TSortData t1[]=     {         { "a",aszAPre,NULL },         { "b",NULL,aszBPost },         { "c",NULL,aszCPost }     };     TSort *pResult;      pResult=prepare(t1,3);     pResult=tsort(pResult,3);      for( ; pResult ; pResult=pResult->pNext)         printf("%s\n",pResult->pData->szName); }
 endif|#
 directive|endif
 end_endif
