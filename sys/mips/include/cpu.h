@@ -25,6 +25,15 @@ directive|include
 file|<machine/endian.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
 begin_comment
 comment|/* BEGIN: these are going away */
 end_comment
@@ -140,30 +149,6 @@ parameter_list|()
 value|mips_rd_count()
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_LOCORE */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_LOCORE
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -207,6 +192,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_LOCORE */
+end_comment
 
 begin_endif
 endif|#

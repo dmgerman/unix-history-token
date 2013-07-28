@@ -33,6 +33,12 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * CPU Feature Attributes  *  * These are defined in the PowerPC ELF ABI for the AT_HWCAP vector,  * and are exported to userland via the machdep.cpu_features  * sysctl.  */
 end_comment
@@ -289,6 +295,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

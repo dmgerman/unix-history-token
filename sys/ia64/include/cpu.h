@@ -29,6 +29,12 @@ directive|include
 file|<machine/frame.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -58,12 +64,6 @@ name|tf
 parameter_list|)
 value|(TRAPF_CPL(tf) != IA64_PSR_CPL_KERN)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_ifdef
 ifdef|#
