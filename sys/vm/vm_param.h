@@ -142,8 +142,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_SWAPPING_ENABLED
+name|VM_OBSOLETE_10
 value|10
+end_define
+
+begin_comment
+comment|/* pageout algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_SWAPPING_ENABLED
+value|11
 end_define
 
 begin_comment
@@ -154,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXID
-value|11
+value|12
 end_define
 
 begin_comment
@@ -165,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|CTL_VM_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "vmtotal", CTLTYPE_STRUCT }, \ 	{ "loadavg", CTLTYPE_STRUCT }, \ 	{ "v_free_min", CTLTYPE_UINT }, \ 	{ "v_free_target", CTLTYPE_UINT }, \ 	{ "v_free_reserved", CTLTYPE_UINT }, \ 	{ "v_inactive_target", CTLTYPE_UINT }, \ 	{ "v_cache_min", CTLTYPE_UINT }, \ 	{ "v_cache_max", CTLTYPE_UINT }, \ 	{ "v_pageout_free_min", CTLTYPE_UINT}, \ 	{ "swap_enabled", CTLTYPE_INT},\ }
+value|{ \ 	{ 0, 0 }, \ 	{ "vmtotal", CTLTYPE_STRUCT }, \ 	{ "loadavg", CTLTYPE_STRUCT }, \ 	{ "v_free_min", CTLTYPE_UINT }, \ 	{ "v_free_target", CTLTYPE_UINT }, \ 	{ "v_free_reserved", CTLTYPE_UINT }, \ 	{ "v_inactive_target", CTLTYPE_UINT }, \ 	{ "v_cache_min", CTLTYPE_UINT }, \ 	{ "v_cache_max", CTLTYPE_UINT }, \ 	{ "v_pageout_free_min", CTLTYPE_UINT}, \ 	{ "obsolete_pageout_algorithm", CTLTYPE_INT}, \ 	{ "swap_enabled", CTLTYPE_INT},\ }
 end_define
 
 begin_comment
