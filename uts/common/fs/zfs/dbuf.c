@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/dmu_send.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dmu_impl.h>
 end_include
 
@@ -4416,7 +4422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Evict (if its unreferenced) or clear (if its referenced) any level-0  * data blocks in the free range, so that any future readers will find  * empty blocks.  Also, if we happen accross any level-1 dbufs in the  * range that have not already been marked dirty, mark them dirty so  * they stay in memory.  */
+comment|/*  * Evict (if its unreferenced) or clear (if its referenced) any level-0  * data blocks in the free range, so that any future readers will find  * empty blocks.  Also, if we happen across any level-1 dbufs in the  * range that have not already been marked dirty, mark them dirty so  * they stay in memory.  *  * This is a no-op if the dataset is in the middle of an incremental  * receive; see comment below for details.  */
 end_comment
 
 begin_function
@@ -4514,6 +4520,51 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dmu_objset_is_receiving
+argument_list|(
+name|dn
+operator|->
+name|dn_objset
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * When processing a free record from a zfs receive, 		 * there should have been no previous modifications to the 		 * data in this range.  Therefore there should be no dbufs 		 * in the range.  Searching dn_dbufs for these non-existent 		 * dbufs can be very expensive, so simply ignore this. 		 */
+name|VERIFY3P
+argument_list|(
+name|dbuf_find
+argument_list|(
+name|dn
+argument_list|,
+literal|0
+argument_list|,
+name|start
+argument_list|)
+argument_list|,
+operator|==
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|VERIFY3P
+argument_list|(
+name|dbuf_find
+argument_list|(
+name|dn
+argument_list|,
+literal|0
+argument_list|,
+name|end
+argument_list|)
+argument_list|,
+operator|==
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|mutex_enter
 argument_list|(
 operator|&
