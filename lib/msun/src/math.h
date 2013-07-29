@@ -401,7 +401,7 @@ name|d
 parameter_list|,
 name|ld
 parameter_list|)
-value|_Generic((0,(x)),			\     float: f(x),							\     double: d(x),							\     long double: ld(x))
+value|_Generic((x),			\     float: f(x),							\     double: d(x),							\     long double: ld(x),							\     volatile float: f(x),						\     volatile double: d(x),						\     volatile long double: ld(x),					\     volatile const float: f(x),						\     volatile const double: d(x),					\     volatile const long double: ld(x),					\     const float: f(x),							\     const double: d(x),							\     const long double: ld(x))
 end_define
 
 begin_elif
