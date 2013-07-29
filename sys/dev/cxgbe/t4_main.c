@@ -2869,18 +2869,56 @@ block|,
 literal|"Chelsio T520-CR"
 block|}
 block|,
+comment|/* 2 x 10G */
+block|{
+literal|0x5402
+block|,
+literal|"Chelsio T522-CR"
+block|}
+block|,
+comment|/* 2 x 10G, 2 X 1G */
+block|{
+literal|0x5403
+block|,
+literal|"Chelsio T540-CR"
+block|}
+block|,
+comment|/* 4 x 10G */
 block|{
 literal|0x5407
 block|,
 literal|"Chelsio T520-SO"
 block|}
 block|,
+comment|/* 2 x 10G, nomem */
 block|{
-literal|0x5408
+literal|0x5409
 block|,
-literal|"Chelsio T520-CX"
+literal|"Chelsio T520-BT"
 block|}
 block|,
+comment|/* 2 x 10GBaseT */
+block|{
+literal|0x540a
+block|,
+literal|"Chelsio T504-BT"
+block|}
+block|,
+comment|/* 4 x 1G */
+block|{
+literal|0x540d
+block|,
+literal|"Chelsio T580-CR"
+block|}
+block|,
+comment|/* 2 x 40G */
+block|{
+literal|0x540e
+block|,
+literal|"Chelsio T540-LP-CR"
+block|}
+block|,
+comment|/* 4 x 10G */
 block|{
 literal|0x5410
 block|,
@@ -2894,21 +2932,24 @@ block|,
 literal|"Chelsio T520-LL-CR"
 block|}
 block|,
+comment|/* 2 x 10G */
+block|{
+literal|0x5412
+block|,
+literal|"Chelsio T560-CR"
+block|}
+block|,
+comment|/* 1 x 40G, 2 x 10G */
+block|{
+literal|0x5414
+block|,
+literal|"Chelsio T580-LP-SO-CR"
+block|}
+block|,
+comment|/* 2 x 40G, nomem */
 ifdef|#
 directive|ifdef
 name|notyet
-block|{
-literal|0x5402
-block|,
-literal|"Chelsio T522-CR"
-block|}
-block|,
-block|{
-literal|0x5403
-block|,
-literal|"Chelsio T540-CR"
-block|}
-block|,
 block|{
 literal|0x5404
 block|,
@@ -2928,15 +2969,9 @@ literal|"Chelsio T540-CH"
 block|}
 block|,
 block|{
-literal|0x5409
+literal|0x5408
 block|,
-literal|"Chelsio T520-BT"
-block|}
-block|,
-block|{
-literal|0x540a
-block|,
-literal|"Chelsio T504-BT"
+literal|"Chelsio T520-CX"
 block|}
 block|,
 block|{
@@ -2952,33 +2987,15 @@ literal|"Chelsio B504-BT"
 block|}
 block|,
 block|{
-literal|0x540d
-block|,
-literal|"Chelsio T580-CR"
-block|}
-block|,
-block|{
-literal|0x540e
-block|,
-literal|"Chelsio T540-LP-CR"
-block|}
-block|,
-block|{
 literal|0x540f
 block|,
 literal|"Chelsio Amsterdam"
 block|}
 block|,
 block|{
-literal|0x5412
-block|,
-literal|"Chelsio T560-CR"
-block|}
-block|,
-block|{
 literal|0x5413
 block|,
-literal|"Chelsio T580-CR"
+literal|"Chelsio T580-CHR"
 block|}
 block|,
 endif|#
