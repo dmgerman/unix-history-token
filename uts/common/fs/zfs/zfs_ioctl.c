@@ -15065,6 +15065,8 @@ argument_list|(
 name|zc
 operator|->
 name|zc_name
+argument_list|,
+name|zfsvfs
 argument_list|)
 expr_stmt|;
 name|resume_err
@@ -15104,6 +15106,8 @@ argument_list|(
 name|zc
 operator|->
 name|zc_name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -17406,6 +17410,8 @@ name|dmu_recv_end
 argument_list|(
 operator|&
 name|drc
+argument_list|,
+name|zfsvfs
 argument_list|)
 expr_stmt|;
 if|if
@@ -17447,6 +17453,8 @@ name|dmu_recv_end
 argument_list|(
 operator|&
 name|drc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -19398,6 +19406,16 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+name|dmu_objset_refresh_ownership
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_os
+argument_list|,
+name|zfsvfs
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|zfs_resume_fs
@@ -19409,6 +19427,7 @@ operator|->
 name|zc_name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

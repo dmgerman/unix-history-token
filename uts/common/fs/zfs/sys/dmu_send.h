@@ -180,6 +180,10 @@ decl_stmt|;
 name|uint64_t
 name|drc_newsnapobj
 decl_stmt|;
+name|void
+modifier|*
+name|drc_owner
+decl_stmt|;
 block|}
 name|dmu_recv_cookie_t
 typedef|;
@@ -250,6 +254,10 @@ parameter_list|(
 name|dmu_recv_cookie_t
 modifier|*
 name|drc
+parameter_list|,
+name|void
+modifier|*
+name|owner
 parameter_list|)
 function_decl|;
 end_function_decl
