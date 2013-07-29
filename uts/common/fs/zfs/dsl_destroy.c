@@ -116,12 +116,7 @@ name|dmu_snapshots_destroy_arg_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * ds must be owned.  */
-end_comment
-
 begin_function
-specifier|static
 name|int
 name|dsl_destroy_snapshot_check_impl
 parameter_list|(
