@@ -325,6 +325,10 @@ block|,
 name|DA_Q_4K
 init|=
 literal|0x08
+block|,
+name|DA_Q_NO_RC16
+init|=
+literal|0x10
 block|}
 name|da_quirks
 typedef|;
@@ -335,7 +339,7 @@ define|#
 directive|define
 name|DA_Q_BIT_STRING
 define|\
-value|"\020"			\ 	"\001NO_SYNC_CACHE"	\ 	"\002NO_6_BYTE"		\ 	"\003NO_PREVENT"	\ 	"\0044K"
+value|"\020"			\ 	"\001NO_SYNC_CACHE"	\ 	"\002NO_6_BYTE"		\ 	"\003NO_PREVENT"	\ 	"\0044K"		\ 	"\005NO_RC16"
 end_define
 
 begin_typedef
@@ -1856,6 +1860,24 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_PREVENT
+block|}
+block|,
+block|{
+comment|/* At least several Transcent USB sticks lie on RC16. */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"JetFlash"
+block|,
+literal|"Transcend*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_RC16
 block|}
 block|,
 comment|/* ATA/SATA devices over SAS/USB/... */
@@ -7853,6 +7875,16 @@ name|inq_data
 argument_list|)
 operator|>=
 name|SCSI_REV_SPC3
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_RC16
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|softc
