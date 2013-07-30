@@ -2963,6 +2963,31 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * This is handled specially here instead of in rwerror because 	 * rwerror is used for all sorts of errors, not just true read/write 	 * errors.  It should be refactored and fixed. 	 */
+if|if
+condition|(
+name|surrender
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"CANNOT READ_BLK: %ld"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|blk
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+name|EEXIT
+argument_list|,
+literal|"ABORTING DUE TO READ ERRORS"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|rwerror
 argument_list|(
 literal|"READ BLK"
