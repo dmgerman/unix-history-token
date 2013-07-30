@@ -903,12 +903,7 @@ name|m
 operator|->
 name|lock_object
 argument_list|,
-operator|(
 name|opts
-operator|&
-operator|~
-name|MTX_RECURSE
-operator|)
 operator||
 name|LOP_NEWORDER
 operator||
@@ -961,12 +956,7 @@ name|m
 operator|->
 name|lock_object
 argument_list|,
-operator|(
 name|opts
-operator|&
-operator|~
-name|MTX_RECURSE
-operator|)
 operator||
 name|LOP_EXCLUSIVE
 argument_list|,
@@ -1250,14 +1240,6 @@ name|LO_RECURSABLE
 operator|)
 operator|!=
 literal|0
-operator|||
-operator|(
-name|opts
-operator|&
-name|MTX_RECURSE
-operator|)
-operator|!=
-literal|0
 argument_list|,
 operator|(
 literal|"mtx_lock_spin: recursed on non-recursive mutex %s @ %s:%d\n"
@@ -1273,11 +1255,6 @@ operator|,
 name|line
 operator|)
 argument_list|)
-expr_stmt|;
-name|opts
-operator|&=
-operator|~
-name|MTX_RECURSE
 expr_stmt|;
 name|WITNESS_CHECKORDER
 argument_list|(
@@ -1633,7 +1610,6 @@ name|m
 argument_list|)
 operator|&&
 operator|(
-operator|(
 name|m
 operator|->
 name|lock_object
@@ -1644,15 +1620,6 @@ name|LO_RECURSABLE
 operator|)
 operator|!=
 literal|0
-operator|||
-operator|(
-name|opts
-operator|&
-name|MTX_RECURSE
-operator|)
-operator|!=
-literal|0
-operator|)
 condition|)
 block|{
 name|m
@@ -1687,11 +1654,6 @@ name|uintptr_t
 operator|)
 name|curthread
 argument_list|)
-expr_stmt|;
-name|opts
-operator|&=
-operator|~
-name|MTX_RECURSE
 expr_stmt|;
 name|LOCK_LOG_TRY
 argument_list|(
@@ -1902,14 +1864,6 @@ name|LO_RECURSABLE
 operator|)
 operator|!=
 literal|0
-operator|||
-operator|(
-name|opts
-operator|&
-name|MTX_RECURSE
-operator|)
-operator|!=
-literal|0
 argument_list|,
 operator|(
 literal|"_mtx_lock_sleep: recursed on non-recursive mutex %s @ %s:%d\n"
@@ -1925,11 +1879,6 @@ operator|,
 name|line
 operator|)
 argument_list|)
-expr_stmt|;
-name|opts
-operator|&=
-operator|~
-name|MTX_RECURSE
 expr_stmt|;
 name|m
 operator|->
@@ -1969,11 +1918,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|opts
-operator|&=
-operator|~
-name|MTX_RECURSE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS

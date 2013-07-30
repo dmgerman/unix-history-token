@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_pageout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_map.h>
 end_include
 
@@ -424,8 +418,6 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|vm_page_insert
 argument_list|(
 name|kern_pg
@@ -434,24 +426,7 @@ name|uobject
 argument_list|,
 name|upindex
 argument_list|)
-condition|)
-block|{
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|uobject
-argument_list|)
 expr_stmt|;
-name|VM_WAIT
-expr_stmt|;
-name|VM_OBJECT_WLOCK
-argument_list|(
-name|uobject
-argument_list|)
-expr_stmt|;
-goto|goto
-name|retry
-goto|;
-block|}
 name|vm_page_dirty
 argument_list|(
 name|kern_pg
