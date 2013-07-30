@@ -1021,6 +1021,9 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|,
+name|boolean_t
+name|recv
 parameter_list|)
 function_decl|;
 name|void

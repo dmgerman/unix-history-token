@@ -8728,6 +8728,8 @@ operator|->
 name|drc_tosnap
 argument_list|,
 name|tx
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 name|dsl_dataset_rele
@@ -8775,6 +8777,8 @@ operator|->
 name|drc_tosnap
 argument_list|,
 name|tx
+argument_list|,
+name|B_TRUE
 argument_list|)
 expr_stmt|;
 block|}
