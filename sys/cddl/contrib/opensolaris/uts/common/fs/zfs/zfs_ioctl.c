@@ -23719,7 +23719,7 @@ name|zfs_secpolicy_inject
 argument_list|,
 name|B_FALSE
 argument_list|,
-name|POOL_CHECK_SUSPENDED
+name|POOL_CHECK_NONE
 argument_list|)
 expr_stmt|;
 name|zfs_ioctl_register_pool
@@ -23732,7 +23732,7 @@ name|zfs_secpolicy_diff
 argument_list|,
 name|B_FALSE
 argument_list|,
-name|POOL_CHECK_SUSPENDED
+name|POOL_CHECK_NONE
 argument_list|)
 expr_stmt|;
 name|zfs_ioctl_register_pool
@@ -23771,7 +23771,7 @@ name|zfs_secpolicy_config
 argument_list|,
 name|B_TRUE
 argument_list|,
-name|POOL_CHECK_SUSPENDED
+name|POOL_CHECK_NONE
 argument_list|)
 expr_stmt|;
 name|zfs_ioctl_register_pool
