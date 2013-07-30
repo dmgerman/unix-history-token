@@ -8514,11 +8514,15 @@ end_function
 
 begin_function
 name|boolean_t
-name|dsl_dataset_modified_since_lastsnap
+name|dsl_dataset_modified_since_snap
 parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|snap
 parameter_list|)
 block|{
 name|dsl_pool_t
@@ -8541,9 +8545,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ds
-operator|->
-name|ds_prev
+name|snap
 operator|==
 name|NULL
 condition|)
@@ -8562,9 +8564,7 @@ name|ds_bp
 operator|.
 name|blk_birth
 operator|>
-name|ds
-operator|->
-name|ds_prev
+name|snap
 operator|->
 name|ds_phys
 operator|->
@@ -8576,7 +8576,7 @@ modifier|*
 name|os
 decl_stmt|,
 modifier|*
-name|os_prev
+name|os_snap
 decl_stmt|;
 comment|/* 		 * It may be that only the ZIL differs, because it was 		 * reset in the head.  Don't count that as being 		 * modified. 		 */
 if|if
@@ -8600,12 +8600,10 @@ if|if
 condition|(
 name|dmu_objset_from_ds
 argument_list|(
-name|ds
-operator|->
-name|ds_prev
+name|snap
 argument_list|,
 operator|&
-name|os_prev
+name|os_snap
 argument_list|)
 operator|!=
 literal|0
@@ -8627,7 +8625,7 @@ operator|->
 name|os_meta_dnode
 argument_list|,
 operator|&
-name|os_prev
+name|os_snap
 operator|->
 name|os_phys
 operator|->
@@ -12686,9 +12684,12 @@ name|EINVAL
 argument_list|)
 operator|)
 return|;
-comment|/* the branch point should be just before them */
+comment|/* if we are not forcing, the branch point should be just before them */
 if|if
 condition|(
+operator|!
+name|force
+operator|&&
 name|clone
 operator|->
 name|ds_prev
@@ -12728,15 +12729,13 @@ name|dp_origin_snap
 operator|&&
 name|origin_head
 operator|->
-name|ds_object
+name|ds_dir
 operator|!=
 name|clone
 operator|->
 name|ds_prev
 operator|->
-name|ds_phys
-operator|->
-name|ds_next_snap_obj
+name|ds_dir
 condition|)
 return|return
 operator|(
@@ -12773,9 +12772,13 @@ condition|(
 operator|!
 name|force
 operator|&&
-name|dsl_dataset_modified_since_lastsnap
+name|dsl_dataset_modified_since_snap
 argument_list|(
 name|origin_head
+argument_list|,
+name|origin_head
+operator|->
+name|ds_prev
 argument_list|)
 condition|)
 return|return
@@ -12960,6 +12963,19 @@ operator|<=
 name|origin_head
 operator|->
 name|ds_quota
+argument_list|)
+expr_stmt|;
+name|ASSERT3P
+argument_list|(
+name|clone
+operator|->
+name|ds_prev
+argument_list|,
+operator|==
+argument_list|,
+name|origin_head
+operator|->
+name|ds_prev
 argument_list|)
 expr_stmt|;
 name|dmu_buf_will_dirty
