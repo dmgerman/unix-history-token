@@ -3224,6 +3224,9 @@ if|if
 condition|(
 name|pretimeout
 operator|>=
+operator|(
+name|uintmax_t
+operator|)
 name|ts
 operator|.
 name|tv_sec
