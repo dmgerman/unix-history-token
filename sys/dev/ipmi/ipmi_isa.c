@@ -237,6 +237,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+comment|/* 	 * Give other drivers precedence.  Unfortunately, this doesn't 	 * work if we have an SMBIOS table that duplicates a PCI device 	 * that's later on the bus than the PCI-ISA bridge. 	 */
+if|if
+condition|(
+name|ipmi_attached
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Skip any PNP devices. */
 if|if
 condition|(
@@ -713,16 +723,6 @@ condition|)
 return|return
 operator|(
 name|ENXIO
-operator|)
-return|;
-comment|/* 	 * Give other drivers precedence.  Unfortunately, this doesn't 	 * work if we have an SMBIOS table that duplicates a PCI device 	 * that's later on the bus than the PCI-ISA bridge. 	 */
-if|if
-condition|(
-name|ipmi_attached
-condition|)
-return|return
-operator|(
-name|EBUSY
 operator|)
 return|;
 switch|switch
