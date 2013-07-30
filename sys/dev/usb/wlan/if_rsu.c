@@ -11793,6 +11793,7 @@ name|rsu_softc
 modifier|*
 name|sc
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|buf
@@ -11998,6 +11999,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|r92s_fw_hdr
 modifier|*
@@ -12008,6 +12010,7 @@ name|r92s_fw_priv
 modifier|*
 name|dmem
 decl_stmt|;
+specifier|const
 name|uint8_t
 modifier|*
 name|imem
@@ -12121,6 +12124,7 @@ block|}
 name|hdr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|r92s_fw_hdr
 operator|*
@@ -12291,6 +12295,7 @@ block|}
 name|imem
 operator|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -12681,10 +12686,17 @@ block|}
 comment|/* Update DMEM section before loading. */
 name|dmem
 operator|=
+name|__DECONST
+argument_list|(
+expr|struct
+name|r92s_fw_priv
+operator|*
+argument_list|,
 operator|&
 name|hdr
 operator|->
 name|priv
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
