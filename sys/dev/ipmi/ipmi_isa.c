@@ -149,12 +149,6 @@ decl_stmt|;
 name|uint32_t
 name|devid
 decl_stmt|;
-comment|/* 	 * Give other drivers precedence.  Unfortunately, this doesn't 	 * work if we have an SMBIOS table that duplicates a PCI device 	 * that's later on the bus than the PCI-ISA bridge. 	 */
-if|if
-condition|(
-name|ipmi_attached
-condition|)
-return|return;
 if|if
 condition|(
 name|ipmi_smbios_identify
@@ -168,6 +162,18 @@ operator|.
 name|iface_type
 operator|!=
 name|SSIF_MODE
+operator|&&
+name|device_find_child
+argument_list|(
+name|parent
+argument_list|,
+literal|"ipmi"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* 		 * XXX: Hack alert.  On some broken systems, the IPMI 		 * interface is described via SMBIOS, but the actual 		 * IO resource is in a PCI device BAR, so we have to let 		 * the PCI device attach ipmi instead.  In that case don't 		 * create an isa ipmi device.  For now we hardcode the list 		 * of bus, device, function tuples. 		 */
@@ -707,6 +713,16 @@ condition|)
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+comment|/* 	 * Give other drivers precedence.  Unfortunately, this doesn't 	 * work if we have an SMBIOS table that duplicates a PCI device 	 * that's later on the bus than the PCI-ISA bridge. 	 */
+if|if
+condition|(
+name|ipmi_attached
+condition|)
+return|return
+operator|(
+name|EBUSY
 operator|)
 return|;
 switch|switch

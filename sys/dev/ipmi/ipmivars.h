@@ -978,7 +978,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TIMEOUT
-value|6 * hz
+value|3 * hz
 end_define
 
 begin_function_decl
