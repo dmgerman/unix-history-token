@@ -563,6 +563,17 @@ name|nsfbufsused
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|sfreadahead
+init|=
+name|MAXPHYS
+operator|/
+name|MAXBSIZE
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -622,6 +633,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of sendfile(2) sf_bufs in use"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sfreadahead
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sfreadahead
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of sendfile(2) read-ahead MAXBSIZE blocks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10855,6 +10887,13 @@ block|{
 name|ssize_t
 name|resid
 decl_stmt|;
+name|int
+name|readahead
+init|=
+name|sfreadahead
+operator|*
+name|MAXBSIZE
+decl_stmt|;
 comment|/* 				 * Ensure that our page is still around 				 * when the I/O completes. 				 */
 name|vm_page_io_start
 argument_list|(
@@ -10877,7 +10916,7 @@ name|vp
 argument_list|,
 name|NULL
 argument_list|,
-name|MAXBSIZE
+name|readahead
 argument_list|,
 name|trunc_page
 argument_list|(
@@ -10892,7 +10931,7 @@ name|IO_VMIO
 operator||
 operator|(
 operator|(
-name|MAXBSIZE
+name|readahead
 operator|/
 name|bsize
 operator|)
