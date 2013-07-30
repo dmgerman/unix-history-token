@@ -45,6 +45,12 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"makefs.h"
+end_include
+
 begin_comment
 comment|/* Macros to access UFS flags */
 end_comment
