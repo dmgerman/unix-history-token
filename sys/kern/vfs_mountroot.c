@@ -3231,6 +3231,15 @@ argument_list|)
 operator|!=
 literal|0
 operator|&&
+name|strstr
+argument_list|(
+name|fs
+argument_list|,
+literal|"nfs"
+argument_list|)
+operator|==
+name|NULL
+operator|&&
 name|dev
 index|[
 literal|0
