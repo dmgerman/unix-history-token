@@ -54,6 +54,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KEYLARGO_FCR2
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|FCR_ENET_ENABLE
 value|0x60000000
 end_define
@@ -63,6 +70,24 @@ define|#
 directive|define
 name|FCR_ENET_RESET
 value|0x80000000
+end_define
+
+begin_comment
+comment|/* Used only by macio_enable_wireless() for now. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEYLARGO_GPIO_BASE
+value|0x6a
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYLARGO_EXTINT_GPIO_REG_BASE
+value|0x58
 end_define
 
 begin_comment
@@ -114,6 +139,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+specifier|extern
+name|int
+name|macio_enable_wireless
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|bool
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
