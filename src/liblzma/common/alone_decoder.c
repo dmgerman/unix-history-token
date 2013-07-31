@@ -82,6 +82,12 @@ name|SEQ_CODE
 block|, 	}
 name|sequence
 enum|;
+comment|/// If true, reject files that are unlikely to be .lzma files.
+comment|/// If false, more non-.lzma files get accepted and will give
+comment|/// LZMA_DATA_ERROR either immediately or after a few output bytes.
+name|bool
+name|picky
+decl_stmt|;
 comment|/// Position in the header fields
 name|size_t
 name|pos
@@ -259,6 +265,10 @@ if|if
 condition|(
 name|coder
 operator|->
+name|picky
+operator|&&
+name|coder
+operator|->
 name|options
 operator|.
 name|dict_size
@@ -270,8 +280,7 @@ comment|// A hack to ditch tons of false positives:
 comment|// We allow only dictionary sizes that are
 comment|// 2^n or 2^n + 2^(n-1). LZMA_Alone created
 comment|// only files with 2^n, but accepts any
-comment|// dictionary size. If someone complains, this
-comment|// will be reconsidered.
+comment|// dictionary size.
 name|uint32_t
 name|d
 init|=
@@ -390,10 +399,13 @@ condition|)
 break|break;
 comment|// Another hack to ditch false positives: Assume that
 comment|// if the uncompressed size is known, it must be less
-comment|// than 256 GiB. Again, if someone complains, this
-comment|// will be reconsidered.
+comment|// than 256 GiB.
 if|if
 condition|(
+name|coder
+operator|->
+name|picky
+operator|&&
 name|coder
 operator|->
 name|uncompressed_size
@@ -702,6 +714,9 @@ name|allocator
 parameter_list|,
 name|uint64_t
 name|memlimit
+parameter_list|,
+name|bool
+name|picky
 parameter_list|)
 block|{
 name|lzma_next_coder_init
@@ -799,6 +814,14 @@ name|next
 operator|->
 name|coder
 operator|->
+name|picky
+operator|=
+name|picky
+expr_stmt|;
+name|next
+operator|->
+name|coder
+operator|->
 name|pos
 operator|=
 literal|0
@@ -886,6 +909,8 @@ argument_list|,
 name|strm
 argument_list|,
 name|memlimit
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|strm

@@ -261,15 +261,15 @@ block|{
 name|printf
 argument_list|(
 literal|"Usage: %s [OPTION]... [FILE]...\n"
-literal|"Uncompress files in the ."
+literal|"Decompress files in the ."
 name|TOOL_FORMAT
-literal|" format to the standard output.\n"
+literal|" format to standard output.\n"
 literal|"\n"
-literal|"  -c, --stdout       (ignored)\n"
-literal|"  -d, --decompress   (ignored)\n"
-literal|"  -k, --keep         (ignored)\n"
+literal|"  -d, --decompress   (ignored, only decompression is supported)\n"
+literal|"  -k, --keep         (ignored, files are never deleted)\n"
+literal|"  -c, --stdout       (ignored, output is always written to standard output)\n"
 literal|"  -q, --quiet        specify *twice* to suppress errors\n"
-literal|"  -Q, --no-warn      (ignored)\n"
+literal|"  -Q, --no-warn      (ignored, the exit status 2 is never used)\n"
 literal|"  -h, --help         display this help and exit\n"
 literal|"  -V, --version      display the version number and exit\n"
 literal|"\n"

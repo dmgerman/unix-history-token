@@ -153,7 +153,7 @@ specifier|extern
 name|void
 name|coder_set_preset
 parameter_list|(
-name|size_t
+name|uint32_t
 name|new_preset
 parameter_list|)
 function_decl|;

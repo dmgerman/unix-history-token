@@ -191,19 +191,26 @@ name|TUKLIB_DOSLIKE
 end_ifndef
 
 begin_comment
-comment|/// File status flags of standard output. This is used by io_open_dest()
+comment|/// Original file status flags of standard output. This is used by
 end_comment
 
 begin_comment
-comment|/// and io_close_dest().
+comment|/// io_open_dest() and io_close_dest() to save and restore the flags.
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|stdout_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|restore_stdout_flags
 init|=
-literal|0
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -1485,10 +1492,6 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-comment|// As of 2010-09-05, NetBSD doesn't document what errno is
-comment|// used with O_NOFOLLOW. It is EFTYPE though, and I
-comment|// understood that is very unlikely to change even though
-comment|// it is undocumented.
 if|if
 condition|(
 name|errno
@@ -1643,6 +1646,9 @@ name|F_SETFL
 argument_list|,
 name|flags
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|error_msg
@@ -2412,20 +2418,18 @@ condition|)
 return|return
 name|false
 return|;
-specifier|const
-name|int
-name|flags
-init|=
+name|stdout_flags
+operator|=
 name|fcntl
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
 name|F_GETFL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|flags
+name|stdout_flags
 operator|==
 operator|-
 literal|1
@@ -2435,7 +2439,7 @@ name|false
 return|;
 if|if
 condition|(
-name|flags
+name|stdout_flags
 operator|&
 name|O_APPEND
 condition|)
@@ -2484,15 +2488,19 @@ operator|&
 operator|~
 name|O_APPEND
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 name|false
 return|;
-comment|// Remember the flags so that io_close_dest()
-comment|// can restore them.
-name|stdout_flags
+comment|// Disabling O_APPEND succeeded. Mark
+comment|// that the flags should be restored
+comment|// in io_close_dest().
+name|restore_stdout_flags
 operator|=
-name|flags
+name|true
 expr_stmt|;
 block|}
 elseif|else
@@ -2615,9 +2623,7 @@ name|TUKLIB_DOSLIKE
 comment|// If io_open_dest() has disabled O_APPEND, restore it here.
 if|if
 condition|(
-name|stdout_flags
-operator|!=
-literal|0
+name|restore_stdout_flags
 condition|)
 block|{
 name|assert
@@ -2629,10 +2635,12 @@ operator|==
 name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
-specifier|const
-name|int
-name|fail
-init|=
+name|restore_stdout_flags
+operator|=
+name|false
+expr_stmt|;
+if|if
+condition|(
 name|fcntl
 argument_list|(
 name|STDOUT_FILENO
@@ -2641,14 +2649,9 @@ name|F_SETFL
 argument_list|,
 name|stdout_flags
 argument_list|)
-decl_stmt|;
-name|stdout_flags
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|fail
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|message_error
@@ -3336,8 +3339,7 @@ condition|(
 name|user_abort
 condition|)
 return|return
-operator|-
-literal|1
+name|true
 return|;
 continue|continue;
 block|}

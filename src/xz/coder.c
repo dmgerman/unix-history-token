@@ -145,7 +145,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|size_t
+name|uint32_t
 name|filters_count
 init|=
 literal|0
@@ -158,31 +158,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|size_t
+name|uint32_t
 name|preset_number
 init|=
-literal|6
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// If a preset is used (no custom filter chain) and preset_extreme is true,
-end_comment
-
-begin_comment
-comment|/// a significantly slower compression is used to achieve slightly better
-end_comment
-
-begin_comment
-comment|/// compression ratio.
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|preset_extreme
-init|=
-name|false
+name|LZMA_PRESET_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -232,18 +211,13 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 name|void
-name|coder_set_preset
+name|forget_filter_chain
 parameter_list|(
-name|size_t
-name|new_preset
+name|void
 parameter_list|)
 block|{
-name|preset_number
-operator|=
-name|new_preset
-expr_stmt|;
 comment|// Setting a preset makes us forget a possibly defined custom
 comment|// filter chain.
 while|while
@@ -283,14 +257,42 @@ end_function
 begin_function
 specifier|extern
 name|void
+name|coder_set_preset
+parameter_list|(
+name|uint32_t
+name|new_preset
+parameter_list|)
+block|{
+name|preset_number
+operator|&=
+operator|~
+name|LZMA_PRESET_LEVEL_MASK
+expr_stmt|;
+name|preset_number
+operator||=
+name|new_preset
+expr_stmt|;
+name|forget_filter_chain
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|extern
+name|void
 name|coder_set_extreme
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|preset_extreme
-operator|=
-name|true
+name|preset_number
+operator||=
+name|LZMA_PRESET_EXTREME
+expr_stmt|;
+name|forget_filter_chain
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -343,6 +345,14 @@ name|options
 expr_stmt|;
 operator|++
 name|filters_count
+expr_stmt|;
+comment|// Setting a custom filter chain makes us forget the preset options.
+comment|// This makes a difference if one specifies e.g. "xz -9 --lzma2 -e"
+comment|// where the custom filter chain resets the preset level back to
+comment|// the default 6, making the example equivalent to "xz -6e".
+name|preset_number
+operator|=
+name|LZMA_PRESET_DEFAULT
 expr_stmt|;
 return|return;
 block|}
@@ -451,14 +461,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Get the preset for LZMA1 or LZMA2.
-if|if
-condition|(
-name|preset_extreme
-condition|)
-name|preset_number
-operator||=
-name|LZMA_PRESET_EXTREME
-expr_stmt|;
 if|if
 condition|(
 name|lzma_lzma_preset

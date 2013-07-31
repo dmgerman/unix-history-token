@@ -76,6 +76,9 @@ name|allocator
 parameter_list|,
 name|uint64_t
 name|memlimit
+parameter_list|,
+name|bool
+name|picky
 parameter_list|)
 function_decl|;
 end_function_decl
