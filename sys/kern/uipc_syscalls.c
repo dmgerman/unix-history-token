@@ -568,9 +568,7 @@ specifier|static
 name|int
 name|sfreadahead
 init|=
-name|MAXPHYS
-operator|/
-name|MAXBSIZE
+literal|1
 decl_stmt|;
 end_decl_stmt
 
