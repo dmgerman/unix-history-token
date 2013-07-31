@@ -89,7 +89,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|random_adaptor
+name|random_systat
 block|{
 name|struct
 name|selinfo
@@ -135,13 +135,22 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|random_systat
+modifier|*
+name|random_systat
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|void
 name|random_ident_hardware
 parameter_list|(
 name|struct
-name|random_adaptor
+name|random_systat
 modifier|*
 modifier|*
 parameter_list|)

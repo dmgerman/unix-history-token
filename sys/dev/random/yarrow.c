@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/random_adaptors.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/random/randomdev_soft.h>
 end_include
 
@@ -460,6 +454,11 @@ name|struct
 name|sysctl_ctx_list
 modifier|*
 name|clist
+parameter_list|,
+name|struct
+name|sysctl_oid
+modifier|*
+name|in_o
 parameter_list|)
 block|{
 name|int
@@ -477,9 +476,9 @@ name|SYSCTL_ADD_NODE
 argument_list|(
 name|clist
 argument_list|,
-name|SYSCTL_STATIC_CHILDREN
+name|SYSCTL_CHILDREN
 argument_list|(
-name|_kern_random
+name|in_o
 argument_list|)
 argument_list|,
 name|OID_AUTO
