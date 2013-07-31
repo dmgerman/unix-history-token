@@ -22074,6 +22074,15 @@ argument_list|,
 literal|"number of filters"
 argument_list|)
 expr_stmt|;
+name|t4_sge_sysctls
+argument_list|(
+name|sc
+argument_list|,
+name|ctx
+argument_list|,
+name|children
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SBUF_DRAIN
