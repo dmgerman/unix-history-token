@@ -6061,6 +6061,21 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|idx
+operator|<
+literal|0
+operator|||
+name|idx
+operator|>=
+name|RTAX_MAX
+condition|)
+name|usage
+argument_list|(
+literal|"internal error"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|af
 operator|==
 literal|0
@@ -6135,17 +6150,6 @@ literal|1
 operator|<<
 name|idx
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|idx
-operator|>
-name|RTAX_MAX
-condition|)
-name|usage
-argument_list|(
-literal|"internal error"
-argument_list|)
 expr_stmt|;
 name|sa
 operator|=
