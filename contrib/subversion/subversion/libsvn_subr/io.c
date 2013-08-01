@@ -13511,6 +13511,13 @@ name|char
 modifier|*
 name|eol
 decl_stmt|;
+if|if
+condition|(
+name|to_read
+operator|==
+literal|0
+condition|)
+break|break;
 comment|/* read data block (or just a part of it) */
 name|SVN_ERR
 argument_list|(

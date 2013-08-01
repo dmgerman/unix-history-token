@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  *  * $FreeBSD$  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -13,6 +13,10 @@ end_comment
 
 begin_comment
 comment|/*	  All Rights Reserved  	*/
+end_comment
+
+begin_comment
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -26,27 +30,6 @@ define|#
 directive|define
 name|_DIS_TABLES_H
 end_define
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"@(#)dis_tables.h	1.7	06/03/02 SMI"
-end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Constants and prototypes for the IA32 disassembler backend.  See dis_tables.c  * for usage information and documentation.  */
@@ -94,7 +77,7 @@ value|8
 define|#
 directive|define
 name|NCPS
-value|12
+value|20
 comment|/* number of chars per symbol	*/
 comment|/*  * data structures that must be provided to dtrace_dis86()  */
 typedef|typedef
@@ -160,7 +143,7 @@ index|]
 decl_stmt|;
 comment|/* bytes of instruction */
 name|char
-name|d86_mneu
+name|d86_mnem
 index|[
 name|OPLEN
 index|]
@@ -190,10 +173,10 @@ name|struct
 name|d86opnd
 name|d86_opnd
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
-comment|/* up to 3 operands */
+comment|/* up to 4 operands */
 name|int
 function_decl|(
 modifier|*
@@ -281,9 +264,14 @@ parameter_list|)
 function_decl|;
 define|#
 directive|define
-name|DIS_OP_OCTAL
+name|DIS_F_OCTAL
 value|0x1
 comment|/* Print all numbers in octal */
+define|#
+directive|define
+name|DIS_F_NOIMMSYM
+value|0x2
+comment|/* Don't print symbols for immediates (.o) */
 ifdef|#
 directive|ifdef
 name|DIS_TEXT
@@ -298,7 +286,7 @@ parameter_list|,
 name|uint_t
 name|cpu_mode
 parameter_list|,
-name|uintptr_t
+name|uint64_t
 name|pc
 parameter_list|,
 name|char

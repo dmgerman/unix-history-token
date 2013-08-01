@@ -1535,6 +1535,8 @@ else|else
 block|{
 name|apr_pool_cleanup_run
 argument_list|(
+name|res
+operator|->
 name|pool
 argument_list|,
 name|res

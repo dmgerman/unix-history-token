@@ -78,6 +78,15 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|reseteval
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* flags in argument to evaltree/evalstring */
 end_comment

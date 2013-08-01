@@ -378,6 +378,9 @@ argument_list|,
 name|FALSE
 comment|/* queue_deletes */
 argument_list|,
+name|FALSE
+comment|/* remove_locks */
+argument_list|,
 name|SVN_INVALID_REVNUM
 argument_list|,
 name|NULL

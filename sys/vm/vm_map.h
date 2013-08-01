@@ -1297,8 +1297,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMFS_ALIGNED_SPACE
+name|VMFS_OPTIMAL_SPACE
 value|2
+end_define
+
+begin_comment
+comment|/* find a range with optimal alignment*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMFS_ALIGNED_SPACE
+value|3
 end_define
 
 begin_comment
@@ -1318,7 +1329,7 @@ begin_define
 define|#
 directive|define
 name|VMFS_TLB_ALIGNED_SPACE
-value|3
+value|4
 end_define
 
 begin_comment

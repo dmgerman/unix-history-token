@@ -2805,9 +2805,6 @@ name|vmem_size_t
 name|size
 parameter_list|,
 name|int
-name|flags
-parameter_list|,
-name|int
 name|type
 parameter_list|)
 block|{
@@ -3132,8 +3129,6 @@ argument_list|,
 name|addr
 argument_list|,
 name|size
-argument_list|,
-name|flags
 argument_list|,
 name|BT_TYPE_SPAN
 argument_list|)
@@ -5578,8 +5573,6 @@ argument_list|,
 name|addr
 argument_list|,
 name|size
-argument_list|,
-name|flags
 argument_list|,
 name|BT_TYPE_SPAN_STATIC
 argument_list|)

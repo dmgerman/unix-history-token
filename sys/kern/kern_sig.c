@@ -10753,20 +10753,6 @@ name|p_sigqueue
 expr_stmt|;
 block|}
 else|else
-block|{
-name|KASSERT
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|==
-name|p
-argument_list|,
-operator|(
-literal|"invalid thread"
-operator|)
-argument_list|)
-expr_stmt|;
 name|sigqueue
 operator|=
 operator|&
@@ -10774,7 +10760,6 @@ name|td
 operator|->
 name|td_sigqueue
 expr_stmt|;
-block|}
 name|SDT_PROBE
 argument_list|(
 name|proc

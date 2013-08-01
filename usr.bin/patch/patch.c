@@ -1300,8 +1300,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* from here on, open no standard i/o files, because malloc */
-comment|/* might misfire and we can't catch it easily */
+comment|/* 		 * from here on, open no standard i/o files, because 		 * malloc might misfire and we can't catch it easily 		 */
 comment|/* apply each hunk of patch */
 name|hunk
 operator|=

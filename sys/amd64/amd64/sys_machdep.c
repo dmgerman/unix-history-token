@@ -1629,7 +1629,7 @@ expr|struct
 name|amd64tss
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -1639,6 +1639,8 @@ name|IOPAGES
 operator|+
 literal|1
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2276,7 +2278,7 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -2287,6 +2289,8 @@ argument_list|(
 expr|struct
 name|user_segment_descriptor
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

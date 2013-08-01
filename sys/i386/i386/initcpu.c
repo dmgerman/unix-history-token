@@ -501,6 +501,36 @@ literal|32
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|cpu_mon_mwait_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MONITOR/MWAIT flags (CPUID.05H.ECX) */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_mon_min_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MONITOR minimum range size, bytes */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_mon_max_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MONITOR minimum range size, bytes */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(

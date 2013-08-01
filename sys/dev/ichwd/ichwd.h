@@ -567,6 +567,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_COLETOCRK_LPC
+value|0x2390
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_82801AA
 value|0x2410
 end_define

@@ -266,9 +266,13 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|v
 operator|->
 name|vlanid
+operator|&
+name|ETHERSWITCH_VID_VALID
+operator|)
 operator|==
 literal|0
 operator|||
@@ -339,6 +343,8 @@ argument_list|,
 name|v
 operator|->
 name|vlanid
+operator|&
+name|ETHERSWITCH_VID_MASK
 argument_list|)
 expr_stmt|;
 for|for

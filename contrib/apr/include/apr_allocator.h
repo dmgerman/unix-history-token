@@ -124,10 +124,16 @@ argument|apr_status_t
 argument_list|)
 name|apr_allocator_create
 argument_list|(
-name|apr_allocator_t
-operator|*
-operator|*
-name|allocator
+argument|apr_allocator_t **allocator
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Destroy an allocator  * @param allocator The allocator to be destroyed  * @remark Any memnodes not given back to the allocator prior to destroying  *         will _not_ be free()d.  */
@@ -137,9 +143,16 @@ argument|void
 argument_list|)
 name|apr_allocator_destroy
 argument_list|(
-name|apr_allocator_t
-operator|*
-name|allocator
+argument|apr_allocator_t *allocator
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Allocate a block of mem from the allocator  * @param allocator The allocator to allocate from  * @param size The size of the mem to allocate (excluding the  *        memnode structure)  */
@@ -153,7 +166,16 @@ argument|apr_allocator_t *allocator
 argument_list|,
 argument|apr_size_t size
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/**  * Free a list of blocks of mem, giving them back to the allocator.  * The list is typically terminated by a memnode with its next field  * set to NULL.  * @param allocator The allocator to give the mem back to  * @param memnode The memory node to return  */
 name|APR_DECLARE
 argument_list|(
@@ -161,13 +183,20 @@ argument|void
 argument_list|)
 name|apr_allocator_free
 argument_list|(
-name|apr_allocator_t
-operator|*
-name|allocator
+argument|apr_allocator_t *allocator
 argument_list|,
-name|apr_memnode_t
-operator|*
-name|memnode
+argument|apr_memnode_t *memnode
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 include|#
@@ -181,13 +210,18 @@ argument|void
 argument_list|)
 name|apr_allocator_owner_set
 argument_list|(
-name|apr_allocator_t
-operator|*
-name|allocator
+argument|apr_allocator_t *allocator
 argument_list|,
-name|apr_pool_t
-operator|*
-name|pool
+argument|apr_pool_t *pool
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Get the current owner of the allocator  * @param allocator The allocator to get the owner from  */
@@ -197,9 +231,16 @@ argument|apr_pool_t *
 argument_list|)
 name|apr_allocator_owner_get
 argument_list|(
-name|apr_allocator_t
-operator|*
-name|allocator
+argument|apr_allocator_t *allocator
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Set the current threshold at which the allocator should start  * giving blocks back to the system.  * @param allocator The allocator the set the threshold on  * @param size The threshold.  0 == unlimited.  */
@@ -213,7 +254,16 @@ argument|apr_allocator_t *allocator
 argument_list|,
 argument|apr_size_t size
 argument_list|)
-empty_stmt|;
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 include|#
 directive|include
 file|"apr_thread_mutex.h"
@@ -227,13 +277,18 @@ argument|void
 argument_list|)
 name|apr_allocator_mutex_set
 argument_list|(
-name|apr_allocator_t
-operator|*
-name|allocator
+argument|apr_allocator_t *allocator
 argument_list|,
-name|apr_thread_mutex_t
-operator|*
-name|mutex
+argument|apr_thread_mutex_t *mutex
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * Get the mutex currently set for the allocator  * @param allocator The allocator  */
@@ -243,9 +298,16 @@ argument|apr_thread_mutex_t *
 argument_list|)
 name|apr_allocator_mutex_get
 argument_list|(
-name|apr_allocator_t
-operator|*
-name|allocator
+argument|apr_allocator_t *allocator
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|nonnull
+argument_list|(
+literal|1
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#

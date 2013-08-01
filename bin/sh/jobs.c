@@ -276,7 +276,7 @@ comment|/* size of array */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|pid_t
 name|backgndpid
 init|=
@@ -290,7 +290,7 @@ comment|/* pid of last background process */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -611,7 +611,7 @@ comment|/*  * Turn job control on and off.  */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|int
 name|jobctl
 decl_stmt|;

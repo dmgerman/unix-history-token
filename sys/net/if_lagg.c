@@ -1877,6 +1877,10 @@ name|use_flowid
 operator|=
 name|def_use_flowid
 expr_stmt|;
+name|sc
+operator|->
+name|sc_oid
+operator|=
 name|oid
 operator|=
 name|SYSCTL_ADD_NODE

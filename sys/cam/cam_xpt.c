@@ -17314,11 +17314,6 @@ operator|!=
 name|CAM_XPT_PATH_ID
 condition|)
 block|{
-name|union
-name|ccb
-modifier|*
-name|scan_ccb
-decl_stmt|;
 name|xpt_async
 argument_list|(
 name|AC_PATH_REGISTERED
@@ -17329,6 +17324,24 @@ operator|&
 name|cpi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cpi
+operator|.
+name|hba_misc
+operator|&
+name|PIM_NOSCAN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|union
+name|ccb
+modifier|*
+name|scan_ccb
+decl_stmt|;
 comment|/* Initiate bus rescan. */
 name|scan_ccb
 operator|=
@@ -17378,6 +17391,13 @@ argument_list|(
 name|path
 argument_list|,
 literal|"Can't allocate CCB to scan bus\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|xpt_free_path
+argument_list|(
+name|path
 argument_list|)
 expr_stmt|;
 block|}

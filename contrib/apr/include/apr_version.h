@@ -19,6 +19,13 @@ begin_comment
 comment|/**  * @file apr_version.h  * @brief APR Versioning Interface  *   * APR's Version  *  * There are several different mechanisms for accessing the version. There  * is a string form, and a set of numbers; in addition, there are constants  * which can be compiled into your application, and you can query the library  * being used for its actual version.  *  * Note that it is possible for an application to detect that it has been  * compiled against a different version of APR by use of the compile-time  * constants and the use of the run-time query function.  *  * APR version numbering follows the guidelines specified in:  *  *     http://apr.apache.org/versioning.html  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|APR_COPYRIGHT
+value|"Copyright (c) 2013 The Apache Software " \                       "Foundation or its licensors, as applicable."
+end_define
+
 begin_comment
 comment|/* The numeric compile-time version constants. These constants are the  * authoritative version numbers for APR.   */
 end_comment
@@ -53,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|APR_PATCH_VERSION
-value|6
+value|8
 end_define
 
 begin_comment
@@ -101,12 +108,23 @@ begin_comment
 comment|/** Internal: string form of the "is dev" flag */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|APR_IS_DEV_STRING
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|APR_IS_DEV_STRING
 value|"-dev"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

@@ -42,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|APU_MINOR_VERSION
-value|4
+value|5
 end_define
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|APU_PATCH_VERSION
-value|1
+value|2
 end_define
 
 begin_comment

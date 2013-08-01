@@ -175,6 +175,10 @@ name|wr_dbm_antsignal
 decl_stmt|;
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -205,6 +209,10 @@ name|wt_chan_flags
 decl_stmt|;
 block|}
 name|__packed
+name|__aligned
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 

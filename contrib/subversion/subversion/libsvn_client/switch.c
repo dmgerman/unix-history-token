@@ -830,7 +830,7 @@ argument_list|)
 argument_list|,
 name|switch_url
 argument_list|,
-name|svn_dirent_dirname
+name|svn_dirent_local_style
 argument_list|(
 name|local_abspath
 argument_list|,

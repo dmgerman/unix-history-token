@@ -1177,7 +1177,7 @@ argument_list|)
 expr_stmt|;
 name|IPSECSTAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5902,7 +5902,7 @@ condition|)
 block|{
 name|IPSECSTAT_INC
 argument_list|(
-name|in_inval
+name|ips_in_inval
 argument_list|)
 expr_stmt|;
 return|return
@@ -6086,7 +6086,7 @@ condition|)
 block|{
 name|IPSECSTAT_INC
 argument_list|(
-name|in_inval
+name|ips_in_inval
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -6164,7 +6164,7 @@ condition|)
 block|{
 name|IPSECSTAT_INC
 argument_list|(
-name|in_nomem
+name|ips_in_nomem
 argument_list|)
 expr_stmt|;
 name|m_freem

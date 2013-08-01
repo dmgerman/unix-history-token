@@ -725,6 +725,12 @@ name|char
 modifier|*
 name|errstr
 decl_stmt|;
+name|char
+name|apr_strerr
+index|[
+literal|512
+index|]
+decl_stmt|;
 comment|/* Can't use svn_error_wrap_apr here because it calls functions in          this file, leading to infinite recursion. */
 if|if
 condition|(
@@ -787,12 +793,32 @@ argument_list|,
 name|topage
 argument_list|)
 expr_stmt|;
+comment|/* Just put the error on the stack, since svn_error_create duplicates it          later.  APR_STRERR will be in the local encoding, not in UTF-8, though.        */
+name|svn_strerror
+argument_list|(
+name|apr_err
+argument_list|,
+name|apr_strerr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|apr_strerr
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|svn_error_create
 argument_list|(
 name|apr_err
 argument_list|,
+name|svn_error_create
+argument_list|(
+name|apr_err
+argument_list|,
 name|NULL
+argument_list|,
+name|apr_strerr
+argument_list|)
 argument_list|,
 name|errstr
 argument_list|)

@@ -55,6 +55,15 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+name|void
+name|resetinput
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|pfgets

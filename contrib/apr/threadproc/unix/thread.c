@@ -364,7 +364,10 @@ if|if
 condition|(
 name|state
 operator|==
+name|DETACH_ARG
+argument_list|(
 literal|1
+argument_list|)
 condition|)
 return|return
 name|APR_DETACH

@@ -3217,7 +3217,9 @@ name|mps_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"mps_user_command: no mps requests\n"
+literal|"%s: no mps requests\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|err
@@ -3249,7 +3251,9 @@ name|sc
 argument_list|,
 name|MPS_USER
 argument_list|,
-literal|"mps_user_command: req %p %d  rpl %p %d\n"
+literal|"%s: req %p %d  rpl %p %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 operator|->
@@ -3324,8 +3328,9 @@ name|sc
 argument_list|,
 name|MPS_USER
 argument_list|,
-literal|"mps_user_command: Function %02X  "
-literal|"MsgFlags %02X\n"
+literal|"%s: Function %02X MsgFlags %02X\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|hdr
 operator|->
@@ -3441,25 +3446,34 @@ expr_stmt|;
 if|if
 condition|(
 name|err
-operator|!=
-literal|0
+operator|==
+name|EINVAL
 condition|)
 block|{
 name|mps_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"mps_user_command: unsupported function 0x%X\n"
+literal|"%s: unsupported parameter or unsupported "
+literal|"function in request (function = 0x%X)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|hdr
 operator|->
 name|Function
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
 goto|goto
 name|RetFreeUnlocked
 goto|;
-block|}
 name|mps_lock
 argument_list|(
 name|sc
@@ -3474,6 +3488,8 @@ argument_list|,
 name|cm
 argument_list|,
 literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 if|if
@@ -3538,7 +3554,10 @@ name|mps_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"mps_user_command: reply buffer too small %d required %d\n"
+literal|"%s: user reply buffer (%d) smaller than "
+literal|"returned buffer (%d)\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|cmd
 operator|->
@@ -3546,10 +3565,6 @@ name|rpl_len
 argument_list|,
 name|sz
 argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|EINVAL
 expr_stmt|;
 name|sz
 operator|=
@@ -3599,7 +3614,9 @@ name|sc
 argument_list|,
 name|MPS_USER
 argument_list|,
-literal|"mps_user_command: reply size %d\n"
+literal|"%s: reply size %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|sz
 argument_list|)
@@ -4085,6 +4102,8 @@ argument_list|,
 name|cm
 argument_list|,
 literal|30
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 if|if
@@ -4151,8 +4170,8 @@ name|mps_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s: reply buffer too small: %d, "
-literal|"required: %d\n"
+literal|"%s: user reply buffer (%d) "
+literal|"smaller than returned buffer (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4163,13 +4182,7 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|EINVAL
-expr_stmt|;
 block|}
-else|else
-block|{
 name|mps_unlock
 argument_list|(
 name|sc
@@ -4198,7 +4211,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|mpssas_free_tm
 argument_list|(
@@ -4627,6 +4639,8 @@ argument_list|,
 name|cm
 argument_list|,
 literal|30
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 if|if
@@ -4813,8 +4827,8 @@ name|mps_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"%s: reply buffer too small: %d, "
-literal|"required: %d\n"
+literal|"%s: user reply buffer (%d) smaller "
+literal|"than returned buffer (%d)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4825,13 +4839,7 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|EINVAL
-expr_stmt|;
 block|}
-else|else
-block|{
 name|mps_unlock
 argument_list|(
 name|sc
@@ -4860,7 +4868,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -5626,6 +5633,8 @@ argument_list|,
 name|cm
 argument_list|,
 literal|30
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 if|if
@@ -5804,8 +5813,8 @@ name|sc
 argument_list|,
 name|MPS_USER
 argument_list|,
-literal|"%s: This buffer type is not supported "
-literal|"by the IOC"
+literal|"%s: This buffer type is not "
+literal|"supported by the IOC"
 argument_list|,
 name|__func__
 argument_list|)
@@ -5928,6 +5937,8 @@ argument_list|,
 name|cm
 argument_list|,
 literal|30
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 if|if

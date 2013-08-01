@@ -4658,21 +4658,15 @@ operator|&
 name|UMA_ZONE_PCPU
 condition|)
 block|{
-name|KASSERT
-argument_list|(
+name|u_int
+name|ncpus
+init|=
 name|mp_ncpus
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"%s: ncpus %d\n"
-operator|,
-name|__func__
-operator|,
+condition|?
 name|mp_ncpus
-operator|)
-argument_list|)
-expr_stmt|;
+else|:
+name|MAXCPU
+decl_stmt|;
 name|keg
 operator|->
 name|uk_slabsize
@@ -4689,7 +4683,7 @@ name|uk_ppera
 operator|=
 name|howmany
 argument_list|(
-name|mp_ncpus
+name|ncpus
 operator|*
 sizeof|sizeof
 argument_list|(

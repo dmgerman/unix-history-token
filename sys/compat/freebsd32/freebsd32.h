@@ -189,6 +189,34 @@ end_define
 
 begin_struct
 struct|struct
+name|itimerspec32
+block|{
+name|struct
+name|timespec32
+name|it_interval
+decl_stmt|;
+name|struct
+name|timespec32
+name|it_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ITS_CP
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|)
+value|do {			\ 	TS_CP((src), (dst), it_interval);	\ 	TS_CP((src), (dst), it_value);		\ } while (0)
+end_define
+
+begin_struct
+struct|struct
 name|rusage32
 block|{
 name|struct

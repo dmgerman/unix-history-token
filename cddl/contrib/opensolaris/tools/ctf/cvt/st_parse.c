@@ -4961,6 +4961,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|mlp
 operator|->
 name|ml_size
@@ -6058,6 +6061,9 @@ name|INTRINSIC
 case|:
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|ml
 operator|->
 name|ml_size

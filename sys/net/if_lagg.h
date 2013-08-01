@@ -971,6 +971,12 @@ name|sysctl_ctx_list
 name|ctx
 decl_stmt|;
 comment|/* sysctl variables */
+name|struct
+name|sysctl_oid
+modifier|*
+name|sc_oid
+decl_stmt|;
+comment|/* sysctl tree oid */
 name|int
 name|use_flowid
 decl_stmt|;

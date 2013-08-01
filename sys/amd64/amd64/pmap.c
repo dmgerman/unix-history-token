@@ -20170,6 +20170,9 @@ name|freed
 decl_stmt|,
 name|idx
 decl_stmt|;
+name|boolean_t
+name|superpage
+decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
@@ -20343,6 +20346,10 @@ operator|==
 name|PG_V
 condition|)
 block|{
+name|superpage
+operator|=
+name|FALSE
+expr_stmt|;
 name|ptepde
 operator|=
 name|tpte
@@ -20377,6 +20384,14 @@ name|tpte
 operator|=
 operator|*
 name|pte
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * Keep track whether 'tpte' is a 					 * superpage explicitly instead of 					 * relying on PG_PS being set. 					 * 					 * This is because PG_PS is numerically 					 * identical to PG_PTE_PAT and thus a 					 * regular page could be mistaken for 					 * a superpage. 					 */
+name|superpage
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -20418,9 +20433,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|tpte
-operator|&
-name|PG_PS
+name|superpage
 condition|)
 name|pa
 operator|=
@@ -20526,13 +20539,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|tpte
-operator|&
-name|PG_PS
-operator|)
-operator|!=
-literal|0
+name|superpage
 condition|)
 block|{
 for|for
@@ -20587,13 +20594,7 @@ name|bitmask
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|tpte
-operator|&
-name|PG_PS
-operator|)
-operator|!=
-literal|0
+name|superpage
 condition|)
 block|{
 name|pmap_resident_count_dec

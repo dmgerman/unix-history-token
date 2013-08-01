@@ -2094,7 +2094,7 @@ name|SYSINIT
 argument_list|(
 name|hv_util_initx
 argument_list|,
-name|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_KTHREAD_IDLE
 argument_list|,
 name|SI_ORDER_MIDDLE
 operator|+

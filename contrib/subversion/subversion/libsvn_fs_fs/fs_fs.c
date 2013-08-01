@@ -5957,7 +5957,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* In the filesystem FS, pack all revprop shards up to min_unpacked_rev.  * Use SCRATCH_POOL for temporary allocations.  */
+comment|/* In the filesystem FS, pack all revprop shards up to min_unpacked_rev.  *   * NOTE: Keep the old non-packed shards around until after the format bump.  * Otherwise, re-running upgrade will drop the packed revprop shard but  * have no unpacked data anymore.  Call upgrade_cleanup_pack_revprops after  * the bump.  *   * Use SCRATCH_POOL for temporary allocations.  */
 end_comment
 
 begin_function
@@ -6137,6 +6137,88 @@ name|iterpool
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|iterpool
+argument_list|)
+expr_stmt|;
+return|return
+name|SVN_NO_ERROR
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* In the filesystem FS, remove all non-packed revprop shards up to  * min_unpacked_rev.  Use SCRATCH_POOL for temporary allocations.  * See upgrade_pack_revprops for more info.  */
+end_comment
+
+begin_function
+specifier|static
+name|svn_error_t
+modifier|*
+name|upgrade_cleanup_pack_revprops
+parameter_list|(
+name|svn_fs_t
+modifier|*
+name|fs
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+block|{
+name|fs_fs_data_t
+modifier|*
+name|ffd
+init|=
+name|fs
+operator|->
+name|fsap_data
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|revprops_shard_path
+decl_stmt|;
+name|apr_int64_t
+name|shard
+decl_stmt|;
+name|apr_int64_t
+name|first_unpacked_shard
+init|=
+name|ffd
+operator|->
+name|min_unpacked_rev
+operator|/
+name|ffd
+operator|->
+name|max_files_per_dir
+decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|iterpool
+init|=
+name|svn_pool_create
+argument_list|(
+name|scratch_pool
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|revsprops_dir
+init|=
+name|svn_dirent_join
+argument_list|(
+name|fs
+operator|->
+name|path
+argument_list|,
+name|PATH_REVPROPS_DIR
+argument_list|,
+name|scratch_pool
+argument_list|)
+decl_stmt|;
 comment|/* delete the non-packed revprops shards afterwards */
 for|for
 control|(
@@ -6248,6 +6330,11 @@ argument_list|)
 decl_stmt|;
 name|svn_node_kind_t
 name|kind
+decl_stmt|;
+name|svn_boolean_t
+name|needs_revprop_shard_cleanup
+init|=
+name|FALSE
 decl_stmt|;
 comment|/* Read the FS format number and max-files-per-dir setting. */
 name|SVN_ERR
@@ -6454,7 +6541,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If the file system supports revision packing but not revprop packing,      pack the revprops up to the point that revision data has been packed. */
+comment|/* If the file system supports revision packing but not revprop packing      *and* the FS has been sharded, pack the revprops up to the point that      revision data has been packed.  However, keep the non-packed revprop      files around until after the format bump */
 if|if
 condition|(
 name|format
@@ -6464,7 +6551,16 @@ operator|&&
 name|format
 operator|<
 name|SVN_FS_FS__MIN_PACKED_REVPROP_FORMAT
+operator|&&
+name|max_files_per_dir
+operator|>
+literal|0
 condition|)
+block|{
+name|needs_revprop_shard_cleanup
+operator|=
+name|TRUE
+expr_stmt|;
 name|SVN_ERR
 argument_list|(
 name|upgrade_pack_revprops
@@ -6475,8 +6571,10 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Bump the format file. */
-return|return
+name|SVN_ERR
+argument_list|(
 name|write_format
 argument_list|(
 name|format_path
@@ -6489,6 +6587,26 @@ name|TRUE
 argument_list|,
 name|pool
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Now, it is safe to remove the redundant revprop files. */
+if|if
+condition|(
+name|needs_revprop_shard_cleanup
+condition|)
+name|SVN_ERR
+argument_list|(
+name|upgrade_cleanup_pack_revprops
+argument_list|(
+name|fs
+argument_list|,
+name|pool
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Done */
+return|return
+name|SVN_NO_ERROR
 return|;
 block|}
 end_function
@@ -14142,7 +14260,7 @@ name|compressed
 argument_list|,
 name|uncompressed
 argument_list|,
-literal|0x1000000
+name|APR_SIZE_MAX
 argument_list|)
 argument_list|)
 expr_stmt|;

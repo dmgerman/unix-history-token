@@ -1650,6 +1650,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5762_A0
+value|0x05762000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM57765_A0
 value|0x57785000
 end_define
@@ -1819,6 +1826,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_ASICREV_BCM5762
+value|0x5762
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_ASICREV_BCM5784
 value|0x5784
 end_define
@@ -1951,6 +1965,13 @@ define|#
 directive|define
 name|BGE_CHIPREV_5761_AX
 value|0x57611
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_57765_AX
+value|0x577850
 end_define
 
 begin_define
@@ -7461,6 +7482,13 @@ name|BGE_CPMU_PHY_STRAP
 value|0x3664
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CPMU_PADRNG_CTL
+value|0x3668
+end_define
+
 begin_comment
 comment|/* Central Power Management Unit (CPMU) register */
 end_comment
@@ -7638,6 +7666,17 @@ define|#
 directive|define
 name|BGE_CPMU_PHY_STRAP_IS_SERDES
 value|0x00000020
+end_define
+
+begin_comment
+comment|/* CPMU Padring Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_CPMU_PADRNG_CTL_RDIV2
+value|0x00040000
 end_define
 
 begin_comment
@@ -8915,6 +8954,20 @@ define|#
 directive|define
 name|BGE_RDMA_STATUS
 value|0x4804
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_REG2
+value|0x4890
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL_REG2
+value|0x48A0
 end_define
 
 begin_define
@@ -13781,6 +13834,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCOM_DEVICEID_BCM5725
+value|0x1643
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5727
+value|0x16F3
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCOM_DEVICEID_BCM5750
 value|0x1676
 end_define
@@ -13909,6 +13976,13 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5761SE
 value|0x1689
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5762
+value|0x1687
 end_define
 
 begin_define

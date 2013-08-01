@@ -781,7 +781,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Remove a node and all its descendants from the BASE tree. This handles    the deletion of a tree from the update editor and some file external    scenarios.     The node to remove is indicated by LOCAL_ABSPATH from the local    filesystem.     This operation *installs* workqueue operations to update the local    filesystem after the database operation.     To maintain a consistent database this function will also remove    any working node that marks LOCAL_ABSPATH as base-deleted.  If this    results in there being no working node for LOCAL_ABSPATH then any    actual node will be removed if the actual node does not mark a    conflict.     If KEEP_AS_WORKING is TRUE, then the base tree is copied to higher    layers as a copy of itself before deleting the BASE nodes.     If KEEP_AS_WORKING is FALSE, and QUEUE_DELETES is TRUE, also queue    workqueue items to delete all in-wc representations that aren't    shadowed by higher layers.    (With KEEP_AS_WORKING TRUE, this is a no-op, as everything is     automatically shadowed by the created copy)     If NOT_PRESENT_REVISION specifies a valid revision a not-present    node is installed in BASE node with kind NOT_PRESENT_KIND after    deleting.     If CONFLICT and/or WORK_ITEMS are passed they are installed as part    of the operation, after the work items inserted by the operation    itself. */
+comment|/* Remove a node and all its descendants from the BASE tree. This handles    the deletion of a tree from the update editor and some file external    scenarios.     The node to remove is indicated by LOCAL_ABSPATH from the local    filesystem.     This operation *installs* workqueue operations to update the local    filesystem after the database operation.     To maintain a consistent database this function will also remove    any working node that marks LOCAL_ABSPATH as base-deleted.  If this    results in there being no working node for LOCAL_ABSPATH then any    actual node will be removed if the actual node does not mark a    conflict.     If KEEP_AS_WORKING is TRUE, then the base tree is copied to higher    layers as a copy of itself before deleting the BASE nodes.     If KEEP_AS_WORKING is FALSE, and QUEUE_DELETES is TRUE, also queue    workqueue items to delete all in-wc representations that aren't    shadowed by higher layers.    (With KEEP_AS_WORKING TRUE, this is a no-op, as everything is     automatically shadowed by the created copy)     If REMOVE_LOCKS is TRUE, all locks of this node and any subnodes    are also removed. This is to be done during commit of deleted nodes.     If NOT_PRESENT_REVISION specifies a valid revision a not-present    node is installed in BASE node with kind NOT_PRESENT_KIND after    deleting.     If CONFLICT and/or WORK_ITEMS are passed they are installed as part    of the operation, after the work items inserted by the operation    itself. */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_base_remove
@@ -800,6 +800,9 @@ name|keep_as_working
 parameter_list|,
 name|svn_boolean_t
 name|queue_deletes
+parameter_list|,
+name|svn_boolean_t
+name|remove_locks
 parameter_list|,
 name|svn_revnum_t
 name|not_present_revision
@@ -4443,7 +4446,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Upgrade the metadata concerning the WC at WCROOT_ABSPATH, in DB,  * to the SVN_WC__VERSION format.  *  * This function is used for upgrading wc-ng working copies to a newer  * wc-ng format. If a pre-1.7 working copy is found, this function  * returns SVN_ERR_WC_UPGRADE_REQUIRED.  *  * Upgrading subdirectories of a working copy is not supported.  * If WCROOT_ABSPATH is not a working copy root SVN_ERR_WC_INVALID_OP_ON_CWD  * is returned.  */
+comment|/* Upgrade the metadata concerning the WC at WCROOT_ABSPATH, in DB,  * to the SVN_WC__VERSION format.  *  * This function is used for upgrading wc-ng working copies to a newer  * wc-ng format. If a pre-1.7 working copy is found, this function  * returns SVN_ERR_WC_UPGRADE_REQUIRED.  *  * Upgrading subdirectories of a working copy is not supported.  * If WCROOT_ABSPATH is not a working copy root SVN_ERR_WC_INVALID_OP_ON_CWD  * is returned.  *  * If BUMPED_FORMAT is not NULL, set *BUMPED_FORMAT to TRUE if the format  * was bumped or to FALSE if the wc was already at the resulting format.  */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_bump_format
@@ -4452,14 +4455,18 @@ name|int
 modifier|*
 name|result_format
 parameter_list|,
-specifier|const
-name|char
+name|svn_boolean_t
 modifier|*
-name|wcroot_abspath
+name|bumped_format
 parameter_list|,
 name|svn_wc__db_t
 modifier|*
 name|db
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|wcroot_abspath
 parameter_list|,
 name|apr_pool_t
 modifier|*

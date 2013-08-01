@@ -336,11 +336,15 @@ name|NULL
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -365,10 +369,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for header completed with error %d"
+literal|"%s: request for header completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -414,7 +418,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: header read with error; iocstatus = 0x%x\n"
@@ -636,11 +640,15 @@ name|page
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -665,10 +673,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request for page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -714,7 +722,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: page read with error; iocstatus = 0x%x\n"
@@ -948,6 +956,7 @@ name|cm_data
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
 name|mps_request_polled
@@ -1244,6 +1253,7 @@ name|cm_data
 operator|=
 name|page
 expr_stmt|;
+comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
 name|mps_request_polled
@@ -2355,11 +2365,15 @@ name|NULL
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -2384,10 +2398,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for header completed with error %d"
+literal|"%s: request for header completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2433,7 +2447,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: header read with error; iocstatus = 0x%x\n"
@@ -2663,11 +2677,15 @@ name|page
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -2692,10 +2710,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request for page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2741,7 +2759,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: page read with error; iocstatus = 0x%x\n"
@@ -2995,11 +3013,15 @@ name|NULL
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -3024,10 +3046,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for header completed with error %d"
+literal|"%s: request for header completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3073,7 +3095,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: header read with error; iocstatus = 0x%x\n"
@@ -3331,11 +3353,15 @@ name|page
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -3360,10 +3386,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request to write page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3409,7 +3435,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: page written with error; iocstatus = 0x%x\n"
@@ -3632,11 +3658,15 @@ name|NULL
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -3661,10 +3691,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for header completed with error %d"
+literal|"%s: request for header completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3710,7 +3740,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: header read with error; iocstatus = 0x%x\n"
@@ -3941,11 +3971,15 @@ name|page
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -3970,10 +4004,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request for page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4019,7 +4053,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: page read with error; iocstatus = 0x%x\n"
@@ -4249,11 +4283,15 @@ name|NULL
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -4278,10 +4316,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for header completed with error %d"
+literal|"%s: request for header completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4327,7 +4365,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: header read with error; iocstatus = 0x%x\n"
@@ -4547,11 +4585,15 @@ name|page
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -4576,10 +4618,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request for page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4625,7 +4667,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: page read with error; iocstatus = 0x%x\n"
@@ -4856,6 +4898,7 @@ name|cm_data
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
 name|mps_request_polled
@@ -5164,6 +5207,7 @@ name|cm_data
 operator|=
 name|page
 expr_stmt|;
+comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
 name|mps_request_polled
@@ -5472,11 +5516,15 @@ name|NULL
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -5501,10 +5549,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for header completed with error %d"
+literal|"%s: request for header completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5550,7 +5598,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: header read with error; iocstatus = 0x%x\n"
@@ -5785,11 +5833,15 @@ name|page
 expr_stmt|;
 name|error
 operator|=
-name|mps_request_polled
+name|mps_wait_command
 argument_list|(
 name|sc
 argument_list|,
 name|cm
+argument_list|,
+literal|60
+argument_list|,
+name|CAN_SLEEP
 argument_list|)
 expr_stmt|;
 name|reply
@@ -5814,10 +5866,10 @@ operator|)
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
-literal|"%s: poll for page completed with error %d"
+literal|"%s: request for page completed with error %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5863,7 +5915,7 @@ name|MPI2_IOCSTATUS_SUCCESS
 condition|)
 block|{
 comment|/* FIXME */
-comment|/* If the poll returns error then we need to do diag reset */
+comment|/* 		 * If the request returns an error then we need to do a diag 		 * reset 		 */
 name|printf
 argument_list|(
 literal|"%s: page read with error; iocstatus = 0x%x\n"
@@ -6182,6 +6234,7 @@ name|cm_data
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
 name|mps_request_polled
@@ -6490,6 +6543,7 @@ name|cm_data
 operator|=
 name|page
 expr_stmt|;
+comment|/* 	 * This page must be polled because the IOC isn't ready yet when this 	 * page is needed. 	 */
 name|error
 operator|=
 name|mps_request_polled

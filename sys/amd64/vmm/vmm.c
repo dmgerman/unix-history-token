@@ -955,11 +955,16 @@ operator|=
 name|VMM_CLEANUP
 argument_list|()
 expr_stmt|;
-block|}
+comment|/* 			 * Something bad happened - prevent new 			 * VMs from being created 			 */
+if|if
+condition|(
+name|error
+condition|)
 name|vmm_initialized
 operator|=
 literal|0
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|error

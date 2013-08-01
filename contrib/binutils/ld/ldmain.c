@@ -345,7 +345,7 @@ begin_decl_stmt
 name|bfd_boolean
 name|add_needed
 init|=
-name|TRUE
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 

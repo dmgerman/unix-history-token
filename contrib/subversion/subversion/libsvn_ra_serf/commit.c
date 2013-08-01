@@ -574,8 +574,6 @@ argument_list|(
 name|handler
 operator|->
 name|sline
-operator|.
-name|code
 argument_list|,
 name|handler
 operator|->
@@ -9121,9 +9119,25 @@ operator|!=
 literal|404
 condition|)
 block|{
-name|SVN_ERR_MALFUNCTION
-argument_list|()
-expr_stmt|;
+return|return
+name|svn_error_createf
+argument_list|(
+name|SVN_ERR_RA_DAV_MALFORMED_DATA
+argument_list|,
+name|NULL
+argument_list|,
+name|_
+argument_list|(
+literal|"DELETE returned unexpected status: %d"
+argument_list|)
+argument_list|,
+name|handler
+operator|->
+name|sline
+operator|.
+name|code
+argument_list|)
+return|;
 block|}
 return|return
 name|SVN_NO_ERROR

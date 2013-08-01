@@ -374,7 +374,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC6STAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 return|return;

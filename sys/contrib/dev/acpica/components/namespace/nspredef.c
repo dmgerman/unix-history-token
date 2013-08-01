@@ -225,6 +225,20 @@ goto|goto
 name|Exit
 goto|;
 block|}
+comment|/*      *      * 4) If there is no return value and it is optional, just return      * AE_OK (_WAK).      */
+if|if
+condition|(
+operator|!
+operator|(
+operator|*
+name|ReturnObjectPtr
+operator|)
+condition|)
+block|{
+goto|goto
+name|Exit
+goto|;
+block|}
 comment|/*      * For returned Package objects, check the type of all sub-objects.      * Note: Package may have been newly created by call above.      */
 if|if
 condition|(
@@ -522,6 +536,33 @@ argument_list|,
 name|ExpectedBtypes
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReturnObject
+condition|)
+block|{
+name|ACPI_WARN_PREDEFINED
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Info
+operator|->
+name|FullPathname
+operator|,
+name|Info
+operator|->
+name|NodeFlags
+operator|,
+literal|"Expected return object of type %s"
+operator|,
+name|TypeBuffer
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|PackageIndex

@@ -628,7 +628,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * vclean() may be called twice. The first time 		 * removes the primary reference to the object, 		 * the second time goes one further and is a 		 * special-case to terminate the object. 		 * 		 * don't double-terminate the object 		 */
+comment|/* 		 * don't double-terminate the object 		 */
 if|if
 condition|(
 operator|(

@@ -553,6 +553,12 @@ name|deleting
 operator|=
 name|SVN_INVALID_REVNUM
 expr_stmt|;
+name|change
+operator|->
+name|kind
+operator|=
+name|svn_node_unknown
+expr_stmt|;
 name|svn_hash_sets
 argument_list|(
 name|eb
@@ -6272,6 +6278,7 @@ name|scratch_pool
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|copyfrom_url
 operator|=
 name|change
@@ -6301,6 +6308,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|copyfrom_rev
 operator|=
 name|change

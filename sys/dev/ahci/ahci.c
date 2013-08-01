@@ -1401,6 +1401,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x23a38086
+block|,
+literal|0x00
+block|,
+literal|"Intel Coleto Creek"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x8c028086
 block|,
 literal|0x00
@@ -4249,7 +4259,43 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Caps2:%s%s%s\n"
+literal|"Caps2:%s%s%s%s%s%s\n"
+argument_list|,
+operator|(
+name|ctlr
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_DESO
+operator|)
+condition|?
+literal|" DESO"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|ctlr
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_SADM
+operator|)
+condition|?
+literal|" SADM"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|ctlr
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_SDS
+operator|)
+condition|?
+literal|" SDS"
+else|:
+literal|""
 argument_list|,
 operator|(
 name|ctlr

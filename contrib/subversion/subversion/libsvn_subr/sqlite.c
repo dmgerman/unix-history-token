@@ -465,7 +465,7 @@ name|x
 parameter_list|,
 name|db
 parameter_list|)
-value|do                                     \ {                                                                \   int sqlite_err__temp = (x);                                    \   if (sqlite_err__temp != SQLITE_OK)                             \     return svn_error_createf(SQLITE_ERROR_CODE(sqlite_err__temp), \                              NULL, "sqlite: %s (S%d)",             \                              sqlite3_errmsg((db)->db3),           \                              sqlite_err__temp);                   \ } while (0)
+value|do                                     \ {                                                                \   int sqlite_err__temp = (x);                                    \   if (sqlite_err__temp != SQLITE_OK)                             \     return svn_error_createf(SQLITE_ERROR_CODE(sqlite_err__temp), \                              NULL, "sqlite[S%d]: %s",             \                              sqlite_err__temp,                    \                              sqlite3_errmsg((db)->db3));          \ } while (0)
 end_define
 
 begin_define
@@ -477,7 +477,7 @@ name|x
 parameter_list|,
 name|msg
 parameter_list|)
-value|do                                \ {                                                                \   int sqlite_err__temp = (x);                                    \   if (sqlite_err__temp != SQLITE_OK)                             \     return svn_error_createf(SQLITE_ERROR_CODE(sqlite_err__temp), \                              NULL, "sqlite: %s (S%d)", (msg),     \                              sqlite_err__temp);                  \ } while (0)
+value|do                                \ {                                                                \   int sqlite_err__temp = (x);                                    \   if (sqlite_err__temp != SQLITE_OK)                             \     return svn_error_createf(SQLITE_ERROR_CODE(sqlite_err__temp), \                              NULL, "sqlite[S%d]: %s",            \                              sqlite_err__temp, msg);             \ } while (0)
 end_define
 
 begin_comment
@@ -579,13 +579,13 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"sqlite: %s (S%d),"
+literal|"sqlite[S%d]: %s,"
 literal|" executing statement '%s'"
 argument_list|)
 argument_list|,
-name|err_msg
-argument_list|,
 name|sqlite_err
+argument_list|,
+name|err_msg
 argument_list|,
 name|sql
 argument_list|)
@@ -1111,7 +1111,9 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
-literal|"sqlite: %s (S%d)"
+literal|"sqlite[S%d]: %s"
+argument_list|,
+name|sqlite_result
 argument_list|,
 name|sqlite3_errmsg
 argument_list|(
@@ -1121,8 +1123,6 @@ name|db
 operator|->
 name|db3
 argument_list|)
-argument_list|,
-name|sqlite_result
 argument_list|)
 expr_stmt|;
 name|err2
@@ -3049,7 +3049,7 @@ name|NULL
 argument_list|,
 name|_
 argument_list|(
-literal|"Could not configure SQLite (S%d)"
+literal|"Could not configure SQLite [S%d]"
 argument_list|)
 argument_list|,
 name|err

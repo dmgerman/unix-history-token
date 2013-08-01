@@ -2728,19 +2728,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|vg
 operator|.
 name|es_vid
-operator|==
-literal|0
-operator|&&
-name|vg
-operator|.
-name|es_member_ports
+operator|&
+name|ETHERSWITCH_VID_VALID
+operator|)
 operator|==
 literal|0
 condition|)
 return|return;
+name|vg
+operator|.
+name|es_vid
+operator|&=
+name|ETHERSWITCH_VID_MASK
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"vlangroup%d:\n"
@@ -3628,13 +3632,15 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"port unit must be between 0 and %d"
+literal|"vlangroup unit must be between 0 and %d"
 argument_list|,
 name|cfg
 operator|.
 name|info
 operator|.
 name|es_nvlangroups
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|newmode

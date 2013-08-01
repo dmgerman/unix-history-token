@@ -852,6 +852,19 @@ name|SVN_CLIENT_COMMIT_ITEM_LOCK_TOKEN
 operator|)
 operator|)
 expr_stmt|;
+comment|/* When the node was deleted (or replaced), we need to always remove the       locks, as they're invalidated on the server. We cannot honor the       SVN_CLIENT_COMMIT_ITEM_LOCK_TOKEN flag here because it does not tell      us whether we have locked children. */
+if|if
+condition|(
+name|item
+operator|->
+name|state_flags
+operator|&
+name|SVN_CLIENT_COMMIT_ITEM_DELETE
+condition|)
+name|remove_lock
+operator|=
+name|TRUE
+expr_stmt|;
 return|return
 name|svn_wc_queue_committed3
 argument_list|(

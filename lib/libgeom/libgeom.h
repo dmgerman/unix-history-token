@@ -41,6 +41,15 @@ end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
+ifndef|#
+directive|ifndef
+name|DEBUG_LIBGEOM
+define|#
+directive|define
+name|DEBUG_LIBGEOM
+value|0
+endif|#
+directive|endif
 name|void
 name|geom_stats_close
 parameter_list|(

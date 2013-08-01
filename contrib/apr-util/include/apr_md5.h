@@ -161,7 +161,7 @@ argument_list|,
 argument|apr_size_t inputLen
 argument_list|)
 empty_stmt|;
-comment|/**  * Encode a password using an MD5 algorithm  * @param password The password to encode  * @param salt The salt to use for the encoding  * @param result The string to store the encoded password in  * @param nbytes The size of the result buffer  */
+comment|/**  * Encode a password using an MD5 algorithm  * @param password The password to encode  * @param salt The salt string to use for the encoding  * @param result The string to store the encoded password in  * @param nbytes The size of the result buffer  */
 name|APU_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -177,7 +177,27 @@ argument_list|,
 argument|apr_size_t nbytes
 argument_list|)
 empty_stmt|;
-comment|/**  * Validate hashes created by APR-supported algorithms: md5 and sha1.  * hashes created by crypt are supported only on platforms that provide  * crypt(3), so don't rely on that function unless you know that your  * application will be run only on platforms that support it.  On platforms  * that don't support crypt(3), this falls back to a clear text string  * comparison.  * @param passwd The password to validate  * @param hash The password to validate against  */
+comment|/**  * Encode a password using the bcrypt algorithm  * @param password The password to encode  * @param count The cost of the encoding, possible values are 4 to 31  * @param salt Pointer to binary data to be used as salt for the encoding  * @param salt_len The size of the salt data (must be>= 16)  * @param out The string to store the encoded password in  * @param out_len The size of the result buffer (must be>= 61)  */
+name|APU_DECLARE
+argument_list|(
+argument|apr_status_t
+argument_list|)
+name|apr_bcrypt_encode
+argument_list|(
+argument|const char *pw
+argument_list|,
+argument|unsigned int count
+argument_list|,
+argument|const unsigned char *salt
+argument_list|,
+argument|apr_size_t salt_len
+argument_list|,
+argument|char *out
+argument_list|,
+argument|apr_size_t out_len
+argument_list|)
+empty_stmt|;
+comment|/**  * Validate hashes created by APR-supported algorithms: md5, bcrypt, and sha1.  * hashes created by crypt are supported only on platforms that provide  * crypt(3), so don't rely on that function unless you know that your  * application will be run only on platforms that support it.  On platforms  * that don't support crypt(3), this falls back to a clear text string  * comparison.  * @param passwd The password to validate  * @param hash The password to validate against  */
 name|APU_DECLARE
 argument_list|(
 argument|apr_status_t

@@ -1383,6 +1383,16 @@ comment|/* file descriptor for writing file system */
 end_comment
 
 begin_decl_stmt
+name|int
+name|surrender
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Give up if reads fail */
+end_comment
+
+begin_decl_stmt
 name|ufs2_daddr_t
 name|maxfsblock
 decl_stmt|;

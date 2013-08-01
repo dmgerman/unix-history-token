@@ -176,6 +176,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|cpu_mon_mwait_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|cpu_mon_min_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|cpu_mon_max_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|ctx_switch_xsave
 index|[]

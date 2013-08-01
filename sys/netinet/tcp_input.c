@@ -4527,7 +4527,7 @@ condition|)
 block|{
 name|IPSEC6STAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4552,7 +4552,7 @@ condition|)
 block|{
 name|IPSECSTAT_INC
 argument_list|(
-name|in_polvio
+name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 goto|goto

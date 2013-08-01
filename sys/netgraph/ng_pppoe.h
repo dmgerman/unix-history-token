@@ -415,6 +415,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PTT_MAX_PAYL
+value|(0x0120)
+end_define
+
+begin_comment
+comment|/* PPP-Max-Payload (RFC4638) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PTT_SRV_ERR
 value|(0x0201)
 end_define
@@ -530,6 +541,17 @@ directive|define
 name|PTT_RELAY_SID
 value|(0x1001)
 end_define
+
+begin_define
+define|#
+directive|define
+name|PTT_MAX_PAYL
+value|(0x2001)
+end_define
+
+begin_comment
+comment|/* PPP-Max-Payload (RFC4638) */
+end_comment
 
 begin_define
 define|#

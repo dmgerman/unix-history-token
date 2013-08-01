@@ -107,6 +107,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ETHERSWITCH_VID_MASK
+value|0xfff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERSWITCH_VID_VALID
+value|(1<< 12)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ETHERSWITCH_VLAN_ISL
 value|(1<< 0)
 end_define
