@@ -247,6 +247,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWN_GPIO_IN
+value|0x018
+end_define
+
+begin_comment
+comment|/* read external chip pins */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IWN_RESET
 value|0x020
 end_define
@@ -296,6 +307,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWN_GP_UCODE
+value|0x048
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWN_GP_DRIVER
 value|0x050
 end_define
@@ -303,8 +321,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|IWN_UCODE_GP1
+value|0x054
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_UCODE_GP1_SET
+value|0x058
+end_define
+
+begin_define
+define|#
+directive|define
 name|IWN_UCODE_GP1_CLR
 value|0x05c
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_UCODE_GP2
+value|0x060
 end_define
 
 begin_define
@@ -362,6 +401,10 @@ directive|define
 name|IWN_DBG_LINK_PWR_MGMT
 value|0x250
 end_define
+
+begin_comment
+comment|/* Need nic_lock for use above */
+end_comment
 
 begin_define
 define|#
