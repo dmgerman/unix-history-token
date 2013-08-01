@@ -46,7 +46,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.13"
+literal|"2.5.15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1849,6 +1849,17 @@ init|=
 name|FALSE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ixgbe.unsupported_sfp"
+argument_list|,
+operator|&
+name|allow_unsupported_sfp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ** HW RSC control:  **  this feature only works with **  IPv4, and only on 82599 and later. **  Also this will cause IP forwarding to **  fail and that can't be controlled by **  the stack as LRO can. For all these **  reasons I've deemed it best to leave **  this off and not bother with a tuneable **  interface, this would need to be compiled **  to enable. */
@@ -5008,7 +5019,7 @@ argument_list|)
 expr_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"ixgbe_init: begin"
+literal|"ixgbe_init_locked: begin"
 argument_list|)
 expr_stmt|;
 name|hw
@@ -6370,107 +6381,6 @@ expr_stmt|;
 block|}
 block|}
 specifier|static
-specifier|inline
-name|void
-name|ixgbe_rearm_queues
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|u64
-name|queues
-parameter_list|)
-block|{
-name|u32
-name|mask
-decl_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|ixgbe_mac_82598EB
-condition|)
-block|{
-name|mask
-operator|=
-operator|(
-name|IXGBE_EIMS_RTX_QUEUE
-operator|&
-name|queues
-operator|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_EICS
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mask
-operator|=
-operator|(
-name|queues
-operator|&
-literal|0xFFFFFFFF
-operator|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_EICS_EX
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-name|mask
-operator|=
-operator|(
-name|queues
-operator|>>
-literal|32
-operator|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_EICS_EX
-argument_list|(
-literal|1
-argument_list|)
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-specifier|static
 name|void
 name|ixgbe_handle_que
 parameter_list|(
@@ -6918,6 +6828,20 @@ name|newitr
 init|=
 literal|0
 decl_stmt|;
+comment|/* Protect against spurious interrupts */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|ixgbe_disable_queue
 argument_list|(
 name|adapter
@@ -7291,6 +7215,12 @@ name|hw
 argument_list|,
 name|IXGBE_EICS
 argument_list|)
+expr_stmt|;
+comment|/* Be sure the queue bits are not cleared */
+name|reg_eicr
+operator|=
+operator|~
+name|IXGBE_EICR_RTX_QUEUE
 expr_stmt|;
 comment|/* Clear interrupt with write */
 name|IXGBE_WRITE_REG
@@ -9195,15 +9125,6 @@ name|watchdog
 goto|;
 name|out
 label|:
-name|ixgbe_rearm_queues
-argument_list|(
-name|adapter
-argument_list|,
-name|adapter
-operator|->
-name|que_mask
-argument_list|)
-expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -14390,7 +14311,7 @@ name|i
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"free_transmit_ring: begin"
+literal|"ixgbe_free_transmit_ring: begin"
 argument_list|)
 expr_stmt|;
 if|if
@@ -17931,7 +17852,7 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* Update descriptor */
+comment|/* Update descriptor and the cached value */
 name|rxr
 operator|->
 name|rx_base
@@ -17948,11 +17869,26 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+name|rxbuf
+operator|->
+name|addr
+operator|=
+name|htole64
+argument_list|(
+name|paddr
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
+name|rxbuf
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|rxbuf
 operator|->
 name|buf
@@ -18052,7 +17988,7 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-comment|/* Update descriptor */
+comment|/* Update the descriptor and the cached value */
 name|rxr
 operator|->
 name|rx_base
@@ -18063,6 +17999,20 @@ operator|.
 name|read
 operator|.
 name|pkt_addr
+operator|=
+name|htole64
+argument_list|(
+name|seg
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
+argument_list|)
+expr_stmt|;
+name|rxbuf
+operator|->
+name|addr
 operator|=
 name|htole64
 argument_list|(
@@ -18961,6 +18911,11 @@ name|adapter
 operator|->
 name|rx_rings
 decl_stmt|;
+name|INIT_DEBUGOUT
+argument_list|(
+literal|"ixgbe_free_receive_structures: begin"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -19051,7 +19006,7 @@ name|rxbuf
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"free_receive_structures: begin"
+literal|"ixgbe_free_receive_buffers: begin"
 argument_list|)
 expr_stmt|;
 comment|/* Cleanup any existing buffers */
@@ -19464,6 +19419,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|rbuf
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *  Return TRUE for more work, FALSE for all clean.  *********************************************************************/
