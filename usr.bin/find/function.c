@@ -1843,6 +1843,12 @@ expr_stmt|;
 comment|/* Potentially unsafe - do not accept relative paths whatsoever */
 if|if
 condition|(
+name|entry
+operator|->
+name|fts_level
+operator|>
+name|FTS_ROOTLEVEL
+operator|&&
 name|strchr
 argument_list|(
 name|entry
