@@ -17,12 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -339,9 +333,9 @@ name|scc_quicc_driver
 argument_list|,
 name|scc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
