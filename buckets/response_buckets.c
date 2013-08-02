@@ -33,6 +33,12 @@ directive|include
 file|"serf_bucket_util.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"serf_private.h"
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct

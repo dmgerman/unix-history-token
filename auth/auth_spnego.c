@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"auth_kerb.h"
+file|"auth_spnego.h"
 end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SERF_HAVE_KERB
+name|SERF_HAVE_SPNEGO
 end_ifdef
 
 begin_comment
@@ -56,7 +56,7 @@ file|<apr_strings.h>
 end_include
 
 begin_comment
-comment|/** TODO:  ** - This implements the SPNEGO mechanism, not Kerberos directly. Adapt  **   filename, functions& comments.  ** - send session key directly on new connections where we already know  **   the server requires Kerberos authn.  ** - Add a way for serf to give detailed error information back to the  **   application.  **/
+comment|/** TODO:  ** - send session key directly on new connections where we already know  **   the server requires Kerberos authn.  ** - Add a way for serf to give detailed error information back to the  **   application.  **/
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ modifier|*
 name|pool
 decl_stmt|;
 comment|/* GSSAPI context */
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|gss_ctx
 decl_stmt|;
@@ -188,10 +188,10 @@ modifier|*
 name|gss_info
 parameter_list|)
 block|{
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 name|input_buf
 decl_stmt|;
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 name|output_buf
 decl_stmt|;
 name|apr_status_t
@@ -236,7 +236,7 @@ block|}
 comment|/* Establish a security context to the server. */
 name|status
 operator|=
-name|serf__kerb_init_sec_context
+name|serf__spnego_init_sec_context
 argument_list|(
 name|gss_info
 operator|->
@@ -360,22 +360,6 @@ decl_stmt|;
 name|serf__authn_info_t
 modifier|*
 name|authn_info
-init|=
-operator|(
-name|peer
-operator|==
-name|HOST
-operator|)
-condition|?
-operator|&
-name|ctx
-operator|->
-name|authn_info
-else|:
-operator|&
-name|ctx
-operator|->
-name|proxy_authn_info
 decl_stmt|;
 specifier|const
 name|char
@@ -402,6 +386,31 @@ decl_stmt|;
 name|apr_status_t
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|peer
+operator|==
+name|HOST
+condition|)
+block|{
+name|authn_info
+operator|=
+name|serf__get_authn_info_for_server
+argument_list|(
+name|conn
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|authn_info
+operator|=
+operator|&
+name|ctx
+operator|->
+name|proxy_authn_info
+expr_stmt|;
+block|}
 comment|/* Is this a response from a host/proxy? auth_hdr should always be set. */
 if|if
 condition|(
@@ -537,7 +546,7 @@ operator|!
 name|token
 condition|)
 block|{
-name|serf__kerb_reset_sec_context
+name|serf__spnego_reset_sec_context
 argument_list|(
 name|gss_info
 operator|->
@@ -678,7 +687,7 @@ end_function
 
 begin_function
 name|apr_status_t
-name|serf__init_kerb
+name|serf__init_spnego
 parameter_list|(
 name|int
 name|code
@@ -704,8 +713,13 @@ end_comment
 
 begin_function
 name|apr_status_t
-name|serf__init_kerb_connection
+name|serf__init_spnego_connection
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|int
 name|code
 parameter_list|,
@@ -729,6 +743,8 @@ name|gss_info
 operator|=
 name|apr_pcalloc
 argument_list|(
+name|conn
+operator|->
 name|pool
 argument_list|,
 sizeof|sizeof
@@ -760,17 +776,19 @@ name|pstate_init
 expr_stmt|;
 name|status
 operator|=
-name|serf__kerb_create_sec_context
+name|serf__spnego_create_sec_context
 argument_list|(
 operator|&
 name|gss_info
 operator|->
 name|gss_ctx
 argument_list|,
-name|pool
+name|scheme
 argument_list|,
 name|gss_info
 operator|->
+name|pool
+argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
@@ -839,7 +857,7 @@ end_comment
 
 begin_function
 name|apr_status_t
-name|serf__handle_kerb_auth
+name|serf__handle_spnego_auth
 parameter_list|(
 name|int
 name|code
@@ -930,7 +948,7 @@ end_comment
 
 begin_function
 name|apr_status_t
-name|serf__setup_request_kerb_auth
+name|serf__setup_request_spnego_auth
 parameter_list|(
 name|peer_t
 name|peer
@@ -1176,7 +1194,7 @@ end_comment
 
 begin_function
 name|apr_status_t
-name|serf__validate_response_kerb_auth
+name|serf__validate_response_spnego_auth
 parameter_list|(
 name|peer_t
 name|peer
@@ -1379,7 +1397,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SERF_HAVE_GSSAPI */
+comment|/* SERF_HAVE_SPNEGO */
 end_comment
 
 end_unit

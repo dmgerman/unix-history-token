@@ -131,76 +131,85 @@ define|#
 directive|define
 name|SERF_ERROR_RANGE
 value|100
+define|#
+directive|define
+name|SERF_ERROR_START
+value|(APR_OS_START_USERERR + SERF_ERROR_RANGE)
 comment|/* This code is for when this is the last response on this connection:  * i.e. do not send any more requests on this connection or expect  * any more responses.  */
 define|#
 directive|define
 name|SERF_ERROR_CLOSING
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 1)
+value|(SERF_ERROR_START + 1)
 comment|/* This code is for when the connection terminated before the request  * could be processed on the other side.  */
 define|#
 directive|define
 name|SERF_ERROR_REQUEST_LOST
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 2)
+value|(SERF_ERROR_START + 2)
 comment|/* This code is for when the connection is blocked - we can not proceed  * until something happens - generally due to SSL negotiation-like behavior  * where a write() is blocked until a read() is processed.  */
 define|#
 directive|define
 name|SERF_ERROR_WAIT_CONN
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 3)
+value|(SERF_ERROR_START + 3)
 comment|/* This code is for when something went wrong during deflating compressed  * data e.g. a CRC error. */
 define|#
 directive|define
 name|SERF_ERROR_DECOMPRESSION_FAILED
-value|(APR_OS_START_USERERR + \                                              SERF_ERROR_RANGE + 4)
+value|(SERF_ERROR_START + 4)
 comment|/* This code is for when a response received from a http server is not in  * http-compliant syntax. */
 define|#
 directive|define
 name|SERF_ERROR_BAD_HTTP_RESPONSE
-value|(APR_OS_START_USERERR + \                                              SERF_ERROR_RANGE + 5)
+value|(SERF_ERROR_START + 5)
 comment|/* The server sent less data than what was announced. */
 define|#
 directive|define
 name|SERF_ERROR_TRUNCATED_HTTP_RESPONSE
-value|(APR_OS_START_USERERR + \                                             SERF_ERROR_RANGE + 6)
+value|(SERF_ERROR_START + 6)
 comment|/* The proxy server returned an error while setting up the SSL tunnel. */
 define|#
 directive|define
 name|SERF_ERROR_SSLTUNNEL_SETUP_FAILED
-value|(APR_OS_START_USERERR + \                                            SERF_ERROR_RANGE + 7)
+value|(SERF_ERROR_START + 7)
 comment|/* The server unexpectedly closed the connection prematurely. */
 define|#
 directive|define
 name|SERF_ERROR_ABORTED_CONNECTION
-value|(APR_OS_START_USERERR + \                                             SERF_ERROR_RANGE + 8)
+value|(SERF_ERROR_START + 8)
 comment|/* SSL certificates related errors */
 define|#
 directive|define
 name|SERF_ERROR_SSL_CERT_FAILED
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 70)
+value|(SERF_ERROR_START + 70)
 comment|/* SSL communications related errors */
 define|#
 directive|define
 name|SERF_ERROR_SSL_COMM_FAILED
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 71)
+value|(SERF_ERROR_START + 71)
 comment|/* General authentication related errors */
 define|#
 directive|define
 name|SERF_ERROR_AUTHN_FAILED
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 90)
+value|(SERF_ERROR_START + 90)
 comment|/* None of the available authn mechanisms for the request are supported */
 define|#
 directive|define
 name|SERF_ERROR_AUTHN_NOT_SUPPORTED
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 91)
+value|(SERF_ERROR_START + 91)
 comment|/* Authn was requested by the server but the header lacked some attribute  */
 define|#
 directive|define
 name|SERF_ERROR_AUTHN_MISSING_ATTRIBUTE
-value|(APR_OS_START_USERERR + SERF_ERROR_RANGE + 92)
+value|(SERF_ERROR_START + 92)
 comment|/* Authentication handler initialization related errors */
 define|#
 directive|define
 name|SERF_ERROR_AUTHN_INITALIZATION_FAILED
-value|(APR_OS_START_USERERR +\     SERF_ERROR_RANGE + 93)
+value|(SERF_ERROR_START + 93)
+comment|/* Error code reserved for use in the test suite. */
+define|#
+directive|define
+name|SERF_ERROR_ISSUE_IN_TESTSUITE
+value|(SERF_ERROR_START + 99)
 comment|/* This macro groups errors potentially raised when reading a http response.  */
 define|#
 directive|define
@@ -730,7 +739,7 @@ modifier|*
 name|conn
 parameter_list|)
 function_decl|;
-comment|/**  * Sets the maximum number of outstanding requests @a max_requests on the  * connection @a conn. Setting max_requests to 0 means unlimited (the default).  * Ex.: setting max_requests to 1 means a request is sent when a response on the  * previous request was received and handled.  */
+comment|/**  * Sets the maximum number of outstanding requests @a max_requests on the  * connection @a conn. Setting max_requests to 0 means unlimited (the default).  * Ex.: setting max_requests to 1 means a request is sent when a response on the  * previous request was received and handled.  *  * In general, serf tends to take around 16KB per outstanding request.  */
 name|void
 name|serf_connection_set_max_outstanding_requests
 parameter_list|(
@@ -1562,11 +1571,11 @@ value|1
 define|#
 directive|define
 name|SERF_MINOR_VERSION
-value|2
+value|3
 define|#
 directive|define
 name|SERF_PATCH_VERSION
-value|1
+value|0
 comment|/* Version number string */
 define|#
 directive|define

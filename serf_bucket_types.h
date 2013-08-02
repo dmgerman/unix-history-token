@@ -737,6 +737,24 @@ modifier|*
 name|allocator
 parameter_list|)
 function_decl|;
+comment|/**  * Equivalent to serf_bucket_simple_create, except that the bucket assumes  * responsibility for freeing the data on this allocator without making  * a copy.  It is assumed that data was created by a call from allocator.  */
+name|serf_bucket_t
+modifier|*
+name|serf_bucket_simple_own_create
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|apr_size_t
+name|len
+parameter_list|,
+name|serf_bucket_alloc_t
+modifier|*
+name|allocator
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|SERF_BUCKET_SIMPLE_STRING
@@ -1339,7 +1357,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/**  * Extract the fields of the certificate in a table with keys (sha1, notBefore,  * notAfter). The returned table will be allocated in @a pool.  */
+comment|/**  * Extract the fields of the certificate in a table with keys (sha1, notBefore,  * notAfter, subjectAltName). The returned table will be allocated in @a pool.  */
 name|apr_hash_t
 modifier|*
 name|serf_ssl_cert_certificate

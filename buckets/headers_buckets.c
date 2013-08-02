@@ -1275,9 +1275,16 @@ name|state
 operator|==
 name|READ_DONE
 condition|)
+block|{
+operator|*
+name|len
+operator|=
+name|avail
+expr_stmt|;
 return|return
 name|APR_EOF
 return|;
+block|}
 if|if
 condition|(
 name|requested

@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"auth_kerb.h"
+file|"auth_spnego.h"
 end_include
 
 begin_ifdef
@@ -76,7 +76,7 @@ end_endif
 
 begin_struct
 struct|struct
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 block|{
 comment|/* GSSAPI context */
 name|gss_ctx_id_t
@@ -103,7 +103,7 @@ name|char
 modifier|*
 name|filename
 parameter_list|,
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 parameter_list|,
@@ -230,10 +230,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|OM_uint32
-name|min_stat
-decl_stmt|;
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 init|=
@@ -248,12 +245,17 @@ operator|!=
 name|GSS_C_NO_CONTEXT
 condition|)
 block|{
-if|if
-condition|(
+name|OM_uint32
+name|gss_min_stat
+decl_stmt|,
+name|gss_maj_stat
+decl_stmt|;
+name|gss_maj_stat
+operator|=
 name|gss_delete_sec_context
 argument_list|(
 operator|&
-name|min_stat
+name|gss_min_stat
 argument_list|,
 operator|&
 name|ctx
@@ -262,12 +264,34 @@ name|gss_ctx
 argument_list|,
 name|GSS_C_NO_BUFFER
 argument_list|)
-operator|==
-name|GSS_S_FAILURE
+expr_stmt|;
+if|if
+condition|(
+name|GSS_ERROR
+argument_list|(
+name|gss_maj_stat
+argument_list|)
 condition|)
+block|{
+name|log_error
+argument_list|(
+name|AUTH_VERBOSE
+argument_list|,
+name|__FILE__
+argument_list|,
+name|ctx
+argument_list|,
+name|gss_maj_stat
+argument_list|,
+name|gss_min_stat
+argument_list|,
+literal|"Error cleaning up GSS security context"
+argument_list|)
+expr_stmt|;
 return|return
-name|APR_EGENERAL
+name|SERF_ERROR_AUTHN_FAILED
 return|;
+block|}
 block|}
 return|return
 name|APR_SUCCESS
@@ -310,23 +334,28 @@ end_function
 
 begin_function
 name|apr_status_t
-name|serf__kerb_create_sec_context
+name|serf__spnego_create_sec_context
 parameter_list|(
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 modifier|*
 name|ctx_p
 parameter_list|,
-name|apr_pool_t
+specifier|const
+name|serf__authn_scheme_t
 modifier|*
-name|scratch_pool
+name|scheme
 parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 block|{
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 decl_stmt|;
@@ -379,9 +408,9 @@ end_function
 
 begin_function
 name|apr_status_t
-name|serf__kerb_reset_sec_context
+name|serf__spnego_reset_sec_context
 parameter_list|(
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 parameter_list|)
@@ -425,9 +454,9 @@ end_function
 
 begin_function
 name|apr_status_t
-name|serf__kerb_init_sec_context
+name|serf__spnego_init_sec_context
 parameter_list|(
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 parameter_list|,
@@ -441,21 +470,21 @@ name|char
 modifier|*
 name|hostname
 parameter_list|,
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 modifier|*
 name|input_buf
 parameter_list|,
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 modifier|*
 name|output_buf
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|scratch_pool
+name|result_pool
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|result_pool
+name|scratch_pool
 parameter_list|)
 block|{
 name|gss_buffer_desc
@@ -549,8 +578,23 @@ name|gss_maj_stat
 argument_list|)
 condition|)
 block|{
+name|log_error
+argument_list|(
+name|AUTH_VERBOSE
+argument_list|,
+name|__FILE__
+argument_list|,
+name|ctx
+argument_list|,
+name|gss_maj_stat
+argument_list|,
+name|gss_min_stat
+argument_list|,
+literal|"Error converting principal name to GSS internal format "
+argument_list|)
+expr_stmt|;
 return|return
-name|APR_EGENERAL
+name|SERF_ERROR_AUTHN_FAILED
 return|;
 block|}
 comment|/* If the server sent us a token, pass it to gss_init_sec_token for        validation. */
@@ -697,7 +741,7 @@ literal|"Error during Kerberos handshake"
 argument_list|)
 expr_stmt|;
 return|return
-name|APR_EGENERAL
+name|SERF_ERROR_AUTHN_FAILED
 return|;
 block|}
 block|}
