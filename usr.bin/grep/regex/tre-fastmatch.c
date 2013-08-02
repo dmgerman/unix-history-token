@@ -332,7 +332,7 @@ parameter_list|,
 name|wide
 parameter_list|)
 define|\
-value|{									\     char *p;								\     tre_char_t *wp;							\ 									\     if (wide)								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    wp = xmalloc(plen * sizeof(tre_char_t));			\ 	    if (wp == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      wp[i] = towlower(pat[i]);					\ 	    _CALC_BMGS(arr, wp, plen);					\ 	    xfree(wp);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\     else								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    p = xmalloc(plen);						\ 	    if (p == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      p[i] = tolower(pat[i]);					\ 	    _CALC_BMGS(arr, p, plen);					\ 	    xfree(p);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\   }
+value|{									\     char *p;								\     tre_char_t *wp;							\ 									\     if (wide)								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    wp = xmalloc(plen * sizeof(tre_char_t));			\ 	    if (wp == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      wp[i] = towlower(pat[i]);					\ 	    _CALC_BMGS(arr, wp, plen);					\ 	    xfree(wp);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\     else								\       {									\ 	if (fg->icase)							\ 	  {								\ 	    p = xmalloc(plen);						\ 	    if (p == NULL)						\ 	      return REG_ESPACE;					\ 	    for (unsigned int i = 0; i< plen; i++)			\ 	      p[i] = tolower((unsigned char)pat[i]);                    \ 	    _CALC_BMGS(arr, p, plen);					\ 	    xfree(p);							\ 	  }								\ 	else								\ 	  _CALC_BMGS(arr, pat, plen);					\       }									\   }
 end_define
 
 begin_define
@@ -2598,6 +2598,10 @@ condition|?
 operator|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|pat_byte
 index|[
 name|i
@@ -2606,6 +2610,10 @@ argument_list|)
 operator|==
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|str_byte
 index|[
 name|i
