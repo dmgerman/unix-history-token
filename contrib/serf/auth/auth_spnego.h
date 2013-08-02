@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AUTH_KERB_H
+name|AUTH_SPNEGO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AUTH_KERB_H
+name|AUTH_SPNEGO_H
 end_define
 
 begin_include
@@ -27,6 +27,18 @@ directive|include
 file|<apr_pools.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"serf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"serf_private.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -39,7 +51,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|SERF_HAVE_KERB
+name|SERF_HAVE_SPNEGO
 end_define
 
 begin_define
@@ -60,7 +72,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|SERF_HAVE_KERB
+name|SERF_HAVE_SPNEGO
 end_define
 
 begin_define
@@ -77,7 +89,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SERF_HAVE_KERB
+name|SERF_HAVE_SPNEGO
 end_ifdef
 
 begin_ifdef
@@ -94,12 +106,12 @@ endif|#
 directive|endif
 typedef|typedef
 name|struct
-name|serf__kerb_context_t
-name|serf__kerb_context_t
+name|serf__spnego_context_t
+name|serf__spnego_context_t
 typedef|;
 typedef|typedef
 struct|struct
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 block|{
 name|apr_size_t
 name|length
@@ -109,31 +121,36 @@ modifier|*
 name|value
 decl_stmt|;
 block|}
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 typedef|;
 comment|/* Create outbound security context.  *  * All temporary allocations will be performed in SCRATCH_POOL, while security  * context will be allocated in result_pool and will be destroyed automatically  * on RESULT_POOL cleanup.  *  */
 name|apr_status_t
-name|serf__kerb_create_sec_context
+name|serf__spnego_create_sec_context
 parameter_list|(
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 modifier|*
 name|ctx_p
 parameter_list|,
-name|apr_pool_t
+specifier|const
+name|serf__authn_scheme_t
 modifier|*
-name|scratch_pool
+name|scheme
 parameter_list|,
 name|apr_pool_t
 modifier|*
 name|result_pool
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Initialize outbound security context.  *  * The function is used to build a security context between the client  * application and a remote peer.  *  * CTX is pointer to existing context created using  * serf__kerb_create_sec_context() function.  *  * SERVICE is name of Kerberos service name. Usually 'HTTP'. HOSTNAME is  * canonical name of destination server. Caller should resolve server's alias  * to canonical name.  *  * INPUT_BUF is pointer structure describing input token if any. Should be  * zero length on first call.  *  * OUTPUT_BUF will be populated with pointer to output data that should send  * to destination server. This buffer will be automatically freed on  * RESULT_POOL cleanup.  *  * All temporary allocations will be performed in SCRATCH_POOL.  *  * Return value:  * - APR_EAGAIN The client must send the output token to the server and wait  *   for a return token.  *  * - APR_SUCCESS The security context was successfully initialized. There is no  *   need for another serf__kerb_init_sec_context call. If the function returns  *   an output token, that is, if the OUTPUT_BUF is of nonzero length, that  *   token must be sent to the server.  *  * Other returns values indicates error.  */
+comment|/* Initialize outbound security context.  *  * The function is used to build a security context between the client  * application and a remote peer.  *  * CTX is pointer to existing context created using  * serf__spnego_create_sec_context() function.  *  * SERVICE is name of Kerberos service name. Usually 'HTTP'. HOSTNAME is  * canonical name of destination server. Caller should resolve server's alias  * to canonical name.  *  * INPUT_BUF is pointer structure describing input token if any. Should be  * zero length on first call.  *  * OUTPUT_BUF will be populated with pointer to output data that should send  * to destination server. This buffer will be automatically freed on  * RESULT_POOL cleanup.  *  * All temporary allocations will be performed in SCRATCH_POOL.  *  * Return value:  * - APR_EAGAIN The client must send the output token to the server and wait  *   for a return token.  *  * - APR_SUCCESS The security context was successfully initialized. There is no  *   need for another serf__spnego_init_sec_context call. If the function returns  *   an output token, that is, if the OUTPUT_BUF is of nonzero length, that  *   token must be sent to the server.  *  * Other returns values indicates error.  */
 name|apr_status_t
-name|serf__kerb_init_sec_context
+name|serf__spnego_init_sec_context
 parameter_list|(
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 parameter_list|,
@@ -147,28 +164,28 @@ name|char
 modifier|*
 name|hostname
 parameter_list|,
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 modifier|*
 name|input_buf
 parameter_list|,
-name|serf__kerb_buffer_t
+name|serf__spnego_buffer_t
 modifier|*
 name|output_buf
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|scratch_pool
+name|result_pool
 parameter_list|,
 name|apr_pool_t
 modifier|*
-name|result_pool
+name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/*  * Reset a previously created security context so we can start with a new one.  *  * This is triggered when the server requires per-request authentication,  * where each request requires a new security context.  */
 name|apr_status_t
-name|serf__kerb_reset_sec_context
+name|serf__spnego_reset_sec_context
 parameter_list|(
-name|serf__kerb_context_t
+name|serf__spnego_context_t
 modifier|*
 name|ctx
 parameter_list|)
@@ -190,7 +207,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SERF_HAVE_KERB */
+comment|/* SERF_HAVE_SPNEGO */
 end_comment
 
 begin_endif
@@ -199,7 +216,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !AUTH_KERB_H */
+comment|/* !AUTH_SPNEGO_H */
 end_comment
 
 end_unit

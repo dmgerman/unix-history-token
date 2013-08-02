@@ -40,53 +40,6 @@ file|"serf_private.h"
 end_include
 
 begin_comment
-comment|/* Older versions of APR do not have the APR_VERSION_AT_LEAST macro. Those    implementations are safe.     If the macro *is* defined, and we're on WIN32, and APR is version 1.4.0,    then we have a broken WSAPoll() implementation.     See serf_context_create_ex() below.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|APR_VERSION_AT_LEAST
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|APR_VERSION_AT_LEAST
-argument_list|(
-literal|1
-operator|,
-literal|4
-operator|,
-literal|0
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BROKEN_WSAPOLL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/**  * Callback function (implements serf_progress_t). Takes a number of bytes  * read @a read and bytes written @a written, adds those to the total for this  * context and notifies an interested party (if any).  */
 end_comment
 
@@ -599,6 +552,15 @@ operator|->
 name|authn_types
 operator|=
 name|SERF_AUTHN_ALL
+expr_stmt|;
+name|ctx
+operator|->
+name|server_authn_info
+operator|=
+name|apr_hash_make
+argument_list|(
+name|pool
+argument_list|)
 expr_stmt|;
 return|return
 name|ctx
@@ -1349,7 +1311,6 @@ name|SERF_ERROR_SSLTUNNEL_SETUP_FAILED
 case|:
 return|return
 literal|"The proxy server returned an error while setting up the "
-expr|\
 literal|"SSL tunnel."
 return|;
 default|default:
