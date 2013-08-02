@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.175 2013/05/29 00:23:31 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.183 2013/07/16 20:00:56 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.175 2013/05/29 00:23:31 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.183 2013/07/16 20:00:56 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.175 2013/05/29 00:23:31 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.183 2013/07/16 20:00:56 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -169,6 +169,13 @@ include|#
 directive|include
 file|"job.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|makelevel
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This lets us tell if we have replaced the original environ  * (which we cannot free).  */
@@ -2369,6 +2376,32 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+comment|/*      * Several make's support this sort of mechanism for tracking      * recursion - but each uses a different name.      * We allow the makefiles to update MAKELEVEL and ensure      * children see a correctly incremented value.      */
+name|snprintf
+argument_list|(
+name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+argument_list|,
+literal|"%d"
+argument_list|,
+name|makelevel
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|setenv
+argument_list|(
+name|MAKE_LEVEL_ENV
+argument_list|,
+name|tmp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|VAR_EXPORTED_NONE
@@ -2880,7 +2913,7 @@ name|cp
 operator|=
 name|getenv
 argument_list|(
-name|MAKE_LEVEL
+name|MAKE_LEVEL_ENV
 argument_list|)
 expr_stmt|;
 comment|/* we should preserve this */
@@ -2968,27 +3001,13 @@ name|NULL
 expr_stmt|;
 name|setenv
 argument_list|(
-name|MAKE_LEVEL
+name|MAKE_LEVEL_ENV
 argument_list|,
 name|cp
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAKE_LEVEL_SAFE
-name|setenv
-argument_list|(
-name|MAKE_LEVEL_SAFE
-argument_list|,
-name|cp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -3501,6 +3520,30 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|ctxt
+operator|==
+name|VAR_CMD
+operator|&&
+operator|(
+name|flags
+operator|&
+name|VAR_NO_EXPORT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 	     * This var would normally prevent the same name being added 	     * to VAR_GLOBAL, so delete it from there if needed. 	     * Otherwise -V name may show the wrong value. 	     */
+name|Var_Delete
+argument_list|(
+name|name
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+block|}
 name|VarAdd
 argument_list|(
 name|name
@@ -3653,79 +3696,6 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * Another special case.      * Several make's support this sort of mechanism for tracking      * recursion - but each uses a different name.      * We allow the makefiles to update .MAKE.LEVEL and ensure      * children see a correctly incremented value.      */
-if|if
-condition|(
-name|ctxt
-operator|==
-name|VAR_GLOBAL
-operator|&&
-name|strcmp
-argument_list|(
-name|MAKE_LEVEL
-argument_list|,
-name|name
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|char
-name|tmp
-index|[
-literal|64
-index|]
-decl_stmt|;
-name|int
-name|level
-decl_stmt|;
-name|level
-operator|=
-name|atoi
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|tmp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmp
-argument_list|)
-argument_list|,
-literal|"%u"
-argument_list|,
-name|level
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|setenv
-argument_list|(
-name|MAKE_LEVEL
-argument_list|,
-name|tmp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAKE_LEVEL_SAFE
-name|setenv
-argument_list|(
-name|MAKE_LEVEL_SAFE
-argument_list|,
-name|tmp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|out
 label|:
