@@ -99,6 +99,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|quicc_read4
+parameter_list|(
+name|bas
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|bus_space_read_4((bas)->bst, (bas)->bsh, reg)
+end_define
+
+begin_define
+define|#
+directive|define
 name|quicc_write2
 parameter_list|(
 name|bas
@@ -109,6 +122,21 @@ name|val
 parameter_list|)
 define|\
 value|bus_space_write_2((bas)->bst, (bas)->bsh, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|quicc_write4
+parameter_list|(
+name|bas
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_4((bas)->bst, (bas)->bsh, reg, val)
 end_define
 
 begin_function_decl
