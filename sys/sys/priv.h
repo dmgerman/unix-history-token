@@ -684,7 +684,7 @@ comment|/* Can call setloginclass(2). */
 end_comment
 
 begin_comment
-comment|/* System V IPC privileges.  */
+comment|/*  * System V IPC privileges.  */
 end_comment
 
 begin_define
