@@ -2015,6 +2015,8 @@ argument_list|)
 expr_stmt|;
 name|vm_imgact_unmap_page
 argument_list|(
+name|object
+argument_list|,
 name|sf
 argument_list|)
 expr_stmt|;
@@ -2348,6 +2350,8 @@ argument_list|)
 expr_stmt|;
 name|vm_imgact_unmap_page
 argument_list|(
+name|object
+argument_list|,
 name|sf
 argument_list|)
 expr_stmt|;
@@ -2851,6 +2855,8 @@ argument_list|)
 expr_stmt|;
 name|vm_imgact_unmap_page
 argument_list|(
+name|object
+argument_list|,
 name|sf
 argument_list|)
 expr_stmt|;

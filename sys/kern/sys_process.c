@@ -777,6 +777,10 @@ name|VM_FAULT_DIRTY
 else|:
 name|VM_FAULT_NORMAL
 expr_stmt|;
+name|fault_flags
+operator||=
+name|VM_FAULT_IOBUSY
+expr_stmt|;
 comment|/* 	 * Only map in one page at a time.  We don't have to, but it 	 * makes things easier.  This way is trivial - right? 	 */
 do|do
 block|{
@@ -826,10 +830,10 @@ operator|->
 name|uio_resid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Fault and hold the page on behalf of the process. 		 */
+comment|/* 		 * Fault and busy the page on behalf of the process. 		 */
 name|error
 operator|=
-name|vm_fault_hold
+name|vm_fault_handle
 argument_list|(
 name|map
 argument_list|,
@@ -928,19 +932,23 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Release the page. 		 */
-name|vm_page_lock
+name|VM_OBJECT_WLOCK
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
+name|vm_page_io_finish
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unhold
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock
-argument_list|(
-name|m
+operator|->
+name|object
 argument_list|)
 expr_stmt|;
 block|}
