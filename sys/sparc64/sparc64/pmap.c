@@ -3441,14 +3441,6 @@ name|m
 operator|->
 name|md
 operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|m
-operator|->
-name|md
-operator|.
 name|pmap
 operator|=
 name|NULL
