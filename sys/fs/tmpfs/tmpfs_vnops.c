@@ -2020,7 +2020,7 @@ argument_list|(
 name|tobj
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The kern_sendfile() code calls vn_rdwr() with the page 	 * soft-busied.  Ignore the soft-busy state here. Parallel 	 * reads of the page content from disk are prevented by 	 * VPO_BUSY. 	 * 	 * Although the tmpfs vnode lock is held here, it is 	 * nonetheless safe to sleep waiting for a free page.  The 	 * pageout daemon does not need to acquire the tmpfs vnode 	 * lock to page out tobj's pages because tobj is a OBJT_SWAP 	 * type object. 	 */
+comment|/* 	 * Parallel reads of the page content from disk are prevented 	 * by VPO_BUSY. 	 * 	 * Although the tmpfs vnode lock is held here, it is 	 * nonetheless safe to sleep waiting for a free page.  The 	 * pageout daemon does not need to acquire the tmpfs vnode 	 * lock to page out tobj's pages because tobj is a OBJT_SWAP 	 * type object. 	 */
 name|m
 operator|=
 name|vm_page_grab
@@ -2032,8 +2032,6 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
-operator||
-name|VM_ALLOC_IGN_SBUSY
 operator||
 name|VM_ALLOC_NOBUSY
 argument_list|)
