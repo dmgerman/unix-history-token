@@ -41980,7 +41980,7 @@ value|(sizeof(array) / sizeof(array[0]))
 end_define
 
 begin_comment
-comment|/*  * Transate CSR code to string  */
+comment|/*  * Translate CSR code to string  */
 end_comment
 
 begin_function
