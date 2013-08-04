@@ -7462,6 +7462,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|Job_SetPrefix
+argument_list|()
+expr_stmt|;
 comment|/* Allocate space for all the job info */
 name|job_table
 operator|=

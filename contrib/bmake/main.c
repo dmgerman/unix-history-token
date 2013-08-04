@@ -4303,9 +4303,6 @@ name|pn
 argument_list|)
 expr_stmt|;
 block|}
-name|Job_SetPrefix
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_META
