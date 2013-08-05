@@ -180,7 +180,7 @@ file|<machine/md_var.h>
 end_include
 
 begin_comment
-comment|/*  * struct switchframe must be a multiple of 8 for correct stack alignment  */
+comment|/*  * struct switchframe and trapframe must both be a multiple of 8  * for correct stack alignment.  */
 end_comment
 
 begin_expr_stmt
@@ -206,7 +206,7 @@ expr|struct
 name|trapframe
 argument_list|)
 operator|==
-literal|76
+literal|80
 argument_list|)
 expr_stmt|;
 end_expr_stmt

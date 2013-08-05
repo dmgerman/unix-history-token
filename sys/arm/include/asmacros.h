@@ -62,7 +62,9 @@ define|#
 directive|define
 name|PUSHFRAME
 define|\
-value|str	lr, [sp, #-4]!;
+value|sub	sp, sp, #4;
+comment|/* Align the stack */
+value|\ 	str	lr, [sp, #-4]!;
 comment|/* Push the return address */
 value|\ 	sub	sp, sp, #(4*17);
 comment|/* Adjust the stack pointer */
@@ -89,7 +91,9 @@ define|#
 directive|define
 name|PUSHFRAME
 define|\
-value|str	lr, [sp, #-4]!;
+value|sub	sp, sp, #4;
+comment|/* Align the stack */
+value|\ 	str	lr, [sp, #-4]!;
 comment|/* Push the return address */
 value|\ 	sub	sp, sp, #(4*17);
 comment|/* Adjust the stack pointer */
@@ -135,10 +139,12 @@ comment|/* NOP for previous instruction */
 value|\ 	add	sp, sp, #(4*17);
 comment|/* Adjust the stack pointer */
 value|\  	ldr	lr, [sp], #0x0004;
+comment|/* Pull the return address */
+value|\ 	add	sp, sp, #4
 end_define
 
 begin_comment
-comment|/* Pull the return address */
+comment|/* Align the stack */
 end_comment
 
 begin_else
@@ -160,10 +166,12 @@ comment|/* NOP for previous instruction */
 value|\ 	add	sp, sp, #(4*17);
 comment|/* Adjust the stack pointer */
 value|\  	ldr	lr, [sp], #0x0004;
+comment|/* Pull the return address */
+value|\ 	add	sp, sp, #4
 end_define
 
 begin_comment
-comment|/* Pull the return address */
+comment|/* Align the stack */
 end_comment
 
 begin_endif
@@ -202,6 +210,10 @@ value|\ 	orr     r2, r2, #(PSR_SVC32_MODE);				   \ 	msr     cpsr_c, r2;
 comment|/* Punch into SVC mode */
 value|\ 	mov	r2, sp;
 comment|/* Save	SVC sp */
+value|\ 	bic	sp, sp, #7;
+comment|/* Align sp to an 8-byte addrress */
+value|\ 	sub	sp, sp, #4;
+comment|/* Pad trapframe to keep alignment */
 value|\ 	str	r0, [sp, #-4]!;
 comment|/* Push return address */
 value|\ 	str	lr, [sp, #-4]!;
@@ -275,6 +287,10 @@ value|\ 	orr     r2, r2, #(PSR_SVC32_MODE);				   \ 	msr     cpsr_c, r2;
 comment|/* Punch into SVC mode */
 value|\ 	mov	r2, sp;
 comment|/* Save	SVC sp */
+value|\ 	bic	sp, sp, #7;
+comment|/* Align sp to an 8-byte addrress */
+value|\ 	sub	sp, sp, #4;
+comment|/* Pad trapframe to keep alignment */
 value|\ 	str	r0, [sp, #-4]!;
 comment|/* Push return address */
 value|\ 	str	lr, [sp, #-4]!;
@@ -383,7 +399,9 @@ define|#
 directive|define
 name|UNWINDSVCFRAME
 define|\
-value|.save {r13-r15};
+value|.pad #(4);
+comment|/* Skip stack alignment */
+value|\ 	.save {r13-r15};
 comment|/* Restore sp, lr, pc */
 value|\ 	.pad #(2*4);
 comment|/* Skip user sp and lr */
