@@ -2212,9 +2212,9 @@ name|lt
 operator|->
 name|ia6t_vltime
 operator|+
-name|time_second
+name|time_uptime
 operator|<
-name|time_second
+name|time_uptime
 condition|)
 block|{
 name|error
@@ -2237,9 +2237,9 @@ name|lt
 operator|->
 name|ia6t_pltime
 operator|+
-name|time_second
+name|time_uptime
 operator|<
-name|time_second
+name|time_uptime
 condition|)
 block|{
 name|error
@@ -2711,7 +2711,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|ia
 operator|->
@@ -2746,7 +2746,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_preferred
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|ia
 operator|->
@@ -5040,7 +5040,7 @@ name|ia
 operator|->
 name|ia6_createtime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 if|if
 condition|(
@@ -5192,7 +5192,7 @@ name|ia
 operator|->
 name|ia6_updatetime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* set prefix mask */
 if|if
@@ -5405,7 +5405,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|ia
 operator|->
@@ -5440,7 +5440,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_preferred
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|ia
 operator|->
@@ -5521,7 +5521,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_preferred
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 comment|/* 	 * Make the address tentative before joining multicast addresses, 	 * so that corresponding MLD responses would not have a tentative 	 * source address. 	 */

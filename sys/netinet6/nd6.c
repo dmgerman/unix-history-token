@@ -1807,7 +1807,7 @@ name|ln
 operator|->
 name|la_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|tick
 operator|/
@@ -2623,7 +2623,7 @@ name|dr
 operator|->
 name|expire
 operator|<
-name|time_second
+name|time_uptime
 condition|)
 name|defrtrlist_del
 argument_list|(
@@ -2802,7 +2802,7 @@ name|ndpr_vltime
 operator|!=
 name|ND6_INFINITE_LIFETIME
 operator|&&
-name|time_second
+name|time_uptime
 operator|-
 name|pr
 operator|->
@@ -3926,7 +3926,7 @@ name|dr
 operator|->
 name|expire
 operator|>
-name|time_second
+name|time_uptime
 condition|)
 name|nd6_llinfo_settimer_locked
 argument_list|(
@@ -3937,7 +3937,7 @@ name|dr
 operator|->
 name|expire
 operator|-
-name|time_second
+name|time_uptime
 operator|)
 operator|*
 name|hz

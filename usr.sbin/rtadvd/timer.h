@@ -39,7 +39,7 @@ modifier|*
 name|rat_rai
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|rat_tm
 decl_stmt|;
 name|struct
@@ -68,7 +68,7 @@ name|void
 modifier|*
 parameter_list|,
 name|struct
-name|timeval
+name|timespec
 modifier|*
 parameter_list|)
 function_decl|;
@@ -124,7 +124,7 @@ name|void
 operator|*
 argument_list|,
 expr|struct
-name|timeval
+name|timespec
 operator|*
 argument_list|)
 argument_list|,
@@ -142,7 +142,7 @@ name|void
 name|rtadvd_set_timer
 parameter_list|(
 name|struct
-name|timeval
+name|timespec
 modifier|*
 parameter_list|,
 name|struct
@@ -165,7 +165,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|timeval
+name|timespec
 modifier|*
 name|rtadvd_check_timer
 parameter_list|(
