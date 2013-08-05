@@ -319,7 +319,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vm_fault_handle
+name|vm_fault_hold
 parameter_list|(
 name|vm_map_t
 name|map
@@ -648,8 +648,6 @@ begin_function_decl
 name|void
 name|vm_imgact_unmap_page
 parameter_list|(
-name|vm_object_t
-parameter_list|,
 name|struct
 name|sf_buf
 modifier|*

@@ -1243,17 +1243,6 @@ begin_comment
 comment|/* Dirty the page; use w/VM_PROT_COPY */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VM_FAULT_IOBUSY
-value|4
-end_define
-
-begin_comment
-comment|/* Busy the faulted page */
-end_comment
-
 begin_comment
 comment|/*  * Initially, mappings are slightly sequential.  The maximum window size must  * account for the map entry's "read_ahead" field being defined as an uint8_t.  */
 end_comment

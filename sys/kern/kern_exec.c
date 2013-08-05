@@ -4161,7 +4161,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_wire
+name|vm_page_hold
 argument_list|(
 name|ma
 index|[
@@ -4270,11 +4270,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unwire
+name|vm_page_unhold
 argument_list|(
 name|m
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock

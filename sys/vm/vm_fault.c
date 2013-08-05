@@ -663,7 +663,7 @@ endif|#
 directive|endif
 name|result
 operator|=
-name|vm_fault_handle
+name|vm_fault_hold
 argument_list|(
 name|map
 argument_list|,
@@ -712,7 +712,7 @@ end_function
 
 begin_function
 name|int
-name|vm_fault_handle
+name|vm_fault_hold
 parameter_list|(
 name|vm_map_t
 name|map
@@ -3337,20 +3337,6 @@ name|fs
 operator|.
 name|m
 expr_stmt|;
-if|if
-condition|(
-name|fault_flags
-operator|&
-name|VM_FAULT_IOBUSY
-condition|)
-name|vm_page_io_start
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|)
-expr_stmt|;
-else|else
 name|vm_page_hold
 argument_list|(
 name|fs
@@ -4275,7 +4261,7 @@ name|mp
 operator|==
 name|NULL
 operator|&&
-name|vm_fault_handle
+name|vm_fault_hold
 argument_list|(
 name|map
 argument_list|,
