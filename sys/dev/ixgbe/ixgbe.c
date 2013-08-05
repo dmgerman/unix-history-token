@@ -7218,7 +7218,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Be sure the queue bits are not cleared */
 name|reg_eicr
-operator|=
+operator|&=
 operator|~
 name|IXGBE_EICR_RTX_QUEUE
 expr_stmt|;
