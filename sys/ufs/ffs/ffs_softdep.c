@@ -12640,9 +12640,9 @@ name|newblk_hashtbl
 operator|=
 name|hashinit
 argument_list|(
-name|desiredvnodes
+name|max_softdeps
 operator|/
-literal|5
+literal|2
 argument_list|,
 name|M_NEWBLK
 argument_list|,
