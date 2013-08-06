@@ -7482,6 +7482,20 @@ decl_stmt|;
 name|bool
 name|more_rx
 decl_stmt|;
+comment|/* Ignore spurious interrupts */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
