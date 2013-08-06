@@ -1583,6 +1583,17 @@ literal|"If you still wish to use RSA (RSAMD5) please "
 literal|"specify \"-a RSAMD5\"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|freeit
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|freeit
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1

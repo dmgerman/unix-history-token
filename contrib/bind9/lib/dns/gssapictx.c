@@ -2178,6 +2178,8 @@ expr_stmt|;
 if|if
 condition|(
 name|estr
+operator|!=
+name|NULL
 condition|)
 operator|(
 operator|*
@@ -2451,6 +2453,17 @@ argument_list|,
 name|err_message
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err_message
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|err_message
+operator|!=
+name|NULL
+condition|)
 name|gss_log
 argument_list|(
 literal|3
@@ -2459,6 +2472,14 @@ literal|"Failure initiating security context: %s"
 argument_list|,
 operator|*
 name|err_message
+argument_list|)
+expr_stmt|;
+else|else
+name|gss_log
+argument_list|(
+literal|3
+argument_list|,
+literal|"Failure initiating security context"
 argument_list|)
 expr_stmt|;
 name|result
