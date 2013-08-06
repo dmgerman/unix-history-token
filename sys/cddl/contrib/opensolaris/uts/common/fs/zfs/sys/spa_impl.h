@@ -509,6 +509,11 @@ modifier|*
 name|spa_async_thread
 decl_stmt|;
 comment|/* thread doing async task */
+name|kthread_t
+modifier|*
+name|spa_async_thread_vd
+decl_stmt|;
+comment|/* thread doing vd async task */
 name|int
 name|spa_async_suspended
 decl_stmt|;
