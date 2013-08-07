@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zlib.h -- interface of the 'zlib' general purpose compression library   version 1.2.7, May 2nd, 2012    Copyright (C) 1995-2012 Jean-loup Gailly and Mark Adler    This software is provided 'as-is', without any express or implied   warranty.  In no event will the authors be held liable for any damages   arising from the use of this software.    Permission is granted to anyone to use this software for any purpose,   including commercial applications, and to alter it and redistribute it   freely, subject to the following restrictions:    1. The origin of this software must not be misrepresented; you must not      claim that you wrote the original software. If you use this software      in a product, an acknowledgment in the product documentation would be      appreciated but is not required.   2. Altered source versions must be plainly marked as such, and must not be      misrepresented as being the original software.   3. This notice may not be removed or altered from any source distribution.    Jean-loup Gailly        Mark Adler   jloup@gzip.org          madler@alumni.caltech.edu     The data format used by the zlib library is described by RFCs (Request for   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format). */
+comment|/* zlib.h -- interface of the 'zlib' general purpose compression library   version 1.2.8, April 28th, 2013    Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler    This software is provided 'as-is', without any express or implied   warranty.  In no event will the authors be held liable for any damages   arising from the use of this software.    Permission is granted to anyone to use this software for any purpose,   including commercial applications, and to alter it and redistribute it   freely, subject to the following restrictions:    1. The origin of this software must not be misrepresented; you must not      claim that you wrote the original software. If you use this software      in a product, an acknowledgment in the product documentation would be      appreciated but is not required.   2. Altered source versions must be plainly marked as such, and must not be      misrepresented as being the original software.   3. This notice may not be removed or altered from any source distribution.    Jean-loup Gailly        Mark Adler   jloup@gzip.org          madler@alumni.caltech.edu     The data format used by the zlib library is described by RFCs (Request for   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format). */
 end_comment
 
 begin_ifndef
@@ -36,11 +36,11 @@ directive|endif
 define|#
 directive|define
 name|ZLIB_VERSION
-value|"1.2.7"
+value|"1.2.8"
 define|#
 directive|define
 name|ZLIB_VERNUM
-value|0x1270
+value|0x1280
 define|#
 directive|define
 name|ZLIB_VER_MAJOR
@@ -52,7 +52,7 @@ value|2
 define|#
 directive|define
 name|ZLIB_VER_REVISION
-value|7
+value|8
 define|#
 directive|define
 name|ZLIB_VER_SUBREVISION
@@ -650,6 +650,27 @@ comment|/*      Initializes the decompression dictionary from the given uncompre
 name|ZEXTERN
 name|int
 name|ZEXPORT
+name|inflateGetDictionary
+name|OF
+argument_list|(
+operator|(
+name|z_streamp
+name|strm
+operator|,
+name|Bytef
+operator|*
+name|dictionary
+operator|,
+name|uInt
+operator|*
+name|dictLength
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/*      Returns the sliding dictionary being maintained by inflate.  dictLength is    set to the number of bytes in the dictionary, and that many bytes are copied    to dictionary.  dictionary must have enough space, where 32768 bytes is    always enough.  If inflateGetDictionary() is called with dictionary equal to    Z_NULL, then only the dictionary length is returned, and nothing is copied.    Similary, if dictLength is Z_NULL, then it is not set.       inflateGetDictionary returns Z_OK on success, or Z_STREAM_ERROR if the    stream state is inconsistent. */
+name|ZEXTERN
+name|int
+name|ZEXPORT
 name|inflateSync
 name|OF
 argument_list|(
@@ -766,6 +787,7 @@ name|void
 name|FAR
 operator|*
 operator|,
+name|z_const
 name|unsigned
 name|char
 name|FAR
@@ -824,7 +846,7 @@ name|out_desc
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/*      inflateBack() does a raw inflate with a single call using a call-back    interface for input and output.  This is more efficient than inflate() for    file i/o applications in that it avoids copying between the output and the    sliding window by simply making the window itself the output buffer.  This    function trusts the application to not change the output buffer passed by    the output function, at least until inflateBack() returns.       inflateBackInit() must be called first to allocate the internal state    and to initialize the state with the user-provided window buffer.    inflateBack() may then be used multiple times to inflate a complete, raw    deflate stream with each call.  inflateBackEnd() is then called to free the    allocated state.       A raw deflate stream is one with no zlib or gzip header or trailer.    This routine would normally be used in a utility that reads zip or gzip    files and writes out uncompressed files.  The utility would decode the    header and process the trailer on its own, hence this routine expects only    the raw deflate stream to decompress.  This is different from the normal    behavior of inflate(), which expects either a zlib or gzip header and    trailer around the deflate stream.       inflateBack() uses two subroutines supplied by the caller that are then    called by inflateBack() for input and output.  inflateBack() calls those    routines until it reads a complete deflate stream and writes out all of the    uncompressed data, or until it encounters an error.  The function's    parameters and return types are defined above in the in_func and out_func    typedefs.  inflateBack() will call in(in_desc,&buf) which should return the    number of bytes of provided input, and a pointer to that input in buf.  If    there is no input available, in() must return zero--buf is ignored in that    case--and inflateBack() will return a buffer error.  inflateBack() will call    out(out_desc, buf, len) to write the uncompressed data buf[0..len-1].  out()    should return zero on success, or non-zero on failure.  If out() returns    non-zero, inflateBack() will return with an error.  Neither in() nor out()    are permitted to change the contents of the window provided to    inflateBackInit(), which is also the buffer that out() uses to write from.    The length written by out() will be at most the window size.  Any non-zero    amount of input may be provided by in().       For convenience, inflateBack() can be provided input on the first call by    setting strm->next_in and strm->avail_in.  If that input is exhausted, then    in() will be called.  Therefore strm->next_in must be initialized before    calling inflateBack().  If strm->next_in is Z_NULL, then in() will be called    immediately for input.  If strm->next_in is not Z_NULL, then strm->avail_in    must also be initialized, and then if strm->avail_in is not zero, input will    initially be taken from strm->next_in[0 ..  strm->avail_in - 1].       The in_desc and out_desc parameters of inflateBack() is passed as the    first parameter of in() and out() respectively when they are called.  These    descriptors can be optionally used to pass any information that the caller-    supplied in() and out() functions need to do their job.       On return, inflateBack() will set strm->next_in and strm->avail_in to    pass back any unused input that was provided by the last in() call.  The    return values of inflateBack() can be Z_STREAM_END on success, Z_BUF_ERROR    if in() or out() returned an error, Z_DATA_ERROR if there was a format error    in the deflate stream (in which case strm->msg is set to indicate the nature    of the error), or Z_STREAM_ERROR if the stream was not properly initialized.    In the case of Z_BUF_ERROR, an input or output error can be distinguished    using strm->next_in which will be Z_NULL only if in() returned an error.  If    strm->next_in is not Z_NULL, then the Z_BUF_ERROR was due to out() returning    non-zero.  (in() will always be called before out(), so strm->next_in is    assured to be defined if out() returns non-zero.) Note that inflateBack()    cannot return Z_OK. */
+comment|/*      inflateBack() does a raw inflate with a single call using a call-back    interface for input and output.  This is potentially more efficient than    inflate() for file i/o applications, in that it avoids copying between the    output and the sliding window by simply making the window itself the output    buffer.  inflate() can be faster on modern CPUs when used with large    buffers.  inflateBack() trusts the application to not change the output    buffer passed by the output function, at least until inflateBack() returns.       inflateBackInit() must be called first to allocate the internal state    and to initialize the state with the user-provided window buffer.    inflateBack() may then be used multiple times to inflate a complete, raw    deflate stream with each call.  inflateBackEnd() is then called to free the    allocated state.       A raw deflate stream is one with no zlib or gzip header or trailer.    This routine would normally be used in a utility that reads zip or gzip    files and writes out uncompressed files.  The utility would decode the    header and process the trailer on its own, hence this routine expects only    the raw deflate stream to decompress.  This is different from the normal    behavior of inflate(), which expects either a zlib or gzip header and    trailer around the deflate stream.       inflateBack() uses two subroutines supplied by the caller that are then    called by inflateBack() for input and output.  inflateBack() calls those    routines until it reads a complete deflate stream and writes out all of the    uncompressed data, or until it encounters an error.  The function's    parameters and return types are defined above in the in_func and out_func    typedefs.  inflateBack() will call in(in_desc,&buf) which should return the    number of bytes of provided input, and a pointer to that input in buf.  If    there is no input available, in() must return zero--buf is ignored in that    case--and inflateBack() will return a buffer error.  inflateBack() will call    out(out_desc, buf, len) to write the uncompressed data buf[0..len-1].  out()    should return zero on success, or non-zero on failure.  If out() returns    non-zero, inflateBack() will return with an error.  Neither in() nor out()    are permitted to change the contents of the window provided to    inflateBackInit(), which is also the buffer that out() uses to write from.    The length written by out() will be at most the window size.  Any non-zero    amount of input may be provided by in().       For convenience, inflateBack() can be provided input on the first call by    setting strm->next_in and strm->avail_in.  If that input is exhausted, then    in() will be called.  Therefore strm->next_in must be initialized before    calling inflateBack().  If strm->next_in is Z_NULL, then in() will be called    immediately for input.  If strm->next_in is not Z_NULL, then strm->avail_in    must also be initialized, and then if strm->avail_in is not zero, input will    initially be taken from strm->next_in[0 ..  strm->avail_in - 1].       The in_desc and out_desc parameters of inflateBack() is passed as the    first parameter of in() and out() respectively when they are called.  These    descriptors can be optionally used to pass any information that the caller-    supplied in() and out() functions need to do their job.       On return, inflateBack() will set strm->next_in and strm->avail_in to    pass back any unused input that was provided by the last in() call.  The    return values of inflateBack() can be Z_STREAM_END on success, Z_BUF_ERROR    if in() or out() returned an error, Z_DATA_ERROR if there was a format error    in the deflate stream (in which case strm->msg is set to indicate the nature    of the error), or Z_STREAM_ERROR if the stream was not properly initialized.    In the case of Z_BUF_ERROR, an input or output error can be distinguished    using strm->next_in which will be Z_NULL only if in() returned an error.  If    strm->next_in is not Z_NULL, then the Z_BUF_ERROR was due to out() returning    non-zero.  (in() will always be called before out(), so strm->next_in is    assured to be defined if out() returns non-zero.) Note that inflateBack()    cannot return Z_OK. */
 name|ZEXTERN
 name|int
 name|ZEXPORT
@@ -2079,6 +2101,44 @@ name|mode
 operator|)
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|Z_HAVE_STDARG_H
+argument_list|)
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+name|ZEXTERN
+name|int
+name|ZEXPORTVA
+name|gzvprintf
+name|Z_ARG
+argument_list|(
+operator|(
+name|gzFile
+name|file
+operator|,
+specifier|const
+name|char
+operator|*
+name|format
+operator|,
+name|va_list
+name|va
+operator|)
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#

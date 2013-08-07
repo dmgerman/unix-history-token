@@ -796,10 +796,12 @@ name|deflate_state
 operator|*
 name|s
 operator|,
+specifier|const
 name|ct_data
 operator|*
 name|ltree
 operator|,
+specifier|const
 name|ct_data
 operator|*
 name|dtree
@@ -5375,12 +5377,14 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
+specifier|const
 name|ct_data
 operator|*
 operator|)
 name|static_ltree
 argument_list|,
 operator|(
+specifier|const
 name|ct_data
 operator|*
 operator|)
@@ -5450,6 +5454,7 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
+specifier|const
 name|ct_data
 operator|*
 operator|)
@@ -5458,6 +5463,7 @@ operator|->
 name|dyn_ltree
 argument_list|,
 operator|(
+specifier|const
 name|ct_data
 operator|*
 operator|)
@@ -5887,11 +5893,13 @@ name|deflate_state
 modifier|*
 name|s
 decl_stmt|;
+specifier|const
 name|ct_data
 modifier|*
 name|ltree
 decl_stmt|;
 comment|/* literal tree */
+specifier|const
 name|ct_data
 modifier|*
 name|dtree

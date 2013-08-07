@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010, 2011, 2012 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010, 2011, 2012, 2013 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -481,6 +481,9 @@ return|;
 comment|/* allocate gzFile structure to return */
 name|state
 operator|=
+operator|(
+name|gz_statep
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -695,6 +698,7 @@ name|strategy
 operator|=
 name|Z_FIXED
 expr_stmt|;
+break|break;
 case|case
 literal|'T'
 case|:
@@ -704,6 +708,7 @@ name|direct
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 default|default:
 comment|/* could consider as an error, but just ignore */
 empty_stmt|;
@@ -810,6 +815,11 @@ name|len
 operator|=
 name|strlen
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|path
 argument_list|)
 expr_stmt|;
@@ -817,6 +827,10 @@ name|state
 operator|->
 name|path
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|len
@@ -882,6 +896,41 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_snprintf
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_vsnprintf
+argument_list|)
+name|snprintf
+argument_list|(
+name|state
+operator|->
+name|path
+argument_list|,
+name|len
+operator|+
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|path
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strcpy
 argument_list|(
 name|state
@@ -891,6 +940,8 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* compute the flags for open() */
 name|oflag
 operator|=
@@ -996,6 +1047,11 @@ endif|#
 directive|endif
 name|open
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|path
 argument_list|,
 name|oflag
@@ -1218,6 +1274,10 @@ operator|||
 operator|(
 name|path
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 literal|7
@@ -1236,6 +1296,40 @@ condition|)
 return|return
 name|NULL
 return|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_snprintf
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_vsnprintf
+argument_list|)
+name|snprintf
+argument_list|(
+name|path
+argument_list|,
+literal|7
+operator|+
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|,
+literal|"<fd:%d>"
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+comment|/* for debugging */
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|path
@@ -1246,6 +1340,8 @@ name|fd
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
+endif|#
+directive|endif
 name|gz
 operator|=
 name|gz_open
@@ -2400,6 +2496,15 @@ expr_stmt|;
 return|return
 name|state
 operator|->
+name|err
+operator|==
+name|Z_MEM_ERROR
+condition|?
+literal|"out of memory"
+else|:
+operator|(
+name|state
+operator|->
 name|msg
 operator|==
 name|NULL
@@ -2409,6 +2514,7 @@ else|:
 name|state
 operator|->
 name|msg
+operator|)
 return|;
 block|}
 end_function
@@ -2588,26 +2694,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* for an out of memory error, save as static string */
+comment|/* for an out of memory error, return literal string when requested */
 if|if
 condition|(
 name|err
 operator|==
 name|Z_MEM_ERROR
 condition|)
-block|{
-name|state
-operator|->
-name|msg
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|msg
-expr_stmt|;
 return|return;
-block|}
 comment|/* construct error message with path */
 if|if
 condition|(
@@ -2616,6 +2710,10 @@ name|state
 operator|->
 name|msg
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|strlen
@@ -2643,18 +2741,54 @@ name|err
 operator|=
 name|Z_MEM_ERROR
 expr_stmt|;
+return|return;
+block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_snprintf
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_vsnprintf
+argument_list|)
+name|snprintf
+argument_list|(
 name|state
 operator|->
 name|msg
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|"out of memory"
+argument_list|,
+name|strlen
+argument_list|(
+name|state
+operator|->
+name|path
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
+operator|+
+literal|3
+argument_list|,
+literal|"%s%s%s"
+argument_list|,
+name|state
+operator|->
+name|path
+argument_list|,
+literal|": "
+argument_list|,
+name|msg
+argument_list|)
 expr_stmt|;
-return|return;
-block|}
+else|#
+directive|else
 name|strcpy
 argument_list|(
 name|state
@@ -2684,6 +2818,8 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function

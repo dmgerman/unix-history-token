@@ -93,7 +93,7 @@ value|{ \     if (err != Z_OK) { \         fprintf(stderr, "%s error: %d\n", msg
 end_define
 
 begin_decl_stmt
-specifier|const
+name|z_const
 name|char
 name|hello
 index|[]
@@ -1270,7 +1270,9 @@ operator|.
 name|next_in
 operator|=
 operator|(
-name|Bytef
+name|z_const
+name|unsigned
+name|char
 operator|*
 operator|)
 name|hello
@@ -2177,7 +2179,9 @@ operator|.
 name|next_in
 operator|=
 operator|(
-name|Bytef
+name|z_const
+name|unsigned
+name|char
 operator|*
 operator|)
 name|hello
@@ -2627,7 +2631,9 @@ operator|.
 name|next_in
 operator|=
 operator|(
-name|Bytef
+name|z_const
+name|unsigned
+name|char
 operator|*
 operator|)
 name|hello
