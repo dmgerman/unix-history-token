@@ -877,10 +877,8 @@ argument_list|)
 expr_stmt|;
 name|sf_base
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|nsfbufs
 operator|*
 name|PAGE_SIZE
@@ -3165,7 +3163,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|bytes
 argument_list|,
@@ -3361,7 +3359,7 @@ name|UMA_SLAB_KMEM
 condition|)
 name|kmem_free
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 operator|(
 name|vm_offset_t

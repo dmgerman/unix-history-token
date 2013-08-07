@@ -5120,7 +5120,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|kmem_alloc_wait
+name|kmap_alloc_wait
 argument_list|(
 name|exec_map
 argument_list|,
@@ -5164,7 +5164,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,

@@ -4389,10 +4389,8 @@ expr|struct
 name|pv_chunk
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 operator|*
 name|pv_maxchunks
@@ -15771,10 +15769,8 @@ name|GIANT_REQUIRED
 expr_stmt|;
 name|va
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|size
 argument_list|)
 expr_stmt|;

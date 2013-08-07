@@ -3593,10 +3593,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|MAXPHYS
 argument_list|)
 expr_stmt|;

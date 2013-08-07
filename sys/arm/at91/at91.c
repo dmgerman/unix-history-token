@@ -300,10 +300,8 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* Free the kernel virtual mapping. */
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|va
 argument_list|,
 name|endva

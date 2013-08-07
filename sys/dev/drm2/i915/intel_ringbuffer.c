@@ -1223,10 +1223,8 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -1378,10 +1376,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|uintptr_t
 operator|)
@@ -3803,10 +3799,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -3975,10 +3969,8 @@ operator|(
 name|void
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;

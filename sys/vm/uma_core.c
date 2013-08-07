@@ -4287,7 +4287,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|bytes
 argument_list|,
@@ -4542,8 +4542,10 @@ name|uint8_t
 name|flags
 parameter_list|)
 block|{
-name|vm_map_t
-name|map
+name|struct
+name|vmem
+modifier|*
+name|vmem
 decl_stmt|;
 if|if
 condition|(
@@ -4551,9 +4553,9 @@ name|flags
 operator|&
 name|UMA_SLAB_KMEM
 condition|)
-name|map
+name|vmem
 operator|=
-name|kmem_map
+name|kmem_arena
 expr_stmt|;
 elseif|else
 if|if
@@ -4562,9 +4564,9 @@ name|flags
 operator|&
 name|UMA_SLAB_KERNEL
 condition|)
-name|map
+name|vmem
 operator|=
-name|kernel_map
+name|kernel_arena
 expr_stmt|;
 else|else
 name|panic
@@ -4576,7 +4578,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|map
+name|vmem
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -12507,10 +12509,8 @@ endif|#
 directive|endif
 name|kva
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|pages
 operator|*
 name|UMA_SLAB_SIZE

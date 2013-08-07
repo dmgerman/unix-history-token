@@ -2113,7 +2113,7 @@ if|if
 condition|(
 name|a_out
 condition|)
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,

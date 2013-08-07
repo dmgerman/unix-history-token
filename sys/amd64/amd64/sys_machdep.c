@@ -1631,7 +1631,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|ctob
 argument_list|(
@@ -2280,7 +2280,7 @@ name|caddr_t
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|max_ldt_segment
 operator|*
@@ -2412,7 +2412,7 @@ condition|)
 block|{
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -2658,7 +2658,7 @@ condition|)
 block|{
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t

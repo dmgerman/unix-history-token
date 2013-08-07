@@ -1840,10 +1840,6 @@ comment|/* 	 * Initialize sleep queue hash table 	 */
 name|sleepinit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * additional VM structures 	 */
-name|vm_init2
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Create process 0 (the swapper). 	 */
 name|LIST_INSERT_HEAD
 argument_list|(

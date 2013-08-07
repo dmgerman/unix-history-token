@@ -11871,10 +11871,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|base
 argument_list|,
 name|size

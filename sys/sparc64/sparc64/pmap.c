@@ -5382,10 +5382,8 @@ expr|struct
 name|tte
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|TSB_BSIZE
 argument_list|)
 expr_stmt|;

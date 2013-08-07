@@ -1555,10 +1555,8 @@ argument_list|)
 expr_stmt|;
 name|shared_va
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;

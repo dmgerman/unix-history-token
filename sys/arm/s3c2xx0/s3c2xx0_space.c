@@ -325,10 +325,8 @@ argument_list|)
 expr_stmt|;
 name|va
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|endpa
 operator|-
 name|startpa
@@ -495,10 +493,8 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|va
 argument_list|,
 name|endva
