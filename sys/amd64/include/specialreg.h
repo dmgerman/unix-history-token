@@ -268,6 +268,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CR4_VMXE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* enable VMX operation (Intel-specific) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CR4_FSGSBASE
 value|0x00010000
 end_define
@@ -1463,6 +1474,13 @@ define|#
 directive|define
 name|MSR_TEST_CTL
 value|0x033
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_IA32_FEATURE_CONTROL
+value|0x03a
 end_define
 
 begin_define
