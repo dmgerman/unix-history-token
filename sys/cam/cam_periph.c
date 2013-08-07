@@ -1277,9 +1277,6 @@ expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
-argument_list|,
-comment|/*topology_lock_held*/
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -2819,9 +2816,6 @@ expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
-argument_list|,
-comment|/*topology_lock_held*/
-literal|1
 argument_list|)
 expr_stmt|;
 name|xpt_unlock_buses
