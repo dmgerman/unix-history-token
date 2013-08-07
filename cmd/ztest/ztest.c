@@ -538,6 +538,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|zfs_deadman_synctime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|ztest_shared_opts_t
 modifier|*
@@ -1369,7 +1376,7 @@ block|,
 literal|1
 block|,
 operator|&
-name|zopt_sometimes
+name|zopt_rarely
 block|}
 block|,
 block|{
@@ -23903,6 +23910,16 @@ operator|>=
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Grab the name lock as reader. There are some operations 	 * which don't like to have their vdevs changed while 	 * they are in progress (i.e. spa_change_guid). Those 	 * operations will have grabbed the name lock as writer. 	 */
+operator|(
+name|void
+operator|)
+name|rw_rdlock
+argument_list|(
+operator|&
+name|ztest_name_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We need SCL_STATE here because we're going to look at vd0->vdev_tsd. 	 */
 name|spa_config_enter
 argument_list|(
@@ -24034,6 +24051,7 @@ name|islog
 operator|=
 name|B_TRUE
 expr_stmt|;
+comment|/* 		 * If the top-level vdev needs to be resilvered 		 * then we only allow faults on the device that is 		 * resilvering. 		 */
 if|if
 condition|(
 name|vd0
@@ -24043,6 +24061,24 @@ operator|&&
 name|maxfaults
 operator|!=
 literal|1
+operator|&&
+operator|(
+operator|!
+name|vdev_resilver_needed
+argument_list|(
+name|vd0
+operator|->
+name|vdev_top
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|||
+name|vd0
+operator|->
+name|vdev_resilvering
+operator|)
 condition|)
 block|{
 comment|/* 			 * Make vd0 explicitly claim to be unreadable, 			 * or unwriteable, or reach behind its back 			 * and close the underlying fd.  We can do this if 			 * maxfaults == 0 because we'll fail and reexecute, 			 * and we can do it if maxfaults>= 2 because we'll 			 * have enough redundancy.  If maxfaults == 1, the 			 * combination of this with injection of random data 			 * corruption below exceeds the pool's fault tolerance. 			 */
@@ -24155,6 +24191,15 @@ argument_list|,
 name|FTAG
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rw_unlock
+argument_list|(
+operator|&
+name|ztest_name_lock
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|vd0
@@ -24222,6 +24267,15 @@ argument_list|,
 name|SCL_STATE
 argument_list|,
 name|FTAG
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|rw_unlock
+argument_list|(
+operator|&
+name|ztest_name_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we can tolerate two or more faults, or we're dealing 	 * with a slog, randomly online/offline vd0. 	 */
@@ -26341,14 +26395,25 @@ name|zs
 init|=
 name|arg
 decl_stmt|;
-name|int
-name|grace
+name|spa_t
+modifier|*
+name|spa
 init|=
-literal|300
+name|ztest_spa
 decl_stmt|;
 name|hrtime_t
 name|delta
+decl_stmt|,
+name|total
+init|=
+literal|0
 decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|delta
 operator|=
 operator|(
@@ -26363,7 +26428,7 @@ operator|)
 operator|/
 name|NANOSEC
 operator|+
-name|grace
+name|zfs_deadman_synctime
 expr_stmt|;
 operator|(
 name|void
@@ -26384,13 +26449,23 @@ name|delta
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If the pool is suspended then fail immediately. Otherwise, 		 * check to see if the pool is making any progress. If 		 * vdev_deadman() discovers that there hasn't been any recent 		 * I/Os then it will end up aborting the tests. 		 */
+if|if
+condition|(
+name|spa_suspended
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+block|{
 name|fatal
 argument_list|(
 literal|0
 argument_list|,
-literal|"failed to complete within %d seconds of deadline"
+literal|"aborting test after %llu seconds because "
+literal|"pool has transitioned to a suspended state."
 argument_list|,
-name|grace
+name|zfs_deadman_synctime
 argument_list|)
 expr_stmt|;
 return|return
@@ -26398,6 +26473,29 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+name|vdev_deadman
+argument_list|(
+name|spa
+operator|->
+name|spa_root_vdev
+argument_list|)
+expr_stmt|;
+name|total
+operator|+=
+name|zfs_deadman_synctime
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"ztest has been running for %lld seconds\n"
+argument_list|,
+name|total
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -29954,6 +30052,10 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+name|zfs_deadman_synctime
+operator|=
+literal|300
 expr_stmt|;
 name|ztest_fd_rand
 operator|=
