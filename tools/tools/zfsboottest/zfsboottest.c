@@ -133,6 +133,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"libzfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"zfsimpl.c"
 end_include
 
@@ -599,9 +605,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|spa_all_status
-argument_list|()
-expr_stmt|;
 name|spa
 operator|=
 name|STAILQ_FIRST
@@ -651,10 +654,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|spa_all_status
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (zfs_get_root(spa,&rootobj)) { 		fprintf(stderr, "can't get root\n"); 		exit(1); 	}  	if (zfs_mount(spa, rootobj,&zfsmnt)) {
+block|uint64_t rootobj; 	if (zfs_get_root(spa,&rootobj)) { 		fprintf(stderr, "can't get root\n"); 		exit(1); 	}  	if (zfs_mount(spa, rootobj,&zfsmnt)) {
 else|#
 directive|else
 if|if
@@ -682,9 +688,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+block|}
 name|printf
 argument_list|(
 literal|"\n"
