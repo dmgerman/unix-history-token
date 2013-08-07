@@ -171,7 +171,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Generically usefull offsets into the peripheral private area */
+comment|/* Generically useful offsets into the peripheral private area */
 end_comment
 
 begin_define
@@ -712,24 +712,6 @@ name|struct
 name|cam_path
 modifier|*
 name|path
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cam_freeze_devq_arg
-parameter_list|(
-name|struct
-name|cam_path
-modifier|*
-name|path
-parameter_list|,
-name|u_int32_t
-name|flags
-parameter_list|,
-name|uint32_t
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

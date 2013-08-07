@@ -2747,6 +2747,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|QUALCOMM
+argument_list|,
+name|NTT_L02C_MODEM
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|QUALCOMM2
 argument_list|,
 name|AC8700

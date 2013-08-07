@@ -389,7 +389,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|ssize_t
 name|extattr_set_fd
 parameter_list|(
 name|int
@@ -415,7 +415,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|ssize_t
 name|extattr_set_file
 parameter_list|(
 specifier|const
@@ -443,7 +443,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|ssize_t
 name|extattr_set_link
 parameter_list|(
 specifier|const

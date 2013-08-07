@@ -48,9 +48,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__has_feature
+name|__has_builtin
 argument_list|(
-name|cxx_atomic
+name|__c11_atomic_exchange
 argument_list|)
 end_if
 
@@ -115,9 +115,9 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__has_feature
+name|__has_builtin
 argument_list|(
-name|cxx_atomic
+name|__c11_atomic_load
 argument_list|)
 end_if
 

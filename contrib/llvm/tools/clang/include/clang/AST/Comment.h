@@ -62,7 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceLocation.h"
+file|"clang/AST/CommentCommandTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclObjC.h"
 end_include
 
 begin_include
@@ -74,13 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/CommentCommandTraits.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/DeclObjC.h"
+file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_include
@@ -114,6 +114,31 @@ block|{
 name|class
 name|FullComment
 decl_stmt|;
+comment|/// Describes the syntax that was used in a documentation command.
+comment|///
+comment|/// Exact values of this enumeration are important because they used to select
+comment|/// parts of diagnostic messages.  Audit diagnostics before changing or adding
+comment|/// a new value.
+enum|enum
+name|CommandMarkerKind
+block|{
+comment|/// Command started with a backslash character:
+comment|/// \code
+comment|///   \foo
+comment|/// \endcode
+name|CMK_Backslash
+init|=
+literal|0
+block|,
+comment|/// Command started with an 'at' character:
+comment|/// \code
+comment|///   @foo
+comment|/// \endcode
+name|CMK_At
+init|=
+literal|1
+block|}
+enum|;
 comment|/// Any part of the comment.
 comment|/// Abstract class.
 name|class
@@ -329,6 +354,13 @@ name|CommandID
 range|:
 literal|8
 decl_stmt|;
+comment|/// Describes the syntax that was used in a documentation command.
+comment|/// Contains values from CommandMarkerKind enum.
+name|unsigned
+name|CommandMarker
+range|:
+literal|1
+decl_stmt|;
 block|}
 empty_stmt|;
 enum|enum
@@ -337,7 +369,7 @@ name|NumBlockCommandCommentBits
 init|=
 name|NumCommentBits
 operator|+
-literal|8
+literal|9
 block|}
 enum|;
 name|class
@@ -536,6 +568,12 @@ specifier|const
 expr_stmt|;
 name|LLVM_ATTRIBUTE_USED
 name|void
+name|dumpColor
+argument_list|()
+specifier|const
+expr_stmt|;
+name|LLVM_ATTRIBUTE_USED
+name|void
 name|dump
 argument_list|(
 specifier|const
@@ -548,8 +586,6 @@ decl_stmt|;
 name|void
 name|dump
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -909,8 +945,6 @@ block|;
 name|protected
 operator|:
 comment|/// Command arguments.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|Argument
@@ -929,7 +963,7 @@ argument|unsigned CommandID
 argument_list|,
 argument|RenderKind RK
 argument_list|,
-argument|llvm::ArrayRef<Argument> Args
+argument|ArrayRef<Argument> Args
 argument_list|)
 operator|:
 name|InlineContentComment
@@ -1721,8 +1755,6 @@ operator|:
 name|public
 name|BlockContentComment
 block|{
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|InlineContentComment
@@ -1734,8 +1766,6 @@ name|public
 operator|:
 name|ParagraphComment
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|InlineContentComment
@@ -1961,8 +1991,6 @@ block|;
 name|protected
 operator|:
 comment|/// Word-like arguments.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|Argument
@@ -1983,6 +2011,8 @@ argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
 argument|unsigned CommandID
+argument_list|,
+argument|CommandMarkerKind CommandMarker
 argument_list|)
 operator|:
 name|BlockContentComment
@@ -2010,6 +2040,12 @@ operator|.
 name|CommandID
 operator|=
 name|CommandID
+block|;
+name|BlockCommandCommentBits
+operator|.
+name|CommandMarker
+operator|=
+name|CommandMarker
 block|;   }
 name|public
 operator|:
@@ -2020,6 +2056,8 @@ argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
 argument|unsigned CommandID
+argument_list|,
+argument|CommandMarkerKind CommandMarker
 argument_list|)
 operator|:
 name|BlockContentComment
@@ -2047,6 +2085,12 @@ operator|.
 name|CommandID
 operator|=
 name|CommandID
+block|;
+name|BlockCommandCommentBits
+operator|.
+name|CommandMarker
+operator|=
+name|CommandMarker
 block|;   }
 specifier|static
 name|bool
@@ -2233,7 +2277,7 @@ block|}
 name|void
 name|setArgs
 argument_list|(
-argument|llvm::ArrayRef<Argument> A
+argument|ArrayRef<Argument> A
 argument_list|)
 block|{
 name|Args
@@ -2346,6 +2390,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|CommandMarkerKind
+name|getCommandMarker
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|static_cast
+operator|<
+name|CommandMarkerKind
+operator|>
+operator|(
+name|BlockCommandCommentBits
+operator|.
+name|CommandMarker
+operator|)
+return|;
+block|}
 expr|}
 block|;
 comment|/// Doxygen \\param command.
@@ -2378,6 +2440,8 @@ argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
 argument|unsigned CommandID
+argument_list|,
+argument|CommandMarkerKind CommandMarker
 argument_list|)
 operator|:
 name|BlockCommandComment
@@ -2389,6 +2453,8 @@ argument_list|,
 name|LocEnd
 argument_list|,
 name|CommandID
+argument_list|,
+name|CommandMarker
 argument_list|)
 block|,
 name|ParamIndex
@@ -2607,8 +2673,6 @@ comment|/// \endverbatim
 comment|/// For C:  Position = { 0 }
 comment|/// For TT: Position = { 1 }
 comment|/// For T:  Position = { 1, 0 }
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|unsigned
@@ -2624,6 +2688,8 @@ argument_list|,
 argument|SourceLocation LocEnd
 argument_list|,
 argument|unsigned CommandID
+argument_list|,
+argument|CommandMarkerKind CommandMarker
 argument_list|)
 operator|:
 name|BlockCommandComment
@@ -2635,6 +2701,8 @@ argument_list|,
 argument|LocEnd
 argument_list|,
 argument|CommandID
+argument_list|,
+argument|CommandMarker
 argument_list|)
 block|{ }
 specifier|static
@@ -2874,8 +2942,6 @@ block|;
 name|SourceLocation
 name|CloseNameLocBegin
 block|;
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|VerbatimBlockLineComment
@@ -2903,7 +2969,10 @@ argument_list|,
 argument|LocEnd
 argument_list|,
 argument|CommandID
+argument_list|,
+argument|CMK_At
 argument_list|)
+comment|// FIXME: improve source fidelity.
 block|{ }
 specifier|static
 name|bool
@@ -2976,7 +3045,7 @@ block|;   }
 name|void
 name|setLines
 argument_list|(
-argument|llvm::ArrayRef<VerbatimBlockLineComment *> L
+argument|ArrayRef<VerbatimBlockLineComment *> L
 argument_list|)
 block|{
 name|Lines
@@ -3064,8 +3133,11 @@ argument_list|,
 name|LocEnd
 argument_list|,
 name|CommandID
+argument_list|,
+name|CMK_At
 argument_list|)
 block|,
+comment|// FIXME: improve source fidelity.
 name|Text
 argument_list|(
 name|Text
@@ -3324,8 +3396,6 @@ operator|:
 name|public
 name|Comment
 block|{
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|BlockContentComment
@@ -3341,8 +3411,6 @@ name|public
 operator|:
 name|FullComment
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|BlockContentComment
@@ -3518,8 +3586,6 @@ return|return
 name|ThisDeclInfo
 return|;
 block|}
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|BlockContentComment

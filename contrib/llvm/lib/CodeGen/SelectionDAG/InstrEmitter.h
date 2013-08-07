@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -82,13 +82,16 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineInstrBuilder
+decl_stmt|;
 name|class
 name|MCInstrDesc
 decl_stmt|;
@@ -187,9 +190,9 @@ name|SDNode
 operator|*
 name|Node
 argument_list|,
-name|MachineInstr
-operator|*
-name|MI
+name|MachineInstrBuilder
+operator|&
+name|MIB
 argument_list|,
 specifier|const
 name|MCInstrDesc
@@ -236,9 +239,9 @@ comment|/// not in the required register class.
 name|void
 name|AddRegisterOperand
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+name|MachineInstrBuilder
+operator|&
+name|MIB
 argument_list|,
 name|SDValue
 name|Op
@@ -277,9 +280,9 @@ comment|/// assertions only.
 name|void
 name|AddOperand
 argument_list|(
-name|MachineInstr
-operator|*
-name|MI
+name|MachineInstrBuilder
+operator|&
+name|MIB
 argument_list|,
 name|SDValue
 name|Op
@@ -323,7 +326,7 @@ parameter_list|,
 name|unsigned
 name|SubIdx
 parameter_list|,
-name|EVT
+name|MVT
 name|VT
 parameter_list|,
 name|DebugLoc

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<link.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -1781,8 +1775,10 @@ name|errno
 return|;
 name|ef
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1820,17 +1816,6 @@ name|ef_ops
 operator|=
 operator|&
 name|ef_obj_file_ops
-expr_stmt|;
-name|bzero
-argument_list|(
-name|ef
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ef
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|ef
 operator|->

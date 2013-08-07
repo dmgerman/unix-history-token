@@ -24,7 +24,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|PCPU_MD_FIELDS
+name|PCPU_MD_COMMON_FIELDS
 define|\
 value|pd_entry_t	*pc_segbase;
 comment|/* curthread segbase */
@@ -40,6 +40,68 @@ end_define
 begin_comment
 comment|/* IPIs pending to this CPU */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_MIPS64_FIELDS
+define|\
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[61]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_MIPS32_FIELDS
+define|\
+value|PCPU_MD_COMMON_FIELDS						\ 	char		__pad[133]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+value|PCPU_MD_MIPS64_FIELDS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+value|PCPU_MD_MIPS32_FIELDS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

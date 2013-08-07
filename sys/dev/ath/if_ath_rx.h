@@ -168,6 +168,11 @@ name|struct
 name|ath_buf
 modifier|*
 name|bf
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl

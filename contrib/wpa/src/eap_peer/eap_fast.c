@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: EAP-FAST (RFC 4851)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer method: EAP-FAST (RFC 4851)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -688,6 +688,8 @@ operator|->
 name|ssl
 argument_list|,
 name|config
+argument_list|,
+name|EAP_TYPE_FAST
 argument_list|)
 condition|)
 block|{
@@ -1978,6 +1980,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|data
 operator|->
 name|phase2_priv
@@ -1992,6 +1995,13 @@ name|data
 argument_list|)
 operator|<
 literal|0
+operator|)
+operator|||
+name|data
+operator|->
+name|phase2_method
+operator|==
+name|NULL
 condition|)
 block|{
 name|wpa_printf
@@ -2575,12 +2585,6 @@ name|struct
 name|eap_method_ret
 modifier|*
 name|ret
-parameter_list|,
-specifier|const
-name|struct
-name|eap_hdr
-modifier|*
-name|req
 parameter_list|,
 name|u8
 modifier|*
@@ -4935,7 +4939,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * This is PAC refreshing, i.e., normal authentication that is 		 * expected to be completed with an EAP-Success. 		 */
+comment|/* 		 * This is PAC refreshing, i.e., normal authentication that is 		 * expected to be completed with an EAP-Success. However, 		 * RFC 5422, Section 3.5 allows EAP-Failure to be sent even 		 * after protected success exchange in case of EAP-Fast 		 * provisioning, so we better use DECISION_COND_SUCC here 		 * instead of DECISION_UNCOND_SUCC. 		 */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -4948,7 +4952,7 @@ name|ret
 operator|->
 name|decision
 operator|=
-name|DECISION_UNCOND_SUCC
+name|DECISION_COND_SUCC
 expr_stmt|;
 block|}
 name|ret
@@ -5633,8 +5637,6 @@ argument_list|,
 name|data
 argument_list|,
 name|ret
-argument_list|,
-name|req
 argument_list|,
 name|tlv
 operator|.

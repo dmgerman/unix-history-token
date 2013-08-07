@@ -27,6 +27,17 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_comment
+comment|/*  * This must agree with the definition in<ufs/ufs/dir.h>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|doff_t
+value|int32_t
+end_define
+
 begin_define
 define|#
 directive|define
@@ -50,15 +61,15 @@ comment|/* Indirect addresses in inode. */
 end_comment
 
 begin_comment
-comment|/*  * This must agree with the definition in<ufs/ufs/dir.h>.  */
+comment|/*  * The size of physical and logical block numbers and time fields in UFS.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|doff_t
-value|int32_t
-end_define
+begin_typedef
+typedef|typedef
+name|int32_t
+name|e2fs_lbn_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * The inode is used to describe each active (or recently active) file in the  * EXT2FS filesystem. It is composed of two types of information. The first  * part is the information that is needed only while the file is active (such  * as the identity of the file and linkage to speed its lookup). The second  * part is the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
@@ -521,7 +532,7 @@ begin_struct
 struct|struct
 name|indir
 block|{
-name|int32_t
+name|e2fs_lbn_t
 name|in_lbn
 decl_stmt|;
 comment|/* Logical block number. */

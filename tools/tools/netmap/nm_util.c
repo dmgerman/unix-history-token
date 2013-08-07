@@ -1037,17 +1037,6 @@ operator|->
 name|memsize
 argument_list|)
 expr_stmt|;
-name|ioctl
-argument_list|(
-name|me
-operator|->
-name|fd
-argument_list|,
-name|NIOCUNREGIF
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|me

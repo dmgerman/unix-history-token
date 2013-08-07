@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/InlineAsm.h"
+file|"llvm/IR/InlineAsm.h"
 end_include
 
 begin_include
@@ -103,6 +103,9 @@ name|GCStrategy
 decl_stmt|;
 name|class
 name|Constant
+decl_stmt|;
+name|class
+name|ConstantArray
 decl_stmt|;
 name|class
 name|GCMetadataPrinter
@@ -334,6 +337,12 @@ specifier|const
 name|DataLayout
 operator|&
 name|getDataLayout
+argument_list|()
+specifier|const
+block|;
+comment|/// getTargetTriple - Return the target triple string.
+name|StringRef
+name|getTargetTriple
 argument_list|()
 specifier|const
 block|;
@@ -894,19 +903,9 @@ argument|unsigned Encoding
 argument_list|)
 specifier|const
 block|;
-comment|/// EmitReference - Emit a reference to a label with a specified encoding.
-comment|///
+comment|/// EmitReference - Emit reference to a ttype global with a specified encoding.
 name|void
-name|EmitReference
-argument_list|(
-argument|const MCSymbol *Sym
-argument_list|,
-argument|unsigned Encoding
-argument_list|)
-specifier|const
-block|;
-name|void
-name|EmitReference
+name|EmitTTypeReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -1119,9 +1118,9 @@ name|void
 name|EmitLLVMUsedList
 argument_list|(
 specifier|const
-name|Constant
+name|ConstantArray
 operator|*
-name|List
+name|InitList
 argument_list|)
 block|;
 name|void

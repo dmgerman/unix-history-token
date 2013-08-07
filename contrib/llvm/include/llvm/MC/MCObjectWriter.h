@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
@@ -160,6 +166,12 @@ operator|~
 name|MCObjectWriter
 argument_list|()
 expr_stmt|;
+comment|/// lifetime management
+name|virtual
+name|void
+name|reset
+parameter_list|()
+block|{ }
 name|bool
 name|isLittleEndian
 argument_list|()
@@ -180,8 +192,8 @@ return|;
 block|}
 comment|/// @name High-Level API
 comment|/// @{
-comment|/// Perform any late binding of symbols (for example, to assign symbol indices
-comment|/// for use when generating relocations).
+comment|/// \brief Perform any late binding of symbols (for example, to assign symbol
+comment|/// indices for use when generating relocations).
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation is
 comment|/// complete.
@@ -201,7 +213,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Record a relocation entry.
+comment|/// \brief Record a relocation entry.
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation, and
 comment|/// post layout binding. The implementation is responsible for storing
@@ -296,7 +308,7 @@ name|IsPCRel
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Write the object file.
+comment|/// \brief Write the object file.
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation is
 comment|/// complete, fixups have been evaluated and applied, and relocations
@@ -633,6 +645,42 @@ expr_stmt|;
 block|}
 name|void
 name|WriteBytes
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|ByteVec
+argument_list|,
+name|unsigned
+name|ZeroFillSize
+operator|=
+literal|0
+argument_list|)
+block|{
+name|WriteBytes
+argument_list|(
+name|StringRef
+argument_list|(
+name|ByteVec
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|ByteVec
+operator|.
+name|size
+argument_list|()
+argument_list|)
+argument_list|,
+name|ZeroFillSize
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|WriteBytes
 parameter_list|(
 name|StringRef
 name|Str
@@ -643,6 +691,8 @@ init|=
 literal|0
 parameter_list|)
 block|{
+comment|// TODO: this version may need to go away once all fragment contents are
+comment|// converted to SmallVector<char, N>
 name|assert
 argument_list|(
 operator|(

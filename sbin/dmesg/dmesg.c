@@ -135,6 +135,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -282,13 +288,20 @@ name|long
 name|pri
 decl_stmt|;
 name|int
-name|all
-decl_stmt|,
 name|ch
+decl_stmt|,
+name|clear
+decl_stmt|;
+name|bool
+name|all
 decl_stmt|;
 name|all
 operator|=
-literal|0
+name|false
+expr_stmt|;
+name|clear
+operator|=
+name|false
 expr_stmt|;
 operator|(
 name|void
@@ -317,7 +330,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aM:N:"
+literal|"acM:N:"
 argument_list|)
 operator|)
 operator|!=
@@ -333,7 +346,16 @@ case|case
 literal|'a'
 case|:
 name|all
-operator|++
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|clear
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -453,6 +475,36 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"sysctl kern.msgbuf"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|clear
+condition|)
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.msgbuf_clear"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|clear
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"sysctl kern.msgbuf_clear"
 argument_list|)
 expr_stmt|;
 block|}
@@ -991,14 +1043,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dmesg [-a] [-M core [-N system]]\n"
+literal|"usage: dmesg [-ac] [-M core [-N system]]\n"
 argument_list|)
 expr_stmt|;
 name|exit

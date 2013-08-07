@@ -13,6 +13,12 @@ directive|include
 file|<ldns/config.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_B64_PTON
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -100,15 +106,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|Assert
-parameter_list|(
-name|Cond
-parameter_list|)
-value|if (!(Cond)) abort()
-end_define
+begin_include
+include|#
+directive|include
+file|<ldns/util.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -649,6 +651,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_B64_PTON */
+end_comment
 
 end_unit
 

@@ -2354,8 +2354,6 @@ name|set_pcb_flags
 argument_list|(
 name|pcb
 argument_list|,
-name|PCB_GS32BIT
-operator||
 name|PCB_32BIT
 argument_list|)
 expr_stmt|;
@@ -5061,8 +5059,6 @@ argument_list|(
 name|pcb
 argument_list|,
 name|PCB_32BIT
-operator||
-name|PCB_GS32BIT
 argument_list|)
 expr_stmt|;
 name|update_gdt_gsbase

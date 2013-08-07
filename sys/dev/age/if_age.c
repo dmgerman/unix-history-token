@@ -12944,6 +12944,7 @@ block|{
 if|if
 condition|(
 name|count
+operator|--
 operator|<=
 literal|0
 condition|)

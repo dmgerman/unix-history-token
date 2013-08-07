@@ -855,13 +855,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|ifc_free_unit
-argument_list|(
-name|ifc
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|ubus

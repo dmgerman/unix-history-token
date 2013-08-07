@@ -297,11 +297,8 @@ decl_stmt|;
 name|avl_tree_t
 name|vq_pending_tree
 decl_stmt|;
-name|uint64_t
+name|hrtime_t
 name|vq_io_complete_ts
-decl_stmt|;
-name|uint64_t
-name|vq_io_delta_ts
 decl_stmt|;
 name|kmutex_t
 name|vq_lock
@@ -778,16 +775,17 @@ define|#
 directive|define
 name|VDD_DTL
 value|0x02
-comment|/*  * Size and offset of embedded boot loader region on each label.  * The total size of the first two labels plus the boot area is 4MB.  */
+comment|/* Offset of embedded boot loader region on each label */
 define|#
 directive|define
 name|VDEV_BOOT_OFFSET
 value|(2 * sizeof (vdev_label_t))
+comment|/*  * Size of embedded boot loader region on each label.  * The total size of the first two labels plus the boot area is 4MB.  */
 define|#
 directive|define
 name|VDEV_BOOT_SIZE
 value|(7ULL<< 19)
-comment|/* 3.5M	*/
+comment|/* 3.5M */
 comment|/*  * Size of label regions at the start and end of each leaf device.  */
 define|#
 directive|define
@@ -1104,7 +1102,8 @@ modifier|*
 name|vd
 parameter_list|)
 function_decl|;
-comment|/*  * zdb uses this tunable, so it must be declared here to make lint happy.  */
+comment|/*  * Global variables  */
+comment|/* zdb uses this tunable, so it must be declared here to make lint happy. */
 specifier|extern
 name|int
 name|zfs_vdev_cache_size

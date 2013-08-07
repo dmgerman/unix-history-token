@@ -6419,6 +6419,7 @@ argument_list|(
 name|nmp
 argument_list|)
 condition|)
+block|{
 name|nfscl_layoutcommit
 argument_list|(
 name|vp
@@ -6426,6 +6427,23 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Invalidate the attribute cache, since writes to a DS 		 * won't update the size attribute. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|n_mtx
+argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|n_attrstamp
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6522,7 +6540,7 @@ name|error
 decl_stmt|,
 name|error2
 decl_stmt|;
-comment|/* 	 * Commits are usually short and sweet so lets save some cpu and 	 * leave the async daemons for more important rpc's (such as reads 	 * and writes). 	 */
+comment|/* 	 * Commits are usually short and sweet so lets save some cpu and 	 * leave the async daemons for more important rpc's (such as reads 	 * and writes). 	 * 	 * Readdirplus RPCs do vget()s to acquire the vnodes for entries 	 * in the directory in order to update attributes. This can deadlock 	 * with another thread that is waiting for async I/O to be done by 	 * an nfsiod thread while holding a lock on one of these vnodes. 	 * To avoid this deadlock, don't allow the async nfsiod threads to 	 * perform Readdirplus RPCs. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -6531,6 +6549,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_iocmd
@@ -6553,6 +6572,25 @@ operator|>
 name|ncl_numasync
 operator|/
 literal|2
+operator|)
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+operator|&&
+operator|(
+name|nmp
+operator|->
+name|nm_flag
+operator|&
+name|NFSMNT_RDIRPLUS
+operator|)
 operator|)
 condition|)
 block|{
@@ -7184,6 +7222,30 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NFSHASPNFS
+argument_list|(
+name|VFSTONFS
+argument_list|(
+name|vnode_mount
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Invalidate the attribute cache, since writes to a DS 			 * won't update the size attribute. 			 */
+name|np
+operator|->
+name|n_attrstamp
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|np
 operator|->
 name|n_directio_asyncwr

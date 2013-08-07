@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Diffie-Hellman group 5 operations  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Diffie-Hellman group 5 operations  * Copyright (c) 2009, 2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -63,11 +63,39 @@ condition|(
 operator|*
 name|publ
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|NULL
 return|;
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|dh5_init_fixed
+parameter_list|(
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|publ
+parameter_list|)
+block|{
 return|return
 operator|(
 name|void

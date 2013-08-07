@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -2377,7 +2377,10 @@ goto|;
 block|}
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2733,7 +2736,10 @@ name|integer_size
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|zap_leaf_array_read
@@ -2771,7 +2777,10 @@ name|num_integers
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 return|return
@@ -2903,7 +2912,10 @@ name|buflen
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 return|return
@@ -2997,7 +3009,10 @@ name|delta_chunks
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 name|zap_leaf_array_free
@@ -3451,7 +3466,10 @@ name|numchunks
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EAGAIN
+argument_list|)
 operator|)
 return|;
 comment|/* make the entry */

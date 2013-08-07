@@ -1876,7 +1876,9 @@ expr_stmt|;
 name|prof_tdata
 operator|=
 name|prof_tdata_get
-argument_list|()
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3086,9 +3088,10 @@ expr_stmt|;
 comment|/* 	 * Check that ctx is still unused by any thread cache before destroying 	 * it.  prof_lookup() increments ctx->nlimbo in order to avoid a race 	 * condition with this function, as does prof_ctx_merge() in order to 	 * avoid a race between the main body of prof_ctx_merge() and entry 	 * into this function. 	 */
 name|prof_tdata
 operator|=
-operator|*
-name|prof_tdata_tsd_get
-argument_list|()
+name|prof_tdata_get
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
@@ -3839,7 +3842,9 @@ expr_stmt|;
 name|prof_tdata
 operator|=
 name|prof_tdata_get
-argument_list|()
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4435,12 +4440,12 @@ operator|==
 name|false
 condition|)
 return|return;
-comment|/* 	 * Don't call prof_tdata_get() here, because it could cause recursive 	 * allocation. 	 */
 name|prof_tdata
 operator|=
-operator|*
-name|prof_tdata_tsd_get
-argument_list|()
+name|prof_tdata_get
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4648,12 +4653,12 @@ operator|==
 name|false
 condition|)
 return|return;
-comment|/* 	 * Don't call prof_tdata_get() here, because it could cause recursive 	 * allocation. 	 */
 name|prof_tdata
 operator|=
-operator|*
-name|prof_tdata_tsd_get
-argument_list|()
+name|prof_tdata_get
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

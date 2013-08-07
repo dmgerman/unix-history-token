@@ -189,6 +189,14 @@ comment|/** Persistent state used by mbrlen() calls. */
 name|__mbstate_t
 name|mbrlen
 decl_stmt|;
+comment|/** Persistent state used by mbrtoc16() calls. */
+name|__mbstate_t
+name|mbrtoc16
+decl_stmt|;
+comment|/** Persistent state used by mbrtoc32() calls. */
+name|__mbstate_t
+name|mbrtoc32
+decl_stmt|;
 comment|/** Persistent state used by mbrtowc() calls. */
 name|__mbstate_t
 name|mbrtowc
@@ -204,6 +212,14 @@ decl_stmt|;
 comment|/** Persistent state used by mbtowc() calls. */
 name|__mbstate_t
 name|mbtowc
+decl_stmt|;
+comment|/** Persistent state used by c16rtomb() calls. */
+name|__mbstate_t
+name|c16rtomb
+decl_stmt|;
+comment|/** Persistent state used by c32rtomb() calls. */
+name|__mbstate_t
+name|c32rtomb
 decl_stmt|;
 comment|/** Persistent state used by wcrtomb() calls. */
 name|__mbstate_t

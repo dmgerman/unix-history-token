@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_FLOAT_H
+name|LLVM_ADT_APFLOAT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_FLOAT_H
+name|LLVM_ADT_APFLOAT_H
 end_define
 
 begin_comment
@@ -288,6 +288,17 @@ argument_list|,
 name|uninitializedTag
 argument_list|)
 expr_stmt|;
+name|APFloat
+argument_list|(
+specifier|const
+name|fltSemantics
+operator|&
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+argument_list|)
+expr_stmt|;
 name|explicit
 name|APFloat
 parameter_list|(
@@ -300,19 +311,6 @@ name|APFloat
 parameter_list|(
 name|float
 name|f
-parameter_list|)
-function_decl|;
-name|explicit
-name|APFloat
-parameter_list|(
-specifier|const
-name|APInt
-modifier|&
-parameter_list|,
-name|bool
-name|isIEEE
-init|=
-name|false
 parameter_list|)
 function_decl|;
 name|APFloat
@@ -831,7 +829,17 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/* The definition of equality is not straightforward for floating point,        so we won't use operator==.  Use one of the following, or write        whatever it is you really mean. */
-comment|// bool operator==(const APFloat&) const;     // DO NOT IMPLEMENT
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|APFloat
+operator|&
+operator|)
+specifier|const
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 comment|/* IEEE comparison with another floating point number (NaNs        compare unordered, 0==-0). */
 name|cmpResult
 name|compare
@@ -985,6 +993,11 @@ name|isNegative
 argument_list|()
 return|;
 block|}
+name|bool
+name|isDenormal
+argument_list|()
+specifier|const
+expr_stmt|;
 name|APFloat
 modifier|&
 name|operator
@@ -1419,14 +1432,14 @@ name|void
 name|initFromAPInt
 parameter_list|(
 specifier|const
+name|fltSemantics
+modifier|*
+name|Sem
+parameter_list|,
+specifier|const
 name|APInt
 modifier|&
 name|api
-parameter_list|,
-name|bool
-name|isIEEE
-init|=
-name|false
 parameter_list|)
 function_decl|;
 name|void
@@ -1567,7 +1580,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LLVM_FLOAT_H */
+comment|/* LLVM_ADT_APFLOAT_H */
 end_comment
 
 end_unit

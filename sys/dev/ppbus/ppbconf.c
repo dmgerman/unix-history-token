@@ -566,7 +566,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * search_token()  *  * Search the first occurence of a token within a string  */
+comment|/*  * search_token()  *  * Search the first occurrence of a token within a string  */
 end_comment
 
 begin_function
@@ -2260,7 +2260,7 @@ name|ppb_owner
 operator|=
 name|dev
 expr_stmt|;
-comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is usefull for 			 * drivers that do not set there operating mode 			 * during attachement 			 */
+comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is useful for 			 * drivers that do not set there operating mode 			 * during attachement 			 */
 if|if
 condition|(
 name|ppbdev

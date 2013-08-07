@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/PPCBaseInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MCTargetDesc/PPCMCTargetDesc.h"
 end_include
 
@@ -102,6 +96,9 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
+name|ImmutablePass
+decl_stmt|;
+name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
@@ -116,6 +113,11 @@ decl_stmt|;
 name|FunctionPass
 modifier|*
 name|createPPCCTRLoops
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCEarlyReturnPass
 parameter_list|()
 function_decl|;
 name|FunctionPass
@@ -165,6 +167,17 @@ name|bool
 name|isDarwin
 parameter_list|)
 function_decl|;
+comment|/// \brief Creates an PPC-specific Target Transformation Info pass.
+name|ImmutablePass
+modifier|*
+name|createPPCTargetTransformInfoPass
+parameter_list|(
+specifier|const
+name|PPCTargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
 name|namespace
 name|PPCII
 block|{
@@ -187,42 +200,70 @@ comment|/// MO_PIC_FLAG - If this bit is set, the symbol reference is relative t
 comment|/// the function's picbase, e.g. lo16(symbol-picbase).
 name|MO_PIC_FLAG
 init|=
-literal|4
+literal|2
 block|,
 comment|/// MO_NLP_FLAG - If this bit is set, the symbol reference is actually to
 comment|/// the non_lazy_ptr for the global, e.g. lo16(symbol$non_lazy_ptr-picbase).
 name|MO_NLP_FLAG
 init|=
-literal|8
+literal|4
 block|,
 comment|/// MO_NLP_HIDDEN_FLAG - If this bit is set, the symbol reference is to a
 comment|/// symbol with hidden visibility.  This causes a different kind of
 comment|/// non-lazy-pointer to be generated.
 name|MO_NLP_HIDDEN_FLAG
 init|=
-literal|16
+literal|8
 block|,
 comment|/// The next are not flags but distinct values.
 name|MO_ACCESS_MASK
 init|=
-literal|224
+literal|0xf0
 block|,
 comment|/// MO_LO16, MO_HA16 - lo16(symbol) and ha16(symbol)
 name|MO_LO16
 init|=
-literal|32
+literal|1
+operator|<<
+literal|4
 block|,
 name|MO_HA16
 init|=
-literal|64
+literal|2
+operator|<<
+literal|4
 block|,
 name|MO_TPREL16_HA
 init|=
-literal|96
+literal|3
+operator|<<
+literal|4
 block|,
 name|MO_TPREL16_LO
 init|=
-literal|128
+literal|4
+operator|<<
+literal|4
+block|,
+comment|/// These values identify relocations on immediates folded
+comment|/// into memory operations.
+name|MO_DTPREL16_LO
+init|=
+literal|5
+operator|<<
+literal|4
+block|,
+name|MO_TLSLD16_LO
+init|=
+literal|6
+operator|<<
+literal|4
+block|,
+name|MO_TOC16_LO
+init|=
+literal|7
+operator|<<
+literal|4
 block|}
 enum|;
 block|}

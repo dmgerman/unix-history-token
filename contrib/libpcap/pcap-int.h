@@ -274,6 +274,10 @@ name|size_t
 name|mmapbuflen
 decl_stmt|;
 comment|/* size of region */
+name|int
+name|vlan_offset
+decl_stmt|;
+comment|/* offset at which to insert vlan tags; if -1, don't insert */
 name|u_int
 name|tp_version
 decl_stmt|;
@@ -909,7 +913,7 @@ decl_stmt|;
 comment|/* microseconds */
 block|}
 struct|;
-comment|/*  * This is a `pcap_pkthdr' as actually stored in a savefile.  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure),  * and do not make the time stamp anything other than seconds and  * microseconds (e.g., seconds and nanoseconds).  Instead:  *  *	introduce a new structure for the new format;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed record  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old record header as well as files with the new record header  *	(using the magic number to determine the header format).  *  * Then supply the changes as a patch at  *  *	http://sourceforge.net/projects/libpcap/  *  * so that future versions of libpcap and programs that use it (such as  * tcpdump) will be able to read your new capture file format.  */
+comment|/*  * This is a `pcap_pkthdr' as actually stored in a savefile.  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure),  * and do not make the time stamp anything other than seconds and  * microseconds (e.g., seconds and nanoseconds).  Instead:  *  *	introduce a new structure for the new format;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed record  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old record header as well as files with the new record header  *	(using the magic number to determine the header format).  *  * Then supply the changes by forking the branch at  *  *	https://github.com/mcr/libpcap/issues  *  * and issuing a pull request, so that future versions of libpcap and  * programs that use it (such as tcpdump) will be able to read your new  * capture file format.  */
 struct|struct
 name|pcap_sf_pkthdr
 block|{
@@ -1147,6 +1151,19 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/*  * Internal interfaces for "pcap_create()".  *  * "pcap_create_interface()" is the routine to do a pcap_create on  * a regular network interface.  There are multiple implementations  * of this, one for each platform type (Linux, BPF, DLPI, etc.),  * with the one used chosen by the configure script.  *  * "pcap_create_common()" allocates and fills in a pcap_t, for use  * by pcap_create routines.  */
+name|pcap_t
+modifier|*
+name|pcap_create_interface
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|pcap_t
 modifier|*
 name|pcap_create_common
@@ -1201,7 +1218,18 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Internal interfaces for "pcap_findalldevs()".  *  * "pcap_platform_finddevs()" is a platform-dependent routine to  * add devices not found by the "standard" mechanisms (SIOCGIFCONF,  * "getifaddrs()", etc..  *  * "pcap_add_if()" adds an interface to the list of interfaces.  */
+comment|/*  * Internal interfaces for "pcap_findalldevs()".  *  * "pcap_findalldevs_interfaces()" finds interfaces using the  * "standard" mechanisms (SIOCGIFCONF, "getifaddrs()", etc.).  *  * "pcap_platform_finddevs()" is a platform-dependent routine to  * add devices not found by the "standard" mechanisms.  *  * "pcap_add_if()" adds an interface to the list of interfaces, for  * use by various "find interfaces" routines.  */
+name|int
+name|pcap_findalldevs_interfaces
+parameter_list|(
+name|pcap_if_t
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|pcap_platform_finddevs
 parameter_list|(

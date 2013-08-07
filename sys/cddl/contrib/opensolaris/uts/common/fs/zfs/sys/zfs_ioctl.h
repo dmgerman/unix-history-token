@@ -888,7 +888,7 @@ name|void
 parameter_list|)
 function_decl|;
 specifier|extern
-name|void
+name|int
 name|zfs_unmount_snap
 parameter_list|(
 specifier|const

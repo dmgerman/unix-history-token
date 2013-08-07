@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
+comment|/*  * Copyright (c) 1998-2002, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: mailstats.c,v 8.100 2002/06/27 23:24:06 gshapiro Exp $"
+literal|"@(#)$Id: mailstats.c,v 8.102 2013/03/12 15:24:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -264,6 +264,10 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
+define|#
+directive|define
+name|MSOPTS
+value|"cC:f:opP"
 name|cfile
 operator|=
 name|getcfname
@@ -304,7 +308,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cC:f:opP"
+name|MSOPTS
 argument_list|)
 operator|)
 operator|!=
@@ -542,8 +546,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 specifier|register

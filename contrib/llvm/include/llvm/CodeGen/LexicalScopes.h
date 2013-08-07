@@ -74,12 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Metadata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
 end_include
 
 begin_include
@@ -587,15 +587,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|IndentLevel
-operator|=
-literal|0
-block|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|Parent
@@ -933,9 +924,14 @@ block|}
 comment|/// dump - print lexical scope.
 name|void
 name|dump
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|unsigned
+name|Indent
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|LexicalScope
@@ -1002,16 +998,6 @@ name|DFSOut
 decl_stmt|;
 comment|// In& Out Depth use to determine
 comment|// scope nesting.
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|mutable
-name|unsigned
-name|IndentLevel
-decl_stmt|;
-comment|// Private state for dump()
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 block|}

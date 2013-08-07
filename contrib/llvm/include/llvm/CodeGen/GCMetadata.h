@@ -138,12 +138,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -151,6 +145,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
 end_include
 
 begin_include
@@ -712,7 +712,8 @@ operator|~
 name|GCModuleInfo
 argument_list|()
 expr_stmt|;
-comment|/// clear - Resets the pass. The metadata deleter pass calls this.
+comment|/// clear - Resets the pass. Any pass, which uses GCModuleInfo, should
+comment|/// call it in doFinalization().
 comment|///
 name|void
 name|clear

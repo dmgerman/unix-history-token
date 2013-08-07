@@ -6208,52 +6208,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__clang__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Some versions of clang don't save and restore all callee registers, if a    __builtin_eh_return() intrinsic is used in a function.  This is particularly    bad on amd64.  For now, use the following ugly hack to force it to assume    those registers are clobbered, when invoking __builtin_eh_return(), so it    will emit code to save and restore them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOBBER_REGS_HACK
-define|\
-value|__asm __volatile(" " : : : "r15", "r14", "r13", "r12", "rbx", "rdx", "rax");
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CLOBBER_REGS_HACK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __clang__ */
-end_comment
-
 begin_comment
 comment|/* Install TARGET into CURRENT so that we can return to it.  This is a    macro because __builtin_eh_return must be invoked in the context of    our caller.  */
 end_comment
@@ -6268,7 +6222,7 @@ parameter_list|,
 name|TARGET
 parameter_list|)
 define|\
-value|do									 \     {									 \       long offset = uw_install_context_1 ((CURRENT), (TARGET));		 \       void *handler = __builtin_frob_return_addr ((TARGET)->ra);	 \       CLOBBER_REGS_HACK							 \       __builtin_eh_return (offset, handler);				 \     }									 \   while (0)
+value|do									 \     {									 \       long offset = uw_install_context_1 ((CURRENT), (TARGET));		 \       void *handler = __builtin_frob_return_addr ((TARGET)->ra);	 \       __builtin_eh_return (offset, handler);				 \     }									 \   while (0)
 end_define
 
 begin_function

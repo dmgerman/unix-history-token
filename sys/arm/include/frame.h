@@ -106,6 +106,9 @@ comment|/* Not used on arm26 */
 name|register_t
 name|tf_pc
 decl_stmt|;
+name|register_t
+name|tf_pad
+decl_stmt|;
 block|}
 name|trapframe_t
 typedef|;

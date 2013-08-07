@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012 Emulex  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Emulex Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * Contact Information:  * freebsd-drivers@emulex.com  *  * Emulex  * 3333 Susan Street  * Costa Mesa, CA 92626  */
+comment|/*-  * Copyright (C) 2013 Emulex  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Emulex Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * Contact Information:  * freebsd-drivers@emulex.com  *  * Emulex  * 3333 Susan Street  * Costa Mesa, CA 92626  */
 end_comment
 
 begin_comment
@@ -339,11 +339,42 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_PRODUCT_SH
+value|0x0720
+end_define
+
+begin_comment
+comment|/* Skyhawk network adapter */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IS_BE
 parameter_list|(
 name|sc
 parameter_list|)
 value|(((sc->flags& OCE_FLAGS_BE3) | \ 			 (sc->flags& OCE_FLAGS_BE2))? 1:0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_BE3
+parameter_list|(
+name|sc
+parameter_list|)
+value|(sc->flags& OCE_FLAGS_BE3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_BE2
+parameter_list|(
+name|sc
+parameter_list|)
+value|(sc->flags& OCE_FLAGS_BE2)
 end_define
 
 begin_define
@@ -364,6 +395,43 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|((sc->flags& OCE_FLAGS_HAS_A0_CHIP) ? 1:0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_SH
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc->flags& OCE_FLAGS_SH) ? 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_be_mode_mc
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc->function_mode& FNM_FLEX10_MODE) ||	\ 				(sc->function_mode& FNM_UMC_MODE)    ||	\ 				(sc->function_mode& FNM_VNIC_MODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCE_FUNCTION_CAPS_SUPER_NIC
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PROFILE_SUPER_NIC
+parameter_list|(
+name|sc
+parameter_list|)
+value|(sc->function_caps& OCE_FUNCTION_CAPS_SUPER_NIC)
 end_define
 
 begin_comment
@@ -417,12 +485,8 @@ begin_define
 define|#
 directive|define
 name|OCE_MAX_RSS
-value|4
+value|8
 end_define
-
-begin_comment
-comment|/* TODO: 8*/
-end_comment
 
 begin_define
 define|#
@@ -434,6 +498,16 @@ end_define
 begin_comment
 comment|/* For BE3 Legacy mode*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|is_rss_enabled
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc->function_caps& FNC_RSS)&& !is_be_mode_mc(sc))
+end_define
 
 begin_define
 define|#
@@ -613,6 +687,13 @@ define|#
 directive|define
 name|RSS_ENABLE_TCP_IPV6
 value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|INDIRECTION_TABLE_ENTRIES
+value|128
 end_define
 
 begin_comment
@@ -796,6 +877,21 @@ name|i
 parameter_list|)
 define|\
 value|for (i = 0, rq = sc->rq[0]; i< sc->nrqs; i++, rq = sc->rq[i])
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_all_rss_queues
+parameter_list|(
+name|sc
+parameter_list|,
+name|rq
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|for (i = 0, rq = sc->rq[i + 1]; i< (sc->nrqs - 1); \ 		     i++, rq = sc->rq[i + 1])
 end_define
 
 begin_define
@@ -2580,10 +2676,10 @@ name|OCE_WQ_PACKET_ARRAY_SIZE
 index|]
 decl_stmt|;
 name|uint32_t
-name|packets_in
+name|pkt_desc_tail
 decl_stmt|;
 name|uint32_t
-name|packets_out
+name|pkt_desc_head
 decl_stmt|;
 name|uint32_t
 name|wqm_used
@@ -2625,6 +2721,9 @@ decl_stmt|;
 name|struct
 name|task
 name|txtask
+decl_stmt|;
+name|uint32_t
+name|db_offset
 decl_stmt|;
 block|}
 struct|;
@@ -2914,6 +3013,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCE_FLAGS_SH
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCE_DEV_BE2_CFG_BAR
 value|1
 end_define
@@ -3133,6 +3239,9 @@ name|uint32_t
 name|nwqs
 decl_stmt|;
 name|uint32_t
+name|nrssqs
+decl_stmt|;
+name|uint32_t
 name|tx_ring_size
 decl_stmt|;
 name|uint32_t
@@ -3140,9 +3249,6 @@ name|rx_ring_size
 decl_stmt|;
 name|uint32_t
 name|rq_frag_size
-decl_stmt|;
-name|uint32_t
-name|rss_enable
 decl_stmt|;
 name|uint32_t
 name|if_id
@@ -3227,6 +3333,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OCE_READ_CSR_MPU
+parameter_list|(
+name|sc
+parameter_list|,
+name|space
+parameter_list|,
+name|o
+parameter_list|)
+define|\
+value|((IS_BE(sc)) ? (bus_space_read_4((sc)->space##_btag, \ 					(sc)->space##_bhandle,o)) \ 				: (bus_space_read_4((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCE_READ_REG32
 parameter_list|(
 name|sc
@@ -3236,7 +3357,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|((IS_BE(sc)) ? (bus_space_read_4((sc)->space##_btag, \ 				      (sc)->space##_bhandle,o)) \ 		  : (bus_space_read_4((sc)->devcfg_btag, \ 				      (sc)->devcfg_bhandle,o)))
+value|((IS_BE(sc) || IS_SH(sc)) ? (bus_space_read_4((sc)->space##_btag, \ 					(sc)->space##_bhandle,o)) \ 				: (bus_space_read_4((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o)))
 end_define
 
 begin_define
@@ -3251,7 +3372,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|((IS_BE(sc)) ? (bus_space_read_2((sc)->space##_btag, \ 				      (sc)->space##_bhandle,o)) \ 		  : (bus_space_read_2((sc)->devcfg_btag, \ 				      (sc)->devcfg_bhandle,o)))
+value|((IS_BE(sc) || IS_SH(sc)) ? (bus_space_read_2((sc)->space##_btag, \ 					(sc)->space##_bhandle,o)) \ 				: (bus_space_read_2((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o)))
 end_define
 
 begin_define
@@ -3266,7 +3387,24 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|((IS_BE(sc)) ? (bus_space_read_1((sc)->space##_btag, \ 				      (sc)->space##_bhandle,o)) \ 		  : (bus_space_read_1((sc)->devcfg_btag, \ 				      (sc)->devcfg_bhandle,o)))
+value|((IS_BE(sc) || IS_SH(sc)) ? (bus_space_read_1((sc)->space##_btag, \ 					(sc)->space##_bhandle,o)) \ 				: (bus_space_read_1((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCE_WRITE_CSR_MPU
+parameter_list|(
+name|sc
+parameter_list|,
+name|space
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|((IS_BE(sc)) ? (bus_space_write_4((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 				: (bus_space_write_4((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o,v)))
 end_define
 
 begin_define
@@ -3283,7 +3421,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|((IS_BE(sc)) ? (bus_space_write_4((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 		  : (bus_space_write_4((sc)->devcfg_btag, \ 				       (sc)->devcfg_bhandle,o,v)))
+value|((IS_BE(sc) || IS_SH(sc)) ? (bus_space_write_4((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 				: (bus_space_write_4((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o,v)))
 end_define
 
 begin_define
@@ -3300,7 +3438,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|((IS_BE(sc)) ? (bus_space_write_2((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 		  : (bus_space_write_2((sc)->devcfg_btag, \ 				       (sc)->devcfg_bhandle,o,v)))
+value|((IS_BE(sc) || IS_SH(sc)) ? (bus_space_write_2((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 				: (bus_space_write_2((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o,v)))
 end_define
 
 begin_define
@@ -3317,7 +3455,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|((IS_BE(sc)) ? (bus_space_write_1((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 		  : (bus_space_write_1((sc)->devcfg_btag, \ 				       (sc)->devcfg_bhandle,o,v)))
+value|((IS_BE(sc) || IS_SH(sc)) ? (bus_space_write_1((sc)->space##_btag, \ 				       (sc)->space##_bhandle,o,v)) \ 				: (bus_space_write_1((sc)->devcfg_btag, \ 					(sc)->devcfg_bhandle,o,v)))
 end_define
 
 begin_comment
@@ -4394,6 +4532,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|oce_get_profile_config
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|oce_get_func_config
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|mbx_common_req_hdr_init
 parameter_list|(
@@ -4672,6 +4830,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|HOST_64
+parameter_list|(
+name|x
+parameter_list|)
+value|le64toh(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_32
+parameter_list|(
+name|x
+parameter_list|)
+value|le32toh(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_16
+parameter_list|(
+name|x
+parameter_list|)
+value|le16toh(x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DW_SWAP
 parameter_list|(
 name|x
@@ -4824,6 +5012,44 @@ name|b
 return|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|MPU_EP_SEMAPHORE
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|IS_BE
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+name|MPU_EP_SEMAPHORE_BE3
+return|;
+elseif|else
+if|if
+condition|(
+name|IS_SH
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+name|MPU_EP_SEMAPHORE_SH
+return|;
+else|else
+return|return
+name|MPU_EP_SEMAPHORE_XE201
 return|;
 block|}
 end_function

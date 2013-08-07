@@ -7098,11 +7098,6 @@ operator|+
 literal|5
 operator|*
 name|NFSX_UNSIGNED
-operator|+
-name|nfsm_rndup
-argument_list|(
-name|len
-argument_list|)
 argument_list|,
 name|M_WAITOK
 argument_list|,
@@ -16863,7 +16858,7 @@ name|LK_SLEEPFAIL
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)

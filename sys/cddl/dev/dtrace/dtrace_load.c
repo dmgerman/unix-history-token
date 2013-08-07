@@ -98,19 +98,6 @@ comment|/* Hang our hook for exceptions. */
 name|dtrace_invop_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * XXX This is a short term hack to avoid having to comment 	 * out lots and lots of lock/unlock calls. 	 */
-name|mutex_init
-argument_list|(
-operator|&
-name|mod_lock
-argument_list|,
-literal|"XXX mod_lock hack"
-argument_list|,
-name|MUTEX_DEFAULT
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialise the mutexes without 'witness' because the dtrace 	 * code is mostly written to wait for memory. To have the 	 * witness code change a malloc() from M_WAITOK to M_NOWAIT 	 * because a lock is held would surely create a panic in a 	 * low memory situation. And that low memory situation might be 	 * the very problem we are trying to trace. 	 */
 name|mutex_init
 argument_list|(
@@ -148,6 +135,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|mutex_init
 argument_list|(
 operator|&
@@ -160,6 +150,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mutex_enter
 argument_list|(
 operator|&

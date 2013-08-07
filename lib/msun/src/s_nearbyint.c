@@ -30,7 +30,7 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|/*  * We save and restore the floating-point environment to avoid raising  * an inexact exception.  We can get away with using fesetenv()  * instead of feclearexcept()/feupdateenv() to restore the environment  * because the only exception defined for rint() is overflow, and  * rounding can't overflow as long as emax>= p.  */
+comment|/*  * We save and restore the floating-point environment to avoid raising  * an inexact exception.  We can get away with using fesetenv()  * instead of feclearexcept()/feupdateenv() to restore the environment  * because the only exception defined for rint() is overflow, and  * rounding can't overflow as long as emax>= p.  *  * The volatile keyword is needed below because clang incorrectly assumes  * that rint won't raise any floating-point exceptions. Declaring ret volatile  * is sufficient to trick the compiler into doing the right thing.  */
 end_comment
 
 begin_define
@@ -45,7 +45,7 @@ parameter_list|,
 name|rint
 parameter_list|)
 define|\
-value|type				\ fn(type x)			\ {				\ 	type ret;		\ 	fenv_t env;		\ 				\ 	fegetenv(&env);		\ 	ret = rint(x);		\ 	fesetenv(&env);		\ 	return (ret);		\ }
+value|type				\ fn(type x)			\ {				\ 	volatile type ret;	\ 	fenv_t env;		\ 				\ 	fegetenv(&env);		\ 	ret = rint(x);		\ 	fesetenv(&env);		\ 	return (ret);		\ }
 end_define
 
 begin_macro

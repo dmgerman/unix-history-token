@@ -227,6 +227,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OCTEON_VENDOR_GEFES
+argument_list|)
+return|return
+literal|0
+return|;
+comment|/* none of the GEFES boards have mgmt ports */
+else|#
+directive|else
 if|if
 condition|(
 name|OCTEON_IS_MODEL
@@ -261,6 +273,26 @@ return|;
 else|else
 return|return
 literal|0
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return the number of management ports supported on this board.  *  * @return Number of ports  */
+end_comment
+
+begin_function
+name|int
+name|cvmx_mgmt_port_num_ports
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|__cvmx_mgmt_port_num_ports
+argument_list|()
 return|;
 block|}
 end_function

@@ -327,6 +327,7 @@ name|NestedNameSpecifier
 operator|*
 name|Prefix
 argument_list|,
+specifier|const
 name|NamespaceDecl
 operator|*
 name|NS

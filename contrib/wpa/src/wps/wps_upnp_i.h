@@ -203,6 +203,9 @@ name|sockaddr_in
 name|saddr
 decl_stmt|;
 comment|/* address for doing connect */
+name|unsigned
+name|num_failures
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -256,6 +259,10 @@ modifier|*
 name|current_event
 decl_stmt|;
 comment|/* non-NULL if being sent (not in q) 					   */
+name|int
+name|last_event_failed
+decl_stmt|;
+comment|/* Whether delivery of last event failed */
 comment|/* Information from SetSelectedRegistrar action */
 name|u8
 name|selected_registrar
@@ -266,6 +273,15 @@ decl_stmt|;
 name|u16
 name|config_methods
 decl_stmt|;
+name|u8
+name|authorized_macs
+index|[
+name|WPS_MAX_AUTHORIZED_MACS
+index|]
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
 name|struct
 name|wps_registrar
 modifier|*
@@ -275,14 +291,14 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Our instance data corresponding to one WiFi network interface  * (multiple might share the same wired network interface!).  *  * This is known as an opaque struct declaration to users of the WPS UPnP code.  */
-end_comment
-
 begin_struct
 struct|struct
-name|upnp_wps_device_sm
+name|upnp_wps_device_interface
 block|{
+name|struct
+name|dl_list
+name|list
+decl_stmt|;
 name|struct
 name|upnp_wps_device_ctx
 modifier|*
@@ -298,6 +314,28 @@ name|void
 modifier|*
 name|priv
 decl_stmt|;
+comment|/* FIX: maintain separate structures for each UPnP peer */
+name|struct
+name|upnp_wps_peer
+name|peer
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Our instance data corresponding to the AP device. Note that there may be  * multiple wireless interfaces sharing the same UPnP device instance. Each  * such interface is stored in the list of struct upnp_wps_device_interface  * instances.  *  * This is known as an opaque struct declaration to users of the WPS UPnP code.  */
+end_comment
+
+begin_struct
+struct|struct
+name|upnp_wps_device_sm
+block|{
+name|struct
+name|dl_list
+name|interfaces
+decl_stmt|;
+comment|/* struct upnp_wps_device_interface */
 name|char
 modifier|*
 name|root_dir
@@ -373,10 +411,16 @@ modifier|*
 name|wlanevent
 decl_stmt|;
 comment|/* the last WLANEvent data */
-comment|/* FIX: maintain separate structures for each UPnP peer */
-name|struct
-name|upnp_wps_peer
-name|peer
+name|enum
+name|upnp_wps_wlanevent_type
+name|wlanevent_type
+decl_stmt|;
+name|os_time_t
+name|last_event_sec
+decl_stmt|;
+name|unsigned
+name|int
+name|num_events_in_sec
 decl_stmt|;
 block|}
 struct|;
@@ -467,6 +511,18 @@ name|uuid
 index|[
 name|UUID_LEN
 index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|subscr_addr_delete
+parameter_list|(
+name|struct
+name|subscr_addr
+modifier|*
+name|a
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -669,6 +725,9 @@ name|struct
 name|wpabuf
 modifier|*
 name|data
+parameter_list|,
+name|int
+name|probereq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -740,6 +799,11 @@ begin_function_decl
 name|void
 name|upnp_er_remove_notification
 parameter_list|(
+name|struct
+name|wps_registrar
+modifier|*
+name|reg
+parameter_list|,
 name|struct
 name|subscription
 modifier|*

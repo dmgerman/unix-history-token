@@ -1239,6 +1239,108 @@ value|0xff000000
 end_define
 
 begin_comment
+comment|/*  * CPUID instruction 5 info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MON_MIN_SIZE
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* eax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MON_MAX_SIZE
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* ebx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MON_MWAIT_EXT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* ecx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MWAIT_INTRBREAK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* ecx */
+end_comment
+
+begin_comment
+comment|/*  * MWAIT cpu power states.  Lower 4 bits are sub-states.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C0
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C1
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C2
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C3
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C4
+value|0x30
+end_define
+
+begin_comment
+comment|/*  * MWAIT extensions.  */
+end_comment
+
+begin_comment
+comment|/* Interrupt breaks MWAIT even when masked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MWAIT_INTRBREAK
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * CPUID instruction 6 ecx info  */
 end_comment
 
@@ -1391,6 +1493,10 @@ name|AMDID_COREID_SIZE_SHIFT
 value|12
 end_define
 
+begin_comment
+comment|/*  * Structured Extended Features  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1408,8 +1514,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID_STDEXT_BMI1
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_HLE
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_AVX2
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID_STDEXT_SMEP
 value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_BMI2
+value|0x00000100
 end_define
 
 begin_define
@@ -1422,8 +1556,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID_STDEXT_RTM
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID_STDEXT_INVPCID
 value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_RDSEED
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_ADX
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_SMAP
+value|0x00100000
 end_define
 
 begin_comment
@@ -2271,6 +2433,43 @@ directive|define
 name|APICBASE_ADDRESS
 value|0xfffff000
 end_define
+
+begin_comment
+comment|/* MSR_IA32_FEATURE_CONTROL related */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_FEATURE_CONTROL_LOCK
+value|0x01
+end_define
+
+begin_comment
+comment|/* lock bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_FEATURE_CONTROL_SMX_EN
+value|0x02
+end_define
+
+begin_comment
+comment|/* enable VMX inside SMX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_FEATURE_CONTROL_VMX_EN
+value|0x04
+end_define
+
+begin_comment
+comment|/* enable VMX outside SMX */
+end_comment
 
 begin_comment
 comment|/*  * PAT modes.  */

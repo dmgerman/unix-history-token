@@ -1,21 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2012 Matteo Landi, Luigi Rizzo, Giuseppe Lettieri. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2012-2013 Matteo Landi, Luigi Rizzo, Giuseppe Lettieri. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap_mem2.c 11881 2012-10-18 23:24:15Z luigi $  *  * (New) memory allocator for netmap  */
+comment|/*  * $FreeBSD$  *  * (New) memory allocator for netmap  */
 end_comment
 
 begin_comment
-comment|/*  * This allocator creates three memory regions:  *	nm_if_pool	for the struct netmap_if  *	nm_ring_pool	for the struct netmap_ring  *	nm_buf_pool	for the packet buffers.  *  * All regions need to be multiple of a page size as we export them to  * userspace through mmap. Only the latter needs to be dma-able,  * but for convenience use the same type of allocator for all.  *  * Once mapped, the three regions are exported to userspace  * as a contiguous block, starting from nm_if_pool. Each  * cluster (and pool) is an integral number of pages.  *   [ . . . ][ . . . . . .][ . . . . . . . . . .]  *    nm_if     nm_ring            nm_buf  *  * The userspace areas contain offsets of the objects in userspace.  * When (at init time) we write these offsets, we find out the index  * of the object, and from there locate the offset from the beginning  * of the region.  *  * The invididual allocators manage a pool of memory for objects of  * the same size.  * The pool is split into smaller clusters, whose size is a  * multiple of the page size. The cluster size is chosen  * to minimize the waste for a given max cluster size  * (we do it by brute force, as we have relatively few object  * per cluster).  *  * Objects are aligned to the cache line (64 bytes) rounding up object  * sizes when needed. A bitmap contains the state of each object.  * Allocation scans the bitmap; this is done only on attach, so we are not  * too worried about performance  *  * For each allocator we can define (thorugh sysctl) the size and  * number of each object. Memory is allocated at the first use of a  * netmap file descriptor, and can be freed when all such descriptors  * have been released (including unmapping the memory).  * If memory is scarce, the system tries to get as much as possible  * and the sysctl values reflect the actual allocation.  * Together with desired values, the sysctl export also absolute  * min and maximum values that cannot be overridden.  *  * struct netmap_if:  *	variable size, max 16 bytes per ring pair plus some fixed amount.  *	1024 bytes should be large enough in practice.  *  *	In the worst case we have one netmap_if per ring in the system.  *  * struct netmap_ring  *	variable too, 8 byte per slot plus some fixed amount.  *	Rings can be large (e.g. 4k slots, or>32Kbytes).  *	We default to 36 KB (9 pages), and a few hundred rings.  *  * struct netmap_buffer  *	The more the better, both because fast interfaces tend to have  *	many slots, and because we may want to use buffers to store  *	packets in userspace avoiding copies.  *	Must contain a full frame (eg 1518, or more for vlans, jumbo  *	frames etc.) plus be nicely aligned, plus some NICs restrict  *	the size to multiple of 1K or so. Default to 2K  */
+comment|/*  * This allocator creates three memory pools:  *	nm_if_pool	for the struct netmap_if  *	nm_ring_pool	for the struct netmap_ring  *	nm_buf_pool	for the packet buffers.  *  * that contain netmap objects. Each pool is made of a number of clusters,  * multiple of a page size, each containing an integer number of objects.  * The clusters are contiguous in user space but not in the kernel.  * Only nm_buf_pool needs to be dma-able,  * but for convenience use the same type of allocator for all.  *  * Once mapped, the three pools are exported to userspace  * as a contiguous block, starting from nm_if_pool. Each  * cluster (and pool) is an integral number of pages.  *   [ . . . ][ . . . . . .][ . . . . . . . . . .]  *    nm_if     nm_ring            nm_buf  *  * The userspace areas contain offsets of the objects in userspace.  * When (at init time) we write these offsets, we find out the index  * of the object, and from there locate the offset from the beginning  * of the region.  *  * The invididual allocators manage a pool of memory for objects of  * the same size.  * The pool is split into smaller clusters, whose size is a  * multiple of the page size. The cluster size is chosen  * to minimize the waste for a given max cluster size  * (we do it by brute force, as we have relatively few objects  * per cluster).  *  * Objects are aligned to the cache line (64 bytes) rounding up object  * sizes when needed. A bitmap contains the state of each object.  * Allocation scans the bitmap; this is done only on attach, so we are not  * too worried about performance  *  * For each allocator we can define (thorugh sysctl) the size and  * number of each object. Memory is allocated at the first use of a  * netmap file descriptor, and can be freed when all such descriptors  * have been released (including unmapping the memory).  * If memory is scarce, the system tries to get as much as possible  * and the sysctl values reflect the actual allocation.  * Together with desired values, the sysctl export also absolute  * min and maximum values that cannot be overridden.  *  * struct netmap_if:  *	variable size, max 16 bytes per ring pair plus some fixed amount.  *	1024 bytes should be large enough in practice.  *  *	In the worst case we have one netmap_if per ring in the system.  *  * struct netmap_ring  *	variable size, 8 byte per slot plus some fixed amount.  *	Rings can be large (e.g. 4k slots, or>32Kbytes).  *	We default to 36 KB (9 pages), and a few hundred rings.  *  * struct netmap_buffer  *	The more the better, both because fast interfaces tend to have  *	many slots, and because we may want to use buffers to store  *	packets in userspace avoiding copies.  *	Must contain a full frame (eg 1518, or more for vlans, jumbo  *	frames etc.) plus be nicely aligned, plus some NICs restrict  *	the size to multiple of 1K or so. Default to 2K  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONSERVATIVE
-end_ifndef
 
 begin_define
 define|#
@@ -28,36 +22,19 @@ begin_comment
 comment|/* large machine */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* CONSERVATIVE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMAP_BUF_MAX_NUM
-value|20000
-end_define
-
-begin_comment
-comment|/* 40MB */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|linux
 end_ifdef
+
+begin_comment
+comment|// XXX a mtx would suffice here 20130415 lr
+end_comment
+
+begin_comment
+comment|// #define NMA_LOCK_T		safe_spinlock_t
+end_comment
 
 begin_define
 define|#
@@ -358,6 +335,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * nm_mem is the memory allocator used for all physical interfaces  * running in netmap mode.  * Virtual (VALE) ports will have each its own allocator.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -482,6 +463,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// XXX logically belongs to nm_mem
+end_comment
+
 begin_decl_stmt
 name|struct
 name|lut_entry
@@ -518,11 +503,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-comment|/* TUNABLE_INT("hw.netmap." STRINGIFY(name) "_size",&netmap_params[id].size); */
-define|\
-value|SYSCTL_INT(_dev_netmap, OID_AUTO, name##_size, \ 	    CTLFLAG_RW,&netmap_params[id].size, 0, "Requested size of netmap " STRINGIFY(name) "s"); \         SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_size, \             CTLFLAG_RD,&nm_mem.pools[id]._objsize, 0, "Current size of netmap " STRINGIFY(name) "s"); \
-comment|/* TUNABLE_INT("hw.netmap." STRINGIFY(name) "_num",&netmap_params[id].num); */
-value|\         SYSCTL_INT(_dev_netmap, OID_AUTO, name##_num, \             CTLFLAG_RW,&netmap_params[id].num, 0, "Requested number of netmap " STRINGIFY(name) "s"); \         SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_num, \             CTLFLAG_RD,&nm_mem.pools[id].objtotal, 0, "Current number of netmap " STRINGIFY(name) "s")
+value|SYSCTL_INT(_dev_netmap, OID_AUTO, name##_size, \ 	    CTLFLAG_RW,&netmap_params[id].size, 0, "Requested size of netmap " STRINGIFY(name) "s"); \         SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_size, \             CTLFLAG_RD,&nm_mem.pools[id]._objsize, 0, "Current size of netmap " STRINGIFY(name) "s"); \         SYSCTL_INT(_dev_netmap, OID_AUTO, name##_num, \             CTLFLAG_RW,&netmap_params[id].num, 0, "Requested number of netmap " STRINGIFY(name) "s"); \         SYSCTL_INT(_dev_netmap, OID_AUTO, name##_curr_num, \             CTLFLAG_RD,&nm_mem.pools[id].objtotal, 0, "Current number of netmap " STRINGIFY(name) "s")
 end_define
 
 begin_macro
@@ -559,7 +540,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Convert a userspace offset to a phisical address.  * XXX re-do in a simpler way.  *  * The idea here is to hide userspace applications the fact that pre-allocated  * memory is not contiguous, but fragmented across different clusters and  * smaller memory allocators. Consequently, first of all we need to find which  * allocator is owning provided offset, then we need to find out the physical  * address associated to target page (this is done using the look-up table.  */
+comment|/*  * Convert a userspace offset to a physical address.  * XXX only called in the FreeBSD's netmap_mmap()  * because in linux we map everything at once.  *  * First, find the allocator that contains the requested offset,  * then locate the cluster through a lookup table.  */
 end_comment
 
 begin_function
@@ -624,7 +605,7 @@ operator|.
 name|_memtotal
 condition|)
 continue|continue;
-comment|// XXX now scan the clusters
+comment|// now lookup the cluster's address
 return|return
 name|p
 index|[
@@ -809,7 +790,7 @@ operator|<
 literal|0
 operator|||
 name|relofs
-operator|>
+operator|>=
 name|p
 operator|->
 name|_clustsize
@@ -881,7 +862,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|(nm_mem.pools[NETMAP_IF_POOL]._memtotal + 				\ 	netmap_obj_offset(&nm_mem.pools[NETMAP_RING_POOL], (v)))
+value|(nm_mem.pools[NETMAP_IF_POOL]._memtotal + 			\ 	netmap_obj_offset(&nm_mem.pools[NETMAP_RING_POOL], (v)))
 end_define
 
 begin_define
@@ -892,7 +873,7 @@ parameter_list|(
 name|v
 parameter_list|)
 define|\
-value|(nm_mem.pools[NETMAP_IF_POOL]._memtotal +				\ 	nm_mem.pools[NETMAP_RING_POOL]._memtotal +			\ 	netmap_obj_offset(&nm_mem.pools[NETMAP_BUF_POOL], (v)))
+value|(nm_mem.pools[NETMAP_IF_POOL]._memtotal +			\ 	nm_mem.pools[NETMAP_RING_POOL]._memtotal +		\ 	netmap_obj_offset(&nm_mem.pools[NETMAP_BUF_POOL], (v)))
 end_define
 
 begin_comment
@@ -1132,7 +1113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * free by index, not by address  */
+comment|/*  * free by index, not by address. This is slow, but is only used  * for a small number of objects (rings, nifp)  */
 end_comment
 
 begin_function
@@ -1291,7 +1272,7 @@ operator|<
 name|base
 operator|||
 name|relofs
-operator|>
+operator|>=
 name|p
 operator|->
 name|_clustsize
@@ -1533,15 +1514,7 @@ operator|->
 name|_objsize
 expr_stmt|;
 comment|/* XXX setting flags=NS_BUF_CHANGED forces a pointer reload 		 * in the NIC ring. This is a hack that hides missing 		 * initializations in the drivers, and should go away. 		 */
-name|slot
-index|[
-name|i
-index|]
-operator|.
-name|flags
-operator|=
-name|NS_BUF_CHANGED
-expr_stmt|;
+comment|// slot[i].flags = NS_BUF_CHANGED;
 block|}
 name|ND
 argument_list|(

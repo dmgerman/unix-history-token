@@ -281,7 +281,7 @@ comment|/* copy of parsefile->nleft */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|int
 name|parselleft
 decl_stmt|;
@@ -407,56 +407,57 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_expr_stmt
-name|INCLUDE
-literal|"input.h"
-name|INCLUDE
-literal|"error.h"
-name|RESET
+begin_function
+name|void
+name|resetinput
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|popallfiles
 argument_list|()
-block|;
+expr_stmt|;
 name|parselleft
 operator|=
 name|parsenleft
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|/* clear input buffer */
 block|}
-endif|#
-directive|endif
+end_function
+
+begin_comment
 comment|/*  * Read a line from the script.  */
+end_comment
+
+begin_function
 name|char
-operator|*
+modifier|*
 name|pfgets
-argument_list|(
-argument|char *line
-argument_list|,
-argument|int len
-argument_list|)
+parameter_list|(
+name|char
+modifier|*
+name|line
+parameter_list|,
+name|int
+name|len
+parameter_list|)
 block|{
 name|char
-operator|*
+modifier|*
 name|p
-operator|=
+init|=
 name|line
-block|;
+decl_stmt|;
 name|int
 name|nleft
-operator|=
+init|=
 name|len
-block|;
+decl_stmt|;
 name|int
 name|c
-block|;
+decl_stmt|;
 while|while
 condition|(
 operator|--
@@ -494,9 +495,6 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|c
@@ -504,43 +502,35 @@ operator|==
 literal|'\n'
 condition|)
 break|break;
-end_if
-
-begin_expr_stmt
-unit|} 	*
+block|}
+operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|line
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Read a character from the script, returning PEOF on end of file.  * Nul characters in the input are silently discarded.  */
 end_comment
 
-begin_macro
-unit|int
+begin_function
+name|int
 name|pgetc
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|pgetc_macro
 argument_list|()
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1439,6 +1429,8 @@ argument_list|(
 name|fname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<
@@ -1469,7 +1461,7 @@ name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|F_DUPFD
+name|F_DUPFD_CLOEXEC
 argument_list|,
 literal|10
 argument_list|)
@@ -1508,7 +1500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like setinputfile, but takes an open file descriptor.  Call this with  * interrupts off.  */
+comment|/*  * Like setinputfile, but takes an open file descriptor (which should have  * its FD_CLOEXEC flag already set).  Call this with interrupts off.  */
 end_comment
 
 begin_function
@@ -1522,18 +1514,6 @@ name|int
 name|push
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|push

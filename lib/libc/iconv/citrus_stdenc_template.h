@@ -375,6 +375,7 @@ modifier|*
 name|__restrict
 name|idx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -657,6 +658,7 @@ modifier|*
 name|__restrict
 name|wc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

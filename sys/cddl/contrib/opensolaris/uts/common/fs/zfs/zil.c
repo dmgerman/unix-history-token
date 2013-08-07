@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ comment|/*  * The zfs intent log (ZIL) saves transaction records of system calls
 end_comment
 
 begin_comment
-comment|/*  * This global ZIL switch affects all pools  */
+comment|/*  * Disable intent logging replay.  This global ZIL switch affects all pools.  */
 end_comment
 
 begin_decl_stmt
@@ -104,10 +104,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* disable intent logging replay */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_DECL
@@ -195,19 +191,27 @@ end_expr_stmt
 
 begin_decl_stmt
 name|boolean_t
-name|zfs_notrim
+name|zfs_trim_enabled
 init|=
 name|B_TRUE
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs_trim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"vfs.zfs.trim_disable"
+literal|"vfs.zfs.trim.enabled"
 argument_list|,
 operator|&
-name|zfs_notrim
+name|zfs_trim_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -215,20 +219,20 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_zfs
+name|_vfs_zfs_trim
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|trim_disable
+name|enabled
 argument_list|,
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
-name|zfs_notrim
+name|zfs_trim_enabled
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable trim"
+literal|"Enable ZFS TRIM"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -557,7 +561,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 name|zn
@@ -938,7 +945,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1053,7 +1063,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4202,7 +4215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Define a limited set of intent log block sizes.  * These must be a multiple of 4KB. Note only the amount used (again  * aligned to 4KB) actually gets written. However, we can't always just  * allocate SPA_MAXBLOCKSIZE as the slog space could be exhausted.  */
+comment|/*  * Define a limited set of intent log block sizes.  *  * These must be a multiple of 4KB. Note only the amount used (again  * aligned to 4KB) actually gets written. However, we can't always just  * allocate SPA_MAXBLOCKSIZE as the slog space could be exhausted.  */
 end_comment
 
 begin_decl_stmt
@@ -8661,7 +8674,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9798,7 +9814,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 return|return

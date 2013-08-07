@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5196,7 +5196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is a stripped-down version of strtoull, suitable only for converting  * lowercase hexidecimal numbers that don't overflow.  */
+comment|/*  * This is a stripped-down version of strtoull, suitable only for converting  * lowercase hexadecimal numbers that don't overflow.  */
 end_comment
 
 begin_function
@@ -6331,6 +6331,31 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|EVENTHANDLER_DEFINE
+argument_list|(
+name|mountroot
+argument_list|,
+name|spa_boot_init
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|spa_init
@@ -6937,7 +6962,10 @@ name|POOL_SCAN_NONE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 name|bzero

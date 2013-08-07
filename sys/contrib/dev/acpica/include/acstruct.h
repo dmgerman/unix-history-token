@@ -470,7 +470,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Structure used to pass object evaluation parameters.  * Purpose is to reduce CPU stack use.  */
+comment|/*  * Structure used to pass object evaluation information and parameters.  * Purpose is to reduce CPU stack use.  */
 end_comment
 
 begin_typedef
@@ -478,43 +478,83 @@ typedef|typedef
 struct|struct
 name|acpi_evaluate_info
 block|{
+comment|/* The first 3 elements are passed by the caller to AcpiNsEvaluate */
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|PrefixNode
 decl_stmt|;
+comment|/* Input: starting node */
 name|char
 modifier|*
-name|Pathname
+name|RelativePathname
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-decl_stmt|;
+comment|/* Input: path relative to PrefixNode */
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|Parameters
 decl_stmt|;
+comment|/* Input: argument list */
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|ResolvedNode
+name|Node
 decl_stmt|;
+comment|/* Resolved node (PrefixNode:RelativePathname) */
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+decl_stmt|;
+comment|/* Object attached to the resolved node */
+name|char
+modifier|*
+name|FullPathname
+decl_stmt|;
+comment|/* Full pathname of the resolved node */
+specifier|const
+name|ACPI_PREDEFINED_INFO
+modifier|*
+name|Predefined
+decl_stmt|;
+comment|/* Used if Node is a predefined name */
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ReturnObject
 decl_stmt|;
-name|UINT8
+comment|/* Object returned from the evaluation */
+name|union
+name|acpi_operand_object
+modifier|*
+name|ParentPackage
+decl_stmt|;
+comment|/* Used if return object is a Package */
+name|UINT32
+name|ReturnFlags
+decl_stmt|;
+comment|/* Used for return value analysis */
+name|UINT32
+name|ReturnBtype
+decl_stmt|;
+comment|/* Bitmapped type of the returned object */
+name|UINT16
 name|ParamCount
 decl_stmt|;
+comment|/* Count of the input argument list */
 name|UINT8
 name|PassNumber
 decl_stmt|;
+comment|/* Parser pass number */
 name|UINT8
 name|ReturnObjectType
 decl_stmt|;
+comment|/* Object type of the returned object */
+name|UINT8
+name|NodeFlags
+decl_stmt|;
+comment|/* Same as Node->Flags */
 name|UINT8
 name|Flags
 decl_stmt|;
+comment|/* General flags */
 block|}
 name|ACPI_EVALUATE_INFO
 typedef|;
@@ -529,6 +569,24 @@ define|#
 directive|define
 name|ACPI_IGNORE_RETURN_VALUE
 value|1
+end_define
+
+begin_comment
+comment|/* Defines for ReturnFlags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OBJECT_REPAIRED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OBJECT_WRAPPED
+value|2
 end_define
 
 begin_comment

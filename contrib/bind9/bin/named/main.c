@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -2208,6 +2208,36 @@ name|maxudp
 operator|=
 literal|1460
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"nosyslog"
+argument_list|)
+condition|)
+name|ns_g_nosyslog
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"nonearest"
+argument_list|)
+condition|)
+name|ns_g_nonearest
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
@@ -2232,9 +2262,30 @@ literal|'v'
 case|:
 name|printf
 argument_list|(
-literal|"BIND %s\n"
+literal|"%s %s"
+argument_list|,
+name|ns_g_product
 argument_list|,
 name|ns_g_version
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ns_g_description
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|ns_g_description
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2247,9 +2298,32 @@ literal|'V'
 case|:
 name|printf
 argument_list|(
-literal|"BIND %s built with %s\n"
+literal|"%s %s"
+argument_list|,
+name|ns_g_product
 argument_list|,
 name|ns_g_version
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ns_g_description
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|ns_g_description
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"<id:%s> built with %s\n"
+argument_list|,
+name|ns_g_srcid
 argument_list|,
 name|ns_g_configargs
 argument_list|)
@@ -3102,7 +3176,9 @@ name|NS_LOGMODULE_MAIN
 argument_list|,
 name|ISC_LOG_NOTICE
 argument_list|,
-literal|"starting BIND %s%s"
+literal|"starting %s %s%s"
+argument_list|,
+name|ns_g_product
 argument_list|,
 name|ns_g_version
 argument_list|,
@@ -3949,12 +4025,17 @@ name|__DATE__
 argument_list|)
 literal|"named version: BIND "
 name|VERSION
+literal|"<"
+name|SRCID
+literal|">"
 argument_list|,
 else|#
 directive|else
 literal|"named version: BIND "
 name|VERSION
-literal|" ("
+literal|"<"
+name|SRCID
+literal|"> ("
 name|__DATE__
 literal|")"
 argument_list|,

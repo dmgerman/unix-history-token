@@ -1230,6 +1230,28 @@ begin_comment
 comment|/* Not permitted in capability mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ENOTRECOVERABLE
+value|95
+end_define
+
+begin_comment
+comment|/* State not recoverable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EOWNERDEAD
+value|96
+end_define
+
+begin_comment
+comment|/* Previous owner died */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1249,7 +1271,7 @@ begin_define
 define|#
 directive|define
 name|ELAST
-value|94
+value|96
 end_define
 
 begin_comment

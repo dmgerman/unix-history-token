@@ -1456,7 +1456,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%.6ld%cB"
+literal|"%6ld%cB"
 argument_list|,
 operator|(
 name|long

@@ -210,18 +210,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -234,19 +222,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Pass.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CallSite.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/Support/IncludeFile.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/IncludeFile.h"
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include

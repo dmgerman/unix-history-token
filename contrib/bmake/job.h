@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.h,v 1.40 2010/09/13 15:36:57 sjg Exp $	*/
+comment|/*	$NetBSD: job.h,v 1.42 2013/07/05 22:14:56 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -415,6 +415,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|shellErrFlag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|jobTokensRunning
 decl_stmt|;
@@ -643,6 +651,21 @@ name|void
 name|Job_SetPrefix
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
+name|Job_RunTarget
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

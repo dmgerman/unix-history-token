@@ -247,6 +247,18 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|ixgbe_update_flash_X540
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|ixgbe_acquire_swfw_sync_X540
 parameter_list|(
 name|struct

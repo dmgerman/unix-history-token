@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant/hostapd / Empty OS specific functions  * Copyright (c) 2005-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * This file can be used as a starting point when adding a new OS target. The  * functions here do not really work as-is since they are just empty or only  * return an error value. os_internal.c can be used as another starting point  * or reference since it has example implementation of many of these functions.  */
+comment|/*  * wpa_supplicant/hostapd / Empty OS specific functions  * Copyright (c) 2005-2006, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file can be used as a starting point when adding a new OS target. The  * functions here do not really work as-is since they are just empty or only  * return an error value. os_internal.c can be used as another starting point  * or reference since it has example implementation of many of these functions.  */
 end_comment
 
 begin_include
@@ -70,6 +70,26 @@ parameter_list|,
 name|os_time_t
 modifier|*
 name|t
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|os_gmtime
+parameter_list|(
+name|os_time_t
+name|t
+parameter_list|,
+name|struct
+name|os_tm
+modifier|*
+name|tm
 parameter_list|)
 block|{
 return|return

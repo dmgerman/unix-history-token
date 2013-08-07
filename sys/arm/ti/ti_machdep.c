@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|DEVMAP_BOOTSTRAP_MAP_START
-value|0xE0000000
+value|0xF0000000
 end_define
 
 begin_function_decl
@@ -220,7 +220,7 @@ index|]
 operator|.
 name|pd_va
 operator|=
-literal|0xE8000000
+literal|0xF8000000
 expr_stmt|;
 name|fdt_devmap
 index|[
@@ -276,7 +276,7 @@ index|]
 operator|.
 name|pd_va
 operator|=
-literal|0xE4C00000
+literal|0xF4C00000
 expr_stmt|;
 name|fdt_devmap
 index|[

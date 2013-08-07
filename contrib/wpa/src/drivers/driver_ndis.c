@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Windows/NDIS driver interface  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - Windows/NDIS driver interface  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifdef
@@ -3204,40 +3204,6 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|wpa_driver_ndis_disassociate
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|addr
-parameter_list|,
-name|int
-name|reason_code
-parameter_list|)
-block|{
-name|struct
-name|wpa_driver_ndis_data
-modifier|*
-name|drv
-init|=
-name|priv
-decl_stmt|;
-return|return
-name|wpa_driver_ndis_disconnect
-argument_list|(
-name|drv
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|wpa_driver_ndis_scan_timeout
 parameter_list|(
@@ -3896,10 +3862,10 @@ name|results
 operator|->
 name|res
 operator|=
-name|os_zalloc
+name|os_calloc
 argument_list|(
 name|count
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4660,16 +4626,10 @@ name|addr
 operator|==
 name|NULL
 operator|||
-name|os_memcmp
+name|is_broadcast_ether_addr
 argument_list|(
 name|addr
-argument_list|,
-literal|"\xff\xff\xff\xff\xff\xff"
-argument_list|,
-name|ETH_ALEN
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* Group Key */
@@ -5041,6 +5001,26 @@ name|priv_mode
 decl_stmt|,
 name|mode
 decl_stmt|;
+name|u8
+name|bcast
+index|[
+name|ETH_ALEN
+index|]
+init|=
+block|{
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|}
+decl_stmt|;
 name|drv
 operator|->
 name|mode
@@ -5147,26 +5127,6 @@ name|KEY_MGMT_802_1X_NO_WPA
 condition|)
 block|{
 comment|/* Re-set WEP keys if static WEP configuration is used. */
-name|u8
-name|bcast
-index|[
-name|ETH_ALEN
-index|]
-init|=
-block|{
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0xff
-block|}
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -5354,6 +5314,72 @@ name|priv_mode
 operator|=
 name|Ndis802_11PrivFilterAcceptAll
 expr_stmt|;
+if|if
+condition|(
+name|params
+operator|->
+name|wps
+operator|==
+name|WPS_MODE_PRIVACY
+condition|)
+block|{
+name|u8
+name|dummy_key
+index|[
+literal|5
+index|]
+init|=
+block|{
+literal|0x11
+block|,
+literal|0x22
+block|,
+literal|0x33
+block|,
+literal|0x44
+block|,
+literal|0x55
+block|}
+decl_stmt|;
+comment|/* 			 * Some NDIS drivers refuse to associate in open mode 			 * configuration due to Privacy field mismatch, so use 			 * a workaround to make the configuration look like 			 * matching one for WPS provisioning. 			 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"NDIS: Set dummy WEP key as a "
+literal|"workaround to allow driver to associate "
+literal|"for WPS"
+argument_list|)
+expr_stmt|;
+name|wpa_driver_ndis_set_key
+argument_list|(
+name|drv
+operator|->
+name|ifname
+argument_list|,
+name|drv
+argument_list|,
+name|WPA_ALG_WEP
+argument_list|,
+name|bcast
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|dummy_key
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dummy_key
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* CONFIG_WPS */
@@ -5432,6 +5458,27 @@ break|break;
 case|case
 name|CIPHER_NONE
 case|:
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS
+if|if
+condition|(
+name|params
+operator|->
+name|wps
+operator|==
+name|WPS_MODE_PRIVACY
+condition|)
+block|{
+name|encr
+operator|=
+name|Ndis802_11Encryption1Enabled
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_WPS */
 if|if
 condition|(
 name|params
@@ -5464,10 +5511,32 @@ name|Ndis802_11EncryptionDisabled
 expr_stmt|;
 break|break;
 default|default:
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS
+if|if
+condition|(
+name|params
+operator|->
+name|wps
+operator|==
+name|WPS_MODE_PRIVACY
+condition|)
+block|{
+name|encr
+operator|=
+name|Ndis802_11Encryption1Enabled
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_WPS */
 name|encr
 operator|=
 name|Ndis802_11EncryptionDisabled
 expr_stmt|;
+break|break;
 block|}
 empty_stmt|;
 if|if
@@ -15448,261 +15517,170 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
+name|char
+modifier|*
+name|ndis_drv_name
+init|=
+literal|"ndis"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ndis_drv_desc
+init|=
+literal|"Windows NDIS driver"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|wpa_driver_ops
 name|wpa_driver_ndis_ops
-init|=
-block|{
-literal|"ndis"
-block|,
-literal|"Windows NDIS driver"
-block|,
-name|wpa_driver_ndis_get_bssid
-block|,
-name|wpa_driver_ndis_get_ssid
-block|,
-name|wpa_driver_ndis_set_key
-block|,
-name|wpa_driver_ndis_init
-block|,
-name|wpa_driver_ndis_deinit
-block|,
-name|NULL
-comment|/* set_param */
-block|,
-name|NULL
-comment|/* set_countermeasures */
-block|,
-name|wpa_driver_ndis_deauthenticate
-block|,
-name|wpa_driver_ndis_disassociate
-block|,
-name|wpa_driver_ndis_associate
-block|,
-name|wpa_driver_ndis_add_pmkid
-block|,
-name|wpa_driver_ndis_remove_pmkid
-block|,
-name|wpa_driver_ndis_flush_pmkid
-block|,
-name|wpa_driver_ndis_get_capa
-block|,
-name|wpa_driver_ndis_poll
-block|,
-name|wpa_driver_ndis_get_ifname
-block|,
-name|wpa_driver_ndis_get_mac_addr
-block|,
-name|NULL
-comment|/* send_eapol */
-block|,
-name|NULL
-comment|/* set_operstate */
-block|,
-name|NULL
-comment|/* mlme_setprotection */
-block|,
-name|NULL
-comment|/* get_hw_feature_data */
-block|,
-name|NULL
-comment|/* set_channel */
-block|,
-name|NULL
-comment|/* set_ssid */
-block|,
-name|NULL
-comment|/* set_bssid */
-block|,
-name|NULL
-comment|/* send_mlme */
-block|,
-name|NULL
-comment|/* mlme_add_sta */
-block|,
-name|NULL
-comment|/* mlme_remove_sta */
-block|,
-name|NULL
-comment|/* update_ft_ies */
-block|,
-name|NULL
-comment|/* send_ft_action */
-block|,
-name|wpa_driver_ndis_get_scan_results
-block|,
-name|NULL
-comment|/* set_country */
-block|,
-name|NULL
-comment|/* global_init */
-block|,
-name|NULL
-comment|/* global_deinit */
-block|,
-name|NULL
-comment|/* init2 */
-block|,
-name|wpa_driver_ndis_get_interfaces
-block|,
-name|wpa_driver_ndis_scan
-block|,
-name|NULL
-comment|/* authenticate */
-block|,
-name|NULL
-comment|/* set_beacon */
-block|,
-name|NULL
-comment|/* hapd_init */
-block|,
-name|NULL
-comment|/* hapd_deinit */
-block|,
-name|NULL
-comment|/* set_ieee8021x */
-block|,
-name|NULL
-comment|/* set_privacy */
-block|,
-name|NULL
-comment|/* get_seqnum */
-block|,
-name|NULL
-comment|/* flush */
-block|,
-name|NULL
-comment|/* set_generic_elem */
-block|,
-name|NULL
-comment|/* read_sta_data */
-block|,
-name|NULL
-comment|/* hapd_send_eapol */
-block|,
-name|NULL
-comment|/* sta_deauth */
-block|,
-name|NULL
-comment|/* sta_disassoc */
-block|,
-name|NULL
-comment|/* sta_remove */
-block|,
-name|NULL
-comment|/* hapd_get_ssid */
-block|,
-name|NULL
-comment|/* hapd_set_ssid */
-block|,
-name|NULL
-comment|/* hapd_set_countermeasures */
-block|,
-name|NULL
-comment|/* sta_add */
-block|,
-name|NULL
-comment|/* get_inact_sec */
-block|,
-name|NULL
-comment|/* sta_clear_stats */
-block|,
-name|NULL
-comment|/* set_freq */
-block|,
-name|NULL
-comment|/* set_rts */
-block|,
-name|NULL
-comment|/* set_frag */
-block|,
-name|NULL
-comment|/* sta_set_flags */
-block|,
-name|NULL
-comment|/* set_rate_sets */
-block|,
-name|NULL
-comment|/* set_cts_protect */
-block|,
-name|NULL
-comment|/* set_preamble */
-block|,
-name|NULL
-comment|/* set_short_slot_time */
-block|,
-name|NULL
-comment|/* set_tx_queue_params */
-block|,
-name|NULL
-comment|/* valid_bss_mask */
-block|,
-name|NULL
-comment|/* if_add */
-block|,
-name|NULL
-comment|/* if_remove */
-block|,
-name|NULL
-comment|/* set_sta_vlan */
-block|,
-name|NULL
-comment|/* commit */
-block|,
-name|NULL
-comment|/* send_ether */
-block|,
-name|NULL
-comment|/* set_radius_acl_auth */
-block|,
-name|NULL
-comment|/* set_radius_acl_expire */
-block|,
-name|NULL
-comment|/* set_ht_params */
-block|,
-name|NULL
-comment|/* set_ap_wps_ie */
-block|,
-name|NULL
-comment|/* set_supp_port */
-block|,
-name|NULL
-comment|/* set_wds_sta */
-block|,
-name|NULL
-comment|/* send_action */
-block|,
-name|NULL
-comment|/* remain_on_channel */
-block|,
-name|NULL
-comment|/* cancel_remain_on_channel */
-block|,
-name|NULL
-comment|/* probe_req_report */
-block|,
-name|NULL
-comment|/* disable_11b_rates */
-block|,
-name|NULL
-comment|/* deinit_ap */
-block|,
-name|NULL
-comment|/* suspend */
-block|,
-name|NULL
-comment|/* resume */
-block|,
-name|NULL
-comment|/* signal_monitor */
-block|,
-name|NULL
-comment|/* send_frame */
-block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|driver_ndis_init_ops
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|os_memset
+argument_list|(
+operator|&
+name|wpa_driver_ndis_ops
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|wpa_driver_ndis_ops
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|name
+operator|=
+name|ndis_drv_name
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|desc
+operator|=
+name|ndis_drv_desc
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_bssid
+operator|=
+name|wpa_driver_ndis_get_bssid
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_ssid
+operator|=
+name|wpa_driver_ndis_get_ssid
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|set_key
+operator|=
+name|wpa_driver_ndis_set_key
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|init
+operator|=
+name|wpa_driver_ndis_init
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|deinit
+operator|=
+name|wpa_driver_ndis_deinit
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|deauthenticate
+operator|=
+name|wpa_driver_ndis_deauthenticate
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|associate
+operator|=
+name|wpa_driver_ndis_associate
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|add_pmkid
+operator|=
+name|wpa_driver_ndis_add_pmkid
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|remove_pmkid
+operator|=
+name|wpa_driver_ndis_remove_pmkid
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|flush_pmkid
+operator|=
+name|wpa_driver_ndis_flush_pmkid
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_capa
+operator|=
+name|wpa_driver_ndis_get_capa
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|poll
+operator|=
+name|wpa_driver_ndis_poll
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_ifname
+operator|=
+name|wpa_driver_ndis_get_ifname
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_mac_addr
+operator|=
+name|wpa_driver_ndis_get_mac_addr
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_scan_results2
+operator|=
+name|wpa_driver_ndis_get_scan_results
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|get_interfaces
+operator|=
+name|wpa_driver_ndis_get_interfaces
+expr_stmt|;
+name|wpa_driver_ndis_ops
+operator|.
+name|scan2
+operator|=
+name|wpa_driver_ndis_scan
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -477,22 +477,6 @@ modifier|*
 name|tag
 parameter_list|)
 function_decl|;
-name|void
-name|dsl_register_onexit_hold_cleanup
-parameter_list|(
-name|dsl_dataset_t
-modifier|*
-name|ds
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|htag
-parameter_list|,
-name|minor_t
-name|minor
-parameter_list|)
-function_decl|;
 name|uint64_t
 name|dsl_dataset_create_sync
 parameter_list|(
@@ -661,11 +645,15 @@ name|ds
 parameter_list|)
 function_decl|;
 name|boolean_t
-name|dsl_dataset_modified_since_lastsnap
+name|dsl_dataset_modified_since_snap
 parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|snap
 parameter_list|)
 function_decl|;
 name|void
@@ -996,6 +984,14 @@ name|origin_head
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|void
+modifier|*
+name|owner
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 name|void
@@ -1029,6 +1025,9 @@ parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|,
+name|boolean_t
+name|recv
 parameter_list|)
 function_decl|;
 name|void
@@ -1138,6 +1137,10 @@ specifier|const
 name|char
 modifier|*
 name|fsname
+parameter_list|,
+name|void
+modifier|*
+name|owner
 parameter_list|)
 function_decl|;
 ifdef|#

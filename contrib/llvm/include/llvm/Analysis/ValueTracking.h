@@ -178,24 +178,17 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// isPowerOfTwo - Return true if the given value is known to have exactly one
-comment|/// bit set when defined. For vectors return true if every element is known to
-comment|/// be a power of two when defined.  Supports values with integer or pointer
-comment|/// type and vectors of integers.  If 'OrZero' is set then returns true if the
-comment|/// given value is either a power of two or zero.
+comment|/// isKnownToBeAPowerOfTwo - Return true if the given value is known to have
+comment|/// exactly one bit set when defined. For vectors return true if every
+comment|/// element is known to be a power of two when defined.  Supports values with
+comment|/// integer or pointer type and vectors of integers.  If 'OrZero' is set then
+comment|/// returns true if the given value is either a power of two or zero.
 name|bool
-name|isPowerOfTwo
+name|isKnownToBeAPowerOfTwo
 parameter_list|(
 name|Value
 modifier|*
 name|V
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|TD
-init|=
-literal|0
 parameter_list|,
 name|bool
 name|OrZero
@@ -400,7 +393,7 @@ name|Offset
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|&
+modifier|*
 name|TD
 parameter_list|)
 function_decl|;
@@ -422,7 +415,7 @@ name|Offset
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|&
+modifier|*
 name|TD
 parameter_list|)
 block|{
@@ -626,6 +619,18 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
+comment|/// its definition.  This returns true for allocas, non-extern-weak globals
+comment|/// and byval arguments.
+name|bool
+name|isKnownNonNull
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
 parameter_list|)
 function_decl|;
 block|}

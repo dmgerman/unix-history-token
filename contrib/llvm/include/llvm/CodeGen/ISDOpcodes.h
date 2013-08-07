@@ -437,8 +437,10 @@ comment|/// shift amount is known to be TLI.getShiftAmountTy().  Before legaliza
 comment|/// the shift amount can be any type, but care must be taken to ensure it is
 comment|/// large enough.  TLI.getShiftAmountTy() is i8 on some targets, but before
 comment|/// legalization, types like i1024 can occur and i8 doesn't have enough bits
-comment|/// to represent the shift amount.  By convention, DAGCombine and
-comment|/// SelectionDAGBuilder forces these shift amounts to i32 for simplicity.
+comment|/// to represent the shift amount.
+comment|/// When the 1st operand is a vector, the shift amount must be in the same
+comment|/// type. (TLI.getShiftAmountTy() will return the same type when the input
+comment|/// type is a vector.)
 name|SHL
 block|,
 name|SRA
@@ -635,6 +637,9 @@ name|FNEARBYINT
 block|,
 name|FFLOOR
 block|,
+comment|/// FSINCOS - Compute both fsin and fcos as a single operation.
+name|FSINCOS
+block|,
 comment|/// LOAD and STORE have token chains as their first operand, then the same
 comment|/// operands as an LLVM load/store instruction, then an offset node that
 comment|/// is added / subtracted from the base pointer to form the address (for
@@ -781,14 +786,6 @@ comment|/// is the chain.  The other operands are the address to prefetch,
 comment|/// read / write specifier, locality specifier and instruction / data cache
 comment|/// specifier.
 name|PREFETCH
-block|,
-comment|/// OUTCHAIN = MEMBARRIER(INCHAIN, load-load, load-store, store-load,
-comment|///                       store-store, device)
-comment|/// This corresponds to the memory.barrier intrinsic.
-comment|/// it takes an input chain, 4 operands to specify the type of barrier, an
-comment|/// operand specifying if the barrier applies to device and uncached memory
-comment|/// and produces an output chain.
-name|MEMBARRIER
 block|,
 comment|/// OUTCHAIN = ATOMIC_FENCE(INCHAIN, ordering, scope)
 comment|/// This corresponds to the fence instruction. It takes an input chain, and

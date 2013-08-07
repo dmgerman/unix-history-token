@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceLocation.h"
+file|"clang/Analysis/ProgramPoint.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/ProgramPoint.h"
+file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_include
@@ -86,19 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<deque>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<list>
 end_include
 
 begin_include
@@ -363,6 +369,8 @@ block|,
 name|Minimal
 block|,
 name|Extensive
+block|,
+name|AlternateExtensive
 block|}
 enum|;
 name|virtual
@@ -1233,6 +1241,33 @@ name|ID
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Given an exploded node, retrieve the statement that should be used
+comment|/// for the diagnostic location.
+specifier|static
+specifier|const
+name|Stmt
+modifier|*
+name|getStmt
+parameter_list|(
+specifier|const
+name|ExplodedNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the statement corresponding to the sucessor node.
+specifier|static
+specifier|const
+name|Stmt
+modifier|*
+name|getNextStmt
+parameter_list|(
+specifier|const
+name|ExplodedNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -1291,6 +1326,34 @@ block|{
 return|return
 name|End
 return|;
+block|}
+name|void
+name|setStart
+parameter_list|(
+specifier|const
+name|PathDiagnosticLocation
+modifier|&
+name|L
+parameter_list|)
+block|{
+name|Start
+operator|=
+name|L
+expr_stmt|;
+block|}
+name|void
+name|setEnd
+parameter_list|(
+specifier|const
+name|PathDiagnosticLocation
+modifier|&
+name|L
+parameter_list|)
+block|{
+name|End
+operator|=
+name|L
+expr_stmt|;
 block|}
 name|void
 name|flatten
@@ -1442,8 +1505,6 @@ operator|~
 name|PathDiagnosticPiece
 argument_list|()
 block|;
-name|llvm
-operator|::
 name|StringRef
 name|getString
 argument_list|()
@@ -1627,7 +1688,7 @@ range|:
 name|public
 name|std
 operator|::
-name|deque
+name|list
 operator|<
 name|IntrusiveRefCntPtr
 operator|<
@@ -1938,8 +1999,6 @@ operator|:
 name|public
 name|PathDiagnosticSpotPiece
 block|{
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
@@ -1950,8 +2009,6 @@ comment|/// If the event occurs in a different frame than the final diagnostic,
 comment|/// supply a message that will be used to construct an extra hint on the
 comment|/// returns from all the calls on the stack from this event to the final
 comment|/// diagnostic.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|StackHintGenerator
@@ -2553,6 +2610,38 @@ argument_list|()
 return|;
 block|}
 name|void
+name|setStartLocation
+argument_list|(
+argument|const PathDiagnosticLocation&L
+argument_list|)
+block|{
+name|LPairs
+index|[
+literal|0
+index|]
+operator|.
+name|setStart
+argument_list|(
+name|L
+argument_list|)
+block|;   }
+name|void
+name|setEndLocation
+argument_list|(
+argument|const PathDiagnosticLocation&L
+argument_list|)
+block|{
+name|LPairs
+index|[
+literal|0
+index|]
+operator|.
+name|setEnd
+argument_list|(
+name|L
+argument_list|)
+block|;   }
+name|void
 name|push_back
 argument_list|(
 argument|const PathDiagnosticLocationPair&X
@@ -2861,8 +2950,6 @@ block|;
 name|PathPieces
 name|pathImpl
 block|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|PathPieces
@@ -2872,10 +2959,20 @@ literal|3
 operator|>
 name|pathStack
 block|;
+comment|/// \brief Important bug uniqueing location.
+comment|/// The location info is useful to differentiate between bugs.
+name|PathDiagnosticLocation
+name|UniqueingLoc
+block|;
+specifier|const
+name|Decl
+operator|*
+name|UniqueingDecl
+block|;
 name|PathDiagnostic
 argument_list|()
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// Do not implement.
 name|public
 operator|:
 name|PathDiagnostic
@@ -2889,6 +2986,10 @@ argument_list|,
 argument|StringRef shortDesc
 argument_list|,
 argument|StringRef category
+argument_list|,
+argument|PathDiagnosticLocation LocationToUnique
+argument_list|,
+argument|const Decl *DeclToUnique
 argument_list|)
 block|;
 operator|~
@@ -3172,6 +3273,40 @@ name|Loc
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Get the location on which the report should be uniqued.
+end_comment
+
+begin_expr_stmt
+name|PathDiagnosticLocation
+name|getUniqueingLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UniqueingLoc
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Get the declaration containing the uniqueing location.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|Decl
+operator|*
+name|getUniqueingDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UniqueingDecl
+return|;
+block|}
+end_expr_stmt
 
 begin_function
 name|void

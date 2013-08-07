@@ -247,12 +247,6 @@ name|BCM_SDHCI_BUFFER_SIZE
 value|512
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

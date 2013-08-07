@@ -805,7 +805,7 @@ name|struct
 name|mmu_log
 name|xpq_queue_log
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 index|[
 name|XPQUEUE_SIZE
@@ -823,7 +823,7 @@ specifier|static
 name|int
 name|xpq_idx
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -833,7 +833,7 @@ specifier|static
 name|mmu_update_t
 name|xpq_queue
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 index|[
 name|XPQUEUE_SIZE

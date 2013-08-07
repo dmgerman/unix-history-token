@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - RSN PMKSA cache  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - RSN PMKSA cache  * Copyright (c) 2004-2009, 2011-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -105,8 +105,9 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
-name|int
-name|replace
+name|enum
+name|pmksa_free_reason
+name|reason
 parameter_list|)
 function_decl|;
 name|void
@@ -164,10 +165,26 @@ name|rsn_pmksa_cache_entry
 modifier|*
 name|entry
 parameter_list|,
-name|int
-name|replace
+name|enum
+name|pmksa_free_reason
+name|reason
 parameter_list|)
 block|{
+name|wpa_sm_remove_pmkid
+argument_list|(
+name|pmksa
+operator|->
+name|sm
+argument_list|,
+name|entry
+operator|->
+name|aa
+argument_list|,
+name|entry
+operator|->
+name|pmkid
+argument_list|)
+expr_stmt|;
 name|pmksa
 operator|->
 name|pmksa_count
@@ -183,7 +200,7 @@ name|pmksa
 operator|->
 name|ctx
 argument_list|,
-name|replace
+name|reason
 argument_list|)
 expr_stmt|;
 name|_pmksa_cache_free_entry
@@ -280,7 +297,7 @@ name|pmksa
 argument_list|,
 name|entry
 argument_list|,
-literal|0
+name|PMKSA_EXPIRE
 argument_list|)
 expr_stmt|;
 block|}
@@ -449,6 +466,8 @@ operator|->
 name|sm
 operator|->
 name|bssid
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -793,35 +812,6 @@ name|pos
 operator|->
 name|next
 expr_stmt|;
-if|if
-condition|(
-name|pos
-operator|==
-name|pmksa
-operator|->
-name|sm
-operator|->
-name|cur_pmksa
-condition|)
-block|{
-comment|/* We are about to replace the current PMKSA 				 * cache entry. This happens when the PMKSA 				 * caching attempt fails, so we don't want to 				 * force pmksa_cache_free_entry() to disconnect 				 * at this point. Let's just make sure the old 				 * PMKSA cache entry will not be used in the 				 * future. 				 */
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"RSN: replacing current "
-literal|"PMKSA entry"
-argument_list|)
-expr_stmt|;
-name|pmksa
-operator|->
-name|sm
-operator|->
-name|cur_pmksa
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -836,7 +826,15 @@ name|pmksa
 argument_list|,
 name|pos
 argument_list|,
-literal|1
+name|PMKSA_REPLACE
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If OKC is used, there may be other PMKSA cache 			 * entries based on the same PMK. These needs to be 			 * flushed so that a new entry can be created based on 			 * the new PMK. 			 */
+name|pmksa_cache_flush
+argument_list|(
+name|pmksa
+argument_list|,
+name|network_ctx
 argument_list|)
 expr_stmt|;
 break|break;
@@ -872,6 +870,40 @@ name|pmksa
 operator|->
 name|pmksa
 expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|==
+name|pmksa
+operator|->
+name|sm
+operator|->
+name|cur_pmksa
+condition|)
+block|{
+comment|/* 			 * Never remove the current PMKSA cache entry, since 			 * it's in use, and removing it triggers a needless 			 * deauthentication. 			 */
+name|pos
+operator|=
+name|pos
+operator|->
+name|next
+expr_stmt|;
+name|pmksa
+operator|->
+name|pmksa
+operator|->
+name|next
+operator|=
+name|pos
+condition|?
+name|pos
+operator|->
+name|next
+else|:
+name|NULL
+expr_stmt|;
+block|}
+else|else
 name|pmksa
 operator|->
 name|pmksa
@@ -880,14 +912,20 @@ name|pos
 operator|->
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|pos
+condition|)
+block|{
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: removed the oldest PMKSA cache "
-literal|"entry (for "
+literal|"RSN: removed the oldest idle "
+literal|"PMKSA cache entry (for "
 name|MACSTR
-literal|") to make room for new one"
+literal|") to "
+literal|"make room for new one"
 argument_list|,
 name|MAC2STR
 argument_list|(
@@ -897,30 +935,16 @@ name|aa
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|wpa_sm_remove_pmkid
-argument_list|(
-name|pmksa
-operator|->
-name|sm
-argument_list|,
-name|pos
-operator|->
-name|aa
-argument_list|,
-name|pos
-operator|->
-name|pmkid
-argument_list|)
-expr_stmt|;
 name|pmksa_cache_free_entry
 argument_list|(
 name|pmksa
 argument_list|,
 name|pos
 argument_list|,
-literal|0
+name|PMKSA_FREE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Add the new entry; order by expiration time */
 name|pos
@@ -1013,8 +1037,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: added PMKSA cache entry for "
+literal|"RSN: Added PMKSA cache entry for "
 name|MACSTR
+literal|" network_ctx=%p"
 argument_list|,
 name|MAC2STR
 argument_list|(
@@ -1022,6 +1047,8 @@ name|entry
 operator|->
 name|aa
 argument_list|)
+argument_list|,
+name|network_ctx
 argument_list|)
 expr_stmt|;
 name|wpa_sm_add_pmkid
@@ -1042,6 +1069,152 @@ expr_stmt|;
 return|return
 name|entry
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * pmksa_cache_flush - Flush PMKSA cache entries for a specific network  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @network_ctx: Network configuration context or %NULL to flush all entries  */
+end_comment
+
+begin_function
+name|void
+name|pmksa_cache_flush
+parameter_list|(
+name|struct
+name|rsn_pmksa_cache
+modifier|*
+name|pmksa
+parameter_list|,
+name|void
+modifier|*
+name|network_ctx
+parameter_list|)
+block|{
+name|struct
+name|rsn_pmksa_cache_entry
+modifier|*
+name|entry
+decl_stmt|,
+modifier|*
+name|prev
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|tmp
+decl_stmt|;
+name|int
+name|removed
+init|=
+literal|0
+decl_stmt|;
+name|entry
+operator|=
+name|pmksa
+operator|->
+name|pmksa
+expr_stmt|;
+while|while
+condition|(
+name|entry
+condition|)
+block|{
+if|if
+condition|(
+name|entry
+operator|->
+name|network_ctx
+operator|==
+name|network_ctx
+operator|||
+name|network_ctx
+operator|==
+name|NULL
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: Flush PMKSA cache entry "
+literal|"for "
+name|MACSTR
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|entry
+operator|->
+name|aa
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prev
+condition|)
+name|prev
+operator|->
+name|next
+operator|=
+name|entry
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|pmksa
+operator|->
+name|pmksa
+operator|=
+name|entry
+operator|->
+name|next
+expr_stmt|;
+name|tmp
+operator|=
+name|entry
+expr_stmt|;
+name|entry
+operator|=
+name|entry
+operator|->
+name|next
+expr_stmt|;
+name|pmksa_cache_free_entry
+argument_list|(
+name|pmksa
+argument_list|,
+name|tmp
+argument_list|,
+name|PMKSA_FREE
+argument_list|)
+expr_stmt|;
+name|removed
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+name|prev
+operator|=
+name|entry
+expr_stmt|;
+name|entry
+operator|=
+name|entry
+operator|->
+name|next
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|removed
+condition|)
+name|pmksa_cache_set_expiration
+argument_list|(
+name|pmksa
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1121,7 +1294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * pmksa_cache_get - Fetch a PMKSA cache entry  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @aa: Authenticator address or %NULL to match any  * @pmkid: PMKID or %NULL to match any  * Returns: Pointer to PMKSA cache entry or %NULL if no match was found  */
+comment|/**  * pmksa_cache_get - Fetch a PMKSA cache entry  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @aa: Authenticator address or %NULL to match any  * @pmkid: PMKID or %NULL to match any  * @network_ctx: Network context or %NULL to match any  * Returns: Pointer to PMKSA cache entry or %NULL if no match was found  */
 end_comment
 
 begin_function
@@ -1144,6 +1317,11 @@ specifier|const
 name|u8
 modifier|*
 name|pmkid
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|network_ctx
 parameter_list|)
 block|{
 name|struct
@@ -1199,57 +1377,22 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-condition|)
-return|return
-name|entry
-return|;
-name|entry
-operator|=
-name|entry
-operator|->
-name|next
-expr_stmt|;
-block|}
-return|return
+operator|&&
+operator|(
+name|network_ctx
+operator|==
 name|NULL
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  * pmksa_cache_notify_reconfig - Reconfiguration notification for PMKSA cache  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  *  * Clear references to old data structures when wpa_supplicant is reconfigured.  */
-end_comment
-
-begin_function
-name|void
-name|pmksa_cache_notify_reconfig
-parameter_list|(
-name|struct
-name|rsn_pmksa_cache
-modifier|*
-name|pmksa
-parameter_list|)
-block|{
-name|struct
-name|rsn_pmksa_cache_entry
-modifier|*
-name|entry
-init|=
-name|pmksa
-operator|->
-name|pmksa
-decl_stmt|;
-while|while
-condition|(
-name|entry
-condition|)
-block|{
+operator|||
+name|network_ctx
+operator|==
 name|entry
 operator|->
 name|network_ctx
-operator|=
-name|NULL
-expr_stmt|;
+operator|)
+condition|)
+return|return
+name|entry
+return|;
 name|entry
 operator|=
 name|entry
@@ -1257,6 +1400,9 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -1384,6 +1530,20 @@ name|pmksa
 operator|->
 name|pmksa
 decl_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: Consider "
+name|MACSTR
+literal|" for OKC"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|aa
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|network_ctx
@@ -1559,6 +1719,50 @@ name|sm
 operator|->
 name|pmksa
 decl_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: PMKSA cache search - network_ctx=%p "
+literal|"try_opportunistic=%d"
+argument_list|,
+name|network_ctx
+argument_list|,
+name|try_opportunistic
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pmkid
+condition|)
+name|wpa_hexdump
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: Search for PMKID"
+argument_list|,
+name|pmkid
+argument_list|,
+name|PMKID_LEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bssid
+condition|)
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: Search for BSSID "
+name|MACSTR
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|bssid
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sm
 operator|->
 name|cur_pmksa
@@ -1580,6 +1784,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|pmkid
+argument_list|,
+name|network_ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -1603,6 +1809,8 @@ argument_list|,
 name|bssid
 argument_list|,
 name|NULL
+argument_list|,
+name|network_ctx
 argument_list|)
 expr_stmt|;
 if|if
@@ -1641,7 +1849,7 @@ name|wpa_hexdump
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"RSN: PMKID"
+literal|"RSN: PMKSA cache entry found - PMKID"
 argument_list|,
 name|sm
 operator|->
@@ -1656,6 +1864,13 @@ return|return
 literal|0
 return|;
 block|}
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"RSN: No PMKSA cache entry found"
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -1930,8 +2145,9 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
-name|int
-name|replace
+name|enum
+name|pmksa_free_reason
+name|reason
 parameter_list|)
 parameter_list|,
 name|void

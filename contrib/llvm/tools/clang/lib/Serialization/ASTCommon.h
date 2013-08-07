@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Serialization/ASTBitCodes.h"
+file|"clang/AST/ASTContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTContext.h"
+file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
 begin_decl_stmt
@@ -267,6 +267,35 @@ name|ComputeHash
 parameter_list|(
 name|Selector
 name|Sel
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve the "definitive" declaration that provides all of the
+comment|/// visible entries for the given declaration context, if there is one.
+comment|///
+comment|/// The "definitive" declaration is the only place where we need to look to
+comment|/// find information about the declarations within the given declaration
+comment|/// context. For example, C++ and Objective-C classes, C structs/unions, and
+comment|/// Objective-C protocols, categories, and extensions are all defined in a
+comment|/// single place in the source code, so they have definitive declarations
+comment|/// associated with them. C++ namespaces, on the other hand, can have
+comment|/// multiple definitions.
+specifier|const
+name|DeclContext
+modifier|*
+name|getDefinitiveDeclContext
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine whether the given declaration kind is redeclarable.
+name|bool
+name|isRedeclarableDeclKind
+parameter_list|(
+name|unsigned
+name|Kind
 parameter_list|)
 function_decl|;
 block|}

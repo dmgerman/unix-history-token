@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: iso9660_rrip.c,v 1.10 2011/05/29 17:07:58 tsutsui Exp $	*/
+comment|/*	$NetBSD: iso9660_rrip.c,v 1.11 2012/04/29 13:32:21 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -1671,7 +1671,7 @@ name|name
 argument_list|)
 operator|!=
 operator|(
-name|int
+name|uint8_t
 operator|)
 name|node
 operator|->
@@ -1699,7 +1699,7 @@ operator|->
 name|name
 argument_list|,
 operator|(
-name|int
+name|uint8_t
 operator|)
 name|node
 operator|->
@@ -3225,7 +3225,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|4
+literal|5
 expr_stmt|;
 name|p
 operator|->

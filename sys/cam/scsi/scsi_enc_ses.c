@@ -3628,12 +3628,14 @@ name|struct
 name|sbuf
 name|sb
 decl_stmt|;
+name|struct
+name|scsi_vpd_id_descriptor
+modifier|*
+name|idd
+decl_stmt|;
 name|uint8_t
 modifier|*
 name|devid
-decl_stmt|,
-modifier|*
-name|elmaddr
 decl_stmt|;
 name|ses_element_t
 modifier|*
@@ -3786,7 +3788,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|elmaddr
+name|idd
 operator|=
 name|scsi_get_devid
 argument_list|(
@@ -3808,7 +3810,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|elmaddr
+name|idd
 operator|==
 name|NULL
 condition|)
@@ -3850,7 +3852,9 @@ literal|"id1,enc@n%jx/type@%x/slot@%x"
 argument_list|,
 name|scsi_8btou64
 argument_list|(
-name|elmaddr
+name|idd
+operator|->
+name|identifier
 argument_list|)
 argument_list|,
 name|iter

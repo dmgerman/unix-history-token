@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/CommentOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceManager.h"
 end_include
 
@@ -131,7 +137,9 @@ argument|const SourceManager&SourceMgr
 argument_list|,
 argument|SourceRange SR
 argument_list|,
-argument|bool Merged = false
+argument|bool Merged
+argument_list|,
+argument|bool ParseAllComments
 argument_list|)
 expr_stmt|;
 name|CommentKind
@@ -234,6 +242,7 @@ name|LLVM_READONLY
 block|{
 return|return
 operator|(
+operator|(
 name|Kind
 operator|==
 name|RCK_OrdinaryBCPL
@@ -244,6 +253,10 @@ name|Kind
 operator|==
 name|RCK_OrdinaryC
 operator|)
+operator|)
+operator|&&
+operator|!
+name|ParseAllComments
 return|;
 block|}
 comment|/// Returns true if this comment any kind of a documentation comment.
@@ -261,6 +274,17 @@ operator|&&
 operator|!
 name|isOrdinary
 argument_list|()
+return|;
+block|}
+comment|/// Returns whether we are parsing all comments.
+name|bool
+name|isParseAllComments
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|ParseAllComments
 return|;
 block|}
 comment|/// Returns raw comment text with comment markers.
@@ -417,6 +441,13 @@ name|IsAlmostTrailingComment
 range|:
 literal|1
 decl_stmt|;
+comment|/// When true, ordinary comments starting with "//" and "/*" will be
+comment|/// considered as documentation comments.
+name|bool
+name|ParseAllComments
+range|:
+literal|1
+decl_stmt|;
 name|mutable
 name|bool
 name|BeginLineValid
@@ -451,6 +482,8 @@ argument_list|,
 argument|bool IsTrailingComment
 argument_list|,
 argument|bool IsAlmostTrailingComment
+argument_list|,
+argument|bool ParseAllComments
 argument_list|)
 block|:
 name|Range
@@ -486,6 +519,11 @@ operator|,
 name|IsAlmostTrailingComment
 argument_list|(
 name|IsAlmostTrailingComment
+argument_list|)
+operator|,
+name|ParseAllComments
+argument_list|(
+name|ParseAllComments
 argument_list|)
 operator|,
 name|BeginLineValid

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *   *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the  *      distribution.  *   *   3. Neither the name of the authors nor the names of their contributors  *      may be used to endorse or promote products derived from this  *      software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY MATTEO LANDI AND CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MATTEO LANDI OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *   *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the  *      distribution.  *   *   3. Neither the name of the authors nor the names of their contributors  *      may be used to endorse or promote products derived from this  *      software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY MATTEO LANDI AND CONTRIBUTORS "AS IS" AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MATTEO LANDI OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap.h 11997 2013-01-17 21:59:12Z luigi $  *  * Definitions of constants and the structures used by the netmap  * framework, for the part visible to both kernel and userspace.  * Detailed info on netmap is available with "man netmap" or at  *   *	http://info.iet.unipi.it/~luigi/netmap/  */
+comment|/*  * $FreeBSD$  *  * Definitions of constants and the structures used by the netmap  * framework, for the part visible to both kernel and userspace.  * Detailed info on netmap is available with "man netmap" or at  *   *	http://info.iet.unipi.it/~luigi/netmap/  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|_NET_NETMAP_H_
 end_define
 
 begin_comment
-comment|/*  * --- Netmap data structures ---  *  * The data structures used by netmap are shown below. Those in  * capital letters are in an mmapp()ed area shared with userspace,  * while others are private to the kernel.  * Shared structures do not contain pointers but only memory  * offsets, so that addressing is portable between kernel and userspace.    softc +----------------+ | standard fields| | if_pspare[0] ----------+ +----------------+       |                          | +----------------+<------+ |(netmap_adapter)| |                |                             netmap_kring | tx_rings *--------------------------------->+---------------+ |                |       netmap_kring         | ring    *---------. | rx_rings *--------->+---------------+       | nr_hwcur      |   | +----------------+    | ring    *--------.    | nr_hwavail    |   V                       | nr_hwcur      |  |    | selinfo       |   |                       | nr_hwavail    |  |    +---------------+   .                       | selinfo       |  |    |     ...       |   .                       +---------------+  |    |(ntx+1 entries)|                       |    ....       |  |    |               |                       |(nrx+1 entries)|  |    +---------------+                       |               |  |    KERNEL             +---------------+  |                                          |   ====================================================================                                          |    USERSPACE                             |      NETMAP_RING                                          +---->+-------------+                                              / | cur         |    NETMAP_IF  (nifp, one per file desc.)    /  | avail       |     +---------------+                      /   | buf_ofs     |     | ni_tx_rings   |                     /    +=============+     | ni_rx_rings   |                    /     | buf_idx     | slot[0]     |               |                   /      | len, flags  |     |               |                  /       +-------------+     +===============+                 /        | buf_idx     | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | len, flags  |     | txring_ofs[1] |                          +-------------+   (num_rings+1 entries)                     (nr_num_slots entries)     | txring_ofs[n] |                          | buf_idx     | slot[n-1]     +---------------+                          | len, flags  |     | rxring_ofs[0] |                          +-------------+     | rxring_ofs[1] |   (num_rings+1 entries)     | txring_ofs[n] |     +---------------+   * The private descriptor ('softc' or 'adapter') of each interface  * is extended with a "struct netmap_adapter" containing netmap-related  * info (see description in dev/netmap/netmap_kernel.h.  * Among other things, tx_rings and rx_rings point to the arrays of  * "struct netmap_kring" which in turn reache the various  * "struct netmap_ring", shared with userspace.   * The NETMAP_RING is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer, its length and some flags.  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index*NETMAP_BUF_SIZE  * In the kernel, buffers do not necessarily need to be contiguous,  * and the virtual and physical addresses are derived through  * a lookup table.  *  * struct netmap_slot:  *  * buf_idx	is the index of the buffer associated to the slot.  * len		is the length of the payload  * NS_BUF_CHANGED	must be set whenever userspace wants  *		to change buf_idx (it might be necessary to  *		reprogram the NIC slot)  * NS_REPORT	must be set if we want the NIC to generate an interrupt  *		when this slot is used. Leaving it to 0 improves  *		performance.  * NS_FORWARD	if set on a receive ring, and the device is in  *		transparent mode, buffers released with the flag set  *		will be forwarded to the 'other' side (host stack  *		or NIC, respectively) on the next select() or ioctl()  * NS_NO_LEARN	on a VALE switch, do not 'learn' the source port for  *		this packet.  * NS_PORT_MASK	the high 8 bits of the flag, if not zero, indicate the  *		destination port for the VALE switch, overriding  *		the lookup table.  */
+comment|/*  * --- Netmap data structures ---  *  * The data structures used by netmap are shown below. Those in  * capital letters are in an mmapp()ed area shared with userspace,  * while others are private to the kernel.  * Shared structures do not contain pointers but only memory  * offsets, so that addressing is portable between kernel and userspace.    softc +----------------+ | standard fields| | if_pspare[0] ----------+ +----------------+       |                          | +----------------+<------+ |(netmap_adapter)| |                |                             netmap_kring | tx_rings *--------------------------------->+---------------+ |                |       netmap_kring         | ring    *---------. | rx_rings *--------->+---------------+       | nr_hwcur      |   | +----------------+    | ring    *--------.    | nr_hwavail    |   V                       | nr_hwcur      |  |    | selinfo       |   |                       | nr_hwavail    |  |    +---------------+   .                       | selinfo       |  |    |     ...       |   .                       +---------------+  |    |(ntx+1 entries)|                       |    ....       |  |    |               |                       |(nrx+1 entries)|  |    +---------------+                       |               |  |    KERNEL             +---------------+  |                                          |   ====================================================================                                          |    USERSPACE                             |      NETMAP_RING                                          +---->+-------------+                                              / | cur         |    NETMAP_IF  (nifp, one per file desc.)    /  | avail       |     +---------------+                      /   | buf_ofs     |     | ni_tx_rings   |                     /    +=============+     | ni_rx_rings   |                    /     | buf_idx     | slot[0]     |               |                   /      | len, flags  |     |               |                  /       +-------------+     +===============+                 /        | buf_idx     | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | len, flags  |     | txring_ofs[1] |                          +-------------+   (num_rings+1 entries)                     (nr_num_slots entries)     | txring_ofs[n] |                          | buf_idx     | slot[n-1]     +---------------+                          | len, flags  |     | rxring_ofs[0] |                          +-------------+     | rxring_ofs[1] |   (num_rings+1 entries)     | txring_ofs[n] |     +---------------+   * The private descriptor ('softc' or 'adapter') of each interface  * is extended with a "struct netmap_adapter" containing netmap-related  * info (see description in dev/netmap/netmap_kernel.h.  * Among other things, tx_rings and rx_rings point to the arrays of  * "struct netmap_kring" which in turn reache the various  * "struct netmap_ring", shared with userspace.   * The NETMAP_RING is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer, its length and some flags.  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index*NETMAP_BUF_SIZE  * In the kernel, buffers do not necessarily need to be contiguous,  * and the virtual and physical addresses are derived through  * a lookup table.  *  * struct netmap_slot:  *  * buf_idx	is the index of the buffer associated to the slot.  * len		is the length of the payload  * NS_BUF_CHANGED	must be set whenever userspace wants  *		to change buf_idx (it might be necessary to  *		reprogram the NIC slot)  * NS_REPORT	must be set if we want the NIC to generate an interrupt  *		when this slot is used. Leaving it to 0 improves  *		performance.  * NS_FORWARD	if set on a receive ring, and the device is in  *		transparent mode, buffers released with the flag set  *		will be forwarded to the 'other' side (host stack  *		or NIC, respectively) on the next select() or ioctl()  *  *		The following will be supported from NETMAP_API = 5  * NS_NO_LEARN	on a VALE switch, do not 'learn' the source port for  *		this packet.  * NS_INDIRECT	the netmap buffer contains a 64-bit pointer to  *		the actual userspace buffer. This may be useful  *		to reduce copies in a VM environment.  * NS_MOREFRAG	Part of a multi-segment frame. The last (or only)  *		segment must not have this flag.  * NS_PORT_MASK	the high 8 bits of the flag, if not zero, indicate the  *		destination port for the VALE switch, overriding  *		the lookup table.  */
 end_comment
 
 begin_struct
@@ -58,6 +58,14 @@ define|#
 directive|define
 name|NS_NO_LEARN
 value|0x0008
+define|#
+directive|define
+name|NS_INDIRECT
+value|0x0010
+define|#
+directive|define
+name|NS_MOREFRAG
+value|0x0020
 define|#
 directive|define
 name|NS_PORT_SHIFT
@@ -189,7 +197,7 @@ name|NIOCREGIF
 end_ifndef
 
 begin_comment
-comment|/*  * ioctl names and related fields  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *  * NIOCREGIF takes an interface name within a struct ifreq,  *	and activates netmap mode on the interface (if possible).  *  * NIOCUNREGIF unregisters the interface associated to the fd.  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid  */
+comment|/*  * ioctl names and related fields  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *  * NIOCREGIF takes an interface name within a struct ifreq,  *	and activates netmap mode on the interface (if possible).  *  *	For vale ports, starting with NETMAP_API = 5,  *	nr_tx_rings and nr_rx_rings specify how many software rings  *	are created (0 means 1).  *  *	NIOCREGIF is also used to attach a NIC to a VALE switch.  *	In this case the name is vale*:ifname, and "nr_cmd"  *	is set to 'NETMAP_BDG_ATTACH' or 'NETMAP_BDG_DETACH'.  *	nr_ringid specifies which rings should be attached, 0 means all,  *	NETMAP_HW_RING + n means only the n-th ring.  *	The process can terminate after the interface has been attached.  *  * NIOCUNREGIF unregisters the interface associated to the fd.  *	this is deprecated and will go away.  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid  *  * NETMAP_API is the API version.  */
 end_comment
 
 begin_comment
@@ -213,7 +221,7 @@ comment|/* API version */
 define|#
 directive|define
 name|NETMAP_API
-value|3
+value|4
 comment|/* current version */
 name|uint32_t
 name|nr_offset
@@ -264,12 +272,43 @@ name|NETMAP_RING_MASK
 value|0xfff
 comment|/* the ring number */
 name|uint16_t
-name|spare1
+name|nr_cmd
+decl_stmt|;
+define|#
+directive|define
+name|NETMAP_BDG_ATTACH
+value|1
+comment|/* attach the NIC */
+define|#
+directive|define
+name|NETMAP_BDG_DETACH
+value|2
+comment|/* detach the NIC */
+define|#
+directive|define
+name|NETMAP_BDG_LOOKUP_REG
+value|3
+comment|/* register lookup function */
+define|#
+directive|define
+name|NETMAP_BDG_LIST
+value|4
+comment|/* get bridge's info */
+name|uint16_t
+name|nr_arg1
+decl_stmt|;
+define|#
+directive|define
+name|NETMAP_BDG_HOST
+value|1
+comment|/* attach the host stack on ATTACH */
+name|uint16_t
+name|nr_arg2
 decl_stmt|;
 name|uint32_t
 name|spare2
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}

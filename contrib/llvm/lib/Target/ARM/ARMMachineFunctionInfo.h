@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/ADT/BitVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_decl_stmt
@@ -120,7 +120,7 @@ block|;
 comment|/// VarArgsRegSaveSize - Size of the register save area for vararg functions.
 comment|///
 name|unsigned
-name|VarArgsRegSaveSize
+name|ArgRegsSaveSize
 block|;
 comment|/// HasStackFrame - True if this function has a stack frame. Set by
 comment|/// processFunctionBeforeCalleeSavedScan().
@@ -241,7 +241,7 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|VarArgsRegSaveSize
+name|ArgRegsSaveSize
 argument_list|(
 literal|0
 argument_list|)
@@ -385,7 +385,7 @@ name|hasThumb2
 argument_list|()
 argument_list|)
 block|,
-name|VarArgsRegSaveSize
+name|ArgRegsSaveSize
 argument_list|(
 literal|0
 argument_list|)
@@ -513,21 +513,21 @@ name|hasThumb2
 return|;
 block|}
 name|unsigned
-name|getVarArgsRegSaveSize
+name|getArgRegsSaveSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|VarArgsRegSaveSize
+name|ArgRegsSaveSize
 return|;
 block|}
 name|void
-name|setVarArgsRegSaveSize
+name|setArgRegsSaveSize
 argument_list|(
 argument|unsigned s
 argument_list|)
 block|{
-name|VarArgsRegSaveSize
+name|ArgRegsSaveSize
 operator|=
 name|s
 block|; }

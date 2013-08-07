@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ASMCOND_H
+name|LLVM_MC_MCPARSER_ASMCOND_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ASMCOND_H
+name|LLVM_MC_MCPARSER_ASMCOND_H
 end_define
 
 begin_decl_stmt

@@ -1603,6 +1603,21 @@ operator|.
 name|dar
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"   dsisr           = 0x%"
+name|PRIxPTR
+literal|"\n"
+argument_list|,
+name|frame
+operator|->
+name|cpu
+operator|.
+name|aim
+operator|.
+name|dsisr
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|EXC_ISE

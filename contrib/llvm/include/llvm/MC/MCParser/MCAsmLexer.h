@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCASMLEXER_H
+name|LLVM_MC_MCPARSER_MCASMLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCASMLEXER_H
+name|LLVM_MC_MCPARSER_MCASMLEXER_H
 end_define
 
 begin_include
@@ -95,9 +95,6 @@ name|Integer
 block|,
 comment|// Real values.
 name|Real
-block|,
-comment|// Register values (stored in IntVal).  Only used by MCTargetAsmLexer.
-name|Register
 block|,
 comment|// No-value.
 name|EndOfStatement
@@ -355,32 +352,6 @@ argument_list|)
 block|;
 return|return
 name|IntVal
-return|;
-block|}
-comment|/// getRegVal - Get the register number for the current token, which should
-comment|/// be a register.
-name|unsigned
-name|getRegVal
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|Register
-operator|&&
-literal|"This token isn't a register!"
-argument_list|)
-block|;
-return|return
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|IntVal
-operator|)
 return|;
 block|}
 block|}

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_xbox.h"
 end_include
 
@@ -557,6 +563,23 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<x86/fdt.h>
 end_include
 
 begin_endif
@@ -15315,6 +15338,14 @@ expr_stmt|;
 name|cpu_probe_cmpxchg8b
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FDT
+name|x86_init_fdt
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -17352,6 +17383,9 @@ operator|&
 name|mcp
 operator|->
 name|mc_fpstate
+index|[
+literal|0
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -82,6 +82,7 @@ end_include
 begin_decl_stmt
 name|sigset_t
 name|_sigintr
+name|__hidden
 decl_stmt|;
 end_decl_stmt
 

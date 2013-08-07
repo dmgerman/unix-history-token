@@ -500,6 +500,8 @@ comment|// Mach-O thread local variable relocation
 name|VK_SECREL
 block|,
 comment|// FIXME: We'd really like to use the generic Kinds listed above for these.
+name|VK_ARM_NONE
+block|,
 name|VK_ARM_PLT
 block|,
 comment|// ARM-style PLT references. i.e., (PLT) instead of @PLT
@@ -517,6 +519,8 @@ block|,
 name|VK_ARM_TARGET1
 block|,
 name|VK_ARM_TARGET2
+block|,
+name|VK_ARM_PREL31
 block|,
 name|VK_PPC_TOC
 block|,
@@ -542,6 +546,45 @@ comment|// symbol@tprel@ha
 name|VK_PPC_TPREL16_LO
 block|,
 comment|// symbol@tprel@l
+name|VK_PPC_DTPREL16_HA
+block|,
+comment|// symbol@dtprel@ha
+name|VK_PPC_DTPREL16_LO
+block|,
+comment|// symbol@dtprel@l
+name|VK_PPC_TOC16_HA
+block|,
+comment|// symbol@toc@ha
+name|VK_PPC_TOC16_LO
+block|,
+comment|// symbol@toc@l
+name|VK_PPC_GOT_TPREL16_HA
+block|,
+comment|// symbol@got@tprel@ha
+name|VK_PPC_GOT_TPREL16_LO
+block|,
+comment|// symbol@got@tprel@l
+name|VK_PPC_TLS
+block|,
+comment|// symbol@tls
+name|VK_PPC_GOT_TLSGD16_HA
+block|,
+comment|// symbol@got@tlsgd@ha
+name|VK_PPC_GOT_TLSGD16_LO
+block|,
+comment|// symbol@got@tlsgd@l
+name|VK_PPC_TLSGD
+block|,
+comment|// symbol@tlsgd
+name|VK_PPC_GOT_TLSLD16_HA
+block|,
+comment|// symbol@got@tlsld@ha
+name|VK_PPC_GOT_TLSLD16_LO
+block|,
+comment|// symbol@got@tlsld@l
+name|VK_PPC_TLSLD
+block|,
+comment|// symbol@tlsld
 name|VK_Mips_GPREL
 block|,
 name|VK_Mips_GOT_CALL
@@ -589,6 +632,9 @@ block|,
 name|VK_Mips_CALL_HI16
 block|,
 name|VK_Mips_CALL_LO16
+block|,
+name|VK_COFF_IMGREL32
+comment|// symbol@imgrel (image-relative)
 block|}
 block|;
 name|private
@@ -1691,6 +1737,16 @@ name|MCSection
 operator|*
 name|FindAssociatedSection
 argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|fixELFSymbolsInTLSFixups
+argument_list|(
+argument|MCAssembler&
+argument_list|)
 specifier|const
 operator|=
 literal|0

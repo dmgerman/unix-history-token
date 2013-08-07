@@ -1621,7 +1621,7 @@ condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_BAD_PARAMETER
+name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}

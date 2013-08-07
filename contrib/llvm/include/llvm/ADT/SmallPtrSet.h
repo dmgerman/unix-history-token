@@ -155,8 +155,6 @@ modifier|*
 name|CurArray
 decl_stmt|;
 comment|/// CurArraySize - The allocated size of CurArray, always a power of two.
-comment|/// Note that CurArray points to an array that has CurArraySize+1 elements in
-comment|/// it, so that the end iterator actually points to valid memory.
 name|unsigned
 name|CurArraySize
 decl_stmt|;
@@ -223,15 +221,6 @@ literal|0
 operator|&&
 literal|"Initial size must be a power of two!"
 argument_list|)
-block|;
-comment|// The end pointer, always valid, is set to a valid element to help the
-comment|// iterator.
-name|CurArray
-index|[
-name|SmallSize
-index|]
-operator|=
-literal|0
 block|;
 name|clear
 argument_list|()
@@ -536,6 +525,13 @@ specifier|const
 modifier|*
 name|Bucket
 decl_stmt|;
+specifier|const
+name|void
+modifier|*
+specifier|const
+modifier|*
+name|End
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -547,11 +543,23 @@ operator|*
 specifier|const
 operator|*
 name|BP
+argument_list|,
+specifier|const
+name|void
+operator|*
+specifier|const
+operator|*
+name|E
 argument_list|)
 operator|:
 name|Bucket
 argument_list|(
-argument|BP
+name|BP
+argument_list|)
+operator|,
+name|End
+argument_list|(
+argument|E
 argument_list|)
 block|{
 name|AdvanceIfNotValid
@@ -604,8 +612,20 @@ name|void
 name|AdvanceIfNotValid
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+name|Bucket
+operator|<=
+name|End
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
+name|Bucket
+operator|!=
+name|End
+operator|&&
+operator|(
 operator|*
 name|Bucket
 operator|==
@@ -621,6 +641,7 @@ name|SmallPtrSetImpl
 operator|::
 name|getTombstoneMarker
 argument_list|()
+operator|)
 condition|)
 operator|++
 name|Bucket
@@ -682,11 +703,20 @@ operator|*
 specifier|const
 operator|*
 name|BP
+argument_list|,
+specifier|const
+name|void
+operator|*
+specifier|const
+operator|*
+name|E
 argument_list|)
 operator|:
 name|SmallPtrSetIteratorImpl
 argument_list|(
 argument|BP
+argument_list|,
+argument|E
 argument_list|)
 block|{}
 comment|// Most methods provided by baseclass.
@@ -698,6 +728,13 @@ operator|(
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|Bucket
+operator|<
+name|End
+argument_list|)
+block|;
 return|return
 name|PtrTraits
 operator|::
@@ -931,16 +968,13 @@ operator|::
 name|Val
 block|}
 block|;
-comment|/// SmallStorage - Fixed size storage used in 'small mode'.  The extra element
-comment|/// ensures that the end iterator actually points to valid memory.
+comment|/// SmallStorage - Fixed size storage used in 'small mode'.
 specifier|const
 name|void
 operator|*
 name|SmallStorage
 index|[
 name|SmallSizePowTwo
-operator|+
-literal|1
 index|]
 block|;
 typedef|typedef
@@ -1146,6 +1180,10 @@ return|return
 name|iterator
 argument_list|(
 name|CurArray
+argument_list|,
+name|CurArray
+operator|+
+name|CurArraySize
 argument_list|)
 return|;
 block|}
@@ -1161,6 +1199,10 @@ block|{
 return|return
 name|iterator
 argument_list|(
+name|CurArray
+operator|+
+name|CurArraySize
+argument_list|,
 name|CurArray
 operator|+
 name|CurArraySize

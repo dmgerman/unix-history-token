@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_PASSMANAGERBUILDER_H
+name|LLVM_TRANSFORMS_IPO_PASSMANAGERBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_PASSMANAGERBUILDER_H
+name|LLVM_TRANSFORMS_IPO_PASSMANAGERBUILDER_H
 end_define
 
 begin_include
@@ -197,7 +197,10 @@ name|bool
 name|DisableUnrollLoops
 decl_stmt|;
 name|bool
-name|Vectorize
+name|BBVectorize
+decl_stmt|;
+name|bool
+name|SLPVectorize
 decl_stmt|;
 name|bool
 name|LoopVectorize

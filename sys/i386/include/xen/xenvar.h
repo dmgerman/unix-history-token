@@ -366,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|NR_CPUS
-value|MAX_VIRT_CPUS
+value|XEN_LEGACY_MAX_VCPUS
 end_define
 
 begin_define

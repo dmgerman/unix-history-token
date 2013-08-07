@@ -370,7 +370,7 @@ name|int
 name|ml_offset
 decl_stmt|;
 comment|/* Offset from start of structure (in bits) */
-name|int
+name|uint_t
 name|ml_size
 decl_stmt|;
 comment|/* Member size (in bits) */

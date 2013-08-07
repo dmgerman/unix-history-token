@@ -196,6 +196,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|vendor_id
+init|=
+name|ATH3KFW_VENDOR_ID
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|product_id
+init|=
+name|ATH3KFW_PRODUCT_ID
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Firmware downloader for Atheros AR3011 based USB Bluetooth devices  */
 end_comment
@@ -272,7 +290,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:f:h"
+literal|"d:f:hp:v:"
 argument_list|)
 operator|)
 operator|!=
@@ -315,6 +333,38 @@ comment|/* firmware file */
 name|firmware
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* product id */
+name|product_id
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+comment|/* vendor id */
+name|vendor_id
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -652,13 +702,13 @@ name|desc
 operator|->
 name|idVendor
 operator|!=
-name|ATH3KFW_VENDOR_ID
+name|vendor_id
 operator|||
 name|desc
 operator|->
 name|idProduct
 operator|!=
-name|ATH3KFW_PRODUCT_ID
+name|product_id
 condition|)
 continue|continue;
 break|break;
@@ -1126,6 +1176,10 @@ expr|\
 literal|"\t-d ugenX.Y           ugen device name\n"
 expr|\
 literal|"\t-f firmware image    firmware image file name for download\n"
+expr|\
+literal|"\t-v vendor_id         vendor id\n"
+expr|\
+literal|"\t-p vendor_id         product id\n"
 expr|\
 literal|"\t-h                   display this message\n"
 argument_list|,

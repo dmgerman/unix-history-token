@@ -82,12 +82,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -95,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Tooling/Tooling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -143,13 +143,13 @@ comment|/// \param Offset The byte offset of the start of the range in the file.
 comment|/// \param Length The length of the range in bytes.
 name|Replacement
 argument_list|(
-argument|llvm::StringRef FilePath
+argument|StringRef FilePath
 argument_list|,
 argument|unsigned Offset
 argument_list|,
 argument|unsigned Length
 argument_list|,
-argument|llvm::StringRef ReplacementText
+argument|StringRef ReplacementText
 argument_list|)
 empty_stmt|;
 comment|/// \brief Creates a Replacement of the range [Start, Start+Length) with
@@ -162,7 +162,7 @@ argument|SourceLocation Start
 argument_list|,
 argument|unsigned Length
 argument_list|,
-argument|llvm::StringRef ReplacementText
+argument|StringRef ReplacementText
 argument_list|)
 empty_stmt|;
 comment|/// \brief Creates a Replacement of the given range with ReplacementText.
@@ -172,7 +172,7 @@ argument|SourceManager&Sources
 argument_list|,
 argument|const CharSourceRange&Range
 argument_list|,
-argument|llvm::StringRef ReplacementText
+argument|StringRef ReplacementText
 argument_list|)
 empty_stmt|;
 comment|/// \brief Creates a Replacement of the node with ReplacementText.
@@ -187,7 +187,7 @@ argument|SourceManager&Sources
 argument_list|,
 argument|const Node&NodeToReplace
 argument_list|,
-argument|llvm::StringRef ReplacementText
+argument|StringRef ReplacementText
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns whether this replacement can be applied to a file.
@@ -283,41 +283,37 @@ name|private
 label|:
 name|void
 name|setFromSourceLocation
-argument_list|(
+parameter_list|(
 name|SourceManager
-operator|&
+modifier|&
 name|Sources
-argument_list|,
+parameter_list|,
 name|SourceLocation
 name|Start
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Length
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|ReplacementText
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|setFromSourceRange
-argument_list|(
+parameter_list|(
 name|SourceManager
-operator|&
+modifier|&
 name|Sources
-argument_list|,
+parameter_list|,
 specifier|const
 name|CharSourceRange
-operator|&
+modifier|&
 name|Range
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|ReplacementText
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|std
 operator|::
 name|string
@@ -351,11 +347,12 @@ name|Less
 operator|>
 name|Replacements
 expr_stmt|;
-comment|/// \brief Apply all replacements on the Rewriter.
+comment|/// \brief Apply all replacements in \p Replaces to the Rewriter \p Rewrite.
 comment|///
-comment|/// If at least one Apply returns false, ApplyAll returns false. Every
-comment|/// Apply will be executed independently of the result of other
-comment|/// Apply operations.
+comment|/// Replacement applications happen independently of the success of
+comment|/// other applications.
+comment|///
+comment|/// \returns true if all replacements apply. false otherwise.
 name|bool
 name|applyAllReplacements
 parameter_list|(
@@ -370,15 +367,17 @@ parameter_list|)
 function_decl|;
 comment|/// \brief A tool to run refactorings.
 comment|///
-comment|/// This is a refactoring specific version of \see ClangTool.
-comment|/// All text replacements added to getReplacements() during the run of the
-comment|/// tool will be applied and saved after all translation units have been
-comment|/// processed.
+comment|/// This is a refactoring specific version of \see ClangTool. FrontendActions
+comment|/// passed to run() and runAndSave() should add replacements to
+comment|/// getReplacements().
 name|class
 name|RefactoringTool
+range|:
+name|public
+name|ClangTool
 block|{
 name|public
-label|:
+operator|:
 comment|/// \see ClangTool::ClangTool.
 name|RefactoringTool
 argument_list|(
@@ -395,34 +394,57 @@ name|string
 operator|>
 name|SourcePaths
 argument_list|)
-expr_stmt|;
-comment|/// \brief Returns a set of replacements. All replacements added during the
-comment|/// run of the tool will be applied after all translation units have been
-comment|/// processed.
+block|;
+comment|/// \brief Returns the set of replacements to which replacements should
+comment|/// be added during the run of the tool.
 name|Replacements
-modifier|&
+operator|&
 name|getReplacements
-parameter_list|()
-function_decl|;
-comment|/// \see ClangTool::run.
+argument_list|()
+block|;
+comment|/// \brief Call run(), apply all generated replacements, and immediately save
+comment|/// the results to disk.
+comment|///
+comment|/// \returns 0 upon success. Non-zero upon failure.
 name|int
-name|run
-parameter_list|(
+name|runAndSave
+argument_list|(
 name|FrontendActionFactory
-modifier|*
+operator|*
 name|ActionFactory
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
+comment|/// \brief Apply all stored replacements to the given Rewriter.
+comment|///
+comment|/// Replacement applications happen independently of the success of other
+comment|/// applications.
+comment|///
+comment|/// \returns true if all replacements apply. false otherwise.
+name|bool
+name|applyAllReplacements
+argument_list|(
+name|Rewriter
+operator|&
+name|Rewrite
+argument_list|)
+block|;
 name|private
-label|:
-name|ClangTool
-name|Tool
-decl_stmt|;
+operator|:
+comment|/// \brief Write all refactored files to disk.
+name|int
+name|saveRewrittenFiles
+argument_list|(
+name|Rewriter
+operator|&
+name|Rewrite
+argument_list|)
+block|;
+name|private
+operator|:
 name|Replacements
 name|Replace
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -436,7 +458,7 @@ argument|SourceManager&Sources
 argument_list|,
 argument|const Node&NodeToReplace
 argument_list|,
-argument|llvm::StringRef ReplacementText
+argument|StringRef ReplacementText
 argument_list|)
 block|{
 specifier|const

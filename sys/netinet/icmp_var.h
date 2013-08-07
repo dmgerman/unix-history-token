@@ -99,6 +99,23 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|icmpstat
+argument_list|,
+name|icmpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
 end_comment
@@ -112,7 +129,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_icmpstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct icmpstat, icmpstat, name, (val))
 end_define
 
 begin_define
@@ -147,7 +165,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_icmpstat_inc(offsetof(struct icmpstat, name) / sizeof(u_long))
+value|kmod_icmpstat_inc(offsetof(struct icmpstat, name) / sizeof(uint64_t))
 end_define
 
 begin_endif
@@ -215,28 +233,6 @@ name|_net_inet_icmp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|icmpstat
-argument_list|,
-name|icmpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* icmp statistics. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_icmpstat
-value|VNET(icmpstat)
-end_define
 
 begin_function_decl
 specifier|extern

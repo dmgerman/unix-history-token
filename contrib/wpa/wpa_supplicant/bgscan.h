@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - background scan and roaming interface  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - background scan and roaming interface  * Copyright (c) 2009-2010, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -80,6 +80,11 @@ parameter_list|(
 name|void
 modifier|*
 name|priv
+parameter_list|,
+name|struct
+name|wpa_scan_results
+modifier|*
+name|scan_res
 parameter_list|)
 function_decl|;
 name|void
@@ -105,6 +110,15 @@ name|priv
 parameter_list|,
 name|int
 name|above
+parameter_list|,
+name|int
+name|current_signal
+parameter_list|,
+name|int
+name|current_noise
+parameter_list|,
+name|int
+name|current_txrate
 parameter_list|)
 function_decl|;
 block|}
@@ -154,6 +168,11 @@ name|struct
 name|wpa_supplicant
 modifier|*
 name|wpa_s
+parameter_list|,
+name|struct
+name|wpa_scan_results
+modifier|*
+name|scan_res
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -181,6 +200,15 @@ name|wpa_s
 parameter_list|,
 name|int
 name|above
+parameter_list|,
+name|int
+name|current_signal
+parameter_list|,
+name|int
+name|current_noise
+parameter_list|,
+name|int
+name|current_txrate
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -241,6 +269,11 @@ name|struct
 name|wpa_supplicant
 modifier|*
 name|wpa_s
+parameter_list|,
+name|struct
+name|wpa_scan_results
+modifier|*
+name|scan_res
 parameter_list|)
 block|{
 return|return
@@ -276,6 +309,15 @@ name|wpa_s
 parameter_list|,
 name|int
 name|above
+parameter_list|,
+name|int
+name|current_signal
+parameter_list|,
+name|int
+name|current_noise
+parameter_list|,
+name|int
+name|current_txrate
 parameter_list|)
 block|{ }
 end_function

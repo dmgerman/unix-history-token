@@ -112,6 +112,16 @@ literal|0.0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|vzero
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|double
 name|log1p
@@ -188,7 +198,7 @@ return|return
 operator|-
 name|two54
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* log1p(-1)=+inf */
 else|else
@@ -653,6 +663,31 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|log1p
+argument_list|,
+name|log1pl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

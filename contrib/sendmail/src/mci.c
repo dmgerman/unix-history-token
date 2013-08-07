@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.223 2010/03/10 04:35:28 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.224 2013/03/12 15:24:53 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3466,8 +3466,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|LineNumber

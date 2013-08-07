@@ -78,25 +78,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ArrayRecycler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include
@@ -353,6 +359,13 @@ name|MachineInstr
 operator|>
 name|InstructionRecycler
 expr_stmt|;
+comment|// Allocation management for operand arrays on instructions.
+name|ArrayRecycler
+operator|<
+name|MachineOperand
+operator|>
+name|OperandRecycler
+expr_stmt|;
 comment|// Allocation management for basic blocks in function.
 name|Recycler
 operator|<
@@ -388,6 +401,10 @@ comment|/// This is used to limit optimizations which cannot reason
 comment|/// about the control flow of such functions.
 name|bool
 name|ExposesReturnsTwice
+decl_stmt|;
+comment|/// True if the function includes MS-style inline assembly.
+name|bool
+name|HasMSInlineAsm
 decl_stmt|;
 name|MachineFunction
 argument_list|(
@@ -669,6 +686,30 @@ name|B
 parameter_list|)
 block|{
 name|ExposesReturnsTwice
+operator|=
+name|B
+expr_stmt|;
+block|}
+comment|/// Returns true if the function contains any MS-style inline assembly.
+name|bool
+name|hasMSInlineAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMSInlineAsm
+return|;
+block|}
+comment|/// Set a flag that indicates that the function contains MS-style inline
+comment|/// assembly.
+name|void
+name|setHasMSInlineAsm
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasMSInlineAsm
 operator|=
 name|B
 expr_stmt|;
@@ -1270,8 +1311,8 @@ block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal functions used to automatically number MachineBasicBlocks
 comment|//
-comment|/// getNextMBBNumber - Returns the next unique number to be assigned
-comment|/// to a MachineBasicBlock in this MachineFunction.
+comment|/// \brief Adds the MBB to the internal numbering. Returns the unique number
+comment|/// assigned to the MBB.
 comment|///
 name|unsigned
 name|addToMBBNumbering
@@ -1456,6 +1497,60 @@ name|uint64_t
 name|Size
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|ArrayRecycler
+operator|<
+name|MachineOperand
+operator|>
+operator|::
+name|Capacity
+name|OperandCapacity
+expr_stmt|;
+comment|/// Allocate an array of MachineOperands. This is only intended for use by
+comment|/// internal MachineInstr functions.
+name|MachineOperand
+modifier|*
+name|allocateOperandArray
+parameter_list|(
+name|OperandCapacity
+name|Cap
+parameter_list|)
+block|{
+return|return
+name|OperandRecycler
+operator|.
+name|allocate
+argument_list|(
+name|Cap
+argument_list|,
+name|Allocator
+argument_list|)
+return|;
+block|}
+comment|/// Dellocate an array of MachineOperands and recycle the memory. This is
+comment|/// only intended for use by internal MachineInstr functions.
+comment|/// Cap must be the same capacity that was used to allocate the array.
+name|void
+name|deallocateOperandArray
+parameter_list|(
+name|OperandCapacity
+name|Cap
+parameter_list|,
+name|MachineOperand
+modifier|*
+name|Array
+parameter_list|)
+block|{
+name|OperandRecycler
+operator|.
+name|deallocate
+argument_list|(
+name|Cap
+argument_list|,
+name|Array
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// allocateMemRefsArray - Allocate an array to hold MachineMemOperand
 comment|/// pointers.  This array is owned by the MachineFunction.
 name|MachineInstr

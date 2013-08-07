@@ -31,6 +31,12 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acpredef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1064,11 +1070,21 @@ name|char
 modifier|*
 name|Pathname
 decl_stmt|;
+name|char
+name|StringBuffer
+index|[
+literal|48
+index|]
+decl_stmt|;
 name|Predefined
 operator|=
-name|AcpiNsCheckForPredefinedName
+name|AcpiUtMatchPredefinedMethod
 argument_list|(
 name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 if|if
@@ -1111,7 +1127,7 @@ name|Info
 operator|.
 name|ExpectedBtypes
 operator|&
-name|ACPI_BTYPE_PACKAGE
+name|ACPI_RTYPE_PACKAGE
 condition|)
 block|{
 name|Package
@@ -1121,23 +1137,33 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|AcpiOsPrintf
+name|AcpiUtGetExpectedReturnTypes
 argument_list|(
-literal|"%-32s arg %X ret %2.2X"
-argument_list|,
-name|Pathname
-argument_list|,
-name|Predefined
-operator|->
-name|Info
-operator|.
-name|ParamCount
+name|StringBuffer
 argument_list|,
 name|Predefined
 operator|->
 name|Info
 operator|.
 name|ExpectedBtypes
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%-32s Arguments %X, Return Types: %s"
+argument_list|,
+name|Pathname
+argument_list|,
+name|METHOD_GET_ARG_COUNT
+argument_list|(
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|ArgumentList
+argument_list|)
+argument_list|,
+name|StringBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1147,7 +1173,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" PkgType %2.2X ObjType %2.2X Count %2.2X"
+literal|" (PkgType %2.2X, ObjType %2.2X, Count %2.2X)"
 argument_list|,
 name|Package
 operator|->
@@ -1174,13 +1200,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|AcpiNsCheckParameterCount
+comment|/* Check that the declared argument count matches the ACPI spec */
+name|AcpiNsCheckAcpiCompliance
 argument_list|(
 name|Pathname
 argument_list|,
 name|Node
-argument_list|,
-name|ACPI_UINT32_MAX
 argument_list|,
 name|Predefined
 argument_list|)
@@ -1706,7 +1731,7 @@ name|Node
 operator|->
 name|Name
 operator|.
-name|Integer
+name|Ascii
 argument_list|)
 condition|)
 block|{
@@ -1951,11 +1976,12 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_SIZE
+name|Address
+decl_stmt|;
 comment|/* Convert string to object pointer */
-name|ObjDesc
+name|Address
 operator|=
-name|ACPI_TO_POINTER
-argument_list|(
 name|ACPI_STRTOUL
 argument_list|(
 name|ObjectArg
@@ -1964,6 +1990,12 @@ name|NULL
 argument_list|,
 literal|16
 argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|=
+name|ACPI_TO_POINTER
+argument_list|(
+name|Address
 argument_list|)
 expr_stmt|;
 comment|/* Search all nodes in namespace */

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -196,6 +196,14 @@ file|<machine/atomic.h>
 include|#
 directive|include
 file|<sys/debug.h>
+ifdef|#
+directive|ifdef
+name|illumos
+include|#
+directive|include
+file|"zfs.h"
+endif|#
+directive|endif
 define|#
 directive|define
 name|ZFS_EXPORTS_PATH
@@ -326,6 +334,164 @@ name|DTRACE_PROBE
 undef|#
 directive|undef
 name|DTRACE_PROBE
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE */
+ifdef|#
+directive|ifdef
+name|illumos
+define|#
+directive|define
+name|DTRACE_PROBE
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|ZFS_PROBE0(#a)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DTRACE_PROBE1
+undef|#
+directive|undef
+name|DTRACE_PROBE1
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE1 */
+ifdef|#
+directive|ifdef
+name|illumos
+define|#
+directive|define
+name|DTRACE_PROBE1
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|ZFS_PROBE1(#a, (unsigned long)c)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DTRACE_PROBE2
+undef|#
+directive|undef
+name|DTRACE_PROBE2
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE2 */
+ifdef|#
+directive|ifdef
+name|illumos
+define|#
+directive|define
+name|DTRACE_PROBE2
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+define|\
+value|ZFS_PROBE2(#a, (unsigned long)c, (unsigned long)e)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DTRACE_PROBE3
+undef|#
+directive|undef
+name|DTRACE_PROBE3
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE3 */
+ifdef|#
+directive|ifdef
+name|illumos
+define|#
+directive|define
+name|DTRACE_PROBE3
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|,
+name|g
+parameter_list|)
+define|\
+value|ZFS_PROBE3(#a, (unsigned long)c, (unsigned long)e, (unsigned long)g)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DTRACE_PROBE4
+undef|#
+directive|undef
+name|DTRACE_PROBE4
+endif|#
+directive|endif
+comment|/* DTRACE_PROBE4 */
+ifdef|#
+directive|ifdef
+name|illumos
+define|#
+directive|define
+name|DTRACE_PROBE4
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|f
+parameter_list|,
+name|g
+parameter_list|,
+name|h
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|ZFS_PROBE4(#a, (unsigned long)c, (unsigned long)e, (unsigned long)g, \ 	(unsigned long)i)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|illumos
+comment|/*  * We use the comma operator so that this macro can be used without much  * additional code.  For example, "return (EINVAL);" becomes  * "return (SET_ERROR(EINVAL));".  Note that the argument will be evaluated  * twice, so it should not have side effects (e.g. something like:  * "return (SET_ERROR(log_error(EINVAL, info)));" would log the error twice).  */
+define|#
+directive|define
+name|SET_ERROR
+parameter_list|(
+name|err
+parameter_list|)
+value|(ZFS_SET_ERROR(err), err)
+else|#
+directive|else
+comment|/* !illumos */
 define|#
 directive|define
 name|DTRACE_PROBE
@@ -333,15 +499,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE */
-ifdef|#
-directive|ifdef
-name|DTRACE_PROBE1
-undef|#
-directive|undef
-name|DTRACE_PROBE1
 define|#
 directive|define
 name|DTRACE_PROBE1
@@ -353,15 +510,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE1 */
-ifdef|#
-directive|ifdef
-name|DTRACE_PROBE2
-undef|#
-directive|undef
-name|DTRACE_PROBE2
 define|#
 directive|define
 name|DTRACE_PROBE2
@@ -377,15 +525,6 @@ parameter_list|,
 name|e
 parameter_list|)
 value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE2 */
-ifdef|#
-directive|ifdef
-name|DTRACE_PROBE3
-undef|#
-directive|undef
-name|DTRACE_PROBE3
 define|#
 directive|define
 name|DTRACE_PROBE3
@@ -405,15 +544,6 @@ parameter_list|,
 name|g
 parameter_list|)
 value|((void)0)
-endif|#
-directive|endif
-comment|/* DTRACE_PROBE3 */
-ifdef|#
-directive|ifdef
-name|DTRACE_PROBE4
-undef|#
-directive|undef
-name|DTRACE_PROBE4
 define|#
 directive|define
 name|DTRACE_PROBE4
@@ -437,9 +567,16 @@ parameter_list|,
 name|i
 parameter_list|)
 value|((void)0)
+define|#
+directive|define
+name|SET_ERROR
+parameter_list|(
+name|err
+parameter_list|)
+value|(err)
 endif|#
 directive|endif
-comment|/* DTRACE_PROBE4 */
+comment|/* !illumos */
 comment|/*  * Threads  */
 define|#
 directive|define

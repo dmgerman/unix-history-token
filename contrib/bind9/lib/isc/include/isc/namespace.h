@@ -341,6 +341,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|isc_mem_printactive
+value|isc__mem_printactive
+end_define
+
+begin_define
+define|#
+directive|define
 name|isc_mem_printallactive
 value|isc__mem_printallactive
 end_define

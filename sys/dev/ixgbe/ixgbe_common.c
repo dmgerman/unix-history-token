@@ -22,6 +22,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ixgbe_dcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ixgbe_dcb_82599.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ixgbe_api.h"
 end_include
 
@@ -727,6 +739,30 @@ name|check_link
 operator|=
 name|NULL
 expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|dmac_config
+operator|=
+name|NULL
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|dmac_update_tcs
+operator|=
+name|NULL
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|dmac_config_tcs
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -734,11 +770,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_device_supports_autoneg_fc - Check if phy supports autoneg flow  *  control  *  @hw: pointer to hardware structure  *  *  There are several phys that do not support autoneg flow control. This  *  function check the device id to see if the associated phy supports  *  autoneg flow control.  **/
+comment|/**  * ixgbe_device_supports_autoneg_fc - Check if device supports autonegotiation  * of flow control  * @hw: pointer to hardware structure  *  * This function returns TRUE if the device supports flow control  * autonegotiation, and FALSE if it does not.  *  **/
 end_comment
 
 begin_function
-name|s32
+name|bool
 name|ixgbe_device_supports_autoneg_fc
 parameter_list|(
 name|struct
@@ -747,11 +783,89 @@ modifier|*
 name|hw
 parameter_list|)
 block|{
+name|bool
+name|supported
+init|=
+name|FALSE
+decl_stmt|;
+name|ixgbe_link_speed
+name|speed
+decl_stmt|;
+name|bool
+name|link_up
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_device_supports_autoneg_fc"
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|hw
+operator|->
+name|phy
+operator|.
+name|media_type
+condition|)
+block|{
+case|case
+name|ixgbe_media_type_fiber_fixed
+case|:
+case|case
+name|ixgbe_media_type_fiber
+case|:
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|check_link
+argument_list|(
+name|hw
+argument_list|,
+operator|&
+name|speed
+argument_list|,
+operator|&
+name|link_up
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* if link is down, assume supported */
+if|if
+condition|(
+name|link_up
+condition|)
+name|supported
+operator|=
+name|speed
+operator|==
+name|IXGBE_LINK_SPEED_1GB_FULL
+condition|?
+name|TRUE
+else|:
+name|FALSE
+expr_stmt|;
+else|else
+name|supported
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|ixgbe_media_type_backplane
+case|:
+name|supported
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|ixgbe_media_type_copper
+case|:
+comment|/* only some copper devices support flow control autoneg */
 switch|switch
 condition|(
 name|hw
@@ -765,14 +879,37 @@ case|:
 case|case
 name|IXGBE_DEV_ID_X540T
 case|:
-return|return
-name|IXGBE_SUCCESS
-return|;
+case|case
+name|IXGBE_DEV_ID_X540_BYPASS
+case|:
+name|supported
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
-return|return
-name|IXGBE_ERR_FC_NOT_SUPPORTED
-return|;
+name|supported
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
+default|default:
+break|break;
+block|}
+name|ERROR_REPORT2
+argument_list|(
+name|IXGBE_ERROR_UNSUPPORTED
+argument_list|,
+literal|"Device %x does not support flow control autoneg"
+argument_list|,
+name|hw
+operator|->
+name|device_id
+argument_list|)
+expr_stmt|;
+return|return
+name|supported
+return|;
 block|}
 end_function
 
@@ -838,8 +975,10 @@ operator|==
 name|ixgbe_fc_rx_pause
 condition|)
 block|{
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_UNSUPPORTED
+argument_list|,
 literal|"ixgbe_fc_rx_pause not valid in strict IEEE mode\n"
 argument_list|)
 expr_stmt|;
@@ -1102,8 +1241,10 @@ name|IXGBE_TAF_ASM_PAUSE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
 literal|"Flow control param set incorrectly\n"
 argument_list|)
 expr_stmt|;
@@ -1307,8 +1448,6 @@ name|ixgbe_device_supports_autoneg_fc
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|IXGBE_SUCCESS
 operator|)
 condition|)
 block|{
@@ -4020,17 +4159,20 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_bus_info_generic - Generic set PCI bus info  *  @hw: pointer to hardware structure  *  *  Sets the PCI bus info (speed, width, type) within the ixgbe_hw structure  **/
+comment|/**  *  ixgbe_set_pci_config_data_generic - Generic store PCI bus info  *  @hw: pointer to hardware structure  *  @link_status: the link status returned by the PCI config space  *  *  Stores the PCI bus info (speed, width, type) within the ixgbe_hw structure  **/
 end_comment
 
 begin_function
-name|s32
-name|ixgbe_get_bus_info_generic
+name|void
+name|ixgbe_set_pci_config_data_generic
 parameter_list|(
 name|struct
 name|ixgbe_hw
 modifier|*
 name|hw
+parameter_list|,
+name|u16
+name|link_status
 parameter_list|)
 block|{
 name|struct
@@ -4043,14 +4185,6 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
-name|u16
-name|link_status
-decl_stmt|;
-name|DEBUGFUNC
-argument_list|(
-literal|"ixgbe_get_bus_info_generic"
-argument_list|)
-expr_stmt|;
 name|hw
 operator|->
 name|bus
@@ -4058,16 +4192,6 @@ operator|.
 name|type
 operator|=
 name|ixgbe_bus_type_pci_express
-expr_stmt|;
-comment|/* Get the negotiated link width and speed from PCI config space */
-name|link_status
-operator|=
-name|IXGBE_READ_PCIE_WORD
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_PCI_LINK_STATUS
-argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -4196,6 +4320,48 @@ operator|.
 name|set_lan_id
 argument_list|(
 name|hw
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  *  ixgbe_get_bus_info_generic - Generic set PCI bus info  *  @hw: pointer to hardware structure  *  *  Gets the PCI bus info (speed, width, type) then calls helper function to  *  store this data within the ixgbe_hw structure.  **/
+end_comment
+
+begin_function
+name|s32
+name|ixgbe_get_bus_info_generic
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|u16
+name|link_status
+decl_stmt|;
+name|DEBUGFUNC
+argument_list|(
+literal|"ixgbe_get_bus_info_generic"
+argument_list|)
+expr_stmt|;
+comment|/* Get the negotiated link width and speed from PCI config space */
+name|link_status
+operator|=
+name|IXGBE_READ_PCIE_WORD
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_PCI_LINK_STATUS
+argument_list|)
+expr_stmt|;
+name|ixgbe_set_pci_config_data_generic
+argument_list|(
+name|hw
+argument_list|,
+name|link_status
 argument_list|)
 expr_stmt|;
 return|return
@@ -5814,6 +5980,13 @@ name|status
 operator|=
 name|IXGBE_ERR_INVALID_ARGUMENT
 expr_stmt|;
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
+literal|"Invalid EEPROM words"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -5832,6 +6005,13 @@ block|{
 name|status
 operator|=
 name|IXGBE_ERR_EEPROM
+expr_stmt|;
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
+literal|"Invalid EEPROM offset"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -6175,6 +6355,13 @@ name|status
 operator|=
 name|IXGBE_ERR_INVALID_ARGUMENT
 expr_stmt|;
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
+literal|"Invalid EEPROM words"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -6193,6 +6380,13 @@ block|{
 name|status
 operator|=
 name|IXGBE_ERR_EEPROM
+expr_stmt|;
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
+literal|"Invalid EEPROM offset"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -6430,6 +6624,19 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|==
+name|IXGBE_EERD_EEWR_ATTEMPTS
+condition|)
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"EEPROM read/write done polling timed out"
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -6854,10 +7061,11 @@ operator|>=
 name|timeout
 condition|)
 block|{
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
-literal|"SWESMBI Software EEPROM semaphore "
-literal|"not granted.\n"
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"SWESMBI Software EEPROM semaphore not granted.\n"
 argument_list|)
 expr_stmt|;
 name|ixgbe_release_eeprom_semaphore
@@ -6873,8 +7081,10 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
 literal|"Software semaphore SMBI between device drivers "
 literal|"not granted.\n"
 argument_list|)
@@ -8253,8 +8463,10 @@ operator|>=
 name|rar_entries
 condition|)
 block|{
-name|DEBUGOUT1
+name|ERROR_REPORT2
 argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
 literal|"RAR index %d is out of range.\n"
 argument_list|,
 name|index
@@ -8457,8 +8669,10 @@ operator|>=
 name|rar_entries
 condition|)
 block|{
-name|DEBUGOUT1
+name|ERROR_REPORT2
 argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
 literal|"RAR index %d is out of range.\n"
 argument_list|,
 name|index
@@ -10164,8 +10378,10 @@ name|IXGBE_FCCFG_TFCE_802_3X
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
 literal|"Flow control param set incorrectly\n"
 argument_list|)
 expr_stmt|;
@@ -10441,9 +10657,23 @@ name|lp_reg
 operator|)
 operator|)
 condition|)
+block|{
+name|ERROR_REPORT3
+argument_list|(
+name|IXGBE_ERROR_UNSUPPORTED
+argument_list|,
+literal|"Local or link partner's advertised flow control "
+literal|"settings are NULL. Local: %x, link partner: %x\n"
+argument_list|,
+name|adv_reg
+argument_list|,
+name|lp_reg
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_ERR_FC_NOT_NEGOTIATED
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -10673,9 +10903,18 @@ operator|==
 literal|1
 operator|)
 condition|)
+block|{
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"Auto-Negotiation did not complete or timed out"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|pcs_anadv_reg
 operator|=
 name|IXGBE_READ_REG
@@ -10770,9 +11009,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"Auto-Negotiation did not complete"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 if|if
 condition|(
 name|hw
@@ -10803,9 +11051,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_UNSUPPORTED
+argument_list|,
+literal|"Link partner is not AN enabled"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 comment|/* 	 * Read the 10g AN autoc and LP ability registers and resolve 	 * local flow control settings accordingly 	 */
 name|autoc_reg
@@ -10980,9 +11237,18 @@ name|fc
 operator|.
 name|disable_fc_autoneg
 condition|)
+block|{
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_UNSUPPORTED
+argument_list|,
+literal|"Flow control autoneg is disabled"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 name|hw
 operator|->
 name|mac
@@ -11007,9 +11273,18 @@ condition|(
 operator|!
 name|link_up
 condition|)
+block|{
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_SOFTWARE
+argument_list|,
+literal|"The link is down"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 switch|switch
 condition|(
 name|hw
@@ -11062,8 +11337,6 @@ name|ixgbe_device_supports_autoneg_fc
 argument_list|(
 name|hw
 argument_list|)
-operator|==
-name|IXGBE_SUCCESS
 condition|)
 name|ret_val
 operator|=
@@ -11121,6 +11394,127 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ixgbe_pcie_timeout_poll - Return number of times to poll for completion  * @hw: pointer to hardware structure  *  * System-wide timeout range is encoded in PCIe Device Control2 register.  *  * Add 10% to specified maximum and return the number of times to poll for  * completion timeout, in units of 100 microsec.  Never return less than  * 800 = 80 millisec.  */
+end_comment
+
+begin_function
+specifier|static
+name|u32
+name|ixgbe_pcie_timeout_poll
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+block|{
+name|s16
+name|devctl2
+decl_stmt|;
+name|u32
+name|pollcnt
+decl_stmt|;
+name|devctl2
+operator|=
+name|IXGBE_READ_PCIE_WORD
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_PCI_DEVICE_CONTROL2
+argument_list|)
+expr_stmt|;
+name|devctl2
+operator|&=
+name|IXGBE_PCIDEVCTRL2_TIMEO_MASK
+expr_stmt|;
+switch|switch
+condition|(
+name|devctl2
+condition|)
+block|{
+case|case
+name|IXGBE_PCIDEVCTRL2_65_130ms
+case|:
+name|pollcnt
+operator|=
+literal|1300
+expr_stmt|;
+comment|/* 130 millisec */
+break|break;
+case|case
+name|IXGBE_PCIDEVCTRL2_260_520ms
+case|:
+name|pollcnt
+operator|=
+literal|5200
+expr_stmt|;
+comment|/* 520 millisec */
+break|break;
+case|case
+name|IXGBE_PCIDEVCTRL2_1_2s
+case|:
+name|pollcnt
+operator|=
+literal|20000
+expr_stmt|;
+comment|/* 2 sec */
+break|break;
+case|case
+name|IXGBE_PCIDEVCTRL2_4_8s
+case|:
+name|pollcnt
+operator|=
+literal|80000
+expr_stmt|;
+comment|/* 8 sec */
+break|break;
+case|case
+name|IXGBE_PCIDEVCTRL2_17_34s
+case|:
+name|pollcnt
+operator|=
+literal|34000
+expr_stmt|;
+comment|/* 34 sec */
+break|break;
+case|case
+name|IXGBE_PCIDEVCTRL2_50_100us
+case|:
+comment|/* 100 microsecs */
+case|case
+name|IXGBE_PCIDEVCTRL2_1_2ms
+case|:
+comment|/* 2 millisecs */
+case|case
+name|IXGBE_PCIDEVCTRL2_16_32ms
+case|:
+comment|/* 32 millisec */
+case|case
+name|IXGBE_PCIDEVCTRL2_16_32ms_def
+case|:
+comment|/* 32 millisec default */
+default|default:
+name|pollcnt
+operator|=
+literal|800
+expr_stmt|;
+comment|/* 80 millisec minimum */
+break|break;
+block|}
+comment|/* add 10% to spec maximum */
+return|return
+operator|(
+name|pollcnt
+operator|*
+literal|11
+operator|)
+operator|/
+literal|10
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  *  ixgbe_disable_pcie_master - Disable PCI-express master access  *  @hw: pointer to hardware structure  *  *  Disables PCI-Express master access and verifies there are no pending  *  requests. IXGBE_ERR_MASTER_REQUESTS_PENDING is returned if master disable  *  bit hasn't caused the master requests to be disabled, else IXGBE_SUCCESS  *  is returned signifying master requests disabled.  **/
 end_comment
 
@@ -11141,6 +11535,8 @@ name|IXGBE_SUCCESS
 decl_stmt|;
 name|u32
 name|i
+decl_stmt|,
+name|poll
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -11157,7 +11553,7 @@ argument_list|,
 name|IXGBE_CTRL_GIO_DIS
 argument_list|)
 expr_stmt|;
-comment|/* Exit if master requets are blocked */
+comment|/* Exit if master requests are blocked */
 if|if
 condition|(
 operator|!
@@ -11228,6 +11624,13 @@ operator||=
 name|IXGBE_FLAGS_DOUBLE_RESET_REQUIRED
 expr_stmt|;
 comment|/* 	 * Before proceeding, make sure that the PCIe block does not have 	 * transactions pending. 	 */
+name|poll
+operator|=
+name|ixgbe_pcie_timeout_poll
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -11236,7 +11639,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|IXGBE_PCI_MASTER_DISABLE_TIMEOUT
+name|poll
 condition|;
 name|i
 operator|++
@@ -11265,8 +11668,10 @@ goto|goto
 name|out
 goto|;
 block|}
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
 literal|"PCIe transaction pending bit also did not clear.\n"
 argument_list|)
 expr_stmt|;
@@ -11301,6 +11706,8 @@ parameter_list|)
 block|{
 name|u32
 name|gssr
+init|=
+literal|0
 decl_stmt|;
 name|u32
 name|swmask
@@ -11314,22 +11721,34 @@ name|mask
 operator|<<
 literal|5
 decl_stmt|;
-name|s32
+name|u32
 name|timeout
 init|=
 literal|200
+decl_stmt|;
+name|u32
+name|i
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_acquire_swfw_sync"
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|timeout
-condition|)
+condition|;
+name|i
+operator|++
+control|)
 block|{
-comment|/* 		 * SW EEPROM semaphore bit is used for access to all 		 * SW_FW_SYNC/GSSR bits (not just EEPROM) 		 */
+comment|/* 		 * SW NVM semaphore bit is used for access to all 		 * SW_FW_SYNC bits (not just NVM) 		 */
 if|if
 condition|(
 name|ixgbe_get_eeprom_semaphore
@@ -11362,37 +11781,7 @@ name|swmask
 operator|)
 operator|)
 condition|)
-break|break;
-comment|/* 		 * Firmware currently using resource (fwmask) or other software 		 * thread currently using resource (swmask) 		 */
-name|ixgbe_release_eeprom_semaphore
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
-name|msec_delay
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-name|timeout
-operator|--
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|timeout
-condition|)
 block|{
-name|DEBUGOUT
-argument_list|(
-literal|"Driver can't access resource, SW_FW_SYNC timeout.\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|IXGBE_ERR_SWFW_SYNC
-return|;
-block|}
 name|gssr
 operator||=
 name|swmask
@@ -11413,6 +11802,54 @@ argument_list|)
 expr_stmt|;
 return|return
 name|IXGBE_SUCCESS
+return|;
+block|}
+else|else
+block|{
+comment|/* Resource is currently in use by FW or SW */
+name|ixgbe_release_eeprom_semaphore
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+name|msec_delay
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* If time expired clear the bits holding the lock and retry */
+if|if
+condition|(
+name|gssr
+operator|&
+operator|(
+name|fwmask
+operator||
+name|swmask
+operator|)
+condition|)
+name|ixgbe_release_swfw_sync
+argument_list|(
+name|hw
+argument_list|,
+name|gssr
+operator|&
+operator|(
+name|fwmask
+operator||
+name|swmask
+operator|)
+argument_list|)
+expr_stmt|;
+name|msec_delay
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+return|return
+name|IXGBE_ERR_SWFW_SYNC
 return|;
 block|}
 end_function
@@ -12130,12 +12567,17 @@ modifier|*
 name|san_mac_offset
 parameter_list|)
 block|{
+name|s32
+name|ret_val
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_get_san_mac_addr_offset"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First read the EEPROM pointer to see if the MAC addresses are 	 * available. 	 */
+name|ret_val
+operator|=
 name|hw
 operator|->
 name|eeprom
@@ -12151,8 +12593,23 @@ argument_list|,
 name|san_mac_offset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|ERROR_REPORT2
+argument_list|(
+name|IXGBE_ERROR_INVALID_STATE
+argument_list|,
+literal|"eeprom at offset %d failed"
+argument_list|,
+name|IXGBE_SAN_MAC_ADDR_PTR
+argument_list|)
+expr_stmt|;
+block|}
 return|return
-name|IXGBE_SUCCESS
+name|ret_val
 return|;
 block|}
 end_function
@@ -12183,12 +12640,17 @@ decl_stmt|;
 name|u8
 name|i
 decl_stmt|;
+name|s32
+name|ret_val
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_get_san_mac_addr_generic"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First read the EEPROM pointer to see if the MAC addresses are 	 * available.  If they're not, no point in calling set_lan_id() here. 	 */
+name|ret_val
+operator|=
 name|ixgbe_get_san_mac_addr_offset
 argument_list|(
 name|hw
@@ -12199,44 +12661,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ret_val
+operator|||
 name|san_mac_offset
 operator|==
 literal|0
-operator|)
 operator|||
-operator|(
 name|san_mac_offset
 operator|==
 literal|0xFFFF
-operator|)
 condition|)
-block|{
-comment|/* 		 * No addresses available in this EEPROM.  It's not an 		 * error though, so just wipe the local address and return. 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|6
-condition|;
-name|i
-operator|++
-control|)
-name|san_mac_addr
-index|[
-name|i
-index|]
-operator|=
-literal|0xFF
-expr_stmt|;
 goto|goto
 name|san_mac_addr_out
 goto|;
-block|}
 comment|/* make sure we know which port we need to program */
 name|hw
 operator|->
@@ -12284,6 +12721,8 @@ name|i
 operator|++
 control|)
 block|{
+name|ret_val
+operator|=
 name|hw
 operator|->
 name|eeprom
@@ -12300,6 +12739,24 @@ operator|&
 name|san_mac_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+block|{
+name|ERROR_REPORT2
+argument_list|(
+name|IXGBE_ERROR_INVALID_STATE
+argument_list|,
+literal|"eeprom read at offset %d failed"
+argument_list|,
+name|san_mac_offset
+argument_list|)
+expr_stmt|;
+goto|goto
+name|san_mac_addr_out
+goto|;
+block|}
 name|san_mac_addr
 index|[
 name|i
@@ -12336,8 +12793,32 @@ name|san_mac_offset
 operator|++
 expr_stmt|;
 block|}
+return|return
+name|IXGBE_SUCCESS
+return|;
 name|san_mac_addr_out
 label|:
+comment|/* 	 * No addresses available in this EEPROM.  It's not an 	 * error though, so just wipe the local address and return. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|6
+condition|;
+name|i
+operator|++
+control|)
+name|san_mac_addr
+index|[
+name|i
+index|]
+operator|=
+literal|0xFF
+expr_stmt|;
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -12363,9 +12844,7 @@ name|san_mac_addr
 parameter_list|)
 block|{
 name|s32
-name|status
-init|=
-name|IXGBE_SUCCESS
+name|ret_val
 decl_stmt|;
 name|u16
 name|san_mac_data
@@ -12381,6 +12860,8 @@ literal|"ixgbe_set_san_mac_addr_generic"
 argument_list|)
 expr_stmt|;
 comment|/* Look for SAN mac address pointer.  If not defined, return */
+name|ret_val
+operator|=
 name|ixgbe_get_san_mac_addr_offset
 argument_list|(
 name|hw
@@ -12391,27 +12872,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ret_val
+operator|||
 name|san_mac_offset
 operator|==
 literal|0
-operator|)
 operator|||
-operator|(
 name|san_mac_offset
 operator|==
 literal|0xFFFF
-operator|)
 condition|)
-block|{
-name|status
-operator|=
+return|return
 name|IXGBE_ERR_NO_SAN_ADDR_PTR
-expr_stmt|;
-goto|goto
-name|san_mac_addr_out
-goto|;
-block|}
+return|;
 comment|/* Make sure we know which port we need to write */
 name|hw
 operator|->
@@ -12515,10 +12988,8 @@ name|san_mac_offset
 operator|++
 expr_stmt|;
 block|}
-name|san_mac_addr_out
-label|:
 return|return
-name|status
+name|IXGBE_SUCCESS
 return|;
 block|}
 end_function
@@ -12984,8 +13455,10 @@ operator|>=
 name|rar_entries
 condition|)
 block|{
-name|DEBUGOUT1
+name|ERROR_REPORT2
 argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
 literal|"RAR index %d is out of range.\n"
 argument_list|,
 name|rar
@@ -13221,8 +13694,10 @@ operator|>=
 name|rar_entries
 condition|)
 block|{
-name|DEBUGOUT1
+name|ERROR_REPORT2
 argument_list|(
+name|IXGBE_ERROR_ARGUMENT
+argument_list|,
 literal|"RAR index %d is out of range.\n"
 argument_list|,
 name|rar
@@ -13587,8 +14062,10 @@ name|first_empty_slot
 expr_stmt|;
 else|else
 block|{
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_SOFTWARE
+argument_list|,
 literal|"No space in VLVF.\n"
 argument_list|)
 expr_stmt|;
@@ -14553,6 +15030,12 @@ operator|=
 literal|0xFFFF
 expr_stmt|;
 comment|/* check if alternative SAN MAC is supported */
+name|offset
+operator|=
+name|IXGBE_ALT_SAN_MAC_ADDR_BLK_PTR
+expr_stmt|;
+if|if
+condition|(
 name|hw
 operator|->
 name|eeprom
@@ -14563,12 +15046,15 @@ name|read
 argument_list|(
 name|hw
 argument_list|,
-name|IXGBE_ALT_SAN_MAC_ADDR_BLK_PTR
+name|offset
 argument_list|,
 operator|&
 name|alt_san_mac_blk_offset
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|wwn_prefix_err
+goto|;
 if|if
 condition|(
 operator|(
@@ -14593,6 +15079,8 @@ name|alt_san_mac_blk_offset
 operator|+
 name|IXGBE_ALT_SAN_MAC_ADDR_CAPS_OFFSET
 expr_stmt|;
+if|if
+condition|(
 name|hw
 operator|->
 name|eeprom
@@ -14608,7 +15096,10 @@ argument_list|,
 operator|&
 name|caps
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|wwn_prefix_err
+goto|;
 if|if
 condition|(
 operator|!
@@ -14628,6 +15119,8 @@ name|alt_san_mac_blk_offset
 operator|+
 name|IXGBE_ALT_SAN_MAC_ADDR_WWNN_OFFSET
 expr_stmt|;
+if|if
+condition|(
 name|hw
 operator|->
 name|eeprom
@@ -14642,13 +15135,26 @@ name|offset
 argument_list|,
 name|wwnn_prefix
 argument_list|)
+condition|)
+block|{
+name|ERROR_REPORT2
+argument_list|(
+name|IXGBE_ERROR_INVALID_STATE
+argument_list|,
+literal|"eeprom read at offset %d failed"
+argument_list|,
+name|offset
+argument_list|)
 expr_stmt|;
+block|}
 name|offset
 operator|=
 name|alt_san_mac_blk_offset
 operator|+
 name|IXGBE_ALT_SAN_MAC_ADDR_WWPN_OFFSET
 expr_stmt|;
+if|if
+condition|(
 name|hw
 operator|->
 name|eeprom
@@ -14663,9 +15169,26 @@ name|offset
 argument_list|,
 name|wwpn_prefix
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|wwn_prefix_err
+goto|;
 name|wwn_prefix_out
 label|:
+return|return
+name|IXGBE_SUCCESS
+return|;
+name|wwn_prefix_err
+label|:
+name|ERROR_REPORT2
+argument_list|(
+name|IXGBE_ERROR_INVALID_STATE
+argument_list|,
+literal|"eeprom read at offset %d failed"
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
 return|return
 name|IXGBE_SUCCESS
 return|;
@@ -16363,6 +16886,72 @@ argument_list|,
 name|hlreg0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * ixgbe_dcb_get_rtrup2tc_generic - read rtrup2tc reg  * @hw: pointer to hardware structure  * @map: pointer to u8 arr for returning map  *  * Read the rtrup2tc HW register and resolve its content into map  **/
+end_comment
+
+begin_function
+name|void
+name|ixgbe_dcb_get_rtrup2tc_generic
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+modifier|*
+name|map
+parameter_list|)
+block|{
+name|u32
+name|reg
+decl_stmt|,
+name|i
+decl_stmt|;
+name|reg
+operator|=
+name|IXGBE_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_RTRUP2TC
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|IXGBE_DCB_MAX_USER_PRIORITY
+condition|;
+name|i
+operator|++
+control|)
+name|map
+index|[
+name|i
+index|]
+operator|=
+name|IXGBE_RTRUP2TC_UP_MASK
+operator|&
+operator|(
+name|reg
+operator|>>
+operator|(
+name|i
+operator|*
+name|IXGBE_RTRUP2TC_UP_SHIFT
+operator|)
+operator|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

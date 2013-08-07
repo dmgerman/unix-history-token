@@ -304,7 +304,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ahc_isa_probe %d: ioport 0x%x "
+literal|"ahc_isa_identify %d: ioport 0x%x "
 literal|"alloc failed\n"
 argument_list|,
 name|slot

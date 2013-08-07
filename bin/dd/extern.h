@@ -88,7 +88,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|summaryx
+name|siginfo_handler
 parameter_list|(
 name|int
 parameter_list|)
@@ -236,6 +236,14 @@ begin_decl_stmt
 specifier|extern
 name|char
 name|fill_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|sig_atomic_t
+name|need_summary
 decl_stmt|;
 end_decl_stmt
 

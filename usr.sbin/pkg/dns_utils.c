@@ -273,6 +273,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|dns_srvinfo
+operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;

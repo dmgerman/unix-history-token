@@ -539,6 +539,11 @@ init|=
 literal|100
 block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_ANT_DIV_COMB
+init|=
+literal|105
+block|,
+comment|/* Enable antenna diversity/combining */
 name|HAL_CAP_PHYRESTART_CLR_WAR
 init|=
 literal|106
@@ -652,6 +657,11 @@ init|=
 literal|246
 block|,
 comment|/* Enforce TXOP if supported */
+name|HAL_CAP_RX_LNA_MIXING
+init|=
+literal|247
+block|,
+comment|/* RX hardware uses LNA mixing */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -1666,6 +1676,34 @@ block|,
 name|HAL_GPIO_OUTPUT_MUX_AS_TX_FRAME
 init|=
 literal|6
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_WLAN_DATA
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_WLAN_CLK
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_BT_DATA
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_MCI_BT_CLK
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_WL_IN_TX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_WL_IN_RX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_BT_IN_TX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_BT_IN_RX
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_RUCKUS_STROBE
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_RUCKUS_DATA
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_SMARTANT_CTRL0
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_SMARTANT_CTRL1
+block|,
+name|HAL_GPIO_OUTPUT_MUX_AS_SMARTANT_CTRL2
+block|,
+name|HAL_GPIO_OUTPUT_MUX_NUM_ENTRIES
 block|}
 name|HAL_GPIO_MUX_TYPE
 typedef|;
@@ -3313,6 +3351,12 @@ comment|/* Change transmit power */
 name|HAL_BT_COEX_ANTENNA_DIVERSITY
 block|,
 comment|/* Enable RX diversity for Kite */
+name|HAL_BT_COEX_MCI_MAX_TX_PWR
+block|,
+comment|/* Set max tx power for concurrent tx */
+name|HAL_BT_COEX_MCI_FTP_STOMP_RX
+block|,
+comment|/* Use a different weight for stomp low */
 block|}
 name|HAL_BT_COEX_SET_PARAMETER
 typedef|;
@@ -3727,6 +3771,9 @@ name|ath_hal_ext_atten_margin_cfg
 decl_stmt|;
 name|int
 name|ath_hal_war70c
+decl_stmt|;
+name|uint32_t
+name|ath_hal_mci_config
 decl_stmt|;
 block|}
 name|HAL_OPS_CONFIG
@@ -4790,27 +4837,6 @@ parameter_list|,
 specifier|const
 name|HAL_NODE_STATS
 modifier|*
-parameter_list|)
-function_decl|;
-name|void
-name|__ahdecl
-function_decl|(
-modifier|*
-name|ah_rxAntCombDiversity
-function_decl|)
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|struct
-name|ath_rx_status
-modifier|*
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 comment|/* Misc Functions */
@@ -6268,7 +6294,7 @@ name|void
 name|__ahdecl
 function_decl|(
 modifier|*
-name|ah_btcoexSetParameter
+name|ah_btCoexSetParameter
 function_decl|)
 parameter_list|(
 name|struct
@@ -6301,6 +6327,37 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* LNA diversity configuration */
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_divLnaConfGet
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_ANT_COMB_CONFIG
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_divLnaConfSet
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_ANT_COMB_CONFIG
 modifier|*
 parameter_list|)
 function_decl|;

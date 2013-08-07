@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Control interface for shared AP commands  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Control interface for shared AP commands  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -78,6 +78,40 @@ name|buf
 parameter_list|,
 name|size_t
 name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hostapd_ctrl_iface_deauthenticate
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|txtaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|hostapd_ctrl_iface_disassociate
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|txtaddr
 parameter_list|)
 function_decl|;
 end_function_decl

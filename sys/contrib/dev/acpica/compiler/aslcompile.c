@@ -207,6 +207,9 @@ case|case
 name|ASL_FILE_C_SOURCE_OUTPUT
 case|:
 case|case
+name|ASL_FILE_C_OFFSET_OUTPUT
+case|:
+case|case
 name|ASL_FILE_C_INCLUDE_OUTPUT
 case|:
 name|Prefix
@@ -345,6 +348,9 @@ case|case
 name|ASL_FILE_C_SOURCE_OUTPUT
 case|:
 case|case
+name|ASL_FILE_C_OFFSET_OUTPUT
+case|:
+case|case
 name|ASL_FILE_C_INCLUDE_OUTPUT
 case|:
 name|Prefix
@@ -404,6 +410,9 @@ condition|)
 block|{
 case|case
 name|ASL_FILE_C_SOURCE_OUTPUT
+case|:
+case|case
+name|ASL_FILE_C_OFFSET_OUTPUT
 case|:
 case|case
 name|ASL_FILE_C_INCLUDE_OUTPUT
@@ -2283,6 +2292,24 @@ name|TRUE
 expr_stmt|;
 block|}
 comment|/* Close all open files */
+comment|/*      * Take care with the preprocessor file (.i), it might be the same      * as the "input" file, depending on where the compiler has terminated      * or aborted. Prevent attempt to close the same file twice in      * loop below.      */
+if|if
+condition|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Handle
+operator|==
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Handle
+condition|)
+block|{
 name|Gbl_Files
 index|[
 name|ASL_FILE_PREPROCESSOR
@@ -2292,7 +2319,8 @@ name|Handle
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* the .i file is same as source file */
+block|}
+comment|/* Close the standard I/O files */
 for|for
 control|(
 name|i

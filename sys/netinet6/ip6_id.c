@@ -648,7 +648,7 @@ name|p
 operator|->
 name|ru_reseed
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|p
 operator|->
@@ -708,7 +708,7 @@ name|p
 operator|->
 name|ru_max
 operator|||
-name|time_second
+name|time_uptime
 operator|>
 name|p
 operator|->

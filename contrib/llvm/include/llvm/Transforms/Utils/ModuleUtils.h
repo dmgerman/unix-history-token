@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TRANSFORMS_UTILS_MODULE_UTILS_H
+name|LLVM_TRANSFORMS_UTILS_MODULEUTILS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TRANSFORMS_UTILS_MODULE_UTILS_H
+name|LLVM_TRANSFORMS_UTILS_MODULEUTILS_H
 end_define
 
 begin_decl_stmt
@@ -117,7 +117,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//  LLVM_TRANSFORMS_UTILS_MODULE_UTILS_H
+comment|//  LLVM_TRANSFORMS_UTILS_MODULEUTILS_H
 end_comment
 
 end_unit

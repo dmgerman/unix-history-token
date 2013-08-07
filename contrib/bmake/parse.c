@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.185 2012/06/12 19:21:51 joerg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.189 2013/06/18 19:31:27 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.185 2012/06/12 19:21:51 joerg Exp $"
+literal|"$NetBSD: parse.c,v 1.189 2013/06/18 19:31:27 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.185 2012/06/12 19:21:51 joerg Exp $"
+literal|"$NetBSD: parse.c,v 1.189 2013/06/18 19:31:27 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -241,7 +241,6 @@ typedef|typedef
 struct|struct
 name|IFile
 block|{
-specifier|const
 name|char
 modifier|*
 name|fname
@@ -420,6 +419,9 @@ comment|/* .SILENT */
 name|SingleShell
 block|,
 comment|/* .SINGLESHELL */
+name|Stale
+block|,
+comment|/* .STALE */
 name|Suffixes
 block|,
 comment|/* .SUFFIXES */
@@ -953,6 +955,14 @@ block|{
 literal|".SINGLESHELL"
 block|,
 name|SingleShell
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|".STALE"
+block|,
+name|Stale
 block|,
 literal|0
 block|}
@@ -3304,6 +3314,15 @@ argument_list|,
 name|TARG_NOHASH
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|doing_depend
+condition|)
+name|ParseMark
+argument_list|(
+name|cohort
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make the cohort invisible as well to avoid duplicating it into 	 * other variables. True, parents of this target won't tend to do 	 * anything with their local variables, but better safe than 	 * sorry. (I think this is pointless now, since the relevant list 	 * traversals will no longer see this node anyway. -mycroft) 	 */
 name|cohort
 operator|->
@@ -3510,6 +3529,15 @@ argument_list|,
 name|TARG_NOHASH
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|doing_depend
+condition|)
+name|ParseMark
+argument_list|(
+name|gn
+argument_list|)
+expr_stmt|;
 name|gn
 operator|->
 name|type
@@ -3579,6 +3607,15 @@ argument_list|(
 name|src
 argument_list|,
 name|TARG_CREATE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|doing_depend
+condition|)
+name|ParseMark
+argument_list|(
+name|gn
 argument_list|)
 expr_stmt|;
 if|if
@@ -3667,6 +3704,15 @@ argument_list|(
 name|src
 argument_list|,
 name|TARG_CREATE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|doing_depend
+condition|)
+name|ParseMark
+argument_list|(
+name|gn
 argument_list|)
 expr_stmt|;
 if|if
@@ -4271,7 +4317,7 @@ index|]
 operator|.
 name|op
 expr_stmt|;
-comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.NOPATH		Don't search for file in the path 		 *	.BEGIN 		 *	.END 		 *	.ERROR 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NULL 		 */
+comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.NOPATH		Don't search for file in the path 		 *	.STALE 		 *	.BEGIN 		 *	.END 		 *	.ERROR 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NULL 		 */
 switch|switch
 condition|(
 name|specType
@@ -4331,6 +4377,9 @@ case|case
 name|End
 case|:
 case|case
+name|Stale
+case|:
+case|case
 name|dotError
 case|:
 case|case
@@ -4343,6 +4392,15 @@ argument_list|(
 name|line
 argument_list|,
 name|TARG_CREATE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|doing_depend
+condition|)
+name|ParseMark
+argument_list|(
+name|gn
 argument_list|)
 expr_stmt|;
 name|gn
@@ -4631,6 +4689,15 @@ name|targName
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|doing_depend
+condition|)
+name|ParseMark
+argument_list|(
+name|gn
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4865,6 +4932,9 @@ expr_stmt|;
 break|break;
 case|case
 name|Default
+case|:
+case|case
+name|Stale
 case|:
 case|case
 name|Begin
@@ -7655,7 +7725,10 @@ name|curFile
 operator|->
 name|fname
 operator|=
+name|bmake_strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|curFile
 operator|->
@@ -7717,6 +7790,19 @@ name|NULL
 condition|)
 block|{
 comment|/* Was all a waste of time ... */
+if|if
+condition|(
+name|curFile
+operator|->
+name|fname
+condition|)
+name|free
+argument_list|(
+name|curFile
+operator|->
+name|fname
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|curFile
@@ -8068,6 +8154,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|*
+name|value
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* terminate variable */
 comment|/*      * Expand the value before putting it in the environment.      */
 name|value
 operator|=

@@ -50,20 +50,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_SCALAREVOLUTION_EXPANDER_H
+name|LLVM_ANALYSIS_SCALAREVOLUTIONEXPANDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_SCALAREVOLUTION_EXPANDER_H
+name|LLVM_ANALYSIS_SCALAREVOLUTIONEXPANDER_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/IRBuilder.h"
-end_include
 
 begin_include
 include|#
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/ScalarEvolutionNormalization.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_include
@@ -100,7 +100,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|TargetLowering
+name|TargetTransformInfo
 decl_stmt|;
 comment|/// Return true if the given expression is safe to expand in the sense that
 comment|/// all materialized values are safe to speculate.
@@ -141,6 +141,7 @@ name|char
 modifier|*
 name|IVName
 decl_stmt|;
+comment|// InsertedExpressions caches Values for reuse, so must track RAUW.
 name|std
 operator|::
 name|map
@@ -157,13 +158,14 @@ name|Instruction
 operator|*
 operator|>
 operator|,
-name|AssertingVH
+name|TrackingVH
 operator|<
 name|Value
 operator|>
 expr|>
 name|InsertedExpressions
 expr_stmt|;
+comment|// InsertedValues only flags inserted instructions so needs no RAUW.
 name|std
 operator|::
 name|set
@@ -453,9 +455,9 @@ operator|&
 name|DeadInsts
 argument_list|,
 specifier|const
-name|TargetLowering
+name|TargetTransformInfo
 operator|*
-name|TLI
+name|TTI
 operator|=
 name|NULL
 argument_list|)

@@ -1764,10 +1764,10 @@ name|int
 name|ch
 parameter_list|,
 name|int
-name|b16
+name|stereo
 parameter_list|,
 name|int
-name|stereo
+name|b16
 parameter_list|,
 name|u_int32_t
 name|rate

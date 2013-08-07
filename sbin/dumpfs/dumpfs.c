@@ -2351,7 +2351,34 @@ operator|->
 name|fs_avgfpdir
 argument_list|)
 expr_stmt|;
-comment|/* -i is dumb */
+name|printf
+argument_list|(
+literal|"-i %jd "
+argument_list|,
+name|fragroundup
+argument_list|(
+name|fs
+argument_list|,
+name|lblktosize
+argument_list|(
+name|fs
+argument_list|,
+name|fragstoblks
+argument_list|(
+name|fs
+argument_list|,
+name|fs
+operator|->
+name|fs_fpg
+argument_list|)
+argument_list|)
+operator|/
+name|fs
+operator|->
+name|fs_ipg
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fs
@@ -2378,7 +2405,28 @@ argument_list|(
 literal|"-J "
 argument_list|)
 expr_stmt|;
-comment|/* -k..l unimplemented */
+name|printf
+argument_list|(
+literal|"-k %jd "
+argument_list|,
+name|fs
+operator|->
+name|fs_metaspace
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_flags
+operator|&
+name|FS_MULTILABEL
+condition|)
+name|printf
+argument_list|(
+literal|"-l "
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"-m %d "

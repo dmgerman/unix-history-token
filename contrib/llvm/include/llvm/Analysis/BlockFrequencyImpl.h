@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/BasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/BasicBlock.h"
 end_include
 
 begin_include
@@ -116,13 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -1491,6 +1491,8 @@ operator|->
 name|begin
 argument_list|()
 block|;
+name|std
+operator|::
 name|copy
 argument_list|(
 name|po_begin
@@ -1503,6 +1505,8 @@ argument_list|(
 name|EntryBlock
 argument_list|)
 argument_list|,
+name|std
+operator|::
 name|back_inserter
 argument_list|(
 name|POT

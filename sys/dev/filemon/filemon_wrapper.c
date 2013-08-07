@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -2413,6 +2419,13 @@ name|msgbufr
 argument_list|,
 name|len
 argument_list|)
+expr_stmt|;
+name|filemon
+operator|->
+name|pid
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 comment|/* Unlock the found filemon structure. */

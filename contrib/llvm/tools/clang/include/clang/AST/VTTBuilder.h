@@ -362,9 +362,6 @@ name|bool
 name|GenerateDefinition
 decl_stmt|;
 comment|/// AddVTablePointer - Add a vtable pointer to the VTT currently being built.
-comment|///
-comment|/// \param AddressPoints - If the vtable is a construction vtable, this has
-comment|/// the address points for it.
 name|void
 name|AddVTablePointer
 parameter_list|(
@@ -394,9 +391,6 @@ comment|/// for the given base subobject.
 comment|///
 comment|/// \param BaseIsMorallyVirtual whether the base subobject is a virtual base
 comment|/// or a direct or indirect base of a virtual base.
-comment|///
-comment|/// \param AddressPoints - If the vtable is a construction vtable, this has
-comment|/// the address points for it.
 name|void
 name|LayoutSecondaryVirtualPointers
 parameter_list|(
@@ -421,9 +415,6 @@ parameter_list|)
 function_decl|;
 comment|/// LayoutSecondaryVirtualPointers - Lay out the secondary virtual pointers
 comment|/// for the given base subobject.
-comment|///
-comment|/// \param AddressPoints - If the vtable is a construction vtable, this has
-comment|/// the address points for it.
 name|void
 name|LayoutSecondaryVirtualPointers
 parameter_list|(

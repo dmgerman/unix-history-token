@@ -124,7 +124,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Create the spinlocks for use at interrupt level */
+comment|/* Create the spinlocks for use at interrupt level or for speed */
 name|Status
 operator|=
 name|AcpiOsCreateLock
@@ -153,6 +153,28 @@ name|AcpiOsCreateLock
 argument_list|(
 operator|&
 name|AcpiGbl_HardwareLock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiOsCreateLock
+argument_list|(
+operator|&
+name|AcpiGbl_ReferenceCountLock
 argument_list|)
 expr_stmt|;
 if|if
@@ -263,6 +285,11 @@ expr_stmt|;
 name|AcpiOsDeleteLock
 argument_list|(
 name|AcpiGbl_HardwareLock
+argument_list|)
+expr_stmt|;
+name|AcpiOsDeleteLock
+argument_list|(
+name|AcpiGbl_ReferenceCountLock
 argument_list|)
 expr_stmt|;
 comment|/* Delete the reader/writer lock */

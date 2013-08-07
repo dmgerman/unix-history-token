@@ -650,8 +650,17 @@ operator||
 name|bit
 argument_list|)
 expr_stmt|;
+comment|/*  	 * AM335x and OMAP4>= ES2 have an updated reset logic. 	 * Monitor a 0->1 transition first. 	 */
 if|if
 condition|(
+operator|(
+name|ti_chip
+argument_list|()
+operator|==
+name|CHIP_AM335X
+operator|)
+operator|||
+operator|(
 operator|(
 name|ti_chip
 argument_list|()
@@ -665,9 +674,9 @@ argument_list|()
 operator|>
 name|OMAP4430_REV_ES1_0
 operator|)
+operator|)
 condition|)
 block|{
-comment|/* OMAP4 ES2 and greater has an updated reset logic. 		 * Monitor a 0->1 transition first 		 */
 name|attempts
 operator|=
 literal|10000
@@ -4510,6 +4519,8 @@ name|capa
 decl_stmt|;
 name|uint32_t
 name|con
+decl_stmt|,
+name|sysconfig
 decl_stmt|;
 comment|/* 1: Enable the controller and interface/functional clocks */
 name|clk
@@ -4565,13 +4576,26 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 2: Issue a softreset to the controller */
+name|sysconfig
+operator|=
+name|ti_mmchs_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|MMCHS_SYSCONFIG
+argument_list|)
+expr_stmt|;
+name|sysconfig
+operator||=
+name|MMCHS_SYSCONFIG_SRST
+expr_stmt|;
 name|ti_mmchs_write_4
 argument_list|(
 name|sc
 argument_list|,
 name|MMCHS_SYSCONFIG
 argument_list|,
-literal|0x0002
+name|sysconfig
 argument_list|)
 expr_stmt|;
 name|timeout

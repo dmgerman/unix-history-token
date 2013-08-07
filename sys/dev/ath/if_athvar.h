@@ -479,7 +479,7 @@ name|struct
 name|mtx
 name|an_mtx
 decl_stmt|;
-comment|/* protecting the ath_node state */
+comment|/* protecting the rate control state */
 name|uint32_t
 name|an_swq_depth
 decl_stmt|;
@@ -488,6 +488,10 @@ name|int
 name|clrdmask
 decl_stmt|;
 comment|/* has clrdmask been set */
+name|uint32_t
+name|an_leak_count
+decl_stmt|;
+comment|/* How many frames to leak during pause */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -702,6 +706,10 @@ index|[
 name|ATH_MAX_SCATTER
 index|]
 decl_stmt|;
+name|uint32_t
+name|bf_nextfraglen
+decl_stmt|;
+comment|/* length of next fragment */
 comment|/* Completion function to call on TX complete (fail or not) */
 comment|/* 	 * "fail" here is set to 1 if the queue entries were removed 	 * through a call to ath_tx_draintxq(). 	 */
 name|void
@@ -1019,11 +1027,12 @@ comment|/* WME AC */
 name|u_int
 name|axq_flags
 decl_stmt|;
+comment|//#define	ATH_TXQ_PUTPENDING	0x0001		/* ath_hal_puttxbuf pending */
 define|#
 directive|define
-name|ATH_TXQ_PUTPENDING
-value|0x0001
-comment|/* ath_hal_puttxbuf pending */
+name|ATH_TXQ_PUTRUNNING
+value|0x0002
+comment|/* ath_hal_puttxbuf has been called */
 name|u_int
 name|axq_depth
 decl_stmt|;
@@ -1159,6 +1168,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_TXQ_UNLOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_assert(&(_tq)->axq_lock,	\ 					    MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_NODE_LOCK
 parameter_list|(
 name|_an
@@ -1279,7 +1298,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1293,7 +1312,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1307,7 +1326,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	(_tq)->an->an_swq_depth--; \ } while (0)
 end_define
 
 begin_define
@@ -1347,7 +1366,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1361,7 +1380,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	atomic_add_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->filtq.tid_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ 	(_tq)->an->an_swq_depth++; \ } while (0)
 end_define
 
 begin_define
@@ -1375,7 +1394,7 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	atomic_subtract_rel_32(&((_tq)->an)->an_swq_depth, 1); \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->filtq.tid_q, _elm, _field); \ 	(_tq)->axq_depth--; \ 	(_tq)->an->an_swq_depth--; \ } while (0)
 end_define
 
 begin_define
@@ -1501,6 +1520,21 @@ name|ieee80211_node
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|av_recv_pspoll
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 block|}
@@ -1914,6 +1948,13 @@ name|HAL_NUM_RX_QUEUES
 index|]
 decl_stmt|;
 comment|/* HP/LP queues */
+name|ath_bufhead
+name|sc_rx_rxlist
+index|[
+name|HAL_NUM_RX_QUEUES
+index|]
+decl_stmt|;
+comment|/* deferred RX completion */
 name|struct
 name|ath_tx_methods
 name|sc_tx
@@ -2243,7 +2284,22 @@ decl_stmt|,
 name|sc_tx_stbc
 range|:
 literal|1
+decl_stmt|,
+name|sc_hasenforcetxop
+range|:
+literal|1
+decl_stmt|,
+comment|/* support enforce TxOP */
+name|sc_hasdivcomb
+range|:
+literal|1
+decl_stmt|,
+comment|/* RX diversity combining */
+name|sc_rx_lnamixer
+range|:
+literal|1
 decl_stmt|;
+comment|/* RX using LNA mixing */
 name|int
 name|sc_cabq_enable
 decl_stmt|;
@@ -2468,10 +2524,6 @@ name|ath_bufhead
 name|sc_rxbuf
 decl_stmt|;
 comment|/* receive buffer */
-name|ath_bufhead
-name|sc_rx_rxlist
-decl_stmt|;
-comment|/* deferred RX completion */
 name|u_int32_t
 modifier|*
 name|sc_rxlink
@@ -2587,11 +2639,6 @@ name|task
 name|sc_txqtask
 decl_stmt|;
 comment|/* tx proc processing */
-name|struct
-name|task
-name|sc_txpkttask
-decl_stmt|;
-comment|/* tx frame processing */
 name|struct
 name|ath_descdma
 name|sc_txcompdma
@@ -2771,23 +2818,23 @@ modifier|*
 name|sc_eepromdata
 decl_stmt|;
 comment|/* Local eeprom data, if AR9100 */
-name|int
+name|uint32_t
 name|sc_txchainmask
 decl_stmt|;
 comment|/* hardware TX chainmask */
-name|int
+name|uint32_t
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* hardware RX chainmask */
-name|int
+name|uint32_t
 name|sc_cur_txchainmask
 decl_stmt|;
 comment|/* currently configured TX chainmask */
-name|int
+name|uint32_t
 name|sc_cur_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
-name|int
+name|uint32_t
 name|sc_rts_aggr_limit
 decl_stmt|;
 comment|/* TX limit on RTS aggregates */
@@ -2800,16 +2847,25 @@ name|sc_delim_min_pad
 decl_stmt|;
 comment|/* Minimum delimiter count */
 comment|/* Queue limits */
-comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
+comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * + A node in powersave shouldn't be allowed to exhaust 	 *   all available mbufs; 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
+name|int
+name|sc_txq_node_maxdepth
+decl_stmt|;
 name|int
 name|sc_txq_data_minfree
 decl_stmt|;
 name|int
 name|sc_txq_mcastq_maxdepth
 decl_stmt|;
-comment|/* 	 * Aggregation twiddles 	 * 	 * hwq_limit:	how busy to keep the hardware queue - don't schedule 	 *		further packets to the hardware, regardless of the TID 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
 name|int
-name|sc_hwq_limit
+name|sc_txq_node_psq_maxdepth
+decl_stmt|;
+comment|/* 	 * Software queue twiddles 	 * 	 * hwq_limit_nonaggr: 	 *		when to begin limiting non-aggregate frames to the 	 *		hardware queue, regardless of the TID. 	 * hwq_limit_aggr: 	 *		when to begin limiting A-MPDU frames to the 	 *		hardware queue, regardless of the TID. 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
+name|int
+name|sc_hwq_limit_nonaggr
+decl_stmt|;
+name|int
+name|sc_hwq_limit_aggr
 decl_stmt|;
 name|int
 name|sc_tid_hwq_lo
@@ -2839,6 +2895,14 @@ name|sc_spectral
 decl_stmt|;
 name|int
 name|sc_dospectral
+decl_stmt|;
+comment|/* LNA diversity related state */
+name|void
+modifier|*
+name|sc_lna_div
+decl_stmt|;
+name|int
+name|sc_dolnadiv
 decl_stmt|;
 comment|/* ALQ */
 ifdef|#
@@ -3335,6 +3399,17 @@ name|_sc
 parameter_list|)
 define|\
 value|mtx_assert(&(_sc)->sc_txbuflock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXBUF_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_assert(&(_sc)->sc_txbuflock, MA_NOTOWNED)
 end_define
 
 begin_define
@@ -5065,6 +5140,63 @@ define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ath_hal_hasenforcetxop
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ENFORCE_TXOP, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getenforcetxop
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ENFORCE_TXOP, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setenforcetxop
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_ENFORCE_TXOP, 1, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasrxlnamixer
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RX_LNA_MIXING, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasdivantcomb
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_ANT_DIV_COMB, 0, NULL) == HAL_OK)
+end_define
+
 begin_comment
 comment|/* EDMA definitions */
 end_comment
@@ -5976,6 +6108,158 @@ name|_ah
 parameter_list|)
 define|\
 value|((*(_ah)->ah_spectralStop)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_supported
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_BT_COEX, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_info
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_info
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetInfo)((_ah), (_info)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_config
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_cfg
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetConfig)((_ah), (_cfg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_qcu_thresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_qcuid
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetQcuThresh)((_ah), (_qcuid)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_weights
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_weight
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetWeights)((_ah), (_weight)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_weights
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_weight
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetWeights)((_ah), (_weight)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_bmiss_thresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_thr
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetBmissThresh)((_ah), (_thr)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_set_parameter
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_attrib
+parameter_list|,
+name|_val
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexSetParameter)((_ah), (_attrib), (_val)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_enable
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexEnable)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_btcoex_disable
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_btCoexDisable)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_div_comb_conf_get
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_conf
+parameter_list|)
+define|\
+value|((*(_ah)->ah_divLnaConfGet)((_ah), (_conf)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_div_comb_conf_set
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_conf
+parameter_list|)
+define|\
+value|((*(_ah)->ah_divLnaConfSet)((_ah), (_conf)))
 end_define
 
 begin_endif

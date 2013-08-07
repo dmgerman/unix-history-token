@@ -147,6 +147,13 @@ name|ieee80211_channel
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_RATE_TABLE_SIZE
+value|128
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_rate_table
@@ -195,7 +202,7 @@ comment|/* short preamble ACK dur. */
 block|}
 name|info
 index|[
-literal|32
+name|IEEE80211_RATE_TABLE_SIZE
 index|]
 struct|;
 block|}
@@ -232,6 +239,23 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
+comment|/* 	 * XXX Assert this is for a legacy rate; not for an MCS rate. 	 * If the caller wishes to use it for a basic rate, they should 	 * clear the high bit first. 	 */
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|rate
+operator|&
+literal|0x80
+operator|)
+argument_list|,
+operator|(
+literal|"rate %d is basic/mcs?"
+operator|,
+name|rate
+operator|)
+argument_list|)
+expr_stmt|;
 name|uint8_t
 name|cix
 init|=
@@ -244,6 +268,8 @@ operator|->
 name|rateCodeToIndex
 index|[
 name|rate
+operator|&
+name|IEEE80211_RATE_VAL
 index|]
 index|]
 operator|.
@@ -295,6 +321,23 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
+comment|/* 	 * XXX Assert this is for a legacy rate; not for an MCS rate. 	 * If the caller wishes to use it for a basic rate, they should 	 * clear the high bit first. 	 */
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|rate
+operator|&
+literal|0x80
+operator|)
+argument_list|,
+operator|(
+literal|"rate %d is basic/mcs?"
+operator|,
+name|rate
+operator|)
+argument_list|)
+expr_stmt|;
 name|uint8_t
 name|cix
 init|=
@@ -307,6 +350,8 @@ operator|->
 name|rateCodeToIndex
 index|[
 name|rate
+operator|&
+name|IEEE80211_RATE_VAL
 index|]
 index|]
 operator|.
@@ -359,6 +404,23 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
+comment|/* 	 * XXX Assert this is for a legacy rate; not for an MCS rate. 	 * If the caller wishes to use it for a basic rate, they should 	 * clear the high bit first. 	 */
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|rate
+operator|&
+literal|0x80
+operator|)
+argument_list|,
+operator|(
+literal|"rate %d is basic/mcs?"
+operator|,
+name|rate
+operator|)
+argument_list|)
+expr_stmt|;
 name|uint8_t
 name|rix
 init|=
@@ -367,6 +429,8 @@ operator|->
 name|rateCodeToIndex
 index|[
 name|rate
+operator|&
+name|IEEE80211_RATE_VAL
 index|]
 decl_stmt|;
 name|KASSERT
@@ -415,6 +479,23 @@ name|uint8_t
 name|rate
 parameter_list|)
 block|{
+comment|/* 	 * XXX Assert this is for a legacy rate; not for an MCS rate. 	 * If the caller wishes to use it for a basic rate, they should 	 * clear the high bit first. 	 */
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|rate
+operator|&
+literal|0x80
+operator|)
+argument_list|,
+operator|(
+literal|"rate %d is basic/mcs?"
+operator|,
+name|rate
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|rt
 operator|->
@@ -550,6 +631,37 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline__
+name|uint8_t
+name|ieee80211_legacy_rate_lookup
+parameter_list|(
+specifier|const
+name|struct
+name|ieee80211_rate_table
+modifier|*
+name|rt
+parameter_list|,
+name|uint8_t
+name|rate
+parameter_list|)
+block|{
+return|return
+operator|(
+name|rt
+operator|->
+name|rateCodeToIndex
+index|[
+name|rate
+operator|&
+name|IEEE80211_RATE_VAL
+index|]
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Compute the time to transmit a frame of length frameLen bytes  * using the specified 802.11 rate code, phy, and short preamble  * setting.  *  * NB: SIFS is included.  */
 end_comment
@@ -603,6 +715,28 @@ name|int
 parameter_list|,
 name|enum
 name|ieee80211_phytype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|ieee80211_compute_duration_ht
+parameter_list|(
+name|uint32_t
+name|frameLen
+parameter_list|,
+name|uint16_t
+name|rate
+parameter_list|,
+name|int
+name|streams
+parameter_list|,
+name|int
+name|isht40
+parameter_list|,
+name|int
+name|isShortGI
 parameter_list|)
 function_decl|;
 end_function_decl

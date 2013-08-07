@@ -77,6 +77,18 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/Core.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -244,6 +256,13 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+name|DEFINE_STDCXX_CONVERSION_FUNCTIONS
+argument_list|(
+argument|PassRegistry
+argument_list|,
+argument|LLVMPassRegistryRef
+argument_list|)
 block|}
 end_decl_stmt
 

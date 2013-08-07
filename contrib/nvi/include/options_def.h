@@ -72,7 +72,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|O_DIRECTORY
+name|O_TMP_DIRECTORY
 value|10
 end_define
 

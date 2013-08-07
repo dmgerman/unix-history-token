@@ -1496,8 +1496,22 @@ block|}
 block|,
 define|#
 directive|define
-name|S_TX_HTPROTECT
+name|S_RX_STBC
 value|AFTER(S_RX_HI_CHAIN)
+block|{
+literal|6
+block|,
+literal|"rxstbc"
+block|,
+literal|"rxstbc"
+block|,
+literal|"Frames received w/ STBC encoding"
+block|}
+block|,
+define|#
+directive|define
+name|S_TX_HTPROTECT
+value|AFTER(S_RX_STBC)
 block|{
 literal|7
 block|,
@@ -2566,7 +2580,7 @@ literal|"bmisscnt"
 block|,
 literal|"beacon miss count"
 block|}
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4884,6 +4898,14 @@ name|rx_hi_rx_chain
 argument_list|)
 expr_stmt|;
 case|case
+name|S_RX_STBC
+case|:
+name|STAT
+argument_list|(
+name|rx_stbc
+argument_list|)
+expr_stmt|;
+case|case
 name|S_TX_HTPROTECT
 case|:
 name|STAT
@@ -6582,6 +6604,14 @@ case|:
 name|STAT
 argument_list|(
 name|rx_hi_rx_chain
+argument_list|)
+expr_stmt|;
+case|case
+name|S_RX_STBC
+case|:
+name|STAT
+argument_list|(
+name|rx_stbc
 argument_list|)
 expr_stmt|;
 case|case

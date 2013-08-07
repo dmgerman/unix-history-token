@@ -59,6 +59,12 @@ directive|include
 file|<geom/geom_int.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -379,7 +385,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"};\n"
+literal|"}\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_finish
@@ -621,7 +627,7 @@ name|mp
 operator|->
 name|name
 argument_list|,
-literal|"DISK"
+name|G_DISK_CLASS_NAME
 argument_list|)
 operator|||
 operator|!

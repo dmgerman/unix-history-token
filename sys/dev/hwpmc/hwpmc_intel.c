@@ -277,6 +277,10 @@ name|nclasses
 operator|=
 literal|2
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|model
 operator|=
 operator|(
@@ -449,11 +453,11 @@ case|:
 case|case
 literal|0x1E
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x1F
 case|:
-comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
 case|case
 literal|0x2E
 case|:
@@ -794,9 +798,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|pmc_tsc_finalize
+argument_list|(
+name|pmc_mdep
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 comment|/* 	 * Init the uncore class. 	 */
 if|#
 directive|if
@@ -849,11 +860,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|free
+name|pmc_mdep_free
 argument_list|(
 name|pmc_mdep
-argument_list|,
-name|M_PMC
 argument_list|)
 expr_stmt|;
 name|pmc_mdep

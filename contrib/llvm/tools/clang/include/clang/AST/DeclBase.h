@@ -62,19 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Attr.h"
+file|"clang/AST/AttrIterator.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/DeclarationName.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -106,73 +100,82 @@ name|namespace
 name|clang
 block|{
 name|class
-name|DeclContext
-decl_stmt|;
-name|class
-name|TranslationUnitDecl
-decl_stmt|;
-name|class
-name|NamespaceDecl
-decl_stmt|;
-name|class
-name|UsingDirectiveDecl
-decl_stmt|;
-name|class
-name|NamedDecl
-decl_stmt|;
-name|class
-name|FunctionDecl
-decl_stmt|;
-name|class
-name|CXXRecordDecl
-decl_stmt|;
-name|class
-name|EnumDecl
-decl_stmt|;
-name|class
-name|ObjCMethodDecl
-decl_stmt|;
-name|class
-name|ObjCContainerDecl
-decl_stmt|;
-name|class
-name|ObjCInterfaceDecl
-decl_stmt|;
-name|class
-name|ObjCCategoryDecl
-decl_stmt|;
-name|class
-name|ObjCProtocolDecl
-decl_stmt|;
-name|class
-name|ObjCImplementationDecl
-decl_stmt|;
-name|class
-name|ObjCCategoryImplDecl
-decl_stmt|;
-name|class
-name|ObjCImplDecl
-decl_stmt|;
-name|class
-name|LinkageSpecDecl
+name|ASTMutationListener
 decl_stmt|;
 name|class
 name|BlockDecl
 decl_stmt|;
 name|class
-name|DeclarationName
+name|CXXRecordDecl
 decl_stmt|;
 name|class
 name|CompoundStmt
 decl_stmt|;
 name|class
-name|StoredDeclsMap
+name|DeclContext
+decl_stmt|;
+name|class
+name|DeclarationName
 decl_stmt|;
 name|class
 name|DependentDiagnostic
 decl_stmt|;
 name|class
-name|ASTMutationListener
+name|EnumDecl
+decl_stmt|;
+name|class
+name|FunctionDecl
+decl_stmt|;
+name|class
+name|LinkageSpecDecl
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|NamedDecl
+decl_stmt|;
+name|class
+name|NamespaceDecl
+decl_stmt|;
+name|class
+name|ObjCCategoryDecl
+decl_stmt|;
+name|class
+name|ObjCCategoryImplDecl
+decl_stmt|;
+name|class
+name|ObjCContainerDecl
+decl_stmt|;
+name|class
+name|ObjCImplDecl
+decl_stmt|;
+name|class
+name|ObjCImplementationDecl
+decl_stmt|;
+name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
+name|ObjCMethodDecl
+decl_stmt|;
+name|class
+name|ObjCProtocolDecl
+decl_stmt|;
+struct_decl|struct
+name|PrintingPolicy
+struct_decl|;
+name|class
+name|Stmt
+decl_stmt|;
+name|class
+name|StoredDeclsMap
+decl_stmt|;
+name|class
+name|TranslationUnitDecl
+decl_stmt|;
+name|class
+name|UsingDirectiveDecl
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -387,7 +390,7 @@ name|IDNS_Ordinary
 init|=
 literal|0x0020
 block|,
-comment|/// Objective C @protocol.
+comment|/// Objective C \@protocol.
 name|IDNS_ObjCProtocol
 init|=
 literal|0x0040
@@ -944,6 +947,16 @@ name|unsigned
 name|Size
 parameter_list|)
 function_decl|;
+comment|/// \brief Update a potentially out-of-date declaration.
+name|void
+name|updateOutOfDate
+argument_list|(
+name|IdentifierInfo
+operator|&
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Source range that this declaration covers.
@@ -1104,15 +1117,18 @@ name|getDeclContext
 argument_list|()
 return|;
 block|}
-comment|/// Finds the innermost non-closure context of this declaration.
-comment|/// That is, walk out the DeclContext chain, skipping any blocks.
-name|DeclContext
+comment|/// Find the innermost non-closure ancestor of this declaration,
+comment|/// walking up through blocks, lambdas, etc.  If that ancestor is
+comment|/// not a code context (!isFunctionOrMethod()), returns null.
+comment|///
+comment|/// A declaration may be its own non-closure context.
+name|Decl
 modifier|*
 name|getNonClosureContext
 parameter_list|()
 function_decl|;
 specifier|const
-name|DeclContext
+name|Decl
 operator|*
 name|getNonClosureContext
 argument_list|()
@@ -1203,6 +1219,20 @@ argument_list|()
 block|;
 endif|#
 directive|endif
+return|return
+name|AccessSpecifier
+argument_list|(
+name|Access
+argument_list|)
+return|;
+block|}
+comment|/// \brief Retrieve the access specifier for this declaration, even though
+comment|/// it may not yet have been properly set.
+name|AccessSpecifier
+name|getAccessUnsafe
+argument_list|()
+specifier|const
+block|{
 return|return
 name|AccessSpecifier
 argument_list|(
@@ -1533,23 +1563,7 @@ name|unsigned
 name|getMaxAlignment
 argument_list|()
 specifier|const
-block|{
-return|return
-name|hasAttrs
-argument_list|()
-operator|?
-name|getMaxAttrAlignment
-argument_list|(
-name|getAttrs
-argument_list|()
-argument_list|,
-name|getASTContext
-argument_list|()
-argument_list|)
-operator|:
-literal|0
-return|;
-block|}
+expr_stmt|;
 comment|/// setInvalidDecl - Indicates the Decl had a semantic error. This
 comment|/// allows for graceful error recovery.
 name|void
@@ -1981,8 +1995,48 @@ literal|0
 return|;
 end_return
 
+begin_expr_stmt
+unit|}  private:
+name|Module
+operator|*
+name|getOwningModuleSlow
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_expr_stmt
+name|Module
+operator|*
+name|getOwningModule
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|isFromASTFile
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getOwningModuleSlow
+argument_list|()
+return|;
+end_return
+
 begin_macro
-unit|}      unsigned
+unit|}    unsigned
 name|getIdentifierNamespace
 argument_list|()
 end_macro
@@ -3360,6 +3414,19 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// Same as dump(), but forces color printing.
+end_comment
+
+begin_expr_stmt
+name|LLVM_ATTRIBUTE_USED
+name|void
+name|dumpColor
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|void
 name|dump
@@ -3584,236 +3651,29 @@ block|; }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|class
-name|DeclContextLookupResult
-range|:
-name|public
-name|std
+begin_typedef
+typedef|typedef
+name|llvm
 operator|::
-name|pair
+name|MutableArrayRef
 operator|<
 name|NamedDecl
-operator|*
-operator|*
-decl_stmt|,
-name|NamedDecl
-modifier|*
-modifier|*
-decl|>
-block|{
-name|public
-label|:
-name|DeclContextLookupResult
-argument_list|(
-name|NamedDecl
-operator|*
-operator|*
-name|I
-argument_list|,
-name|NamedDecl
-operator|*
-operator|*
-name|E
-argument_list|)
-operator|:
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-operator|*
-operator|,
-name|NamedDecl
-operator|*
 operator|*
 operator|>
-operator|(
-name|I
-operator|,
-name|E
-operator|)
-block|{}
 name|DeclContextLookupResult
-argument_list|()
-operator|:
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-operator|*
-operator|,
-name|NamedDecl
-operator|*
-operator|*
-operator|>
-operator|(
-operator|)
-block|{}
-name|using
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-operator|*
-operator|,
-name|NamedDecl
-operator|*
-operator|*
-operator|>
-operator|::
-name|operator
-operator|=
 expr_stmt|;
-block|}
-end_decl_stmt
+end_typedef
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
-name|class
+begin_typedef
+typedef|typedef
+name|ArrayRef
+operator|<
+name|NamedDecl
+operator|*
+operator|>
 name|DeclContextLookupConstResult
-range|:
-name|public
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-decl_stmt|,
-name|NamedDecl
-modifier|*
-decl|const
-modifier|*
-decl|>
-block|{
-name|public
-label|:
-name|DeclContextLookupConstResult
-argument_list|(
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-operator|*
-argument_list|,
-name|NamedDecl
-operator|*
-operator|*
-operator|>
-name|R
-argument_list|)
-operator|:
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|,
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-name|R
-operator|)
-block|{}
-name|DeclContextLookupConstResult
-argument_list|(
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-name|I
-argument_list|,
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-name|E
-argument_list|)
-operator|:
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|,
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-name|I
-operator|,
-name|E
-operator|)
-block|{}
-name|DeclContextLookupConstResult
-argument_list|()
-operator|:
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|,
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|(
-operator|)
-block|{}
-name|using
-name|std
-operator|::
-name|pair
-operator|<
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|,
-name|NamedDecl
-operator|*
-specifier|const
-operator|*
-operator|>
-operator|::
-name|operator
-operator|=
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_typedef
 
 begin_comment
 comment|/// DeclContext - This is used only as base class of specific decl types that
@@ -3881,7 +3741,7 @@ comment|/// \brief Whether this declaration context also has some external
 comment|/// storage that contains additional declarations that are lexically
 comment|/// part of this context.
 name|mutable
-name|unsigned
+name|bool
 name|ExternalLexicalStorage
 range|:
 literal|1
@@ -3890,8 +3750,18 @@ comment|/// \brief Whether this declaration context also has some external
 comment|/// storage that contains additional declarations that are visible
 comment|/// in this context.
 name|mutable
-name|unsigned
+name|bool
 name|ExternalVisibleStorage
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this declaration context has had external visible
+comment|/// storage added since the last lookup. In this case, \c LookupPtr's
+comment|/// invariant may not hold and needs to be fixed before we perform
+comment|/// another lookup.
+name|mutable
+name|bool
+name|NeedToReconcileExternalVisibleStorage
 range|:
 literal|1
 decl_stmt|;
@@ -3899,8 +3769,9 @@ comment|/// \brief Pointer to the data structure used to lookup declarations
 comment|/// within this context (or a DependentStoredDeclsMap if this is a
 comment|/// dependent context), and a bool indicating whether we have lazily
 comment|/// omitted any declarations from the map. We maintain the invariant
-comment|/// that, if the map contains an entry for a DeclarationName, then it
-comment|/// contains all relevant entries for that name.
+comment|/// that, if the map contains an entry for a DeclarationName (and we
+comment|/// haven't lazily omitted anything), then it contains all relevant
+comment|/// entries for that name.
 name|mutable
 name|llvm
 operator|::
@@ -3982,6 +3853,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|NeedToReconcileExternalVisibleStorage
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|LookupPtr
 argument_list|(
 literal|0
@@ -3998,7 +3874,7 @@ name|LastDecl
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 name|public
 operator|:
 operator|~
@@ -4238,6 +4114,11 @@ case|:
 case|case
 name|Decl
 operator|::
+name|Captured
+case|:
+case|case
+name|Decl
+operator|::
 name|ObjCMethod
 case|:
 return|return
@@ -4355,13 +4236,6 @@ name|isTransparentContext
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Determines whether this context is, or is nested within,
-comment|/// a C++ extern "C" linkage spec.
-name|bool
-name|isExternCContext
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// \brief Determine whether this declaration context is equivalent
 comment|/// to the declaration context DC.
 name|bool
@@ -4403,13 +4277,13 @@ decl_stmt|;
 comment|/// \brief Find the nearest non-closure ancestor of this context,
 comment|/// i.e. the innermost semantic parent of this context which is not
 comment|/// a closure.  A context may be its own non-closure ancestor.
-name|DeclContext
+name|Decl
 modifier|*
 name|getNonClosureAncestor
 parameter_list|()
 function_decl|;
 specifier|const
-name|DeclContext
+name|Decl
 operator|*
 name|getNonClosureAncestor
 argument_list|()
@@ -4559,8 +4433,6 @@ comment|/// for non-namespace contexts).
 name|void
 name|collectAllContexts
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|DeclContext
@@ -5621,6 +5493,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// @brief Checks whether a declaration is in this context.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|containsDecl
+argument_list|(
+name|Decl
+operator|*
+name|D
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// lookup_iterator - An iterator that provides access to the results
 end_comment
 
@@ -5757,8 +5645,6 @@ argument_list|(
 name|DeclarationName
 name|Name
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|NamedDecl
@@ -5974,7 +5860,11 @@ comment|/// \brief Mark the lookup table as needing to be built.  This should be
 end_comment
 
 begin_comment
-comment|/// used only if setHasExternalLexicalStorage() has been called.
+comment|/// used only if setHasExternalLexicalStorage() has been called on any
+end_comment
+
+begin_comment
+comment|/// decl context for which this is the primary context.
 end_comment
 
 begin_function
@@ -5982,13 +5872,6 @@ name|void
 name|setMustBuildLookupTable
 parameter_list|()
 block|{
-name|assert
-argument_list|(
-name|ExternalLexicalStorage
-operator|&&
-literal|"Requires external lexical storage"
-argument_list|)
-expr_stmt|;
 name|LookupPtr
 operator|.
 name|setInt
@@ -6122,6 +6005,19 @@ name|ExternalVisibleStorage
 operator|=
 name|ES
 expr_stmt|;
+if|if
+condition|(
+name|ES
+operator|&&
+name|LookupPtr
+operator|.
+name|getPointer
+argument_list|()
+condition|)
+name|NeedToReconcileExternalVisibleStorage
+operator|=
+name|true
+expr_stmt|;
 block|}
 end_function
 
@@ -6210,6 +6106,13 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_function_decl
+name|void
+name|reconcileExternalVisibleStorage
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|void

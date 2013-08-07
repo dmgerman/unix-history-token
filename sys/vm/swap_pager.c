@@ -3166,7 +3166,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_FREESPACE() -	frees swap blocks associated with a page  *				range within an object.  *  *	This is a globally accessible routine.  *  *	This routine removes swapblk assignments from swap metadata.  *  *	The external callers of this routine typically have already destroyed  *	or renamed vm_page_t's associated with this range in the object so  *	we should be ok.  */
+comment|/*  * SWAP_PAGER_FREESPACE() -	frees swap blocks associated with a page  *				range within an object.  *  *	This is a globally accessible routine.  *  *	This routine removes swapblk assignments from swap metadata.  *  *	The external callers of this routine typically have already destroyed  *	or renamed vm_page_t's associated with this range in the object so  *	we should be ok.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -3183,11 +3183,6 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|swp_pager_meta_free
 argument_list|(
 name|object
@@ -3201,7 +3196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_RESERVE() - reserve swap blocks in object  *  *	Assigns swap blocks to the specified range within the object.  The  *	swap blocks are not zerod.  Any previous swap assignment is destroyed.  *  *	Returns 0 on success, -1 on failure.  */
+comment|/*  * SWAP_PAGER_RESERVE() - reserve swap blocks in object  *  *	Assigns swap blocks to the specified range within the object.  The  *	swap blocks are not zeroed.  Any previous swap assignment is destroyed.  *  *	Returns 0 on success, -1 on failure.  */
 end_comment
 
 begin_function
@@ -3600,7 +3595,7 @@ block|{
 name|daddr_t
 name|blk0
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
@@ -3794,7 +3789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.  *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not sleep.  */
+comment|/*  * SWAP_PAGER_PAGE_UNSWAPPED() - remove swap backing store related to page  *  *	This removes any associated swap backing store, whether valid or  *	not, from the page.  *  *	This routine is typically called when a page is made dirty, at  *	which point any associated swap can be freed.  MADV_FREE also  *	calls us in a special-case situation  *  *	NOTE!!!  If the page is clean and the swap was valid, the caller  *	should make the page dirty before calling this routine.  This routine  *	does NOT change the m->dirty status of the page.  Also: MADV_FREE  *	depends on it.  *  *	This routine may not sleep.  *  *	The object containing the page must be locked.  */
 end_comment
 
 begin_function
@@ -3806,13 +3801,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
-argument_list|(
-name|m
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 name|swp_pager_meta_ctl
 argument_list|(
 name|m
@@ -5672,6 +5660,8 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
+operator||
+name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -5710,11 +5700,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|vm_pager_page_unswapped
 argument_list|(
 name|m
@@ -5722,6 +5707,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|vm_page_busy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|swap_pager_getpages
@@ -6165,6 +6155,16 @@ argument_list|(
 name|swap_zone
 argument_list|,
 name|M_NOWAIT
+operator||
+operator|(
+name|curproc
+operator|==
+name|pageproc
+condition|?
+name|M_USE_RESERVE
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6403,7 +6403,7 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)
@@ -6789,7 +6789,7 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|object
 argument_list|)

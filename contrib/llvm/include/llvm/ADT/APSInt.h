@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_APSINT_H
+name|LLVM_ADT_APSINT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_APSINT_H
+name|LLVM_ADT_APSINT_H
 end_define
 
 begin_include
@@ -88,6 +88,11 @@ comment|/// Default constructor that creates an uninitialized APInt.
 name|explicit
 name|APSInt
 argument_list|()
+operator|:
+name|IsUnsigned
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 comment|/// APSInt ctor - Create an APSInt with the specified width, default to
 comment|/// unsigned.
@@ -1000,6 +1005,8 @@ operator|++
 operator|(
 operator|)
 block|{
+operator|++
+operator|(
 name|static_cast
 operator|<
 name|APInt
@@ -1009,7 +1016,7 @@ operator|(
 operator|*
 name|this
 operator|)
-operator|++
+operator|)
 block|;
 return|return
 operator|*
@@ -1026,6 +1033,8 @@ operator|--
 operator|(
 operator|)
 block|{
+operator|--
+operator|(
 name|static_cast
 operator|<
 name|APInt
@@ -1035,7 +1044,7 @@ operator|(
 operator|*
 name|this
 operator|)
-operator|--
+operator|)
 block|;
 return|return
 operator|*

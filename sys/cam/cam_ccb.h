@@ -494,11 +494,6 @@ init|=
 literal|0x0c
 block|,
 comment|/* Device statistics (error counts, etc.) */
-name|XPT_FREEZE_QUEUE
-init|=
-literal|0x0d
-block|,
-comment|/* Freeze device queue */
 name|XPT_DEV_ADVINFO
 init|=
 literal|0x0e
@@ -1772,7 +1767,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x16
+value|0x17
 end_define
 
 begin_comment
@@ -1902,7 +1897,12 @@ comment|/* Do bus scans sequentially, not in parallel */
 name|PIM_UNMAPPED
 init|=
 literal|0x02
-block|, }
+block|,
+name|PIM_NOSCAN
+init|=
+literal|0x01
+comment|/* SIM does its own scanning */
+block|}
 name|pi_miscflag
 typedef|;
 end_typedef
@@ -2460,10 +2460,6 @@ define|#
 directive|define
 name|RELSIM_RELEASE_AFTER_QEMPTY
 value|0x08
-define|#
-directive|define
-name|RELSIM_RELEASE_RUNLEVEL
-value|0x10
 name|u_int32_t
 name|openings
 decl_stmt|;
@@ -2960,6 +2956,10 @@ define|#
 directive|define
 name|CTS_ATA_VALID_ATAPI
 value|0x20
+define|#
+directive|define
+name|CTS_ATA_VALID_CAPS
+value|0x40
 name|int
 name|mode
 decl_stmt|;
@@ -2972,6 +2972,23 @@ name|u_int
 name|atapi
 decl_stmt|;
 comment|/* Length of ATAPI CDB */
+name|u_int
+name|caps
+decl_stmt|;
+comment|/* Device and host SATA caps. */
+define|#
+directive|define
+name|CTS_ATA_CAPS_H
+value|0x0000ffff
+define|#
+directive|define
+name|CTS_ATA_CAPS_H_DMA48
+value|0x00000001
+comment|/* 48-bit DMA */
+define|#
+directive|define
+name|CTS_ATA_CAPS_D
+value|0xffff0000
 block|}
 struct|;
 end_struct
@@ -4677,6 +4694,72 @@ name|smp_response_len
 operator|=
 name|smp_response_len
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|cam_set_ccbstatus
+parameter_list|(
+name|union
+name|ccb
+modifier|*
+name|ccb
+parameter_list|,
+name|cam_status
+name|status
+parameter_list|)
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&=
+operator|~
+name|CAM_STATUS_MASK
+expr_stmt|;
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator||=
+name|status
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|cam_status
+name|cam_ccb_status
+parameter_list|(
+name|union
+name|ccb
+modifier|*
+name|ccb
+parameter_list|)
+block|{
+return|return
+operator|(
+call|(
+name|cam_status
+call|)
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_STATUS_MASK
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

@@ -496,6 +496,17 @@ name|AE_RXD_COUNT_DEFAULT
 value|64
 end_define
 
+begin_comment
+comment|/* Padding to align frames on a 128-byte boundary. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AE_RXD_PADDING
+value|120
+end_define
+
 begin_define
 define|#
 directive|define

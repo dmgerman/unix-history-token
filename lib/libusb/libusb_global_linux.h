@@ -31,11 +31,22 @@ directive|define
 name|_BSD_SOURCE
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|_POSIX_SOURCE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -86,11 +97,22 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<alloca.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -108,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -151,6 +179,22 @@ include|#
 directive|include
 file|<dev/usb/usb_freebsd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<compat/linux/linux_ioctl.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|IOUSB
+parameter_list|(
+name|a
+parameter_list|)
+value|FBSD_L##a
+end_define
 
 begin_ifndef
 ifndef|#

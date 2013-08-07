@@ -572,9 +572,7 @@ name|REPLACE
 parameter_list|(
 name|r
 parameter_list|)
-value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
-comment|/* check for safety */
-value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \
+value|do {\ 	IP6STAT_INC(ip6s_sources_rule[(r)]); \ 	rule = (r);	\
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: replace %s with %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto replace; \ } while(0)
 end_define
@@ -586,9 +584,7 @@ name|NEXT
 parameter_list|(
 name|r
 parameter_list|)
-value|do {\ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
-comment|/* check for safety */
-value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \
+value|do {\
 comment|/* { \ 	char ip6buf[INET6_ADDRSTRLEN], ip6b[INET6_ADDRSTRLEN]; \ 	printf("in6_selectsrc: keep %s against %s by %d\n", ia_best ? ip6_sprintf(ip6buf,&ia_best->ia_addr.sin6_addr) : "none", ip6_sprintf(ip6b,&ia->ia_addr.sin6_addr), (r)); \ 	} */
 value|\ 	goto next;
 comment|/* XXX: we can't use 'continue' here */
@@ -602,9 +598,7 @@ name|BREAK
 parameter_list|(
 name|r
 parameter_list|)
-value|do { \ 	if ((r)< sizeof(V_ip6stat.ip6s_sources_rule) / \ 		sizeof(V_ip6stat.ip6s_sources_rule[0]))
-comment|/* check for safety */
-value|\ 		V_ip6stat.ip6s_sources_rule[(r)]++; \ 	goto out;
+value|do { \ 	IP6STAT_INC(ip6s_sources_rule[(r)]); \ 	rule = (r);	\ 	goto out;
 comment|/* XXX: we can't use 'break' here */
 value|\ } while(0)
 end_define
@@ -723,6 +717,8 @@ name|prefer_tempaddr
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|rule
 decl_stmt|;
 name|struct
 name|ip6_moptions
@@ -1271,6 +1267,10 @@ operator|(
 name|error
 operator|)
 return|;
+name|rule
+operator|=
+literal|0
+expr_stmt|;
 name|IN6_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
@@ -2038,6 +2038,11 @@ block|{
 name|IN6_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_none
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
@@ -2089,6 +2094,11 @@ block|{
 name|IN6_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_none
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
@@ -2116,6 +2126,69 @@ argument_list|(
 operator|*
 name|srcp
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|->
+name|ia_ifp
+operator|==
+name|ifp
+condition|)
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_sameif
+index|[
+name|best_scope
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_otherif
+index|[
+name|best_scope
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dst_scope
+operator|==
+name|best_scope
+condition|)
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_samescope
+index|[
+name|best_scope
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_otherscope
+index|[
+name|best_scope
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IFA6_IS_DEPRECATED
+argument_list|(
+name|ia
+argument_list|)
+condition|)
+name|IP6STAT_INC
+argument_list|(
+name|ip6s_sources_deprecated
+index|[
+name|best_scope
+index|]
 argument_list|)
 expr_stmt|;
 name|IN6_IFADDR_RUNLOCK
@@ -2857,10 +2930,10 @@ name|error
 operator|==
 name|EHOSTUNREACH
 condition|)
-name|V_ip6stat
-operator|.
+name|IP6STAT_INC
+argument_list|(
 name|ip6s_noroute
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4414,6 +4487,13 @@ argument_list|()
 expr_stmt|;
 name|ADDRSEL_XUNLOCK
 argument_list|()
+expr_stmt|;
+name|free
+argument_list|(
+name|pol
+argument_list|,
+name|M_IFADDR
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

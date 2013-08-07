@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_types.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -298,6 +298,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|kvm_counter_u64_fetch
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|kinfo_proc
 modifier|*
@@ -419,23 +431,19 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|kvm_uread
+name|kvm_read_zpcpu
 parameter_list|(
 name|kvm_t
 modifier|*
 parameter_list|,
-specifier|const
-name|struct
-name|kinfo_proc
+name|void
 modifier|*
 parameter_list|,
-name|unsigned
-name|long
-parameter_list|,
-name|char
-modifier|*
+name|u_long
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

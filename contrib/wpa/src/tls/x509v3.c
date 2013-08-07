@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * X.509v3 certificate parsing and processing (RFC 3280 profile)  * Copyright (c) 2006-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * X.509v3 certificate parsing and processing (RFC 3280 profile)  * Copyright (c) 2006-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -8226,6 +8226,9 @@ parameter_list|,
 name|int
 modifier|*
 name|reason
+parameter_list|,
+name|int
+name|disable_time_checks
 parameter_list|)
 block|{
 name|long
@@ -8328,6 +8331,10 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|!
+name|disable_time_checks
+operator|&&
+operator|(
 operator|(
 name|unsigned
 name|long
@@ -8359,6 +8366,7 @@ operator|)
 name|cert
 operator|->
 name|not_after
+operator|)
 condition|)
 block|{
 name|wpa_printf

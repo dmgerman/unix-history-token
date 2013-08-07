@@ -150,12 +150,12 @@ argument_list|(
 specifier|const
 name|ExplodedNode
 operator|*
-name|N
+name|Succ
 argument_list|,
 specifier|const
 name|ExplodedNode
 operator|*
-name|PrevN
+name|Pred
 argument_list|,
 name|BugReporterContext
 operator|&
@@ -287,81 +287,57 @@ name|SVal
 name|V
 block|;
 name|bool
-name|satisfied
+name|Satisfied
+block|;
+comment|/// If the visitor is tracking the value directly responsible for the
+comment|/// bug, we are going to employ false positive suppression.
+name|bool
+name|EnableNullFPSuppression
 block|;
 name|public
 operator|:
-comment|/// \brief Convenience method to create a visitor given only the MemRegion.
-comment|/// Returns NULL if the visitor cannot be created. For example, when the
-comment|/// corresponding value is unknown.
-specifier|static
-name|BugReporterVisitor
-operator|*
-name|createVisitorObject
-argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
-argument_list|,
-specifier|const
-name|MemRegion
-operator|*
-name|R
-argument_list|)
-block|;
 comment|/// Creates a visitor for every VarDecl inside a Stmt and registers it with
 comment|/// the BugReport.
 specifier|static
 name|void
 name|registerStatementVarDecls
 argument_list|(
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|S
+argument|const Stmt *S
+argument_list|,
+argument|bool EnableNullFPSuppression
 argument_list|)
 block|;
 name|FindLastStoreBRVisitor
 argument_list|(
-argument|SVal v
+argument|KnownSVal V
 argument_list|,
-argument|const MemRegion *r
+argument|const MemRegion *R
+argument_list|,
+argument|bool InEnableNullFPSuppression
 argument_list|)
 operator|:
 name|R
 argument_list|(
-name|r
+name|R
 argument_list|)
 block|,
 name|V
 argument_list|(
-name|v
+name|V
 argument_list|)
 block|,
-name|satisfied
+name|Satisfied
 argument_list|(
-argument|false
+name|false
 argument_list|)
-block|{
-name|assert
+block|,
+name|EnableNullFPSuppression
 argument_list|(
-operator|!
-name|V
-operator|.
-name|isUnknown
-argument_list|()
-operator|&&
-literal|"Cannot track unknown value."
+argument|InEnableNullFPSuppression
 argument_list|)
-block|;
-comment|// TODO: Does it make sense to allow undef values here?
-comment|// (If not, also see UndefCapturedBlockVarChecker)?
-block|}
+block|{}
 name|void
 name|Profile
 argument_list|(
@@ -405,12 +381,19 @@ block|{
 name|DefinedSVal
 name|Constraint
 block|;
-specifier|const
 name|bool
 name|Assumption
 block|;
 name|bool
-name|isSatisfied
+name|IsSatisfied
+block|;
+name|bool
+name|IsZeroCheck
+block|;
+comment|/// We should start tracking from the last node along the path in which the
+comment|/// value is constrained.
+name|bool
+name|IsTrackingTurnedOn
 block|;
 name|public
 operator|:
@@ -431,7 +414,27 @@ argument_list|(
 name|assumption
 argument_list|)
 block|,
-name|isSatisfied
+name|IsSatisfied
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsZeroCheck
+argument_list|(
+operator|!
+name|Assumption
+operator|&&
+name|Constraint
+operator|.
+name|getAs
+operator|<
+name|Loc
+operator|>
+operator|(
+operator|)
+argument_list|)
+block|,
+name|IsTrackingTurnedOn
 argument_list|(
 argument|false
 argument_list|)
@@ -474,8 +477,20 @@ name|BugReport
 operator|&
 name|BR
 argument_list|)
-block|; }
 block|;
+name|private
+operator|:
+comment|/// Checks if the constraint is valid in the current state.
+name|bool
+name|isUnderconstrained
+argument_list|(
+argument|const ExplodedNode *N
+argument_list|)
+specifier|const
+block|;  }
+block|;
+comment|/// \class NilReceiverBRVisitor
+comment|/// \brief Prints path notes when a message is sent to a nil receiver.
 name|class
 name|NilReceiverBRVisitor
 operator|:
@@ -529,6 +544,25 @@ argument_list|,
 name|BugReport
 operator|&
 name|BR
+argument_list|)
+block|;
+comment|/// If the statement is a message send expression with nil receiver, returns
+comment|/// the receiver expression. Returns NULL otherwise.
+specifier|static
+specifier|const
+name|Expr
+operator|*
+name|getNilReceiver
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|,
+specifier|const
+name|ExplodedNode
+operator|*
+name|N
 argument_list|)
 block|; }
 block|;
@@ -728,8 +762,6 @@ name|Expr
 operator|*
 name|Ex
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Out
@@ -747,14 +779,103 @@ name|ExplodedNode
 operator|*
 name|N
 argument_list|,
-name|llvm
-operator|::
 name|Optional
 operator|<
 name|bool
 operator|>
 operator|&
 name|prunable
+argument_list|)
+block|; }
+block|;
+comment|/// \brief Suppress reports that might lead to known false positives.
+comment|///
+comment|/// Currently this suppresses reports based on locations of bugs.
+name|class
+name|LikelyFalsePositiveSuppressionBRVisitor
+operator|:
+name|public
+name|BugReporterVisitorImpl
+operator|<
+name|LikelyFalsePositiveSuppressionBRVisitor
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+name|void
+operator|*
+name|getTag
+argument_list|()
+block|{
+specifier|static
+name|int
+name|Tag
+operator|=
+literal|0
+block|;
+return|return
+name|static_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+operator|&
+name|Tag
+operator|)
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|getTag
+argument_list|()
+argument_list|)
+block|;   }
+name|virtual
+name|PathDiagnosticPiece
+operator|*
+name|VisitNode
+argument_list|(
+argument|const ExplodedNode *N
+argument_list|,
+argument|const ExplodedNode *Prev
+argument_list|,
+argument|BugReporterContext&BRC
+argument_list|,
+argument|BugReport&BR
+argument_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|PathDiagnosticPiece
+operator|*
+name|getEndPath
+argument_list|(
+name|BugReporterContext
+operator|&
+name|BRC
+argument_list|,
+specifier|const
+name|ExplodedNode
+operator|*
+name|N
+argument_list|,
+name|BugReport
+operator|&
+name|BR
 argument_list|)
 block|; }
 block|;
@@ -846,6 +967,81 @@ name|BR
 argument_list|)
 block|; }
 block|;
+name|class
+name|SuppressInlineDefensiveChecksVisitor
+operator|:
+name|public
+name|BugReporterVisitorImpl
+operator|<
+name|SuppressInlineDefensiveChecksVisitor
+operator|>
+block|{
+comment|/// The symbolic value for which we are tracking constraints.
+comment|/// This value is constrained to null in the end of path.
+name|DefinedSVal
+name|V
+block|;
+comment|/// Track if we found the node where the constraint was first added.
+name|bool
+name|IsSatisfied
+block|;
+comment|/// Since the visitors can be registered on nodes previous to the last
+comment|/// node in the BugReport, but the path traversal always starts with the last
+comment|/// node, the visitor invariant (that we start with a node in which V is null)
+comment|/// might not hold when node visitation starts. We are going to start tracking
+comment|/// from the last node in which the value is null.
+name|bool
+name|IsTrackingTurnedOn
+block|;
+name|public
+operator|:
+name|SuppressInlineDefensiveChecksVisitor
+argument_list|(
+argument|DefinedSVal Val
+argument_list|,
+argument|const ExplodedNode *N
+argument_list|)
+block|;
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|;
+comment|/// Return the tag associated with this visitor.  This tag will be used
+comment|/// to make all PathDiagnosticPieces created by this visitor.
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getTag
+argument_list|()
+block|;
+name|PathDiagnosticPiece
+operator|*
+name|VisitNode
+argument_list|(
+specifier|const
+name|ExplodedNode
+operator|*
+name|Succ
+argument_list|,
+specifier|const
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|BugReporterContext
+operator|&
+name|BRC
+argument_list|,
+name|BugReport
+operator|&
+name|BR
+argument_list|)
+block|; }
+block|;
 name|namespace
 name|bugreporter
 block|{
@@ -859,6 +1055,8 @@ comment|/// \param R The bug report to which visitors should be attached.
 comment|/// \param IsArg Whether the statement is an argument to an inlined function.
 comment|///              If this is the case, \p N \em must be the CallEnter node for
 comment|///              the function.
+comment|/// \param EnableNullFPSuppression Whether we should employ false positive
+comment|///         suppression (inlined defensive checks, returned null).
 comment|///
 comment|/// \return Whether or not the function was able to add visitors for this
 comment|///         statement. Note that returning \c true does not actually imply
@@ -873,17 +1071,19 @@ argument_list|,
 argument|BugReport&R
 argument_list|,
 argument|bool IsArg = false
+argument_list|,
+argument|bool EnableNullFPSuppression = true
 argument_list|)
 block|;
 specifier|const
-name|Stmt
+name|Expr
 operator|*
-name|GetDerefExpr
+name|getDerefExpr
 argument_list|(
 specifier|const
-name|ExplodedNode
+name|Stmt
 operator|*
-name|N
+name|S
 argument_list|)
 block|;
 specifier|const

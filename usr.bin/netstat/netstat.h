@@ -281,6 +281,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kread_counters
+parameter_list|(
+name|u_long
+name|addr
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -1084,6 +1101,8 @@ name|void
 name|routepr
 parameter_list|(
 name|u_long
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

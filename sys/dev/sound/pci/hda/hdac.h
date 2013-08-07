@@ -1022,6 +1022,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASUS_UX31A_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(ASUS, 0x1517)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASUS_W2J_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(ASUS, 0x1971)
 end_define

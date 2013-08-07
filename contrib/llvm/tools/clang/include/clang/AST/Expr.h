@@ -68,19 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Stmt.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
 end_include
 
 begin_include
@@ -98,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTVector.h"
+file|"clang/AST/Stmt.h"
 end_include
 
 begin_include
@@ -110,7 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/TargetInfo.h"
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/CharInfo.h"
 end_include
 
 begin_include
@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APSInt.h"
+file|"llvm/ADT/APFloat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/APFloat.h"
+file|"llvm/ADT/APSInt.h"
 end_include
 
 begin_include
@@ -149,21 +149,27 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cctype>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
+name|APValue
+decl_stmt|;
+name|class
 name|ASTContext
 decl_stmt|;
 name|class
-name|APValue
+name|BlockDecl
+decl_stmt|;
+name|class
+name|CXXBaseSpecifier
+decl_stmt|;
+name|class
+name|CXXMemberCallExpr
+decl_stmt|;
+name|class
+name|CXXOperatorCallExpr
 decl_stmt|;
 name|class
 name|CastExpr
@@ -175,34 +181,25 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
-name|ParmVarDecl
-decl_stmt|;
-name|class
-name|NamedDecl
-decl_stmt|;
-name|class
-name|ValueDecl
-decl_stmt|;
-name|class
-name|BlockDecl
-decl_stmt|;
-name|class
-name|CXXBaseSpecifier
-decl_stmt|;
-name|class
-name|CXXOperatorCallExpr
-decl_stmt|;
-name|class
 name|MaterializeTemporaryExpr
 decl_stmt|;
 name|class
-name|CXXMemberCallExpr
+name|NamedDecl
 decl_stmt|;
 name|class
 name|ObjCPropertyRefExpr
 decl_stmt|;
 name|class
 name|OpaqueValueExpr
+decl_stmt|;
+name|class
+name|ParmVarDecl
+decl_stmt|;
+name|class
+name|TargetInfo
+decl_stmt|;
+name|class
+name|ValueDecl
 decl_stmt|;
 comment|/// \brief A simple array of base specifiers.
 typedef|typedef
@@ -230,9 +227,8 @@ name|MemberPointerAdjustment
 block|}
 name|Kind
 enum|;
-union|union
-block|{
 struct|struct
+name|DTB
 block|{
 specifier|const
 name|CastExpr
@@ -245,13 +241,9 @@ modifier|*
 name|DerivedClass
 decl_stmt|;
 block|}
-name|DerivedToBase
 struct|;
-name|FieldDecl
-modifier|*
-name|Field
-decl_stmt|;
 struct|struct
+name|P
 block|{
 specifier|const
 name|MemberPointerType
@@ -263,8 +255,21 @@ modifier|*
 name|RHS
 decl_stmt|;
 block|}
-name|Ptr
 struct|;
+union|union
+block|{
+name|struct
+name|DTB
+name|DerivedToBase
+decl_stmt|;
+name|FieldDecl
+modifier|*
+name|Field
+decl_stmt|;
+name|struct
+name|P
+name|Ptr
+decl_stmt|;
 block|}
 union|;
 name|SubobjectAdjustment
@@ -620,7 +625,7 @@ operator|=
 name|ID
 block|;   }
 comment|/// \brief Whether this expression contains an unexpanded parameter
-comment|/// pack (for C++0x variadic templates).
+comment|/// pack (for C++11 variadic templates).
 comment|///
 comment|/// Given the following function template:
 comment|///
@@ -692,7 +697,7 @@ comment|/// an l-value expression identifies a specific object whereas the
 comment|/// result of an r-value expression is a value detached from any
 comment|/// specific storage.
 comment|///
-comment|/// C++0x divides the concept of "r-value" into pure r-values
+comment|/// C++11 divides the concept of "r-value" into pure r-values
 comment|/// ("pr-values") and so-called expiring values ("x-values"), which
 comment|/// identify specific objects that can be safely cannibalized for
 comment|/// their resources.  This is an unfortunate abuse of terminology on
@@ -833,7 +838,7 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief The return type of classify(). Represents the C++0x expression
+comment|/// \brief The return type of classify(). Represents the C++11 expression
 comment|///        taxonomy.
 name|class
 name|Classification
@@ -1066,10 +1071,10 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Classify - Classify this expression according to the C++0x
+comment|/// \brief Classify - Classify this expression according to the C++11
 comment|///        expression taxonomy.
 comment|///
-comment|/// C++0x defines ([basic.lval]) a new taxonomy of expressions to replace the
+comment|/// C++11 defines ([basic.lval]) a new taxonomy of expressions to replace the
 comment|/// old lvalue vs rvalue. This function determines the type of expression this
 comment|/// is. There are three expression types:
 comment|/// - lvalues are classical lvalues as in C++03.
@@ -1095,7 +1100,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief ClassifyModifiable - Classify this expression according to the
-comment|///        C++0x expression taxonomy, and see if it is valid on the left side
+comment|///        C++11 expression taxonomy, and see if it is valid on the left side
 comment|///        of an assignment.
 comment|///
 comment|/// This function extends classify in that it also tests whether the
@@ -1277,17 +1282,39 @@ specifier|const
 block|;
 name|public
 operator|:
+comment|/// \brief Returns true if this expression is a gl-value that
+comment|/// potentially refers to a bit-field.
+comment|///
+comment|/// In C++, whether a gl-value refers to a bitfield is essentially
+comment|/// an aspect of the value-kind type system.
+name|bool
+name|refersToBitField
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getObjectKind
+argument_list|()
+operator|==
+name|OK_BitField
+return|;
+block|}
 comment|/// \brief If this expression refers to a bit-field, retrieve the
 comment|/// declaration of that bit-field.
+comment|///
+comment|/// Note that this returns a non-null pointer in subtly different
+comment|/// places than refersToBitField returns true.  In particular, this can
+comment|/// return a non-null pointer even for r-values loaded from
+comment|/// bit-fields, but it will return null for a conditional bit-field.
 name|FieldDecl
 operator|*
-name|getBitField
+name|getSourceBitField
 argument_list|()
 block|;
 specifier|const
 name|FieldDecl
 operator|*
-name|getBitField
+name|getSourceBitField
 argument_list|()
 specifier|const
 block|{
@@ -1301,7 +1328,7 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getBitField
+name|getSourceBitField
 argument_list|()
 return|;
 block|}
@@ -1493,8 +1520,6 @@ name|FunctionDecl
 operator|*
 name|FD
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|PartialDiagnosticAt
@@ -1533,8 +1558,6 @@ comment|/// If the expression is unfoldable, the notes will indicate why it's no
 comment|/// foldable. If the expression is foldable, but not a constant expression,
 comment|/// the notes will describes why it isn't a constant expression. If the
 comment|/// expression *is* a constant expression, no notes will be produced.
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|PartialDiagnosticAt
@@ -1699,9 +1722,29 @@ name|APSInt
 name|EvaluateKnownConstInt
 argument_list|(
 argument|const ASTContext&Ctx
+argument_list|,
+argument|SmallVectorImpl<PartialDiagnosticAt> *Diag=
+literal|0
 argument_list|)
 specifier|const
 expr_stmt|;
+name|void
+name|EvaluateForOverflow
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|PartialDiagnosticAt
+operator|>
+operator|*
+name|Diag
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// EvaluateAsLValue - Evaluate an expression to see if we can fold it to an
 comment|/// lvalue with link time known address, with no side-effects.
 name|bool
@@ -1739,8 +1782,6 @@ name|VarDecl
 operator|*
 name|VD
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|PartialDiagnosticAt
@@ -1770,8 +1811,8 @@ block|,
 comment|/// \brief Expression is a Null pointer constant built from a literal zero.
 name|NPCK_ZeroLiteral
 block|,
-comment|/// \brief Expression is a C++0X nullptr.
-name|NPCK_CXX0X_nullptr
+comment|/// \brief Expression is a C++11 nullptr.
+name|NPCK_CXX11_nullptr
 block|,
 comment|/// \brief Expression is a GNU-style __null constant.
 name|NPCK_GNUNull
@@ -2178,8 +2219,6 @@ specifier|static
 name|bool
 name|hasAnyTypeDependentArguments
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|Expr
@@ -2418,29 +2457,40 @@ return|return
 name|Loc
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
-if|if
-condition|(
-name|SourceExpr
-condition|)
 return|return
+name|SourceExpr
+operator|?
 name|SourceExpr
 operator|->
-name|getSourceRange
+name|getLocStart
 argument_list|()
-return|;
-return|return
+operator|:
 name|Loc
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceExpr
+condition|?
+name|SourceExpr
+operator|->
+name|getLocEnd
+argument_list|()
+else|:
+name|Loc
+return|;
+block|}
 name|SourceLocation
 name|getExprLoc
 argument_list|()
@@ -2457,28 +2507,23 @@ operator|->
 name|getExprLoc
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|Loc
 return|;
-end_return
+block|}
+end_decl_stmt
 
-begin_macro
-unit|}    child_range
+begin_function
+name|child_range
 name|children
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 name|child_range
 argument_list|()
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/// The source expression of an opaque value expression is the
@@ -3178,15 +3223,6 @@ name|L
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SourceLocation
@@ -4141,17 +4177,24 @@ argument_list|,
 argument|const Decl *CurrentDecl
 argument_list|)
 block|;
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|Loc
-argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
 return|;
 block|}
 specifier|static
@@ -4373,7 +4416,7 @@ operator|::
 name|APFloat
 name|getValue
 argument_list|(
-argument|bool IsIEEE
+argument|const llvm::fltSemantics&Semantics
 argument_list|)
 specifier|const
 block|{
@@ -4382,10 +4425,10 @@ name|llvm
 operator|::
 name|APFloat
 argument_list|(
+name|Semantics
+argument_list|,
 name|getIntValue
 argument_list|()
-argument_list|,
-name|IsIEEE
 argument_list|)
 return|;
 block|}
@@ -4479,17 +4522,24 @@ argument_list|,
 argument|EmptyShell Empty
 argument_list|)
 block|;
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|Loc
-argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
 return|;
 block|}
 comment|/// \brief Retrieve the location of the literal.
@@ -4656,17 +4706,24 @@ name|Kind
 operator|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|Loc
-argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
 return|;
 block|}
 name|unsigned
@@ -4812,9 +4869,8 @@ name|APFloatStorage
 operator|::
 name|getValue
 argument_list|(
-name|FloatingLiteralBits
-operator|.
-name|IsIEEE
+name|getSemantics
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -4826,6 +4882,21 @@ argument_list|,
 argument|const llvm::APFloat&Val
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|&
+name|getSemantics
+argument_list|()
+operator|==
+operator|&
+name|Val
+operator|.
+name|getSemantics
+argument_list|()
+operator|&&
+literal|"Inconsistent semantics"
+argument_list|)
+block|;
 name|APFloatStorage
 operator|::
 name|setValue
@@ -4835,6 +4906,61 @@ argument_list|,
 name|Val
 argument_list|)
 block|;   }
+comment|/// Get a raw enumeration value representing the floating-point semantics of
+comment|/// this literal (32-bit IEEE, x87, ...), suitable for serialisation.
+name|APFloatSemantics
+name|getRawSemantics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|APFloatSemantics
+operator|>
+operator|(
+name|FloatingLiteralBits
+operator|.
+name|Semantics
+operator|)
+return|;
+block|}
+comment|/// Set the raw enumeration value representing the floating-point semantics of
+comment|/// this literal (32-bit IEEE, x87, ...), suitable for serialisation.
+name|void
+name|setRawSemantics
+argument_list|(
+argument|APFloatSemantics Sem
+argument_list|)
+block|{
+name|FloatingLiteralBits
+operator|.
+name|Semantics
+operator|=
+name|Sem
+block|;   }
+comment|/// Return the APFloat semantics this literal uses.
+specifier|const
+name|llvm
+operator|::
+name|fltSemantics
+operator|&
+name|getSemantics
+argument_list|()
+specifier|const
+block|;
+comment|/// Set the APFloat semantics this literal uses.
+name|void
+name|setSemantics
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|fltSemantics
+operator|&
+name|Sem
+argument_list|)
+block|;
 name|bool
 name|isExact
 argument_list|()
@@ -4885,17 +5011,24 @@ name|Loc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|Loc
-argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Loc
 return|;
 block|}
 specifier|static
@@ -5030,8 +5163,8 @@ name|Val
 operator|=
 name|E
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -5039,7 +5172,20 @@ block|{
 return|return
 name|Val
 operator|->
-name|getSourceRange
+name|getLocStart
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Val
+operator|->
+name|getLocEnd
 argument_list|()
 return|;
 block|}
@@ -5384,10 +5530,9 @@ block|}
 name|void
 name|outputString
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|)
+specifier|const
 block|;
 name|uint32_t
 name|getCodeUnit
@@ -5614,7 +5759,7 @@ control|)
 if|if
 condition|(
 operator|!
-name|isascii
+name|isASCII
 argument_list|(
 name|Str
 index|[
@@ -5739,27 +5884,32 @@ operator|+
 name|NumConcatenated
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|TokLocs
 index|[
 literal|0
 index|]
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|TokLocs
 index|[
 name|NumConcatenated
 operator|-
 literal|1
 index|]
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -5929,19 +6079,24 @@ name|Val
 operator|=
 name|E
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|L
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|R
-argument_list|)
 return|;
 block|}
 comment|/// \brief Get the location of the left parentheses '('.
@@ -6428,39 +6583,40 @@ argument_list|(
 argument|Opcode Opc
 argument_list|)
 block|;
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
-if|if
-condition|(
+return|return
 name|isPostfix
 argument_list|()
-condition|)
-return|return
-name|SourceRange
-argument_list|(
+operator|?
 name|Val
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+operator|:
 name|Loc
-argument_list|)
 return|;
-else|else
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
 return|return
-name|SourceRange
-argument_list|(
+name|isPostfix
+argument_list|()
+condition|?
 name|Loc
-argument_list|,
+else|:
 name|Val
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -6633,9 +6789,9 @@ name|DotLoc
 operator|.
 name|isValid
 argument_list|()
-operator|?
+condition|?
 name|DotLoc
-operator|:
+else|:
 name|NameLoc
 argument_list|,
 name|NameLoc
@@ -6662,9 +6818,9 @@ name|DotLoc
 operator|.
 name|isValid
 argument_list|()
-operator|?
+condition|?
 name|DotLoc
-operator|:
+else|:
 name|NameLoc
 argument_list|,
 name|NameLoc
@@ -6818,6 +6974,32 @@ name|LLVM_READONLY
 block|{
 return|return
 name|Range
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
 return|;
 block|}
 expr|}
@@ -7180,19 +7362,24 @@ return|return
 name|NumExprs
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|OperatorLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -7664,19 +7851,24 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|OpLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -8063,23 +8255,28 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getLHS
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RBracketLoc
-argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -8684,6 +8881,37 @@ name|getNumArgs
 argument_list|()
 return|;
 block|}
+comment|/// This method provides fast access to all the subexpressions of
+comment|/// a CallExpr without going through the slower virtual child_iterator
+comment|/// interface.  This provides efficient reverse iteration of the
+comment|/// subexpressions.  This is currently used for CFG construction.
+name|ArrayRef
+operator|<
+name|Stmt
+operator|*
+operator|>
+name|getRawSubExprs
+argument_list|()
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+name|SubExprs
+expr|,
+name|getNumPreArgs
+argument_list|()
+operator|+
+name|PREARGS_START
+operator|+
+name|getNumArgs
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// getNumCommas - Return the number of commas that must have been present in
 comment|/// this function call.
 name|unsigned
@@ -8706,6 +8934,15 @@ comment|/// not, return 0.
 name|unsigned
 name|isBuiltinCall
 argument_list|()
+specifier|const
+block|;
+comment|/// \brief Returns \c true if this is a call to a builtin which does not
+comment|/// evaluate side-effects within its arguments.
+name|bool
+name|isUnevaluatedBuiltinCall
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|)
 specifier|const
 block|;
 comment|/// getCallReturnType - Get the return type of the call expr. This is not
@@ -8735,12 +8972,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-block|;
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -9833,15 +10064,6 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -10250,8 +10472,8 @@ argument_list|(
 name|tinfo
 argument_list|)
 block|;   }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -10263,7 +10485,7 @@ operator|!
 name|Init
 condition|)
 return|return
-name|SourceRange
+name|SourceLocation
 argument_list|()
 return|;
 if|if
@@ -10276,22 +10498,45 @@ condition|)
 return|return
 name|Init
 operator|->
-name|getSourceRange
+name|getLocStart
 argument_list|()
 return|;
 end_decl_stmt
 
 begin_return
 return|return
-name|SourceRange
-argument_list|(
 name|LParenLoc
-argument_list|,
+return|;
+end_return
+
+begin_macro
+unit|}   SourceLocation
+name|getLocEnd
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+name|LLVM_READONLY
+block|{
+comment|// FIXME: Init should never be null.
+if|if
+condition|(
+operator|!
+name|Init
+condition|)
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
 name|Init
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 end_return
 
@@ -10531,10 +10776,14 @@ operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 operator|||
+operator|(
+name|op
+operator|&&
 name|op
 operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
+operator|)
 operator|)
 argument_list|)
 operator|,
@@ -11108,20 +11357,6 @@ argument_list|,
 argument|unsigned PathSize
 argument_list|)
 block|;
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-name|LLVM_READONLY
-block|{
-return|return
-name|getSubExpr
-argument_list|()
-operator|->
-name|getSourceRange
-argument_list|()
-return|;
-block|}
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -11562,26 +11797,28 @@ name|RPLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|LPLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getSubExpr
 argument_list|()
 operator|->
-name|getSourceRange
+name|getLocEnd
 argument_list|()
-operator|.
-name|getEnd
-argument_list|()
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -11777,7 +12014,7 @@ operator|!
 name|isCompoundAssignmentOp
 argument_list|()
 operator|&&
-literal|"Use ArithAssignBinaryOperator for compound assignments"
+literal|"Use CompoundAssignOperator for compound assignments"
 argument_list|)
 block|;   }
 comment|/// \brief Construct an empty binary operator.
@@ -11917,27 +12154,32 @@ index|]
 operator|=
 name|E
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getLHS
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getRHS
 argument_list|()
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 comment|/// getOpcodeStr - Turn an Opcode enum value into the punctuation char it
@@ -12190,6 +12432,115 @@ name|getOpcode
 argument_list|()
 argument_list|)
 return|;
+block|}
+specifier|static
+name|Opcode
+name|negateComparisonOp
+argument_list|(
+argument|Opcode Opc
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|Opc
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Not a comparsion operator."
+argument_list|)
+expr_stmt|;
+case|case
+name|BO_LT
+case|:
+return|return
+name|BO_GE
+return|;
+case|case
+name|BO_GT
+case|:
+return|return
+name|BO_LE
+return|;
+case|case
+name|BO_LE
+case|:
+return|return
+name|BO_GT
+return|;
+case|case
+name|BO_GE
+case|:
+return|return
+name|BO_LT
+return|;
+case|case
+name|BO_EQ
+case|:
+return|return
+name|BO_NE
+return|;
+case|case
+name|BO_NE
+case|:
+return|return
+name|BO_EQ
+return|;
+block|}
+block|}
+specifier|static
+name|Opcode
+name|reverseComparisonOp
+argument_list|(
+argument|Opcode Opc
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|Opc
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Not a comparsion operator."
+argument_list|)
+expr_stmt|;
+case|case
+name|BO_LT
+case|:
+return|return
+name|BO_GT
+return|;
+case|case
+name|BO_GT
+case|:
+return|return
+name|BO_LT
+return|;
+case|case
+name|BO_LE
+case|:
+return|return
+name|BO_GE
+return|;
+case|case
+name|BO_GE
+case|:
+return|return
+name|BO_LE
+return|;
+case|case
+name|BO_EQ
+case|:
+case|case
+name|BO_NE
+case|:
+return|return
+name|Opc
+return|;
+block|}
 block|}
 specifier|static
 name|bool
@@ -13082,27 +13433,32 @@ index|]
 operator|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getCond
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getRHS
 argument_list|()
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -13435,27 +13791,32 @@ index|]
 operator|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getCommon
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getFalseExpr
 argument_list|()
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -13736,19 +14097,24 @@ name|LabelLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|AmpAmpLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|LabelLoc
-argument_list|)
 return|;
 block|}
 name|LabelDecl
@@ -13929,19 +14295,24 @@ name|SubStmt
 operator|=
 name|S
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|LParenLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 name|SourceLocation
@@ -14119,19 +14490,24 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|BuiltinLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -14644,19 +15020,24 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|BuiltinLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -14784,17 +15165,24 @@ name|TokenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|TokenLoc
-argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|TokenLoc
 return|;
 block|}
 specifier|static
@@ -15042,19 +15430,24 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|BuiltinLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -15215,21 +15608,14 @@ comment|/// \brief Build an empty initializer list.
 name|explicit
 name|InitListExpr
 argument_list|(
-argument|ASTContext&C
-argument_list|,
 argument|EmptyShell Empty
 argument_list|)
 operator|:
 name|Expr
 argument_list|(
-name|InitListExprClass
+argument|InitListExprClass
 argument_list|,
-name|Empty
-argument_list|)
-block|,
-name|InitExprs
-argument_list|(
-argument|C
+argument|Empty
 argument_list|)
 block|{ }
 name|unsigned
@@ -15708,8 +16094,14 @@ name|InitializesStdInitializerList
 operator|=
 name|ISIL
 block|;   }
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|;
+name|SourceLocation
+name|getLocEnd
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -16512,9 +16904,10 @@ name|Index
 return|;
 block|}
 name|SourceLocation
-name|getStartLocation
+name|getLocStart
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 if|if
 condition|(
@@ -16542,9 +16935,10 @@ argument_list|()
 return|;
 block|}
 name|SourceLocation
-name|getEndLocation
+name|getLocEnd
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Kind
@@ -16567,10 +16961,10 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|getStartLocation
+name|getLocStart
 argument_list|()
 argument_list|,
-name|getEndLocation
+name|getLocEnd
 argument_list|()
 argument_list|)
 return|;
@@ -16763,44 +17157,47 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|Expr
 modifier|*
 name|getArrayIndex
-parameter_list|(
+argument_list|(
 specifier|const
 name|Designator
-modifier|&
+operator|&
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|Expr
 modifier|*
 name|getArrayRangeStart
-parameter_list|(
+argument_list|(
 specifier|const
 name|Designator
-modifier|&
+operator|&
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|Expr
 modifier|*
 name|getArrayRangeEnd
-parameter_list|(
+argument_list|(
 specifier|const
 name|Designator
-modifier|&
+operator|&
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// @brief Retrieve the location of the '=' that precedes the
@@ -17137,8 +17534,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getLocEnd
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -17303,14 +17709,25 @@ operator|==
 name|ImplicitValueInitExprClass
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
+name|SourceLocation
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|SourceLocation
 argument_list|()
 return|;
 block|}
@@ -17479,19 +17896,24 @@ return|return
 name|RParenLoc
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|LParenLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -17904,19 +18326,24 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|GenericLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -18172,23 +18599,28 @@ argument|SmallVectorImpl<unsigned>&Elts
 argument_list|)
 specifier|const
 block|;
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getBase
 argument_list|()
 operator|->
 name|getLocStart
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|AccessorLoc
-argument_list|)
 return|;
 block|}
 comment|/// isArrow - Return true if the base expression is a pointer to vector,
@@ -18357,24 +18789,29 @@ operator|*
 name|getBody
 argument_list|()
 block|;
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|getCaretLocation
 argument_list|()
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|getBody
 argument_list|()
 operator|->
 name|getLocEnd
 argument_list|()
-argument_list|)
 return|;
 block|}
 comment|/// getFunctionType - Return the underlying function type for this block.
@@ -18574,19 +19011,24 @@ return|return
 name|RParenLoc
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|BuiltinLoc
-argument_list|,
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -19032,8 +19474,8 @@ name|getExprLoc
 argument_list|()
 return|;
 block|}
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
@@ -19042,7 +19484,21 @@ return|return
 name|getSyntacticForm
 argument_list|()
 operator|->
-name|getSourceRange
+name|getLocStart
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|getSyntacticForm
+argument_list|()
+operator|->
+name|getLocEnd
 argument_list|()
 return|;
 block|}
@@ -19525,19 +19981,27 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|SourceRange
-name|getSourceRange
+name|SourceLocation
+name|getLocStart
 argument_list|()
 specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|SourceRange
-argument_list|(
 name|BuiltinLoc
-argument_list|,
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
 name|RParenLoc
-argument_list|)
 return|;
 block|}
 end_expr_stmt

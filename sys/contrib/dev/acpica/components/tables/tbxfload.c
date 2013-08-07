@@ -304,7 +304,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|2
+literal|0
 init|;
 name|i
 operator|<
@@ -373,13 +373,19 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* Skip SSDT when it is overriden with DSDT */
+comment|/*          * Optionally do not load any SSDTs from the RSDT/XSDT. This can          * be useful for debugging ACPI problems on some machines.          */
 if|if
 condition|(
-name|ACPI_COMPARE_NAME
+name|AcpiGbl_DisableSsdtTableLoad
+condition|)
+block|{
+name|ACPI_INFO
 argument_list|(
-operator|&
 operator|(
+name|AE_INFO
+operator|,
+literal|"Ignoring %4.4s at %p"
+operator|,
 name|AcpiGbl_RootTableList
 operator|.
 name|Tables
@@ -388,12 +394,13 @@ name|i
 index|]
 operator|.
 name|Signature
-operator|)
+operator|.
+name|Ascii
+operator|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|void
 argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|)
-operator|&&
-operator|(
 name|AcpiGbl_RootTableList
 operator|.
 name|Tables
@@ -401,12 +408,11 @@ index|[
 name|i
 index|]
 operator|.
-name|Flags
-operator|&
-name|ACPI_TABLE_ORIGIN_OVERRIDE
+name|Address
+argument_list|)
 operator|)
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* Ignore errors while loading tables, get as many as possible */

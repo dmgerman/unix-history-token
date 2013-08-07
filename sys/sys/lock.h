@@ -280,6 +280,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LO_IS_VNODE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Tell WITNESS about a VNODE lock */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LO_CLASSMASK
 value|0x0f000000
 end_define
@@ -780,6 +791,14 @@ specifier|extern
 name|struct
 name|lock_class
 name|lock_class_rm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lock_class
+name|lock_class_rm_sleepable
 decl_stmt|;
 end_decl_stmt
 

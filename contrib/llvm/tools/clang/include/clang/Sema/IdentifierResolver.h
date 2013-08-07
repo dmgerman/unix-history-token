@@ -553,10 +553,6 @@ name|DeclContext
 operator|*
 name|Ctx
 argument_list|,
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
 name|Scope
 operator|*
 name|S

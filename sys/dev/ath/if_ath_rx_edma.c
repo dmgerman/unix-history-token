@@ -1331,7 +1331,7 @@ name|bf
 operator|->
 name|bf_desc
 expr_stmt|;
-comment|/* 		 * Sync descriptor memory - this also syncs the buffer for us. 		 * 		 * EDMA descriptors are in cached memory. 		 */
+comment|/* 		 * Sync descriptor memory - this also syncs the buffer for us. 		 * EDMA descriptors are in cached memory. 		 */
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -1343,6 +1343,8 @@ operator|->
 name|bf_dmamap
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 name|rs
@@ -1449,7 +1451,7 @@ operator|==
 name|HAL_EINPROGRESS
 condition|)
 break|break;
-comment|/* 		 * Completed descriptor. 		 * 		 * In the future we'll call ath_rx_pkt(), but it first 		 * has to be taught about EDMA RX queues (so it can 		 * access sc_rxpending correctly.) 		 */
+comment|/* 		 * Completed descriptor. 		 */
 name|DPRINTF
 argument_list|(
 name|sc
@@ -1465,6 +1467,18 @@ argument_list|)
 expr_stmt|;
 name|npkts
 operator|++
+expr_stmt|;
+comment|/* 		 * We've been synced already, so unmap. 		 */
+name|bus_dmamap_unload
+argument_list|(
+name|sc
+operator|->
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Remove the FIFO entry and place it on the completion 		 * queue. 		 */
 name|re
@@ -1484,6 +1498,9 @@ operator|&
 name|sc
 operator|->
 name|sc_rx_rxlist
+index|[
+name|qtype
+index|]
 argument_list|,
 name|bf
 argument_list|,
@@ -1593,6 +1610,12 @@ argument_list|,
 literal|"ath_edma_recv_proc_queue(): kickpcu"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|npkts
+operator|>
+literal|0
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -1656,7 +1679,27 @@ name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bf
 argument_list|,
-argument|&sc->sc_rx_rxlist
+argument|&sc->sc_rx_rxlist[HAL_RX_QUEUE_LP]
+argument_list|,
+argument|bf_list
+argument_list|,
+argument|next
+argument_list|)
+block|{
+comment|/* Free the buffer/mbuf */
+name|ath_edma_rxbuf_free
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+block|}
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|bf
+argument_list|,
+argument|&sc->sc_rx_rxlist[HAL_RX_QUEUE_HP]
 argument_list|,
 argument|bf_list
 argument_list|,
@@ -1719,6 +1762,11 @@ decl_stmt|;
 name|ath_bufhead
 name|rxlist
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1763,6 +1811,9 @@ operator|&
 name|sc
 operator|->
 name|sc_rx_rxlist
+index|[
+name|qtype
+index|]
 argument_list|,
 name|bf_list
 argument_list|)
@@ -1797,7 +1848,6 @@ name|sc_rx_statuslen
 argument_list|)
 expr_stmt|;
 comment|/* Handle the frame */
-comment|/* 		 * Note: this may or may not free bf->bf_m and sync/unmap 		 * the frame. 		 */
 name|rs
 operator|=
 operator|&
@@ -1806,6 +1856,18 @@ operator|->
 name|bf_status
 operator|.
 name|ds_rxstat
+expr_stmt|;
+name|m
+operator|=
+name|bf
+operator|->
+name|bf_m
+expr_stmt|;
+name|bf
+operator|->
+name|bf_m
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1826,6 +1888,8 @@ argument_list|,
 name|qtype
 argument_list|,
 name|bf
+argument_list|,
+name|m
 argument_list|)
 condition|)
 name|ngood
@@ -2120,7 +2184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an RX mbuf for the given ath_buf and initialise  * it for EDMA.  *  * + Allocate a 4KB mbuf;  * + Setup the DMA map for the given buffer;  * + Keep a pointer to the start of the mbuf - that's where the  *   descriptor lies;  * + Take a pointer to the start of the RX buffer, set the  *   mbuf "start" to be there;  * + Return that.  */
+comment|/*  * Allocate an RX mbuf for the given ath_buf and initialise  * it for EDMA.  *  * + Allocate a 4KB mbuf;  * + Setup the DMA map for the given buffer;  * + Return that.  */
 end_comment
 
 begin_function
@@ -2212,6 +2276,49 @@ name|m_ext
 operator|.
 name|ext_size
 expr_stmt|;
+comment|/* 	 * Populate ath_buf fields. 	 */
+name|bf
+operator|->
+name|bf_desc
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ath_desc
+operator|*
+argument_list|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_lastds
+operator|=
+name|bf
+operator|->
+name|bf_desc
+expr_stmt|;
+comment|/* XXX only really for TX? */
+name|bf
+operator|->
+name|bf_m
+operator|=
+name|m
+expr_stmt|;
+comment|/* 	 * Zero the descriptor and ensure it makes it out to the 	 * bounce buffer if one is required. 	 * 	 * XXX PREWRITE will copy the whole buffer; we only needed it 	 * to sync the first 32 DWORDS.  Oh well. 	 */
+name|memset
+argument_list|(
+name|bf
+operator|->
+name|bf_desc
+argument_list|,
+literal|'\0'
+argument_list|,
+name|sc
+operator|->
+name|sc_rx_statuslen
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create DMA mapping. 	 */
 name|error
 operator|=
@@ -2270,20 +2377,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Populate ath_buf fields. 	 */
-name|bf
-operator|->
-name|bf_desc
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ath_desc
-operator|*
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Set daddr to the physical mapping page. 	 */
 name|bf
 operator|->
 name|bf_daddr
@@ -2297,42 +2391,22 @@ index|]
 operator|.
 name|ds_addr
 expr_stmt|;
-name|bf
-operator|->
-name|bf_lastds
-operator|=
-name|bf
-operator|->
-name|bf_desc
-expr_stmt|;
-comment|/* XXX only really for TX? */
-name|bf
-operator|->
-name|bf_m
-operator|=
-name|m
-expr_stmt|;
-comment|/* Zero the descriptor */
-name|memset
+comment|/* 	 * Prepare for the upcoming read. 	 * 	 * We need to both sync some data into the buffer (the zero'ed 	 * descriptor payload) and also prepare for the read that's going 	 * to occur. 	 */
+name|bus_dmamap_sync
 argument_list|(
-name|bf
-operator|->
-name|bf_desc
-argument_list|,
-literal|'\0'
-argument_list|,
 name|sc
 operator|->
-name|sc_rx_statuslen
+name|sc_dmat
+argument_list|,
+name|bf
+operator|->
+name|bf_dmamap
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Adjust mbuf header and length/size to compensate for the 	 * descriptor size. 	 */
-block|m_adj(m, sc->sc_rx_statuslen);
-endif|#
-directive|endif
 comment|/* Finish! */
 return|return
 operator|(
@@ -2341,6 +2415,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Allocate a RX buffer.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2386,11 +2464,24 @@ name|bf
 operator|==
 name|NULL
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: nothing on rxbuf?!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* Remove it from the free list */
 name|TAILQ_REMOVE
 argument_list|(
@@ -2483,7 +2574,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* We're doing this multiple times? */
+comment|/* 	 * Only unload the frame if we haven't consumed 	 * the mbuf via ath_rx_pkt(). 	 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_m
+condition|)
+block|{
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -2495,13 +2593,6 @@ operator|->
 name|bf_dmamap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_m
-condition|)
-block|{
 name|m_freem
 argument_list|(
 name|bf
@@ -2721,20 +2812,6 @@ index|]
 operator|=
 name|bf
 expr_stmt|;
-comment|/* 		 * Flush the descriptor contents before it's handed to the 		 * hardware. 		 */
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|sc_dmat
-argument_list|,
-name|bf
-operator|->
-name|bf_dmamap
-argument_list|,
-name|BUS_DMASYNC_PREREAD
-argument_list|)
-expr_stmt|;
 comment|/* Write to the RX FIFO */
 name|DPRINTF
 argument_list|(
@@ -2742,7 +2819,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_EDMA_RX
 argument_list|,
-literal|"%s: Q%d: putrxbuf=%p\n"
+literal|"%s: Q%d: putrxbuf=%p (0x%jx)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2751,6 +2828,13 @@ argument_list|,
 name|bf
 operator|->
 name|bf_desc
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|bf
+operator|->
+name|bf_daddr
 argument_list|)
 expr_stmt|;
 name|ath_hal_putrxbuf

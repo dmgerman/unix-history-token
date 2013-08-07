@@ -317,6 +317,14 @@ comment|/* # of IGMPv3 records in this chain */
 block|}
 name|PH_vt
 union|;
+name|u_int16_t
+name|fibnum
+decl_stmt|;
+comment|/* this packet should use this fib */
+name|u_int16_t
+name|pad2
+decl_stmt|;
+comment|/* align to 32 bits */
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
@@ -783,21 +791,6 @@ begin_comment
 comment|/* mask of bits holding flowid hash type */
 end_comment
 
-begin_comment
-comment|/*  * For RELENG_{6,7} steal these flags for limited multiple routing table  * support. In RELENG_8 and beyond, use just one flag and a tag.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FIB
-value|0xF0000000
-end_define
-
-begin_comment
-comment|/* steal some bits to store fib number. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -969,7 +962,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_FIB|M_HASHTYPEBITS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
 end_define
 
 begin_comment
@@ -1397,75 +1390,6 @@ end_define
 begin_comment
 comment|/* no tags attached to mbuf */
 end_comment
-
-begin_comment
-comment|/*  * General mbuf allocator statistics structure.  *  * Many of these statistics are no longer used; we instead track many  * allocator statistics through UMA's built in statistics mechanism.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mbstat
-block|{
-name|u_long
-name|m_mbufs
-decl_stmt|;
-comment|/* XXX */
-name|u_long
-name|m_mclusts
-decl_stmt|;
-comment|/* XXX */
-name|u_long
-name|m_drain
-decl_stmt|;
-comment|/* times drained protocols for space */
-name|u_long
-name|m_mcfail
-decl_stmt|;
-comment|/* XXX: times m_copym failed */
-name|u_long
-name|m_mpfail
-decl_stmt|;
-comment|/* XXX: times m_pullup failed */
-name|u_long
-name|m_msize
-decl_stmt|;
-comment|/* length of an mbuf */
-name|u_long
-name|m_mclbytes
-decl_stmt|;
-comment|/* length of an mbuf cluster */
-name|u_long
-name|m_minclsize
-decl_stmt|;
-comment|/* min length of data to allocate a cluster */
-name|u_long
-name|m_mlen
-decl_stmt|;
-comment|/* length of data in an mbuf */
-name|u_long
-name|m_mhlen
-decl_stmt|;
-comment|/* length of data in a header mbuf */
-comment|/* Number of mbtypes (gives # elems in mbtypes[] array) */
-name|short
-name|m_numtypes
-decl_stmt|;
-comment|/* XXX: Sendfile stats should eventually move to their own struct */
-name|u_long
-name|sf_iocnt
-decl_stmt|;
-comment|/* times sendfile had to do disk I/O */
-name|u_long
-name|sf_allocfail
-decl_stmt|;
-comment|/* times sfbuf allocation failed */
-name|u_long
-name|sf_allocwait
-decl_stmt|;
-comment|/* times sfbuf allocation had to wait */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Compatibility with historic mbuf allocator.  */
@@ -2999,18 +2923,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mbstat
-name|mbstat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* General mbuf stats/infos */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|nmbclusters
 decl_stmt|;
@@ -4444,27 +4356,42 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/* XXX temporary FIB methods probably eventually use tags.*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FIBSHIFT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_FIBMASK
-value|0x0F
-end_define
-
-begin_comment
-comment|/* get the fib from an mbuf and if it is not set, return the default */
-end_comment
+begin_function
+specifier|static
+name|int
+specifier|inline
+name|rt_m_getfib
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+argument_list|,
+operator|(
+literal|"Attempt to get FIB from non header mbuf."
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|fibnum
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -4473,8 +4400,7 @@ name|M_GETFIB
 parameter_list|(
 name|_m
 parameter_list|)
-define|\
-value|((((_m)->m_flags& M_FIB)>> M_FIBSHIFT)& M_FIBMASK)
+value|rt_m_getfib(_m)
 end_define
 
 begin_define
@@ -4486,7 +4412,7 @@ name|_m
 parameter_list|,
 name|_fib
 parameter_list|)
-value|do {						\ 	_m->m_flags&= ~M_FIB;					   	\ 	_m->m_flags |= (((_fib)<< M_FIBSHIFT)& M_FIB);  \ } while (0)
+value|do {						\         KASSERT((_m)->m_flags& M_PKTHDR, ("Attempt to set FIB on non header mbuf."));	\ 	((_m)->m_pkthdr.fibnum) = (_fib);				\ } while (0)
 end_define
 
 begin_endif

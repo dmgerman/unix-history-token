@@ -19,13 +19,6 @@ directive|define
 name|_SYS_UNIQUE_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -61,7 +54,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/*  * Return a new unique value (which will not be uniquified against until  * it is unique_insert()-ed.  */
+comment|/*  * Return a new unique value (which will not be uniquified against until  * it is unique_insert()-ed).  */
 name|uint64_t
 name|unique_create
 parameter_list|(

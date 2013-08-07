@@ -687,7 +687,7 @@ name|size
 parameter_list|,
 name|ret
 parameter_list|)
-value|do {			\ 	prof_tdata_t *prof_tdata;					\ 	prof_bt_t bt;							\ 									\ 	assert(size == s2u(size));					\ 									\ 	prof_tdata = prof_tdata_get();					\ 	if ((uintptr_t)prof_tdata<= (uintptr_t)PROF_TDATA_STATE_MAX) {	\ 		if (prof_tdata != NULL)					\ 			ret = (prof_thr_cnt_t *)(uintptr_t)1U;		\ 		else							\ 			ret = NULL;					\ 		break;							\ 	}								\ 									\ 	if (opt_prof_active == false) {					\
+value|do {			\ 	prof_tdata_t *prof_tdata;					\ 	prof_bt_t bt;							\ 									\ 	assert(size == s2u(size));					\ 									\ 	prof_tdata = prof_tdata_get(true);				\ 	if ((uintptr_t)prof_tdata<= (uintptr_t)PROF_TDATA_STATE_MAX) {	\ 		if (prof_tdata != NULL)					\ 			ret = (prof_thr_cnt_t *)(uintptr_t)1U;		\ 		else							\ 			ret = NULL;					\ 		break;							\ 	}								\ 									\ 	if (opt_prof_active == false) {					\
 comment|/* Sampling is currently inactive, so avoid sampling. */
 value|\ 		ret = (prof_thr_cnt_t *)(uintptr_t)1U;			\ 	} else if (opt_lg_prof_sample == 0) {				\
 comment|/* Don't bother with sampling logic, since sampling   */
@@ -740,7 +740,8 @@ name|prof_tdata_t
 modifier|*
 name|prof_tdata_get
 parameter_list|(
-name|void
+name|bool
+name|create
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -910,7 +911,8 @@ name|prof_tdata_t
 modifier|*
 name|prof_tdata_get
 parameter_list|(
-name|void
+name|bool
+name|create
 parameter_list|)
 block|{
 name|prof_tdata_t
@@ -930,19 +932,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|uintptr_t
-operator|)
-name|prof_tdata
-operator|<=
-operator|(
-name|uintptr_t
-operator|)
-name|PROF_TDATA_STATE_MAX
-condition|)
-block|{
-if|if
-condition|(
+name|create
+operator|&&
 name|prof_tdata
 operator|==
 name|NULL
@@ -952,7 +943,6 @@ operator|=
 name|prof_tdata_init
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|prof_tdata
@@ -1232,9 +1222,10 @@ argument_list|)
 expr_stmt|;
 name|prof_tdata
 operator|=
-operator|*
-name|prof_tdata_tsd_get
-argument_list|()
+name|prof_tdata_get
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

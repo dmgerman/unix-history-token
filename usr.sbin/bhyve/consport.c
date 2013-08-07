@@ -420,6 +420,8 @@ literal|"bvmcons"
 block|,
 name|BVM_CONSOLE_PORT
 block|,
+literal|1
+block|,
 name|IOPORT_F_INOUT
 block|,
 name|console_handler

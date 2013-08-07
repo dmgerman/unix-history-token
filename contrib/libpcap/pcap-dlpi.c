@@ -6522,7 +6522,7 @@ endif|#
 directive|endif
 name|pcap_t
 modifier|*
-name|pcap_create
+name|pcap_create_interface
 parameter_list|(
 specifier|const
 name|char

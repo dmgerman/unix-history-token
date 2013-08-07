@@ -483,6 +483,17 @@ end_if
 begin_define
 define|#
 directive|define
+name|IPPROTO_IPV6
+value|41
+end_define
+
+begin_comment
+comment|/* IP6 header */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_RAW
 value|255
 end_define
@@ -933,17 +944,6 @@ end_define
 
 begin_comment
 comment|/* IL transport protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPPROTO_IPV6
-value|41
-end_define
-
-begin_comment
-comment|/* IP6 header */
 end_comment
 
 begin_define

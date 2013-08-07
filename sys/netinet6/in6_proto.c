@@ -1959,6 +1959,18 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|icmp6_nodeinfo_oldmcprefix
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * sysctl related items.  */
 end_comment
@@ -2386,7 +2398,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet6_ip6
 argument_list|,
@@ -2394,17 +2406,12 @@ name|IPV6CTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|ip6stat
-argument_list|)
 argument_list|,
 name|ip6stat
 argument_list|,
-literal|""
+literal|"IP6 statistics (struct ip6stat, netinet6/ip6_var.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2880,7 +2887,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet6_ip6
 argument_list|,
@@ -2888,17 +2895,12 @@ name|IPV6CTL_RIP6STATS
 argument_list|,
 name|rip6stats
 argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|rip6stat
-argument_list|)
 argument_list|,
 name|rip6stat
 argument_list|,
-literal|""
+literal|"Raw IP6 statistics (struct rip6stat, netinet6/raw_ip6.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3153,7 +3155,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -3161,17 +3163,12 @@ name|ICMPV6CTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
+expr|struct
 name|icmp6stat
-argument_list|)
 argument_list|,
 name|icmp6stat
 argument_list|,
-literal|""
+literal|"ICMPv6 statistics (struct icmp6stat, netinet/icmp6.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3316,6 +3313,31 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_icmp6
+argument_list|,
+name|ICMPV6CTL_NODEINFO_OLDMCPREFIX
+argument_list|,
+name|nodeinfo_oldmcprefix
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|icmp6_nodeinfo_oldmcprefix
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Join old IPv6 NI group address in draft-ietf-ipngwg-icmp-name-lookup"
+literal|" for compatibility with KAME implememtation."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -621,7 +621,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOMEM
+argument_list|)
 operator|)
 return|;
 block|}
@@ -668,11 +671,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|zap_cursor_fini
+argument_list|(
+operator|&
+name|zc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
+block|}
 operator|*
 name|count
 operator|-=
@@ -747,7 +761,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOMEM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -787,7 +804,10 @@ literal|0
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EFAULT
+argument_list|)
 operator|)
 return|;
 operator|*

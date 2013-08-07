@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.c,v 1.26 2013/01/19 04:23:37 sjg Exp $ */
+comment|/*      $NetBSD: meta.c,v 1.32 2013/06/25 00:20:54 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -169,6 +169,35 @@ end_decl_stmt
 begin_comment
 comment|/* our scope of control */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Lst
+name|metaIgnorePaths
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* paths we deliberately ignore */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAKE_META_IGNORE_PATHS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAKE_META_IGNORE_PATHS
+value|".MAKE.META.IGNORE_PATHS"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|Boolean
@@ -2311,9 +2340,44 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialization we need before reading makefiles.  */
+end_comment
+
 begin_function
 name|void
 name|meta_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|USE_FILEMON
+comment|/* this allows makefiles to test if we have filemon support */
+name|Var_Set
+argument_list|(
+literal|".MAKE.PATH_FILEMON"
+argument_list|,
+name|_PATH_FILEMON
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialization we need after reading makefiles.  */
+end_comment
+
+begin_function
+name|void
+name|meta_mode_init
 parameter_list|(
 specifier|const
 name|char
@@ -2566,6 +2630,53 @@ block|{
 name|str2Lst_Append
 argument_list|(
 name|metaBailiwick
+argument_list|,
+name|cp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * We ignore any paths that start with ${.MAKE.META.IGNORE_PATHS}      */
+name|metaIgnorePaths
+operator|=
+name|Lst_Init
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|Var_Append
+argument_list|(
+name|MAKE_META_IGNORE_PATHS
+argument_list|,
+literal|"/dev /etc /proc /tmp /var/run /var/tmp ${TMPDIR}"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|Var_Subst
+argument_list|(
+name|NULL
+argument_list|,
+literal|"${"
+name|MAKE_META_IGNORE_PATHS
+literal|":O:u:tA}"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+block|{
+name|str2Lst_Append
+argument_list|(
+name|metaIgnorePaths
 argument_list|,
 name|cp
 argument_list|,
@@ -4479,6 +4590,11 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|ln
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* we're done with it */
 block|}
 block|}
 break|break;
@@ -4659,79 +4775,44 @@ comment|/* Exec */
 comment|/* 		     * Check for runtime files that can't 		     * be part of the dependencies because 		     * they are _expected_ to change. 		     */
 if|if
 condition|(
-name|strncmp
-argument_list|(
+operator|*
 name|p
-argument_list|,
-literal|"/tmp/"
-argument_list|,
-literal|5
-argument_list|)
 operator|==
-literal|0
-operator|||
-operator|(
-name|tmplen
-operator|>
-literal|0
+literal|'/'
 operator|&&
-name|strncmp
+name|Lst_ForEach
 argument_list|(
+name|metaIgnorePaths
+argument_list|,
+name|prefix_match
+argument_list|,
 name|p
-argument_list|,
-name|tmpdir
-argument_list|,
-name|tmplen
 argument_list|)
-operator|==
-literal|0
-operator|)
 condition|)
-break|break;
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_META_MODE
 if|if
 condition|(
-name|strncmp
+name|DEBUG
 argument_list|(
-name|p
-argument_list|,
-literal|"/var/"
-argument_list|,
-literal|5
+name|META
 argument_list|)
-operator|==
-literal|0
 condition|)
-break|break;
-comment|/* Ignore device files. */
-if|if
-condition|(
-name|strncmp
+name|fprintf
 argument_list|(
+name|debug_file
+argument_list|,
+literal|"meta_oodate: ignoring: %s\n"
+argument_list|,
 name|p
-argument_list|,
-literal|"/dev/"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
-condition|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
-comment|/* Ignore /etc/ files. */
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|p
-argument_list|,
-literal|"/etc/"
-argument_list|,
-literal|5
-argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
+block|}
 if|if
 condition|(
 operator|(
@@ -5169,12 +5250,11 @@ argument_list|(
 name|ln
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|needOODATE
-condition|)
-block|{
+name|Boolean
+name|hasOODATE
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 name|strstr
@@ -5184,7 +5264,7 @@ argument_list|,
 literal|"$?"
 argument_list|)
 condition|)
-name|needOODATE
+name|hasOODATE
 operator|=
 name|TRUE
 expr_stmt|;
@@ -5203,7 +5283,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* check for $[{(].OODATE[)}] */
+comment|/* check for $[{(].OODATE[:)}] */
 if|if
 condition|(
 name|cp
@@ -5220,15 +5300,22 @@ index|]
 operator|==
 literal|'$'
 condition|)
-name|needOODATE
+name|hasOODATE
 operator|=
 name|TRUE
 expr_stmt|;
 block|}
 if|if
 condition|(
+name|hasOODATE
+condition|)
+block|{
 name|needOODATE
-operator|&&
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
 name|DEBUG
 argument_list|(
 name|META
@@ -5238,7 +5325,7 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"%s: %d: cannot compare commands using .OODATE\n"
+literal|"%s: %d: cannot compare command using .OODATE\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -5384,7 +5471,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|needOODATE
+name|hasOODATE
 operator|&&
 operator|!
 operator|(

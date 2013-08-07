@@ -979,16 +979,13 @@ condition|(
 operator|!
 name|qflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|printfn
 argument_list|(
-literal|"\n==> %s<==\n"
-argument_list|,
 name|file
 operator|->
 name|file_name
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|last
@@ -1382,16 +1379,13 @@ operator|&&
 operator|!
 name|qflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|printfn
 argument_list|(
-literal|"\n==> %s<==\n"
-argument_list|,
 name|file
 operator|->
 name|file_name
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|forward

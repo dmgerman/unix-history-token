@@ -720,6 +720,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA7
+value|0x410fc070
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_CORTEXA8R1
 value|0x411fc080
 end_define
@@ -750,6 +757,20 @@ define|#
 directive|define
 name|CPU_ID_CORTEXA9R2
 value|0x412fc090
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA9R3
+value|0x413fc090
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_ID_CORTEXA15
+value|0x410fc0f0
 end_define
 
 begin_define
@@ -1511,6 +1532,17 @@ end_define
 
 begin_comment
 comment|/* L2 Cache enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONTROL_AF_ENABLE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Access Flag enable */
 end_comment
 
 begin_define
@@ -2341,6 +2373,17 @@ end_define
 
 begin_comment
 comment|/* Translation -- Section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAULT_TRANS_F
+value|0x06
+end_define
+
+begin_comment
+comment|/* Translation -- Flag */
 end_comment
 
 begin_define

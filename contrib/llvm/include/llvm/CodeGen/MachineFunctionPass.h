@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_MACHINE_FUNCTION_PASS_H
+name|LLVM_CODEGEN_MACHINEFUNCTIONPASS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_MACHINE_FUNCTION_PASS_H
+name|LLVM_CODEGEN_MACHINEFUNCTIONPASS_H
 end_define
 
 begin_include

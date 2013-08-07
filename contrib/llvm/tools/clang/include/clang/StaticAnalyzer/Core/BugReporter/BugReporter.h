@@ -90,7 +90,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ImmutableSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_include
@@ -103,24 +121,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ilist_node.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ImmutableSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
 end_include
 
 begin_decl_stmt
@@ -281,6 +281,11 @@ name|PathDiagnosticLocation
 name|UniqueingLocation
 decl_stmt|;
 specifier|const
+name|Decl
+modifier|*
+name|UniqueingDecl
+decl_stmt|;
+specifier|const
 name|ExplodedNode
 modifier|*
 name|ErrorNode
@@ -321,8 +326,6 @@ comment|/// report as being "interesting", and thus used to help decide which
 comment|/// diagnostics to include when constructing the final path diagnostic.
 comment|/// The stack is largely used by BugReporter when generating PathDiagnostics
 comment|/// for multiple PathDiagnosticConsumers.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Symbols
@@ -337,8 +340,6 @@ comment|/// "interesting", and thus used to help decide which diagnostics
 comment|/// to include when constructing the final path diagnostic.
 comment|/// The stack is largely used by BugReporter when generating PathDiagnostics
 comment|/// for multiple PathDiagnosticConsumers.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Regions
@@ -593,6 +594,8 @@ argument_list|,
 argument|const ExplodedNode *errornode
 argument_list|,
 argument|PathDiagnosticLocation LocationToUnique
+argument_list|,
+argument|const Decl *DeclToUnique
 argument_list|)
 operator|:
 name|BT
@@ -613,6 +616,11 @@ operator|,
 name|UniqueingLocation
 argument_list|(
 name|LocationToUnique
+argument_list|)
+operator|,
+name|UniqueingDecl
+argument_list|(
+name|DeclToUnique
 argument_list|)
 operator|,
 name|ErrorNode
@@ -954,6 +962,28 @@ name|SM
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Get the location on which the report should be uniqued.
+name|PathDiagnosticLocation
+name|getUniqueingLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UniqueingLocation
+return|;
+block|}
+comment|/// \brief Get the declaration containing the uniqueing location.
+specifier|const
+name|Decl
+operator|*
+name|getUniqueingDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UniqueingDecl
+return|;
+block|}
 specifier|const
 name|Stmt
 operator|*
@@ -1500,22 +1530,6 @@ operator|*
 operator|>
 name|EQClassesVector
 expr_stmt|;
-comment|/// A map from PathDiagnosticPiece to the LocationContext of the inlined
-comment|/// function call it represents.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|PathDiagnosticCallPiece
-operator|*
-operator|,
-specifier|const
-name|LocationContext
-operator|*
-operator|>
-name|LocationContextMap
-expr_stmt|;
 name|protected
 label|:
 name|BugReporter
@@ -1729,7 +1743,7 @@ name|true
 return|;
 block|}
 name|bool
-name|RemoveUneededCalls
+name|RemoveUnneededCalls
 parameter_list|(
 name|PathPieces
 modifier|&
@@ -1738,12 +1752,6 @@ parameter_list|,
 name|BugReport
 modifier|*
 name|R
-parameter_list|,
-name|PathDiagnosticCallPiece
-modifier|*
-name|CallWithLoc
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -1875,28 +1883,6 @@ name|R
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|addCallPieceLocationContextPair
-parameter_list|(
-specifier|const
-name|PathDiagnosticCallPiece
-modifier|*
-name|C
-parameter_list|,
-specifier|const
-name|LocationContext
-modifier|*
-name|LC
-parameter_list|)
-block|{
-name|LocationContextMap
-index|[
-name|C
-index|]
-operator|=
-name|LC
 expr_stmt|;
 block|}
 name|private

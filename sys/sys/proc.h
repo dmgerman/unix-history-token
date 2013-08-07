@@ -827,6 +827,10 @@ name|int
 name|td_no_sleeping
 decl_stmt|;
 comment|/* (k) Sleeping disabled count. */
+name|int
+name|td_dom_rr_idx
+decl_stmt|;
+comment|/* (k) RR Numa domain selection. */
 define|#
 directive|define
 name|td_endzero
@@ -1098,17 +1102,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|CRITICAL_ASSERT
-parameter_list|(
-name|td
-parameter_list|)
-define|\
-value|KASSERT((td)->td_critnest>= 1, ("Not in critical section"));
-end_define
 
 begin_comment
 comment|/*  * Flags kept in td_flags:  * To change these you MUST have the scheduler lock.  */
@@ -4721,6 +4714,28 @@ end_function_decl
 begin_function_decl
 name|int
 name|proc_getargv
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|proc_getauxv
 parameter_list|(
 name|struct
 name|thread

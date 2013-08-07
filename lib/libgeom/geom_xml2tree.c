@@ -1619,6 +1619,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG_LIBGEOM
+operator|>
+literal|0
 name|printf
 argument_list|(
 literal|"Unexpected XML: name=%s data=\"%s\"\n"
@@ -1628,6 +1633,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|p

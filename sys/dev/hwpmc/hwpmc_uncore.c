@@ -5934,7 +5934,7 @@ condition|(
 name|pe
 condition|)
 block|{
-comment|/*	 		 * Events valid only on counter 0. 		 */
+comment|/* 		 * Events valid only on counter 0. 		 */
 case|case
 name|PMC_EV_UCP_EVENT_80H_01H
 case|:

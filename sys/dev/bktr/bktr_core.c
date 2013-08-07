@@ -8683,7 +8683,6 @@ block|{
 name|int
 name|tmp_int
 decl_stmt|;
-name|unsigned
 name|int
 name|temp
 decl_stmt|,

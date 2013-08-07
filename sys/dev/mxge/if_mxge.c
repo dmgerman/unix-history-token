@@ -17156,7 +17156,7 @@ return|return
 name|err
 return|;
 block|}
-comment|/* now allocate TX resouces */
+comment|/* now allocate TX resources */
 ifndef|#
 directive|ifndef
 name|IFNET_BUF_RING

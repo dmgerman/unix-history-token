@@ -81,6 +81,12 @@ directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -88,11 +94,12 @@ block|{
 name|class
 name|IdentifierInfo
 decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 comment|/// \brief A sequence of identifier/location pairs used to describe a particular
 comment|/// module or submodule, e.g., std.vector.
 typedef|typedef
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|std
@@ -107,6 +114,77 @@ operator|>
 expr|>
 name|ModuleIdPath
 expr_stmt|;
+comment|/// \brief Describes the result of attempting to load a module.
+name|class
+name|ModuleLoadResult
+block|{
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|Module
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|Storage
+expr_stmt|;
+name|public
+label|:
+name|ModuleLoadResult
+argument_list|()
+operator|:
+name|Storage
+argument_list|()
+block|{ }
+name|ModuleLoadResult
+argument_list|(
+argument|Module *module
+argument_list|,
+argument|bool missingExpected
+argument_list|)
+operator|:
+name|Storage
+argument_list|(
+argument|module
+argument_list|,
+argument|missingExpected
+argument_list|)
+block|{ }
+name|operator
+name|Module
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determines whether the module, which failed to load, was
+comment|/// actually a submodule that we expected to see (based on implying the
+comment|/// submodule from header structure), but didn't materialize in the actual
+comment|/// module.
+name|bool
+name|isMissingExpected
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Storage
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Abstract interface for a module loader.
 comment|///
 comment|/// This abstract interface describes a module loader, which is responsible
@@ -142,8 +220,7 @@ comment|///
 comment|/// \returns If successful, returns the loaded module. Otherwise, returns
 comment|/// NULL to indicate that the module could not be loaded.
 name|virtual
-name|Module
-modifier|*
+name|ModuleLoadResult
 name|loadModule
 argument_list|(
 name|SourceLocation
@@ -159,6 +236,29 @@ name|Visibility
 argument_list|,
 name|bool
 name|IsInclusionDirective
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief Make the given module visible.
+name|virtual
+name|void
+name|makeModuleVisible
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|,
+name|Module
+operator|::
+name|NameVisibilityKind
+name|Visibility
+argument_list|,
+name|SourceLocation
+name|ImportLoc
+argument_list|,
+name|bool
+name|Complain
 argument_list|)
 init|=
 literal|0

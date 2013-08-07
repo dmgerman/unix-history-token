@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PPC.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|"PPC.h"
 end_include
 
 begin_define
@@ -106,9 +106,7 @@ range|:
 name|public
 name|PPCGenRegisterInfo
 block|{
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|unsigned
 block|,
@@ -125,10 +123,6 @@ specifier|const
 name|TargetInstrInfo
 operator|&
 name|TII
-block|;
-name|mutable
-name|int
-name|CRSpillFrameIdx
 block|;
 name|public
 operator|:
@@ -189,6 +183,13 @@ argument|CallingConv::ID CC
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getNoPreservedMask
+argument_list|()
+specifier|const
+block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
@@ -196,49 +197,56 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|avoidWriteAfterWrite
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-comment|/// requiresRegisterScavenging - We require a register scavenger.
-comment|/// FIXME (64-bit): Should be inlined.
+comment|/// We require the register scavenger.
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|bool
 name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
-name|void
-name|eliminateCallFramePseudoInstr
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|requiresVirtualBaseRegisters
 argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|lowerDynamicAlloc
 argument_list|(
 argument|MachineBasicBlock::iterator II
-argument_list|,
-argument|int SPAdj
-argument_list|,
-argument|RegScavenger *RS
 argument_list|)
 specifier|const
 block|;
@@ -248,10 +256,6 @@ argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|unsigned FrameIndex
-argument_list|,
-argument|int SPAdj
-argument_list|,
-argument|RegScavenger *RS
 argument_list|)
 specifier|const
 block|;
@@ -261,10 +265,24 @@ argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|unsigned FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerVRSAVESpilling
+argument_list|(
+argument|MachineBasicBlock::iterator II
 argument_list|,
-argument|int SPAdj
+argument|unsigned FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerVRSAVERestore
+argument_list|(
+argument|MachineBasicBlock::iterator II
 argument_list|,
-argument|RegScavenger *RS
+argument|unsigned FrameIndex
 argument_list|)
 specifier|const
 block|;
@@ -286,7 +304,52 @@ argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
 argument_list|,
+argument|unsigned FIOperandNum
+argument_list|,
 argument|RegScavenger *RS = NULL
+argument_list|)
+specifier|const
+block|;
+comment|// Support for virtual base registers.
+name|bool
+name|needsFrameBaseReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|materializeFrameBaseRegister
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|resolveFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isFrameOffsetLegal
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;

@@ -212,7 +212,6 @@ parameter_list|,
 name|struct
 name|cpuref
 modifier|*
-name|cpuref
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -233,7 +232,16 @@ name|void
 name|wii_cpu_idle
 parameter_list|(
 name|sbintime_t
-name|sbt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|wiibus_reset_system
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -549,8 +557,13 @@ name|wii_reset
 parameter_list|(
 name|platform_t
 name|plat
+name|__unused
 parameter_list|)
-block|{ }
+block|{
+name|wiibus_reset_system
+argument_list|()
+expr_stmt|;
+block|}
 end_function
 
 begin_function

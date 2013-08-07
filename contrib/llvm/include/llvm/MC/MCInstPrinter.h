@@ -43,6 +43,18 @@ directive|define
 name|LLVM_MC_MCINSTPRINTER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Format.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -102,6 +114,10 @@ comment|/// True if we are printing marked up assembly.
 name|bool
 name|UseMarkup
 decl_stmt|;
+comment|/// True if we are printing immediates as hex.
+name|bool
+name|PrintImmHex
+decl_stmt|;
 comment|/// Utility function for printing annotations.
 name|void
 name|printAnnotation
@@ -160,6 +176,11 @@ literal|0
 argument_list|)
 operator|,
 name|UseMarkup
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|PrintImmHex
 argument_list|(
 literal|0
 argument_list|)
@@ -291,6 +312,38 @@ name|b
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|getPrintImmHex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrintImmHex
+return|;
+block|}
+name|void
+name|setPrintImmHex
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|PrintImmHex
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// Utility function to print immediates in decimal or hex.
+name|format_object1
+operator|<
+name|int64_t
+operator|>
+name|formatImm
+argument_list|(
+argument|const int64_t Value
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

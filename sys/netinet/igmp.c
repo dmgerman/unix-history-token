@@ -7643,6 +7643,11 @@ name|igi_version
 operator|=
 name|IGMP_VERSION_2
 expr_stmt|;
+name|igmp_v3_cancel_link_timers
+argument_list|(
+name|igi
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}

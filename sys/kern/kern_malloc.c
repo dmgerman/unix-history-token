@@ -382,19 +382,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_FREE
-argument_list|,
-literal|"free"
-argument_list|,
-literal|"should be on free list"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|struct

@@ -391,7 +391,7 @@ comment|/* 	 * Let PCI and Ethernet interrupts pass through 	 * IRQ25, IRQ27..IR
 name|pass_irqs
 operator|=
 operator|(
-literal|7
+literal|0x1f
 operator|<<
 literal|27
 operator|)

@@ -1958,7 +1958,7 @@ name|mpt_pci_shutdown
 argument_list|,
 name|dev
 argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
+name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 if|if

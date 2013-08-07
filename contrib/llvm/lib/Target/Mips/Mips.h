@@ -125,6 +125,15 @@ modifier|&
 name|JCE
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createMipsConstantIslandPass
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|tm
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

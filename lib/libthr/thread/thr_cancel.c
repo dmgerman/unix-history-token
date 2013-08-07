@@ -258,6 +258,12 @@ name|cancel_enable
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|cancel_async
+condition|)
 name|testcancel
 argument_list|(
 name|curthread

@@ -285,8 +285,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#
@@ -405,6 +414,21 @@ name|msg
 parameter_list|)
 define|\
 value|KASSERT(sizeof(var) == sizeof(void *)&&			\ 	    ((uintptr_t)&(var)& (sizeof(void *) - 1)) == 0, msg)
+end_define
+
+begin_comment
+comment|/*  * Assert that a thread is in critical(9) section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRITICAL_ASSERT
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|KASSERT((td)->td_critnest>= 1, ("Not in critical section"));
 end_define
 
 begin_comment

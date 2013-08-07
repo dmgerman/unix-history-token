@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2009, 2012, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.279 2012/11/16 20:25:03 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.280 2013/01/16 18:48:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -8670,7 +8670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MILTER_COMMAND -- send a command and return the response for each filter ** **	Parameters: **		cmd -- command to send. **		data -- optional command data. **		sz -- length of buf. **		macros -- macros to send for filter smfi_getsymval(). **		e -- current envelope (for macro access). **		state -- return state word. **		where -- description of calling function (logging). **		cmd_error -- did the SMTP command cause an error? ** **	Returns: **		response string (may be NULL) */
+comment|/* **  MILTER_COMMAND -- send a command and return the response for each filter ** **	Parameters: **		cmd -- command to send. **		data -- optional command data. **		sz -- length of buf. **		stage -- index of macros to send for filter smfi_getsymval(). **		e -- current envelope (for macro access). **		state -- return state word. **		where -- description of calling function (logging). **		cmd_error -- did the SMTP command cause an error? ** **	Returns: **		response string (may be NULL) */
 end_comment
 
 begin_function

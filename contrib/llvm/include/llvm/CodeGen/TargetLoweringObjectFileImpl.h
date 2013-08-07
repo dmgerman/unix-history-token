@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetLoweringObjectFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -187,14 +187,13 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
-comment|/// getExprForDwarfGlobalReference - Return an MCExpr to use for a reference
-comment|/// to the specified global variable from exception handling information.
-comment|///
+comment|/// getTTypeGlobalReference - Return an MCExpr to use for a reference to the
+comment|/// specified type info global variable from exception handling information.
 name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getExprForDwarfGlobalReference
+name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -335,13 +334,13 @@ argument|Mangler *
 argument_list|)
 specifier|const
 block|;
-comment|/// getExprForDwarfGlobalReference - The mach-o version of this method
+comment|/// getTTypeGlobalReference - The mach-o version of this method
 comment|/// defaults to returning a stub reference.
 name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getExprForDwarfGlobalReference
+name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -408,6 +407,22 @@ argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
+comment|/// emitModuleFlags - Emit Obj-C garbage collection and linker options.  Only
+comment|/// linker option emission is implemented for COFF.
+name|virtual
+name|void
+name|emitModuleFlags
+argument_list|(
+argument|MCStreamer&Streamer
+argument_list|,
+argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
 argument_list|,
 argument|Mangler *Mang
 argument_list|,

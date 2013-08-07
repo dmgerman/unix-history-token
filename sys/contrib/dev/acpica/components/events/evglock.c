@@ -214,6 +214,11 @@ argument_list|,
 name|AcpiEvGlobalLockHandler
 argument_list|)
 expr_stmt|;
+name|AcpiOsDeleteLock
+argument_list|(
+name|AcpiGbl_GlobalLockPendingLock
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

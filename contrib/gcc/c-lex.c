@@ -2708,6 +2708,23 @@ decl_stmt|;
 name|size_t
 name|copylen
 decl_stmt|;
+comment|/* Default (no suffix) is double.  */
+if|if
+condition|(
+name|flags
+operator|&
+name|CPP_N_DEFAULT
+condition|)
+block|{
+name|flags
+operator|^=
+name|CPP_N_DEFAULT
+expr_stmt|;
+name|flags
+operator||=
+name|CPP_N_MEDIUM
+expr_stmt|;
+block|}
 comment|/* Decode type based on width and properties. */
 if|if
 condition|(

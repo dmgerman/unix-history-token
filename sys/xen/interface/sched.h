@@ -180,6 +180,60 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Latch a shutdown code, so that when the domain later shuts down it  * reports this code to the control tools.  * @arg == as for SCHEDOP_shutdown.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHEDOP_shutdown_code
+value|5
+end_define
+
+begin_comment
+comment|/*  * Setup, poke and destroy a domain watchdog timer.  * @arg == pointer to sched_watchdog structure.  * With id == 0, setup a domain watchdog timer to cause domain shutdown  *               after timeout, returns watchdog id.  * With id != 0 and timeout == 0, destroy domain watchdog timer.  * With id != 0 and timeout != 0, poke watchdog timer and set new timeout.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHEDOP_watchdog
+value|6
+end_define
+
+begin_struct
+struct|struct
+name|sched_watchdog
+block|{
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* watchdog ID */
+name|uint32_t
+name|timeout
+decl_stmt|;
+comment|/* timeout */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sched_watchdog
+name|sched_watchdog_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|sched_watchdog_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Reason codes for SCHEDOP_shutdown. These may be interpreted by control  * software to determine the appropriate action. For the most part, Xen does  * not care about the shutdown code.  */
 end_comment
 
@@ -225,6 +279,17 @@ end_define
 
 begin_comment
 comment|/* Tell controller we've crashed.             */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHUTDOWN_watchdog
+value|4
+end_define
+
+begin_comment
+comment|/* Restart because watchdog time expired.     */
 end_comment
 
 begin_endif

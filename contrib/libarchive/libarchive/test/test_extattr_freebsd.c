@@ -111,9 +111,10 @@ name|archive_entry
 modifier|*
 name|ae
 decl_stmt|;
-name|int
+name|ssize_t
 name|n
-decl_stmt|,
+decl_stmt|;
+name|int
 name|fd
 decl_stmt|;
 name|int

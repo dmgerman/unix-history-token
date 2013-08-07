@@ -22279,12 +22279,6 @@ block|{
 name|int
 name|id
 decl_stmt|;
-name|kbdc
-operator|=
-name|sc
-operator|->
-name|kbdc
-expr_stmt|;
 if|if
 condition|(
 name|send_aux_command

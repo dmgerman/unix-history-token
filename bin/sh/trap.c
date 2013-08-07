@@ -216,7 +216,7 @@ comment|/* temporary - to reset a hard ignored sig */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|char
 name|sigmode
 index|[

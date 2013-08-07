@@ -136,7 +136,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
+name|uint32_t
 name|at91_pio_gpio_get
 parameter_list|(
 name|uint32_t

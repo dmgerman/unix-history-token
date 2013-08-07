@@ -136,7 +136,24 @@ value|((intptr_t)(_s)->ring - (intptr_t)(_s))
 end_define
 
 begin_comment
-comment|/*  * Calculate size of a shared ring, given the total available space for the  * ring and indexes (_sz), and the name tag of the request/response structure.  * A ring contains as many entries as will fit, rounded down to the nearest   * power of two (so we can mask with (size-1) to loop around).  */
+comment|/*  * Calculate size of a shared ring, given the total available space for the  * ring and indexes (_sz), and the name tag of the request/response structure.  * A ring contains as many entries as will fit, rounded down to the nearest  * power of two (so we can mask with (size-1) to loop around).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__CONST_RING_SIZE
+parameter_list|(
+name|_s
+parameter_list|,
+name|_sz
+parameter_list|)
+define|\
+value|(__RD32(((_sz) - offsetof(struct _s##_sring, ring)) / \ 	    sizeof(((struct _s##_sring *)0)->ring[0])))
+end_define
+
+begin_comment
+comment|/*  * The same for passing in an actual pointer instead of a name tag.  */
 end_comment
 
 begin_define
@@ -189,7 +206,7 @@ comment|/* Shared ring entry */
 define|\
 value|union __name##_sring_entry {                                            \     __req_t req;                                                        \     __rsp_t rsp;                                                        \ };                                                                      \                                                                         \
 comment|/* Shared ring page */
-value|\ struct __name##_sring {                                                 \     RING_IDX req_prod, req_event;                                       \     RING_IDX rsp_prod, rsp_event;                                       \     uint8_t  pad[48];                                                   \     union __name##_sring_entry ring[1];
+value|\ struct __name##_sring {                                                 \     RING_IDX req_prod, req_event;                                       \     RING_IDX rsp_prod, rsp_event;                                       \     union {                                                             \         struct {                                                        \             uint8_t smartpoll_active;                                   \         } netif;                                                        \         struct {                                                        \             uint8_t msg;                                                \         } tapif_user;                                                   \         uint8_t pvt_pad[4];                                             \     } private;                                                          \     uint8_t __pad[44];                                                  \     union __name##_sring_entry ring[1];
 comment|/* variable-length */
 value|\ };                                                                      \                                                                         \
 comment|/* "Front" end's private variables */
@@ -215,7 +232,7 @@ name|SHARED_RING_INIT
 parameter_list|(
 name|_s
 parameter_list|)
-value|do {                                       \     (_s)->req_prod  = (_s)->rsp_prod  = 0;                              \     (_s)->req_event = (_s)->rsp_event = 1;                              \     (void)memset((_s)->pad, 0, sizeof((_s)->pad));                      \ } while(0)
+value|do {                                       \     (_s)->req_prod  = (_s)->rsp_prod  = 0;                              \     (_s)->req_event = (_s)->rsp_event = 1;                              \     (void)memset((_s)->private.pvt_pad, 0, sizeof((_s)->private.pvt_pad)); \     (void)memset((_s)->__pad, 0, sizeof((_s)->__pad));                  \ } while(0)
 end_define
 
 begin_define

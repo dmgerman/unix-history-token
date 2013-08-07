@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -31,6 +25,18 @@ begin_include
 include|#
 directive|include
 file|<netipsec/esp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_struct
@@ -322,7 +328,7 @@ name|x
 parameter_list|,
 name|fmt
 parameter_list|)
-value|if (x) printf(fmt "\n", x)
+value|if (x) printf(fmt "\n", (uintmax_t)x)
 name|struct
 name|ipsecstat
 name|ips
@@ -448,16 +454,7 @@ name|x
 parameter_list|,
 name|fmt
 parameter_list|)
-value|if (x) printf("ah " fmt ": %u\n", x)
-define|#
-directive|define
-name|AHSTAT64
-parameter_list|(
-name|x
-parameter_list|,
-name|fmt
-parameter_list|)
-value|if (x) printf("ah " fmt ": %llu\n", x)
+value|if (x) printf("ah " fmt ": %ju\n", (uintmax_t)x)
 name|AHSTAT
 argument_list|(
 name|ahs
@@ -635,7 +632,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"ah packets with %s: %u\n"
+literal|"ah packets with %s: %ju\n"
 argument_list|,
 name|algname
 argument_list|(
@@ -649,6 +646,9 @@ name|aalgs
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ahs
 operator|.
 name|ahs_hist
@@ -657,7 +657,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|AHSTAT64
+name|AHSTAT
 argument_list|(
 name|ahs
 operator|.
@@ -666,7 +666,7 @@ argument_list|,
 literal|"bytes received"
 argument_list|)
 expr_stmt|;
-name|AHSTAT64
+name|AHSTAT
 argument_list|(
 name|ahs
 operator|.
@@ -675,9 +675,6 @@ argument_list|,
 literal|"bytes transmitted"
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|AHSTAT64
 undef|#
 directive|undef
 name|AHSTAT
@@ -689,16 +686,7 @@ name|x
 parameter_list|,
 name|fmt
 parameter_list|)
-value|if (x) printf("esp " fmt ": %u\n", x)
-define|#
-directive|define
-name|ESPSTAT64
-parameter_list|(
-name|x
-parameter_list|,
-name|fmt
-parameter_list|)
-value|if (x) printf("esp " fmt ": %llu\n", x)
+value|if (x) printf("esp " fmt ": %ju\n", (uintmax_t)x)
 name|ESPSTAT
 argument_list|(
 name|esps
@@ -885,7 +873,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"esp packets with %s: %u\n"
+literal|"esp packets with %s: %ju\n"
 argument_list|,
 name|algname
 argument_list|(
@@ -899,6 +887,9 @@ name|espalgs
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|esps
 operator|.
 name|esps_hist
@@ -907,7 +898,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|ESPSTAT64
+name|ESPSTAT
 argument_list|(
 name|esps
 operator|.
@@ -916,7 +907,7 @@ argument_list|,
 literal|"bytes received"
 argument_list|)
 expr_stmt|;
-name|ESPSTAT64
+name|ESPSTAT
 argument_list|(
 name|esps
 operator|.
@@ -925,9 +916,6 @@ argument_list|,
 literal|"bytes transmitted"
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|ESPSTAT64
 undef|#
 directive|undef
 name|ESPSTAT
@@ -948,12 +936,18 @@ name|ips_out_polvio
 condition|)
 name|printf
 argument_list|(
-literal|"policy violations: input %u output %u\n"
+literal|"policy violations: input %ju output %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_in_polvio
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_out_polvio
@@ -965,7 +959,7 @@ name|ips
 operator|.
 name|ips_out_nosa
 argument_list|,
-literal|"no SA found %u (output)"
+literal|"no SA found %ju (output)"
 argument_list|)
 expr_stmt|;
 name|STAT
@@ -974,7 +968,7 @@ name|ips
 operator|.
 name|ips_out_nomem
 argument_list|,
-literal|"no memory available %u (output)"
+literal|"no memory available %ju (output)"
 argument_list|)
 expr_stmt|;
 name|STAT
@@ -983,7 +977,7 @@ name|ips
 operator|.
 name|ips_out_noroute
 argument_list|,
-literal|"no route available %u (output)"
+literal|"no route available %ju (output)"
 argument_list|)
 expr_stmt|;
 name|STAT
@@ -992,7 +986,7 @@ name|ips
 operator|.
 name|ips_out_inval
 argument_list|,
-literal|"generic error %u (output)"
+literal|"generic error %ju (output)"
 argument_list|)
 expr_stmt|;
 name|STAT
@@ -1001,52 +995,67 @@ name|ips
 operator|.
 name|ips_out_bundlesa
 argument_list|,
-literal|"bundled SA processed %u (output)"
+literal|"bundled SA processed %ju (output)"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"m_clone processing: %u mbufs + %u clusters coalesced\n"
+literal|"m_clone processing: %ju mbufs + %ju clusters coalesced\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_mbcoalesced
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_clcoalesced
 argument_list|)
 expr_stmt|;
-name|printf
+name|STAT
 argument_list|(
-literal|"m_clone processing: %u clusters copied\n"
-argument_list|,
 name|ips
 operator|.
 name|ips_clcopied
+argument_list|,
+literal|"m_clone processing: %ju clusters copied\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|STAT
 argument_list|(
-literal|"m_makespace: %u mbufs inserted\n"
-argument_list|,
 name|ips
 operator|.
 name|ips_mbinserted
+argument_list|,
+literal|"m_makespace: %ju mbufs inserted\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"header position [front/middle/end]: %u/%u/%u\n"
+literal|"header position [front/middle/end]: %ju/%ju/%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_input_front
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_input_middle
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ips
 operator|.
 name|ips_input_end

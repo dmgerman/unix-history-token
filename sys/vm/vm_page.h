@@ -26,7 +26,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_comment
-comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	In general, operations on this structure's mutable fields are  *	synchronized using either one of or a combination of the lock on the  *	object that the page belongs to (O), the pool lock for the page (P),  *	or the lock for either the free or paging queue (Q).  If a field is  *	annotated below with two of these locks, then holding either lock is  *	sufficient for read access, but both locks are required for write  *	access.  *  *	In contrast, the synchronization of accesses to the page's  *	dirty field is machine dependent (M).  In the  *	machine-independent layer, the lock on the object that the  *	page belongs to must be held in order to operate on the field.  *	However, the pmap layer is permitted to set all bits within  *	the field without holding that lock.  If the underlying  *	architecture does not support atomic read-modify-write  *	operations on the field's type, then the machine-independent  *	layer uses a 32-bit atomic on the aligned 32-bit word that  *	contains the dirty field.  In the machine-independent layer,  *	the implementation of read-modify-write operations on the  *	field is encapsulated in vm_page_clear_dirty_mask().  */
+comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several collections:  *  *		A radix tree used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	In general, operations on this structure's mutable fields are  *	synchronized using either one of or a combination of the lock on the  *	object that the page belongs to (O), the pool lock for the page (P),  *	or the lock for either the free or paging queue (Q).  If a field is  *	annotated below with two of these locks, then holding either lock is  *	sufficient for read access, but both locks are required for write  *	access.  *  *	In contrast, the synchronization of accesses to the page's  *	dirty field is machine dependent (M).  In the  *	machine-independent layer, the lock on the object that the  *	page belongs to must be held in order to operate on the field.  *	However, the pmap layer is permitted to set all bits within  *	the field without holding that lock.  If the underlying  *	architecture does not support atomic read-modify-write  *	operations on the field's type, then the machine-independent  *	layer uses a 32-bit atomic on the aligned 32-bit word that  *	contains the dirty field.  In the machine-independent layer,  *	the implementation of read-modify-write operations on the  *	field is encapsulated in vm_page_clear_dirty_mask().  */
 end_comment
 
 begin_if
@@ -198,7 +198,7 @@ comment|/* page PG_* flags (P) */
 name|u_char
 name|act_count
 decl_stmt|;
-comment|/* page usage count (O) */
+comment|/* page usage count (P) */
 name|u_char
 name|busy
 decl_stmt|;
@@ -570,49 +570,6 @@ parameter_list|)
 value|vm_page_trylock_KBI((m), LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INVARIANTS
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|vm_page_lock_assert
-parameter_list|(
-name|m
-parameter_list|,
-name|a
-parameter_list|)
-define|\
-value|vm_page_lock_assert_KBI((m), (a), __FILE__, __LINE__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vm_page_lock_assert
-parameter_list|(
-name|m
-parameter_list|,
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_else
 else|#
 directive|else
@@ -662,6 +619,31 @@ parameter_list|)
 value|mtx_trylock(vm_page_lockptr((m)))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|vm_page_assert_locked
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|vm_page_assert_locked_KBI((m), __FILE__, __LINE__)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -671,7 +653,33 @@ name|m
 parameter_list|,
 name|a
 parameter_list|)
-value|mtx_assert(vm_page_lockptr((m)), (a))
+define|\
+value|vm_page_lock_assert_KBI((m), (a), __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|vm_page_assert_locked
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lock_assert
+parameter_list|(
+name|m
+parameter_list|,
+name|a
+parameter_list|)
 end_define
 
 begin_endif
@@ -680,7 +688,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the object containing the page is  * locked.  It is set by both the MI and MD VM layers.  However, kernel  * loadable modules should not directly set this flag.  They should call  * vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
+comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the page is locked.  It is set by  * both the MI and MD VM layers.  However, kernel loadable modules should not  * directly set this flag.  They should call vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -1292,6 +1300,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vm_page_advise
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_page_t
 name|vm_page_alloc
 parameter_list|(
@@ -1409,15 +1430,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|vm_page_try_to_free
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_dontneed
 parameter_list|(
 name|vm_page_t
 parameter_list|)
@@ -1940,6 +1952,24 @@ end_if
 
 begin_function_decl
 name|void
+name|vm_page_assert_locked_KBI
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_page_lock_assert_KBI
 parameter_list|(
 name|vm_page_t
@@ -2058,7 +2088,7 @@ name|addr
 decl_stmt|,
 name|val
 decl_stmt|;
-comment|/* 	 * The PGA_REFERENCED flag can only be cleared if the object 	 * containing the page is locked. 	 */
+comment|/* 	 * The PGA_REFERENCED flag can only be cleared if the page is locked. 	 */
 if|if
 condition|(
 operator|(
@@ -2069,7 +2099,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|VM_PAGE_OBJECT_LOCK_ASSERT
+name|vm_page_assert_locked
 argument_list|(
 name|m
 argument_list|)

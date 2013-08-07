@@ -211,6 +211,22 @@ name|p
 argument_list|)
 return|;
 block|}
+comment|/// The 64-bit ABI uses biased stack and frame pointers, so the stack frame
+comment|/// of the current function is the area from [%sp+BIAS] to [%fp+BIAS].
+name|int64_t
+name|getStackPointerBias
+argument_list|()
+specifier|const
+block|{
+return|return
+name|is64Bit
+argument_list|()
+operator|?
+literal|2047
+operator|:
+literal|0
+return|;
+block|}
 expr|}
 block|;  }
 end_decl_stmt

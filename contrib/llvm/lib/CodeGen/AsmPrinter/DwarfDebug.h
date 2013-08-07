@@ -68,30 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/AsmPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/LexicalScopes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -117,6 +93,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/AsmPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/LexicalScopes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
@@ -171,9 +171,11 @@ decl_stmt|;
 name|class
 name|DIEEntry
 decl_stmt|;
+name|class
+name|DwarfDebug
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// SrcLineInfo - This class is used to record source line correspondence.
-comment|///
+comment|/// \brief This class is used to record source line correspondence.
 name|class
 name|SrcLineInfo
 block|{
@@ -267,8 +269,8 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// DotDebugLocEntry - This struct describes location entries emitted in
-comment|/// .debug_loc section.
+comment|/// \brief This struct describes location entries emitted in the .debug_loc
+comment|/// section.
 typedef|typedef
 struct|struct
 name|DotDebugLocEntry
@@ -577,7 +579,7 @@ name|EntryKind
 operator|=
 name|E_ConstantInt
 block|; }
-comment|/// Empty entries are also used as a trigger to emit temp label. Such
+comment|/// \brief Empty entries are also used as a trigger to emit temp label. Such
 comment|/// labels are referenced is used to find debug_loc offset for a given DIE.
 name|bool
 name|isEmpty
@@ -722,8 +724,7 @@ block|}
 name|DotDebugLocEntry
 typedef|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// DbgVariable - This class is used to track local variable information.
-comment|///
+comment|/// \brief This class is used to track local variable information.
 name|class
 name|DbgVariable
 block|{
@@ -946,7 +947,7 @@ operator|::
 name|DW_TAG_variable
 return|;
 block|}
-comment|/// isArtificial - Return true if DbgVariable is artificial.
+comment|/// \brief Return true if DbgVariable is artificial.
 name|bool
 name|isArtificial
 argument_list|()
@@ -1018,7 +1019,7 @@ return|;
 end_return
 
 begin_macro
-unit|}      bool
+unit|}    bool
 name|variableHasComplexAddress
 argument_list|()
 end_macro
@@ -1123,88 +1124,17 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_comment
 unit|};
-name|class
-name|DwarfDebug
-block|{
-comment|/// Asm - Target of Dwarf emission.
-name|AsmPrinter
-modifier|*
-name|Asm
-decl_stmt|;
-comment|/// MMI - Collected machine module information.
-name|MachineModuleInfo
-modifier|*
-name|MMI
-decl_stmt|;
-comment|/// DIEValueAllocator - All DIEValues are allocated through this allocator.
-name|BumpPtrAllocator
-name|DIEValueAllocator
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|// Attributes used to construct specific Dwarf sections.
-comment|//
-name|CompileUnit
-modifier|*
-name|FirstCU
-decl_stmt|;
-comment|/// Maps MDNode with its corresponding CompileUnit.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|CompileUnit
-operator|*
-operator|>
-name|CUMap
-expr_stmt|;
-comment|/// Maps subprogram MDNode with its corresponding CompileUnit.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|CompileUnit
-operator|*
-operator|>
-name|SPMap
-expr_stmt|;
-comment|/// AbbreviationsSet - Used to uniquely define abbreviations.
-comment|///
-name|FoldingSet
-operator|<
-name|DIEAbbrev
-operator|>
-name|AbbreviationsSet
-expr_stmt|;
-comment|/// Abbreviations - A list of all the unique abbreviations in use.
-comment|///
-name|std
-operator|::
-name|vector
-operator|<
-name|DIEAbbrev
-operator|*
-operator|>
-name|Abbreviations
-expr_stmt|;
-comment|/// SourceIdMap - Source id map, i.e. pair of source filename and directory,
-comment|/// separated by a zero byte, mapped to a unique id.
-name|StringMap
-operator|<
-name|unsigned
-operator|,
-name|BumpPtrAllocator
-operator|&
-operator|>
-name|SourceIdMap
-expr_stmt|;
-comment|/// StringPool - A String->Symbol mapping of strings used by indirect
-comment|/// references.
+comment|// A String->Symbol mapping of strings used by indirect
+end_comment
+
+begin_comment
+comment|// references.
+end_comment
+
+begin_typedef
+typedef|typedef
 name|StringMap
 operator|<
 name|std
@@ -1220,13 +1150,428 @@ operator|,
 name|BumpPtrAllocator
 operator|&
 operator|>
-name|StringPool
+name|StrPool
 expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// A Symbol->pair<Symbol, unsigned> mapping of addresses used by indirect
+end_comment
+
+begin_comment
+comment|// references.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|AddrPool
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Collects and handles information specific to a particular
+end_comment
+
+begin_comment
+comment|/// collection of units.
+end_comment
+
+begin_decl_stmt
+name|class
+name|DwarfUnits
+block|{
+comment|// Target of Dwarf emission, used for sizing of abbreviations.
+name|AsmPrinter
+modifier|*
+name|Asm
+decl_stmt|;
+comment|// Used to uniquely define abbreviations.
+name|FoldingSet
+operator|<
+name|DIEAbbrev
+operator|>
+operator|*
+name|AbbreviationsSet
+expr_stmt|;
+comment|// A list of all the unique abbreviations in use.
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+operator|*
+name|Abbreviations
+expr_stmt|;
+comment|// A pointer to all units in the section.
+name|SmallVector
+operator|<
+name|CompileUnit
+operator|*
+operator|,
+literal|1
+operator|>
+name|CUs
+expr_stmt|;
+comment|// Collection of strings for this unit and assorted symbols.
+name|StrPool
+name|StringPool
+decl_stmt|;
 name|unsigned
 name|NextStringPoolNumber
 decl_stmt|;
-comment|/// SectionMap - Provides a unique id per text section.
-comment|///
+name|std
+operator|::
+name|string
+name|StringPref
+expr_stmt|;
+comment|// Collection of addresses for this unit and assorted labels.
+name|AddrPool
+name|AddressPool
+decl_stmt|;
+name|unsigned
+name|NextAddrPoolNumber
+decl_stmt|;
+name|public
+label|:
+name|DwarfUnits
+argument_list|(
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|FoldingSet
+operator|<
+name|DIEAbbrev
+operator|>
+operator|*
+name|AS
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Pref
+argument_list|,
+name|BumpPtrAllocator
+operator|&
+name|DA
+argument_list|)
+operator|:
+name|Asm
+argument_list|(
+name|AP
+argument_list|)
+operator|,
+name|AbbreviationsSet
+argument_list|(
+name|AS
+argument_list|)
+operator|,
+name|Abbreviations
+argument_list|(
+name|A
+argument_list|)
+operator|,
+name|StringPool
+argument_list|(
+name|DA
+argument_list|)
+operator|,
+name|NextStringPoolNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|StringPref
+argument_list|(
+name|Pref
+argument_list|)
+operator|,
+name|AddressPool
+argument_list|()
+operator|,
+name|NextAddrPoolNumber
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// \brief Compute the size and offset of a DIE given an incoming Offset.
+name|unsigned
+name|computeSizeAndOffset
+argument_list|(
+argument|DIE *Die
+argument_list|,
+argument|unsigned Offset
+argument_list|)
+expr_stmt|;
+comment|/// \brief Compute the size and offset of all the DIEs.
+name|void
+name|computeSizeAndOffsets
+parameter_list|()
+function_decl|;
+comment|/// \brief Define a unique number for the abbreviation.
+name|void
+name|assignAbbrevNumber
+parameter_list|(
+name|DIEAbbrev
+modifier|&
+name|Abbrev
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a unit to the list of CUs.
+name|void
+name|addUnit
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|CU
+parameter_list|)
+block|{
+name|CUs
+operator|.
+name|push_back
+argument_list|(
+name|CU
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Emit all of the units to the section listed with the given
+comment|/// abbreviation section.
+name|void
+name|emitUnits
+parameter_list|(
+name|DwarfDebug
+modifier|*
+parameter_list|,
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|,
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit all of the strings to the section given.
+name|void
+name|emitStrings
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|,
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit all of the addresses to the section given.
+name|void
+name|emitAddresses
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns the entry into the start of the pool.
+name|MCSymbol
+modifier|*
+name|getStringPoolSym
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns an entry into the string pool with the given
+comment|/// string text.
+name|MCSymbol
+modifier|*
+name|getStringPoolEntry
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns the index into the string pool with the given
+comment|/// string text.
+name|unsigned
+name|getStringPoolIndex
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns the string pool.
+name|StrPool
+modifier|*
+name|getStringPool
+parameter_list|()
+block|{
+return|return
+operator|&
+name|StringPool
+return|;
+block|}
+comment|/// \brief Returns the index into the address pool with the given
+comment|/// label/symbol.
+name|unsigned
+name|getAddrPoolIndex
+parameter_list|(
+name|MCSymbol
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns the address pool.
+name|AddrPool
+modifier|*
+name|getAddrPool
+parameter_list|()
+block|{
+return|return
+operator|&
+name|AddressPool
+return|;
+block|}
+comment|/// \brief for a given compile unit DIE, returns offset from beginning of
+comment|/// debug info.
+name|unsigned
+name|getCUOffset
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// \brief Collects and handles dwarf debug information.
+end_comment
+
+begin_decl_stmt
+name|class
+name|DwarfDebug
+block|{
+comment|// Target of Dwarf emission.
+name|AsmPrinter
+modifier|*
+name|Asm
+decl_stmt|;
+comment|// Collected machine module information.
+name|MachineModuleInfo
+modifier|*
+name|MMI
+decl_stmt|;
+comment|// All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
+decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Attribute used to construct specific Dwarf sections.
+comment|//
+name|CompileUnit
+modifier|*
+name|FirstCU
+decl_stmt|;
+comment|// Maps MDNode with its corresponding CompileUnit.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|CompileUnit
+operator|*
+operator|>
+name|CUMap
+expr_stmt|;
+comment|// Maps subprogram MDNode with its corresponding CompileUnit.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|CompileUnit
+operator|*
+operator|>
+name|SPMap
+expr_stmt|;
+comment|// Used to uniquely define abbreviations.
+name|FoldingSet
+operator|<
+name|DIEAbbrev
+operator|>
+name|AbbreviationsSet
+expr_stmt|;
+comment|// A list of all the unique abbreviations in use.
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+name|Abbreviations
+expr_stmt|;
+comment|// Stores the current file ID for a given compile unit.
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|FileIDCUMap
+expr_stmt|;
+comment|// Source id map, i.e. CUID, source filename and directory,
+comment|// separated by a zero byte, mapped to a unique id.
+name|StringMap
+operator|<
+name|unsigned
+operator|,
+name|BumpPtrAllocator
+operator|&
+operator|>
+name|SourceIdMap
+expr_stmt|;
+comment|// Provides a unique id per text section.
 name|SetVector
 operator|<
 specifier|const
@@ -1235,7 +1580,7 @@ operator|*
 operator|>
 name|SectionMap
 expr_stmt|;
-comment|/// CurrentFnArguments - List of Arguments (DbgValues) for current function.
+comment|// List of Arguments (DbgValues) for current function.
 name|SmallVector
 operator|<
 name|DbgVariable
@@ -1248,7 +1593,7 @@ expr_stmt|;
 name|LexicalScopes
 name|LScopes
 decl_stmt|;
-comment|/// AbstractSPDies - Collection of abstract subprogram DIEs.
+comment|// Collection of abstract subprogram DIEs.
 name|DenseMap
 operator|<
 specifier|const
@@ -1260,7 +1605,7 @@ operator|*
 operator|>
 name|AbstractSPDies
 expr_stmt|;
-comment|/// ScopeVariables - Collection of dbg variables of a scope.
+comment|// Collection of dbg variables of a scope.
 name|DenseMap
 operator|<
 name|LexicalScope
@@ -1276,7 +1621,7 @@ operator|>
 expr|>
 name|ScopeVariables
 expr_stmt|;
-comment|/// AbstractVariables - Collection of abstract variables.
+comment|// Collection of abstract variables.
 name|DenseMap
 operator|<
 specifier|const
@@ -1288,7 +1633,7 @@ operator|*
 operator|>
 name|AbstractVariables
 expr_stmt|;
-comment|/// DotDebugLocEntries - Collection of DotDebugLocEntry.
+comment|// Collection of DotDebugLocEntry.
 name|SmallVector
 operator|<
 name|DotDebugLocEntry
@@ -1297,8 +1642,8 @@ literal|4
 operator|>
 name|DotDebugLocEntries
 expr_stmt|;
-comment|/// InlinedSubprogramDIEs - Collection of subprogram DIEs that are marked
-comment|/// (at the end of the module) as DW_AT_inline.
+comment|// Collection of subprogram DIEs that are marked (at the end of the module)
+comment|// as DW_AT_inline.
 name|SmallPtrSet
 operator|<
 name|DIE
@@ -1308,8 +1653,8 @@ literal|4
 operator|>
 name|InlinedSubprogramDIEs
 expr_stmt|;
-comment|/// InlineInfo - Keep track of inlined functions and their location.  This
-comment|/// information is used to populate the debug_inlined section.
+comment|// Keep track of inlined functions and their location.  This
+comment|// information is used to populate the debug_inlined section.
 typedef|typedef
 name|std
 operator|::
@@ -1349,8 +1694,8 @@ literal|4
 operator|>
 name|InlinedSPNodes
 expr_stmt|;
-comment|// ProcessedSPNodes - This is a collection of subprogram MDNodes that
-comment|// are processed to create DIEs.
+comment|// This is a collection of subprogram MDNodes that are processed to
+comment|// create DIEs.
 name|SmallPtrSet
 operator|<
 specifier|const
@@ -1361,8 +1706,7 @@ literal|16
 operator|>
 name|ProcessedSPNodes
 expr_stmt|;
-comment|/// LabelsBeforeInsn - Maps instruction with label emitted before
-comment|/// instruction.
+comment|// Maps instruction with label emitted before instruction.
 name|DenseMap
 operator|<
 specifier|const
@@ -1374,8 +1718,7 @@ operator|*
 operator|>
 name|LabelsBeforeInsn
 expr_stmt|;
-comment|/// LabelsAfterInsn - Maps instruction with label emitted after
-comment|/// instruction.
+comment|// Maps instruction with label emitted after instruction.
 name|DenseMap
 operator|<
 specifier|const
@@ -1387,8 +1730,8 @@ operator|*
 operator|>
 name|LabelsAfterInsn
 expr_stmt|;
-comment|/// UserVariables - Every user variable mentioned by a DBG_VALUE instruction
-comment|/// in order of appearance.
+comment|// Every user variable mentioned by a DBG_VALUE instruction in order of
+comment|// appearance.
 name|SmallVector
 operator|<
 specifier|const
@@ -1399,9 +1742,9 @@ literal|8
 operator|>
 name|UserVariables
 expr_stmt|;
-comment|/// DbgValues - For each user variable, keep a list of DBG_VALUE
-comment|/// instructions in order. The list can also contain normal instructions that
-comment|/// clobber the previous DBG_VALUE.
+comment|// For each user variable, keep a list of DBG_VALUE instructions in order.
+comment|// The list can also contain normal instructions that clobber the previous
+comment|// DBG_VALUE.
 typedef|typedef
 name|DenseMap
 operator|<
@@ -1433,8 +1776,8 @@ literal|8
 operator|>
 name|DebugRangeSymbols
 expr_stmt|;
-comment|/// Previous instruction's location information. This is used to determine
-comment|/// label location to indicate scope boundries in dwarf debug info.
+comment|// Previous instruction's location information. This is used to determine
+comment|// label location to indicate scope boundries in dwarf debug info.
 name|DebugLoc
 name|PrevInstLoc
 decl_stmt|;
@@ -1442,8 +1785,8 @@ name|MCSymbol
 modifier|*
 name|PrevLabel
 decl_stmt|;
-comment|/// PrologEndLoc - This location indicates end of function prologue and
-comment|/// beginning of function body.
+comment|// This location indicates end of function prologue and beginning of function
+comment|// body.
 name|DebugLoc
 name|PrologEndLoc
 decl_stmt|;
@@ -1511,6 +1854,12 @@ decl_stmt|;
 name|MCSymbol
 modifier|*
 name|DwarfDebugLocSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfLineSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfAddrSectionSym
 decl_stmt|;
 name|MCSymbol
 modifier|*
@@ -1519,30 +1868,99 @@ decl_stmt|,
 modifier|*
 name|FunctionEndSym
 decl_stmt|;
+name|MCSymbol
+modifier|*
+name|DwarfAbbrevDWOSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfStrDWOSectionSym
+decl_stmt|;
 comment|// As an optimization, there is no need to emit an entry in the directory
 comment|// table for the same directory as DW_at_comp_dir.
 name|StringRef
 name|CompilationDir
 decl_stmt|;
-comment|// A holder for the DarwinGDBCompat flag so that the compile unit can use it.
+comment|// Counter for assigning globally unique IDs for CUs.
+name|unsigned
+name|GlobalCUIndexCount
+decl_stmt|;
+comment|// Holder for the file specific debug information.
+name|DwarfUnits
+name|InfoHolder
+decl_stmt|;
+comment|// Holders for the various debug information flags that we might need to
+comment|// have exposed. See accessor functions below for description.
+comment|// Whether or not we're emitting info for older versions of gdb on darwin.
 name|bool
-name|isDarwinGDBCompat
+name|IsDarwinGDBCompat
+decl_stmt|;
+comment|// DWARF5 Experimental Options
+name|bool
+name|HasDwarfAccelTables
 decl_stmt|;
 name|bool
-name|hasDwarfAccelTables
+name|HasSplitDwarf
+decl_stmt|;
+comment|// Separated Dwarf Variables
+comment|// In general these will all be for bits that are left in the
+comment|// original object file, rather than things that are meant
+comment|// to be in the .dwo sections.
+comment|// The CUs left in the original object file for separated debug info.
+name|SmallVector
+operator|<
+name|CompileUnit
+operator|*
+operator|,
+literal|1
+operator|>
+name|SkeletonCUs
+expr_stmt|;
+comment|// Used to uniquely define abbreviations for the skeleton emission.
+name|FoldingSet
+operator|<
+name|DIEAbbrev
+operator|>
+name|SkeletonAbbrevSet
+expr_stmt|;
+comment|// A list of all the unique abbreviations in use.
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+name|SkeletonAbbrevs
+expr_stmt|;
+comment|// Holder for the skeleton information.
+name|DwarfUnits
+name|SkeletonHolder
+decl_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+specifier|const
+name|MDNode
+operator|*
+operator|>
+operator|,
+literal|32
+operator|>
+name|ImportedEntityMap
+expr_stmt|;
+name|ImportedEntityMap
+name|ScopesWithImportedEntities
 decl_stmt|;
 name|private
 label|:
-comment|/// assignAbbrevNumber - Define a unique number for the abbreviation.
-comment|///
-name|void
-name|assignAbbrevNumber
-parameter_list|(
-name|DIEAbbrev
-modifier|&
-name|Abbrev
-parameter_list|)
-function_decl|;
 name|void
 name|addScopeVariable
 parameter_list|(
@@ -1555,7 +1973,7 @@ modifier|*
 name|Var
 parameter_list|)
 function_decl|;
-comment|/// findAbstractVariable - Find abstract variable associated with Var.
+comment|/// \brief Find abstract variable associated with Var.
 name|DbgVariable
 modifier|*
 name|findAbstractVariable
@@ -1568,10 +1986,10 @@ name|DebugLoc
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// updateSubprogramScopeDIE - Find DIE for the given subprogram and
-comment|/// attach appropriate DW_AT_low_pc and DW_AT_high_pc attributes.
-comment|/// If there are global variables in this scope then create and insert
-comment|/// DIEs for these variables.
+comment|/// \brief Find DIE for the given subprogram and attach appropriate
+comment|/// DW_AT_low_pc and DW_AT_high_pc attributes. If there are global
+comment|/// variables in this scope then create and insert DIEs for these
+comment|/// variables.
 name|DIE
 modifier|*
 name|updateSubprogramScopeDIE
@@ -1586,8 +2004,8 @@ modifier|*
 name|SPNode
 parameter_list|)
 function_decl|;
-comment|/// constructLexicalScope - Construct new DW_TAG_lexical_block
-comment|/// for this scope and attach DW_AT_low_pc/DW_AT_high_pc labels.
+comment|/// \brief Construct new DW_TAG_lexical_block for this scope and
+comment|/// attach DW_AT_low_pc/DW_AT_high_pc labels.
 name|DIE
 modifier|*
 name|constructLexicalScopeDIE
@@ -1601,9 +2019,8 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// constructInlinedScopeDIE - This scope represents inlined body of
-comment|/// a function. Construct DIE to represent this concrete inlined copy
-comment|/// of the function.
+comment|/// \brief This scope represents inlined body of a function. Construct
+comment|/// DIE to represent this concrete inlined copy of the function.
 name|DIE
 modifier|*
 name|constructInlinedScopeDIE
@@ -1617,7 +2034,7 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// constructScopeDIE - Construct a DIE for this scope.
+comment|/// \brief Construct a DIE for this scope.
 name|DIE
 modifier|*
 name|constructScopeDIE
@@ -1631,24 +2048,12 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// EmitSectionLabels - Emit initial Dwarf sections with a label at
-comment|/// the start of each one.
+comment|/// \brief Emit initial Dwarf sections with a label at the start of each one.
 name|void
-name|EmitSectionLabels
+name|emitSectionLabels
 parameter_list|()
 function_decl|;
-comment|/// emitDIE - Recursively Emits a debug information entry.
-comment|///
-name|void
-name|emitDIE
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|)
-function_decl|;
-comment|/// computeSizeAndOffset - Compute the size and offset of a DIE.
-comment|///
+comment|/// \brief Compute the size and offset of a DIE given an incoming Offset.
 name|unsigned
 name|computeSizeAndOffset
 parameter_list|(
@@ -1658,33 +2063,65 @@ name|Die
 parameter_list|,
 name|unsigned
 name|Offset
-parameter_list|,
-name|bool
-name|Last
 parameter_list|)
 function_decl|;
-comment|/// computeSizeAndOffsets - Compute the size and offset of all the DIEs.
-comment|///
+comment|/// \brief Compute the size and offset of all the DIEs.
 name|void
 name|computeSizeAndOffsets
 parameter_list|()
 function_decl|;
-comment|/// EmitDebugInfo - Emit the debug info section.
-comment|///
+comment|/// \brief Attach DW_AT_inline attribute with inlined subprogram DIEs.
+name|void
+name|computeInlinedDIEs
+parameter_list|()
+function_decl|;
+comment|/// \brief Collect info for variables that were optimized out.
+name|void
+name|collectDeadVariables
+parameter_list|()
+function_decl|;
+comment|/// \brief Finish off debug information after all functions have been
+comment|/// processed.
+name|void
+name|finalizeModuleInfo
+parameter_list|()
+function_decl|;
+comment|/// \brief Emit labels to close any remaining sections that have been left
+comment|/// open.
+name|void
+name|endSections
+parameter_list|()
+function_decl|;
+comment|/// \brief Emit a set of abbreviations to the specific section.
+name|void
+name|emitAbbrevs
+argument_list|(
+specifier|const
+name|MCSection
+operator|*
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+operator|*
+argument_list|)
+decl_stmt|;
+comment|/// \brief Emit the debug info section.
 name|void
 name|emitDebugInfo
 parameter_list|()
 function_decl|;
-comment|/// emitAbbreviations - Emit the abbreviation section.
-comment|///
+comment|/// \brief Emit the abbreviation section.
 name|void
 name|emitAbbreviations
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// emitEndOfLineMatrix - Emit the last address of the section and the end of
+parameter_list|()
+function_decl|;
+comment|/// \brief Emit the last address of the section and the end of
 comment|/// the line matrix.
-comment|///
 name|void
 name|emitEndOfLineMatrix
 parameter_list|(
@@ -1692,90 +2129,105 @@ name|unsigned
 name|SectionEnd
 parameter_list|)
 function_decl|;
-comment|/// emitAccelNames - Emit visible names into a hashed accelerator table
-comment|/// section.
+comment|/// \brief Emit visible names into a hashed accelerator table section.
 name|void
 name|emitAccelNames
 parameter_list|()
 function_decl|;
-comment|/// emitAccelObjC - Emit objective C classes and categories into a hashed
+comment|/// \brief Emit objective C classes and categories into a hashed
 comment|/// accelerator table section.
 name|void
 name|emitAccelObjC
 parameter_list|()
 function_decl|;
-comment|/// emitAccelNamespace - Emit namespace dies into a hashed accelerator
-comment|/// table.
+comment|/// \brief Emit namespace dies into a hashed accelerator table.
 name|void
 name|emitAccelNamespaces
 parameter_list|()
 function_decl|;
-comment|/// emitAccelTypes() - Emit type dies into a hashed accelerator table.
-comment|///
+comment|/// \brief Emit type dies into a hashed accelerator table.
 name|void
 name|emitAccelTypes
 parameter_list|()
 function_decl|;
-comment|/// emitDebugPubTypes - Emit visible types into a debug pubtypes section.
-comment|///
+comment|/// \brief Emit visible names into a debug pubnames section.
+name|void
+name|emitDebugPubnames
+parameter_list|()
+function_decl|;
+comment|/// \brief Emit visible types into a debug pubtypes section.
 name|void
 name|emitDebugPubTypes
 parameter_list|()
 function_decl|;
-comment|/// emitDebugStr - Emit visible names into a debug str section.
-comment|///
+comment|/// \brief Emit visible names into a debug str section.
 name|void
 name|emitDebugStr
 parameter_list|()
 function_decl|;
-comment|/// emitDebugLoc - Emit visible names into a debug loc section.
-comment|///
+comment|/// \brief Emit visible names into a debug loc section.
 name|void
 name|emitDebugLoc
 parameter_list|()
 function_decl|;
-comment|/// EmitDebugARanges - Emit visible names into a debug aranges section.
-comment|///
+comment|/// \brief Emit visible names into a debug aranges section.
 name|void
-name|EmitDebugARanges
+name|emitDebugARanges
 parameter_list|()
 function_decl|;
-comment|/// emitDebugRanges - Emit visible names into a debug ranges section.
-comment|///
+comment|/// \brief Emit visible names into a debug ranges section.
 name|void
 name|emitDebugRanges
 parameter_list|()
 function_decl|;
-comment|/// emitDebugMacInfo - Emit visible names into a debug macinfo section.
-comment|///
+comment|/// \brief Emit visible names into a debug macinfo section.
 name|void
 name|emitDebugMacInfo
 parameter_list|()
 function_decl|;
-comment|/// emitDebugInlineInfo - Emit inline info using following format.
-comment|/// Section Header:
-comment|/// 1. length of section
-comment|/// 2. Dwarf version number
-comment|/// 3. address size.
-comment|///
-comment|/// Entries (one "entry" for each function that was inlined):
-comment|///
-comment|/// 1. offset into __debug_str section for MIPS linkage name, if exists;
-comment|///   otherwise offset into __debug_str for regular function name.
-comment|/// 2. offset into __debug_str section for regular function name.
-comment|/// 3. an unsigned LEB128 number indicating the number of distinct inlining
-comment|/// instances for the function.
-comment|///
-comment|/// The rest of the entry consists of a {die_offset, low_pc} pair for each
-comment|/// inlined instance; the die_offset points to the inlined_subroutine die in
-comment|/// the __debug_info section, and the low_pc is the starting address for the
-comment|/// inlining instance.
+comment|/// \brief Emit inline info using custom format.
 name|void
 name|emitDebugInlineInfo
 parameter_list|()
 function_decl|;
-comment|/// constructCompileUnit - Create new CompileUnit for the given
-comment|/// metadata node with tag DW_TAG_compile_unit.
+comment|/// DWARF 5 Experimental Split Dwarf Emitters
+comment|/// \brief Construct the split debug info compile unit for the debug info
+comment|/// section.
+name|CompileUnit
+modifier|*
+name|constructSkeletonCU
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the local split abbreviations.
+name|void
+name|emitSkeletonAbbrevs
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit the debug info dwo section.
+name|void
+name|emitDebugInfoDWO
+parameter_list|()
+function_decl|;
+comment|/// \brief Emit the debug abbrev dwo section.
+name|void
+name|emitDebugAbbrevDWO
+parameter_list|()
+function_decl|;
+comment|/// \brief Emit the debug str dwo section.
+name|void
+name|emitDebugStrDWO
+parameter_list|()
+function_decl|;
+comment|/// \brief Create new CompileUnit for the given metadata node with tag
+comment|/// DW_TAG_compile_unit.
 name|CompileUnit
 modifier|*
 name|constructCompileUnit
@@ -1786,7 +2238,7 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// construct SubprogramDIE - Construct subprogram DIE.
+comment|/// \brief Construct subprogram DIE.
 name|void
 name|constructSubprogramDIE
 parameter_list|(
@@ -1800,9 +2252,59 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|/// recordSourceLine - Register a source line with debug info. Returns the
-comment|/// unique label that was emitted and which provides correspondence to
-comment|/// the source line list.
+comment|/// \brief Construct import_module DIE.
+name|void
+name|constructImportedModuleDIE
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// \brief Construct import_module DIE.
+name|void
+name|constructImportedModuleDIE
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|,
+name|DIE
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// \brief Construct import_module DIE.
+name|void
+name|constructImportedModuleDIE
+parameter_list|(
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
+specifier|const
+name|DIImportedModule
+modifier|&
+name|Module
+parameter_list|,
+name|DIE
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// \brief Register a source line with debug info. Returns the unique
+comment|/// label that was emitted and which provides correspondence to the
+comment|/// source line list.
 name|void
 name|recordSourceLine
 parameter_list|(
@@ -1821,14 +2323,14 @@ name|unsigned
 name|Flags
 parameter_list|)
 function_decl|;
-comment|/// identifyScopeMarkers() - Indentify instructions that are marking the
-comment|/// beginning of or ending of a scope.
+comment|/// \brief Indentify instructions that are marking the beginning of or
+comment|/// ending of a scope.
 name|void
 name|identifyScopeMarkers
 parameter_list|()
 function_decl|;
-comment|/// addCurrentFnArgument - If Var is an current function argument that add
-comment|/// it in CurrentFnArguments list.
+comment|/// \brief If Var is an current function argument that add it in
+comment|/// CurrentFnArguments list.
 name|bool
 name|addCurrentFnArgument
 parameter_list|(
@@ -1846,7 +2348,7 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// collectVariableInfo - Populate LexicalScope entries with variables' info.
+comment|/// \brief Populate LexicalScope entries with variables' info.
 name|void
 name|collectVariableInfo
 argument_list|(
@@ -1866,8 +2368,8 @@ operator|&
 name|ProcessedVars
 argument_list|)
 decl_stmt|;
-comment|/// collectVariableInfoFromMMITable - Collect variable information from
-comment|/// side table maintained by MMI.
+comment|/// \brief Collect variable information from the side table maintained
+comment|/// by MMI.
 name|void
 name|collectVariableInfoFromMMITable
 argument_list|(
@@ -1888,7 +2390,7 @@ operator|&
 name|P
 argument_list|)
 decl_stmt|;
-comment|/// requestLabelBeforeInsn - Ensure that a label will be emitted before MI.
+comment|/// \brief Ensure that a label will be emitted before MI.
 name|void
 name|requestLabelBeforeInsn
 parameter_list|(
@@ -1917,8 +2419,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getLabelBeforeInsn - Return Label preceding the instruction.
-specifier|const
+comment|/// \brief Return Label preceding the instruction.
 name|MCSymbol
 modifier|*
 name|getLabelBeforeInsn
@@ -1929,7 +2430,7 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// requestLabelAfterInsn - Ensure that a label will be emitted after MI.
+comment|/// \brief Ensure that a label will be emitted after MI.
 name|void
 name|requestLabelAfterInsn
 parameter_list|(
@@ -1958,8 +2459,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getLabelAfterInsn - Return Label immediately following the instruction.
-specifier|const
+comment|/// \brief Return Label immediately following the instruction.
 name|MCSymbol
 modifier|*
 name|getLabelAfterInsn
@@ -1990,44 +2490,18 @@ operator|~
 name|DwarfDebug
 argument_list|()
 expr_stmt|;
-comment|/// collectInfoFromNamedMDNodes - Collect debug info from named mdnodes such
-comment|/// as llvm.dbg.enum and llvm.dbg.ty
-name|void
-name|collectInfoFromNamedMDNodes
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
-function_decl|;
-comment|/// collectLegacyDebugInfo - Collect debug info using DebugInfoFinder.
-comment|/// FIXME - Remove this when DragonEgg switches to DIBuilder.
-name|bool
-name|collectLegacyDebugInfo
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
-function_decl|;
-comment|/// beginModule - Emit all Dwarf sections that should come prior to the
+comment|/// \brief Emit all Dwarf sections that should come prior to the
 comment|/// content.
 name|void
 name|beginModule
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
+parameter_list|()
 function_decl|;
-comment|/// endModule - Emit all Dwarf sections that should come after the content.
-comment|///
+comment|/// \brief Emit all Dwarf sections that should come after the content.
 name|void
 name|endModule
 parameter_list|()
 function_decl|;
-comment|/// beginFunction - Gather pre-function debug information.  Assumes being
-comment|/// emitted immediately after the function entry point.
+comment|/// \brief Gather pre-function debug information.
 name|void
 name|beginFunction
 parameter_list|(
@@ -2037,8 +2511,7 @@ modifier|*
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// endFunction - Gather and emit post-function debug information.
-comment|///
+comment|/// \brief Gather and emit post-function debug information.
 name|void
 name|endFunction
 parameter_list|(
@@ -2048,7 +2521,7 @@ modifier|*
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// beginInstruction - Process beginning of an instruction.
+comment|/// \brief Process beginning of an instruction.
 name|void
 name|beginInstruction
 parameter_list|(
@@ -2058,7 +2531,7 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// endInstruction - Prcess end of an instruction.
+comment|/// \brief Process end of an instruction.
 name|void
 name|endInstruction
 parameter_list|(
@@ -2068,51 +2541,70 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// GetOrCreateSourceID - Look up the source id with the given directory and
-comment|/// source file names. If none currently exists, create a new id and insert it
-comment|/// in the SourceIds map.
+comment|/// \brief Look up the source id with the given directory and source file
+comment|/// names. If none currently exists, create a new id and insert it in the
+comment|/// SourceIds map.
 name|unsigned
-name|GetOrCreateSourceID
+name|getOrCreateSourceID
 parameter_list|(
 name|StringRef
 name|DirName
 parameter_list|,
 name|StringRef
 name|FullName
+parameter_list|,
+name|unsigned
+name|CUID
 parameter_list|)
 function_decl|;
-comment|/// getStringPool - returns the entry into the start of the pool.
-name|MCSymbol
-modifier|*
-name|getStringPool
-parameter_list|()
-function_decl|;
-comment|/// getStringPoolEntry - returns an entry into the string pool with the given
-comment|/// string text.
-name|MCSymbol
-modifier|*
-name|getStringPoolEntry
-parameter_list|(
-name|StringRef
-name|Str
-parameter_list|)
-function_decl|;
-comment|/// useDarwinGDBCompat - returns whether or not to limit some of our debug
+comment|/// \brief Recursively Emits a debug information entry.
+name|void
+name|emitDIE
+argument_list|(
+name|DIE
+operator|*
+name|Die
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+operator|*
+name|Abbrevs
+argument_list|)
+decl_stmt|;
+comment|/// \brief Returns whether or not to limit some of our debug
 comment|/// output to the limitations of darwin gdb.
 name|bool
 name|useDarwinGDBCompat
 parameter_list|()
 block|{
 return|return
-name|isDarwinGDBCompat
+name|IsDarwinGDBCompat
 return|;
 block|}
+comment|// Experimental DWARF5 features.
+comment|/// \brief Returns whether or not to emit tables that dwarf consumers can
+comment|/// use to accelerate lookup.
 name|bool
 name|useDwarfAccelTables
 parameter_list|()
 block|{
 return|return
-name|hasDwarfAccelTables
+name|HasDwarfAccelTables
+return|;
+block|}
+comment|/// \brief Returns whether or not to change the current debug info for the
+comment|/// split dwarf proposal support.
+name|bool
+name|useSplitDwarf
+parameter_list|()
+block|{
+return|return
+name|HasSplitDwarf
 return|;
 block|}
 block|}

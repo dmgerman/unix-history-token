@@ -1321,6 +1321,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|short
+name|inp_so_options
+parameter_list|(
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -2077,6 +2090,17 @@ end_define
 
 begin_comment
 comment|/* inp itself is not valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_REUSEADDR
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* SO_REUSEADDR option is set */
 end_comment
 
 begin_comment

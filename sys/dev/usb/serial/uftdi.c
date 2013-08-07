@@ -2561,6 +2561,17 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|LM3S_ICDI_B_BOARD
+argument_list|,
+name|UFTDI_TYPE_AUTO
+operator||
+name|UFTDI_FLAG_JTAG
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|MASTERDEVEL2
 argument_list|,
 name|UFTDI_TYPE_AUTO

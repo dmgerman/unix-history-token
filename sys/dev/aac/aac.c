@@ -2216,7 +2216,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4716,6 +4715,43 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cm
+operator|->
+name|cm_flags
+operator|&
+name|AAC_REQ_BIO
+condition|)
+name|error
+operator|=
+name|bus_dmamap_load_bio
+argument_list|(
+name|sc
+operator|->
+name|aac_buffer_dmat
+argument_list|,
+name|cm
+operator|->
+name|cm_datamap
+argument_list|,
+operator|(
+expr|struct
+name|bio
+operator|*
+operator|)
+name|cm
+operator|->
+name|cm_private
+argument_list|,
+name|aac_map_command_sg
+argument_list|,
+name|cm
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|bus_dmamap_load
@@ -4764,10 +4800,6 @@ operator|->
 name|flags
 operator||=
 name|AAC_QUEUE_FRZN
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -5568,18 +5600,6 @@ goto|;
 comment|/* fill out the command */
 name|cm
 operator|->
-name|cm_data
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|bp
-operator|->
-name|bio_data
-expr_stmt|;
-name|cm
-operator|->
 name|cm_datalen
 operator|=
 name|bp
@@ -5591,6 +5611,12 @@ operator|->
 name|cm_complete
 operator|=
 name|aac_bio_complete
+expr_stmt|;
+name|cm
+operator|->
+name|cm_flags
+operator|=
+name|AAC_REQ_BIO
 expr_stmt|;
 name|cm
 operator|->
@@ -7995,7 +8021,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -11336,7 +11361,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -16157,7 +16181,6 @@ operator|->
 name|aac_aifq_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -18198,7 +18221,6 @@ operator|->
 name|aac_dev
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

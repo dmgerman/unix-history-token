@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -142,6 +136,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -1182,7 +1182,7 @@ name|int
 name|s
 parameter_list|)
 block|{
-name|u_char
+name|char
 name|ntopbuf
 index|[
 name|INET6_ADDRSTRLEN
@@ -1299,11 +1299,11 @@ name|NI_MAXHOST
 index|]
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|lifetime
 decl_stmt|;
 name|int
@@ -1906,12 +1906,12 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|newent_rai
@@ -2477,7 +2477,7 @@ operator|->
 name|nd_opt_rdnss_lifetime
 argument_list|)
 expr_stmt|;
-name|timeradd
+name|TS_ADD
 argument_list|(
 operator|&
 name|now
@@ -2769,7 +2769,7 @@ operator|->
 name|nd_opt_dnssl_lifetime
 argument_list|)
 expr_stmt|;
-name|timeradd
+name|TS_ADD
 argument_list|(
 operator|&
 name|now
@@ -2960,7 +2960,7 @@ modifier|*
 name|smp3
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
 name|struct
@@ -3002,12 +3002,12 @@ argument_list|(
 name|resstr_nl
 argument_list|)
 expr_stmt|;
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * All options from multiple RAs with the same or different 	 * source addresses on a single interface will be gathered and 	 * handled, not overridden.  [RFC 4861 6.3.4] 	 */
@@ -3041,7 +3041,7 @@ name|ND_OPT_RDNSS
 case|:
 if|if
 condition|(
-name|timercmp
+name|TS_CMP
 argument_list|(
 operator|&
 name|now
@@ -3157,7 +3157,7 @@ name|ND_OPT_DNSSL
 case|:
 if|if
 condition|(
-name|timercmp
+name|TS_CMP
 argument_list|(
 operator|&
 name|now

@@ -612,6 +612,21 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|EPERM
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Only priviledged users"
+literal|" can use the -m option"
+argument_list|)
+expr_stmt|;
 block|}
 name|mntbuf
 operator|++

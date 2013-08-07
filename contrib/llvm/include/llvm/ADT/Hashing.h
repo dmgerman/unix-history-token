@@ -545,8 +545,7 @@ if|if
 condition|(
 name|sys
 operator|::
-name|isBigEndianHost
-argument_list|()
+name|IsBigEndianHost
 condition|)
 return|return
 name|sys
@@ -590,8 +589,7 @@ if|if
 condition|(
 name|sys
 operator|::
-name|isBigEndianHost
-argument_list|()
+name|IsBigEndianHost
 condition|)
 return|return
 name|sys

@@ -227,6 +227,14 @@ name|FindAssociatedSection
 argument_list|()
 return|;
 block|}
+comment|// There are no TLS ARMMCExprs at the moment.
+name|void
+name|fixELFSymbolsInTLSFixups
+argument_list|(
+argument|MCAssembler&Asm
+argument_list|)
+specifier|const
+block|{}
 specifier|static
 name|bool
 name|classof

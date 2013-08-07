@@ -216,6 +216,8 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|CODE
 name|prioritynames
 index|[]
@@ -628,6 +630,8 @@ name|SYSLOG_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|CODE
 name|facilitynames
 index|[]

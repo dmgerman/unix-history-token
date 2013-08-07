@@ -490,6 +490,7 @@ comment|/*  * Returns 1 if a directory has been created,  * 2 if it already exis
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|build
 parameter_list|(
@@ -825,6 +826,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

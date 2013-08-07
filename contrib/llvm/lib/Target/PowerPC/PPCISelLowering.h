@@ -72,19 +72,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"PPCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"PPCRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"PPCSubtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLowering.h"
+file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_decl_stmt
@@ -113,6 +125,14 @@ comment|/// and f64 value containing the FP representation of the integer that
 comment|/// was temporarily in the f64 operand.
 name|FCFID
 block|,
+comment|/// Newer FCFID[US] integer-to-floating-point conversion instructions for
+comment|/// unsigned integers and single-precision outputs.
+name|FCFIDU
+block|,
+name|FCFIDS
+block|,
+name|FCFIDUS
+block|,
 comment|/// FCTI[D,W]Z - The FCTIDZ and FCTIWZ instructions, taking an f32 or f64
 comment|/// operand, producing an f64 value containing the integer representation
 comment|/// of that FP value.
@@ -120,9 +140,16 @@ name|FCTIDZ
 block|,
 name|FCTIWZ
 block|,
-comment|/// STFIWX - The STFIWX instruction.  The first operand is an input token
-comment|/// chain, then an f64 value to store, then an address to store it to.
-name|STFIWX
+comment|/// Newer FCTI[D,W]UZ floating-point-to-integer conversion instructions for
+comment|/// unsigned integers.
+name|FCTIDUZ
+block|,
+name|FCTIWUZ
+block|,
+comment|/// Reciprocal estimate instructions (unary FP ops).
+name|FRE
+block|,
+name|FRSQRTE
 block|,
 comment|// VMADDFP, VNMSUBFP - The VMADDFP and VNMSUBFP instructions, taking
 comment|// three v4f32 operands and producing a v4f32 result.
@@ -177,21 +204,12 @@ name|SRA
 block|,
 name|SHL
 block|,
-comment|/// EXTSW_32 - This is the EXTSW instruction for use with "32-bit"
-comment|/// registers.
-name|EXTSW_32
-block|,
 comment|/// CALL - A direct function call.
-comment|/// CALL_NOP_SVR4 is a call with the special  NOP which follows 64-bit
+comment|/// CALL_NOP is a call with the special NOP which follows 64-bit
 comment|/// SVR4 calls.
-name|CALL_Darwin
+name|CALL
 block|,
-name|CALL_SVR4
-block|,
-name|CALL_NOP_SVR4
-block|,
-comment|/// NOP - Special NOP which follows 64-bit SVR4 calls.
-name|NOP
+name|CALL_NOP
 block|,
 comment|/// CHAIN,FLAG = MTCTR(VAL, CHAIN[, INFLAG]) - Directly corresponds to a
 comment|/// MTCTR instruction.
@@ -199,9 +217,7 @@ name|MTCTR
 block|,
 comment|/// CHAIN,FLAG = BCTRL(CHAIN, INFLAG) - Directly corresponds to a
 comment|/// BCTRL instruction.
-name|BCTRL_Darwin
-block|,
-name|BCTRL_SVR4
+name|BCTRL
 block|,
 comment|/// Return with a flag operand, matched by 'blr'
 name|RET_FLAG
@@ -211,6 +227,12 @@ comment|/// instructions.  This copies the bits corresponding to the specified
 comment|/// CRREG into the resultant GPR.  Bits corresponding to other CR regs
 comment|/// are undefined.
 name|MFCR
+block|,
+comment|// EH_SJLJ_SETJMP - SjLj exception handling setjmp.
+name|EH_SJLJ_SETJMP
+block|,
+comment|// EH_SJLJ_LONGJMP - SjLj exception handling longjmp.
+name|EH_SJLJ_LONGJMP
 block|,
 comment|/// RESVEC = VCMP(LHS, RHS, OPC) - Represents one of the altivec VCMP*
 comment|/// instructions.  For lack of better number, we use the opcode number
@@ -231,25 +253,13 @@ comment|/// PPC::BLE), DESTBB is the destination block to branch to, and INFLAG 
 comment|/// an optional input flag argument.
 name|COND_BRANCH
 block|,
-comment|// The following 5 instructions are used only as part of the
-comment|// long double-to-int conversion sequence.
-comment|/// OUTFLAG = MFFS F8RC - This moves the FPSCR (not modelled) into the
-comment|/// register.
-name|MFFS
-block|,
-comment|/// OUTFLAG = MTFSB0 INFLAG - This clears a bit in the FPSCR.
-name|MTFSB0
-block|,
-comment|/// OUTFLAG = MTFSB1 INFLAG - This sets a bit in the FPSCR.
-name|MTFSB1
-block|,
-comment|/// F8RC, OUTFLAG = FADDRTZ F8RC, F8RC, INFLAG - This is an FADD done with
-comment|/// rounding towards zero.  It has flags added so it won't move past the
-comment|/// FPSCR-setting instructions.
+comment|/// F8RC = FADDRTZ F8RC, F8RC - This is an FADD done with rounding
+comment|/// towards zero.  Used only as part of the long double-to-int
+comment|/// conversion sequence.
 name|FADDRTZ
 block|,
-comment|/// MTFSF = F8RC, INFLAG - This moves the register into the FPSCR.
-name|MTFSF
+comment|/// F8RC = MFFS - This moves the FPSCR (not modeled) into the register.
+name|MFFS
 block|,
 comment|/// LARX = This corresponds to PPC l{w|d}arx instrcution: load and
 comment|/// reserve indexed. This is used to implement atomic operations.
@@ -271,24 +281,115 @@ name|CR6SET
 block|,
 name|CR6UNSET
 block|,
-comment|/// STD_32 - This is the STD instruction for use with "32-bit" registers.
-name|STD_32
-init|=
-name|ISD
-operator|::
-name|FIRST_TARGET_MEMORY_OPCODE
+comment|/// G8RC = ADDIS_GOT_TPREL_HA %X2, Symbol - Used by the initial-exec
+comment|/// TLS model, produces an ADDIS8 instruction that adds the GOT
+comment|/// base to sym@got@tprel@ha.
+name|ADDIS_GOT_TPREL_HA
+block|,
+comment|/// G8RC = LD_GOT_TPREL_L Symbol, G8RReg - Used by the initial-exec
+comment|/// TLS model, produces a LD instruction with base register G8RReg
+comment|/// and offset sym@got@tprel@l.  This completes the addition that
+comment|/// finds the offset of "sym" relative to the thread pointer.
+name|LD_GOT_TPREL_L
+block|,
+comment|/// G8RC = ADD_TLS G8RReg, Symbol - Used by the initial-exec TLS
+comment|/// model, produces an ADD instruction that adds the contents of
+comment|/// G8RReg to the thread pointer.  Symbol contains a relocation
+comment|/// sym@tls which is to be replaced by the thread pointer and
+comment|/// identifies to the linker that the instruction is part of a
+comment|/// TLS sequence.
+name|ADD_TLS
+block|,
+comment|/// G8RC = ADDIS_TLSGD_HA %X2, Symbol - For the general-dynamic TLS
+comment|/// model, produces an ADDIS8 instruction that adds the GOT base
+comment|/// register to sym@got@tlsgd@ha.
+name|ADDIS_TLSGD_HA
+block|,
+comment|/// G8RC = ADDI_TLSGD_L G8RReg, Symbol - For the general-dynamic TLS
+comment|/// model, produces an ADDI8 instruction that adds G8RReg to
+comment|/// sym@got@tlsgd@l.
+name|ADDI_TLSGD_L
+block|,
+comment|/// G8RC = GET_TLS_ADDR %X3, Symbol - For the general-dynamic TLS
+comment|/// model, produces a call to __tls_get_addr(sym@tlsgd).
+name|GET_TLS_ADDR
+block|,
+comment|/// G8RC = ADDIS_TLSLD_HA %X2, Symbol - For the local-dynamic TLS
+comment|/// model, produces an ADDIS8 instruction that adds the GOT base
+comment|/// register to sym@got@tlsld@ha.
+name|ADDIS_TLSLD_HA
+block|,
+comment|/// G8RC = ADDI_TLSLD_L G8RReg, Symbol - For the local-dynamic TLS
+comment|/// model, produces an ADDI8 instruction that adds G8RReg to
+comment|/// sym@got@tlsld@l.
+name|ADDI_TLSLD_L
+block|,
+comment|/// G8RC = GET_TLSLD_ADDR %X3, Symbol - For the local-dynamic TLS
+comment|/// model, produces a call to __tls_get_addr(sym@tlsld).
+name|GET_TLSLD_ADDR
+block|,
+comment|/// G8RC = ADDIS_DTPREL_HA %X3, Symbol, Chain - For the
+comment|/// local-dynamic TLS model, produces an ADDIS8 instruction
+comment|/// that adds X3 to sym@dtprel@ha.  The Chain operand is needed
+comment|/// to tie this in place following a copy to %X3 from the result
+comment|/// of a GET_TLSLD_ADDR.
+name|ADDIS_DTPREL_HA
+block|,
+comment|/// G8RC = ADDI_DTPREL_L G8RReg, Symbol - For the local-dynamic TLS
+comment|/// model, produces an ADDI8 instruction that adds G8RReg to
+comment|/// sym@got@dtprel@l.
+name|ADDI_DTPREL_L
+block|,
+comment|/// VRRC = VADD_SPLAT Elt, EltSize - Temporary node to be expanded
+comment|/// during instruction selection to optimize a BUILD_VECTOR into
+comment|/// operations on splats.  This is necessary to avoid losing these
+comment|/// optimizations due to constant folding.
+name|VADD_SPLAT
 block|,
 comment|/// CHAIN = STBRX CHAIN, GPRC, Ptr, Type - This is a
 comment|/// byte-swapping store instruction.  It byte-swaps the low "Type" bits of
 comment|/// the GPRC input, then stores it through Ptr.  Type can be either i16 or
 comment|/// i32.
 name|STBRX
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
 block|,
 comment|/// GPRC, CHAIN = LBRX CHAIN, Ptr, Type - This is a
 comment|/// byte-swapping load instruction.  It loads "Type" bits, byte swaps it,
 comment|/// then puts it in the bottom bits of the GPRC.  TYPE can be either i16
 comment|/// or i32.
 name|LBRX
+block|,
+comment|/// STFIWX - The STFIWX instruction.  The first operand is an input token
+comment|/// chain, then an f64 value to store, then an address to store it to.
+name|STFIWX
+block|,
+comment|/// GPRC, CHAIN = LFIWAX CHAIN, Ptr - This is a floating-point
+comment|/// load which sign-extends from a 32-bit integer value into the
+comment|/// destination 64-bit register.
+name|LFIWAX
+block|,
+comment|/// GPRC, CHAIN = LFIWZX CHAIN, Ptr - This is a floating-point
+comment|/// load which zero-extends from a 32-bit integer value into the
+comment|/// destination 64-bit register.
+name|LFIWZX
+block|,
+comment|/// G8RC = ADDIS_TOC_HA %X2, Symbol - For medium and large code model,
+comment|/// produces an ADDIS8 instruction that adds the TOC base register to
+comment|/// sym@toc@ha.
+name|ADDIS_TOC_HA
+block|,
+comment|/// G8RC = LD_TOC_L Symbol, G8RReg - For medium and large code model,
+comment|/// produces a LD instruction with base register G8RReg and offset
+comment|/// sym@toc@l.  Preceded by an ADDIS_TOC_HA to form a full 32-bit offset.
+name|LD_TOC_L
+block|,
+comment|/// G8RC = ADDI_TOC_L G8RReg, Symbol - For medium code model, produces
+comment|/// an ADDI8 instruction that adds G8RReg to sym@toc@l.
+comment|/// Preceded by an ADDIS_TOC_HA to form a full 32-bit offset.
+name|ADDI_TOC_L
 block|}
 enum|;
 block|}
@@ -435,6 +536,16 @@ name|PPCSubtarget
 operator|&
 name|PPCSubTarget
 block|;
+specifier|const
+name|PPCRegisterInfo
+operator|*
+name|PPCRegInfo
+block|;
+specifier|const
+name|PPCInstrInfo
+operator|*
+name|PPCII
+block|;
 name|public
 operator|:
 name|explicit
@@ -459,7 +570,7 @@ specifier|const
 block|;
 name|virtual
 name|MVT
-name|getShiftAmountTy
+name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
@@ -664,6 +775,26 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
+name|MachineBasicBlock
+operator|*
+name|emitEHSjLjSetJmp
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitEHSjLjLongJmp
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
@@ -774,11 +905,10 @@ comment|/// and store operations as a result of memset, memcpy, and memmove
 comment|/// lowering. If DstAlign is zero that means it's safe to destination
 comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
 comment|/// means there isn't a need to check it against alignment requirement,
-comment|/// probably because the source does not need to be loaded. If
-comment|/// 'IsZeroVal' is true, that means it's safe to return a
-comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
-comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
-comment|/// constant so it does not need to be loaded.
+comment|/// probably because the source does not need to be loaded. If 'IsMemset' is
+comment|/// true, that means it's expanding a memset. If 'ZeroMemset' is true, that
+comment|/// means it's a memset of zero. 'MemcpyStrSrc' indicates whether the memcpy
+comment|/// source is constant so it does not need to be loaded.
 comment|/// It returns EVT::Other if the type should be determined using generic
 comment|/// target-independent logic.
 name|virtual
@@ -791,11 +921,26 @@ argument|unsigned DstAlign
 argument_list|,
 argument|unsigned SrcAlign
 argument_list|,
-argument|bool IsZeroVal
+argument|bool IsMemset
+argument_list|,
+argument|bool ZeroMemset
 argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// Is unaligned memory access allowed for the given type, and is it fast
+comment|/// relative to software emulation.
+name|virtual
+name|bool
+name|allowsUnalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|bool *Fast =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -1016,7 +1161,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerSINT_TO_FP
+name|LowerINT_TO_FP
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1410,6 +1555,42 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerEH_SJLJ_SETJMP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerEH_SJLJ_LONGJMP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|DAGCombineFastRecip
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|DAGCombineFastRecipFSQRT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;   }

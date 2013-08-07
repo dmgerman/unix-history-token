@@ -7798,7 +7798,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  *	t3_handle_intr_status - table driven interrupt handler  *	@adapter: the adapter that generated the interrupt  *	@reg: the interrupt status register to process  *	@mask: a mask to apply to the interrupt status  *	@acts: table of interrupt actions  *	@stats: statistics counters tracking interrupt occurences  *  *	A table driven interrupt handler that applies a set of masks to an  *	interrupt status word and performs the corresponding actions if the  *	interrupts described by the mask have occured.  The actions include  *	optionally printing a warning or alert message, and optionally  *	incrementing a stat counter.  The table is terminated by an entry  *	specifying mask 0.  Returns the number of fatal interrupt conditions.  */
+comment|/**  *	t3_handle_intr_status - table driven interrupt handler  *	@adapter: the adapter that generated the interrupt  *	@reg: the interrupt status register to process  *	@mask: a mask to apply to the interrupt status  *	@acts: table of interrupt actions  *	@stats: statistics counters tracking interrupt occurrences  *  *	A table driven interrupt handler that applies a set of masks to an  *	interrupt status word and performs the corresponding actions if the  *	interrupts described by the mask have occured.  The actions include  *	optionally printing a warning or alert message, and optionally  *	incrementing a stat counter.  The table is terminated by an entry  *	specifying mask 0.  Returns the number of fatal interrupt conditions.  */
 end_comment
 
 begin_function

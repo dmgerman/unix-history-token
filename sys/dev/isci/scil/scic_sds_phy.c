@@ -2780,7 +2780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief This method release resources in for a scic phy.  *  * @param[in] controller This parameter specifies the core controller, one of  *            its phy's resources are to be released.  * @param[in] this_phy This parameter specifies the phy whose resourse is to  *            be released.  */
+comment|/**  * @brief This method release resources in for a scic phy.  *  * @param[in] controller This parameter specifies the core controller, one of  *            its phy's resources are to be released.  * @param[in] this_phy This parameter specifies the phy whose resource is to  *            be released.  */
 end_comment
 
 begin_function

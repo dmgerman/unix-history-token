@@ -68,7 +68,10 @@ name|payload
 argument_list|,
 name|lba_count
 operator|*
-literal|512
+name|nvme_ns_get_sector_size
+argument_list|(
+name|ns
+argument_list|)
 argument_list|,
 name|cb_fn
 argument_list|,
@@ -331,7 +334,10 @@ name|payload
 argument_list|,
 name|lba_count
 operator|*
-literal|512
+name|nvme_ns_get_sector_size
+argument_list|(
+name|ns
+argument_list|)
 argument_list|,
 name|cb_fn
 argument_list|,

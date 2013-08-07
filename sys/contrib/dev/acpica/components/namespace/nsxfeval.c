@@ -359,12 +359,6 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|Info
-operator|->
-name|Pathname
-operator|=
-name|Pathname
-expr_stmt|;
 comment|/* Convert and validate the device handle */
 name|Info
 operator|->
@@ -391,7 +385,85 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * If there are parameters to be passed to a control method, the external      * objects must all be converted to internal objects      */
+comment|/*      * Get the actual namespace node for the target object.      * Handles these cases:      *      * 1) Null node, valid pathname from root (absolute path)      * 2) Node and valid pathname (path relative to Node)      * 3) Node, Null pathname      */
+if|if
+condition|(
+operator|(
+name|Pathname
+operator|)
+operator|&&
+operator|(
+name|ACPI_IS_ROOT_PREFIX
+argument_list|(
+name|Pathname
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* The path is fully qualified, just evaluate by name */
+name|Info
+operator|->
+name|PrefixNode
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|Handle
+condition|)
+block|{
+comment|/*          * A handle is optional iff a fully qualified pathname is specified.          * Since we've already handled fully qualified names above, this is          * an error.          */
+if|if
+condition|(
+operator|!
+name|Pathname
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Both Handle and Pathname are NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Null Handle with relative pathname [%s]"
+operator|,
+name|Pathname
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|Info
+operator|->
+name|RelativePathname
+operator|=
+name|Pathname
+expr_stmt|;
+comment|/*      * Convert all external objects passed as arguments to the      * internal version(s).      */
 if|if
 condition|(
 name|ExternalParams
@@ -401,6 +473,53 @@ operator|->
 name|Count
 condition|)
 block|{
+name|Info
+operator|->
+name|ParamCount
+operator|=
+operator|(
+name|UINT16
+operator|)
+name|ExternalParams
+operator|->
+name|Count
+expr_stmt|;
+comment|/* Warn on impossible argument count */
+if|if
+condition|(
+name|Info
+operator|->
+name|ParamCount
+operator|>
+name|ACPI_METHOD_NUM_ARGS
+condition|)
+block|{
+name|ACPI_WARN_PREDEFINED
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Pathname
+operator|,
+name|ACPI_WARN_ALWAYS
+operator|,
+literal|"Excess arguments (%u) - using only %u"
+operator|,
+name|Info
+operator|->
+name|ParamCount
+operator|,
+name|ACPI_METHOD_NUM_ARGS
+operator|)
+argument_list|)
+expr_stmt|;
+name|Info
+operator|->
+name|ParamCount
+operator|=
+name|ACPI_METHOD_NUM_ARGS
+expr_stmt|;
+block|}
 comment|/*          * Allocate a new parameter block for the internal objects          * Add 1 to count to allow for null terminated internal list          */
 name|Info
 operator|->
@@ -412,9 +531,9 @@ operator|(
 operator|(
 name|ACPI_SIZE
 operator|)
-name|ExternalParams
+name|Info
 operator|->
-name|Count
+name|ParamCount
 operator|+
 literal|1
 operator|)
@@ -451,9 +570,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|ExternalParams
+name|Info
 operator|->
-name|Count
+name|ParamCount
 condition|;
 name|i
 operator|++
@@ -497,39 +616,34 @@ name|Info
 operator|->
 name|Parameters
 index|[
-name|ExternalParams
+name|Info
 operator|->
-name|Count
+name|ParamCount
 index|]
 operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*      * Three major cases:      * 1) Fully qualified pathname      * 2) No handle, not fully qualified pathname (error)      * 3) Valid handle      */
-if|if
-condition|(
-operator|(
-name|Pathname
-operator|)
-operator|&&
-operator|(
-name|ACPI_IS_ROOT_PREFIX
-argument_list|(
-name|Pathname
-index|[
+if|#
+directive|if
 literal|0
-index|]
-argument_list|)
-operator|)
-condition|)
-block|{
-comment|/* The path is fully qualified, just evaluate by name */
-name|Info
-operator|->
-name|PrefixNode
-operator|=
-name|NULL
-expr_stmt|;
+comment|/*      * Begin incoming argument count analysis. Check for too few args      * and too many args.      */
+block|switch (AcpiNsGetType (Info->Node))     {     case ACPI_TYPE_METHOD:
+comment|/* Check incoming argument count against the method definition */
+block|if (Info->ObjDesc->Method.ParamCount> Info->ParamCount)         {             ACPI_ERROR ((AE_INFO,                 "Insufficient arguments (%u) - %u are required",                 Info->ParamCount,                 Info->ObjDesc->Method.ParamCount));              Status = AE_MISSING_ARGUMENTS;             goto Cleanup;         }          else if (Info->ObjDesc->Method.ParamCount< Info->ParamCount)         {             ACPI_WARNING ((AE_INFO,                 "Excess arguments (%u) - only %u are required",                 Info->ParamCount,                 Info->ObjDesc->Method.ParamCount));
+comment|/* Just pass the required number of arguments */
+block|Info->ParamCount = Info->ObjDesc->Method.ParamCount;         }
+comment|/*          * Any incoming external objects to be passed as arguments to the          * method must be converted to internal objects          */
+block|if (Info->ParamCount)         {
+comment|/*              * Allocate a new parameter block for the internal objects              * Add 1 to count to allow for null terminated internal list              */
+block|Info->Parameters = ACPI_ALLOCATE_ZEROED (                 ((ACPI_SIZE) Info->ParamCount + 1) * sizeof (void *));             if (!Info->Parameters)             {                 Status = AE_NO_MEMORY;                 goto Cleanup;             }
+comment|/* Convert each external object in the list to an internal object */
+block|for (i = 0; i< Info->ParamCount; i++)             {                 Status = AcpiUtCopyEobjectToIobject (&ExternalParams->Pointer[i],&Info->Parameters[i]);                 if (ACPI_FAILURE (Status))                 {                     goto Cleanup;                 }             }              Info->Parameters[Info->ParamCount] = NULL;         }         break;      default:
+comment|/* Warn if arguments passed to an object that is not a method */
+block|if (Info->ParamCount)         {             ACPI_WARNING ((AE_INFO,                 "%u arguments were passed to a non-method ACPI object",                 Info->ParamCount));         }         break;     }
+endif|#
+directive|endif
+comment|/* Now we can evaluate the object */
 name|Status
 operator|=
 name|AcpiNsEvaluate
@@ -537,61 +651,6 @@ argument_list|(
 name|Info
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|Handle
-condition|)
-block|{
-comment|/*          * A handle is optional iff a fully qualified pathname is specified.          * Since we've already handled fully qualified names above, this is          * an error          */
-if|if
-condition|(
-operator|!
-name|Pathname
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Both Handle and Pathname are NULL"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Null Handle with relative pathname [%s]"
-operator|,
-name|Pathname
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-name|Status
-operator|=
-name|AE_BAD_PARAMETER
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* We have a namespace a node and a possible relative path */
-name|Status
-operator|=
-name|AcpiNsEvaluate
-argument_list|(
-name|Info
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * If we are expecting a return value, and all went well above,      * copy the return value to an external object.      */
 if|if
 condition|(
@@ -931,7 +990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              PreOrderVisit       - Called during tree pre-order visit  *                                    when an object of "Type" is found  *              PostOrderVisit      - Called during tree post-order visit  *                                    when an object of "Type" is found  *              Context             - Passed to user function(s) above  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The callback function is called whenever an object that matches  *              the type parameter is found. If the callback function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services; the callback function(s) can be  *              tailored to each task, whether it is a print function,  *              a compare function, etc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkNamespace  *  * PARAMETERS:  Type                - ACPI_OBJECT_TYPE to search for  *              StartObject         - Handle in namespace where search begins  *              MaxDepth            - Depth to which search is to reach  *              DescendingCallback  - Called during tree descent  *                                    when an object of "Type" is found  *              AscendingCallback   - Called during tree ascent  *                                    when an object of "Type" is found  *              Context             - Passed to user function(s) above  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The callback function is called whenever an object that matches  *              the type parameter is found. If the callback function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              The point of this procedure is to provide a generic namespace  *              walk routine that can be called from multiple places to  *              provide multiple services; the callback function(s) can be  *              tailored to each task, whether it is a print function,  *              a compare function, etc.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -948,10 +1007,10 @@ name|UINT32
 name|MaxDepth
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PreOrderVisit
+name|DescendingCallback
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PostOrderVisit
+name|AscendingCallback
 parameter_list|,
 name|void
 modifier|*
@@ -987,10 +1046,10 @@ operator|)
 operator|||
 operator|(
 operator|!
-name|PreOrderVisit
+name|DescendingCallback
 operator|&&
 operator|!
-name|PostOrderVisit
+name|AscendingCallback
 operator|)
 condition|)
 block|{
@@ -1055,9 +1114,9 @@ name|MaxDepth
 argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
-name|PreOrderVisit
+name|DescendingCallback
 argument_list|,
-name|PostOrderVisit
+name|AscendingCallback
 argument_list|,
 name|Context
 argument_list|,

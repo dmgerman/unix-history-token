@@ -372,10 +372,10 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|V_ipsec6stat
-operator|.
-name|in_polvio
-operator|++
+name|IPSEC6STAT_INC
+argument_list|(
+name|ips_in_polvio
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

@@ -213,6 +213,8 @@ name|ACPI_DMT_UINT64
 block|,
 name|ACPI_DMT_BUF7
 block|,
+name|ACPI_DMT_BUF10
+block|,
 name|ACPI_DMT_BUF16
 block|,
 name|ACPI_DMT_BUF128

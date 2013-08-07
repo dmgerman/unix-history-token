@@ -111,10 +111,19 @@ directive|define
 name|SBUF_DYNSTRUCT
 value|0x00080000
 comment|/* sbuf must be freed */
+define|#
+directive|define
+name|SBUF_INSECTION
+value|0x00100000
+comment|/* set by sbuf_start_section() */
 name|int
 name|s_flags
 decl_stmt|;
 comment|/* flags */
+name|ssize_t
+name|s_sect_len
+decl_stmt|;
+comment|/* current length of section */
 block|}
 struct|;
 end_struct
@@ -396,6 +405,37 @@ parameter_list|(
 name|struct
 name|sbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbuf_start_section
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|ssize_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|sbuf_end_section
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|ssize_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -234,6 +234,13 @@ name|cp
 operator|->
 name|private
 expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Orphan callbacks occur from the GEOM event thread. 	 * Concurrent with this call, new I/O requests may be 	 * working their way through GEOM about to find out 	 * (only once executed by the g_down thread) that we've 	 * been orphaned from our disk provider.  These I/Os 	 * must be retired before we can detach our consumer. 	 * This is most easily achieved by acquiring the 	 * SPA ZIO configuration lock as a writer, but doing 	 * so with the GEOM topology lock held would cause 	 * a lock order reversal.  Instead, rely on the SPA's 	 * async removal support to invoke a close on this 	 * vdev once it is safe to do so. 	 */
 name|zfs_post_remove
 argument_list|(
@@ -1276,10 +1283,6 @@ name|state
 argument_list|)
 operator|!=
 literal|0
-operator|||
-name|state
-operator|==
-name|POOL_STATE_DESTROYED
 operator|||
 name|state
 operator|>
@@ -3244,6 +3247,13 @@ name|vdev_delayed_close
 operator|=
 name|B_FALSE
 expr_stmt|;
+name|cp
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX locking */
 name|g_post_event
 argument_list|(
 name|vdev_geom_detach

@@ -148,7 +148,29 @@ value|\ 	struct system_segment_descriptor *pc_ldt;			\
 comment|/* Pointer to the CPU TSS descriptor */
 value|\ 	struct system_segment_descriptor *pc_tss;			\ 	u_int	pc_cmci_mask
 comment|/* MCx banks for CMCI */
-value|\ 	PCPU_XEN_FIELDS
+value|\ 	PCPU_XEN_FIELDS;						\ 	uint64_t pc_dbreg[16];
+comment|/* ddb debugging regs */
+value|\ 	int pc_dbreg_cmd;
+comment|/* ddb debugging reg cmd */
+value|\ 	char	__pad[161]
+end_define
+
+begin_comment
+comment|/* be divisor of PAGE_SIZE	\ 					   after cache alignment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PC_DBREG_CMD_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PC_DBREG_CMD_LOAD
+value|1
 end_define
 
 begin_ifdef

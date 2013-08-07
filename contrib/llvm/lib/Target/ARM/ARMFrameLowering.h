@@ -119,7 +119,7 @@ argument_list|()
 argument_list|,
 literal|0
 argument_list|,
-literal|4
+literal|8
 argument_list|)
 block|,
 name|STI
@@ -280,6 +280,18 @@ argument_list|,
 argument|bool(*Func)(unsigned, bool)
 argument_list|,
 argument|unsigned NumAlignedDPRCS2Regs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|eliminateCallFramePseudoInstr
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 block|; }

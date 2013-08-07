@@ -230,6 +230,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usb_request.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/template/usb_template.h>
 end_include
 
@@ -5075,17 +5081,13 @@ name|uts
 operator|->
 name|buf
 operator|=
-name|malloc
+name|usbd_alloc_config_desc
 argument_list|(
+name|udev
+argument_list|,
 name|uts
 operator|->
 name|size
-argument_list|,
-name|M_USB
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allow malloc() to return NULL regardless of M_WAITOK flag. 	 * This helps when porting the software to non-FreeBSD 	 * systems. 	 */
@@ -5308,20 +5310,13 @@ modifier|*
 name|udev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|udev
-operator|->
-name|usb_template_ptr
-condition|)
-block|{
-name|free
+name|usbd_free_config_desc
 argument_list|(
 name|udev
+argument_list|,
+name|udev
 operator|->
 name|usb_template_ptr
-argument_list|,
-name|M_USB
 argument_list|)
 expr_stmt|;
 name|udev
@@ -5330,7 +5325,6 @@ name|usb_template_ptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 

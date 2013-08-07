@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTMutationListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -84,13 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTMutationListener.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PPMutationListener.h"
+file|"clang/Sema/SemaConsumer.h"
 end_include
 
 begin_include
@@ -103,24 +103,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Serialization/ASTDeserializationListener.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/SemaConsumer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -145,6 +127,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -213,10 +207,19 @@ name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
+name|HeaderSearchOptions
+decl_stmt|;
+name|class
 name|IdentifierResolver
 decl_stmt|;
 name|class
 name|MacroDefinition
+decl_stmt|;
+name|class
+name|MacroDirective
+decl_stmt|;
+name|class
+name|MacroInfo
 decl_stmt|;
 name|class
 name|OpaqueValueExpr
@@ -226,9 +229,6 @@ name|OpenCLOptions
 decl_stmt|;
 name|class
 name|ASTReader
-decl_stmt|;
-name|class
-name|MacroInfo
 decl_stmt|;
 name|class
 name|Module
@@ -255,7 +255,13 @@ name|class
 name|TargetInfo
 decl_stmt|;
 name|class
+name|Token
+decl_stmt|;
+name|class
 name|VersionTuple
+decl_stmt|;
+name|class
+name|ASTUnresolvedSet
 decl_stmt|;
 name|namespace
 name|SrcMgr
@@ -275,9 +281,6 @@ name|ASTWriter
 range|:
 name|public
 name|ASTDeserializationListener
-decl_stmt|,
-name|public
-name|PPMutationListener
 decl_stmt|,
 name|public
 name|ASTMutationListener
@@ -716,6 +719,46 @@ name|MacroID
 operator|>
 name|MacroIDs
 expr_stmt|;
+struct|struct
+name|MacroInfoToEmitData
+block|{
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Name
+decl_stmt|;
+name|MacroInfo
+modifier|*
+name|MI
+decl_stmt|;
+name|serialization
+operator|::
+name|MacroID
+name|ID
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief The macro infos to emit.
+name|std
+operator|::
+name|vector
+operator|<
+name|MacroInfoToEmitData
+operator|>
+name|MacroInfosToEmit
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|IdentMacroDirectivesOffsetMap
+expr_stmt|;
 comment|/// @name FlushStmt Caches
 comment|/// @{
 comment|/// \brief Set of parent Stmts for the currently serializing sub stmt.
@@ -799,22 +842,6 @@ name|uint32_t
 operator|>
 name|SelectorOffsets
 expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|MapVector
-operator|<
-name|MacroInfo
-operator|*
-operator|,
-name|MacroUpdate
-operator|>
-name|MacroUpdatesMap
-expr_stmt|;
-comment|/// \brief Updates to macro definitions that were loaded from an AST file.
-name|MacroUpdatesMap
-name|MacroUpdates
-decl_stmt|;
 comment|/// \brief Mapping from macro definitions (as they occur in the preprocessing
 comment|/// record) to the macro IDs.
 name|llvm
@@ -1036,8 +1063,6 @@ operator|<
 name|Decl
 operator|*
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Decl
@@ -1287,6 +1312,10 @@ name|SourceManager
 modifier|&
 name|SourceMgr
 parameter_list|,
+name|HeaderSearchOptions
+modifier|&
+name|HSOpts
+parameter_list|,
 name|StringRef
 name|isysroot
 parameter_list|)
@@ -1354,6 +1383,9 @@ specifier|const
 name|DiagnosticsEngine
 modifier|&
 name|Diag
+parameter_list|,
+name|bool
+name|isModule
 parameter_list|)
 function_decl|;
 name|void
@@ -1450,10 +1482,6 @@ operator|&
 name|Record
 argument_list|)
 decl_stmt|;
-name|void
-name|WriteMacroUpdates
-parameter_list|()
-function_decl|;
 name|void
 name|ResolveDeclUpdatesBlocks
 parameter_list|()
@@ -1635,6 +1663,20 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+comment|/// \brief Emit a token.
+name|void
+name|AddToken
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|Tok
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a source location.
 name|void
 name|AddSourceLocation
@@ -1721,19 +1763,6 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit a reference to a macro.
-name|void
-name|addMacroRef
-parameter_list|(
-name|MacroInfo
-modifier|*
-name|MI
-parameter_list|,
-name|RecordDataImpl
-modifier|&
-name|Record
-parameter_list|)
-function_decl|;
 comment|/// \brief Emit a Selector (which is a smart pointer reference).
 name|void
 name|AddSelectorRef
@@ -1808,8 +1837,33 @@ argument_list|(
 name|MacroInfo
 operator|*
 name|MI
+argument_list|,
+specifier|const
+name|IdentifierInfo
+operator|*
+name|Name
 argument_list|)
 expr_stmt|;
+comment|/// \brief Determine the ID of an already-emitted macro.
+name|serialization
+operator|::
+name|MacroID
+name|getMacroID
+argument_list|(
+name|MacroInfo
+operator|*
+name|MI
+argument_list|)
+expr_stmt|;
+name|uint64_t
+name|getMacroDirectivesOffset
+parameter_list|(
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit a reference to a type.
 name|void
 name|AddTypeRef
@@ -2095,7 +2149,7 @@ name|void
 name|AddUnresolvedSet
 parameter_list|(
 specifier|const
-name|UnresolvedSetImpl
+name|ASTUnresolvedSet
 modifier|&
 name|Set
 parameter_list|,
@@ -2240,6 +2294,17 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 expr_stmt|;
+comment|/// \brief Retrieve a submodule ID for this module.
+comment|/// Returns 0 If no ID has been associated with the module.
+name|unsigned
+name|getExistingSubmoduleID
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Note that the identifier II occurs at the given offset
 comment|/// within the identifier table.
 name|void
@@ -2508,16 +2573,6 @@ operator|*
 name|Mod
 argument_list|)
 decl_stmt|;
-comment|// PPMutationListener implementation.
-name|virtual
-name|void
-name|UndefinedMacro
-parameter_list|(
-name|MacroInfo
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
 comment|// ASTMutationListener implementation.
 name|virtual
 name|void
@@ -2683,8 +2738,6 @@ name|Sema
 operator|*
 name|SemaPtr
 block|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|char
@@ -2762,12 +2815,6 @@ name|ASTContext
 operator|&
 name|Ctx
 argument_list|)
-block|;
-name|virtual
-name|PPMutationListener
-operator|*
-name|GetPPMutationListener
-argument_list|()
 block|;
 name|virtual
 name|ASTMutationListener

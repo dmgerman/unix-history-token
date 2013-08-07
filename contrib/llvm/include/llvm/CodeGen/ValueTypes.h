@@ -121,6 +121,13 @@ label|:
 enum|enum
 name|SimpleValueType
 block|{
+comment|// INVALID_SIMPLE_VALUE_TYPE - Simple value types less than zero are
+comment|// considered extended value types.
+name|INVALID_SIMPLE_VALUE_TYPE
+init|=
+operator|-
+literal|1
+block|,
 comment|// If you change this numbering, you must change the values in
 comment|// ValueTypes.td as well!
 name|Other
@@ -224,144 +231,126 @@ init|=
 literal|16
 block|,
 comment|// 16 x i1
-name|v2i8
+name|v32i1
 init|=
 literal|17
+block|,
+comment|// 32 x i1
+name|v64i1
+init|=
+literal|18
+block|,
+comment|// 64 x i1
+name|v2i8
+init|=
+literal|19
 block|,
 comment|//  2 x i8
 name|v4i8
 init|=
-literal|18
+literal|20
 block|,
 comment|//  4 x i8
 name|v8i8
 init|=
-literal|19
+literal|21
 block|,
 comment|//  8 x i8
 name|v16i8
 init|=
-literal|20
+literal|22
 block|,
 comment|// 16 x i8
 name|v32i8
 init|=
-literal|21
+literal|23
 block|,
 comment|// 32 x i8
+name|v64i8
+init|=
+literal|24
+block|,
+comment|// 64 x i8
 name|v1i16
 init|=
-literal|22
+literal|25
 block|,
 comment|//  1 x i16
 name|v2i16
 init|=
-literal|23
+literal|26
 block|,
 comment|//  2 x i16
 name|v4i16
 init|=
-literal|24
+literal|27
 block|,
 comment|//  4 x i16
 name|v8i16
 init|=
-literal|25
+literal|28
 block|,
 comment|//  8 x i16
 name|v16i16
 init|=
-literal|26
+literal|29
 block|,
 comment|// 16 x i16
+name|v32i16
+init|=
+literal|30
+block|,
+comment|// 32 x i16
 name|v1i32
 init|=
-literal|27
+literal|31
 block|,
 comment|//  1 x i32
 name|v2i32
 init|=
-literal|28
+literal|32
 block|,
 comment|//  2 x i32
 name|v4i32
 init|=
-literal|29
+literal|33
 block|,
 comment|//  4 x i32
 name|v8i32
 init|=
-literal|30
+literal|34
 block|,
 comment|//  8 x i32
 name|v16i32
 init|=
-literal|31
+literal|35
 block|,
 comment|// 16 x i32
 name|v1i64
 init|=
-literal|32
+literal|36
 block|,
 comment|//  1 x i64
 name|v2i64
 init|=
-literal|33
+literal|37
 block|,
 comment|//  2 x i64
 name|v4i64
 init|=
-literal|34
+literal|38
 block|,
 comment|//  4 x i64
 name|v8i64
 init|=
-literal|35
+literal|39
 block|,
 comment|//  8 x i64
 name|v16i64
 init|=
-literal|36
-block|,
-comment|// 16 x i64
-name|v2f16
-init|=
-literal|37
-block|,
-comment|//  2 x f16
-name|v2f32
-init|=
-literal|38
-block|,
-comment|//  2 x f32
-name|v4f32
-init|=
-literal|39
-block|,
-comment|//  4 x f32
-name|v8f32
-init|=
 literal|40
 block|,
-comment|//  8 x f32
-name|v2f64
-init|=
-literal|41
-block|,
-comment|//  2 x f64
-name|v4f64
-init|=
-literal|42
-block|,
-comment|//  4 x f64
-name|FIRST_VECTOR_VALUETYPE
-init|=
-name|v2i1
-block|,
-name|LAST_VECTOR_VALUETYPE
-init|=
-name|v4f64
-block|,
+comment|// 16 x i64
 name|FIRST_INTEGER_VECTOR_VALUETYPE
 init|=
 name|v2i1
@@ -370,39 +359,87 @@ name|LAST_INTEGER_VECTOR_VALUETYPE
 init|=
 name|v16i64
 block|,
+name|v2f16
+init|=
+literal|41
+block|,
+comment|//  2 x f16
+name|v2f32
+init|=
+literal|42
+block|,
+comment|//  2 x f32
+name|v4f32
+init|=
+literal|43
+block|,
+comment|//  4 x f32
+name|v8f32
+init|=
+literal|44
+block|,
+comment|//  8 x f32
+name|v16f32
+init|=
+literal|45
+block|,
+comment|// 16 x f32
+name|v2f64
+init|=
+literal|46
+block|,
+comment|//  2 x f64
+name|v4f64
+init|=
+literal|47
+block|,
+comment|//  4 x f64
+name|v8f64
+init|=
+literal|48
+block|,
+comment|//  8 x f64
 name|FIRST_FP_VECTOR_VALUETYPE
 init|=
 name|v2f16
 block|,
 name|LAST_FP_VECTOR_VALUETYPE
 init|=
-name|v4f64
+name|v8f64
+block|,
+name|FIRST_VECTOR_VALUETYPE
+init|=
+name|v2i1
+block|,
+name|LAST_VECTOR_VALUETYPE
+init|=
+name|v8f64
 block|,
 name|x86mmx
 init|=
-literal|43
+literal|49
 block|,
 comment|// This is an X86 MMX value
 name|Glue
 init|=
-literal|44
+literal|50
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|45
+literal|51
 block|,
 comment|// This has no value
 name|Untyped
 init|=
-literal|46
+literal|52
 block|,
 comment|// This value takes a register, but has
 comment|// unspecified type.  The register class
 comment|// will be determined by the opcode.
 name|LAST_VALUETYPE
 init|=
-literal|47
+literal|53
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -450,19 +487,6 @@ comment|// target.  This should only be used internal to tblgen!
 name|iPTR
 init|=
 literal|255
-block|,
-comment|// LastSimpleValueType - The greatest valid SimpleValueType value.
-name|LastSimpleValueType
-init|=
-literal|255
-block|,
-comment|// INVALID_SIMPLE_VALUE_TYPE - Simple value types greater than or equal
-comment|// to this are considered extended value types.
-name|INVALID_SIMPLE_VALUE_TYPE
-init|=
-name|LastSimpleValueType
-operator|+
-literal|1
 block|}
 enum|;
 name|SimpleValueType
@@ -898,6 +922,30 @@ name|SimpleTy
 operator|==
 name|MVT
 operator|::
+name|v8f64
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v16f32
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v64i8
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
+name|v32i16
+operator|||
+name|SimpleTy
+operator|==
+name|MVT
+operator|::
 name|v8i64
 operator|||
 name|SimpleTy
@@ -1039,6 +1087,12 @@ case|:
 case|case
 name|v16i1
 case|:
+case|case
+name|v32i1
+case|:
+case|case
+name|v64i1
+case|:
 return|return
 name|i1
 return|;
@@ -1057,6 +1111,9 @@ case|:
 case|case
 name|v32i8
 case|:
+case|case
+name|v64i8
+case|:
 return|return
 name|i8
 return|;
@@ -1074,6 +1131,9 @@ name|v8i16
 case|:
 case|case
 name|v16i16
+case|:
+case|case
+name|v32i16
 case|:
 return|return
 name|i16
@@ -1129,6 +1189,9 @@ case|:
 case|case
 name|v8f32
 case|:
+case|case
+name|v16f32
+case|:
 return|return
 name|f32
 return|;
@@ -1137,6 +1200,9 @@ name|v2f64
 case|:
 case|case
 name|v4f64
+case|:
+case|case
+name|v8f64
 case|:
 return|return
 name|f64
@@ -1160,10 +1226,25 @@ literal|"Not a vector MVT!"
 argument_list|)
 expr_stmt|;
 case|case
+name|v32i1
+case|:
+case|case
 name|v32i8
+case|:
+case|case
+name|v32i16
 case|:
 return|return
 literal|32
+return|;
+case|case
+name|v64i1
+case|:
+case|case
+name|v64i8
+case|:
+return|return
+literal|64
 return|;
 case|case
 name|v16i1
@@ -1179,6 +1260,9 @@ name|v16i32
 case|:
 case|case
 name|v16i64
+case|:
+case|case
+name|v16f32
 case|:
 return|return
 literal|16
@@ -1200,6 +1284,9 @@ name|v8i64
 case|:
 case|case
 name|v8f32
+case|:
+case|case
+name|v8f64
 case|:
 return|return
 literal|8
@@ -1296,9 +1383,20 @@ case|:
 case|case
 name|fAny
 case|:
+case|case
+name|vAny
+case|:
 name|llvm_unreachable
 argument_list|(
 literal|"Value type is overloaded."
+argument_list|)
+expr_stmt|;
+case|case
+name|Metadata
+case|:
+name|llvm_unreachable
+argument_list|(
+literal|"Value type is metadata."
 argument_list|)
 expr_stmt|;
 default|default:
@@ -1359,6 +1457,9 @@ case|case
 name|i32
 case|:
 case|case
+name|v32i1
+case|:
+case|case
 name|v4i8
 case|:
 case|case
@@ -1381,6 +1482,9 @@ name|f64
 case|:
 case|case
 name|i64
+case|:
+case|case
+name|v64i1
 case|:
 case|case
 name|v8i8
@@ -1458,10 +1562,22 @@ return|return
 literal|256
 return|;
 case|case
+name|v64i8
+case|:
+case|case
+name|v32i16
+case|:
+case|case
 name|v16i32
 case|:
 case|case
 name|v8i64
+case|:
+case|case
+name|v16f32
+case|:
+case|case
+name|v8f64
 case|:
 return|return
 literal|512
@@ -1504,6 +1620,82 @@ name|getStoreSize
 argument_list|()
 operator|*
 literal|8
+return|;
+block|}
+comment|/// Return true if this has more bits than VT.
+name|bool
+name|bitsGT
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getSizeInBits
+argument_list|()
+operator|>
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
+return|;
+block|}
+comment|/// Return true if this has no less bits than VT.
+name|bool
+name|bitsGE
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getSizeInBits
+argument_list|()
+operator|>=
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
+return|;
+block|}
+comment|/// Return true if this has less bits than VT.
+name|bool
+name|bitsLT
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getSizeInBits
+argument_list|()
+operator|<
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
+return|;
+block|}
+comment|/// Return true if this has no more bits than VT.
+name|bool
+name|bitsLE
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|getSizeInBits
+argument_list|()
+operator|<=
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
 return|;
 block|}
 specifier|static
@@ -1712,6 +1904,28 @@ name|MVT
 operator|::
 name|v16i1
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|v32i1
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|64
+condition|)
+return|return
+name|MVT
+operator|::
+name|v64i1
+return|;
 break|break;
 case|case
 name|MVT
@@ -1773,6 +1987,17 @@ name|MVT
 operator|::
 name|v32i8
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|64
+condition|)
+return|return
+name|MVT
+operator|::
+name|v64i8
+return|;
 break|break;
 case|case
 name|MVT
@@ -1833,6 +2058,17 @@ return|return
 name|MVT
 operator|::
 name|v16i16
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|32
+condition|)
+return|return
+name|MVT
+operator|::
+name|v32i16
 return|;
 break|break;
 case|case
@@ -2012,6 +2248,17 @@ name|MVT
 operator|::
 name|v8f32
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|16
+condition|)
+return|return
+name|MVT
+operator|::
+name|v16f32
+return|;
 break|break;
 case|case
 name|MVT
@@ -2040,6 +2287,17 @@ name|MVT
 operator|::
 name|v4f64
 return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|v8f64
+return|;
 break|break;
 block|}
 return|return
@@ -2055,6 +2313,23 @@ name|INVALID_SIMPLE_VALUE_TYPE
 operator|)
 return|;
 block|}
+comment|/// Return the value type corresponding to the specified type.  This returns
+comment|/// all pointers as iPTR.  If HandleUnknown is true, unknown types are
+comment|/// returned as Other, otherwise they are invalid.
+specifier|static
+name|MVT
+name|getVT
+parameter_list|(
+name|Type
+modifier|*
+name|Ty
+parameter_list|,
+name|bool
+name|HandleUnknown
+init|=
+name|false
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -2189,10 +2464,8 @@ condition|(
 name|V
 operator|.
 name|SimpleTy
-operator|==
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
+operator|<
+literal|0
 condition|)
 return|return
 name|LLVMTy
@@ -2254,10 +2527,8 @@ condition|(
 name|M
 operator|.
 name|SimpleTy
-operator|!=
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
+operator|>=
+literal|0
 condition|)
 return|return
 name|M
@@ -2307,10 +2578,8 @@ condition|(
 name|M
 operator|.
 name|SimpleTy
-operator|!=
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
+operator|>=
+literal|0
 condition|)
 return|return
 name|M
@@ -2387,10 +2656,10 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|VecTy
-operator|!=
-name|MVT
-operator|::
-name|INVALID_SIMPLE_VALUE_TYPE
+operator|.
+name|SimpleTy
+operator|>=
+literal|0
 operator|&&
 literal|"Simple vector VT not representable by simple integer vector VT!"
 argument_list|)
@@ -2410,10 +2679,8 @@ return|return
 name|V
 operator|.
 name|SimpleTy
-operator|<=
-name|MVT
-operator|::
-name|LastSimpleValueType
+operator|>=
+literal|0
 return|;
 block|}
 comment|/// isExtended - Test if the given EVT is extended (as opposed to
@@ -3309,10 +3576,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_expr_stmt
 name|intptr_t
 name|getRawBits
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 if|if
 condition|(
@@ -3334,7 +3602,7 @@ name|LLVMTy
 argument_list|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_comment
 comment|/// compareRawBits - A meaningless but well-behaved order, useful for

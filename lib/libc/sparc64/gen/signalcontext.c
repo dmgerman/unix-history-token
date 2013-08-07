@@ -144,7 +144,7 @@ operator|)
 operator|(
 name|mc
 operator|->
-name|mc_sp
+name|_mc_sp
 operator|+
 name|SPOFF
 operator|)
@@ -287,7 +287,7 @@ name|SPOFF
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tnpc
+name|_mc_tnpc
 operator|=
 operator|(
 name|uint64_t
@@ -298,7 +298,7 @@ literal|4
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tpc
+name|_mc_tpc
 operator|=
 operator|(
 name|uint64_t

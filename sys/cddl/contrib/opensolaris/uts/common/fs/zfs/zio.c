@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -644,6 +644,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|zio_use_uma
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * For small buffers, we want a cache for each multiple of 	 * SPA_MINBLOCKSIZE.  For medium-size buffers, we want a cache 	 * for each quarter-power of 2.  For large buffers, we want 	 * a cache for each multiple of PAGESIZE. 	 */
 for|for
 control|(
@@ -963,6 +971,8 @@ name|c
 index|]
 expr_stmt|;
 block|}
+name|out
+label|:
 comment|/* 	 * The zio write taskqs have 1 thread per cpu, allow 1/2 of the taskqs 	 * to fail 3 times per txg or 8 failures, whichever is greater. 	 */
 if|if
 condition|(
@@ -1757,7 +1767,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3776,6 +3789,35 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Frees that are for the currently-syncing txg, are not going to be 	 * deferred, and which will not need to do a read (i.e. not GANG or 	 * DEDUP), can be processed immediately.  Otherwise, put them on the 	 * in-memory list for later processing. 	 */
+if|if
+condition|(
+name|zfs_trim_enabled
+operator|||
+name|BP_IS_GANG
+argument_list|(
+name|bp
+argument_list|)
+operator|||
+name|BP_GET_DEDUP
+argument_list|(
+name|bp
+argument_list|)
+operator|||
+name|txg
+operator|!=
+name|spa
+operator|->
+name|spa_syncing_txg
+operator|||
+name|spa_sync_pass
+argument_list|(
+name|spa
+argument_list|)
+operator|>=
+name|zfs_sync_pass_deferred_free
+condition|)
+block|{
 name|bplist_append
 argument_list|(
 operator|&
@@ -3791,6 +3833,34 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|VERIFY0
+argument_list|(
+name|zio_wait
+argument_list|(
+name|zio_free_sync
+argument_list|(
+name|NULL
+argument_list|,
+name|spa
+argument_list|,
+name|txg
+argument_list|,
+name|bp
+argument_list|,
+name|BP_GET_PSIZE
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3826,6 +3896,12 @@ block|{
 name|zio_t
 modifier|*
 name|zio
+decl_stmt|;
+name|enum
+name|zio_stage
+name|stage
+init|=
+name|ZIO_FREE_PIPELINE
 decl_stmt|;
 name|dprintf_bp
 argument_list|(
@@ -3879,6 +3955,43 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+name|arc_freed
+argument_list|(
+name|spa
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zfs_trim_enabled
+condition|)
+name|stage
+operator||=
+name|ZIO_STAGE_ISSUE_ASYNC
+operator||
+name|ZIO_STAGE_VDEV_IO_START
+operator||
+name|ZIO_STAGE_VDEV_IO_ASSESS
+expr_stmt|;
+comment|/* 	 * GANG and DEDUP blocks can induce a read (for the gang block header, 	 * or the DDT), so issue them asynchronously so that this thread is 	 * not tied up. 	 */
+elseif|else
+if|if
+condition|(
+name|BP_IS_GANG
+argument_list|(
+name|bp
+argument_list|)
+operator|||
+name|BP_GET_DEDUP
+argument_list|(
+name|bp
+argument_list|)
+condition|)
+name|stage
+operator||=
+name|ZIO_STAGE_ISSUE_ASYNC
+expr_stmt|;
 name|zio
 operator|=
 name|zio_create
@@ -3913,7 +4026,7 @@ name|NULL
 argument_list|,
 name|ZIO_STAGE_OPEN
 argument_list|,
-name|ZIO_FREE_PIPELINE
+name|stage
 argument_list|)
 expr_stmt|;
 return|return
@@ -6244,7 +6357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Execute the I/O pipeline until one of the following occurs:  * (1) the I/O completes; (2) the pipeline stalls waiting for  * dependent child I/Os; (3) the I/O issues, so we're waiting  * for an I/O completion interrupt; (4) the I/O is delegated by  * vdev-level caching or aggregation; (5) the I/O is deferred  * due to vdev-level queueing; (6) the I/O is handed off to  * another thread.  In all cases, the pipeline stops whenever  * there's no CPU work; it never burns a thread in cv_wait().  *  * There's no locking on io_stage because there's no legitimate way  * for multiple threads to be attempting to process the same I/O.  */
+comment|/*  * Execute the I/O pipeline until one of the following occurs:  *  *	(1) the I/O completes  *	(2) the pipeline stalls waiting for dependent child I/Os  *	(3) the I/O issues, so we're waiting for an I/O completion interrupt  *	(4) the I/O is delegated by vdev-level caching or aggregation  *	(5) the I/O is deferred due to vdev-level queueing  *	(6) the I/O is handed off to another thread.  *  * In all cases, the pipeline stops whenever there's no CPU work; it never  * burns a thread in cv_wait().  *  * There's no locking on io_stage because there's no legitimate way  * for multiple threads to be attempting to process the same I/O.  */
 end_comment
 
 begin_decl_stmt
@@ -10197,7 +10310,10 @@ literal|0
 condition|)
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 expr_stmt|;
 name|VERIFY
 argument_list|(
@@ -12617,7 +12733,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 name|zio_interrupt
 argument_list|(
@@ -12891,7 +13010,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -13325,7 +13447,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If we can't write to an interior vdev (mirror or RAID-Z), 	 * set vdev_cant_write so that we stop trying to allocate from it. 	 */
 if|if

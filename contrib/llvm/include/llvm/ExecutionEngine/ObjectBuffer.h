@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//                     The LLVM Compiler Infrastructure
+comment|//		       The LLVM Compiler Infrastructure
 end_comment
 
 begin_comment
@@ -66,25 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt

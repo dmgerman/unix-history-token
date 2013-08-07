@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / shared MSCHAPV2 helper functions / RFC 2433 / RFC 2759  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / shared MSCHAPV2 helper functions / RFC 2433 / RFC 2759  * Copyright (c) 2004-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -32,6 +32,258 @@ include|#
 directive|include
 file|"crypto.h"
 end_include
+
+begin_comment
+comment|/**  * utf8_to_ucs2 - Convert UTF-8 string to UCS-2 encoding  * @utf8_string: UTF-8 string (IN)  * @utf8_string_len: Length of utf8_string (IN)  * @ucs2_buffer: UCS-2 buffer (OUT)  * @ucs2_buffer_size: Length of UCS-2 buffer (IN)  * @ucs2_string_size: Number of 2-byte words in the resulting UCS-2 string  * Returns: 0 on success, -1 on failure  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|utf8_to_ucs2
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|utf8_string
+parameter_list|,
+name|size_t
+name|utf8_string_len
+parameter_list|,
+name|u8
+modifier|*
+name|ucs2_buffer
+parameter_list|,
+name|size_t
+name|ucs2_buffer_size
+parameter_list|,
+name|size_t
+modifier|*
+name|ucs2_string_size
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|j
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|utf8_string_len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|u8
+name|c
+init|=
+name|utf8_string
+index|[
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|j
+operator|>=
+name|ucs2_buffer_size
+condition|)
+block|{
+comment|/* input too long */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|c
+operator|<=
+literal|0x7F
+condition|)
+block|{
+name|WPA_PUT_LE16
+argument_list|(
+name|ucs2_buffer
+operator|+
+name|j
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|j
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+name|utf8_string_len
+operator|-
+literal|1
+operator|||
+name|j
+operator|>=
+name|ucs2_buffer_size
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* incomplete surrogate */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
+name|u8
+name|c2
+init|=
+name|utf8_string
+index|[
+operator|++
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|c
+operator|&
+literal|0xE0
+operator|)
+operator|==
+literal|0xC0
+condition|)
+block|{
+comment|/* two-byte encoding */
+name|WPA_PUT_LE16
+argument_list|(
+name|ucs2_buffer
+operator|+
+name|j
+argument_list|,
+operator|(
+operator|(
+name|c
+operator|&
+literal|0x1F
+operator|)
+operator|<<
+literal|6
+operator|)
+operator||
+operator|(
+name|c2
+operator|&
+literal|0x3F
+operator|)
+argument_list|)
+expr_stmt|;
+name|j
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|==
+name|utf8_string_len
+operator|||
+name|j
+operator|>=
+name|ucs2_buffer_size
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* incomplete surrogate */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
+comment|/* three-byte encoding */
+name|u8
+name|c3
+init|=
+name|utf8_string
+index|[
+operator|++
+name|i
+index|]
+decl_stmt|;
+name|WPA_PUT_LE16
+argument_list|(
+name|ucs2_buffer
+operator|+
+name|j
+argument_list|,
+operator|(
+operator|(
+name|c
+operator|&
+literal|0xF
+operator|)
+operator|<<
+literal|12
+operator|)
+operator||
+operator|(
+operator|(
+name|c2
+operator|&
+literal|0x3F
+operator|)
+operator|<<
+literal|6
+operator|)
+operator||
+operator|(
+name|c3
+operator|&
+literal|0x3F
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|ucs2_string_size
+condition|)
+operator|*
+name|ucs2_string_size
+operator|=
+name|j
+operator|/
+literal|2
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/**  * challenge_hash - ChallengeHash() - RFC 2759, Sect. 8.2  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @challenge: 8-octet Challenge (OUT)  * Returns: 0 on success, -1 on failure  */
@@ -161,7 +413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * nt_password_hash - NtPasswordHash() - RFC 2759, Sect. 8.3  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @password_hash: 16-octet PasswordHash (OUT)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * nt_password_hash - NtPasswordHash() - RFC 2759, Sect. 8.3  * @password: 0-to-256-unicode-char Password (IN; UTF-8)  * @password_len: Length of password  * @password_hash: 16-octet PasswordHash (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -191,63 +443,41 @@ modifier|*
 name|pos
 decl_stmt|;
 name|size_t
-name|i
-decl_stmt|,
 name|len
+decl_stmt|,
+name|max_len
 decl_stmt|;
+name|max_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|password_len
-operator|>
-literal|256
-condition|)
-name|password_len
-operator|=
-literal|256
-expr_stmt|;
-comment|/* Convert password into unicode */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|password_len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|buf
-index|[
-literal|2
-operator|*
-name|i
-index|]
-operator|=
+name|utf8_to_ucs2
+argument_list|(
 name|password
-index|[
-name|i
-index|]
-expr_stmt|;
-name|buf
-index|[
-literal|2
-operator|*
-name|i
-operator|+
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|len
-operator|=
+argument_list|,
 name|password_len
-operator|*
+argument_list|,
+name|buf
+argument_list|,
+name|max_len
+argument_list|,
+operator|&
+name|len
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|len
+operator|*=
 literal|2
 expr_stmt|;
 name|pos
@@ -414,7 +644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * generate_nt_response - GenerateNTResponse() - RFC 2759, Sect. 8.1  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * generate_nt_response - GenerateNTResponse() - RFC 2759, Sect. 8.1  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @password: 0-to-256-unicode-char Password (IN; UTF-8)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -464,6 +694,8 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|challenge_hash
 argument_list|(
 name|peer_challenge
@@ -476,7 +708,11 @@ name|username_len
 argument_list|,
 name|challenge
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|nt_password_hash
@@ -941,6 +1177,8 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
 name|challenge_hash
 argument_list|(
 name|peer_challenge
@@ -953,7 +1191,11 @@ name|username_len
 argument_list|,
 name|challenge
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|sha1_vector
 argument_list|(
@@ -970,7 +1212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * generate_authenticator_response - GenerateAuthenticatorResponse() - RFC 2759, Sect. 8.7  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @nt_response: 24-octet NT-Response (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @response: 20-octet AuthenticatorResponse (OUT) (note: this value is usually  * encoded as a 42-octet ASCII string (S=hexdump_of_response)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * generate_authenticator_response - GenerateAuthenticatorResponse() - RFC 2759, Sect. 8.7  * @password: 0-to-256-unicode-char Password (IN; UTF-8)  * @password_len: Length of password  * @nt_response: 24-octet NT-Response (IN)  * @peer_challenge: 16-octet PeerChallenge (IN)  * @auth_challenge: 16-octet AuthenticatorChallenge (IN)  * @username: 0-to-256-char UserName (IN)  * @username_len: Length of username  * @response: 20-octet AuthenticatorResponse (OUT) (note: this value is usually  * encoded as a 42-octet ASCII string (S=hexdump_of_response)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -1056,7 +1298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * nt_challenge_response - NtChallengeResponse() - RFC 2433, Sect. A.5  * @challenge: 8-octet Challenge (IN)  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * nt_challenge_response - NtChallengeResponse() - RFC 2433, Sect. A.5  * @challenge: 8-octet Challenge (IN)  * @password: 0-to-256-unicode-char Password (IN; UTF-8)  * @password_len: Length of password  * @response: 24-octet Response (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -1987,7 +2229,7 @@ value|516
 end_define
 
 begin_comment
-comment|/**  * encrypt_pw_block_with_password_hash - EncryptPwBlockWithPasswordHash() - RFC 2759, Sect. 8.10  * @password: 0-to-256-unicode-char Password (IN; ASCII)  * @password_len: Length of password  * @password_hash: 16-octet PasswordHash (IN)  * @pw_block: 516-byte PwBlock (OUT)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * encrypt_pw_block_with_password_hash - EncryptPwBlockWithPasswordHash() - RFC 2759, Sect. 8.10  * @password: 0-to-256-unicode-char Password (IN; UTF-8)  * @password_len: Length of password  * @password_hash: 16-octet PasswordHash (IN)  * @pw_block: 516-byte PwBlock (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -2013,7 +2255,7 @@ name|pw_block
 parameter_list|)
 block|{
 name|size_t
-name|i
+name|ucs2_len
 decl_stmt|,
 name|offset
 decl_stmt|;
@@ -2021,16 +2263,6 @@ name|u8
 modifier|*
 name|pos
 decl_stmt|;
-if|if
-condition|(
-name|password_len
-operator|>
-literal|256
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 name|os_memset
 argument_list|(
 name|pw_block
@@ -2040,15 +2272,67 @@ argument_list|,
 name|PWBLOCK_LEN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|utf8_to_ucs2
+argument_list|(
+name|password
+argument_list|,
+name|password_len
+argument_list|,
+name|pw_block
+argument_list|,
+literal|512
+argument_list|,
+operator|&
+name|ucs2_len
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+name|ucs2_len
+operator|>
+literal|256
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|offset
 operator|=
 operator|(
 literal|256
 operator|-
-name|password_len
+name|ucs2_len
 operator|)
 operator|*
 literal|2
+expr_stmt|;
+if|if
+condition|(
+name|offset
+operator|!=
+literal|0
+condition|)
+block|{
+name|os_memmove
+argument_list|(
+name|pw_block
+operator|+
+name|offset
+argument_list|,
+name|pw_block
+argument_list|,
+name|ucs2_len
+operator|*
+literal|2
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2065,33 +2349,7 @@ return|return
 operator|-
 literal|1
 return|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|password_len
-condition|;
-name|i
-operator|++
-control|)
-name|pw_block
-index|[
-name|offset
-operator|+
-name|i
-operator|*
-literal|2
-index|]
-operator|=
-name|password
-index|[
-name|i
-index|]
-expr_stmt|;
+block|}
 comment|/* 	 * PasswordLength is 4 octets, but since the maximum password length is 	 * 256, only first two (in little endian byte order) can be non-zero. 	 */
 name|pos
 operator|=
@@ -2132,7 +2390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * new_password_encrypted_with_old_nt_password_hash - NewPasswordEncryptedWithOldNtPasswordHash() - RFC 2759, Sect. 8.9  * @new_password: 0-to-256-unicode-char NewPassword (IN; ASCII)  * @new_password_len: Length of new_password  * @old_password: 0-to-256-unicode-char OldPassword (IN; ASCII)  * @old_password_len: Length of old_password  * @encrypted_pw_block: 516-octet EncryptedPwBlock (OUT)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * new_password_encrypted_with_old_nt_password_hash - NewPasswordEncryptedWithOldNtPasswordHash() - RFC 2759, Sect. 8.9  * @new_password: 0-to-256-unicode-char NewPassword (IN; UTF-8)  * @new_password_len: Length of new_password  * @old_password: 0-to-256-unicode-char OldPassword (IN; UTF-8)  * @old_password_len: Length of old_password  * @encrypted_pw_block: 516-octet EncryptedPwBlock (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -2255,7 +2513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * old_nt_password_hash_encrypted_with_new_nt_password_hash - OldNtPasswordHashEncryptedWithNewNtPasswordHash() - RFC 2759, Sect. 8.12  * @new_password: 0-to-256-unicode-char NewPassword (IN; ASCII)  * @new_password_len: Length of new_password  * @old_password: 0-to-256-unicode-char OldPassword (IN; ASCII)  * @old_password_len: Length of old_password  * @encrypted_password_hash: 16-octet EncryptedPasswordHash (OUT)  * Returns: 0 on success, -1 on failure  */
+comment|/**  * old_nt_password_hash_encrypted_with_new_nt_password_hash - OldNtPasswordHashEncryptedWithNewNtPasswordHash() - RFC 2759, Sect. 8.12  * @new_password: 0-to-256-unicode-char NewPassword (IN; UTF-8)  * @new_password_len: Length of new_password  * @old_password: 0-to-256-unicode-char OldPassword (IN; UTF-8)  * @old_password_len: Length of old_password  * @encrypted_password_hash: 16-octet EncryptedPasswordHash (OUT)  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function

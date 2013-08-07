@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- X86AsmPrinter.h - Convert X86 LLVM code to assembly -----*- C++ -*-===//
+comment|//===-- X86AsmPrinter.h - X86 implementation of AsmPrinter ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -21,22 +21,6 @@ end_comment
 
 begin_comment
 comment|// License. See LICENSE.TXT for details.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// AT&T assembly code printer class.
 end_comment
 
 begin_comment
@@ -163,7 +147,7 @@ specifier|const
 name|LLVM_OVERRIDE
 block|{
 return|return
-literal|"X86 AT&T-Style Assembly Printer"
+literal|"X86 Assembly / Object Emitter"
 return|;
 block|}
 specifier|const

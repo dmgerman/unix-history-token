@@ -220,9 +220,13 @@ expr_stmt|;
 block|}
 name|sgp
 struct|;
-comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
+comment|/* 		 * Swap pager 		 * 		 *	swp_tmpfs - back-pointer to the tmpfs vnode, 		 *		     if any, which uses the vm object 		 *		     as backing store.  The handle 		 *		     cannot be reused for linking, 		 *		     because the vnode can be 		 *		     reclaimed and recreated, making 		 *		     the handle changed and hash-chain 		 *		     invalid. 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
 block|{
+name|void
+modifier|*
+name|swp_tmpfs
+decl_stmt|;
 name|int
 name|swp_bcount
 decl_stmt|;
@@ -361,6 +365,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_TMPFS
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
 name|IDX_TO_OFF
 parameter_list|(
 name|idx
@@ -441,6 +452,17 @@ end_define
 
 begin_comment
 comment|/* Don't unmap pages. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJPR_NOTWIRED
+value|0x4
+end_define
+
+begin_comment
+comment|/* Don't remove wired pages. */
 end_comment
 
 begin_expr_stmt
@@ -538,6 +560,17 @@ name|object
 parameter_list|)
 define|\
 value|rw_assert(&(object)->lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_LOCK_DOWNGRADE
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_downgrade(&(object)->lock)
 end_define
 
 begin_define

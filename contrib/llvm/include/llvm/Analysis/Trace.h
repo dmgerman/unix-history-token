@@ -78,13 +78,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -557,7 +557,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// TRACE_H
+comment|// LLVM_ANALYSIS_TRACE_H
 end_comment
 
 end_unit

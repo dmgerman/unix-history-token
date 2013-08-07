@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"clang/AST/Type.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -382,10 +382,13 @@ comment|///     certain cases; or
 comment|///   - the conventions are substantively different in how they pass
 comment|///     arguments, because in this case using the variadic convention
 comment|///     will lead to C99 violations.
-comment|/// It is not necessarily correct when arguments are passed in the
-comment|/// same way and some out-of-band information is passed for the
-comment|/// benefit of variadic callees, as is the case for x86-64.
-comment|/// In this case the ABI should be consulted.
+comment|///
+comment|/// However, some platforms make the conventions identical except
+comment|/// for passing additional out-of-band information to a variadic
+comment|/// function: for example, x86-64 passes the number of SSE
+comment|/// arguments in %al.  On these platforms, it is desireable to
+comment|/// call unprototyped functions using the variadic convention so
+comment|/// that unprototyped calls to varargs functions still succeed.
 name|virtual
 name|bool
 name|isNoProtoCallVariadic

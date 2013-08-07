@@ -2156,6 +2156,7 @@ comment|/* Salt suitable for traditional DES and MD5 */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|makesalt
 parameter_list|(
@@ -2163,13 +2164,15 @@ name|char
 name|salt
 index|[
 name|SALTSIZE
+operator|+
+literal|1
 index|]
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* These are not really random numbers, they are just 	 * numbers that change to thwart construction of a 	 * dictionary. This is exposed to the public. 	 */
+comment|/* These are not really random numbers, they are just 	 * numbers that change to thwart construction of a 	 * dictionary. 	 */
 for|for
 control|(
 name|i

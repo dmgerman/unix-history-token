@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -677,10 +683,13 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"File: %s; File size %qd bytes\n"
+literal|"File: %s; File size %jd bytes\n"
 argument_list|,
 name|fn
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|file_size
 argument_list|)
 expr_stmt|;

@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -991,12 +997,15 @@ operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_write_test: aio_waitcomplete: short "
-literal|"write (%d)"
+literal|"write (%jd)"
 argument_list|,
 name|ac
 operator|->
 name|ac_test
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -1277,12 +1286,15 @@ operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: aio_waitcomplete: short "
-literal|"read (%d)"
+literal|"read (%jd)"
 argument_list|,
 name|ac
 operator|->
 name|ac_test
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -1403,7 +1415,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|aio_file_test
 parameter_list|(
 name|void
@@ -1616,7 +1628,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|aio_fifo_test
 parameter_list|(
 name|void
@@ -1932,7 +1944,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|aio_unix_socketpair_test
 parameter_list|(
 name|void
@@ -2088,6 +2100,10 @@ name|aio_pty_arg
 modifier|*
 name|apa
 decl_stmt|;
+name|apa
+operator|=
+name|arg
+expr_stmt|;
 name|close
 argument_list|(
 name|apa
@@ -2125,7 +2141,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|aio_pty_test
 parameter_list|(
 name|void
@@ -2385,7 +2401,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|aio_pipe_test
 parameter_list|(
 name|void
@@ -2640,7 +2656,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|aio_md_test
 parameter_list|(
 name|void

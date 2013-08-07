@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAPOL definitions shared between hostapd and wpa_supplicant  * Copyright (c) 2002-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAPOL definitions shared between hostapd and wpa_supplicant  * Copyright (c) 2002-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -138,6 +138,136 @@ literal|254
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|IEEE8021X_REPLAY_COUNTER_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE8021X_KEY_SIGN_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE8021X_KEY_IV_LEN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE8021X_KEY_INDEX_FLAG
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE8021X_KEY_INDEX_MASK
+value|0x03
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
+
+begin_struct
+struct|struct
+name|ieee802_1x_eapol_key
+block|{
+name|u8
+name|type
+decl_stmt|;
+comment|/* Note: key_length is unaligned */
+name|u8
+name|key_length
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* does not repeat within the life of the keying material used to 	 * encrypt the Key field; 64-bit NTP timestamp MAY be used here */
+name|u8
+name|replay_counter
+index|[
+name|IEEE8021X_REPLAY_COUNTER_LEN
+index|]
+decl_stmt|;
+name|u8
+name|key_iv
+index|[
+name|IEEE8021X_KEY_IV_LEN
+index|]
+decl_stmt|;
+comment|/* cryptographically random number */
+name|u8
+name|key_index
+decl_stmt|;
+comment|/* key flag in the most significant bit: 		       * 0 = broadcast (default key), 		       * 1 = unicast (key mapping key); key index is in the 		       * 7 least significant bits */
+comment|/* HMAC-MD5 message integrity check computed with MS-MPPE-Send-Key as 	 * the key */
+name|u8
+name|key_signature
+index|[
+name|IEEE8021X_KEY_SIGN_LEN
+index|]
+decl_stmt|;
+comment|/* followed by key: if packet body length = 44 + key length, then the 	 * key field (of key_length bytes) contains the key in encrypted form; 	 * if packet body length = 44, key field is absent and key_length 	 * represents the number of least significant octets from 	 * MS-MPPE-Send-Key attribute to be used as the keying material; 	 * RC4 key used in encryption = Key-IV + MS-MPPE-Recv-Key */
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_endif
 endif|#

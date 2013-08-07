@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -146,7 +146,10 @@ operator|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 if|if
@@ -167,7 +170,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -200,7 +206,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EOVERFLOW
+argument_list|)
 operator|)
 return|;
 operator|*
@@ -548,7 +557,10 @@ block|}
 comment|/* 		 * If we found an explicit inheritance entry, err is zero even 		 * though we haven't yet found the value, so reinitializing err 		 * at the end of the loop (instead of at the beginning) ensures 		 * that err has a valid post-loop value. 		 */
 name|err
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1590,7 +1602,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unregister this callback.  Return 0 on success, ENOENT if ddname is  * invalid, ENOMSG if no matching callback registered.  */
+comment|/*  * Unregister this callback.  Return 0 on success, ENOENT if ddname is  * invalid, or ENOMSG if no matching callback registered.  */
 end_comment
 
 begin_function
@@ -1712,7 +1724,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOMSG
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2565,25 +2580,6 @@ operator|<
 name|SPA_VERSION_RECVD_PROPS
 condition|)
 block|{
-name|zfs_prop_t
-name|prop
-init|=
-name|zfs_name_to_prop
-argument_list|(
-name|propname
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|prop
-operator|==
-name|ZFS_PROP_QUOTA
-operator|||
-name|prop
-operator|==
-name|ZFS_PROP_RESERVATION
-condition|)
-return|return;
 if|if
 condition|(
 name|source
@@ -3559,7 +3555,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENAMETOOLONG
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3636,7 +3635,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}

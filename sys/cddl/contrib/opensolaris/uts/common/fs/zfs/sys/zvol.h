@@ -409,9 +409,17 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* sun */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
 specifier|extern
 name|int
 name|zvol_create_minors

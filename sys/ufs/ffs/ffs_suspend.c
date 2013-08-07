@@ -893,6 +893,8 @@ operator|=
 name|vfs_write_suspend
 argument_list|(
 name|mp
+argument_list|,
+name|VS_SKIP_UNMOUNT
 argument_list|)
 operator|)
 operator|!=

@@ -120,6 +120,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TRC_HW
+value|0x0080f000
+end_define
+
+begin_comment
+comment|/* Xen hardware-related traces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_GUEST
+value|0x0800f000
+end_define
+
+begin_comment
+comment|/* Guest-generated traces   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRC_ALL
 value|0x0ffff000
 end_define
@@ -212,12 +234,49 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TRC_SCHED_CLASS
+value|0x00022000
+end_define
+
+begin_comment
+comment|/* Scheduler-specific    */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TRC_SCHED_VERBOSE
 value|0x00028000
 end_define
 
 begin_comment
 comment|/* More inclusive scheduling */
+end_comment
+
+begin_comment
+comment|/* Trace classes for Hardware */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_PM
+value|0x00801000
+end_define
+
+begin_comment
+comment|/* Power management traces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ
+value|0x00802000
+end_define
+
+begin_comment
+comment|/* Traces relating to the handling of IRQs */
 end_comment
 
 begin_comment
@@ -250,6 +309,13 @@ define|#
 directive|define
 name|TRC_SCHED_RUNSTATE_CHANGE
 value|(TRC_SCHED_MIN + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_SCHED_CONTINUE_RUNNING
+value|(TRC_SCHED_MIN + 2)
 end_define
 
 begin_define
@@ -360,6 +426,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRC_SCHED_SHUTDOWN_CODE
+value|(TRC_SCHED_VERBOSE + 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TRC_MEM_PAGE_GRANT_MAP
 value|(TRC_MEM + 1)
 end_define
@@ -376,6 +449,41 @@ define|#
 directive|define
 name|TRC_MEM_PAGE_GRANT_TRANSFER
 value|(TRC_MEM + 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_MEM_SET_P2M_ENTRY
+value|(TRC_MEM + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_MEM_DECREASE_RESERVATION
+value|(TRC_MEM + 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_MEM_POD_POPULATE
+value|(TRC_MEM + 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_MEM_POD_ZERO_RECLAIM
+value|(TRC_MEM + 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_MEM_POD_SUPERPAGE_SPLINTER
+value|(TRC_MEM + 18)
 end_define
 
 begin_define
@@ -574,6 +682,13 @@ end_define
 begin_comment
 comment|/* trace events per subclass */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_NESTEDFLAG
+value|(0x400)
+end_define
 
 begin_define
 define|#
@@ -781,14 +896,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|TRC_HVM_IO_ASSIST
+name|TRC_HVM_IOPORT_READ
 value|(TRC_HVM_HANDLER + 0x16)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TRC_HVM_MMIO_ASSIST
+name|TRC_HVM_IOMEM_READ
 value|(TRC_HVM_HANDLER + 0x17)
 end_define
 
@@ -811,6 +926,154 @@ define|#
 directive|define
 name|TRC_HVM_LMSW64
 value|(TRC_HVM_HANDLER + TRC_64_FLAG + 0x19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_RDTSC
+value|(TRC_HVM_HANDLER + 0x1a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_INTR_WINDOW
+value|(TRC_HVM_HANDLER + 0x20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_NPF
+value|(TRC_HVM_HANDLER + 0x21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_REALMODE_EMULATE
+value|(TRC_HVM_HANDLER + 0x22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_TRAP
+value|(TRC_HVM_HANDLER + 0x23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_TRAP_DEBUG
+value|(TRC_HVM_HANDLER + 0x24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_VLAPIC
+value|(TRC_HVM_HANDLER + 0x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_IOPORT_WRITE
+value|(TRC_HVM_HANDLER + 0x216)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HVM_IOMEM_WRITE
+value|(TRC_HVM_HANDLER + 0x217)
+end_define
+
+begin_comment
+comment|/* trace events for per class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_PM_FREQ_CHANGE
+value|(TRC_HW_PM + 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_PM_IDLE_ENTRY
+value|(TRC_HW_PM + 0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_PM_IDLE_EXIT
+value|(TRC_HW_PM + 0x03)
+end_define
+
+begin_comment
+comment|/* Trace events for IRQs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_MOVE_CLEANUP_DELAY
+value|(TRC_HW_IRQ + 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_MOVE_CLEANUP
+value|(TRC_HW_IRQ + 0x2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_BIND_VECTOR
+value|(TRC_HW_IRQ + 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_CLEAR_VECTOR
+value|(TRC_HW_IRQ + 0x4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_MOVE_FINISH
+value|(TRC_HW_IRQ + 0x5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_ASSIGN_VECTOR
+value|(TRC_HW_IRQ + 0x6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_UNMAPPED_VECTOR
+value|(TRC_HW_IRQ + 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRC_HW_IRQ_HANDLED
+value|(TRC_HW_IRQ + 0x8)
 end_define
 
 begin_comment
@@ -895,6 +1158,28 @@ name|prod
 decl_stmt|;
 comment|/* Offset of next item to be produced by Xen.           */
 comment|/*  Records follow immediately after the meta-data header.    */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure used to pass MFNs to the trace buffers back to trace consumers.  * Offset is an offset into the mapped structure where the mfn list will be held.  * MFNs will be at ((unsigned long *)(t_info))+(t_info->cpu_offset[cpu]).  */
+end_comment
+
+begin_struct
+struct|struct
+name|t_info
+block|{
+name|uint16_t
+name|tbuf_size
+decl_stmt|;
+comment|/* Size in pages of each trace buffer */
+name|uint16_t
+name|mfn_offset
+index|[]
+decl_stmt|;
+comment|/* Offset within t_info structure of the page list per cpu */
+comment|/* MFN lists immediately after the header */
 block|}
 struct|;
 end_struct

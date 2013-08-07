@@ -147,9 +147,21 @@ block|,
 operator|&
 name|uart_z8530_class
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 operator|&
 name|uart_lpc_class
-block|, }
+block|,
+operator|&
+name|uart_s3c2410_class
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 

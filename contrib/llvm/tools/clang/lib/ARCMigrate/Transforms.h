@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Transforms.h - Tranformations to ARC mode ---------------*- C++ -*-===//
+comment|//===-- Transforms.h - Transformations to ARC mode --------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/RecursiveASTVisitor.h"
+file|"clang/AST/ParentMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/ParentMap.h"
+file|"clang/AST/RecursiveASTVisitor.h"
 end_include
 
 begin_include
@@ -579,6 +579,24 @@ name|BodyCtx
 argument_list|)
 block|; }
 decl_stmt|;
+name|class
+name|ProtectedScopeTraverser
+range|:
+name|public
+name|ASTTraverser
+block|{
+name|public
+operator|:
+name|virtual
+name|void
+name|traverseBody
+argument_list|(
+name|BodyContext
+operator|&
+name|BodyCtx
+argument_list|)
+block|; }
+decl_stmt|;
 comment|// GC transformations
 name|class
 name|GCAttrsTraverser
@@ -645,6 +663,15 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
+name|bool
+name|isPlusOne
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
 comment|/// \brief 'Loc' is the end of a statement range. This returns the location
 comment|/// immediately after the semicolon following the statement.
 comment|/// If no semicolon is found or the location is inside a macro, the returned
@@ -660,7 +687,7 @@ modifier|&
 name|Ctx
 parameter_list|)
 function_decl|;
-comment|/// \brief \arg Loc is the end of a statement range. This returns the location
+comment|/// \brief 'Loc' is the end of a statement range. This returns the location
 comment|/// of the semicolon following the statement.
 comment|/// If no semicolon is found or the location is inside a macro, the returned
 comment|/// source location will be invalid.

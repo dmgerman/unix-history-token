@@ -223,119 +223,119 @@ begin_struct
 struct|struct
 name|ipstat
 block|{
-name|u_long
+name|uint64_t
 name|ips_total
 decl_stmt|;
 comment|/* total packets received */
-name|u_long
+name|uint64_t
 name|ips_badsum
 decl_stmt|;
 comment|/* checksum bad */
-name|u_long
+name|uint64_t
 name|ips_tooshort
 decl_stmt|;
 comment|/* packet too short */
-name|u_long
+name|uint64_t
 name|ips_toosmall
 decl_stmt|;
 comment|/* not enough data */
-name|u_long
+name|uint64_t
 name|ips_badhlen
 decl_stmt|;
 comment|/* ip header length< data size */
-name|u_long
+name|uint64_t
 name|ips_badlen
 decl_stmt|;
 comment|/* ip length< ip header length */
-name|u_long
+name|uint64_t
 name|ips_fragments
 decl_stmt|;
 comment|/* fragments received */
-name|u_long
+name|uint64_t
 name|ips_fragdropped
 decl_stmt|;
 comment|/* frags dropped (dups, out of space) */
-name|u_long
+name|uint64_t
 name|ips_fragtimeout
 decl_stmt|;
 comment|/* fragments timed out */
-name|u_long
+name|uint64_t
 name|ips_forward
 decl_stmt|;
 comment|/* packets forwarded */
-name|u_long
+name|uint64_t
 name|ips_fastforward
 decl_stmt|;
 comment|/* packets fast forwarded */
-name|u_long
+name|uint64_t
 name|ips_cantforward
 decl_stmt|;
 comment|/* packets rcvd for unreachable dest */
-name|u_long
+name|uint64_t
 name|ips_redirectsent
 decl_stmt|;
 comment|/* packets forwarded on same net */
-name|u_long
+name|uint64_t
 name|ips_noproto
 decl_stmt|;
 comment|/* unknown or unsupported protocol */
-name|u_long
+name|uint64_t
 name|ips_delivered
 decl_stmt|;
 comment|/* datagrams delivered to upper level*/
-name|u_long
+name|uint64_t
 name|ips_localout
 decl_stmt|;
 comment|/* total ip packets generated here */
-name|u_long
+name|uint64_t
 name|ips_odropped
 decl_stmt|;
 comment|/* lost packets due to nobufs, etc. */
-name|u_long
+name|uint64_t
 name|ips_reassembled
 decl_stmt|;
 comment|/* total packets reassembled ok */
-name|u_long
+name|uint64_t
 name|ips_fragmented
 decl_stmt|;
 comment|/* datagrams successfully fragmented */
-name|u_long
+name|uint64_t
 name|ips_ofragments
 decl_stmt|;
 comment|/* output fragments created */
-name|u_long
+name|uint64_t
 name|ips_cantfrag
 decl_stmt|;
 comment|/* don't fragment flag was set, etc. */
-name|u_long
+name|uint64_t
 name|ips_badoptions
 decl_stmt|;
 comment|/* error in option processing */
-name|u_long
+name|uint64_t
 name|ips_noroute
 decl_stmt|;
 comment|/* packets discarded due to no route */
-name|u_long
+name|uint64_t
 name|ips_badvers
 decl_stmt|;
 comment|/* ip version != 4 */
-name|u_long
+name|uint64_t
 name|ips_rawout
 decl_stmt|;
 comment|/* total raw ip packets generated */
-name|u_long
+name|uint64_t
 name|ips_toolong
 decl_stmt|;
 comment|/* ip length> max ip packet size */
-name|u_long
+name|uint64_t
 name|ips_notmember
 decl_stmt|;
 comment|/* multicasts for unregistered grps */
-name|u_long
+name|uint64_t
 name|ips_nogif
 decl_stmt|;
 comment|/* no match gif found */
-name|u_long
+name|uint64_t
 name|ips_badaddr
 decl_stmt|;
 comment|/* invalid address on header */
@@ -352,8 +352,25 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|ipstat
+argument_list|,
+name|ipstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
@@ -368,7 +385,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ipstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ipstat, ipstat, name, (val))
 end_define
 
 begin_define
@@ -380,7 +398,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_ipstat.name -= (val)
+value|IPSTAT_ADD(name, -(val))
 end_define
 
 begin_define
@@ -425,7 +443,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_ipstat_inc(offsetof(struct ipstat, name) / sizeof(u_long))
+value|kmod_ipstat_inc(offsetof(struct ipstat, name) / sizeof(uint64_t))
 end_define
 
 begin_function_decl
@@ -446,7 +464,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_ipstat_dec(offsetof(struct ipstat, name) / sizeof(u_long))
+value|kmod_ipstat_dec(offsetof(struct ipstat, name) / sizeof(uint64_t))
 end_define
 
 begin_comment
@@ -608,17 +626,6 @@ end_struct_decl
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-expr|struct
-name|ipstat
-argument_list|,
-name|ipstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|u_short
 argument_list|,
 name|ip_id
@@ -776,13 +783,6 @@ name|pr_usrreqs
 name|rip_usrreqs
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ipstat
-value|VNET(ipstat)
-end_define
 
 begin_define
 define|#

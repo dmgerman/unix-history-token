@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * http_client - HTTP client  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * http_client - HTTP client  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|HTTP_CLIENT_TIMEOUT
+name|HTTP_CLIENT_TIMEOUT_SEC
 value|30
 end_define
 
@@ -130,7 +130,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"HTTP: Timeout"
+literal|"HTTP: Timeout (c=%p)"
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 name|c
@@ -175,6 +177,20 @@ name|c
 init|=
 name|cookie
 decl_stmt|;
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"HTTP: httpread callback: handle=%p cookie=%p "
+literal|"e=%d"
+argument_list|,
+name|handle
+argument_list|,
+name|cookie
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|eloop_cancel_timeout
 argument_list|(
 name|http_client_timeout
@@ -645,7 +661,7 @@ name|c
 operator|->
 name|max_response
 argument_list|,
-name|HTTP_CLIENT_TIMEOUT
+name|HTTP_CLIENT_TIMEOUT_SEC
 argument_list|)
 expr_stmt|;
 if|if
@@ -928,7 +944,7 @@ if|if
 condition|(
 name|eloop_register_timeout
 argument_list|(
-name|HTTP_CLIENT_TIMEOUT
+name|HTTP_CLIENT_TIMEOUT_SEC
 argument_list|,
 literal|0
 argument_list|,

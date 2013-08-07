@@ -1669,7 +1669,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 		 * XXXRW: While in UFS, we always get DIRBLKSIZ returns from 		 * the directory code on success, on other file systems this 		 * may not be the case.  For portability, we should check the 		 * read length on return from ufs_readdir(). 		 */
 name|edp
 operator|=
 operator|(
@@ -1681,6 +1680,10 @@ operator|&
 name|dirbuf
 index|[
 name|DIRBLKSIZ
+operator|-
+name|auio
+operator|.
+name|uio_resid
 index|]
 expr_stmt|;
 for|for
@@ -1700,37 +1703,6 @@ name|edp
 condition|;
 control|)
 block|{
-if|#
-directive|if
-operator|(
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-operator|)
-name|dp
-operator|->
-name|d_type
-operator|=
-name|dp
-operator|->
-name|d_namlen
-expr_stmt|;
-name|dp
-operator|->
-name|d_namlen
-operator|=
-literal|0
-expr_stmt|;
-else|#
-directive|else
-name|dp
-operator|->
-name|d_type
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|dp
@@ -3838,7 +3810,7 @@ block|{
 comment|/* 		 * The inode itself has a different generation number 		 * than the attribute data.  For now, the best solution 		 * is to coerce this to undefined, and let it get cleaned 		 * up by the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr_get (%s): inode number inconsistency (%d, %jd)\n"
+literal|"ufs_extattr_get (%s): inode number inconsistency (%d, %ju)\n"
 argument_list|,
 name|mp
 operator|->
@@ -3851,7 +3823,7 @@ operator|.
 name|ueh_i_gen
 argument_list|,
 operator|(
-name|intmax_t
+name|uintmax_t
 operator|)
 name|ip
 operator|->

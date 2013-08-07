@@ -577,6 +577,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPEED_40000
+value|40000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DUPLEX_HALF
 value|0
 end_define

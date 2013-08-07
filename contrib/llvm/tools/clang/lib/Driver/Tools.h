@@ -104,10 +104,67 @@ range|:
 name|public
 name|Tool
 block|{
+name|public
+operator|:
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getBaseInputName
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|InputInfoList
+operator|&
+name|Inputs
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getBaseInputStem
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|InputInfoList
+operator|&
+name|Inputs
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getDependencyFileName
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|InputInfoList
+operator|&
+name|Inputs
+argument_list|)
+block|;
+name|private
+operator|:
 name|void
 name|AddPreprocessingOptions
 argument_list|(
 argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
 argument_list|,
 argument|const Driver&D
 argument_list|,
@@ -143,6 +200,15 @@ specifier|const
 block|;
 name|void
 name|AddPPCTargetArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|AddR600TargetArgs
 argument_list|(
 argument|const ArgList&Args
 argument_list|,
@@ -949,285 +1015,6 @@ expr|}
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
-name|CC1
-operator|:
-name|public
-name|DarwinTool
-block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|public
-operator|:
-specifier|static
-specifier|const
-name|char
-operator|*
-name|getBaseInputName
-argument_list|(
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|,
-specifier|const
-name|InputInfoList
-operator|&
-name|Input
-argument_list|)
-block|;
-specifier|static
-specifier|const
-name|char
-operator|*
-name|getBaseInputStem
-argument_list|(
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|,
-specifier|const
-name|InputInfoList
-operator|&
-name|Input
-argument_list|)
-block|;
-specifier|static
-specifier|const
-name|char
-operator|*
-name|getDependencyFileName
-argument_list|(
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|,
-specifier|const
-name|InputInfoList
-operator|&
-name|Inputs
-argument_list|)
-block|;
-name|protected
-operator|:
-specifier|const
-name|char
-operator|*
-name|getCC1Name
-argument_list|(
-argument|types::ID Type
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddCC1Args
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|RemoveCC1UnsupportedArgs
-argument_list|(
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddCC1OptionsArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|,
-argument|const ArgStringList&OutputArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddCPPOptionsArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|,
-argument|const ArgStringList&OutputArgs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddCPPUniqueOptionsArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|)
-specifier|const
-block|;
-name|void
-name|AddCPPArgs
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
-specifier|const
-block|;
-name|public
-operator|:
-name|CC1
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|Name
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|ShortName
-argument_list|,
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|DarwinTool
-argument_list|(
-argument|Name
-argument_list|,
-argument|ShortName
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|hasGoodDiagnostics
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|hasIntegratedCPP
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Preprocess
-operator|:
-name|public
-name|CC1
-block|{
-name|public
-operator|:
-name|Preprocess
-argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|CC1
-argument_list|(
-literal|"darwin::Preprocess"
-argument_list|,
-literal|"gcc preprocessor"
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|virtual
-name|void
-name|ConstructJob
-argument_list|(
-argument|Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const InputInfo&Output
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|,
-argument|const ArgList&TCArgs
-argument_list|,
-argument|const char *LinkingOutput
-argument_list|)
-specifier|const
-block|;   }
-block|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
-name|Compile
-operator|:
-name|public
-name|CC1
-block|{
-name|public
-operator|:
-name|Compile
-argument_list|(
-specifier|const
-name|ToolChain
-operator|&
-name|TC
-argument_list|)
-operator|:
-name|CC1
-argument_list|(
-literal|"darwin::Compile"
-argument_list|,
-literal|"gcc frontend"
-argument_list|,
-argument|TC
-argument_list|)
-block|{}
-name|virtual
-name|void
-name|ConstructJob
-argument_list|(
-argument|Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|,
-argument|const InputInfo&Output
-argument_list|,
-argument|const InputInfoList&Inputs
-argument_list|,
-argument|const ArgList&TCArgs
-argument_list|,
-argument|const char *LinkingOutput
-argument_list|)
-specifier|const
-block|;   }
-block|;
-name|class
-name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
@@ -1455,6 +1242,16 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isDsymutilJob
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 name|virtual
@@ -2031,9 +1828,9 @@ specifier|const
 block|;   }
 block|; }
 comment|// end namespace netbsd
-comment|/// linux -- Directly call GNU Binutils assembler and linker
+comment|/// Directly call GNU Binutils' assembler and linker.
 name|namespace
-name|linuxtools
+name|gnutools
 block|{
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -2054,7 +1851,7 @@ argument_list|)
 operator|:
 name|Tool
 argument_list|(
-literal|"linux::Assemble"
+literal|"GNU::Assemble"
 argument_list|,
 literal|"assembler"
 argument_list|,
@@ -2109,7 +1906,7 @@ argument_list|)
 operator|:
 name|Tool
 argument_list|(
-literal|"linux::Link"
+literal|"GNU::Link"
 argument_list|,
 literal|"linker"
 argument_list|,

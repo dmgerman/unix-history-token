@@ -70,13 +70,13 @@ name|class
 name|CXXRecordDecl
 decl_stmt|;
 name|class
+name|Decl
+decl_stmt|;
+name|class
 name|DeclGroupRef
 decl_stmt|;
 name|class
 name|HandleTagDeclDefinition
-decl_stmt|;
-name|class
-name|PPMutationListener
 decl_stmt|;
 name|class
 name|ASTMutationListener
@@ -274,19 +274,6 @@ name|bool
 name|DefinitionRequired
 parameter_list|)
 block|{}
-comment|/// \brief If the consumer is interested in preprocessor entities getting
-comment|/// modified after their initial creation, it should return a pointer to
-comment|/// a PPMutationListener here.
-name|virtual
-name|PPMutationListener
-modifier|*
-name|GetPPMutationListener
-parameter_list|()
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// \brief If the consumer is interested in entities getting modified after
 comment|/// their initial creation, it should return a pointer to
 comment|/// an ASTMutationListener here.
@@ -318,6 +305,25 @@ name|void
 name|PrintStats
 parameter_list|()
 block|{}
+comment|/// \brief This callback is called for each function if the Parser was
+comment|/// initialized with \c SkipFunctionBodies set to \c true.
+comment|///
+comment|/// \return \c true if the function's body should be skipped. The function
+comment|/// body may be parsed anyway if it is needed (for instance, if it contains
+comment|/// the code completion point or is constexpr).
+name|virtual
+name|bool
+name|shouldSkipFunctionBody
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

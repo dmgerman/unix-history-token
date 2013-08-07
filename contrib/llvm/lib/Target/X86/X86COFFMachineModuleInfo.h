@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineModuleInfo.h"
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|"llvm/CodeGen/MachineModuleInfo.h"
 end_include
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003, 2006 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003, 2006, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.147 2007/09/26 23:29:11 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.148 2013/03/12 15:24:53 ca Exp $"
 argument_list|)
 end_macro
 
@@ -305,6 +305,9 @@ name|p
 decl_stmt|;
 name|int
 name|linelen
+decl_stmt|;
+name|int
+name|blen
 decl_stmt|;
 name|int
 name|bt
@@ -1336,6 +1339,9 @@ name|MBT_FINAL
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|blen
+operator|=
 name|sm_io_fgets
 argument_list|(
 name|e
@@ -1351,8 +1357,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|)
+operator|>=
+literal|0
 condition|)
 block|{
 name|bt
@@ -1378,10 +1385,7 @@ name|putxline
 argument_list|(
 name|buf
 argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
+name|blen
 argument_list|,
 name|mci
 argument_list|,
@@ -1646,6 +1650,9 @@ expr_stmt|;
 comment|/* skip the late "comment" epilogue */
 while|while
 condition|(
+operator|(
+name|blen
+operator|=
 name|sm_io_fgets
 argument_list|(
 name|e
@@ -1661,8 +1668,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|)
+operator|>=
+literal|0
 condition|)
 block|{
 name|bt
@@ -1688,10 +1696,7 @@ name|putxline
 argument_list|(
 name|buf
 argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
+name|blen
 argument_list|,
 name|mci
 argument_list|,
@@ -2001,6 +2006,9 @@ expr_stmt|;
 comment|/* do a scan of this body type to count character types */
 while|while
 condition|(
+operator|(
+name|blen
+operator|=
 name|sm_io_fgets
 argument_list|(
 name|e
@@ -2016,8 +2024,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|)
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -2034,16 +2043,15 @@ condition|)
 break|break;
 for|for
 control|(
-name|p
+name|i
 operator|=
-name|buf
+literal|0
 init|;
-operator|*
-name|p
-operator|!=
-literal|'\0'
+name|i
+operator|<
+name|blen
 condition|;
-name|p
+name|i
 operator|++
 control|)
 block|{
@@ -2057,8 +2065,10 @@ name|bitset
 argument_list|(
 literal|0200
 argument_list|,
-operator|*
-name|p
+name|buf
+index|[
+name|i
+index|]
 argument_list|)
 condition|)
 name|sectionhighbits
@@ -2303,6 +2313,9 @@ name|MCIF_INHEADER
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|blen
+operator|=
 name|sm_io_fgets
 argument_list|(
 name|e
@@ -2318,8 +2331,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|)
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
@@ -2359,10 +2373,7 @@ name|putxline
 argument_list|(
 name|buf
 argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
+name|blen
 argument_list|,
 name|mci
 argument_list|,
@@ -4791,6 +4802,8 @@ decl_stmt|;
 block|{
 name|int
 name|pxflags
+decl_stmt|,
+name|blen
 decl_stmt|;
 specifier|register
 name|char
@@ -4971,6 +4984,9 @@ name|MCIF_INHEADER
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|blen
+operator|=
 name|sm_io_fgets
 argument_list|(
 name|e
@@ -4986,18 +5002,23 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|)
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 operator|!
-name|putline
+name|putxline
 argument_list|(
 name|buf
 argument_list|,
+name|blen
+argument_list|,
 name|mci
+argument_list|,
+name|PXLF_MAPFROM
 argument_list|)
 condition|)
 goto|goto
@@ -5441,8 +5462,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|off

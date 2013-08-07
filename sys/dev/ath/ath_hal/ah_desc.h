@@ -570,6 +570,120 @@ begin_comment
 comment|/* Is ASPD trigger frame */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAL_RX_STBC
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Is an STBC frame */
+end_comment
+
+begin_comment
+comment|/*  * This is the format of RSSI[2] on the AR9285/AR9485.  * It encodes the LNA configuration information.  *  * For boards with an external diversity antenna switch,  * HAL_RX_LNA_EXTCFG encodes which configuration was  * used (antenna 1 or antenna 2.)  This feeds into the  * switch table and ensures that the given antenna was  * connected to an LNA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_LNACFG
+value|0x80
+end_define
+
+begin_comment
+comment|/* 1 = main LNA config used, 0 = ALT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_EXTCFG
+value|0x40
+end_define
+
+begin_comment
+comment|/* 0 = external diversity ant1, 1 = ant2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_CFG_USED
+value|0x30
+end_define
+
+begin_comment
+comment|/* 2 bits; LNA config used on RX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_CFG_USED_S
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_CFG_MAIN
+value|0x0c
+end_define
+
+begin_comment
+comment|/* 2 bits; "Main" LNA config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_CFG_ALT
+value|0x02
+end_define
+
+begin_comment
+comment|/* 2 bits; "Alt" LNA config */
+end_comment
+
+begin_comment
+comment|/*  * This is the format of RSSI_EXT[2] on the AR9285/AR9485.  * It encodes the switch table configuration and fast diversity  * value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_FASTDIV
+value|0x40
+end_define
+
+begin_comment
+comment|/* 1 = fast diversity measurement done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_SWITCH_0
+value|0x30
+end_define
+
+begin_comment
+comment|/* 2 bits; sw_0[1:0] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAL_RX_LNA_SWITCH_COM
+value|0x0f
+end_define
+
+begin_comment
+comment|/* 4 bits, sw_com[3:0] */
+end_comment
+
 begin_enum
 enum|enum
 block|{

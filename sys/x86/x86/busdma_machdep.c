@@ -4150,13 +4150,13 @@ literal|"performing bounce"
 argument_list|,
 name|__func__
 argument_list|,
-name|op
-argument_list|,
 name|dmat
 argument_list|,
 name|dmat
 operator|->
 name|flags
+argument_list|,
+name|op
 argument_list|)
 expr_stmt|;
 if|if

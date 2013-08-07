@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MipsInstrInfo.h"
+file|"Mips16RegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Mips16RegisterInfo.h"
+file|"MipsInstrInfo.h"
 end_include
 
 begin_decl_stmt
@@ -153,7 +153,7 @@ specifier|const
 block|;
 name|virtual
 name|void
-name|storeRegToStackSlot
+name|storeRegToStack
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -168,12 +168,14 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;
 name|virtual
 name|void
-name|loadRegFromStackSlot
+name|loadRegFromStack
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
@@ -186,6 +188,8 @@ argument_list|,
 argument|const TargetRegisterClass *RC
 argument_list|,
 argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;
@@ -205,6 +209,34 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
+comment|// Adjust SP by FrameSize bytes. Save RA, S0, S1
+name|void
+name|makeFrame
+argument_list|(
+argument|unsigned SP
+argument_list|,
+argument|int64_t FrameSize
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
+comment|// Adjust SP by FrameSize bytes. Restore RA, S0, S1
+name|void
+name|restoreFrame
+argument_list|(
+argument|unsigned SP
+argument_list|,
+argument|int64_t FrameSize
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
 comment|/// Adjust SP by Amount bytes.
 name|void
 name|adjustStackPtr
@@ -216,6 +248,77 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;
+comment|/// Emit a series of instructions to load an immediate.
+comment|// This is to adjust some FrameReg. We return the new register to be used
+comment|// in place of FrameReg and the adjusted immediate field (&NewImm)
+comment|//
+name|unsigned
+name|loadImmediate
+argument_list|(
+argument|unsigned FrameReg
+argument_list|,
+argument|int64_t Imm
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned&NewImm
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|validSpImm8
+argument_list|(
+argument|int offset
+argument_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|offset
+operator|&
+literal|7
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+name|isInt
+operator|<
+literal|11
+operator|>
+operator|(
+name|offset
+operator|)
+return|;
+block|}
+comment|//
+comment|// build the proper one based on the Imm field
+comment|//
+specifier|const
+name|MCInstrDesc
+operator|&
+name|AddiuSpImm
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
+name|void
+name|BuildAddiuSpImm
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|int64_t Imm
 argument_list|)
 specifier|const
 block|;
@@ -239,7 +342,39 @@ argument_list|,
 argument|unsigned Opc
 argument_list|)
 specifier|const
-block|; }
+block|;
+comment|// Adjust SP by Amount bytes where bytes can be up to 32bit number.
+name|void
+name|adjustStackPtrBig
+argument_list|(
+argument|unsigned SP
+argument_list|,
+argument|int64_t Amount
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned Reg1
+argument_list|,
+argument|unsigned Reg2
+argument_list|)
+specifier|const
+block|;
+comment|// Adjust SP by Amount bytes where bytes can be up to 32bit number.
+name|void
+name|adjustStackPtrBigUnrestricted
+argument_list|(
+argument|unsigned SP
+argument_list|,
+argument|int64_t Amount
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|)
+specifier|const
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

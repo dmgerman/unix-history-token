@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MACHINESCHEDULER_H
+name|LLVM_CODEGEN_MACHINESCHEDULER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MACHINESCHEDULER_H
+name|LLVM_CODEGEN_MACHINESCHEDULER_H
 end_define
 
 begin_include
@@ -158,6 +158,9 @@ name|RegisterClassInfo
 decl_stmt|;
 name|class
 name|ScheduleDAGInstrs
+decl_stmt|;
+name|class
+name|SchedDFSResult
 decl_stmt|;
 comment|/// MachineSchedContext provides enough context from the MachineScheduler pass
 comment|/// for the target to instantiate a scheduler.
@@ -442,6 +445,15 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Scheduler callback to notify that a new subtree is scheduled.
+name|virtual
+name|void
+name|scheduleTree
+parameter_list|(
+name|unsigned
+name|SubtreeID
+parameter_list|)
+block|{}
 comment|/// Notify MachineSchedStrategy that ScheduleDAGMI has scheduled an
 comment|/// instruction and updated scheduled/remaining flags in the DAG nodes.
 name|virtual
@@ -661,6 +673,18 @@ name|end
 argument_list|()
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|elements
+argument_list|()
+block|{
+return|return
+name|Queue
+return|;
+block|}
 name|iterator
 name|find
 parameter_list|(
@@ -759,9 +783,18 @@ operator|+
 name|idx
 return|;
 block|}
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
 name|void
 name|dump
 parameter_list|()
@@ -837,6 +870,20 @@ name|MachineSchedStrategy
 operator|*
 name|SchedImpl
 block|;
+comment|/// Information about DAG subtrees. If DFSResult is NULL, then SchedulerTrees
+comment|/// will be empty.
+name|SchedDFSResult
+operator|*
+name|DFSResult
+block|;
+name|BitVector
+name|ScheduledTrees
+block|;
+comment|/// Topo - A topological ordering for SUnits which permits fast IsReachable
+comment|/// and similar queries.
+name|ScheduleDAGTopologicalSort
+name|Topo
+block|;
 comment|/// Ordered list of DAG postprocessing steps.
 name|std
 operator|::
@@ -893,6 +940,17 @@ name|BotPressure
 block|;
 name|RegPressureTracker
 name|BotRPTracker
+block|;
+comment|/// Record the next node in a scheduled cluster.
+specifier|const
+name|SUnit
+operator|*
+name|NextClusterPred
+block|;
+specifier|const
+name|SUnit
+operator|*
+name|NextClusterSucc
 block|;
 ifndef|#
 directive|ifndef
@@ -961,6 +1019,19 @@ argument_list|(
 name|S
 argument_list|)
 block|,
+name|DFSResult
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Topo
+argument_list|(
+name|SUnits
+argument_list|,
+operator|&
+name|ExitSU
+argument_list|)
+block|,
 name|RPTracker
 argument_list|(
 name|RegPressure
@@ -979,7 +1050,17 @@ argument_list|()
 block|,
 name|BotRPTracker
 argument_list|(
-argument|BotPressure
+name|BotPressure
+argument_list|)
+block|,
+name|NextClusterPred
+argument_list|(
+name|NULL
+argument_list|)
+block|,
+name|NextClusterSucc
+argument_list|(
+argument|NULL
 argument_list|)
 block|{
 ifndef|#
@@ -996,13 +1077,12 @@ name|virtual
 operator|~
 name|ScheduleDAGMI
 argument_list|()
-block|{
-name|delete
-name|SchedImpl
-block|;   }
+block|;
 comment|/// Add a postprocessing step to the DAG builder.
 comment|/// Mutations are applied in the order that they are added after normal DAG
 comment|/// building and before MachineSchedStrategy initialization.
+comment|///
+comment|/// ScheduleDAGMI takes ownership of the Mutation object.
 name|void
 name|addMutation
 argument_list|(
@@ -1016,6 +1096,38 @@ argument_list|(
 name|Mutation
 argument_list|)
 block|;   }
+comment|/// \brief True if an edge can be added from PredSU to SuccSU without creating
+comment|/// a cycle.
+name|bool
+name|canAddEdge
+argument_list|(
+name|SUnit
+operator|*
+name|SuccSU
+argument_list|,
+name|SUnit
+operator|*
+name|PredSU
+argument_list|)
+block|;
+comment|/// \brief Add a DAG edge to the given SU with the given predecessor
+comment|/// dependence data.
+comment|///
+comment|/// \returns true if the edge may be added without creating a cycle OR if an
+comment|/// equivalent edge already existed (false indicates failure).
+name|bool
+name|addEdge
+argument_list|(
+name|SUnit
+operator|*
+name|SuccSU
+argument_list|,
+specifier|const
+name|SDep
+operator|&
+name|PredDep
+argument_list|)
+block|;
 name|MachineBasicBlock
 operator|::
 name|iterator
@@ -1059,6 +1171,16 @@ name|virtual
 name|void
 name|schedule
 argument_list|()
+block|;
+comment|/// Change the position of an instruction within the basic block and update
+comment|/// live ranges and region boundary iterators.
+name|void
+name|moveInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPos
+argument_list|)
 block|;
 comment|/// Get current register pressure for the top scheduled instructions.
 specifier|const
@@ -1134,6 +1256,69 @@ return|return
 name|RegionCriticalPSets
 return|;
 block|}
+specifier|const
+name|SUnit
+operator|*
+name|getNextClusterPred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextClusterPred
+return|;
+block|}
+specifier|const
+name|SUnit
+operator|*
+name|getNextClusterSucc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextClusterSucc
+return|;
+block|}
+comment|/// Compute a DFSResult after DAG building is complete, and before any
+comment|/// queue comparisons.
+name|void
+name|computeDFSResult
+argument_list|()
+block|;
+comment|/// Return a non-null DFS result if the scheduling strategy initialized it.
+specifier|const
+name|SchedDFSResult
+operator|*
+name|getDFSResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DFSResult
+return|;
+block|}
+name|BitVector
+operator|&
+name|getScheduledTrees
+argument_list|()
+block|{
+return|return
+name|ScheduledTrees
+return|;
+block|}
+name|void
+name|viewGraph
+argument_list|(
+argument|const Twine&Name
+argument_list|,
+argument|const Twine&Title
+argument_list|)
+name|LLVM_OVERRIDE
+block|;
+name|void
+name|viewGraph
+argument_list|()
+name|LLVM_OVERRIDE
+block|;
 name|protected
 operator|:
 comment|// Top-Level entry points for the schedule() driver...
@@ -1151,10 +1336,24 @@ name|void
 name|postprocessDAG
 argument_list|()
 block|;
-comment|/// Identify DAG roots and setup scheduler queues.
+comment|/// Release ExitSU predecessors and setup scheduler queues.
 name|void
 name|initQueues
-argument_list|()
+argument_list|(
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|TopRoots
+argument_list|,
+name|ArrayRef
+operator|<
+name|SUnit
+operator|*
+operator|>
+name|BotRoots
+argument_list|)
 block|;
 comment|/// Move an instruction and update register pressure.
 name|void
@@ -1193,21 +1392,15 @@ block|;
 name|void
 name|updateScheduledPressure
 argument_list|(
+specifier|const
 name|std
 operator|::
 name|vector
 operator|<
 name|unsigned
 operator|>
+operator|&
 name|NewMaxPressure
-argument_list|)
-block|;
-name|void
-name|moveInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|MachineBasicBlock::iterator InsertPos
 argument_list|)
 block|;
 name|bool
@@ -1215,8 +1408,24 @@ name|checkSchedLimit
 argument_list|()
 block|;
 name|void
-name|releaseRoots
-argument_list|()
+name|findRootsAndBiasEdges
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|SUnit
+operator|*
+operator|>
+operator|&
+name|TopRoots
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|SUnit
+operator|*
+operator|>
+operator|&
+name|BotRoots
+argument_list|)
 block|;
 name|void
 name|releaseSucc

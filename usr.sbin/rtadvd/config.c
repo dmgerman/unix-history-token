@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -147,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -2714,15 +2714,15 @@ argument_list|)
 condition|)
 block|{
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|pfx
@@ -2832,15 +2832,15 @@ argument_list|)
 condition|)
 block|{
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|pfx
@@ -5835,7 +5835,7 @@ name|pfx
 parameter_list|)
 block|{
 name|struct
-name|timeval
+name|timespec
 name|timo
 decl_stmt|;
 name|struct
@@ -5978,7 +5978,7 @@ name|prefix_timo
 expr_stmt|;
 name|timo
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -6252,7 +6252,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> Prefix added interface No.%d doesn't"
+literal|"<%s> Prefix added interface No.%d doesn't "
 literal|"exist. This should not happen! %s"
 argument_list|,
 name|__func__
@@ -6927,7 +6927,7 @@ decl_stmt|,
 name|pltime
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
 name|ndopt_pi
@@ -7011,12 +7011,12 @@ name|pfx
 operator|->
 name|pfx_pltimeexpire
 condition|)
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if

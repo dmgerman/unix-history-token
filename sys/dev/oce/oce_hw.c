@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2012 Emulex  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Emulex Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * Contact Information:  * freebsd-drivers@emulex.com  *  * Emulex  * 3333 Susan Street  * Costa Mesa, CA 92626  */
+comment|/*-  * Copyright (C) 2013 Emulex  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Emulex Corporation nor the names of its  *    contributors may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * Contact Information:  * freebsd-drivers@emulex.com  *  * Emulex  * 3333 Susan Street  * Costa Mesa, CA 92626  */
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ name|post_status
 operator|.
 name|dw0
 operator|=
-name|OCE_READ_REG32
+name|OCE_READ_CSR_MPU
 argument_list|(
 name|sc
 argument_list|,
@@ -82,7 +82,7 @@ name|stage
 operator|=
 name|POST_STAGE_CHIP_RESET
 expr_stmt|;
-name|OCE_WRITE_REG32
+name|OCE_WRITE_CSR_MPU
 argument_list|(
 name|sc
 argument_list|,
@@ -123,7 +123,7 @@ name|post_status
 operator|.
 name|dw0
 operator|=
-name|OCE_READ_REG32
+name|OCE_READ_CSR_MPU
 argument_list|(
 name|sc
 argument_list|,
@@ -355,6 +355,7 @@ name|error
 goto|;
 if|if
 condition|(
+operator|(
 name|IS_BE
 argument_list|(
 name|sc
@@ -367,6 +368,12 @@ name|flags
 operator|&
 name|OCE_FLAGS_BE3
 operator|)
+operator|)
+operator|||
+name|IS_SH
+argument_list|(
+name|sc
+argument_list|)
 condition|)
 block|{
 name|rc
@@ -937,6 +944,11 @@ name|IS_BE
 argument_list|(
 name|sc
 argument_list|)
+operator|||
+name|IS_SH
+argument_list|(
+name|sc
+argument_list|)
 condition|)
 name|sc
 operator|->
@@ -1136,6 +1148,11 @@ comment|/* Lancer has one BAR (CFG) but BE3 has three (CFG, CSR, DB) */
 if|if
 condition|(
 name|IS_BE
+argument_list|(
+name|sc
+argument_list|)
+operator|||
+name|IS_SH
 argument_list|(
 name|sc
 argument_list|)
@@ -1456,9 +1473,10 @@ block|}
 comment|/* enable capabilities controlled via driver startup parameters */
 if|if
 condition|(
+name|is_rss_enabled
+argument_list|(
 name|sc
-operator|->
-name|rss_enable
+argument_list|)
 condition|)
 name|capab_en_flags
 operator||=
@@ -1644,7 +1662,7 @@ name|ctrl
 operator|.
 name|dw0
 operator|=
-name|OCE_READ_REG32
+name|OCE_READ_CSR_MPU
 argument_list|(
 name|sc
 argument_list|,
@@ -1661,7 +1679,7 @@ name|cpu_reset
 operator|=
 literal|1
 expr_stmt|;
-name|OCE_WRITE_REG32
+name|OCE_WRITE_CSR_MPU
 argument_list|(
 name|sc
 argument_list|,

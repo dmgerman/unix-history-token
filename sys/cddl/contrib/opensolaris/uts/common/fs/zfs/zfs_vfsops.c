@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -852,7 +852,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__FreeBSD__
+name|__FreeBSD_kernel__
 end_ifndef
 
 begin_function
@@ -1040,7 +1040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__FreeBSD__ */
+comment|/* !__FreeBSD_kernel__ */
 end_comment
 
 begin_function
@@ -2810,7 +2810,10 @@ name|DMU_OT_SA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If we have a NULL data pointer 	 * then assume the id's aren't changing and 	 * return EEXIST to the dmu to let it know to 	 * use the same ids 	 */
@@ -2822,7 +2825,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EEXIST
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3258,7 +3264,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|obj
@@ -3518,7 +3527,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOENT
+argument_list|)
 operator|)
 return|;
 block|}
@@ -3607,7 +3619,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|obj
@@ -3746,7 +3761,10 @@ name|ZFS_PROP_GROUPQUOTA
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -3759,7 +3777,10 @@ name|ZPL_VERSION_USERSPACE
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|objp
@@ -4474,7 +4495,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -5614,6 +5638,57 @@ name|z_vfs
 operator|=
 name|vfsp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+comment|/* Initialize the generic filesystem structure. */
+name|vfsp
+operator|->
+name|vfs_bcount
+operator|=
+literal|0
+expr_stmt|;
+name|vfsp
+operator|->
+name|vfs_data
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|zfs_create_unique_device
+argument_list|(
+operator|&
+name|mount_dev
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|error
+operator|=
+name|SET_ERROR
+argument_list|(
+name|ENODEV
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|ASSERT
+argument_list|(
+name|vfs_devismounted
+argument_list|(
+name|mount_dev
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -6262,7 +6337,10 @@ literal|'9'
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|num
@@ -6333,7 +6411,10 @@ literal|'/'
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 operator|(
@@ -6419,7 +6500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_check_global_label:  *	Check that the hex label string is appropriate for the dataset  *	being mounted into the global_zone proper.  *  *	Return an error if the hex label string is not default or  *	admin_low/admin_high.  For admin_low labels, the corresponding  *	dataset must be readonly.  */
+comment|/*  * Check that the hex label string is appropriate for the dataset being  * mounted into the global_zone proper.  *  * Return an error if the hex label string is not default or  * admin_low/admin_high.  For admin_low labels, the corresponding  * dataset must be readonly.  */
 end_comment
 
 begin_function
@@ -6504,7 +6585,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 return|return
@@ -6519,14 +6603,17 @@ return|;
 block|}
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_mount_label_policy:  *	Determine whether the mount is allowed according to MAC check.  *	by comparing (where appropriate) label of the dataset against  *	the label of the zone being mounted into.  If the dataset has  *	no label, create one.  *  *	Returns:  *		 0 :	access allowed  *>0 :	error code, such as EACCES  */
+comment|/*  * Determine whether the mount is allowed according to MAC check.  * by comparing (where appropriate) label of the dataset against  * the label of the zone being mounted into.  If the dataset has  * no label, create one.  *  * Returns 0 if access allowed, error otherwise (e.g. EACCES)  */
 end_comment
 
 begin_function
@@ -6607,7 +6694,10 @@ name|error
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 comment|/* 	 * If labeling is NOT enabled, then disallow the mount of datasets 	 * which have a non-default label already.  No other label checks 	 * are needed. 	 */
@@ -6636,7 +6726,10 @@ operator|)
 return|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6691,7 +6784,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EACCES
+argument_list|)
 operator|)
 return|;
 if|if
@@ -6974,7 +7070,10 @@ operator|++
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 comment|/* 		 * the process of doing a spa_load will require the 		 * clock to be set before we could (for example) do 		 * something better by looking at the timestamp on 		 * an uberblock, so just set it to -1. 		 */
@@ -7008,7 +7107,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7340,7 +7442,10 @@ block|}
 comment|/* 	 * if "why" is equal to anything else other than ROOT_INIT, 	 * ROOT_REMOUNT, or ROOT_UNMOUNT, we do not support it. 	 */
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7510,6 +7615,116 @@ decl_stmt|;
 name|int
 name|canwrite
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
+if|if
+condition|(
+name|mvp
+operator|->
+name|v_type
+operator|!=
+name|VDIR
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENOTDIR
+argument_list|)
+operator|)
+return|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|mvp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MS_REMOUNT
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MS_OVERLAY
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|mvp
+operator|->
+name|v_count
+operator|!=
+literal|1
+operator|||
+operator|(
+name|mvp
+operator|->
+name|v_flag
+operator|&
+name|VROOT
+operator|)
+operator|)
+condition|)
+block|{
+name|mutex_exit
+argument_list|(
+operator|&
+name|mvp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EBUSY
+argument_list|)
+operator|)
+return|;
+block|}
+name|mutex_exit
+argument_list|(
+operator|&
+name|mvp
+operator|->
+name|v_lock
+argument_list|)
+expr_stmt|;
+comment|/* 	 * ZFS does not support passing unparsed data in via MS_DATA. 	 * Users should use the MS_OPTIONSTR interface; this means 	 * that all option parsing is already done and the options struct 	 * can be interrogated. 	 */
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MS_DATA
+operator|)
+operator|&&
+name|uap
+operator|->
+name|datalen
+operator|>
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -7524,7 +7739,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 operator|)
 return|;
 if|if
@@ -7550,9 +7768,15 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* ! illumos */
 comment|/* 	 * If full-owner-access is enabled and delegated administration is 	 * turned on, we must set nosuid. 	 */
 if|if
 condition|(
@@ -7748,7 +7972,10 @@ condition|)
 block|{
 name|error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|EPERM
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -8445,7 +8672,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EIO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8954,7 +9184,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -8978,7 +9211,10 @@ literal|1
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EBUSY
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9567,7 +9803,10 @@ name|err
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 name|ZFS_ENTER
@@ -9687,7 +9926,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -9982,7 +10224,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -10044,7 +10289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Block out VOPs and close zfsvfs_t::z_os  *  * Note, if successful, then we return with the 'z_teardown_lock' and  * 'z_teardown_inactive_lock' write held.  */
+comment|/*  * Block out VOPs and close zfsvfs_t::z_os  *  * Note, if successful, then we return with the 'z_teardown_lock' and  * 'z_teardown_inactive_lock' write held.  We leave ownership of the underlying  * dataset and objset intact so that they can be atomically handed off during  * a subsequent rollback or recv operation and the resume thereafter.  */
 end_comment
 
 begin_function
@@ -10079,15 +10324,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|dmu_objset_disown
-argument_list|(
-name|zfsvfs
-operator|->
-name|z_os
-argument_list|,
-name|zfsvfs
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10097,7 +10333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reopen zfsvfs_t::z_os and release VOPs.  */
+comment|/*  * Rebuild SA and release VOPs.  Note that ownership of the underlying dataset  * is an invariant across any of the operations that can be performed while the  * filesystem was suspended.  Whether it succeeded or failed, the preconditions  * are the same: the relevant objset and associated dataset are owned by  * zfsvfs, held, and long held on entry.  */
 end_comment
 
 begin_function
@@ -10116,6 +10352,15 @@ parameter_list|)
 block|{
 name|int
 name|err
+decl_stmt|;
+name|znode_t
+modifier|*
+name|zp
+decl_stmt|;
+name|uint64_t
+name|sa_obj
+init|=
+literal|0
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -10139,15 +10384,12 @@ name|z_teardown_inactive_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|dmu_objset_own
+comment|/* 	 * We already own this, so just hold and rele it to update the 	 * objset_t, as the one we had before may have been evicted. 	 */
+name|VERIFY0
+argument_list|(
+name|dmu_objset_hold
 argument_list|(
 name|osname
-argument_list|,
-name|DMU_OST_ZFS
-argument_list|,
-name|B_FALSE
 argument_list|,
 name|zfsvfs
 argument_list|,
@@ -10156,31 +10398,45 @@ name|zfsvfs
 operator|->
 name|z_os
 argument_list|)
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
+name|VERIFY3P
+argument_list|(
 name|zfsvfs
 operator|->
 name|z_os
-operator|=
-name|NULL
+operator|->
+name|os_dsl_dataset
+operator|->
+name|ds_owner
+argument_list|,
+operator|==
+argument_list|,
+name|zfsvfs
+argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|znode_t
-modifier|*
-name|zp
-decl_stmt|;
-name|uint64_t
-name|sa_obj
-init|=
-literal|0
-decl_stmt|;
-comment|/* 		 * Make sure version hasn't changed 		 */
+name|VERIFY
+argument_list|(
+name|dsl_dataset_long_held
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_os
+operator|->
+name|os_dsl_dataset
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dmu_objset_rele
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_os
+argument_list|,
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Make sure version hasn't changed 	 */
 name|err
 operator|=
 name|zfs_get_zplprop
@@ -10300,7 +10556,7 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Attempt to re-establish all the active znodes with 		 * their dbufs.  If a zfs_rezget() fails, then we'll let 		 * any potential callers discover that via ZFS_ENTER_VERIFY_VP 		 * when they try to use their znode. 		 */
+comment|/* 	 * Attempt to re-establish all the active znodes with 	 * their dbufs.  If a zfs_rezget() fails, then we'll let 	 * any potential callers discover that via ZFS_ENTER_VERIFY_VP 	 * when they try to use their znode. 	 */
 name|mutex_enter
 argument_list|(
 operator|&
@@ -10353,7 +10609,6 @@ operator|->
 name|z_znodes_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|bail
 label|:
 comment|/* release the VOPs */
@@ -10380,7 +10635,7 @@ condition|(
 name|err
 condition|)
 block|{
-comment|/* 		 * Since we couldn't reopen zfsvfs::z_os, or 		 * setup the sa framework force unmount this file system. 		 */
+comment|/* 		 * Since we couldn't setup the sa framework, try to force 		 * unmount this file system. 		 */
 if|if
 condition|(
 name|vn_vfswlock
@@ -10704,7 +10959,10 @@ name|ZPL_VERSION
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -10717,7 +10975,10 @@ name|z_version
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 if|if
@@ -10739,7 +11000,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|ENOTSUP
+argument_list|)
 operator|)
 return|;
 name|tx

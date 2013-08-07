@@ -2101,7 +2101,7 @@ operator|)
 condition|?
 name|VMFS_NO_SPACE
 else|:
-name|VMFS_ANY_SPACE
+name|VMFS_OPTIMAL_SPACE
 argument_list|,
 name|prot
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: meta.h,v 1.2 2011/03/30 22:03:49 sjg Exp $ */
+comment|/*      $NetBSD: meta.h,v 1.3 2013/03/23 05:31:29 sjg Exp $ */
 end_comment
 
 begin_comment
@@ -57,6 +57,15 @@ end_comment
 begin_function_decl
 name|void
 name|meta_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|meta_mode_init
 parameter_list|(
 specifier|const
 name|char

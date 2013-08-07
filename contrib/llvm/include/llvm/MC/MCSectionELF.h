@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSection.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Debug.h"
 end_include
 
 begin_include
@@ -74,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
@@ -196,6 +208,40 @@ return|return
 name|SectionName
 return|;
 block|}
+name|virtual
+name|std
+operator|::
+name|string
+name|getLabelBeginName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SectionName
+operator|.
+name|str
+argument_list|()
+operator|+
+literal|"_begin"
+return|;
+block|}
+name|virtual
+name|std
+operator|::
+name|string
+name|getLabelEndName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SectionName
+operator|.
+name|str
+argument_list|()
+operator|+
+literal|"_end"
+return|;
+block|}
 name|unsigned
 name|getType
 argument_list|()
@@ -240,6 +286,8 @@ argument_list|(
 argument|const MCAsmInfo&MAI
 argument_list|,
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCExpr *Subsection
 argument_list|)
 specifier|const
 block|;

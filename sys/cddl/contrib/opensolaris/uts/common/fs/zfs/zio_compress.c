@@ -11,6 +11,10 @@ begin_comment
 comment|/*  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -597,7 +601,10 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 return|return

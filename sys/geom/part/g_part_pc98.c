@@ -2942,6 +2942,17 @@ name|mid
 decl_stmt|,
 name|sid
 decl_stmt|;
+if|if
+condition|(
+name|baseentry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 name|mid
 operator|=
 name|sid

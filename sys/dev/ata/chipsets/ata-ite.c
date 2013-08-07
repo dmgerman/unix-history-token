@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ata.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -519,17 +513,12 @@ name|flags
 operator||=
 name|ATA_CHECKS_CABLE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|ch
 operator|->
 name|flags
 operator||=
 name|ATA_NO_ATAPI_DMA
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error

@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fm/fs/zfs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/spa_impl.h>
 end_include
 
@@ -392,7 +398,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|spa_config_write
 parameter_list|(
 name|spa_config_dirent_t
@@ -430,6 +436,9 @@ name|char
 modifier|*
 name|temp
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 comment|/* 	 * If the nvlist is empty (NULL), then remove the old cachefile. 	 */
 if|if
 condition|(
@@ -438,9 +447,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|vn_remove
 argument_list|(
 name|dp
@@ -452,7 +460,11 @@ argument_list|,
 name|RMFILE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|err
+operator|)
+return|;
 block|}
 comment|/* 	 * Pack the configuration into a buffer. 	 */
 name|VERIFY
@@ -525,8 +537,8 @@ operator|->
 name|scd_path
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|err
+operator|=
 name|vn_open
 argument_list|(
 name|temp
@@ -544,12 +556,16 @@ name|CRCREAT
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
+name|err
+operator|=
 name|vn_rdwr
 argument_list|(
 name|UIO_WRITE
@@ -572,9 +588,15 @@ name|kcred
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
-operator|&&
+condition|)
+name|err
+operator|=
 name|VOP_FSYNC
 argument_list|(
 name|vp
@@ -585,13 +607,15 @@ name|kcred
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|vn_rename
 argument_list|(
 name|temp
@@ -603,7 +627,6 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -649,6 +672,11 @@ argument_list|,
 name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
 block|}
 end_function
 
@@ -682,6 +710,12 @@ name|nvlist_t
 modifier|*
 name|nvl
 decl_stmt|;
+name|boolean_t
+name|ccw_failure
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|MUTEX_HELD
@@ -706,6 +740,10 @@ operator|)
 condition|)
 return|return;
 comment|/* 	 * Iterate over all cachefiles for the pool, past or present.  When the 	 * cachefile is changed, the new one is pushed onto this list, allowing 	 * us to update previous cachefiles that no longer contain this pool. 	 */
+name|ccw_failure
+operator|=
+name|B_FALSE
+expr_stmt|;
 for|for
 control|(
 name|dp
@@ -769,13 +807,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 			 * Skip over our own pool if we're about to remove 			 * ourselves from the spa namespace or any pool that 			 * is readonly. Since we cannot guarantee that a 			 * readonly pool would successfully import upon reboot, 			 * we don't allow them to be written to the cache file. 			 */
 if|if
 condition|(
+operator|(
 name|spa
 operator|==
 name|target
 operator|&&
 name|removing
+operator|)
+operator|||
+operator|!
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
 condition|)
 continue|continue;
 name|mutex_enter
@@ -882,6 +929,8 @@ name|spa_props_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+operator|=
 name|spa_config_write
 argument_list|(
 name|dp
@@ -889,10 +938,76 @@ argument_list|,
 name|nvl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|ccw_failure
+operator|=
+name|B_TRUE
+expr_stmt|;
 name|nvlist_free
 argument_list|(
 name|nvl
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ccw_failure
+condition|)
+block|{
+comment|/* 		 * Keep trying so that configuration data is 		 * written if/when any temporary filesystem 		 * resource issues are resolved. 		 */
+if|if
+condition|(
+name|target
+operator|->
+name|spa_ccw_fail_time
+operator|==
+literal|0
+condition|)
+block|{
+name|zfs_ereport_post
+argument_list|(
+name|FM_EREPORT_ZFS_CONFIG_CACHE_WRITE
+argument_list|,
+name|target
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|target
+operator|->
+name|spa_ccw_fail_time
+operator|=
+name|gethrtime
+argument_list|()
+expr_stmt|;
+name|spa_async_request
+argument_list|(
+name|target
+argument_list|,
+name|SPA_ASYNC_CONFIG_UPDATE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Do not rate limit future attempts to update 		 * the config cache. 		 */
+name|target
+operator|->
+name|spa_ccw_fail_time
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Remove any config entries older than the current one. 	 */
@@ -1179,7 +1294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate the pool's configuration based on the current in-core state.  * We infer whether to generate a complete config or just one top-level config  * based on whether vd is the root vdev.  */
+comment|/*  * Generate the pool's configuration based on the current in-core state.  *  * We infer whether to generate a complete config or just one top-level config  * based on whether vd is the root vdev.  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.9 2013/01/27 10:06:12 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.10 2013/02/19 02:12:47 dtucker Exp $ */
 end_comment
 
 begin_include
@@ -2682,20 +2682,55 @@ literal|"selected 0x%02x%s"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|contig
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|last_gap
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|next_gap
 argument_list|,
 name|final
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cost_list
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cost_range
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cost_bitmap
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cost_bitmap_restart
 argument_list|,
 name|new_state
@@ -2889,10 +2924,20 @@ literal|"%s: serial %llu:%llu state 0x%02x"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rs
 operator|->
 name|lo
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rs
 operator|->
 name|hi
@@ -5026,6 +5071,11 @@ name|debug
 argument_list|(
 literal|"KRL version %llu generated at %s%s%s"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|krl
 operator|->
 name|krl_version

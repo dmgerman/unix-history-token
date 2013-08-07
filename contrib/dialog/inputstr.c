@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: inputstr.c,v 1.69 2011/01/16 21:52:35 tom Exp $  *  *  inputstr.c -- functions for input/display of a string  *  *  Copyright 2000-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: inputstr.c,v 1.72 2012/12/30 22:11:37 tom Exp $  *  *  inputstr.c -- functions for input/display of a string  *  *  Copyright 2000-2011,2012	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -1232,11 +1232,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
-name|part
-init|=
-literal|0
-decl_stmt|;
 name|size_t
 name|code
 init|=
@@ -1326,9 +1321,6 @@ condition|)
 block|{
 break|break;
 block|}
-operator|++
-name|part
-expr_stmt|;
 operator|--
 name|len
 expr_stmt|;
@@ -1493,6 +1485,13 @@ operator|+
 literal|1
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|temp
+operator|!=
+literal|0
+condition|)
+block|{
 name|cache
 operator|.
 name|string
@@ -1575,6 +1574,16 @@ argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|cache
+operator|.
+name|i_len
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|result
 operator|=
@@ -1865,6 +1874,14 @@ name|result
 operator|==
 name|limit
 operator|||
+operator|(
+operator|(
+name|result
+operator|<
+name|limit
+operator|)
+operator|&&
+operator|(
 name|to_find
 operator|<
 name|list
@@ -1873,8 +1890,12 @@ name|result
 operator|+
 literal|1
 index|]
+operator|)
+operator|)
 condition|)
+block|{
 break|break;
+block|}
 block|}
 return|return
 name|result
@@ -2670,6 +2691,10 @@ if|if
 condition|(
 operator|*
 name|chr_offset
+operator|&&
+name|offset
+operator|>
+literal|0
 condition|)
 operator|*
 name|chr_offset
@@ -3468,6 +3493,9 @@ operator|&
 name|scrollamt
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|win

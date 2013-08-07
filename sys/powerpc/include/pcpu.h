@@ -66,12 +66,17 @@ directive|define
 name|PCPU_MD_AIM32_FIELDS
 end_define
 
+begin_comment
+unit|\
+comment|/* char		__pad[0] */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PCPU_MD_AIM64_FIELDS
 define|\
-value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;					\ 	register_t	pc_slbsave[18];					\ 	uint8_t		pc_slbstack[1024];
+value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;					\ 	register_t	pc_slbsave[18];					\ 	uint8_t		pc_slbstack[1024];				\ 	char		__pad[1137]
 end_define
 
 begin_ifdef
@@ -137,7 +142,7 @@ define|#
 directive|define
 name|PCPU_MD_BOOKE_FIELDS
 define|\
-value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;
+value|register_t	pc_booke_critsave[BOOKE_CRITSAVE_LEN];		\ 	register_t	pc_booke_mchksave[CPUSAVE_LEN];			\ 	register_t	pc_booke_tlbsave[BOOKE_TLBSAVE_LEN];		\ 	register_t	pc_booke_tlb_level;				\ 	uint32_t	*pc_booke_tlb_lock;				\ 	int		pc_tid_next;					\ 	char		__pad[173]
 end_define
 
 begin_comment
@@ -381,12 +386,6 @@ name|TLBSAVE_BOOKE_R31
 value|15
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPILING_LINT
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -428,24 +427,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCPU_MD_FIELDS
-define|\
-value|PCPU_MD_COMMON_FIELDS	\ 	PCPU_MD_AIM_FIELDS	\ 	PCPU_MD_BOOKE_FIELDS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Catch-all for ports (e.g. lsof, used by gtop)  */
 end_comment
@@ -461,7 +442,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|int		pc_md_placeholder
+value|int		pc_md_placeholder[32]
 end_define
 
 begin_endif

@@ -394,6 +394,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FILECAPS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 specifier|inline
@@ -741,7 +749,7 @@ index|]
 operator|.
 name|fde_ioctls
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|)
 expr_stmt|;
 name|fdp
@@ -1285,7 +1293,7 @@ argument_list|)
 operator|*
 name|ncmds
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1322,7 +1330,7 @@ name|free
 argument_list|(
 name|cmds
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1439,7 +1447,7 @@ name|free
 argument_list|(
 name|cmds
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2224,7 +2232,7 @@ index|]
 operator|.
 name|fde_ioctls
 argument_list|,
-name|M_TEMP
+name|M_FILECAPS
 argument_list|)
 expr_stmt|;
 name|fdp

@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -389,14 +383,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
-init|=
-literal|0
 decl_stmt|,
 name|sflag
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -628,6 +619,7 @@ value|(1<< 6)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|uint32_t
 name|ndopt_flags
 index|[]
@@ -899,7 +891,7 @@ name|PFD_MAX
 index|]
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 modifier|*
 name|timeout
 decl_stmt|;
@@ -1549,7 +1541,9 @@ name|int
 operator|)
 name|timeout
 operator|->
-name|tv_usec
+name|tv_nsec
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
@@ -1598,7 +1592,9 @@ literal|1000
 operator|+
 name|timeout
 operator|->
-name|tv_usec
+name|tv_nsec
+operator|/
+literal|1000
 operator|/
 literal|1000
 operator|)
@@ -2005,7 +2001,7 @@ name|ifi
 operator|->
 name|ifi_ra_lastsent
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|==
 literal|0
 operator|&&
@@ -4451,7 +4447,7 @@ name|delay
 decl_stmt|;
 comment|/* must not be greater than 1000000 */
 name|struct
-name|timeval
+name|timespec
 name|interval
 decl_stmt|,
 name|now
@@ -4502,9 +4498,11 @@ literal|0
 expr_stmt|;
 name|interval
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 name|delay
+operator|*
+literal|1000
 expr_stmt|;
 name|rest
 operator|=
@@ -4517,12 +4515,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TIMEVAL_LT
+name|TS_CMP
 argument_list|(
 name|rest
 argument_list|,
 operator|&
 name|interval
+argument_list|,
+operator|<
 argument_list|)
 condition|)
 block|{
@@ -4543,15 +4543,15 @@ name|rest
 expr_stmt|;
 block|}
 comment|/* 	 * If we sent a multicast Router Advertisement within 	 * the last MIN_DELAY_BETWEEN_RAS seconds, schedule 	 * the advertisement to be sent at a time corresponding to 	 * MIN_DELAY_BETWEEN_RAS plus the random value after the 	 * previous advertisement was sent. 	 */
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|TIMEVAL_SUB
+name|TS_SUB
 argument_list|(
 operator|&
 name|now
@@ -4573,23 +4573,25 @@ name|MIN_DELAY_BETWEEN_RAS
 expr_stmt|;
 name|min_delay
 operator|.
-name|tv_usec
+name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|TIMEVAL_LT
+name|TS_CMP
 argument_list|(
 operator|&
 name|tm_tmp
 argument_list|,
 operator|&
 name|min_delay
+argument_list|,
+operator|<
 argument_list|)
 condition|)
 block|{
-name|TIMEVAL_SUB
+name|TS_SUB
 argument_list|(
 operator|&
 name|min_delay
@@ -4601,7 +4603,7 @@ operator|&
 name|min_delay
 argument_list|)
 expr_stmt|;
-name|TIMEVAL_ADD
+name|TS_ADD
 argument_list|(
 operator|&
 name|min_delay
@@ -5581,7 +5583,7 @@ name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
 if|#
@@ -5757,12 +5759,12 @@ name|pfx_pltimeexpire
 condition|)
 block|{
 comment|/* 		 * The lifetime is decremented in real time, so we should 		 * compare the expiration time. 		 * (RFC 2461 Section 6.2.7.) 		 * XXX: can we really expect that all routers on the link 		 * have synchronized clocks? 		 */
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|preferred_time
@@ -5953,12 +5955,12 @@ operator|->
 name|pfx_vltimeexpire
 condition|)
 block|{
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|valid_time
@@ -7547,6 +7549,32 @@ name|ifinfo
 modifier|*
 name|ifi
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|,
+name|name0
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* Check if the interface has a valid name or not. */
+if|if
+condition|(
+name|if_indextoname
+argument_list|(
+name|idx
+argument_list|,
+name|name0
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifi
@@ -8116,14 +8144,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* update timestamp */
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|ifi
 operator|->
 name|ifi_ra_lastsent
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* update counter */
@@ -8385,7 +8413,7 @@ modifier|*
 name|arg
 parameter_list|,
 name|struct
-name|timeval
+name|timespec
 modifier|*
 name|tm
 parameter_list|)
@@ -8500,7 +8528,7 @@ name|interval
 expr_stmt|;
 name|tm
 operator|->
-name|tv_usec
+name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -8530,7 +8558,9 @@ name|int
 operator|)
 name|tm
 operator|->
-name|tv_usec
+name|tv_nsec
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 return|return;

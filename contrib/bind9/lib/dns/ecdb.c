@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -227,12 +227,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|RDATASET_ATTR_NEGATIVE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
 name|NXDOMAIN
 parameter_list|(
 name|header
 parameter_list|)
 define|\
 value|(((header)->attributes& RDATASET_ATTR_NXDOMAIN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEGATIVE
+parameter_list|(
+name|header
+parameter_list|)
+define|\
+value|(((header)->attributes& RDATASET_ATTR_NEGATIVE) != 0)
 end_define
 
 begin_function_decl
@@ -1914,6 +1932,19 @@ name|attributes
 operator||=
 name|DNS_RDATASETATTR_NXDOMAIN
 expr_stmt|;
+if|if
+condition|(
+name|NEGATIVE
+argument_list|(
+name|header
+argument_list|)
+condition|)
+name|rdataset
+operator|->
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_NEGATIVE
+expr_stmt|;
 name|rdataset
 operator|->
 name|private1
@@ -2236,6 +2267,24 @@ operator|->
 name|attributes
 operator||=
 name|RDATASET_ATTR_NXDOMAIN
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rdataset
+operator|->
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|header
+operator|->
+name|attributes
+operator||=
+name|RDATASET_ATTR_NEGATIVE
 expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(

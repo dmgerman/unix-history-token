@@ -306,9 +306,10 @@ argument_list|)
 block|,
 name|ACPI_PM_TIMER_WIDTH
 block|,
-name|ACPI_FADT_REQUIRED
+name|ACPI_FADT_SEPARATE_LENGTH
 block|}
 block|,
+comment|/* ACPI 5.0A: Timer is optional */
 block|{
 literal|"Gpe0Block"
 block|,
@@ -1271,12 +1272,21 @@ index|]
 operator|.
 name|Name
 expr_stmt|;
-comment|/*          * For each extended field, check for length mismatch between the          * legacy length field and the corresponding 64-bit X length field.          */
+comment|/*          * For each extended field, check for length mismatch between the          * legacy length field and the corresponding 64-bit X length field.          * Note: If the legacy length field is> 0xFF bits, ignore this          * check. (GPE registers can be larger than the 64-bit GAS structure          * can accomodate, 0xFF bits).          */
 if|if
 condition|(
 name|Address64
 operator|->
 name|Address
+operator|&&
+operator|(
+name|ACPI_MUL_8
+argument_list|(
+name|Length
+argument_list|)
+operator|<=
+name|ACPI_UINT8_MAX
+operator|)
 operator|&&
 operator|(
 name|Address64
@@ -1323,7 +1333,7 @@ operator|&
 name|ACPI_FADT_REQUIRED
 condition|)
 block|{
-comment|/*              * Field is required (PM1aEvent, PM1aControl, PmTimer).              * Both the address and length must be non-zero.              */
+comment|/*              * Field is required (PM1aEvent, PM1aControl).              * Both the address and length must be non-zero.              */
 if|if
 condition|(
 operator|!

@@ -110,6 +110,14 @@ modifier|*
 name|CompleteFileName
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Get all the compile commands in the given compilation database.  */
+name|CINDEX_LINKAGE
+name|CXCompileCommands
+name|clang_CompilationDatabase_getAllCompileCommands
+parameter_list|(
+name|CXCompilationDatabase
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Free the given CompileCommands  */
 name|CINDEX_LINKAGE
 name|void

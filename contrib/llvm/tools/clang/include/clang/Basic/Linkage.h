@@ -97,6 +97,18 @@ comment|/// be referred to from other translation units.
 name|ExternalLinkage
 block|}
 enum|;
+comment|/// \brief Describes the different kinds of language linkage
+comment|/// (C++ [dcl.link]) that an entity may have.
+enum|enum
+name|LanguageLinkage
+block|{
+name|CLanguageLinkage
+block|,
+name|CXXLanguageLinkage
+block|,
+name|NoLanguageLinkage
+block|}
+enum|;
 comment|/// \brief A more specific kind of linkage than enum Linkage.
 comment|///
 comment|/// This is relevant to CodeGen and AST file reading.

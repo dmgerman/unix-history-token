@@ -13,6 +13,12 @@ directive|include
 file|<ldns/config.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_B32_PTON
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -100,6 +106,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ldns/util.h>
+end_include
+
 begin_comment
 comment|/*	"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";*/
 end_comment
@@ -149,6 +161,7 @@ comment|/* skips all whitespace anywhere.    converts characters, four at a time
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ldns_b32_pton_ar
 parameter_list|(
@@ -1138,6 +1151,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_B32_PTON */
+end_comment
 
 end_unit
 

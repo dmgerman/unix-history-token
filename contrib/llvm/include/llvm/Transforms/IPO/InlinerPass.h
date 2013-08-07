@@ -74,7 +74,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CallGraphSCCPass.h"
+file|"llvm/Analysis/CallGraphSCCPass.h"
 end_include
 
 begin_decl_stmt
@@ -149,6 +149,13 @@ name|CallGraphSCC
 operator|&
 name|SCC
 argument_list|)
+block|;
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
+name|doFinalization
 block|;
 comment|// doFinalization - Remove now-dead linkonce functions at the end of
 comment|// processing to avoid breaking the SCC traversal.

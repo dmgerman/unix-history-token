@@ -481,6 +481,22 @@ name|MV_DDR_CADR_BASE
 value|(MV_BASE + 0xF1500)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_DDR_CADR_BASE
+value|(MV_BASE + 0x20180)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1035,31 +1051,25 @@ begin_comment
 comment|/* SOC_MV_DOVE */
 end_comment
 
+begin_comment
+comment|/*  * These values are valid only for peripherals decoding windows  * Bit in ATTR is zeroed according to CS bank number  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MV_WIN_CESA_CTRL
+name|MV_WIN_DDR_ATTR
 parameter_list|(
-name|n
+name|cs
 parameter_list|)
-value|(0x8 * (n) + 0xa04)
+value|(0x0F& ~(0x01<< (cs)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_WIN_CESA_BASE
-parameter_list|(
-name|n
-parameter_list|)
-value|(0x8 * (n) + 0xa00)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_WIN_CESA_MAX
-value|4
+name|MV_WIN_DDR_TARGET
+value|0x0
 end_define
 
 begin_if
@@ -1082,7 +1092,40 @@ begin_define
 define|#
 directive|define
 name|MV_WIN_CESA_ATTR
+parameter_list|(
+name|eng_sel
+parameter_list|)
 value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|SOC_MV_ARMADAXP
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_TARGET
+value|9
+end_define
+
+begin_comment
+comment|/*  * Bits [2:3] of cesa attribute select engine:  * eng_sel:  *  1: engine1  *  2: engine0  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MV_WIN_CESA_ATTR
+parameter_list|(
+name|eng_sel
+parameter_list|)
+value|(1 | ((eng_sel)<< 2))
 end_define
 
 begin_else
@@ -1101,6 +1144,9 @@ begin_define
 define|#
 directive|define
 name|MV_WIN_CESA_ATTR
+parameter_list|(
+name|eng_sel
+parameter_list|)
 value|0
 end_define
 

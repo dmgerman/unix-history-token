@@ -585,7 +585,7 @@ operator|)
 name|LHSKind
 return|;
 block|}
-comment|/// getRHSKind - Get the NodeKind of the left-hand side.
+comment|/// getRHSKind - Get the NodeKind of the right-hand side.
 name|NodeKind
 name|getRHSKind
 argument_list|()

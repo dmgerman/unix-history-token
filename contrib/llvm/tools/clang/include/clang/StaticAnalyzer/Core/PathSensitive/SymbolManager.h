@@ -96,13 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -114,7 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -197,6 +197,14 @@ name|SymIntKind
 block|,
 name|IntSymKind
 block|,
+name|SymSymKind
+block|,
+name|BEGIN_BINARYSYMEXPRS
+operator|=
+name|SymIntKind
+block|,
+name|END_BINARYSYMEXPRS
+operator|=
 name|SymSymKind
 block|,
 name|CastSymbolKind
@@ -378,8 +386,6 @@ modifier|*
 name|SymbolRef
 typedef|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|SymbolRef
@@ -1482,54 +1488,35 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// SymIntExpr - Represents symbolic expression like 'x' + 3.
+comment|/// \brief Represents a symbolic expression involving a binary operator
 name|class
-name|SymIntExpr
+name|BinarySymExpr
 operator|:
 name|public
 name|SymExpr
 block|{
-specifier|const
-name|SymExpr
-operator|*
-name|LHS
-block|;
 name|BinaryOperator
 operator|::
 name|Opcode
 name|Op
 block|;
-specifier|const
-name|llvm
-operator|::
-name|APSInt
-operator|&
-name|RHS
-block|;
 name|QualType
 name|T
 block|;
-name|public
+name|protected
 operator|:
-name|SymIntExpr
+name|BinarySymExpr
 argument_list|(
-argument|const SymExpr *lhs
+argument|Kind k
 argument_list|,
 argument|BinaryOperator::Opcode op
-argument_list|,
-argument|const llvm::APSInt& rhs
 argument_list|,
 argument|QualType t
 argument_list|)
 operator|:
 name|SymExpr
 argument_list|(
-name|SymIntKind
-argument_list|)
-block|,
-name|LHS
-argument_list|(
-name|lhs
+name|k
 argument_list|)
 block|,
 name|Op
@@ -1537,16 +1524,13 @@ argument_list|(
 name|op
 argument_list|)
 block|,
-name|RHS
-argument_list|(
-name|rhs
-argument_list|)
-block|,
 name|T
 argument_list|(
 argument|t
 argument_list|)
 block|{}
+name|public
+operator|:
 comment|// FIXME: We probably need to make this out-of-line to avoid redundant
 comment|// generation of virtual functions.
 name|QualType
@@ -1569,6 +1553,86 @@ return|return
 name|Op
 return|;
 block|}
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SymExpr *SE
+argument_list|)
+block|{
+name|Kind
+name|k
+operator|=
+name|SE
+operator|->
+name|getKind
+argument_list|()
+block|;
+return|return
+name|k
+operator|>=
+name|BEGIN_BINARYSYMEXPRS
+operator|&&
+name|k
+operator|<=
+name|END_BINARYSYMEXPRS
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a symbolic expression like 'x' + 3.
+name|class
+name|SymIntExpr
+operator|:
+name|public
+name|BinarySymExpr
+block|{
+specifier|const
+name|SymExpr
+operator|*
+name|LHS
+block|;
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|&
+name|RHS
+block|;
+name|public
+operator|:
+name|SymIntExpr
+argument_list|(
+argument|const SymExpr *lhs
+argument_list|,
+argument|BinaryOperator::Opcode op
+argument_list|,
+argument|const llvm::APSInt& rhs
+argument_list|,
+argument|QualType t
+argument_list|)
+operator|:
+name|BinarySymExpr
+argument_list|(
+name|SymIntKind
+argument_list|,
+name|op
+argument_list|,
+name|t
+argument_list|)
+block|,
+name|LHS
+argument_list|(
+name|lhs
+argument_list|)
+block|,
+name|RHS
+argument_list|(
+argument|rhs
+argument_list|)
+block|{}
 name|virtual
 name|void
 name|dumpToStream
@@ -1667,11 +1731,13 @@ name|ID
 argument_list|,
 name|LHS
 argument_list|,
-name|Op
+name|getOpcode
+argument_list|()
 argument_list|,
 name|RHS
 argument_list|,
-name|T
+name|getType
+argument_list|()
 argument_list|)
 block|;   }
 comment|// Implement isa<T> support.
@@ -1694,12 +1760,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// IntSymExpr - Represents symbolic expression like 3 - 'x'.
+comment|/// \brief Represents a symbolic expression like 3 - 'x'.
 name|class
 name|IntSymExpr
 operator|:
 name|public
-name|SymExpr
+name|BinarySymExpr
 block|{
 specifier|const
 name|llvm
@@ -1708,18 +1774,10 @@ name|APSInt
 operator|&
 name|LHS
 block|;
-name|BinaryOperator
-operator|::
-name|Opcode
-name|Op
-block|;
 specifier|const
 name|SymExpr
 operator|*
 name|RHS
-block|;
-name|QualType
-name|T
 block|;
 name|public
 operator|:
@@ -1734,9 +1792,13 @@ argument_list|,
 argument|QualType t
 argument_list|)
 operator|:
-name|SymExpr
+name|BinarySymExpr
 argument_list|(
 name|IntSymKind
+argument_list|,
+name|op
+argument_list|,
+name|t
 argument_list|)
 block|,
 name|LHS
@@ -1744,41 +1806,11 @@ argument_list|(
 name|lhs
 argument_list|)
 block|,
-name|Op
-argument_list|(
-name|op
-argument_list|)
-block|,
 name|RHS
 argument_list|(
-name|rhs
-argument_list|)
-block|,
-name|T
-argument_list|(
-argument|t
+argument|rhs
 argument_list|)
 block|{}
-name|QualType
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|T
-return|;
-block|}
-name|BinaryOperator
-operator|::
-name|Opcode
-name|getOpcode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Op
-return|;
-block|}
 name|virtual
 name|void
 name|dumpToStream
@@ -1877,11 +1909,13 @@ name|ID
 argument_list|,
 name|LHS
 argument_list|,
-name|Op
+name|getOpcode
+argument_list|()
 argument_list|,
 name|RHS
 argument_list|,
-name|T
+name|getType
+argument_list|()
 argument_list|)
 block|;   }
 comment|// Implement isa<T> support.
@@ -1904,30 +1938,22 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// SymSymExpr - Represents symbolic expression like 'x' + 'y'.
+comment|/// \brief Represents a symbolic expression like 'x' + 'y'.
 name|class
 name|SymSymExpr
 operator|:
 name|public
-name|SymExpr
+name|BinarySymExpr
 block|{
 specifier|const
 name|SymExpr
 operator|*
 name|LHS
 block|;
-name|BinaryOperator
-operator|::
-name|Opcode
-name|Op
-block|;
 specifier|const
 name|SymExpr
 operator|*
 name|RHS
-block|;
-name|QualType
-name|T
 block|;
 name|public
 operator|:
@@ -1942,9 +1968,13 @@ argument_list|,
 argument|QualType t
 argument_list|)
 operator|:
-name|SymExpr
+name|BinarySymExpr
 argument_list|(
 name|SymSymKind
+argument_list|,
+name|op
+argument_list|,
+name|t
 argument_list|)
 block|,
 name|LHS
@@ -1952,32 +1982,11 @@ argument_list|(
 name|lhs
 argument_list|)
 block|,
-name|Op
-argument_list|(
-name|op
-argument_list|)
-block|,
 name|RHS
 argument_list|(
-name|rhs
-argument_list|)
-block|,
-name|T
-argument_list|(
-argument|t
+argument|rhs
 argument_list|)
 block|{}
-name|BinaryOperator
-operator|::
-name|Opcode
-name|getOpcode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Op
-return|;
-block|}
 specifier|const
 name|SymExpr
 operator|*
@@ -1998,17 +2007,6 @@ specifier|const
 block|{
 return|return
 name|RHS
-return|;
-block|}
-comment|// FIXME: We probably need to make this out-of-line to avoid redundant
-comment|// generation of virtual functions.
-name|QualType
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|T
 return|;
 block|}
 name|virtual
@@ -2084,11 +2082,13 @@ name|ID
 argument_list|,
 name|LHS
 argument_list|,
-name|Op
+name|getOpcode
+argument_list|()
 argument_list|,
 name|RHS
 argument_list|,
-name|T
+name|getType
+argument_list|()
 argument_list|)
 block|;   }
 comment|// Implement isa<T> support.

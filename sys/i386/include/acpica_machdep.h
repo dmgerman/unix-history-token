@@ -192,42 +192,6 @@ begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MACHINE_WIDTH
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_INT64
-value|long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_UINT64
-value|unsigned long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
 begin_function_decl
 name|void
 name|acpi_SetDefaultIntrModel
@@ -285,6 +249,15 @@ name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

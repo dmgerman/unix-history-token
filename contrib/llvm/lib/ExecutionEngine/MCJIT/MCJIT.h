@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/PassManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -64,7 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ExecutionEngine/ObjectCache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ExecutionEngine/RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/PassManager.h"
 end_include
 
 begin_decl_stmt
@@ -120,7 +126,7 @@ name|EventListeners
 block|;
 comment|// FIXME: Add support for multiple modules
 name|bool
-name|isCompiled
+name|IsLoaded
 block|;
 name|Module
 operator|*
@@ -132,6 +138,12 @@ name|ObjectImage
 operator|>
 name|LoadedObject
 block|;
+comment|// An optional ObjectCache to be notified of compiled objects and used to
+comment|// perform lookup of pre-compiled code to avoid re-compilation.
+name|ObjectCache
+operator|*
+name|ObjCache
+block|;
 name|public
 operator|:
 operator|~
@@ -140,6 +152,16 @@ argument_list|()
 block|;
 comment|/// @name ExecutionEngine interface implementation
 comment|/// @{
+comment|/// Sets the object manager that MCJIT should use to avoid compilation.
+name|virtual
+name|void
+name|setObjectCache
+argument_list|(
+name|ObjectCache
+operator|*
+name|manager
+argument_list|)
+block|;
 name|virtual
 name|void
 name|finalizeObject
@@ -297,8 +319,17 @@ comment|/// Currently, MCJIT only supports a single module and the module passed
 comment|/// this function call is expected to be the contained module.  The module
 comment|/// is passed as a parameter here to prepare for multiple module support in
 comment|/// the future.
-name|void
+name|ObjectBufferStream
+operator|*
 name|emitObject
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|)
+block|;
+name|void
+name|loadObject
 argument_list|(
 name|Module
 operator|*

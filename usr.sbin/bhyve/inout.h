@@ -76,6 +76,9 @@ name|int
 name|port
 decl_stmt|;
 name|int
+name|size
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 name|inout_func_t
@@ -124,7 +127,7 @@ parameter_list|,
 name|handler
 parameter_list|)
 define|\
-value|static struct inout_port __CONCAT(__inout_port, __LINE__) = {	\ 		#name,							\ 		(port),							\ 		(flags),						\ 		(handler),						\ 		0							\ 	};								\ 	DATA_SET(inout_port_set, __CONCAT(__inout_port, __LINE__))
+value|static struct inout_port __CONCAT(__inout_port, __LINE__) = {	\ 		#name,							\ 		(port),							\ 		1,							\ 		(flags),						\ 		(handler),						\ 		0							\ 	};								\ 	DATA_SET(inout_port_set, __CONCAT(__inout_port, __LINE__))
 end_define
 
 begin_function_decl
@@ -169,6 +172,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|register_inout
+parameter_list|(
+name|struct
+name|inout_port
+modifier|*
+name|iop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|unregister_inout
 parameter_list|(
 name|struct
 name|inout_port

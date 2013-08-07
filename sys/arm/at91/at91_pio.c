@@ -2925,7 +2925,7 @@ block|}
 end_function
 
 begin_function
-name|uint8_t
+name|uint32_t
 name|at91_pio_gpio_get
 parameter_list|(
 name|uint32_t
@@ -2951,7 +2951,6 @@ operator|)
 decl_stmt|;
 return|return
 operator|(
-operator|(
 name|PIO
 index|[
 name|PIO_PDSR
@@ -2960,7 +2959,6 @@ literal|4
 index|]
 operator|&
 name|data_mask
-operator|)
 operator|)
 return|;
 block|}

@@ -666,6 +666,9 @@ name|routepr
 parameter_list|(
 name|u_long
 name|rtree
+parameter_list|,
+name|int
+name|fibnum
 parameter_list|)
 block|{
 name|struct
@@ -685,8 +688,6 @@ decl_stmt|;
 name|int
 name|fam
 decl_stmt|,
-name|fibnum
-decl_stmt|,
 name|numfibs
 decl_stmt|;
 name|intsize
@@ -698,6 +699,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fibnum
+operator|==
+operator|-
+literal|1
+operator|&&
 name|sysctlbyname
 argument_list|(
 literal|"net.my_fibnum"
@@ -743,6 +749,27 @@ condition|)
 name|numfibs
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|fibnum
+operator|<
+literal|0
+operator|||
+name|fibnum
+operator|>
+name|numfibs
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%d: invalid fib"
+argument_list|,
+name|fibnum
+argument_list|)
 expr_stmt|;
 name|rt_tables
 operator|=
@@ -799,7 +826,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Routing tables\n"
+literal|"Routing tables"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fibnum
+condition|)
+name|printf
+argument_list|(
+literal|" (fib: %d)"
+argument_list|,
+name|fibnum
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if

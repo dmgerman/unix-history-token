@@ -615,6 +615,10 @@ name|u_int
 name|t_keepcnt
 decl_stmt|;
 comment|/* number of keepalives before close */
+name|u_int
+name|t_tsomax
+decl_stmt|;
+comment|/* tso burst length limit */
 name|uint32_t
 name|t_ispare
 index|[
@@ -1287,6 +1291,24 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Used by tcp_maxmtu() to communicate interface specific features  * and limits at the time of connection setup.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tcp_ifcap
+block|{
+name|int
+name|ifcap
+decl_stmt|;
+name|u_int
+name|tsomax
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1479,401 +1501,401 @@ begin_struct
 struct|struct
 name|tcpstat
 block|{
-name|u_long
+name|uint64_t
 name|tcps_connattempt
 decl_stmt|;
 comment|/* connections initiated */
-name|u_long
+name|uint64_t
 name|tcps_accepts
 decl_stmt|;
 comment|/* connections accepted */
-name|u_long
+name|uint64_t
 name|tcps_connects
 decl_stmt|;
 comment|/* connections established */
-name|u_long
+name|uint64_t
 name|tcps_drops
 decl_stmt|;
 comment|/* connections dropped */
-name|u_long
+name|uint64_t
 name|tcps_conndrops
 decl_stmt|;
 comment|/* embryonic connections dropped */
-name|u_long
+name|uint64_t
 name|tcps_minmssdrops
 decl_stmt|;
 comment|/* average minmss too low drops */
-name|u_long
+name|uint64_t
 name|tcps_closed
 decl_stmt|;
 comment|/* conn. closed (includes drops) */
-name|u_long
+name|uint64_t
 name|tcps_segstimed
 decl_stmt|;
 comment|/* segs where we tried to get rtt */
-name|u_long
+name|uint64_t
 name|tcps_rttupdated
 decl_stmt|;
 comment|/* times we succeeded */
-name|u_long
+name|uint64_t
 name|tcps_delack
 decl_stmt|;
 comment|/* delayed acks sent */
-name|u_long
+name|uint64_t
 name|tcps_timeoutdrop
 decl_stmt|;
 comment|/* conn. dropped in rxmt timeout */
-name|u_long
+name|uint64_t
 name|tcps_rexmttimeo
 decl_stmt|;
 comment|/* retransmit timeouts */
-name|u_long
+name|uint64_t
 name|tcps_persisttimeo
 decl_stmt|;
 comment|/* persist timeouts */
-name|u_long
+name|uint64_t
 name|tcps_keeptimeo
 decl_stmt|;
 comment|/* keepalive timeouts */
-name|u_long
+name|uint64_t
 name|tcps_keepprobe
 decl_stmt|;
 comment|/* keepalive probes sent */
-name|u_long
+name|uint64_t
 name|tcps_keepdrops
 decl_stmt|;
 comment|/* connections dropped in keepalive */
-name|u_long
+name|uint64_t
 name|tcps_sndtotal
 decl_stmt|;
 comment|/* total packets sent */
-name|u_long
+name|uint64_t
 name|tcps_sndpack
 decl_stmt|;
 comment|/* data packets sent */
-name|u_long
+name|uint64_t
 name|tcps_sndbyte
 decl_stmt|;
 comment|/* data bytes sent */
-name|u_long
+name|uint64_t
 name|tcps_sndrexmitpack
 decl_stmt|;
 comment|/* data packets retransmitted */
-name|u_long
+name|uint64_t
 name|tcps_sndrexmitbyte
 decl_stmt|;
 comment|/* data bytes retransmitted */
-name|u_long
+name|uint64_t
 name|tcps_sndrexmitbad
 decl_stmt|;
 comment|/* unnecessary packet retransmissions */
-name|u_long
+name|uint64_t
 name|tcps_sndacks
 decl_stmt|;
 comment|/* ack-only packets sent */
-name|u_long
+name|uint64_t
 name|tcps_sndprobe
 decl_stmt|;
 comment|/* window probes sent */
-name|u_long
+name|uint64_t
 name|tcps_sndurg
 decl_stmt|;
 comment|/* packets sent with URG only */
-name|u_long
+name|uint64_t
 name|tcps_sndwinup
 decl_stmt|;
 comment|/* window update-only packets sent */
-name|u_long
+name|uint64_t
 name|tcps_sndctrl
 decl_stmt|;
 comment|/* control (SYN|FIN|RST) packets sent */
-name|u_long
+name|uint64_t
 name|tcps_rcvtotal
 decl_stmt|;
 comment|/* total packets received */
-name|u_long
+name|uint64_t
 name|tcps_rcvpack
 decl_stmt|;
 comment|/* packets received in sequence */
-name|u_long
+name|uint64_t
 name|tcps_rcvbyte
 decl_stmt|;
 comment|/* bytes received in sequence */
-name|u_long
+name|uint64_t
 name|tcps_rcvbadsum
 decl_stmt|;
 comment|/* packets received with ccksum errs */
-name|u_long
+name|uint64_t
 name|tcps_rcvbadoff
 decl_stmt|;
 comment|/* packets received with bad offset */
-name|u_long
+name|uint64_t
 name|tcps_rcvmemdrop
 decl_stmt|;
 comment|/* packets dropped for lack of memory */
-name|u_long
+name|uint64_t
 name|tcps_rcvshort
 decl_stmt|;
 comment|/* packets received too short */
-name|u_long
+name|uint64_t
 name|tcps_rcvduppack
 decl_stmt|;
 comment|/* duplicate-only packets received */
-name|u_long
+name|uint64_t
 name|tcps_rcvdupbyte
 decl_stmt|;
 comment|/* duplicate-only bytes received */
-name|u_long
+name|uint64_t
 name|tcps_rcvpartduppack
 decl_stmt|;
 comment|/* packets with some duplicate data */
-name|u_long
+name|uint64_t
 name|tcps_rcvpartdupbyte
 decl_stmt|;
 comment|/* dup. bytes in part-dup. packets */
-name|u_long
+name|uint64_t
 name|tcps_rcvoopack
 decl_stmt|;
 comment|/* out-of-order packets received */
-name|u_long
+name|uint64_t
 name|tcps_rcvoobyte
 decl_stmt|;
 comment|/* out-of-order bytes received */
-name|u_long
+name|uint64_t
 name|tcps_rcvpackafterwin
 decl_stmt|;
 comment|/* packets with data after window */
-name|u_long
+name|uint64_t
 name|tcps_rcvbyteafterwin
 decl_stmt|;
 comment|/* bytes rcvd after window */
-name|u_long
+name|uint64_t
 name|tcps_rcvafterclose
 decl_stmt|;
 comment|/* packets rcvd after "close" */
-name|u_long
+name|uint64_t
 name|tcps_rcvwinprobe
 decl_stmt|;
 comment|/* rcvd window probe packets */
-name|u_long
+name|uint64_t
 name|tcps_rcvdupack
 decl_stmt|;
 comment|/* rcvd duplicate acks */
-name|u_long
+name|uint64_t
 name|tcps_rcvacktoomuch
 decl_stmt|;
 comment|/* rcvd acks for unsent data */
-name|u_long
+name|uint64_t
 name|tcps_rcvackpack
 decl_stmt|;
 comment|/* rcvd ack packets */
-name|u_long
+name|uint64_t
 name|tcps_rcvackbyte
 decl_stmt|;
 comment|/* bytes acked by rcvd acks */
-name|u_long
+name|uint64_t
 name|tcps_rcvwinupd
 decl_stmt|;
 comment|/* rcvd window update packets */
-name|u_long
+name|uint64_t
 name|tcps_pawsdrop
 decl_stmt|;
 comment|/* segments dropped due to PAWS */
-name|u_long
+name|uint64_t
 name|tcps_predack
 decl_stmt|;
 comment|/* times hdr predict ok for acks */
-name|u_long
+name|uint64_t
 name|tcps_preddat
 decl_stmt|;
 comment|/* times hdr predict ok for data pkts */
-name|u_long
+name|uint64_t
 name|tcps_pcbcachemiss
 decl_stmt|;
-name|u_long
+name|uint64_t
 name|tcps_cachedrtt
 decl_stmt|;
 comment|/* times cached RTT in route updated */
-name|u_long
+name|uint64_t
 name|tcps_cachedrttvar
 decl_stmt|;
 comment|/* times cached rttvar updated */
-name|u_long
+name|uint64_t
 name|tcps_cachedssthresh
 decl_stmt|;
 comment|/* times cached ssthresh updated */
-name|u_long
+name|uint64_t
 name|tcps_usedrtt
 decl_stmt|;
 comment|/* times RTT initialized from route */
-name|u_long
+name|uint64_t
 name|tcps_usedrttvar
 decl_stmt|;
 comment|/* times RTTVAR initialized from rt */
-name|u_long
+name|uint64_t
 name|tcps_usedssthresh
 decl_stmt|;
 comment|/* times ssthresh initialized from rt*/
-name|u_long
+name|uint64_t
 name|tcps_persistdrop
 decl_stmt|;
 comment|/* timeout in persist state */
-name|u_long
+name|uint64_t
 name|tcps_badsyn
 decl_stmt|;
 comment|/* bogus SYN, e.g. premature ACK */
-name|u_long
+name|uint64_t
 name|tcps_mturesent
 decl_stmt|;
 comment|/* resends due to MTU discovery */
-name|u_long
+name|uint64_t
 name|tcps_listendrop
 decl_stmt|;
 comment|/* listen queue overflows */
-name|u_long
+name|uint64_t
 name|tcps_badrst
 decl_stmt|;
 comment|/* ignored RSTs in the window */
-name|u_long
+name|uint64_t
 name|tcps_sc_added
 decl_stmt|;
 comment|/* entry added to syncache */
-name|u_long
+name|uint64_t
 name|tcps_sc_retransmitted
 decl_stmt|;
 comment|/* syncache entry was retransmitted */
-name|u_long
+name|uint64_t
 name|tcps_sc_dupsyn
 decl_stmt|;
 comment|/* duplicate SYN packet */
-name|u_long
+name|uint64_t
 name|tcps_sc_dropped
 decl_stmt|;
 comment|/* could not reply to packet */
-name|u_long
+name|uint64_t
 name|tcps_sc_completed
 decl_stmt|;
 comment|/* successful extraction of entry */
-name|u_long
+name|uint64_t
 name|tcps_sc_bucketoverflow
 decl_stmt|;
 comment|/* syncache per-bucket limit hit */
-name|u_long
+name|uint64_t
 name|tcps_sc_cacheoverflow
 decl_stmt|;
 comment|/* syncache cache limit hit */
-name|u_long
+name|uint64_t
 name|tcps_sc_reset
 decl_stmt|;
 comment|/* RST removed entry from syncache */
-name|u_long
+name|uint64_t
 name|tcps_sc_stale
 decl_stmt|;
 comment|/* timed out or listen socket gone */
-name|u_long
+name|uint64_t
 name|tcps_sc_aborted
 decl_stmt|;
 comment|/* syncache entry aborted */
-name|u_long
+name|uint64_t
 name|tcps_sc_badack
 decl_stmt|;
 comment|/* removed due to bad ACK */
-name|u_long
+name|uint64_t
 name|tcps_sc_unreach
 decl_stmt|;
 comment|/* ICMP unreachable received */
-name|u_long
+name|uint64_t
 name|tcps_sc_zonefail
 decl_stmt|;
 comment|/* zalloc() failed */
-name|u_long
+name|uint64_t
 name|tcps_sc_sendcookie
 decl_stmt|;
 comment|/* SYN cookie sent */
-name|u_long
+name|uint64_t
 name|tcps_sc_recvcookie
 decl_stmt|;
 comment|/* SYN cookie received */
-name|u_long
+name|uint64_t
 name|tcps_hc_added
 decl_stmt|;
 comment|/* entry added to hostcache */
-name|u_long
+name|uint64_t
 name|tcps_hc_bucketoverflow
 decl_stmt|;
 comment|/* hostcache per bucket limit hit */
-name|u_long
+name|uint64_t
 name|tcps_finwait2_drops
 decl_stmt|;
 comment|/* Drop FIN_WAIT_2 connection after time limit */
 comment|/* SACK related stats */
-name|u_long
+name|uint64_t
 name|tcps_sack_recovery_episode
 decl_stmt|;
 comment|/* SACK recovery episodes */
-name|u_long
+name|uint64_t
 name|tcps_sack_rexmits
 decl_stmt|;
 comment|/* SACK rexmit segments   */
-name|u_long
+name|uint64_t
 name|tcps_sack_rexmit_bytes
 decl_stmt|;
 comment|/* SACK rexmit bytes      */
-name|u_long
+name|uint64_t
 name|tcps_sack_rcv_blocks
 decl_stmt|;
 comment|/* SACK blocks (options) received */
-name|u_long
+name|uint64_t
 name|tcps_sack_send_blocks
 decl_stmt|;
 comment|/* SACK blocks (options) sent     */
-name|u_long
+name|uint64_t
 name|tcps_sack_sboverflow
 decl_stmt|;
 comment|/* times scoreboard overflowed */
 comment|/* ECN related stats */
-name|u_long
+name|uint64_t
 name|tcps_ecn_ce
 decl_stmt|;
 comment|/* ECN Congestion Experienced */
-name|u_long
+name|uint64_t
 name|tcps_ecn_ect0
 decl_stmt|;
 comment|/* ECN Capable Transport */
-name|u_long
+name|uint64_t
 name|tcps_ecn_ect1
 decl_stmt|;
 comment|/* ECN Capable Transport */
-name|u_long
+name|uint64_t
 name|tcps_ecn_shs
 decl_stmt|;
 comment|/* ECN successful handshakes */
-name|u_long
+name|uint64_t
 name|tcps_ecn_rcwnd
 decl_stmt|;
 comment|/* # times ECN reduced the cwnd */
 comment|/* TCP_SIGNATURE related stats */
-name|u_long
+name|uint64_t
 name|tcps_sig_rcvgoodsig
 decl_stmt|;
 comment|/* Total matching signature received */
-name|u_long
+name|uint64_t
 name|tcps_sig_rcvbadsig
 decl_stmt|;
 comment|/* Total bad signature received */
-name|u_long
+name|uint64_t
 name|tcps_sig_err_buildsig
 decl_stmt|;
 comment|/* Mismatching signature received */
-name|u_long
+name|uint64_t
 name|tcps_sig_err_sigopt
 decl_stmt|;
 comment|/* No signature expected by socket */
-name|u_long
+name|uint64_t
 name|tcps_sig_err_nosigopt
 decl_stmt|;
 comment|/* No signature provided by segment */
-name|u_long
+name|uint64_t
 name|_pad
 index|[
 literal|12
@@ -1890,6 +1912,27 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|tcpstat
+argument_list|,
+name|tcpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* tcp statistics */
+end_comment
+
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
 end_comment
@@ -1903,7 +1946,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_tcpstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct tcpstat, tcpstat, name, (val))
 end_define
 
 begin_define
@@ -1938,7 +1982,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_tcpstat_inc(offsetof(struct tcpstat, name) / sizeof(u_long))
+value|kmod_tcpstat_inc(offsetof(struct tcpstat, name) / sizeof(uint64_t))
 end_define
 
 begin_comment
@@ -2334,21 +2378,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|tcpstat
-argument_list|,
-name|tcpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* tcp statistics */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2472,13 +2501,6 @@ define|#
 directive|define
 name|V_tcbinfo
 value|VNET(tcbinfo)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_tcpstat
-value|VNET(tcpstat)
 end_define
 
 begin_define
@@ -2966,7 +2988,8 @@ name|struct
 name|in_conninfo
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2980,7 +3003,8 @@ name|struct
 name|in_conninfo
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3002,7 +3026,8 @@ name|struct
 name|hc_metrics_lite
 modifier|*
 parameter_list|,
-name|int
+name|struct
+name|tcp_ifcap
 modifier|*
 parameter_list|)
 function_decl|;

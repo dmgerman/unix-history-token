@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP common peer/server definitions  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP common peer/server definitions  * Copyright (c) 2004-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,22 @@ include|#
 directive|include
 file|"wpabuf.h"
 end_include
+
+begin_function_decl
+name|int
+name|eap_hdr_len_valid
+parameter_list|(
+specifier|const
+name|struct
+name|wpabuf
+modifier|*
+name|msg
+parameter_list|,
+name|size_t
+name|min_payload
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const

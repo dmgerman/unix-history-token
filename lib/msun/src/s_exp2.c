@@ -53,10 +53,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|huge
-init|=
-literal|0x1p1000
-decl_stmt|,
 name|redux
 init|=
 literal|0x1
@@ -107,6 +103,10 @@ begin_decl_stmt
 specifier|static
 specifier|volatile
 name|double
+name|huge
+init|=
+literal|0x1p1000
+decl_stmt|,
 name|twom1000
 init|=
 literal|0x1p

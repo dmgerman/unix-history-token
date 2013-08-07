@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011, Bryan Venteicher<bryanv@daemoninthecloset.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2011, Bryan Venteicher<bryanv@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -198,9 +198,9 @@ argument_list|)
 name|vtballoon_pages
 expr_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|vtballoon_kproc
+name|vtballoon_td
 decl_stmt|;
 name|uint32_t
 modifier|*
@@ -308,7 +308,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|vtballoon_vq_intr
 parameter_list|(
 name|void
@@ -519,7 +519,7 @@ name|_sc
 parameter_list|,
 name|_name
 parameter_list|)
-value|mtx_init(VTBALLOON_MTX((_sc)), _name, \ 					    "VirtIO Balloon Lock", MTX_SPIN)
+value|mtx_init(VTBALLOON_MTX((_sc)), _name, \ 					    "VirtIO Balloon Lock", MTX_DEF)
 end_define
 
 begin_define
@@ -529,7 +529,7 @@ name|VTBALLOON_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_lock_spin(VTBALLOON_MTX((_sc)))
+value|mtx_lock(VTBALLOON_MTX((_sc)))
 end_define
 
 begin_define
@@ -539,7 +539,7 @@ name|VTBALLOON_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock_spin(VTBALLOON_MTX((_sc)))
+value|mtx_unlock(VTBALLOON_MTX((_sc)))
 end_define
 
 begin_define
@@ -861,16 +861,18 @@ goto|;
 block|}
 name|error
 operator|=
-name|kproc_create
+name|kthread_add
 argument_list|(
 name|vtballoon_thread
 argument_list|,
 name|sc
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 argument_list|,
 literal|0
 argument_list|,
@@ -888,7 +890,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot create balloon kproc\n"
+literal|"cannot create balloon kthread\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -953,7 +955,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 operator|!=
 name|NULL
 condition|)
@@ -974,16 +976,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|msleep_spin
+name|msleep
 argument_list|(
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 argument_list|,
 name|VTBALLOON_MTX
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"vtbdth"
 argument_list|,
@@ -997,7 +1001,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|vtballoon_kproc
+name|vtballoon_td
 operator|=
 name|NULL
 expr_stmt|;
@@ -1251,7 +1255,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vtballoon_vq_intr
 parameter_list|(
 name|void
@@ -1283,11 +1287,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -1322,10 +1321,6 @@ name|sc
 operator|->
 name|vtballoon_inflate_vq
 expr_stmt|;
-name|m
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|npages
@@ -1335,17 +1330,6 @@ condition|)
 name|npages
 operator|=
 name|VTBALLOON_PAGES_PER_REQUEST
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|npages
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"balloon doesn't need inflating?"
-operator|)
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1374,7 +1358,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|sc
+operator|->
+name|vtballoon_timeout
+operator|=
+name|VTBALLOON_LOWMEM_TIMEOUT
+expr_stmt|;
 break|break;
+block|}
 name|sc
 operator|->
 name|vtballoon_page_frames
@@ -1398,7 +1390,11 @@ operator|==
 name|PQ_NONE
 argument_list|,
 operator|(
-literal|"allocated page on queue"
+literal|"%s: allocated page %p on queue"
+operator|,
+name|__func__
+operator|,
+name|m
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1429,18 +1425,6 @@ name|vq
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-name|sc
-operator|->
-name|vtballoon_timeout
-operator|=
-name|VTBALLOON_LOWMEM_TIMEOUT
 expr_stmt|;
 block|}
 end_function
@@ -1499,17 +1483,6 @@ name|npages
 operator|=
 name|VTBALLOON_PAGES_PER_REQUEST
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|npages
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"balloon doesn't need deflating?"
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1541,7 +1514,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"no more pages to deflate"
+literal|"%s: no more pages to deflate"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1669,7 +1644,13 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"balloon empty?"
+literal|"%s: bogus page count %d"
+operator|,
+name|__func__
+operator|,
+name|sc
+operator|->
+name|vtballoon_current_npages
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1806,7 +1787,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|msleep_spin
+name|msleep
 argument_list|(
 name|sc
 argument_list|,
@@ -1814,6 +1795,8 @@ name|VTBALLOON_MTX
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"vtbspf"
 argument_list|,
@@ -2169,7 +2152,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|msleep_spin
+name|msleep
 argument_list|(
 name|sc
 argument_list|,
@@ -2177,6 +2160,8 @@ name|VTBALLOON_MTX
 argument_list|(
 name|sc
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"vtbslp"
 argument_list|,
@@ -2288,10 +2273,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
+name|kthread_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function

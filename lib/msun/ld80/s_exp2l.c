@@ -58,6 +58,12 @@ directive|include
 file|"math.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"math_private.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -79,45 +85,15 @@ name|BIAS
 value|(LDBL_MAX_EXP - 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|EXPMASK
-value|(BIAS + LDBL_MAX_EXP)
-end_define
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|long
-name|double
-name|huge
-init|=
-literal|0x1p10000L
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX Prevent gcc from erroneously constant folding this. */
-end_comment
-
-begin_else
-unit|static const long double twom10000 = 0x1p-10000L;
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 specifier|volatile
 name|long
 name|double
+name|huge
+init|=
+literal|0x1p10000L
+decl_stmt|,
 name|twom10000
 init|=
 literal|0x1p
@@ -126,10 +102,24 @@ literal|10000L
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+specifier|const
+name|union
+name|IEEEl2bits
+name|P1
+init|=
+name|LD80C
+argument_list|(
+literal|0xb17217f7d1cf79ac
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|6.93147180559945309429e-1L
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -142,51 +132,36 @@ literal|.8p63
 operator|/
 name|TBLSIZE
 decl_stmt|,
-name|P1
-init|=
-literal|0x1
-literal|.62e42fefa39efp
-operator|-
-literal|1
-decl_stmt|,
+comment|/*  * Domain [-0.00390625, 0.00390625], range ~[-1.7079e-23, 1.7079e-23]  * |exp(x) - p(x)|< 2**-75.6  */
 name|P2
 init|=
-literal|0x1
-operator|.
-name|ebfbdff82c58fp
-operator|-
-literal|3
+literal|2.4022650695910072e-1
 decl_stmt|,
+comment|/*  0x1ebfbdff82c58f.0p-55 */
 name|P3
 init|=
-literal|0x1
-operator|.
-name|c6b08d7049fap
-operator|-
-literal|5
+literal|5.5504108664816879e-2
 decl_stmt|,
+comment|/*  0x1c6b08d7049e1a.0p-57 */
 name|P4
 init|=
-literal|0x1
-literal|.3b2ab6fba4da5p
-operator|-
-literal|7
+literal|9.6181291055695180e-3
 decl_stmt|,
+comment|/*  0x13b2ab6fa8321a.0p-59 */
 name|P5
 init|=
-literal|0x1
-literal|.5d8804780a736p
-operator|-
-literal|10
+literal|1.3333563089183052e-3
 decl_stmt|,
+comment|/*  0x15d8806f67f251.0p-62 */
 name|P6
 init|=
-literal|0x1
-literal|.430918835e33dp
-operator|-
-literal|13
+literal|1.5413361552277414e-4
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  0x1433ddacff3441.0p-65 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1632,7 +1607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * exp2l(x): compute the base 2 exponential of x  *  * Accuracy: Peak error< 0.511 ulp.  *  * Method: (equally-spaced tables)  *  *   Reduce x:  *     x = 2**k + y, for integer k and |y|<= 1/2.  *     Thus we have exp2l(x) = 2**k * exp2(y).  *  *   Reduce y:  *     y = i/TBLSIZE + z for integer i near y * TBLSIZE.  *     Thus we have exp2(y) = exp2(i/TBLSIZE) * exp2(z),  *     with |z|<= 2**-(TBLBITS+1).  *  *   We compute exp2(i/TBLSIZE) via table lookup and exp2(z) via a  *   degree-6 minimax polynomial with maximum error under 2**-69.  *   The table entries each have 104 bits of accuracy, encoded as  *   a pair of double precision values.  */
+comment|/**  * Compute the base 2 exponential of x for Intel 80-bit format.  *  * Accuracy: Peak error< 0.511 ulp.  *  * Method: (equally-spaced tables)  *  *   Reduce x:  *     x = 2**k + y, for integer k and |y|<= 1/2.  *     Thus we have exp2l(x) = 2**k * exp2(y).  *  *   Reduce y:  *     y = i/TBLSIZE + z for integer i near y * TBLSIZE.  *     Thus we have exp2(y) = exp2(i/TBLSIZE) * exp2(z),  *     with |z|<= 2**-(TBLBITS+1).  *  *   We compute exp2(i/TBLSIZE) via table lookup and exp2(z) via a  *   degree-6 minimax polynomial with maximum error under 2**-75.6.  *   The table entries each have 104 bits of accuracy, encoded as  *   a pair of double precision values.  */
 end_comment
 
 begin_function
@@ -1690,7 +1665,7 @@ name|ix
 operator|=
 name|hx
 operator|&
-name|EXPMASK
+literal|0x7fff
 expr_stmt|;
 if|if
 condition|(
@@ -1713,24 +1688,26 @@ condition|)
 block|{
 if|if
 condition|(
+name|hx
+operator|&
+literal|0x8000
+operator|&&
 name|u
 operator|.
 name|xbits
 operator|.
 name|man
-operator|!=
+operator|==
 literal|1ULL
 operator|<<
 literal|63
-operator|||
-operator|(
-name|hx
-operator|&
-literal|0x8000
-operator|)
-operator|==
-literal|0
 condition|)
+return|return
+operator|(
+literal|0.0L
+operator|)
+return|;
+comment|/* x is -Inf */
 return|return
 operator|(
 name|x
@@ -1738,14 +1715,7 @@ operator|+
 name|x
 operator|)
 return|;
-comment|/* x is +Inf or NaN */
-else|else
-return|return
-operator|(
-literal|0.0
-operator|)
-return|;
-comment|/* x is -Inf */
+comment|/* x is +Inf, NaN or unsupported */
 block|}
 if|if
 condition|(
@@ -1787,36 +1757,19 @@ operator|-
 literal|66
 condition|)
 block|{
-comment|/* |x|< 0x1p-66 */
+comment|/* |x|< 0x1p-65 (includes pseudos) */
 return|return
 operator|(
-literal|1.0
+literal|1.0L
 operator|+
 name|x
 operator|)
 return|;
+comment|/* 1 with inexact */
 block|}
-ifdef|#
-directive|ifdef
-name|__i386__
-comment|/* 	 * The default precision on i386 is 53 bits, so long doubles are 	 * broken. Call exp2() to get an accurate (double precision) result. 	 */
-if|if
-condition|(
-name|fpgetprec
+name|ENTERI
 argument_list|()
-operator|!=
-name|FP_PE
-condition|)
-return|return
-operator|(
-name|exp2
-argument_list|(
-name|x
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
+expr_stmt|;
 comment|/* 	 * Reduce x, computing z, i0, and k. The low bits of x + redux 	 * contain the 16-bit integer part of the exponent (k) followed by 	 * TBLBITS fractional bits (i0). We use bit tricks to extract these 	 * as integers, then set z to the remainder. 	 * 	 * Example: Suppose x is 0xabc.123456p0 and TBLBITS is 8. 	 * Then the low-order word of x + redux is 0x000abc12, 	 * We split this into k = 0xabc and i0 = 0x12 (adjusted to 	 * index into the table), then we compute z = 0x0.003456p0. 	 * 	 * XXX If the exponent is negative, the computation of k depends on 	 *     '>>' doing sign extension. 	 */
 name|u
 operator|.
@@ -1898,9 +1851,7 @@ name|xbits
 operator|.
 name|expsign
 operator|=
-name|LDBL_MAX_EXP
-operator|-
-literal|1
+name|BIAS
 operator|+
 name|k
 expr_stmt|;
@@ -1919,9 +1870,7 @@ name|xbits
 operator|.
 name|expsign
 operator|=
-name|LDBL_MAX_EXP
-operator|-
-literal|1
+name|BIAS
 operator|+
 name|k
 operator|+
@@ -1955,7 +1904,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* XXX This gives> 1 ulp errors outside of FE_TONEAREST mode */
 name|r
 operator|=
 name|t_lo
@@ -1970,6 +1918,8 @@ name|z
 operator|*
 operator|(
 name|P1
+operator|.
+name|e
 operator|+
 name|z
 operator|*
@@ -2016,34 +1966,34 @@ name|k
 operator|==
 name|LDBL_MAX_EXP
 condition|)
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|r
 operator|*
 literal|2.0
 operator|*
 literal|0x1p16383L
-operator|)
-return|;
-return|return
-operator|(
+argument_list|)
+expr_stmt|;
+name|RETURNI
+argument_list|(
 name|r
 operator|*
 name|twopk
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-return|return
-operator|(
+name|RETURNI
+argument_list|(
 name|r
 operator|*
 name|twopkp10000
 operator|*
 name|twom10000
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

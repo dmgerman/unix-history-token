@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Event loop based on Windows events and WaitForMultipleObjects  * Copyright (c) 2002-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Event loop based on Windows events and WaitForMultipleObjects  * Copyright (c) 2002-2006, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -342,7 +342,7 @@ literal|0
 return|;
 name|n
 operator|=
-name|os_realloc
+name|os_realloc_array
 argument_list|(
 name|eloop
 operator|.
@@ -353,7 +353,7 @@ operator|.
 name|num_handles
 operator|*
 literal|2
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|eloop
@@ -486,20 +486,18 @@ return|;
 block|}
 name|tmp
 operator|=
-name|os_realloc
+name|os_realloc_array
 argument_list|(
 name|eloop
 operator|.
 name|readers
 argument_list|,
-operator|(
 name|eloop
 operator|.
 name|reader_count
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -850,20 +848,18 @@ literal|1
 return|;
 name|tmp
 operator|=
-name|os_realloc
+name|os_realloc_array
 argument_list|(
 name|eloop
 operator|.
 name|events
 argument_list|,
-operator|(
 name|eloop
 operator|.
 name|event_count
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1116,6 +1112,9 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
+name|os_time_t
+name|now_sec
+decl_stmt|;
 name|timeout
 operator|=
 name|os_malloc
@@ -1145,6 +1144,14 @@ operator|->
 name|time
 argument_list|)
 expr_stmt|;
+name|now_sec
+operator|=
+name|timeout
+operator|->
+name|time
+operator|.
+name|sec
+expr_stmt|;
 name|timeout
 operator|->
 name|time
@@ -1153,6 +1160,37 @@ name|sec
 operator|+=
 name|secs
 expr_stmt|;
+if|if
+condition|(
+name|timeout
+operator|->
+name|time
+operator|.
+name|sec
+operator|<
+name|now_sec
+condition|)
+block|{
+comment|/* 		 * Integer overflow - assume long enough timeout to be assumed 		 * to be infinite, i.e., the timeout would never happen. 		 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"ELOOP: Too long timeout (secs=%u) to "
+literal|"ever happen - ignore it"
+argument_list|,
+name|secs
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|timeout
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|timeout
 operator|->
 name|time
@@ -1709,20 +1747,18 @@ name|tmp
 decl_stmt|;
 name|tmp
 operator|=
-name|os_realloc
+name|os_realloc_array
 argument_list|(
 name|eloop
 operator|.
 name|signals
 argument_list|,
-operator|(
 name|eloop
 operator|.
 name|signal_count
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct

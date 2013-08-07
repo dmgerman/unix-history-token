@@ -15,6 +15,12 @@ directive|define
 name|_FTS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -38,7 +44,7 @@ modifier|*
 name|fts_array
 decl_stmt|;
 comment|/* sort array */
-name|dev_t
+name|__dev_t
 name|fts_dev
 decl_stmt|;
 comment|/* starting device # */
@@ -51,11 +57,11 @@ name|int
 name|fts_rfd
 decl_stmt|;
 comment|/* fd for root */
-name|size_t
+name|__size_t
 name|fts_pathlen
 decl_stmt|;
 comment|/* sizeof(path) */
-name|size_t
+name|__size_t
 name|fts_nitems
 decl_stmt|;
 comment|/* elements in the sort array */
@@ -206,23 +212,23 @@ name|int
 name|fts_symfd
 decl_stmt|;
 comment|/* fd for symlink */
-name|size_t
+name|__size_t
 name|fts_pathlen
 decl_stmt|;
 comment|/* strlen(fts_path) */
-name|size_t
+name|__size_t
 name|fts_namelen
 decl_stmt|;
 comment|/* strlen(fts_name) */
-name|ino_t
+name|__ino_t
 name|fts_ino
 decl_stmt|;
 comment|/* inode */
-name|dev_t
+name|__dev_t
 name|fts_dev
 decl_stmt|;
 comment|/* device */
-name|nlink_t
+name|__nlink_t
 name|fts_nlink
 decl_stmt|;
 comment|/* link count */

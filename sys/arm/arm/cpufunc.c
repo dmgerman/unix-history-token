@@ -4460,6 +4460,10 @@ if|if
 condition|(
 name|cputype
 operator|==
+name|CPU_ID_CORTEXA7
+operator|||
+name|cputype
+operator|==
 name|CPU_ID_CORTEXA8R1
 operator|||
 name|cputype
@@ -4477,6 +4481,14 @@ operator|||
 name|cputype
 operator|==
 name|CPU_ID_CORTEXA9R2
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA9R3
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_CORTEXA15
 condition|)
 block|{
 name|cpufuncs

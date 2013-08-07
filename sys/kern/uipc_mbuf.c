@@ -3169,18 +3169,6 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|top
-operator|==
-name|NULL
-condition|)
-name|mbstat
-operator|.
-name|m_mcfail
-operator|++
-expr_stmt|;
-comment|/* XXX: No consistency. */
 return|return
 operator|(
 name|top
@@ -3193,12 +3181,6 @@ argument_list|(
 name|top
 argument_list|)
 expr_stmt|;
-name|mbstat
-operator|.
-name|m_mcfail
-operator|++
-expr_stmt|;
-comment|/* XXX: No consistency. */
 return|return
 operator|(
 name|NULL
@@ -4448,12 +4430,6 @@ argument_list|(
 name|top
 argument_list|)
 expr_stmt|;
-name|mbstat
-operator|.
-name|m_mcfail
-operator|++
-expr_stmt|;
-comment|/* XXX: No consistency. */
 return|return
 operator|(
 name|NULL
@@ -4966,12 +4942,6 @@ argument_list|(
 name|top
 argument_list|)
 expr_stmt|;
-name|mbstat
-operator|.
-name|m_mcfail
-operator|++
-expr_stmt|;
-comment|/* XXX: No consistency. */
 return|return
 operator|(
 name|NULL
@@ -5687,12 +5657,6 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|mbstat
-operator|.
-name|m_mpfail
-operator|++
-expr_stmt|;
-comment|/* XXX: No consistency. */
 return|return
 operator|(
 name|NULL

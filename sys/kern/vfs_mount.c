@@ -1048,7 +1048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If a mount option is specified several times,  * (with or without the "no" prefix) only keep  * the last occurence of it.  */
+comment|/*  * If a mount option is specified several times,  * (with or without the "no" prefix) only keep  * the last occurrence of it.  */
 end_comment
 
 begin_function
@@ -4368,14 +4368,25 @@ argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
-name|newdp
+name|vp
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|vfs_mounted
+argument_list|,
+name|mp
+argument_list|,
+name|newdp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
-name|vp
+name|newdp
 argument_list|,
 literal|0
 argument_list|)
@@ -6799,6 +6810,15 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|vfs_unmounted
+argument_list|,
+name|mp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if

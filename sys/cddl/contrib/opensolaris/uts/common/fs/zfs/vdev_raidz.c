@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ file|<sys/fm/fs/zfs.h>
 end_include
 
 begin_comment
-comment|/*  * Virtual device vector for RAID-Z.  *  * This vdev supports single, double, and triple parity. For single parity,  * we use a simple XOR of all the data columns. For double or triple parity,  * we use a special case of Reed-Solomon coding. This extends the  * technique described in "The mathematics of RAID-6" by H. Peter Anvin by  * drawing on the system described in "A Tutorial on Reed-Solomon Coding for  * Fault-Tolerance in RAID-like Systems" by James S. Plank on which the  * former is also based. The latter is designed to provide higher performance  * for writes.  *  * Note that the Plank paper claimed to support arbitrary N+M, but was then  * amended six years later identifying a critical flaw that invalidates its  * claims. Nevertheless, the technique can be adapted to work for up to  * triple parity. For additional parity, the amendment "Note: Correction to  * the 1997 Tutorial on Reed-Solomon Coding" by James S. Plank and Ying Ding  * is viable, but the additional complexity means that write performance will  * suffer.  *  * All of the methods above operate on a Galois field, defined over the  * integers mod 2^N. In our case we choose N=8 for GF(8) so that all elements  * can be expressed with a single byte. Briefly, the operations on the  * field are defined as follows:  *  *   o addition (+) is represented by a bitwise XOR  *   o subtraction (-) is therefore identical to addition: A + B = A - B  *   o multiplication of A by 2 is defined by the following bitwise expression:  *	(A * 2)_7 = A_6  *	(A * 2)_6 = A_5  *	(A * 2)_5 = A_4  *	(A * 2)_4 = A_3 + A_7  *	(A * 2)_3 = A_2 + A_7  *	(A * 2)_2 = A_1 + A_7  *	(A * 2)_1 = A_0  *	(A * 2)_0 = A_7  *  * In C, multiplying by 2 is therefore ((a<< 1) ^ ((a& 0x80) ? 0x1d : 0)).  * As an aside, this multiplication is derived from the error correcting  * primitive polynomial x^8 + x^4 + x^3 + x^2 + 1.  *  * Observe that any number in the field (except for 0) can be expressed as a  * power of 2 -- a generator for the field. We store a table of the powers of  * 2 and logs base 2 for quick look ups, and exploit the fact that A * B can  * be rewritten as 2^(log_2(A) + log_2(B)) (where '+' is normal addition rather  * than field addition). The inverse of a field element A (A^-1) is therefore  * A ^ (255 - 1) = A^254.  *  * The up-to-three parity columns, P, Q, R over several data columns,  * D_0, ... D_n-1, can be expressed by field operations:  *  *	P = D_0 + D_1 + ... + D_n-2 + D_n-1  *	Q = 2^n-1 * D_0 + 2^n-2 * D_1 + ... + 2^1 * D_n-2 + 2^0 * D_n-1  *	  = ((...((D_0) * 2 + D_1) * 2 + ...) * 2 + D_n-2) * 2 + D_n-1  *	R = 4^n-1 * D_0 + 4^n-2 * D_1 + ... + 4^1 * D_n-2 + 4^0 * D_n-1  *	  = ((...((D_0) * 4 + D_1) * 4 + ...) * 4 + D_n-2) * 4 + D_n-1  *  * We chose 1, 2, and 4 as our generators because 1 corresponds to the trival  * XOR operation, and 2 and 4 can be computed quickly and generate linearly-  * independent coefficients. (There are no additional coefficients that have  * this property which is why the uncorrected Plank method breaks down.)  *  * See the reconstruction code below for how P, Q and R can used individually  * or in concert to recover missing data columns.  */
+comment|/*  * Virtual device vector for RAID-Z.  *  * This vdev supports single, double, and triple parity. For single parity,  * we use a simple XOR of all the data columns. For double or triple parity,  * we use a special case of Reed-Solomon coding. This extends the  * technique described in "The mathematics of RAID-6" by H. Peter Anvin by  * drawing on the system described in "A Tutorial on Reed-Solomon Coding for  * Fault-Tolerance in RAID-like Systems" by James S. Plank on which the  * former is also based. The latter is designed to provide higher performance  * for writes.  *  * Note that the Plank paper claimed to support arbitrary N+M, but was then  * amended six years later identifying a critical flaw that invalidates its  * claims. Nevertheless, the technique can be adapted to work for up to  * triple parity. For additional parity, the amendment "Note: Correction to  * the 1997 Tutorial on Reed-Solomon Coding" by James S. Plank and Ying Ding  * is viable, but the additional complexity means that write performance will  * suffer.  *  * All of the methods above operate on a Galois field, defined over the  * integers mod 2^N. In our case we choose N=8 for GF(8) so that all elements  * can be expressed with a single byte. Briefly, the operations on the  * field are defined as follows:  *  *   o addition (+) is represented by a bitwise XOR  *   o subtraction (-) is therefore identical to addition: A + B = A - B  *   o multiplication of A by 2 is defined by the following bitwise expression:  *  *	(A * 2)_7 = A_6  *	(A * 2)_6 = A_5  *	(A * 2)_5 = A_4  *	(A * 2)_4 = A_3 + A_7  *	(A * 2)_3 = A_2 + A_7  *	(A * 2)_2 = A_1 + A_7  *	(A * 2)_1 = A_0  *	(A * 2)_0 = A_7  *  * In C, multiplying by 2 is therefore ((a<< 1) ^ ((a& 0x80) ? 0x1d : 0)).  * As an aside, this multiplication is derived from the error correcting  * primitive polynomial x^8 + x^4 + x^3 + x^2 + 1.  *  * Observe that any number in the field (except for 0) can be expressed as a  * power of 2 -- a generator for the field. We store a table of the powers of  * 2 and logs base 2 for quick look ups, and exploit the fact that A * B can  * be rewritten as 2^(log_2(A) + log_2(B)) (where '+' is normal addition rather  * than field addition). The inverse of a field element A (A^-1) is therefore  * A ^ (255 - 1) = A^254.  *  * The up-to-three parity columns, P, Q, R over several data columns,  * D_0, ... D_n-1, can be expressed by field operations:  *  *	P = D_0 + D_1 + ... + D_n-2 + D_n-1  *	Q = 2^n-1 * D_0 + 2^n-2 * D_1 + ... + 2^1 * D_n-2 + 2^0 * D_n-1  *	  = ((...((D_0) * 2 + D_1) * 2 + ...) * 2 + D_n-2) * 2 + D_n-1  *	R = 4^n-1 * D_0 + 4^n-2 * D_1 + ... + 4^1 * D_n-2 + 4^0 * D_n-1  *	  = ((...((D_0) * 4 + D_1) * 4 + ...) * 4 + D_n-2) * 4 + D_n-1  *  * We chose 1, 2, and 4 as our generators because 1 corresponds to the trival  * XOR operation, and 2 and 4 can be computed quickly and generate linearly-  * independent coefficients. (There are no additional coefficients that have  * this property which is why the uncorrected Plank method breaks down.)  *  * See the reconstruction code below for how P, Q and R can used individually  * or in concert to recover missing data columns.  */
 end_comment
 
 begin_typedef
@@ -249,7 +249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These two tables represent powers and logs of 2 in the Galois field defined  * above. These values were computed by repeatedly multiplying by 2 as above.  */
+comment|/* Powers of 2 in the Galois field defined above. */
 end_comment
 
 begin_decl_stmt
@@ -776,6 +776,10 @@ literal|0x01
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Logs of 2 in the Galois field defined above. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2271,6 +2275,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Divides the IO evenly across all child vdevs; usually, dcols is  * the number of children in the target vdev.  */
+end_comment
+
 begin_function
 specifier|static
 name|raidz_map_t
@@ -2295,6 +2303,7 @@ name|raidz_map_t
 modifier|*
 name|rm
 decl_stmt|;
+comment|/* The starting RAIDZ (parent) vdev sector of the block. */
 name|uint64_t
 name|b
 init|=
@@ -2304,6 +2313,7 @@ name|io_offset
 operator|>>
 name|unit_shift
 decl_stmt|;
+comment|/* The zio's size in units of the vdev's minimum sector size. */
 name|uint64_t
 name|s
 init|=
@@ -2313,6 +2323,7 @@ name|io_size
 operator|>>
 name|unit_shift
 decl_stmt|;
+comment|/* The first column for this stripe. */
 name|uint64_t
 name|f
 init|=
@@ -2320,6 +2331,7 @@ name|b
 operator|%
 name|dcols
 decl_stmt|;
+comment|/* The starting byte offset on each child vdev. */
 name|uint64_t
 name|o
 init|=
@@ -2354,6 +2366,7 @@ name|asize
 decl_stmt|,
 name|tot
 decl_stmt|;
+comment|/* 	 * "Quotient": The number of data sectors for this stripe on all but 	 * the "big column" child vdevs that also contain "remainder" data. 	 */
 name|q
 operator|=
 name|s
@@ -2364,6 +2377,7 @@ operator|-
 name|nparity
 operator|)
 expr_stmt|;
+comment|/* 	 * "Remainder": The number of partial stripe data sectors in this I/O. 	 * This will add a sector to some, but not all, child vdevs. 	 */
 name|r
 operator|=
 name|s
@@ -2376,6 +2390,7 @@ operator|-
 name|nparity
 operator|)
 expr_stmt|;
+comment|/* The number of "big columns" - those which contain remainder data. */
 name|bc
 operator|=
 operator|(
@@ -2390,6 +2405,7 @@ operator|+
 name|nparity
 operator|)
 expr_stmt|;
+comment|/* 	 * The total number of data and parity sectors associated with 	 * this I/O. 	 */
 name|tot
 operator|=
 name|s
@@ -2410,6 +2426,8 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
+comment|/* acols: The columns that will be accessed. */
+comment|/* scols: The columns that will be accessed or skipped. */
 if|if
 condition|(
 name|q
@@ -2417,6 +2435,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Our I/O request doesn't span all child vdevs. */
 name|acols
 operator|=
 name|bc
@@ -7461,7 +7480,10 @@ name|VDEV_AUX_BAD_LABEL
 expr_stmt|;
 return|return
 operator|(
+name|SET_ERROR
+argument_list|(
 name|EINVAL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -7787,6 +7809,10 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Start an IO operation on a RAIDZ VDev  *  * Outline:  * - For write operations:  *   1. Generate the parity data  *   2. Create child zio write operations to each column's vdev, for both  *      data and parity.  *   3. If the column skips any sectors for padding, create optional dummy  *      write zio children for those areas to improve aggregation continuity.  * - For read operations:  *   1. Create child zio read operations to each data column's vdev to read  *      the range of data required for zio.  *   2. If this is a scrub or resilver operation, or if any of the data  *      vdevs have had errors, then create zio read operations to the parity  *      columns' VDevs as well.  */
+end_comment
 
 begin_function
 specifier|static
@@ -8249,7 +8275,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ENXIO
+argument_list|)
 expr_stmt|;
 name|rc
 operator|->
@@ -8305,7 +8334,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ESTALE
+argument_list|)
 expr_stmt|;
 name|rc
 operator|->
@@ -8768,7 +8800,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 name|ret
 operator|++
@@ -9319,7 +9354,10 @@ name|rc
 operator|->
 name|rc_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 block|}
 name|ret
@@ -9532,6 +9570,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Complete an IO operation on a RAIDZ VDev  *  * Outline:  * - For write operations:  *   1. Check for errors on the child IOs.  *   2. Return, setting an error code if too few child VDevs were written  *      to reconstruct the data later.  Note that partial writes are  *      considered successful if they can be reconstructed at all.  * - For read operations:  *   1. Check for errors on the child IOs.  *   2. If data errors occurred:  *      a. Try to reassemble the data from the parity available.  *      b. If we haven't yet read the parity drives, read them now.  *      c. If all parity drives have been read but the data still doesn't  *         reassemble with a correct checksum, then try combinatorial  *         reconstruction.  *      d. If that doesn't work, return an error.  *   3. If there were unexpected errors or this is a resilver operation,  *      rewrite the vdevs that had errors.  */
+end_comment
 
 begin_function
 specifier|static
@@ -10238,7 +10280,10 @@ name|zio
 operator|->
 name|io_error
 operator|=
+name|SET_ERROR
+argument_list|(
 name|ECKSUM
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

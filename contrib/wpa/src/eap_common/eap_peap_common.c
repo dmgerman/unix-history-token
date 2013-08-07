@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP-PEAP common routines  * Copyright (c) 2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP-PEAP common routines  * Copyright (c) 2008-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|"eap_peap_common.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|peap_prfplus
 parameter_list|(
 name|int
@@ -270,6 +270,8 @@ name|buf_len
 operator|-
 name|pos
 expr_stmt|;
+if|if
+condition|(
 name|hmac_sha1_vector
 argument_list|(
 name|key
@@ -284,7 +286,13 @@ name|len
 argument_list|,
 name|hash
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|plen
@@ -335,6 +343,9 @@ operator|=
 name|SHA1_MAC_LEN
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

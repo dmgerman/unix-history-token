@@ -66,7 +66,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/AddressSpaces.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TargetCXXABI.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/VersionTuple.h"
 end_include
 
 begin_include
@@ -108,43 +138,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/AddressSpaces.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/TargetOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/VersionTuple.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/Specifiers.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -183,24 +189,6 @@ struct_decl|struct
 name|Info
 struct_decl|;
 block|}
-comment|/// \brief The types of C++ ABIs for which we can generate code.
-enum|enum
-name|TargetCXXABI
-block|{
-comment|/// The generic ("Itanium") C++ ABI, documented at:
-comment|///   http://www.codesourcery.com/public/cxx-abi/
-name|CXXABI_Itanium
-block|,
-comment|/// The ARM C++ ABI, based largely on the Itanium ABI but with
-comment|/// significant differences.
-comment|///    http://infocenter.arm.com
-comment|///                    /help/topic/com.arm.doc.ihi0041c/IHI0041C_cppabi.pdf
-name|CXXABI_ARM
-block|,
-comment|/// The Visual Studio ABI.  Only scattered official documentation exists.
-name|CXXABI_Microsoft
-block|}
-enum|;
 comment|/// \brief Exposes information about the current target.
 comment|///
 name|class
@@ -212,8 +200,6 @@ operator|<
 name|TargetInfo
 operator|>
 block|{
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|TargetOptions
@@ -305,6 +291,10 @@ name|SuitableAlign
 block|;
 name|unsigned
 name|char
+name|MinGlobalAlign
+block|;
+name|unsigned
+name|char
 name|MaxAtomicPromoteWidth
 block|,
 name|MaxAtomicInlineWidth
@@ -351,7 +341,7 @@ block|,
 name|SSERegParmMax
 block|;
 name|TargetCXXABI
-name|CXXABI
+name|TheCXXABI
 block|;
 specifier|const
 name|LangAS
@@ -411,7 +401,7 @@ operator|&
 name|Diags
 argument_list|,
 name|TargetOptions
-operator|&
+operator|*
 name|Opts
 argument_list|)
 block|;
@@ -442,14 +432,13 @@ block|}
 name|void
 name|setTargetOpts
 argument_list|(
-argument|TargetOptions&TargetOpts
+argument|TargetOptions *TargetOpts
 argument_list|)
 block|{
 name|this
 operator|->
 name|TargetOpts
 operator|=
-operator|&
 name|TargetOpts
 block|;   }
 comment|///===---- Target Data Type Query Methods -------------------------------===//
@@ -501,6 +490,10 @@ block|,
 comment|/// typedef void* __builtin_va_list;
 name|VoidPtrBuiltinVaList
 block|,
+comment|/// __builtin_va_list as defind by the AArch64 ABI
+comment|/// http://infocenter.arm.com/help/topic/com.arm.doc.ihi0055a/IHI0055A_aapcs64.pdf
+name|AArch64ABIBuiltinVaList
+block|,
 comment|/// __builtin_va_list as defined by the PNaCl ABI:
 comment|/// http://www.chromium.org/nativeclient/pnacl/bitcode-abi#TOC-Machine-Types
 name|PNaClABIBuiltinVaList
@@ -518,6 +511,15 @@ comment|/// __builtin_va_list as defined by ARM AAPCS ABI
 comment|/// http://infocenter.arm.com
 comment|//        /help/topic/com.arm.doc.ihi0042d/IHI0042D_aapcs.pdf
 name|AAPCSABIBuiltinVaList
+block|,
+comment|// typedef struct __va_list_tag
+comment|//   {
+comment|//     long __gpr;
+comment|//     long __fpr;
+comment|//     void *__overflow_arg_area;
+comment|//     void *__reg_save_area;
+comment|//   } va_list[1];
+name|SystemZBuiltinVaList
 block|}
 block|;
 name|protected
@@ -897,6 +899,22 @@ return|return
 name|LongLongAlign
 return|;
 block|}
+comment|/// \brief Determine whether the __int128 type is supported on this target.
+name|bool
+name|hasInt128Type
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerWidth
+argument_list|(
+literal|0
+argument_list|)
+operator|>=
+literal|64
+return|;
+block|}
+comment|// FIXME
 comment|/// \brief Return the alignment that is suitable for storing any
 comment|/// object with a fundamental alignment requirement.
 name|unsigned
@@ -906,6 +924,17 @@ specifier|const
 block|{
 return|return
 name|SuitableAlign
+return|;
+block|}
+comment|/// getMinGlobalAlign - Return the minimum alignment of a global variable,
+comment|/// unless its alignment is explicitly reduced via attributes.
+name|unsigned
+name|getMinGlobalAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinGlobalAlign
 return|;
 block|}
 comment|/// getWCharWidth/Align - Return the size of 'wchar_t' for this target, in
@@ -1192,6 +1221,19 @@ return|return
 name|getTypeWidth
 argument_list|(
 name|IntMaxType
+argument_list|)
+return|;
+block|}
+comment|// Return the size of unwind_word for this target.
+name|unsigned
+name|getUnwindWordWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerWidth
+argument_list|(
+literal|0
 argument_list|)
 return|;
 block|}
@@ -1729,6 +1771,22 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|validateInputSize
+argument_list|(
+argument|StringRef
+comment|/*Constraint*/
+argument_list|,
+argument|unsigned
+comment|/*Size*/
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
 name|validateConstraintModifier
 argument_list|(
 argument|StringRef
@@ -1891,16 +1949,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|bool
-name|useGlobalsForAutomaticVariables
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// \brief Return the section to use for CFString literals, or 0 if no
 comment|/// special section is used.
 name|virtual
@@ -2005,14 +2053,13 @@ literal|""
 return|;
 block|}
 comment|/// \brief Get the C++ ABI currently in use.
-name|virtual
 name|TargetCXXABI
 name|getCXXABI
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CXXABI
+name|TheCXXABI
 return|;
 block|}
 comment|/// \brief Target the specified CPU.
@@ -2049,67 +2096,21 @@ comment|/// \return False on error (invalid C++ ABI name).
 name|bool
 name|setCXXABI
 argument_list|(
-argument|const std::string&Name
+argument|llvm::StringRef name
 argument_list|)
 block|{
-specifier|static
-specifier|const
-name|TargetCXXABI
-name|Unknown
-operator|=
-name|static_cast
-operator|<
-name|TargetCXXABI
-operator|>
-operator|(
-operator|-
-literal|1
-operator|)
-block|;
 name|TargetCXXABI
 name|ABI
-operator|=
-name|llvm
-operator|::
-name|StringSwitch
-operator|<
-name|TargetCXXABI
-operator|>
-operator|(
-name|Name
-operator|)
-operator|.
-name|Case
-argument_list|(
-literal|"arm"
-argument_list|,
-name|CXXABI_ARM
-argument_list|)
-operator|.
-name|Case
-argument_list|(
-literal|"itanium"
-argument_list|,
-name|CXXABI_Itanium
-argument_list|)
-operator|.
-name|Case
-argument_list|(
-literal|"microsoft"
-argument_list|,
-name|CXXABI_Microsoft
-argument_list|)
-operator|.
-name|Default
-argument_list|(
-name|Unknown
-argument_list|)
 block|;
 if|if
 condition|(
+operator|!
 name|ABI
-operator|==
-name|Unknown
+operator|.
+name|tryParse
+argument_list|(
+name|name
+argument_list|)
 condition|)
 return|return
 name|false
@@ -2132,7 +2133,7 @@ name|TargetCXXABI
 name|ABI
 parameter_list|)
 block|{
-name|CXXABI
+name|TheCXXABI
 operator|=
 name|ABI
 expr_stmt|;
@@ -2324,19 +2325,32 @@ return|return
 name|BigEndian
 return|;
 block|}
+enum|enum
+name|CallingConvMethodType
+block|{
+name|CCMT_Unknown
+block|,
+name|CCMT_Member
+block|,
+name|CCMT_NonMember
+block|}
+enum|;
 comment|/// \brief Gets the default calling convention for the given target and
 comment|/// declaration context.
 name|virtual
 name|CallingConv
 name|getDefaultCallingConv
-argument_list|()
-specifier|const
+argument_list|(
+name|CallingConvMethodType
+name|MT
+argument_list|)
+decl|const
 block|{
 comment|// Not all targets will specify an explicit calling convention that we can
 comment|// express.  This will always do the right thing, even though it's not
 comment|// an explicit calling convention.
 return|return
-name|CC_Default
+name|CC_C
 return|;
 block|}
 enum|enum

@@ -125,6 +125,20 @@ name|TPS65217B
 value|0xF
 end_define
 
+begin_define
+define|#
+directive|define
+name|TPS65217C
+value|0xE
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPS65217D
+value|0x6
+end_define
+
 begin_comment
 comment|/* TPS65217 Reisters */
 end_comment
@@ -523,6 +537,36 @@ argument_list|(
 name|name
 argument_list|,
 literal|"TPS65217B ver 1.%u"
+argument_list|,
+name|reg
+operator|&
+literal|0xF
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TPS65217C
+case|:
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"TPS65217C ver 1.%u"
+argument_list|,
+name|reg
+operator|&
+literal|0xF
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TPS65217D
+case|:
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"TPS65217D ver 1.%u"
 argument_list|,
 name|reg
 operator|&

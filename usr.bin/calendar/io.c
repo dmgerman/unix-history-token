@@ -1446,7 +1446,7 @@ literal|"cpp"
 argument_list|,
 literal|"-P"
 argument_list|,
-literal|"-traditional"
+literal|"-traditional-cpp"
 argument_list|,
 literal|"-nostdinc"
 argument_list|,

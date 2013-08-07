@@ -45,15 +45,18 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * The matchtype specifies which entry will be accessed.  * MT_EXACT: only find an exact match (non-normalized)  * MT_FIRST: find the "first" normalized (case and Unicode  *     form) match; the designated "first" match will not change as long  *     as the set of entries with this normalization doesn't change  * MT_BEST: if there is an exact match, find that, otherwise find the  *     first normalized match  */
+comment|/*  * Specifies matching criteria for ZAP lookups.  */
 typedef|typedef
 enum|enum
 name|matchtype
 block|{
+comment|/* Only find an exact match (non-normalized) */
 name|MT_EXACT
 block|,
+comment|/* 	 * If there is an exact match, find that, otherwise find the 	 * first normalized match. 	 */
 name|MT_BEST
 block|,
+comment|/* 	 * Find the "first" normalized (case and Unicode form) match; 	 * the designated "first" match will not change as long as the 	 * set of entries with this normalization doesn't change. 	 */
 name|MT_FIRST
 block|}
 name|matchtype_t
@@ -257,7 +260,7 @@ name|tx
 parameter_list|)
 function_decl|;
 comment|/*  * Manipulate attributes.  *  * 'integer_size' is in bytes, and must be 1, 2, 4, or 8.  */
-comment|/*  * Retrieve the contents of the attribute with the given name.  *  * If the requested attribute does not exist, the call will fail and  * return ENOENT.  *  * If 'integer_size' is smaller than the attribute's integer size, the  * call will fail and return EINVAL.  *  * If 'integer_size' is equal to or larger than the attribute's integer  * size, the call will succeed and return 0.  * When converting to a  * larger integer size, the integers will be treated as unsigned (ie. no  * sign-extension will be performed).  *  * 'num_integers' is the length (in integers) of 'buf'.  *  * If the attribute is longer than the buffer, as many integers as will  * fit will be transferred to 'buf'.  If the entire attribute was not  * transferred, the call will return EOVERFLOW.  *  * If rn_len is nonzero, realname will be set to the name of the found  * entry (which may be different from the requested name if matchtype is  * not MT_EXACT).  *  * If normalization_conflictp is not NULL, it will be set if there is  * another name with the same case/unicode normalized form.  */
+comment|/*  * Retrieve the contents of the attribute with the given name.  *  * If the requested attribute does not exist, the call will fail and  * return ENOENT.  *  * If 'integer_size' is smaller than the attribute's integer size, the  * call will fail and return EINVAL.  *  * If 'integer_size' is equal to or larger than the attribute's integer  * size, the call will succeed and return 0.  *  * When converting to a larger integer size, the integers will be treated as  * unsigned (ie. no sign-extension will be performed).  *  * 'num_integers' is the length (in integers) of 'buf'.  *  * If the attribute is longer than the buffer, as many integers as will  * fit will be transferred to 'buf'.  If the entire attribute was not  * transferred, the call will return EOVERFLOW.  */
 name|int
 name|zap_lookup
 parameter_list|(
@@ -284,6 +287,7 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
+comment|/*  * If rn_len is nonzero, realname will be set to the name of the found  * entry (which may be different from the requested name if matchtype is  * not MT_EXACT).  *  * If normalization_conflictp is not NULL, it will be set if there is  * another name with the same case/unicode normalized form.  */
 name|int
 name|zap_lookup_norm
 parameter_list|(

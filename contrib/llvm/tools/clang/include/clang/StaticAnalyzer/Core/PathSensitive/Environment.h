@@ -113,15 +113,6 @@ name|StackFrameContext
 modifier|*
 decl|>
 block|{
-name|friend
-name|class
-name|EnvironmentManager
-decl_stmt|;
-name|EnvironmentEntry
-name|makeLocation
-argument_list|()
-specifier|const
-expr_stmt|;
 name|public
 label|:
 name|EnvironmentEntry
@@ -493,26 +484,6 @@ name|V
 parameter_list|,
 name|bool
 name|Invalidate
-parameter_list|)
-function_decl|;
-comment|/// Bind the location 'location' and value 'V' to the specified
-comment|/// environment entry.
-name|Environment
-name|bindExprAndLocation
-parameter_list|(
-name|Environment
-name|Env
-parameter_list|,
-specifier|const
-name|EnvironmentEntry
-modifier|&
-name|E
-parameter_list|,
-name|SVal
-name|location
-parameter_list|,
-name|SVal
-name|V
 parameter_list|)
 function_decl|;
 name|Environment

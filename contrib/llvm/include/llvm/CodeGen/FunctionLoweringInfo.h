@@ -66,18 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/InlineAsm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Instructions.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/APInt.h"
 end_include
 
@@ -85,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -114,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/BranchProbabilityInfo.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
@@ -126,19 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ISDOpcodes.h"
+file|"llvm/IR/InlineAsm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
@@ -162,6 +138,9 @@ name|AllocaInst
 decl_stmt|;
 name|class
 name|BasicBlock
+decl_stmt|;
+name|class
+name|BranchProbabilityInfo
 decl_stmt|;
 name|class
 name|CallInst
@@ -421,6 +400,14 @@ operator|>
 expr|>
 name|PHINodesToUpdate
 expr_stmt|;
+comment|/// If the current MBB is a landing pad, the exception pointer and exception
+comment|/// selector registers are copied into these virtual registers by
+comment|/// SelectionDAGISel::PrepareEHLandingPad().
+name|unsigned
+name|ExceptionPointerVirtReg
+decl_stmt|,
+name|ExceptionSelectorVirtReg
+decl_stmt|;
 name|explicit
 name|FunctionLoweringInfo
 parameter_list|(
@@ -476,7 +463,7 @@ block|}
 name|unsigned
 name|CreateReg
 parameter_list|(
-name|EVT
+name|MVT
 name|VT
 parameter_list|)
 function_decl|;

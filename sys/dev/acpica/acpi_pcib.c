@@ -472,20 +472,6 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/*      * Don't attach if we're not really there.      *      * XXX: This isn't entirely correct since we may be a PCI bus      * on a hot-plug docking station, etc.      */
-if|if
-condition|(
-operator|!
-name|acpi_DeviceIsPresent
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-name|return_VALUE
-argument_list|(
-name|ENXIO
-argument_list|)
-expr_stmt|;
 comment|/*      * Get the PCI interrupt routing table for this bus.  If we can't      * get it, this is not an error but may reduce functionality.  There      * are several valid bridges in the field that do not have a _PRT, so      * only warn about missing tables if bootverbose is set.      */
 name|prt
 operator|->

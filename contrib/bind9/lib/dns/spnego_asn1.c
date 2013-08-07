@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006, 2007  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006, 2007, 2012, 2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -111,7 +111,7 @@ parameter_list|,
 name|R
 parameter_list|)
 define|\
-value|do {                                                         \     (BL) = length_##T((S));                                    \     (B) = malloc((BL));                                        \     if((B) == NULL) {                                          \       (R) = ENOMEM;                                            \     } else {                                                   \       (R) = encode_##T(((unsigned char*)(B)) + (BL) - 1, (BL), \                        (S), (L));                              \       if((R) != 0) {                                           \         free((B));                                             \         (B) = NULL;                                            \       }                                                        \     }                                                          \   } while (0)
+value|do {                                                         \     (BL) = length_##T((S));                                    \     (B) = malloc((BL));                                        \     if((B) == NULL) {                                          \       (R) = ENOMEM;                                            \     } else {                                                   \       (R) = encode_##T(((unsigned char*)(B)) + (BL) - 1, (BL), \ 		       (S), (L));                              \       if((R) != 0) {                                           \ 	free((B));                                             \ 	(B) = NULL;                                            \       }                                                        \     }                                                          \   } while (0)
 end_define
 
 begin_endif
@@ -622,7 +622,7 @@ begin_define
 define|#
 directive|define
 name|BACK
-value|if (e) return e; p -= l; len -= l; ret += l
+value|if (e) return e; p -= l; len -= l; ret += l; POST(p); POST(len); POST(ret)
 end_define
 
 begin_function
@@ -657,14 +657,8 @@ name|size_t
 name|l
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|e
 decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 name|e
 operator|=
 name|encode_oid
@@ -696,7 +690,7 @@ begin_define
 define|#
 directive|define
 name|FORW
-value|if(e) goto fail; p += l; len -= l; ret += l
+value|if(e) goto fail; p += l; len -= l; ret += l; POST(p); POST(len); POST(ret)
 end_define
 
 begin_function
@@ -726,8 +720,6 @@ name|size_t
 name|ret
 init|=
 literal|0
-decl_stmt|,
-name|reallen
 decl_stmt|;
 name|size_t
 name|l
@@ -747,10 +739,6 @@ operator|*
 name|data
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|reallen
-operator|=
-literal|0
 expr_stmt|;
 name|e
 operator|=
@@ -827,13 +815,6 @@ begin_comment
 comment|/* Do not edit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BACK
-value|if (e) return e; p -= l; len -= l; ret += l
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -870,10 +851,6 @@ name|i
 decl_stmt|,
 name|e
 decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -964,13 +941,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|FORW
-value|if(e) goto fail; p += l; len -= l; ret += l
-end_define
 
 begin_function
 specifier|static
@@ -1099,6 +1069,16 @@ operator|<
 name|origlen
 condition|)
 block|{
+name|void
+modifier|*
+name|old
+init|=
+operator|(
+name|data
+operator|)
+operator|->
+name|val
+decl_stmt|;
 operator|(
 name|data
 operator|)
@@ -1139,6 +1119,36 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|data
+operator|)
+operator|->
+name|val
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|data
+operator|)
+operator|->
+name|val
+operator|=
+name|old
+expr_stmt|;
+operator|(
+name|data
+operator|)
+operator|->
+name|len
+operator|--
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|e
 operator|=
 name|decode_MechType
@@ -1288,13 +1298,6 @@ begin_comment
 comment|/* Do not edit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BACK
-value|if (e) return e; p -= l; len -= l; ret += l
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -1327,14 +1330,8 @@ name|size_t
 name|l
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|e
 decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 block|{
 name|unsigned
 name|char
@@ -1527,13 +1524,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|FORW
-value|if(e) goto fail; p += l; len -= l; ret += l
-end_define
 
 begin_function
 specifier|static
@@ -1723,14 +1713,6 @@ operator|)
 operator|&
 literal|1
 expr_stmt|;
-name|p
-operator|+=
-name|reallen
-expr_stmt|;
-name|len
-operator|-=
-name|reallen
-expr_stmt|;
 name|ret
 operator|+=
 name|reallen
@@ -1810,13 +1792,6 @@ begin_comment
 comment|/* Do not edit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BACK
-value|if (e) return e; p -= l; len -= l; ret += l
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -1849,14 +1824,8 @@ name|size_t
 name|l
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|e
 decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2142,13 +2111,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|FORW
-value|if(e) goto fail; p += l; len -= l; ret += l
-end_define
 
 begin_function
 specifier|static
@@ -3185,13 +3147,6 @@ begin_comment
 comment|/* Do not edit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BACK
-value|if (e) return e; p -= l; len -= l; ret += l
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -3224,14 +3179,8 @@ name|size_t
 name|l
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|e
 decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3524,13 +3473,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|FORW
-value|if(e) goto fail; p += l; len -= l; ret += l
-end_define
 
 begin_function
 specifier|static

@@ -1162,6 +1162,9 @@ index|]
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|as
 index|[
 name|i
@@ -1191,6 +1194,9 @@ index|]
 operator|.
 name|h
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|oi
 index|[
 literal|4

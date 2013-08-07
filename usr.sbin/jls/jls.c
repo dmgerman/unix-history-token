@@ -157,6 +157,13 @@ name|PRINT_VERBOSE
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|PRINT_JAIL_NAME
+value|0x40
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -378,7 +385,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adj:hnqsv"
+literal|"adj:hNnqsv"
 argument_list|)
 operator|)
 operator|>=
@@ -454,6 +461,14 @@ name|PRINT_HEADER
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|pflags
+operator||=
+name|PRINT_JAIL_NAME
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|pflags
@@ -525,7 +540,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: jls [-dhnqv] [-j jail] [param ...]"
+literal|"usage: jls [-dhNnqv] [-j jail] [param ...]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -750,6 +765,29 @@ name|pflags
 operator||=
 name|PRINT_DEFAULT
 expr_stmt|;
+if|if
+condition|(
+name|pflags
+operator|&
+name|PRINT_JAIL_NAME
+condition|)
+name|add_param
+argument_list|(
+literal|"name"
+argument_list|,
+name|NULL
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|JP_USER
+argument_list|)
+expr_stmt|;
+else|else
 name|add_param
 argument_list|(
 literal|"jid"
@@ -1030,6 +1068,19 @@ name|pflags
 operator|&
 name|PRINT_DEFAULT
 condition|)
+if|if
+condition|(
+name|pflags
+operator|&
+name|PRINT_JAIL_NAME
+condition|)
+name|printf
+argument_list|(
+literal|" JID             IP Address      "
+literal|"Hostname                      Path\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"   JID  IP Address      "
@@ -2352,9 +2403,33 @@ name|pflags
 operator|&
 name|PRINT_DEFAULT
 condition|)
+block|{
+if|if
+condition|(
+name|pflags
+operator|&
+name|PRINT_JAIL_NAME
+condition|)
 name|printf
 argument_list|(
-literal|"%6d  %-15.15s %-29.29s %.74s\n"
+literal|" %-15s "
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|params
+index|[
+literal|0
+index|]
+operator|.
+name|jp_value
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%6d  "
 argument_list|,
 operator|*
 operator|(
@@ -2367,6 +2442,11 @@ literal|0
 index|]
 operator|.
 name|jp_value
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-15.15s %-29.29s %.74s\n"
 argument_list|,
 ifdef|#
 directive|ifdef
@@ -2458,13 +2538,11 @@ index|]
 operator|.
 name|jp_value
 block|)
-function|;
-end_function
-
-begin_endif
+empty_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_else
 else|else

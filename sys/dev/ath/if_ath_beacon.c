@@ -1322,9 +1322,10 @@ argument_list|,
 name|HAL_PKT_TYPE_BEACON
 comment|/* Atheros packet type */
 argument_list|,
+name|ieee80211_get_node_txpower
+argument_list|(
 name|ni
-operator|->
-name|ni_txpower
+argument_list|)
 comment|/* txpower XXX */
 argument_list|,
 name|rate
@@ -1689,6 +1690,37 @@ name|hangs
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_MISSED_BEACON
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_MISSED_BEACON
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 name|sc
@@ -1888,6 +1920,37 @@ name|sc_bmisscount
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_DEBUG_ALQ
+if|if
+condition|(
+name|if_ath_alq_checkdebug
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_RESUME_BEACON
+argument_list|)
+condition|)
+name|if_ath_alq_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_alq
+argument_list|,
+name|ATH_ALQ_RESUME_BEACON
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -2497,6 +2560,12 @@ operator|->
 name|bf_daddr
 argument_list|)
 expr_stmt|;
+name|cabq
+operator|->
+name|axq_flags
+operator||=
+name|ATH_TXQ_PUTRUNNING
+expr_stmt|;
 comment|/* NB: gated by beacon so safe to start here */
 name|ath_hal_txstart
 argument_list|(
@@ -2578,6 +2647,12 @@ name|bf
 operator|->
 name|bf_daddr
 argument_list|)
+expr_stmt|;
+name|cabq
+operator|->
+name|axq_flags
+operator||=
+name|ATH_TXQ_PUTRUNNING
 expr_stmt|;
 comment|/* NB: gated by beacon so safe to start here */
 name|ath_hal_txstart
@@ -2896,6 +2971,7 @@ name|sc_stagbeacons
 condition|)
 block|{
 comment|/* 			 * CABQ traffic from a previous vap is still pending. 			 * We must drain the q before this beacon frame goes 			 * out as otherwise this vap's stations will get cab 			 * frames from a different vap. 			 * XXX could be slow causing us to miss DBA 			 */
+comment|/* 			 * XXX TODO: this doesn't stop CABQ DMA - it assumes 			 * that since we're about to transmit a beacon, we've 			 * already stopped transmitting on the CABQ.  But this 			 * doesn't at all mean that the CABQ DMA QCU will 			 * accept a new TXDP!  So what, should we do a DMA 			 * stop? What if it fails? 			 * 			 * More thought is required here. 			 */
 name|ath_tx_draintxq
 argument_list|(
 name|sc

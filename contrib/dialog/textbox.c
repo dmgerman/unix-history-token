@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: textbox.c,v 1.101 2011/06/29 09:53:03 tom Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2010,2011	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: textbox.c,v 1.110 2012/12/01 01:48:08 tom Exp $  *  *  textbox.c -- implements the text box  *  *  Copyright 2000-2011,2012	Thomas E.  Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors:  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -149,6 +149,7 @@ condition|(
 name|mode
 condition|)
 block|{
+default|default:
 case|case
 name|SEEK_CUR
 case|:
@@ -206,6 +207,138 @@ argument_list|,
 name|SEEK_CUR
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|lseek_set
+parameter_list|(
+name|MY_OBJ
+modifier|*
+name|obj
+parameter_list|,
+name|long
+name|offset
+parameter_list|)
+block|{
+name|long
+name|actual
+init|=
+name|lseek_obj
+argument_list|(
+name|obj
+argument_list|,
+name|offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|actual
+operator|!=
+name|offset
+condition|)
+block|{
+name|dlg_exiterr
+argument_list|(
+literal|"Cannot set file position to %ld (actual %ld)\n"
+argument_list|,
+name|offset
+argument_list|,
+name|actual
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|lseek_end
+parameter_list|(
+name|MY_OBJ
+modifier|*
+name|obj
+parameter_list|,
+name|long
+name|offset
+parameter_list|)
+block|{
+name|long
+name|actual
+init|=
+name|lseek_obj
+argument_list|(
+name|obj
+argument_list|,
+name|offset
+argument_list|,
+name|SEEK_END
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|actual
+operator|>
+name|offset
+condition|)
+block|{
+name|obj
+operator|->
+name|file_size
+operator|=
+name|actual
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|lseek_cur
+parameter_list|(
+name|MY_OBJ
+modifier|*
+name|obj
+parameter_list|,
+name|long
+name|offset
+parameter_list|)
+block|{
+name|long
+name|actual
+init|=
+name|lseek_obj
+argument_list|(
+name|obj
+argument_list|,
+name|offset
+argument_list|,
+name|SEEK_CUR
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|actual
+operator|!=
+name|offset
+condition|)
+block|{
+name|dlg_trace_msg
+argument_list|(
+literal|"Lseek returned %ld, expected %ld\n"
+argument_list|,
+name|actual
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -780,7 +913,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|lseek_obj
+name|lseek_set
 argument_list|(
 name|obj
 argument_list|,
@@ -789,8 +922,6 @@ operator|-
 name|obj
 operator|->
 name|fd_bytes_read
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 comment|/* Allocate space for read buffer */
@@ -943,13 +1074,11 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-name|lseek_obj
+name|lseek_set
 argument_list|(
 name|obj
 argument_list|,
 name|fpos
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|free
@@ -1278,13 +1407,11 @@ name|fd_bytes_read
 condition|)
 block|{
 comment|/* No, move less than */
-name|lseek_obj
+name|lseek_set
 argument_list|(
 name|obj
 argument_list|,
 literal|0L
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|val_to_tabize
@@ -1299,7 +1426,7 @@ block|}
 else|else
 block|{
 comment|/* Move backward BUF_SIZE/2 bytes */
-name|lseek_obj
+name|lseek_cur
 argument_list|(
 name|obj
 argument_list|,
@@ -1313,8 +1440,6 @@ name|obj
 operator|->
 name|fd_bytes_read
 operator|)
-argument_list|,
-name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 name|val_to_tabize
@@ -1443,13 +1568,11 @@ name|fd_bytes_read
 condition|)
 block|{
 comment|/* No, move less than */
-name|lseek_obj
+name|lseek_set
 argument_list|(
 name|obj
 argument_list|,
 literal|0L
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|val_to_tabize
@@ -1464,7 +1587,7 @@ block|}
 else|else
 block|{
 comment|/* Move backward BUF_SIZE/2 bytes */
-name|lseek_obj
+name|lseek_cur
 argument_list|(
 name|obj
 argument_list|,
@@ -1478,8 +1601,6 @@ name|obj
 operator|->
 name|fd_bytes_read
 operator|)
-argument_list|,
-name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 name|val_to_tabize
@@ -1910,6 +2031,13 @@ operator|->
 name|text
 argument_list|)
 expr_stmt|;
+name|dlg_trace_win
+argument_list|(
+name|obj
+operator|->
+name|text
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2281,7 +2409,7 @@ argument_list|,
 name|binding
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|widget
 argument_list|,
@@ -2296,8 +2424,13 @@ argument_list|,
 name|searchbox_attr
 argument_list|,
 name|searchbox_border_attr
+argument_list|,
+name|searchbox_border2_attr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|widget
@@ -2365,12 +2498,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|box_y
-operator|++
-expr_stmt|;
-name|box_x
-operator|++
 expr_stmt|;
 name|box_width
 operator|-=
@@ -2693,6 +2820,9 @@ block|}
 endif|#
 directive|endif
 comment|/* ESC pressed, or no search term, reprint page to clear box */
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|obj
@@ -2766,10 +2896,6 @@ operator|+
 literal|1
 operator|)
 argument_list|)
-expr_stmt|;
-name|found
-operator|=
-name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -2852,13 +2978,11 @@ name|beep
 argument_list|()
 expr_stmt|;
 comment|/* Restore program state to that before searching */
-name|lseek_obj
+name|lseek_set
 argument_list|(
 name|obj
 argument_list|,
 name|fpos
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|read_high
@@ -2909,6 +3033,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Reprint page */
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|obj
@@ -3233,14 +3360,8 @@ decl_stmt|;
 name|int
 name|button
 init|=
-name|dialog_vars
-operator|.
-name|extra_button
-condition|?
-name|dlg_defaultno_button
+name|dlg_default_button
 argument_list|()
-else|:
-literal|0
 decl_stmt|;
 name|int
 name|min_width
@@ -3320,29 +3441,21 @@ name|file
 argument_list|)
 expr_stmt|;
 comment|/* Get file size. Actually, 'file_size' is the real file size - 1,        since it's only the last byte offset from the beginning */
-name|obj
-operator|.
-name|file_size
-operator|=
-name|lseek_obj
+name|lseek_end
 argument_list|(
 operator|&
 name|obj
 argument_list|,
 literal|0L
-argument_list|,
-name|SEEK_END
 argument_list|)
 expr_stmt|;
 comment|/* Restore file pointer to beginning of file after getting file size */
-name|lseek_obj
+name|lseek_set
 argument_list|(
 operator|&
 name|obj
 argument_list|,
 literal|0L
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|read_high
@@ -3504,7 +3617,7 @@ literal|1
 comment|/* lines */
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|dialog
 argument_list|,
@@ -3519,11 +3632,19 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
+argument_list|,
+name|border2_attr
 argument_list|)
 expr_stmt|;
-name|dlg_draw_bottom_box
+name|dlg_draw_bottom_box2
 argument_list|(
 name|dialog
+argument_list|,
+name|border_attr
+argument_list|,
+name|border2_attr
+argument_list|,
+name|dialog_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -4101,14 +4222,12 @@ name|fd_bytes_read
 condition|)
 block|{
 comment|/* Yes, we have to read it in */
-name|lseek_obj
+name|lseek_set
 argument_list|(
 operator|&
 name|obj
 argument_list|,
 literal|0L
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|read_high
@@ -4160,15 +4279,13 @@ name|file_size
 condition|)
 block|{
 comment|/* Yes, we have to read it in */
-name|lseek_obj
+name|lseek_end
 argument_list|(
 operator|&
 name|obj
 argument_list|,
 operator|-
 name|BUF_SIZE
-argument_list|,
-name|SEEK_END
 argument_list|)
 expr_stmt|;
 name|read_high
@@ -4463,10 +4580,6 @@ name|obj
 operator|.
 name|page_length
 argument_list|)
-expr_stmt|;
-name|moved
-operator|=
-name|TRUE
 expr_stmt|;
 comment|/* repaint */
 name|dlg_clear

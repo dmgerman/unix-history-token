@@ -74,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|"llvm/CodeGen/MachineFrameInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFrameInfo.h"
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_decl_stmt

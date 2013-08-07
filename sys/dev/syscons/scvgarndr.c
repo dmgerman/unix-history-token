@@ -2009,6 +2009,12 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_decl_stmt
+name|int
+name|sc_txtmouse_no_retrace_wait
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2469,6 +2475,9 @@ name|va_crtc_addr
 expr_stmt|;
 while|while
 condition|(
+operator|!
+name|sc_txtmouse_no_retrace_wait
+operator|&&
 operator|!
 operator|(
 name|inb

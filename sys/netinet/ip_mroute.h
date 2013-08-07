@@ -607,58 +607,58 @@ begin_struct
 struct|struct
 name|mrtstat
 block|{
-name|u_long
+name|uint64_t
 name|mrts_mfc_lookups
 decl_stmt|;
 comment|/* # forw. cache hash table hits   */
-name|u_long
+name|uint64_t
 name|mrts_mfc_misses
 decl_stmt|;
 comment|/* # forw. cache hash table misses */
-name|u_long
+name|uint64_t
 name|mrts_upcalls
 decl_stmt|;
 comment|/* # calls to multicast routing daemon */
-name|u_long
+name|uint64_t
 name|mrts_no_route
 decl_stmt|;
 comment|/* no route for packet's origin    */
-name|u_long
+name|uint64_t
 name|mrts_bad_tunnel
 decl_stmt|;
 comment|/* malformed tunnel options        */
-name|u_long
+name|uint64_t
 name|mrts_cant_tunnel
 decl_stmt|;
 comment|/* no room for tunnel options      */
-name|u_long
+name|uint64_t
 name|mrts_wrong_if
 decl_stmt|;
-comment|/* arrived on wrong interface	   */
-name|u_long
+comment|/* arrived on wrong interface	 */
+name|uint64_t
 name|mrts_upq_ovflw
 decl_stmt|;
-comment|/* upcall Q overflow		   */
-name|u_long
+comment|/* upcall Q overflow		 */
+name|uint64_t
 name|mrts_cache_cleanups
 decl_stmt|;
-comment|/* # entries with no upcalls	   */
-name|u_long
+comment|/* # entries with no upcalls	 */
+name|uint64_t
 name|mrts_drop_sel
 decl_stmt|;
 comment|/* pkts dropped selectively        */
-name|u_long
+name|uint64_t
 name|mrts_q_overflow
 decl_stmt|;
 comment|/* pkts dropped - Q overflow       */
-name|u_long
+name|uint64_t
 name|mrts_pkt2large
 decl_stmt|;
 comment|/* pkts dropped - size> BKT SIZE  */
-name|u_long
+name|uint64_t
 name|mrts_upq_sockfull
 decl_stmt|;
-comment|/* upcalls dropped - socket full */
+comment|/* upcalls dropped - socket full   */
 block|}
 struct|;
 end_struct
@@ -678,7 +678,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_mrtstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct mrtstat, mrtstat, name, (val))
 end_define
 
 begin_define

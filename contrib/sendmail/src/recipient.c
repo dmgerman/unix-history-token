@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.349 2007/07/10 17:01:22 ca Exp $"
+literal|"@(#)$Id: recipient.c,v 8.350 2013/03/12 15:24:54 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7299,8 +7299,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 operator|&&
 operator|!
 name|maxreached

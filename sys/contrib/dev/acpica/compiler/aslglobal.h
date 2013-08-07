@@ -303,6 +303,16 @@ literal|"C Include:    "
 block|,
 literal|"C Header Output"
 block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Offset Table: "
+block|,
+literal|"C Offset Table Output"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -418,6 +428,13 @@ define|#
 directive|define
 name|ASL_MSG_BUFFER_SIZE
 value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_MAX_DISABLED_MESSAGES
+value|32
 end_define
 
 begin_define
@@ -696,6 +713,18 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_C_OutputFlag
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_C_OffsetTableFlag
 parameter_list|,
 name|FALSE
 parameter_list|)
@@ -1432,6 +1461,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ASL_EXTERN
+name|UINT32
+name|ASL_INIT_GLOBAL
+argument_list|(
+name|Gbl_DisabledMessagesIndex
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|ASL_EXTERN
 name|UINT8
@@ -1599,6 +1640,16 @@ name|char
 name|StringBuffer2
 index|[
 name|ASL_MSG_BUFFER_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|UINT32
+name|Gbl_DisabledMessages
+index|[
+name|ASL_MAX_DISABLED_MESSAGES
 index|]
 decl_stmt|;
 end_decl_stmt

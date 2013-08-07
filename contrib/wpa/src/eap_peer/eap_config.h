@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer configuration data  * Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer configuration data  * Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -32,7 +32,7 @@ comment|/** 	 * identity_len - EAP Identity length 	 */
 name|size_t
 name|identity_len
 decl_stmt|;
-comment|/** 	 * anonymous_identity -  Anonymous EAP Identity 	 * 	 * This field is used for unencrypted use with EAP types that support 	 * different tunnelled identity, e.g., EAP-TTLS, in order to reveal the 	 * real identity (identity field) only to the authentication server. 	 * 	 * If not set, the identity field will be used for both unencrypted and 	 * protected fields. 	 */
+comment|/** 	 * anonymous_identity -  Anonymous EAP Identity 	 * 	 * This field is used for unencrypted use with EAP types that support 	 * different tunnelled identity, e.g., EAP-TTLS, in order to reveal the 	 * real identity (identity field) only to the authentication server. 	 * 	 * If not set, the identity field will be used for both unencrypted and 	 * protected fields. 	 * 	 * This field can also be used with EAP-SIM/AKA/AKA' to store the 	 * pseudonym identity. 	 */
 name|u8
 modifier|*
 name|anonymous_identity
@@ -273,7 +273,11 @@ define|#
 directive|define
 name|EAP_CONFIG_FLAGS_PASSWORD_NTHASH
 value|BIT(0)
-comment|/** 	 * flags - Network configuration flags (bitfield) 	 * 	 * This variable is used for internal flags to describe further details 	 * for the network parameters. 	 * bit 0 = password is represented as a 16-byte NtPasswordHash value 	 *         instead of plaintext password 	 */
+define|#
+directive|define
+name|EAP_CONFIG_FLAGS_EXT_PASSWORD
+value|BIT(1)
+comment|/** 	 * flags - Network configuration flags (bitfield) 	 * 	 * This variable is used for internal flags to describe further details 	 * for the network parameters. 	 * bit 0 = password is represented as a 16-byte NtPasswordHash value 	 *         instead of plaintext password 	 * bit 1 = password is stored in external storage; the value in the 	 *         password field is the name of that external entry 	 */
 name|u32
 name|flags
 decl_stmt|;

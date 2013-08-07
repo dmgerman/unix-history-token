@@ -10083,6 +10083,16 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
+name|INP_SOCKAF
+argument_list|(
+name|so
+argument_list|)
+operator|==
+name|AF_INET6
+condition|)
+block|{
+if|if
+condition|(
 name|MODULE_GLOBAL
 argument_list|(
 name|ip6_auto_flowlabel
@@ -10099,6 +10109,26 @@ name|inp_flags
 operator||=
 name|IN6P_AUTOFLOWLABEL
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|MODULE_GLOBAL
+argument_list|(
+name|ip6_v6only
+argument_list|)
+condition|)
+block|{
+name|inp
+operator|->
+name|ip_inp
+operator|.
+name|inp
+operator|.
+name|inp_flags
+operator||=
+name|IN6P_IPV6_V6ONLY
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -10808,12 +10838,6 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|max_open_streams_intome
-operator|=
-name|MAX_SCTP_STREAMS
-expr_stmt|;
-name|m
-operator|->
 name|max_init_times
 operator|=
 name|SCTP_BASE_SYSCTL
@@ -10894,6 +10918,15 @@ operator|=
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_default_ss_module
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|max_open_streams_intome
+operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_nr_incoming_streams_default
 argument_list|)
 expr_stmt|;
 comment|/* number of streams to pre-open on a association */
@@ -19996,15 +20029,6 @@ name|SCTP_STACK_VTAG_HASH_SIZE
 operator|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -20128,7 +20152,6 @@ condition|)
 break|break;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
@@ -20181,15 +20204,6 @@ name|SCTP_STACK_VTAG_HASH_SIZE
 operator|)
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -20267,7 +20281,6 @@ condition|(
 name|found
 condition|)
 break|break;
-block|}
 block|}
 name|SCTP_INP_INFO_WUNLOCK
 argument_list|()
@@ -20354,16 +20367,6 @@ name|set
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
-comment|/* Block(s) present, lets find space, and expire on the fly */
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -20373,6 +20376,7 @@ argument_list|,
 argument|sctp_nxt_tagblock
 argument_list|)
 block|{
+comment|/* Block(s) present, lets find space, and expire on the fly */
 for|for
 control|(
 name|i
@@ -20605,9 +20609,8 @@ condition|(
 name|set
 condition|)
 block|{
-comment|/* 				 * We only do up to the block where we can 				 * place our tag for audits 				 */
+comment|/* 			 * We only do up to the block where we can place our 			 * tag for audits 			 */
 break|break;
-block|}
 block|}
 block|}
 comment|/* Need to add a new block to chain */
@@ -30580,16 +30583,6 @@ operator|)
 index|]
 expr_stmt|;
 comment|/* Now what about timed wait ? */
-if|if
-condition|(
-operator|!
-name|LIST_EMPTY
-argument_list|(
-name|chain
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Block(s) are present, lets see if we have this tag in the 		 * list 		 */
 name|LIST_FOREACH
 argument_list|(
 argument|twait_block
@@ -30599,6 +30592,7 @@ argument_list|,
 argument|sctp_nxt_tagblock
 argument_list|)
 block|{
+comment|/* 		 * Block(s) are present, lets see if we have this tag in the 		 * list 		 */
 for|for
 control|(
 name|i
@@ -30748,7 +30742,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 block|}
 block|}

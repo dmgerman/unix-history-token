@@ -61,6 +61,23 @@ end_function
 
 begin_function
 name|int
+name|__fillcontextx2
+parameter_list|(
+name|char
+modifier|*
+name|ctx
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|__fillcontextx
 parameter_list|(
 name|char

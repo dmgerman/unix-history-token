@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_UPDATER_H
+name|_UPDATER_H_
 end_define
 
 begin_function_decl

@@ -2077,6 +2077,12 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|fp
+operator|->
+name|f_seekp
+operator|=
+literal|0
+expr_stmt|;
 name|out
 label|:
 if|if
@@ -2323,6 +2329,12 @@ name|f_buf_blkno
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|fp
+operator|->
+name|f_seekp
+operator|=
+literal|0
 expr_stmt|;
 name|out
 label|:

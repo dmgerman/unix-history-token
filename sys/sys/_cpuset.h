@@ -15,6 +15,12 @@ directive|define
 name|_SYS__CPUSET_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_bitset.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -62,37 +68,30 @@ begin_define
 define|#
 directive|define
 name|_NCPUBITS
-value|(sizeof(long) * NBBY)
+value|_BITSET_BITS
 end_define
-
-begin_comment
-comment|/* bits per mask */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|_NCPUWORDS
-value|howmany(CPU_SETSIZE, _NCPUBITS)
+value|__bitset_words(CPU_SETSIZE)
 end_define
+
+begin_expr_stmt
+name|BITSET_DEFINE
+argument_list|(
+name|_cpuset
+argument_list|,
+name|CPU_SETSIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|_cpuset
-block|{
-name|long
-name|__bits
-index|[
-name|howmany
-argument_list|(
-name|CPU_SETSIZE
-argument_list|,
-name|_NCPUBITS
-argument_list|)
-index|]
-decl_stmt|;
-block|}
 name|cpuset_t
 typedef|;
 end_typedef
@@ -101,19 +100,14 @@ begin_define
 define|#
 directive|define
 name|CPUSET_FSET
-define|\
-value|[ 0 ... (_NCPUWORDS - 1) ] = (-1L)
+value|BITSET_FSET(_NCPUWORDS)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPUSET_T_INITIALIZER
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|{ .__bits = { x } }
+value|BITSET_T_INITIALIZER
 end_define
 
 begin_endif

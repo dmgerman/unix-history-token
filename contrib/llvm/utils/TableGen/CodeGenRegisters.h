@@ -72,18 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/TableGen/Record.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/ValueTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
@@ -108,7 +96,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/TableGen/Record.h"
 end_include
 
 begin_include
@@ -126,13 +126,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|<set>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<set>
+file|<string>
 end_include
 
 begin_include
@@ -962,13 +962,13 @@ operator|::
 name|string
 name|Namespace
 expr_stmt|;
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|MVT
 operator|::
 name|SimpleValueType
+operator|,
+literal|4
 operator|>
 name|VTs
 expr_stmt|;
@@ -1021,16 +1021,12 @@ name|getQualifiedName
 argument_list|()
 specifier|const
 expr_stmt|;
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|MVT
 operator|::
 name|SimpleValueType
 operator|>
-operator|&
 name|getValueTypes
 argument_list|()
 specifier|const
@@ -1502,10 +1498,20 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+comment|// Index into RegClassUnitSets where we can find the list of UnitSets that
+comment|// contain this unit.
+name|unsigned
+name|RegClassUnitSetsIdx
+decl_stmt|;
 name|RegUnit
 argument_list|()
 operator|:
 name|Weight
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|RegClassUnitSetsIdx
 argument_list|(
 literal|0
 argument_list|)
@@ -1798,6 +1804,10 @@ name|RegUnitSets
 expr_stmt|;
 comment|// Map RegisterClass index to the index of the RegUnitSet that contains the
 comment|// class's units and any inferred RegUnit supersets.
+comment|//
+comment|// NOTE: This could grow beyond the number of register classes when we map
+comment|// register units to lists of unit sets. If the list of unit sets does not
+comment|// already exist for a register class, we create a new entry in this vector.
 name|std
 operator|::
 name|vector
@@ -2420,6 +2430,21 @@ name|RegUnitSets
 index|[
 name|Idx
 index|]
+return|;
+block|}
+comment|// The number of pressure set lists may be larget than the number of
+comment|// register classes if some register units appeared in a list of sets that
+comment|// did not correspond to an existing register class.
+name|unsigned
+name|getNumRegClassPressureSetLists
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegClassUnitSets
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 comment|// Get a list of pressure set IDs for a register class. Liveness of a

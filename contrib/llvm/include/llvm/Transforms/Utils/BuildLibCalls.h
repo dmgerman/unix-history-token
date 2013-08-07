@@ -54,19 +54,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TRANSFORMS_UTILS_BUILDLIBCALLS_H
+name|LLVM_TRANSFORMS_UTILS_BUILDLIBCALLS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TRANSFORMS_UTILS_BUILDLIBCALLS_H
+name|LLVM_TRANSFORMS_UTILS_BUILDLIBCALLS_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/IRBuilder.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_decl_stmt
@@ -431,7 +431,7 @@ operator|&
 name|B
 argument_list|,
 specifier|const
-name|AttrListPtr
+name|AttributeSet
 operator|&
 name|Attrs
 argument_list|)

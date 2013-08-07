@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Bitcode/BitCodes.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_decl_stmt
@@ -121,7 +121,7 @@ specifier|const
 name|unsigned
 name|VERSION_MAJOR
 init|=
-literal|4
+literal|5
 decl_stmt|;
 comment|/// \brief AST file minor version number supported by this version of
 comment|/// Clang.
@@ -438,6 +438,17 @@ typedef|typedef
 name|uint32_t
 name|MacroID
 typedef|;
+comment|/// \brief A global ID number that refers to a macro in an AST file.
+typedef|typedef
+name|uint32_t
+name|GlobalMacroID
+typedef|;
+comment|/// \brief A local to a module ID number that refers to a macro in an
+comment|/// AST file.
+typedef|typedef
+name|uint32_t
+name|LocalMacroID
+typedef|;
 comment|/// \brief The number of predefined macro IDs.
 specifier|const
 name|unsigned
@@ -698,31 +709,37 @@ name|ORIGINAL_PCH_DIR
 init|=
 literal|6
 block|,
+comment|/// \brief Record code for file ID of the file or buffer that was used to
+comment|/// generate the AST file.
+name|ORIGINAL_FILE_ID
+init|=
+literal|7
+block|,
 comment|/// \brief Offsets into the input-files block where input files
 comment|/// reside.
 name|INPUT_FILE_OFFSETS
 init|=
-literal|7
+literal|8
 block|,
 comment|/// \brief Record code for the diagnostic options table.
 name|DIAGNOSTIC_OPTIONS
 init|=
-literal|8
+literal|9
 block|,
 comment|/// \brief Record code for the filesystem options table.
 name|FILE_SYSTEM_OPTIONS
 init|=
-literal|9
+literal|10
 block|,
 comment|/// \brief Record code for the headers search options table.
 name|HEADER_SEARCH_OPTIONS
 init|=
-literal|10
+literal|11
 block|,
 comment|/// \brief Record code for the preprocessor options table.
 name|PREPROCESSOR_OPTIONS
 init|=
-literal|11
+literal|12
 block|}
 enum|;
 comment|/// \brief Record types that occur within the input-files block
@@ -780,6 +797,13 @@ name|IDENTIFIER_OFFSET
 init|=
 literal|3
 block|,
+comment|/// \brief This is so that older clang versions, before the introduction
+comment|/// of the control block, can read and reject the newer PCH format.
+comment|/// *DON"T CHANGE THIS NUMBER*.
+name|METADATA_OLD_FORMAT
+init|=
+literal|4
+block|,
 comment|/// \brief Record code for the identifier table.
 comment|///
 comment|/// The identifier table is a simple blob that contains
@@ -794,7 +818,7 @@ comment|/// IdentifierInfo pointers (for already-resolved identifier
 comment|/// IDs).
 name|IDENTIFIER_TABLE
 init|=
-literal|4
+literal|5
 block|,
 comment|/// \brief Record code for the array of external definitions.
 comment|///
@@ -806,7 +830,7 @@ comment|/// read, since their presence can affect the semantics of the
 comment|/// program (e.g., for code generation).
 name|EXTERNAL_DEFINITIONS
 init|=
-literal|5
+literal|6
 block|,
 comment|/// \brief Record code for the set of non-builtin, special
 comment|/// types.
@@ -817,47 +841,47 @@ comment|/// __builtin_va_list). The SPECIAL_TYPE_* constants provide
 comment|/// offsets into this record.
 name|SPECIAL_TYPES
 init|=
-literal|6
+literal|7
 block|,
 comment|/// \brief Record code for the extra statistics we gather while
 comment|/// generating an AST file.
 name|STATISTICS
 init|=
-literal|7
+literal|8
 block|,
 comment|/// \brief Record code for the array of tentative definitions.
 name|TENTATIVE_DEFINITIONS
 init|=
-literal|8
-block|,
-comment|/// \brief Record code for the array of locally-scoped external
-comment|/// declarations.
-name|LOCALLY_SCOPED_EXTERNAL_DECLS
-init|=
 literal|9
+block|,
+comment|/// \brief Record code for the array of locally-scoped extern "C"
+comment|/// declarations.
+name|LOCALLY_SCOPED_EXTERN_C_DECLS
+init|=
+literal|10
 block|,
 comment|/// \brief Record code for the table of offsets into the
 comment|/// Objective-C method pool.
 name|SELECTOR_OFFSETS
 init|=
-literal|10
+literal|11
 block|,
 comment|/// \brief Record code for the Objective-C method pool,
 name|METHOD_POOL
 init|=
-literal|11
+literal|12
 block|,
 comment|/// \brief The value of the next __COUNTER__ to dispense.
 comment|/// [PP_COUNTER_VALUE, Val]
 name|PP_COUNTER_VALUE
 init|=
-literal|12
+literal|13
 block|,
 comment|/// \brief Record code for the table of offsets into the block
 comment|/// of source-location information.
 name|SOURCE_LOCATION_OFFSETS
 init|=
-literal|13
+literal|14
 block|,
 comment|/// \brief Record code for the set of source location entries
 comment|/// that need to be preloaded by the AST reader.
@@ -867,7 +891,7 @@ comment|/// predefines buffer and for any file entries that need to be
 comment|/// preloaded.
 name|SOURCE_LOCATION_PRELOADS
 init|=
-literal|14
+literal|15
 block|,
 comment|/// \brief Record code for the set of ext_vector type names.
 name|EXT_VECTOR_DECLS
@@ -1060,11 +1084,17 @@ name|MACRO_OFFSET
 init|=
 literal|47
 block|,
-comment|/// \brief Record of updates for a macro that was modified after
-comment|/// being deserialized.
-name|MACRO_UPDATES
+comment|/// \brief Mapping table from the identifier ID to the offset of the
+comment|/// macro directive history for the identifier.
+name|MACRO_TABLE
 init|=
 literal|48
+block|,
+comment|/// \brief Record code for undefined but used functions and variables that
+comment|/// need a definition in this TU.
+name|UNDEFINED_BUT_USED
+init|=
+literal|49
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1122,6 +1152,11 @@ comment|/// [PP_TOKEN, SLoc, Length, IdentInfoID, Kind, Flags]
 name|PP_TOKEN
 init|=
 literal|3
+block|,
+comment|/// \brief The macro directives history for a particular identifier.
+name|PP_MACRO_DIRECTIVE_HISTORY
+init|=
+literal|4
 block|}
 enum|;
 comment|/// \brief Record types used within a preprocessor detail block.
@@ -1203,6 +1238,21 @@ comment|/// from this submodule.
 name|SUBMODULE_EXCLUDED_HEADER
 init|=
 literal|9
+block|,
+comment|/// \brief Specifies a library or framework to link against.
+name|SUBMODULE_LINK_LIBRARY
+init|=
+literal|10
+block|,
+comment|/// \brief Specifies a configuration macro for this module.
+name|SUBMODULE_CONFIG_MACRO
+init|=
+literal|11
+block|,
+comment|/// \brief Specifies a conflict with another module.
+name|SUBMODULE_CONFLICT
+init|=
+literal|12
 block|}
 enum|;
 comment|/// \brief Record types used within a comments block.
@@ -1419,6 +1469,46 @@ comment|/// \brief The placeholder type for builtin functions.
 name|PREDEF_TYPE_BUILTIN_FN
 init|=
 literal|37
+block|,
+comment|/// \brief OpenCL 1d image type.
+name|PREDEF_TYPE_IMAGE1D_ID
+init|=
+literal|38
+block|,
+comment|/// \brief OpenCL 1d image array type.
+name|PREDEF_TYPE_IMAGE1D_ARR_ID
+init|=
+literal|39
+block|,
+comment|/// \brief OpenCL 1d image buffer type.
+name|PREDEF_TYPE_IMAGE1D_BUFF_ID
+init|=
+literal|40
+block|,
+comment|/// \brief OpenCL 2d image type.
+name|PREDEF_TYPE_IMAGE2D_ID
+init|=
+literal|41
+block|,
+comment|/// \brief OpenCL 2d image array type.
+name|PREDEF_TYPE_IMAGE2D_ARR_ID
+init|=
+literal|42
+block|,
+comment|/// \brief OpenCL 3d image type.
+name|PREDEF_TYPE_IMAGE3D_ID
+init|=
+literal|43
+block|,
+comment|/// \brief OpenCL event type.
+name|PREDEF_TYPE_EVENT_ID
+init|=
+literal|44
+block|,
+comment|/// \brief OpenCL sampler type.
+name|PREDEF_TYPE_SAMPLER_ID
+init|=
+literal|45
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1836,6 +1926,9 @@ block|,
 comment|/// \brief A FieldDecl record.
 name|DECL_FIELD
 block|,
+comment|/// \brief A MSPropertyDecl record.
+name|DECL_MS_PROPERTY
+block|,
 comment|/// \brief A VarDecl record.
 name|DECL_VAR
 block|,
@@ -1850,6 +1943,9 @@ name|DECL_FILE_SCOPE_ASM
 block|,
 comment|/// \brief A BlockDecl record.
 name|DECL_BLOCK
+block|,
+comment|/// \brief A CapturedDecl record.
+name|DECL_CAPTURED
 block|,
 comment|/// \brief A record that stores the set of declarations that are
 comment|/// lexically stored within a given DeclContext.
@@ -1968,6 +2064,12 @@ name|DECL_CLASS_SCOPE_FUNCTION_SPECIALIZATION
 block|,
 comment|/// \brief An ImportDecl recording a module import.
 name|DECL_IMPORT
+block|,
+comment|/// \brief A OMPThreadPrivateDecl record.
+name|DECL_OMP_THREADPRIVATE
+block|,
+comment|/// \brief An EmptyDecl record.
+name|DECL_EMPTY
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
@@ -2042,6 +2144,9 @@ name|STMT_RETURN
 block|,
 comment|/// \brief A DeclStmt record.
 name|STMT_DECL
+block|,
+comment|/// \brief A CapturedStmt record.
+name|STMT_CAPTURED
 block|,
 comment|/// \brief A GCC-style AsmStmt record.
 name|STMT_GCCASM
@@ -2279,6 +2384,9 @@ comment|// CXXThrowExpr
 name|EXPR_CXX_DEFAULT_ARG
 block|,
 comment|// CXXDefaultArgExpr
+name|EXPR_CXX_DEFAULT_INIT
+block|,
+comment|// CXXDefaultInitExpr
 name|EXPR_CXX_BIND_TEMPORARY
 block|,
 comment|// CXXBindTemporaryExpr
@@ -2363,6 +2471,9 @@ name|EXPR_ASTYPE
 block|,
 comment|// AsTypeExpr
 comment|// Microsoft
+name|EXPR_CXX_PROPERTY_REF_EXPR
+block|,
+comment|// MSPropertyRefExpr
 name|EXPR_CXX_UUIDOF_EXPR
 block|,
 comment|// CXXUuidofExpr (of expr).

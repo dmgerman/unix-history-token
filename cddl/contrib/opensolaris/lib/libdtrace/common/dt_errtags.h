@@ -8,7 +8,7 @@ comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*   * Copyright (c) 2011, Joyent, Inc. All rights reserved.   * Copyright (c) 2011 by Delphix. All rights reserved.   */
+comment|/*   * Copyright (c) 2011, Joyent, Inc. All rights reserved.   * Copyright (c) 2012 by Delphix. All rights reserved.   */
 end_comment
 
 begin_ifndef
@@ -477,12 +477,18 @@ comment|/* trace() argument has void type */
 name|D_TRACE_DYN
 block|,
 comment|/* trace() argument has dynamic type */
+name|D_TRACE_AGG
+block|,
+comment|/* trace() argument is an aggregation */
 name|D_PRINT_VOID
 block|,
 comment|/* print() argument has void type */
 name|D_PRINT_DYN
 block|,
 comment|/* print() argument has dynamic type */
+name|D_PRINT_AGG
+block|,
+comment|/* print() argument is an aggregation */
 name|D_TRACEMEM_ADDR
 block|,
 comment|/* tracemem() address bad type */
@@ -687,6 +693,9 @@ comment|/* llquantize() magnitude too small */
 name|D_LLQUANT_MAGTOOBIG
 block|,
 comment|/* llquantize() high mag too large */
+name|D_NOREG
+block|,
+comment|/* no available internal registers */
 name|D_PRINTM_ADDR
 block|,
 comment|/* printm() memref bad type */

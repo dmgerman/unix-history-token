@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mtree.c,v 1.46 2012/12/20 19:09:25 christos Exp $	*/
+comment|/*	$NetBSD: mtree.c,v 1.48 2013/04/08 17:39:11 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: mtree.c,v 1.46 2012/12/20 19:09:25 christos Exp $"
+literal|"$NetBSD: mtree.c,v 1.48 2013/04/08 17:39:11 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -171,13 +171,7 @@ begin_decl_stmt
 name|int
 name|bflag
 decl_stmt|,
-name|cflag
-decl_stmt|,
-name|Cflag
-decl_stmt|,
 name|dflag
-decl_stmt|,
-name|Dflag
 decl_stmt|,
 name|eflag
 decl_stmt|,
@@ -200,10 +194,6 @@ decl_stmt|,
 name|tflag
 decl_stmt|,
 name|uflag
-decl_stmt|,
-name|Uflag
-decl_stmt|,
-name|wflag
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +280,17 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|int
+name|cflag
+decl_stmt|,
+name|Cflag
+decl_stmt|,
+name|Dflag
+decl_stmt|,
+name|Uflag
+decl_stmt|,
+name|wflag
+decl_stmt|;
 name|char
 modifier|*
 name|dir
@@ -311,6 +312,18 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+name|cflag
+operator|=
+name|Cflag
+operator|=
+name|Dflag
+operator|=
+name|Uflag
+operator|=
+name|wflag
+operator|=
+literal|0
 expr_stmt|;
 name|dir
 operator|=
@@ -338,7 +351,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcCdDeE:f:F:I:ijk:K:lLmMnN:p:PqrR:s:StuUwWxX:"
+literal|"bcCdDeE:f:F:I:ijk:K:lLmMnN:O:p:PqrR:s:StuUwWxX:"
 argument_list|)
 operator|)
 operator|!=
@@ -717,6 +730,15 @@ name|mtree_err
 argument_list|(
 literal|"Unable to use user and group databases in `%s'"
 argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|load_only
+argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;

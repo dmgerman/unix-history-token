@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Instruction.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/IR/Instruction.h"
 end_include
 
 begin_decl_stmt

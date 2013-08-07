@@ -51,12 +51,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ALL_STD_EXCEPT
-value|(FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \ 			 FE_OVERFLOW | FE_UNDERFLOW)
-end_define
+begin_include
+include|#
+directive|include
+file|"test-utils.h"
+end_include
 
 begin_define
 define|#
@@ -95,7 +94,7 @@ name|tol
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {			\ 	volatile long double _in = (x), _out = (result);		\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal(func(_in), _out, (tol)));			\ 	assert((func, fetestexcept(ALL_STD_EXCEPT) == (excepts)));	\ } while (0)
+value|do {			\ 	volatile long double _in = (x), _out = (result);		\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal_tol(func(_in), _out, (tol), CS_BOTH));		\ 	assert(((void)func, fetestexcept(ALL_STD_EXCEPT) == (excepts))); \ } while (0)
 end_define
 
 begin_define
@@ -167,7 +166,7 @@ name|tol
 parameter_list|,
 name|excepts
 parameter_list|)
-value|do {		\ 	volatile long double _iny = (y), _inx = (x), _out = (result);	\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal(func(_iny, _inx), _out, (tol)));			\ 	assert((func, fetestexcept(ALL_STD_EXCEPT) == (excepts)));	\ } while (0)
+value|do {		\ 	volatile long double _iny = (y), _inx = (x), _out = (result);	\ 	assert(feclearexcept(FE_ALL_EXCEPT) == 0);			\ 	assert(fpequal_tol(func(_iny, _inx), _out, (tol), CS_BOTH));	\ 	assert(((void)func, fetestexcept(ALL_STD_EXCEPT) == (excepts))); \ } while (0)
 end_define
 
 begin_define
@@ -260,128 +259,6 @@ init|=
 literal|4.14213562373095048801688724209698081e-01L
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Determine whether x and y are equal to within a relative error of tol,  * with two special rules:  *	+0.0 != -0.0  *	 NaN == NaN  */
-end_comment
-
-begin_function
-name|int
-name|fpequal
-parameter_list|(
-name|long
-name|double
-name|x
-parameter_list|,
-name|long
-name|double
-name|y
-parameter_list|,
-name|long
-name|double
-name|tol
-parameter_list|)
-block|{
-name|fenv_t
-name|env
-decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
-if|if
-condition|(
-name|isnan
-argument_list|(
-name|x
-argument_list|)
-operator|&&
-name|isnan
-argument_list|(
-name|y
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-operator|!
-name|signbit
-argument_list|(
-name|x
-argument_list|)
-operator|!=
-operator|!
-name|signbit
-argument_list|(
-name|y
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-name|x
-operator|==
-name|y
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|tol
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Hard case: need to check the tolerance. */
-name|feholdexcept
-argument_list|(
-operator|&
-name|env
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|fabsl
-argument_list|(
-name|x
-operator|-
-name|y
-argument_list|)
-operator|<=
-name|fabsl
-argument_list|(
-name|y
-operator|*
-name|tol
-argument_list|)
-expr_stmt|;
-name|fesetenv
-argument_list|(
-operator|&
-name|env
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Test special case inputs in asin(), acos() and atan(): signed  * zeroes, infinities, and NaNs.  */

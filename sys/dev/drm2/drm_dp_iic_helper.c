@@ -524,6 +524,8 @@ name|m
 index|]
 operator|.
 name|slave
+operator|>>
+literal|1
 argument_list|,
 name|reading
 argument_list|)

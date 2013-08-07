@@ -70,24 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBasicBlock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -100,13 +82,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/CodeGen/MachineInstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_decl_stmt
@@ -187,6 +181,15 @@ name|Order
 comment|///< Any other ordering dependency.
 block|}
 enum|;
+comment|// Strong dependencies must be respected by the scheduler. Artificial
+comment|// dependencies may be removed only if they are redundant with another
+comment|// strong depedence.
+comment|//
+comment|// Weak dependencies may be violated by the scheduling strategy, but only if
+comment|// the strategy can prove it is correct to do so.
+comment|//
+comment|// Strong OrderKinds must occur before "Weak".
+comment|// Weak OrderKinds must occur after "Weak".
 enum|enum
 name|OrderKind
 block|{
@@ -200,7 +203,13 @@ name|MustAliasMem
 block|,
 comment|///< Nonvolatile load/Store instructions that must alias.
 name|Artificial
-comment|///< Arbitrary weak DAG edge (no actual dependence).
+block|,
+comment|///< Arbitrary strong DAG edge (no real dependence).
+name|Weak
+block|,
+comment|///< Arbitrary weak DAG edge.
+name|Cluster
+comment|///< Weak DAG edge linking a chain of clustered instrs.
 block|}
 enum|;
 name|private
@@ -649,6 +658,28 @@ operator|==
 name|MustAliasMem
 return|;
 block|}
+comment|/// isWeak - Test if this a weak dependence. Weak dependencies are
+comment|/// considered DAG edges for height computation and other heuristics, but do
+comment|/// not force ordering. Breaking a weak edge may require the scheduler to
+comment|/// compensate, for example by inserting a copy.
+name|bool
+name|isWeak
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|Order
+operator|&&
+name|Contents
+operator|.
+name|OrdKind
+operator|>=
+name|Weak
+return|;
+block|}
 comment|/// isArtificial - Test if this is an Order dependence that is marked
 comment|/// as "artificial", meaning it isn't necessary for correctness.
 name|bool
@@ -667,6 +698,26 @@ operator|.
 name|OrdKind
 operator|==
 name|Artificial
+return|;
+block|}
+comment|/// isCluster - Test if this is an Order dependence that is marked
+comment|/// as "cluster", meaning it is artificial and wants to be adjacent.
+name|bool
+name|isCluster
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|Order
+operator|&&
+name|Contents
+operator|.
+name|OrdKind
+operator|==
+name|Cluster
 return|;
 block|}
 comment|/// isAssignedRegDep - Test if this is a Data dependence that is
@@ -835,6 +886,14 @@ name|SUnit
 block|{
 name|private
 label|:
+enum|enum
+block|{
+name|BoundaryID
+init|=
+operator|~
+literal|0u
+block|}
+enum|;
 name|SDNode
 modifier|*
 name|Node
@@ -948,6 +1007,14 @@ name|NumSuccsLeft
 decl_stmt|;
 comment|// # of succs not scheduled.
 name|unsigned
+name|WeakPredsLeft
+decl_stmt|;
+comment|// # of weak preds not scheduled.
+name|unsigned
+name|WeakSuccsLeft
+decl_stmt|;
+comment|// # of weak succs not scheduled.
+name|unsigned
 name|short
 name|NumRegDefsLeft
 decl_stmt|;
@@ -987,6 +1054,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Is a commutable instruction.
+name|bool
+name|hasPhysRegUses
+range|:
+literal|1
+decl_stmt|;
+comment|// Has physreg uses.
 name|bool
 name|hasPhysRegDefs
 range|:
@@ -1143,6 +1216,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|WeakPredsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|WeakSuccsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|NumRegDefsLeft
 argument_list|(
 literal|0
@@ -1174,6 +1257,11 @@ name|false
 argument_list|)
 operator|,
 name|isCommutable
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasPhysRegUses
 argument_list|(
 name|false
 argument_list|)
@@ -1324,6 +1412,16 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|WeakPredsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|WeakSuccsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|NumRegDefsLeft
 argument_list|(
 literal|0
@@ -1355,6 +1453,11 @@ name|false
 argument_list|)
 operator|,
 name|isCommutable
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasPhysRegUses
 argument_list|(
 name|false
 argument_list|)
@@ -1472,8 +1575,7 @@ argument_list|)
 operator|,
 name|NodeNum
 argument_list|(
-operator|~
-literal|0u
+name|BoundaryID
 argument_list|)
 operator|,
 name|NodeQueueId
@@ -1497,6 +1599,16 @@ literal|0
 argument_list|)
 operator|,
 name|NumSuccsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|WeakPredsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|WeakSuccsLeft
 argument_list|(
 literal|0
 argument_list|)
@@ -1532,6 +1644,11 @@ name|false
 argument_list|)
 operator|,
 name|isCommutable
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|hasPhysRegUses
 argument_list|(
 name|false
 argument_list|)
@@ -1623,13 +1740,34 @@ argument_list|(
 argument|NULL
 argument_list|)
 block|{}
+comment|/// \brief Boundary nodes are placeholders for the boundary of the
+comment|/// scheduling region.
+comment|///
+comment|/// BoundaryNodes can have DAG edges, including Data edges, but they do not
+comment|/// correspond to schedulable entities (e.g. instructions) and do not have a
+comment|/// valid ID. Consequently, always check for boundary nodes before accessing
+comment|/// an assoicative data structure keyed on node ID.
+name|bool
+name|isBoundaryNode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NodeNum
+operator|==
+name|BoundaryID
+return|;
+block|}
+empty_stmt|;
 comment|/// setNode - Assign the representative SDNode for this SUnit.
 comment|/// This may be used during pre-regalloc scheduling.
 name|void
 name|setNode
-argument_list|(
-argument|SDNode *N
-argument_list|)
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -1638,11 +1776,12 @@ name|Instr
 operator|&&
 literal|"Setting SDNode of SUnit with MachineInstr!"
 argument_list|)
-block|;
+expr_stmt|;
 name|Node
 operator|=
 name|N
-block|;     }
+expr_stmt|;
+block|}
 comment|/// getNode - Return the representative SDNode for this SUnit.
 comment|/// This may be used during pre-regalloc scheduling.
 name|SDNode
@@ -1727,6 +1866,11 @@ specifier|const
 name|SDep
 modifier|&
 name|D
+parameter_list|,
+name|bool
+name|Required
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// removePred - This removes the specified edge as a pred of the current
@@ -2038,6 +2182,21 @@ literal|0
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Order this node's predecessor edges such that the critical path
+end_comment
+
+begin_comment
+comment|/// edge occurs first.
+end_comment
+
+begin_function_decl
+name|void
+name|biasCriticalPath
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -2545,6 +2704,7 @@ block|}
 comment|/// viewGraph - Pop up a GraphViz/gv window with the ScheduleDAG rendered
 comment|/// using 'dot'.
 comment|///
+name|virtual
 name|void
 name|viewGraph
 parameter_list|(
@@ -2559,6 +2719,7 @@ modifier|&
 name|Title
 parameter_list|)
 function_decl|;
+name|virtual
 name|void
 name|viewGraph
 parameter_list|()
@@ -3173,6 +3334,10 @@ operator|>
 operator|&
 name|SUnits
 expr_stmt|;
+name|SUnit
+modifier|*
+name|ExitSU
+decl_stmt|;
 comment|/// Index2Node - Maps topological index to the node number.
 name|std
 operator|::
@@ -3243,7 +3408,6 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-name|explicit
 name|ScheduleDAGTopologicalSort
 argument_list|(
 name|std
@@ -3254,8 +3418,12 @@ name|SUnit
 operator|>
 operator|&
 name|SUnits
+argument_list|,
+name|SUnit
+operator|*
+name|ExitSU
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// InitDAGTopologicalSorting - create the initial topological
 comment|/// ordering from the DAG to be scheduled.
 name|void
@@ -3277,18 +3445,17 @@ modifier|*
 name|TargetSU
 parameter_list|)
 function_decl|;
-comment|/// WillCreateCycle - Returns true if adding an edge from SU to TargetSU
-comment|/// will create a cycle.
+comment|/// WillCreateCycle - Return true if addPred(TargetSU, SU) creates a cycle.
 name|bool
 name|WillCreateCycle
 parameter_list|(
 name|SUnit
 modifier|*
-name|SU
+name|TargetSU
 parameter_list|,
 name|SUnit
 modifier|*
-name|TargetSU
+name|SU
 parameter_list|)
 function_decl|;
 comment|/// AddPred - Updates the topological ordering to accommodate an edge

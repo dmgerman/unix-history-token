@@ -636,6 +636,10 @@ name|pLit
 operator|->
 name|name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|.
 name|u
@@ -649,10 +653,17 @@ name|cp
 argument_list|,
 literal|"literal %ld (%#lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|c
 operator|.
 name|i
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|.
 name|u
@@ -1052,10 +1063,17 @@ name|cp
 argument_list|,
 literal|"%ld ( %#lx )"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pc
 operator|->
 name|i
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pc
 operator|->
 name|u
@@ -1225,12 +1243,19 @@ name|pad
 argument_list|,
 literal|"variable = %ld (%#lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pFW
 operator|->
 name|param
 operator|->
 name|i
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pFW
 operator|->
 name|param
@@ -1264,12 +1289,19 @@ name|pad
 argument_list|,
 literal|"user variable %ld (%#lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pFW
 operator|->
 name|param
 operator|->
 name|i
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pFW
 operator|->
 name|param
@@ -1302,12 +1334,19 @@ name|pad
 argument_list|,
 literal|"constant = %ld (%#lx)"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pFW
 operator|->
 name|param
 operator|->
 name|i
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|pFW
 operator|->
 name|param

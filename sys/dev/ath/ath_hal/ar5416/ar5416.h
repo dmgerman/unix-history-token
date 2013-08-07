@@ -474,8 +474,18 @@ name|struct
 name|ar5416NfLimits
 name|nf_5g
 decl_stmt|;
+comment|/* 	 * TX power configuration related structures 	 */
 name|int
 name|initPDADC
+decl_stmt|;
+name|int
+name|ah_ht40PowerIncForPdadc
+decl_stmt|;
+name|int16_t
+name|ah_ratesArray
+index|[
+name|Ar5416RateSize
+index|]
 decl_stmt|;
 name|int
 name|ah_need_an_top2_fixup

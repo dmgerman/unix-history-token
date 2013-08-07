@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -1006,7 +1012,7 @@ argument|pfx_next
 argument_list|)
 block|{
 name|struct
-name|timeval
+name|timespec
 name|now
 decl_stmt|;
 if|if
@@ -1063,12 +1069,12 @@ operator|->
 name|irr_rrf_decrvalid
 condition|)
 block|{
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|pfx
@@ -1098,12 +1104,12 @@ operator|->
 name|irr_rrf_decrprefd
 condition|)
 block|{
-name|gettimeofday
+name|clock_gettime
 argument_list|(
+name|CLOCK_MONOTONIC_FAST
+argument_list|,
 operator|&
 name|now
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|pfx
@@ -1538,7 +1544,7 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"<%s> pkt too short. left len = %d. "
-literal|"gabage at end of pkt?"
+literal|"garbage at end of pkt?"
 argument_list|,
 name|__func__
 argument_list|,

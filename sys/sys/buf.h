@@ -227,18 +227,6 @@ argument_list|)
 name|b_bobufs
 expr_stmt|;
 comment|/* (V) Buffer's associated vnode. */
-name|struct
-name|buf
-modifier|*
-name|b_left
-decl_stmt|;
-comment|/* (V) splay tree link */
-name|struct
-name|buf
-modifier|*
-name|b_right
-decl_stmt|;
-comment|/* (V) splay tree link */
 name|uint32_t
 name|b_vflags
 decl_stmt|;
@@ -679,12 +667,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_02000000
+name|B_INFREECNT
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* buf is counted in numfreebufs */
 end_comment
 
 begin_define
@@ -757,7 +745,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32needsgiant\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15b12\14b11\13eintr\12done\11persist\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
+value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32infreecnt\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15b12\14b11\13eintr\12done\11persist\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
 end_define
 
 begin_comment
@@ -877,19 +865,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BV_INFREECNT
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* buf is counted in numfreebufs */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRINT_BUF_VFLAGS
-value|"\20\40infreecnt\3bkgrdwait\2bkgrdinprog\1scanned"
+value|"\20\3bkgrdwait\2bkgrdinprog\1scanned"
 end_define
 
 begin_ifdef
@@ -969,7 +946,7 @@ parameter_list|,
 name|interlock
 parameter_list|)
 define|\
-value|_lockmgr_args(&(bp)->b_lock, (locktype), (interlock),		\ 	    LK_WMESG_DEFAULT, LK_PRIO_DEFAULT, LK_TIMO_DEFAULT,		\ 	    LOCK_FILE, LOCK_LINE)
+value|_lockmgr_args_rw(&(bp)->b_lock, (locktype), (interlock),	\ 	    LK_WMESG_DEFAULT, LK_PRIO_DEFAULT, LK_TIMO_DEFAULT,		\ 	    LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_comment
@@ -994,7 +971,7 @@ parameter_list|,
 name|timo
 parameter_list|)
 define|\
-value|_lockmgr_args(&(bp)->b_lock, (locktype) | LK_TIMELOCK,		\ 	    (interlock), (wmesg), (PRIBIO + 4) | (catch), (timo),	\ 	    LOCK_FILE, LOCK_LINE)
+value|_lockmgr_args_rw(&(bp)->b_lock, (locktype) | LK_TIMELOCK,	\ 	    (interlock), (wmesg), (PRIBIO + 4) | (catch), (timo),	\ 	    LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_comment

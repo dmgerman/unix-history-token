@@ -246,6 +246,36 @@ name|LINEBUFSZ
 value|1024
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_WRAPPER
+end_ifdef
+
+begin_function_decl
+name|int
+name|hosts_ctl
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Read /var/yp/securenets file and initialize the securenets  * list. If the file doesn't exist, we set up a dummy entry that  * allows all hosts to connect.  */
 end_comment
