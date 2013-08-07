@@ -2399,7 +2399,11 @@ name|ifmr
 operator|.
 name|ifm_status
 operator|&
+operator|(
 name|IFM_ACTIVE
+operator||
+name|IFM_AVALID
+operator|)
 expr_stmt|;
 return|return
 literal|0
