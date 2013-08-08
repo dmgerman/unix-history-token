@@ -1529,7 +1529,7 @@ name|len
 expr_stmt|;
 name|err
 operator|=
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 argument_list|(
 name|vap
 argument_list|,
@@ -10097,7 +10097,7 @@ operator||=
 name|M_PWR_SAV
 expr_stmt|;
 comment|/* bypass PS handling */
-comment|/* 	 * Do the right thing; if it's an encap'ed frame then 	 * call ieee80211_parent_transmit() (and free the ref) else 	 * call ieee80211_vap_transmit(). 	 */
+comment|/* 	 * Do the right thing; if it's an encap'ed frame then 	 * call ieee80211_parent_xmitpkt() (and free the ref) else 	 * call ieee80211_vap_xmitpkt(). 	 */
 if|if
 condition|(
 name|m
@@ -10109,7 +10109,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,
@@ -10129,7 +10129,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 argument_list|(
 name|vap
 argument_list|,

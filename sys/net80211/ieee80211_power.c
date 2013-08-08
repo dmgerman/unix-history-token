@@ -2004,7 +2004,7 @@ expr_stmt|;
 comment|/* 			 * For encaped frames, we need to free the node 			 * reference upon failure. 			 */
 if|if
 condition|(
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,
@@ -2068,7 +2068,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 argument_list|(
 name|vap
 argument_list|,

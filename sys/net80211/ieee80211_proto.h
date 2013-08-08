@@ -630,8 +630,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ieee80211_vap_transmit
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
-name|ieee80211_start
+name|ieee80211_vap_qflush
 parameter_list|(
 name|struct
 name|ifnet

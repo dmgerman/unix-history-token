@@ -2482,7 +2482,7 @@ name|iv_ifp
 decl_stmt|;
 name|error
 operator|=
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,

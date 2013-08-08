@@ -1300,7 +1300,7 @@ end_struct_decl
 
 begin_function_decl
 name|int
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -1315,7 +1315,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 parameter_list|(
 name|struct
 name|ieee80211vap

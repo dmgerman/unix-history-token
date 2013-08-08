@@ -757,7 +757,7 @@ block|}
 block|}
 name|error
 operator|=
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,
@@ -1321,13 +1321,18 @@ comment|/*  * Start method for vap's.  All packets from the stack come  * throug
 end_comment
 
 begin_function
-name|void
-name|ieee80211_start
+name|int
+name|ieee80211_vap_transmit
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 block|{
 name|struct
@@ -1357,11 +1362,6 @@ name|ic
 operator|->
 name|ic_ifp
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 comment|/* NB: parent must be up and running */
 if|if
 condition|(
@@ -1388,7 +1388,11 @@ name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* XXX stat */
-return|return;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1409,7 +1413,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * No data frames go out unless we're running. 	 * Note in particular this covers CAC and CSA 	 * states (though maybe we should check muting 	 * for CSA). 	 */
 if|if
@@ -1466,29 +1474,17 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|IFQ_LOCK
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|IFQ_UNLOCK
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 name|IEEE80211_UNLOCK
 argument_list|(
@@ -1496,30 +1492,7 @@ name|ic
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|IFQ_DEQUEUE
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-break|break;
-comment|/* 		 * Sanitize mbuf flags for net80211 use.  We cannot 		 * clear M_PWR_SAV or M_MORE_DATA because these may 		 * be set for frames that are re-submitted from the 		 * power save queue. 		 * 		 * NB: This must be done before ieee80211_classify as 		 *     it marks EAPOL in frames with M_EAPOL. 		 */
+comment|/* 	 * Sanitize mbuf flags for net80211 use.  We cannot 	 * clear M_PWR_SAV or M_MORE_DATA because these may 	 * be set for frames that are re-submitted from the 	 * power save queue. 	 * 	 * NB: This must be done before ieee80211_classify as 	 *     it marks EAPOL in frames with M_EAPOL. 	 */
 name|m
 operator|->
 name|m_flags
@@ -1533,19 +1506,31 @@ operator|-
 name|M_MORE_DATA
 operator|)
 expr_stmt|;
-comment|/* 		 * Bump to the packet transmission path. 		 */
+comment|/* 	 * Bump to the packet transmission path. 	 * The mbuf will be consumed here. 	 */
+return|return
 operator|(
-name|void
-operator|)
 name|ieee80211_start_pkt
 argument_list|(
 name|vap
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-comment|/* mbuf is consumed here */
+operator|)
+return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|ieee80211_vap_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+comment|/* Empty for now */
 block|}
 end_function
 
@@ -1707,14 +1692,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|IFQ_LOCK
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1724,14 +1701,6 @@ operator|&
 name|IFF_DRV_OACTIVE
 condition|)
 block|{
-name|IFQ_UNLOCK
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Short-circuit requests if the vap is marked OACTIVE 		 * as this can happen because a packet came down through 		 * ieee80211_start before the vap entered RUN state in 		 * which case it's ok to just drop the frame.  This 		 * should not be necessary but callers of if_output don't 		 * check OACTIVE. 		 */
 name|senderr
 argument_list|(
@@ -1739,14 +1708,6 @@ name|ENETDOWN
 argument_list|)
 expr_stmt|;
 block|}
-name|IFQ_UNLOCK
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
 name|vap
 operator|=
 name|ifp
