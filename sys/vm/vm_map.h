@@ -174,6 +174,11 @@ modifier|*
 name|cred
 decl_stmt|;
 comment|/* tmp storage for creator ref */
+name|struct
+name|thread
+modifier|*
+name|wiring_thread
+decl_stmt|;
 block|}
 struct|;
 end_struct
