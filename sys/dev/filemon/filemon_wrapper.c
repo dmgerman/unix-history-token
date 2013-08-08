@@ -2420,6 +2420,13 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|filemon
+operator|->
+name|pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 comment|/* Unlock the found filemon structure. */
 name|filemon_filemon_unlock
