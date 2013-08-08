@@ -406,6 +406,17 @@ begin_comment
 comment|/* Don't unmap pages. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OBJPR_NOTWIRED
+value|0x4
+end_define
+
+begin_comment
+comment|/* Don't remove wired pages. */
+end_comment
+
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
