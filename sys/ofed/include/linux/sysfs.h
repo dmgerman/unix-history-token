@@ -303,11 +303,36 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
-comment|/* Trim trailing newline. */
+elseif|else
+if|if
+condition|(
+name|len
+condition|)
+block|{
 name|len
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
+name|PAGE_SIZE
+condition|)
+name|len
+operator|=
+name|PAGE_SIZE
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Trim trailing newline. */
 name|buf
 index|[
 name|len
@@ -315,6 +340,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 comment|/* Leave one trailing byte to append a newline. */
 name|error
