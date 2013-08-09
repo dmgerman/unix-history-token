@@ -1480,6 +1480,11 @@ directive|define
 name|AAC_FLAGS_LBA_64BIT
 value|(1<< 14)
 comment|/* 64-bit LBA support */
+define|#
+directive|define
+name|AAC_FLAGS_NOMSI
+value|(1<< 31)
+comment|/* Broken MSI */
 name|u_int32_t
 name|supported_options
 decl_stmt|;
