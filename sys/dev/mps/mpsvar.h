@@ -1313,6 +1313,12 @@ index|[
 name|MPS_MAX_DISKS_IN_VOL
 index|]
 decl_stmt|;
+name|char
+name|exclude_ids
+index|[
+literal|80
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
