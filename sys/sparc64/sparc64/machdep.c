@@ -3273,15 +3273,15 @@ name|td
 argument_list|,
 name|mc
 operator|->
-name|mc_tpc
+name|_mc_tpc
 argument_list|,
 name|mc
 operator|->
-name|mc_sp
+name|_mc_sp
 argument_list|,
 name|mc
 operator|->
-name|mc_tstate
+name|_mc_tstate
 argument_list|)
 expr_stmt|;
 return|return
@@ -3372,7 +3372,7 @@ expr_stmt|;
 comment|/* 	 * Copy the registers which will be restored by tl0_ret() from the 	 * trapframe. 	 * Note that we skip %g7 which is used as the userland TLS register 	 * and %wstate. 	 */
 name|mc
 operator|->
-name|mc_flags
+name|_mc_flags
 operator|=
 name|_MC_VERSION
 expr_stmt|;
@@ -3603,7 +3603,7 @@ index|]
 expr_stmt|;
 name|mc
 operator|->
-name|mc_fprs
+name|_mc_fprs
 operator|=
 name|tf
 operator|->
@@ -3611,7 +3611,7 @@ name|tf_fprs
 expr_stmt|;
 name|mc
 operator|->
-name|mc_fsr
+name|_mc_fsr
 operator|=
 name|tf
 operator|->
@@ -3619,7 +3619,7 @@ name|tf_fsr
 expr_stmt|;
 name|mc
 operator|->
-name|mc_gsr
+name|_mc_gsr
 operator|=
 name|tf
 operator|->
@@ -3627,7 +3627,7 @@ name|tf_gsr
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tnpc
+name|_mc_tnpc
 operator|=
 name|tf
 operator|->
@@ -3635,7 +3635,7 @@ name|tf_tnpc
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tpc
+name|_mc_tpc
 operator|=
 name|tf
 operator|->
@@ -3643,7 +3643,7 @@ name|tf_tpc
 expr_stmt|;
 name|mc
 operator|->
-name|mc_tstate
+name|_mc_tstate
 operator|=
 name|tf
 operator|->
@@ -3651,7 +3651,7 @@ name|tf_tstate
 expr_stmt|;
 name|mc
 operator|->
-name|mc_y
+name|_mc_y
 operator|=
 name|tf
 operator|->
@@ -3727,7 +3727,7 @@ argument_list|)
 expr_stmt|;
 name|mc
 operator|->
-name|mc_fprs
+name|_mc_fprs
 operator||=
 name|FPRS_FEF
 expr_stmt|;
@@ -3775,13 +3775,13 @@ name|TSTATE_SECURE
 argument_list|(
 name|mc
 operator|->
-name|mc_tstate
+name|_mc_tstate
 argument_list|)
 operator|||
 operator|(
 name|mc
 operator|->
-name|mc_flags
+name|_mc_flags
 operator|&
 operator|(
 operator|(
@@ -4020,7 +4020,7 @@ name|tf_fprs
 operator|=
 name|mc
 operator|->
-name|mc_fprs
+name|_mc_fprs
 expr_stmt|;
 name|tf
 operator|->
@@ -4028,7 +4028,7 @@ name|tf_fsr
 operator|=
 name|mc
 operator|->
-name|mc_fsr
+name|_mc_fsr
 expr_stmt|;
 name|tf
 operator|->
@@ -4036,7 +4036,7 @@ name|tf_gsr
 operator|=
 name|mc
 operator|->
-name|mc_gsr
+name|_mc_gsr
 expr_stmt|;
 name|tf
 operator|->
@@ -4044,7 +4044,7 @@ name|tf_tnpc
 operator|=
 name|mc
 operator|->
-name|mc_tnpc
+name|_mc_tnpc
 expr_stmt|;
 name|tf
 operator|->
@@ -4052,7 +4052,7 @@ name|tf_tpc
 operator|=
 name|mc
 operator|->
-name|mc_tpc
+name|_mc_tpc
 expr_stmt|;
 name|tf
 operator|->
@@ -4060,7 +4060,7 @@ name|tf_tstate
 operator|=
 name|mc
 operator|->
-name|mc_tstate
+name|_mc_tstate
 expr_stmt|;
 name|tf
 operator|->
@@ -4068,14 +4068,14 @@ name|tf_y
 operator|=
 name|mc
 operator|->
-name|mc_y
+name|_mc_y
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|mc
 operator|->
-name|mc_fprs
+name|_mc_fprs
 operator|&
 name|FPRS_FEF
 operator|)

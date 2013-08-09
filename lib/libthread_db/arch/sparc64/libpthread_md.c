@@ -195,7 +195,7 @@ argument_list|)
 expr_stmt|;
 name|mc
 operator|->
-name|mc_fsr
+name|_mc_fsr
 operator|=
 name|r
 operator|->
@@ -203,7 +203,7 @@ name|fr_fsr
 expr_stmt|;
 name|mc
 operator|->
-name|mc_gsr
+name|_mc_gsr
 operator|=
 name|r
 operator|->
@@ -211,7 +211,7 @@ name|fr_gsr
 expr_stmt|;
 name|mc
 operator|->
-name|mc_fprs
+name|_mc_fprs
 operator||=
 name|FPRS_FEF
 expr_stmt|;
@@ -248,7 +248,7 @@ condition|(
 operator|(
 name|mc
 operator|->
-name|mc_fprs
+name|_mc_fprs
 operator|&
 name|FPRS_FEF
 operator|)
@@ -290,7 +290,7 @@ name|fr_fsr
 operator|=
 name|mc
 operator|->
-name|mc_fsr
+name|_mc_fsr
 expr_stmt|;
 name|r
 operator|->
@@ -298,7 +298,7 @@ name|fr_gsr
 operator|=
 name|mc
 operator|->
-name|mc_gsr
+name|_mc_gsr
 expr_stmt|;
 block|}
 else|else
