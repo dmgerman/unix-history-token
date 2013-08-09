@@ -4098,7 +4098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Uses the page mnew as a replacement for an existing page at index  * pindex which must be already present in the object.  */
+comment|/*  * Uses the page mnew as a replacement for an existing page at index  * pindex which must be already present in the object.  *  * The existing page must not be on a paging queue.  */
 end_comment
 
 begin_function
@@ -4205,6 +4205,19 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|mold
+operator|->
+name|queue
+operator|==
+name|PQ_NONE
+argument_list|,
+operator|(
+literal|"vm_page_replace: mold is on a paging queue"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Detach the old page from the resident tailq. */
 name|TAILQ_REMOVE
 argument_list|(
@@ -4218,40 +4231,13 @@ argument_list|,
 name|listq
 argument_list|)
 expr_stmt|;
-name|vm_page_lock
-argument_list|(
-name|mold
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mold
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-condition|)
-block|{
-name|mold
-operator|->
-name|oflags
-operator|&=
-operator|~
-name|VPO_BUSY
-expr_stmt|;
-name|vm_page_flash
-argument_list|(
-name|mold
-argument_list|)
-expr_stmt|;
-block|}
 name|mold
 operator|->
 name|object
 operator|=
 name|NULL
 expr_stmt|;
-name|vm_page_unlock
+name|vm_page_xunbusy
 argument_list|(
 name|mold
 argument_list|)

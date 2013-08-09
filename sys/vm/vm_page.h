@@ -281,17 +281,6 @@ begin_comment
 comment|/* do not collect for syncer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VPO_BUSY
-value|0x20
-end_define
-
-begin_comment
-comment|/* TBD */
-end_comment
-
 begin_comment
 comment|/*  * Busy page implementation details.  * The algorithm is taken mostly by rwlock(9) and sx(9) locks implementation,  * even if the support for owner identity is removed because of size  * constraints.  Checks on lock recursion are then not possible, while the  * lock assertions effectiveness is someway reduced.  */
 end_comment
