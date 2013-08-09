@@ -2124,6 +2124,7 @@ name|__inline
 name|uint8_t
 name|isonum_711
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2131,10 +2132,12 @@ name|p
 parameter_list|)
 block|{
 return|return
+operator|(
 name|p
 index|[
 literal|0
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -2142,9 +2145,10 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|uint8_t
+name|int8_t
 name|isonum_712
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2152,10 +2156,16 @@ name|p
 parameter_list|)
 block|{
 return|return
+operator|(
+operator|(
+name|signed
+name|char
+operator|)
 name|p
 index|[
 literal|0
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -2166,6 +2176,7 @@ name|__inline
 name|uint8_t
 name|isonum_713
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2173,10 +2184,12 @@ name|p
 parameter_list|)
 block|{
 return|return
+operator|(
 name|p
 index|[
 literal|0
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -2187,6 +2200,7 @@ name|__inline
 name|uint16_t
 name|isonum_721
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2217,6 +2231,7 @@ name|__inline
 name|uint16_t
 name|isonum_722
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2247,6 +2262,7 @@ name|__inline
 name|uint16_t
 name|isonum_723
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2277,6 +2293,7 @@ name|__inline
 name|uint32_t
 name|isonum_731
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2321,6 +2338,7 @@ name|__inline
 name|uint32_t
 name|isonum_732
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2365,6 +2383,7 @@ name|__inline
 name|uint32_t
 name|isonum_733
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
