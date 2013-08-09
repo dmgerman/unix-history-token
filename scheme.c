@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/diskpc98.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vtoc.h>
 end_include
 
@@ -440,7 +446,7 @@ name|SCHEME_MBR
 case|:
 name|parts
 operator|=
-literal|4
+name|NDOSPART
 expr_stmt|;
 break|break;
 case|case
@@ -448,7 +454,7 @@ name|SCHEME_PC98
 case|:
 name|parts
 operator|=
-literal|16
+name|PC98_NPARTS
 expr_stmt|;
 break|break;
 case|case
