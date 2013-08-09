@@ -6511,7 +6511,7 @@ name|p
 operator|->
 name|sig
 expr_stmt|;
-comment|/* struct sigevent * */
+comment|/* struct sigevent32 * */
 operator|*
 name|n_args
 operator|=
@@ -21702,7 +21702,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct sigevent *"
+literal|"struct sigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
