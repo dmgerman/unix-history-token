@@ -2610,7 +2610,7 @@ name|bad
 goto|;
 block|}
 block|}
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -2710,7 +2710,7 @@ name|k
 operator|>=
 name|i
 condition|)
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)

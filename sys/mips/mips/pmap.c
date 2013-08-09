@@ -9092,14 +9092,15 @@ name|m
 operator|->
 name|oflags
 operator|&
-operator|(
 name|VPO_UNMANAGED
-operator||
-name|VPO_BUSY
-operator|)
 operator|)
 operator|!=
 literal|0
+operator|||
+name|vm_page_xbusied
+argument_list|(
+name|m
+argument_list|)
 argument_list|,
 operator|(
 literal|"pmap_enter: page %p is not busy"
@@ -12417,7 +12418,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * set by another thread while the object is locked.  Thus, 	 * if PGA_WRITEABLE is clear, no page table entries need updating. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -12427,15 +12428,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|(
 name|m
@@ -12700,7 +12697,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no PTEs can have PTE_D set. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no PTEs can have PTE_D set. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -12710,15 +12707,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|(
 name|m
@@ -12906,24 +12899,20 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
-literal|"pmap_clear_modify: page %p is busy"
+literal|"pmap_clear_modify: page %p is exclusive busied"
 operator|,
 name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not PGA_WRITEABLE, then no PTEs can have PTE_D set. 	 * If the object containing the page is locked and the page is not 	 * VPO_BUSY, then PGA_WRITEABLE cannot be concurrently set. 	 */
+comment|/* 	 * If the page is not PGA_WRITEABLE, then no PTEs can have PTE_D set. 	 * If the object containing the page is locked and the page is not 	 * write busied, then PGA_WRITEABLE cannot be concurrently set. 	 */
 if|if
 condition|(
 operator|(

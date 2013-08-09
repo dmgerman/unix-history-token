@@ -2091,7 +2091,7 @@ index|[
 name|j
 index|]
 expr_stmt|;
-name|vm_page_io_start
+name|vm_page_sbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4067,11 +4067,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
+argument_list|)
 condition|)
 block|{
 name|VM_OBJECT_WUNLOCK
@@ -4118,7 +4117,7 @@ index|[
 name|j
 index|]
 expr_stmt|;
-name|vm_page_io_start
+name|vm_page_sbusy
 argument_list|(
 name|m
 argument_list|)

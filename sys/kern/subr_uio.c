@@ -364,8 +364,6 @@ name|vm_page_sleep_if_busy
 argument_list|(
 name|user_pg
 argument_list|,
-name|TRUE
-argument_list|,
 literal|"vm_pgmoveco"
 argument_list|)
 condition|)
