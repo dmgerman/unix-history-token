@@ -12610,13 +12610,13 @@ literal|5
 expr_stmt|;
 break|break;
 block|}
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
 block|{
 name|struct
-name|kmq_notify_args
+name|freebsd32_kmq_notify_args
 modifier|*
 name|p
 init|=
@@ -12644,7 +12644,7 @@ name|p
 operator|->
 name|sigev
 expr_stmt|;
-comment|/* const struct sigevent * */
+comment|/* const struct sigevent32 * */
 operator|*
 name|n_args
 operator|=
@@ -26022,7 +26022,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
@@ -26044,7 +26044,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sigevent *"
+literal|"const struct sigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
