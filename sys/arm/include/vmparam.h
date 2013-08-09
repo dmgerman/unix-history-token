@@ -500,7 +500,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|(((vm_max_kernel_address - \     VM_MIN_KERNEL_ADDRESS + 1) * 2 / 5)&~ PAGE_MASK)
+value|((vm_max_kernel_address - \     VM_MIN_KERNEL_ADDRESS + 1) * 2 / 5)
 end_define
 
 begin_endif

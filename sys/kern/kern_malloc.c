@@ -3056,6 +3056,13 @@ name|mem_size
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+name|vm_kmem_size
+operator|=
+name|round_page
+argument_list|(
+name|vm_kmem_size
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_MEMGUARD
