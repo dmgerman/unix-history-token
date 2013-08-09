@@ -37,7 +37,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_radix_insert
 parameter_list|(
 name|struct
@@ -116,6 +116,24 @@ name|struct
 name|vm_radix
 modifier|*
 name|rtree
+parameter_list|,
+name|vm_pindex_t
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_radix_replace
+parameter_list|(
+name|struct
+name|vm_radix
+modifier|*
+name|rtree
+parameter_list|,
+name|vm_page_t
+name|newpage
 parameter_list|,
 name|vm_pindex_t
 name|index

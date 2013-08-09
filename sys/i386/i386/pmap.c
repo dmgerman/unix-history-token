@@ -1396,7 +1396,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pmap_insert_pt_page
 parameter_list|(
 name|pmap_t
@@ -6759,7 +6759,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|pmap_insert_pt_page
 parameter_list|(
 name|pmap_t
@@ -6776,6 +6776,8 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|vm_radix_insert
 argument_list|(
 operator|&
@@ -6785,7 +6787,8 @@ name|pm_root
 argument_list|,
 name|mpte
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -15065,13 +15068,32 @@ literal|"pmap_promote_pde: page table page's pindex is wrong"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|pmap_insert_pt_page
 argument_list|(
 name|pmap
 argument_list|,
 name|mpte
 argument_list|)
+condition|)
+block|{
+name|pmap_pde_p_failures
+operator|++
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_promote_pde: failure for va %#x in pmap %p"
+argument_list|,
+name|va
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Promote the pv entries. 	 */
 if|if
 condition|(
