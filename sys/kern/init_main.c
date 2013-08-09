@@ -1836,10 +1836,6 @@ name|schedinit
 argument_list|()
 expr_stmt|;
 comment|/* scheduler gets its house in order */
-comment|/* 	 * Initialize sleep queue hash table 	 */
-name|sleepinit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Create process 0 (the swapper). 	 */
 name|LIST_INSERT_HEAD
 argument_list|(

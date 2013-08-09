@@ -466,10 +466,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|sleepinit
 parameter_list|(
 name|void
+modifier|*
+name|unused
 parameter_list|)
 block|{
 name|hogticks
@@ -488,6 +491,26 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * vmem tries to lock the sleepq mutexes when free'ing kva, so make sure  * it is available.  */
+end_comment
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|sleepinit
+argument_list|,
+name|SI_SUB_KMEM
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|sleepinit
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * General sleep call.  Suspends the current thread until a wakeup is  * performed on the specified identifier.  The thread will then be made  * runnable with the specified priority.  Sleeps at most sbt units of time  * (0 means no timeout).  If pri includes the PCATCH flag, let signals  * interrupt the sleep, otherwise ignore them while sleeping.  Returns 0 if  * awakened, EWOULDBLOCK if the timeout expires.  If PCATCH is set and a  * signal becomes pending, ERESTART is returned if the current system  * call should be restarted if possible, and EINTR is returned if the system  * call should be interrupted by the signal (return EINTR).  *  * The lock argument is unlocked before the caller is suspended, and  * re-locked before _sleep() returns.  If priority includes the PDROP  * flag the lock is not re-locked before returning.  */
