@@ -1319,6 +1319,10 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|struct
+name|timeval
+name|lastfail
+decl_stmt|;
 block|}
 struct|;
 end_struct

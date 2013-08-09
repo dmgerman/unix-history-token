@@ -635,6 +635,24 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Rate limit chain-fail messages to 1 per minute */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|timeval
+name|mps_chainfail_interval
+init|=
+block|{
+literal|60
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*   * sleep_flag can be either CAN_SLEEP or NO_SLEEP.  * If this function is called from process context, it can sleep  * and there is no harm to sleep, in case if this fuction is called  * from Interrupt handler, we can not sleep and need NO_SLEEP flag set.  * based on sleep flags driver will call either msleep, pause or DELAY.  * msleep and pause are of same variant, but pause is used when mps_mtx  * is not hold by driver.  *  */
 end_comment
 
@@ -7044,6 +7062,14 @@ operator|->
 name|event_list
 argument_list|)
 expr_stmt|;
+name|timevalclear
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|lastfail
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -10944,6 +10970,19 @@ literal|0
 condition|)
 block|{
 comment|/* Resource shortage, roll back! */
+if|if
+condition|(
+name|ratecheck
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|lastfail
+argument_list|,
+operator|&
+name|mps_chainfail_interval
+argument_list|)
+condition|)
 name|mps_dprint
 argument_list|(
 name|sc
