@@ -919,7 +919,7 @@ argument|&pool->list
 argument_list|,
 argument|pglist
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|,
 argument|p1
 argument_list|)
@@ -957,7 +957,9 @@ name|list
 argument_list|,
 name|p
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|ttm_pool_update_free_locked
@@ -1044,7 +1046,9 @@ name|list
 argument_list|,
 name|p
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|ttm_pool_update_free_locked
@@ -1449,7 +1453,9 @@ index|[
 name|i
 index|]
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|ttm_vm_page_free
@@ -1770,7 +1776,9 @@ name|pages
 argument_list|,
 name|p
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -1961,7 +1969,9 @@ argument_list|,
 operator|&
 name|new_pages
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1992,7 +2002,7 @@ argument|p
 argument_list|,
 argument|&pool->list
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|)
 block|{
 operator|++
@@ -2009,7 +2019,9 @@ argument_list|,
 operator|&
 name|new_pages
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|pool
@@ -2103,7 +2115,9 @@ name|pool
 operator|->
 name|list
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|count
@@ -2155,7 +2169,9 @@ name|list
 argument_list|,
 name|p
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -2164,7 +2180,9 @@ name|pages
 argument_list|,
 name|p
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -2324,7 +2342,9 @@ index|[
 name|i
 index|]
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|pages
@@ -2622,7 +2642,7 @@ argument|p
 argument_list|,
 argument|&plist
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|)
 block|{
 name|pages
@@ -2648,7 +2668,7 @@ argument|p
 argument_list|,
 argument|&plist
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|)
 block|{
 name|pmap_zero_page
@@ -2695,7 +2715,7 @@ argument|p
 argument_list|,
 argument|&plist
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|)
 block|{
 name|pages

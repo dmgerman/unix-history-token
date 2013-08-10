@@ -1031,7 +1031,9 @@ name|devp_pglist
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|vm_page_putfake
@@ -1350,7 +1352,9 @@ index|[
 name|reqpage
 index|]
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 block|}

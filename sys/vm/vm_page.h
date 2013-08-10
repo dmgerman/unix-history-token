@@ -126,24 +126,56 @@ begin_struct
 struct|struct
 name|vm_page
 block|{
+union|union
+block|{
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
-name|pageq
+name|q
 expr_stmt|;
-comment|/* page queue or free list (Q)	*/
+comment|/* page queue or free list (Q) */
+struct|struct
+block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|vm_page
+argument_list|)
+name|ss
+expr_stmt|;
+comment|/* private slists */
+name|void
+modifier|*
+name|pv
+decl_stmt|;
+block|}
+name|s
+struct|;
+struct|struct
+block|{
+name|u_long
+name|p
+decl_stmt|;
+name|u_long
+name|v
+decl_stmt|;
+block|}
+name|memguard
+struct|;
+block|}
+name|plinks
+union|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
 name|listq
 expr_stmt|;
-comment|/* pages in same object (O) 	*/
+comment|/* pages in same object (O) */
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* which object am I in (O,P)*/
+comment|/* which object am I in (O,P) */
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
@@ -203,7 +235,7 @@ name|u_char
 name|__pad0
 decl_stmt|;
 comment|/* unused padding */
-comment|/* NOTE that these must support one bit per DEV_BSIZE in a page!!! */
+comment|/* NOTE that these must support one bit per DEV_BSIZE in a page */
 comment|/* so, on normal X86 kernels, they must be at least 8 bits wide */
 name|vm_page_bits_t
 name|valid
@@ -395,6 +427,16 @@ begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
 name|pglist
+argument_list|,
+name|vm_page
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|spglist
 argument_list|,
 name|vm_page
 argument_list|)

@@ -460,7 +460,9 @@ name|sgp_pglist
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|vm_page_putfake
@@ -729,7 +731,9 @@ name|sgp_pglist
 argument_list|,
 name|page
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 comment|/* Free the original pages and insert this fake page into the object. */

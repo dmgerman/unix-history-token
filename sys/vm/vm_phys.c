@@ -1145,7 +1145,9 @@ name|pl
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 else|else
@@ -1161,7 +1163,9 @@ name|pl
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|fl
@@ -1204,7 +1208,9 @@ name|pl
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|fl
@@ -4150,7 +4156,7 @@ argument|&fl[oind].pl
 argument_list|,
 argument|pglist
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|)
 block|{
 for|for
@@ -4541,7 +4547,7 @@ argument|m_ret
 argument_list|,
 argument|&fl[oind].pl
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|)
 block|{
 comment|/* 					 * A free list may contain physical pages 					 * from one or more segments. 					 */

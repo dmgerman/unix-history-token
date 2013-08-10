@@ -1407,7 +1407,9 @@ name|vtballoon_pages
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -1543,7 +1545,9 @@ name|vtballoon_pages
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -1553,7 +1557,9 @@ name|free_pages
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -1596,7 +1602,9 @@ name|free_pages
 argument_list|,
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|vtballoon_free_page

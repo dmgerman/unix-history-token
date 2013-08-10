@@ -1173,7 +1173,9 @@ argument_list|,
 operator|&
 name|marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|vm_pagequeue_unlock
@@ -1210,7 +1212,9 @@ argument_list|(
 operator|&
 name|marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|unchanged
@@ -1235,7 +1239,9 @@ name|TAILQ_NEXT
 argument_list|(
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 operator|)
 expr_stmt|;
@@ -1249,7 +1255,9 @@ argument_list|,
 operator|&
 name|marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 return|return
@@ -1344,7 +1352,9 @@ argument_list|,
 operator|&
 name|marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|vm_pagequeue_unlock
@@ -1371,7 +1381,9 @@ argument_list|(
 operator|&
 name|marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|unchanged
@@ -1390,7 +1402,9 @@ name|TAILQ_NEXT
 argument_list|(
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 operator|)
 expr_stmt|;
@@ -1404,7 +1418,9 @@ argument_list|,
 operator|&
 name|marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 return|return
@@ -2217,7 +2233,7 @@ argument|m
 argument_list|,
 argument|&pq->pq_pl
 argument_list|,
-argument|pageq
+argument|plinks.q
 argument_list|,
 argument|next
 argument_list|)
@@ -3780,7 +3796,9 @@ name|TAILQ_NEXT
 argument_list|(
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 comment|/* 		 * skip marker pages 		 */
@@ -3926,7 +3944,9 @@ name|vmd
 operator|->
 name|vmd_marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|vm_pagequeue_unlock
@@ -4484,7 +4504,9 @@ name|TAILQ_NEXT
 argument_list|(
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 operator|!=
 operator|&
@@ -4698,7 +4720,9 @@ name|vmd
 operator|->
 name|vmd_marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -4713,7 +4737,9 @@ name|vmd
 operator|->
 name|vmd_marker
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 block|}
@@ -4815,7 +4841,9 @@ name|TAILQ_NEXT
 argument_list|(
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 if|if
@@ -5932,7 +5960,9 @@ name|TAILQ_NEXT
 argument_list|(
 name|m
 argument_list|,
-name|pageq
+name|plinks
+operator|.
+name|q
 argument_list|)
 expr_stmt|;
 if|if
