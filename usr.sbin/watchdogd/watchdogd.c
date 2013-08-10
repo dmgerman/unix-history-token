@@ -176,6 +176,9 @@ specifier|const
 name|char
 modifier|*
 name|myoptarg
+parameter_list|,
+name|int
+name|zero_ok
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1031,6 +1034,8 @@ argument_list|,
 name|longopt
 argument_list|,
 name|myoptarg
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2013,6 +2018,9 @@ specifier|const
 name|char
 modifier|*
 name|myoptarg
+parameter_list|,
+name|int
+name|zero_ok
 parameter_list|)
 block|{
 specifier|const
@@ -2075,8 +2083,17 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
-operator|<=
+operator|<
 literal|0
+operator|||
+operator|(
+operator|!
+name|zero_ok
+operator|&&
+name|rv
+operator|==
+literal|0
+operator|)
 condition|)
 name|errstr
 operator|=
@@ -3003,6 +3020,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|optarg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3059,6 +3078,8 @@ argument_list|,
 literal|"NULL"
 argument_list|,
 name|optarg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3102,6 +3123,8 @@ argument_list|,
 name|lopt
 argument_list|,
 name|optarg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
