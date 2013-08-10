@@ -10628,7 +10628,7 @@ operator|->
 name|pm_active
 argument_list|)
 expr_stmt|;
-name|atomic_store_ptr
+name|atomic_store_acq_ptr
 argument_list|(
 operator|(
 name|uintptr_t
