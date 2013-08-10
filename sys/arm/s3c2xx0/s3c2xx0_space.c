@@ -435,6 +435,8 @@ name|vm_offset_t
 name|va
 decl_stmt|,
 name|endva
+decl_stmt|,
+name|origva
 decl_stmt|;
 if|if
 condition|(
@@ -443,7 +445,7 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|t
+name|h
 argument_list|,
 name|size
 argument_list|)
@@ -461,11 +463,13 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|t
+name|h
 operator|+
 name|size
 argument_list|)
 expr_stmt|;
+name|origva
+operator|=
 name|va
 operator|=
 name|trunc_page
@@ -473,7 +477,7 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|t
+name|h
 argument_list|)
 expr_stmt|;
 while|while
@@ -499,7 +503,7 @@ name|va
 argument_list|,
 name|endva
 operator|-
-name|va
+name|origva
 argument_list|)
 expr_stmt|;
 block|}
