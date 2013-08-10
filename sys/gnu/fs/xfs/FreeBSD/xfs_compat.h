@@ -584,25 +584,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|barrier
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|barrier
-parameter_list|()
-value|__asm__ __volatile__("": : :"memory")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Map simple global vairables to FreeBSD kernel equivalents  */
 end_comment

@@ -553,7 +553,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile("" : : : "memory");		\ 	*p = v;						\ }							\ struct __hack
+value|static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__compiler_membar();				\ 	*p = v;						\ }							\ struct __hack
 end_define
 
 begin_if
@@ -581,7 +581,7 @@ parameter_list|,
 name|LOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE tmp;					\ 							\ 	tmp = *p;					\ 	__asm __volatile("" : : : "memory");		\ 	return (tmp);					\ }							\ struct __hack
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE tmp;					\ 							\ 	tmp = *p;					\ 	__compiler_membar();				\ 	return (tmp);					\ }							\ struct __hack
 end_define
 
 begin_else

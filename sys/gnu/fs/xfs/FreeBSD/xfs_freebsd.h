@@ -682,7 +682,7 @@ define|#
 directive|define
 name|SYNCHRONIZE
 parameter_list|()
-value|barrier()
+value|__compiler_membar()
 end_define
 
 begin_define

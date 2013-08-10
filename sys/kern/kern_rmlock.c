@@ -146,19 +146,6 @@ begin_comment
 comment|/*  * To support usage of rmlock in CVs and msleep yet another list for the  * priority tracker would be needed.  Using this lock for cv and msleep also  * does not seem very useful  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|compiler_memory_barrier
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("":::"memory");
-block|}
-end_function
-
 begin_function_decl
 specifier|static
 name|void
@@ -1438,7 +1425,7 @@ name|td_critnest
 operator|++
 expr_stmt|;
 comment|/* critical_enter(); */
-name|compiler_memory_barrier
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 name|pc
@@ -1461,7 +1448,7 @@ expr_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
-name|compiler_memory_barrier
+name|__compiler_membar
 argument_list|()
 expr_stmt|;
 name|td

@@ -151,7 +151,7 @@ name|s
 parameter_list|,
 name|sz
 parameter_list|)
-value|({					\ 	itype(sz) v;							\ 	v = atomic_cas((p), (e), (s), sz);				\ 	__asm __volatile("" : : : "memory");				\ 	v;								\ })
+value|({					\ 	itype(sz) v;							\ 	v = atomic_cas((p), (e), (s), sz);				\ 	__compiler_membar();						\ 	v;								\ })
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ name|v
 parameter_list|,
 name|sz
 parameter_list|)
-value|({					\ 	itype(sz) t;							\ 	t = atomic_op((p), op, (v), sz);				\ 	__asm __volatile("" : : : "memory");				\ 	t;								\ })
+value|({					\ 	itype(sz) t;							\ 	t = atomic_op((p), op, (v), sz);				\ 	__compiler_membar();						\ 	t;								\ })
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ name|p
 parameter_list|,
 name|sz
 parameter_list|)
-value|({					\ 	itype(sz) v;							\ 	v = atomic_load((p), sz);					\ 	__asm __volatile("" : : : "memory");				\ 	v;								\ })
+value|({					\ 	itype(sz) v;							\ 	v = atomic_load((p), sz);					\ 	__compiler_membar();						\ 	v;								\ })
 end_define
 
 begin_define
