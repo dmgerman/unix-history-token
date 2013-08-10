@@ -1317,7 +1317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start method for vap's.  All packets from the stack come  * through here.  We handle common processing of the packets  * before dispatching them to the underlying device.  */
+comment|/*  * Start method for vap's.  All packets from the stack come  * through here.  We handle common processing of the packets  * before dispatching them to the underlying device.  *  * if_transmit() requires that the mbuf be consumed by this call  * regardless of the return condition.  */
 end_comment
 
 begin_function
@@ -1388,6 +1388,11 @@ name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* XXX stat */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1411,6 +1416,11 @@ argument_list|,
 name|IEEE80211_S_RUN
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 return|return
@@ -1479,6 +1489,11 @@ operator|->
 name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
