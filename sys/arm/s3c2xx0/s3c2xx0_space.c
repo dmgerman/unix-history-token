@@ -499,7 +499,7 @@ expr_stmt|;
 block|}
 name|kva_free
 argument_list|(
-name|va
+name|origva
 argument_list|,
 name|endva
 operator|-
