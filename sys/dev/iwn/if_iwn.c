@@ -30600,7 +30600,7 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-name|btprio
+name|btprot
 argument_list|)
 expr_stmt|;
 name|btprot
