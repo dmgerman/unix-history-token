@@ -1774,6 +1774,12 @@ name|flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
+else|else
+name|maxsize
+operator|=
+literal|2
+expr_stmt|;
+comment|/* Need at most 2 bounce pages for unaligned access on cache line boundaries */
 if|if
 condition|(
 operator|(
@@ -2154,10 +2160,28 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to add pages to our pool on a per-instance 	 * basis up to a sane limit. 	 */
+if|if
+condition|(
+name|dmat
+operator|->
+name|flags
+operator|&
+name|BUS_DMA_COULD_BOUNCE
+condition|)
 name|maxpages
 operator|=
 name|MAX_BPAGES
 expr_stmt|;
+else|else
+name|maxpages
+operator|=
+literal|2
+operator|*
+name|bz
+operator|->
+name|map_count
+expr_stmt|;
+comment|/* Only need at most 2 pages for buffers unaligned on cache line boundaries */
 if|if
 condition|(
 operator|(
