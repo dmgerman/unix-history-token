@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  * Copyright (c) 1994, 1996  *	Rob Mayoff.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)tag.h	10.5 (Berkeley) 5/15/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  * Copyright (c) 1994, 1996  *	Rob Mayoff.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: tag.h,v 10.9 2012/07/06 16:38:36 zy Exp $  */
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_struct
 struct|struct
 name|_csc
 block|{
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|_csc
 argument_list|)
@@ -31,8 +31,9 @@ name|pid_t
 name|pid
 decl_stmt|;
 comment|/* PID of the connected cscope process. */
-name|time_t
-name|mtime
+name|struct
+name|timespec
+name|mtim
 decl_stmt|;
 comment|/* Last modification time of cscope database. */
 name|FILE
@@ -130,7 +131,7 @@ struct|struct
 name|_tag
 block|{
 comment|/* Tag list. */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_tag
 argument_list|)
@@ -164,7 +165,7 @@ name|recno_t
 name|slno
 decl_stmt|;
 comment|/* Search line number. */
-name|char
+name|CHAR_T
 modifier|*
 name|search
 decl_stmt|;
@@ -173,7 +174,16 @@ name|size_t
 name|slen
 decl_stmt|;
 comment|/* Search string length. */
-name|char
+name|CHAR_T
+modifier|*
+name|msg
+decl_stmt|;
+comment|/* Message string. */
+name|size_t
+name|mlen
+decl_stmt|;
+comment|/* Message string length. */
+name|CHAR_T
 name|buf
 index|[
 literal|1
@@ -189,7 +199,7 @@ struct|struct
 name|_tagq
 block|{
 comment|/* Tag queue. */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_tagq
 argument_list|)
@@ -197,13 +207,16 @@ name|q
 expr_stmt|;
 comment|/* Linked list of tag queues. */
 comment|/* This queue's tag list. */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_tagqh
 argument_list|,
 argument|_tag
 argument_list|)
 name|tagq
+index|[
+literal|1
+index|]
 expr_stmt|;
 name|TAG
 modifier|*

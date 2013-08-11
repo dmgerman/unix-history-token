@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_z.c	10.10 (Berkeley) 5/16/96"
+literal|"$Id: v_z.c,v 10.13 2011/12/02 17:26:59 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,23 +91,19 @@ begin_function
 name|int
 name|v_z
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|lno
 decl_stmt|;
-name|u_int
+name|e_key_t
 name|value
 decl_stmt|;
 comment|/* 	 * The first count is the line to use.  If the value doesn't 	 * exist, use the last line. 	 */
@@ -539,17 +535,14 @@ begin_function
 name|int
 name|vs_crel
 parameter_list|(
-name|sp
-parameter_list|,
-name|count
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|long
+name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|sp
 operator|->

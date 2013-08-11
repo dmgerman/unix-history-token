@@ -15,26 +15,14 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static const char sccsid[] = "@(#)vs_line.c	10.19 (Berkeley) 9/26/96";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id: vs_line.c,v 10.40 2012/02/13 19:22:25 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,34 +127,24 @@ begin_function
 name|int
 name|vs_line
 parameter_list|(
-name|sp
-parameter_list|,
-name|smp
-parameter_list|,
-name|yp
-parameter_list|,
-name|xp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|SMAP
 modifier|*
 name|smp
-decl_stmt|;
+parameter_list|,
+name|size_t
+modifier|*
+name|yp
+parameter_list|,
 name|size_t
 modifier|*
 name|xp
-decl_stmt|,
-decl|*
-name|yp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
-name|CHAR_T
+name|u_char
 modifier|*
 name|kp
 decl_stmt|;
@@ -180,6 +158,8 @@ name|tsmp
 decl_stmt|;
 name|size_t
 name|chlen
+init|=
+literal|0
 decl_stmt|,
 name|cno_cnt
 decl_stmt|,
@@ -206,8 +186,6 @@ decl_stmt|,
 name|skip_screens
 decl_stmt|;
 name|int
-name|ch
-decl_stmt|,
 name|dne
 decl_stmt|,
 name|is_cached
@@ -223,10 +201,11 @@ name|list_tab
 decl_stmt|,
 name|list_dollar
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|CHAR_T
 modifier|*
 name|cbp
 decl_stmt|,
@@ -237,6 +216,11 @@ name|cbuf
 index|[
 literal|128
 index|]
+decl_stmt|;
+name|ARG_CHAR_T
+name|ch
+init|=
+literal|'\0'
 decl_stmt|;
 if|#
 directive|if
@@ -511,6 +495,10 @@ name|nlen
 operator|=
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cbuf
 argument_list|,
 sizeof|sizeof
@@ -537,6 +525,10 @@ name|scr_addstr
 argument_list|(
 name|sp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cbuf
 argument_list|,
 name|nlen
@@ -732,6 +724,31 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* If we shortened this line in another screen, the cursor 	 * position may have fallen off. 	 */
+if|if
+condition|(
+name|sp
+operator|->
+name|lno
+operator|==
+name|smp
+operator|->
+name|lno
+operator|&&
+name|sp
+operator|->
+name|cno
+operator|>=
+name|len
+condition|)
+name|sp
+operator|->
+name|cno
+operator|=
+name|len
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 	 * If we just wrote this or a previous line, we cached the starting 	 * and ending positions of that line.  The way it works is we keep 	 * information about the lines displayed in the SMAP.  If we're 	 * painting the screen in the forward direction, this saves us from 	 * reformatting the physical line for every line on the screen.  This 	 * wins big on binary files with 10K lines. 	 * 	 * Test for the first screen of the line, then the current screen line, 	 * then the line behind us, then do the hard work.  Note, it doesn't 	 * do us any good to have a line in front of us -- it would be really 	 * hard to try and figure out tabs in the reverse direction, i.e. how 	 * many spaces a tab takes up in the reverse direction depends on 	 * what characters preceded it. 	 * 	 * Test for the first screen of the line. 	 */
 if|if
 condition|(
@@ -967,10 +984,6 @@ operator|(
 name|ch
 operator|=
 operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 operator|++
 operator|)
@@ -985,7 +998,7 @@ argument_list|(
 name|scno
 argument_list|)
 else|:
-name|KEY_LEN
+name|KEY_COL
 argument_list|(
 name|sp
 argument_list|,
@@ -1101,10 +1114,6 @@ operator|(
 name|ch
 operator|=
 operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 operator|++
 operator|)
@@ -1119,7 +1128,7 @@ argument_list|(
 name|scno
 argument_list|)
 else|:
-name|KEY_LEN
+name|KEY_COL
 argument_list|(
 name|sp
 argument_list|,
@@ -1272,7 +1281,7 @@ operator|=
 name|cbuf
 operator|)
 operator|+
-sizeof|sizeof
+name|SIZE
 argument_list|(
 name|cbuf
 argument_list|)
@@ -1307,10 +1316,6 @@ operator|(
 name|ch
 operator|=
 operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 operator|++
 operator|)
@@ -1343,7 +1348,7 @@ name|scno
 operator|+=
 name|chlen
 operator|=
-name|KEY_LEN
+name|KEY_COL
 argument_list|(
 name|sp
 argument_list|,
@@ -1475,6 +1480,20 @@ argument_list|,
 name|SC_TINPUT
 argument_list|)
 condition|)
+if|if
+condition|(
+name|is_partial
+condition|)
+operator|*
+name|xp
+operator|=
+name|scno
+operator|-
+name|smp
+operator|->
+name|c_ecsize
+expr_stmt|;
+else|else
 operator|*
 name|xp
 operator|=
@@ -1538,7 +1557,7 @@ continue|continue;
 define|#
 directive|define
 name|FLUSH
-value|{								\ 	*cbp = '\0';							\ 	(void)gp->scr_addstr(sp, cbuf, cbp - cbuf);			\ 	cbp = cbuf;							\ }
+value|{								\ 	*cbp = '\0';							\ 	(void)gp->scr_waddstr(sp, cbuf, cbp - cbuf);			\ 	cbp = cbuf;							\ }
 comment|/* 		 * Display the character.  We do tab expansion here because 		 * the screen interface doesn't have any way to set the tab 		 * length.  Note, it's theoretically possible for chlen to 		 * be larger than cbuf, if the user set a impossibly large 		 * tabstop. 		 */
 if|if
 condition|(
@@ -1577,10 +1596,53 @@ name|ecbp
 condition|)
 name|FLUSH
 expr_stmt|;
+comment|/* don't display half a wide character */
+if|if
+condition|(
+name|is_partial
+operator|&&
+name|CHAR_WIDTH
+argument_list|(
+name|sp
+argument_list|,
+name|ch
+argument_list|)
+operator|>
+literal|1
+condition|)
+block|{
+operator|*
+name|cbp
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|KEY_NEEDSWIDE
+argument_list|(
+name|sp
+argument_list|,
+name|ch
+argument_list|)
+condition|)
+operator|*
+name|cbp
+operator|++
+operator|=
+name|ch
+expr_stmt|;
+else|else
 for|for
 control|(
 name|kp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|KEY_NAME
 argument_list|(
 name|sp
@@ -1620,7 +1682,7 @@ name|smp
 operator|->
 name|c_eclen
 operator|=
-name|KEY_LEN
+name|KEY_COL
 argument_list|(
 name|sp
 argument_list|,
@@ -1667,6 +1729,10 @@ for|for
 control|(
 name|kp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|KEY_NAME
 argument_list|(
 name|sp
@@ -1736,7 +1802,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * vs_number --  *	Repaint the numbers on all the lines.  *  * PUBLIC: int vs_number __P((SCR *));  */
@@ -1746,12 +1812,10 @@ begin_function
 name|int
 name|vs_number
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GS
 modifier|*

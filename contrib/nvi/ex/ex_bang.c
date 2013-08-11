@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_bang.c	10.33 (Berkeley) 9/23/96"
+literal|"$Id: ex_bang.c,v 10.36 2001/06/25 15:19:14 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,18 +115,14 @@ begin_function
 name|int
 name|ex_bang
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|filtertype
@@ -153,6 +149,13 @@ specifier|const
 name|char
 modifier|*
 name|msg
+decl_stmt|;
+name|char
+modifier|*
+name|np
+decl_stmt|;
+name|size_t
+name|nlen
 decl_stmt|;
 name|ap
 operator|=
@@ -221,11 +224,17 @@ name|exp
 operator|->
 name|lastbcomm
 operator|=
-name|strdup
+name|v_wstrdup
 argument_list|(
+name|sp
+argument_list|,
 name|ap
 operator|->
 name|bp
+argument_list|,
+name|ap
+operator|->
+name|len
 argument_list|)
 operator|)
 operator|==
@@ -296,7 +305,9 @@ name|ex_printf
 argument_list|(
 name|sp
 argument_list|,
-literal|"!%s\n"
+literal|"!"
+name|WS
+literal|"\n"
 argument_list|,
 name|ap
 operator|->
@@ -399,6 +410,25 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* If we're still in a vi screen, move out explicitly. */
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
+name|ap
+operator|->
+name|bp
+argument_list|,
+name|ap
+operator|->
+name|len
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -408,9 +438,7 @@ name|sp
 argument_list|,
 name|cmdp
 argument_list|,
-name|ap
-operator|->
-name|bp
+name|np
 argument_list|,
 name|msg
 argument_list|,
