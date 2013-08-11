@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -9,19 +9,11 @@ directive|include
 file|"ipf.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PRINTF
-value|(void)printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRINTF
-value|(void)fprintf
-end_define
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_function
 name|void
@@ -90,7 +82,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"table role = "
+literal|"table role="
 argument_list|)
 expr_stmt|;
 block|}
@@ -117,7 +109,7 @@ name|PRINTF
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|pool
@@ -162,96 +154,13 @@ literal|"Role: "
 argument_list|)
 expr_stmt|;
 block|}
-switch|switch
-condition|(
-name|pool
-operator|->
-name|ipo_unit
-condition|)
-block|{
-case|case
-name|IPL_LOGIPF
-case|:
-name|printf
+name|printunit
 argument_list|(
-literal|"ipf"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGNAT
-case|:
-name|printf
-argument_list|(
-literal|"nat"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGSTATE
-case|:
-name|printf
-argument_list|(
-literal|"state"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGAUTH
-case|:
-name|printf
-argument_list|(
-literal|"auth"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGSYNC
-case|:
-name|printf
-argument_list|(
-literal|"sync"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGSCAN
-case|:
-name|printf
-argument_list|(
-literal|"scan"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGLOOKUP
-case|:
-name|printf
-argument_list|(
-literal|"lookup"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGCOUNT
-case|:
-name|printf
-argument_list|(
-literal|"count"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default :
-name|printf
-argument_list|(
-literal|"unknown(%d)"
-argument_list|,
 name|pool
 operator|->
 name|ipo_unit
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -265,16 +174,25 @@ condition|)
 block|{
 name|PRINTF
 argument_list|(
-literal|" type = tree %s = %s\n"
+literal|" type=tree %s=%s\n"
 argument_list|,
-name|isdigit
+operator|(
+operator|!
+operator|*
+name|pool
+operator|->
+name|ipo_name
+operator|||
+name|ISDIGIT
 argument_list|(
 operator|*
 name|pool
 operator|->
 name|ipo_name
 argument_list|)
+operator|)
 condition|?
+then|\
 literal|"number"
 else|:
 literal|"name"

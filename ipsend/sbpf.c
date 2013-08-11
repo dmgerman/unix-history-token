@@ -135,19 +135,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/udp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/udp_var.h>
 end_include
 
 begin_include
@@ -255,7 +243,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sbpf.c,v 2.5.4.1 2006/03/21 16:32:58 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 

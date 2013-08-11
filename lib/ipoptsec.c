@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2001-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipoptsec.c,v 1.2.4.1 2006/06/16 17:21:04 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -126,6 +126,20 @@ name|ipopt_names
 modifier|*
 name|so
 decl_stmt|;
+if|if
+condition|(
+name|slevel
+operator|==
+name|NULL
+operator|||
+operator|*
+name|slevel
+operator|==
+literal|'\0'
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|so
@@ -164,7 +178,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"no such security level: %s\n"
+literal|"no such security level: '%s'\n"
 argument_list|,
 name|slevel
 argument_list|)
@@ -233,7 +247,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"no such security class: %d\n"
+literal|"no such security class: %d.\n"
 argument_list|,
 name|class
 argument_list|)

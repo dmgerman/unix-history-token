@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printproto.c,v 1.1.2.2 2006/06/16 17:21:14 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,7 +77,7 @@ operator|)
 operator|==
 name|IPN_TCPUDP
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"tcp/udp"
 argument_list|)
@@ -91,7 +91,7 @@ name|in_flags
 operator|&
 name|IPN_TCP
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"tcp"
 argument_list|)
@@ -105,7 +105,7 @@ name|in_flags
 operator|&
 name|IPN_UDP
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"udp"
 argument_list|)
@@ -119,7 +119,7 @@ name|in_flags
 operator|&
 name|IPN_ICMPQUERY
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"icmp"
 argument_list|)
@@ -127,23 +127,26 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_AIX51
-comment|/* 		 * To make up for "ip = 252" and "hopopt = 0" in /etc/protocols 		 */
+comment|/* 		 * To make up for "ip = 252" and "hopopt = 0" in /etc/protocols 		 * The IANA has doubled up on the definition of 0 - it is now 		 * also used for IPv6 hop-opts, so we can no longer rely on 		 * /etc/protocols providing the correct name->number mapping. 		 */
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
 name|np
 operator|->
-name|in_p
+name|in_pr
+index|[
+literal|0
+index|]
 operator|==
 literal|0
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"ip"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -151,7 +154,7 @@ name|pr
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -161,13 +164,16 @@ name|p_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%d"
 argument_list|,
 name|np
 operator|->
-name|in_p
+name|in_pr
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -182,7 +188,7 @@ name|p
 operator|==
 literal|0
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"ip"
 argument_list|)
@@ -196,7 +202,7 @@ name|pr
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -206,7 +212,7 @@ name|p_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%d"
 argument_list|,

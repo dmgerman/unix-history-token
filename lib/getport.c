@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: getport.c,v 1.1.4.6 2006/06/16 17:21:00 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ipf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_function
@@ -18,6 +24,8 @@ parameter_list|,
 name|name
 parameter_list|,
 name|port
+parameter_list|,
+name|proto
 parameter_list|)
 name|frentry_t
 modifier|*
@@ -26,11 +34,20 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+decl_stmt|,
+decl|*
+name|proto
 decl_stmt|;
+end_function
+
+begin_decl_stmt
 name|u_short
 modifier|*
 name|port
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|protoent
@@ -64,7 +81,7 @@ name|getservbyname
 argument_list|(
 name|name
 argument_list|,
-name|NULL
+name|proto
 argument_list|)
 expr_stmt|;
 if|if
@@ -80,6 +97,52 @@ operator|=
 name|s
 operator|->
 name|s_port
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|ISDIGIT
+argument_list|(
+operator|*
+name|name
+argument_list|)
+condition|)
+block|{
+name|int
+name|portval
+init|=
+name|atoi
+argument_list|(
+name|name
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|portval
+operator|<
+literal|0
+operator|||
+name|portval
+operator|>
+literal|65535
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+operator|*
+name|port
+operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|portval
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -314,7 +377,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

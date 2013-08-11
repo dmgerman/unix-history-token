@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -14,20 +14,6 @@ include|#
 directive|include
 file|"kmem.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|PRINTF
-value|(void)printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRINTF
-value|(void)fprintf
-end_define
 
 begin_function
 name|ipstate_t
@@ -51,31 +37,81 @@ name|u_long
 name|now
 decl_stmt|;
 block|{
+name|struct
+name|protoent
+modifier|*
+name|pr
+decl_stmt|;
 name|synclist_t
 name|ipsync
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|opts
+operator|&
+name|OPT_NORESOLVE
+operator|)
+operator|==
+literal|0
+condition|)
+name|pr
+operator|=
+name|getprotobynumber
+argument_list|(
 name|sp
 operator|->
-name|is_phnext
-operator|==
+name|is_p
+argument_list|)
+expr_stmt|;
+else|else
+name|pr
+operator|=
+name|NULL
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|"%d:"
+argument_list|,
+name|sp
+operator|->
+name|is_v
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pr
+operator|!=
 name|NULL
 condition|)
 name|PRINTF
 argument_list|(
-literal|"ORPHAN "
+literal|"%s"
+argument_list|,
+name|pr
+operator|->
+name|p_name
+argument_list|)
+expr_stmt|;
+else|else
+name|PRINTF
+argument_list|(
+literal|"%d"
+argument_list|,
+name|sp
+operator|->
+name|is_p
 argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"%s -> "
+literal|" src:%s"
 argument_list|,
 name|hostname
 argument_list|(
 name|sp
 operator|->
-name|is_v
+name|is_family
 argument_list|,
 operator|&
 name|sp
@@ -86,15 +122,57 @@ name|in4
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|is_p
+operator|==
+name|IPPROTO_UDP
+operator|||
+name|sp
+operator|->
+name|is_p
+operator|==
+name|IPPROTO_TCP
+condition|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|is_flags
+operator|&
+name|IS_WSPORT
+condition|)
 name|PRINTF
 argument_list|(
-literal|"%s pass %#x pr %d state %d/%d"
+literal|",*"
+argument_list|)
+expr_stmt|;
+else|else
+name|PRINTF
+argument_list|(
+literal|",%d"
+argument_list|,
+name|ntohs
+argument_list|(
+name|sp
+operator|->
+name|is_sport
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|PRINTF
+argument_list|(
+literal|" dst:%s"
 argument_list|,
 name|hostname
 argument_list|(
 name|sp
 operator|->
-name|is_v
+name|is_family
 argument_list|,
 operator|&
 name|sp
@@ -103,14 +181,62 @@ name|is_dst
 operator|.
 name|in4
 argument_list|)
-argument_list|,
-name|sp
-operator|->
-name|is_pass
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|sp
 operator|->
 name|is_p
+operator|==
+name|IPPROTO_UDP
+operator|||
+name|sp
+operator|->
+name|is_p
+operator|==
+name|IPPROTO_TCP
+condition|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|is_flags
+operator|&
+name|IS_WDPORT
+condition|)
+name|PRINTF
+argument_list|(
+literal|",*"
+argument_list|)
+expr_stmt|;
+else|else
+name|PRINTF
+argument_list|(
+literal|",%d"
+argument_list|,
+name|ntohs
+argument_list|(
+name|sp
+operator|->
+name|is_dport
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|is_p
+operator|==
+name|IPPROTO_TCP
+condition|)
+block|{
+name|PRINTF
+argument_list|(
+literal|" state:%d/%d"
 argument_list|,
 name|sp
 operator|->
@@ -127,38 +253,47 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|opts
-operator|&
-name|OPT_DEBUG
-condition|)
+block|}
 name|PRINTF
 argument_list|(
-literal|" bkt %d ref %d"
-argument_list|,
-name|sp
-operator|->
-name|is_hv
-argument_list|,
-name|sp
-operator|->
-name|is_ref
-argument_list|)
-expr_stmt|;
-name|PRINTF
-argument_list|(
-literal|"\n\ttag %u ttl %lu"
-argument_list|,
-name|sp
-operator|->
-name|is_tag
+literal|" %ld"
 argument_list|,
 name|sp
 operator|->
 name|is_die
 operator|-
 name|now
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|is_phnext
+operator|==
+name|NULL
+condition|)
+name|PRINTF
+argument_list|(
+literal|" ORPHAN"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|is_flags
+operator|&
+name|IS_CLONE
+condition|)
+name|PRINTF
+argument_list|(
+literal|" CLONE"
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 if|if
@@ -172,21 +307,7 @@ condition|)
 block|{
 name|PRINTF
 argument_list|(
-literal|"\n\t%hu -> %hu %x:%x %hu<<%d:%hu<<%d\n"
-argument_list|,
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|is_sport
-argument_list|)
-argument_list|,
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|is_dport
-argument_list|)
+literal|"\t%x:%x %hu<<%d:%hu<<%d\n"
 argument_list|,
 name|sp
 operator|->
@@ -213,9 +334,20 @@ operator|->
 name|is_dwinscale
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+name|OPT_VERBOSE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|PRINTF
 argument_list|(
-literal|"\tcmsk %04x smsk %04x s0 %08x/%08x\n"
+literal|"\tcmsk %04x smsk %04x isc %p s0 %08x/%08x\n"
 argument_list|,
 name|sp
 operator|->
@@ -230,6 +362,10 @@ name|is_smsk
 index|[
 literal|1
 index|]
+argument_list|,
+name|sp
+operator|->
+name|is_isc
 argument_list|,
 name|sp
 operator|->
@@ -248,7 +384,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\tFWD:ISN inc %x sumd %x\n"
+literal|"\tFWD: ISN inc %x sumd %x\n"
 argument_list|,
 name|sp
 operator|->
@@ -267,7 +403,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"\tREV:ISN inc %x sumd %x\n"
+literal|"\tREV: ISN inc %x sumd %x\n"
 argument_list|,
 name|sp
 operator|->
@@ -325,35 +461,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-elseif|else
-if|if
-condition|(
-name|sp
-operator|->
-name|is_p
-operator|==
-name|IPPROTO_UDP
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|" %hu -> %hu\n"
-argument_list|,
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|is_sport
-argument_list|)
-argument_list|,
-name|ntohs
-argument_list|(
-name|sp
-operator|->
-name|is_dport
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -367,7 +474,7 @@ condition|)
 block|{
 name|PRINTF
 argument_list|(
-literal|" call %hx/%hx\n"
+literal|"\tcall %hx/%hx\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -415,9 +522,10 @@ name|IPPROTO_ICMPV6
 endif|#
 directive|endif
 condition|)
+block|{
 name|PRINTF
 argument_list|(
-literal|" id %hu seq %hu type %d\n"
+literal|"\tid %hu seq %hu type %d\n"
 argument_list|,
 name|sp
 operator|->
@@ -438,12 +546,29 @@ operator|.
 name|ici_type
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|USE_QUAD_T
 name|PRINTF
 argument_list|(
-literal|"\tforward: pkts in %qd bytes in %qd pkts out %qd bytes out %qd\n\tbackward: pkts in %qd bytes in %qd pkts out %qd bytes out %qd\n"
+literal|"\tFWD: IN pkts %"
+name|PRIu64
+literal|" bytes %"
+name|PRIu64
+literal|" OUT pkts %"
+name|PRIu64
+literal|" bytes %"
+name|PRIu64
+literal|"\n\tREV: IN pkts %"
+name|PRIu64
+literal|" bytes %"
+name|PRIu64
+literal|" OUT pkts %"
+name|PRIu64
+literal|" bytes %"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|sp
 operator|->
@@ -506,7 +631,7 @@ else|#
 directive|else
 name|PRINTF
 argument_list|(
-literal|"\tforward: pkts in %ld bytes in %ld pkts out %ld bytes out %ld\n\tbackward: pkts in %ld bytes in %ld pkts out %ld bytes out %ld\n"
+literal|"\tFWD: IN pkts %lu bytes %lu OUT pkts %lu bytes %lu\n\tREV: IN pkts %lu bytes %lu OUT pkts %lu bytes %lu\n"
 argument_list|,
 name|sp
 operator|->
@@ -569,7 +694,15 @@ endif|#
 directive|endif
 name|PRINTF
 argument_list|(
-literal|"\t"
+literal|"\ttag %u pass %#x = "
+argument_list|,
+name|sp
+operator|->
+name|is_tag
+argument_list|,
+name|sp
+operator|->
+name|is_pass
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print out bits set in the result code for the state being 	 * kept as they would for a rule. 	 */
@@ -864,31 +997,94 @@ name|sp
 operator|->
 name|is_pass
 operator|&
+operator|(
+name|FR_STATESYNC
+operator||
+name|FR_STSTRICT
+operator||
+name|FR_STLOOSE
+operator|)
+condition|)
+block|{
+name|PRINTF
+argument_list|(
+literal|" ("
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|is_pass
+operator|&
 name|FR_STATESYNC
 condition|)
 name|PRINTF
 argument_list|(
-literal|" ( sync )"
+literal|" sync"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|is_pass
+operator|&
+name|FR_STSTRICT
+condition|)
+name|PRINTF
+argument_list|(
+literal|" strict"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|is_pass
+operator|&
+name|FR_STLOOSE
+condition|)
+name|PRINTF
+argument_list|(
+literal|" loose"
+argument_list|)
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|" )"
 argument_list|)
 expr_stmt|;
 block|}
-name|PRINTF
-argument_list|(
-literal|"\tIPv%d"
-argument_list|,
-name|sp
-operator|->
-name|is_v
-argument_list|)
-expr_stmt|;
+block|}
 name|PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+name|OPT_VERBOSE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
 name|PRINTF
 argument_list|(
-literal|"\tpkt_flags& %x(%x) = %x,\t"
+literal|"\tref %d"
+argument_list|,
+name|sp
+operator|->
+name|is_ref
+argument_list|)
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|" pkt_flags& %x(%x) = %x\n"
 argument_list|,
 name|sp
 operator|->
@@ -1006,6 +1202,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|PRINTF
 argument_list|(
 literal|"\tinterfaces: in %s[%s"
@@ -1186,6 +1383,11 @@ argument_list|(
 literal|"]\n"
 argument_list|)
 expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|"\tSync status: "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -1222,7 +1424,7 @@ condition|)
 block|{
 name|PRINTF
 argument_list|(
-literal|"\tSync status: status could not be retrieved\n"
+literal|"status could not be retrieved\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1231,7 +1433,7 @@ return|;
 block|}
 name|PRINTF
 argument_list|(
-literal|"\tSync status: idx %d num %d v %d pr %d rev %d\n"
+literal|"idx %d num %d v %d pr %d rev %d\n"
 argument_list|,
 name|ipsync
 operator|.
@@ -1259,7 +1461,7 @@ else|else
 block|{
 name|PRINTF
 argument_list|(
-literal|"\tSync status: not synchronized\n"
+literal|"not synchronized\n"
 argument_list|)
 expr_stmt|;
 block|}

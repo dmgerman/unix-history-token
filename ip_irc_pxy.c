@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 2000-2003 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Id: ip_irc_pxy.c,v 2.39.2.4 2005/02/04 10:22:55 darrenr Exp  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_define
@@ -25,8 +21,8 @@ comment|/* This *MUST* be>= 64! */
 end_comment
 
 begin_decl_stmt
-name|int
-name|ippr_irc_init
+name|void
+name|ipf_p_irc_main_load
 name|__P
 argument_list|(
 operator|(
@@ -38,7 +34,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ippr_irc_fini
+name|ipf_p_irc_main_unload
 name|__P
 argument_list|(
 operator|(
@@ -50,10 +46,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ippr_irc_new
+name|ipf_p_irc_new
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|fr_info_t
 operator|*
 operator|,
@@ -69,10 +68,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ippr_irc_out
+name|ipf_p_irc_out
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|fr_info_t
 operator|*
 operator|,
@@ -88,7 +90,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ippr_irc_send
+name|ipf_p_irc_send
 name|__P
 argument_list|(
 operator|(
@@ -104,7 +106,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ippr_irc_complete
+name|ipf_p_irc_complete
 name|__P
 argument_list|(
 operator|(
@@ -154,8 +156,8 @@ comment|/*  * Initialize local structures.  */
 end_comment
 
 begin_function
-name|int
-name|ippr_irc_init
+name|void
+name|ipf_p_irc_main_load
 parameter_list|()
 block|{
 name|bzero
@@ -205,15 +207,12 @@ name|irc_proxy_init
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
 begin_function
 name|void
-name|ippr_irc_fini
+name|ipf_p_irc_main_unload
 parameter_list|()
 block|{
 if|if
@@ -240,9 +239,10 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
-name|ippr_irc_dcctypes
+name|ipf_p_irc_dcctypes
 index|[]
 init|=
 block|{
@@ -269,7 +269,7 @@ end_comment
 
 begin_function
 name|int
-name|ippr_irc_complete
+name|ipf_p_irc_complete
 parameter_list|(
 name|ircp
 parameter_list|,
@@ -592,7 +592,7 @@ name|k
 operator|=
 literal|0
 init|;
-name|ippr_irc_dcctypes
+name|ipf_p_irc_dcctypes
 index|[
 name|j
 index|]
@@ -607,7 +607,7 @@ name|MIN
 argument_list|(
 name|strlen
 argument_list|(
-name|ippr_irc_dcctypes
+name|ipf_p_irc_dcctypes
 index|[
 name|j
 index|]
@@ -621,7 +621,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|ippr_irc_dcctypes
+name|ipf_p_irc_dcctypes
 index|[
 name|j
 index|]
@@ -636,7 +636,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ippr_irc_dcctypes
+name|ipf_p_irc_dcctypes
 index|[
 name|j
 index|]
@@ -939,14 +939,20 @@ end_function
 
 begin_function
 name|int
-name|ippr_irc_new
+name|ipf_p_irc_new
 parameter_list|(
+name|arg
+parameter_list|,
 name|fin
 parameter_list|,
 name|aps
 parameter_list|,
 name|nat
 parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin
@@ -964,6 +970,18 @@ name|ircinfo_t
 modifier|*
 name|irc
 decl_stmt|;
+if|if
+condition|(
+name|fin
+operator|->
+name|fin_v
+operator|!=
+literal|4
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|KMALLOC
 argument_list|(
 name|irc
@@ -982,11 +1000,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|fin
-operator|=
-name|fin
-expr_stmt|;
-comment|/* LINT */
 name|nat
 operator|=
 name|nat
@@ -1030,7 +1043,7 @@ end_function
 
 begin_function
 name|int
-name|ippr_irc_send
+name|ipf_p_irc_send
 parameter_list|(
 name|fin
 parameter_list|,
@@ -1079,6 +1092,10 @@ name|i
 decl_stmt|,
 name|dlen
 decl_stmt|;
+name|ipf_main_softc_t
+modifier|*
+name|softc
+decl_stmt|;
 name|size_t
 name|nlen
 init|=
@@ -1126,6 +1143,12 @@ name|m1
 decl_stmt|;
 endif|#
 directive|endif
+name|softc
+operator|=
+name|fin
+operator|->
+name|fin_main_soft
+expr_stmt|;
 name|m
 operator|=
 name|fin
@@ -1273,7 +1296,7 @@ name|aps_data
 expr_stmt|;
 if|if
 condition|(
-name|ippr_irc_complete
+name|ipf_p_irc_complete
 argument_list|(
 name|irc
 argument_list|,
@@ -1287,7 +1310,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * check that IP address in the PORT/PASV reply is the same as the 	 * sender of the command - prevents using PORT for port scanning. 	 */
+comment|/* 	 * check that IP address in the DCC reply is the same as the 	 * sender of the command - prevents use for port scanning. 	 */
 if|if
 condition|(
 name|irc
@@ -1298,9 +1321,7 @@ name|ntohl
 argument_list|(
 name|nat
 operator|->
-name|nat_inip
-operator|.
-name|s_addr
+name|nat_osrcaddr
 argument_list|)
 condition|)
 return|return
@@ -1419,9 +1440,9 @@ condition|(
 operator|(
 name|inc
 operator|+
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 operator|)
 operator|>
 literal|65535
@@ -1494,7 +1515,7 @@ name|nm
 operator|)
 argument_list|,
 operator|(
-literal|"ippr_irc_out: allocb failed"
+literal|"ipf_p_irc_out: allocb failed"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1531,7 +1552,7 @@ name|b_rptr
 operator|)
 argument_list|,
 operator|(
-literal|"ippr_irc_out: cannot handle fragmented data block"
+literal|"ipf_p_irc_out: cannot handle fragmented data block"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1620,6 +1641,12 @@ argument_list|,
 name|newbuf
 argument_list|)
 expr_stmt|;
+name|fin
+operator|->
+name|fin_flx
+operator||=
+name|FI_DOCKSUM
+expr_stmt|;
 if|if
 condition|(
 name|inc
@@ -1646,15 +1673,15 @@ name|sum2
 decl_stmt|;
 name|sum1
 operator|=
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 expr_stmt|;
 name|sum2
 operator|=
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 operator|+
 name|inc
 expr_stmt|;
@@ -1686,9 +1713,9 @@ operator|>>
 literal|16
 operator|)
 expr_stmt|;
-name|fix_outcksum
+name|ipf_fix_outcksum
 argument_list|(
-name|fin
+literal|0
 argument_list|,
 operator|&
 name|ip
@@ -1696,13 +1723,32 @@ operator|->
 name|ip_sum
 argument_list|,
 name|sum2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|fin
+operator|->
+name|fin_plen
+operator|+=
+name|inc
+expr_stmt|;
 name|ip
 operator|->
 name|ip_len
+operator|=
+name|htons
+argument_list|(
+name|fin
+operator|->
+name|fin_plen
+argument_list|)
+expr_stmt|;
+name|fin
+operator|->
+name|fin_dlen
 operator|+=
 name|inc
 expr_stmt|;
@@ -1773,7 +1819,7 @@ index|]
 expr_stmt|;
 name|nat2
 operator|=
-name|nat_outlookup
+name|ipf_nat_outlookup
 argument_list|(
 name|fin
 argument_list|,
@@ -1781,11 +1827,14 @@ name|IPN_TCP
 argument_list|,
 name|nat
 operator|->
-name|nat_p
+name|nat_pr
+index|[
+literal|1
+index|]
 argument_list|,
 name|nat
 operator|->
-name|nat_inip
+name|nat_nsrcip
 argument_list|,
 name|ip
 operator|->
@@ -1799,6 +1848,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_MUTEXES
+name|ipf_nat_softc_t
+modifier|*
+name|softn
+init|=
+name|softc
+operator|->
+name|ipf_nat_soft
+decl_stmt|;
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -1855,18 +1917,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX - don't specify remote port */
-name|fi
-operator|.
-name|fin_state
-operator|=
-name|NULL
-expr_stmt|;
-name|fi
-operator|.
-name|fin_nat
-operator|=
-name|NULL
-expr_stmt|;
 name|fi
 operator|.
 name|fin_data
@@ -1941,11 +1991,19 @@ name|ip_src
 operator|=
 name|nat
 operator|->
-name|nat_inip
+name|nat_nsrcip
+expr_stmt|;
+name|MUTEX_ENTER
+argument_list|(
+operator|&
+name|softn
+operator|->
+name|ipf_nat_new
+argument_list|)
 expr_stmt|;
 name|nat2
 operator|=
-name|nat_new
+name|ipf_nat_add
 argument_list|(
 operator|&
 name|fi
@@ -1965,6 +2023,14 @@ argument_list|,
 name|NAT_OUTBOUND
 argument_list|)
 expr_stmt|;
+name|MUTEX_EXIT
+argument_list|(
+operator|&
+name|softn
+operator|->
+name|ipf_nat_new
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nat2
@@ -1975,7 +2041,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|nat_proto
+name|ipf_nat_proto
 argument_list|(
 operator|&
 name|fi
@@ -1985,53 +2051,43 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nat_update
+name|MUTEX_ENTER
+argument_list|(
+operator|&
+name|nat2
+operator|->
+name|nat_lock
+argument_list|)
+expr_stmt|;
+name|ipf_nat_update
 argument_list|(
 operator|&
 name|fi
 argument_list|,
 name|nat2
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|MUTEX_EXIT
+argument_list|(
+operator|&
 name|nat2
 operator|->
-name|nat_ptr
+name|nat_lock
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fr_addstate
+name|ipf_state_add
 argument_list|(
+name|softc
+argument_list|,
 operator|&
 name|fi
 argument_list|,
 name|NULL
 argument_list|,
 name|SI_W_DPORT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fi
-operator|.
-name|fin_state
-operator|!=
-name|NULL
-condition|)
-name|fr_statederef
-argument_list|(
-operator|&
-name|fi
-argument_list|,
-operator|(
-name|ipstate_t
-operator|*
-operator|*
-operator|)
-operator|&
-name|fi
-operator|.
-name|fin_state
 argument_list|)
 expr_stmt|;
 block|}
@@ -2050,14 +2106,20 @@ end_function
 
 begin_function
 name|int
-name|ippr_irc_out
+name|ipf_p_irc_out
 parameter_list|(
+name|arg
+parameter_list|,
 name|fin
 parameter_list|,
 name|aps
 parameter_list|,
 name|nat
 parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin
@@ -2077,7 +2139,7 @@ name|aps
 expr_stmt|;
 comment|/* LINT */
 return|return
-name|ippr_irc_send
+name|ipf_p_irc_send
 argument_list|(
 name|fin
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printlog.c,v 1.6.4.3 2006/06/16 17:21:12 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ decl_stmt|,
 modifier|*
 name|u
 decl_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"log"
 argument_list|)
@@ -46,7 +46,7 @@ name|fr_flags
 operator|&
 name|FR_LOGBODY
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|" body"
 argument_list|)
@@ -59,7 +59,7 @@ name|fr_flags
 operator|&
 name|FR_LOGFIRST
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|" first"
 argument_list|)
@@ -72,7 +72,7 @@ name|fr_flags
 operator|&
 name|FR_LOGORBLOCK
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|" or-block"
 argument_list|)
@@ -86,7 +86,7 @@ operator|!=
 literal|0xffff
 condition|)
 block|{
-name|printf
+name|PRINTF
 argument_list|(
 literal|" level "
 argument_list|)
@@ -139,7 +139,7 @@ name|u
 operator|=
 literal|"!!!"
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s.%s"
 argument_list|,

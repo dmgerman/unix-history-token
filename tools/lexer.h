@@ -1,24 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|wordtab
-block|{
-name|char
-modifier|*
-name|w_word
-decl_stmt|;
-name|int
-name|w_value
-decl_stmt|;
-block|}
-name|wordtab_t
-typedef|;
-end_typedef
 
 begin_ifdef
 ifdef|#
@@ -134,6 +117,20 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|yysetdict
+name|__P
+argument_list|(
+operator|(
+name|wordtab_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|yysetfixeddict
 name|__P
 argument_list|(
 operator|(

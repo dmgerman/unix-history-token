@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipresend.c,v 2.4 2004/01/08 13:34:31 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,15 +166,9 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|ipread
-name|snoop
-decl_stmt|,
 name|pcap
 decl_stmt|,
-name|etherf
-decl_stmt|,
 name|iphex
-decl_stmt|,
-name|tcpd
 decl_stmt|,
 name|iptext
 decl_stmt|;
@@ -560,15 +554,6 @@ ifndef|#
 directive|ifndef
 name|NO_IPF
 case|case
-literal|'E'
-case|:
-name|ipr
-operator|=
-operator|&
-name|etherf
-expr_stmt|;
-break|break;
-case|case
 literal|'H'
 case|:
 name|ipr
@@ -584,24 +569,6 @@ name|ipr
 operator|=
 operator|&
 name|pcap
-expr_stmt|;
-break|break;
-case|case
-literal|'S'
-case|:
-name|ipr
-operator|=
-operator|&
-name|snoop
-expr_stmt|;
-break|break;
-case|case
-literal|'T'
-case|:
-name|ipr
-operator|=
-operator|&
-name|tcpd
 expr_stmt|;
 break|break;
 case|case

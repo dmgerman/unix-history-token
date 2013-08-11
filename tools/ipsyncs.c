@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2001-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsyncs.c,v 1.5.2.4 2006/08/26 11:21:15 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -676,7 +676,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/*  			 * XXX currently we do not check the source address 			 * of a datagram, this can be a security risk 			 */
+comment|/* 			 * XXX currently we do not check the source address 			 * of a datagram, this can be a security risk 			 */
 name|n1
 operator|=
 name|read
@@ -698,6 +698,9 @@ literal|"header : %d bytes read (header = %d bytes)\n"
 argument_list|,
 name|n1
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1104,7 +1107,7 @@ condition|(
 name|terminate
 condition|)
 break|break;
-comment|/* move buffer to the front,we might need to make 			 * this more efficient, by using a rolling pointer 			 * over the buffer and only copying it, when 			 * we are reaching the end  			 */
+comment|/* move buffer to the front,we might need to make 			 * this more efficient, by using a rolling pointer 			 * over the buffer and only copying it, when 			 * we are reaching the end 			 */
 name|inbuf
 operator|-=
 name|n2

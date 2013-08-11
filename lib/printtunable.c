@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2003 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: printtunable.c,v 1.1.4.1 2006/06/16 17:21:15 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -20,9 +20,9 @@ modifier|*
 name|tup
 decl_stmt|;
 block|{
-name|printf
+name|PRINTF
 argument_list|(
-literal|"%s\tmin %#lx\tmax %#lx\tcurrent "
+literal|"%s\tmin %lu\tmax %lu\tcurrent "
 argument_list|,
 name|tup
 operator|->
@@ -48,7 +48,7 @@ argument_list|(
 name|u_long
 argument_list|)
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%lu\n"
 argument_list|,
@@ -69,7 +69,7 @@ argument_list|(
 name|u_int
 argument_list|)
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%u\n"
 argument_list|,
@@ -90,7 +90,7 @@ argument_list|(
 name|u_short
 argument_list|)
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%hu\n"
 argument_list|,
@@ -111,7 +111,7 @@ argument_list|(
 name|u_char
 argument_list|)
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%u\n"
 argument_list|,
@@ -125,7 +125,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|PRINTF
 argument_list|(
 literal|"sz = %d\n"
 argument_list|,

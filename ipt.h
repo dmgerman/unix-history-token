@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ipt.h,v 2.6.4.2 2006/03/26 23:42:04 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -108,10 +108,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|char
+name|mb_t
 operator|*
-operator|,
-name|int
 operator|,
 name|char
 operator|*
@@ -135,38 +133,6 @@ directive|define
 name|R_DO_CKSUM
 value|0x01
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|debug
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|verbose
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#

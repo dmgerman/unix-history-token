@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: printsbuf.c,v 1.2.4.2 2006/06/16 17:21:14 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_ifdef
@@ -89,7 +89,7 @@ name|s
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\\%o"
 argument_list|,
@@ -98,6 +98,41 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|printsbuf
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|printsbuf
+parameter_list|(
+name|buf
+parameter_list|)
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+block|{
+name|buf
+operator|=
+name|buf
+expr_stmt|;
+comment|/* gcc -Wextra */
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: facpri.c,v 1.6.2.5 2006/06/16 17:20:58 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: facpri.c,v 1.6.2.5 2006/06/16 17:20:58 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,6 +582,70 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * map a facility name to its number  */
+end_comment
+
+begin_function
+name|int
+name|pri_findname
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|pris
+index|[
+name|i
+index|]
+operator|.
+name|name
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|pris
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|name
+argument_list|)
+condition|)
+return|return
+name|pris
+index|[
+name|i
+index|]
+operator|.
+name|value
+return|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * map a priority number to its name  */

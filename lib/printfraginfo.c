@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printfraginfo.c,v 1.1.2.5 2006/12/25 15:10:37 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -36,21 +36,60 @@ block|{
 name|frentry_t
 name|fr
 decl_stmt|;
+name|int
+name|family
+decl_stmt|;
+name|PRINTF
+argument_list|(
+literal|"%s"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifr
+operator|->
+name|ipfr_v
+operator|==
+literal|6
+condition|)
+block|{
+name|PRINTF
+argument_list|(
+literal|"inet6"
+argument_list|)
+expr_stmt|;
+name|family
+operator|=
+name|AF_INET6
+expr_stmt|;
+block|}
+else|else
+block|{
+name|PRINTF
+argument_list|(
+literal|"inet"
+argument_list|)
+expr_stmt|;
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+block|}
 name|fr
 operator|.
 name|fr_flags
 operator|=
 literal|0xffffffff
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
-literal|"%s%s -> "
-argument_list|,
-name|prefix
+literal|" %s -> "
 argument_list|,
 name|hostname
 argument_list|(
-literal|4
+name|family
 argument_list|,
 operator|&
 name|ifr
@@ -59,14 +98,14 @@ name|ipfr_src
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	if (kmemcpy((char *)&fr, (u_long)ifr->ipfr_rule, 		    sizeof(fr)) == -1) 		return; */
-name|printf
+comment|/* 	if (kmemcpy((char *)&fr, (u_long)ifr->ipfr_rule, 		    sizeof(fr)) == -1) 		return;  */
+name|PRINTF
 argument_list|(
-literal|"%s id %d ttl %ld pr %d seen0 %d ref %d tos %#02x\n"
+literal|"%s id %x ttl %lu pr %d pkts %u bytes %u seen0 %d ref %d\n"
 argument_list|,
 name|hostname
 argument_list|(
-literal|4
+name|family
 argument_list|,
 operator|&
 name|ifr
@@ -88,15 +127,19 @@ name|ipfr_p
 argument_list|,
 name|ifr
 operator|->
+name|ipfr_pkts
+argument_list|,
+name|ifr
+operator|->
+name|ipfr_bytes
+argument_list|,
+name|ifr
+operator|->
 name|ipfr_seen0
 argument_list|,
 name|ifr
 operator|->
 name|ipfr_ref
-argument_list|,
-name|ifr
-operator|->
-name|ipfr_tos
 argument_list|)
 expr_stmt|;
 block|}

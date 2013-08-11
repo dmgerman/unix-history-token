@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: buildopts.c,v 1.6.4.1 2006/06/16 17:20:56 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -98,6 +98,11 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+else|else
+name|t
+operator|=
+literal|""
+expr_stmt|;
 for|for
 control|(
 name|io
@@ -188,6 +193,27 @@ return|return
 literal|0
 return|;
 block|}
+block|}
+while|while
+condition|(
+operator|(
+name|len
+operator|&
+literal|3
+operator|)
+operator|!=
+literal|3
+condition|)
+block|{
+operator|*
+name|op
+operator|++
+operator|=
+name|IPOPT_NOP
+expr_stmt|;
+name|len
+operator|++
+expr_stmt|;
 block|}
 operator|*
 name|op

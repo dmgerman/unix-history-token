@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD$	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (C) 1993-2001, 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * Id: ip_compat.h,v 2.142.2.25 2005/03/28 09:33:36 darrenr Exp  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -170,9 +166,18 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|SOLARIS2
+argument_list|)
+operator|&&
+operator|(
 name|SOLARIS2
 operator|>=
 literal|8
+operator|)
+operator|)
 end_if
 
 begin_ifndef
@@ -276,6 +281,47 @@ directive|define
 name|USE_INET6
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD_Version__
+argument_list|)
+operator|&&
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|106140000
+operator|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+expr|\
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|IPFILTER_LKM
+argument_list|)
+operator|||
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|399000100
+operator|)
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -286,6 +332,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_INET6
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -339,6 +395,7 @@ begin_define
 define|#
 directive|define
 name|USE_INET6
+value|1
 end_define
 
 begin_endif
@@ -399,6 +456,11 @@ define|#
 directive|define
 name|USE_INET6
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -820,6 +882,156 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NETBSD_GE_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(__NetBSD_Version__)&& \ 				 (__NetBSD_Version__>= (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETBSD_GT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(__NetBSD_Version__)&& \ 				 (__NetBSD_Version__> (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETBSD_LT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(__NetBSD_Version__)&& \ 				 (__NetBSD_Version__< (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD_GE_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(__FreeBSD_version)&& \ 				 (__FreeBSD_version>= (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD_GT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(__FreeBSD_version)&& \ 				 (__FreeBSD_version> (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD_LT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(__FreeBSD_version)&& \ 				 (__FreeBSD_version< (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSDOS_GE_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(_BSDI_VERSION)&& \ 				 (_BSDI_VERSION>= (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSDOS_GT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(_BSDI_VERSION)&& \ 				 (_BSDI_VERSION> (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSDOS_LT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(_BSDI_VERSION)&& \ 				 (_BSDI_VERSION< (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENBSD_GE_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(OpenBSD)&& (OpenBSD>= (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENBSD_GT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(OpenBSD)&& (OpenBSD> (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPENBSD_LT_REV
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(OpenBSD)&& (OpenBSD< (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSD_GE_YEAR
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(BSD)&& (BSD>= (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSD_GT_YEAR
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(BSD)&& (BSD> (x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSD_LT_YEAR
+parameter_list|(
+name|x
+parameter_list|)
+value|(defined(BSD)&& (BSD< (x)))
+end_define
+
 begin_comment
 comment|/* ----------------------------------------------------------------------- */
 end_comment
@@ -913,6 +1125,12 @@ directive|include
 file|<sys/ddi_impldefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -925,8 +1143,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ADD_KERNEL
+end_define
 
 begin_define
 define|#
@@ -1031,6 +1255,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADD_KERNEL
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<inet/mib2.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -1043,23 +1290,21 @@ directive|undef
 name|COPYOUT
 end_undef
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_SYS_NETI_H
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<inet/ip_ire.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_endif
 endif|#
@@ -1158,6 +1403,13 @@ end_include
 
 begin_typedef
 typedef|typedef
+name|uint8_t
+name|u_int8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|uint32_t
 name|u_32_t
 typedef|;
@@ -1167,6 +1419,14 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|u_int8_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1188,11 +1448,52 @@ name|U_32_T
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|SOLARIS2
+operator|>=
+literal|7
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_QUAD_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_QUAD_T
+value|uint64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUAD_T
+value|int64_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEED_LOCAL_RAND
+value|1
+end_define
 
 begin_define
 define|#
@@ -1208,6 +1509,16 @@ name|KMUTEX_T
 value|kmutex_t
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|FW_HOOKS
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -1219,6 +1530,11 @@ include|#
 directive|include
 file|"pfil.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1313,16 +1629,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATOMIC_INC16
-parameter_list|(
-name|x
-parameter_list|)
-value|atomic_add_16((uint16_t*)&(x), 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATOMIC_DEC64
 parameter_list|(
 name|x
@@ -1340,16 +1646,6 @@ parameter_list|)
 value|atomic_add_32((uint32_t*)&(x), -1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC16
-parameter_list|(
-name|x
-parameter_list|)
-value|atomic_add_16((uint16_t*)&(x), -1)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -1362,7 +1658,7 @@ name|ATOMIC_INC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ mutex_enter(&ipf_rw); (x)++; \ 					  mutex_exit(&ipf_rw); }
+value|{ mutex_enter(&softc->ipf_rw); (x)++; \ 					  mutex_exit(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -1372,7 +1668,7 @@ name|ATOMIC_DEC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ mutex_enter(&ipf_rw); (x)--; \ 					  mutex_exit(&ipf_rw); }
+value|{ mutex_enter(&softc->ipf_rw); (x)--; \ 					  mutex_exit(&softc->ipf_rw); }
 end_define
 
 begin_endif
@@ -1543,7 +1839,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(void) copyin((caddr_t)(a), (caddr_t)(b), (c))
+value|copyin((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -1557,7 +1853,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(void) copyout((caddr_t)(a), (caddr_t)(b), (c))
+value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -1596,6 +1892,16 @@ parameter_list|,
 name|s
 parameter_list|)
 value|kmem_free((char *)(x), (s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -1733,6 +2039,9 @@ name|get_unit
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
@@ -1751,7 +2060,200 @@ name|n
 parameter_list|,
 name|v
 parameter_list|)
-value|get_unit(n, v)
+value|get_unit(softc, n, v)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INSTANCES
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/hook.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/neti.h>
+end_include
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|qpktinfo
+block|{
+name|void
+modifier|*
+name|qpi_real
+decl_stmt|;
+comment|/* the real one on the STREAM */
+name|void
+modifier|*
+name|qpi_ill
+decl_stmt|;
+comment|/* COPIED */
+name|mblk_t
+modifier|*
+name|qpi_m
+decl_stmt|;
+name|queue_t
+modifier|*
+name|qpi_q
+decl_stmt|;
+name|void
+modifier|*
+name|qpi_data
+decl_stmt|;
+comment|/* where layer 3 header starts */
+name|size_t
+name|qpi_off
+decl_stmt|;
+name|int
+name|qpi_flags
+decl_stmt|;
+comment|/* COPIED */
+block|}
+name|qpktinfo_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|QF_MULTICAST
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|QF_BROADCAST
+value|0x0002
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|qifpkt
+block|{
+name|struct
+name|qifpkt
+modifier|*
+name|qp_next
+decl_stmt|;
+name|char
+name|qp_ifname
+index|[
+name|LIFNAMSIZ
+index|]
+decl_stmt|;
+name|int
+name|qp_sap
+decl_stmt|;
+name|mblk_t
+modifier|*
+name|qp_mb
+decl_stmt|;
+name|int
+name|qp_inout
+decl_stmt|;
+block|}
+name|qifpkt_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|COPYIFNAME
+parameter_list|(
+name|v
+parameter_list|,
+name|x
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|do {						\ 				if ((v) == 4) {				\ 					net_getifname(softc->ipf_nd_v4,	\ 						      (phy_if_t)x, b,	\ 						      sizeof(b));	\ 				} else {				\ 					net_getifname(softc->ipf_nd_v6,	\ 						      (phy_if_t)x, b,	\ 						      sizeof(b));	\ 				}					\ 			} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|net_getmtu(softc->ipf_nd_v4, (phy_if_t)x, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|net_getmtu(softc->ipf_nd_v6, (phy_if_t)x, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SOFTC
+parameter_list|(
+name|x
+parameter_list|)
+value|ipf_find_softc(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FASTROUTE_RECURSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SOFTC
+parameter_list|(
+name|x
+parameter_list|)
+value|&ipfmain
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((qif_t *)x)->qf_max_frag
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((qif_t *)x)->qf_max_frag
 end_define
 
 begin_define
@@ -1769,6 +2271,8 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
@@ -1776,6 +2280,11 @@ parameter_list|)
 define|\
 value|(void) strncpy(b, ((qif_t *)x)->qf_name, \ 					       LIFNAMSIZ)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1792,9 +2301,9 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|msgdsize(x)
+value|msgdsize(m)
 end_define
 
 begin_define
@@ -1802,15 +2311,27 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|((x)->b_wptr - (x)->b_rptr)
+value|((m)->b_wptr - (m)->b_rptr)
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|adjmsg(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
 parameter_list|(
 name|x
 parameter_list|)
@@ -1852,18 +2373,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|m_next
-value|b_cont
+name|ALLOC_MB_T
+parameter_list|(
+name|m
+parameter_list|,
+name|l
+parameter_list|)
+value|(m) = allocmbt(l)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|PREP_MB_T
 parameter_list|(
-name|x
+name|f
+parameter_list|,
+name|m
 parameter_list|)
-value|(((qpktinfo_t *)(x)->fin_qpi)->qpi_num& 7)
+value|ipf_prependmbt(f, m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|copymsg(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_next
+value|b_cont
 end_define
 
 begin_define
@@ -1884,6 +2429,48 @@ name|mblk_t
 name|mb_t
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mb_copydata
+name|__P
+argument_list|(
+operator|(
+name|mblk_t
+operator|*
+operator|,
+name|size_t
+operator|,
+name|size_t
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mb_copyback
+name|__P
+argument_list|(
+operator|(
+name|mblk_t
+operator|*
+operator|,
+name|size_t
+operator|,
+name|size_t
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -2104,6 +2691,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|FASTROUTE_RECURSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNPRINTF
 value|sprintf
 end_define
@@ -2269,7 +2863,7 @@ name|ATOMIC_INCL
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int64(&ipf_rw.ipf_lk,&(x), 1)
+value|lock_and_incr_int64(&softc->ipf_rw.ipf_lk,&(x), 1)
 end_define
 
 begin_define
@@ -2279,7 +2873,7 @@ name|ATOMIC_DECL
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int64(&ipf_rw.ipf_lk,&(x), -1)
+value|lock_and_incr_int64(&softc->ipf_rw.ipf_lk,&(x), -1)
 end_define
 
 begin_else
@@ -2294,7 +2888,7 @@ name|ATOMIC_INCL
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int32(&ipf_rw.ipf_lk,&(x), 1)
+value|lock_and_incr_int32(&softc->ipf_rw.ipf_lk,&(x), 1)
 end_define
 
 begin_define
@@ -2304,7 +2898,7 @@ name|ATOMIC_DECL
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int32(&ipf_rw.ipf_lk,&(x), -1)
+value|lock_and_incr_int32(&softc->ipf_rw.ipf_lk,&(x), -1)
 end_define
 
 begin_endif
@@ -2319,7 +2913,7 @@ name|ATOMIC_INC64
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int64(&ipf_rw.ipf_lk,&(x), 1)
+value|lock_and_incr_int64(&softc->ipf_rw.ipf_lk,&(x), 1)
 end_define
 
 begin_define
@@ -2329,17 +2923,7 @@ name|ATOMIC_INC32
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int32(&ipf_rw.ipf_lk,&(x), 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_INC16
-parameter_list|(
-name|x
-parameter_list|)
-value|lock_and_incr_int16(&ipf_rw.ipf_lk,&(x), 1)
+value|lock_and_incr_int32(&softc->ipf_rw.ipf_lk,&(x), 1)
 end_define
 
 begin_define
@@ -2349,7 +2933,7 @@ name|ATOMIC_DEC64
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int64(&ipf_rw.ipf_lk,&(x), -1)
+value|lock_and_incr_int64(&softc->ipf_rw.ipf_lk,&(x), -1)
 end_define
 
 begin_define
@@ -2359,17 +2943,7 @@ name|ATOMIC_DEC32
 parameter_list|(
 name|x
 parameter_list|)
-value|lock_and_incr_int32(&ipf_rw.ipf_lk,&(x), -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC16
-parameter_list|(
-name|x
-parameter_list|)
-value|lock_and_incr_int16(&ipf_rw.ipf_lk,&(x), -1)
+value|lock_and_incr_int32(&softc->ipf_rw.ipf_lk,&(x), -1)
 end_define
 
 begin_else
@@ -2388,7 +2962,7 @@ name|ATOMIC_INC64
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)++; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2398,7 +2972,7 @@ name|ATOMIC_DEC64
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)--; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2408,7 +2982,7 @@ name|ATOMIC_INC32
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)++; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2418,7 +2992,7 @@ name|ATOMIC_DEC32
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)--; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2428,7 +3002,7 @@ name|ATOMIC_INCL
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)++; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2438,7 +3012,7 @@ name|ATOMIC_DECL
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)--; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2448,7 +3022,7 @@ name|ATOMIC_INC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)++; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -2458,7 +3032,7 @@ name|ATOMIC_DEC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); (x)--; \ 					  MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_endif
@@ -2786,79 +3360,15 @@ parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
-begin_if
-if|#
-directive|if
-name|HPUXREV
-operator|>=
-literal|1111
-end_if
-
 begin_define
 define|#
 directive|define
-name|BCOPYIN
+name|SPL_SCHED
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+name|x
 parameter_list|)
-value|0; bcopy((caddr_t)(a), (caddr_t)(b), (c))
+value|;
 end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|0; bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2928,6 +3438,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((ill_t *)x)->ill_mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((ill_t *)x)->ill_mtu
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFNAME
 parameter_list|(
 name|x
@@ -2942,6 +3472,8 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
@@ -2988,6 +3520,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|{ lock_t *_l = get_sleep_lock((caddr_t)id); \ 				  wakeup(id + x); \ 				  spinunlock(_l); \ 				}
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -3043,9 +3585,21 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
+name|m
+parameter_list|)
+value|msgdsize(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|msgdsize(x)
+value|adjmsg(m, x)
 end_define
 
 begin_define
@@ -3053,19 +3607,29 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|((x)->b_wptr - (x)->b_rptr)
+value|((m)->b_wptr - (m)->b_rptr)
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_COPY
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|dupmsg((x))
+value|copymsg((m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|dupmsg(m)
 end_define
 
 begin_define
@@ -3125,16 +3689,6 @@ name|mblk_t
 name|mb_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|CACHE_HASH
-parameter_list|(
-name|x
-parameter_list|)
-value|(((qpktinfo_t *)(x)->fin_qpi)->qpi_num& 7)
-end_define
 
 begin_include
 include|#
@@ -3500,11 +4054,18 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|NEED_LOCAL_RAND
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATOMIC_INC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); \ 					  (x)++; MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); \ 					  (x)++; MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -3514,7 +4075,7 @@ name|ATOMIC_DEC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ MUTEX_ENTER(&ipf_rw); \ 					  (x)--; MUTEX_EXIT(&ipf_rw); }
+value|{ MUTEX_ENTER(&softc->ipf_rw); \ 					  (x)--; MUTEX_EXIT(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -3568,13 +4129,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATOMIC_INC16
-value|ATOMIC_INC
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATOMIC_DECL
 parameter_list|(
 name|x
@@ -3600,13 +4154,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|atomicAddUint(&(x), -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC16
-value|ATOMIC_DEC
 end_define
 
 begin_undef
@@ -3905,34 +4452,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|UIOMOVE
 parameter_list|(
 name|a
@@ -3973,6 +4492,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|KFREE
 parameter_list|(
 name|x
@@ -4002,6 +4531,26 @@ parameter_list|,
 name|v
 parameter_list|)
 value|ifunit(n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
 end_define
 
 begin_include
@@ -4082,6 +4631,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|(x) = splsched()
+end_define
+
+begin_define
+define|#
+directive|define
 name|SPL_X
 parameter_list|(
 name|x
@@ -4136,9 +4695,21 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
+name|m
+parameter_list|)
+value|mbufchainlen(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|mbufchainlen(x)
+value|m_adj(m, x)
 end_define
 
 begin_define
@@ -4154,11 +4725,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_COPY
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|m_copy((x), 0, M_COPYALL)
+value|m_copy((m), 0, M_COPYALL)
 end_define
 
 begin_define
@@ -4174,11 +4745,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_define
@@ -4290,6 +4861,13 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEED_LOCAL_RAND
+value|1
+end_define
 
 begin_define
 define|#
@@ -4474,26 +5052,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATOMIC_INC16
-parameter_list|(
-name|x
-parameter_list|)
-value|{ simple_lock(&ipf_rw); (x)++; \ 					  simple_unlock(&ipf_rw); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC16
-parameter_list|(
-name|x
-parameter_list|)
-value|{ simple_lock(&ipf_rw); (x)--; \ 					  simple_unlock(&ipf_rw); }
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATOMIC_INCL
 parameter_list|(
 name|x
@@ -4518,7 +5076,7 @@ name|ATOMIC_INC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ simple_lock(&ipf_rw); (x)++; \ 					  simple_unlock(&ipf_rw); }
+value|{ simple_lock(&softc->ipf_rw); (x)++; \ 					  simple_unlock(&softc->ipf_rw); }
 end_define
 
 begin_define
@@ -4528,7 +5086,17 @@ name|ATOMIC_DEC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ simple_lock(&ipf_rw); (x)--; \ 					  simple_unlock(&ipf_rw); }
+value|{ simple_lock(&softc->ipf_rw); (x)--; \ 					  simple_unlock(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -4620,6 +5188,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
+end_define
+
+begin_define
+define|#
+directive|define
 name|GET_MINOR
 value|getminor
 end_define
@@ -4634,6 +5222,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wakeup(id + x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -4662,34 +5260,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -4745,9 +5315,9 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|mbufchainlen(x)
+value|mbufchainlen(m)
 end_define
 
 begin_define
@@ -4755,19 +5325,41 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->m_len
+value|(m)->m_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
 parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|m_copy((x), 0, M_COPYALL)
+value|m_adj(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
+parameter_list|(
+name|m
+parameter_list|)
+value|m_copy((m), 0, M_COPYALL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|m_copy((m), 0, M_COPYALL)
 end_define
 
 begin_define
@@ -4783,11 +5375,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_define
@@ -4800,6 +5392,13 @@ parameter_list|,
 name|y
 parameter_list|)
 value|if (x) { printf y; panic("ipf_panic"); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|selinfo
+value|sel_queue
 end_define
 
 begin_typedef
@@ -4934,6 +5533,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|TRU64
+operator|<=
+literal|1885
+end_if
+
+begin_define
+define|#
+directive|define
+name|ip6_vfc
+value|ip6_vcf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * These are from's Solaris' #defines for little endian.  */
 end_comment
@@ -5033,6 +5652,135 @@ directive|ifdef
 name|__NetBSD__
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|HAS_SYS_MD5_H
+value|1
+end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|NetBSD
+operator|>=
+literal|199905
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IPFILTER_LKM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|<
+literal|399001400
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter_log.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"opt_ipfilter.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>
+literal|500000000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/kauth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -5124,20 +5872,327 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|499000000
+operator|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|caddr_t
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|USE_MUTEXES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMUTEX_T
+value|kmutex_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRWLOCK_T
+value|krwlock_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|mutex_destroy(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DOWNGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_downgrade(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|mutex_enter(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|mutex_exit(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|mutex_init(&(x)->ipf_lk, MUTEX_DRIVER,\ 						  IPL_SOFTNET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_NUKE
+parameter_list|(
+name|x
+parameter_list|)
+value|bzero((x), sizeof(*(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_enter(&(x)->ipf_lk, RW_READER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|rw_init(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_exit(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_destroy(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_enter(&(x)->ipf_lk, RW_WRITER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_NET
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_IMP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_X
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|399001400
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_comment
+comment|/* Not in NetBSD 3.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROC_T
+value|struct lwp
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREE
+parameter_list|(
+name|a
+parameter_list|)
+value|free((a), _M_IPF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|free((a), _M_IPF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMALLOC
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(a) = (b)malloc(sizeof (*(a)), \ 							_M_IPF, M_NOWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMALLOCS
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|(a) = (b)malloc((c), _M_IPF, M_NOWAIT)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PROC_T
+value|struct proc
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|mbufchainlen(x)
+value|mbufchainlen(m)
 end_define
 
 begin_define
@@ -5145,15 +6200,27 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->m_len
+value|(m)->m_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|m_adj(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
 parameter_list|(
 name|x
 parameter_list|)
@@ -5210,33 +6277,37 @@ parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__NetBSD_Version__
+argument_list|)
+operator|&&
+operator|(
+name|__NetBSD_Version__
+operator|>=
+literal|499004900
+operator|)
+operator|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|BCOPYOUT
+name|POLLWAKEUP
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+name|x
 parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
+value|selnotify(softc->ipf_selwait+x, 0, 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -5286,22 +6357,14 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
 parameter_list|)
 define|\
 value|(void) strncpy(b, \ 					       ((struct ifnet *)x)->if_xname, \ 					       LIFNAMSIZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CACHE_HASH
-parameter_list|(
-name|x
-parameter_list|)
-value|((((struct ifnet *)fin->fin_ifp)->if_index)&7)
 end_define
 
 begin_else
@@ -5312,11 +6375,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_endif
@@ -5397,21 +6460,31 @@ end_ifdef
 begin_if
 if|#
 directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|400000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NEED_LOCAL_RAND
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
 argument_list|)
 end_if
 
@@ -5431,17 +6504,6 @@ directive|include
 file|"opt_bpf.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"bpf.h"
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -5458,7 +6520,7 @@ operator|&&
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|400000
+literal|500000
 operator|)
 end_if
 
@@ -5512,6 +6574,91 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500024
+operator|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500043
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|p_cred
+value|td_ucred
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_uid
+value|td_ucred->cr_ruid
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|p_cred
+value|t_proc->p_cred
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_uid
+value|t_proc->p_cred->p_ruid
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|p_uid
+value|p_cred->p_ruid
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD_version>= 500024 */
+end_comment
 
 begin_if
 if|#
@@ -5593,34 +6740,6 @@ parameter_list|)
 value|copyout((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
 begin_if
 if|#
 directive|if
@@ -5642,6 +6761,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -5650,6 +6780,27 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|700000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -5667,6 +6818,128 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|700014
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KRWLOCK_FILL_SZ
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMUTEX_FILL_SZ
+value|24
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KMUTEX_T
+value|struct mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRWLOCK_T
+value|struct rwlock
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_rlock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_wlock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DOWNGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_downgrade(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|rw_init(&(x)->ipf_lk, (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|rw_destroy(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do { \ 					    if (rw_wowned(&(x)->ipf_lk)) \ 					    	rw_wunlock(&(x)->ipf_lk); \ 					    else \ 						rw_runlock(&(x)->ipf_lk); \ 					} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -5677,6 +6950,22 @@ begin_comment
 comment|/*  * Whilst the sx(9) locks on FreeBSD have the right semantics and interface  * for what we want to use them for, despite testing showing they work -  * with a WITNESS kernel, it generates LOR messages.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|700000
+operator|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -5684,17 +6973,171 @@ name|KMUTEX_T
 value|struct mtx
 end_define
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_define
 define|#
 directive|define
 name|KRWLOCK_T
 value|struct mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_lock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_lock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_unlock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DOWNGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|mtx_init(&(x)->ipf_lk, (y), NULL,\ 						 MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_destroy(&(x)->ipf_lk)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KRWLOCK_T
+value|struct sx
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMUTEX_T
+value|struct mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|sx_slock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|sx_xlock(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DOWNGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|sx_downgrade(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|sx_init(&(x)->ipf_lk, (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|sx_destroy(&(x)->ipf_lk)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sx_unlock
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|sx_unlock(&(x)->ipf_lk)
 end_define
 
 begin_else
@@ -5705,9 +7148,27 @@ end_else
 begin_define
 define|#
 directive|define
-name|KRWLOCK_T
-value|struct sx
+name|RWLOCK_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|do { \ 					    if ((x)->ipf_lk.sx_cnt< 0) \ 						sx_xunlock(&(x)->ipf_lk); \ 					    else \ 						sx_sunlock(&(x)->ipf_lk); \ 					} while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -5750,6 +7211,8 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
@@ -5773,16 +7236,6 @@ literal|500043
 operator|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|CACHE_HASH
-parameter_list|(
-name|x
-parameter_list|)
-value|((((struct ifnet *)fin->fin_ifp)->if_index)& 7)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -5791,11 +7244,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_endif
@@ -5924,172 +7377,6 @@ begin_comment
 comment|/*  * Whilst the sx(9) locks on FreeBSD have the right semantics and interface  * for what we want to use them for, despite testing showing they work -  * with a WITNESS kernel, it generates LOR messages.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_define
-define|#
-directive|define
-name|READ_ENTER
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_lock(&(x)->ipf_lk)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRITE_ENTER
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_lock(&(x)->ipf_lk)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RWLOCK_EXIT
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_unlock(&(x)->ipf_lk)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTEX_DOWNGRADE
-parameter_list|(
-name|x
-parameter_list|)
-value|;
-end_define
-
-begin_define
-define|#
-directive|define
-name|RWLOCK_INIT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|mtx_init(&(x)->ipf_lk, (y), NULL,\ 						 MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RW_DESTROY
-parameter_list|(
-name|x
-parameter_list|)
-value|mtx_destroy(&(x)->ipf_lk)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|READ_ENTER
-parameter_list|(
-name|x
-parameter_list|)
-value|sx_slock(&(x)->ipf_lk)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WRITE_ENTER
-parameter_list|(
-name|x
-parameter_list|)
-value|sx_xlock(&(x)->ipf_lk)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTEX_DOWNGRADE
-parameter_list|(
-name|x
-parameter_list|)
-value|sx_downgrade(&(x)->ipf_lk)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RWLOCK_INIT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|sx_init(&(x)->ipf_lk, (y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RW_DESTROY
-parameter_list|(
-name|x
-parameter_list|)
-value|sx_destroy(&(x)->ipf_lk)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sx_unlock
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RWLOCK_EXIT
-parameter_list|(
-name|x
-parameter_list|)
-value|sx_unlock(x)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RWLOCK_EXIT
-parameter_list|(
-name|x
-parameter_list|)
-value|do { \ 					    if ((x)->ipf_lk.sx_cnt< 0) \ 						sx_xunlock(&(x)->ipf_lk); \ 					    else \ 						sx_sunlock(&(x)->ipf_lk); \ 					} while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -6103,7 +7390,7 @@ name|ATOMIC_INC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ mtx_lock(&ipf_rw.ipf_lk); (x)++; \ 					  mtx_unlock(&ipf_rw.ipf_lk); }
+value|{ mtx_lock(&softc->ipf_rw.ipf_lk); (x)++; \ 					  mtx_unlock(&softc->ipf_rw.ipf_lk); }
 end_define
 
 begin_define
@@ -6113,7 +7400,7 @@ name|ATOMIC_DEC
 parameter_list|(
 name|x
 parameter_list|)
-value|{ mtx_lock(&ipf_rw.ipf_lk); (x)--; \ 					  mtx_unlock(&ipf_rw.ipf_lk); }
+value|{ mtx_lock(&softc->ipf_rw.ipf_lk); (x)--; \ 					  mtx_unlock(&softc->ipf_rw.ipf_lk); }
 end_define
 
 begin_define
@@ -6143,17 +7430,7 @@ name|ATOMIC_INC32
 parameter_list|(
 name|x
 parameter_list|)
-value|atomic_add_32(&(x), 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_INC16
-parameter_list|(
-name|x
-parameter_list|)
-value|atomic_add_16(&(x), 1)
+value|atomic_add_32((u_int *)&(x), 1)
 end_define
 
 begin_define
@@ -6183,17 +7460,7 @@ name|ATOMIC_DEC32
 parameter_list|(
 name|x
 parameter_list|)
-value|atomic_add_32(&(x), -1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC16
-parameter_list|(
-name|x
-parameter_list|)
-value|atomic_add_16(&(x), -1)
+value|atomic_add_32((u_int *)&(x), -1)
 end_define
 
 begin_define
@@ -6226,6 +7493,16 @@ parameter_list|)
 value|;
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -6243,6 +7520,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splhigh()
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -6252,14 +7544,36 @@ begin_comment
 comment|/* __FreeBSD_version>= 500043 */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500024
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|GET_MINOR
+value|dev2unit
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|mbufchainlen(x)
+value|mbufchainlen(m)
 end_define
 
 begin_define
@@ -6267,19 +7581,41 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->m_len
+value|(m)->m_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|m_adj(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
 parameter_list|(
 name|x
 parameter_list|)
 value|m_copy((x), 0, M_COPYALL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|m_dup(m, M_NOWAIT)
 end_define
 
 begin_define
@@ -6616,34 +7952,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
 name|GETKTIME
 parameter_list|(
 name|x
@@ -6656,9 +7964,9 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|mbufchainlen(x)
+value|mbufchainlen(m)
 end_define
 
 begin_define
@@ -6666,19 +7974,31 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->m_len
+value|(m)->m_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
 parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|m_copy((x), 0, M_COPYALL)
+value|m_adj(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
+parameter_list|(
+name|m
+parameter_list|)
+value|m_copy((m), 0, M_COPYALL)
 end_define
 
 begin_define
@@ -6737,22 +8057,14 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
 parameter_list|)
 define|\
 value|(void) strncpy(b, \ 					       ((struct ifnet *)x)->if_xname, \ 					       LIFNAMSIZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CACHE_HASH
-parameter_list|(
-name|x
-parameter_list|)
-value|((((struct ifnet *)fin->fin_ifp)->if_index)&7)
 end_define
 
 begin_else
@@ -6763,11 +8075,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_endif
@@ -6883,9 +8195,9 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|mbufchainlen(x)
+value|mbufchainlen(m)
 end_define
 
 begin_define
@@ -6893,29 +8205,41 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->m_len
+value|(m)->m_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
 parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|m_copy((x), 0, M_COPYALL)
+value|m_adj(m, x)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|M_COPY
+parameter_list|(
+name|m
+parameter_list|)
+value|m_copy((m), 0, M_COPYALL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_typedef
@@ -7050,9 +8374,9 @@ define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|mbufchainlen(x)
+value|mbufchainlen(m)
 end_define
 
 begin_define
@@ -7060,29 +8384,41 @@ define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->m_len
+value|(m)->m_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
 parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|m_copy((x), 0, M_COPYALL)
+value|m_adj(m, x)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CACHE_HASH
+name|M_COPY
+parameter_list|(
+name|m
+parameter_list|)
+value|m_copy((m), 0, M_COPYALL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
+value|((struct ifnet *)x)->if_name
 end_define
 
 begin_define
@@ -7095,6 +8431,16 @@ parameter_list|,
 name|v
 parameter_list|)
 value|ifunit(n, IFNAMSIZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
 end_define
 
 begin_define
@@ -7141,6 +8487,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wakeup(id + x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
 end_define
 
 begin_define
@@ -7309,21 +8665,22 @@ end_if
 begin_include
 include|#
 directive|include
-file|<linux/config.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/version.h>
 end_include
 
 begin_if
 if|#
 directive|if
+operator|(
 name|LINUX
 operator|>=
 literal|20600
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 end_if
 
 begin_define
@@ -7375,6 +8732,70 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<asm/byteorder.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LITTLE_ENDIAN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BIG_ENDIAN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LITTLE_ENDIAN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|LITTLE_ENDIAN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BIG_ENDIAN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LITTLE_ENDIAN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|BIG_ENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -7385,34 +8806,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|if (x) { printf y; panic("ipf_panic"); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|bcopy((caddr_t)(a), (caddr_t)(b), (c))
 end_define
 
 begin_define
@@ -7466,6 +8859,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|wait_event_interruptible
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SLEEP
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|wait_event_interruptible((*(x##_linux)), 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|SLEEP
 parameter_list|(
 name|x
@@ -7474,6 +8900,11 @@ name|s
 parameter_list|)
 value|0, interruptible_sleep_on(x##_linux)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7500,7 +8931,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|uiomove(a,b,c,d)
+value|uiomove((caddr_t)a,b,c,d)
 end_define
 
 begin_define
@@ -7542,7 +8973,7 @@ name|MUTEX_ENTER
 parameter_list|(
 name|x
 parameter_list|)
-value|spin_lock(&(x)->ipf_lk)
+value|spin_lock_bh(&(x)->ipf_lk)
 end_define
 
 begin_define
@@ -7552,7 +8983,7 @@ name|MUTEX_EXIT
 parameter_list|(
 name|x
 parameter_list|)
-value|spin_unlock(&(x)->ipf_lk)
+value|spin_unlock_bh(&(x)->ipf_lk)
 end_define
 
 begin_define
@@ -7604,7 +9035,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|rwlock_init(&(x)->ipf_lk)
+value|ipf_rw_init(x, y)
 end_define
 
 begin_define
@@ -7644,7 +9075,7 @@ name|ATOMIC_INCL
 parameter_list|(
 name|x
 parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)++; \ 					MUTEX_EXIT(&ipf_rw)
+value|atomic_long_inc((atomic_long_t *)&(x))
 end_define
 
 begin_define
@@ -7654,17 +9085,7 @@ name|ATOMIC_DECL
 parameter_list|(
 name|x
 parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)--; \ 					MUTEX_EXIT(&ipf_rw)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_INC64
-parameter_list|(
-name|x
-parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)++; \ 					MUTEX_EXIT(&ipf_rw)
+value|atomic_long_dec((atomic_long_t *)&(x))
 end_define
 
 begin_define
@@ -7674,27 +9095,7 @@ name|ATOMIC_INC32
 parameter_list|(
 name|x
 parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)++; \ 					MUTEX_EXIT(&ipf_rw)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_INC16
-parameter_list|(
-name|x
-parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)++; \ 					MUTEX_EXIT(&ipf_rw)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC64
-parameter_list|(
-name|x
-parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)--; \ 					MUTEX_EXIT(&ipf_rw)
+value|atomic_inc((atomic_t *)&(x))
 end_define
 
 begin_define
@@ -7704,17 +9105,87 @@ name|ATOMIC_DEC32
 parameter_list|(
 name|x
 parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)--; \ 					MUTEX_EXIT(&ipf_rw)
+value|atomic_dec((atomic_t *)&(x))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_X86_32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC64
+parameter_list|(
+name|x
+parameter_list|)
+value|do { MUTEX_ENTER(&softc->ipf_rw); \ 					     (x)++; \ 					     MUTEX_EXIT(&softc->ipf_rw); \ 					} while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATOMIC_DEC16
+name|ATOMIC_DEC64
 parameter_list|(
 name|x
 parameter_list|)
-value|MUTEX_ENTER(&ipf_rw); (x)--; \ 					MUTEX_EXIT(&ipf_rw)
+value|do { MUTEX_ENTER(&softc->ipf_rw); \ 					     (x)--; \ 					     MUTEX_EXIT(&softc->ipf_rw); \ 					} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC64
+parameter_list|(
+name|x
+parameter_list|)
+value|atomic64_inc((atomic64_t *)&(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DEC64
+parameter_list|(
+name|x
+parameter_list|)
+value|atomic64_dec((atomic64_t *)&(x))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|U_QUAD_T
+value|u_int64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUAD_T
+value|int64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define
@@ -7755,16 +9226,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((struct net_device*)x)->name
-end_define
-
-begin_define
-define|#
-directive|define
-name|CACHE_HASH
-parameter_list|(
-name|x
-parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 			  ((struct net_device *)fin->fin_ifp)->ifindex)& 7)
 end_define
 
 begin_typedef
@@ -7870,6 +9331,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|m_adj
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|skb_trim((m), (m)->len + (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_data
+value|data
+end_define
+
+begin_define
+define|#
+directive|define
 name|m_len
 value|len
 end_define
@@ -7884,7 +9364,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_COPY
 parameter_list|(
 name|m
 parameter_list|)
@@ -7909,6 +9389,52 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(m)->len
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|m_adj(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|skb_copy((m), in_interrupt() ? GFP_ATOMIC : \ 								GFP_KERNEL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREP_MB_T
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|do { \ 					(m)->next = *(f)->fin_mp; \ 					*(fin)->fin_mp = (m); \ 					(f)->fin_m = (m); \ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLOC_MB_T
+parameter_list|(
+name|m
+parameter_list|,
+name|l
+parameter_list|)
+value|(m) = alloc_skb((l), \ 						in_interrupt() ? GFP_ATOMIC : \ 								 GFP_KERNEL)
 end_define
 
 begin_define
@@ -7967,6 +9493,65 @@ name|z
 parameter_list|)
 value|memcmp(a, b, z)
 end_define
+
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|>=
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|23
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ipf_random
+value|random32
+end_define
+
+begin_define
+define|#
+directive|define
+name|arc4random
+value|random32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<linux/random.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ipf_random
+value|get_random_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|arc4random
+value|get_random_int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -8037,6 +9622,45 @@ parameter_list|)
 value|kfree(x)
 end_define
 
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|>=
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|23
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|f_uid
+value|f_owner.uid
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFP
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|dev_get_by_name(&init_net, n)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -8047,6 +9671,31 @@ parameter_list|,
 name|v
 parameter_list|)
 value|dev_get_by_name(n)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct net_device *)x)->mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct net_device *)x)->mtu
 end_define
 
 begin_else
@@ -8156,6 +9805,8 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
@@ -8268,6 +9919,41 @@ name|UIO_WRITE
 value|2
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+name|LINUX_VERSION_CODE
+operator|>=
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|6
+operator|,
+literal|23
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|int
+name|fmode_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|u_long
@@ -8307,6 +9993,735 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ----------------------------------------------------------------------- */
+end_comment
+
+begin_comment
+comment|/*                                    A I X                                */
+end_comment
+
+begin_comment
+comment|/* ----------------------------------------------------------------------- */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX51
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|MENTAT
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|rw_read_locked
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_include
+include|#
+directive|include
+file|<net/net_globals.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/net_malloc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|KMUTEX_T
+value|simple_lock_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRWLOCK_T
+value|complex_lock_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_MUTEXES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_SPL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|lock_read((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|lock_write((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DOWNGRADE
+parameter_list|(
+name|x
+parameter_list|)
+value|lock_write_to_read((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|lock_alloc(&(x)->ipf_lk, \ 						   LOCK_ALLOC_PIN, \ 						   (u_short)y, 0); \ 					lock_init((x)->ipf_lk, TRUE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWLOCK_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|lock_done((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RW_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|lock_free(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_ENTER
+parameter_list|(
+name|x
+parameter_list|)
+value|simple_lock((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_INIT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|lock_alloc(&(x)->ipf_lk, \ 						   LOCK_ALLOC_PIN, \ 						   (u_short)y, 0); \ 					simple_lock_init((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|lock_free(&(x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_EXIT
+parameter_list|(
+name|x
+parameter_list|)
+value|simple_unlock((x)->ipf_lk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUTEX_NUKE
+parameter_list|(
+name|x
+parameter_list|)
+value|bzero(&(x)->ipf_lk, sizeof((x)->ipf_lk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC64
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DEC64
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC32
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DEC32
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INCL
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DECL
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)++; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DEC
+parameter_list|(
+name|x
+parameter_list|)
+value|{ MUTEX_ENTER(&softc->ipf_rw); (x)--; \ 					  MUTEX_EXIT(&softc->ipf_rw); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splsched()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_NET
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splnet()
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_IMP
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splimp()
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SPL_X
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SPL_X
+parameter_list|(
+name|x
+parameter_list|)
+value|splx(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIOMOVE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|uiomove((caddr_t)a,b,c,d)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|getifp
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GETIFP
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|)
+value|getifp(n, v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_MINOR
+value|minor
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLEEP
+parameter_list|(
+name|id
+parameter_list|,
+name|n
+parameter_list|)
+value|sleepx((id), PZERO+1, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WAKEUP
+parameter_list|(
+name|id
+parameter_list|,
+name|x
+parameter_list|)
+value|wakeup(id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|COPYIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|copyin((caddr_t)(a), (caddr_t)(b), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|COPYOUT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|copyout((caddr_t)(a), (caddr_t)(b), (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMALLOC
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|MALLOC((a), b, sizeof(*(a)), M_TEMP, M_NOWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMALLOCS
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|MALLOC((a), b, (c), M_TEMP, \ 					    ((c)> 4096) ? M_WAITOK : M_NOWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREE
+parameter_list|(
+name|x
+parameter_list|)
+value|FREE((x), M_TEMP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KFREES
+parameter_list|(
+name|x
+parameter_list|,
+name|s
+parameter_list|)
+value|FREE((x), M_TEMP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSGDSIZE
+parameter_list|(
+name|m
+parameter_list|)
+value|mbufchainlen(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_LEN
+parameter_list|(
+name|m
+parameter_list|)
+value|(m)->m_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ADJ
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|m_adj(m, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
+parameter_list|(
+name|m
+parameter_list|)
+value|m_copy((m), 0, M_COPYALL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETKTIME
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPF_PANIC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mbuf
+name|mb_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * These are from's Solaris' #defines for little endian.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IP6F_MORE_FRAG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IP6F_MORE_FRAG
+value|0x0100
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IP6F_RESERVED_MASK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IP6F_RESERVED_MASK
+value|0x0600
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IP6F_OFF_MASK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IP6F_OFF_MASK
+value|0xf8ff
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|ip6_ext
+block|{
+name|u_char
+name|ip6e_nxt
+decl_stmt|;
+name|u_char
+name|ip6e_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|int
+name|ioctlcmd_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|minor_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Really, any arch where sizeof(long) != sizeof(int).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|u_32_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|U_32_T
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_RECOGNISED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _AIX51 */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -8360,14 +10775,44 @@ name|defined
 argument_list|(
 name|IPFILTER_BPF
 argument_list|)
-operator|&&
+end_if
+
+begin_if
+if|#
+directive|if
 operator|(
+name|defined
+argument_list|(
+name|NBPF
+argument_list|)
+operator|&&
 operator|(
 name|NBPF
 operator|>
 literal|0
 operator|)
+operator|)
 operator|||
+operator|(
+name|defined
+argument_list|(
+name|DEV_BPF
+argument_list|)
+operator|&&
+operator|(
+name|DEV_BPF
+operator|>
+literal|0
+operator|)
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|NBPFILTER
+argument_list|)
+operator|&&
 operator|(
 name|NBPFILTER
 operator|>
@@ -8387,9 +10832,58 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Userland locking primitives  */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KMUTEX_FILL_SZ
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KMUTEX_FILL_SZ
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KRWLOCK_FILL_SZ
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|KRWLOCK_FILL_SZ
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -8412,17 +10906,6 @@ decl_stmt|;
 name|int
 name|eMm_heldat
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__hpux
-name|char
-name|eMm_fill
-index|[
-literal|8
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|eMmutex_t
 typedef|;
@@ -8452,17 +10935,6 @@ decl_stmt|;
 name|int
 name|eMrw_heldat
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__hpux
-name|char
-name|eMm_fill
-index|[
-literal|24
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|eMrwlock_t
 typedef|;
@@ -8472,6 +10944,12 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
+name|char
+name|_fill
+index|[
+name|KMUTEX_FILL_SZ
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KMUTEX_T
@@ -8480,6 +10958,7 @@ block|{
 name|KMUTEX_T
 name|ipf_slk
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ipf_lname
@@ -8501,6 +10980,12 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
+name|char
+name|_fill
+index|[
+name|KRWLOCK_FILL_SZ
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KRWLOCK_T
@@ -8509,6 +10994,7 @@ block|{
 name|KRWLOCK_T
 name|ipf_slk
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ipf_lname
@@ -8644,7 +11130,6 @@ end_if
 
 begin_decl_stmt
 specifier|extern
-name|INLINE
 name|void
 name|ipf_read_enter
 name|__P
@@ -8659,7 +11144,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|INLINE
 name|void
 name|ipf_write_enter
 name|__P
@@ -8674,7 +11158,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|INLINE
 name|void
 name|ipf_rw_exit
 name|__P
@@ -8689,7 +11172,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|INLINE
+name|void
+name|ipf_rw_init
+name|__P
+argument_list|(
+operator|(
+name|ipfrwlock_t
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|ipf_rw_downgrade
 name|__P
@@ -8727,8 +11226,19 @@ name|mb_s
 modifier|*
 name|mb_next
 decl_stmt|;
+name|char
+modifier|*
+name|mb_data
+decl_stmt|;
+name|void
+modifier|*
+name|mb_ifp
+decl_stmt|;
 name|int
 name|mb_len
+decl_stmt|;
+name|int
+name|mb_flags
 decl_stmt|;
 name|u_long
 name|mb_buf
@@ -8754,38 +11264,134 @@ name|m_next
 value|mb_next
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|m_len
+end_undef
+
+begin_define
+define|#
+directive|define
+name|m_len
+value|mb_len
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|m_flags
+end_undef
+
+begin_define
+define|#
+directive|define
+name|m_flags
+value|mb_flags
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|m_data
+end_undef
+
+begin_define
+define|#
+directive|define
+name|m_data
+value|mb_data
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|M_MCAST
+end_undef
+
+begin_define
+define|#
+directive|define
+name|M_MCAST
+value|0x01
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|M_BCAST
+end_undef
+
+begin_define
+define|#
+directive|define
+name|M_BCAST
+value|0x02
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|M_MBCAST
+end_undef
+
+begin_define
+define|#
+directive|define
+name|M_MBCAST
+value|0x04
+end_define
+
 begin_define
 define|#
 directive|define
 name|MSGDSIZE
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->mb_len
+value|msgdsize(m)
 end_define
-
-begin_comment
-comment|/* XXX - from ipt.c */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|M_LEN
 parameter_list|(
-name|x
+name|m
 parameter_list|)
-value|(x)->mb_len
+value|(m)->mb_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|M_DUPLICATE
+name|M_ADJ
 parameter_list|(
+name|m
+parameter_list|,
 name|x
 parameter_list|)
-value|(x)
+value|(m)->mb_len += x
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_COPY
+parameter_list|(
+name|m
+parameter_list|)
+value|dupmbt(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|dupmbt(m)
 end_define
 
 begin_define
@@ -8807,7 +11413,7 @@ name|m
 parameter_list|,
 name|t
 parameter_list|)
-value|((t)(m)->mb_buf)
+value|((t)(m)->mb_data)
 end_define
 
 begin_define
@@ -8815,8 +11421,33 @@ define|#
 directive|define
 name|FREE_MB_T
 parameter_list|(
-name|x
+name|m
 parameter_list|)
+value|freembt(m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALLOC_MB_T
+parameter_list|(
+name|m
+parameter_list|,
+name|l
+parameter_list|)
+value|(m) = allocmbt(l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREP_MB_T
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|do { \ 						(m)->mb_next = *(f)->fin_mp; \ 						*(fin)->fin_mp = (m); \ 						(f)->fin_m = (m); \ 					} while (0)
 end_define
 
 begin_define
@@ -8846,6 +11477,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|y
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPF_PANIC
 parameter_list|(
 name|x
@@ -8863,6 +11504,16 @@ parameter_list|(
 name|x
 parameter_list|,
 name|y
+parameter_list|)
+value|;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
 parameter_list|)
 value|;
 end_define
@@ -8960,6 +11611,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
 name|COPYIN
 parameter_list|(
 name|a
@@ -8968,7 +11639,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(bcopy((a), (b), (c)), 0)
+value|bcopywrap((a), (b), (c))
 end_define
 
 begin_define
@@ -8982,35 +11653,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(bcopy((a), (b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((a), (b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((a), (b), (c)), 0)
+value|bcopywrap((a), (b), (c))
 end_define
 
 begin_define
@@ -9058,7 +11701,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|ipfuiomove(a,b,c,d)
+value|ipfuiomove((caddr_t)a,b,c,d)
 end_define
 
 begin_decl_stmt
@@ -9102,26 +11745,67 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CACHE_HASH
-end_ifndef
+begin_decl_stmt
+specifier|extern
+name|int
+name|bcopywrap
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CACHE_HASH
-parameter_list|(
-name|x
-parameter_list|)
-value|((IFNAME(fin->fin_ifp)[0] + \ 				  ((struct ifnet *)fin->fin_ifp)->if_unit)& 7)
-end_define
+begin_decl_stmt
+specifier|extern
+name|mb_t
+modifier|*
+name|allocmbt
+name|__P
+argument_list|(
+operator|(
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|mb_t
+modifier|*
+name|dupmbt
+name|__P
+argument_list|(
+operator|(
+name|mb_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|freembt
+name|__P
+argument_list|(
+operator|(
+name|mb_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -9130,7 +11814,7 @@ name|MUTEX_DESTROY
 parameter_list|(
 name|x
 parameter_list|)
-value|eMmutex_destroy(&(x)->ipf_emu)
+value|eMmutex_destroy(&(x)->ipf_emu, \ 							__FILE__, __LINE__)
 end_define
 
 begin_define
@@ -9150,7 +11834,7 @@ name|MUTEX_EXIT
 parameter_list|(
 name|x
 parameter_list|)
-value|eMmutex_exit(&(x)->ipf_emu)
+value|eMmutex_exit(&(x)->ipf_emu, \ 						     __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -9162,7 +11846,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|eMmutex_init(&(x)->ipf_emu, y)
+value|eMmutex_init(&(x)->ipf_emu, y, \ 						     __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -9253,6 +11937,11 @@ argument_list|(
 operator|(
 name|eMmutex_t
 operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -9286,6 +11975,11 @@ argument_list|(
 operator|(
 name|eMmutex_t
 operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -9303,6 +11997,11 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -9415,6 +12114,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|extern
+name|mb_t
+modifier|*
+name|allocmbt
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -9447,9 +12157,16 @@ end_comment
 begin_if
 if|#
 directive|if
-name|BSD
-operator|>
+operator|!
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|BSD_GT_YEAR
+argument_list|(
 literal|199306
+argument_list|)
 end_if
 
 begin_define
@@ -9481,6 +12198,16 @@ begin_comment
 comment|/* BSD> 199306 */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|U_QUAD_T
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -9494,6 +12221,11 @@ directive|define
 name|QUAD_T
 value|long
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -9643,11 +12375,20 @@ name|_KERNEL
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MENTAT
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|INSTANCES
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -9690,11 +12431,10 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
-name|BSD
-operator|>=
+name|BSD_GE_YEAR
+argument_list|(
 literal|199306
-operator|)
+argument_list|)
 operator|||
 name|defined
 argument_list|(
@@ -9764,50 +12504,24 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|||
-operator|(
-name|defined
+name|FREEBSD_GE_REV
 argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|&&
-expr|\
-operator|(
-name|__FreeBSD_version
-operator|>=
 literal|300000
-operator|)
-operator|)
+argument_list|)
 end_if
 
 begin_if
 if|#
 directive|if
-operator|(
-name|defined
+name|NETBSD_GE_REV
 argument_list|(
-name|__NetBSD_Version__
-argument_list|)
-operator|&&
-operator|(
-name|__NetBSD_Version__
-operator|>=
 literal|105180000
-operator|)
-operator|)
-operator|||
-expr|\
-operator|(
-name|defined
-argument_list|(
-name|OpenBSD
 argument_list|)
-operator|&&
-operator|(
-name|OpenBSD
-operator|>=
+operator|||
+name|OPENBSD_GE_REV
+argument_list|(
 literal|200111
-operator|)
-operator|)
+argument_list|)
 end_if
 
 begin_include
@@ -9975,6 +12689,16 @@ begin_comment
 comment|/* IPFILTER_M_IPFILTER */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KMALLOC
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -9986,6 +12710,21 @@ name|b
 parameter_list|)
 value|MALLOC((a), b, sizeof(*(a)), _M_IPF, M_NOWAIT)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KMALLOCS
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -10001,6 +12740,21 @@ parameter_list|)
 value|MALLOC((a), b, (c), _M_IPF, M_NOWAIT)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KFREE
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -10010,6 +12764,21 @@ name|x
 parameter_list|)
 value|FREE((x), _M_IPF)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KFREES
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -10022,6 +12791,11 @@ name|s
 parameter_list|)
 value|FREE((x), _M_IPF)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -10036,7 +12810,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|uiomove(a,b,d)
+value|uiomove((caddr_t)a,b,d)
 end_define
 
 begin_define
@@ -10063,6 +12837,31 @@ parameter_list|)
 value|wakeup(id+x)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|POLLWAKEUP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|POLLWAKEUP
+parameter_list|(
+name|x
+parameter_list|)
+value|selwakeup(softc->ipf_selwait+x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -10073,6 +12872,26 @@ parameter_list|,
 name|v
 parameter_list|)
 value|ifunit(n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_4
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
+end_define
+
+begin_define
+define|#
+directive|define
+name|GETIFMTU_6
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct ifnet *)x)->if_mtu
 end_define
 
 begin_endif
@@ -10123,18 +12942,10 @@ operator|)
 operator|)
 operator|||
 expr|\
-operator|(
-name|defined
+name|OPENBSD_GE_REV
 argument_list|(
-name|OpenBSD
-argument_list|)
-operator|&&
-operator|(
-name|OpenBSD
-operator|>=
 literal|200006
-operator|)
-operator|)
+argument_list|)
 end_if
 
 begin_define
@@ -10181,6 +12992,31 @@ begin_comment
 comment|/* NetBSD&& (NetBSD<= 1991011)&& (NetBSD>= 199407) */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SPL_SCHED
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SPL_SCHED
+parameter_list|(
+name|x
+parameter_list|)
+value|x = splsched()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -10215,6 +13051,127 @@ name|m
 parameter_list|)
 value|m_freem(m)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ALLOC_MB_T
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MGETHDR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ALLOC_MB_T
+parameter_list|(
+name|m
+parameter_list|,
+name|l
+parameter_list|)
+value|do { \ 					MGETHDR((m), M_DONTWAIT, MT_HEADER); \ 					if ((m) != NULL) { \ 						(m)->m_len = (l); \ 						(m)->m_pkthdr.len = (l); \ 					} \ 				} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ALLOC_MB_T
+parameter_list|(
+name|m
+parameter_list|,
+name|l
+parameter_list|)
+value|do { \ 					MGET((m), M_DONTWAIT, MT_HEADER); \ 					if ((m) != NULL) { \ 						(m)->m_len = (l); \ 						(m)->m_pkthdr.len = (l); \ 					} \ 				} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREP_MB_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PREP_MB_T
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|do { \ 						mb_t *_o = *(f)->fin_mp; \ 						(m)->m_next = _o; \ 						*(fin)->fin_mp = (m); \ 						if (_o->m_flags& M_PKTHDR) { \ 							(m)->m_pkthdr.len += \ 							    _o->m_pkthdr.len; \ 							(m)->m_pkthdr.rcvif = \ 							  _o->m_pkthdr.rcvif; \ 						} \ 					} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|M_DUP
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|M_COPYALL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|m_dup(m, 0, M_COPYALL, 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_DUP
+parameter_list|(
+name|m
+parameter_list|)
+value|m_dup(m)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -10268,34 +13225,6 @@ begin_define
 define|#
 directive|define
 name|COPYOUT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPYOUT
 parameter_list|(
 name|a
 parameter_list|,
@@ -10390,11 +13319,21 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|IFNAME
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -10403,7 +13342,7 @@ name|IFNAME
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct ifnet *)x)->if_name
+value|get_ifname((struct ifnet *)x)
 end_define
 
 begin_endif
@@ -10427,7 +13366,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|fr_getifname
+name|ipf_getifname
 name|__P
 argument_list|(
 operator|(
@@ -10447,12 +13386,14 @@ define|#
 directive|define
 name|COPYIFNAME
 parameter_list|(
+name|v
+parameter_list|,
 name|x
 parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|fr_getifname((struct ifnet *)x, b)
+value|ipf_getifname((struct ifnet *)x, b)
 end_define
 
 begin_endif
@@ -10466,6 +13407,12 @@ directive|ifndef
 name|ASSERT
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -10473,6 +13420,65 @@ name|ASSERT
 parameter_list|(
 name|x
 parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|do { if (!(x)) abort(); } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BCOPYIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BCOPYIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOPYOUT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|(bcopy((caddr_t)(a), (caddr_t)(b), (c)), 0)
 end_define
 
 begin_endif
@@ -10507,31 +13513,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISASCII
-parameter_list|(
-name|x
-parameter_list|)
-value|isascii((u_char)(x))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISDIGIT
 parameter_list|(
 name|x
 parameter_list|)
 value|isdigit((u_char)(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISPRINT
-parameter_list|(
-name|x
-parameter_list|)
-value|isprint((u_char)(x))
 end_define
 
 begin_define
@@ -10793,6 +13779,49 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_SPL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SPL_INT
+parameter_list|(
+name|x
+parameter_list|)
+value|int x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SPL_INT
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * If there are no atomic operations for bit sizes defined, define them to all  * use a generic one that works for all sizes.  */
 end_comment
@@ -10827,13 +13856,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATOMIC_INC16
-value|ATOMIC_INC
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATOMIC_DECL
 value|ATOMIC_DEC
 end_define
@@ -10849,13 +13871,6 @@ begin_define
 define|#
 directive|define
 name|ATOMIC_DEC32
-value|ATOMIC_DEC
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATOMIC_DEC16
 value|ATOMIC_DEC
 end_define
 
@@ -10941,23 +13956,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|offsetof
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|offsetof
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -10973,7 +13971,30 @@ name|t
 parameter_list|,
 name|m
 parameter_list|)
-value|(int)((&((t *)0L)->m))
+value|(size_t)((&((t *)0L)->m))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|stsizeof
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|stsizeof
+parameter_list|(
+name|t
+parameter_list|,
+name|m
+parameter_list|)
+value|sizeof(((t *)0L)->m)
 end_define
 
 begin_endif
@@ -11065,7 +14086,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x)->ip_hl = (y)
+value|(x)->ip_hl = ((y)& 0xf)
 end_define
 
 begin_endif
@@ -11216,11 +14237,10 @@ end_define
 begin_if
 if|#
 directive|if
-operator|(
-name|BSD
-operator|>=
+name|BSD_GE_YEAR
+argument_list|(
 literal|199306
-operator|)
+argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -11722,6 +14742,19 @@ end_define
 begin_comment
 comment|/* FINN */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|IPOPT_AH
+end_undef
+
+begin_define
+define|#
+directive|define
+name|IPOPT_AH
+value|256+IPPROTO_AH
+end_define
 
 begin_ifndef
 ifndef|#
@@ -13380,6 +16413,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|IPPROTO_IPIP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IPIP
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IPPROTO_ENCAP
 end_ifndef
 
@@ -13387,7 +16438,7 @@ begin_define
 define|#
 directive|define
 name|IPPROTO_ENCAP
-value|4
+value|98
 end_define
 
 begin_endif
@@ -13564,14 +16615,14 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IPPROTO_FRAGMENT
+name|IPPROTO_MOBILITY
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IPPROTO_FRAGMENT
-value|44
+name|IPPROTO_MOBILITY
+value|135
 end_define
 
 begin_endif
@@ -14533,6 +17584,252 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MLD_MTRACE_RESP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MLD_MTRACE_RESP
+value|200
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MLD_MTRACE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MLD_MTRACE
+value|201
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MLD6_MTRACE_RESP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MLD6_MTRACE_RESP
+value|MLD_MTRACE_RESP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MLD6_MTRACE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MLD6_MTRACE
+value|MLD_MTRACE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IPV6_FLOWINFO_MASK
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|_BIG_ENDIAN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPV6_FLOWINFO_MASK
+value|0x0fffffff
+end_define
+
+begin_comment
+comment|/* flow info (28 bits) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+operator|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_BIG_ENDIAN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPV6_FLOWINFO_MASK
+value|0xffffff0f
+end_define
+
+begin_comment
+comment|/* flow info (28 bits) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LITTLE_ENDIAN */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|IPV6_FLOWLABEL_MASK
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|_BIG_ENDIAN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPV6_FLOWLABEL_MASK
+value|0x000fffff
+end_define
+
+begin_comment
+comment|/* flow label (20 bits) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+operator|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_BIG_ENDIAN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IPV6_FLOWLABEL_MASK
+value|0xffff0f00
+end_define
+
+begin_comment
+comment|/* flow label (20 bits) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LITTLE_ENDIAN */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * ECN is a new addition to TCP - RFC 2481  */
 end_comment
@@ -14587,19 +17884,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPF_TCPS_CLOSED
-value|0
-end_define
-
-begin_comment
-comment|/* closed */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IPF_TCPS_LISTEN
-value|1
+value|0
 end_define
 
 begin_comment
@@ -14610,7 +17896,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_SYN_SENT
-value|2
+value|1
 end_define
 
 begin_comment
@@ -14621,7 +17907,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_SYN_RECEIVED
-value|3
+value|2
 end_define
 
 begin_comment
@@ -14632,7 +17918,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_HALF_ESTAB
-value|4
+value|3
 end_define
 
 begin_comment
@@ -14647,7 +17933,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_ESTABLISHED
-value|5
+value|4
 end_define
 
 begin_comment
@@ -14658,7 +17944,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_CLOSE_WAIT
-value|6
+value|5
 end_define
 
 begin_comment
@@ -14673,7 +17959,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_FIN_WAIT_1
-value|7
+value|6
 end_define
 
 begin_comment
@@ -14684,7 +17970,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_CLOSING
-value|8
+value|7
 end_define
 
 begin_comment
@@ -14695,7 +17981,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_LAST_ACK
-value|9
+value|8
 end_define
 
 begin_comment
@@ -14710,7 +17996,7 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_FIN_WAIT_2
-value|10
+value|9
 end_define
 
 begin_comment
@@ -14721,11 +18007,22 @@ begin_define
 define|#
 directive|define
 name|IPF_TCPS_TIME_WAIT
-value|11
+value|10
 end_define
 
 begin_comment
 comment|/* in 2*msl quiet wait after close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPF_TCPS_CLOSED
+value|11
+end_define
+
+begin_comment
+comment|/* closed */
 end_comment
 
 begin_define
@@ -14913,7 +18210,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ICMP error replies have an IP header (20 bytes), 8 bytes of ICMP data,  * another IP header and then 64 bits of data, totalling 56.  Of course,  * the last 64 bits is dependant on that being available.  */
+comment|/*  * ICMP error replies have an IP header (20 bytes), 8 bytes of ICMP data,  * another IP header and then 64 bits of data, totalling 56.  Of course,  * the last 64 bits is dependent on that being available.  */
 end_comment
 
 begin_define
@@ -14984,6 +18281,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|RESCUE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|IPFILTER_BPF
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IPF_DEBUG
 end_ifdef
 
@@ -15015,6 +18329,346 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AF_INET6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AF_INET6
+value|26
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DTRACE_PROBE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DT
+parameter_list|(
+name|_n
+parameter_list|)
+value|DTRACE_PROBE(_n)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT1
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|)
+value|DTRACE_PROBE1(_n,_a,_b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT2
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|)
+value|DTRACE_PROBE2(_n,_a,_b,_c,_d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT3
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|)
+define|\
+value|DTRACE_PROBE3(_n,_a,_b,_c,_d,_e,_f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT4
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|,
+name|_g
+parameter_list|,
+name|_h
+parameter_list|)
+define|\
+value|DTRACE_PROBE4(_n,_a,_b,_c,_d,_e,_f,_g,_h)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DT
+parameter_list|(
+name|_n
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT1
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT2
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT3
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT4
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|,
+name|_g
+parameter_list|,
+name|_h
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DT
+parameter_list|(
+name|_n
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT1
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT2
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT3
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT4
+parameter_list|(
+name|_n
+parameter_list|,
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|,
+name|_g
+parameter_list|,
+name|_h
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|ip6_routing
+block|{
+name|u_char
+name|ip6r_nxt
+decl_stmt|;
+comment|/* next header */
+name|u_char
+name|ip6r_len
+decl_stmt|;
+comment|/* length in units of 8 octets */
+name|u_char
+name|ip6r_type
+decl_stmt|;
+comment|/* always zero */
+name|u_char
+name|ip6r_segleft
+decl_stmt|;
+comment|/* segments left */
+name|u_32_t
+name|ip6r_reserved
+decl_stmt|;
+comment|/* reserved field */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

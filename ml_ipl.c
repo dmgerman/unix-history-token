@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  * responsibility and is not changed in any way.  *  * I hate legaleese, don't you ?  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|IPL_NAME
-value|"/dev/ipl"
+value|"/dev/ipf"
 end_define
 
 begin_endif
@@ -137,19 +137,19 @@ end_endif
 begin_decl_stmt
 specifier|extern
 name|int
-name|iplattach
+name|ipfattach
 argument_list|()
 decl_stmt|,
-name|iplopen
+name|ipfopen
 argument_list|()
 decl_stmt|,
-name|iplclose
+name|ipfclose
 argument_list|()
 decl_stmt|,
-name|iplioctl
+name|ipfioctl
 argument_list|()
 decl_stmt|,
-name|iplread
+name|ipfread
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -160,7 +160,7 @@ name|int
 name|nulldev
 argument_list|()
 decl_stmt|,
-name|iplidentify
+name|ipfidentify
 argument_list|()
 decl_stmt|,
 name|errno
@@ -170,18 +170,18 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|cdevsw
-name|ipldevsw
+name|ipfdevsw
 init|=
 block|{
-name|iplopen
+name|ipfopen
 block|,
-name|iplclose
+name|ipfclose
 block|,
-name|iplread
+name|ipfread
 block|,
 name|nulldev
 block|,
-name|iplioctl
+name|ipfioctl
 block|,
 name|nulldev
 block|,
@@ -199,20 +199,20 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|dev_ops
-name|ipl_ops
+name|ipf_ops
 init|=
 block|{
 literal|1
 block|,
-name|iplidentify
+name|ipfidentify
 block|,
-name|iplattach
+name|ipfattach
 block|,
-name|iplopen
+name|ipfopen
 block|,
-name|iplclose
+name|ipfclose
 block|,
-name|iplread
+name|ipfread
 block|,
 name|NULL
 block|,
@@ -226,7 +226,7 @@ comment|/* dump */
 literal|0
 block|,
 comment|/* psize */
-name|iplioctl
+name|ipfioctl
 block|,
 name|NULL
 block|,
@@ -239,7 +239,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ipl_major
+name|ipf_major
 init|=
 literal|0
 decl_stmt|;
@@ -259,15 +259,15 @@ init|=
 block|{
 name|VDMAGIC_PSEUDO
 block|,
-literal|"ipl"
+literal|"ipf"
 block|,
 operator|&
-name|ipl_ops
+name|ipf_ops
 block|,
 name|NULL
 block|,
 operator|&
-name|ipldevsw
+name|ipfdevsw
 block|,
 literal|0
 block|,
@@ -304,14 +304,14 @@ block|{
 name|VDMAGIC_PSEUDO
 block|,
 comment|/* magic */
-literal|"ipl"
+literal|"ipf"
 block|,
 comment|/* name */
 ifdef|#
 directive|ifdef
 name|sun4c
 operator|&
-name|ipl_ops
+name|ipf_ops
 block|,
 comment|/* dev_ops */
 else|#
@@ -338,7 +338,7 @@ name|NULL
 block|,
 comment|/* bdevsw */
 operator|&
-name|ipldevsw
+name|ipfdevsw
 block|,
 comment|/* cdevsw */
 literal|0
@@ -445,25 +445,25 @@ name|VDLOAD
 case|:
 while|while
 condition|(
-name|ipl_major
+name|ipf_major
 operator|<
 name|nchrdev
 operator|&&
 name|cdevsw
 index|[
-name|ipl_major
+name|ipf_major
 index|]
 operator|.
 name|d_open
 operator|!=
 name|vd_unuseddev
 condition|)
-name|ipl_major
+name|ipf_major
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ipl_major
+name|ipf_major
 operator|==
 name|nchrdev
 condition|)
@@ -474,7 +474,7 @@ name|vd
 operator|.
 name|Drv_charmajor
 operator|=
-name|ipl_major
+name|ipf_major
 expr_stmt|;
 name|vdp
 operator|->
@@ -489,7 +489,7 @@ operator|&
 name|vd
 expr_stmt|;
 return|return
-name|ipl_attach
+name|ipf_attach
 argument_list|(
 name|vdi
 argument_list|)
@@ -560,7 +560,7 @@ name|FILE
 argument_list|)
 expr_stmt|;
 return|return
-name|ipldetach
+name|ipfdetach
 argument_list|()
 return|;
 block|}
@@ -569,7 +569,7 @@ end_block
 begin_function
 specifier|static
 name|int
-name|ipl_attach
+name|ipf_attach
 parameter_list|(
 name|vdi
 parameter_list|)
@@ -640,7 +640,7 @@ name|vattr
 operator|.
 name|va_rdev
 operator|=
-name|ipl_major
+name|ipf_major
 operator|<<
 literal|8
 expr_stmt|;
@@ -675,7 +675,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 return|return
-name|iplattach
+name|ipfattach
 argument_list|(
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: iptests.c,v 2.8.2.9 2007/09/13 07:19:34 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,16 +334,21 @@ directive|include
 file|<sys/stream.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -428,23 +433,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__osf__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"radix_ipf_local.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -507,11 +495,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|solaris
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -560,48 +563,6 @@ include|#
 directive|include
 file|<netinet/ip.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|linux
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_var.h>
-end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__hpux
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_pcb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -668,6 +629,54 @@ undef|#
 directive|undef
 name|_NET_ROUTE_INCLUDED
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|solaris
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

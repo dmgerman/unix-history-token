@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000-2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: portname.c,v 1.7.2.1 2006/06/16 17:21:09 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -44,7 +44,9 @@ modifier|*
 name|sv
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|servent
 modifier|*
 name|sv1
 init|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2003 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: rwlock_emul.c,v 1.1.4.1 2006/06/16 17:21:17 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -480,6 +480,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|initcount
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|eMrwlock_init
@@ -568,6 +577,9 @@ name|eMrw_owner
 operator|=
 name|NULL
 expr_stmt|;
+name|initcount
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -612,6 +624,21 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rw
+operator|->
+name|eMrw_owner
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|rw
+operator|->
+name|eMrw_owner
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|rw
@@ -624,6 +651,26 @@ operator|*
 name|rw
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|initcount
+operator|--
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|ipf_rwlock_clean
+parameter_list|()
+block|{
+if|if
+condition|(
+name|initcount
+operator|!=
+literal|0
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
 block|}
 end_function

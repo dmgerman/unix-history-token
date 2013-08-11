@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: getifname.c,v 1.5.2.3 2006/07/14 06:12:24 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ literal|0
 end_if
 
 begin_if
-unit|char *getifname(ptr) struct ifnet *ptr; {
+unit|char *getifname(ptr) 	struct ifnet *ptr; {
 if|#
 directive|if
 name|SOLARIS
@@ -136,7 +136,7 @@ directive|else
 end_else
 
 begin_endif
-unit|char buf[32]; 	int len;
+unit|char buf[LIFNAMSIZ]; 	int len;
 endif|#
 directive|endif
 end_endif
@@ -224,6 +224,10 @@ modifier|*
 name|ptr
 decl_stmt|;
 block|{
+name|ptr
+operator|=
+name|ptr
+expr_stmt|;
 return|return
 literal|"X"
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2003 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: hostname.c,v 1.6.2.2 2007/01/16 02:25:22 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -14,12 +14,12 @@ name|char
 modifier|*
 name|hostname
 parameter_list|(
-name|v
+name|family
 parameter_list|,
 name|ip
 parameter_list|)
 name|int
-name|v
+name|family
 decl_stmt|;
 name|void
 modifier|*
@@ -65,9 +65,9 @@ expr_stmt|;
 comment|/* XXX gcc */
 if|if
 condition|(
-name|v
+name|family
 operator|==
-literal|4
+name|AF_INET
 condition|)
 block|{
 name|ipa
@@ -109,9 +109,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|v
+name|family
 operator|==
-literal|4
+name|AF_INET
 condition|)
 block|{
 name|hp
@@ -240,9 +240,9 @@ block|}
 block|}
 if|if
 condition|(
-name|v
+name|family
 operator|==
-literal|4
+name|AF_INET
 condition|)
 block|{
 return|return

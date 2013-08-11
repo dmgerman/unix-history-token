@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: getproto.c,v 1.2.2.3 2006/06/16 17:21:00 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ipf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_function
@@ -69,7 +75,9 @@ return|;
 ifdef|#
 directive|ifdef
 name|_AIX51
-comment|/* 	 * For some bogus reason, "ip" is 252 in /etc/protocols on AIX 5 	 */
+comment|/* 	 * For some bogus reason, "ip" is 252 in /etc/protocols on AIX 5 	 * The IANA has doubled up on the definition of 0 - it is now also 	 * used for IPv6 hop-opts, so we can no longer rely on /etc/protocols 	 * providing the correct name->number mapping 	 */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -83,8 +91,6 @@ condition|)
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
 name|p
 operator|=
 name|getprotobyname

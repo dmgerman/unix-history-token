@@ -82,7 +82,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"tcpip.h"
+file|"netinet/tcpip.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -8,20 +8,6 @@ include|#
 directive|include
 file|"ipf.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|PRINTF
-value|(void)printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRINTF
-value|(void)fprintf
-end_define
 
 begin_function
 name|iphtable_t
@@ -35,6 +21,8 @@ parameter_list|,
 name|name
 parameter_list|,
 name|opts
+parameter_list|,
+name|fields
 parameter_list|)
 name|iphtable_t
 modifier|*
@@ -49,6 +37,10 @@ name|name
 decl_stmt|;
 name|int
 name|opts
+decl_stmt|;
+name|wordtab_t
+modifier|*
+name|fields
 decl_stmt|;
 block|{
 name|iphtent_t
@@ -121,6 +113,12 @@ name|iph
 operator|.
 name|iph_next
 return|;
+if|if
+condition|(
+name|fields
+operator|==
+name|NULL
+condition|)
 name|printhashdata
 argument_list|(
 name|hp
@@ -236,6 +234,8 @@ argument_list|,
 name|copyfunc
 argument_list|,
 name|opts
+argument_list|,
+name|fields
 argument_list|)
 expr_stmt|;
 name|printed
