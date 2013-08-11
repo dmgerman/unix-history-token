@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -369,7 +369,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_scan.c,v 2.40.2.10 2007/06/02 21:22:28 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,12 +391,12 @@ end_comment
 begin_decl_stmt
 name|ipscan_t
 modifier|*
-name|ipsc_list
+name|ipf_scan_list
 init|=
 name|NULL
 decl_stmt|,
 modifier|*
-name|ipsc_tail
+name|ipf_scan_tail
 init|=
 name|NULL
 decl_stmt|;
@@ -404,7 +404,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ipscanstat_t
-name|ipsc_stat
+name|ipf_scan_stat
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,7 @@ end_ifdef
 
 begin_decl_stmt
 name|ipfrwlock_t
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 decl_stmt|;
 end_decl_stmt
 
@@ -448,7 +448,7 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|ipsc_add
+name|ipf_scan_add
 name|__P
 argument_list|(
 operator|(
@@ -460,7 +460,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ipsc_delete
+name|ipf_scan_remove
 name|__P
 argument_list|(
 operator|(
@@ -474,7 +474,7 @@ begin_decl_stmt
 name|struct
 name|ipscan
 modifier|*
-name|ipsc_lookup
+name|ipf_scan_lookup
 name|__P
 argument_list|(
 operator|(
@@ -487,7 +487,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ipsc_matchstr
+name|ipf_scan_matchstr
 name|__P
 argument_list|(
 operator|(
@@ -505,7 +505,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ipsc_matchisc
+name|ipf_scan_matchisc
 name|__P
 argument_list|(
 operator|(
@@ -528,7 +528,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ipsc_match
+name|ipf_scan_match
 name|__P
 argument_list|(
 operator|(
@@ -542,7 +542,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ipsc_inited
+name|ipf_scan_inited
 init|=
 literal|0
 decl_stmt|;
@@ -550,18 +550,18 @@ end_decl_stmt
 
 begin_function
 name|int
-name|ipsc_init
+name|ipf_scan_init
 parameter_list|()
 block|{
 name|RWLOCK_INIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|,
 literal|"ip scan rwlock"
 argument_list|)
 expr_stmt|;
-name|ipsc_inited
+name|ipf_scan_inited
 operator|=
 literal|1
 expr_stmt|;
@@ -573,12 +573,16 @@ end_function
 
 begin_function
 name|void
-name|fr_scanunload
-parameter_list|()
+name|ipf_scan_unload
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 if|if
 condition|(
-name|ipsc_inited
+name|ipf_scan_inited
 operator|==
 literal|1
 condition|)
@@ -586,10 +590,10 @@ block|{
 name|RW_DESTROY
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
-name|ipsc_inited
+name|ipf_scan_inited
 operator|=
 literal|0
 expr_stmt|;
@@ -599,7 +603,7 @@ end_function
 
 begin_function
 name|int
-name|ipsc_add
+name|ipf_scan_add
 parameter_list|(
 name|data
 parameter_list|)
@@ -630,9 +634,15 @@ condition|(
 operator|!
 name|isc
 condition|)
+block|{
+name|ipf_interror
+operator|=
+literal|90001
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|err
 operator|=
 name|copyinptr
@@ -665,12 +675,12 @@ block|}
 name|WRITE_ENTER
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|ipsc_lookup
+name|ipf_scan_lookup
 argument_list|(
 name|isc
 operator|->
@@ -680,12 +690,14 @@ expr_stmt|;
 if|if
 condition|(
 name|i
+operator|!=
+name|NULL
 condition|)
 block|{
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 name|KFREE
@@ -693,16 +705,20 @@ argument_list|(
 name|isc
 argument_list|)
 expr_stmt|;
+name|ipf_interror
+operator|=
+literal|90002
+expr_stmt|;
 return|return
 name|EEXIST
 return|;
 block|}
 if|if
 condition|(
-name|ipsc_tail
+name|ipf_scan_tail
 condition|)
 block|{
-name|ipsc_tail
+name|ipf_scan_tail
 operator|->
 name|ipsc_next
 operator|=
@@ -713,22 +729,22 @@ operator|->
 name|ipsc_pnext
 operator|=
 operator|&
-name|ipsc_tail
+name|ipf_scan_tail
 operator|->
 name|ipsc_next
 expr_stmt|;
-name|ipsc_tail
+name|ipf_scan_tail
 operator|=
 name|isc
 expr_stmt|;
 block|}
 else|else
 block|{
-name|ipsc_list
+name|ipf_scan_list
 operator|=
 name|isc
 expr_stmt|;
-name|ipsc_tail
+name|ipf_scan_tail
 operator|=
 name|isc
 expr_stmt|;
@@ -737,7 +753,7 @@ operator|->
 name|ipsc_pnext
 operator|=
 operator|&
-name|ipsc_list
+name|ipf_scan_list
 expr_stmt|;
 block|}
 name|isc
@@ -770,7 +786,7 @@ name|ipsc_active
 operator|=
 literal|0
 expr_stmt|;
-name|ipsc_stat
+name|ipf_scan_stat
 operator|.
 name|iscs_entries
 operator|++
@@ -778,7 +794,7 @@ expr_stmt|;
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -789,7 +805,7 @@ end_function
 
 begin_function
 name|int
-name|ipsc_delete
+name|ipf_scan_remove
 parameter_list|(
 name|data
 parameter_list|)
@@ -831,12 +847,12 @@ return|;
 name|WRITE_ENTER
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|ipsc_lookup
+name|ipf_scan_lookup
 argument_list|(
 name|isc
 operator|.
@@ -865,8 +881,12 @@ block|{
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
+expr_stmt|;
+name|ipf_interror
+operator|=
+literal|90003
 expr_stmt|;
 return|return
 name|EBUSY
@@ -906,14 +926,14 @@ operator|->
 name|ipsc_pnext
 operator|==
 operator|&
-name|ipsc_list
+name|ipf_scan_list
 condition|)
-name|ipsc_tail
+name|ipf_scan_tail
 operator|=
 name|NULL
 expr_stmt|;
 else|else
-name|ipsc_tail
+name|ipf_scan_tail
 operator|=
 operator|*
 operator|(
@@ -926,7 +946,7 @@ operator|->
 name|ipsc_pnext
 expr_stmt|;
 block|}
-name|ipsc_stat
+name|ipf_scan_stat
 operator|.
 name|iscs_entries
 operator|--
@@ -940,7 +960,7 @@ block|}
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -953,7 +973,7 @@ begin_function
 name|struct
 name|ipscan
 modifier|*
-name|ipsc_lookup
+name|ipf_scan_lookup
 parameter_list|(
 name|tag
 parameter_list|)
@@ -970,7 +990,7 @@ for|for
 control|(
 name|i
 operator|=
-name|ipsc_list
+name|ipf_scan_list
 init|;
 name|i
 condition|;
@@ -1003,7 +1023,7 @@ end_function
 
 begin_function
 name|int
-name|ipsc_attachfr
+name|ipf_scan_attachfr
 parameter_list|(
 name|fr
 parameter_list|)
@@ -1022,24 +1042,28 @@ condition|(
 name|fr
 operator|->
 name|fr_isctag
-index|[
-literal|0
-index|]
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|READ_ENTER
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|ipsc_lookup
+name|ipf_scan_lookup
 argument_list|(
 name|fr
 operator|->
 name|fr_isctag
+operator|+
+name|fr
+operator|->
+name|fr_names
 argument_list|)
 expr_stmt|;
 if|if
@@ -1060,7 +1084,7 @@ block|}
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1069,9 +1093,15 @@ name|i
 operator|==
 name|NULL
 condition|)
+block|{
+name|ipf_interror
+operator|=
+literal|90004
+expr_stmt|;
 return|return
 name|ENOENT
 return|;
+block|}
 name|fr
 operator|->
 name|fr_isc
@@ -1087,7 +1117,7 @@ end_function
 
 begin_function
 name|int
-name|ipsc_attachis
+name|ipf_scan_attachis
 parameter_list|(
 name|is
 parameter_list|)
@@ -1108,7 +1138,7 @@ decl_stmt|;
 name|READ_ENTER
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 name|fr
@@ -1120,6 +1150,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fr
+operator|!=
+name|NULL
 condition|)
 block|{
 name|i
@@ -1204,7 +1236,7 @@ block|}
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -1215,7 +1247,7 @@ end_function
 
 begin_function
 name|int
-name|ipsc_detachfr
+name|ipf_scan_detachfr
 parameter_list|(
 name|fr
 parameter_list|)
@@ -1258,7 +1290,7 @@ end_function
 
 begin_function
 name|int
-name|ipsc_detachis
+name|ipf_scan_detachis
 parameter_list|(
 name|is
 parameter_list|)
@@ -1275,7 +1307,7 @@ decl_stmt|;
 name|READ_ENTER
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 if|if
@@ -1328,7 +1360,7 @@ block|}
 name|RWLOCK_EXIT
 argument_list|(
 operator|&
-name|ipsc_rwlock
+name|ipf_scan_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -1343,7 +1375,7 @@ end_comment
 
 begin_function
 name|int
-name|ipsc_matchstr
+name|ipf_scan_matchstr
 parameter_list|(
 name|sp
 parameter_list|,
@@ -1497,7 +1529,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|ipsc_matchisc
+name|ipf_scan_matchisc
 argument_list|(
 name|isc
 argument_list|,
@@ -1696,7 +1728,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ipsc_matchstr
+name|ipf_scan_matchstr
 argument_list|(
 operator|&
 name|isc
@@ -1810,7 +1842,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ipsc_matchstr
+name|ipf_scan_matchstr
 argument_list|(
 operator|&
 name|isc
@@ -1882,7 +1914,7 @@ end_block
 
 begin_function
 name|int
-name|ipsc_match
+name|ipf_scan_match
 parameter_list|(
 name|is
 parameter_list|)
@@ -1992,7 +2024,7 @@ block|{
 comment|/* 		 * Known object to scan for. 		 */
 name|i
 operator|=
-name|ipsc_matchisc
+name|ipf_scan_matchisc
 argument_list|(
 name|isc
 argument_list|,
@@ -2112,7 +2144,7 @@ literal|0
 operator|,
 name|isc
 operator|=
-name|ipsc_list
+name|ipf_scan_list
 init|;
 name|isc
 condition|;
@@ -2125,7 +2157,7 @@ control|)
 block|{
 name|i
 operator|=
-name|ipsc_matchisc
+name|ipf_scan_matchisc
 argument_list|(
 name|isc
 argument_list|,
@@ -2375,7 +2407,7 @@ name|isc
 operator|->
 name|ipsc_action
 expr_stmt|;
-name|ipsc_stat
+name|ipf_scan_stat
 operator|.
 name|iscs_acted
 operator|++
@@ -2425,7 +2457,7 @@ name|isc
 operator|->
 name|ipsc_else
 expr_stmt|;
-name|ipsc_stat
+name|ipf_scan_stat
 operator|.
 name|iscs_else
 operator|++
@@ -2469,7 +2501,7 @@ end_comment
 
 begin_function
 name|int
-name|ipsc_packet
+name|ipf_scan_packet
 parameter_list|(
 name|fin
 parameter_list|,
@@ -2744,7 +2776,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|ipsc_match
+name|ipf_scan_match
 argument_list|(
 name|is
 argument_list|)
@@ -2764,7 +2796,7 @@ end_function
 
 begin_function
 name|int
-name|fr_scan_ioctl
+name|ipf_scan_ioctl
 parameter_list|(
 name|data
 parameter_list|,
@@ -2810,7 +2842,7 @@ name|SIOCADSCA
 case|:
 name|err
 operator|=
-name|ipsc_add
+name|ipf_scan_add
 argument_list|(
 name|data
 argument_list|)
@@ -2821,7 +2853,7 @@ name|SIOCRMSCA
 case|:
 name|err
 operator|=
-name|ipsc_delete
+name|ipf_scan_remove
 argument_list|(
 name|data
 argument_list|)
@@ -2837,7 +2869,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ipsc_stat
+name|ipf_scan_stat
 argument_list|,
 operator|(
 name|char
@@ -2856,7 +2888,7 @@ name|ipscs
 operator|.
 name|iscs_list
 operator|=
-name|ipsc_list
+name|ipf_scan_list
 expr_stmt|;
 name|err
 operator|=
@@ -2879,10 +2911,16 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|ipf_interror
+operator|=
+literal|90005
+expr_stmt|;
 name|err
 operator|=
 name|EFAULT
 expr_stmt|;
+block|}
 break|break;
 default|default :
 name|err
