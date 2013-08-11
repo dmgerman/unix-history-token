@@ -255,9 +255,11 @@ operator|&
 literal|0x8000
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"Correcting Natoma config for SMP\n"
+name|dev
+argument_list|,
+literal|"correcting Natoma config for SMP\n"
 argument_list|)
 expr_stmt|;
 name|pmccfg
@@ -290,9 +292,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"Correcting Natoma config for non-SMP\n"
+name|dev
+argument_list|,
+literal|"correcting Natoma config for non-SMP\n"
 argument_list|)
 expr_stmt|;
 name|pmccfg
@@ -374,9 +378,11 @@ operator|&
 literal|0x000e0000
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"Correcting nForce2 C1 CPU disconnect hangs\n"
+name|dev
+argument_list|,
+literal|"correcting nForce2 C1 CPU disconnect hangs\n"
 argument_list|)
 expr_stmt|;
 name|val
