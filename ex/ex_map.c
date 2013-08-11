@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_map.c	10.9 (Berkeley) 3/6/96"
+literal|"$Id: ex_map.c,v 10.11 2001/06/25 15:19:17 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -97,18 +103,14 @@ begin_function
 name|int
 name|ex_map
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|seq_t
 name|stype
@@ -471,18 +473,14 @@ begin_function
 name|int
 name|ex_unmap
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -523,7 +521,7 @@ name|SEQ_COMMAND
 argument_list|)
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,

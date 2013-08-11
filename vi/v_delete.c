@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_delete.c	10.9 (Berkeley) 10/23/96"
+literal|"$Id: v_delete.c,v 10.11 2001/06/25 15:19:31 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,18 +91,14 @@ begin_function
 name|int
 name|v_delete
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|nlines

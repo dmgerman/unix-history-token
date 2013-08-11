@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_zexit.c	10.6 (Berkeley) 4/27/96"
+literal|"$Id: v_zexit.c,v 10.7 2001/06/25 15:19:37 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,18 +97,14 @@ begin_function
 name|int
 name|v_zexit
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Write back any modifications. */
 if|if

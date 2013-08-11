@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_undo.c	10.5 (Berkeley) 3/6/96"
+literal|"$Id: v_undo.c,v 10.6 2001/06/25 15:19:36 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,18 +109,14 @@ begin_function
 name|int
 name|v_Undo
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Historically, U reset the cursor to the first column in the line 	 * (not the first non-blank).  This seems a bit non-intuitive, but, 	 * considering that we may have undone multiple changes, anything 	 * else (including the cursor position stored in the logging records) 	 * is going to appear random. 	 */
 name|vp
@@ -168,18 +164,14 @@ begin_function
 name|int
 name|v_undo
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|EXF
 modifier|*

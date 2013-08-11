@@ -1,7 +1,47 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)mem.h	10.7 (Berkeley) 3/30/96  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: mem.h,v 10.17 2012/10/07 00:40:29 zy Exp $  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CHECK_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|type L__lp __attribute__((unused)) = var;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHECK_TYPE
+parameter_list|(
+name|type
+parameter_list|,
+name|var
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Increase the size of a malloc'd buffer.  Two versions, one that  * returns, one that jumps to an error label.  */
@@ -14,13 +54,15 @@ name|BINC_GOTO
 parameter_list|(
 name|sp
 parameter_list|,
+name|type
+parameter_list|,
 name|lp
 parameter_list|,
 name|llen
 parameter_list|,
 name|nlen
 parameter_list|)
-value|{					\ 	void *L__bincp;							\ 	if ((nlen)> llen) {						\ 		if ((L__bincp = binc(sp, lp,&(llen), nlen)) == NULL)	\ 			goto alloc_err;					\
+value|{				\ 	CHECK_TYPE(type *, lp)						\ 	void *L__bincp;							\ 	if ((nlen)> llen) {						\ 		if ((L__bincp = binc(sp, lp,&(llen), nlen)) == NULL)	\ 			goto alloc_err;					\
 comment|/*							\ 		 * !!!							\ 		 * Possible pointer conversion.				\ 		 */
 value|\ 		lp = L__bincp;						\ 	}								\ }
 end_define
@@ -28,7 +70,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BINC_RET
+name|BINC_GOTOC
 parameter_list|(
 name|sp
 parameter_list|,
@@ -38,9 +80,79 @@ name|llen
 parameter_list|,
 name|nlen
 parameter_list|)
-value|{					\ 	void *L__bincp;							\ 	if ((nlen)> llen) {						\ 		if ((L__bincp = binc(sp, lp,&(llen), nlen)) == NULL)	\ 			return (1);					\
+define|\
+value|BINC_GOTO(sp, char, lp, llen, nlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINC_GOTOW
+parameter_list|(
+name|sp
+parameter_list|,
+name|lp
+parameter_list|,
+name|llen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|BINC_GOTO(sp, CHAR_T, lp, llen, (nlen) * sizeof(CHAR_T))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINC_RET
+parameter_list|(
+name|sp
+parameter_list|,
+name|type
+parameter_list|,
+name|lp
+parameter_list|,
+name|llen
+parameter_list|,
+name|nlen
+parameter_list|)
+value|{				\ 	CHECK_TYPE(type *, lp)						\ 	void *L__bincp;							\ 	if ((nlen)> llen) {						\ 		if ((L__bincp = binc(sp, lp,&(llen), nlen)) == NULL)	\ 			return (1);					\
 comment|/*							\ 		 * !!!							\ 		 * Possible pointer conversion.				\ 		 */
 value|\ 		lp = L__bincp;						\ 	}								\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINC_RETC
+parameter_list|(
+name|sp
+parameter_list|,
+name|lp
+parameter_list|,
+name|llen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|BINC_RET(sp, char, lp, llen, nlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BINC_RETW
+parameter_list|(
+name|sp
+parameter_list|,
+name|lp
+parameter_list|,
+name|llen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|BINC_RET(sp, CHAR_T, lp, llen, (nlen) * sizeof(CHAR_T))
 end_define
 
 begin_comment
@@ -54,19 +166,21 @@ name|GET_SPACE_GOTO
 parameter_list|(
 name|sp
 parameter_list|,
+name|type
+parameter_list|,
 name|bp
 parameter_list|,
 name|blen
 parameter_list|,
 name|nlen
 parameter_list|)
-value|{				\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || F_ISSET(L__gp, G_TMP_INUSE)) {		\ 		bp = NULL;						\ 		blen = 0;						\ 		BINC_GOTO(sp, bp, blen, nlen); 				\ 	} else {							\ 		BINC_GOTO(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = L__gp->tmp_bp;					\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	}								\ }
+value|{			\ 	CHECK_TYPE(type *, bp)						\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || F_ISSET(L__gp, G_TMP_INUSE)) {		\ 		bp = NULL;						\ 		blen = 0;						\ 		BINC_GOTO(sp, type, bp, blen, nlen); 			\ 	} else {							\ 		BINC_GOTOC(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = (type *) L__gp->tmp_bp;				\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	}								\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|GET_SPACE_RET
+name|GET_SPACE_GOTOC
 parameter_list|(
 name|sp
 parameter_list|,
@@ -76,7 +190,77 @@ name|blen
 parameter_list|,
 name|nlen
 parameter_list|)
-value|{				\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || F_ISSET(L__gp, G_TMP_INUSE)) {		\ 		bp = NULL;						\ 		blen = 0;						\ 		BINC_RET(sp, bp, blen, nlen);				\ 	} else {							\ 		BINC_RET(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = L__gp->tmp_bp;					\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	}								\ }
+define|\
+value|GET_SPACE_GOTO(sp, char, bp, blen, nlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SPACE_GOTOW
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|GET_SPACE_GOTO(sp, CHAR_T, bp, blen, (nlen) * sizeof(CHAR_T))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SPACE_RET
+parameter_list|(
+name|sp
+parameter_list|,
+name|type
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+value|{			\ 	CHECK_TYPE(type *, bp)						\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || F_ISSET(L__gp, G_TMP_INUSE)) {		\ 		bp = NULL;						\ 		blen = 0;						\ 		BINC_RET(sp, type, bp, blen, nlen);			\ 	} else {							\ 		BINC_RETC(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = (type *) L__gp->tmp_bp;				\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	}								\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SPACE_RETC
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|GET_SPACE_RET(sp, char, bp, blen, nlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_SPACE_RETW
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|GET_SPACE_RET(sp, CHAR_T, bp, blen, (nlen) * sizeof(CHAR_T))
 end_define
 
 begin_comment
@@ -90,19 +274,21 @@ name|ADD_SPACE_GOTO
 parameter_list|(
 name|sp
 parameter_list|,
+name|type
+parameter_list|,
 name|bp
 parameter_list|,
 name|blen
 parameter_list|,
 name|nlen
 parameter_list|)
-value|{				\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || bp == L__gp->tmp_bp) {			\ 		F_CLR(L__gp, G_TMP_INUSE);				\ 		BINC_GOTO(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = L__gp->tmp_bp;					\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	} else								\ 		BINC_GOTO(sp, bp, blen, nlen);				\ }
+value|{			\ 	CHECK_TYPE(type *, bp)						\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || bp == (type *)L__gp->tmp_bp) {		\ 		F_CLR(L__gp, G_TMP_INUSE);				\ 		BINC_GOTOC(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = (type *) L__gp->tmp_bp;				\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	} else								\ 		BINC_GOTO(sp, type, bp, blen, nlen);			\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|ADD_SPACE_RET
+name|ADD_SPACE_GOTOC
 parameter_list|(
 name|sp
 parameter_list|,
@@ -112,7 +298,77 @@ name|blen
 parameter_list|,
 name|nlen
 parameter_list|)
-value|{				\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || bp == L__gp->tmp_bp) {			\ 		F_CLR(L__gp, G_TMP_INUSE);				\ 		BINC_RET(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = L__gp->tmp_bp;					\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	} else								\ 		BINC_RET(sp, bp, blen, nlen);				\ }
+define|\
+value|ADD_SPACE_GOTO(sp, char, bp, blen, nlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADD_SPACE_GOTOW
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|ADD_SPACE_GOTO(sp, CHAR_T, bp, blen, (nlen) * sizeof(CHAR_T))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADD_SPACE_RET
+parameter_list|(
+name|sp
+parameter_list|,
+name|type
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+value|{			\ 	CHECK_TYPE(type *, bp)						\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp == NULL || bp == (type *)L__gp->tmp_bp) {		\ 		F_CLR(L__gp, G_TMP_INUSE);				\ 		BINC_RETC(sp, L__gp->tmp_bp, L__gp->tmp_blen, nlen);	\ 		bp = (type *) L__gp->tmp_bp;				\ 		blen = L__gp->tmp_blen;					\ 		F_SET(L__gp, G_TMP_INUSE);				\ 	} else								\ 		BINC_RET(sp, type, bp, blen, nlen);			\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADD_SPACE_RETC
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|ADD_SPACE_RET(sp, char, bp, blen, nlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADD_SPACE_RETW
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|,
+name|nlen
+parameter_list|)
+define|\
+value|ADD_SPACE_RET(sp, CHAR_T, bp, blen, (nlen) * sizeof(CHAR_T))
 end_define
 
 begin_comment
@@ -131,6 +387,20 @@ parameter_list|,
 name|blen
 parameter_list|)
 value|{					\ 	GS *L__gp = (sp) == NULL ? NULL : (sp)->gp;			\ 	if (L__gp != NULL&& bp == L__gp->tmp_bp)			\ 		F_CLR(L__gp, G_TMP_INUSE);				\ 	else								\ 		free(bp);						\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREE_SPACEW
+parameter_list|(
+name|sp
+parameter_list|,
+name|bp
+parameter_list|,
+name|blen
+parameter_list|)
+value|{					\ 	CHECK_TYPE(CHAR_T *, bp)					\ 	FREE_SPACE(sp, (char *)bp, blen);				\ }
 end_define
 
 begin_comment
@@ -274,7 +544,7 @@ value|{					\ 	if ((p = (cast)malloc(size)) == NULL) {				\ 		msgq(sp, M_SYSERR,
 end_define
 
 begin_comment
-comment|/*  * XXX  * Don't depend on realloc(NULL, size) working.  */
+comment|/*  * Resize a buffer, free any already held memory if we can't get more.  * FreeBSD's reallocf(3) does the same thing, but it's not portable yet.  */
 end_comment
 
 begin_define
@@ -290,17 +560,17 @@ name|cast
 parameter_list|,
 name|size
 parameter_list|)
-value|{					\ 	if ((p = (cast)(p == NULL ?					\ 	    malloc(size) : realloc(p, size))) == NULL)			\ 		msgq(sp, M_SYSERR, NULL);				\ }
+value|{					\ 	cast newp;							\ 	if ((newp = (cast)realloc(p, size)) == NULL) {			\ 		if (p != NULL)						\ 			free(p);					\ 		msgq(sp, M_SYSERR, NULL);				\ 	}								\ 	p = newp;							\ }
 end_define
 
 begin_comment
-comment|/*  * Versions of memmove(3) and memset(3) that use the size of the  * initial pointer to figure out how much memory to manipulate.  */
+comment|/*  * Versions of bcopy(3) and bzero(3) that use the size of the  * initial pointer to figure out how much memory to manipulate.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MEMMOVE
+name|BCOPY
 parameter_list|(
 name|p
 parameter_list|,
@@ -308,21 +578,107 @@ name|t
 parameter_list|,
 name|len
 parameter_list|)
-value|memmove(p, t, (len) * sizeof(*(p)))
+value|bcopy(p, t, (len) * sizeof(*(p)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEMSET
+name|BZERO
 parameter_list|(
 name|p
 parameter_list|,
-name|value
-parameter_list|,
 name|len
 parameter_list|)
-value|memset(p, value, (len) * sizeof(*(p)))
+value|bzero(p, (len) * sizeof(*(p)))
+end_define
+
+begin_comment
+comment|/*   * p2roundup --  *	Get next power of 2; convenient for realloc.  *  * Reference: FreeBSD /usr/src/lib/libc/stdio/getdelim.c  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|size_t
+name|p2roundup
+parameter_list|(
+name|size_t
+name|n
+parameter_list|)
+block|{
+name|n
+operator|--
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|1
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|2
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|4
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|8
+expr_stmt|;
+name|n
+operator||=
+name|n
+operator|>>
+literal|16
+expr_stmt|;
+if|#
+directive|if
+name|SIZE_T_MAX
+operator|>
+literal|0xffffffffU
+name|n
+operator||=
+name|n
+operator|>>
+literal|32
+expr_stmt|;
+endif|#
+directive|endif
+name|n
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Additional TAILQ helper. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAILQ_ENTRY_ISVALID
+parameter_list|(
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|((elm)->field.tqe_prev != NULL)
 end_define
 
 end_unit

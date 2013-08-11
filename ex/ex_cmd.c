@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_cmd.c	10.20 (Berkeley) 10/10/96"
+literal|"$Id: ex_cmd.c,v 10.26 2011/07/14 15:11:16 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -84,7 +90,10 @@ init|=
 block|{
 comment|/* C_SCROLL */
 block|{
+name|L
+argument_list|(
 literal|"\004"
+argument_list|)
 block|,
 name|ex_pr
 block|,
@@ -99,7 +108,10 @@ block|}
 block|,
 comment|/* C_BANG */
 block|{
+name|L
+argument_list|(
 literal|"!"
+argument_list|)
 block|,
 name|ex_bang
 block|,
@@ -116,7 +128,10 @@ block|}
 block|,
 comment|/* C_HASH */
 block|{
+name|L
+argument_list|(
 literal|"#"
+argument_list|)
 block|,
 name|ex_number
 block|,
@@ -133,11 +148,16 @@ block|}
 block|,
 comment|/* C_SUBAGAIN */
 block|{
+name|L
+argument_list|(
 literal|"&"
+argument_list|)
 block|,
 name|ex_subagain
 block|,
 name|E_ADDR2
+operator||
+name|E_ADDR_ZERO
 block|,
 literal|"s"
 block|,
@@ -148,7 +168,10 @@ block|}
 block|,
 comment|/* C_STAR */
 block|{
+name|L
+argument_list|(
 literal|"*"
+argument_list|)
 block|,
 name|ex_at
 block|,
@@ -163,7 +186,10 @@ block|}
 block|,
 comment|/* C_SHIFTL */
 block|{
+name|L
+argument_list|(
 literal|"<"
+argument_list|)
 block|,
 name|ex_shiftl
 block|,
@@ -180,7 +206,10 @@ block|}
 block|,
 comment|/* C_EQUAL */
 block|{
+name|L
+argument_list|(
 literal|"="
+argument_list|)
 block|,
 name|ex_equal
 block|,
@@ -199,7 +228,10 @@ block|}
 block|,
 comment|/* C_SHIFTR */
 block|{
+name|L
+argument_list|(
 literal|">"
+argument_list|)
 block|,
 name|ex_shiftr
 block|,
@@ -216,7 +248,10 @@ block|}
 block|,
 comment|/* C_AT */
 block|{
+name|L
+argument_list|(
 literal|"@"
+argument_list|)
 block|,
 name|ex_at
 block|,
@@ -231,7 +266,10 @@ block|}
 block|,
 comment|/* C_APPEND */
 block|{
+name|L
+argument_list|(
 literal|"append"
+argument_list|)
 block|,
 name|ex_append
 block|,
@@ -250,7 +288,10 @@ block|}
 block|,
 comment|/* C_ABBR */
 block|{
+name|L
+argument_list|(
 literal|"abbreviate"
+argument_list|)
 block|,
 name|ex_abbr
 block|,
@@ -265,7 +306,10 @@ block|}
 block|,
 comment|/* C_ARGS */
 block|{
+name|L
+argument_list|(
 literal|"args"
+argument_list|)
 block|,
 name|ex_args
 block|,
@@ -280,7 +324,10 @@ block|}
 block|,
 comment|/* C_BG */
 block|{
+name|L
+argument_list|(
 literal|"bg"
+argument_list|)
 block|,
 name|ex_bg
 block|,
@@ -295,7 +342,10 @@ block|}
 block|,
 comment|/* C_CHANGE */
 block|{
+name|L
+argument_list|(
 literal|"change"
+argument_list|)
 block|,
 name|ex_change
 block|,
@@ -312,7 +362,10 @@ block|}
 block|,
 comment|/* C_CD */
 block|{
+name|L
+argument_list|(
 literal|"cd"
+argument_list|)
 block|,
 name|ex_cd
 block|,
@@ -327,7 +380,10 @@ block|}
 block|,
 comment|/* C_CHDIR */
 block|{
+name|L
+argument_list|(
 literal|"chdir"
+argument_list|)
 block|,
 name|ex_cd
 block|,
@@ -342,7 +398,10 @@ block|}
 block|,
 comment|/* C_COPY */
 block|{
+name|L
+argument_list|(
 literal|"copy"
+argument_list|)
 block|,
 name|ex_copy
 block|,
@@ -359,7 +418,10 @@ block|}
 block|,
 comment|/* C_CSCOPE */
 block|{
+name|L
+argument_list|(
 literal|"cscope"
+argument_list|)
 block|,
 name|ex_cscope
 block|,
@@ -375,7 +437,10 @@ block|,
 comment|/*  * !!!  * Adding new commands starting with 'd' may break the delete command code  * in ex_cmd() (the ex parser).  Read through the comments there, first.  */
 comment|/* C_DELETE */
 block|{
+name|L
+argument_list|(
 literal|"delete"
+argument_list|)
 block|,
 name|ex_delete
 block|,
@@ -392,7 +457,10 @@ block|}
 block|,
 comment|/* C_DISPLAY */
 block|{
+name|L
+argument_list|(
 literal|"display"
+argument_list|)
 block|,
 name|ex_display
 block|,
@@ -407,7 +475,10 @@ block|}
 block|,
 comment|/* C_EDIT */
 block|{
+name|L
+argument_list|(
 literal|"edit"
+argument_list|)
 block|,
 name|ex_edit
 block|,
@@ -422,7 +493,10 @@ block|}
 block|,
 comment|/* C_EX */
 block|{
+name|L
+argument_list|(
 literal|"ex"
+argument_list|)
 block|,
 name|ex_edit
 block|,
@@ -437,7 +511,10 @@ block|}
 block|,
 comment|/* C_EXUSAGE */
 block|{
+name|L
+argument_list|(
 literal|"exusage"
+argument_list|)
 block|,
 name|ex_usage
 block|,
@@ -452,7 +529,10 @@ block|}
 block|,
 comment|/* C_FILE */
 block|{
+name|L
+argument_list|(
 literal|"file"
+argument_list|)
 block|,
 name|ex_file
 block|,
@@ -467,7 +547,10 @@ block|}
 block|,
 comment|/* C_FG */
 block|{
+name|L
+argument_list|(
 literal|"fg"
+argument_list|)
 block|,
 name|ex_fg
 block|,
@@ -484,7 +567,10 @@ block|}
 block|,
 comment|/* C_GLOBAL */
 block|{
+name|L
+argument_list|(
 literal|"global"
+argument_list|)
 block|,
 name|ex_global
 block|,
@@ -499,7 +585,10 @@ block|}
 block|,
 comment|/* C_HELP */
 block|{
+name|L
+argument_list|(
 literal|"help"
+argument_list|)
 block|,
 name|ex_help
 block|,
@@ -514,7 +603,10 @@ block|}
 block|,
 comment|/* C_INSERT */
 block|{
+name|L
+argument_list|(
 literal|"insert"
+argument_list|)
 block|,
 name|ex_insert
 block|,
@@ -533,7 +625,10 @@ block|}
 block|,
 comment|/* C_JOIN */
 block|{
+name|L
+argument_list|(
 literal|"join"
+argument_list|)
 block|,
 name|ex_join
 block|,
@@ -550,7 +645,10 @@ block|}
 block|,
 comment|/* C_K */
 block|{
+name|L
+argument_list|(
 literal|"k"
+argument_list|)
 block|,
 name|ex_mark
 block|,
@@ -565,7 +663,10 @@ block|}
 block|,
 comment|/* C_LIST */
 block|{
+name|L
+argument_list|(
 literal|"list"
+argument_list|)
 block|,
 name|ex_list
 block|,
@@ -582,7 +683,10 @@ block|}
 block|,
 comment|/* C_MOVE */
 block|{
+name|L
+argument_list|(
 literal|"move"
+argument_list|)
 block|,
 name|ex_move
 block|,
@@ -599,7 +703,10 @@ block|}
 block|,
 comment|/* C_MARK */
 block|{
+name|L
+argument_list|(
 literal|"mark"
+argument_list|)
 block|,
 name|ex_mark
 block|,
@@ -614,7 +721,10 @@ block|}
 block|,
 comment|/* C_MAP */
 block|{
+name|L
+argument_list|(
 literal|"map"
+argument_list|)
 block|,
 name|ex_map
 block|,
@@ -629,7 +739,10 @@ block|}
 block|,
 comment|/* C_MKEXRC */
 block|{
+name|L
+argument_list|(
 literal|"mkexrc"
+argument_list|)
 block|,
 name|ex_mkexrc
 block|,
@@ -644,7 +757,10 @@ block|}
 block|,
 comment|/* C_NEXT */
 block|{
+name|L
+argument_list|(
 literal|"next"
+argument_list|)
 block|,
 name|ex_next
 block|,
@@ -659,7 +775,10 @@ block|}
 block|,
 comment|/* C_NUMBER */
 block|{
+name|L
+argument_list|(
 literal|"number"
+argument_list|)
 block|,
 name|ex_number
 block|,
@@ -676,7 +795,10 @@ block|}
 block|,
 comment|/* C_OPEN */
 block|{
+name|L
+argument_list|(
 literal|"open"
+argument_list|)
 block|,
 name|ex_open
 block|,
@@ -691,7 +813,10 @@ block|}
 block|,
 comment|/* C_PRINT */
 block|{
+name|L
+argument_list|(
 literal|"print"
+argument_list|)
 block|,
 name|ex_pr
 block|,
@@ -706,51 +831,12 @@ block|,
 literal|"display lines"
 block|}
 block|,
-comment|/* C_PERLCMD */
-block|{
-literal|"perl"
-block|,
-name|ex_perl
-block|,
-name|E_ADDR2_ALL
-operator||
-name|E_ADDR_ZERO
-operator||
-name|E_ADDR_ZERODEF
-operator||
-name|E_SECURE
-block|,
-literal|"s"
-block|,
-literal|"pe[rl] cmd"
-block|,
-literal|"run the perl interpreter with the command"
-block|}
-block|,
-comment|/* C_PERLDOCMD */
-block|{
-literal|"perldo"
-block|,
-name|ex_perl
-block|,
-name|E_ADDR2_ALL
-operator||
-name|E_ADDR_ZERO
-operator||
-name|E_ADDR_ZERODEF
-operator||
-name|E_SECURE
-block|,
-literal|"s"
-block|,
-literal|"perld[o] cmd"
-block|,
-literal|"run the perl interpreter with the command, on each line"
-block|}
-block|,
 comment|/* C_PRESERVE */
 block|{
+name|L
+argument_list|(
 literal|"preserve"
+argument_list|)
 block|,
 name|ex_preserve
 block|,
@@ -765,7 +851,10 @@ block|}
 block|,
 comment|/* C_PREVIOUS */
 block|{
+name|L
+argument_list|(
 literal|"previous"
+argument_list|)
 block|,
 name|ex_prev
 block|,
@@ -780,7 +869,10 @@ block|}
 block|,
 comment|/* C_PUT */
 block|{
+name|L
+argument_list|(
 literal|"put"
+argument_list|)
 block|,
 name|ex_put
 block|,
@@ -801,7 +893,10 @@ block|}
 block|,
 comment|/* C_QUIT */
 block|{
+name|L
+argument_list|(
 literal|"quit"
+argument_list|)
 block|,
 name|ex_quit
 block|,
@@ -816,7 +911,10 @@ block|}
 block|,
 comment|/* C_READ */
 block|{
+name|L
+argument_list|(
 literal|"read"
+argument_list|)
 block|,
 name|ex_read
 block|,
@@ -835,7 +933,10 @@ block|}
 block|,
 comment|/* C_RECOVER */
 block|{
+name|L
+argument_list|(
 literal|"recover"
+argument_list|)
 block|,
 name|ex_recover
 block|,
@@ -850,7 +951,10 @@ block|}
 block|,
 comment|/* C_RESIZE */
 block|{
+name|L
+argument_list|(
 literal|"resize"
+argument_list|)
 block|,
 name|ex_resize
 block|,
@@ -865,7 +969,10 @@ block|}
 block|,
 comment|/* C_REWIND */
 block|{
+name|L
+argument_list|(
 literal|"rewind"
+argument_list|)
 block|,
 name|ex_rew
 block|,
@@ -881,11 +988,16 @@ block|,
 comment|/*  * !!!  * Adding new commands starting with 's' may break the substitute command code  * in ex_cmd() (the ex parser).  Read through the comments there, first.  */
 comment|/* C_SUBSTITUTE */
 block|{
+name|L
+argument_list|(
 literal|"s"
+argument_list|)
 block|,
 name|ex_s
 block|,
 name|E_ADDR2
+operator||
+name|E_ADDR_ZERO
 block|,
 literal|"s"
 block|,
@@ -896,7 +1008,10 @@ block|}
 block|,
 comment|/* C_SCRIPT */
 block|{
+name|L
+argument_list|(
 literal|"script"
+argument_list|)
 block|,
 name|ex_script
 block|,
@@ -911,7 +1026,10 @@ block|}
 block|,
 comment|/* C_SET */
 block|{
+name|L
+argument_list|(
 literal|"set"
+argument_list|)
 block|,
 name|ex_set
 block|,
@@ -926,7 +1044,10 @@ block|}
 block|,
 comment|/* C_SHELL */
 block|{
+name|L
+argument_list|(
 literal|"shell"
+argument_list|)
 block|,
 name|ex_shell
 block|,
@@ -941,7 +1062,10 @@ block|}
 block|,
 comment|/* C_SOURCE */
 block|{
+name|L
+argument_list|(
 literal|"source"
+argument_list|)
 block|,
 name|ex_source
 block|,
@@ -956,7 +1080,10 @@ block|}
 block|,
 comment|/* C_STOP */
 block|{
+name|L
+argument_list|(
 literal|"stop"
+argument_list|)
 block|,
 name|ex_stop
 block|,
@@ -971,7 +1098,10 @@ block|}
 block|,
 comment|/* C_SUSPEND */
 block|{
+name|L
+argument_list|(
 literal|"suspend"
+argument_list|)
 block|,
 name|ex_stop
 block|,
@@ -986,7 +1116,10 @@ block|}
 block|,
 comment|/* C_T */
 block|{
+name|L
+argument_list|(
 literal|"t"
+argument_list|)
 block|,
 name|ex_copy
 block|,
@@ -1003,7 +1136,10 @@ block|}
 block|,
 comment|/* C_TAG */
 block|{
+name|L
+argument_list|(
 literal|"tag"
+argument_list|)
 block|,
 name|ex_tag_push
 block|,
@@ -1018,7 +1154,10 @@ block|}
 block|,
 comment|/* C_TAGNEXT */
 block|{
+name|L
+argument_list|(
 literal|"tagnext"
+argument_list|)
 block|,
 name|ex_tag_next
 block|,
@@ -1033,7 +1172,10 @@ block|}
 block|,
 comment|/* C_TAGPOP */
 block|{
+name|L
+argument_list|(
 literal|"tagpop"
+argument_list|)
 block|,
 name|ex_tag_pop
 block|,
@@ -1048,7 +1190,10 @@ block|}
 block|,
 comment|/* C_TAGPREV */
 block|{
+name|L
+argument_list|(
 literal|"tagprev"
+argument_list|)
 block|,
 name|ex_tag_prev
 block|,
@@ -1063,7 +1208,10 @@ block|}
 block|,
 comment|/* C_TAGTOP */
 block|{
+name|L
+argument_list|(
 literal|"tagtop"
+argument_list|)
 block|,
 name|ex_tag_top
 block|,
@@ -1076,30 +1224,12 @@ block|,
 literal|"discard all tags"
 block|}
 block|,
-comment|/* C_TCLCMD */
-block|{
-literal|"tcl"
-block|,
-name|ex_tcl
-block|,
-name|E_ADDR2_ALL
-operator||
-name|E_ADDR_ZERO
-operator||
-name|E_ADDR_ZERODEF
-operator||
-name|E_SECURE
-block|,
-literal|"s"
-block|,
-literal|"tc[l] cmd"
-block|,
-literal|"run the tcl interpreter with the command"
-block|}
-block|,
 comment|/* C_UNDO */
 block|{
+name|L
+argument_list|(
 literal|"undo"
+argument_list|)
 block|,
 name|ex_undo
 block|,
@@ -1114,7 +1244,10 @@ block|}
 block|,
 comment|/* C_UNABBREVIATE */
 block|{
+name|L
+argument_list|(
 literal|"unabbreviate"
+argument_list|)
 block|,
 name|ex_unabbr
 block|,
@@ -1129,7 +1262,10 @@ block|}
 block|,
 comment|/* C_UNMAP */
 block|{
+name|L
+argument_list|(
 literal|"unmap"
+argument_list|)
 block|,
 name|ex_unmap
 block|,
@@ -1144,7 +1280,10 @@ block|}
 block|,
 comment|/* C_V */
 block|{
+name|L
+argument_list|(
 literal|"v"
+argument_list|)
 block|,
 name|ex_v
 block|,
@@ -1159,7 +1298,10 @@ block|}
 block|,
 comment|/* C_VERSION */
 block|{
+name|L
+argument_list|(
 literal|"version"
+argument_list|)
 block|,
 name|ex_version
 block|,
@@ -1174,7 +1316,10 @@ block|}
 block|,
 comment|/* C_VISUAL_EX */
 block|{
+name|L
+argument_list|(
 literal|"visual"
+argument_list|)
 block|,
 name|ex_visual
 block|,
@@ -1191,7 +1336,10 @@ block|}
 block|,
 comment|/* C_VISUAL_VI */
 block|{
+name|L
+argument_list|(
 literal|"visual"
+argument_list|)
 block|,
 name|ex_edit
 block|,
@@ -1206,7 +1354,10 @@ block|}
 block|,
 comment|/* C_VIUSAGE */
 block|{
+name|L
+argument_list|(
 literal|"viusage"
+argument_list|)
 block|,
 name|ex_viusage
 block|,
@@ -1219,9 +1370,30 @@ block|,
 literal|"display vi key usage statement"
 block|}
 block|,
+comment|/* C_VSPLIT */
+block|{
+name|L
+argument_list|(
+literal|"vsplit"
+argument_list|)
+block|,
+name|ex_edit
+block|,
+name|E_VIONLY
+block|,
+literal|"f1o"
+block|,
+literal|"vs[plit] [+cmd] [file]"
+block|,
+literal|"split the current screen vertically"
+block|}
+block|,
 comment|/* C_WRITE */
 block|{
+name|L
+argument_list|(
 literal|"write"
+argument_list|)
 block|,
 name|ex_write
 block|,
@@ -1238,7 +1410,10 @@ block|}
 block|,
 comment|/* C_WN */
 block|{
+name|L
+argument_list|(
 literal|"wn"
+argument_list|)
 block|,
 name|ex_wn
 block|,
@@ -1255,7 +1430,10 @@ block|}
 block|,
 comment|/* C_WQ */
 block|{
+name|L
+argument_list|(
 literal|"wq"
+argument_list|)
 block|,
 name|ex_wq
 block|,
@@ -1272,7 +1450,10 @@ block|}
 block|,
 comment|/* C_XIT */
 block|{
+name|L
+argument_list|(
 literal|"xit"
+argument_list|)
 block|,
 name|ex_xit
 block|,
@@ -1289,7 +1470,10 @@ block|}
 block|,
 comment|/* C_YANK */
 block|{
+name|L
+argument_list|(
 literal|"yank"
+argument_list|)
 block|,
 name|ex_yank
 block|,
@@ -1304,7 +1488,10 @@ block|}
 block|,
 comment|/* C_Z */
 block|{
+name|L
+argument_list|(
 literal|"z"
+argument_list|)
 block|,
 name|ex_z
 block|,
@@ -1319,11 +1506,16 @@ block|}
 block|,
 comment|/* C_SUBTILDE */
 block|{
+name|L
+argument_list|(
 literal|"~"
+argument_list|)
 block|,
 name|ex_subtilde
 block|,
 name|E_ADDR2
+operator||
+name|E_ADDR_ZERO
 block|,
 literal|"s"
 block|,

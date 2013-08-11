@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_visual.c	10.13 (Berkeley) 6/28/96"
+literal|"$Id: ex_visual.c,v 10.16 2001/08/29 11:04:13 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,18 +109,14 @@ begin_function
 name|int
 name|ex_visual
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|SCR
 modifier|*
@@ -137,6 +133,13 @@ name|buf
 index|[
 literal|256
 index|]
+decl_stmt|;
+name|size_t
+name|wlen
+decl_stmt|;
+name|CHAR_T
+modifier|*
+name|wp
 decl_stmt|;
 comment|/* If open option off, disallow visual command. */
 if|if
@@ -310,6 +313,9 @@ argument_list|)
 argument_list|,
 literal|"%luz%c%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|lno
@@ -335,11 +341,27 @@ argument_list|)
 argument_list|,
 literal|"%luz%c"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|lno
 argument_list|,
 name|pos
+argument_list|)
+expr_stmt|;
+name|CHAR2INT
+argument_list|(
+name|sp
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|,
+name|wp
+argument_list|,
+name|wlen
 argument_list|)
 expr_stmt|;
 operator|(
@@ -351,9 +373,9 @@ name|sp
 argument_list|,
 name|NULL
 argument_list|,
-name|buf
+name|wp
 argument_list|,
-name|len
+name|wlen
 argument_list|,
 name|CH_NOMAP
 operator||
@@ -447,6 +469,7 @@ name|ep
 operator|->
 name|refcnt
 expr_stmt|;
+comment|/* XXXX where is this decremented ? */
 comment|/* 		 * Fake up a screen pointer -- vi doesn't get to change our 		 * underlying file, regardless. 		 */
 name|tsp
 operator|=

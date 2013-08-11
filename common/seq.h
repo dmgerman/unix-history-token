@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)seq.h	10.3 (Berkeley) 3/6/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: seq.h,v 10.4 2011/12/11 21:43:39 zy Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Map and abbreviation structures.  *  * The map structure is doubly linked list, sorted by input string and by  * input length within the string.  (The latter is necessary so that short  * matches will happen before long matches when the list is searched.)  * Additionally, there is a bitmap which has bits set if there are entries  * starting with the corresponding character.  This keeps us from walking  * the list unless it's necessary.  *  * The name and the output fields of a SEQ can be empty, i.e. NULL.  * Only the input field is required.  *  * XXX  * The fast-lookup bits are never turned off -- users don't usually unmap  * things, though, so it's probably not a big deal.  */
+comment|/*  * Map and abbreviation structures.  *  * The map structure is singly linked list, sorted by input string and by  * input length within the string.  (The latter is necessary so that short  * matches will happen before long matches when the list is searched.)  * Additionally, there is a bitmap which has bits set if there are entries  * starting with the corresponding character.  This keeps us from walking  * the list unless it's necessary.  *  * The name and the output fields of a SEQ can be empty, i.e. NULL.  * Only the input field is required.  *  * XXX  * The fast-lookup bits are never turned off -- users don't usually unmap  * things, though, so it's probably not a big deal.  */
 end_comment
 
 begin_struct
 struct|struct
 name|_seq
 block|{
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|_seq
 argument_list|)

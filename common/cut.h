@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)cut.h	10.5 (Berkeley) 4/3/96  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: cut.h,v 10.10 2012/02/11 15:52:33 zy Exp $  */
 end_comment
 
 begin_typedef
@@ -16,7 +16,7 @@ comment|/* TEXT list head structure. */
 end_comment
 
 begin_expr_stmt
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|_texth
 argument_list|,
@@ -33,7 +33,7 @@ begin_struct
 struct|struct
 name|_cb
 block|{
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|_cb
 argument_list|)
@@ -42,8 +42,12 @@ expr_stmt|;
 comment|/* Linked list of cut buffers. */
 name|TEXTH
 name|textq
+index|[
+literal|1
+index|]
 decl_stmt|;
 comment|/* Linked list of TEXT structures. */
+comment|/* XXXX Needed ? Can non ascii-chars be cut buffer names ? */
 name|CHAR_T
 name|name
 decl_stmt|;
@@ -73,14 +77,14 @@ struct|struct
 name|_text
 block|{
 comment|/* Text: a linked list of lines. */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_text
 argument_list|)
 name|q
 expr_stmt|;
 comment|/* Linked list of text structures. */
-name|char
+name|CHAR_T
 modifier|*
 name|lb
 decl_stmt|;
@@ -98,6 +102,11 @@ name|recno_t
 name|lno
 decl_stmt|;
 comment|/* 1-N: file line. */
+define|#
+directive|define
+name|ENTIRE_LINE
+value|((size_t)-1)
+comment|/* cno: end of the line. */
 name|size_t
 name|cno
 decl_stmt|;
@@ -166,7 +175,7 @@ name|cbp
 parameter_list|,
 name|nch
 parameter_list|)
-value|{						\ 	CHAR_T L__name;							\ 	L__name = isupper(nch) ? tolower(nch) : (nch);			\ 	for (cbp = sp->gp->cutq.lh_first;				\ 	    cbp != NULL; cbp = cbp->q.le_next)				\ 		if (cbp->name == L__name)				\ 			break;						\ }
+value|{						\ 	CHAR_T L__name;							\ 	L__name = isupper(nch) ? tolower(nch) : (nch);			\ 	SLIST_FOREACH(cbp, sp->gp->cutq, q)				\ 		if (cbp->name == L__name)				\ 			break;						\ }
 end_define
 
 begin_comment

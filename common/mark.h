@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)mark.h	10.3 (Berkeley) 3/6/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: mark.h,v 10.6 2011/07/04 14:41:51 zy Exp $  */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ begin_struct
 struct|struct
 name|_lmark
 block|{
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|_lmark
 argument_list|)
@@ -47,6 +47,7 @@ name|size_t
 name|cno
 decl_stmt|;
 comment|/* Column number. */
+comment|/* XXXX Needed ? Can non ascii-chars be mark names ? */
 name|CHAR_T
 name|name
 decl_stmt|;
