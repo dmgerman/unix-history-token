@@ -1983,6 +1983,12 @@ name|m
 operator|->
 name|m_nextpkt
 expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* must be encapsulated */
 name|KASSERT
 argument_list|(
