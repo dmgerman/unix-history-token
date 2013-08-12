@@ -210,7 +210,7 @@ modifier|*
 parameter_list|,
 name|int32_t
 parameter_list|,
-name|int32_t
+name|int64_t
 modifier|*
 parameter_list|,
 name|int
