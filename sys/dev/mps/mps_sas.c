@@ -2008,6 +2008,24 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* No need to be in here if debugging isn't enabled */
+if|if
+condition|(
+name|cm
+operator|->
+name|cm_sc
+operator|->
+name|mps_debug
+operator|&
+name|level
+condition|)
+operator|==
+literal|0
+block|)
+function|return;
+end_function
+
+begin_expr_stmt
 name|sbuf_new
 argument_list|(
 operator|&
@@ -2023,6 +2041,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|va_start
 argument_list|(
 name|ap
@@ -2030,6 +2051,9 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|cm
@@ -2171,6 +2195,9 @@ name|cm_lun
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|sbuf_printf
 argument_list|(
 operator|&
@@ -2187,6 +2214,9 @@ operator|.
 name|SMID
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sbuf_vprintf
 argument_list|(
 operator|&
@@ -2197,12 +2227,18 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sbuf_finish
 argument_list|(
 operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mps_dprint_field
 argument_list|(
 name|cm
@@ -2220,16 +2256,18 @@ name|sb
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|va_end
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}   static
 name|void
 name|mpssas_remove_volume
 parameter_list|(
