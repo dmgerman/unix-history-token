@@ -667,6 +667,7 @@ name|AR934X_GPIO_COUNT
 operator|-
 literal|1
 expr_stmt|;
+break|break;
 default|default:
 operator|*
 name|maxpin
