@@ -7527,6 +7527,7 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pci_alloc_msix
 argument_list|(
 name|dev
@@ -7536,6 +7537,13 @@ name|want
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|want
+operator|==
+literal|2
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -7555,6 +7563,12 @@ name|want
 operator|)
 return|;
 block|}
+comment|/* Release in case alloc was insufficient */
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 if|if
