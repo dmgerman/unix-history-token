@@ -3870,6 +3870,9 @@ name|res_tv
 operator|.
 name|tv_sec
 operator|>=
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|duration

@@ -814,6 +814,9 @@ name|res_tv
 operator|.
 name|tv_sec
 operator|>=
+operator|(
+name|int
+operator|)
 name|duration
 operator|)
 condition|)
@@ -1356,6 +1359,9 @@ name|res_tv
 operator|.
 name|tv_sec
 operator|>=
+operator|(
+name|int
+operator|)
 name|duration
 operator|)
 condition|)
