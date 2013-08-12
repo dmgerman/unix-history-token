@@ -3717,7 +3717,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3751,7 +3751,7 @@ name|PCIR_COMMAND
 argument_list|,
 name|reg
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
