@@ -435,7 +435,7 @@ name|G_RAID_VOLUME_RLQ_R4P0
 operator|||
 name|qual
 operator|==
-name|G_RAID_VOLUME_RLQ_R4P0
+name|G_RAID_VOLUME_RLQ_R4PN
 operator|)
 condition|)
 block|{
