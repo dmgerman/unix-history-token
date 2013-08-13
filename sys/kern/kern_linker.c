@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -4445,6 +4451,13 @@ name|lf
 operator|->
 name|id
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|mod_load
+argument_list|,
+name|lf
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
@@ -4730,7 +4743,27 @@ name|userrefs
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Check if there are DTrace probes enabled on this file. */
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|mod_unload
+argument_list|,
+name|lf
+argument_list|,
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|lf
