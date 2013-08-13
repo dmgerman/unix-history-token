@@ -523,7 +523,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|int32_t
+name|e4fs_daddr_t
 name|start
 decl_stmt|,
 name|last

@@ -6125,7 +6125,7 @@ name|bufobj
 modifier|*
 name|bo
 decl_stmt|;
-name|int64_t
+name|daddr_t
 name|blkno
 decl_stmt|;
 name|int

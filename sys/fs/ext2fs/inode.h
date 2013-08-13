@@ -79,13 +79,27 @@ comment|/* Indirect addresses in inode. */
 end_comment
 
 begin_comment
-comment|/*  * The size of physical and logical block numbers and time fields in UFS.  */
+comment|/*  * The size of physical and logical block numbers in EXT2FS.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|uint32_t
+name|e2fs_daddr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int64_t
 name|e2fs_lbn_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int64_t
+name|e4fs_daddr_t
 typedef|;
 end_typedef
 
