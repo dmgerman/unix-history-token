@@ -19968,8 +19968,8 @@ literal|"arcmsr%d: srb_dmat bus_dmamap_load failure!\n"
 argument|, device_get_unit(dev)); 		return ENXIO; 	} 	pci_command = pci_read_config(dev, PCIR_COMMAND,
 literal|2
 argument|); 	pci_command |= PCIM_CMD_BUSMASTEREN; 	pci_command |= PCIM_CMD_PERRESPEN; 	pci_command |= PCIM_CMD_MWRICEN;
-comment|/* Enable Busmaster/Mem */
-argument|pci_command |= PCIM_CMD_MEMEN; 	pci_write_config(dev, PCIR_COMMAND, pci_command,
+comment|/* Enable Busmaster */
+argument|pci_write_config(dev, PCIR_COMMAND, pci_command,
 literal|2
 argument|); 	switch(acb->adapter_type) { 	case ACB_ADAPTER_TYPE_A: { 			u_int32_t rid0 = PCIR_BAR(
 literal|0

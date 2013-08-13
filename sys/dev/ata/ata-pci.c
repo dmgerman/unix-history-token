@@ -354,38 +354,9 @@ operator|=
 name|dev
 expr_stmt|;
 comment|/* if needed try to enable busmastering */
-name|cmd
-operator|=
-name|pci_read_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|cmd
-operator|&
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-condition|)
-block|{
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|cmd
-operator||
-name|PCIM_CMD_BUSMASTEREN
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -399,7 +370,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* if busmastering mode "stuck" use it */
 if|if
 condition|(

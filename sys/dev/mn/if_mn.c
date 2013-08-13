@@ -7490,7 +7490,7 @@ name|self
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7511,10 +7511,8 @@ operator||
 name|PCIM_CMD_PERRESPEN
 operator||
 name|PCIM_CMD_BUSMASTEREN
-operator||
-name|PCIM_CMD_MEMEN
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|#
