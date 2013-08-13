@@ -1307,6 +1307,10 @@ name|int
 name|v_global_id
 decl_stmt|;
 comment|/* Global volume ID (rX). */
+name|int
+name|v_read_only
+decl_stmt|;
+comment|/* Volume is read-only. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|g_raid_volume
