@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -894,6 +900,35 @@ operator|&
 name|transient_arena_storage
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_MEMGUARD
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|vmem
+name|memguard_arena_storage
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vmem_t
+modifier|*
+name|memguard_arena
+init|=
+operator|&
+name|memguard_arena_storage
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Fill the vmem's boundary tag cache.  We guarantee that boundary tag  * allocation will not fail once bt_fill() passes.  To do so we cache  * at least the maximum possible tag allocations in the arena.  */

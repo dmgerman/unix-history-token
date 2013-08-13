@@ -79,6 +79,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|vmem
+modifier|*
+name|memguard_arena
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|vm_offset_t
 name|swapbkva
 decl_stmt|;

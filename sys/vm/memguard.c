@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_extern.h>
 end_include
 
@@ -366,16 +372,6 @@ literal|"Short description of memory type to monitor"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|vmem_t
-modifier|*
-name|memguard_map
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -961,16 +957,18 @@ name|parent
 argument_list|,
 name|memguard_mapsize
 argument_list|,
+name|M_BESTFIT
+operator||
 name|M_WAITOK
 argument_list|,
 operator|&
 name|base
 argument_list|)
 expr_stmt|;
-name|memguard_map
-operator|=
-name|vmem_create
+name|vmem_init
 argument_list|(
+name|memguard_arena
+argument_list|,
 literal|"memguard arena"
 argument_list|,
 name|base
@@ -1359,7 +1357,7 @@ if|if
 condition|(
 name|vmem_size
 argument_list|(
-name|memguard_map
+name|memguard_arena
 argument_list|,
 name|VMEM_ALLOC
 argument_list|)
@@ -1396,7 +1394,7 @@ if|if
 condition|(
 name|vmem_xalloc
 argument_list|(
-name|memguard_map
+name|memguard_arena
 argument_list|,
 name|size_v
 argument_list|,
@@ -1481,7 +1479,7 @@ condition|)
 block|{
 name|vmem_xfree
 argument_list|(
-name|memguard_map
+name|memguard_arena
 argument_list|,
 name|addr
 argument_list|,
@@ -1734,7 +1732,7 @@ name|PAGE_SIZE
 expr_stmt|;
 name|vmem_xfree
 argument_list|(
-name|memguard_map
+name|memguard_arena
 argument_list|,
 name|addr
 argument_list|,
