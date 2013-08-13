@@ -3098,9 +3098,7 @@ name|tmp
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|PAGE_SIZE
-operator|*
-literal|16
+literal|0
 argument_list|,
 literal|0
 argument_list|)
