@@ -6577,6 +6577,8 @@ name|rs_rates
 index|[
 name|i
 index|]
+operator|&
+name|IEEE80211_RATE_VAL
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -6622,6 +6624,8 @@ name|rs_rates
 index|[
 name|i
 index|]
+operator|&
+name|IEEE80211_RATE_VAL
 argument_list|,
 name|modtype
 argument_list|)
