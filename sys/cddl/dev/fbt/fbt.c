@@ -5924,6 +5924,34 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|fbt_linker_file_cb
+parameter_list|(
+name|linker_file_t
+name|lf
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|fbt_provide_module
+argument_list|(
+name|arg
+argument_list|,
+name|lf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|fbt_load
 parameter_list|(
@@ -6023,6 +6051,14 @@ operator|!=
 literal|0
 condition|)
 return|return;
+comment|/* Create probes for the kernel and already-loaded modules. */
+name|linker_file_foreach
+argument_list|(
+name|fbt_linker_file_cb
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

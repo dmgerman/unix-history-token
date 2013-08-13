@@ -98,6 +98,33 @@ comment|/* Hang our hook for exceptions. */
 name|dtrace_invop_init
 argument_list|()
 expr_stmt|;
+comment|/* Register callbacks for module load and unload events. */
+name|dtrace_modload_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|mod_load
+argument_list|,
+name|dtrace_mod_load
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+name|dtrace_modunload_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|mod_unload
+argument_list|,
+name|dtrace_mod_unload
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialise the mutexes without 'witness' because the dtrace 	 * code is mostly written to wait for memory. To have the 	 * witness code change a malloc() from M_WAITOK to M_NOWAIT 	 * because a lock is held would surely create a panic in a 	 * low memory situation. And that low memory situation might be 	 * the very problem we are trying to trace. 	 */
 name|mutex_init
 argument_list|(

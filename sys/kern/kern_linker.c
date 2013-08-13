@@ -4756,27 +4756,6 @@ if|if
 condition|(
 name|lf
 operator|->
-name|nenabled
-operator|>
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"kldunload: attempt to unload file that has"
-literal|" DTrace probes enabled\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EBUSY
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|lf
-operator|->
 name|userrefs
 operator|==
 literal|0
