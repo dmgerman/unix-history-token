@@ -186,6 +186,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GPT_CR_24MEN
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPT_CR_FRR
 value|(1<< 9)
 end_define
@@ -194,35 +201,42 @@ begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_NONE
-value|0x00000000
+value|(0<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_IPG
-value|0x00000040
+value|(1<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_IPG_HIGH
-value|0x00000080
+value|(2<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_EXT
-value|0x000000c0
+value|(3<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_32K
-value|0x00000100
+value|(4<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_CR_CLKSRC_24M
+value|(5<< 6)
 end_define
 
 begin_define
@@ -230,6 +244,13 @@ define|#
 directive|define
 name|GPT_CR_STOPEN
 value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_CR_DOZEEN
+value|(1<< 4)
 end_define
 
 begin_define
@@ -283,6 +304,20 @@ define|#
 directive|define
 name|GPT_PR_VALUE_MASK
 value|0x00000fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_PR_VALUE_SHIFT_24M
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_PR_VALUE_MASK_24M
+value|0x0000f000
 end_define
 
 begin_comment
