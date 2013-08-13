@@ -107,12 +107,24 @@ directive|include
 file|"citrus_iconv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<_libiconv_compat.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LIBICONV_COMPAT
+end_ifdef
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconv
-argument_list|,
 name|iconv
+argument_list|,
+name|libiconv
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -120,9 +132,9 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconv_open
-argument_list|,
 name|iconv_open
+argument_list|,
+name|libiconv_open
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -130,9 +142,9 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconv_open_into
-argument_list|,
 name|iconv_open_into
+argument_list|,
+name|libiconv_open_into
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -140,9 +152,9 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconv_close
-argument_list|,
 name|iconv_close
+argument_list|,
+name|libiconv_close
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -150,9 +162,9 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconvlist
-argument_list|,
 name|iconvlist
+argument_list|,
+name|libiconvlist
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,9 +172,9 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconvctl
-argument_list|,
 name|iconvctl
+argument_list|,
+name|libiconvctl
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -170,12 +182,27 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|libiconv_set_relocation_prefix
-argument_list|,
 name|iconv_set_relocation_prefix
+argument_list|,
+name|libiconv_set_relocation_prefix
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_iconv_version
+argument_list|,
+name|_libiconv_version
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -189,9 +216,9 @@ end_define
 
 begin_decl_stmt
 name|int
-name|_libiconv_version
+name|_iconv_version
 init|=
-name|_LIBICONV_VERSION
+name|_ICONV_VERSION
 decl_stmt|;
 end_decl_stmt
 
@@ -394,7 +421,7 @@ end_function
 
 begin_function
 name|iconv_t
-name|libiconv_open
+name|iconv_open
 parameter_list|(
 specifier|const
 name|char
@@ -424,7 +451,7 @@ end_function
 
 begin_function
 name|int
-name|libiconv_open_into
+name|iconv_open_into
 parameter_list|(
 specifier|const
 name|char
@@ -485,7 +512,7 @@ end_function
 
 begin_function
 name|int
-name|libiconv_close
+name|iconv_close
 parameter_list|(
 name|iconv_t
 name|handle
@@ -534,7 +561,7 @@ end_function
 
 begin_function
 name|size_t
-name|libiconv
+name|iconv
 parameter_list|(
 name|iconv_t
 name|handle
@@ -906,7 +933,7 @@ end_function
 
 begin_function
 name|void
-name|libiconvlist
+name|iconvlist
 parameter_list|(
 name|int
 function_decl|(
@@ -1302,7 +1329,7 @@ end_function
 
 begin_function
 name|int
-name|libiconvctl
+name|iconvctl
 parameter_list|(
 name|iconv_t
 name|cd
@@ -1595,7 +1622,7 @@ end_function
 
 begin_function
 name|void
-name|libiconv_set_relocation_prefix
+name|iconv_set_relocation_prefix
 parameter_list|(
 specifier|const
 name|char
