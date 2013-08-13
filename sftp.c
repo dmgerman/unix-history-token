@@ -7142,6 +7142,11 @@ expr_stmt|;
 case|case
 name|I_LINK
 case|:
+if|if
+condition|(
+operator|!
+name|sflag
+condition|)
 name|path1
 operator|=
 name|make_absolute
