@@ -3053,6 +3053,12 @@ name|ktr_code
 condition|)
 block|{
 case|case
+name|SYS_bindat
+case|:
+case|case
+name|SYS_connectat
+case|:
+case|case
 name|SYS_faccessat
 case|:
 case|case
