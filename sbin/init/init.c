@@ -7731,6 +7731,10 @@ argument_list|,
 name|LOGIN_SETPRIORITY
 operator||
 name|LOGIN_SETRESOURCES
+operator||
+name|LOGIN_SETLOGINCLASS
+operator||
+name|LOGIN_SETCPUMASK
 argument_list|)
 expr_stmt|;
 name|login_close
