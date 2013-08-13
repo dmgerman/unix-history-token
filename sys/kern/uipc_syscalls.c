@@ -542,7 +542,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * NSFBUFS-related variables and associated sysctls  */
+comment|/*  * sendfile(2)-related variables and associated sysctls  */
 end_comment
 
 begin_decl_stmt
