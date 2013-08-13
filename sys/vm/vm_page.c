@@ -919,12 +919,6 @@ name|v_active_count
 expr_stmt|;
 name|vmd
 operator|->
-name|vmd_fullintervalcount
-operator|=
-literal|0
-expr_stmt|;
-name|vmd
-operator|->
 name|vmd_page_count
 operator|=
 literal|0

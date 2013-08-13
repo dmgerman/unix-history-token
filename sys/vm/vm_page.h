@@ -488,9 +488,6 @@ index|[
 name|PQ_COUNT
 index|]
 decl_stmt|;
-name|int
-name|vmd_fullintervalcount
-decl_stmt|;
 name|u_int
 name|vmd_page_count
 decl_stmt|;
