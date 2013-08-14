@@ -88,6 +88,8 @@ block|,
 name|Timeval2
 block|,
 name|Pathconf
+block|,
+name|Rforkflags
 block|}
 enum|;
 end_enum
