@@ -633,27 +633,29 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
-literal|"\tstart %ld, end %ld overlap start %lld, end %ld\n"
+literal|"\tstart %jd, end %jd overlap start %jd, end %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|start
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|last
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|ep
 operator|->
 name|b_blkno
 argument_list|,
 call|(
-name|long
+name|intmax_t
 call|)
 argument_list|(
 name|ep
@@ -673,7 +675,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"Disk buffer overlap"
+literal|"ext2_checkoverlap: Disk buffer overlap"
 argument_list|)
 expr_stmt|;
 block|}
