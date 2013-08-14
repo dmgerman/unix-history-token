@@ -4,6 +4,10 @@ comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
+comment|/* $Id$ */
+end_comment
+
+begin_comment
 comment|/*! \file */
 end_comment
 
@@ -4108,6 +4112,10 @@ name|unsigned
 name|int
 name|width
 parameter_list|,
+name|unsigned
+name|int
+name|split_width
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -4144,6 +4152,25 @@ name|flags
 expr_stmt|;
 if|if
 condition|(
+name|split_width
+operator|==
+literal|0xffffffff
+condition|)
+name|tctx
+operator|.
+name|width
+operator|=
+name|width
+expr_stmt|;
+else|else
+name|tctx
+operator|.
+name|width
+operator|=
+name|split_width
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|flags
 operator|&
@@ -4152,22 +4179,20 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|tctx
-operator|.
-name|width
-operator|=
-name|width
-expr_stmt|;
 name|tctx
 operator|.
 name|linebreak
 operator|=
 name|linebreak
 expr_stmt|;
-block|}
 else|else
 block|{
+if|if
+condition|(
+name|split_width
+operator|==
+literal|0xffffffff
+condition|)
 name|tctx
 operator|.
 name|width
@@ -6674,6 +6699,16 @@ operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
+if|if
+condition|(
+name|tregion
+operator|.
+name|base
+operator|!=
+name|sregion
+operator|.
+name|base
+condition|)
 name|memcpy
 argument_list|(
 name|tregion

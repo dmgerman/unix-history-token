@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2013  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keygen.c,v 1.115.14.4 2011/11/30 00:51:38 marka Exp $ */
+comment|/* $Id: dnssec-keygen.c,v 1.120 2011/11/30 00:48:51 marka Exp $ */
 end_comment
 
 begin_comment
@@ -514,13 +514,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    -e: use large exponent (RSAMD5/RSASHA1 only)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"    -f<keyflag>: KSK | REVOKE\n"
 argument_list|)
 expr_stmt|;
@@ -536,7 +529,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    -L<ttl>: default key TTL\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    -p<protocol>: (default: 3 [dnssec])\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    -r<randomdev>: a file containing random data\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -569,13 +576,6 @@ argument_list|,
 literal|"    -t<type>: "
 literal|"AUTHCONF | NOAUTHCONF | NOAUTH | NOCONF "
 literal|"(default: AUTHCONF)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -r<randomdev>: a file containing random data\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -912,10 +912,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
-name|rsa_exp
-init|=
-literal|0
-decl_stmt|,
 name|generator
 init|=
 literal|0
@@ -1022,6 +1018,11 @@ name|dbits
 init|=
 literal|0
 decl_stmt|;
+name|dns_ttl_t
+name|ttl
+init|=
+literal|0
+decl_stmt|;
 name|isc_boolean_t
 name|use_default
 init|=
@@ -1082,6 +1083,10 @@ name|ISC_FALSE
 decl_stmt|;
 name|isc_boolean_t
 name|setdel
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|setttl
 init|=
 name|ISC_FALSE
 decl_stmt|;
@@ -1147,7 +1152,7 @@ comment|/* 	 * Process memory debugging argument first. 	 */
 define|#
 directive|define
 name|CMDLINE_FLAGS
-value|"3A:a:b:Cc:D:d:E:eFf:Gg:hI:i:K:km:n:P:p:qR:r:S:s:T:t:v:"
+value|"3A:a:b:Cc:D:d:E:eFf:Gg:hI:i:K:kL:m:n:P:p:qR:r:S:s:T:t:v:"
 while|while
 condition|(
 operator|(
@@ -1411,9 +1416,13 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|rsa_exp
-operator|=
-literal|1
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"phased-out option -e "
+literal|"(was 'use (RSA) large exponent)\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1542,6 +1551,37 @@ literal|"The -k option has been deprecated.\n"
 literal|"To generate a key-signing key, use -f KSK.\n"
 literal|"To generate a key with TYPE=KEY, use -T KEY.\n"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|ttl
+operator|=
+name|strtottl
+argument_list|(
+name|isc_commandline_argument
+argument_list|)
+expr_stmt|;
+name|setttl
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -3717,52 +3757,6 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|alg
-operator|==
-name|DNS_KEYALG_RSAMD5
-operator|||
-name|alg
-operator|==
-name|DNS_KEYALG_RSASHA1
-operator|||
-name|alg
-operator|==
-name|DNS_KEYALG_NSEC3RSASHA1
-operator|||
-name|alg
-operator|==
-name|DNS_KEYALG_RSASHA256
-operator|||
-name|alg
-operator|==
-name|DNS_KEYALG_RSASHA512
-operator|||
-name|alg
-operator|==
-name|DST_ALG_ECCGOST
-operator|||
-name|alg
-operator|==
-name|DST_ALG_ECDSA256
-operator|||
-name|alg
-operator|==
-name|DST_ALG_ECDSA384
-operator|)
-operator|&&
-name|rsa_exp
-operator|!=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"specified RSA exponent for a non-RSA key"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|alg
 operator|!=
 name|DNS_KEYALG_DH
@@ -4095,10 +4089,6 @@ case|:
 case|case
 name|DNS_KEYALG_RSASHA512
 case|:
-name|param
-operator|=
-name|rsa_exp
-expr_stmt|;
 name|show_progress
 operator|=
 name|ISC_TRUE
@@ -4585,6 +4575,18 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the default key TTL */
+if|if
+condition|(
+name|setttl
+condition|)
+name|dst_key_setttl
+argument_list|(
+name|key
+argument_list|,
+name|ttl
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Do not overwrite an existing key, or create a key 		 * if there is a risk of ID collision due to this key 		 * or another key being revoked. 		 */
 if|if
 condition|(

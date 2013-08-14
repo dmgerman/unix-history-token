@@ -2908,6 +2908,9 @@ name|opensslecdsa_verify
 block|,
 name|NULL
 block|,
+comment|/*%< verify2 */
+name|NULL
+block|,
 comment|/*%< computesecret */
 name|opensslecdsa_compare
 block|,

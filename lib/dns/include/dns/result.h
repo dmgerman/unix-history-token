@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: result.h,v 1.123 2011/03/21 07:22:14 each Exp $ */
 end_comment
 
 begin_ifndef

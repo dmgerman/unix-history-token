@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2011, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: cache.h,v 1.32 2011/08/02 23:47:52 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -353,21 +353,6 @@ comment|/*%<  * Get the periodic cache cleaning interval to 'interval' seconds. 
 end_comment
 
 begin_function_decl
-name|isc_uint32_t
-name|dns_cache_getcachesize
-parameter_list|(
-name|dns_cache_t
-modifier|*
-name|cache
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*%<  * Get the maximum cache size.  */
-end_comment
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -392,7 +377,7 @@ name|dns_cache_t
 modifier|*
 name|cache
 parameter_list|,
-name|isc_uint32_t
+name|size_t
 name|size
 parameter_list|)
 function_decl|;
@@ -403,7 +388,7 @@ comment|/*%<  * Set the maximum cache size.  0 means unlimited.  */
 end_comment
 
 begin_function_decl
-name|isc_uint32_t
+name|size_t
 name|dns_cache_getcachesize
 parameter_list|(
 name|dns_cache_t
@@ -434,6 +419,28 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
+name|dns_cache_flushnode
+parameter_list|(
+name|dns_cache_t
+modifier|*
+name|cache
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_boolean_t
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Flush a given name from the cache.  If 'tree' is true, then  * also flush all names under 'name'.  *  * Requires:  *\li	'cache' to be valid.  *\li	'name' to be valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	other error returns.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
 name|dns_cache_flushname
 parameter_list|(
 name|dns_cache_t
@@ -448,7 +455,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flushes a given name from the cache.  *  * Requires:  *\li	'cache' to be valid.  *\li	'name' to be valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	other error returns.  */
+comment|/*  * Flush a given name from the cache.  Equivalent to  * dns_cache_flushpartial(cache, name, ISC_FALSE).  *  * Requires:  *\li	'cache' to be valid.  *\li	'name' to be valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	other error returns.  */
 end_comment
 
 begin_macro
