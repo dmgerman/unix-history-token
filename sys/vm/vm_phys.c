@@ -269,9 +269,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_FICT_PAGES
 argument_list|,
-literal|""
+literal|"vm_fictitious"
 argument_list|,
-literal|""
+literal|"Fictitious VM pages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
