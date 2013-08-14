@@ -4441,7 +4441,7 @@ name|id
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
-name|mod_load
+name|kld_load
 argument_list|,
 name|lf
 argument_list|)
@@ -4733,7 +4733,7 @@ argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
-name|mod_unload
+name|kld_unload
 argument_list|,
 name|lf
 argument_list|,

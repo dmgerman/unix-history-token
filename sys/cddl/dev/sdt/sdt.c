@@ -252,7 +252,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|sdt_modload
+name|sdt_kld_load
 parameter_list|(
 name|void
 modifier|*
@@ -267,7 +267,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|sdt_modunload
+name|sdt_kld_unload
 parameter_list|(
 name|void
 modifier|*
@@ -420,13 +420,13 @@ end_expr_stmt
 
 begin_decl_stmt
 name|eventhandler_tag
-name|modload_tag
+name|sdt_kld_load_tag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|eventhandler_tag
-name|modunload_tag
+name|sdt_kld_unload_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -1092,7 +1092,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|sdt_modload
+name|sdt_kld_load
 parameter_list|(
 name|void
 modifier|*
@@ -1310,7 +1310,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sdt_modunload
+name|sdt_kld_unload
 parameter_list|(
 name|void
 modifier|*
@@ -1375,9 +1375,9 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-comment|/* No DTrace providers are declared in this module. */
+comment|/* No DTrace providers are declared in this file. */
 return|return;
-comment|/* 	 * Go through all the providers declared in this module and unregister 	 * any that aren't declared in another loaded module. 	 */
+comment|/* 	 * Go through all the providers declared in this linker file and 	 * unregister any that aren't declared in another loaded file. 	 */
 for|for
 control|(
 name|curr
@@ -1492,7 +1492,7 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-name|sdt_modload
+name|sdt_kld_load
 argument_list|(
 name|NULL
 argument_list|,
@@ -1547,33 +1547,33 @@ name|sdt_probe_func
 operator|=
 name|dtrace_probe
 expr_stmt|;
-name|modload_tag
+name|sdt_kld_load_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|mod_load
+name|kld_load
 argument_list|,
-name|sdt_modload
+name|sdt_kld_load
 argument_list|,
 name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-name|modunload_tag
+name|sdt_kld_unload_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|mod_unload
+name|kld_unload
 argument_list|,
-name|sdt_modunload
+name|sdt_kld_unload
 argument_list|,
 name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-comment|/* Pick up probes from the kernel and already-loaded modules. */
+comment|/* Pick up probes from the kernel and already-loaded linker files. */
 name|linker_file_foreach
 argument_list|(
 name|sdt_linker_file_cb
@@ -1605,16 +1605,16 @@ name|tmp
 decl_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|mod_load
+name|kld_load
 argument_list|,
-name|modload_tag
+name|sdt_kld_load_tag
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|mod_unload
+name|kld_unload
 argument_list|,
-name|modunload_tag
+name|sdt_kld_unload_tag
 argument_list|)
 expr_stmt|;
 name|sdt_probe_func

@@ -1332,7 +1332,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Module load and unload events */
+comment|/* Kernel linker file load and unload events */
 end_comment
 
 begin_struct_decl
@@ -1346,7 +1346,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|mod_load_fn
+name|kld_load_fn
 function_decl|)
 parameter_list|(
 name|void
@@ -1364,7 +1364,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|mod_unload_fn
+name|kld_unload_fn
 function_decl|)
 parameter_list|(
 name|void
@@ -1383,9 +1383,9 @@ end_typedef
 begin_expr_stmt
 name|EVENTHANDLER_DECLARE
 argument_list|(
-name|mod_load
+name|kld_load
 argument_list|,
-name|mod_load_fn
+name|kld_load_fn
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1393,9 +1393,9 @@ end_expr_stmt
 begin_expr_stmt
 name|EVENTHANDLER_DECLARE
 argument_list|(
-name|mod_unload
+name|kld_unload
 argument_list|,
-name|mod_unload_fn
+name|kld_unload_fn
 argument_list|)
 expr_stmt|;
 end_expr_stmt

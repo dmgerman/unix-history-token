@@ -98,27 +98,27 @@ comment|/* Hang our hook for exceptions. */
 name|dtrace_invop_init
 argument_list|()
 expr_stmt|;
-comment|/* Register callbacks for module load and unload events. */
-name|dtrace_modload_tag
+comment|/* Register callbacks for linker file load and unload events. */
+name|dtrace_kld_load_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|mod_load
+name|kld_load
 argument_list|,
-name|dtrace_mod_load
+name|dtrace_kld_load
 argument_list|,
 name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-name|dtrace_modunload_tag
+name|dtrace_kld_unload_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|mod_unload
+name|kld_unload
 argument_list|,
-name|dtrace_mod_unload
+name|dtrace_kld_unload
 argument_list|,
 name|NULL
 argument_list|,

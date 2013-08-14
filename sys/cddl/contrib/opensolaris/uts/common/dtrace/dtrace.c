@@ -1244,14 +1244,14 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
-name|dtrace_modload_tag
+name|dtrace_kld_load_tag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|eventhandler_tag
-name|dtrace_modunload_tag
+name|dtrace_kld_unload_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -64546,7 +64546,7 @@ name|sun
 argument_list|)
 specifier|static
 name|void
-name|dtrace_mod_load
+name|dtrace_kld_load
 parameter_list|(
 name|void
 modifier|*
@@ -64565,7 +64565,7 @@ expr_stmt|;
 block|}
 specifier|static
 name|void
-name|dtrace_mod_unload
+name|dtrace_kld_unload
 parameter_list|(
 name|void
 modifier|*
