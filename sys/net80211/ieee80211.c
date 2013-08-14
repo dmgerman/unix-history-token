@@ -6999,13 +6999,6 @@ name|ieee80211_phymode
 name|mode
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 specifier|static
 specifier|const
 name|struct
@@ -7757,7 +7750,7 @@ name|findmedia
 argument_list|(
 name|htrates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|htrates
 argument_list|)
@@ -7805,7 +7798,7 @@ name|findmedia
 argument_list|(
 name|htrates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|htrates
 argument_list|)
@@ -7859,7 +7852,7 @@ name|findmedia
 argument_list|(
 name|rates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -7877,7 +7870,7 @@ name|findmedia
 argument_list|(
 name|rates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -7895,7 +7888,7 @@ name|findmedia
 argument_list|(
 name|rates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -7926,7 +7919,7 @@ name|findmedia
 argument_list|(
 name|rates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -7952,7 +7945,7 @@ name|findmedia
 argument_list|(
 name|rates
 argument_list|,
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -7966,9 +7959,6 @@ block|}
 return|return
 name|IFM_AUTO
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -7980,13 +7970,6 @@ name|int
 name|mword
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 specifier|static
 specifier|const
 name|int
@@ -8079,7 +8062,7 @@ argument_list|(
 name|mword
 argument_list|)
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ieeerates
 argument_list|)
@@ -8094,9 +8077,6 @@ index|]
 else|:
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

@@ -3119,13 +3119,6 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 specifier|static
 specifier|const
 name|int
@@ -3159,7 +3152,7 @@ name|rs
 operator|->
 name|rs_nrates
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -3175,7 +3168,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -3247,9 +3240,6 @@ block|}
 return|return
 literal|1
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
