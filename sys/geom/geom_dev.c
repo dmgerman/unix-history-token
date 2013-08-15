@@ -246,8 +246,6 @@ operator|=
 name|D_DISK
 operator||
 name|D_TRACKCLOSE
-operator||
-name|D_UNMAPPED_IO
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1166,6 +1164,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|dev
+operator|->
+name|si_flags
+operator||=
+name|SI_UNMAPPED
+expr_stmt|;
 name|sc
 operator|->
 name|sc_dev
@@ -1285,6 +1289,12 @@ literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+name|adev
+operator|->
+name|si_flags
+operator||=
+name|SI_UNMAPPED
 expr_stmt|;
 break|break;
 block|}

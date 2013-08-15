@@ -113,6 +113,11 @@ directive|define
 name|SI_CLONELIST
 value|0x0200
 comment|/* on a clone list */
+define|#
+directive|define
+name|SI_UNMAPPED
+value|0x0400
+comment|/* can handle unmapped I/O */
 name|struct
 name|timespec
 name|si_atime
@@ -699,17 +704,6 @@ end_define
 
 begin_comment
 comment|/* driver uses clone_create() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|D_UNMAPPED_IO
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* d_strategy can accept unmapped IO */
 end_comment
 
 begin_comment
