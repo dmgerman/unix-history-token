@@ -279,6 +279,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|fo_sendfile_t
+name|vn_sendfile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|fileops
 name|vnops
@@ -333,6 +340,11 @@ operator|.
 name|fo_chown
 operator|=
 name|vn_chown
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|vn_sendfile
 block|,
 operator|.
 name|fo_flags

@@ -13075,7 +13075,12 @@ operator|.
 name|fo_close
 operator|=
 name|mqf_close
-block|}
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
+block|, }
 decl_stmt|;
 end_decl_stmt
 
