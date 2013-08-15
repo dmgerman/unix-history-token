@@ -950,8 +950,8 @@ condition|(
 name|hdr
 operator|->
 name|hdr_entries
-operator|<
-literal|128
+operator|==
+literal|0
 operator|||
 name|hdr
 operator|->
@@ -1083,7 +1083,6 @@ name|hdr
 operator|->
 name|hdr_entsz
 expr_stmt|;
-comment|/* Check CRC only when buffer size is enough for table. */
 if|if
 condition|(
 name|hdr
@@ -1091,17 +1090,33 @@ operator|->
 name|hdr_entries
 operator|<=
 name|cnt
-operator|&&
+condition|)
+block|{
+name|cnt
+operator|=
+name|hdr
+operator|->
+name|hdr_entries
+expr_stmt|;
+comment|/* Check CRC only when buffer size is enough for table. */
+if|if
+condition|(
+name|hdr
+operator|->
+name|hdr_crc_table
+operator|!=
 name|crc32
 argument_list|(
 name|tbl
 argument_list|,
-name|size
-argument_list|)
-operator|!=
 name|hdr
 operator|->
-name|hdr_crc_table
+name|hdr_entries
+operator|*
+name|hdr
+operator|->
+name|hdr_entsz
+argument_list|)
 condition|)
 block|{
 name|DEBUG
@@ -1115,6 +1130,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 block|}
 name|ent
 operator|=
