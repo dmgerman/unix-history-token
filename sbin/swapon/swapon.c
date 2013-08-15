@@ -2154,6 +2154,7 @@ name|char
 modifier|*
 name|ret
 decl_stmt|;
+specifier|static
 name|char
 name|mdpath
 index|[

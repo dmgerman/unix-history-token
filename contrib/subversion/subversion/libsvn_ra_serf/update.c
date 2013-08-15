@@ -4252,8 +4252,6 @@ operator|->
 name|handler
 operator|->
 name|sline
-operator|.
-name|code
 argument_list|,
 name|fetch_ctx
 operator|->
@@ -10606,7 +10604,7 @@ name|headers
 argument_list|,
 literal|"Accept-Encoding"
 argument_list|,
-literal|"gzip;svndiff1;q=0.9,svndiff;q=0.8"
+literal|"gzip,svndiff1;q=0.9,svndiff;q=0.8"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11167,8 +11165,6 @@ argument_list|(
 name|handler
 operator|->
 name|sline
-operator|.
-name|code
 argument_list|,
 name|handler
 operator|->

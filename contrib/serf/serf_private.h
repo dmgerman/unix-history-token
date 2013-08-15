@@ -48,6 +48,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Older versions of APR do not have this macro.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APR_SIZE_MAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|REQUESTED_MAX
+value|APR_SIZE_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|REQUESTED_MAX
+value|(~((apr_size_t)0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -122,6 +156,53 @@ directive|define
 name|AUTH_VERBOSE
 value|0
 end_define
+
+begin_comment
+comment|/* Older versions of APR do not have the APR_VERSION_AT_LEAST macro. Those    implementations are safe.     If the macro *is* defined, and we're on WIN32, and APR is version 1.4.0+,    then we have a broken WSAPoll() implementation.     See serf_context_create_ex() below.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|APR_VERSION_AT_LEAST
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|APR_VERSION_AT_LEAST
+argument_list|(
+literal|1
+operator|,
+literal|4
+operator|,
+literal|0
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BROKEN_WSAPOLL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -217,6 +298,10 @@ decl_stmt|;
 name|int
 name|priority
 decl_stmt|;
+comment|/* 1 if this is a request to setup a SSL tunnel, 0 for normal requests. */
+name|int
+name|ssltunnel
+decl_stmt|;
 comment|/* This baton is currently only used for digest authentication, which        needs access to the uri of the request in the response handler.        If serf_request_t is replaced by a serf_http_request_t in the future,        which knows about uri and method and such, this baton won't be needed        anymore. */
 name|void
 modifier|*
@@ -251,11 +336,6 @@ typedef|typedef
 struct|struct
 name|serf__authn_info_t
 block|{
-specifier|const
-name|char
-modifier|*
-name|realm
-decl_stmt|;
 specifier|const
 name|serf__authn_scheme_t
 modifier|*
@@ -326,10 +406,12 @@ decl_stmt|;
 name|apr_off_t
 name|progress_written
 decl_stmt|;
-comment|/* authentication info for this context, shared by all connections. */
-name|serf__authn_info_t
-name|authn_info
+comment|/* authentication info for the servers used in this context. Shared by all        connections to the same server.        Structure of the hashtable:  key: host url, e.g. https://localhost:80                                   value: serf__authn_info_t *      */
+name|apr_hash_t
+modifier|*
+name|server_authn_info
 decl_stmt|;
+comment|/* authentication info for the proxy configured in this context, shared by        all connections. */
 name|serf__authn_info_t
 name|proxy_authn_info
 decl_stmt|;
@@ -425,7 +507,6 @@ name|SERF_CONN_CONNECTED
 block|,
 comment|/* conn is ready to send requests */
 name|SERF_CONN_CLOSING
-block|,
 comment|/* conn is closing, no more requests,                                    start a new socket */
 block|}
 name|serf__connection_state_t
@@ -579,12 +660,13 @@ decl_stmt|;
 name|int
 name|hit_eof
 decl_stmt|;
-comment|/* Host info. */
+comment|/* Host url, path ommitted, syntax: https://svn.apache.org . */
 specifier|const
 name|char
 modifier|*
 name|host_url
 decl_stmt|;
+comment|/* Exploded host url, path ommitted. Only scheme, hostinfo, hostname&        port values are filled in. */
 name|apr_uri_t
 name|host_info
 decl_stmt|;
@@ -604,6 +686,10 @@ decl_stmt|;
 comment|/* Calculated connection latency. Negative value if latency is unknown. */
 name|apr_interval_time_t
 name|latency
+decl_stmt|;
+comment|/* Needs to read first before we can write again. */
+name|int
+name|stop_writing
 decl_stmt|;
 block|}
 struct|;
@@ -726,6 +812,11 @@ modifier|*
 name|serf__init_conn_func_t
 function_decl|)
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|int
 name|code
 parameter_list|,
@@ -828,15 +919,17 @@ begin_struct
 struct|struct
 name|serf__authn_scheme_t
 block|{
-comment|/* The http status code that's handled by this authentication scheme.        Normal values are 401 for server authentication and 407 for proxy        authentication */
-name|int
-name|code
-decl_stmt|;
-comment|/* The name of this authentication scheme. This should be a case        sensitive match of the string sent in the HTTP authentication header. */
+comment|/* The name of this authentication scheme. Used in headers of requests and        for logging. */
 specifier|const
 name|char
 modifier|*
 name|name
+decl_stmt|;
+comment|/* Key is the name of the authentication scheme in lower case, to        facilitate case insensitive matching of the response headers. */
+specifier|const
+name|char
+modifier|*
+name|key
 decl_stmt|;
 comment|/* Internal code used for this authn type. */
 name|int
@@ -893,6 +986,22 @@ parameter_list|,
 name|apr_pool_t
 modifier|*
 name|pool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Get the cached serf__authn_info_t object for the target server, or create one    when this is the first connection to the server.    TODO: The serf__authn_info_t objects are allocated in the context pool, so    a context that's used to connect to many different servers using Basic or     Digest authencation will hold on to many objects indefinitely. We should be    able to cleanup stale objects from time to time. */
+end_comment
+
+begin_function_decl
+name|serf__authn_info_t
+modifier|*
+name|serf__get_authn_info_for_server
+parameter_list|(
+name|serf_connection_t
+modifier|*
+name|conn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -983,6 +1092,71 @@ parameter_list|(
 name|serf_connection_t
 modifier|*
 name|conn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|serf_request_t
+modifier|*
+name|serf__ssltunnel_request_create
+parameter_list|(
+name|serf_connection_t
+modifier|*
+name|conn
+parameter_list|,
+name|serf_request_setup_t
+name|setup
+parameter_list|,
+name|void
+modifier|*
+name|setup_baton
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|apr_status_t
+name|serf__provide_credentials
+parameter_list|(
+name|serf_context_t
+modifier|*
+name|ctx
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|username
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|password
+parameter_list|,
+name|serf_request_t
+modifier|*
+name|request
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|,
+name|int
+name|code
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|authn_type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|realm
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 function_decl|;
 end_function_decl

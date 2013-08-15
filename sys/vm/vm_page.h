@@ -126,24 +126,56 @@ begin_struct
 struct|struct
 name|vm_page
 block|{
+union|union
+block|{
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
-name|pageq
+name|q
 expr_stmt|;
-comment|/* page queue or free list (Q)	*/
+comment|/* page queue or free list (Q) */
+struct|struct
+block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|vm_page
+argument_list|)
+name|ss
+expr_stmt|;
+comment|/* private slists */
+name|void
+modifier|*
+name|pv
+decl_stmt|;
+block|}
+name|s
+struct|;
+struct|struct
+block|{
+name|u_long
+name|p
+decl_stmt|;
+name|u_long
+name|v
+decl_stmt|;
+block|}
+name|memguard
+struct|;
+block|}
+name|plinks
+union|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
 name|listq
 expr_stmt|;
-comment|/* pages in same object (O) 	*/
+comment|/* pages in same object (O) */
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* which object am I in (O,P)*/
+comment|/* which object am I in (O,P) */
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
@@ -200,10 +232,10 @@ name|act_count
 decl_stmt|;
 comment|/* page usage count (P) */
 name|u_char
-name|busy
+name|__pad0
 decl_stmt|;
-comment|/* page busy count (O) */
-comment|/* NOTE that these must support one bit per DEV_BSIZE in a page!!! */
+comment|/* unused padding */
+comment|/* NOTE that these must support one bit per DEV_BSIZE in a page */
 comment|/* so, on normal X86 kernels, they must be at least 8 bits wide */
 name|vm_page_bits_t
 name|valid
@@ -213,6 +245,11 @@ name|vm_page_bits_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
+specifier|volatile
+name|u_int
+name|busy_lock
+decl_stmt|;
+comment|/* busy owners lock */
 block|}
 struct|;
 end_struct
@@ -224,23 +261,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VPO_BUSY
+name|VPO_UNUSED01
 value|0x01
 end_define
 
 begin_comment
-comment|/* page is in transit */
+comment|/* --available-- */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VPO_WANTED
+name|VPO_SWAPSLEEP
 value|0x02
 end_define
 
 begin_comment
-comment|/* someone is waiting for page */
+comment|/* waiting for swap to finish */
 end_comment
 
 begin_define
@@ -275,6 +312,88 @@ end_define
 begin_comment
 comment|/* do not collect for syncer */
 end_comment
+
+begin_comment
+comment|/*  * Busy page implementation details.  * The algorithm is taken mostly by rwlock(9) and sx(9) locks implementation,  * even if the support for owner identity is removed because of size  * constraints.  Checks on lock recursion are then not possible, while the  * lock assertions effectiveness is someway reduced.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VPB_BIT_SHARED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_BIT_EXCLUSIVE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_BIT_WAITERS
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_BIT_FLAGMASK
+define|\
+value|(VPB_BIT_SHARED | VPB_BIT_EXCLUSIVE | VPB_BIT_WAITERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_SHARERS_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_SHARERS
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x)& ~VPB_BIT_FLAGMASK)>> VPB_SHARERS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_SHARERS_WORD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< VPB_SHARERS_SHIFT | VPB_BIT_SHARED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_ONE_SHARER
+value|(1<< VPB_SHARERS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_SINGLE_EXCLUSIVER
+value|VPB_BIT_EXCLUSIVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|VPB_UNBUSIED
+value|VPB_SHARERS_WORD(0)
+end_define
 
 begin_define
 define|#
@@ -314,6 +433,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|spglist
+argument_list|,
+name|vm_page
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|vm_pagequeue
@@ -327,9 +456,12 @@ name|pglist
 name|pq_pl
 decl_stmt|;
 name|int
+name|pq_cnt
+decl_stmt|;
+name|int
 modifier|*
 specifier|const
-name|pq_cnt
+name|pq_vcnt
 decl_stmt|;
 specifier|const
 name|char
@@ -345,13 +477,50 @@ argument_list|)
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_domain
+block|{
+name|struct
+name|vm_pagequeue
+name|vmd_pagequeues
+index|[
+name|PQ_COUNT
+index|]
+decl_stmt|;
+name|u_int
+name|vmd_page_count
+decl_stmt|;
+name|u_int
+name|vmd_free_count
+decl_stmt|;
+name|long
+name|vmd_segs
+decl_stmt|;
+comment|/* bitmask of the segments */
+name|boolean_t
+name|vmd_oom
+decl_stmt|;
+name|int
+name|vmd_pass
+decl_stmt|;
+comment|/* local pagedaemon pass */
+name|struct
+name|vm_page
+name|vmd_marker
+decl_stmt|;
+comment|/* marker for pagedaemon private use */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vm_pagequeue
-name|vm_pagequeues
+name|vm_domain
+name|vm_dom
 index|[
-name|PQ_COUNT
+name|MAXMEMDOM
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -364,16 +533,6 @@ parameter_list|(
 name|pq
 parameter_list|)
 value|mtx_assert(&(pq)->pq_mutex, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_pagequeue_init_lock
-parameter_list|(
-name|pq
-parameter_list|)
-value|mtx_init(&(pq)->pq_mutex,	\ 	    (pq)->pq_name, "vm pagequeue", MTX_DEF | MTX_DUPOK);
 end_define
 
 begin_define
@@ -395,6 +554,84 @@ name|pq
 parameter_list|)
 value|mtx_unlock(&(pq)->pq_mutex)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_pagequeue_cnt_add
+parameter_list|(
+name|struct
+name|vm_pagequeue
+modifier|*
+name|pq
+parameter_list|,
+name|int
+name|addend
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|notyet
+name|vm_pagequeue_assert_locked
+argument_list|(
+name|pq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|pq
+operator|->
+name|pq_cnt
+operator|+=
+name|addend
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+name|pq
+operator|->
+name|pq_vcnt
+argument_list|,
+name|addend
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|vm_pagequeue_cnt_inc
+parameter_list|(
+name|pq
+parameter_list|)
+value|vm_pagequeue_cnt_add((pq), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_pagequeue_cnt_dec
+parameter_list|(
+name|pq
+parameter_list|)
+value|vm_pagequeue_cnt_add((pq), -1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -688,7 +925,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the page is locked.  It is set by  * both the MI and MD VM layers.  However, kernel loadable modules should not  * directly set this flag.  They should call vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  The MI VM layer must never access this  * flag directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
+comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the page is locked.  It is set by  * both the MI and MD VM layers.  However, kernel loadable modules should not  * directly set this flag.  They should call vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be exclusive busied.  The MI VM layer must never  * access this flag directly.  Instead, it should call  * pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -1089,6 +1326,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VM_ALLOC_SBUSY
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Shared busy the page */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VM_ALLOC_COUNT_SHIFT
 value|16
 end_define
@@ -1202,10 +1450,25 @@ end_endif
 
 begin_function_decl
 name|void
-name|vm_page_busy
+name|vm_page_busy_downgrade
 parameter_list|(
 name|vm_page_t
 name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_busy_sleep
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1213,26 +1476,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_page_flash
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_io_start
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_io_finish
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1273,16 +1516,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_page_free_zero
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_wakeup
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1506,7 +1739,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_page_insert
 parameter_list|(
 name|vm_page_t
@@ -1567,6 +1800,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|vm_pagequeue
+modifier|*
+name|vm_page_pagequeue
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_page_t
 name|vm_page_prev
 parameter_list|(
@@ -1616,7 +1861,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_page_rename
 parameter_list|(
 name|vm_page_t
@@ -1624,6 +1869,22 @@ parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_page_replace
+parameter_list|(
+name|vm_page_t
+name|mnew
+parameter_list|,
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1649,6 +1910,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vm_page_sbusied
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_page_set_valid_range
 parameter_list|(
@@ -1665,8 +1936,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_page_sleep
+name|int
+name|vm_page_sleep_if_busy
 parameter_list|(
 name|vm_page_t
 name|m
@@ -1685,6 +1956,26 @@ name|vm_page_startup
 parameter_list|(
 name|vm_offset_t
 name|vaddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_sunbusy
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_page_trysbusy
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1735,6 +2026,16 @@ name|void
 name|vm_page_wire
 parameter_list|(
 name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_page_xunbusy_hard
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1994,6 +2295,102 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|vm_page_assert_sbusied
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|KASSERT(vm_page_sbusied(m),					\ 	    ("vm_page_assert_sbusied: page %p not shared busy @ %s:%d", \ 	    (void *)m, __FILE__, __LINE__));
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_assert_unbusied
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|KASSERT(!vm_page_busied(m),					\ 	    ("vm_page_assert_unbusied: page %p busy @ %s:%d",		\ 	    (void *)m, __FILE__, __LINE__));
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_assert_xbusied
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|KASSERT(vm_page_xbusied(m),					\ 	    ("vm_page_assert_xbusied: page %p not exclusive busy @ %s:%d", \ 	    (void *)m, __FILE__, __LINE__));
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_busied
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|((m)->busy_lock != VPB_UNBUSIED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_sbusy
+parameter_list|(
+name|m
+parameter_list|)
+value|do {						\ 	if (!vm_page_trysbusy(m))					\ 		panic("%s: page %p failed shared busing", __func__, m);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_tryxbusy
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|(atomic_cmpset_acq_int(&m->busy_lock, VPB_UNBUSIED,		\ 	    VPB_SINGLE_EXCLUSIVER))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_xbusied
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|((m->busy_lock& VPB_SINGLE_EXCLUSIVER) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_xbusy
+parameter_list|(
+name|m
+parameter_list|)
+value|do {						\ 	if (!vm_page_tryxbusy(m))					\ 		panic("%s: page %p failed exclusive busing", __func__,	\ 		    m);							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_xunbusy
+parameter_list|(
+name|m
+parameter_list|)
+value|do {						\ 	if (!atomic_cmpset_rel_int(&(m)->busy_lock,			\ 	    VPB_SINGLE_EXCLUSIVER, VPB_UNBUSIED))			\ 		vm_page_xunbusy_hard(m);				\ } while (0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2189,7 +2586,7 @@ name|addr
 decl_stmt|,
 name|val
 decl_stmt|;
-comment|/* 	 * The PGA_WRITEABLE flag can only be set if the page is managed and 	 * VPO_BUSY.  Currently, this flag is only set by pmap_enter(). 	 */
+comment|/* 	 * The PGA_WRITEABLE flag can only be set if the page is managed and 	 * exclusive busied.  Currently, this flag is only set by pmap_enter(). 	 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -2201,21 +2598,24 @@ operator|==
 literal|0
 operator|||
 operator|(
+operator|(
 name|m
 operator|->
 name|oflags
 operator|&
-operator|(
 name|VPO_UNMANAGED
-operator||
-name|VPO_BUSY
-operator|)
 operator|)
 operator|==
-name|VPO_BUSY
+literal|0
+operator|&&
+name|vm_page_xbusied
+argument_list|(
+name|m
+argument_list|)
+operator|)
 argument_list|,
 operator|(
-literal|"vm_page_aflag_set: PGA_WRITEABLE and !VPO_BUSY"
+literal|"vm_page_aflag_set: PGA_WRITEABLE and not exclusive busy"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2352,68 +2752,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	vm_page_sleep_if_busy:  *  *	Sleep and release the page queues lock if VPO_BUSY is set or,  *	if also_m_busy is TRUE, busy is non-zero.  Returns TRUE if the  *	thread slept and the page queues lock was released.  *	Otherwise, retains the page queues lock and returns FALSE.  *  *	The object containing the given page must be locked.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|vm_page_sleep_if_busy
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|int
-name|also_m_busy
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|||
-operator|(
-name|also_m_busy
-operator|&&
-name|m
-operator|->
-name|busy
-operator|)
-condition|)
-block|{
-name|vm_page_sleep
-argument_list|(
-name|m
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
 block|}
 end_function
 

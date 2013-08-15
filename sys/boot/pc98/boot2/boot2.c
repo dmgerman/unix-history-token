@@ -1681,9 +1681,7 @@ name|drvread
 argument_list|(
 name|sec
 argument_list|,
-name|DOSBBSECTOR
-operator|+
-literal|1
+name|PC98_BBSECTOR
 argument_list|)
 condition|)
 return|return
@@ -1701,7 +1699,7 @@ operator|)
 operator|(
 name|sec
 operator|+
-name|DOSPARTOFF
+name|PC98_PARTOFF
 operator|)
 expr_stmt|;
 for|for
@@ -1712,7 +1710,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -3297,7 +3295,7 @@ name|dsk
 operator|.
 name|slice
 operator|>
-name|NDOSPART
+name|PC98_NPARTS
 operator|+
 literal|1
 condition|)
@@ -3518,9 +3516,7 @@ name|drvread
 argument_list|(
 name|sec
 argument_list|,
-name|DOSBBSECTOR
-operator|+
-literal|1
+name|PC98_BBSECTOR
 argument_list|)
 condition|)
 return|return
@@ -3536,7 +3532,7 @@ operator|)
 operator|(
 name|sec
 operator|+
-name|DOSPARTOFF
+name|PC98_PARTOFF
 operator|)
 expr_stmt|;
 name|sl
@@ -3560,7 +3556,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++

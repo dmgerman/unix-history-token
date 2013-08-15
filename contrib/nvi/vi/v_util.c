@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_util.c	10.11 (Berkeley) 6/30/96"
+literal|"$Id: v_util.c,v 10.14 2001/06/25 15:19:36 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,18 +115,14 @@ begin_function
 name|void
 name|v_eof
 parameter_list|(
-name|sp
-parameter_list|,
-name|mp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|MARK
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|lno
@@ -198,18 +194,14 @@ begin_function
 name|void
 name|v_eol
 parameter_list|(
-name|sp
-parameter_list|,
-name|mp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|MARK
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -291,12 +283,10 @@ begin_function
 name|void
 name|v_nomove
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|msgq
 argument_list|(
@@ -318,18 +308,14 @@ begin_function
 name|void
 name|v_sof
 parameter_list|(
-name|sp
-parameter_list|,
-name|mp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|MARK
 modifier|*
 name|mp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -373,12 +359,10 @@ begin_function
 name|void
 name|v_sol
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|msgq
 argument_list|(
@@ -393,24 +377,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_isempty --  *	Return if the line contains nothing but white-space characters.  *  * PUBLIC: int v_isempty __P((char *, size_t));  */
+comment|/*  * v_isempty --  *	Return if the line contains nothing but white-space characters.  *  * PUBLIC: int v_isempty __P((CHAR_T *, size_t));  */
 end_comment
 
 begin_function
 name|int
 name|v_isempty
 parameter_list|(
-name|p
-parameter_list|,
-name|len
-parameter_list|)
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -451,23 +431,17 @@ begin_function
 name|void
 name|v_emsg
 parameter_list|(
-name|sp
-parameter_list|,
-name|p
-parameter_list|,
-name|which
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|vim_t
 name|which
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(

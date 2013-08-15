@@ -1739,9 +1739,6 @@ comment|/* libctf called failed (dt_ctferr has more) */
 name|EDT_COMPILER
 block|,
 comment|/* error in D program compilation */
-name|EDT_NOREG
-block|,
-comment|/* register allocation failure */
 name|EDT_NOTUPREG
 block|,
 comment|/* tuple register allocation failure */

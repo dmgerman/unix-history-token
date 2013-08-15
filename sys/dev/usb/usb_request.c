@@ -153,12 +153,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usbhid.h>
 end_include
 

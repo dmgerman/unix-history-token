@@ -1316,31 +1316,6 @@ begin_comment
 comment|/* find a superpage-aligned range */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|VMFS_TLB_ALIGNED_SPACE
-value|4
-end_define
-
-begin_comment
-comment|/* find a TLB entry aligned range */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * vm_map_wire and vm_map_unwire option flags  */
 end_comment
@@ -1769,15 +1744,6 @@ parameter_list|(
 name|vm_map_t
 parameter_list|,
 name|vm_map_entry_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_init2
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

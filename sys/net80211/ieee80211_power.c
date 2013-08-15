@@ -1983,6 +1983,12 @@ name|m
 operator|->
 name|m_nextpkt
 expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* must be encapsulated */
 name|KASSERT
 argument_list|(
@@ -2004,7 +2010,7 @@ expr_stmt|;
 comment|/* 			 * For encaped frames, we need to free the node 			 * reference upon failure. 			 */
 if|if
 condition|(
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 argument_list|(
 name|ic
 argument_list|,
@@ -2045,6 +2051,12 @@ name|m
 operator|->
 name|m_nextpkt
 expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -2068,7 +2080,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 argument_list|(
 name|vap
 argument_list|,

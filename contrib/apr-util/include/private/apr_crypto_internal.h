@@ -67,9 +67,11 @@ name|char
 modifier|*
 name|params
 parameter_list|,
-name|int
+specifier|const
+name|apu_err_t
 modifier|*
-name|rc
+modifier|*
+name|result
 parameter_list|)
 function_decl|;
 comment|/**      * @brief Create a context for supporting encryption. Keys, certificates,      *        algorithms and other parameters will be set per context. More than      *        one context can be created at one time. A cleanup will be automatically      *        registered with the given pool to guarantee a graceful shutdown.      * @param f - context pointer will be written here      * @param provider - provider to use      * @param params - array of key parameters      * @param pool - process pool      * @return APR_ENOENGINE when the engine specified does not exist. APR_EINITENGINE      * if the engine cannot be initialised.      */

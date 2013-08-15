@@ -2320,10 +2320,8 @@ operator|)
 return|;
 name|va
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PCIE_CACHE
 operator|*
 name|PAGE_SIZE

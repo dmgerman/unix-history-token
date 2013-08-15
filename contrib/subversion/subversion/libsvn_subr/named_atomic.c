@@ -640,6 +640,12 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|APR_HAS_MMAP
+end_if
+
 begin_comment
 comment|/* Initialization flag for the above used by svn_atomic__init_once.  */
 end_comment
@@ -696,6 +702,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APR_HAS_MMAP */
+end_comment
 
 begin_comment
 comment|/* Utility that acquires our global mutex and converts error types.  */
@@ -809,6 +824,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|APR_HAS_MMAP
+end_if
+
 begin_comment
 comment|/* The last user to close a particular namespace should also remove the  * lock file.  Failure to do so, however, does not affect further uses  * of the same namespace.  */
 end_comment
@@ -877,6 +898,15 @@ name|status
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* APR_HAS_MMAP */
+end_comment
 
 begin_comment
 comment|/* Validate the ATOMIC parameter, i.e it's address.  Correct code will  * never need this but if someone should accidentally to use a NULL or  * incomplete structure, let's catch that here instead of segfaulting.  */
@@ -1012,9 +1042,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|!
+name|APR_HAS_MMAP
+return|return
+name|FALSE
+return|;
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
 name|_WIN32
+argument_list|)
+return|return
+name|TRUE
+return|;
+else|#
+directive|else
 specifier|static
 name|svn_tristate_t
 name|result
@@ -1075,13 +1121,9 @@ name|result
 operator|==
 name|svn_tristate_true
 return|;
-else|#
-directive|else
-return|return
-name|TRUE
-return|;
 endif|#
 directive|endif
+comment|/* _WIN32 */
 block|}
 end_function
 
@@ -1118,6 +1160,22 @@ modifier|*
 name|result_pool
 parameter_list|)
 block|{
+if|#
+directive|if
+operator|!
+name|APR_HAS_MMAP
+return|return
+name|svn_error_create
+argument_list|(
+name|APR_ENOTIMPL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+return|;
+else|#
+directive|else
 name|apr_status_t
 name|apr_err
 decl_stmt|;
@@ -1501,6 +1559,9 @@ argument_list|,
 name|err
 argument_list|)
 return|;
+endif|#
+directive|endif
+comment|/* APR_HAS_MMAP */
 block|}
 end_function
 

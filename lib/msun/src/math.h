@@ -401,7 +401,7 @@ name|d
 parameter_list|,
 name|ld
 parameter_list|)
-value|_Generic((0,(x)),			\     float: f(x),							\     double: d(x),							\     long double: ld(x))
+value|_Generic((x),			\     float: f(x),							\     double: d(x),							\     long double: ld(x),							\     volatile float: f(x),						\     volatile double: d(x),						\     volatile long double: ld(x),					\     volatile const float: f(x),						\     volatile const double: d(x),					\     volatile const long double: ld(x),					\     const float: f(x),							\     const double: d(x),							\     const long double: ld(x))
 end_define
 
 begin_elif
@@ -1164,6 +1164,61 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Version 2 of the Single UNIX Specification (UNIX98) defined isnan() and  * isinf() as functions taking double.  C99, and the subsequent POSIX revisions  * (SUSv3, POSIX.1-2001, define it as a macro that accepts any real floating  * point type.  If we are targeting SUSv2 and C99 or C11 (or C++11) then we  * expose the newer definition, assuming that the language spec takes  * precedence over the operating system interface spec.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+operator|>
+literal|0
+operator|&&
+name|__XSI_VISIBLE
+operator|<
+literal|600
+operator|&&
+name|__ISO_C_VISIBLE
+operator|<
+literal|1999
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|isinf
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|isnan
+end_undef
+
+begin_function_decl
+name|int
+name|isinf
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isnan
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|double

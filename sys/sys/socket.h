@@ -1308,8 +1308,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AF_INET_SDP
+value|40
+end_define
+
+begin_comment
+comment|/* OFED Socket Direct Protocol ipv4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_INET6_SDP
+value|42
+end_define
+
+begin_comment
+comment|/* OFED Socket Direct Protocol ipv6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AF_MAX
-value|38
+value|42
 end_define
 
 begin_comment
@@ -2028,6 +2050,20 @@ define|#
 directive|define
 name|PF_IEEE80211
 value|AF_IEEE80211
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_INET_SDP
+value|AF_INET_SDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_INET6_SDP
+value|AF_INET6_SDP
 end_define
 
 begin_define
@@ -2911,10 +2947,36 @@ name|SF_SYNC
 value|0x00000004
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SFK_COMPAT
+value|0x00000001
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_ifndef
 ifndef|#

@@ -27242,6 +27242,21 @@ expr|struct
 name|sctp_init_chunk
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We might not overwrite the identification[] completely and on 	 * some platforms time_entered will contain some padding. Therefore 	 * zero out the cookie to avoid putting uninitialized memory on the 	 * wire. 	 */
+name|memset
+argument_list|(
+operator|&
+name|stc
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_state_cookie
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* the time I built cookie */
 operator|(
 name|void
@@ -38254,7 +38269,7 @@ endif|#
 directive|endif
 parameter_list|)
 block|{
-comment|/* 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - Service the stream queue that is next, moving any 	 * message (note I must get a complete message i.e. FIRST/MIDDLE and 	 * LAST to the out queue in one pass) and assigning TSN's - Check to 	 * see if the cwnd/rwnd allows any output, if so we go ahead and 	 * fomulate and send the low level chunks. Making sure to combine 	 * any control in the control chunk queue also. 	 */
+comment|/** 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - Service the stream queue that is next, moving any 	 * message (note I must get a complete message i.e. FIRST/MIDDLE and 	 * LAST to the out queue in one pass) and assigning TSN's - Check to 	 * see if the cwnd/rwnd allows any output, if so we go ahead and 	 * fomulate and send the low level chunks. Making sure to combine 	 * any control in the control chunk queue also. 	 */
 name|struct
 name|sctp_nets
 modifier|*

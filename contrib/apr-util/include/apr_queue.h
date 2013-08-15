@@ -126,7 +126,7 @@ operator|*
 name|data
 argument_list|)
 expr_stmt|;
-comment|/**  * pop/get an object to the queue, returning immediately if the queue is empty  *  * @param queue the queue  * @param data the data  * @returns APR_EINTR the blocking operation was interrupted (try again)  * @returns APR_EAGAIN the queue is empty  * @returns APR_EOF the queue has been terminated  * @returns APR_SUCCESS on a successful push  */
+comment|/**  * pop/get an object to the queue, returning immediately if the queue is empty  *  * @param queue the queue  * @param data the data  * @returns APR_EINTR the blocking operation was interrupted (try again)  * @returns APR_EAGAIN the queue is empty  * @returns APR_EOF the queue has been terminated  * @returns APR_SUCCESS on a successful pop  */
 name|APU_DECLARE
 argument_list|(
 argument|apr_status_t

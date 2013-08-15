@@ -2235,10 +2235,8 @@ condition|(
 operator|(
 name|sva
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|size
 argument_list|)
 operator|)
@@ -2482,10 +2480,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|sva
 argument_list|,
 name|size

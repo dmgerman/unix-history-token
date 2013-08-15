@@ -282,6 +282,14 @@ comment|/* The server is not Apache/mod_dav_svn (directly) and only supports    
 name|svn_boolean_t
 name|http10
 decl_stmt|;
+comment|/* Should we use Transfer-Encoding: chunked for HTTP/1.1 servers. */
+name|svn_boolean_t
+name|using_chunked_requests
+decl_stmt|;
+comment|/* Do we need to detect whether the connection supports chunked requests?      i.e. is there a (reverse) proxy that does not support them?  */
+name|svn_boolean_t
+name|detect_chunking
+decl_stmt|;
 comment|/* Our Version-Controlled-Configuration; may be NULL until we know it. */
 specifier|const
 name|char
@@ -348,7 +356,7 @@ modifier|*
 name|activity_collection_url
 decl_stmt|;
 comment|/* Are we using a proxy? */
-name|int
+name|svn_boolean_t
 name|using_proxy
 decl_stmt|;
 specifier|const
@@ -2520,6 +2528,20 @@ name|scratch_pool
 parameter_list|)
 function_decl|;
 comment|/** OPTIONS-related functions **/
+comment|/* When running with a proxy, we may need to detect and correct for problems.    This probing function will send a simple OPTIONS request to detect problems    with the connection.  */
+name|svn_error_t
+modifier|*
+name|svn_ra_serf__probe_proxy
+parameter_list|(
+name|svn_ra_serf__session_t
+modifier|*
+name|serf_sess
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|scratch_pool
+parameter_list|)
+function_decl|;
 comment|/* On HTTPv2 connections, run an OPTIONS request over CONN to fetch the    current youngest revnum, returning it in *YOUNGEST.     (the revnum is headers of the OPTIONS response)     This function performs the request synchronously.     All temporary allocations will be made in SCRATCH_POOL.  */
 name|svn_error_t
 modifier|*
@@ -3595,8 +3617,8 @@ name|svn_error_t
 modifier|*
 name|svn_ra_serf__error_on_status
 parameter_list|(
-name|int
-name|status_code
+name|serf_status_line
+name|sline
 parameter_list|,
 specifier|const
 name|char

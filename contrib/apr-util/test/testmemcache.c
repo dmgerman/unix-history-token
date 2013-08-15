@@ -2305,6 +2305,13 @@ operator|==
 name|APR_SUCCESS
 argument_list|)
 expr_stmt|;
+name|values
+operator|=
+name|apr_hash_make
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|tdata
 operator|=
 name|apr_hash_make
@@ -3245,7 +3252,7 @@ argument_list|(
 name|suite
 argument_list|)
 expr_stmt|;
-comment|/* check for a running memcached on the typical port before       * trying to run the tests. succeed silently if we don't find one.      */
+comment|/* check for a running memcached on the typical port before       * trying to run the tests. succeed if we don't find one.      */
 name|rv
 operator|=
 name|check_mc
@@ -3319,6 +3326,21 @@ argument_list|,
 name|test_memcache_incrdecr
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|abts_log_message
+argument_list|(
+literal|"Error %d occurred attempting to reach memcached "
+literal|"on %s:%d.  Skipping apr_memcache tests..."
+argument_list|,
+name|rv
+argument_list|,
+name|HOST
+argument_list|,
+name|PORT
 argument_list|)
 expr_stmt|;
 block|}

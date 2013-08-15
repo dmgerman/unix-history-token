@@ -2230,6 +2230,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtUpdateInterfaces
+parameter_list|(
+name|UINT8
+name|Action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_INTERFACE_INFO
 modifier|*
 name|AcpiUtGetInterface

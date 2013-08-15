@@ -329,7 +329,6 @@ comment|/* last token read */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
 name|int
 name|tokpushback
 decl_stmt|;
@@ -352,15 +351,11 @@ comment|/* text of last word returned by readtoken */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|int
 name|checkkwd
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 1 == check for kwds, 2 == also eat newlines */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3088,6 +3083,15 @@ name|TAND
 case|:
 case|case
 name|TOR
+case|:
+case|case
+name|TPIPE
+case|:
+case|case
+name|TENDCASE
+case|:
+case|case
+name|TFALLTHRU
 case|:
 comment|/* 		 * An empty command before a ; doesn't make much sense, and 		 * should certainly be disallowed in the case of `if ;'. 		 */
 if|if
@@ -8933,17 +8937,12 @@ begin_comment
 comment|/* end of readtoken */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_macro
-name|RESET
-end_macro
-
-begin_block
+begin_function
+name|void
+name|resetparser
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tokpushback
 operator|=
@@ -8954,12 +8953,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function
 
 begin_comment
 comment|/*  * Returns true if the text contains nothing to expand (no dollar signs  * or backquotes).  */

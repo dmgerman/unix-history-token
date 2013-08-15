@@ -2481,6 +2481,17 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|aclp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|aclp
 operator|->
 name|acl_maxcnt

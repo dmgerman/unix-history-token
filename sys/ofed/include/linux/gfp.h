@@ -197,7 +197,7 @@ block|{
 return|return
 name|kmem_malloc
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
@@ -257,7 +257,7 @@ condition|)
 return|return;
 name|kmem_free
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|page
 argument_list|,
@@ -296,7 +296,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -345,7 +345,7 @@ name|order
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -395,7 +395,7 @@ name|page
 operator|=
 name|kmem_alloc_contig
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|size
 argument_list|,

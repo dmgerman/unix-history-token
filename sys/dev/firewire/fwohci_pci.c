@@ -1089,8 +1089,6 @@ argument_list|)
 expr_stmt|;
 name|cmd
 operator||=
-name|PCIM_CMD_MEMEN
-operator||
 name|PCIM_CMD_BUSMASTEREN
 operator||
 name|PCIM_CMD_MWRICEN

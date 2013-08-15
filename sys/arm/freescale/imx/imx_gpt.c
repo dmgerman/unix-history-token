@@ -158,13 +158,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|MIN_PERIOD
-value|100LLU
-end_define
-
-begin_define
-define|#
-directive|define
 name|WRITE4
 parameter_list|(
 name|_sc
@@ -322,10 +315,14 @@ block|,
 operator|.
 name|tc_quality
 operator|=
-literal|500
+literal|1000
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Global softc pointer for use in DELAY(). */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -337,15 +334,41 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Hand-calibrated delay-loop counter.  This was calibrated on an i.MX6 running  * at 792mhz.  It will delay a bit too long on slower processors -- that's  * better than not delaying long enough.  In practice this is unlikely to get  * used much since the clock driver is one of the first to start up, and once  * we're attached the delay loop switches to using the timer hardware.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
-specifier|volatile
+specifier|const
 name|int
 name|imx_gpt_delay_count
 init|=
-literal|300
+literal|78
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Try to divide down an available fast clock to this frequency. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_FREQUENCY
+value|1000000
+end_define
+
+begin_comment
+comment|/* Don't try to set an event timer period smaller than this. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_ET_PERIOD
+value|10LLU
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -409,7 +432,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Freescale i.MXxxx GPT timer"
+literal|"Freescale i.MX GPT timer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -435,7 +458,14 @@ modifier|*
 name|sc
 decl_stmt|;
 name|int
+name|ctlreg
+decl_stmt|,
 name|err
+decl_stmt|;
+name|uint32_t
+name|basefreq
+decl_stmt|,
+name|prescale
 decl_stmt|;
 name|sc
 operator|=
@@ -479,12 +509,6 @@ name|dev
 expr_stmt|;
 name|sc
 operator|->
-name|sc_clksrc
-operator|=
-name|GPT_CR_CLKSRC_IPG
-expr_stmt|;
-name|sc
-operator|->
 name|sc_iot
 operator|=
 name|rman_get_bustag
@@ -511,6 +535,33 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For now, just automatically choose a good clock for the hardware 	 * we're running on.  Eventually we could allow selection from the fdt; 	 * the code in this driver will cope with any clock frequency. 	 */
+if|if
+condition|(
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"fsl,imx6-gpt"
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_clksrc
+operator|=
+name|GPT_CR_CLKSRC_24M
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_clksrc
+operator|=
+name|GPT_CR_CLKSRC_IPG
+expr_stmt|;
+name|ctlreg
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -519,52 +570,28 @@ name|sc_clksrc
 condition|)
 block|{
 case|case
-name|GPT_CR_CLKSRC_NONE
-case|:
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"can't run timer without clock source\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-case|case
-name|GPT_CR_CLKSRC_EXT
-case|:
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Not implemented. Geve me the way to get "
-literal|"external clock source frequency\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-case|case
 name|GPT_CR_CLKSRC_32K
 case|:
-name|sc
-operator|->
-name|clkfreq
+name|basefreq
 operator|=
 literal|32768
 expr_stmt|;
 break|break;
 case|case
+name|GPT_CR_CLKSRC_IPG
+case|:
+name|basefreq
+operator|=
+name|imx51_get_clock
+argument_list|(
+name|IMX51CLK_IPG_CLK_ROOT
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|GPT_CR_CLKSRC_IPG_HIGH
 case|:
-name|sc
-operator|->
-name|clkfreq
+name|basefreq
 operator|=
 name|imx51_get_clock
 argument_list|(
@@ -574,64 +601,54 @@ operator|*
 literal|2
 expr_stmt|;
 break|break;
-default|default:
-name|sc
-operator|->
-name|clkfreq
-operator|=
-name|imx51_get_clock
-argument_list|(
-name|IMX51CLK_IPG_CLK_ROOT
-argument_list|)
+case|case
+name|GPT_CR_CLKSRC_24M
+case|:
+name|ctlreg
+operator||=
+name|GPT_CR_24MEN
 expr_stmt|;
-block|}
+name|basefreq
+operator|=
+literal|24000000
+expr_stmt|;
+break|break;
+case|case
+name|GPT_CR_CLKSRC_NONE
+case|:
+comment|/* Can't run without a clock. */
+case|case
+name|GPT_CR_CLKSRC_EXT
+case|:
+comment|/* No way to get the freq of an ext clock. */
+default|default:
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Run on %dKHz clock.\n"
+literal|"Unsupported clock source '%d'\n"
 argument_list|,
 name|sc
 operator|->
-name|clkfreq
-operator|/
-literal|1000
+name|sc_clksrc
 argument_list|)
 expr_stmt|;
-comment|/* Reset */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+comment|/* 	 * The following setup sequence is from the I.MX6 reference manual, 	 * "Selecting the clock source".  First, disable the clock and 	 * interrupts.  This also clears input and output mode bits and in 	 * general completes several of the early steps in the procedure. 	 */
 name|WRITE4
 argument_list|(
 name|sc
 argument_list|,
 name|IMX_GPT_CR
 argument_list|,
-name|GPT_CR_SWR
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Enable and setup counters */
-name|WRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|IMX_GPT_CR
-argument_list|,
-name|GPT_CR_CLKSRC_IPG
-operator||
-comment|/* Use IPG clock */
-name|GPT_CR_FRR
-operator||
-comment|/* Just count (FreeRunner mode) */
-name|GPT_CR_STOPEN
-operator||
-comment|/* Run in STOP mode */
-name|GPT_CR_WAITEN
-operator||
-comment|/* Run in WAIT mode */
-name|GPT_CR_DBGEN
-argument_list|)
-expr_stmt|;
-comment|/* Run in DEBUG mode */
-comment|/* Disable interrupts */
 name|WRITE4
 argument_list|(
 name|sc
@@ -641,25 +658,168 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Tick every 10us */
-comment|/* XXX: must be calculated from clock source frequency */
+comment|/* Choose the clock and the power-saving behaviors. */
+name|ctlreg
+operator||=
+name|sc
+operator|->
+name|sc_clksrc
+operator||
+comment|/* Use selected clock */
+name|GPT_CR_FRR
+operator||
+comment|/* Just count (FreeRunner mode) */
+name|GPT_CR_STOPEN
+operator||
+comment|/* Run in STOP mode */
+name|GPT_CR_DOZEEN
+operator||
+comment|/* Run in DOZE mode */
+name|GPT_CR_WAITEN
+operator||
+comment|/* Run in WAIT mode */
+name|GPT_CR_DBGEN
+expr_stmt|;
+comment|/* Run in DEBUG mode */
+name|WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_CR
+argument_list|,
+name|ctlreg
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The datasheet says to do the software reset after choosing the clock 	 * source.  It says nothing about needing to wait for the reset to 	 * complete, but the register description does document the fact that 	 * the reset isn't complete until the SWR bit reads 0, so let's be safe. 	 * The reset also clears all registers except for a few of the bits in 	 * CR, but we'll rewrite all the CR bits when we start the counter. 	 */
+name|WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_CR
+argument_list|,
+name|ctlreg
+operator||
+name|GPT_CR_SWR
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|READ4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_CR
+argument_list|)
+operator|&
+name|GPT_CR_SWR
+condition|)
+continue|continue;
+comment|/* Set a prescaler value that gets us near the target frequency. */
+if|if
+condition|(
+name|basefreq
+operator|<
+name|TARGET_FREQUENCY
+condition|)
+block|{
+name|prescale
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|clkfreq
+operator|=
+name|basefreq
+expr_stmt|;
+block|}
+else|else
+block|{
+name|prescale
+operator|=
+name|basefreq
+operator|/
+name|TARGET_FREQUENCY
+expr_stmt|;
+name|sc
+operator|->
+name|clkfreq
+operator|=
+name|basefreq
+operator|/
+name|prescale
+expr_stmt|;
+name|prescale
+operator|-=
+literal|1
+expr_stmt|;
+comment|/* 1..n range is 0..n-1 in hardware. */
+block|}
 name|WRITE4
 argument_list|(
 name|sc
 argument_list|,
 name|IMX_GPT_PR
 argument_list|,
-literal|665
+name|prescale
 argument_list|)
 expr_stmt|;
-comment|/* Use 100 KHz */
+comment|/* Clear the status register. */
+name|WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_SR
+argument_list|,
+name|GPT_IR_ALL
+argument_list|)
+expr_stmt|;
+comment|/* Start the counter. */
+name|WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_CR
+argument_list|,
+name|ctlreg
+operator||
+name|GPT_CR_EN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Running on %dKHz clock, base freq %uHz CR=0x%08x, PR=0x%08x\n"
+argument_list|,
 name|sc
 operator|->
 name|clkfreq
-operator|=
-literal|100000
+operator|/
+literal|1000
+argument_list|,
+name|basefreq
+argument_list|,
+name|READ4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_CR
+argument_list|)
+argument_list|,
+name|READ4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_PR
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* Setup and enable the timer interrupt */
+comment|/* Setup the timer interrupt. */
 name|err
 operator|=
 name|bus_setup_intr
@@ -721,6 +881,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* Register as an eventtimer. */
 name|sc
 operator|->
 name|et
@@ -764,7 +925,7 @@ operator|.
 name|et_min_period
 operator|=
 operator|(
-name|MIN_PERIOD
+name|MIN_ET_PERIOD
 operator|<<
 literal|32
 operator|)
@@ -825,45 +986,7 @@ operator|->
 name|et
 argument_list|)
 expr_stmt|;
-comment|/* Disable interrupts */
-name|WRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|IMX_GPT_IR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* ACK any panding interrupts */
-name|WRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|IMX_GPT_SR
-argument_list|,
-operator|(
-name|GPT_IR_ROV
-operator|<<
-literal|1
-operator|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|imx_gpt_sc
-operator|=
-name|sc
-expr_stmt|;
+comment|/* Register as a timecounter. */
 name|imx_gpt_timecounter
 operator|.
 name|tc_frequency
@@ -878,45 +1001,19 @@ operator|&
 name|imx_gpt_timecounter
 argument_list|)
 expr_stmt|;
-name|printf
+comment|/* If this is the first unit, store the softc for use in DELAY. */
+if|if
+condition|(
+name|device_get_unit
 argument_list|(
-literal|"clock: hz=%d stathz = %d\n"
-argument_list|,
-name|hz
-argument_list|,
-name|stathz
+name|dev
 argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"timer clock frequency %d\n"
-argument_list|,
-name|sc
-operator|->
-name|clkfreq
-argument_list|)
-expr_stmt|;
-name|imx_gpt_delay_count
+operator|==
+literal|0
+condition|)
+name|imx_gpt_sc
 operator|=
-name|imx51_get_clock
-argument_list|(
-name|IMX51CLK_ARM_ROOT
-argument_list|)
-operator|/
-literal|4000000
-expr_stmt|;
-name|SET4
-argument_list|(
 name|sc
-argument_list|,
-name|IMX_GPT_CR
-argument_list|,
-name|GPT_CR_EN
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1178,13 +1275,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|imx_gpt_sc
+operator|==
+name|NULL
 condition|)
 block|{
 name|panic
 argument_list|(
-literal|"%s: driver has not been initialized!"
+literal|"%s: i.MX GPT driver has not been initialized!"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1192,20 +1290,6 @@ expr_stmt|;
 block|}
 name|cpu_initclocks_bsp
 argument_list|()
-expr_stmt|;
-comment|/* Switch to DELAY using counter */
-name|imx_gpt_delay_count
-operator|=
-literal|0
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|imx_gpt_sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"switch DELAY to use H/W counter\n"
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1476,60 +1560,69 @@ name|int
 name|usec
 parameter_list|)
 block|{
-name|int32_t
-name|counts
+name|uint64_t
+name|curcnt
+decl_stmt|,
+name|endcnt
+decl_stmt|,
+name|startcnt
+decl_stmt|,
+name|ticks
 decl_stmt|;
-name|uint32_t
-name|last
-decl_stmt|;
-comment|/* 	 * Check the timers are setup, if not just use a for loop for the 	 * meantime. 	 */
+comment|/* If the timer hardware is not accessible, just use a loop. */
 if|if
 condition|(
-name|imx_gpt_delay_count
+name|imx_gpt_sc
+operator|==
+name|NULL
 condition|)
 block|{
-for|for
-control|(
-init|;
-name|usec
-operator|>
-literal|0
-condition|;
+while|while
+condition|(
 name|usec
 operator|--
-control|)
+operator|>
+literal|0
+condition|)
 for|for
 control|(
-name|counts
+name|ticks
 operator|=
-name|imx_gpt_delay_count
-init|;
-name|counts
-operator|>
 literal|0
+init|;
+name|ticks
+operator|<
+name|imx_gpt_delay_count
 condition|;
-name|counts
-operator|--
+operator|++
+name|ticks
 control|)
-comment|/* Prevent optimizing out the loop */
 name|cpufunc_nullop
 argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* At least 1 count */
-name|usec
+comment|/* 	 * Calculate the tick count with 64-bit values so that it works for any 	 * clock frequency.  Loop until the hardware count reaches start+ticks. 	 * If the 32-bit hardware count rolls over while we're looping, just 	 * manually do a carry into the high bits after each read; don't worry 	 * that doing this on each loop iteration is inefficient -- we're trying 	 * to waste time here. 	 */
+name|ticks
 operator|=
-name|MAX
-argument_list|(
 literal|1
-argument_list|,
+operator|+
+operator|(
+operator|(
+name|uint64_t
+operator|)
 name|usec
+operator|*
+name|imx_gpt_sc
+operator|->
+name|clkfreq
+operator|)
 operator|/
-literal|100
-argument_list|)
+literal|1000000
 expr_stmt|;
-name|last
+name|curcnt
+operator|=
+name|startcnt
 operator|=
 name|READ4
 argument_list|(
@@ -1537,27 +1630,42 @@ name|imx_gpt_sc
 argument_list|,
 name|IMX_GPT_CNT
 argument_list|)
+expr_stmt|;
+name|endcnt
+operator|=
+name|startcnt
 operator|+
-name|usec
+name|ticks
 expr_stmt|;
 while|while
 condition|(
+name|curcnt
+operator|<
+name|endcnt
+condition|)
+block|{
+name|curcnt
+operator|=
 name|READ4
 argument_list|(
 name|imx_gpt_sc
 argument_list|,
 name|IMX_GPT_CNT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|curcnt
 operator|<
-name|last
+name|startcnt
 condition|)
-block|{
-comment|/* Prevent optimizing out the loop */
-name|cpufunc_nullop
-argument_list|()
+name|curcnt
+operator|+=
+literal|1ULL
+operator|<<
+literal|32
 expr_stmt|;
 block|}
-comment|/* TODO: use interrupt on OCR2 */
 block|}
 end_function
 

@@ -140,8 +140,6 @@ name|dev
 parameter_list|)
 block|{
 name|int
-name|command
-decl_stmt|,
 name|type
 init|=
 literal|0
@@ -164,37 +162,13 @@ name|irq
 init|=
 literal|0
 decl_stmt|;
-name|command
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-comment|/*bytes*/
-literal|1
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
 comment|/* XXX Memory Mapped I/O seems to cause problems */
-block|if (command& PCIM_CMD_MEMEN) { 		type = SYS_RES_MEMORY; 		rid = BT_PCI_MEMADDR; 		regs = bus_alloc_resource_any(dev, type,&rid, RF_ACTIVE); 	}
+block|type = SYS_RES_MEMORY; 	rid = BT_PCI_MEMADDR; 	regs = bus_alloc_resource_any(dev, type,&rid, RF_ACTIVE);
 else|#
 directive|else
-if|if
-condition|(
-operator|!
-name|regs
-operator|&&
-operator|(
-name|command
-operator|&
-name|PCIM_CMD_PORTEN
-operator|)
-condition|)
-block|{
 name|type
 operator|=
 name|SYS_RES_IOPORT
@@ -217,7 +191,6 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if

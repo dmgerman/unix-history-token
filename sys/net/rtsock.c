@@ -4664,6 +4664,16 @@ name|rti_need_deembed
 condition|)
 block|{
 comment|/* sin6_scope_id is recovered before sending rtm. */
+name|sin6
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+operator|&
+name|ss
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4678,16 +4688,6 @@ name|i
 operator|++
 control|)
 block|{
-name|sin6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|&
-name|ss
-expr_stmt|;
 if|if
 condition|(
 name|info

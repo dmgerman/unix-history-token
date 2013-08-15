@@ -46,7 +46,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.5.13"
+literal|"2.5.15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1849,6 +1849,17 @@ init|=
 name|FALSE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ixgbe.unsupported_sfp"
+argument_list|,
+operator|&
+name|allow_unsupported_sfp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* ** HW RSC control:  **  this feature only works with **  IPv4, and only on 82599 and later. **  Also this will cause IP forwarding to **  fail and that can't be controlled by **  the stack as LRO can. For all these **  reasons I've deemed it best to leave **  this off and not bother with a tuneable **  interface, this would need to be compiled **  to enable. */
@@ -5008,7 +5019,7 @@ argument_list|)
 expr_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"ixgbe_init: begin"
+literal|"ixgbe_init_locked: begin"
 argument_list|)
 expr_stmt|;
 name|hw
@@ -6370,107 +6381,6 @@ expr_stmt|;
 block|}
 block|}
 specifier|static
-specifier|inline
-name|void
-name|ixgbe_rearm_queues
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|u64
-name|queues
-parameter_list|)
-block|{
-name|u32
-name|mask
-decl_stmt|;
-if|if
-condition|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|ixgbe_mac_82598EB
-condition|)
-block|{
-name|mask
-operator|=
-operator|(
-name|IXGBE_EIMS_RTX_QUEUE
-operator|&
-name|queues
-operator|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_EICS
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mask
-operator|=
-operator|(
-name|queues
-operator|&
-literal|0xFFFFFFFF
-operator|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_EICS_EX
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-name|mask
-operator|=
-operator|(
-name|queues
-operator|>>
-literal|32
-operator|)
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|IXGBE_EICS_EX
-argument_list|(
-literal|1
-argument_list|)
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-specifier|static
 name|void
 name|ixgbe_handle_que
 parameter_list|(
@@ -6918,6 +6828,20 @@ name|newitr
 init|=
 literal|0
 decl_stmt|;
+comment|/* Protect against spurious interrupts */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|ixgbe_disable_queue
 argument_list|(
 name|adapter
@@ -7291,6 +7215,12 @@ name|hw
 argument_list|,
 name|IXGBE_EICS
 argument_list|)
+expr_stmt|;
+comment|/* Be sure the queue bits are not cleared */
+name|reg_eicr
+operator|&=
+operator|~
+name|IXGBE_EICR_RTX_QUEUE
 expr_stmt|;
 comment|/* Clear interrupt with write */
 name|IXGBE_WRITE_REG
@@ -9195,15 +9125,6 @@ name|watchdog
 goto|;
 name|out
 label|:
-name|ixgbe_rearm_queues
-argument_list|(
-name|adapter
-argument_list|,
-name|adapter
-operator|->
-name|que_mask
-argument_list|)
-expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -10823,6 +10744,22 @@ goto|goto
 name|msi
 goto|;
 comment|/* First try MSI/X */
+name|msgs
+operator|=
+name|pci_msix_count
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msgs
+operator|==
+literal|0
+condition|)
+goto|goto
+name|msi
+goto|;
 name|rid
 operator|=
 name|PCIR_BAR
@@ -10848,10 +10785,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|adapter
 operator|->
 name|msix_mem
+operator|==
+name|NULL
 condition|)
 block|{
 name|rid
@@ -10878,10 +10816,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|adapter
 operator|->
 name|msix_mem
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* May not be enabled */
@@ -10893,44 +10832,6 @@ name|dev
 argument_list|,
 literal|"Unable to map MSIX table \n"
 argument_list|)
-expr_stmt|;
-goto|goto
-name|msi
-goto|;
-block|}
-name|msgs
-operator|=
-name|pci_msix_count
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msgs
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* system has msix disabled */
-name|bus_release_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-name|rid
-argument_list|,
-name|adapter
-operator|->
-name|msix_mem
-argument_list|)
-expr_stmt|;
-name|adapter
-operator|->
-name|msix_mem
-operator|=
-name|NULL
 expr_stmt|;
 goto|goto
 name|msi
@@ -11020,19 +10921,13 @@ argument_list|,
 name|want
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Will go to Legacy setup */
+goto|goto
+name|msi
+goto|;
 block|}
 if|if
 condition|(
 operator|(
-name|msgs
-operator|)
-operator|&&
 name|pci_alloc_msix
 argument_list|(
 name|dev
@@ -11042,6 +10937,13 @@ name|msgs
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|msgs
+operator|==
+name|want
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -11067,21 +10969,49 @@ name|msgs
 operator|)
 return|;
 block|}
-name|msi
-label|:
-name|msgs
-operator|=
-name|pci_msi_count
+comment|/* 	** If MSIX alloc failed or provided us with 	** less than needed, free and fall through to MSI 	*/
+name|pci_release_msi
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|msi
+label|:
 if|if
 condition|(
+name|adapter
+operator|->
+name|msix_mem
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|rid
+argument_list|,
+name|adapter
+operator|->
+name|msix_mem
+argument_list|)
+expr_stmt|;
+name|adapter
+operator|->
+name|msix_mem
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|msgs
-operator|==
+operator|=
 literal|1
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 name|pci_alloc_msi
 argument_list|(
 name|dev
@@ -11092,6 +11022,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|adapter
@@ -11101,7 +11032,12 @@ argument_list|,
 literal|"Using an MSI interrupt\n"
 argument_list|)
 expr_stmt|;
-else|else
+return|return
+operator|(
+name|msgs
+operator|)
+return|;
+block|}
 name|device_printf
 argument_list|(
 name|adapter
@@ -11113,7 +11049,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|msgs
+literal|0
 operator|)
 return|;
 block|}
@@ -14390,7 +14326,7 @@ name|i
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"free_transmit_ring: begin"
+literal|"ixgbe_free_transmit_ring: begin"
 argument_list|)
 expr_stmt|;
 if|if
@@ -17931,7 +17867,7 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* Update descriptor */
+comment|/* Update descriptor and the cached value */
 name|rxr
 operator|->
 name|rx_base
@@ -17948,11 +17884,26 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+name|rxbuf
+operator|->
+name|addr
+operator|=
+name|htole64
+argument_list|(
+name|paddr
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
+name|rxbuf
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|rxbuf
 operator|->
 name|buf
@@ -18052,7 +18003,7 @@ argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
-comment|/* Update descriptor */
+comment|/* Update the descriptor and the cached value */
 name|rxr
 operator|->
 name|rx_base
@@ -18063,6 +18014,20 @@ operator|.
 name|read
 operator|.
 name|pkt_addr
+operator|=
+name|htole64
+argument_list|(
+name|seg
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
+argument_list|)
+expr_stmt|;
+name|rxbuf
+operator|->
+name|addr
 operator|=
 name|htole64
 argument_list|(
@@ -18961,6 +18926,11 @@ name|adapter
 operator|->
 name|rx_rings
 decl_stmt|;
+name|INIT_DEBUGOUT
+argument_list|(
+literal|"ixgbe_free_receive_structures: begin"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|int
@@ -19051,7 +19021,7 @@ name|rxbuf
 decl_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
-literal|"free_receive_structures: begin"
+literal|"ixgbe_free_receive_buffers: begin"
 argument_list|)
 expr_stmt|;
 comment|/* Cleanup any existing buffers */
@@ -19464,6 +19434,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|rbuf
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *  Return TRUE for more work, FALSE for all clean.  *********************************************************************/

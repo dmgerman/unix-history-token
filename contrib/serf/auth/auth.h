@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"auth_kerb.h"
+file|"auth_spnego.h"
 end_include
 
 begin_ifdef
@@ -60,6 +60,29 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
+comment|/* Prefixes the realm_name with a string containing scheme, hostname and port    of the connection, for providing it to the application. */
+specifier|const
+name|char
+modifier|*
+name|serf__construct_realm
+parameter_list|(
+name|peer_t
+name|peer
+parameter_list|,
+name|serf_connection_t
+modifier|*
+name|conn
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|realm_name
+parameter_list|,
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+function_decl|;
 comment|/** Basic authentication **/
 name|apr_status_t
 name|serf__init_basic
@@ -79,6 +102,11 @@ function_decl|;
 name|apr_status_t
 name|serf__init_basic_connection
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|int
 name|code
 parameter_list|,
@@ -175,6 +203,11 @@ function_decl|;
 name|apr_status_t
 name|serf__init_digest_connection
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|int
 name|code
 parameter_list|,
@@ -280,10 +313,10 @@ parameter_list|)
 function_decl|;
 ifdef|#
 directive|ifdef
-name|SERF_HAVE_KERB
+name|SERF_HAVE_SPNEGO
 comment|/** Kerberos authentication **/
 name|apr_status_t
-name|serf__init_kerb
+name|serf__init_spnego
 parameter_list|(
 name|int
 name|code
@@ -298,8 +331,13 @@ name|pool
 parameter_list|)
 function_decl|;
 name|apr_status_t
-name|serf__init_kerb_connection
+name|serf__init_spnego_connection
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|int
 name|code
 parameter_list|,
@@ -313,7 +351,7 @@ name|pool
 parameter_list|)
 function_decl|;
 name|apr_status_t
-name|serf__handle_kerb_auth
+name|serf__handle_spnego_auth
 parameter_list|(
 name|int
 name|code
@@ -346,7 +384,7 @@ name|pool
 parameter_list|)
 function_decl|;
 name|apr_status_t
-name|serf__setup_request_kerb_auth
+name|serf__setup_request_spnego_auth
 parameter_list|(
 name|peer_t
 name|peer
@@ -378,7 +416,7 @@ name|hdrs_bkt
 parameter_list|)
 function_decl|;
 name|apr_status_t
-name|serf__validate_response_kerb_auth
+name|serf__validate_response_spnego_auth
 parameter_list|(
 name|peer_t
 name|peer

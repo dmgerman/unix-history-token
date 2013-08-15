@@ -856,12 +856,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|sx_xunlock
+name|gctl_error
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_lock
+name|req
+argument_list|,
+literal|"Array is busy."
 argument_list|)
 expr_stmt|;
 name|g_topology_lock

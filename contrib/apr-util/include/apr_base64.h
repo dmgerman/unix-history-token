@@ -45,7 +45,7 @@ endif|#
 directive|endif
 comment|/**  * @defgroup APR_Util_Base64 Base64 Encoding  * @ingroup APR_Util  * @{  */
 comment|/* Simple BASE64 encode/decode functions.  *   * As we might encode binary strings, hence we require the length of  * the incoming plain source. And return the length of what we decoded.  *  * The decoding function takes any non valid char (i.e. whitespace, \0  * or anything non A-Z,0-9 etc as terminal.  *   * plain strings/binary sequences are not assumed '\0' terminated. Encoded  * strings are neither. But probably should.  *  */
-comment|/**  * Given the length of an un-encrypted string, get the length of the   * encrypted string.  * @param len the length of an unencrypted string.  * @return the length of the string after it is encrypted  */
+comment|/**  * Given the length of an un-encoded string, get the length of the  * encoded string.  * @param len the length of an unencoded string.  * @return the length of the string after it is encoded, including the  * trailing \0  */
 name|APU_DECLARE
 argument_list|(
 argument|int

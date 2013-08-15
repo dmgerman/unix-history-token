@@ -46,27 +46,10 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Local prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|ACPI_STATUS
-name|AcpiTbValidateRsdp
-parameter_list|(
-name|ACPI_TABLE_RSDP
-modifier|*
-name|Rsdp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateRsdp  *  * PARAMETERS:  Rsdp                - Pointer to unvalidated RSDP  *  * RETURN:      Status  *  * DESCRIPTION: Validate the RSDP (ptr)  *  ******************************************************************************/
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
 name|AcpiTbValidateRsdp
 parameter_list|(
@@ -85,6 +68,8 @@ name|char
 operator|*
 operator|)
 name|Rsdp
+operator|->
+name|Signature
 argument_list|,
 name|ACPI_SIG_RSDP
 argument_list|,

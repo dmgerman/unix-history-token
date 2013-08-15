@@ -4898,6 +4898,13 @@ name|BGE_RXMODE_IPV6_ENABLE
 value|0x01000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RXMODE_IPV4_FRAG_FIX
+value|0x02000000
+end_define
+
 begin_comment
 comment|/* Receive MAC status register */
 end_comment

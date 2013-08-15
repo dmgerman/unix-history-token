@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -2471,18 +2477,6 @@ operator|=
 operator|++
 name|loadcnt
 expr_stmt|;
-name|lf
-operator|->
-name|sdt_probes
-operator|=
-name|NULL
-expr_stmt|;
-name|lf
-operator|->
-name|sdt_nprobes
-operator|=
-literal|0
-expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -4445,6 +4439,13 @@ name|lf
 operator|->
 name|id
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|kld_load
+argument_list|,
+name|lf
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HWPMC_HOOKS
@@ -4730,27 +4731,26 @@ name|userrefs
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Check if there are DTrace probes enabled on this file. */
-if|if
-condition|(
-name|lf
-operator|->
-name|nenabled
-operator|>
-literal|0
-condition|)
-block|{
-name|printf
+name|EVENTHANDLER_INVOKE
 argument_list|(
-literal|"kldunload: attempt to unload file that has"
-literal|" DTrace probes enabled\n"
+name|kld_unload
+argument_list|,
+name|lf
+argument_list|,
+operator|&
+name|error
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 name|error
 operator|=
 name|EBUSY
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(

@@ -2378,10 +2378,8 @@ operator|(
 name|void
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|num_pages
 operator|*
 name|PAGE_SIZE
@@ -2749,10 +2747,8 @@ operator|->
 name|num_pages
 argument_list|)
 expr_stmt|;
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)

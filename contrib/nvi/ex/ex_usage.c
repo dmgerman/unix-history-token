@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_usage.c	10.13 (Berkeley) 5/3/96"
+literal|"$Id: ex_usage.c,v 10.16 2011/12/21 19:26:48 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,18 +109,14 @@ begin_function
 name|int
 name|ex_help
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -188,18 +184,14 @@ begin_function
 name|int
 name|ex_usage
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|ARGS
 modifier|*
@@ -213,7 +205,7 @@ decl_stmt|;
 name|int
 name|newscreen
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|name
 decl_stmt|,
@@ -248,7 +240,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|isupper
+name|ISUPPER
 argument_list|(
 name|ap
 operator|->
@@ -270,7 +262,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|ap
 operator|->
@@ -298,7 +290,7 @@ name|name
 operator|!=
 name|NULL
 operator|&&
-name|memcmp
+name|MEMCMP
 argument_list|(
 name|ap
 operator|->
@@ -325,6 +317,7 @@ name|name
 operator|==
 name|NULL
 operator|||
+operator|(
 name|newscreen
 operator|&&
 operator|!
@@ -334,6 +327,7 @@ name|cp
 argument_list|,
 name|E_NEWSCREEN
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -347,7 +341,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|ap
 operator|->
@@ -364,7 +358,9 @@ name|ex_printf
 argument_list|(
 name|sp
 argument_list|,
-literal|"The %.*s command is unknown\n"
+literal|"The "
+name|WVS
+literal|" command is unknown\n"
 argument_list|,
 operator|(
 name|int
@@ -504,7 +500,10 @@ index|]
 condition|)
 name|name
 operator|=
+name|L
+argument_list|(
 literal|"^D"
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -529,7 +528,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|cp
 operator|->
@@ -607,7 +606,8 @@ name|ex_printf
 argument_list|(
 name|sp
 argument_list|,
-literal|"%*s: %s\n"
+name|WVS
+literal|": %s\n"
 argument_list|,
 name|MAXCMDNAMELEN
 argument_list|,
@@ -641,18 +641,14 @@ begin_function
 name|int
 name|ex_viusage
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GS
 modifier|*

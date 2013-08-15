@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_stop.c	10.10 (Berkeley) 3/6/96"
+literal|"$Id: ex_stop.c,v 10.11 2001/06/25 15:19:20 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -97,18 +103,14 @@ begin_function
 name|int
 name|ex_stop
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|allowed

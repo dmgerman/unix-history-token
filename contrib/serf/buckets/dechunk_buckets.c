@@ -529,6 +529,12 @@ operator|=
 name|STATE_SIZE
 expr_stmt|;
 block|}
+comment|/* Don't return the CR of CRLF to the caller! */
+operator|*
+name|len
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -541,6 +547,11 @@ case|case
 name|STATE_DONE
 case|:
 comment|/* Just keep returning EOF */
+operator|*
+name|len
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|APR_EOF
 return|;

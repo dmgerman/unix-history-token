@@ -953,7 +953,7 @@ directive|if
 literal|0
 block|vm_offset_t va, endva;  	va = trunc_page((vm_offset_t)t); 	endva = va + round_page(size);
 comment|/* Free the kernel virtual mapping. */
-block|kmem_free(kernel_map, va, endva - va);
+block|kva_free(va, endva - va);
 endif|#
 directive|endif
 block|}

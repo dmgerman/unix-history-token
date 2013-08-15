@@ -4423,12 +4423,12 @@ name|V_ip6_log_time
 operator|+
 name|V_ip6_log_interval
 operator|<
-name|time_second
+name|time_uptime
 condition|)
 block|{
 name|V_ip6_log_time
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|log
 argument_list|(

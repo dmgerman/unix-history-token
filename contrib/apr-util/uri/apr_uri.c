@@ -726,19 +726,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T_COLON
-value|0x01
-end_define
-
-begin_comment
-comment|/* ':' */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|T_SLASH
-value|0x02
+value|0x01
 end_define
 
 begin_comment
@@ -749,7 +738,7 @@ begin_define
 define|#
 directive|define
 name|T_QUESTION
-value|0x04
+value|0x02
 end_define
 
 begin_comment
@@ -760,11 +749,33 @@ begin_define
 define|#
 directive|define
 name|T_HASH
-value|0x08
+value|0x04
 end_define
 
 begin_comment
 comment|/* '#' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_ALPHA
+value|0x08
+end_define
+
+begin_comment
+comment|/* 'A' ... 'Z', 'a' ... 'z' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_SCHEME
+value|0x10
+end_define
+
+begin_comment
+comment|/* '0' ... '9', '-', '+', '.'                                        * (allowed in scheme except first char)                                        */
 end_comment
 
 begin_define
@@ -801,515 +812,771 @@ init|=
 block|{
 name|T_NUL
 block|,
+comment|/* 0x00     */
 literal|0
 block|,
+comment|/* 0x01     */
 literal|0
 block|,
+comment|/* 0x02     */
 literal|0
 block|,
+comment|/* 0x03     */
 literal|0
 block|,
+comment|/* 0x04     */
 literal|0
 block|,
+comment|/* 0x05     */
 literal|0
 block|,
+comment|/* 0x06     */
 literal|0
 block|,
+comment|/* 0x07     */
 literal|0
 block|,
+comment|/* 0x08     */
 literal|0
 block|,
+comment|/* 0x09     */
 literal|0
 block|,
+comment|/* 0x0a     */
 literal|0
 block|,
+comment|/* 0x0b     */
 literal|0
 block|,
+comment|/* 0x0c     */
 literal|0
 block|,
+comment|/* 0x0d     */
 literal|0
 block|,
+comment|/* 0x0e     */
 literal|0
 block|,
+comment|/* 0x0f     */
 literal|0
 block|,
+comment|/* 0x10     */
 literal|0
 block|,
+comment|/* 0x11     */
 literal|0
 block|,
+comment|/* 0x12     */
 literal|0
 block|,
+comment|/* 0x13     */
 literal|0
 block|,
+comment|/* 0x14     */
 literal|0
 block|,
+comment|/* 0x15     */
 literal|0
 block|,
+comment|/* 0x16     */
 literal|0
 block|,
+comment|/* 0x17     */
 literal|0
 block|,
+comment|/* 0x18     */
 literal|0
 block|,
+comment|/* 0x19     */
 literal|0
 block|,
+comment|/* 0x1a     */
 literal|0
 block|,
+comment|/* 0x1b     */
 literal|0
 block|,
+comment|/* 0x1c     */
 literal|0
 block|,
+comment|/* 0x1d     */
 literal|0
 block|,
+comment|/* 0x1e     */
 literal|0
 block|,
+comment|/* 0x1f     */
 literal|0
 block|,
+comment|/* 0x20     */
 literal|0
 block|,
+comment|/* 0x21     */
 literal|0
 block|,
+comment|/* 0x22     */
 literal|0
 block|,
+comment|/* 0x23     */
 literal|0
 block|,
+comment|/* 0x24     */
 literal|0
 block|,
+comment|/* 0x25     */
 literal|0
 block|,
+comment|/* 0x26     */
 literal|0
 block|,
+comment|/* 0x27     */
 literal|0
 block|,
+comment|/* 0x28     */
 literal|0
 block|,
+comment|/* 0x29     */
 literal|0
 block|,
+comment|/* 0x2a     */
 literal|0
 block|,
+comment|/* 0x2b     */
 literal|0
 block|,
+comment|/* 0x2c     */
 literal|0
 block|,
+comment|/* 0x2d     */
 literal|0
 block|,
+comment|/* 0x2e     */
 literal|0
 block|,
+comment|/* 0x2f     */
 literal|0
 block|,
+comment|/* 0x30     */
 literal|0
 block|,
+comment|/* 0x31     */
 literal|0
 block|,
+comment|/* 0x32     */
 literal|0
 block|,
+comment|/* 0x33     */
 literal|0
 block|,
+comment|/* 0x34     */
 literal|0
 block|,
+comment|/* 0x35     */
 literal|0
 block|,
+comment|/* 0x36     */
 literal|0
 block|,
+comment|/* 0x37     */
 literal|0
 block|,
+comment|/* 0x38     */
 literal|0
 block|,
+comment|/* 0x39     */
 literal|0
 block|,
+comment|/* 0x3a     */
 literal|0
 block|,
+comment|/* 0x3b     */
 literal|0
 block|,
+comment|/* 0x3c     */
 literal|0
 block|,
+comment|/* 0x3d     */
 literal|0
 block|,
+comment|/* 0x3e     */
 literal|0
 block|,
+comment|/* 0x3f     */
 literal|0
 block|,
+comment|/* 0x40 ' ' */
 literal|0
 block|,
+comment|/* 0x41     */
 literal|0
 block|,
+comment|/* 0x42     */
 literal|0
 block|,
+comment|/* 0x43     */
 literal|0
 block|,
+comment|/* 0x44     */
 literal|0
 block|,
+comment|/* 0x45     */
 literal|0
 block|,
+comment|/* 0x46     */
 literal|0
 block|,
+comment|/* 0x47     */
 literal|0
 block|,
+comment|/* 0x48     */
 literal|0
 block|,
+comment|/* 0x49     */
 literal|0
 block|,
-literal|0
+comment|/* 0x4a '[' */
+name|T_SCHEME
 block|,
+comment|/* 0x4b '.' */
 literal|0
 block|,
+comment|/* 0x4c '<' */
 literal|0
 block|,
-literal|0
+comment|/* 0x4d '(' */
+name|T_SCHEME
 block|,
+comment|/* 0x4e '+' */
 literal|0
 block|,
+comment|/* 0x4f '!' */
 literal|0
 block|,
+comment|/* 0x50 '&' */
 literal|0
 block|,
+comment|/* 0x51     */
 literal|0
 block|,
+comment|/* 0x52     */
 literal|0
 block|,
+comment|/* 0x53     */
 literal|0
 block|,
+comment|/* 0x54     */
 literal|0
 block|,
+comment|/* 0x55     */
 literal|0
 block|,
+comment|/* 0x56     */
 literal|0
 block|,
+comment|/* 0x57     */
 literal|0
 block|,
+comment|/* 0x58     */
 literal|0
 block|,
+comment|/* 0x59     */
 literal|0
 block|,
+comment|/* 0x5a ']' */
 literal|0
 block|,
+comment|/* 0x5b '$' */
 literal|0
 block|,
+comment|/* 0x5c '*' */
 literal|0
 block|,
+comment|/* 0x5d ')' */
 literal|0
 block|,
+comment|/* 0x5e ';' */
 literal|0
 block|,
-literal|0
+comment|/* 0x5f '^' */
+name|T_SCHEME
 block|,
+comment|/* 0x60 '-' */
 name|T_SLASH
 block|,
+comment|/* 0x61 '/' */
 literal|0
 block|,
+comment|/* 0x62     */
 literal|0
 block|,
+comment|/* 0x63     */
 literal|0
 block|,
+comment|/* 0x64     */
 literal|0
 block|,
+comment|/* 0x65     */
 literal|0
 block|,
+comment|/* 0x66     */
 literal|0
 block|,
+comment|/* 0x67     */
 literal|0
 block|,
+comment|/* 0x68     */
 literal|0
 block|,
+comment|/* 0x69     */
 literal|0
 block|,
+comment|/* 0x6a '|' */
 literal|0
 block|,
+comment|/* 0x6b ',' */
 literal|0
 block|,
+comment|/* 0x6c '%' */
 literal|0
 block|,
+comment|/* 0x6d '_' */
 literal|0
 block|,
+comment|/* 0x6e '>' */
 name|T_QUESTION
 block|,
+comment|/* 0x6f '?' */
 literal|0
 block|,
+comment|/* 0x70     */
 literal|0
 block|,
+comment|/* 0x71     */
 literal|0
 block|,
+comment|/* 0x72     */
 literal|0
 block|,
+comment|/* 0x73     */
 literal|0
 block|,
+comment|/* 0x74     */
 literal|0
 block|,
+comment|/* 0x75     */
 literal|0
 block|,
+comment|/* 0x76     */
 literal|0
 block|,
+comment|/* 0x77     */
 literal|0
 block|,
+comment|/* 0x78     */
 literal|0
 block|,
-name|T_COLON
+comment|/* 0x79 '`' */
+literal|0
 block|,
+comment|/* 0x7a ':' */
 name|T_HASH
 block|,
+comment|/* 0x7b '#' */
 literal|0
 block|,
+comment|/* 0x7c '@' */
 literal|0
 block|,
+comment|/* 0x7d ''' */
 literal|0
 block|,
+comment|/* 0x7e '=' */
 literal|0
 block|,
+comment|/* 0x7f '"' */
 literal|0
 block|,
-literal|0
+comment|/* 0x80     */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x81 'a' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x82 'b' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x83 'c' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x84 'd' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x85 'e' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x86 'f' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x87 'g' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x88 'h' */
+name|T_ALPHA
 block|,
+comment|/* 0x89 'i' */
 literal|0
 block|,
+comment|/* 0x8a     */
 literal|0
 block|,
+comment|/* 0x8b     */
 literal|0
 block|,
+comment|/* 0x8c     */
 literal|0
 block|,
+comment|/* 0x8d     */
 literal|0
 block|,
+comment|/* 0x8e     */
 literal|0
 block|,
+comment|/* 0x8f     */
 literal|0
 block|,
-literal|0
+comment|/* 0x90     */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x91 'j' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x92 'k' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x93 'l' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x94 'm' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x95 'n' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x96 'o' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x97 'p' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x98 'q' */
+name|T_ALPHA
 block|,
+comment|/* 0x99 'r' */
 literal|0
 block|,
+comment|/* 0x9a     */
 literal|0
 block|,
+comment|/* 0x9b     */
 literal|0
 block|,
+comment|/* 0x9c     */
 literal|0
 block|,
+comment|/* 0x9d     */
 literal|0
 block|,
+comment|/* 0x9e     */
 literal|0
 block|,
+comment|/* 0x9f     */
 literal|0
 block|,
+comment|/* 0xa0     */
 literal|0
 block|,
-literal|0
+comment|/* 0xa1 '~' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa2 's' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa3 't' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa4 'u' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa5 'v' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa6 'w' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa7 'x' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xa8 'y' */
+name|T_ALPHA
 block|,
+comment|/* 0xa9 'z' */
 literal|0
 block|,
+comment|/* 0xaa     */
 literal|0
 block|,
+comment|/* 0xab     */
 literal|0
 block|,
+comment|/* 0xac     */
 literal|0
 block|,
+comment|/* 0xad     */
 literal|0
 block|,
+comment|/* 0xae     */
 literal|0
 block|,
+comment|/* 0xaf     */
 literal|0
 block|,
+comment|/* 0xb0     */
 literal|0
 block|,
+comment|/* 0xb1     */
 literal|0
 block|,
+comment|/* 0xb2     */
 literal|0
 block|,
+comment|/* 0xb3     */
 literal|0
 block|,
+comment|/* 0xb4     */
 literal|0
 block|,
+comment|/* 0xb5     */
 literal|0
 block|,
+comment|/* 0xb6     */
 literal|0
 block|,
+comment|/* 0xb7     */
 literal|0
 block|,
+comment|/* 0xb8     */
 literal|0
 block|,
+comment|/* 0xb9     */
 literal|0
 block|,
+comment|/* 0xba     */
 literal|0
 block|,
+comment|/* 0xbb     */
 literal|0
 block|,
+comment|/* 0xbc     */
 literal|0
 block|,
+comment|/* 0xbd     */
 literal|0
 block|,
+comment|/* 0xbe     */
 literal|0
 block|,
+comment|/* 0xbf     */
 literal|0
 block|,
-literal|0
+comment|/* 0xc0 '{' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc1 'A' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc2 'B' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc3 'C' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc4 'D' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc5 'E' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc6 'F' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc7 'G' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xc8 'H' */
+name|T_ALPHA
 block|,
+comment|/* 0xc9 'I' */
 literal|0
 block|,
+comment|/* 0xca     */
 literal|0
 block|,
+comment|/* 0xcb     */
 literal|0
 block|,
+comment|/* 0xcc     */
 literal|0
 block|,
+comment|/* 0xcd     */
 literal|0
 block|,
+comment|/* 0xce     */
 literal|0
 block|,
+comment|/* 0xcf     */
 literal|0
 block|,
-literal|0
+comment|/* 0xd0 '}' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd1 'J' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd2 'K' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd3 'L' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd4 'M' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd5 'N' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd6 'O' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd7 'P' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xd8 'Q' */
+name|T_ALPHA
 block|,
+comment|/* 0xd9 'R' */
 literal|0
 block|,
+comment|/* 0xda     */
 literal|0
 block|,
+comment|/* 0xdb     */
 literal|0
 block|,
+comment|/* 0xdc     */
 literal|0
 block|,
+comment|/* 0xdd     */
 literal|0
 block|,
+comment|/* 0xde     */
 literal|0
 block|,
+comment|/* 0xdf     */
 literal|0
 block|,
+comment|/* 0xe0 '\' */
 literal|0
 block|,
-literal|0
+comment|/* 0xe1     */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe2 'S' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe3 'T' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe4 'U' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe5 'V' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe6 'W' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe7 'X' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0xe8 'Y' */
+name|T_ALPHA
 block|,
+comment|/* 0xe9 'Z' */
 literal|0
 block|,
+comment|/* 0xea     */
 literal|0
 block|,
+comment|/* 0xeb     */
 literal|0
 block|,
+comment|/* 0xec     */
 literal|0
 block|,
+comment|/* 0xed     */
 literal|0
 block|,
+comment|/* 0xee     */
 literal|0
 block|,
-literal|0
+comment|/* 0xef     */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf0 '0' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf1 '1' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf2 '2' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf3 '3' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf4 '4' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf5 '5' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf6 '6' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf7 '7' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0xf8 '8' */
+name|T_SCHEME
 block|,
+comment|/* 0xf9 '9' */
 literal|0
 block|,
+comment|/* 0xfa     */
 literal|0
 block|,
+comment|/* 0xfb     */
 literal|0
 block|,
+comment|/* 0xfc     */
 literal|0
 block|,
+comment|/* 0xfd     */
 literal|0
 block|,
+comment|/* 0xfe     */
 literal|0
+comment|/* 0xff     */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1336,515 +1603,771 @@ init|=
 block|{
 name|T_NUL
 block|,
+comment|/* 0x00     */
 literal|0
 block|,
+comment|/* 0x01     */
 literal|0
 block|,
+comment|/* 0x02     */
 literal|0
 block|,
+comment|/* 0x03     */
 literal|0
 block|,
+comment|/* 0x04     */
 literal|0
 block|,
+comment|/* 0x05     */
 literal|0
 block|,
+comment|/* 0x06     */
 literal|0
 block|,
+comment|/* 0x07     */
 literal|0
 block|,
+comment|/* 0x08     */
 literal|0
 block|,
+comment|/* 0x09     */
 literal|0
 block|,
+comment|/* 0x0a     */
 literal|0
 block|,
+comment|/* 0x0b     */
 literal|0
 block|,
+comment|/* 0x0c     */
 literal|0
 block|,
+comment|/* 0x0d     */
 literal|0
 block|,
+comment|/* 0x0e     */
 literal|0
 block|,
+comment|/* 0x0f     */
 literal|0
 block|,
+comment|/* 0x10     */
 literal|0
 block|,
+comment|/* 0x11     */
 literal|0
 block|,
+comment|/* 0x12     */
 literal|0
 block|,
+comment|/* 0x13     */
 literal|0
 block|,
+comment|/* 0x14     */
 literal|0
 block|,
+comment|/* 0x15     */
 literal|0
 block|,
+comment|/* 0x16     */
 literal|0
 block|,
+comment|/* 0x17     */
 literal|0
 block|,
+comment|/* 0x18     */
 literal|0
 block|,
+comment|/* 0x19     */
 literal|0
 block|,
+comment|/* 0x1a     */
 literal|0
 block|,
+comment|/* 0x1b     */
 literal|0
 block|,
+comment|/* 0x1c     */
 literal|0
 block|,
+comment|/* 0x1d     */
 literal|0
 block|,
+comment|/* 0x1e     */
 literal|0
 block|,
+comment|/* 0x1f     */
 literal|0
 block|,
+comment|/* 0x20 ' ' */
 literal|0
 block|,
+comment|/* 0x21 '!' */
 literal|0
 block|,
+comment|/* 0x22 '"' */
 name|T_HASH
 block|,
+comment|/* 0x23 '#' */
 literal|0
 block|,
+comment|/* 0x24 '$' */
 literal|0
 block|,
+comment|/* 0x25 '%' */
 literal|0
 block|,
+comment|/* 0x26 '&' */
 literal|0
 block|,
+comment|/* 0x27 ''' */
 literal|0
 block|,
+comment|/* 0x28 '(' */
 literal|0
 block|,
+comment|/* 0x29 ')' */
 literal|0
 block|,
+comment|/* 0x2a '*' */
+name|T_SCHEME
+block|,
+comment|/* 0x2b '+' */
 literal|0
 block|,
-literal|0
+comment|/* 0x2c ',' */
+name|T_SCHEME
 block|,
-literal|0
+comment|/* 0x2d '-' */
+name|T_SCHEME
 block|,
-literal|0
-block|,
+comment|/* 0x2e '.' */
 name|T_SLASH
 block|,
+comment|/* 0x2f '/' */
+name|T_SCHEME
+block|,
+comment|/* 0x30 '0' */
+name|T_SCHEME
+block|,
+comment|/* 0x31 '1' */
+name|T_SCHEME
+block|,
+comment|/* 0x32 '2' */
+name|T_SCHEME
+block|,
+comment|/* 0x33 '3' */
+name|T_SCHEME
+block|,
+comment|/* 0x34 '4' */
+name|T_SCHEME
+block|,
+comment|/* 0x35 '5' */
+name|T_SCHEME
+block|,
+comment|/* 0x36 '6' */
+name|T_SCHEME
+block|,
+comment|/* 0x37 '7' */
+name|T_SCHEME
+block|,
+comment|/* 0x38 '8' */
+name|T_SCHEME
+block|,
+comment|/* 0x39 '9' */
 literal|0
 block|,
+comment|/* 0x3a ':' */
 literal|0
 block|,
+comment|/* 0x3b ';' */
 literal|0
 block|,
+comment|/* 0x3c '<' */
 literal|0
 block|,
+comment|/* 0x3d '=' */
 literal|0
 block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|T_COLON
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
+comment|/* 0x3e '>' */
 name|T_QUESTION
 block|,
+comment|/* 0x3f '?' */
 literal|0
 block|,
-literal|0
+comment|/* 0x40 '@' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x41 'A' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x42 'B' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x43 'C' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x44 'D' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x45 'E' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x46 'F' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x47 'G' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x48 'H' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x49 'I' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x4a 'J' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x4b 'K' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x4c 'L' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x4d 'M' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x4e 'N' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x4f 'O' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x50 'P' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x51 'Q' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x52 'R' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x53 'S' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x54 'T' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x55 'U' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x56 'V' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x57 'W' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x58 'X' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x59 'Y' */
+name|T_ALPHA
 block|,
+comment|/* 0x5a 'Z' */
 literal|0
 block|,
+comment|/* 0x5b '[' */
 literal|0
 block|,
+comment|/* 0x5c '\' */
 literal|0
 block|,
+comment|/* 0x5d ']' */
 literal|0
 block|,
+comment|/* 0x5e '^' */
 literal|0
 block|,
+comment|/* 0x5f '_' */
 literal|0
 block|,
-literal|0
+comment|/* 0x60 '`' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x61 'a' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x62 'b' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x63 'c' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x64 'd' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x65 'e' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x66 'f' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x67 'g' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x68 'h' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x69 'i' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x6a 'j' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x6b 'k' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x6c 'l' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x6d 'm' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x6e 'n' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x6f 'o' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x70 'p' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x71 'q' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x72 'r' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x73 's' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x74 't' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x75 'u' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x76 'v' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x77 'w' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x78 'x' */
+name|T_ALPHA
 block|,
-literal|0
+comment|/* 0x79 'y' */
+name|T_ALPHA
 block|,
+comment|/* 0x7a 'z' */
 literal|0
 block|,
+comment|/* 0x7b '{' */
 literal|0
 block|,
+comment|/* 0x7c '|' */
 literal|0
 block|,
+comment|/* 0x7d '}' */
 literal|0
 block|,
+comment|/* 0x7e '~' */
 literal|0
 block|,
+comment|/* 0x7f     */
 literal|0
 block|,
+comment|/* 0x80     */
 literal|0
 block|,
+comment|/* 0x81     */
 literal|0
 block|,
+comment|/* 0x82     */
 literal|0
 block|,
+comment|/* 0x83     */
 literal|0
 block|,
+comment|/* 0x84     */
 literal|0
 block|,
+comment|/* 0x85     */
 literal|0
 block|,
+comment|/* 0x86     */
 literal|0
 block|,
+comment|/* 0x87     */
 literal|0
 block|,
+comment|/* 0x88     */
 literal|0
 block|,
+comment|/* 0x89     */
 literal|0
 block|,
+comment|/* 0x8a     */
 literal|0
 block|,
+comment|/* 0x8b     */
 literal|0
 block|,
+comment|/* 0x8c     */
 literal|0
 block|,
+comment|/* 0x8d     */
 literal|0
 block|,
+comment|/* 0x8e     */
 literal|0
 block|,
+comment|/* 0x8f     */
 literal|0
 block|,
+comment|/* 0x90     */
 literal|0
 block|,
+comment|/* 0x91     */
 literal|0
 block|,
+comment|/* 0x92     */
 literal|0
 block|,
+comment|/* 0x93     */
 literal|0
 block|,
+comment|/* 0x94     */
 literal|0
 block|,
+comment|/* 0x95     */
 literal|0
 block|,
+comment|/* 0x96     */
 literal|0
 block|,
+comment|/* 0x97     */
 literal|0
 block|,
+comment|/* 0x98     */
 literal|0
 block|,
+comment|/* 0x99     */
 literal|0
 block|,
+comment|/* 0x9a     */
 literal|0
 block|,
+comment|/* 0x9b     */
 literal|0
 block|,
+comment|/* 0x9c     */
 literal|0
 block|,
+comment|/* 0x9d     */
 literal|0
 block|,
+comment|/* 0x9e     */
 literal|0
 block|,
+comment|/* 0x9f     */
 literal|0
 block|,
+comment|/* 0xa0     */
 literal|0
 block|,
+comment|/* 0xa1     */
 literal|0
 block|,
+comment|/* 0xa2     */
 literal|0
 block|,
+comment|/* 0xa3     */
 literal|0
 block|,
+comment|/* 0xa4     */
 literal|0
 block|,
+comment|/* 0xa5     */
 literal|0
 block|,
+comment|/* 0xa6     */
 literal|0
 block|,
+comment|/* 0xa7     */
 literal|0
 block|,
+comment|/* 0xa8     */
 literal|0
 block|,
+comment|/* 0xa9     */
 literal|0
 block|,
+comment|/* 0xaa     */
 literal|0
 block|,
+comment|/* 0xab     */
 literal|0
 block|,
+comment|/* 0xac     */
 literal|0
 block|,
+comment|/* 0xad     */
 literal|0
 block|,
+comment|/* 0xae     */
 literal|0
 block|,
+comment|/* 0xaf     */
 literal|0
 block|,
+comment|/* 0xb0     */
 literal|0
 block|,
+comment|/* 0xb1     */
 literal|0
 block|,
+comment|/* 0xb2     */
 literal|0
 block|,
+comment|/* 0xb3     */
 literal|0
 block|,
+comment|/* 0xb4     */
 literal|0
 block|,
+comment|/* 0xb5     */
 literal|0
 block|,
+comment|/* 0xb6     */
 literal|0
 block|,
+comment|/* 0xb7     */
 literal|0
 block|,
+comment|/* 0xb8     */
 literal|0
 block|,
+comment|/* 0xb9     */
 literal|0
 block|,
+comment|/* 0xba     */
 literal|0
 block|,
+comment|/* 0xbb     */
 literal|0
 block|,
+comment|/* 0xbc     */
 literal|0
 block|,
+comment|/* 0xbd     */
 literal|0
 block|,
+comment|/* 0xbe     */
 literal|0
 block|,
+comment|/* 0xbf     */
 literal|0
 block|,
+comment|/* 0xc0     */
 literal|0
 block|,
+comment|/* 0xc1     */
 literal|0
 block|,
+comment|/* 0xc2     */
 literal|0
 block|,
+comment|/* 0xc3     */
 literal|0
 block|,
+comment|/* 0xc4     */
 literal|0
 block|,
+comment|/* 0xc5     */
 literal|0
 block|,
+comment|/* 0xc6     */
 literal|0
 block|,
+comment|/* 0xc7     */
 literal|0
 block|,
+comment|/* 0xc8     */
 literal|0
 block|,
+comment|/* 0xc9     */
 literal|0
 block|,
+comment|/* 0xca     */
 literal|0
 block|,
+comment|/* 0xcb     */
 literal|0
 block|,
+comment|/* 0xcc     */
 literal|0
 block|,
+comment|/* 0xcd     */
 literal|0
 block|,
+comment|/* 0xce     */
 literal|0
 block|,
+comment|/* 0xcf     */
 literal|0
 block|,
+comment|/* 0xd0     */
 literal|0
 block|,
+comment|/* 0xd1     */
 literal|0
 block|,
+comment|/* 0xd2     */
 literal|0
 block|,
+comment|/* 0xd3     */
 literal|0
 block|,
+comment|/* 0xd4     */
 literal|0
 block|,
+comment|/* 0xd5     */
 literal|0
 block|,
+comment|/* 0xd6     */
 literal|0
 block|,
+comment|/* 0xd7     */
 literal|0
 block|,
+comment|/* 0xd8     */
 literal|0
 block|,
+comment|/* 0xd9     */
 literal|0
 block|,
+comment|/* 0xda     */
 literal|0
 block|,
+comment|/* 0xdb     */
 literal|0
 block|,
+comment|/* 0xdc     */
 literal|0
 block|,
+comment|/* 0xdd     */
 literal|0
 block|,
+comment|/* 0xde     */
 literal|0
 block|,
+comment|/* 0xdf     */
 literal|0
 block|,
+comment|/* 0xe0     */
 literal|0
 block|,
+comment|/* 0xe1     */
 literal|0
 block|,
+comment|/* 0xe2     */
 literal|0
 block|,
+comment|/* 0xe3     */
 literal|0
 block|,
+comment|/* 0xe4     */
 literal|0
 block|,
+comment|/* 0xe5     */
 literal|0
 block|,
+comment|/* 0xe6     */
 literal|0
 block|,
+comment|/* 0xe7     */
 literal|0
 block|,
+comment|/* 0xe8     */
 literal|0
 block|,
+comment|/* 0xe9     */
 literal|0
 block|,
+comment|/* 0xea     */
 literal|0
 block|,
+comment|/* 0xeb     */
 literal|0
 block|,
+comment|/* 0xec     */
 literal|0
 block|,
+comment|/* 0xed     */
 literal|0
 block|,
+comment|/* 0xee     */
 literal|0
 block|,
+comment|/* 0xef     */
 literal|0
 block|,
+comment|/* 0xf0     */
 literal|0
 block|,
+comment|/* 0xf1     */
 literal|0
 block|,
+comment|/* 0xf2     */
 literal|0
 block|,
+comment|/* 0xf3     */
 literal|0
 block|,
+comment|/* 0xf4     */
 literal|0
 block|,
+comment|/* 0xf5     */
 literal|0
 block|,
+comment|/* 0xf6     */
 literal|0
 block|,
+comment|/* 0xf7     */
 literal|0
 block|,
+comment|/* 0xf8     */
 literal|0
 block|,
+comment|/* 0xf9     */
 literal|0
 block|,
+comment|/* 0xfa     */
 literal|0
 block|,
+comment|/* 0xfb     */
 literal|0
 block|,
+comment|/* 0xfc     */
 literal|0
 block|,
+comment|/* 0xfd     */
 literal|0
 block|,
+comment|/* 0xfe     */
 literal|0
+comment|/* 0xff     */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1857,17 +2380,6 @@ end_endif
 begin_comment
 comment|/* it works like this:     if (uri_delims[ch]& NOTEND_foobar) {         then we're not at a delimiter for foobar     } */
 end_comment
-
-begin_comment
-comment|/* Note that we optimize the scheme scanning here, we cheat and let the  * compiler know that it doesn't have to do the& masking.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOTEND_SCHEME
-value|(0xff)
-end_define
 
 begin_define
 define|#
@@ -2158,6 +2670,26 @@ name|s
 operator|=
 name|uri
 expr_stmt|;
+comment|/* first char must be letter */
+if|if
+condition|(
+name|uri_delims
+index|[
+operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|s
+index|]
+operator|&
+name|T_ALPHA
+condition|)
+block|{
+operator|++
+name|s
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2172,12 +2704,13 @@ operator|)
 name|s
 index|]
 operator|&
-name|NOTEND_SCHEME
+operator|(
+name|T_ALPHA
+operator||
+name|T_SCHEME
 operator|)
-operator|==
-literal|0
+operator|)
 condition|)
-block|{
 operator|++
 name|s
 expr_stmt|;
@@ -2186,22 +2719,17 @@ comment|/* scheme must be non-empty and followed by : */
 if|if
 condition|(
 name|s
-operator|==
+operator|!=
 name|uri
-operator|||
+operator|&&
 name|s
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|':'
 condition|)
 block|{
-goto|goto
-name|deal_with_path
-goto|;
-comment|/* backwards predicted taken! */
-block|}
 name|uptr
 operator|->
 name|scheme
@@ -2217,28 +2745,110 @@ operator|-
 name|uri
 argument_list|)
 expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* No valid scheme, restart from the beginning */
+name|s
+operator|=
+name|uri
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|s
 index|[
-literal|1
+literal|0
 index|]
 operator|!=
 literal|'/'
 operator|||
 name|s
 index|[
-literal|2
+literal|1
 index|]
 operator|!=
 literal|'/'
 condition|)
 block|{
+if|if
+condition|(
+name|uri
+operator|==
+name|s
+condition|)
+block|{
+comment|/*              * RFC 3986 3.3: If we have no scheme and no authority,              * the leading segment of a relative path must not contain a ':'.              */
+name|char
+modifier|*
+name|first_slash
+init|=
+name|strchr
+argument_list|(
+name|uri
+argument_list|,
+literal|'/'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|first_slash
+condition|)
+block|{
+while|while
+condition|(
+name|s
+operator|<
+name|first_slash
+condition|)
+block|{
+if|if
+condition|(
+name|s
+index|[
+literal|0
+index|]
+operator|==
+literal|':'
+condition|)
+return|return
+name|APR_EGENERAL
+return|;
+operator|++
+name|s
+expr_stmt|;
+block|}
+comment|/* no scheme but relative path, e.g. '../image.jpg' */
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|uri
+argument_list|,
+literal|':'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|APR_EGENERAL
+return|;
+comment|/* no scheme, no slash, but relative path, e.g. 'image.jpg' */
+block|}
+goto|goto
+name|deal_with_path
+goto|;
+block|}
+comment|/* scheme and relative path */
 name|uri
 operator|=
 name|s
-operator|+
-literal|1
 expr_stmt|;
 goto|goto
 name|deal_with_path
@@ -2246,7 +2856,7 @@ goto|;
 block|}
 name|s
 operator|+=
-literal|3
+literal|2
 expr_stmt|;
 name|deal_with_authority
 label|:
@@ -2298,7 +2908,7 @@ operator|-
 name|hostinfo
 argument_list|)
 expr_stmt|;
-comment|/* If there's a username:password@host:port, the @ we want is the last @...      * too bad there's no memrchr()... For the C purists, note that hostinfo      * is definately not the first character of the original uri so therefore      *&hostinfo[-1]<&hostinfo[0] ... and this loop is valid C.      */
+comment|/* If there's a username:password@host:port, the @ we want is the last @...      * too bad there's no memrchr()... For the C purists, note that hostinfo      * is definitely not the first character of the original uri so therefore      *&hostinfo[-1]<&hostinfo[0] ... and this loop is valid C.      */
 do|do
 block|{
 operator|--

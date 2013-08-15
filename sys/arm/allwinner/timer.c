@@ -143,6 +143,12 @@ directive|include
 file|<sys/kdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"a20/a20_cpu_cfg.h"
+end_include
+
 begin_comment
 comment|/**  * Timer registers addr  *  */
 end_comment
@@ -297,6 +303,10 @@ name|struct
 name|eventtimer
 name|et
 decl_stmt|;
+name|uint8_t
+name|sc_timer_type
+decl_stmt|;
+comment|/* 0 for A10, 1 for A20 */
 block|}
 struct|;
 end_struct
@@ -525,6 +535,19 @@ name|lo
 decl_stmt|,
 name|hi
 decl_stmt|;
+comment|/* In case of A20 get appropriate counter info */
+if|if
+condition|(
+name|a10_timer_sc
+operator|->
+name|sc_timer_type
+condition|)
+return|return
+operator|(
+name|a20_read_counter64
+argument_list|()
+operator|)
+return|;
 comment|/* Latch counter, wait for it to be ready to read. */
 name|timer_write_4
 argument_list|(
@@ -591,9 +614,20 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|a10_timer_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -601,6 +635,29 @@ argument_list|,
 literal|"allwinner,sun4i-timer"
 argument_list|)
 condition|)
+name|sc
+operator|->
+name|sc_timer_type
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"allwinner,sun7i-timer"
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_timer_type
+operator|=
+literal|1
+expr_stmt|;
+else|else
 return|return
 operator|(
 name|ENXIO
@@ -610,7 +667,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Allwinner A10 timer"
+literal|"Allwinner A10/A20 timer"
 argument_list|)
 expr_stmt|;
 return|return

@@ -411,10 +411,11 @@ decl_stmt|;
 name|uint32_t
 name|reserved1
 decl_stmt|;
-name|uint32_t
+comment|/** controller status */
+name|union
+name|csts_register
 name|csts
 decl_stmt|;
-comment|/* controller status */
 name|uint32_t
 name|reserved2
 decl_stmt|;

@@ -1349,6 +1349,9 @@ parameter_list|,
 name|svn_boolean_t
 name|is_move
 parameter_list|,
+name|svn_boolean_t
+name|metadata_only
+parameter_list|,
 name|svn_client_ctx_t
 modifier|*
 name|ctx
@@ -1535,6 +1538,15 @@ argument_list|)
 return|;
 block|}
 comment|/* Check that there is no unversioned obstruction */
+if|if
+condition|(
+name|metadata_only
+condition|)
+name|dst_kind
+operator|=
+name|svn_node_none
+expr_stmt|;
+else|else
 name|SVN_ERR
 argument_list|(
 name|svn_io_check_path
@@ -1908,6 +1920,9 @@ parameter_list|,
 name|svn_boolean_t
 name|is_move
 parameter_list|,
+name|svn_boolean_t
+name|metadata_only
+parameter_list|,
 name|svn_client_ctx_t
 modifier|*
 name|ctx
@@ -2058,6 +2073,8 @@ argument_list|,
 name|make_parents
 argument_list|,
 name|is_move
+argument_list|,
+name|metadata_only
 argument_list|,
 name|ctx
 argument_list|,
@@ -6890,6 +6907,9 @@ name|FALSE
 argument_list|,
 name|FALSE
 argument_list|,
+name|FALSE
+comment|/* metadata_only */
+argument_list|,
 name|ctx
 argument_list|,
 name|scratch_pool
@@ -8921,6 +8941,8 @@ argument_list|,
 name|make_parents
 argument_list|,
 name|is_move
+argument_list|,
+name|metadata_only
 argument_list|,
 name|ctx
 argument_list|,

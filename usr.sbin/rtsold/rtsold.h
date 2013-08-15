@@ -49,7 +49,7 @@ name|u_int8_t
 name|rao_type
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|rao_expire
 decl_stmt|;
 name|size_t
@@ -161,11 +161,11 @@ name|int
 name|dadcount
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|timer
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|expire
 decl_stmt|;
 name|int
@@ -357,6 +357,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|TS_CMP
+parameter_list|(
+name|tsp
+parameter_list|,
+name|usp
+parameter_list|,
+name|cmp
+parameter_list|)
+define|\
+value|(((tsp)->tv_sec == (usp)->tv_sec) ?				\ 	    ((tsp)->tv_nsec cmp (usp)->tv_nsec) :			\ 	    ((tsp)->tv_sec cmp (usp)->tv_sec))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_ADD
+parameter_list|(
+name|tsp
+parameter_list|,
+name|usp
+parameter_list|,
+name|vsp
+parameter_list|)
+define|\
+value|do {								\ 		(vsp)->tv_sec = (tsp)->tv_sec + (usp)->tv_sec;		\ 		(vsp)->tv_nsec = (tsp)->tv_nsec + (usp)->tv_nsec;	\ 		if ((vsp)->tv_nsec>= 1000000000L) {			\ 			(vsp)->tv_sec++;				\ 			(vsp)->tv_nsec -= 1000000000L;			\ 		}							\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_SUB
+parameter_list|(
+name|tsp
+parameter_list|,
+name|usp
+parameter_list|,
+name|vsp
+parameter_list|)
+define|\
+value|do {								\ 		(vsp)->tv_sec = (tsp)->tv_sec - (usp)->tv_sec;		\ 		(vsp)->tv_nsec = (tsp)->tv_nsec - (usp)->tv_nsec;	\ 		if ((vsp)->tv_nsec< 0) {				\ 			(vsp)->tv_sec--;				\ 			(vsp)->tv_nsec += 1000000000L;			\ 		}							\ 	} while (0)
+end_define
+
 begin_comment
 comment|/* rtsold.c */
 end_comment
@@ -364,7 +409,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|timeval
+name|timespec
 name|tm_max
 decl_stmt|;
 end_decl_stmt
@@ -719,7 +764,7 @@ name|sec2str
 parameter_list|(
 specifier|const
 name|struct
-name|timeval
+name|timespec
 modifier|*
 parameter_list|)
 function_decl|;

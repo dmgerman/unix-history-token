@@ -111,7 +111,7 @@ name|temp
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"                   "	lr  %1,%0\n"                   "	alr %1,%3\n"                   "	cs  %0,%1,%2\n"                   "	jl  loop_%=\n"                   : "+d" (prev), "+d" (temp), "=Q" (*mem)                   : "d" (val), "m" (*mem)                   : "cc", "memory");
+asm|("loop_%=:\n"                   "    lr  %1,%0\n"                   "    alr %1,%3\n"                   "    cs  %0,%1,%2\n"                   "    jl  loop_%=\n"                   : "+d" (prev), "+d" (temp), "=Q" (*mem)                   : "d" (val), "m" (*mem)                   : "cc", "memory");
 return|return
 name|prev
 return|;
@@ -199,7 +199,7 @@ name|temp
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"                   "	lr  %1,%0\n"                   "	slr %1,%3\n"                   "	cs  %0,%1,%2\n"                   "	jl  loop_%=\n"                   : "+d" (prev), "+d" (temp), "=Q" (*mem)                   : "d" (val), "m" (*mem)                   : "cc", "memory");
+asm|("loop_%=:\n"                   "    lr  %1,%0\n"                   "    slr %1,%3\n"                   "    cs  %0,%1,%2\n"                   "    jl  loop_%=\n"                   : "+d" (prev), "+d" (temp), "=Q" (*mem)                   : "d" (val), "m" (*mem)                   : "cc", "memory");
 return|return
 name|temp
 return|;
@@ -283,7 +283,7 @@ begin_block
 block|{
 asm|asm
 specifier|volatile
-asm|("	cs  %0,%2,%1\n"                   : "+d" (cmp), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
+asm|("    cs  %0,%2,%1\n"                   : "+d" (cmp), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
 return|return
 name|cmp
 return|;
@@ -316,7 +316,7 @@ name|mem
 decl_stmt|;
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"                   "	cs  %0,%2,%1\n"                   "	jl  loop_%=\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (val), "m" (*mem)                   : "cc", "memory");
+asm|("loop_%=:\n"                   "    cs  %0,%2,%1\n"                   "    jl  loop_%=\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (val), "m" (*mem)                   : "cc", "memory");
 return|return
 name|prev
 return|;
@@ -360,7 +360,7 @@ operator|==
 literal|4
 asm|asm
 specifier|volatile
-asm|("	cs  %0,%2,%1\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
+asm|("    cs  %0,%2,%1\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
 elif|#
 directive|elif
 name|APR_SIZEOF_VOIDP
@@ -368,7 +368,7 @@ operator|==
 literal|8
 asm|asm
 specifier|volatile
-asm|("	csg %0,%2,%1\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
+asm|("    csg %0,%2,%1\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
 else|#
 directive|else
 error|#
@@ -418,7 +418,7 @@ operator|==
 literal|4
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"                   "	cs  %0,%2,%1\n"                   "	jl  loop_%=\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
+asm|("loop_%=:\n"                   "    cs  %0,%2,%1\n"                   "    jl  loop_%=\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
 elif|#
 directive|elif
 name|APR_SIZEOF_VOIDP
@@ -426,7 +426,7 @@ operator|==
 literal|8
 asm|asm
 specifier|volatile
-asm|("loop_%=:\n"                   "	csg %0,%2,%1\n"                   "	jl  loop_%=\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
+asm|("loop_%=:\n"                   "    csg %0,%2,%1\n"                   "    jl  loop_%=\n"                   : "+d" (prev), "=Q" (*mem)                   : "d" (with), "m" (*mem)                   : "cc", "memory");
 else|#
 directive|else
 error|#

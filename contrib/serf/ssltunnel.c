@@ -566,7 +566,7 @@ name|conn
 operator|->
 name|host_info
 operator|.
-name|hostinfo
+name|hostname
 argument_list|,
 name|conn
 operator|->
@@ -590,8 +590,7 @@ argument_list|,
 name|conn
 argument_list|)
 expr_stmt|;
-comment|/* TODO: should be the first request on the connection. */
-name|serf_connection_priority_request_create
+name|serf__ssltunnel_request_create
 argument_list|(
 name|conn
 argument_list|,

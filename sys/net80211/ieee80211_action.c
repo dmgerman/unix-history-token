@@ -299,13 +299,6 @@ modifier|*
 name|f
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 switch|switch
 condition|(
 name|cat
@@ -318,7 +311,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|ba_send_action
 argument_list|)
@@ -341,7 +334,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|ht_send_action
 argument_list|)
@@ -364,7 +357,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|meshpl_send_action
 argument_list|)
@@ -387,7 +380,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|meshaction_send_action
 argument_list|)
@@ -411,7 +404,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|vendor_send_action
 argument_list|)
@@ -431,9 +424,6 @@ block|}
 return|return
 name|EINVAL
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -480,13 +470,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|ieee80211_send_action_func
 modifier|*
 name|f
@@ -505,7 +488,7 @@ if|if
 condition|(
 name|act
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ba_send_action
 argument_list|)
@@ -525,7 +508,7 @@ if|if
 condition|(
 name|act
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ht_send_action
 argument_list|)
@@ -545,7 +528,7 @@ if|if
 condition|(
 name|act
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|meshpl_send_action
 argument_list|)
@@ -565,7 +548,7 @@ if|if
 condition|(
 name|act
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|meshaction_send_action
 argument_list|)
@@ -585,7 +568,7 @@ if|if
 condition|(
 name|act
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|vendor_send_action
 argument_list|)
@@ -611,9 +594,6 @@ argument_list|,
 name|sa
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -818,13 +798,6 @@ modifier|*
 name|f
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 switch|switch
 condition|(
 name|cat
@@ -837,7 +810,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|ba_recv_action
 argument_list|)
@@ -860,7 +833,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|ht_recv_action
 argument_list|)
@@ -883,7 +856,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|meshpl_recv_action
 argument_list|)
@@ -906,7 +879,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|meshaction_recv_action
 argument_list|)
@@ -929,7 +902,7 @@ if|if
 condition|(
 name|act
 operator|>=
-name|N
+name|nitems
 argument_list|(
 name|vendor_recv_action
 argument_list|)
@@ -949,9 +922,6 @@ block|}
 return|return
 name|EINVAL
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -1004,13 +974,6 @@ modifier|*
 name|efrm
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|ieee80211_recv_action_func
 modifier|*
 name|f
@@ -1056,7 +1019,7 @@ name|ia
 operator|->
 name|ia_action
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ba_recv_action
 argument_list|)
@@ -1080,7 +1043,7 @@ name|ia
 operator|->
 name|ia_action
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ht_recv_action
 argument_list|)
@@ -1104,7 +1067,7 @@ name|ia
 operator|->
 name|ia_action
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|meshpl_recv_action
 argument_list|)
@@ -1177,7 +1140,7 @@ name|ia
 operator|->
 name|ia_action
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|meshaction_recv_action
 argument_list|)
@@ -1201,7 +1164,7 @@ name|ia
 operator|->
 name|ia_action
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|vendor_recv_action
 argument_list|)
@@ -1229,9 +1192,6 @@ argument_list|,
 name|efrm
 argument_list|)
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

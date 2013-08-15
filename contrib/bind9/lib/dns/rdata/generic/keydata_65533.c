@@ -944,7 +944,7 @@ name|sr
 operator|.
 name|length
 operator|<
-literal|4
+literal|16
 condition|)
 return|return
 operator|(

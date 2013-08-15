@@ -10559,8 +10559,8 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"cancelling unmapped "
-literal|"because of %s\n"
+literal|"Cancelling unmapped "
+literal|"because of %s."
 argument_list|,
 name|dp
 operator|->

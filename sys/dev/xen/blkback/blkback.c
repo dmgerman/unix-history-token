@@ -8193,10 +8193,8 @@ block|{
 ifndef|#
 directive|ifndef
 name|XENHVM
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|xbb
 operator|->
 name|kva
@@ -9295,10 +9293,8 @@ name|xbb
 operator|->
 name|kva
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|xbb
 operator|->
 name|kva_size

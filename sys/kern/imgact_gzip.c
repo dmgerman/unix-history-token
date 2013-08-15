@@ -582,7 +582,7 @@ name|igz
 operator|.
 name|inbuf
 condition|)
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -1390,7 +1390,7 @@ name|igz
 operator|->
 name|inbuf
 condition|)
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,

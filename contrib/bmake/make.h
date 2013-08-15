@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.90 2013/02/25 01:57:14 dholland Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.91 2013/06/18 20:06:09 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -1672,22 +1672,18 @@ name|MAKE_MODE
 value|".MAKE.MODE"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_MAKE_LEVEL_SAFE
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAKE_LEVEL_ENV
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MAKE_LEVEL_SAFE
-value|"_MAKE_LEVEL"
+name|MAKE_LEVEL_ENV
+value|"MAKELEVEL"
 end_define
-
-begin_comment
-comment|/* some shells will not pass .MAKE. */
-end_comment
 
 begin_endif
 endif|#

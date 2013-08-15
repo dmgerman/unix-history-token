@@ -3441,14 +3441,6 @@ name|m
 operator|->
 name|md
 operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|m
-operator|->
-name|md
-operator|.
 name|pmap
 operator|=
 name|NULL
@@ -5390,10 +5382,8 @@ expr|struct
 name|tte
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|TSB_BSIZE
 argument_list|)
 expr_stmt|;
@@ -6821,14 +6811,16 @@ name|m
 operator|->
 name|oflags
 operator|&
-operator|(
 name|VPO_UNMANAGED
-operator||
-name|VPO_BUSY
-operator|)
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|vm_page_xbusied
+argument_list|(
+name|m
+argument_list|)
 condition|)
 name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
@@ -9827,7 +9819,7 @@ name|rv
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no TTEs can have TD_W set. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no TTEs can have TD_W set. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -9837,15 +9829,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|(
 name|m
@@ -10120,24 +10108,20 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
-literal|"pmap_clear_modify: page %p is busy"
+literal|"pmap_clear_modify: page %p is exclusive busied"
 operator|,
 name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not PGA_WRITEABLE, then no TTEs can have TD_W set. 	 * If the object containing the page is locked and the page is not 	 * VPO_BUSY, then PGA_WRITEABLE cannot be concurrently set. 	 */
+comment|/* 	 * If the page is not PGA_WRITEABLE, then no TTEs can have TD_W set. 	 * If the object containing the page is locked and the page is not 	 * exclusive busied, then PGA_WRITEABLE cannot be concurrently set. 	 */
 if|if
 condition|(
 operator|(
@@ -10367,7 +10351,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * set by another thread while the object is locked.  Thus, 	 * if PGA_WRITEABLE is clear, no page table entries need updating. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -10377,15 +10361,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|(
 name|m
@@ -10618,7 +10598,7 @@ operator|->
 name|pm_active
 argument_list|)
 expr_stmt|;
-name|atomic_store_rel_ptr
+name|atomic_store_acq_ptr
 argument_list|(
 operator|(
 name|uintptr_t

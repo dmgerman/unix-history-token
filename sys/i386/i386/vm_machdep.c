@@ -1344,10 +1344,8 @@ condition|)
 block|{
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
 comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -2726,10 +2724,8 @@ argument_list|)
 expr_stmt|;
 name|sf_base
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|nsfbufs
 operator|*
 name|PAGE_SIZE

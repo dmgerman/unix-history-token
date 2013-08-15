@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_status.c	10.9 (Berkeley) 5/15/96"
+literal|"$Id: v_status.c,v 10.10 2001/06/25 15:19:35 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -97,18 +91,14 @@ begin_function
 name|int
 name|v_status
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 operator|(
 name|void

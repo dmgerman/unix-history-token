@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delete.c	10.12 (Berkeley) 10/23/96"
+literal|"$Id: delete.c,v 10.18 2012/02/11 15:52:33 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -97,34 +103,21 @@ begin_function
 name|int
 name|del
 parameter_list|(
-name|sp
-parameter_list|,
-name|fm
-parameter_list|,
-name|tm
-parameter_list|,
-name|lmode
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|MARK
 modifier|*
 name|fm
-decl_stmt|,
-decl|*
+parameter_list|,
+name|MARK
+modifier|*
 name|tm
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|lmode
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|recno_t
 name|lno
@@ -138,7 +131,7 @@ name|nlen
 decl_stmt|,
 name|tlen
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|bp
 decl_stmt|,
@@ -280,6 +273,12 @@ operator|=
 name|tm
 operator|->
 name|cno
+operator|!=
+name|ENTIRE_LINE
+operator|&&
+name|tm
+operator|->
+name|cno
 operator|>=
 name|len
 condition|?
@@ -377,7 +376,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -390,7 +389,7 @@ operator|->
 name|cno
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|bp
 argument_list|,
@@ -464,7 +463,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -483,7 +482,7 @@ name|cno
 operator|!=
 literal|0
 condition|)
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|bp
 argument_list|,
@@ -494,7 +493,7 @@ operator|->
 name|cno
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|bp
 operator|+
@@ -596,7 +595,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -609,7 +608,7 @@ operator|+
 literal|256
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|bp
 argument_list|,
@@ -701,7 +700,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -714,7 +713,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|ADD_SPACE_RET
+name|ADD_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -725,7 +724,7 @@ argument_list|,
 name|nlen
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|bp
 operator|+
@@ -860,7 +859,7 @@ name|bp
 operator|!=
 name|NULL
 condition|)
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,
@@ -875,7 +874,7 @@ name|rval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

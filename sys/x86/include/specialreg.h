@@ -1228,6 +1228,108 @@ value|0xff000000
 end_define
 
 begin_comment
+comment|/*  * CPUID instruction 5 info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MON_MIN_SIZE
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* eax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MON_MAX_SIZE
+value|0x0000ffff
+end_define
+
+begin_comment
+comment|/* ebx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MON_MWAIT_EXT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* ecx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID5_MWAIT_INTRBREAK
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* ecx */
+end_comment
+
+begin_comment
+comment|/*  * MWAIT cpu power states.  Lower 4 bits are sub-states.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C0
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C1
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C2
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C3
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|MWAIT_C4
+value|0x30
+end_define
+
+begin_comment
+comment|/*  * MWAIT extensions.  */
+end_comment
+
+begin_comment
+comment|/* Interrupt breaks MWAIT even when masked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MWAIT_INTRBREAK
+value|0x00000001
+end_define
+
+begin_comment
 comment|/*  * CPUID instruction 6 ecx info  */
 end_comment
 

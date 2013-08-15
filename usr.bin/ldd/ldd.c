@@ -95,36 +95,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_32BIT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LD_
-value|"LD_32_"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LD_
-value|"LD_"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * 32-bit ELF data structures can only be used if the system header[s] declare  * them.  There is no official macro for determining whether they are declared,  * so check for the existence of one of the 32-macros defined in elf(5).  */
 end_comment
@@ -145,6 +115,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|LDD_SETENV
+parameter_list|(
+name|name
+parameter_list|,
+name|value
+parameter_list|,
+name|overwrite
+parameter_list|)
+value|do {		\ 	setenv("LD_" name, value, overwrite);		\ 	setenv("LD_32_" name, value, overwrite);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LDD_UNSETENV
+parameter_list|(
+name|name
+parameter_list|)
+value|do {		\ 	unsetenv("LD_" name);		\ 	unsetenv("LD_32_" name);	\ } while (0)
+end_define
 
 begin_function_decl
 specifier|static
@@ -274,9 +268,8 @@ name|rval
 decl_stmt|,
 name|status
 decl_stmt|;
-name|unsetenv
+name|LDD_UNSETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS"
 argument_list|)
 expr_stmt|;
@@ -510,9 +503,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|setenv
+name|LDD_SETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS"
 argument_list|,
 literal|"yes"
@@ -885,9 +877,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* ld.so magic */
-name|setenv
+name|LDD_SETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS"
 argument_list|,
 literal|"yes"
@@ -901,9 +892,8 @@ name|fmt1
 operator|!=
 name|NULL
 condition|)
-name|setenv
+name|LDD_SETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS_FMT1"
 argument_list|,
 name|fmt1
@@ -917,9 +907,8 @@ name|fmt2
 operator|!=
 name|NULL
 condition|)
-name|setenv
+name|LDD_SETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS_FMT2"
 argument_list|,
 name|fmt2
@@ -927,9 +916,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|setenv
+name|LDD_SETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS_PROGNAME"
 argument_list|,
 operator|*
@@ -942,9 +930,8 @@ if|if
 condition|(
 name|aflag
 condition|)
-name|setenv
+name|LDD_SETENV
 argument_list|(
-name|LD_
 literal|"TRACE_LOADED_OBJECTS_ALL"
 argument_list|,
 literal|"1"

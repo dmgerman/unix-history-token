@@ -15576,13 +15576,17 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|PAGE_SIZE
 operator|*
 literal|2
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -15593,7 +15597,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"kmem_alloc returned 0"
+literal|"kmem_malloc returned 0"
 argument_list|)
 expr_stmt|;
 comment|/* Put the problematic entry (#6) at the end of the lower page. */
@@ -15649,11 +15653,9 @@ name|idt
 operator|=
 name|new_idt
 expr_stmt|;
-if|if
-condition|(
-name|vm_map_protect
+name|pmap_protect
 argument_list|(
-name|kernel_map
+name|kernel_pmap
 argument_list|,
 name|tmp
 argument_list|,
@@ -15662,15 +15664,6 @@ operator|+
 name|PAGE_SIZE
 argument_list|,
 name|VM_PROT_READ
-argument_list|,
-name|FALSE
-argument_list|)
-operator|!=
-name|KERN_SUCCESS
-condition|)
-name|panic
-argument_list|(
-literal|"vm_map_protect failed"
 argument_list|)
 expr_stmt|;
 block|}

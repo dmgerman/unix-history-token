@@ -3798,13 +3798,17 @@ operator|(
 name|char
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|dpcpu
@@ -3813,11 +3817,15 @@ operator|(
 name|void
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|DPCPU_SIZE
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* setup a vector to our boot code */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.173 2013/06/05 03:59:43 sjg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.173 2013/06/05 03:59:43 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.173 2013/06/05 03:59:43 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -819,6 +819,15 @@ comment|/* last component of shell */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|shellErrFlag
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -1041,7 +1050,7 @@ parameter_list|,
 name|gn
 parameter_list|)
 define|\
-value|if (maxJobs != 1) \ 	    (void)fprintf(fp, TARG_FMT, targPrefix, gn->name)
+value|if (maxJobs != 1&& targPrefix&& *targPrefix) \ 	    (void)fprintf(fp, TARG_FMT, targPrefix, gn->name)
 end_define
 
 begin_decl_stmt
@@ -7254,6 +7263,110 @@ operator|=
 literal|""
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|commandShell
+operator|->
+name|hasErrCtl
+operator|&&
+operator|*
+name|commandShell
+operator|->
+name|exit
+condition|)
+block|{
+if|if
+condition|(
+name|shellErrFlag
+operator|&&
+name|strcmp
+argument_list|(
+name|commandShell
+operator|->
+name|exit
+argument_list|,
+operator|&
+name|shellErrFlag
+index|[
+literal|1
+index|]
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|shellErrFlag
+argument_list|)
+expr_stmt|;
+name|shellErrFlag
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|shellErrFlag
+condition|)
+block|{
+name|int
+name|n
+init|=
+name|strlen
+argument_list|(
+name|commandShell
+operator|->
+name|exit
+argument_list|)
+operator|+
+literal|2
+decl_stmt|;
+name|shellErrFlag
+operator|=
+name|bmake_malloc
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|shellErrFlag
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|shellErrFlag
+argument_list|,
+name|n
+argument_list|,
+literal|"-%s"
+argument_list|,
+name|commandShell
+operator|->
+name|exit
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|shellErrFlag
+condition|)
+block|{
+name|free
+argument_list|(
+name|shellErrFlag
+argument_list|)
+expr_stmt|;
+name|shellErrFlag
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7349,6 +7462,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|Job_SetPrefix
+argument_list|()
+expr_stmt|;
 comment|/* Allocate space for all the job info */
 name|job_table
 operator|=
@@ -8579,6 +8695,10 @@ operator|=
 name|newShell
 expr_stmt|;
 block|}
+comment|/* this will take care of shellErrFlag */
+name|Shell_Init
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(

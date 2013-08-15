@@ -33,6 +33,12 @@ name|vm_map
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vmem
+struct_decl|;
+end_struct_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -60,7 +66,7 @@ name|void
 name|memguard_init
 parameter_list|(
 name|struct
-name|vm_map
+name|vmem
 modifier|*
 parameter_list|)
 function_decl|;

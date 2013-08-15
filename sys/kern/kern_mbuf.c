@@ -252,15 +252,7 @@ name|physmem
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|vm_map_max
-argument_list|(
-name|kmem_map
-argument_list|)
-operator|-
-name|vm_map_min
-argument_list|(
-name|kmem_map
-argument_list|)
+name|vm_kmem_size
 argument_list|)
 expr_stmt|;
 name|maxmbufmem
@@ -1662,7 +1654,7 @@ operator|*
 operator|)
 name|kmem_alloc_contig
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|bytes
 argument_list|,

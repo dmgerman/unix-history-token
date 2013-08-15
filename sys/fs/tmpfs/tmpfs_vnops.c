@@ -2020,7 +2020,7 @@ argument_list|(
 name|tobj
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The kern_sendfile() code calls vn_rdwr() with the page 	 * soft-busied.  Ignore the soft-busy state here. Parallel 	 * reads of the page content from disk are prevented by 	 * VPO_BUSY. 	 * 	 * Although the tmpfs vnode lock is held here, it is 	 * nonetheless safe to sleep waiting for a free page.  The 	 * pageout daemon does not need to acquire the tmpfs vnode 	 * lock to page out tobj's pages because tobj is a OBJT_SWAP 	 * type object. 	 */
+comment|/* 	 * Parallel reads of the page content from disk are prevented 	 * by exclusive busy. 	 * 	 * Although the tmpfs vnode lock is held here, it is 	 * nonetheless safe to sleep waiting for a free page.  The 	 * pageout daemon does not need to acquire the tmpfs vnode 	 * lock to page out tobj's pages because tobj is a OBJT_SWAP 	 * type object. 	 */
 name|m
 operator|=
 name|vm_page_grab
@@ -2032,10 +2032,6 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
-operator||
-name|VM_ALLOC_IGN_SBUSY
-operator||
-name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2047,11 +2043,6 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm_pager_has_page
@@ -2175,12 +2166,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
+block|}
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_lock
 argument_list|(
 name|m
@@ -2588,8 +2579,6 @@ name|idx
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
-name|VM_ALLOC_NOBUSY
-operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
@@ -2602,11 +2591,6 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|vm_page_busy
-argument_list|(
-name|tpg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm_pager_has_page
@@ -2730,12 +2714,12 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
+block|}
+name|vm_page_xunbusy
 argument_list|(
 name|tpg
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_lock
 argument_list|(
 name|tpg

@@ -8148,7 +8148,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_expire
 operator|>
-name|time_second
+name|time_uptime
 condition|)
 name|ltime
 operator|=
@@ -8160,7 +8160,7 @@ name|ia6_lifetime
 operator|.
 name|ia6t_expire
 operator|-
-name|time_second
+name|time_uptime
 argument_list|)
 expr_stmt|;
 else|else

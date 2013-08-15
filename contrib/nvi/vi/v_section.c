@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_section.c	10.7 (Berkeley) 3/6/96"
+literal|"$Id: v_section.c,v 10.10 2001/06/25 15:19:35 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,18 +101,14 @@ begin_function
 name|int
 name|v_sectionf
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|cnt
@@ -122,10 +118,11 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|list
 decl_stmt|,
@@ -303,6 +300,7 @@ index|]
 operator|==
 literal|'{'
 operator|||
+operator|(
 name|ISMOTION
 argument_list|(
 name|vp
@@ -314,6 +312,7 @@ literal|0
 index|]
 operator|==
 literal|'}'
+operator|)
 condition|)
 block|{
 if|if
@@ -411,6 +410,7 @@ literal|1
 index|]
 operator|&&
 operator|(
+operator|(
 name|lp
 index|[
 literal|1
@@ -421,6 +421,7 @@ operator|&&
 name|len
 operator|==
 literal|2
+operator|)
 operator|||
 name|lp
 index|[
@@ -609,18 +610,14 @@ begin_function
 name|int
 name|v_sectionb
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -630,10 +627,11 @@ name|cnt
 decl_stmt|,
 name|lno
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|list
 decl_stmt|,
@@ -828,6 +826,7 @@ literal|1
 index|]
 operator|&&
 operator|(
+operator|(
 name|lp
 index|[
 literal|1
@@ -838,6 +837,7 @@ operator|&&
 name|len
 operator|==
 literal|2
+operator|)
 operator|||
 name|lp
 index|[

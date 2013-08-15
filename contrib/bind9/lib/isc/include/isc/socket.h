@@ -2115,7 +2115,7 @@ name|HAVE_LIBXML2
 end_ifdef
 
 begin_function_decl
-name|void
+name|int
 name|isc_socketmgr_renderxml
 parameter_list|(
 name|isc_socketmgr_t

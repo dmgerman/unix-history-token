@@ -365,9 +365,11 @@ name|char
 modifier|*
 name|params
 parameter_list|,
-name|int
+specifier|const
+name|apu_err_t
 modifier|*
-name|rc
+modifier|*
+name|result
 parameter_list|)
 block|{
 name|CRYPTO_malloc_init

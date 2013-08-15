@@ -953,9 +953,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|TW_UINT32
-name|command
-decl_stmt|;
 name|TW_INT32
 name|bar_num
 decl_stmt|;
@@ -1173,71 +1170,10 @@ argument_list|,
 literal|"TWA driver version"
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we are going to be able to talk to this board. */
-name|command
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|command
-operator|&
-name|PCIM_CMD_PORTEN
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|tw_osli_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"error = %d"
-argument_list|,
-name|TW_CL_SEVERITY_ERROR_STRING
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_FREEBSD_DRIVER
-argument_list|,
-literal|0x2001
-argument_list|,
-literal|"Register window not available"
-argument_list|,
-name|ENXIO
-argument_list|)
-expr_stmt|;
-name|tw_osli_free_resources
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Force the busmaster enable bit on, in case the BIOS forgot. */
-name|command
-operator||=
-name|PCIM_CMD_BUSMASTEREN
-expr_stmt|;
-name|pci_write_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|command
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Allocate the PCI register window. */

@@ -1776,7 +1776,7 @@ condition|)
 return|return
 name|rv
 return|;
-name|apr_pool_cleanup_register
+name|apr_pool_pre_cleanup_register
 argument_list|(
 name|tp
 operator|->
@@ -1785,8 +1785,6 @@ argument_list|,
 name|tp
 argument_list|,
 name|thread_pool_cleanup
-argument_list|,
-name|apr_pool_cleanup_null
 argument_list|)
 expr_stmt|;
 while|while
@@ -1900,17 +1898,15 @@ end_macro
 
 begin_block
 block|{
-return|return
-name|apr_pool_cleanup_run
+name|apr_pool_destroy
 argument_list|(
 name|me
 operator|->
 name|pool
-argument_list|,
-name|me
-argument_list|,
-name|thread_pool_cleanup
 argument_list|)
+expr_stmt|;
+return|return
+name|APR_SUCCESS
 return|;
 block|}
 end_block

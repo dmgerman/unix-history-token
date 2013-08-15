@@ -3119,13 +3119,6 @@ modifier|*
 name|rs
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 specifier|static
 specifier|const
 name|int
@@ -3159,7 +3152,7 @@ name|rs
 operator|->
 name|rs_nrates
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -3175,7 +3168,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|rates
 argument_list|)
@@ -3247,9 +3240,6 @@ block|}
 return|return
 literal|1
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -8678,16 +8668,6 @@ name|IEEE80211_S_RUN
 condition|)
 block|{
 comment|/* 		 * OACTIVE may be set on the vap if the upper layer 		 * tried to transmit (e.g. IPv6 NDP) before we reach 		 * RUN state.  Clear it and restart xmit. 		 * 		 * Note this can also happen as a result of SLEEP->RUN 		 * (i.e. coming out of power save mode). 		 */
-name|IF_LOCK
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
 name|vap
 operator|->
 name|iv_ifp
@@ -8697,24 +8677,7 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-name|IF_UNLOCK
-argument_list|(
-operator|&
-name|vap
-operator|->
-name|iv_ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
-comment|/* 		 * XXX Kick-start a VAP queue - this should be a method, 		 * not if_start()! 		 */
-name|if_start
-argument_list|(
-name|vap
-operator|->
-name|iv_ifp
-argument_list|)
-expr_stmt|;
+comment|/* 		 * XXX TODO Kick-start a VAP queue - this should be a method! 		 */
 comment|/* bring up any vaps waiting on us */
 name|wakeupwaiting
 argument_list|(
@@ -8736,24 +8699,7 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-comment|/* XXX NB: cast for altq */
-name|ieee80211_flush_ifq
-argument_list|(
-operator|(
-expr|struct
-name|ifqueue
-operator|*
-operator|)
-operator|&
-name|ic
-operator|->
-name|ic_ifp
-operator|->
-name|if_snd
-argument_list|,
-name|vap
-argument_list|)
-expr_stmt|;
+comment|/* 		 * XXX TODO: ic/vap queue flush 		 */
 block|}
 name|done
 label|:

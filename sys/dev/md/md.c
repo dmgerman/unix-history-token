@@ -4156,7 +4156,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4289,7 +4289,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4400,7 +4400,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4446,7 +4446,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)

@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_join.c	10.10 (Berkeley) 9/15/96"
+literal|"$Id: ex_join.c,v 10.17 2004/03/16 14:14:04 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -97,18 +103,14 @@ begin_function
 name|int
 name|ex_join
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|from
@@ -126,20 +128,25 @@ name|tlen
 decl_stmt|;
 name|int
 name|echar
+init|=
+literal|0
 decl_stmt|,
 name|extra
 decl_stmt|,
 name|first
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|bp
 decl_stmt|,
 modifier|*
-name|p
-decl_stmt|,
-modifier|*
 name|tbp
+init|=
+name|NULL
+decl_stmt|;
+name|CHAR_T
+modifier|*
+name|p
 decl_stmt|;
 name|NEEDFILE
 argument_list|(
@@ -193,7 +200,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -207,36 +214,18 @@ expr_stmt|;
 comment|/* 	 * The count for the join command was off-by-one, 	 * historically, to other counts for other commands. 	 */
 if|if
 condition|(
-name|FL_ISSET
+name|F_ISSET
 argument_list|(
 name|cmdp
-operator|->
-name|iflags
 argument_list|,
-name|E_C_COUNT
+name|E_ADDR_DEF
 argument_list|)
-condition|)
-operator|++
+operator|||
 name|cmdp
 operator|->
-name|addr2
-operator|.
-name|lno
-expr_stmt|;
-comment|/* 	 * If only a single address specified, or, the same address 	 * specified twice, the from/two addresses will be the same. 	 */
-if|if
-condition|(
-name|cmdp
-operator|->
-name|addr1
-operator|.
-name|lno
+name|addrcnt
 operator|==
-name|cmdp
-operator|->
-name|addr2
-operator|.
-name|lno
+literal|1
 condition|)
 operator|++
 name|cmdp
@@ -327,7 +316,7 @@ name|len
 operator|+
 literal|2
 expr_stmt|;
-name|ADD_SPACE_RET
+name|ADD_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -403,9 +392,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|strchr
+name|STRCHR
+argument_list|(
+name|L
 argument_list|(
 literal|".?!"
+argument_list|)
 argument_list|,
 name|echar
 argument_list|)
@@ -461,7 +453,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|tbp
 argument_list|,
@@ -610,7 +602,7 @@ condition|)
 block|{
 name|err
 label|:
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,
@@ -625,7 +617,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,

@@ -243,10 +243,6 @@ parameter_list|(
 name|struct
 name|sysctl_ctx_list
 modifier|*
-parameter_list|,
-name|struct
-name|sysctl_oid
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -263,7 +259,7 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|struct
-name|random_systat
+name|random_adaptor
 name|random_yarrow
 decl_stmt|;
 end_decl_stmt

@@ -209,6 +209,20 @@ name|PWMSS1_CLK
 block|,
 name|PWMSS2_CLK
 block|,
+comment|/* Mailbox modules */
+name|MAILBOX0_CLK
+init|=
+literal|1500
+block|,
+comment|/* Spinlock modules */
+name|SPINLOCK0_CLK
+init|=
+literal|1600
+block|,
+name|PRUSS_CLK
+init|=
+literal|1700
+block|,
 name|INVALID_CLK_IDENT
 block|}
 name|clk_ident_t

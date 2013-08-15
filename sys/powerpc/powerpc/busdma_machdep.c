@@ -2263,7 +2263,7 @@ operator|*
 operator|)
 name|kmem_alloc_contig
 argument_list|(
-name|kernel_map
+name|kmem_arena
 argument_list|,
 name|dmat
 operator|->
@@ -2420,7 +2420,7 @@ expr_stmt|;
 else|else
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kmem_arena
 argument_list|,
 operator|(
 name|vm_offset_t

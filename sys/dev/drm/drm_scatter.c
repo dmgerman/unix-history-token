@@ -137,7 +137,7 @@ name|vaddr
 operator|=
 name|kmem_alloc_attr
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|size
 argument_list|,
@@ -351,7 +351,7 @@ literal|0
 condition|)
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|entry
 operator|->

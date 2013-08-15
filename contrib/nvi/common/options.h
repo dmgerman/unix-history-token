@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)options.h	10.19 (Berkeley) 10/10/96  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: options.h,v 10.21 2012/02/10 20:24:58 zy Exp $  */
 end_comment
 
 begin_comment
@@ -305,7 +305,7 @@ begin_struct
 struct|struct
 name|_optlist
 block|{
-name|char
+name|CHAR_T
 modifier|*
 name|name
 decl_stmt|;
@@ -380,6 +380,11 @@ directive|define
 name|OPT_NOZERO
 value|0x040
 comment|/* Option may not be set to 0. */
+define|#
+directive|define
+name|OPT_PAIRS
+value|0x080
+comment|/* String with even length. */
 name|u_int8_t
 name|flags
 decl_stmt|;

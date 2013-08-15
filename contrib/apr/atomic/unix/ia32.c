@@ -349,7 +349,7 @@ operator|==
 literal|8
 asm|asm
 specifier|volatile
-asm|("xchgq %q2, %1"                   : "=a" (prev), "+m" (*mem)                   : "r" ((unsigned long)with));
+asm|("xchgq %q2, %1"                   : "=a" (prev), "+m" (*mem)                   : "0" (with));
 else|#
 directive|else
 error|#

@@ -871,6 +871,9 @@ argument_list|)
 name|pv_list
 expr_stmt|;
 name|int
+name|pv_gen
+decl_stmt|;
+name|int
 name|pat_mode
 decl_stmt|;
 block|}
