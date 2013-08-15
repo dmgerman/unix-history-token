@@ -285,26 +285,9 @@ name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
 comment|/* now setup the infrastructure to talk to the device */
-name|pci_write_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|1
-argument_list|)
-operator||
-name|PCIM_CMD_MEMEN
-operator||
-name|PCIM_CMD_BUSMASTEREN
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|sc
