@@ -927,16 +927,6 @@ operator|(
 name|FNM_NOMATCH
 operator|)
 return|;
-if|if
-condition|(
-name|pclen
-operator|==
-literal|0
-condition|)
-name|pc
-operator|=
-literal|'\\'
-expr_stmt|;
 name|pattern
 operator|+=
 name|pclen
