@@ -7763,10 +7763,6 @@ name|CPUID_CX8
 operator|)
 operator|!=
 literal|0
-operator|||
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_RISE
 condition|)
 block|{
 name|atomic_load_acq_64
