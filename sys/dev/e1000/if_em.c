@@ -13491,8 +13491,6 @@ name|dev
 decl_stmt|;
 name|int
 name|val
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	** Setup MSI/X for Hartwell: tests have shown 	** use of two queues to be unstable, and to 	** provide no great gain anyway, so we simply 	** seperate the interrupts and use a single queue. 	*/
 if|if
@@ -13543,10 +13541,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|adapter
 operator|->
 name|msix_mem
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* May not be enabled */
@@ -13570,31 +13569,18 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* We only need 3 vectors */
+comment|/* We only need/want 3 vectors */
 if|if
 condition|(
 name|val
-operator|>
+operator|>=
 literal|3
 condition|)
 name|val
 operator|=
 literal|3
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|val
-operator|!=
-literal|3
-operator|)
-operator|&&
-operator|(
-name|val
-operator|!=
-literal|5
-operator|)
-condition|)
+else|else
 block|{
 name|bus_release_resource
 argument_list|(
@@ -13656,28 +13642,22 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|val
 operator|)
 return|;
 block|}
+comment|/* Fall through to MSI */
+block|}
 name|msi
 label|:
 name|val
 operator|=
-name|pci_msi_count
-argument_list|(
-name|dev
-argument_list|)
+literal|1
 expr_stmt|;
 if|if
 condition|(
-name|val
-operator|==
-literal|1
-operator|&&
 name|pci_alloc_msi
 argument_list|(
 name|dev
@@ -13689,12 +13669,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|adapter
-operator|->
-name|msix
-operator|=
-literal|1
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|adapter
