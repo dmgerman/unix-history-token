@@ -4662,6 +4662,21 @@ name|pq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute the number of pages we want to try to move from the 	 * active queue to the inactive queue. 	 */
+name|pq
+operator|=
+operator|&
+name|vmd
+operator|->
+name|vmd_pagequeues
+index|[
+name|PQ_ACTIVE
+index|]
+expr_stmt|;
+name|vm_pagequeue_lock
+argument_list|(
+name|pq
+argument_list|)
+expr_stmt|;
 name|pcount
 operator|=
 name|pq
@@ -4707,21 +4722,6 @@ name|pcount
 expr_stmt|;
 block|}
 comment|/* 	 * Scan the active queue for things we can deactivate. We nominally 	 * track the per-page activity counter and use it to locate 	 * deactivation candidates. 	 */
-name|pq
-operator|=
-operator|&
-name|vmd
-operator|->
-name|vmd_pagequeues
-index|[
-name|PQ_ACTIVE
-index|]
-expr_stmt|;
-name|vm_pagequeue_lock
-argument_list|(
-name|pq
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|TAILQ_FIRST
