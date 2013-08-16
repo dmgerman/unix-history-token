@@ -252,6 +252,17 @@ name|CMD_RETRIES
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|CARD_ID_FREQUENCY
+value|400000
+end_define
+
+begin_comment
+comment|/* Spec requires 400KHz max during ID phase. */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -3228,12 +3239,7 @@ name|mmcbr_set_clock
 argument_list|(
 name|dev
 argument_list|,
-name|mmcbr_get_f_min
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
+name|CARD_ID_FREQUENCY
 argument_list|)
 expr_stmt|;
 name|mmcbr_set_timing
@@ -9714,10 +9720,7 @@ name|mmcbr_set_clock
 argument_list|(
 name|dev
 argument_list|,
-name|mmcbr_get_f_min
-argument_list|(
-name|dev
-argument_list|)
+name|CARD_ID_FREQUENCY
 argument_list|)
 expr_stmt|;
 name|mmcbr_update_ios
@@ -9883,8 +9886,6 @@ name|nkid
 decl_stmt|,
 name|i
 decl_stmt|,
-name|f_min
-decl_stmt|,
 name|f_max
 decl_stmt|;
 name|device_t
@@ -9896,15 +9897,6 @@ name|mmc_ivars
 modifier|*
 name|ivar
 decl_stmt|;
-name|f_min
-operator|=
-name|mmcbr_get_f_min
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 name|f_max
 operator|=
 name|mmcbr_get_f_max
