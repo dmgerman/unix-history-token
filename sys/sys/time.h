@@ -1045,6 +1045,13 @@ name|CLOCK_THREAD_CPUTIME_ID
 value|14
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLOCK_PROCESS_CPUTIME_ID
+value|15
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1077,6 +1084,31 @@ end_define
 begin_comment
 comment|/* absolute timer */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|CPUCLOCK_WHICH_PID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUCLOCK_WHICH_TID
+value|1
+end_define
 
 begin_endif
 endif|#
@@ -1482,6 +1514,20 @@ modifier|*
 parameter_list|,
 name|struct
 name|timeval
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|clock_getcpuclockid2
+parameter_list|(
+name|id_t
+parameter_list|,
+name|int
+parameter_list|,
+name|clockid_t
 modifier|*
 parameter_list|)
 function_decl|;

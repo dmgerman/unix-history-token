@@ -6405,13 +6405,16 @@ block|}
 block|,
 comment|/* 246 = nosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|clock_getcpuclockid2_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sys_clock_getcpuclockid2
 block|,
 name|AUE_NULL
 block|,
@@ -6423,10 +6426,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 247 = nosys */
+comment|/* 247 = clock_getcpuclockid2 */
 block|{
 literal|0
 block|,

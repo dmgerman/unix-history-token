@@ -1304,6 +1304,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FREEBSD32_SYS_clock_getcpuclockid2
+value|247
+end_define
+
+begin_define
+define|#
+directive|define
 name|FREEBSD32_SYS_minherit
 value|250
 end_define

@@ -1341,6 +1341,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_clock_getcpuclockid2
+value|247
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYS_ntp_gettime
 value|248
 end_define

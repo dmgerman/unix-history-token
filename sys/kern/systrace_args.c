@@ -6979,6 +6979,58 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+block|{
+name|struct
+name|clock_getcpuclockid2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* id_t */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|which
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|clock_id
+expr_stmt|;
+comment|/* clockid_t * */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
 comment|/* ntp_gettime */
 case|case
 literal|248
@@ -22759,6 +22811,44 @@ case|:
 name|p
 operator|=
 literal|"struct timespec *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* clock_getcpuclockid2 */
+case|case
+literal|247
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"id_t"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"clockid_t *"
 expr_stmt|;
 break|break;
 default|default:

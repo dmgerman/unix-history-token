@@ -225,6 +225,43 @@ begin_comment
 comment|/* __POSIX_VISIBLE>= 199309 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__pid_t
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_PID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* These macros are also in sys/time.h. */
 end_comment
@@ -822,6 +859,31 @@ end_endif
 begin_comment
 comment|/* __POSIX_VISIBLE>= 199309 */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_function_decl
+name|int
+name|clock_getcpuclockid
+parameter_list|(
+name|pid_t
+parameter_list|,
+name|clockid_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

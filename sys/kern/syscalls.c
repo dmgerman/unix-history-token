@@ -752,9 +752,9 @@ comment|/* 245 = nosys */
 literal|"#246"
 block|,
 comment|/* 246 = nosys */
-literal|"#247"
+literal|"clock_getcpuclockid2"
 block|,
-comment|/* 247 = nosys */
+comment|/* 247 = clock_getcpuclockid2 */
 literal|"ntp_gettime"
 block|,
 comment|/* 248 = ntp_gettime */
