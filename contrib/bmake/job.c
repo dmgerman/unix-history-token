@@ -312,6 +312,26 @@ value|static
 end_define
 
 begin_comment
+comment|/*  * FreeBSD: traditionally .MAKE is not required to  * pass jobs queue to sub-makes.  * Use .MAKE.ALWAYS_PASS_JOB_QUEUE=no to disable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_ALWAYS_PASS_JOB_QUEUE
+value|".MAKE.ALWAYS_PASS_JOB_QUEUE"
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Always_pass_job_queue
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * error handling variables  */
 end_comment
 
@@ -4667,6 +4687,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Always_pass_job_queue
+operator|||
+operator|(
 name|job
 operator|->
 name|node
@@ -4674,6 +4697,7 @@ operator|->
 name|type
 operator|&
 name|OP_MAKE
+operator|)
 condition|)
 block|{
 comment|/* 		 * Pass job token pipe to submakes. 		 */
@@ -7511,6 +7535,15 @@ expr_stmt|;
 name|lastNode
 operator|=
 name|NULL
+expr_stmt|;
+name|Always_pass_job_queue
+operator|=
+name|getBoolean
+argument_list|(
+name|MAKE_ALWAYS_PASS_JOB_QUEUE
+argument_list|,
+name|Always_pass_job_queue
+argument_list|)
 expr_stmt|;
 comment|/*      * There is a non-zero chance that we already have children.      * eg after 'make -f-<<EOF'      * Since their termination causes a 'Child (pid) not in table' message,      * Collect the status of any that are already dead, and suppress the      * error message if there are any undead ones.      */
 for|for
