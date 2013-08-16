@@ -531,6 +531,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_CTRL_DMA_MASK
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL_8BITBUS
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_CTRL_CARD_DET
 value|0x40
 end_define
@@ -946,6 +960,13 @@ define|#
 directive|define
 name|SDHCI_MAX_BLOCK_SHIFT
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CAN_DO_8BITBUS
+value|0x00040000
 end_define
 
 begin_define
