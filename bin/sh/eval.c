@@ -484,10 +484,6 @@ name|loopnest
 operator|=
 literal|0
 expr_stmt|;
-name|funcnest
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 

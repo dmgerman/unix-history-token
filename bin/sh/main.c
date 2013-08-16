@@ -705,12 +705,6 @@ expr_stmt|;
 name|resetinput
 argument_list|()
 expr_stmt|;
-name|resetparser
-argument_list|()
-expr_stmt|;
-name|resetredir
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

@@ -903,6 +903,10 @@ name|tokpushback
 operator|=
 literal|0
 expr_stmt|;
+name|checkkwd
+operator|=
+literal|0
+expr_stmt|;
 name|doprompt
 operator|=
 name|interact
@@ -8936,24 +8940,6 @@ end_function
 begin_comment
 comment|/* end of readtoken */
 end_comment
-
-begin_function
-name|void
-name|resetparser
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|tokpushback
-operator|=
-literal|0
-expr_stmt|;
-name|checkkwd
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Returns true if the text contains nothing to expand (no dollar signs  * or backquotes).  */
