@@ -335,6 +335,45 @@ begin_comment
 comment|/* prefault mapping for reading */
 end_comment
 
+begin_comment
+comment|/*  * Request specific alignment (n == log2 of the desired alignment).  *  * MAP_ALIGNED_SUPER requests optimal superpage alignment, but does  * not enforce a specific alignment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_ALIGNED
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)<< MAP_ALIGNMENT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ALIGNMENT_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ALIGNMENT_MASK
+value|MAP_ALIGNED(0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ALIGNED_SUPER
+value|MAP_ALIGNED(1)
+end_define
+
+begin_comment
+comment|/* align on a superpage */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -277,7 +277,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|VMFS_ALIGNED_SPACE
+name|VMFS_SUPER_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
