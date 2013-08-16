@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012, Joyent, Inc.  All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_CTF_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -480,6 +477,10 @@ name|ctf_type_t
 name|dtd_data
 decl_stmt|;
 comment|/* type node (see<sys/ctf.h>) */
+name|int
+name|dtd_ref
+decl_stmt|;
+comment|/* recfount for dyanmic types */
 union|union
 block|{
 name|ctf_list_t
@@ -886,7 +887,13 @@ name|ECTF_DUPMEMBER
 block|,
 comment|/* duplicate member name definition */
 name|ECTF_CONFLICT
+block|,
 comment|/* conflicting type definition present */
+name|ECTF_REFERENCED
+block|,
+comment|/* type has outstanding references */
+name|ECTF_NOTDYN
+comment|/* type is not a dynamic type */
 block|}
 enum|;
 specifier|extern
