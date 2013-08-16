@@ -8,6 +8,10 @@ comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
+comment|/*  * Copyright (c) 2012, Joyent, Inc.  All rights reserved.  */
+end_comment
+
+begin_comment
 comment|/*  * This header file defines the interfaces available from the CTF debugger  * library, libctf, and an equivalent kernel module.  This API can be used by  * a debugger to operate on data in the Compact ANSI-C Type Format (CTF).  * This is NOT a public interface, although it may eventually become one in  * the fullness of time after we gain more experience with the interfaces.  *  * In the meantime, be aware that any program linked with this API in this  * release of Solaris is almost guaranteed to break in the next release.  *  * In short, do not user this header file or the CTF routines for any purpose.  */
 end_comment
 
@@ -22,13 +26,6 @@ define|#
 directive|define
 name|_CTF_API_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -1069,6 +1066,16 @@ parameter_list|,
 specifier|const
 name|ctf_arinfo_t
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|ctf_delete_type
+parameter_list|(
+name|ctf_file_t
+modifier|*
+parameter_list|,
+name|ctf_id_t
 parameter_list|)
 function_decl|;
 specifier|extern
