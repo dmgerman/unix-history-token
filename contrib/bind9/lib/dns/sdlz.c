@@ -8453,7 +8453,7 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -8799,7 +8799,7 @@ name|origin
 operator|=
 name|dns_rootname
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b

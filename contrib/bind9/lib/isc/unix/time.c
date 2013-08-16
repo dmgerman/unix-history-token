@@ -148,6 +148,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|isc_interval_t
 name|zero_interval
 init|=
@@ -160,8 +161,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|isc_interval_t
 modifier|*
+specifier|const
 name|isc_interval_zero
 init|=
 operator|&
@@ -397,6 +400,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|isc_time_t
 name|epoch
 init|=
@@ -409,8 +413,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|isc_time_t
 modifier|*
+specifier|const
 name|isc_time_epoch
 init|=
 operator|&

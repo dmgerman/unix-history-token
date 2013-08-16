@@ -294,6 +294,13 @@ name|DNS_RDATA_CHECKMXFAIL
 value|DNS_NAME_CHECKMXFAIL
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_RDATA_UNKNOWNESCAPE
+value|0x80000000
+end_define
+
 begin_comment
 comment|/***  *** Initialization  ***/
 end_comment

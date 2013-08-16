@@ -383,14 +383,14 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_TCP
-value|0x01
+value|0x001
 end_define
 
 begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_RA
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -401,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_PKTINFO
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -412,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_MULTICAST
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -423,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_WANTDNSSEC
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -434,7 +434,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_WANTNSID
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -451,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_FILTER_AAAA
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -462,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_FILTER_AAAA_RC
-value|0x80
+value|0x080
 end_define
 
 begin_comment
@@ -473,6 +473,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NS_CLIENTATTR_WANTAD
+value|0x100
+end_define
+
+begin_comment
+comment|/*%< want AD in response if possible */
+end_comment
 
 begin_decl_stmt
 specifier|extern

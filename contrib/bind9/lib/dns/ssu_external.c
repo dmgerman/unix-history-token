@@ -275,7 +275,7 @@ name|sun_family
 operator|=
 name|AF_UNIX
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|addr
 operator|.
