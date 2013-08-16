@@ -7772,7 +7772,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Card at relative address %d%s:\n"
+literal|"Card at relative address 0x%04x%s:\n"
 argument_list|,
 name|ivar
 operator|->
