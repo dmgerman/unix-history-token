@@ -279,13 +279,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|fo_sendfile_t
-name|vn_sendfile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|fileops
 name|vnops

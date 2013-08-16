@@ -1276,6 +1276,12 @@ name|invfo_sendfile
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|fo_sendfile_t
+name|vn_sendfile
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|finit
