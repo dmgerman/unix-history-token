@@ -674,6 +674,10 @@ name|CAPABILITY_MODE
 comment|/* 	 * In capability mode, lookups must be "strictly relative" (i.e. 	 * not an absolute path, and not containing '..' components) to 	 * a real file descriptor, not the pseudo-descriptor AT_FDCWD. 	 */
 if|if
 condition|(
+name|error
+operator|=
+literal|0
+operator|&&
 name|IN_CAPABILITY_MODE
 argument_list|(
 name|td
