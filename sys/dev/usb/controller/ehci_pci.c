@@ -530,7 +530,7 @@ case|case
 literal|0x005b10de
 case|:
 return|return
-literal|"NVIDIA nForce4 USB 2.0 controller"
+literal|"NVIDIA nForce CK804 USB 2.0 controller"
 return|;
 case|case
 literal|0x036d10de
