@@ -675,7 +675,7 @@ comment|/* 	 * In capability mode, lookups must be "strictly relative" (i.e. 	 *
 if|if
 condition|(
 name|error
-operator|=
+operator|==
 literal|0
 operator|&&
 name|IN_CAPABILITY_MODE
