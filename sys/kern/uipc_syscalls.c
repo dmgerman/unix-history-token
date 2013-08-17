@@ -800,12 +800,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|fo_sendfile_t
-name|vn_sendfile
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Convert a user file descriptor to a kernel file entry and check if required  * capability rights are present.  * A reference on the file entry is held upon returning.  */
 end_comment
