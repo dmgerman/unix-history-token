@@ -116,23 +116,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FAST_FPE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/acct.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -232,24 +215,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FAST_FPE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|want_resched
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|LIST_HEAD
@@ -1026,39 +991,6 @@ literal|"Undefined instruction in kernel.\n"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|FAST_FPE
-comment|/* Optimised exit code */
-block|{
-comment|/* 		 * Check for reschedule request, at the moment there is only 		 * 1 ast so this code should always be run 		 */
-if|if
-condition|(
-name|want_resched
-condition|)
-block|{
-comment|/* 			 * We are being preempted. 			 */
-name|preempt
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Invoke MI userret code */
-name|mi_userret
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|l->l_priority = l->l_usrpri;  		curcpu()->ci_schedstate.spc_curpriority = l->l_priority;
-endif|#
-directive|endif
-block|}
-else|#
-directive|else
 name|userret
 argument_list|(
 name|td
@@ -1066,8 +998,6 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
