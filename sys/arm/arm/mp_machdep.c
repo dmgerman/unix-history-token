@@ -152,7 +152,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 end_ifdef
 
 begin_include
@@ -867,7 +867,7 @@ name|td_pcb
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 name|pc
 operator|->
 name|pc_cpu

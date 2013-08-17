@@ -751,7 +751,7 @@ literal|0x0f
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 else|else
 block|{
 comment|/* check for special instructions */
@@ -785,7 +785,7 @@ comment|/* vfp / simd */
 block|}
 endif|#
 directive|endif
-comment|/* ARM_VFP_SUPPORT */
+comment|/* VFP */
 if|if
 condition|(
 operator|(

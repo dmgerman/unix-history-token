@@ -4270,7 +4270,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 name|PCPU_SET
 argument_list|(
 name|cpu
