@@ -62,16 +62,6 @@ parameter_list|)
 value|x
 end_define
 
-begin_define
-define|#
-directive|define
-name|PIC_GOT
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
 begin_endif
 endif|#
 directive|endif
