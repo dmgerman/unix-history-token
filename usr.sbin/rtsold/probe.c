@@ -781,6 +781,10 @@ expr|struct
 name|in6_pktinfo
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|CMSG_DATA
 argument_list|(
 name|cm
