@@ -177,6 +177,17 @@ value|(1<<12)
 end_define
 
 begin_comment
+comment|/* Hardware shifts the 136-bit response, don't do it in software. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_DONT_SHIFT_RESPONSE
+value|(1<<13)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
