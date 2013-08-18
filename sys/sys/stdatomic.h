@@ -1418,7 +1418,7 @@ name|success
 parameter_list|,
 name|failure
 parameter_list|)
-value|__extension__ ({			\ 	__typeof__(expected) __ep = (expected);				\ 	__typeof__(*__ep) __e = *__ep;					\ 	(void)(success); (void)(failure);				\ 	(*__ep = __sync_val_compare_and_swap(&(object)->__val,		\ 	    __e, desired)) == __e;					\ })
+value|__extension__ ({			\ 	__typeof__(expected) __ep = (expected);				\ 	__typeof__(*__ep) __e = *__ep;					\ 	(void)(success); (void)(failure);				\ 	(_Bool)((*__ep = __sync_val_compare_and_swap(&(object)->__val,	\ 	    __e, desired)) == __e);					\ })
 end_define
 
 begin_define
