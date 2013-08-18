@@ -684,10 +684,9 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: any ni ref held on stageq */
-comment|/* XXX better status? */
 return|return
 operator|(
-name|ENOBUFS
+literal|0
 operator|)
 return|;
 block|}
