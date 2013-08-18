@@ -17324,6 +17324,65 @@ literal|8
 expr_stmt|;
 break|break;
 block|}
+comment|/* freebsd32_cap_rights_limit */
+case|case
+literal|533
+case|:
+block|{
+name|struct
+name|freebsd32_cap_rights_limit_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|pad
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|rights1
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|rights2
+expr_stmt|;
+comment|/* uint32_t */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
 else|#
 directive|else
 comment|/* freebsd32_posix_fallocate */
@@ -17572,15 +17631,13 @@ literal|7
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* cap_rights_limit */
+comment|/* freebsd32_cap_rights_limit */
 case|case
 literal|533
 case|:
 block|{
 name|struct
-name|cap_rights_limit_args
+name|freebsd32_cap_rights_limit_args
 modifier|*
 name|p
 init|=
@@ -17603,16 +17660,28 @@ index|]
 operator|=
 name|p
 operator|->
-name|rights
+name|rights1
 expr_stmt|;
-comment|/* uint64_t */
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|rights2
+expr_stmt|;
+comment|/* uint32_t */
 operator|*
 name|n_args
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
@@ -30530,6 +30599,52 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+comment|/* freebsd32_cap_rights_limit */
+case|case
+literal|533
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 else|#
 directive|else
 comment|/* freebsd32_posix_fallocate */
@@ -30718,9 +30833,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* cap_rights_limit */
+comment|/* freebsd32_cap_rights_limit */
 case|case
 literal|533
 case|:
@@ -30742,7 +30855,15 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uint64_t"
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 default|default:
@@ -30750,6 +30871,8 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
@@ -37876,6 +37999,25 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+comment|/* freebsd32_cap_rights_limit */
+case|case
+literal|533
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 else|#
 directive|else
 comment|/* freebsd32_posix_fallocate */
@@ -37935,9 +38077,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* cap_rights_limit */
+comment|/* freebsd32_cap_rights_limit */
 case|case
 literal|533
 case|:
@@ -37956,6 +38096,8 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
