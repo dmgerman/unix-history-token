@@ -9851,6 +9851,12 @@ name|O_ACCMODE
 operator|)
 operator|==
 name|O_ACCMODE
+operator|||
+name|uap
+operator|->
+name|flags
+operator|&
+name|O_EXEC
 condition|)
 return|return
 operator|(
@@ -13479,6 +13485,12 @@ name|O_ACCMODE
 operator|)
 operator|==
 name|O_ACCMODE
+operator|||
+name|uap
+operator|->
+name|flags
+operator|&
+name|O_EXEC
 condition|)
 return|return
 operator|(
