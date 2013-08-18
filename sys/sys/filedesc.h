@@ -59,10 +59,6 @@ name|cap_rights_t
 name|fc_rights
 decl_stmt|;
 comment|/* per-descriptor capability rights */
-name|uint32_t
-name|fc_fcntls
-decl_stmt|;
-comment|/* per-descriptor allowed fcntls */
 name|u_long
 modifier|*
 name|fc_ioctls
@@ -72,6 +68,10 @@ name|int16_t
 name|fc_nioctls
 decl_stmt|;
 comment|/* fc_ioctls array size */
+name|uint32_t
+name|fc_fcntls
+decl_stmt|;
+comment|/* per-descriptor allowed fcntls */
 block|}
 struct|;
 end_struct
