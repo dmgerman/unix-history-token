@@ -17613,13 +17613,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
 block|{
 name|struct
-name|cap_ioctls_limit_args
+name|freebsd32_cap_ioctls_limit_args
 modifier|*
 name|p
 init|=
@@ -17647,7 +17647,7 @@ name|p
 operator|->
 name|cmds
 expr_stmt|;
-comment|/* const u_long * */
+comment|/* const uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -17665,13 +17665,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
 block|{
 name|struct
-name|cap_ioctls_get_args
+name|freebsd32_cap_ioctls_get_args
 modifier|*
 name|p
 init|=
@@ -17699,7 +17699,7 @@ name|p
 operator|->
 name|cmds
 expr_stmt|;
-comment|/* u_long * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -30750,7 +30750,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
@@ -30772,7 +30772,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const u_long *"
+literal|"const uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -30788,7 +30788,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
@@ -30810,7 +30810,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_long *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -37956,7 +37956,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
@@ -37975,7 +37975,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
