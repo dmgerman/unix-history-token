@@ -13022,6 +13022,8 @@ name|IAP_F_WM
 operator||
 name|IAP_F_SB
 operator||
+name|IAP_F_SBX
+operator||
 name|IAP_F_IB
 operator||
 name|IAP_F_IBX
@@ -13048,6 +13050,8 @@ operator||
 name|IAP_F_WM
 operator||
 name|IAP_F_SB
+operator||
+name|IAP_F_SBX
 operator||
 name|IAP_F_IB
 operator||
@@ -13076,6 +13080,8 @@ name|IAP_F_WM
 operator||
 name|IAP_F_SB
 operator||
+name|IAP_F_SBX
+operator||
 name|IAP_F_IB
 operator||
 name|IAP_F_IBX
@@ -13103,6 +13109,8 @@ name|IAP_F_WM
 operator||
 name|IAP_F_SB
 operator||
+name|IAP_F_SBX
+operator||
 name|IAP_F_IB
 operator||
 name|IAP_F_IBX
@@ -13127,6 +13135,16 @@ operator||
 name|IAP_F_I7
 operator||
 name|IAP_F_WM
+operator||
+name|IAP_F_SB
+operator||
+name|IAP_F_SBX
+operator||
+name|IAP_F_IB
+operator||
+name|IAP_F_IBX
+operator||
+name|IAP_F_HW
 argument_list|)
 block|,
 name|IAPDESCR
