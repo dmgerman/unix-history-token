@@ -30,7 +30,12 @@ end_include
 begin_if
 if|#
 directive|if
-name|__has_feature
+name|__has_extension
+argument_list|(
+name|c_atomic
+argument_list|)
+operator|||
+name|__has_extension
 argument_list|(
 name|cxx_atomic
 argument_list|)
