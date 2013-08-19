@@ -2280,6 +2280,8 @@ parameter_list|)
 block|{
 name|uint32_t
 name|caps
+decl_stmt|,
+name|freq
 decl_stmt|;
 name|int
 name|err
@@ -2548,9 +2550,7 @@ name|version
 operator|>=
 name|SDHCI_SPEC_300
 condition|)
-name|slot
-operator|->
-name|max_clk
+name|freq
 operator|=
 operator|(
 name|caps
@@ -2561,9 +2561,7 @@ operator|>>
 name|SDHCI_CLOCK_BASE_SHIFT
 expr_stmt|;
 else|else
-name|slot
-operator|->
-name|max_clk
+name|freq
 operator|=
 operator|(
 name|caps
@@ -2573,6 +2571,21 @@ operator|)
 operator|>>
 name|SDHCI_CLOCK_BASE_SHIFT
 expr_stmt|;
+if|if
+condition|(
+name|freq
+operator|!=
+literal|0
+condition|)
+name|slot
+operator|->
+name|max_clk
+operator|=
+name|freq
+operator|*
+literal|1000000
+expr_stmt|;
+comment|/* 	 * If the frequency wasn't in the capabilities and the hardware driver 	 * hasn't already set max_clk we're probably not going to work right 	 * with an assumption, so complain about it. 	 */
 if|if
 condition|(
 name|slot
@@ -2587,6 +2600,8 @@ operator|->
 name|max_clk
 operator|=
 name|SDHCI_DEFAULT_MAX_FREQ
+operator|*
+literal|1000000
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -2599,12 +2614,6 @@ name|SDHCI_DEFAULT_MAX_FREQ
 argument_list|)
 expr_stmt|;
 block|}
-name|slot
-operator|->
-name|max_clk
-operator|*=
-literal|1000000
-expr_stmt|;
 comment|/* Calculate timeout clock frequency. */
 if|if
 condition|(
@@ -2653,6 +2662,7 @@ operator|*=
 literal|1000
 expr_stmt|;
 block|}
+comment|/* 	 * If the frequency wasn't in the capabilities and the hardware driver 	 * hasn't already set timeout_clk we'll probably work okay using the 	 * max timeout, but still mention it. 	 */
 if|if
 condition|(
 name|slot
