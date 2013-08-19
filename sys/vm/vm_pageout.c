@@ -513,6 +513,22 @@ name|disable_swap_pageouts
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|lowmem_period
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lowmem_ticks
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -627,6 +643,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum active LRU update period"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lowmem_period
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|lowmem_period
+argument_list|,
+literal|0
+argument_list|,
+literal|"Low memory callback period"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3548,12 +3585,30 @@ decl_stmt|;
 name|boolean_t
 name|queues_locked
 decl_stmt|;
-comment|/* 	 * If we need to reclaim memory ask kernel caches to return 	 * some. 	 */
+comment|/* 	 * If we need to reclaim memory ask kernel caches to return 	 * some.  We rate limit to avoid thrashing. 	 */
 if|if
 condition|(
+name|vmd
+operator|==
+operator|&
+name|vm_dom
+index|[
+literal|0
+index|]
+operator|&&
 name|pass
 operator|>
 literal|0
+operator|&&
+name|lowmem_ticks
+operator|+
+operator|(
+name|lowmem_period
+operator|*
+name|hz
+operator|)
+operator|<
+name|ticks
 condition|)
 block|{
 comment|/* 		 * Decrease registered cache sizes. 		 */
@@ -3567,6 +3622,10 @@ expr_stmt|;
 comment|/* 		 * We do this explicitly after the caches have been 		 * drained above. 		 */
 name|uma_reclaim
 argument_list|()
+expr_stmt|;
+name|lowmem_ticks
+operator|=
+name|ticks
 expr_stmt|;
 block|}
 comment|/* 	 * The addl_page_shortage is the number of temporarily 	 * stuck pages in the inactive queue.  In other words, the 	 * number of pages from the inactive count that should be 	 * discounted in setting the target for the active queue scan. 	 */
@@ -6077,7 +6136,7 @@ operator|)
 operator|*
 literal|11
 expr_stmt|;
-comment|/* 	 * Set interval in seconds for active scan.  We want to visit each 	 * page at least once a minute. 	 */
+comment|/* 	 * Set interval in seconds for active scan.  We want to visit each 	 * page at least once every ten minutes.  This is to prevent worst 	 * case paging behaviors with stale active LRU. 	 */
 if|if
 condition|(
 name|vm_pageout_update_period
@@ -6086,7 +6145,7 @@ literal|0
 condition|)
 name|vm_pageout_update_period
 operator|=
-literal|60
+literal|600
 expr_stmt|;
 comment|/* XXX does not really belong here */
 if|if
