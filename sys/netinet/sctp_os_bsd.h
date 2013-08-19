@@ -1918,6 +1918,21 @@ parameter_list|)
 end_define
 
 begin_comment
+comment|/*  * SCTP protocol specific mbuf flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOTIFICATION
+value|M_PROTO5
+end_define
+
+begin_comment
+comment|/* SCTP notification */
+end_comment
+
+begin_comment
 comment|/*  * IP output routines  */
 end_comment
 

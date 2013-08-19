@@ -777,17 +777,6 @@ begin_comment
 comment|/* mask of bits holding flowid hash type */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_NOTIFICATION
-value|M_PROTO5
-end_define
-
-begin_comment
-comment|/* SCTP notification */
-end_comment
-
 begin_comment
 comment|/*  * Flags to purge when crossing layers.  */
 end_comment
