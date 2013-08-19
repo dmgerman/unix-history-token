@@ -3329,8 +3329,6 @@ name|m_flags
 operator|&
 name|M_MCAST
 operator|)
-operator||
-name|M_FRAG
 expr_stmt|;
 comment|/* 		 * In the first mbuf, leave room for the link header, then 		 * copy the original IP header including options. The payload 		 * goes into an additional mbuf chain returned by m_copym(). 		 */
 name|m
@@ -3428,21 +3426,12 @@ name|len
 operator|>=
 name|ip_len
 condition|)
-block|{
-comment|/* last fragment */
 name|len
 operator|=
 name|ip_len
 operator|-
 name|off
 expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_LASTFRAG
-expr_stmt|;
-block|}
 else|else
 name|mhip
 operator|->
@@ -3623,23 +3612,6 @@ name|ips_ofragments
 argument_list|,
 name|nfrags
 argument_list|)
-expr_stmt|;
-comment|/* set first marker for fragment chain */
-name|m0
-operator|->
-name|m_flags
-operator||=
-name|M_FIRSTFRAG
-operator||
-name|M_FRAG
-expr_stmt|;
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_data
-operator|=
-name|nfrags
 expr_stmt|;
 comment|/* 	 * Update first fragment by trimming what's been copied out 	 * and updating header. 	 */
 name|m_adj
