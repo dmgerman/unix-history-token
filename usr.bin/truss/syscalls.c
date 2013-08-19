@@ -7430,7 +7430,6 @@ case|case
 name|Mmapflags
 case|:
 block|{
-specifier|const
 name|char
 modifier|*
 name|base
