@@ -6727,6 +6727,12 @@ operator|->
 name|ip6_dst
 expr_stmt|;
 comment|/* 		 * We just call if_output instead of nd6_output here, since 		 * we need no ND for a multicast forwarded packet...right? 		 */
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* Avoid confusing lower layers. */
 name|error
 operator|=
 call|(

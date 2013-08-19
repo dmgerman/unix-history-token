@@ -6826,14 +6826,10 @@ operator|&=
 operator|~
 name|M_VLANTAG
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
 name|m_adj
 argument_list|(

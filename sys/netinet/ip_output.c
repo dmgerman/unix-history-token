@@ -2672,14 +2672,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * Reset layer specific mbuf flags 		 * to avoid confusing lower layers. 		 */
+name|m_clrprotoflags
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2824,14 +2820,10 @@ name|len
 expr_stmt|;
 block|}
 comment|/* 			 * Reset layer specific mbuf flags 			 * to avoid confusing upper layers. 			 */
+name|m_clrprotoflags
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

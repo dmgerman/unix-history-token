@@ -11603,14 +11603,10 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
 name|m0
 operator|->

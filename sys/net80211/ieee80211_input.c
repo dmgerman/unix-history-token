@@ -1043,12 +1043,15 @@ name|m_flags
 operator|&=
 operator|~
 operator|(
-name|M_80211_RX
-operator||
 name|M_MCAST
 operator||
 name|M_BCAST
 operator|)
+expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 comment|/* NB: see hostap_deliver_data, this path doesn't handle hostap */
 name|KASSERT

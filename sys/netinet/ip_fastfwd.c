@@ -1831,6 +1831,12 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* 		 * Avoid confusing lower layers. 		 */
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Send off the packet via outgoing interface 		 */
 name|error
 operator|=
@@ -1948,6 +1954,12 @@ operator|->
 name|m_nextpkt
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* 				 * Avoid confusing lower layers. 				 */
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

@@ -744,6 +744,12 @@ name|ip6
 operator|->
 name|ip6_dst
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* Avoid confusing lower layers. */
 comment|/* 		 * Output the packet as nd6.c:nd6_output_lle() would do. 		 * The mbuf is always consumed, so we do not have to care 		 * about that. 		 * XXX-BZ as we added data, what about fragmenting, 		 * if now needed? 		 */
 name|int
 name|error
