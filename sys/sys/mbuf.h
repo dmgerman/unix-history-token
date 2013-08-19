@@ -688,15 +688,8 @@ begin_comment
 comment|/* packet is last fragment */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_SKIP_FIREWALL
-value|0x00004000
-end_define
-
 begin_comment
-comment|/* skip firewall processing */
+comment|/*	0x00004000    free */
 end_comment
 
 begin_comment
@@ -962,7 +955,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
 end_define
 
 begin_comment
