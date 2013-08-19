@@ -310,10 +310,21 @@ decl_stmt|;
 name|vm_memattr_t
 name|pv_memattr
 decl_stmt|;
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|==
+literal|0
 name|vm_offset_t
 name|pv_kva
 decl_stmt|;
 comment|/* first kernel VA mapping */
+endif|#
+directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

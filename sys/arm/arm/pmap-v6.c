@@ -16982,14 +16982,6 @@ expr_stmt|;
 comment|/* 	 * It appears that this function can only be called before any mappings 	 * for the page are established on ARM.  If this ever changes, this code 	 * will need to walk the pv_list and make each of the existing mappings 	 * uncacheable, being careful to sync caches and PTEs (and maybe 	 * invalidate TLB?) for any current mapping it modifies. 	 */
 if|if
 condition|(
-name|m
-operator|->
-name|md
-operator|.
-name|pv_kva
-operator|!=
-literal|0
-operator|||
 name|TAILQ_FIRST
 argument_list|(
 operator|&
