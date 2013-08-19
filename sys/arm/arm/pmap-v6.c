@@ -11015,6 +11015,12 @@ argument_list|,
 name|PVF_WIRED
 argument_list|,
 name|wired
+operator|==
+name|TRUE
+condition|?
+name|PVF_WIRED
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
