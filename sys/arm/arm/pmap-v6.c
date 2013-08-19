@@ -3001,16 +3001,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|maskbits
-operator|&
-name|PVF_WRITE
-condition|)
-name|maskbits
-operator||=
-name|PVF_MOD
-expr_stmt|;
-if|if
-condition|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
@@ -3106,7 +3096,6 @@ name|ptep
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|maskbits
 operator|&
 operator|(
@@ -3114,19 +3103,8 @@ name|PVF_WRITE
 operator||
 name|PVF_MOD
 operator|)
-operator|)
-operator|&&
-name|L2_S_WRITABLE
-argument_list|(
-name|opte
-argument_list|)
 condition|)
 block|{
-name|vm_page_dirty
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* make the pte read only */
 name|npte
 operator||=
@@ -3135,16 +3113,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|maskbits
 operator|&
 name|PVF_REF
-operator|)
-operator|&&
-name|L2_S_REFERENCED
-argument_list|(
-name|opte
-argument_list|)
 condition|)
 block|{
 comment|/* 			 * Clear referenced flag in PTE so that we 			 * will take a flag fault the next time the mapping 			 * is referenced. 			 */
