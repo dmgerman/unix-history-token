@@ -718,15 +718,8 @@ begin_comment
 comment|/* packet was not for us */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_NOFREE
-value|0x00040000
-end_define
-
 begin_comment
-comment|/* do not free mbuf, embedded in cluster */
+comment|/*	0x00040000    free */
 end_comment
 
 begin_define
@@ -2161,19 +2154,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_NOFREE
-operator|)
-operator|==
-literal|0
-condition|)
+else|else
 name|uma_zfree
 argument_list|(
 name|zone_mbuf
