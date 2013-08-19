@@ -1925,7 +1925,7 @@ begin_define
 define|#
 directive|define
 name|M_NOTIFICATION
-value|M_PROTO5
+value|M_PROTO1
 end_define
 
 begin_comment

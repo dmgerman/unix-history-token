@@ -581,63 +581,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO1
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO2
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO3
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO4
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO5
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_BCAST
-value|0x00000200
+value|0x00000010
 end_define
 
 begin_comment
@@ -648,29 +593,72 @@ begin_define
 define|#
 directive|define
 name|M_MCAST
-value|0x00000400
+value|0x00000020
 end_define
 
 begin_comment
 comment|/* send/received as link-level multicast */
 end_comment
 
-begin_comment
-comment|/*	0x00000800    free */
-end_comment
+begin_define
+define|#
+directive|define
+name|M_PROMISC
+value|0x00000040
+end_define
 
 begin_comment
-comment|/*	0x00001000    free */
-end_comment
-
-begin_comment
-comment|/*	0x00002000    free */
+comment|/* packet was not for us */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_PROTO9
+name|M_VLANTAG
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* ether_vtag is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FLOWID
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* deprecated: flowid is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO1
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO2
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO3
 value|0x00004000
 end_define
 
@@ -681,7 +669,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO10
+name|M_PROTO4
 value|0x00008000
 end_define
 
@@ -692,30 +680,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_VLANTAG
+name|M_PROTO5
 value|0x00010000
-end_define
-
-begin_comment
-comment|/* ether_vtag is valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROMISC
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* packet was not for us */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO11
-value|0x00040000
 end_define
 
 begin_comment
@@ -726,7 +692,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO6
-value|0x00080000
+value|0x00020000
 end_define
 
 begin_comment
@@ -737,7 +703,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO7
-value|0x00100000
+value|0x00040000
 end_define
 
 begin_comment
@@ -748,6 +714,28 @@ begin_define
 define|#
 directive|define
 name|M_PROTO8
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO9
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO10
 value|0x00200000
 end_define
 
@@ -758,12 +746,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FLOWID
+name|M_PROTO11
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* deprecated: flowid is valid */
+comment|/* protocol-specific */
 end_comment
 
 begin_define
@@ -798,6 +786,33 @@ directive|define
 name|M_PROTOFLAGS
 define|\
 value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8|\      M_PROTO9|M_PROTO10|M_PROTO11|M_PROTO12)
+end_define
+
+begin_comment
+comment|/*  * Mbuf flag description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FLAG_BITS
+define|\
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\11M_FLOWID"
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FLAG_PROTOBITS
+define|\
+value|"\15M_PROTO1\16M_PROTO2\17M_PROTO3\20M_PROTO4\21M_PROTO5" \     "\22M_PROTO6\23M_PROTO7\24M_PROTO8\25M_PROTO9\26M_PROTO10" \     "\27M_PROTO11\30M_PROTO12"
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FLAG_PRINTF
+value|(M_FLAG_BITS M_FLAG_PROTOBITS)
 end_define
 
 begin_comment
@@ -948,7 +963,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_BCAST|M_MCAST|\      M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_VLANTAG|M_PROMISC| \      M_PROTOFLAGS|M_HASHTYPEBITS)
 end_define
 
 begin_comment
