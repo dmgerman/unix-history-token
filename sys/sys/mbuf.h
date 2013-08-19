@@ -688,12 +688,26 @@ begin_comment
 comment|/* packet is last fragment */
 end_comment
 
-begin_comment
-comment|/*	0x00004000    free */
-end_comment
+begin_define
+define|#
+directive|define
+name|M_PROTO9
+value|0x00004000
+end_define
 
 begin_comment
-comment|/*	0x00008000    free */
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO10
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
 end_comment
 
 begin_define
@@ -718,8 +732,15 @@ begin_comment
 comment|/* packet was not for us */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_PROTO11
+value|0x00040000
+end_define
+
 begin_comment
-comment|/*	0x00040000    free */
+comment|/* protocol-specific */
 end_comment
 
 begin_define
@@ -769,6 +790,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_PROTO12
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_HASHTYPEBITS
 value|0x0F000000
 end_define
@@ -786,7 +818,7 @@ define|#
 directive|define
 name|M_PROTOFLAGS
 define|\
-value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8)
+value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8|\      M_PROTO9|M_PROTO10|M_PROTO11|M_PROTO12)
 end_define
 
 begin_comment
