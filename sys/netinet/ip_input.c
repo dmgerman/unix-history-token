@@ -3787,7 +3787,7 @@ name|m
 operator|->
 name|m_flags
 operator||=
-name|M_FRAG
+name|M_IP_FRAG
 expr_stmt|;
 block|}
 else|else
@@ -3796,7 +3796,7 @@ operator|->
 name|m_flags
 operator|&=
 operator|~
-name|M_FRAG
+name|M_IP_FRAG
 expr_stmt|;
 name|ip
 operator|->
@@ -4520,7 +4520,7 @@ name|p
 operator|->
 name|m_flags
 operator|&
-name|M_FRAG
+name|M_IP_FRAG
 condition|)
 block|{
 if|if

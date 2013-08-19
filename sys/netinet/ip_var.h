@@ -563,6 +563,17 @@ begin_comment
 comment|/* explicit ip nexthop */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_IP_FRAG
+value|M_PROTO4
+end_define
+
+begin_comment
+comment|/* fragment reassembly */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
