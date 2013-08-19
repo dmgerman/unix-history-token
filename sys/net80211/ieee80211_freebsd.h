@@ -1024,9 +1024,42 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_FRAG
+value|M_PROTO9
+end_define
+
+begin_comment
+comment|/* frame fragmentation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FIRSTFRAG
+value|M_PROTO10
+end_define
+
+begin_comment
+comment|/* first frame fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LASTFRAG
+value|M_PROTO11
+end_define
+
+begin_comment
+comment|/* last frame fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_80211_TX
 define|\
-value|(M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_ENCAP|M_EAPOL|M_PWR_SAV|\ 	 M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
+value|(M_ENCAP|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB| \ 	 M_AMPDU_MPDU|M_FRAG|M_FIRSTFRAG|M_LASTFRAG)
 end_define
 
 begin_comment

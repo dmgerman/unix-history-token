@@ -655,37 +655,16 @@ begin_comment
 comment|/* send/received as link-level multicast */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_FRAG
-value|0x00000800
-end_define
-
 begin_comment
-comment|/* packet is a fragment of a larger packet */
+comment|/*	0x00000800    free */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_FIRSTFRAG
-value|0x00001000
-end_define
-
 begin_comment
-comment|/* packet is first fragment */
+comment|/*	0x00001000    free */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_LASTFRAG
-value|0x00002000
-end_define
-
 begin_comment
-comment|/* packet is last fragment */
+comment|/*	0x00002000    free */
 end_comment
 
 begin_define
@@ -969,7 +948,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_BCAST|M_MCAST|\      M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
 end_define
 
 begin_comment
