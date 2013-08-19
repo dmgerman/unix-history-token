@@ -1545,7 +1545,7 @@ begin_define
 define|#
 directive|define
 name|L2_S_PROT_MASK
-value|(L2_S_PROT_U|L2_S_PROT_R)
+value|(L2_S_PROT_U|L2_S_PROT_R|L2_APX)
 end_define
 
 begin_define

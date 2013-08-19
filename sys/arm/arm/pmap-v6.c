@@ -3503,7 +3503,11 @@ operator|*
 name|ptep
 operator|&=
 operator|~
+operator|(
 name|L2_S_PROT_MASK
+operator||
+name|L2_XN
+operator|)
 expr_stmt|;
 if|if
 condition|(
