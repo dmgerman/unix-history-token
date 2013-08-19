@@ -1643,7 +1643,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Handle unalligned and alligned buffer cases. */
+comment|/* Handle unaligned and aligned buffer cases. */
 if|if
 condition|(
 operator|(
@@ -1853,7 +1853,7 @@ name|offset
 operator|+=
 name|left
 expr_stmt|;
-comment|/* Handle unalligned and alligned buffer cases. */
+comment|/* Handle unaligned and aligned buffer cases. */
 if|if
 condition|(
 operator|(
@@ -4576,7 +4576,7 @@ name|data_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Interrupt aggregation: Restore command interrupt. 	 * Auxillary restore point for the case when data interrupt 	 * happened first. */
+comment|/* Interrupt aggregation: Restore command interrupt. 	 * Auxiliary restore point for the case when data interrupt 	 * happened first. */
 if|if
 condition|(
 operator|!
