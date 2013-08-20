@@ -1215,7 +1215,7 @@ literal|"HCC uses 64-bit structures\n"
 argument_list|)
 expr_stmt|;
 comment|/* MUST clear segment register if 64 bit capable */
-name|EWRITE4
+name|EOWRITE4
 argument_list|(
 name|sc
 argument_list|,
