@@ -1997,6 +1997,7 @@ modifier|*
 name|user_data
 parameter_list|)
 function_decl|;
+specifier|const
 name|struct
 name|libusb_pollfd
 modifier|*
