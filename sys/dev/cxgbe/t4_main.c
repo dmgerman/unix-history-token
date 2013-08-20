@@ -14200,7 +14200,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"Chelsio %s %sNIC (rev %d), S/N:%s, E/C:%s"
+literal|"Chelsio %s %sNIC (rev %d), S/N:%s, "
+literal|"P/N:%s, E/C:%s"
 argument_list|,
 name|p
 operator|->
@@ -14227,6 +14228,12 @@ operator|->
 name|vpd
 operator|.
 name|sn
+argument_list|,
+name|p
+operator|->
+name|vpd
+operator|.
+name|pn
 argument_list|,
 name|p
 operator|->
