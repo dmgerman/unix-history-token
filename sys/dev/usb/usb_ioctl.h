@@ -1080,8 +1080,15 @@ value|_IOW ('U', 127, struct usb_read_dir)
 end_define
 
 begin_comment
-comment|/* 128 - 134 unused */
+comment|/* 128 - 133 unused */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_GET_DEV_PORT_PATH
+value|_IOR ('U', 134, struct usb_device_port_path)
+end_define
 
 begin_define
 define|#
