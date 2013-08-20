@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -16357,15 +16357,26 @@ name|tdvp
 operator|=
 name|realvp
 expr_stmt|;
+name|tdzp
+operator|=
+name|VTOZ
+argument_list|(
+name|tdvp
+argument_list|)
+expr_stmt|;
+name|ZFS_VERIFY_ZP
+argument_list|(
+name|tdzp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We check z_zfsvfs rather than v_vfsp here, because snapshots and the 	 * ctldir appear to have the same v_vfsp. 	 */
 if|if
 condition|(
-name|tdvp
+name|tdzp
 operator|->
-name|v_vfsp
+name|z_zfsvfs
 operator|!=
-name|sdvp
-operator|->
-name|v_vfsp
+name|zfsvfs
 operator|||
 name|zfsctl_is_node
 argument_list|(
@@ -16387,18 +16398,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|tdzp
-operator|=
-name|VTOZ
-argument_list|(
-name|tdvp
-argument_list|)
-expr_stmt|;
-name|ZFS_VERIFY_ZP
-argument_list|(
-name|tdzp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|zfsvfs
@@ -18710,15 +18709,26 @@ argument_list|)
 operator|)
 return|;
 block|}
+name|szp
+operator|=
+name|VTOZ
+argument_list|(
+name|svp
+argument_list|)
+expr_stmt|;
+name|ZFS_VERIFY_ZP
+argument_list|(
+name|szp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We check z_zfsvfs rather than v_vfsp here, because snapshots and the 	 * ctldir appear to have the same v_vfsp. 	 */
 if|if
 condition|(
-name|svp
+name|szp
 operator|->
-name|v_vfsp
+name|z_zfsvfs
 operator|!=
-name|tdvp
-operator|->
-name|v_vfsp
+name|zfsvfs
 operator|||
 name|zfsctl_is_node
 argument_list|(
@@ -18740,18 +18750,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|szp
-operator|=
-name|VTOZ
-argument_list|(
-name|svp
-argument_list|)
-expr_stmt|;
-name|ZFS_VERIFY_ZP
-argument_list|(
-name|szp
-argument_list|)
-expr_stmt|;
 comment|/* Prevent links to .zfs/shares files */
 if|if
 condition|(
