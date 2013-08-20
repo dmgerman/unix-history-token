@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -573,6 +579,36 @@ argument_list|(
 name|DIAGNOSTIC
 argument_list|)
 end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|enable_vmem_check
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vmem_check
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|enable_vmem_check
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable vmem check"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -2953,6 +2989,13 @@ ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
 comment|/* Convenient time to verify vmem state. */
+if|if
+condition|(
+name|enable_vmem_check
+operator|==
+literal|1
+condition|)
+block|{
 name|VMEM_LOCK
 argument_list|(
 name|vm
@@ -2968,6 +3011,7 @@ argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|desired
