@@ -214,6 +214,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CM_PER_UART5_CLKCTRL
+value|(CM_PER + 0x038)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CM_PER_MMC0_CLKCTRL
 value|(CM_PER + 0x03C)
 end_define
@@ -230,6 +237,34 @@ define|#
 directive|define
 name|CM_PER_I2C1_CLKCTRL
 value|(CM_PER + 0x048)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_PER_UART1_CLKCTRL
+value|(CM_PER + 0x06C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_PER_UART2_CLKCTRL
+value|(CM_PER + 0x070)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_PER_UART3_CLKCTRL
+value|(CM_PER + 0x074)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CM_PER_UART4_CLKCTRL
+value|(CM_PER + 0x078)
 end_define
 
 begin_define
@@ -826,6 +861,17 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|AM335X_NOOP_CLOCK_DEV
+parameter_list|(
+name|i
+parameter_list|)
+define|\
+value|{	.id = (i) }
+end_define
+
+begin_define
+define|#
+directive|define
 name|AM335X_GENERIC_CLOCK_DEV
 parameter_list|(
 name|i
@@ -1027,6 +1073,37 @@ name|clk_get_source_freq
 operator|=
 name|am335x_clk_get_arm_disp_freq
 block|, 	}
+block|,
+comment|/* UART.  Uart0 clock cannot be controlled. */
+name|AM335X_NOOP_CLOCK_DEV
+argument_list|(
+name|UART0_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|UART1_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|UART2_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|UART3_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|UART4_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|UART5_CLK
+argument_list|)
 block|,
 comment|/* DMTimer */
 name|AM335X_GENERIC_CLOCK_DEV
@@ -1249,6 +1326,61 @@ name|g_am335x_clk_details
 index|[]
 init|=
 block|{
+comment|/* UART. UART0 clock not controllable. */
+name|_CLK_DETAIL
+argument_list|(
+name|UART0_CLK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|UART1_CLK
+argument_list|,
+name|CM_PER_UART1_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|UART2_CLK
+argument_list|,
+name|CM_PER_UART2_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|UART3_CLK
+argument_list|,
+name|CM_PER_UART3_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|UART4_CLK
+argument_list|,
+name|CM_PER_UART4_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|UART5_CLK
+argument_list|,
+name|CM_PER_UART5_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* DMTimer modules */
 name|_CLK_DETAIL
 argument_list|(

@@ -83,15 +83,25 @@ block|,
 name|USBP2_HSIC_CLK
 block|,
 comment|/* UART modules */
-name|UART1_CLK
+name|UART0_CLK
 init|=
 literal|400
+block|,
+name|UART1_CLK
 block|,
 name|UART2_CLK
 block|,
 name|UART3_CLK
 block|,
 name|UART4_CLK
+block|,
+name|UART5_CLK
+block|,
+name|UART6_CLK
+block|,
+name|UART7_CLK
+block|,
+name|UART8_CLK
 block|,
 comment|/* General purpose timer modules */
 name|GPTIMER1_CLK
