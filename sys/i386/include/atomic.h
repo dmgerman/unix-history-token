@@ -737,7 +737,7 @@ asm|__asm __volatile(
 literal|"	"
 name|MPLOCKED
 literal|"		"
-literal|"	xaddl	%0, %1 ;	"
+literal|"	xaddl	%0,%1 ;		"
 literal|"# atomic_fetchadd_int"
 operator|:
 literal|"+r"
@@ -745,7 +745,7 @@ operator|(
 name|v
 operator|)
 operator|,
-comment|/* 0 (result) */
+comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
@@ -1361,7 +1361,7 @@ parameter_list|(
 specifier|volatile
 name|u_int
 modifier|*
-name|addr
+name|p
 parameter_list|)
 block|{
 name|u_int
@@ -1384,14 +1384,14 @@ comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
-name|addr
+name|p
 operator|)
 comment|/* 1 */
 operator|:
 literal|"m"
 operator|(
 operator|*
-name|addr
+name|p
 operator|)
 block|)
 function|;
@@ -1414,7 +1414,7 @@ parameter_list|(
 specifier|volatile
 name|u_long
 modifier|*
-name|addr
+name|p
 parameter_list|)
 block|{
 name|u_long
@@ -1437,14 +1437,14 @@ comment|/* 0 */
 literal|"=m"
 operator|(
 operator|*
-name|addr
+name|p
 operator|)
 comment|/* 1 */
 operator|:
 literal|"m"
 operator|(
 operator|*
-name|addr
+name|p
 operator|)
 block|)
 function|;
@@ -1475,7 +1475,7 @@ argument_list|(
 specifier|volatile
 name|u_int
 operator|*
-name|addr
+name|p
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1487,7 +1487,7 @@ parameter_list|(
 specifier|volatile
 name|u_long
 modifier|*
-name|addr
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
