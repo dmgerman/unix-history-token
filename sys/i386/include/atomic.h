@@ -654,7 +654,6 @@ name|MPLOCKED
 literal|"		"
 literal|"	cmpxchgl %2,%1 ;	"
 literal|"       sete	%0 ;		"
-literal|"1:				"
 literal|"# atomic_cmpset_int"
 operator|:
 literal|"=a"
