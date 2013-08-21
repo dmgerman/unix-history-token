@@ -259,7 +259,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p)				\ 	: "cc");					\ }							\ 							\ static __inline void					\ atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "=m" (*p)					\ 	: CONS (V), "m" (*p)				\ 	: "memory", "cc");				\ }							\ struct __hack
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "+m" (*p)					\ 	: CONS (V)					\ 	: "cc");					\ }							\ 							\ static __inline void					\ atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "+m" (*p)					\ 	: CONS (V)					\ 	: "memory", "cc");				\ }							\ struct __hack
 end_define
 
 begin_comment
@@ -301,7 +301,7 @@ name|res
 operator|)
 operator|,
 comment|/* 0 */
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|dst
@@ -318,14 +318,7 @@ literal|"a"
 operator|(
 name|expect
 operator|)
-operator|,
 comment|/* 3 */
-literal|"m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 4 */
 operator|:
 literal|"memory"
 operator|,
@@ -377,7 +370,7 @@ name|res
 operator|)
 operator|,
 comment|/* 0 */
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|dst
@@ -394,14 +387,7 @@ literal|"a"
 operator|(
 name|expect
 operator|)
-operator|,
 comment|/* 3 */
-literal|"m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 4 */
 operator|:
 literal|"memory"
 operator|,
@@ -451,19 +437,13 @@ name|v
 operator|)
 operator|,
 comment|/* 0 */
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 comment|/* 1 */
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-comment|/* 2 */
 operator|:
 literal|"cc"
 block|)
@@ -511,19 +491,13 @@ name|v
 operator|)
 operator|,
 comment|/* 0 */
-literal|"=m"
+literal|"+m"
 operator|(
 operator|*
 name|p
 operator|)
 comment|/* 1 */
 operator|:
-literal|"m"
-operator|(
-operator|*
-name|p
-operator|)
-comment|/* 2 */
 operator|:
 literal|"cc"
 block|)
@@ -603,11 +577,9 @@ parameter_list|)
 define|\
 value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
 comment|/* 0 */
-value|\ 	  "=m" (*p)
+value|\ 	  "+m" (*p)
 comment|/* 1 */
-value|\ 	: "m" (*p)
-comment|/* 2 */
-value|\ 	: "memory", "cc");				\ 							\ 	return (res);					\ }							\ struct __hack
+value|\ 	: : "memory", "cc");				\ 							\ 	return (res);					\ }							\ struct __hack
 end_define
 
 begin_endif
@@ -1023,14 +995,7 @@ name|res
 operator|)
 operator|,
 comment|/* 0 */
-literal|"=m"
-operator|(
-operator|*
-name|p
-operator|)
-comment|/* 1 */
-operator|:
-literal|"m"
+literal|"+m"
 operator|(
 operator|*
 name|p
@@ -1038,6 +1003,10 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_comment
+comment|/* 1 */
+end_comment
 
 begin_return
 return|return
@@ -1076,14 +1045,7 @@ name|res
 operator|)
 operator|,
 comment|/* 0 */
-literal|"=m"
-operator|(
-operator|*
-name|p
-operator|)
-comment|/* 1 */
-operator|:
-literal|"m"
+literal|"+m"
 operator|(
 operator|*
 name|p
@@ -1091,6 +1053,10 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_comment
+comment|/* 1 */
+end_comment
 
 begin_return
 return|return
