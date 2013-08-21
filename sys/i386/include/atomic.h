@@ -633,11 +633,11 @@ asm|__asm __volatile(
 literal|"	"
 name|MPLOCKED
 literal|"		"
-literal|"	cmpxchgl %2,%1 ;	"
+literal|"	cmpxchgl %3,%1 ;	"
 literal|"       sete	%0 ;		"
 literal|"# atomic_cmpset_int"
 operator|:
-literal|"=a"
+literal|"=q"
 operator|(
 name|res
 operator|)
@@ -648,17 +648,17 @@ operator|(
 operator|*
 name|dst
 operator|)
+operator|,
 comment|/* 1 */
+literal|"+a"
+operator|(
+name|expect
+operator|)
+comment|/* 2 */
 operator|:
 literal|"r"
 operator|(
 name|src
-operator|)
-operator|,
-comment|/* 2 */
-literal|"a"
-operator|(
-name|expect
 operator|)
 comment|/* 3 */
 operator|:
