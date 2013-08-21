@@ -32,6 +32,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -170,6 +193,30 @@ define|\
 value|void		atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
 end_define
 
+begin_function_decl
+name|uint64_t
+name|atomic_load_acq_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atomic_store_rel_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -244,295 +291,6 @@ define|\
 value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "+m" (*p)					\ 	: CONS (V)					\ 	: "cc");					\ }							\ 							\ static __inline void					\ atomic_##NAME##_barr_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(MPLOCKED OP			\ 	: "+m" (*p)					\ 	: CONS (V)					\ 	: "memory", "cc");				\ }							\ struct __hack
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|WANT_FUNCTIONS
-argument_list|)
-end_if
-
-begin_comment
-comment|/* I486 does not support SMP or CMPXCHG8B. */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|uint64_t
-name|atomic_load_acq_64_i386
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|)
-block|{
-specifier|volatile
-name|uint32_t
-modifier|*
-name|high
-decl_stmt|,
-modifier|*
-name|low
-decl_stmt|;
-name|uint64_t
-name|res
-decl_stmt|;
-name|low
-operator|=
-operator|(
-specifier|volatile
-name|uint32_t
-operator|*
-operator|)
-name|p
-expr_stmt|;
-name|high
-operator|=
-operator|(
-specifier|volatile
-name|uint32_t
-operator|*
-operator|)
-name|p
-operator|+
-literal|1
-expr_stmt|;
-asm|__asm __volatile(
-literal|"	pushfl ;		"
-literal|"	cli ;			"
-literal|"	movl %1,%%eax ;		"
-literal|"	movl %2,%%edx ;		"
-literal|"	popfl"
-operator|:
-literal|"=&A"
-operator|(
-name|res
-operator|)
-comment|/* 0 */
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|low
-operator|)
-operator|,
-comment|/* 1 */
-literal|"m"
-operator|(
-operator|*
-name|high
-operator|)
-comment|/* 2 */
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_store_rel_64_i386
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|v
-parameter_list|)
-block|{
-specifier|volatile
-name|uint32_t
-modifier|*
-name|high
-decl_stmt|,
-modifier|*
-name|low
-decl_stmt|;
-name|low
-operator|=
-operator|(
-specifier|volatile
-name|uint32_t
-operator|*
-operator|)
-name|p
-expr_stmt|;
-name|high
-operator|=
-operator|(
-specifier|volatile
-name|uint32_t
-operator|*
-operator|)
-name|p
-operator|+
-literal|1
-expr_stmt|;
-asm|__asm __volatile(
-literal|"	pushfl ;		"
-literal|"	cli ;			"
-literal|"	movl %%eax,%0 ;		"
-literal|"	movl %%edx,%1 ;		"
-literal|"	popfl"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|low
-operator|)
-operator|,
-comment|/* 0 */
-literal|"=m"
-operator|(
-operator|*
-name|high
-operator|)
-comment|/* 1 */
-operator|:
-literal|"A"
-operator|(
-name|v
-operator|)
-comment|/* 2 */
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|uint64_t
-name|atomic_load_acq_64_i586
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|uint64_t
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	movl %%ebx,%%eax ;	"
-literal|"	movl %%ecx,%%edx ;	"
-literal|"	"
-name|MPLOCKED
-literal|"		"
-literal|"	cmpxchg8b %1"
-operator|:
-literal|"=&A"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|p
-operator|)
-comment|/* 1 */
-operator|:
-operator|:
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|atomic_store_rel_64_i586
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-name|p
-parameter_list|,
-name|uint64_t
-name|v
-parameter_list|)
-block|{
-asm|__asm __volatile(
-literal|"	movl %%eax,%%ebx ;	"
-literal|"	movl %%edx,%%ecx ;	"
-literal|"1:				"
-literal|"	"
-name|MPLOCKED
-literal|"		"
-literal|"	cmpxchg8b %0 ;		"
-literal|"	jne 1b"
-operator|:
-literal|"+m"
-operator|(
-operator|*
-name|p
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+A"
-operator|(
-name|v
-operator|)
-comment|/* 1 */
-operator|:
-operator|:
-literal|"ebx"
-operator|,
-literal|"ecx"
-operator|,
-literal|"memory"
-operator|,
-literal|"cc"
-block|)
-function|;
-end_function
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL&& !WANT_FUNCTIONS */
-end_comment
-
 begin_comment
 comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == expect) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
@@ -544,7 +302,7 @@ name|CPU_DISABLE_CMPXCHG
 end_ifdef
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|int
 name|atomic_cmpset_int
@@ -894,6 +652,409 @@ begin_comment
 comment|/* _KERNEL&& !SMP */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WANT_FUNCTIONS
+end_ifdef
+
+begin_expr_stmt
+unit|uint64_t
+name|atomic_load_acq_64_i386
+argument_list|(
+specifier|volatile
+name|uint64_t
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|uint64_t
+name|atomic_load_acq_64_i586
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atomic_store_rel_64_i386
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atomic_store_rel_64_i586
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* I486 does not support SMP or CMPXCHG8B. */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_load_acq_64_i386
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+specifier|volatile
+name|uint32_t
+modifier|*
+name|q
+decl_stmt|;
+name|uint64_t
+name|res
+decl_stmt|;
+name|q
+operator|=
+operator|(
+specifier|volatile
+name|uint32_t
+operator|*
+operator|)
+name|p
+expr_stmt|;
+asm|__asm __volatile(
+literal|"	pushfl ;		"
+literal|"	cli ;			"
+literal|"	movl	%1,%%eax ;	"
+literal|"	movl	%2,%%edx ;	"
+literal|"	popfl"
+operator|:
+literal|"=&A"
+operator|(
+name|res
+operator|)
+comment|/* 0 */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|q
+operator|)
+operator|,
+comment|/* 1 */
+literal|"m"
+operator|(
+operator|*
+operator|(
+name|q
+operator|+
+literal|1
+operator|)
+operator|)
+comment|/* 2 */
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_store_rel_64_i386
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+specifier|volatile
+name|uint32_t
+modifier|*
+name|q
+decl_stmt|;
+name|q
+operator|=
+operator|(
+specifier|volatile
+name|uint32_t
+operator|*
+operator|)
+name|p
+expr_stmt|;
+asm|__asm __volatile(
+literal|"	pushfl ;		"
+literal|"	cli ;			"
+literal|"	movl	%%eax,%0 ;	"
+literal|"	movl	%%edx,%1 ;	"
+literal|"	popfl"
+operator|:
+literal|"=m"
+operator|(
+operator|*
+name|q
+operator|)
+operator|,
+comment|/* 0 */
+literal|"=m"
+operator|(
+operator|*
+operator|(
+name|q
+operator|+
+literal|1
+operator|)
+operator|)
+comment|/* 1 */
+operator|:
+literal|"A"
+operator|(
+name|v
+operator|)
+comment|/* 2 */
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_load_acq_64_i586
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint64_t
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	movl	%%ebx,%%eax ;	"
+literal|"	movl	%%ecx,%%edx ;	"
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	cmpxchg8b %1"
+operator|:
+literal|"=&A"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+operator|:
+literal|"memory"
+operator|,
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_store_rel_64_i586
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"	movl	%%eax,%%ebx ;	"
+literal|"	movl	%%edx,%%ecx ;	"
+literal|"1:				"
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	cmpxchg8b %0 ;		"
+literal|"	jne	1b"
+operator|:
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+A"
+operator|(
+name|v
+operator|)
+comment|/* 1 */
+operator|:
+operator|:
+literal|"ebx"
+operator|,
+literal|"ecx"
+operator|,
+literal|"memory"
+operator|,
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_load_acq_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_CX8
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|atomic_load_acq_64_i386
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|atomic_load_acq_64_i586
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_store_rel_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_CX8
+operator|)
+operator|==
+literal|0
+condition|)
+name|atomic_store_rel_64_i386
+argument_list|(
+name|p
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+else|else
+name|atomic_store_rel_64_i586
+argument_list|(
+name|p
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -904,18 +1065,18 @@ comment|/* KLD_MODULE || !__GNUCLIKE_ASM */
 end_comment
 
 begin_expr_stmt
-unit|ATOMIC_ASM
-operator|(
+name|ATOMIC_ASM
+argument_list|(
 name|set
-operator|,
+argument_list|,
 name|char
-operator|,
+argument_list|,
 literal|"orb %b1,%0"
-operator|,
+argument_list|,
 literal|"iq"
-operator|,
+argument_list|,
 name|v
-operator|)
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1258,49 +1419,6 @@ ifndef|#
 directive|ifndef
 name|WANT_FUNCTIONS
 end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|uint64_t
-function_decl|(
-modifier|*
-name|atomic_load_acq_64
-function_decl|)
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|atomic_store_rel_64
-function_decl|)
-parameter_list|(
-specifier|volatile
-name|uint64_t
-modifier|*
-parameter_list|,
-name|uint64_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
