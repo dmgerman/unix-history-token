@@ -57,7 +57,7 @@ value|__asm __volatile("lock; addl $0,(%%esp)" : : : "memory", "cc")
 end_define
 
 begin_comment
-comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
+comment|/*  * Various simple operations on memory, each of which is atomic in the  * presence of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char *)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char *)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char *)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char *)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short *)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short *)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short *)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short *)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int *)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int *)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int *)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int *)(P) -= (V))  * atomic_swap_int(P, V)	(return (*(u_int *)(P)); *(u_int *)(P) = (V);)  * atomic_readandclear_int(P)	(return (*(u_int *)(P)); *(u_int *)(P) = 0;)  *  * atomic_set_long(P, V)	(*(u_long *)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long *)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long *)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long *)(P) -= (V))  * atomic_swap_long(P, V)	(return (*(u_long *)(P)); *(u_long *)(P) = (V);)  * atomic_readandclear_long(P)	(return (*(u_long *)(P)); *(u_long *)(P) = 0;)  */
 end_comment
 
 begin_comment
@@ -119,6 +119,21 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|atomic_fetchadd_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|atomic_testandset_int
 parameter_list|(
 specifier|volatile
 name|u_int
@@ -740,6 +755,66 @@ operator|)
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|int
+name|atomic_testandset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+name|u_char
+name|res
+decl_stmt|;
+asm|__asm __volatile(
+literal|"	"
+name|MPLOCKED
+literal|"		"
+literal|"	btsl	%2,%1 ;		"
+literal|"	setc	%0 ;		"
+literal|"# atomic_testandset_int"
+operator|:
+literal|"=q"
+operator|(
+name|res
+operator|)
+operator|,
+comment|/* 0 */
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
+comment|/* 1 */
+operator|:
+literal|"Ir"
+operator|(
+name|v
+operator|&
+literal|0x1f
+operator|)
+comment|/* 2 */
+operator|:
+literal|"cc"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|res
+operator|)
+return|;
+end_return
+
 begin_comment
 unit|}
 comment|/*  * We assume that a = b will do atomic loads and stores.  Due to the  * IA32 memory model, a simple store guarantees release semantics.  *  * However, loads may pass stores, so for atomic_load_acq we have to  * ensure a Store/Load barrier to do the load in SMP kernels.  We use  * "lock cmpxchg" as recommended by the AMD Software Optimization  * Guide, and not mfence.  For UP kernels, however, the cache of the  * single processor is always consistent, so we only need to take care  * of the compiler.  */
@@ -1307,8 +1382,41 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|atomic_testandset_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+block|{
+return|return
+operator|(
+name|atomic_testandset_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|p
+argument_list|,
+name|v
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/* Read the current value and store a zero in the destination. */
+comment|/* Read the current value and store a new value in the destination. */
 end_comment
 
 begin_ifdef
@@ -1321,28 +1429,24 @@ begin_function
 specifier|static
 name|__inline
 name|u_int
-name|atomic_readandclear_int
+name|atomic_swap_int
 parameter_list|(
 specifier|volatile
 name|u_int
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|v
 parameter_list|)
 block|{
-name|u_int
-name|res
-decl_stmt|;
-name|res
-operator|=
-literal|0
-expr_stmt|;
 asm|__asm __volatile(
 literal|"	xchgl	%1,%0 ;		"
-literal|"# atomic_readandclear_int"
+literal|"# atomic_swap_int"
 operator|:
 literal|"+r"
 operator|(
-name|res
+name|v
 operator|)
 operator|,
 comment|/* 0 */
@@ -1362,7 +1466,7 @@ end_comment
 begin_return
 return|return
 operator|(
-name|res
+name|v
 operator|)
 return|;
 end_return
@@ -1371,54 +1475,39 @@ begin_function
 unit|}  static
 name|__inline
 name|u_long
-name|atomic_readandclear_long
+name|atomic_swap_long
 parameter_list|(
 specifier|volatile
 name|u_long
 modifier|*
 name|p
+parameter_list|,
+name|u_long
+name|v
 parameter_list|)
 block|{
-name|u_long
-name|res
-decl_stmt|;
-name|res
-operator|=
-literal|0
-expr_stmt|;
-asm|__asm __volatile(
-literal|"	xchgl	%1,%0 ;		"
-literal|"# atomic_readandclear_long"
-operator|:
-literal|"+r"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"+m"
-operator|(
-operator|*
-name|p
-operator|)
-block|)
-function|;
-end_function
-
-begin_comment
-comment|/* 1 */
-end_comment
-
-begin_return
 return|return
 operator|(
-name|res
+name|atomic_swap_int
+argument_list|(
+operator|(
+specifier|volatile
+name|u_int
+operator|*
+operator|)
+name|p
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|v
+argument_list|)
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_else
-unit|}
 else|#
 directive|else
 end_else
@@ -1427,26 +1516,32 @@ begin_comment
 comment|/* !__GNUCLIKE_ASM */
 end_comment
 
-begin_expr_stmt
-unit|u_int
-name|atomic_readandclear_int
-argument_list|(
+begin_function_decl
+name|u_int
+name|atomic_swap_int
+parameter_list|(
 specifier|volatile
 name|u_int
-operator|*
+modifier|*
 name|p
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|,
+name|u_int
+name|v
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|u_long
-name|atomic_readandclear_long
+name|atomic_swap_long
 parameter_list|(
 specifier|volatile
 name|u_long
 modifier|*
 name|p
+parameter_list|,
+name|u_long
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1710,6 +1805,26 @@ define|#
 directive|define
 name|atomic_cmpset_rel_long
 value|atomic_cmpset_long
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_int
+parameter_list|(
+name|p
+parameter_list|)
+value|atomic_swap_int(p, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_long
+parameter_list|(
+name|p
+parameter_list|)
+value|atomic_swap_long(p, 0)
 end_define
 
 begin_comment
@@ -2042,6 +2157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_swap_32
+value|atomic_swap_int
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_readandclear_32
 value|atomic_readandclear_int
 end_define
@@ -2051,6 +2173,13 @@ define|#
 directive|define
 name|atomic_fetchadd_32
 value|atomic_fetchadd_int
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_testandset_32
+value|atomic_testandset_int
 end_define
 
 begin_comment
@@ -2280,6 +2409,19 @@ name|new
 parameter_list|)
 define|\
 value|atomic_cmpset_rel_int((volatile u_int *)(dst), (u_int)(old), \ 	    (u_int)(new))
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_swap_ptr
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|atomic_swap_int((volatile u_int *)(p), (u_int)(v))
 end_define
 
 begin_define
