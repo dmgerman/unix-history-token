@@ -247,6 +247,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_class
+name|uart_ti8250_class
+name|__attribute__
+argument_list|(
+operator|(
+name|weak
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
