@@ -383,6 +383,14 @@ literal|"#endif	/* ! YYPARSE_PARAM */"
 block|,
 literal|""
 block|,
+literal|"#if defined(__cplusplus) || __STDC__"
+block|,
+literal|"extern int yyparse (YYPARSE_PARAM_ARG);"
+block|,
+literal|"#endif	/* ANSI-C/C++ */"
+block|,
+literal|""
+block|,
 literal|"int"
 block|,
 literal|"yyparse (YYPARSE_PARAM_ARG)"
