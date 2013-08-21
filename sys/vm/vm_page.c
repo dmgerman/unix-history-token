@@ -7116,10 +7116,12 @@ operator|=
 name|VM_ALLOC_SYSTEM
 expr_stmt|;
 comment|/* 	 * Do not allocate reserved pages unless the req has asked for it. 	 */
-name|mtx_lock
+name|mtx_lock_flags
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
+argument_list|,
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|if
