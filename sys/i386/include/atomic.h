@@ -882,7 +882,7 @@ value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)
 comment|/* 0 */
 value|\ 	  "+m" (*p)
 comment|/* 1 */
-value|\ 	: : "memory", "cc");				\ 							\ 	return (res);					\ }							\ struct __hack
+value|\ 	: : "memory", "cc");				\ 	return (res);					\ }							\ struct __hack
 end_define
 
 begin_endif
