@@ -1195,7 +1195,7 @@ name|success
 parameter_list|,
 name|failure
 parameter_list|)
-value|__extension__ ({			\ 	__typeof__((object)->__val) __v;				\ 	__typeof__(expected) __e;					\ 	_Bool __r;							\ 	__e = (expected);						\ 	(void)(success);						\ 	(void)(failure);						\ 	__v = __sync_val_compare_and_swap(&(object)->__val,		\ 	    *__e, (desired));						\ 	__r = (*__e == __v);						\ 	*__e = __v;							\ 	__r;								\ })
+value|__extension__ ({			\ 	__typeof__(expected) __ep = (expected);				\ 	__typeof__(*__ep) __e = *__ep;					\ 	(void)(success); (void)(failure);				\ 	(_Bool)((*__ep = __sync_val_compare_and_swap(&(object)->__val,	\ 	    __e, desired)) == __e);					\ })
 end_define
 
 begin_define
@@ -1286,7 +1286,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_add(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_add(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1301,7 +1301,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_and(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_and(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1316,7 +1316,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_or(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_or(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1331,7 +1331,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_sub(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_sub(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1346,7 +1346,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_xor(&(object)->__val, operand)
+value|((void)(order), __sync_fetch_and_xor(&(object)->__val, operand))
 end_define
 
 begin_define
@@ -1359,7 +1359,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_fetch_and_add(&(object)->__val, 0)
+value|((void)(order), __sync_fetch_and_add(&(object)->__val, 0))
 end_define
 
 begin_define
@@ -1373,7 +1373,8 @@ name|desired
 parameter_list|,
 name|order
 parameter_list|)
-value|__extension__ ({	\ 	__typeof__(object) __o = (object);				\ 	__typeof__(desired) __d = (desired);				\ 	(void)(order);							\ 	__sync_synchronize();						\ 	__o->__val = __d;						\ 	__sync_synchronize();						\ })
+define|\
+value|((void)atomic_exchange_explicit(object, desired, order))
 end_define
 
 begin_endif

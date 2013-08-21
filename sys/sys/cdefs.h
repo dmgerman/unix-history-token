@@ -3353,6 +3353,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__has_extension
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_extension
+value|__has_feature
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__has_feature
 end_ifndef
 
