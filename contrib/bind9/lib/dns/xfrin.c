@@ -1466,7 +1466,7 @@ name|mctx
 argument_list|,
 name|journalfile
 argument_list|,
-name|ISC_TRUE
+name|DNS_JOURNAL_CREATE
 argument_list|,
 operator|&
 name|xfr

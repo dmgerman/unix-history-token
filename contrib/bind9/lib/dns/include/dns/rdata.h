@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: rdata.h,v 1.80 2011/03/20 02:31:53 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -250,6 +250,13 @@ define|#
 directive|define
 name|DNS_STYLEFLAG_COMMENT
 value|0x00000002U
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_STYLEFLAG_RRCOMMENT
+value|0x00000004U
 end_define
 
 begin_define
@@ -598,6 +605,10 @@ name|unsigned
 name|int
 name|width
 parameter_list|,
+name|unsigned
+name|int
+name|split_width
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -611,7 +622,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Like dns_rdata_totext, but do formatted output suitable for  * database dumps.  This is intended for use by dns_db_dump();  * library users are discouraged from calling it directly.  *  * If (flags& #DNS_STYLEFLAG_MULTILINE) != 0, attempt to stay  * within 'width' by breaking the text into multiple lines.  * The string 'linebreak' is inserted between lines, and parentheses  * are added when necessary.  Because RRs contain unbreakable elements  * such as domain names whose length is variable, unpredictable, and  * potentially large, there is no guarantee that the lines will  * not exceed 'width' anyway.  *  * If (flags& #DNS_STYLEFLAG_MULTILINE) == 0, the rdata is always  * printed as a single line, and no parentheses are used.  * The 'width' and 'linebreak' arguments are ignored.  *  * If (flags& #DNS_STYLEFLAG_COMMENT) != 0, output explanatory  * comments next to things like the SOA timer fields.  Some  * comments (e.g., the SOA ones) are only printed when multiline  * output is selected.  */
+comment|/*%<  * Like dns_rdata_totext, but do formatted output suitable for  * database dumps.  This is intended for use by dns_db_dump();  * library users are discouraged from calling it directly.  *  * If (flags& #DNS_STYLEFLAG_MULTILINE) != 0, attempt to stay  * within 'width' by breaking the text into multiple lines.  * The string 'linebreak' is inserted between lines, and parentheses  * are added when necessary.  Because RRs contain unbreakable elements  * such as domain names whose length is variable, unpredictable, and  * potentially large, there is no guarantee that the lines will  * not exceed 'width' anyway.  *  * If (flags& #DNS_STYLEFLAG_MULTILINE) == 0, the rdata is always  * printed as a single line, and no parentheses are used.  * The 'width' and 'linebreak' arguments are ignored.  *  * If (flags& #DNS_STYLEFLAG_COMMENT) != 0, output explanatory  * comments next to things like the SOA timer fields.  Some  * comments (e.g., the SOA ones) are only printed when multiline  * output is selected.  *  * base64 rdata text (e.g., DNSKEY records) will be split into chunks  * of 'split_width' characters.  If split_width == 0, the text will  * not be split at all.  If split_width == UINT_MAX (0xffffffff), then  * it is undefined and falls back to the default value of 'width'  */
 end_comment
 
 begin_function_decl

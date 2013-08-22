@@ -308,8 +308,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_dnssec_verify3
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|set
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_boolean_t
+name|ignoretime
+parameter_list|,
+name|unsigned
+name|int
+name|maxbits
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dns_rdata_t
+modifier|*
+name|sigrdata
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|wild
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  *	Verifies the RRSIG record covering this rdataset signed by a specific  *	key.  This does not determine if the key's owner is authorized to sign  *	this record, as this requires a resolver or database.  *	If 'ignoretime' is ISC_TRUE, temporal validity will not be checked.  *  *	Requires:  *\li		'name' (the owner name of the record) is a valid name  *\li		'set' is a valid rdataset  *\li		'key' is a valid key  *\li		'mctx' is not NULL  *\li		'sigrdata' is a valid rdata containing a SIG record  *\li		'wild' if non-NULL then is a valid and has a buffer.  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#DNS_R_FROMWILDCARD - the signature is valid and is from  *			a wildcard expansion.  dns_dnssec_verify2() only.  *			'wild' contains the name of the wildcard if non-NULL.  *\li		#DNS_R_SIGINVALID - the signature fails to verify  *\li		#DNS_R_SIGEXPIRED - the signature has expired  *\li		#DNS_R_SIGFUTURE - the signature's validity period has not begun  *\li		#DNS_R_KEYUNAUTHORIZED - the key cannot sign this data (either  *			it is not a zone key or its flags prevent  *			authentication)  *\li		DST_R_*  */
+comment|/*%<  *	Verifies the RRSIG record covering this rdataset signed by a specific  *	key.  This does not determine if the key's owner is authorized to sign  *	this record, as this requires a resolver or database.  *	If 'ignoretime' is ISC_TRUE, temporal validity will not be checked.  *  *	'maxbits' specifies the maximum number of rsa exponent bits accepted.  *  *	Requires:  *\li		'name' (the owner name of the record) is a valid name  *\li		'set' is a valid rdataset  *\li		'key' is a valid key  *\li		'mctx' is not NULL  *\li		'sigrdata' is a valid rdata containing a SIG record  *\li		'wild' if non-NULL then is a valid and has a buffer.  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_NOMEMORY  *\li		#DNS_R_FROMWILDCARD - the signature is valid and is from  *			a wildcard expansion.  dns_dnssec_verify2() only.  *			'wild' contains the name of the wildcard if non-NULL.  *\li		#DNS_R_SIGINVALID - the signature fails to verify  *\li		#DNS_R_SIGEXPIRED - the signature has expired  *\li		#DNS_R_SIGFUTURE - the signature's validity period has not begun  *\li		#DNS_R_KEYUNAUTHORIZED - the key cannot sign this data (either  *			it is not a zone key or its flags prevent  *			authentication)  *\li		DST_R_*  */
 end_comment
 
 begin_comment
@@ -657,7 +695,7 @@ modifier|*
 name|origin
 parameter_list|,
 name|dns_ttl_t
-name|ttl
+name|hint_ttl
 parameter_list|,
 name|dns_diff_t
 modifier|*
@@ -687,7 +725,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Update the list of keys in 'keys' with new key information in 'newkeys'.  *  * For each key in 'newkeys', see if it has a match in 'keys'.  * - If not, and if the metadata says the key should be published:  *   add it to 'keys', and place a dns_difftuple into 'diff' so  *   the key can be added to the DNSKEY set.  If the metadata says it  *   should be active, set the first_sign flag.  * - If so, and if the metadata says it should be removed:  *   remove it from 'keys', and place a dns_difftuple into 'diff' so  *   the key can be removed from the DNSKEY set.  if 'removed' is non-NULL,  *   copy the key into that list; otherwise destroy it.  * - Otherwise, make sure keys has current metadata.  *  * If 'allzsk' is true, we are allowing KSK-flagged keys to be used as  * ZSKs.  *  * 'ttl' is the TTL of the DNSKEY RRset; if it is longer than the  * time until a new key will be activated, then we have to delay the  * key's activation.  *  * 'report' points to a function for reporting status.  *  * On completion, any remaining keys in 'newkeys' are freed.  */
+comment|/*%<  * Update the list of keys in 'keys' with new key information in 'newkeys'.  *  * For each key in 'newkeys', see if it has a match in 'keys'.  * - If not, and if the metadata says the key should be published:  *   add it to 'keys', and place a dns_difftuple into 'diff' so  *   the key can be added to the DNSKEY set.  If the metadata says it  *   should be active, set the first_sign flag.  * - If so, and if the metadata says it should be removed:  *   remove it from 'keys', and place a dns_difftuple into 'diff' so  *   the key can be removed from the DNSKEY set.  if 'removed' is non-NULL,  *   copy the key into that list; otherwise destroy it.  * - Otherwise, make sure keys has current metadata.  *  * If 'allzsk' is true, we are allowing KSK-flagged keys to be used as  * ZSKs.  *  * 'hint_ttl' is the TTL to use for the DNSKEY RRset if there is no  * existing RRset, and if none of the keys to be added has a default TTL  * (in which case we would use the shortest one).  If the TTL is longer  * than the time until a new key will be activated, then we have to delay  * the key's activation.  *  * 'report' points to a function for reporting status.  *  * On completion, any remaining keys in 'newkeys' are freed.  */
 end_comment
 
 begin_macro

@@ -158,7 +158,7 @@ name|dns_acache_t
 modifier|*
 name|acache
 parameter_list|,
-name|isc_uint32_t
+name|size_t
 name|size
 parameter_list|)
 function_decl|;

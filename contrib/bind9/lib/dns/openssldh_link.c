@@ -3238,6 +3238,9 @@ comment|/*%< openssldh_sign */
 name|NULL
 block|,
 comment|/*%< openssldh_verify */
+name|NULL
+block|,
+comment|/*%< openssldh_verify2 */
 name|openssldh_computesecret
 block|,
 name|openssldh_compare

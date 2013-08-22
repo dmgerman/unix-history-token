@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: zt.h,v 1.40 2011/09/02 23:46:32 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -43,8 +43,57 @@ name|DNS_ZTFIND_NOEXACT
 value|0x01
 end_define
 
-begin_function_decl
+begin_macro
 name|ISC_LANG_BEGINDECLS
+end_macro
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+modifier|*
+name|dns_zt_allloaded_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*%<  * Method prototype: when all pending zone loads are complete,  * the zone table can inform the caller via a callback function with  * this signature.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+modifier|*
+name|dns_zt_zoneloaded_t
+function_decl|)
+parameter_list|(
+name|dns_zt_t
+modifier|*
+name|zt
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*%<  * Method prototype: when a zone finishes loading, the zt object  * can be informed via a callback function with this signature.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_zt_create
 parameter_list|(
@@ -217,8 +266,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_zt_asyncload
+parameter_list|(
+name|dns_zt_t
+modifier|*
+name|zt
+parameter_list|,
+name|dns_zt_allloaded_t
+name|alldone
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Load all zones in the table.  If 'stop' is ISC_TRUE,  * stop on the first error and return it.  If 'stop'  * is ISC_FALSE, ignore errors.  *  * dns_zt_loadnew() only loads zones that are not yet loaded.  * dns_zt_load() also loads zones that are already loaded and  * and whose master file has changed since the last load.  *  * Requires:  * \li	'zt' to be valid  */
+comment|/*%<  * Load all zones in the table.  If 'stop' is ISC_TRUE,  * stop on the first error and return it.  If 'stop'  * is ISC_FALSE, ignore errors.  *  * dns_zt_loadnew() only loads zones that are not yet loaded.  * dns_zt_load() also loads zones that are already loaded and  * and whose master file has changed since the last load.  * dns_zt_asyncload() loads zones asynchronously; when all  * zones in the zone table have finished loaded (or failed due  * to errors), the caller is informed by calling 'alldone'  * with an argument of 'arg'.  *  * Requires:  * \li	'zt' to be valid  */
 end_comment
 
 begin_function_decl
@@ -307,6 +374,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Apply a given 'action' to all zone zones in the table.  * If 'stop' is 'ISC_TRUE' then walking the zone tree will stop if  * 'action' does not return ISC_R_SUCCESS.  *  * Requires:  * \li	'zt' to be valid.  * \li	'action' to be non NULL.  *  * Returns:  * \li	ISC_R_SUCCESS if action was applied to all nodes.  If 'stop' is  *	ISC_FALSE and 'sub' is non NULL then the first error (if any)  *	reported by 'action' is returned in '*sub';  *	any error code from 'action'.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_zt_loadspending
+parameter_list|(
+name|dns_zt_t
+modifier|*
+name|zt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns ISC_TRUE if and only if there are zones still waiting to  * be loaded in zone table 'zt'.  *  * Requires:  * \li	'zt' to be valid.  */
 end_comment
 
 begin_macro

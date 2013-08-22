@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011, 2012  Internet Systems 
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dst_openssl.h,v 1.11 2011/03/12 04:59:48 tbox Exp $ */
 end_comment
 
 begin_ifndef
