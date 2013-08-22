@@ -2049,8 +2049,6 @@ name|VM_ALLOC_SBUSY
 operator||
 name|VM_ALLOC_NORMAL
 operator||
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_IGN_SBUSY
 argument_list|)
 expr_stmt|;

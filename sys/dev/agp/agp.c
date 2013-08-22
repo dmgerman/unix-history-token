@@ -2401,8 +2401,6 @@ argument_list|,
 name|VM_ALLOC_WIRED
 operator||
 name|VM_ALLOC_ZERO
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 name|AGP_DPF

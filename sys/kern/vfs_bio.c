@@ -13778,8 +13778,6 @@ name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_WIRED
 operator||
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_IGN_SBUSY
 operator||
 name|VM_ALLOC_COUNT

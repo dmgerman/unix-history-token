@@ -409,8 +409,6 @@ name|shared_page_obj
 argument_list|,
 literal|0
 argument_list|,
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_NOBUSY
 operator||
 name|VM_ALLOC_ZERO

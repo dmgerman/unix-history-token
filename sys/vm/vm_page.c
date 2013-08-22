@@ -9691,7 +9691,7 @@ name|head
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * The caller must always specify the VM_ALLOC_RETRY flag.  This is intended  * to facilitate its eventual removal.  *  * This routine may sleep.  *  * The object must be locked on entry.  The lock will, however, be released  * and reacquired if the routine sleeps.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * This routine may sleep.  *  * The object must be locked on entry.  The lock will, however, be released  * and reacquired if the routine sleeps.  */
 name|vm_page_t
 name|vm_page_grab
 parameter_list|(
@@ -9714,21 +9714,6 @@ decl_stmt|;
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|allocflags
-operator|&
-name|VM_ALLOC_RETRY
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"vm_page_grab: VM_ALLOC_RETRY is required"
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -9912,11 +9897,7 @@ argument_list|,
 name|allocflags
 operator|&
 operator|~
-operator|(
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_IGN_SBUSY
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

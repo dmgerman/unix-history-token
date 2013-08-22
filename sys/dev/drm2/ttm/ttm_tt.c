@@ -1194,7 +1194,7 @@ name|obj
 argument_list|,
 name|i
 argument_list|,
-name|VM_ALLOC_RETRY
+name|VM_ALLOC_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1539,7 +1539,7 @@ name|obj
 argument_list|,
 name|i
 argument_list|,
-name|VM_ALLOC_RETRY
+name|VM_ALLOC_NORMAL
 argument_list|)
 expr_stmt|;
 name|pmap_copy_page
