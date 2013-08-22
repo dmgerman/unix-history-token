@@ -27299,6 +27299,21 @@ expr|struct
 name|sctp_init_chunk
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We might not overwrite the identification[] completely and on 	 * some platforms time_entered will contain some padding. Therefore 	 * zero out the cookie to avoid putting uninitialized memory on the 	 * wire. 	 */
+name|memset
+argument_list|(
+operator|&
+name|stc
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_state_cookie
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* the time I built cookie */
 operator|(
 name|void
