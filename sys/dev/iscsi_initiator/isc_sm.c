@@ -186,13 +186,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/iscsi/initiator/iscsi.h>
+file|<dev/iscsi_initiator/iscsi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/iscsi/initiator/iscsivar.h>
+file|<dev/iscsi_initiator/iscsivar.h>
 end_include
 
 begin_function
