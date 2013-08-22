@@ -7209,6 +7209,20 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* 	 * If the user specified a buffer, copy out the source filter 	 * entries to userland gracefully. 	 * We only copy out the number of entries which userland 	 * has asked for, but we always tell userland how big the 	 * buffer really needs to be. 	 */
+if|if
+condition|(
+name|msfr
+operator|.
+name|msfr_nsrcs
+operator|>
+name|in_mcast_maxsocksrc
+condition|)
+name|msfr
+operator|.
+name|msfr_nsrcs
+operator|=
+name|in_mcast_maxsocksrc
+expr_stmt|;
 name|tss
 operator|=
 name|NULL
