@@ -601,21 +601,6 @@ name|cap_monitor_trap
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* statistics */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|VMM_STAT_INTEL
-argument_list|(
-name|VMEXIT_HLT_IGNORED
-argument_list|,
-literal|"number of times hlt was ignored"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
