@@ -5358,11 +5358,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate KVA space for the TSB. 	 */
 if|if
 condition|(
@@ -5784,11 +5779,6 @@ block|}
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pm
 argument_list|)
 expr_stmt|;
 block|}

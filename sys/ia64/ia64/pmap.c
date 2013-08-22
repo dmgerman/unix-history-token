@@ -2474,6 +2474,11 @@ modifier|*
 name|pmap
 parameter_list|)
 block|{
+name|PMAP_LOCK_INIT
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 comment|/* kernel_pmap is the same as any other pmap. */
 name|pmap_pinit
 argument_list|(
@@ -2500,11 +2505,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2606,11 +2606,6 @@ name|pm_rid
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 block|}

@@ -6764,6 +6764,11 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
+name|PMAP_LOCK_INIT
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 name|mmu_booke_pinit
 argument_list|(
 name|mmu
@@ -6834,11 +6839,6 @@ argument_list|,
 operator|(
 literal|"pmap_pinit: initializing kernel_pmap"
 operator|)
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 for|for
@@ -6948,11 +6948,6 @@ name|pm_stats
 operator|.
 name|resident_count
 operator|)
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 block|}

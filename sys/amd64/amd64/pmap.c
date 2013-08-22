@@ -7155,11 +7155,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 comment|/* 	 * allocate the page directory page 	 */
 while|while
 condition|(
@@ -8377,18 +8372,6 @@ literal|"pmap_release: pmap has reserved page table page(s)"
 operator|)
 argument_list|)
 expr_stmt|;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -8481,11 +8464,6 @@ expr_stmt|;
 name|vm_page_free_zero
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 block|}

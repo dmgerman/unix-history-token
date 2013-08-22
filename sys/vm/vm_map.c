@@ -707,6 +707,14 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|PMAP_LOCK_INIT
+argument_list|(
+name|vmspace_pmap
+argument_list|(
+name|vm
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

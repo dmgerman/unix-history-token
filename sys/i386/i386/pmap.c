@@ -7220,11 +7220,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 comment|/* 	 * No need to allocate page table space yet but we do need a valid 	 * page directory table. 	 */
 if|if
 condition|(
@@ -8618,11 +8613,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

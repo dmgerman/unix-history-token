@@ -4567,11 +4567,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 comment|/* 	 * allocate the page directory page 	 */
 while|while
 condition|(
@@ -5226,11 +5221,6 @@ expr_stmt|;
 name|vm_page_free_zero
 argument_list|(
 name|ptdpg
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 block|}
