@@ -6704,7 +6704,7 @@ condition|)
 continue|continue;
 name|err
 operator|=
-name|dmu_free_object
+name|dmu_free_long_object
 argument_list|(
 name|os
 argument_list|,
