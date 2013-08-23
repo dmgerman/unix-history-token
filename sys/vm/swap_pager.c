@@ -5710,8 +5710,6 @@ argument_list|,
 name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 if|if

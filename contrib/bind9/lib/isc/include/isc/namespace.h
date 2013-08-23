@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009, 2010, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -70,6 +70,13 @@ define|#
 directive|define
 name|isc_app_shutdown
 value|isc__app_shutdown
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_app_ctxfinish
+value|isc__app_ctxfinish
 end_define
 
 begin_define
@@ -467,6 +474,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|isc_socket_dup
+value|isc__socket_dup
+end_define
+
+begin_define
+define|#
+directive|define
 name|isc_socket_attach
 value|isc__socket_attach
 end_define
@@ -616,6 +630,13 @@ define|#
 directive|define
 name|isc_socket_connect
 value|isc__socket_connect
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_socket_getfd
+value|isc__socket_getfd
 end_define
 
 begin_define
@@ -856,6 +877,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|isc_taskmgr_setmode
+value|isc__taskmgr_setmode
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_taskmgr_mode
+value|isc__taskmgr_mode
+end_define
+
+begin_define
+define|#
+directive|define
 name|isc_taskmgr_destroy
 value|isc__taskmgr_destroy
 end_define
@@ -886,6 +921,20 @@ define|#
 directive|define
 name|isc_task_endexclusive
 value|isc__task_endexclusive
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_task_setprivilege
+value|isc__task_setprivilege
+end_define
+
+begin_define
+define|#
+directive|define
+name|isc_task_privilege
+value|isc__task_privilege
 end_define
 
 begin_define

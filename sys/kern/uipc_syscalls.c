@@ -10853,8 +10853,6 @@ operator||
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_WIRED
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Check if page is valid for what we need, 			 * otherwise initiate I/O. 			 * If we already turned some pages into mbufs, 			 * send them off before we come here again and 			 * block. 			 */

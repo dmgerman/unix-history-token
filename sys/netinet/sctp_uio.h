@@ -3926,7 +3926,7 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|features
 decl_stmt|;
 name|uint32_t
@@ -3953,7 +3953,7 @@ decl_stmt|;
 name|uint32_t
 name|extra_padding
 index|[
-literal|32
+literal|31
 index|]
 decl_stmt|;
 comment|/* future */

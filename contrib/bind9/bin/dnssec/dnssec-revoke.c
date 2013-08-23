@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-revoke.c,v 1.22.124.2 2011/10/20 23:46:27 tbox Exp $ */
+comment|/* $Id: dnssec-revoke.c,v 1.24 2011/10/20 23:46:51 tbox Exp $ */
 end_comment
 
 begin_comment

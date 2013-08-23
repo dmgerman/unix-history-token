@@ -1249,17 +1249,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_ALLOC_RETRY
-value|0x0080
-end_define
-
-begin_comment
-comment|/* Mandatory with vm_page_grab() */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VM_ALLOC_NOOBJ
 value|0x0100
 end_define

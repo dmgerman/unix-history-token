@@ -406,19 +406,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vfs_drain_busy_pages
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vfs_clean_pages_dirty_buf
 parameter_list|(
 name|struct
@@ -13778,8 +13765,6 @@ name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_WIRED
 operator||
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_IGN_SBUSY
 operator||
 name|VM_ALLOC_COUNT
@@ -15893,7 +15878,6 @@ comment|/*  * Ensure that all buffer pages are not exclusive busied.  If any pag
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vfs_drain_busy_pages
 parameter_list|(

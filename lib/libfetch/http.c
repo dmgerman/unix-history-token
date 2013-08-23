@@ -6681,6 +6681,21 @@ name|http_cmd
 argument_list|(
 name|conn
 argument_list|,
+literal|"Host: %s:%d"
+argument_list|,
+name|URL
+operator|->
+name|host
+argument_list|,
+name|URL
+operator|->
+name|port
+argument_list|)
+expr_stmt|;
+name|http_cmd
+argument_list|(
+name|conn
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;

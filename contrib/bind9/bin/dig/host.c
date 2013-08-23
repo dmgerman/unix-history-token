@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009-2012  Internet Systems Consortium, I
 end_comment
 
 begin_comment
-comment|/* $Id: host.c,v 1.124.40.3 2011/03/11 06:46:59 marka Exp $ */
+comment|/* $Id: host.c,v 1.127 2011/03/11 06:11:20 marka Exp $ */
 end_comment
 
 begin_comment

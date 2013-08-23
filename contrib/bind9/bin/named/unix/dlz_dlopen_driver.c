@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dlz_dlopen_driver.c,v 1.1.4.6 2012/02/22 23:46:35 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -658,6 +658,14 @@ parameter_list|,
 name|dns_sdlzlookup_t
 modifier|*
 name|lookup
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|)
 block|{
 name|dlopen_data_t
@@ -698,6 +706,10 @@ operator|->
 name|dbdata
 argument_list|,
 name|lookup
+argument_list|,
+name|methods
+argument_list|,
+name|clientinfo
 argument_list|)
 expr_stmt|;
 name|MAYBE_UNLOCK

@@ -6505,11 +6505,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"pmap_release()\n"
@@ -12117,11 +12112,6 @@ name|uint32_t
 operator|)
 name|pmap
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 name|pmap_alloc_l1

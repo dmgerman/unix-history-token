@@ -31,6 +31,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<dns/clientinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/dlz.h>
 end_include
 
@@ -310,12 +316,20 @@ parameter_list|,
 name|dns_sdlzlookup_t
 modifier|*
 name|lookup
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|)
 function_decl|;
 end_typedef
 
 begin_comment
-comment|/*%<  * Method prototype.  Drivers implementing the SDLZ interface MUST  * supply a lookup method.  This method is called when the DNS server  * is performing a query, after the find zone and before any other  * methods have been called.  This function returns record DNS record  * information using the dns_sdlz_putrr and dns_sdlz_putsoa functions.  * If this function supplies authority information for the DNS record  * the authority method is not required.  If it does not, the  * authority function is required.  A SDLZ driver must implement a  * lookup method.  */
+comment|/*%<  * Method prototype.  Drivers implementing the SDLZ interface MUST  * supply a lookup method.  This method is called when the  * DNS server is performing a query, after the find zone and before any  * other methods have been called.  This function returns DNS record  * information using the dns_sdlz_putrr and dns_sdlz_putsoa functions.  * If this function supplies authority information for the DNS record  * the authority method is not required.  If it does not, the  * authority function is required.  *  * The 'methods' and 'clientinfo' args allow an SDLZ driver to retrieve  * information about the querying client (such as source IP address)  * from the caller.  */
 end_comment
 
 begin_typedef
