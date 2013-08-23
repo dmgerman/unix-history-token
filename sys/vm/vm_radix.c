@@ -1573,6 +1573,54 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Returns TRUE if the specified radix tree contains a single leaf and FALSE  * otherwise.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|vm_radix_is_singleton
+parameter_list|(
+name|struct
+name|vm_radix
+modifier|*
+name|rtree
+parameter_list|)
+block|{
+name|struct
+name|vm_radix_node
+modifier|*
+name|rnode
+decl_stmt|;
+name|rnode
+operator|=
+name|vm_radix_getroot
+argument_list|(
+name|rtree
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rnode
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+return|return
+operator|(
+name|vm_radix_isleaf
+argument_list|(
+name|rnode
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Returns the value stored at the index.  If the index is not present,  * NULL is returned.  */
 end_comment
 

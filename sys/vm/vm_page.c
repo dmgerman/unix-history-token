@@ -9397,6 +9397,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * The above call to vm_radix_insert() could reclaim the one pre- 	 * existing cached page from this object, resulting in a call to 	 * vdrop(). 	 */
+if|if
+condition|(
+operator|!
+name|cache_was_empty
+condition|)
+name|cache_was_empty
+operator|=
+name|vm_radix_is_singleton
+argument_list|(
+operator|&
+name|object
+operator|->
+name|cache
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|flags

@@ -52,6 +52,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|boolean_t
+name|vm_radix_is_singleton
+parameter_list|(
+name|struct
+name|vm_radix
+modifier|*
+name|rtree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_page_t
 name|vm_radix_lookup
 parameter_list|(

@@ -260,7 +260,7 @@ value|400000
 end_define
 
 begin_comment
-comment|/* Spec requires 400KHz max during ID phase. */
+comment|/* Spec requires 400kHz max during ID phase. */
 end_comment
 
 begin_expr_stmt
@@ -2496,10 +2496,11 @@ operator|&
 name|R1_APP_CMD
 operator|)
 condition|)
-return|return
+name|err
+operator|=
 name|MMC_ERR_FAILED
-return|;
-comment|/* Retries won't help. */
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|mmc_wait_for_cmd

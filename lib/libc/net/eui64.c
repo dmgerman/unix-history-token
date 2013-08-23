@@ -881,7 +881,7 @@ name|fopen
 argument_list|(
 name|_PATH_EUI64
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==
@@ -1143,7 +1143,7 @@ name|fopen
 argument_list|(
 name|_PATH_EUI64
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==

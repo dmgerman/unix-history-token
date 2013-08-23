@@ -284,6 +284,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|callout_init_rm
+parameter_list|(
+name|c
+parameter_list|,
+name|rm
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|_callout_init_lock((c), ((rm != NULL) ?&(rm)->lock_object : 	\ 	    NULL, (flags))
+end_define
+
+begin_define
+define|#
+directive|define
 name|callout_init_rw
 parameter_list|(
 name|c

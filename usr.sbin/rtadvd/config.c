@@ -5648,6 +5648,12 @@ name|pfx_origin
 operator|=
 name|PREFIX_FROM_DYNAMIC
 expr_stmt|;
+name|pfx
+operator|->
+name|pfx_rainfo
+operator|=
+name|rai
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5659,12 +5665,6 @@ name|pfx
 argument_list|,
 name|pfx_next
 argument_list|)
-expr_stmt|;
-name|pfx
-operator|->
-name|pfx_rainfo
-operator|=
-name|rai
 expr_stmt|;
 name|syslog
 argument_list|(
