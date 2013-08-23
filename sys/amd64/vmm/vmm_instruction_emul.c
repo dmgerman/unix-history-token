@@ -3115,10 +3115,6 @@ condition|(
 name|vie
 operator|->
 name|num_processed
-operator|==
-name|vie
-operator|->
-name|num_valid
 condition|)
 return|return
 operator|(
