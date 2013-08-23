@@ -660,6 +660,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|AcpiNsDumpObjectPaths
+parameter_list|(
+name|ACPI_OBJECT_TYPE
+name|Type
+parameter_list|,
+name|UINT8
+name|DisplayType
+parameter_list|,
+name|UINT32
+name|MaxDepth
+parameter_list|,
+name|ACPI_OWNER_ID
+name|OwnerId
+parameter_list|,
+name|ACPI_HANDLE
+name|StartHandle
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * nseval - Namespace evaluation functions  */
 end_comment

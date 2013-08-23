@@ -451,8 +451,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_ACCESS
+value|EXCEP_ENV (0x001D)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x001C
+value|0x001D
 end_define
 
 begin_comment
@@ -980,7 +987,7 @@ name|EXCEP_TXT
 argument_list|(
 literal|"AE_NOT_FOUND"
 argument_list|,
-literal|"The name was not found in the namespace"
+literal|"A requested entity is not found"
 argument_list|)
 block|,
 name|EXCEP_TXT
@@ -1142,6 +1149,13 @@ argument_list|(
 literal|"AE_NOT_CONFIGURED"
 argument_list|,
 literal|"The interface is not part of the current subsystem configuration"
+argument_list|)
+block|,
+name|EXCEP_TXT
+argument_list|(
+literal|"AE_ACCESS"
+argument_list|,
+literal|"Permission denied for the requested operation"
 argument_list|)
 block|}
 decl_stmt|;

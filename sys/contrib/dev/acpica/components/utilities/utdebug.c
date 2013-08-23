@@ -335,7 +335,7 @@ block|}
 comment|/*      * Display the module name, current line number, thread ID (if requested),      * current procedure nesting level, and the current procedure name      */
 name|AcpiOsPrintf
 argument_list|(
-literal|"%8s-%04ld "
+literal|"%9s-%04ld "
 argument_list|,
 name|ModuleName
 argument_list|,
