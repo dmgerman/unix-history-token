@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  */
 end_comment
 
 begin_include
@@ -8762,6 +8762,7 @@ name|endptr
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|searchname
 operator|=
 name|argv
@@ -8769,6 +8770,11 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|searchguid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|found_config
 operator|=
 name|NULL
