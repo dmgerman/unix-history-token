@@ -12389,7 +12389,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* assert(hz> 0); */
 if|if
 condition|(
 name|tv
@@ -12427,31 +12426,18 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* assert(tick> 0); */
-comment|/* assert(ULONG_MAX - INT_MAX>= 1000000); */
 name|val
 operator|=
-call|(
-name|u_long
-call|)
+name|tvtohz
 argument_list|(
+operator|&
 name|tv
-operator|.
-name|tv_sec
-operator|*
-name|hz
 argument_list|)
-operator|+
-name|tv
-operator|.
-name|tv_usec
-operator|/
-name|tick
 expr_stmt|;
 if|if
 condition|(
 name|val
-operator|>
+operator|==
 name|INT_MAX
 condition|)
 block|{
@@ -12463,22 +12449,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
-name|val
-operator|==
-literal|0
-operator|&&
-name|tv
-operator|.
-name|tv_usec
-operator|!=
-literal|0
-condition|)
-name|val
-operator|=
-literal|1
-expr_stmt|;
 switch|switch
 condition|(
 name|sopt
