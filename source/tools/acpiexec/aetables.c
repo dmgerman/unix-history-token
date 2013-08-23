@@ -656,15 +656,11 @@ name|ACPI_TABLE_RSDP
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ACPI_MEMCPY
+name|ACPI_MAKE_RSDP_SIG
 argument_list|(
 name|LocalRSDP
 operator|.
 name|Signature
-argument_list|,
-name|ACPI_SIG_RSDP
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 name|ACPI_MEMCPY

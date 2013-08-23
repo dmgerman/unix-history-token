@@ -274,6 +274,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|UINT32
+name|AeSciHandler
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -1406,7 +1418,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeEventHandler  *  * DESCRIPTION: Handler for Fixed Events  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeEventHandler, AeSciHandler  *  * DESCRIPTION: Handler for Fixed Events and SCIs  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1419,6 +1431,29 @@ modifier|*
 name|Context
 parameter_list|)
 block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|UINT32
+name|AeSciHandler
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[AcpiExec] Received an SCI at handler\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1461,12 +1496,27 @@ modifier|*
 name|RegionContext
 parameter_list|)
 block|{
-comment|/*      * Real simple, set the RegionContext to the RegionHandle      */
+if|if
+condition|(
+name|Function
+operator|==
+name|ACPI_REGION_DEACTIVATE
+condition|)
+block|{
+operator|*
+name|RegionContext
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|*
 name|RegionContext
 operator|=
 name|RegionHandle
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK
@@ -1476,7 +1526,117 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AeInstallDeviceHandlers, AeInstallEcHandler,  *              AeInstallPciHandler  *  * PARAMETERS:  ACPI_WALK_NAMESPACE callback  *  * RETURN:      Status  *  * DESCRIPTION: Walk entire namespace, install a handler for every EC  *              device found.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AeInstallSciHandler  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install handler for SCIs. Exercise the code by doing an  *              install/remove/install.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AeInstallSciHandler
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiInstallSciHandler
+argument_list|(
+name|AeSciHandler
+argument_list|,
+operator|&
+name|AeMyContext
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Could not install an SCI handler (1)"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiRemoveSciHandler
+argument_list|(
+name|AeSciHandler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Could not remove an SCI handler"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiInstallSciHandler
+argument_list|(
+name|AeSciHandler
+argument_list|,
+operator|&
+name|AeMyContext
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Could not install an SCI handler (2)"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AeInstallDeviceHandlers, AeInstallEcHandler,  *              AeInstallPciHandler  *  * PARAMETERS:  ACPI_WALK_NAMESPACE callback  *  * RETURN:      Status  *  * DESCRIPTION: Walk entire namespace, install a handler for every EC  *              and PCI device found.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1728,6 +1888,19 @@ operator|!
 name|AcpiGbl_ReducedHardware
 condition|)
 block|{
+comment|/* Install a user SCI handler */
+name|Status
+operator|=
+name|AeInstallSciHandler
+argument_list|()
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AeInstallSciHandler
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 comment|/* Install some fixed event handlers */
 name|Status
 operator|=

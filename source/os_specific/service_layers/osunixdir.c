@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<acpi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -47,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acpisrc.h"
 end_include
 
 begin_comment
@@ -158,6 +158,15 @@ operator|!
 name|dir
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot open directory - %s\n"
+argument_list|,
+name|DirPathname
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ExternalInfo
@@ -319,8 +328,10 @@ operator|!
 name|temp_str
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Could not allocate buffer for temporary string\n"
 argument_list|)
 expr_stmt|;
@@ -378,9 +389,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"stat() error - should not happen\n"
+name|stderr
+argument_list|,
+literal|"Cannot stat file (should not happen) - %s\n"
+argument_list|,
+name|temp_str
 argument_list|)
 expr_stmt|;
 return|return

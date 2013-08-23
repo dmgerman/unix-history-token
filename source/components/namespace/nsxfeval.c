@@ -1102,6 +1102,24 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/* Now we can validate the starting node */
+if|if
+condition|(
+operator|!
+name|AcpiNsValidateHandle
+argument_list|(
+name|StartObject
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_BAD_PARAMETER
+expr_stmt|;
+goto|goto
+name|UnlockAndExit2
+goto|;
+block|}
 name|Status
 operator|=
 name|AcpiNsWalkNamespace
@@ -1123,6 +1141,8 @@ argument_list|,
 name|ReturnValue
 argument_list|)
 expr_stmt|;
+name|UnlockAndExit2
+label|:
 operator|(
 name|void
 operator|)

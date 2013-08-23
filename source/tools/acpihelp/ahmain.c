@@ -27,6 +27,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|AH_UTILITY_NAME
+value|"ACPI Help Utility"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORTED_OPTIONS
+value|"ehikmopsv"
+end_define
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AhDisplayUsage  *  * DESCRIPTION: Usage message  *  ******************************************************************************/
 end_comment
@@ -49,6 +63,13 @@ argument_list|(
 literal|"-h"
 argument_list|,
 literal|"Display help"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display version information"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -169,7 +190,7 @@ name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|"ACPI Help Utility"
+name|AH_UTILITY_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -205,7 +226,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ehikmops"
+name|AH_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -272,6 +293,15 @@ operator|=
 name|AH_DECODE_ASL
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+comment|/* -v: (Version): signon already emitted, just exit */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 literal|'h'
 case|:

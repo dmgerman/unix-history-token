@@ -146,17 +146,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|EXTERN
-name|UINT32
+name|BOOLEAN
 name|INIT_GLOBAL
-argument_list|(
-name|Gbl_SsdtCount
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|Gbl_DumpCustomizedTables
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|EXTERN
@@ -180,6 +180,18 @@ operator|*
 name|Gbl_OutputFilename
 argument_list|,
 name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|UINT64
+name|INIT_GLOBAL
+argument_list|(
+name|Gbl_RsdpBase
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -251,6 +263,17 @@ block|}
 name|AP_DUMP_ACTION
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Local RSDP signature (Not the same as the actual signature which is "RSD PTR ") */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AP_DUMP_SIG_RSDP
+value|"RSDP"
+end_define
 
 begin_define
 define|#
@@ -387,6 +410,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|BOOLEAN
+name|ApIsValidChecksum
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT32
+name|ApGetTableLength
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * apfiles - File I/O utilities  */
 end_comment
@@ -420,6 +465,9 @@ parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
+parameter_list|,
+name|UINT32
+name|Instance
 parameter_list|)
 function_decl|;
 end_function_decl

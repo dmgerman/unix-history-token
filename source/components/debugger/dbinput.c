@@ -225,6 +225,8 @@ name|CMD_OSI
 block|,
 name|CMD_OWNER
 block|,
+name|CMD_PATHS
+block|,
 name|CMD_PREDEFINED
 block|,
 name|CMD_PREFIX
@@ -236,6 +238,8 @@ block|,
 name|CMD_RESOURCES
 block|,
 name|CMD_RESULTS
+block|,
+name|CMD_SCI
 block|,
 name|CMD_SET
 block|,
@@ -548,6 +552,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"PATHS"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"PREDEFINED"
 block|,
 literal|0
@@ -579,6 +589,12 @@ block|}
 block|,
 block|{
 literal|"RESULTS"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"SCI"
 block|,
 literal|0
 block|}
@@ -903,33 +919,9 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Event<F|G><Value>"
-block|,
-literal|"Generate AcpiEvent (Fixed/GPE)\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
 literal|"  Find<AcpiName> (? is wildcard)"
 block|,
 literal|"Find ACPI name(s) with wildcards\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Gpe<GpeNum><GpeBlock>"
-block|,
-literal|"Simulate a GPE\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Gpes"
-block|,
-literal|"Display info on all GPEs\n"
 block|}
 block|,
 block|{
@@ -983,6 +975,14 @@ block|,
 block|{
 literal|1
 block|,
+literal|"  Paths"
+block|,
+literal|"Display full pathnames of namespace objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
 literal|"  Predefined"
 block|,
 literal|"Check all predefined names\n"
@@ -1018,14 +1018,6 @@ block|,
 literal|"  Set N<NamedObject><Value>"
 block|,
 literal|"Set value for named integer\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"  Sleep [SleepState]"
-block|,
-literal|"Simulate sleep/wake sequence(s) (0-5)\n"
 block|}
 block|,
 block|{
@@ -1127,7 +1119,7 @@ block|,
 block|{
 literal|1
 block|,
-literal|"     (Byte List)"
+literal|"     (Hex Byte List)"
 block|,
 literal|"Buffer method argument\n"
 block|}
@@ -1234,6 +1226,54 @@ block|,
 literal|"<Enter>"
 block|,
 literal|"Single step next AML opcode (over calls)\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nHardware Related Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Event<F|G><Value>"
+block|,
+literal|"Generate AcpiEvent (Fixed/GPE)\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Gpe<GpeNum><GpeBlock>"
+block|,
+literal|"Simulate a GPE\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Gpes"
+block|,
+literal|"Display info on all GPEs\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Sci"
+block|,
+literal|"Generate an SCI\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"  Sleep [SleepState]"
+block|,
+literal|"Simulate sleep/wake sequence(s) (0-5)\n"
 block|}
 block|,
 block|{
@@ -2955,6 +2995,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CMD_PATHS
+case|:
+name|AcpiDbDumpNamespacePaths
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|CMD_PREDEFINED
 case|:
 name|AcpiDbCheckPredefinedNames
@@ -3001,6 +3048,13 @@ case|case
 name|CMD_RESULTS
 case|:
 name|AcpiDbDisplayResults
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CMD_SCI
+case|:
+name|AcpiDbGenerateSci
 argument_list|()
 expr_stmt|;
 break|break;

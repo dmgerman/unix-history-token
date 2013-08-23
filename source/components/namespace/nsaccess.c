@@ -1021,8 +1021,10 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"ACPI path has too many parent prefixes (^) "
+literal|"%s: Path has too many parent prefixes (^) "
 literal|"- reached beyond root node"
+operator|,
+name|Pathname
 operator|)
 argument_list|)
 expr_stmt|;

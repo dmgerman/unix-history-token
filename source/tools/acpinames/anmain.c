@@ -55,8 +55,15 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|AE_SUPPORTED_OPTIONS
-value|"?h"
+name|AN_UTILITY_NAME
+value|"ACPI Namespace Dump Utility"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_SUPPORTED_OPTIONS
+value|"?hv"
 end_define
 
 begin_comment
@@ -81,6 +88,13 @@ argument_list|(
 literal|"-?"
 argument_list|,
 literal|"Display this message"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display version information"
 argument_list|)
 expr_stmt|;
 block|}
@@ -497,7 +511,7 @@ name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|"ACPI Namespace Dump Utility"
+name|AN_UTILITY_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -552,7 +566,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|AE_SUPPORTED_OPTIONS
+name|AN_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -563,6 +577,15 @@ condition|(
 name|j
 condition|)
 block|{
+case|case
+literal|'v'
+case|:
+comment|/* -v: (Version): signon already emitted, just exit */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 literal|'?'
 case|:

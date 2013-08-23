@@ -237,7 +237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetTableByIndex  *  * PARAMETERS:  Index           - Which table to get  *              Table           - Where a pointer to the table is returned  *              Address         - Where the table physical address is returned  *  * RETURN:      Status; Table buffer and physical address returned if AE_OK.  *              AE_LIMIT: Index is beyond valid limit  *  * DESCRIPTION: Get an ACPI table via an index value (0 through n). Returns  *              AE_LIMIT when an invalid index is reached. Index is not  *              necessarily an index into the RSDT/XSDT.  *              Table is obtained from the Windows registry.  *  * NOTE:        Cannot get the physical address from the windows registry;  *              zero is returned instead.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetTableByIndex  *  * PARAMETERS:  Index           - Which table to get  *              Table           - Where a pointer to the table is returned  *              Instance        - Where a pointer to the table instance no. is  *                                returned  *              Address         - Where the table physical address is returned  *  * RETURN:      Status; Table buffer and physical address returned if AE_OK.  *              AE_LIMIT: Index is beyond valid limit  *  * DESCRIPTION: Get an ACPI table via an index value (0 through n). Returns  *              AE_LIMIT when an invalid index is reached. Index is not  *              necessarily an index into the RSDT/XSDT.  *              Table is obtained from the Windows registry.  *  * NOTE:        Cannot get the physical address from the windows registry;  *              zero is returned instead.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -251,6 +251,10 @@ name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|Table
+parameter_list|,
+name|UINT32
+modifier|*
+name|Instance
 parameter_list|,
 name|ACPI_PHYSICAL_ADDRESS
 modifier|*
@@ -783,6 +787,71 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* These are here for acpidump only, so we don't need to link oswinxf */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DUMP_APP
+end_ifdef
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsMapMemory  *  * PARAMETERS:  Where               - Physical address of memory to be mapped  *              Length              - How much memory to map  *  * RETURN:      Pointer to mapped memory. Null on error.  *  * DESCRIPTION: Map physical memory into caller's address space  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|AcpiOsMapMemory
+parameter_list|(
+name|ACPI_PHYSICAL_ADDRESS
+name|Where
+parameter_list|,
+name|ACPI_SIZE
+name|Length
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ACPI_TO_POINTER
+argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
+name|Where
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsUnmapMemory  *  * PARAMETERS:  Where               - Logical address of memory to be unmapped  *              Length              - How much memory to unmap  *  * RETURN:      None.  *  * DESCRIPTION: Delete a previously created mapping. Where and Length must  *              correspond to a previous mapping exactly.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiOsUnmapMemory
+parameter_list|(
+name|void
+modifier|*
+name|Where
+parameter_list|,
+name|ACPI_SIZE
+name|Length
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|AP_SUPPORTED_OPTIONS
-value|"?a:bf:hn:o:svz"
+value|"?a:bcf:hn:o:r:svz"
 end_define
 
 begin_comment
@@ -135,6 +135,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-c"
+argument_list|,
+literal|"Dump customized tables"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-h -?"
 argument_list|,
 literal|"This help message"
@@ -149,6 +156,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-r<Address>"
+argument_list|,
+literal|"Dump tables from specified RSDP"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-s"
 argument_list|,
 literal|"Print table summaries only"
@@ -158,7 +172,7 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-v"
 argument_list|,
-literal|"Version of this utility"
+literal|"Display version information"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -290,6 +304,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Command line options */
 while|while
 condition|(
@@ -324,6 +341,15 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 case|case
+literal|'c'
+case|:
+comment|/* Dump customized tables */
+name|Gbl_DumpCustomizedTables
+operator|=
+name|TRUE
+expr_stmt|;
+continue|continue;
+case|case
 literal|'h'
 case|:
 case|case
@@ -349,6 +375,47 @@ name|AcpiGbl_Optarg
 argument_list|)
 condition|)
 block|{
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+case|case
+literal|'r'
+case|:
+comment|/* Dump tables from specified RSDP */
+name|Status
+operator|=
+name|AcpiUtStrtoul64
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|Gbl_RsdpBase
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Could not convert to a physical address\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 operator|-

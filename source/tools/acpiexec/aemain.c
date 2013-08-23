@@ -238,8 +238,15 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|ACPIEXEC_NAME
+value|"AML Execution/Debug Utility"
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_SUPPORTED_OPTIONS
-value|"?b:d:e:f:ghm^orv:x:"
+value|"?b:d:e:f:ghm^orv^:x:"
 end_define
 
 begin_comment
@@ -377,6 +384,13 @@ argument_list|(
 literal|"-r"
 argument_list|,
 literal|"Use hardware-reduced FADT V5"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display version information"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -773,6 +787,15 @@ index|]
 condition|)
 block|{
 case|case
+literal|'^'
+case|:
+comment|/* -v: (Version): signon already emitted, just exit */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
 literal|'i'
 case|:
 name|AcpiDbgLevel
@@ -911,7 +934,7 @@ name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|"AML Execution/Debug Utility"
+name|ACPIEXEC_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;

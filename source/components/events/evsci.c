@@ -70,6 +70,98 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSciDispatch  *  * PARAMETERS:  None  *  * RETURN:      Status code indicates whether interrupt was handled.  *  * DESCRIPTION: Dispatch the SCI to all host-installed SCI handlers.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
+name|AcpiEvSciDispatch
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_SCI_HANDLER_INFO
+modifier|*
+name|SciHandler
+decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|Flags
+decl_stmt|;
+name|UINT32
+name|IntStatus
+init|=
+name|ACPI_INTERRUPT_NOT_HANDLED
+decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+name|EvSciDispatch
+argument_list|)
+expr_stmt|;
+comment|/* Are there any host-installed SCI handlers? */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_SciHandlerList
+condition|)
+block|{
+return|return
+operator|(
+name|IntStatus
+operator|)
+return|;
+block|}
+name|Flags
+operator|=
+name|AcpiOsAcquireLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|)
+expr_stmt|;
+comment|/* Invoke all host-installed SCI handlers */
+name|SciHandler
+operator|=
+name|AcpiGbl_SciHandlerList
+expr_stmt|;
+while|while
+condition|(
+name|SciHandler
+condition|)
+block|{
+comment|/* Invoke the installed handler (at interrupt level) */
+name|IntStatus
+operator||=
+name|SciHandler
+operator|->
+name|Address
+argument_list|(
+name|SciHandler
+operator|->
+name|Context
+argument_list|)
+expr_stmt|;
+name|SciHandler
+operator|=
+name|SciHandler
+operator|->
+name|Next
+expr_stmt|;
+block|}
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|Flags
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|IntStatus
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSciXruptHandler  *  * PARAMETERS:  Context   - Calling Context  *  * RETURN:      Status code indicates whether interrupt was handled.  *  * DESCRIPTION: Interrupt handler that will figure out what function or  *              control method to call to deal with a SCI.  *  ******************************************************************************/
 end_comment
 
@@ -115,6 +207,12 @@ argument_list|(
 name|GpeXruptList
 argument_list|)
 expr_stmt|;
+comment|/* Invoke all host-installed SCI handlers */
+name|InterruptHandled
+operator||=
+name|AcpiEvSciDispatch
+argument_list|()
+expr_stmt|;
 name|AcpiSciCount
 operator|++
 expr_stmt|;
@@ -156,7 +254,7 @@ argument_list|(
 name|EvGpeXruptHandler
 argument_list|)
 expr_stmt|;
-comment|/*      * We are guaranteed by the ACPI CA initialization/shutdown code that      * if this interrupt handler is installed, ACPI is enabled.      */
+comment|/*      * We are guaranteed by the ACPICA initialization/shutdown code that      * if this interrupt handler is installed, ACPI is enabled.      */
 comment|/* GPEs: Check for and dispatch any GPEs that have occurred */
 name|InterruptHandled
 operator||=
@@ -219,22 +317,29 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEvRemoveSciHandler  *  * PARAMETERS:  none  *  * RETURN:      E_OK if handler uninstalled OK, E_ERROR if handler was not  *              installed to begin with  *  * DESCRIPTION: Remove the SCI interrupt handler. No further SCIs will be  *              taken.  *  * Note:  It doesn't seem important to disable all events or set the event  *        enable registers to their original values. The OS should disable  *        the SCI interrupt level when the handler is removed, so no more  *        events will come in.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEvRemoveAllSciHandlers  *  * PARAMETERS:  none  *  * RETURN:      AE_OK if handler uninstalled, AE_ERROR if handler was not  *              installed to begin with  *  * DESCRIPTION: Remove the SCI interrupt handler. No further SCIs will be  *              taken. Remove all host-installed SCI handlers.  *  * Note:  It doesn't seem important to disable all events or set the event  *        enable registers to their original values. The OS should disable  *        the SCI interrupt level when the handler is removed, so no more  *        events will come in.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEvRemoveSciHandler
+name|AcpiEvRemoveAllSciHandlers
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_SCI_HANDLER_INFO
+modifier|*
+name|SciHandler
+decl_stmt|;
+name|ACPI_CPU_FLAGS
+name|Flags
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-name|EvRemoveSciHandler
+name|EvRemoveAllSciHandlers
 argument_list|)
 expr_stmt|;
 comment|/* Just let the OS remove the handler and disable the level */
@@ -250,6 +355,54 @@ operator|.
 name|SciInterrupt
 argument_list|,
 name|AcpiEvSciXruptHandler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AcpiGbl_SciHandlerList
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Flags
+operator|=
+name|AcpiOsAcquireLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|)
+expr_stmt|;
+comment|/* Free all host-installed SCI handlers */
+while|while
+condition|(
+name|AcpiGbl_SciHandlerList
+condition|)
+block|{
+name|SciHandler
+operator|=
+name|AcpiGbl_SciHandlerList
+expr_stmt|;
+name|AcpiGbl_SciHandlerList
+operator|=
+name|SciHandler
+operator|->
+name|Next
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|SciHandler
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

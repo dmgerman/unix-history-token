@@ -3032,6 +3032,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|AcpiDbGenerateSci
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|AcpiEvSciDispatch
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

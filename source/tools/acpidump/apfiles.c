@@ -124,7 +124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ApWriteToBinaryFile  *  * PARAMETERS:  Table               - ACPI table to be written  *  * RETURN:      Status  *  * DESCRIPTION: Write an ACPI table to a binary file. Builds the output  *              filename from the table signature.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ApWriteToBinaryFile  *  * PARAMETERS:  Table               - ACPI table to be written  *              Instance            - ACPI table instance no. to be written  *  * RETURN:      Status  *  * DESCRIPTION: Write an ACPI table to a binary file. Builds the output  *              filename from the table signature.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -134,6 +134,9 @@ parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
+parameter_list|,
+name|UINT32
+name|Instance
 parameter_list|)
 block|{
 name|char
@@ -145,7 +148,7 @@ literal|16
 index|]
 decl_stmt|;
 name|char
-name|SsdtInstance
+name|InstanceStr
 index|[
 literal|16
 index|]
@@ -157,7 +160,48 @@ decl_stmt|;
 name|size_t
 name|Actual
 decl_stmt|;
-comment|/* Construct lower-case filename from the table signature */
+name|UINT32
+name|TableLength
+decl_stmt|;
+comment|/* Obtain table length */
+name|TableLength
+operator|=
+name|ApGetTableLength
+argument_list|(
+name|Table
+argument_list|)
+expr_stmt|;
+comment|/* Construct lower-case filename from the table local signature */
+if|if
+condition|(
+name|ACPI_VALIDATE_RSDP_SIG
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|)
+condition|)
+block|{
+name|ACPI_MOVE_NAME
+argument_list|(
+name|Filename
+argument_list|,
+name|AP_DUMP_SIG_RSDP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ACPI_MOVE_NAME
+argument_list|(
+name|Filename
+argument_list|,
+name|Table
+operator|->
+name|Signature
+argument_list|)
+expr_stmt|;
+block|}
 name|Filename
 index|[
 literal|0
@@ -168,9 +212,7 @@ name|char
 operator|)
 name|ACPI_TOLOWER
 argument_list|(
-name|Table
-operator|->
-name|Signature
+name|Filename
 index|[
 literal|0
 index|]
@@ -186,9 +228,7 @@ name|char
 operator|)
 name|ACPI_TOLOWER
 argument_list|(
-name|Table
-operator|->
-name|Signature
+name|Filename
 index|[
 literal|1
 index|]
@@ -204,9 +244,7 @@ name|char
 operator|)
 name|ACPI_TOLOWER
 argument_list|(
-name|Table
-operator|->
-name|Signature
+name|Filename
 index|[
 literal|2
 index|]
@@ -222,9 +260,7 @@ name|char
 operator|)
 name|ACPI_TOLOWER
 argument_list|(
-name|Table
-operator|->
-name|Signature
+name|Filename
 index|[
 literal|3
 index|]
@@ -240,34 +276,26 @@ expr_stmt|;
 comment|/* Handle multiple SSDTs - create different filenames for each */
 if|if
 condition|(
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|Table
-operator|->
-name|Signature
-argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|)
+name|Instance
+operator|>
+literal|0
 condition|)
 block|{
 name|sprintf
 argument_list|(
-name|SsdtInstance
+name|InstanceStr
 argument_list|,
 literal|"%u"
 argument_list|,
-name|Gbl_SsdtCount
+name|Instance
 argument_list|)
 expr_stmt|;
 name|strcat
 argument_list|(
 name|Filename
 argument_list|,
-name|SsdtInstance
+name|InstanceStr
 argument_list|)
-expr_stmt|;
-name|Gbl_SsdtCount
-operator|++
 expr_stmt|;
 block|}
 name|strcat
@@ -340,9 +368,7 @@ name|Table
 argument_list|,
 literal|1
 argument_list|,
-name|Table
-operator|->
-name|Length
+name|TableLength
 argument_list|,
 name|File
 argument_list|)
@@ -351,9 +377,7 @@ if|if
 condition|(
 name|Actual
 operator|!=
-name|Table
-operator|->
-name|Length
+name|TableLength
 condition|)
 block|{
 name|perror

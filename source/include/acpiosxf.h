@@ -891,6 +891,10 @@ modifier|*
 modifier|*
 name|Table
 parameter_list|,
+name|UINT32
+modifier|*
+name|Instance
+parameter_list|,
 name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|Address

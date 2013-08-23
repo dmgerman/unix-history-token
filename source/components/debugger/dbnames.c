@@ -598,6 +598,54 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpNamespacePaths  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump entire namespace with full object pathnames and object  *              type information. Alternative to "namespace" command.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDbDumpNamespacePaths
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|AcpiDbSetOutputDestination
+argument_list|(
+name|ACPI_DB_DUPLICATE_OUTPUT
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"ACPI Namespace (from root):\n"
+argument_list|)
+expr_stmt|;
+comment|/* Display the entire namespace */
+name|AcpiDbSetOutputDestination
+argument_list|(
+name|ACPI_DB_REDIRECTABLE_OUTPUT
+argument_list|)
+expr_stmt|;
+name|AcpiNsDumpObjectPaths
+argument_list|(
+name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_DISPLAY_SUMMARY
+argument_list|,
+name|ACPI_UINT32_MAX
+argument_list|,
+name|ACPI_OWNER_ID_MAX
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
+name|AcpiDbSetOutputDestination
+argument_list|(
+name|ACPI_DB_CONSOLE_OUTPUT
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpNamespaceByOwner  *  * PARAMETERS:  OwnerArg        - Owner ID whose nodes will be displayed  *              DepthArg        - Maximum tree depth to be dumped  *  * RETURN:      None  *  * DESCRIPTION: Dump elements of the namespace that are owned by the OwnerId.  *  ******************************************************************************/
 end_comment
 

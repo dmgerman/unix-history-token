@@ -130,6 +130,20 @@ name|AX_REQUIRED_TABLE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|AX_UTILITY_NAME
+value|"ACPI Binary Table Extraction Utility"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AX_SUPPORTED_OPTIONS
+value|"ahls:v"
+end_define
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    DisplayUsage  *  * DESCRIPTION: Usage message  *  ******************************************************************************/
 end_comment
@@ -166,6 +180,13 @@ argument_list|(
 literal|"-s<signature>"
 argument_list|,
 literal|"Extract all tables with<signature>"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display version information"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -216,7 +237,7 @@ name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|"ACPI Binary Table Extraction Utility"
+name|AX_UTILITY_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -248,7 +269,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ahls:"
+name|AX_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -286,6 +307,15 @@ name|AX_EXTRACT_SIGNATURE
 expr_stmt|;
 comment|/* Extract only tables with this sig */
 break|break;
+case|case
+literal|'v'
+case|:
+comment|/* -v: (Version): signon already emitted, just exit */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 literal|'h'
 case|:

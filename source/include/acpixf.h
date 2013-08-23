@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20130725
+value|0x20130823
 end_define
 
 begin_include
@@ -954,6 +954,20 @@ name|Function
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiInstallSciHandler (     ACPI_SCI_HANDLER        Address,     void                    *Context)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiRemoveSciHandler (     ACPI_SCI_HANDLER        Address)
+argument_list|)
+end_macro
 
 begin_macro
 name|ACPI_HW_DEPENDENT_RETURN_STATUS

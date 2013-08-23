@@ -381,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber      - Interrupt for a GPE block  *  * RETURN:      A GPE interrupt block  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs. Should be  *              called only when the GPE lists are semaphore locked and not  *              subject to change.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber             - Interrupt for a GPE block  *  * RETURN:      A GPE interrupt block  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs. Should be  *              called only when the GPE lists are semaphore locked and not  *              subject to change.  *  ******************************************************************************/
 end_comment
 
 begin_function

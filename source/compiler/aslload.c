@@ -1131,6 +1131,20 @@ name|Node
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*                  * However, this is an error -- primarily because the MS                  * interpreter can't handle a forward reference from the                  * Scope() operator.                  */
 name|AslError
 argument_list|(

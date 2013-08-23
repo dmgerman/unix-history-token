@@ -294,6 +294,20 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|AS_UTILITY_NAME
+value|"ACPI Source Code Conversion Utility"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AS_SUPPORTED_OPTIONS
+value|"cdhlqsuv^y"
+end_define
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AsStricmp  *  * DESCRIPTION: Implementation of the non-ANSI stricmp function (compare  *              strings with no case sensitivity)  *  ******************************************************************************/
 end_comment
@@ -854,6 +868,13 @@ name|ACPI_OPTION
 argument_list|(
 literal|"-v"
 argument_list|,
+literal|"Display version information"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vb"
+argument_list|,
 literal|"Verbose mode"
 argument_list|)
 expr_stmt|;
@@ -913,7 +934,7 @@ name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|"ACPI Source Code Conversion Utility"
+name|AS_UTILITY_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -945,7 +966,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdhlqsuvy"
+name|AS_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -1036,11 +1057,47 @@ break|break;
 case|case
 literal|'v'
 case|:
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
+comment|/* -v: (Version): signon already emitted, just exit */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
+literal|'b'
+case|:
 comment|/* Verbose mode */
 name|Gbl_VerboseMode
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -v%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'y'

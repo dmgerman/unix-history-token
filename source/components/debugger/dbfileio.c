@@ -249,11 +249,16 @@ argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
-name|ACPI_STRCPY
+name|ACPI_STRNCPY
 argument_list|(
 name|AcpiGbl_DbDebugFilename
 argument_list|,
 name|Name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|AcpiGbl_DbDebugFilename
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_DbOutputToFile
@@ -539,7 +544,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-comment|/* The RSDT, FACS and S3PT tables do not have standard ACPI headers */
+comment|/* The RSDP table does not have standard ACPI header */
 if|if
 condition|(
 name|ACPI_COMPARE_NAME
@@ -549,24 +554,6 @@ operator|.
 name|Signature
 argument_list|,
 literal|"RSD "
-argument_list|)
-operator|||
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-literal|"FACS"
-argument_list|)
-operator|||
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-literal|"S3PT"
 argument_list|)
 condition|)
 block|{

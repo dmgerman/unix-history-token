@@ -1801,6 +1801,11 @@ name|UINT32
 name|Width
 parameter_list|)
 block|{
+operator|*
+name|Value
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK

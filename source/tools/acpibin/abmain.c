@@ -40,6 +40,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|AB_UTILITY_NAME
+value|"ACPI Binary Table Dump Utility"
+end_define
+
+begin_define
+define|#
+directive|define
+name|AB_SUPPORTED_OPTIONS
+value|"c:d:e:h:s:tv"
+end_define
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AbDisplayUsage  *  * DESCRIPTION: Usage message  *  ******************************************************************************/
 end_comment
@@ -113,6 +127,13 @@ argument_list|,
 literal|"Terse mode"
 argument_list|)
 expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-v"
+argument_list|,
+literal|"Display version information"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -161,7 +182,7 @@ name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|"ACPI Binary AML File Utility"
+name|AB_UTILITY_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -195,7 +216,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:d:e:h:s:t"
+name|AB_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -396,6 +417,15 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+comment|/* -v: (Version): signon already emitted, just exit */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
 name|AbDisplayUsage
 argument_list|(
