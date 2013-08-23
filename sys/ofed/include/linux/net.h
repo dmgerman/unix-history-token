@@ -104,7 +104,6 @@ block|{
 name|struct
 name|sockaddr
 modifier|*
-modifier|*
 name|nam
 decl_stmt|;
 name|int
@@ -156,6 +155,7 @@ call|)
 argument_list|(
 name|so
 argument_list|,
+operator|&
 name|nam
 argument_list|)
 expr_stmt|;
@@ -176,6 +176,7 @@ call|)
 argument_list|(
 name|so
 argument_list|,
+operator|&
 name|nam
 argument_list|)
 expr_stmt|;
@@ -193,7 +194,6 @@ operator|*
 name|addr
 operator|=
 operator|*
-operator|*
 name|nam
 expr_stmt|;
 operator|*
@@ -205,7 +205,6 @@ name|sa_len
 expr_stmt|;
 name|free
 argument_list|(
-operator|*
 name|nam
 argument_list|,
 name|M_SONAME
