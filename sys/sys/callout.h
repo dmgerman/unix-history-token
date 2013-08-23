@@ -284,6 +284,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|callout_init_rm
+parameter_list|(
+name|c
+parameter_list|,
+name|rm
+parameter_list|,
+name|flags
+parameter_list|)
+end_define
+
+begin_macro
+name|_callout_init_lock
+argument_list|(
+argument|(c)
+argument_list|,
+argument|((rm != NULL) ?&(rm)->lock_object : \ 	    NULL, (flags))
+define|#
+directive|define
 name|callout_init_rw
 parameter_list|(
 name|c
@@ -294,9 +312,6 @@ name|flags
 parameter_list|)
 define|\
 value|_callout_init_lock((c), ((rw) != NULL) ?&(rw)->lock_object :	\ 	   NULL, (flags))
-end_define
-
-begin_define
 define|#
 directive|define
 name|callout_pending
@@ -304,40 +319,7 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)->c_flags& CALLOUT_PENDING)
-end_define
-
-begin_function_decl
-name|int
-name|callout_reset_sbt_on
-parameter_list|(
-name|struct
-name|callout
-modifier|*
-parameter_list|,
-name|sbintime_t
-parameter_list|,
-name|sbintime_t
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
+argument|int	callout_reset_sbt_on(struct callout *, sbintime_t, sbintime_t, 	    void (*)(void *), void *, int, int);
 define|#
 directive|define
 name|callout_reset_sbt
@@ -356,9 +338,6 @@ name|flags
 parameter_list|)
 define|\
 value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), (c)->c_cpu, flags)
-end_define
-
-begin_define
 define|#
 directive|define
 name|callout_reset_sbt_curcpu
@@ -377,9 +356,6 @@ name|flags
 parameter_list|)
 define|\
 value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), PCPU_GET(cpuid), flags)
-end_define
-
-begin_define
 define|#
 directive|define
 name|callout_reset_on
@@ -396,9 +372,6 @@ name|cpu
 parameter_list|)
 define|\
 value|callout_reset_sbt_on((c), (tick_sbt * (to_ticks)), 0, (fn), (arg), \         (cpu), C_HARDCLOCK)
-end_define
-
-begin_define
 define|#
 directive|define
 name|callout_reset
@@ -413,9 +386,6 @@ name|arg
 parameter_list|)
 define|\
 value|callout_reset_on((c), (on_tick), (fn), (arg), (c)->c_cpu)
-end_define
-
-begin_define
 define|#
 directive|define
 name|callout_reset_curcpu
@@ -430,37 +400,7 @@ name|arg
 parameter_list|)
 define|\
 value|callout_reset_on((c), (on_tick), (fn), (arg), PCPU_GET(cpuid))
-end_define
-
-begin_function_decl
-name|int
-name|callout_schedule
-parameter_list|(
-name|struct
-name|callout
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|callout_schedule_on
-parameter_list|(
-name|struct
-name|callout
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
+argument|int	callout_schedule(struct callout *, int); int	callout_schedule_on(struct callout *, int, int);
 define|#
 directive|define
 name|callout_schedule_curcpu
@@ -471,9 +411,6 @@ name|on_tick
 parameter_list|)
 define|\
 value|callout_schedule_on((c), (on_tick), PCPU_GET(cpuid))
-end_define
-
-begin_define
 define|#
 directive|define
 name|callout_stop
@@ -481,30 +418,8 @@ parameter_list|(
 name|c
 parameter_list|)
 value|_callout_stop_safe(c, 0)
-end_define
-
-begin_function_decl
-name|int
-name|_callout_stop_safe
-parameter_list|(
-name|struct
-name|callout
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|callout_process
-parameter_list|(
-name|sbintime_t
-name|now
-parameter_list|)
-function_decl|;
-end_function_decl
+argument|int	_callout_stop_safe(struct callout *, int); void	callout_process(sbintime_t now);
+end_macro
 
 begin_endif
 endif|#
