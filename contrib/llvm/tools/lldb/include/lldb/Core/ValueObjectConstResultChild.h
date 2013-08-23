@@ -1,0 +1,229 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===-- ValueObjectConstResultChild.h -------------------------------*- C++ -*-===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|liblldb_ValueObjectConstResultChild_h_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|liblldb_ValueObjectConstResultChild_h_
+end_define
+
+begin_comment
+comment|// C Includes
+end_comment
+
+begin_comment
+comment|// C++ Includes
+end_comment
+
+begin_comment
+comment|// Other libraries and framework includes
+end_comment
+
+begin_comment
+comment|// Project includes
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ValueObjectChild.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Core/ValueObjectConstResultImpl.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|lldb_private
+block|{
+comment|//----------------------------------------------------------------------
+comment|// A child of a ValueObjectConstResult.
+comment|//----------------------------------------------------------------------
+name|class
+name|ValueObjectConstResultChild
+range|:
+name|public
+name|ValueObjectChild
+block|{
+name|public
+operator|:
+name|ValueObjectConstResultChild
+argument_list|(
+argument|ValueObject&parent
+argument_list|,
+argument|const ClangASTType&clang_type
+argument_list|,
+argument|const ConstString&name
+argument_list|,
+argument|uint32_t byte_size
+argument_list|,
+argument|int32_t byte_offset
+argument_list|,
+argument|uint32_t bitfield_bit_size
+argument_list|,
+argument|uint32_t bitfield_bit_offset
+argument_list|,
+argument|bool is_base_class
+argument_list|,
+argument|bool is_deref_of_parent
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|ValueObjectConstResultChild
+argument_list|()
+block|;
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
+name|Dereference
+argument_list|(
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|ValueObject
+operator|*
+name|CreateChildAtIndex
+argument_list|(
+argument|size_t idx
+argument_list|,
+argument|bool synthetic_array_member
+argument_list|,
+argument|int32_t synthetic_index
+argument_list|)
+block|;
+name|virtual
+name|ClangASTType
+name|GetClangType
+argument_list|()
+block|{
+return|return
+name|ValueObjectChild
+operator|::
+name|GetClangType
+argument_list|()
+return|;
+block|}
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetSyntheticChildAtOffset
+argument_list|(
+argument|uint32_t offset
+argument_list|,
+argument|const ClangASTType& type
+argument_list|,
+argument|bool can_create
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
+name|AddressOf
+argument_list|(
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|size_t
+name|GetPointeeData
+argument_list|(
+argument|DataExtractor& data
+argument_list|,
+argument|uint32_t item_idx =
+literal|0
+argument_list|,
+argument|uint32_t item_count =
+literal|1
+argument_list|)
+block|;
+name|protected
+operator|:
+name|ValueObjectConstResultImpl
+name|m_impl
+block|;
+name|private
+operator|:
+name|friend
+name|class
+name|ValueObject
+block|;
+name|friend
+name|class
+name|ValueObjectConstResult
+block|;
+name|friend
+name|class
+name|ValueObjectConstResultImpl
+block|;
+name|DISALLOW_COPY_AND_ASSIGN
+argument_list|(
+name|ValueObjectConstResultChild
+argument_list|)
+block|; }
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace lldb_private
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// liblldb_ValueObjectConstResultChild_h_
+end_comment
+
+end_unit
+
