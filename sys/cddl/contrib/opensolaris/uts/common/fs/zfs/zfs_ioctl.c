@@ -7823,6 +7823,9 @@ operator|&
 name|nspares
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * A root pool with concatenated devices is not supported. 	 * Thus, can not add a device to a root pool. 	 * 	 * Intent log device can not be added to a rootpool because 	 * during mountroot, zil is replayed, a seperated log device 	 * can not be accessed during the mountroot time. 	 * 	 * l2cache and spare devices are ok to be added to a rootpool. 	 */
 if|if
 condition|(
@@ -7863,6 +7866,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* illumos */
 if|if
 condition|(
 name|error
