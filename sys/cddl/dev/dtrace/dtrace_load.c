@@ -148,6 +148,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|mutex_init
 argument_list|(
 operator|&
@@ -160,6 +163,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mutex_enter
 argument_list|(
 operator|&
