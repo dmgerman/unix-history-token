@@ -10850,6 +10850,8 @@ name|pindex
 argument_list|,
 name|VM_ALLOC_NOBUSY
 operator||
+name|VM_ALLOC_IGN_SBUSY
+operator||
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_WIRED
