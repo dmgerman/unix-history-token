@@ -742,7 +742,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static void name ## _add_proc(void *dummy __unused)			\ {									\ 									\ 	SYSCTL_ADD_PROC(NULL,						\ 	    SYSCTL_STATIC_CHILDREN(_kern_sched_stats), OID_AUTO,	\ 	    #name, CTLTYPE_LONG|CTLFLAG_RD|CTLFLAG_MPSAFE,		\ 	    ptr, 0, sysctl_dpcpu_long, "LU", descr);			\ }									\ SYSINIT(name, SI_SUB_RUN_SCHEDULER, SI_ORDER_MIDDLE, name ## _add_proc, NULL);
+value|static void name ## _add_proc(void *dummy __unused)			\ {									\ 									\ 	SYSCTL_ADD_PROC(NULL,						\ 	    SYSCTL_STATIC_CHILDREN(_kern_sched_stats), OID_AUTO,	\ 	    #name, CTLTYPE_LONG|CTLFLAG_RD|CTLFLAG_MPSAFE,		\ 	    ptr, 0, sysctl_dpcpu_long, "LU", descr);			\ }									\ SYSINIT(name, SI_SUB_LAST, SI_ORDER_MIDDLE, name ## _add_proc, NULL);
 end_define
 
 begin_define

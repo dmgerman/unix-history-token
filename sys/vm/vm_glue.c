@@ -215,37 +215,6 @@ directive|include
 file|<vm/swap_pager.h>
 end_include
 
-begin_comment
-comment|/*  * System initialization  *  * THIS MUST BE THE LAST INITIALIZATION ITEM!!!  *  * Note: run scheduling should be divorced from the vm system.  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|scheduler
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|scheduler
-argument_list|,
-name|SI_SUB_RUN_SCHEDULER
-argument_list|,
-name|SI_ORDER_ANY
-argument_list|,
-name|scheduler
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2742,21 +2711,12 @@ begin_comment
 comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  * Giant is held on entry.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED*/
-end_comment
-
 begin_function
-specifier|static
 name|void
-name|scheduler
+name|swapper
 parameter_list|(
-name|dummy
-parameter_list|)
 name|void
-modifier|*
-name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|proc
@@ -2785,22 +2745,6 @@ decl_stmt|;
 name|int
 name|pri
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
-operator||
-name|MA_NOTRECURSED
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|loop
 label|:
 if|if
@@ -2994,7 +2938,7 @@ name|proc0
 argument_list|,
 name|PVM
 argument_list|,
-literal|"sched"
+literal|"swapin"
 argument_list|,
 name|MAXSLP
 operator|*

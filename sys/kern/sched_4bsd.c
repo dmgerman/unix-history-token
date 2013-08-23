@@ -618,7 +618,7 @@ name|SYSINIT
 argument_list|(
 name|schedcpu
 argument_list|,
-name|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_LAST
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
