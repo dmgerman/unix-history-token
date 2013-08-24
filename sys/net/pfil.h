@@ -609,10 +609,14 @@ parameter_list|)
 value|rm_wowned((p)->ph_plock)
 end_define
 
+begin_comment
+comment|/* Internal locking macros for global/vnet pfil_head_list. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PFIL_LIST_LOCK
+name|PFIL_HEADLIST_LOCK
 parameter_list|()
 value|mtx_lock(&pfil_global_lock)
 end_define
@@ -620,7 +624,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PFIL_LIST_UNLOCK
+name|PFIL_HEADLIST_UNLOCK
 parameter_list|()
 value|mtx_unlock(&pfil_global_lock)
 end_define

@@ -630,7 +630,7 @@ name|pfil_head
 modifier|*
 name|lph
 decl_stmt|;
-name|PFIL_LIST_LOCK
+name|PFIL_HEADLIST_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -665,7 +665,7 @@ operator|.
 name|phu_val
 condition|)
 block|{
-name|PFIL_LIST_UNLOCK
+name|PFIL_HEADLIST_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -712,7 +712,7 @@ argument_list|,
 name|ph_list
 argument_list|)
 expr_stmt|;
-name|PFIL_LIST_UNLOCK
+name|PFIL_HEADLIST_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -745,7 +745,7 @@ decl_stmt|,
 modifier|*
 name|pfnext
 decl_stmt|;
-name|PFIL_LIST_LOCK
+name|PFIL_HEADLIST_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_REMOVE
@@ -755,7 +755,7 @@ argument_list|,
 name|ph_list
 argument_list|)
 expr_stmt|;
-name|PFIL_LIST_UNLOCK
+name|PFIL_HEADLIST_UNLOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -827,7 +827,7 @@ name|pfil_head
 modifier|*
 name|ph
 decl_stmt|;
-name|PFIL_LIST_LOCK
+name|PFIL_HEADLIST_LOCK
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -855,7 +855,7 @@ operator|==
 name|val
 condition|)
 break|break;
-name|PFIL_LIST_UNLOCK
+name|PFIL_HEADLIST_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
