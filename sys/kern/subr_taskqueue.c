@@ -2878,11 +2878,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|TQ_LOCK
-argument_list|(
-name|queue
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2939,11 +2934,6 @@ name|tq_tcount
 condition|)
 break|break;
 block|}
-name|TQ_UNLOCK
-argument_list|(
-name|queue
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
