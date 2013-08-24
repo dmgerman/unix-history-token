@@ -589,6 +589,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ipfw_nat_ready
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|ipfw_nat_t
 modifier|*
