@@ -7598,7 +7598,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mbuf=%p,len=%d,tso_segsz=%d,csum_flags=%#x,flags=%#x"
+literal|"mbuf=%p,len=%d,tso_segsz=%d,csum_flags=%b,flags=%#x"
 argument_list|,
 name|m0
 argument_list|,
@@ -7610,11 +7610,16 @@ name|m_pkthdr
 operator|.
 name|tso_segsz
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m0
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
+argument_list|,
+name|CSUM_BITS
 argument_list|,
 name|m0
 operator|->

@@ -4891,7 +4891,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s: (nsegs[%d, %d, 0x%x]> Q8_TX_MAX_SEGMENTS)\n"
+literal|"%s: (nsegs[%d, %d, 0x%b]> Q8_TX_MAX_SEGMENTS)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4903,11 +4903,16 @@ name|m_pkthdr
 operator|.
 name|len
 argument_list|,
+operator|(
+name|int
+operator|)
 name|mp
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
+argument_list|,
+name|CSUM_BITS
 argument_list|)
 expr_stmt|;
 name|qla_dump_buf8

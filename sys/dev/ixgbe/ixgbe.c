@@ -20505,7 +20505,7 @@ operator|&
 name|IXGBE_RXD_STAT_L4CS
 condition|)
 block|{
-name|u16
+name|u64
 name|type
 init|=
 operator|(

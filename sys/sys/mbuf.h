@@ -264,7 +264,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  */
+comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  */
 end_comment
 
 begin_struct
@@ -277,54 +277,6 @@ modifier|*
 name|rcvif
 decl_stmt|;
 comment|/* rcv interface */
-comment|/* variables for ip and tcp reassembly */
-name|void
-modifier|*
-name|header
-decl_stmt|;
-comment|/* pointer to packet header */
-name|int
-name|len
-decl_stmt|;
-comment|/* total packet length */
-name|uint32_t
-name|flowid
-decl_stmt|;
-comment|/* packet's 4-tuple system 					 * flow identifier 					 */
-comment|/* variables for hardware checksum */
-name|int
-name|csum_flags
-decl_stmt|;
-comment|/* flags regarding checksum */
-name|int
-name|csum_data
-decl_stmt|;
-comment|/* data field used by csum routines */
-name|u_int16_t
-name|tso_segsz
-decl_stmt|;
-comment|/* TSO segment size */
-union|union
-block|{
-name|u_int16_t
-name|vt_vtag
-decl_stmt|;
-comment|/* Ethernet 802.1p+q vlan tag */
-name|u_int16_t
-name|vt_nrecs
-decl_stmt|;
-comment|/* # of IGMPv3 records in this chain */
-block|}
-name|PH_vt
-union|;
-name|u_int16_t
-name|fibnum
-decl_stmt|;
-comment|/* this packet should use this fib */
-name|u_int16_t
-name|pad2
-decl_stmt|;
-comment|/* align to 32 bits */
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
@@ -334,6 +286,126 @@ argument_list|)
 name|tags
 expr_stmt|;
 comment|/* list of packet tags */
+name|int32_t
+name|len
+decl_stmt|;
+comment|/* total packet length */
+comment|/* Layer crossing persistent information. */
+name|uint32_t
+name|flowid
+decl_stmt|;
+comment|/* packet's 4-tuple system */
+name|uint64_t
+name|csum_flags
+decl_stmt|;
+comment|/* checksum and offload features */
+name|uint16_t
+name|fibnum
+decl_stmt|;
+comment|/* this packet should use this fib */
+name|uint8_t
+name|cosqos
+decl_stmt|;
+comment|/* class/quality of service */
+name|uint8_t
+name|rsstype
+decl_stmt|;
+comment|/* hash type */
+name|uint8_t
+name|l2hlen
+decl_stmt|;
+comment|/* layer 2 header length */
+name|uint8_t
+name|l3hlen
+decl_stmt|;
+comment|/* layer 3 header length */
+name|uint8_t
+name|l4hlen
+decl_stmt|;
+comment|/* layer 4 header length */
+name|uint8_t
+name|l5hlen
+decl_stmt|;
+comment|/* layer 5 header length */
+union|union
+block|{
+name|uint8_t
+name|eigth
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint16_t
+name|sixteen
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|thirtytwo
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint64_t
+name|sixtyfour
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uintptr_t
+name|unintptr
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+block|}
+name|PH_per
+union|;
+comment|/* Layer specific non-persistent local storage for reassembly, etc. */
+union|union
+block|{
+name|uint8_t
+name|eigth
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint16_t
+name|sixteen
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|thirtytwo
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint64_t
+name|sixtyfour
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uintptr_t
+name|unintptr
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+block|}
+name|PH_loc
+union|;
 block|}
 struct|;
 end_struct
@@ -342,7 +414,42 @@ begin_define
 define|#
 directive|define
 name|ether_vtag
-value|PH_vt.vt_vtag
+value|PH_per.sixteen[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|PH_vt
+value|PH_per
+end_define
+
+begin_define
+define|#
+directive|define
+name|vt_nrecs
+value|sixteen[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|tso_segsz
+value|PH_per.sixteen[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|csum_phsum
+value|PH_per.sixteen[2]
+end_define
+
+begin_define
+define|#
+directive|define
+name|csum_data
+value|PH_per.thirtytwo[1]
 end_define
 
 begin_comment
@@ -787,17 +894,6 @@ begin_comment
 comment|/* protocol-specific */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|M_HASHTYPEBITS
-value|0x0F000000
-end_define
-
-begin_comment
-comment|/* mask of bits holding flowid hash type */
-end_comment
-
 begin_comment
 comment|/*  * Flags to purge when crossing layers.  */
 end_comment
@@ -808,6 +904,18 @@ directive|define
 name|M_PROTOFLAGS
 define|\
 value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8|\      M_PROTO9|M_PROTO10|M_PROTO11|M_PROTO12)
+end_define
+
+begin_comment
+comment|/*  * Flags preserved when copying m_pkthdr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COPYFLAGS
+define|\
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_VLANTAG|M_PROMISC| \      M_PROTOFLAGS)
 end_define
 
 begin_comment
@@ -844,22 +952,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_HASHTYPE_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
 name|M_HASHTYPE_NONE
-value|0x0
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV4
-value|0x1
+value|1
 end_define
 
 begin_comment
@@ -870,7 +971,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV4
-value|0x2
+value|2
 end_define
 
 begin_comment
@@ -881,7 +982,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV6
-value|0x3
+value|3
 end_define
 
 begin_comment
@@ -892,7 +993,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV6
-value|0x4
+value|4
 end_define
 
 begin_comment
@@ -903,7 +1004,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV6_EX
-value|0x5
+value|5
 end_define
 
 begin_comment
@@ -914,7 +1015,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV6_EX
-value|0x6
+value|6
 end_define
 
 begin_comment
@@ -925,7 +1026,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_OPAQUE
-value|0xf
+value|255
 end_define
 
 begin_comment
@@ -939,7 +1040,7 @@ name|M_HASHTYPE_CLEAR
 parameter_list|(
 name|m
 parameter_list|)
-value|(m)->m_flags&= ~(M_HASHTYPEBITS)
+value|((m)->m_pkthdr.rsstype = 0)
 end_define
 
 begin_define
@@ -949,7 +1050,7 @@ name|M_HASHTYPE_GET
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)->m_flags& M_HASHTYPEBITS)>> \ 				    M_HASHTYPE_SHIFT)
+value|((m)->m_pkthdr.rsstype)
 end_define
 
 begin_define
@@ -961,7 +1062,7 @@ name|m
 parameter_list|,
 name|v
 parameter_list|)
-value|do {					\ 	(m)->m_flags&= ~M_HASHTYPEBITS;				\ 	(m)->m_flags |= ((v)<< M_HASHTYPE_SHIFT);			\ } while (0)
+value|((m)->m_pkthdr.rsstype = (v))
 end_define
 
 begin_define
@@ -977,15 +1078,161 @@ value|(M_HASHTYPE_GET(m) == (v))
 end_define
 
 begin_comment
-comment|/*  * Flags preserved when copying m_pkthdr.  */
+comment|/*  * COS/QOS class and quality of service tags.  * It uses DSCP code points as base.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_COPYFLAGS
-define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_VLANTAG|M_PROMISC| \      M_PROTOFLAGS|M_HASHTYPEBITS)
+name|QOS_DSCP_CS0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_DEF
+value|QOS_DSCP_CS0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS1
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF11
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF12
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF13
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS2
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF21
+value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF22
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF23
+value|0x58
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS3
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF31
+value|0x68
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF32
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF33
+value|0x78
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS4
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF41
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF42
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF43
+value|0x98
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS5
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_EF
+value|0xb8
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS6
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS7
+value|0xe0
 end_define
 
 begin_comment
@@ -1339,176 +1586,285 @@ value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLA
 end_define
 
 begin_comment
-comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  This  * field can be directly tested against if_data.ifi_hwassist.  */
+comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against if_data.ifi_hwassist.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_IP
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* will csum IP */
+comment|/* IP header checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_TCP
-value|0x0002
+name|CSUM_IP_UDP
+value|0x00000002
 end_define
 
 begin_comment
-comment|/* will csum TCP */
+comment|/* UDP checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_UDP
-value|0x0004
+name|CSUM_IP_TCP
+value|0x00000004
 end_define
 
 begin_comment
-comment|/* will csum UDP */
+comment|/* TCP checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_FRAGMENT
-value|0x0010
+name|CSUM_IP_SCTP
+value|0x00000008
 end_define
 
 begin_comment
-comment|/* will do IP fragmentation */
+comment|/* SCTP checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_TSO
-value|0x0020
+name|CSUM_IP_TSO
+value|0x00000010
 end_define
 
 begin_comment
-comment|/* will do TSO */
+comment|/* TCP segmentation offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_SCTP
-value|0x0040
+name|CSUM_IP_ISCSI
+value|0x00000020
 end_define
 
 begin_comment
-comment|/* will csum SCTP */
+comment|/* iSCSI checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_SCTP_IPV6
-value|0x0080
+name|CSUM_IP6_UDP
+value|0x00000200
 end_define
 
 begin_comment
-comment|/* will csum IPv6/SCTP */
+comment|/* UDP checksum offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_TCP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* TCP checksum offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_SCTP
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* SCTP checksum offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_TSO
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* TCP segmentation offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_ISCSI
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* iSCSI checksum offload */
+end_comment
+
+begin_comment
+comment|/* Inbound checksum support where the checksum was verified by hardware. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L3_CALC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* calculated layer 3 csum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L3_VALID
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* checksum is correct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L4_CALC
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* calculated layer 4 csum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L4_VALID
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* checksum is correct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L5_CALC
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* calculated layer 5 csum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L5_VALID
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* checksum is correct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_COALESED
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* contains merged segments */
+end_comment
+
+begin_comment
+comment|/*  * CSUM flag description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_BITS
+define|\
+value|"\20\1CSUM_IP\2CSUM_IP_UDP\3CSUM_IP_TCP\4CSUM_IP_SCTP\5CSUM_IP_TSO" \     "\6CSUM_IP_ISCSI" \     "\12CSUM_IP6_UDP\13CSUM_IP6_TCP\14CSUM_IP6_SCTP\15CSUM_IP6_TSO" \     "\16CSUM_IP6_ISCSI" \     "\31CSUM_L3_CALC\32CSUM_L3_VALID\33CSUM_L4_CALC\34CSUM_L4_VALID" \     "\35CSUM_L5_CALC\36CSUM_L5_VALID\37CSUM_COALESED"
+end_define
+
+begin_comment
+comment|/* CSUM flags compatibility mappings. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_IP_CHECKED
-value|0x0100
+value|CSUM_L3_CALC
 end_define
-
-begin_comment
-comment|/* did csum IP */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_IP_VALID
-value|0x0200
+value|CSUM_L3_VALID
 end_define
-
-begin_comment
-comment|/*   ... the csum is valid */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_DATA_VALID
-value|0x0400
+value|CSUM_L4_VALID
 end_define
-
-begin_comment
-comment|/* csum_data field is valid */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_PSEUDO_HDR
-value|0x0800
+value|CSUM_L4_CALC
 end_define
-
-begin_comment
-comment|/* csum_data has pseudo hdr */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_SCTP_VALID
-value|0x1000
+value|CSUM_L3_VALID
 end_define
-
-begin_comment
-comment|/* SCTP checksum is valid */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_UDP_IPV6
-value|0x2000
+name|CSUM_DELAY_DATA
+value|(CSUM_TCP|CSUM_UDP)
 end_define
-
-begin_comment
-comment|/* will csum IPv6/UDP */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_TCP_IPV6
-value|0x4000
+name|CSUM_DELAY_IP
+value|CSUM_IP
 end_define
 
 begin_comment
-comment|/* will csum IPv6/TCP */
-end_comment
-
-begin_comment
-comment|/*	CSUM_TSO_IPV6		0x8000		will do IPv6/TSO */
-end_comment
-
-begin_comment
-comment|/*	CSUM_FRAGMENT_IPV6	0x10000		will do IPv6 fragementation */
+comment|/* Only v4, no v6 IP hdr csum */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_DELAY_DATA_IPV6
-value|(CSUM_TCP_IPV6 | CSUM_UDP_IPV6)
+value|(CSUM_TCP_IPV6|CSUM_UDP_IPV6)
 end_define
 
 begin_define
@@ -1521,19 +1877,61 @@ end_define
 begin_define
 define|#
 directive|define
-name|CSUM_DELAY_DATA
-value|(CSUM_TCP | CSUM_UDP)
+name|CSUM_TCP
+value|CSUM_IP_TCP
 end_define
 
 begin_define
 define|#
 directive|define
-name|CSUM_DELAY_IP
-value|(CSUM_IP)
+name|CSUM_UDP
+value|CSUM_IP_UDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP
+value|CSUM_IP_SCTP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TSO
+value|(CSUM_IP_TSO|CSUM_IP6_TSO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_UDP_IPV6
+value|CSUM_IP6_UDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP_IPV6
+value|CSUM_IP6_TCP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP_IPV6
+value|CSUM_IP6_SCTP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_FRAGMENT
+value|0x0
 end_define
 
 begin_comment
-comment|/* Only v4, no v6 IP hdr csum */
+comment|/* Unused */
 end_comment
 
 begin_comment
