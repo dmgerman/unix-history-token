@@ -83,6 +83,10 @@ name|CTL_PORT_INTERNAL
 init|=
 literal|0x08
 block|,
+name|CTL_PORT_ISCSI
+init|=
+literal|0x10
+block|,
 name|CTL_PORT_ALL
 init|=
 literal|0xff
