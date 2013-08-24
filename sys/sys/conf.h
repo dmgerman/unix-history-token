@@ -118,6 +118,11 @@ directive|define
 name|SI_UNMAPPED
 value|0x0400
 comment|/* can handle unmapped I/O */
+define|#
+directive|define
+name|SI_NOSPLIT
+value|0x0800
+comment|/* I/O should not be split up */
 name|struct
 name|timespec
 name|si_atime
