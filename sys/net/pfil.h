@@ -339,6 +339,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|PFIL_HOOKED
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->ph_nhooks> 0)
+end_define
+
 begin_comment
 comment|/* Public functions to run the packet inspection by protocols. */
 end_comment
@@ -397,7 +407,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Internal pfil locking functions. */
+comment|/* Public pfil locking functions for self managed locks by packet filters. */
 end_comment
 
 begin_struct_decl
@@ -489,15 +499,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|PFIL_HOOKED
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->ph_nhooks> 0)
-end_define
+begin_comment
+comment|/* Internal pfil locking functions. */
+end_comment
 
 begin_define
 define|#
