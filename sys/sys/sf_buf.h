@@ -137,6 +137,16 @@ directive|include
 file|<sys/counter.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* for sf_buf_mext() */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|counter_u64_t
@@ -221,6 +231,11 @@ begin_function_decl
 name|void
 name|sf_buf_mext
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mb
+parameter_list|,
 name|void
 modifier|*
 name|addr

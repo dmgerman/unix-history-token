@@ -385,6 +385,10 @@ name|ext_free
 function_decl|)
 comment|/* free routine if not the usual */
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -3317,6 +3321,10 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

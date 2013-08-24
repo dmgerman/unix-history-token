@@ -9297,6 +9297,11 @@ begin_function
 name|void
 name|sf_buf_mext
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mb
+parameter_list|,
 name|void
 modifier|*
 name|addr
@@ -11164,6 +11169,8 @@ name|sf_buf_mext
 argument_list|(
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|sf
 argument_list|)
 expr_stmt|;
@@ -11219,6 +11226,8 @@ operator|)
 expr_stmt|;
 name|sf_buf_mext
 argument_list|(
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 name|sf

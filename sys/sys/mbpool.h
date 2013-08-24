@@ -165,6 +165,10 @@ begin_function_decl
 name|void
 name|mbp_ext_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

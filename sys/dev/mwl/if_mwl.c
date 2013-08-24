@@ -12438,6 +12438,11 @@ specifier|static
 name|void
 name|mwl_ext_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|data

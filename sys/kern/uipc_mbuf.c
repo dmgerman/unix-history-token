@@ -1045,6 +1045,10 @@ modifier|*
 name|freef
 function_decl|)
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -1483,6 +1487,8 @@ name|ext_free
 operator|)
 operator|)
 operator|(
+name|m
+operator|,
 name|m
 operator|->
 name|m_ext
