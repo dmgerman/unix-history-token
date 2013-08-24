@@ -97,7 +97,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*-  * Macro for type conversion: convert mbuf pointer to data pointer of correct  * type:  *  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  */
+comment|/*-  * Macro for type conversion: convert mbuf pointer to data pointer of correct  * type:  *  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  * mtodo(m, o) -- Same as above but with offset 'o' into data.  */
 end_comment
 
 begin_define
@@ -110,6 +110,18 @@ parameter_list|,
 name|t
 parameter_list|)
 value|((t)((m)->m_data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtodo
+parameter_list|(
+name|m
+parameter_list|,
+name|o
+parameter_list|)
+value|((void *)(((m)->m_data) + (o)))
 end_define
 
 begin_comment
