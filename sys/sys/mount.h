@@ -2934,6 +2934,14 @@ name|vfs_notify_lowervp_t
 modifier|*
 name|vfs_unlink_lowervp
 decl_stmt|;
+name|vfs_mount_t
+modifier|*
+name|vfs_spare
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* spares for ABI compat */
 block|}
 struct|;
 end_struct
