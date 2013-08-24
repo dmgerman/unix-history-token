@@ -532,6 +532,14 @@ literal|"nVidia nForce3 USB Controller"
 operator|)
 return|;
 case|case
+literal|0x005a10de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce CK804 USB Controller"
+operator|)
+return|;
+case|case
 literal|0x036c10de
 case|:
 return|return
