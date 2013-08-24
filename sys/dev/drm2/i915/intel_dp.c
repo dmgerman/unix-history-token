@@ -2804,17 +2804,6 @@ argument_list|,
 name|adjusted_mode
 argument_list|)
 expr_stmt|;
-comment|/* 		 * the mode->clock is used to calculate the Data&Link M/N 		 * of the pipe. For the eDP the fixed clock should be used. 		 */
-name|mode
-operator|->
-name|clock
-operator|=
-name|intel_dp
-operator|->
-name|panel_fixed_mode
-operator|->
-name|clock
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2823,7 +2812,7 @@ name|intel_dp_adjust_dithering
 argument_list|(
 name|intel_dp
 argument_list|,
-name|mode
+name|adjusted_mode
 argument_list|,
 name|adjusted_mode
 argument_list|)
@@ -2892,7 +2881,7 @@ if|if
 condition|(
 name|intel_dp_link_required
 argument_list|(
-name|mode
+name|adjusted_mode
 operator|->
 name|clock
 argument_list|,
