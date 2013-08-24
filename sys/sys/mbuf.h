@@ -346,17 +346,38 @@ value|PH_vt.vt_vtag
 end_define
 
 begin_comment
-comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  */
+comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  */
 end_comment
 
 begin_struct
 struct|struct
 name|m_ext
 block|{
+specifier|volatile
+name|u_int
+modifier|*
+name|ref_cnt
+decl_stmt|;
+comment|/* pointer to ref count info */
 name|caddr_t
 name|ext_buf
 decl_stmt|;
 comment|/* start of buffer */
+name|uint32_t
+name|ext_size
+decl_stmt|;
+comment|/* size of buffer, for ext_free */
+name|uint32_t
+name|ext_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of external storage */
+name|ext_flags
+range|:
+literal|24
+decl_stmt|;
+comment|/* external storage mbuf flags */
 name|void
 function_decl|(
 modifier|*
@@ -381,20 +402,6 @@ modifier|*
 name|ext_arg2
 decl_stmt|;
 comment|/* optional argument pointer */
-name|u_int
-name|ext_size
-decl_stmt|;
-comment|/* size of buffer, for ext_free */
-specifier|volatile
-name|u_int
-modifier|*
-name|ref_cnt
-decl_stmt|;
-comment|/* pointer to ref count info */
-name|int
-name|ext_type
-decl_stmt|;
-comment|/* type of external storage */
 block|}
 struct|;
 end_struct
@@ -978,7 +985,7 @@ value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_VLANTAG|M_PROMISC| \      M_PRO
 end_define
 
 begin_comment
-comment|/*  * External buffer types: identify ext_buf type.  */
+comment|/*  * External mbuf storage buffer types.  */
 end_comment
 
 begin_define
@@ -1061,8 +1068,96 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT_VENDOR1
+value|224
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_VENDOR2
+value|225
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_VENDOR3
+value|226
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_VENDOR4
+value|227
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP1
+value|244
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP2
+value|245
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP3
+value|246
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP4
+value|247
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXT_NET_DRV
-value|100
+value|252
 end_define
 
 begin_comment
@@ -1073,7 +1168,7 @@ begin_define
 define|#
 directive|define
 name|EXT_MOD_TYPE
-value|200
+value|253
 end_define
 
 begin_comment
@@ -1084,7 +1179,7 @@ begin_define
 define|#
 directive|define
 name|EXT_DISPOSABLE
-value|300
+value|254
 end_define
 
 begin_comment
@@ -1095,12 +1190,149 @@ begin_define
 define|#
 directive|define
 name|EXT_EXTREF
-value|400
+value|255
 end_define
 
 begin_comment
 comment|/* has externally maintained ref_cnt ptr */
 end_comment
+
+begin_comment
+comment|/*  * Flags for external mbuf buffer types.  * NB: limited to the lower 24 bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EMBREF
+value|0x000001
+end_define
+
+begin_comment
+comment|/* embedded ref_cnt, notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXTREF
+value|0x000002
+end_define
+
+begin_comment
+comment|/* external ref_cnt, notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_NOFREE
+value|0x000010
+end_define
+
+begin_comment
+comment|/* don't free mbuf to pool, notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR1
+value|0x010000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR2
+value|0x020000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR3
+value|0x040000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR4
+value|0x080000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP1
+value|0x100000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP2
+value|0x200000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP3
+value|0x400000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP4
+value|0x800000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_comment
+comment|/*  * EXT flag description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_BITS
+define|\
+value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLAG_VENDOR1\22EXT_FLAG_VENDOR2\23EXT_FLAG_VENDOR3" \     "\24EXT_FLAG_VENDOR4\25EXT_FLAG_EXP1\26EXT_FLAG_EXP2\27EXT_FLAG_EXP3" \     "\30EXT_FLAG_EXP4"
+end_define
 
 begin_comment
 comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  This  * field can be directly tested against if_data.ifi_hwassist.  */
@@ -2524,6 +2756,14 @@ operator|.
 name|ext_type
 operator|=
 name|type
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_flags
+operator|=
+literal|0
 expr_stmt|;
 name|m
 operator|->

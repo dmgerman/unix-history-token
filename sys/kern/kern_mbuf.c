@@ -2389,6 +2389,14 @@ name|m
 operator|->
 name|m_ext
 operator|.
+name|ext_flags
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
 name|ref_cnt
 operator|=
 name|refcnt
