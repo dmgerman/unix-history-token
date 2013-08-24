@@ -2697,15 +2697,9 @@ name|mb_args
 modifier|*
 name|args
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MAC
 name|int
 name|error
-decl_stmt|;
-endif|#
-directive|endif
-name|int
+decl_stmt|,
 name|flags
 decl_stmt|;
 name|short
