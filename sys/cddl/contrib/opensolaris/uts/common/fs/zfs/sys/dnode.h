@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -479,6 +479,10 @@ name|uint32_t
 name|dn_dbufs_count
 decl_stmt|;
 comment|/* count of dn_dbufs */
+comment|/* There are no level-0 blocks of this blkid or higher in dn_dbufs */
+name|uint64_t
+name|dn_unlisted_l0_blkid
+decl_stmt|;
 comment|/* protected by os_lock: */
 name|list_node_t
 name|dn_dirty_link
