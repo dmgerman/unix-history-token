@@ -153,41 +153,8 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__LP64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|M_HDR_PAD
-value|6
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|M_HDR_PAD
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Header present at the beginning of every mbuf.  */
+comment|/*  * Header present at the beginning of every mbuf.  * Size ILP32: 20  *	 LP64: 32  */
 end_comment
 
 begin_struct
@@ -210,25 +177,21 @@ name|caddr_t
 name|mh_data
 decl_stmt|;
 comment|/* location of data */
-name|int
+name|int32_t
 name|mh_len
 decl_stmt|;
 comment|/* amount of data in this mbuf */
-name|int
+name|uint32_t
+name|mh_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of data in this mbuf */
 name|mh_flags
+range|:
+literal|24
 decl_stmt|;
 comment|/* flags; see below */
-name|short
-name|mh_type
-decl_stmt|;
-comment|/* type of data in this mbuf */
-name|uint8_t
-name|pad
-index|[
-name|M_HDR_PAD
-index|]
-decl_stmt|;
-comment|/* word align                  */
 block|}
 struct|;
 end_struct
@@ -661,7 +624,7 @@ value|M_dat.M_databuf
 end_define
 
 begin_comment
-comment|/*  * mbuf flags.  */
+comment|/*  * mbuf flags of global significance and layer crossing.  * Those of only protocol/layer specific significance are to be mapped  * to M_PROTO[1-12] and cleared at layer handoff boundaries.  * NB: Limited to the lower 24 bits.  */
 end_comment
 
 begin_define
@@ -1947,7 +1910,7 @@ comment|/* Unused */
 end_comment
 
 begin_comment
-comment|/*  * mbuf types.  */
+comment|/*  * mbuf types describing the content of the mbuf (including external storage).  */
 end_comment
 
 begin_define
@@ -1986,12 +1949,100 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MT_VENDOR1
+value|4
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_VENDOR2
+value|5
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_VENDOR3
+value|6
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_VENDOR4
+value|7
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MT_SONAME
 value|8
 end_define
 
 begin_comment
 comment|/* socket name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP1
+value|9
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP2
+value|10
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP3
+value|11
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP4
+value|12
+end_define
+
+begin_comment
+comment|/* for experimental use */
 end_comment
 
 begin_define
