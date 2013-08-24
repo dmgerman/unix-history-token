@@ -759,6 +759,10 @@ name|AcpiDmClearExternalList
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Load any externals defined in the optional external ref file */
+name|AcpiDmGetExternalsFromFile
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{

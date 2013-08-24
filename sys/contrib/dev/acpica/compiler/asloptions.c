@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:b|c|d^D:e:fgh^i|I:l^m:no|p:P^r:s|t|T+G^v^w|x:z"
+value|"@:b|c|d^D:e:f^gh^i|I:l^m:no|p:P^r:s|t|T+G^v^w|x:z"
 end_define
 
 begin_comment
@@ -257,11 +257,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n"
+literal|"Use -h option for help information\n"
 argument_list|)
-expr_stmt|;
-name|Usage
-argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -569,11 +566,64 @@ break|break;
 case|case
 literal|'f'
 case|:
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'^'
+case|:
 comment|/* Ignore errors and force creation of aml file */
 name|Gbl_IgnoreErrors
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* Disassembler: Get external declaration file */
+if|if
+condition|(
+name|AcpiGetoptArgument
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|Gbl_ExternalRefFilename
+operator|=
+name|AcpiGbl_Optarg
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -f%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'G'

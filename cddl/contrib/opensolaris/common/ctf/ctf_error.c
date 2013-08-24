@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2003 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2012, Joyent, Inc.  */
+end_comment
 
 begin_include
 include|#
@@ -162,6 +159,11 @@ comment|/* ECTF_DUPMEMBER */
 literal|"Conflicting type is already defined"
 block|,
 comment|/* ECTF_CONFLICT */
+literal|"Type has outstanding references"
+block|,
+comment|/* ECTF_REFERENCED */
+literal|"Type is not a dynamic type"
+comment|/* ECTF_NOTDYN */
 block|}
 decl_stmt|;
 end_decl_stmt
