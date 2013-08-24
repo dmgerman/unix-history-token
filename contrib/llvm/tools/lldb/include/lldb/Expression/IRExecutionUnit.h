@@ -724,17 +724,12 @@ comment|///
 comment|/// @return
 comment|///     True in case of failure, false in case of success.
 comment|//------------------------------------------------------------------
-name|virtual
 name|bool
-name|finalizeMemory
+name|applyPermissions
 argument_list|(
 argument|std::string *ErrMsg
 argument_list|)
 block|{
-comment|// TODO: Ensure that the instruction cache is flushed because
-comment|// relocations are updated by dy-load.  See:
-comment|//   sys::Memory::InvalidateInstructionCache
-comment|//   llvm::SectionMemoryManager
 return|return
 name|false
 return|;
@@ -749,6 +744,78 @@ argument_list|(
 name|void
 operator|*
 name|Body
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Passthrough interface stub
+comment|//------------------------------------------------------------------
+name|virtual
+name|uint8_t
+operator|*
+name|startExceptionTable
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Function
+operator|*
+name|F
+argument_list|,
+name|uintptr_t
+operator|&
+name|ActualSize
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Complete the exception table for a function, and add it to the
+comment|/// m_exception_tables map
+comment|///
+comment|/// @param[in] F
+comment|///     The function whose exception table is being written.
+comment|///
+comment|/// @param[in] TableStart
+comment|///     The first byte of the exception table.
+comment|///
+comment|/// @param[in] TableEnd
+comment|///     The last byte of the exception table.
+comment|///
+comment|/// @param[in] FrameRegister
+comment|///     I don't know what this does, but it's passed through.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|endExceptionTable
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Function
+operator|*
+name|F
+argument_list|,
+name|uint8_t
+operator|*
+name|TableStart
+argument_list|,
+name|uint8_t
+operator|*
+name|TableEnd
+argument_list|,
+name|uint8_t
+operator|*
+name|FrameRegister
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Passthrough interface stub
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|deallocateExceptionTable
+argument_list|(
+name|void
+operator|*
+name|ET
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
