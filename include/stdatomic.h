@@ -1567,7 +1567,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|atomic_compare_exchange_strong_explicit(object, 0, 1, order, order)
+value|atomic_exchange_explicit(object, 1, order)
 end_define
 
 begin_define
