@@ -694,7 +694,7 @@ argument_list|,
 name|tcp_do_initcwnd10
 argument_list|)
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 end_expr_stmt
 
