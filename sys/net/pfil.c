@@ -135,7 +135,7 @@ specifier|static
 name|struct
 name|packet_filter_hook
 modifier|*
-name|pfil_hook_get
+name|pfil_chain_get
 parameter_list|(
 name|int
 parameter_list|,
@@ -149,9 +149,9 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pfil_list_add
+name|pfil_chain_add
 parameter_list|(
-name|pfil_list_t
+name|pfil_chain_t
 modifier|*
 parameter_list|,
 name|struct
@@ -166,9 +166,9 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pfil_list_remove
+name|pfil_chain_remove
 parameter_list|(
-name|pfil_list_t
+name|pfil_chain_t
 modifier|*
 parameter_list|,
 name|pfil_func_t
@@ -226,7 +226,7 @@ value|VNET(pfil_lock)
 end_define
 
 begin_comment
-comment|/*  * pfil_run_hooks() runs the specified packet filter hooks.  */
+comment|/*  * pfil_run_hooks() runs the specified packet filter hook chain.  */
 end_comment
 
 begin_function
@@ -305,7 +305,7 @@ for|for
 control|(
 name|pfh
 operator|=
-name|pfil_hook_get
+name|pfil_chain_get
 argument_list|(
 name|dir
 argument_list|,
@@ -322,7 +322,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|pfh
 argument_list|,
-name|pfil_link
+name|pfil_chain
 argument_list|)
 control|)
 block|{
@@ -397,7 +397,7 @@ specifier|static
 name|struct
 name|packet_filter_hook
 modifier|*
-name|pfil_hook_get
+name|pfil_chain_get
 parameter_list|(
 name|int
 name|dir
@@ -764,7 +764,7 @@ argument|pfh
 argument_list|,
 argument|&ph->ph_in
 argument_list|,
-argument|pfil_link
+argument|pfil_chain
 argument_list|,
 argument|pfnext
 argument_list|)
@@ -781,7 +781,7 @@ argument|pfh
 argument_list|,
 argument|&ph->ph_out
 argument_list|,
-argument|pfil_link
+argument|pfil_chain
 argument_list|,
 argument|pfnext
 argument_list|)
@@ -1035,7 +1035,7 @@ name|arg
 expr_stmt|;
 name|err
 operator|=
-name|pfil_list_add
+name|pfil_chain_add
 argument_list|(
 operator|&
 name|ph
@@ -1084,7 +1084,7 @@ name|arg
 expr_stmt|;
 name|err
 operator|=
-name|pfil_list_add
+name|pfil_chain_add
 argument_list|(
 operator|&
 name|ph
@@ -1110,7 +1110,7 @@ name|flags
 operator|&
 name|PFIL_IN
 condition|)
-name|pfil_list_remove
+name|pfil_chain_remove
 argument_list|(
 operator|&
 name|ph
@@ -1186,7 +1186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_remove_hook removes a specific function from the packet filter hook  * list.  */
+comment|/*  * pfil_remove_hook removes a specific function from the packet filter hook  * chain.  */
 end_comment
 
 begin_function
@@ -1228,7 +1228,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|pfil_list_remove
+name|pfil_chain_remove
 argument_list|(
 operator|&
 name|ph
@@ -1269,7 +1269,7 @@ condition|)
 block|{
 name|err
 operator|=
-name|pfil_list_remove
+name|pfil_chain_remove
 argument_list|(
 operator|&
 name|ph
@@ -1306,14 +1306,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Internal: Add a new pfil hook into a hook chain.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|pfil_list_add
+name|pfil_chain_add
 parameter_list|(
-name|pfil_list_t
+name|pfil_chain_t
 modifier|*
-name|list
+name|chain
 parameter_list|,
 name|struct
 name|packet_filter_hook
@@ -1334,9 +1338,9 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pfh
 argument_list|,
-argument|list
+argument|chain
 argument_list|,
-argument|pfil_link
+argument|pfil_chain
 argument_list|)
 if|if
 condition|(
@@ -1370,21 +1374,21 @@ name|PFIL_IN
 condition|)
 name|TAILQ_INSERT_HEAD
 argument_list|(
-name|list
+name|chain
 argument_list|,
 name|pfh1
 argument_list|,
-name|pfil_link
+name|pfil_chain
 argument_list|)
 expr_stmt|;
 else|else
 name|TAILQ_INSERT_TAIL
 argument_list|(
-name|list
+name|chain
 argument_list|,
 name|pfh1
 argument_list|,
-name|pfil_link
+name|pfil_chain
 argument_list|)
 expr_stmt|;
 return|return
@@ -1396,17 +1400,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_list_remove is an internal function that takes a function off the  * specified list.  */
+comment|/*  * Internal: Remove a pfil hook from a hook chain.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|pfil_list_remove
+name|pfil_chain_remove
 parameter_list|(
-name|pfil_list_t
+name|pfil_chain_t
 modifier|*
-name|list
+name|chain
 parameter_list|,
 name|pfil_func_t
 name|func
@@ -1425,9 +1429,9 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|pfh
 argument_list|,
-argument|list
+argument|chain
 argument_list|,
-argument|pfil_link
+argument|pfil_chain
 argument_list|)
 if|if
 condition|(
@@ -1446,11 +1450,11 @@ condition|)
 block|{
 name|TAILQ_REMOVE
 argument_list|(
-name|list
+name|chain
 argument_list|,
 name|pfh
 argument_list|,
-name|pfil_link
+name|pfil_chain
 argument_list|)
 expr_stmt|;
 name|free
@@ -1526,7 +1530,24 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-comment|/*  XXX should panic if list is not empty */
+name|KASSERT
+argument_list|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|V_pfil_head_list
+argument_list|)
+argument_list|,
+operator|(
+literal|"%s: pfil_head_list %p not empty"
+operator|,
+name|__func__
+operator|,
+operator|&
+name|V_pfil_head_list
+operator|)
+argument_list|)
+expr_stmt|;
 name|PFIL_LOCK_DESTROY_REAL
 argument_list|(
 operator|&

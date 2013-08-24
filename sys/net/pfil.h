@@ -107,7 +107,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * The packet filter hooks are designed for anything to call them to  * possibly intercept the packet.  */
+comment|/*  * The packet filter hooks are designed for anything to call them to  * possibly intercept the packet.  Multiple filter hooks are chained  * together and after each other in the specified order.  */
 end_comment
 
 begin_struct
@@ -118,7 +118,7 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|packet_filter_hook
 argument_list|)
-name|pfil_link
+name|pfil_chain
 expr_stmt|;
 name|pfil_func_t
 name|pfil_func
@@ -163,11 +163,11 @@ begin_typedef
 typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
-argument|pfil_list
+argument|pfil_chain
 argument_list|,
 argument|packet_filter_hook
 argument_list|)
-name|pfil_list_t
+name|pfil_chain_t
 expr_stmt|;
 end_typedef
 
@@ -204,14 +204,18 @@ begin_comment
 comment|/* Personal lock instead of global */
 end_comment
 
+begin_comment
+comment|/*  * A pfil head is created by each protocol or packet intercept point.  * For packet is then run through the hook chain for inspection.  */
+end_comment
+
 begin_struct
 struct|struct
 name|pfil_head
 block|{
-name|pfil_list_t
+name|pfil_chain_t
 name|ph_in
 decl_stmt|;
-name|pfil_list_t
+name|pfil_chain_t
 name|ph_out
 decl_stmt|;
 name|int
@@ -282,6 +286,23 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Public functions for pfil hook management by packet filters. */
+end_comment
+
+begin_function_decl
+name|struct
+name|pfil_head
+modifier|*
+name|pfil_head_get
+parameter_list|(
+name|int
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|pfil_add_hook
@@ -318,6 +339,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Public functions to run the packet inspection by protocols. */
+end_comment
+
 begin_function_decl
 name|int
 name|pfil_run_hooks
@@ -344,6 +369,36 @@ name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Public functions for pfil head management by protocols. */
+end_comment
+
+begin_function_decl
+name|int
+name|pfil_head_register
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pfil_head_unregister
+parameter_list|(
+name|struct
+name|pfil_head
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Internal pfil locking functions. */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -430,41 +485,6 @@ name|struct
 name|pfil_head
 modifier|*
 name|ph
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfil_head_register
-parameter_list|(
-name|struct
-name|pfil_head
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfil_head_unregister
-parameter_list|(
-name|struct
-name|pfil_head
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|pfil_head
-modifier|*
-name|pfil_head_get
-parameter_list|(
-name|int
-parameter_list|,
-name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
