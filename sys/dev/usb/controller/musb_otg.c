@@ -16245,12 +16245,6 @@ modifier|*
 name|parm
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|usb_hw_ep_profile
-modifier|*
-name|pf
-decl_stmt|;
 name|struct
 name|musbotg_softc
 modifier|*
@@ -16451,12 +16445,6 @@ name|last_obj
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * get profile stuff 	 */
-if|if
-condition|(
-name|ntd
-condition|)
-block|{
 name|ep_no
 operator|=
 name|xfer
@@ -16465,6 +16453,24 @@ name|endpointno
 operator|&
 name|UE_ADDR
 expr_stmt|;
+comment|/* 	 * Check for a valid endpoint profile in USB device mode: 	 */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_DEVICE
+condition|)
+block|{
+specifier|const
+name|struct
+name|usb_hw_ep_profile
+modifier|*
+name|pf
+decl_stmt|;
 name|musbotg_get_hw_ep_profile
 argument_list|(
 name|parm
@@ -16493,17 +16499,6 @@ name|USB_ERR_INVAL
 expr_stmt|;
 return|return;
 block|}
-block|}
-else|else
-block|{
-name|ep_no
-operator|=
-literal|0
-expr_stmt|;
-name|pf
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 comment|/* align data */
 name|parm

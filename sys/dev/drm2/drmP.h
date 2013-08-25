@@ -1750,6 +1750,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_MDELAY
+parameter_list|(
+name|msecs
+parameter_list|)
+value|do { int loops = (msecs);		\ 	                          while (loops--) DELAY(1000);		\ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_TIME_SLICE
 value|(hz/20)
 end_define
@@ -2965,6 +2975,21 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|use_msi
+function_decl|)
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
 name|firstopen
 function_decl|)
 parameter_list|(
@@ -3360,6 +3385,36 @@ modifier|*
 name|obj
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|gem_open_object
+function_decl|)
+parameter_list|(
+name|struct
+name|drm_gem_object
+modifier|*
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|gem_close_object
+function_decl|)
+parameter_list|(
+name|struct
+name|drm_gem_object
+modifier|*
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+parameter_list|)
+function_decl|;
 name|struct
 name|cdev_pager_ops
 modifier|*
@@ -3679,14 +3734,22 @@ modifier|*
 name|id_entry
 decl_stmt|;
 comment|/* PCI ID, name, and chipset private */
-name|u_int16_t
+name|uint16_t
 name|pci_device
 decl_stmt|;
 comment|/* PCI device id */
-name|u_int16_t
+name|uint16_t
 name|pci_vendor
 decl_stmt|;
 comment|/* PCI vendor id */
+name|uint16_t
+name|pci_subdevice
+decl_stmt|;
+comment|/* PCI subsystem device id */
+name|uint16_t
+name|pci_subvendor
+decl_stmt|;
+comment|/* PCI subsystem vendor id */
 name|char
 modifier|*
 name|unique
@@ -3921,7 +3984,7 @@ decl_stmt|;
 comment|/**< render type primary screen head */
 name|void
 modifier|*
-name|drm_ttm_bo
+name|drm_ttm_bdev
 decl_stmt|;
 name|struct
 name|unrhdr
@@ -7754,6 +7817,28 @@ define|#
 directive|define
 name|KTR_DRM_REG
 value|KTR_SPARE3
+end_define
+
+begin_comment
+comment|/* Error codes conversion from Linux to FreeBSD. */
+end_comment
+
+begin_comment
+comment|/* XXXKIB what is the right code for EREMOTEIO on FreeBSD? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EREMOTEIO
+value|ENXIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERESTARTSYS
+value|ERESTART
 end_define
 
 begin_endif

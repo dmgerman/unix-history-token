@@ -2168,9 +2168,8 @@ name|I8207X_CONFIG
 argument_list|,
 literal|0
 argument_list|,
-literal|0x40
-operator||
-comment|/* Enable Implied Seek */
+comment|/* 0x40 | */
+comment|/* Enable Implied Seek - 						 * breaks 2step! */
 literal|0x10
 operator||
 comment|/* Polling disabled */
@@ -4335,7 +4334,7 @@ name|settle
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * SEEK to where we want to be 	 * 	 * Enhanced controllers do implied seeks for read&write as long as 	 * we do not need multiple steps per track. 	 */
+comment|/* 	 * SEEK to where we want to be 	 */
 if|if
 condition|(
 name|cylinder
@@ -4343,30 +4342,6 @@ operator|!=
 name|fd
 operator|->
 name|track
-operator|&&
-operator|(
-name|fdc
-operator|->
-name|fdct
-operator|!=
-name|FDC_ENHANCED
-operator|||
-name|descyl
-operator|!=
-name|cylinder
-operator|||
-operator|(
-name|bp
-operator|->
-name|bio_cmd
-operator|&
-operator|(
-name|BIO_RDID
-operator||
-name|BIO_FMT
-operator|)
-operator|)
-operator|)
 condition|)
 block|{
 name|retry_line

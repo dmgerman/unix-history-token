@@ -1257,6 +1257,11 @@ specifier|static
 name|void
 name|hatm_mbuf0_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|buf
@@ -1344,6 +1349,11 @@ specifier|static
 name|void
 name|hatm_mbuf1_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|buf
@@ -2506,6 +2516,8 @@ block|}
 else|else
 name|hatm_mbuf0_free
 argument_list|(
+name|NULL
+argument_list|,
 name|c0
 argument_list|,
 name|sc
@@ -2692,6 +2704,8 @@ block|}
 else|else
 name|hatm_mbuf1_free
 argument_list|(
+name|NULL
+argument_list|,
 name|c1
 argument_list|,
 name|sc

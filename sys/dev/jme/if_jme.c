@@ -9117,7 +9117,7 @@ decl_stmt|;
 name|uint32_t
 name|cflags
 decl_stmt|,
-name|tso_segsz
+name|tsosegsz
 decl_stmt|;
 name|JME_LOCK_ASSERT
 argument_list|(
@@ -9793,7 +9793,7 @@ name|cflags
 operator|=
 literal|0
 expr_stmt|;
-name|tso_segsz
+name|tsosegsz
 operator|=
 literal|0
 expr_stmt|;
@@ -9813,7 +9813,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|tso_segsz
+name|tsosegsz
 operator|=
 operator|(
 name|uint32_t
@@ -9946,7 +9946,7 @@ name|buflen
 operator|=
 name|htole32
 argument_list|(
-name|tso_segsz
+name|tsosegsz
 argument_list|)
 expr_stmt|;
 name|desc

@@ -3824,7 +3824,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|ip
 expr_stmt|;
@@ -4005,7 +4007,7 @@ name|GETIP
 parameter_list|(
 name|m
 parameter_list|)
-value|((struct ip*)((m)->m_pkthdr.header))
+value|((struct ip*)((m)->m_pkthdr.PH_loc.ptr))
 comment|/* 	 * Handle ECN by comparing this segment with the first one; 	 * if CE is set, do not lose CE. 	 * drop if CE and not-ECT are mixed for the same packet. 	 */
 name|ecn
 operator|=

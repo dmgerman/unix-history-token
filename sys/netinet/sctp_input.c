@@ -30055,6 +30055,9 @@ operator|.
 name|rcvif
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m
 operator|->
 name|m_pkthdr

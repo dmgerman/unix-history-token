@@ -1370,7 +1370,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|ifp
 operator|->
@@ -1408,7 +1410,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -1508,7 +1512,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|)
 argument_list|,
 operator|(
@@ -12911,7 +12917,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|)
 argument_list|)
 expr_stmt|;

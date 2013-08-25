@@ -579,6 +579,11 @@ specifier|static
 name|void
 name|cas_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|arg1
@@ -9942,6 +9947,11 @@ specifier|static
 name|void
 name|cas_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|arg1

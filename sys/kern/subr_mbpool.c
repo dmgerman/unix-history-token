@@ -1250,6 +1250,11 @@ begin_function
 name|void
 name|mbp_ext_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|buf

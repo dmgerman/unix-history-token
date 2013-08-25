@@ -479,7 +479,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: request ptr %#jx is not "
+literal|"%s: request ptr %p is not "
 literal|"on a page boundary, cannot split "
 literal|"request\n"
 argument_list|,
@@ -488,9 +488,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|bp
 operator|->
 name|b_data

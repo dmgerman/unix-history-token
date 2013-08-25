@@ -23446,7 +23446,7 @@ name|E1000_RXD_STAT_UDPCS
 operator|)
 condition|)
 block|{
-name|u16
+name|u64
 name|type
 init|=
 operator|(

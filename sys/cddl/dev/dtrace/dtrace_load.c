@@ -112,13 +112,13 @@ argument_list|,
 name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
-name|dtrace_kld_unload_tag
+name|dtrace_kld_unload_try_tag
 operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
-name|kld_unload
+name|kld_unload_try
 argument_list|,
-name|dtrace_kld_unload
+name|dtrace_kld_unload_try
 argument_list|,
 name|NULL
 argument_list|,
