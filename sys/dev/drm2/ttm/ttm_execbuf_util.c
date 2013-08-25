@@ -516,7 +516,7 @@ name|retry_this_bo
 label|:
 name|ret
 operator|=
-name|ttm_bo_reserve_locked
+name|ttm_bo_reserve_nolru
 argument_list|(
 name|bo
 argument_list|,
