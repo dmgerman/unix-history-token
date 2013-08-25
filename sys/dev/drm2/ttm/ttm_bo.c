@@ -615,6 +615,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ttm_bo_wait_unreserved_locked
 parameter_list|(

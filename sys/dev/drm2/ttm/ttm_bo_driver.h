@@ -1616,26 +1616,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * ttm_bo_wait_unreserved  *  * @bo: A pointer to a struct ttm_buffer_object.  *  * Wait for a struct ttm_buffer_object to become unreserved.  * This is typically used in the execbuf code to relax cpu-usage when  * a potential deadlock condition backoff.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|ttm_bo_wait_unreserved_locked
-parameter_list|(
-name|struct
-name|ttm_buffer_object
-modifier|*
-name|bo
-parameter_list|,
-name|bool
-name|interruptible
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * ttm_bo_util.c  */
 end_comment
 
