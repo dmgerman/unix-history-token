@@ -497,7 +497,7 @@ name|FFLAGS
 parameter_list|(
 name|oflags
 parameter_list|)
-value|((oflags) + 1)
+value|((oflags)& O_EXEC ? (oflags) : (oflags) + 1)
 end_define
 
 begin_define
@@ -507,7 +507,7 @@ name|OFLAGS
 parameter_list|(
 name|fflags
 parameter_list|)
-value|((fflags) - 1)
+value|((fflags)& O_EXEC ? (fflags) : (fflags) - 1)
 end_define
 
 begin_comment
