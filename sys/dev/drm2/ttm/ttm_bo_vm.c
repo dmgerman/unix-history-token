@@ -1374,9 +1374,7 @@ name|vm_obj
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|vm_obj
