@@ -1829,7 +1829,7 @@ begin_define
 define|#
 directive|define
 name|CSUM_SCTP_VALID
-value|CSUM_L3_VALID
+value|CSUM_L4_VALID
 end_define
 
 begin_define
