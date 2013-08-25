@@ -175,6 +175,11 @@ specifier|static
 name|void
 name|socow_iodone
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|addr
@@ -191,6 +196,11 @@ specifier|static
 name|void
 name|socow_iodone
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|addr
