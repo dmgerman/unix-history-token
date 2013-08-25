@@ -3941,11 +3941,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|tcp_state_change
+argument_list|(
 name|tp
-operator|->
-name|t_state
-operator|=
+argument_list|,
 name|TCPS_SYN_RECEIVED
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -51,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -117,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -750,6 +768,23 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* Avoid confusing lower layers. */
+name|IP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip6
+argument_list|,
+name|ifp
+argument_list|,
+name|NULL
+argument_list|,
+name|ip6
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Output the packet as nd6.c:nd6_output_lle() would do. 		 * The mbuf is always consumed, so we do not have to care 		 * about that. 		 * XXX-BZ as we added data, what about fragmenting, 		 * if now needed? 		 */
 name|int
 name|error

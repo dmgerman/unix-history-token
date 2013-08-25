@@ -47,6 +47,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ui_v
+value|ui_i.ih_x1[0]
+end_define
+
+begin_define
+define|#
+directive|define
 name|ui_pr
 value|ui_i.ih_pr
 end_define

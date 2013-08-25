@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_route.h"
+file|"opt_kdtrace.h"
 end_include
 
 begin_include
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|"opt_mpath.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_route.h"
 end_include
 
 begin_include
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -188,6 +200,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -2677,6 +2695,23 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|IP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip
+argument_list|,
+name|ifp
+argument_list|,
+name|ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -2823,6 +2858,23 @@ comment|/* 			 * Reset layer specific mbuf flags 			 * to avoid confusing upper 
 name|m_clrprotoflags
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|IP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip
+argument_list|,
+name|ifp
+argument_list|,
+name|ip
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|error
