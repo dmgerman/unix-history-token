@@ -1507,6 +1507,52 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * ttm_bo_reserve_slowpath_nolru:  * @bo: A pointer to a struct ttm_buffer_object.  * @interruptible: Sleep interruptible if waiting.  * @sequence: Set (@bo)->sequence to this value after lock  *  * This is called after ttm_bo_reserve returns -EAGAIN and we backed off  * from all our other reservations. Because there are no other reservations  * held by us, this function cannot deadlock any more.  *  * Will not remove reserved buffers from the lru lists.  * Otherwise identical to ttm_bo_reserve_slowpath.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ttm_bo_reserve_slowpath_nolru
+parameter_list|(
+name|struct
+name|ttm_buffer_object
+modifier|*
+name|bo
+parameter_list|,
+name|bool
+name|interruptible
+parameter_list|,
+name|uint32_t
+name|sequence
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * ttm_bo_reserve_slowpath:  * @bo: A pointer to a struct ttm_buffer_object.  * @interruptible: Sleep interruptible if waiting.  * @sequence: Set (@bo)->sequence to this value after lock  *  * This is called after ttm_bo_reserve returns -EAGAIN and we backed off  * from all our other reservations. Because there are no other reservations  * held by us, this function cannot deadlock any more.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ttm_bo_reserve_slowpath
+parameter_list|(
+name|struct
+name|ttm_buffer_object
+modifier|*
+name|bo
+parameter_list|,
+name|bool
+name|interruptible
+parameter_list|,
+name|uint32_t
+name|sequence
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * ttm_bo_reserve_nolru:  *  * @bo: A pointer to a struct ttm_buffer_object.  * @interruptible: Sleep interruptible if waiting.  * @no_wait: Don't sleep while trying to reserve, rather return -EBUSY.  * @use_sequence: If @bo is already reserved, Only sleep waiting for  * it to become unreserved if @sequence< (@bo)->sequence.  *  * Will not remove reserved buffers from the lru lists.  * Otherwise identical to ttm_bo_reserve.  *  * Returns:  * -EAGAIN: The reservation may cause a deadlock.  * Release all buffer reservations, wait for @bo to become unreserved and  * try again. (only if use_sequence == 1).  * -ERESTARTSYS: A wait for the buffer to become unreserved was interrupted by  * a signal. Release all buffer reservations and return to user-space.  * -EBUSY: The function needed to sleep, but @no_wait was true  * -EDEADLK: Bo already reserved using @sequence. This error code will only  * be returned if @use_sequence is set to true.  */
 end_comment
 
