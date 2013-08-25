@@ -3954,7 +3954,7 @@ decl_stmt|;
 comment|/**< render type primary screen head */
 name|void
 modifier|*
-name|drm_ttm_bo
+name|drm_ttm_bdev
 decl_stmt|;
 name|struct
 name|unrhdr
