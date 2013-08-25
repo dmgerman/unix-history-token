@@ -540,6 +540,7 @@ name|priv_flags
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * Here, the behavior differs between Linux and FreeBSD. 		 * 		 * On Linux, the wait is interruptible (3rd argument to 		 * ttm_bo_wait). There must be some mechanism to resume 		 * page fault handling, once the signal is processed. 		 * 		 * On FreeBSD, the wait is uninteruptible. This is not a 		 * problem as we can't end up with an unkillable process 		 * here, because the wait will eventually time out. 		 * 		 * An example of this situation is the Xorg process 		 * which uses SIGALRM internally. The signal could 		 * interrupt the wait, causing the page fault to fail 		 * and the process to receive SIGSEGV. 		 */
 name|ret
 operator|=
 name|ttm_bo_wait
@@ -548,7 +549,7 @@ name|bo
 argument_list|,
 name|false
 argument_list|,
-name|true
+name|false
 argument_list|,
 name|false
 argument_list|)
