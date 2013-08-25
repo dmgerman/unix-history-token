@@ -295,13 +295,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * On x86, the System BIOS copy the default display 		 * device's Video BIOS at a fixed location in system 		 * memory (0xC0000, 128 kBytes long) at boot time. 		 * 		 * We use this copy for the default boot device, because 		 * the original ROM may not be valid after boot. 		 */
-name|printf
-argument_list|(
-literal|"%s: Mapping BIOS shadow\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 operator|*
 name|size
 operator|=
@@ -321,13 +314,6 @@ return|;
 block|}
 endif|#
 directive|endif
-name|printf
-argument_list|(
-literal|"%s: Mapping PCI expansion ROM\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|rid
 operator|=
 name|PCIR_BIOS
@@ -432,13 +418,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* We mapped the BIOS shadow copy located at 0xC0000. */
-name|printf
-argument_list|(
-literal|"%s: Unmapping BIOS shadow\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|pmap_unmapdev
 argument_list|(
 operator|(
@@ -454,13 +433,6 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * FIXME: We returned only the virtual address of the resource 	 * to the caller. Now, to get the resource struct back, we 	 * allocate it again: the struct exists once in memory in 	 * device softc. Therefore, we release twice now to release the 	 * reference we just obtained to get the structure back and the 	 * caller's reference. 	 */
-name|printf
-argument_list|(
-literal|"%s: Unmapping PCI expansion ROM\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|rid
 operator|=
 name|PCIR_BIOS
