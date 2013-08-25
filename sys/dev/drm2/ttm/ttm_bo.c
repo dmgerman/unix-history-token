@@ -7834,26 +7834,11 @@ modifier|*
 name|bo
 parameter_list|)
 block|{
-name|struct
-name|ttm_bo_device
-modifier|*
-name|bdev
-init|=
+name|ttm_bo_release_mmap
+argument_list|(
 name|bo
-operator|->
-name|bdev
-decl_stmt|;
-comment|/* off_t offset = (off_t)bo->addr_space_offset;XXXKIB */
-comment|/* off_t holelen = ((off_t)bo->mem.num_pages)<< PAGE_SHIFT;XXXKIB */
-if|if
-condition|(
-operator|!
-name|bdev
-operator|->
-name|dev_mapping
-condition|)
-return|return;
-comment|/* unmap_mapping_range(bdev->dev_mapping, offset, holelen, 1); XXXKIB */
+argument_list|)
+expr_stmt|;
 name|ttm_mem_io_free_vm
 argument_list|(
 name|bo
