@@ -63,13 +63,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|VM_ALLOC_DMA32
-value|VM_ALLOC_RESERVED1
-end_define
-
-begin_define
-define|#
-directive|define
 name|NUM_PAGES_TO_ALLOC
 value|(PAGE_SIZE/sizeof(vm_page_t))
 end_define
