@@ -1553,9 +1553,18 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+comment|/* if we fail here don't nuke the mm node 			 * as the bo still owns it */
+name|old_copy
+operator|.
+name|mm_node
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|out1
 goto|;
+block|}
 block|}
 name|add
 operator|=
@@ -1709,9 +1718,18 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+comment|/* failing here, means keep old copy as-is */
+name|old_copy
+operator|.
+name|mm_node
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|out1
 goto|;
+block|}
 block|}
 name|mb
 argument_list|()
