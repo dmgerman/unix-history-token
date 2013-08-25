@@ -1071,7 +1071,7 @@ name|wake_up
 operator|=
 name|true
 expr_stmt|;
-comment|/*  		 * In the worst case with memory ordering these values can be  		 * seen in the wrong order. However since we call wake_up_all  		 * in that case, this will hopefully not pose a problem,  		 * and the worst case would only cause someone to accidentally  		 * hit -EAGAIN in ttm_bo_reserve when they see old value of  		 * val_seq. However this would only happen if seq_valid was  		 * written before val_seq was, and just means some slightly  		 * increased cpu usage  		 */
+comment|/* 		 * In the worst case with memory ordering these values can be 		 * seen in the wrong order. However since we call wake_up_all 		 * in that case, this will hopefully not pose a problem, 		 * and the worst case would only cause someone to accidentally 		 * hit -EAGAIN in ttm_bo_reserve when they see old value of 		 * val_seq. However this would only happen if seq_valid was 		 * written before val_seq was, and just means some slightly 		 * increased cpu usage 		 */
 name|bo
 operator|->
 name|val_seq
