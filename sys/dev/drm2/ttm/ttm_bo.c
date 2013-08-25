@@ -2226,6 +2226,11 @@ operator|=
 operator|*
 name|mem
 expr_stmt|;
+operator|*
+name|mem
+operator|=
+name|tmp_mem
+expr_stmt|;
 block|}
 goto|goto
 name|out_err
