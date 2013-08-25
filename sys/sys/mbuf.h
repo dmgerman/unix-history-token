@@ -460,7 +460,7 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* external storage mbuf flags */
-name|void
+name|int
 function_decl|(
 modifier|*
 name|ext_free
@@ -1559,6 +1559,21 @@ name|EXT_FLAG_BITS
 define|\
 value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLAG_VENDOR1\22EXT_FLAG_VENDOR2\23EXT_FLAG_VENDOR3" \     "\24EXT_FLAG_VENDOR4\25EXT_FLAG_EXP1\26EXT_FLAG_EXP2\27EXT_FLAG_EXP3" \     "\30EXT_FLAG_EXP4"
 end_define
+
+begin_comment
+comment|/*  * Return values for (*ext_free).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FREE_OK
+value|0
+end_define
+
+begin_comment
+comment|/* Normal return */
+end_comment
 
 begin_comment
 comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against if_data.ifi_hwassist.  */
@@ -3708,7 +3723,7 @@ name|caddr_t
 parameter_list|,
 name|u_int
 parameter_list|,
-name|void
+name|int
 function_decl|(
 modifier|*
 function_decl|)

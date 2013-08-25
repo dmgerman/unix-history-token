@@ -172,7 +172,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|socow_iodone
 parameter_list|(
 name|struct
@@ -193,7 +193,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
+name|int
 name|socow_iodone
 parameter_list|(
 name|struct
@@ -282,6 +282,11 @@ operator|.
 name|iodone
 operator|++
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 

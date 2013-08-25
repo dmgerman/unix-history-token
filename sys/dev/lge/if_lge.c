@@ -302,7 +302,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|lge_jfree
 parameter_list|(
 name|struct
@@ -3793,7 +3793,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|lge_jfree
 parameter_list|(
 name|struct
@@ -3928,7 +3928,11 @@ argument_list|,
 name|jpool_entries
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 

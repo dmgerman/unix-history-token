@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbpool.h>
 end_include
 
@@ -1247,7 +1253,7 @@ comment|/*  * Mbuf system external mbuf free routine  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|mbp_ext_free
 parameter_list|(
 name|struct
@@ -1271,6 +1277,11 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 
