@@ -951,20 +951,6 @@ name|IPSECCTL_MAXID
 value|14
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPSECCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "ah_cleartos", CTLTYPE_INT }, \ 	{ "ah_offsetmask", CTLTYPE_INT }, \ 	{ "dfbit", CTLTYPE_INT }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "esp_randpad", CTLTYPE_INT }, \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPSEC6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "esp_randpad", CTLTYPE_INT }, \ }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
