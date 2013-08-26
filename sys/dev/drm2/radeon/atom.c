@@ -430,7 +430,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -440,7 +440,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -455,7 +455,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -465,7 +465,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -1010,7 +1010,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"REG[0x%04X]"
 argument_list|,
@@ -1186,7 +1186,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"PS[0x%02X,0x%04X]"
 argument_list|,
@@ -1217,7 +1217,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"WS[0x%02X]"
 argument_list|,
@@ -1373,7 +1373,7 @@ name|gctx
 operator|->
 name|data_block
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"ID[0x%04X+%04X]"
 argument_list|,
@@ -1385,7 +1385,7 @@ name|data_block
 argument_list|)
 expr_stmt|;
 else|else
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"ID[0x%04X]"
 argument_list|,
@@ -1487,7 +1487,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"FB[0x%02X]"
 argument_list|,
@@ -1525,7 +1525,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"IMM 0x%08X\n"
 argument_list|,
@@ -1563,7 +1563,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"IMM 0x%04X\n"
 argument_list|,
@@ -1603,7 +1603,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"IMM 0x%02X\n"
 argument_list|,
@@ -1638,7 +1638,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"PLL[0x%02X]"
 argument_list|,
@@ -1682,7 +1682,7 @@ if|if
 condition|(
 name|print
 condition|)
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"MC[0x%02X]"
 argument_list|,
@@ -1741,7 +1741,7 @@ block|{
 case|case
 name|ATOM_SRC_DWORD
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[31:0] -> 0x%08X\n"
 argument_list|,
@@ -1752,7 +1752,7 @@ break|break;
 case|case
 name|ATOM_SRC_WORD0
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[15:0] -> 0x%04X\n"
 argument_list|,
@@ -1763,7 +1763,7 @@ break|break;
 case|case
 name|ATOM_SRC_WORD8
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[23:8] -> 0x%04X\n"
 argument_list|,
@@ -1774,7 +1774,7 @@ break|break;
 case|case
 name|ATOM_SRC_WORD16
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[31:16] -> 0x%04X\n"
 argument_list|,
@@ -1785,7 +1785,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE0
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[7:0] -> 0x%02X\n"
 argument_list|,
@@ -1796,7 +1796,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE8
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[15:8] -> 0x%02X\n"
 argument_list|,
@@ -1807,7 +1807,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE16
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[23:16] -> 0x%02X\n"
 argument_list|,
@@ -1818,7 +1818,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE24
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[31:24] -> 0x%02X\n"
 argument_list|,
@@ -2353,7 +2353,7 @@ operator|)
 operator|+=
 literal|2
 expr_stmt|;
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"REG[0x%04X]"
 argument_list|,
@@ -2521,7 +2521,7 @@ name|ptr
 operator|)
 operator|++
 expr_stmt|;
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"PS[0x%02X]"
 argument_list|,
@@ -2558,7 +2558,7 @@ name|ptr
 operator|)
 operator|++
 expr_stmt|;
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"WS[0x%02X]"
 argument_list|,
@@ -2739,7 +2739,7 @@ index|]
 operator|=
 name|val
 expr_stmt|;
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"FB[0x%02X]"
 argument_list|,
@@ -2764,7 +2764,7 @@ name|ptr
 operator|)
 operator|++
 expr_stmt|;
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"PLL[0x%02X]"
 argument_list|,
@@ -2804,7 +2804,7 @@ name|ptr
 operator|)
 operator|++
 expr_stmt|;
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|"MC[0x%02X]"
 argument_list|,
@@ -2836,7 +2836,7 @@ block|{
 case|case
 name|ATOM_SRC_DWORD
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[31:0]<- 0x%08X\n"
 argument_list|,
@@ -2847,7 +2847,7 @@ break|break;
 case|case
 name|ATOM_SRC_WORD0
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[15:0]<- 0x%04X\n"
 argument_list|,
@@ -2858,7 +2858,7 @@ break|break;
 case|case
 name|ATOM_SRC_WORD8
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[23:8]<- 0x%04X\n"
 argument_list|,
@@ -2869,7 +2869,7 @@ break|break;
 case|case
 name|ATOM_SRC_WORD16
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[31:16]<- 0x%04X\n"
 argument_list|,
@@ -2880,7 +2880,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE0
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[7:0]<- 0x%02X\n"
 argument_list|,
@@ -2891,7 +2891,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE8
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[15:8]<- 0x%02X\n"
 argument_list|,
@@ -2902,7 +2902,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE16
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[23:16]<- 0x%02X\n"
 argument_list|,
@@ -2913,7 +2913,7 @@ break|break;
 case|case
 name|ATOM_SRC_BYTE24
 case|:
-name|DEBUG
+name|ATOM_DEBUG_PRINT
 argument_list|(
 literal|".[31:24]<- 0x%02X\n"
 argument_list|,
@@ -2967,7 +2967,7 @@ init|=
 operator|*
 name|ptr
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -2990,7 +2990,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -3010,7 +3010,7 @@ name|dst
 operator|+=
 name|src
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -3076,7 +3076,7 @@ init|=
 operator|*
 name|ptr
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -3099,7 +3099,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -3119,7 +3119,7 @@ name|dst
 operator|&=
 name|src
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -3208,7 +3208,7 @@ name|idx
 operator|<
 name|ATOM_TABLE_NAMES_CNT
 condition|)
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   table: %d (%s)\n"
 argument_list|,
@@ -3221,7 +3221,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   table: %d\n"
 argument_list|,
@@ -3348,7 +3348,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -3406,7 +3406,7 @@ name|dst
 decl_stmt|,
 name|src
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src1: "
 argument_list|)
@@ -3428,7 +3428,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src2: "
 argument_list|)
@@ -3468,7 +3468,7 @@ operator|>
 name|src
 operator|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   result: %s %s\n"
 argument_list|,
@@ -3525,7 +3525,7 @@ operator|)
 operator|++
 argument_list|)
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   count: %d\n"
 argument_list|,
@@ -3598,7 +3598,7 @@ name|dst
 decl_stmt|,
 name|src
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src1: "
 argument_list|)
@@ -3620,7 +3620,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src2: "
 argument_list|)
@@ -3869,7 +3869,7 @@ name|arg
 operator|!=
 name|ATOM_COND_ALWAYS
 condition|)
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   taken: %s\n"
 argument_list|,
@@ -3880,7 +3880,7 @@ else|:
 literal|"no"
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   target: 0x%04X\n"
 argument_list|,
@@ -4041,7 +4041,7 @@ init|=
 operator|*
 name|ptr
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -4083,14 +4083,14 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   mask: 0x%08x"
 argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -4114,7 +4114,7 @@ name|dst
 operator||=
 name|src
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -4226,7 +4226,7 @@ operator|=
 literal|0xCDCDCDCD
 expr_stmt|;
 block|}
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -4242,7 +4242,7 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -4300,7 +4300,7 @@ name|dst
 decl_stmt|,
 name|src
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src1: "
 argument_list|)
@@ -4322,7 +4322,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src2: "
 argument_list|)
@@ -4417,7 +4417,7 @@ init|=
 operator|*
 name|ptr
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -4440,7 +4440,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -4460,7 +4460,7 @@ name|dst
 operator||=
 name|src
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -4513,7 +4513,7 @@ operator|)
 operator|++
 argument_list|)
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"POST card output: 0x%02X\n"
 argument_list|,
@@ -4630,7 +4630,7 @@ name|ptr
 operator|)
 operator|++
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   block: %d\n"
 argument_list|,
@@ -4689,7 +4689,7 @@ operator|*
 name|idx
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   base: 0x%04X\n"
 argument_list|,
@@ -4732,7 +4732,7 @@ operator|)
 operator|++
 argument_list|)
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   fb_base: "
 argument_list|)
@@ -4797,7 +4797,7 @@ name|port
 operator|<
 name|ATOM_IO_NAMES_CNT
 condition|)
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   port: %d (%s)\n"
 argument_list|,
@@ -4810,7 +4810,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   port: %d\n"
 argument_list|,
@@ -4925,7 +4925,7 @@ operator|)
 operator|+=
 literal|2
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   base: 0x%04X\n"
 argument_list|,
@@ -4996,7 +4996,7 @@ index|]
 operator|<<
 literal|6
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5030,7 +5030,7 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   shift: %d\n"
 argument_list|,
@@ -5041,7 +5041,7 @@ name|dst
 operator|<<=
 name|shift
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5122,7 +5122,7 @@ index|]
 operator|<<
 literal|6
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5156,7 +5156,7 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   shift: %d\n"
 argument_list|,
@@ -5167,7 +5167,7 @@ name|dst
 operator|>>=
 name|shift
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5256,7 +5256,7 @@ operator|&
 literal|3
 index|]
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5295,7 +5295,7 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   shift: %d\n"
 argument_list|,
@@ -5320,7 +5320,7 @@ index|[
 name|dst_align
 index|]
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5409,7 +5409,7 @@ operator|&
 literal|3
 index|]
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5448,7 +5448,7 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   shift: %d\n"
 argument_list|,
@@ -5473,7 +5473,7 @@ index|[
 name|dst_align
 index|]
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5539,7 +5539,7 @@ init|=
 operator|*
 name|ptr
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5562,7 +5562,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -5582,7 +5582,7 @@ name|dst
 operator|-=
 name|src
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5642,7 +5642,7 @@ name|val
 decl_stmt|,
 name|target
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   switch: "
 argument_list|)
@@ -5685,7 +5685,7 @@ name|ptr
 operator|)
 operator|++
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   case: "
 argument_list|)
@@ -5722,7 +5722,7 @@ operator|==
 name|src
 condition|)
 block|{
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   target: %04X\n"
 argument_list|,
@@ -5801,7 +5801,7 @@ name|dst
 decl_stmt|,
 name|src
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src1: "
 argument_list|)
@@ -5823,7 +5823,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src2: "
 argument_list|)
@@ -5855,7 +5855,7 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   result: %s\n"
 argument_list|,
@@ -5915,7 +5915,7 @@ init|=
 operator|*
 name|ptr
 decl_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -5938,7 +5938,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   src: "
 argument_list|)
@@ -5958,7 +5958,7 @@ name|dst
 operator|^=
 name|src
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"   dst: "
 argument_list|)
@@ -6870,7 +6870,7 @@ name|base
 operator|+
 name|ATOM_CT_CODE_PTR
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|">> execute %04X (len %d, WS %d, PS %d)\n"
 argument_list|,
@@ -6971,7 +6971,7 @@ name|op
 operator|<
 name|ATOM_OP_NAMES_CNT
 condition|)
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"%s @ 0x%04X\n"
 argument_list|,
@@ -6986,7 +6986,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"[%d] @ 0x%04X\n"
 argument_list|,
@@ -7074,7 +7074,7 @@ block|}
 name|debug_depth
 operator|--
 expr_stmt|;
-name|SDEBUG
+name|ATOM_SDEBUG_PRINT
 argument_list|(
 literal|"<<\n"
 argument_list|)
