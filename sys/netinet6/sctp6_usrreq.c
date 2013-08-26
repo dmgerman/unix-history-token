@@ -391,7 +391,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_CRCOFFLOAD
 argument_list|,
-literal|"sctp6_input(): Packet of length %d received on %s with csum_flags 0x%x.\n"
+literal|"sctp6_input(): Packet of length %d received on %s with csum_flags 0x%b.\n"
 argument_list|,
 name|m
 operator|->
@@ -416,6 +416,8 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
+argument_list|,
+name|CSUM_BITS
 argument_list|)
 expr_stmt|;
 if|if

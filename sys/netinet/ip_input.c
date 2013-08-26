@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_route.h"
 end_include
 
@@ -116,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -183,6 +195,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -2086,6 +2104,27 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
+name|IP_PROBE
+argument_list|(
+name|receive
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|,
+name|ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 127/8 must not appear on wire - RFC1122 */
 name|ifp
 operator|=

@@ -572,6 +572,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|list_for_each_entry_safe_from
+parameter_list|(
+name|pos
+parameter_list|,
+name|n
+parameter_list|,
+name|head
+parameter_list|,
+name|member
+parameter_list|)
+define|\
+value|for (n = list_entry(pos->member.next, __typeof(*pos), member);		\&pos->member != (head);						\ 	     pos = n, n = list_entry(n->member.next, __typeof(*n), member))
+end_define
+
+begin_define
+define|#
+directive|define
 name|list_first_entry
 parameter_list|(
 name|ptr

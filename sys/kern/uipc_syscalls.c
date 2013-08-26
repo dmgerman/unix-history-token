@@ -9294,7 +9294,7 @@ comment|/*  * Detach mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|sf_buf_mext
 parameter_list|(
 name|struct
@@ -9374,7 +9374,11 @@ name|addr
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 name|sfs
 operator|=
 name|addr
@@ -9425,6 +9429,11 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -11165,6 +11174,9 @@ else|:
 name|ENOBUFS
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sf_buf_mext
 argument_list|(
 name|NULL
@@ -11224,6 +11236,9 @@ else|:
 name|ENOBUFS
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sf_buf_mext
 argument_list|(
 name|NULL

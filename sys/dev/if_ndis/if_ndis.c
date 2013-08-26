@@ -6969,8 +6969,13 @@ operator|->
 name|np_refcnt
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ndis_return_packet
 argument_list|(
+name|NULL
+argument_list|,
 name|p
 argument_list|,
 name|block
@@ -7038,8 +7043,13 @@ name|npo_status
 operator|==
 name|NDIS_STATUS_SUCCESS
 condition|)
+operator|(
+name|void
+operator|)
 name|ndis_return_packet
 argument_list|(
+name|NULL
+argument_list|,
 name|p
 argument_list|,
 name|block

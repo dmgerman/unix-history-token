@@ -2005,22 +2005,22 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ndis_return_packet
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|void
+modifier|*
 name|buf
 parameter_list|,
+name|void
+modifier|*
 name|arg
 parameter_list|)
-name|void
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* not used */
-name|void
-modifier|*
-name|arg
-decl_stmt|;
 block|{
 name|ndis_packet
 modifier|*
@@ -2036,7 +2036,11 @@ name|arg
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 name|p
 operator|=
 name|arg
@@ -2054,7 +2058,11 @@ name|p
 operator|->
 name|np_refcnt
 condition|)
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 name|block
 operator|=
 operator|(
@@ -2134,6 +2142,11 @@ argument_list|,
 name|block
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 

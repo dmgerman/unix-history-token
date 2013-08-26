@@ -438,7 +438,7 @@ name|refcount
 operator|=
 literal|1
 expr_stmt|;
-name|atomic_set
+name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|obj

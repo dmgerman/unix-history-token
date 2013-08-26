@@ -3075,7 +3075,7 @@ operator||
 name|CHKALIAS
 expr_stmt|;
 break|break;
-comment|/* Handle an empty command like other simple commands.  */
+comment|/* A simple command must have at least one redirection or word. */
 case|case
 name|TBACKGND
 case|:
@@ -3097,7 +3097,15 @@ case|:
 case|case
 name|TFALLTHRU
 case|:
-comment|/* 		 * An empty command before a ; doesn't make much sense, and 		 * should certainly be disallowed in the case of `if ;'. 		 */
+case|case
+name|TEOF
+case|:
+case|case
+name|TNL
+case|:
+case|case
+name|TRP
+case|:
 if|if
 condition|(
 operator|!
@@ -3110,16 +3118,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 case|case
-name|TNL
-case|:
-case|case
-name|TEOF
-case|:
-case|case
 name|TWORD
-case|:
-case|case
-name|TRP
 case|:
 name|tokpushback
 operator|++
