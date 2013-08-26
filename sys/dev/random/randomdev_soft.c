@@ -933,38 +933,6 @@ argument_list|,
 literal|"Harvest SWI entropy"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_PROC
-argument_list|(
-operator|&
-name|random_clist
-argument_list|,
-name|SYSCTL_CHILDREN
-argument_list|(
-name|random_sys_harvest_o
-argument_list|)
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"namei"
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|harvest
-operator|.
-name|namei
-argument_list|,
-literal|0
-argument_list|,
-name|random_check_boolean
-argument_list|,
-literal|"I"
-argument_list|,
-literal|"Harvest namei cache entropy"
-argument_list|)
-expr_stmt|;
 comment|/* Initialise the harvest fifos */
 name|STAILQ_INIT
 argument_list|(
