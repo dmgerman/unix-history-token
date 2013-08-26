@@ -2061,6 +2061,9 @@ name|m_pkthdr
 operator|.
 name|flowid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m
 operator|->
 name|m_pkthdr
@@ -2082,19 +2085,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    rcvif=%16p,  header=%18p, len=%19d\n"
+literal|"    rcvif=%16p,  len=%19d\n"
 argument_list|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|header
 argument_list|,
 name|m
 operator|->
@@ -2123,7 +2120,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    m_len=%17d, m_flags=%#15x, m_type=%18hd\n"
+literal|"    m_len=%17d, m_flags=%#15x, m_type=%18u\n"
 argument_list|,
 name|m
 operator|->
