@@ -112,6 +112,12 @@ directive|include
 file|<dns/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dns/zt.h>
+end_include
+
 begin_macro
 name|ISC_LANG_BEGINDECLS
 end_macro
@@ -316,9 +322,6 @@ modifier|*
 name|answernames_exclude
 decl_stmt|;
 name|isc_boolean_t
-name|requestixfr
-decl_stmt|;
-name|isc_boolean_t
 name|provideixfr
 decl_stmt|;
 name|isc_boolean_t
@@ -365,6 +368,10 @@ name|dlv_fixed
 decl_stmt|;
 name|isc_uint16_t
 name|maxudp
+decl_stmt|;
+name|unsigned
+name|int
+name|maxbits
 decl_stmt|;
 name|dns_v4_aaaa_t
 name|v4_aaaa
@@ -435,6 +442,10 @@ decl_stmt|;
 name|dns_zone_t
 modifier|*
 name|managed_keys
+decl_stmt|;
+name|dns_zone_t
+modifier|*
+name|redirect
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -634,6 +645,10 @@ parameter_list|,
 name|unsigned
 name|int
 name|ntasks
+parameter_list|,
+name|unsigned
+name|int
+name|ndisp
 parameter_list|,
 name|isc_socketmgr_t
 modifier|*
@@ -1185,8 +1200,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_view_asyncload
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|dns_zt_allloaded_t
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Load zones attached to this view.  dns_view_load() loads  * all zones whose master file has changed since the last  * load; dns_view_loadnew() loads only zones that have never  * been loaded.  *  * If 'stop' is ISC_TRUE, stop on the first error and return it.  * If 'stop' is ISC_FALSE, ignore errors.  *  * Requires:  *  *\li	'view' is valid.  */
+comment|/*%<  * Load zones attached to this view.  dns_view_load() loads  * all zones whose master file has changed since the last  * load; dns_view_loadnew() loads only zones that have never  * been loaded.  *  * dns_view_asyncload() loads zones asynchronously.  When all zones  * in the view have finished loading, 'callback' is called with argument  * 'arg' to inform the caller.  *  * If 'stop' is ISC_TRUE, stop on the first error and return it.  * If 'stop' is ISC_FALSE (or we are loading asynchronously), ignore errors.  *  * Requires:  *  *\li	'view' is valid.  */
 end_comment
 
 begin_function_decl
@@ -1325,6 +1358,28 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
+name|dns_view_flushnode
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_boolean_t
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Flush the given name from the view's cache (and optionally ADB/badcache).  *  * If 'tree' is true, flush 'name' and all names below it  * from the cache, but do not flush ADB.  *  * If 'tree' is false, flush 'name' frmo both the cache and ADB,  * but do not touch any other nodes.  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *	other returns are failures.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
 name|dns_view_flushname
 parameter_list|(
 name|dns_view_t
@@ -1333,12 +1388,13 @@ name|view
 parameter_list|,
 name|dns_name_t
 modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Flush the given name from the view's cache (and ADB).  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *	other returns are failures.  */
+comment|/*%<  * Flush the given name from the view's cache, ADB and badcache.  * Equivalent to dns_view_flushnode(view, name, ISC_FALSE).  *  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *	other returns are failures.  */
 end_comment
 
 begin_function_decl
@@ -1357,7 +1413,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Add the given name to the delegation only table.  *  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Add the given name to the delegation only table.  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl

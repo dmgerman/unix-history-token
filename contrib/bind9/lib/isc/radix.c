@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2007-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2007-2009, 2011-2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -73,10 +73,6 @@ specifier|static
 name|void
 name|_deref_prefix
 parameter_list|(
-name|isc_mem_t
-modifier|*
-name|mctx
-parameter_list|,
 name|isc_prefix_t
 modifier|*
 name|prefix
@@ -291,6 +287,22 @@ name|family
 operator|=
 name|family
 expr_stmt|;
+name|prefix
+operator|->
+name|mctx
+operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
+name|mctx
+argument_list|,
+operator|&
+name|prefix
+operator|->
+name|mctx
+argument_list|)
+expr_stmt|;
 name|isc_refcount_init
 argument_list|(
 operator|&
@@ -319,10 +331,6 @@ specifier|static
 name|void
 name|_deref_prefix
 parameter_list|(
-name|isc_mem_t
-modifier|*
-name|mctx
-parameter_list|,
 name|isc_prefix_t
 modifier|*
 name|prefix
@@ -364,8 +372,11 @@ operator|->
 name|refcount
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
+name|prefix
+operator|->
 name|mctx
 argument_list|,
 name|prefix
@@ -503,7 +514,9 @@ name|bitlen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 name|isc_refcount_increment
@@ -715,7 +728,17 @@ name|radix
 operator|->
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|radix
+operator|->
+name|mctx
+argument_list|)
 expr_stmt|;
 name|radix
 operator|->
@@ -859,10 +882,6 @@ condition|)
 block|{
 name|_deref_prefix
 argument_list|(
-name|radix
-operator|->
-name|mctx
-argument_list|,
 name|Xrn
 operator|->
 name|prefix
@@ -1049,8 +1068,9 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|radix
 operator|->
 name|mctx
@@ -3537,10 +3557,6 @@ name|NULL
 condition|)
 name|_deref_prefix
 argument_list|(
-name|radix
-operator|->
-name|mctx
-argument_list|,
 name|node
 operator|->
 name|prefix
@@ -3593,10 +3609,6 @@ name|parent
 expr_stmt|;
 name|_deref_prefix
 argument_list|(
-name|radix
-operator|->
-name|mctx
-argument_list|,
 name|node
 operator|->
 name|prefix
@@ -3844,10 +3856,6 @@ name|parent
 expr_stmt|;
 name|_deref_prefix
 argument_list|(
-name|radix
-operator|->
-name|mctx
-argument_list|,
 name|node
 operator|->
 name|prefix

@@ -172,6 +172,24 @@ begin_comment
 comment|/*%<  * Destroy a task pool.  The tasks in the pool are detached but not  * shut down.  *  * Requires:  * \li	'*poolp' is a valid task pool.  */
 end_comment
 
+begin_function_decl
+name|void
+name|isc_taskpool_setprivilege
+parameter_list|(
+name|isc_taskpool_t
+modifier|*
+name|pool
+parameter_list|,
+name|isc_boolean_t
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the privilege flag on all tasks in 'pool' to 'priv'.  If 'priv' is  * true, then when the task manager is set into privileged mode, only  * tasks wihin this pool will be able to execute.  (Note:  It is important  * to turn the pool tasks' privilege back off before the last task finishes  * executing.)  *  * Requires:  * \li	'pool' is a valid task pool.  */
+end_comment
+
 begin_macro
 name|ISC_LANG_ENDDECLS
 end_macro

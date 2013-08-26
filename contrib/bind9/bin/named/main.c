@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.180.14.4 2011/11/05 00:45:52 each Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -1807,7 +1807,7 @@ argument_list|,
 name|argv
 argument_list|,
 literal|"46c:C:d:E:fFgi:lm:n:N:p:P:"
-literal|"sS:t:T:u:vVx:"
+literal|"sS:t:T:U:u:vVx:"
 argument_list|)
 operator|)
 operator|!=
@@ -2250,6 +2250,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'U'
+case|:
+name|ns_g_udpdisp
+operator|=
+name|parse_int
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"number of UDP listeners "
+literal|"per interface"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|ns_g_username
@@ -2498,6 +2512,60 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|WIN32
+name|ns_g_udpdisp
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|ns_g_udpdisp
+operator|==
+literal|0
+condition|)
+name|ns_g_udpdisp
+operator|=
+name|ns_g_cpus_detected
+expr_stmt|;
+if|if
+condition|(
+name|ns_g_udpdisp
+operator|>
+name|ns_g_cpus
+condition|)
+name|ns_g_udpdisp
+operator|=
+name|ns_g_cpus
+expr_stmt|;
+endif|#
+directive|endif
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_SERVER
+argument_list|,
+name|ISC_LOG_INFO
+argument_list|,
+literal|"using %u UDP listener%s per interface"
+argument_list|,
+name|ns_g_udpdisp
+argument_list|,
+name|ns_g_udpdisp
+operator|==
+literal|1
+condition|?
+literal|""
+else|:
+literal|"s"
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|isc_taskmgr_create

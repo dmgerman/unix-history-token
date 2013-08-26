@@ -79,6 +79,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISC_TASKEVENT_TEST
+value|(ISC_EVENTCLASS_TASK + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISC_TASKEVENT_LASTEVENT
 value|(ISC_EVENTCLASS_TASK + 65535)
 end_define
@@ -94,6 +101,20 @@ end_macro
 begin_comment
 comment|/***  *** Types  ***/
 end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|isc_taskmgrmode_normal
+init|=
+literal|0
+block|,
+name|isc_taskmgrmode_privileged
+block|}
+name|isc_taskmgrmode_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*% Task and task manager methods */
@@ -114,6 +135,31 @@ name|isc_taskmgr_t
 modifier|*
 modifier|*
 name|managerp
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setmode
+function_decl|)
+parameter_list|(
+name|isc_taskmgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|isc_taskmgrmode_t
+name|mode
+parameter_list|)
+function_decl|;
+name|isc_taskmgrmode_t
+function_decl|(
+modifier|*
+name|mode
+function_decl|)
+parameter_list|(
+name|isc_taskmgr_t
+modifier|*
+name|manager
 parameter_list|)
 function_decl|;
 name|isc_result_t
@@ -391,6 +437,31 @@ name|void
 function_decl|(
 modifier|*
 name|endexclusive
+function_decl|)
+parameter_list|(
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setprivilege
+function_decl|)
+parameter_list|(
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_boolean_t
+name|priv
+parameter_list|)
+function_decl|;
+name|isc_boolean_t
+function_decl|(
+modifier|*
+name|privilege
 function_decl|)
 parameter_list|(
 name|isc_task_t
@@ -902,6 +973,39 @@ begin_comment
 comment|/*%<  * Returns ISC_TRUE if the task is in the process of shutting down,  * ISC_FALSE otherwise.  *  * Requires:  *\li	'task' is a valid task.  */
 end_comment
 
+begin_function_decl
+name|void
+name|isc_task_setprivilege
+parameter_list|(
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_boolean_t
+name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set or unset the task's "privileged" flag depending on the value of  * 'priv'.  *  * Under normal circumstances this flag has no effect on the task behavior,  * but when the task manager has been set to privileged exeuction mode via  * isc_taskmgr_setmode(), only tasks with the flag set will be executed,  * and all other tasks will wait until they're done.  Once all privileged  * tasks have finished executing, the task manager will automatically  * return to normal execution mode and nonprivileged task can resume.  *  * Requires:  *\li	'task' is a valid task.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|isc_task_privilege
+parameter_list|(
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Returns the current value of the task's privilege flag.  *  * Requires:  *\li	'task' is a valid task.  */
+end_comment
+
 begin_comment
 comment|/*****  ***** Task Manager.  *****/
 end_comment
@@ -960,6 +1064,35 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Create a new task manager.  isc_taskmgr_createinctx() also associates  * the new manager with the specified application context.  *  * Notes:  *  *\li	'workers' in the number of worker threads to create.  In general,  *	the value should be close to the number of processors in the system.  *	The 'workers' value is advisory only.  An attempt will be made to  *	create 'workers' threads, but if at least one thread creation  *	succeeds, isc_taskmgr_create() may return ISC_R_SUCCESS.  *  *\li	If 'default_quantum' is non-zero, then it will be used as the default  *	quantum value when tasks are created.  If zero, then an implementation  *	defined default quantum will be used.  *  * Requires:  *  *\li      'mctx' is a valid memory context.  *  *\li	workers> 0  *  *\li	managerp != NULL&& *managerp == NULL  *  *\li	'actx' is a valid application context (for createinctx()).  *  * Ensures:  *  *\li	On success, '*managerp' will be attached to the newly created task  *	manager.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  *\li	#ISC_R_NOTHREADS		No threads could be created.  *\li	#ISC_R_UNEXPECTED		An unexpected error occurred.  *\li	#ISC_R_SHUTTINGDOWN      	The non-threaded, shared, task  *					manager shutting down.  */
+end_comment
+
+begin_function_decl
+name|void
+name|isc_taskmgr_setmode
+parameter_list|(
+name|isc_taskmgr_t
+modifier|*
+name|manager
+parameter_list|,
+name|isc_taskmgrmode_t
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_taskmgrmode_t
+name|isc_taskmgr_mode
+parameter_list|(
+name|isc_taskmgr_t
+modifier|*
+name|manager
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set/get the current operating mode of the task manager.  Valid modes are:  *  *\li  isc_taskmgrmode_normal  *\li  isc_taskmgrmode_privileged  *  * In privileged execution mode, only tasks that have had the "privilege"  * flag set via isc_task_setprivilege() can be executed.  When all such  * tasks are complete, the manager automatically returns to normal mode  * and proceeds with running non-privileged ready tasks.  This means it is  * necessary to have at least one privileged task waiting on the ready  * queue *before* setting the manager into privileged execution mode,  * which in turn means the task which calls this function should be in  * task-exclusive mode when it does so.  *  * Requires:  *  *\li      'manager' is a valid task manager.  */
 end_comment
 
 begin_function_decl

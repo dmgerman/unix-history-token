@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.336.22.9 2011/12/07 17:23:55 each Exp $ */
+comment|/* $Id: dighost.c,v 1.345 2011/12/07 17:23:28 each Exp $ */
 end_comment
 
 begin_comment
@@ -1946,18 +1946,6 @@ name|query
 parameter_list|,
 name|isc_boolean_t
 name|include_question
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|send_tcp_connect
-parameter_list|(
-name|dig_query_t
-modifier|*
-name|query
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4126,14 +4114,6 @@ name|need_search
 operator|=
 name|ISC_FALSE
 expr_stmt|;
-name|dns_fixedname_init
-argument_list|(
-operator|&
-name|looknew
-operator|->
-name|fdomain
-argument_list|)
-expr_stmt|;
 name|ISC_LINK_INIT
 argument_list|(
 name|looknew
@@ -4612,27 +4592,6 @@ operator|=
 name|lookold
 operator|->
 name|done_as_is
-expr_stmt|;
-name|dns_name_copy
-argument_list|(
-name|dns_fixedname_name
-argument_list|(
-operator|&
-name|lookold
-operator|->
-name|fdomain
-argument_list|)
-argument_list|,
-name|dns_fixedname_name
-argument_list|(
-operator|&
-name|looknew
-operator|->
-name|fdomain
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9072,6 +9031,14 @@ operator|->
 name|recurse
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|dns_fixedname_init
+argument_list|(
+operator|&
+name|lookup
+operator|->
+name|fdomain
+argument_list|)
 expr_stmt|;
 name|domain
 operator|=

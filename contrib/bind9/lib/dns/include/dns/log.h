@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2011, 2012  Internet Systems Consor
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: log.h,v 1.47 2011/10/13 22:48:24 tbox Exp $ */
 end_comment
 
 begin_comment
