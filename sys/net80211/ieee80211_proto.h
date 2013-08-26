@@ -791,6 +791,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|ieee80211_ff_encap1
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ether_header
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The formation of ProbeResponse frames requires guidance to  * deal with legacy clients.  When the client is identified as  * "legacy 11b" ieee80211_send_proberesp is passed this token.  */
 end_comment
