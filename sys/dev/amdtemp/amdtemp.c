@@ -205,6 +205,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_AMD_MISC12
+value|0x1403
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_AMD_MISC14
 value|0x1703
 end_define
@@ -248,6 +255,12 @@ block|{
 name|VENDORID_AMD
 block|,
 name|DEVICEID_AMD_MISC11
+block|}
+block|,
+block|{
+name|VENDORID_AMD
+block|,
+name|DEVICEID_AMD_MISC12
 block|}
 block|,
 block|{
