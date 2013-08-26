@@ -4036,7 +4036,7 @@ argument_list|(
 literal|','
 argument_list|)
 expr_stmt|;
-name|socktypename
+name|socktypenamewithflags
 argument_list|(
 operator|*
 name|ip
@@ -4362,7 +4362,7 @@ argument_list|(
 literal|','
 argument_list|)
 expr_stmt|;
-name|socktypename
+name|socktypenamewithflags
 argument_list|(
 operator|*
 name|ip

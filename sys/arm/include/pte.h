@@ -430,6 +430,17 @@ comment|/* 1K */
 end_comment
 
 begin_comment
+comment|/* Total number of page table entries in L2 table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2_PTE_NUM_TOTAL
+value|(L2_TABLE_SIZE_REAL / sizeof(pt_entry_t))
+end_define
+
+begin_comment
 comment|/*  * ARM L1 Descriptors  */
 end_comment
 
@@ -523,6 +534,17 @@ end_define
 
 begin_comment
 comment|/* implementation defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_S_XN
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* execute not */
 end_comment
 
 begin_define
@@ -1076,6 +1098,17 @@ end_define
 
 begin_comment
 comment|/* writable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AP_REF
+value|0x01
+end_define
+
+begin_comment
+comment|/* referenced flag */
 end_comment
 
 begin_define

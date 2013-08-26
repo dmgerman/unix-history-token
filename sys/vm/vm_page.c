@@ -6360,7 +6360,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Enqueue the vnode for deferred vdrop(). 				 * 				 * Once the pages are removed from the free 				 * page list, "pageq" can be safely abused to 				 * construct a short-lived list of vnodes. 				 */
+comment|/* 				 * Enqueue the vnode for deferred vdrop(). 				 */
 name|m
 operator|->
 name|plinks
