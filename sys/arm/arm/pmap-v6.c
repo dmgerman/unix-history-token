@@ -3884,6 +3884,14 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|pmap
+operator|->
+name|pm_pvchunk
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
