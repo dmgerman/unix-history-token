@@ -117,6 +117,10 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|freq
+operator|=
+literal|0
+expr_stmt|;
 name|ret
 operator|=
 name|YAMON_SYSCON_READ
