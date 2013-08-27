@@ -10128,12 +10128,6 @@ block|{
 name|ssize_t
 name|resid
 decl_stmt|;
-comment|/* 				 * Ensure that our page is still around 				 * when the I/O completes. 				 */
-name|vm_page_io_start
-argument_list|(
-name|pg
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|obj
@@ -10199,22 +10193,11 @@ argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
-name|vm_page_io_finish
-argument_list|(
-name|pg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
 condition|)
-name|VM_OBJECT_UNLOCK
+name|VM_OBJECT_LOCK
 argument_list|(
 name|obj
 argument_list|)
