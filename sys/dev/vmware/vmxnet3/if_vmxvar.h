@@ -106,17 +106,6 @@ define|\
 value|(VMXNET3_MAX_RX_NDESC * VMXNET3_RXRINGS_PERQ)
 end_define
 
-begin_comment
-comment|/*  * The maximum number of Rx segments we accept. When LRO is enabled,  * this allows us to receive the maximum sized frame with one MCLBYTES  * cluster followed by 16 MJUMPAGESIZE clusters.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMXNET3_MAX_RX_SEGS
-value|17
-end_define
-
 begin_struct
 struct|struct
 name|vmxnet3_txbuf
@@ -886,6 +875,17 @@ define|#
 directive|define
 name|VMXNET3_TX_MAXSEGSIZE
 value|(1<< 14)
+end_define
+
+begin_comment
+comment|/*  * The maximum number of Rx segments we accept. When LRO is enabled,  * this allows us to receive the maximum sized frame with one MCLBYTES  * cluster followed by 16 MJUMPAGESIZE clusters.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MAX_RX_SEGS
+value|17
 end_define
 
 begin_comment
