@@ -129,6 +129,11 @@ directive|define
 name|SI_CLONELIST
 value|0x0200
 comment|/* on a clone list */
+define|#
+directive|define
+name|SI_UNMAPPED
+value|0x0400
+comment|/* can handle unmapped I/O */
 name|struct
 name|timespec
 name|si_atime
