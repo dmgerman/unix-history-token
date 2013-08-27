@@ -813,6 +813,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ieee80211_tx_complete
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The formation of ProbeResponse frames requires guidance to  * deal with legacy clients.  When the client is identified as  * "legacy 11b" ieee80211_send_proberesp is passed this token.  */
 end_comment
