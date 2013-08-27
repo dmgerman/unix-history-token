@@ -1172,6 +1172,7 @@ name|rm_descr
 operator|=
 literal|"GT64120 PCI I/O Ports"
 expr_stmt|;
+comment|/*  	 * First 256 bytes are ISA's registers: e.g. i8259's 	 * So do not use them for general purpose PCI I/O window 	 */
 if|if
 condition|(
 name|rman_init
@@ -1191,7 +1192,7 @@ name|sc
 operator|->
 name|sc_io_rman
 argument_list|,
-literal|0
+literal|0x100
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -2482,10 +2483,19 @@ comment|/* 		 * PIIX4 IDE adapter. HW IRQ0 		 */
 return|return
 literal|0
 return|;
+case|case
+literal|11
+case|:
+comment|/* Ethernet */
+return|return
+literal|10
+return|;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"No mapping for %d/%d/%d/%d\n"
+name|pcib
+argument_list|,
+literal|"no IRQ mapping for %d/%d/%d/%d\n"
 argument_list|,
 name|bus
 argument_list|,
