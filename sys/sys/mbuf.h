@@ -66,7 +66,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
+comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * NB: These calculation do not take actual compiler-induced alignment and  * padding inside the complete struct mbuf into account.  Appropriate  * attention is required when changing members of struct mbuf.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
 end_comment
 
 begin_define
@@ -154,7 +154,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Header present at the beginning of every mbuf.  * Size ILP32: 20  *	 LP64: 32  */
+comment|/*  * Header present at the beginning of every mbuf.  * Size ILP32: 24  *	 LP64: 32  */
 end_comment
 
 begin_struct
@@ -192,6 +192,19 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* flags; see below */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+name|uint32_t
+name|mh_pad
+decl_stmt|;
+comment|/* pad for 64bit alignment */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
