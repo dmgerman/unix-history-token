@@ -2162,6 +2162,11 @@ name|struct
 name|tom_tunables
 name|tt
 decl_stmt|;
+name|void
+modifier|*
+name|iwarp_softc
+decl_stmt|;
+comment|/* (struct c4iw_dev *) */
 endif|#
 directive|endif
 name|struct
