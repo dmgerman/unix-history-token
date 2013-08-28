@@ -271,7 +271,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ssize_t
+name|size_t
 name|vesa_state_buf_size
 decl_stmt|;
 end_decl_stmt
@@ -993,7 +993,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|ssize_t
+name|size_t
 name|vesa_bios_state_buf_size
 parameter_list|(
 name|int
@@ -2558,7 +2558,7 @@ end_function
 
 begin_function
 specifier|static
-name|ssize_t
+name|size_t
 name|vesa_bios_state_buf_size
 parameter_list|(
 name|int
