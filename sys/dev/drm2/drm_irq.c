@@ -826,7 +826,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|uint32_t
+name|long
 name|rem
 decl_stmt|;
 if|if
