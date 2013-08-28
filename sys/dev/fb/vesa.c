@@ -7680,6 +7680,12 @@ operator|)
 name|vesa_bios_post
 argument_list|()
 expr_stmt|;
+name|bsize
+operator|=
+name|adp
+operator|->
+name|va_buffer_size
+expr_stmt|;
 name|mode
 operator|=
 name|adp
@@ -7749,13 +7755,6 @@ name|buf
 operator|!=
 name|NULL
 condition|)
-block|{
-name|bsize
-operator|=
-name|adp
-operator|->
-name|va_buffer_size
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|vesa_vmem_buf
@@ -7765,7 +7764,6 @@ argument_list|,
 name|bsize
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|free
 argument_list|(
