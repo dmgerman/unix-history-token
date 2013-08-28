@@ -5525,7 +5525,9 @@ name|sc
 argument_list|,
 name|NULL
 argument_list|,
-name|HOLD_LOCK
+name|SLEEP_OK
+operator||
+name|INTR_OK
 argument_list|,
 literal|"t4tomun"
 argument_list|)
@@ -5551,7 +5553,7 @@ name|end_synchronized_op
 argument_list|(
 name|sc
 argument_list|,
-name|LOCK_HELD
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
