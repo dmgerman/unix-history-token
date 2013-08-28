@@ -611,7 +611,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3439,7 +3439,7 @@ name|dev_private
 expr_stmt|;
 if|if
 condition|(
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3604,7 +3604,7 @@ argument_list|,
 name|seqno
 argument_list|)
 operator|||
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3647,7 +3647,7 @@ name|ret
 operator|==
 literal|0
 operator|&&
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3682,7 +3682,7 @@ argument_list|,
 name|seqno
 argument_list|)
 operator|||
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
