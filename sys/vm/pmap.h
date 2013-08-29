@@ -95,6 +95,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_advise
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_align_superpage
 parameter_list|(
 name|vm_object_t
