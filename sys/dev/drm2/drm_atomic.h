@@ -48,23 +48,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|atomic_read
+parameter_list|(
+name|p
+parameter_list|)
+value|(*(volatile u_int *)(p))
+end_define
+
+begin_define
+define|#
+directive|define
 name|atomic_set
 parameter_list|(
 name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|atomic_store_rel_int(p, v)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_read
-parameter_list|(
-name|p
-parameter_list|)
-value|atomic_load_acq_int(p)
+value|do { *(u_int *)(p) = (v); } while (0)
 end_define
 
 begin_define
@@ -259,20 +259,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(atomic_load_acq_int((volatile u_int *)(p) + (b) / 32)& (1<< (b) % 32))
-end_define
-
-begin_define
-define|#
-directive|define
-name|test_and_set_bit
-parameter_list|(
-name|b
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|atomic_testandset_int((volatile u_int *)(p) + (b) / 32, b)
+value|((atomic_read((volatile u_int *)(p) + (b) / 32)& (1<< (b) % 32)) != 0)
 end_define
 
 begin_function
