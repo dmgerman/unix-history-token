@@ -7724,6 +7724,12 @@ argument_list|)
 expr_stmt|;
 name|de
 operator|->
+name|de_dir
+operator|=
+name|dd
+expr_stmt|;
+name|de
+operator|->
 name|de_dirent
 operator|->
 name|d_type
