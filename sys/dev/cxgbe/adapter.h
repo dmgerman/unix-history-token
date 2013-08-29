@@ -2127,6 +2127,9 @@ name|struct
 name|sge
 name|sge
 decl_stmt|;
+name|int
+name|lro_timeout
+decl_stmt|;
 name|struct
 name|taskqueue
 modifier|*
