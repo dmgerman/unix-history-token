@@ -399,9 +399,8 @@ decl_stmt|;
 name|blkif_front_ring_t
 name|xbd_ring
 decl_stmt|;
-name|unsigned
-name|int
-name|xbd_irq
+name|xen_intr_handle_t
+name|xen_intr_handle
 decl_stmt|;
 name|struct
 name|gnttab_free_callback

@@ -180,12 +180,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -204,13 +198,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/blkif.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<xen/evtchn.h>
+file|<xen/blkif.h>
 end_include
 
 begin_include
@@ -1070,8 +1064,8 @@ name|blkif_back_rings_t
 name|rings
 decl_stmt|;
 comment|/** IRQ mapping for the communication ring event channel. */
-name|int
-name|irq
+name|xen_intr_handle_t
+name|xen_intr_handle
 decl_stmt|;
 comment|/** 	 * \brief Backend access mode flags (e.g. write, or read-only). 	 * 	 * This value is passed to us by the front-end via the XenStore. 	 */
 name|char
@@ -3029,11 +3023,11 @@ if|if
 condition|(
 name|notify
 condition|)
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|xbb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -3833,14 +3827,14 @@ expr_stmt|;
 comment|/* Check that number of segments is sane. */
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|nseg
 operator|==
 literal|0
 argument_list|)
 operator|||
-name|unlikely
+name|__predict_false
 argument_list|(
 name|nseg
 operator|>
@@ -4337,7 +4331,7 @@ control|)
 block|{
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|map
 operator|->
@@ -5143,8 +5137,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|xbb_intr
+name|int
+name|xbb_filter
 parameter_list|(
 name|void
 modifier|*
@@ -5156,7 +5150,7 @@ name|xbb_softc
 modifier|*
 name|xbb
 decl_stmt|;
-comment|/* Defer to kernel thread. */
+comment|/* Defer to taskqueue thread. */
 name|xbb
 operator|=
 operator|(
@@ -5178,6 +5172,11 @@ operator|->
 name|io_task
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -5385,7 +5384,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|bio
 operator|==
@@ -5654,7 +5653,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|bio
 operator|==
@@ -8337,29 +8336,14 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|xbb
-operator|->
-name|irq
-operator|!=
-literal|0
-condition|)
-block|{
-name|unbind_from_irqhandler
+name|xen_intr_unbind
 argument_list|(
+operator|&
 name|xbb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
-name|xbb
-operator|->
-name|irq
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -9096,8 +9080,12 @@ name|XBBF_RING_CONNECTED
 expr_stmt|;
 name|error
 operator|=
-name|bind_interdomain_evtchn_to_irqhandler
+name|xen_intr_bind_remote_port
 argument_list|(
+name|xbb
+operator|->
+name|dev
+argument_list|,
 name|xbb
 operator|->
 name|otherend_id
@@ -9108,14 +9096,10 @@ name|ring_config
 operator|.
 name|evtchn
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|xbb
-operator|->
-name|dev
-argument_list|)
+name|xbb_filter
 argument_list|,
-name|xbb_intr
+comment|/*ithread_handler*/
+name|NULL
 argument_list|,
 comment|/*arg*/
 name|xbb
@@ -9127,7 +9111,7 @@ argument_list|,
 operator|&
 name|xbb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -12395,7 +12379,7 @@ name|xbb
 operator|->
 name|io_taskqueue
 operator|=
-name|taskqueue_create
+name|taskqueue_create_fast
 argument_list|(
 name|device_get_nameunit
 argument_list|(
@@ -12406,7 +12390,7 @@ name|M_NOWAIT
 argument_list|,
 name|taskqueue_thread_enqueue
 argument_list|,
-comment|/*context*/
+comment|/*contxt*/
 operator|&
 name|xbb
 operator|->

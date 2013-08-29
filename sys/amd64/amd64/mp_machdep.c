@@ -250,6 +250,23 @@ directive|include
 file|<machine/tss.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENHVM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<xen/hvm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -3010,6 +3027,15 @@ comment|/* set up FPU state on the AP */
 name|fpuinit
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XENHVM
+comment|/* register vcpu_info area */
+name|xen_hvm_init_cpu
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* A quick check from sanity claus */
 name|cpuid
 operator|=

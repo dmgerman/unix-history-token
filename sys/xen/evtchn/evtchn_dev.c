@@ -98,7 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/xen-os.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/evtchn.h>
 end_include
 
 begin_include
@@ -116,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -134,13 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/hypervisor.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/evtchn.h>
+file|<xen/evtchn/evtchnvar.h>
 end_include
 
 begin_typedef
@@ -156,28 +156,6 @@ block|}
 name|evtchn_softc_t
 typedef|;
 end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linuxcrap
-end_ifdef
-
-begin_comment
-comment|/* NB. This must be shared amongst drivers if more things go in /dev/xen */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|devfs_handle_t
-name|xen_dev_dir
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Only one process may open /dev/xen/evtchn at any time. */
@@ -321,7 +299,7 @@ begin_function
 name|void
 name|evtchn_device_upcall
 parameter_list|(
-name|int
+name|evtchn_port_t
 name|port
 parameter_list|)
 block|{
@@ -331,12 +309,12 @@ operator|&
 name|upcall_lock
 argument_list|)
 expr_stmt|;
-name|mask_evtchn
+name|evtchn_mask_port
 argument_list|(
 name|port
 argument_list|)
 expr_stmt|;
-name|clear_evtchn
+name|evtchn_clear_port
 argument_list|(
 name|port
 argument_list|)
@@ -896,7 +874,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|unmask_evtchn
+name|evtchn_unmask_port
 argument_list|(
 name|kbuf
 index|[
@@ -961,6 +939,9 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTYET
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1059,6 +1040,8 @@ operator|&
 name|lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|rc
 return|;
@@ -1314,7 +1297,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|mask_evtchn
+name|evtchn_mask_port
 argument_list|(
 name|i
 argument_list|)
@@ -1483,21 +1466,6 @@ name|evtchn_softc_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX I don't think we need any of this rubbish */
-if|#
-directive|if
-literal|0
-block|if ( err != 0 ) 	{ 		printk(KERN_ALERT "Could not register /dev/misc/evtchn\n"); 		return err; 	}
-comment|/* (DEVFS) create directory '/dev/xen'. */
-block|xen_dev_dir = devfs_mk_dir(NULL, "xen", NULL);
-comment|/* (DEVFS)&link_dest[pos] == '../misc/evtchn'. */
-block|pos = devfs_generate_path(evtchn_miscdev.devfs_handle,&link_dest[3],  				  sizeof(link_dest) - 3); 	if ( pos>= 0 ) 		strncpy(&link_dest[pos], "../", 3);
-comment|/* (DEVFS) symlink '/dev/xen/evtchn' -> '../misc/evtchn'. */
-block|(void)devfs_mk_symlink(xen_dev_dir,  			       "evtchn",  			       DEVFS_FL_DEFAULT,&link_dest[pos],&symlink_handle,  			       NULL);
-comment|/* (DEVFS) automatically destroy the symlink with its destination. */
-block|devfs_auto_unregister(evtchn_miscdev.devfs_handle, symlink_handle);
-endif|#
-directive|endif
 if|if
 condition|(
 name|bootverbose

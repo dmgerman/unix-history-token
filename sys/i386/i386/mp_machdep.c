@@ -337,6 +337,23 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENHVM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<xen/hvm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -3045,6 +3062,15 @@ comment|/* set up SSE registers */
 name|enable_sse
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XENHVM
+comment|/* register vcpu_info area */
+name|xen_hvm_init_cpu
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PAE

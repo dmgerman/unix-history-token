@@ -1,349 +1,164 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  * evtchn.h  *   * Communication via Xen event channels.  * Also definitions for the device that demuxes notifications to userspace.  *   * Copyright (c) 2004, K A Fraser  *  * $FreeBSD$  */
+comment|/******************************************************************************  * evtchn.h  *   * Interface to /dev/xen/evtchn.  *   * Copyright (c) 2003-2005, K A Fraser  *   * This file may be distributed separately from the Linux kernel, or  * incorporated into other software packages, subject to the following license:  *   * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this source file (the "Software"), to deal in the Software without  * restriction, including without limitation the rights to use, copy, modify,  * merge, publish, distribute, sublicense, and/or sell copies of the Software,  * and to permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *   * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ASM_EVTCHN_H__
+name|__XEN_EVTCHN_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ASM_EVTCHN_H__
+name|__XEN_EVTCHN_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/pcpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/hypervisor.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/synch_bitops.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
 begin_comment
-comment|/*  * LOW-LEVEL DEFINITIONS  */
+comment|/*  * Bind a fresh port to VIRQ @virq.  */
 end_comment
 
-begin_comment
-comment|/*  * Unlike notify_remote_via_evtchn(), this is safe to use across  * save/restore. Notifications on a broken connection are silently dropped.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|IOCTL_EVTCHN_BIND_VIRQ
+define|\
+value|_IOWR('E', 4, struct ioctl_evtchn_bind_virq)
+end_define
 
-begin_function_decl
-name|void
-name|notify_remote_via_irq
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Entry point for notifications into Linux subsystems. */
-end_comment
-
-begin_function_decl
-name|void
-name|evtchn_do_upcall
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|frame
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Entry point for notifications into the userland character device. */
-end_comment
-
-begin_function_decl
-name|void
-name|evtchn_device_upcall
-parameter_list|(
-name|int
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mask_evtchn
-parameter_list|(
-name|int
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|unmask_evtchn
-parameter_list|(
-name|int
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_function_decl
-name|void
-name|rebind_evtchn_to_cpu
-parameter_list|(
-name|int
-name|port
-parameter_list|,
+begin_struct
+struct|struct
+name|ioctl_evtchn_bind_virq
+block|{
 name|unsigned
 name|int
-name|cpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|rebind_evtchn_to_cpu
-parameter_list|(
-name|port
-parameter_list|,
-name|cpu
-parameter_list|)
-value|((void)0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|test_and_set_evtchn_mask
-parameter_list|(
-name|int
-name|port
-parameter_list|)
-block|{
-name|shared_info_t
-modifier|*
-name|s
-init|=
-name|HYPERVISOR_shared_info
+name|virq
 decl_stmt|;
-return|return
-name|synch_test_and_set_bit
-argument_list|(
-name|port
-argument_list|,
-name|s
-operator|->
-name|evtchn_mask
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|clear_evtchn
-parameter_list|(
-name|int
-name|port
-parameter_list|)
-block|{
-name|shared_info_t
-modifier|*
-name|s
-init|=
-name|HYPERVISOR_shared_info
-decl_stmt|;
-name|synch_clear_bit
-argument_list|(
-name|port
-argument_list|,
-operator|&
-name|s
-operator|->
-name|evtchn_pending
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|notify_remote_via_evtchn
-parameter_list|(
-name|int
-name|port
-parameter_list|)
-block|{
-name|struct
-name|evtchn_send
-name|send
-init|=
-block|{
-operator|.
-name|port
-operator|=
-name|port
-block|}
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|HYPERVISOR_event_channel_op
-argument_list|(
-name|EVTCHNOP_send
-argument_list|,
-operator|&
-name|send
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Use these to access the event channel underlying the IRQ handle returned  * by bind_*_to_irqhandler().  */
-end_comment
-
-begin_function_decl
-name|int
-name|irq_to_evtchn_port
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipi_pcpu
-parameter_list|(
 name|unsigned
 name|int
-name|cpu
-parameter_list|,
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Bind a fresh port to remote<@remote_domain, @remote_port>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCTL_EVTCHN_BIND_INTERDOMAIN
+define|\
+value|_IOWR('E', 5, struct ioctl_evtchn_bind_interdomain)
+end_define
+
+begin_struct
+struct|struct
+name|ioctl_evtchn_bind_interdomain
+block|{
+name|unsigned
 name|int
-name|vector
-parameter_list|)
-function_decl|;
-end_function_decl
+name|remote_domain
+decl_stmt|,
+name|remote_port
+decl_stmt|;
+name|unsigned
+name|int
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/*  * CHARACTER-DEVICE DEFINITIONS  */
+comment|/*  * Allocate a fresh port for binding to @remote_domain.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PORT_NORMAL
-value|0x0000
+name|IOCTL_EVTCHN_BIND_UNBOUND_PORT
+define|\
+value|_IOWR('E', 6, struct ioctl_evtchn_bind_unbound_port)
 end_define
 
-begin_define
-define|#
-directive|define
-name|PORT_EXCEPTION
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PORTIDX_MASK
-value|0x7fff
-end_define
+begin_struct
+struct|struct
+name|ioctl_evtchn_bind_unbound_port
+block|{
+name|unsigned
+name|int
+name|remote_domain
+decl_stmt|;
+name|unsigned
+name|int
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/* /dev/xen/evtchn resides at device number major=10, minor=200 */
+comment|/*  * Unbind previously allocated @port.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EVTCHN_MINOR
-value|200
+name|IOCTL_EVTCHN_UNBIND
+define|\
+value|_IOW('E', 7, struct ioctl_evtchn_unbind)
 end_define
 
-begin_comment
-comment|/* /dev/xen/evtchn ioctls: */
-end_comment
+begin_struct
+struct|struct
+name|ioctl_evtchn_unbind
+block|{
+name|unsigned
+name|int
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
-comment|/* EVTCHN_RESET: Clear and reinit the event buffer. Clear error condition. */
+comment|/*  * Send event to previously allocated @port.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EVTCHN_RESET
-value|_IO('E', 1)
+name|IOCTL_EVTCHN_NOTIFY
+define|\
+value|_IOW('E', 8, struct ioctl_evtchn_notify)
 end_define
 
+begin_struct
+struct|struct
+name|ioctl_evtchn_notify
+block|{
+name|unsigned
+name|int
+name|port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/* EVTCHN_BIND: Bind to the specified event-channel port. */
+comment|/* Clear and reinitialise the event buffer. Clear error condition. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EVTCHN_BIND
-value|_IO('E', 2)
-end_define
-
-begin_comment
-comment|/* EVTCHN_UNBIND: Unbind from the specified event-channel port. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EVTCHN_UNBIND
-value|_IO('E', 3)
+name|IOCTL_EVTCHN_RESET
+define|\
+value|_IO('E', 9)
 end_define
 
 begin_endif
@@ -352,7 +167,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ASM_EVTCHN_H__ */
+comment|/* __XEN_EVTCHN_H__ */
 end_comment
 
 end_unit

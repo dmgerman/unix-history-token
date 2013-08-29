@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -456,6 +456,18 @@ end_decl_stmt
 begin_comment
 comment|/* write_cons, write_prod */
 end_comment
+
+begin_decl_stmt
+name|xen_intr_handle_t
+name|xen_intr_handle
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|device_t
+name|xencons_dev
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1079,6 +1091,10 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|xencons_dev
+operator|=
+name|dev
+expr_stmt|;
 name|xccons
 operator|=
 name|tty_alloc
@@ -1138,13 +1154,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|bind_virq_to_irqhandler
+name|xen_intr_bind_virq
 argument_list|(
+name|dev
+argument_list|,
 name|VIRQ_CONSOLE
 argument_list|,
 literal|0
-argument_list|,
-literal|"console"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1154,7 +1170,8 @@ name|NULL
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
-name|NULL
+operator|&
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 name|KASSERT

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/xen-os.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/xen_intr.h>
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<xen/hypervisor.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xen-os.h>
 end_include
 
 begin_include

@@ -335,6 +335,13 @@ name|IRQ_DTRACE_RET
 value|(NUM_IO_INTS + 3)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IRQ_EVTCHN
+value|(NUM_IO_INTS + 4)
+end_define
+
 begin_comment
 comment|/*  * Support for local APICs.  Local APICs manage interrupts on each  * individual processor as opposed to I/O APICs which receive interrupts  * from I/O devices and then forward them on to the local APICs.  *  * Local APICs can also send interrupts to each other thus providing the  * mechanism for IPIs.  */
 end_comment
@@ -1522,6 +1529,25 @@ name|APIC_IO_INTS
 index|]
 operator|=
 name|IRQ_DTRACE_RET
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|XENHVM
+name|lapics
+index|[
+name|apic_id
+index|]
+operator|.
+name|la_ioint_irqs
+index|[
+name|IDT_EVTCHN
+operator|-
+name|APIC_IO_INTS
+index|]
+operator|=
+name|IRQ_EVTCHN
 expr_stmt|;
 endif|#
 directive|endif
@@ -5111,6 +5137,18 @@ condition|(
 name|irq
 operator|==
 name|IRQ_DTRACE_RET
+condition|)
+continue|continue;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|XENHVM
+if|if
+condition|(
+name|irq
+operator|==
+name|IRQ_EVTCHN
 condition|)
 continue|continue;
 endif|#
