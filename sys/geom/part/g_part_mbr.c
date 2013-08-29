@@ -2843,6 +2843,17 @@ name|changed
 decl_stmt|;
 if|if
 condition|(
+name|baseentry
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+if|if
+condition|(
 name|strcasecmp
 argument_list|(
 name|attrib
