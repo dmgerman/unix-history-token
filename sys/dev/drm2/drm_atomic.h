@@ -298,7 +298,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|((atomic_read(__bit_addr(p, b))& __bit_mask(b)) != 0)
+value|((*__bit_addr(p, b)& __bit_mask(b)) != 0)
 end_define
 
 begin_function
