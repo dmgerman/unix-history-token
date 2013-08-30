@@ -3082,6 +3082,15 @@ case|:
 case|case
 name|TOR
 case|:
+case|case
+name|TPIPE
+case|:
+case|case
+name|TENDCASE
+case|:
+case|case
+name|TFALLTHRU
+case|:
 comment|/* 		 * An empty command before a ; doesn't make much sense, and 		 * should certainly be disallowed in the case of `if ;'. 		 */
 if|if
 condition|(
