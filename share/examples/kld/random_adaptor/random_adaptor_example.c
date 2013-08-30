@@ -59,13 +59,6 @@ directive|include
 file|<dev/random/randomdev.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|random_example_entropy_control
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -86,16 +79,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|random_example_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|random_adaptor
@@ -110,7 +93,11 @@ block|,
 operator|.
 name|init
 operator|=
-name|random_example_init
+operator|(
+name|random_init_func_t
+operator|*
+operator|)
+name|random_null_func
 block|,
 operator|.
 name|deinit
@@ -151,22 +138,6 @@ literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|random_example_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* 	 * Init() is called only if this RNG was chosen to plugin in to 	 * random(4). In which case, we should no longer use this adaptor as 	 * an entropy source. 	 */
-name|random_example_entropy_control
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Used under the license provided @ http://xkcd.com/221/  * http://creativecommons.org/licenses/by-nc/2.5/  */
@@ -273,18 +244,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* start off by using this as an entropy source */
-name|random_adaptor_use_as_entropy
-argument_list|(
-name|RNG_NAME
-argument_list|,
-operator|&
-name|random_example
-argument_list|,
-operator|&
-name|random_example_entropy_control
-argument_list|)
-expr_stmt|;
 name|random_adaptor_register
 argument_list|(
 name|RNG_NAME
