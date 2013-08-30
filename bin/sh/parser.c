@@ -329,6 +329,7 @@ comment|/* last token read */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tokpushback
 decl_stmt|;
