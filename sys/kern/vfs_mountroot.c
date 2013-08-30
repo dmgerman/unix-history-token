@@ -322,6 +322,17 @@ literal|3
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.mountroot.timeout"
+argument_list|,
+operator|&
+name|root_mount_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|struct
 name|root_hold_token
