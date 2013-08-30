@@ -233,6 +233,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_AND_ATOMIC
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|BIT_AND_ATOMIC(CPU_SETSIZE, n, p)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_OR_ATOMIC
 parameter_list|(
 name|d

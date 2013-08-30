@@ -277,6 +277,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BIT_AND_ATOMIC
+parameter_list|(
+name|_s
+parameter_list|,
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|do {					\ 	__size_t __i;							\ 	for (__i = 0; __i< __bitset_words((_s)); __i++)		\ 		atomic_clear_long(&(d)->__bits[__i],			\ 		    ~(s)->__bits[__i]);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BIT_OR_ATOMIC
 parameter_list|(
 name|_s
