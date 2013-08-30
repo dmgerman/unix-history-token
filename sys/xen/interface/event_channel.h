@@ -114,6 +114,12 @@ begin_comment
 comment|/* ` } */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__XEN_EVTCHN_PORT_DEFINED__
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|uint32_t
@@ -128,6 +134,18 @@ name|evtchn_port_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|__XEN_EVTCHN_PORT_DEFINED__
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * EVTCHNOP_alloc_unbound: Allocate a port in domain<dom> and mark as  * accepting interdomain bindings from domain<remote_dom>. A fresh port  * is allocated in<dom> and returned as<port>.  * NOTES:  *  1. If the caller is unprivileged then<dom> must be DOMID_SELF.  *  2.<rdom> may be DOMID_SELF, allowing loopback connections.  */

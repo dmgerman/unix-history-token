@@ -196,6 +196,11 @@ init|=
 literal|0x1A00000
 block|,
 comment|/* kvm operational limits*/
+name|SI_SUB_HYPERVISOR
+init|=
+literal|0x1A40000
+block|,
+comment|/* 						 * Hypervisor detection and 						 * virtualization support  						 * setup. 						 */
 name|SI_SUB_WITNESS
 init|=
 literal|0x1A80000

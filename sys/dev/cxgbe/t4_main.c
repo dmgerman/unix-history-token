@@ -713,7 +713,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|sx
 name|t4_list_lock
 decl_stmt|;
 end_decl_stmt
@@ -738,7 +738,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
+name|sx
 name|t4_uld_list_lock
 decl_stmt|;
 end_decl_stmt
@@ -3572,7 +3572,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -3588,7 +3588,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -5493,7 +5493,7 @@ name|sc_lock
 argument_list|)
 condition|)
 block|{
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -5511,7 +5511,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -13828,9 +13828,13 @@ name|t4_query_params
 argument_list|(
 name|sc
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|mbox
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|pf
 argument_list|,
 literal|0
 argument_list|,
@@ -22123,6 +22127,34 @@ argument_list|,
 name|ctx
 argument_list|,
 name|children
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|lro_timeout
+operator|=
+literal|100
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"lro_timeout"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|lro_timeout
+argument_list|,
+literal|0
+argument_list|,
+literal|"lro inactive-flush timeout (in us)"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -41048,7 +41080,7 @@ name|adapter
 modifier|*
 name|sc
 decl_stmt|;
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -41072,7 +41104,7 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -42264,7 +42296,7 @@ name|uld_info
 modifier|*
 name|u
 decl_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42317,7 +42349,7 @@ literal|0
 expr_stmt|;
 name|done
 label|:
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42351,7 +42383,7 @@ name|uld_info
 modifier|*
 name|u
 decl_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42413,7 +42445,7 @@ block|}
 block|}
 name|done
 label|:
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42455,7 +42487,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42506,7 +42538,7 @@ block|}
 block|}
 name|done
 label|:
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42548,7 +42580,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42599,7 +42631,7 @@ block|}
 block|}
 name|done
 label|:
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -42932,16 +42964,12 @@ break|break;
 name|t4_sge_modload
 argument_list|()
 expr_stmt|;
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
 name|t4_list_lock
 argument_list|,
-literal|"T4 adapters"
-argument_list|,
-literal|0
-argument_list|,
-name|MTX_DEF
+literal|"T4/T5 adapters"
 argument_list|)
 expr_stmt|;
 name|SLIST_INIT
@@ -42953,16 +42981,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
 name|t4_uld_list_lock
 argument_list|,
-literal|"T4 ULDs"
-argument_list|,
-literal|0
-argument_list|,
-name|MTX_DEF
+literal|"T4/T5 ULDs"
 argument_list|)
 expr_stmt|;
 name|SLIST_INIT
@@ -43003,7 +43027,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -43023,7 +43047,7 @@ name|rc
 operator|=
 name|EBUSY
 expr_stmt|;
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -43031,13 +43055,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_uld_list_lock
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|t4_uld_list_lock
@@ -43045,7 +43069,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -43065,7 +43089,7 @@ name|rc
 operator|=
 name|EBUSY
 expr_stmt|;
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_list_lock
@@ -43073,13 +43097,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|t4_list_lock
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|sx_destroy
 argument_list|(
 operator|&
 name|t4_list_lock

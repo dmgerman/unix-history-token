@@ -193,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|9
+value|8
 end_define
 
 begin_define
@@ -704,6 +704,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|int
+name|ki_fibnum
+decl_stmt|;
+comment|/* Default FIB number */
 name|u_int
 name|ki_cr_flags
 decl_stmt|;

@@ -676,6 +676,8 @@ argument_list|,
 name|qf
 operator|->
 name|accmode
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<
@@ -859,6 +861,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -3025,6 +3029,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

@@ -2304,13 +2304,6 @@ name|TCPCTL_FINWAIT2_TIMEOUT
 value|17
 end_define
 
-begin_define
-define|#
-directive|define
-name|TCPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ 	{ "v6mssdflt", CTLTYPE_INT }, \ 	{ "maxid", CTLTYPE_INT }, \ }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

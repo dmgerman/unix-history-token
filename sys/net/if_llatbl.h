@@ -32,12 +32,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"opt_ofed.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_rwlock.h>
 end_include
 

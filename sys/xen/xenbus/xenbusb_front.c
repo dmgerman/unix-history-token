@@ -96,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<machine/stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include

@@ -837,6 +837,14 @@ name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
+name|cpuset_t
+name|pm_save
+decl_stmt|;
+comment|/* Context valid on cpus mask */
+name|int
+name|pm_pcid
+decl_stmt|;
+comment|/* context id */
 comment|/* spare u_int here due to padding */
 name|struct
 name|pmap_statistics

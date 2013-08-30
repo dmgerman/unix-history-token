@@ -169,15 +169,12 @@ block|}
 comment|/* 	 * If the driver does not want I/O to be split, that means that we 	 * need to reject any requests that will not fit into one buffer. 	 */
 if|if
 condition|(
-operator|(
 name|dev
 operator|->
 name|si_flags
 operator|&
 name|SI_NOSPLIT
-operator|)
 operator|&&
-operator|(
 operator|(
 name|uio
 operator|->
@@ -186,23 +183,18 @@ operator|>
 name|dev
 operator|->
 name|si_iosize_max
-operator|)
 operator|||
-operator|(
 name|uio
 operator|->
 name|uio_resid
 operator|>
 name|MAXPHYS
-operator|)
 operator|||
-operator|(
 name|uio
 operator|->
 name|uio_iovcnt
 operator|>
 literal|1
-operator|)
 operator|)
 condition|)
 block|{
@@ -217,9 +209,9 @@ name|dev
 operator|->
 name|si_iosize_max
 condition|)
-name|printf
+name|uprintf
 argument_list|(
-literal|"%s: request size %zd> si_iosize_max=%d, "
+literal|"%s: request size=%zd> si_iosize_max=%d; "
 literal|"cannot split request\n"
 argument_list|,
 name|devtoname
@@ -244,9 +236,9 @@ name|uio_resid
 operator|>
 name|MAXPHYS
 condition|)
-name|printf
+name|uprintf
 argument_list|(
-literal|"%s: request size %zd> MAXPHYS=%d, "
+literal|"%s: request size=%zd> MAXPHYS=%d; "
 literal|"cannot split request\n"
 argument_list|,
 name|devtoname
@@ -269,9 +261,9 @@ name|uio_iovcnt
 operator|>
 literal|1
 condition|)
-name|printf
+name|uprintf
 argument_list|(
-literal|"%s: request vectors=%d> 1, "
+literal|"%s: request vectors=%d> 1; "
 literal|"cannot split request\n"
 argument_list|,
 name|devtoname
@@ -477,10 +469,10 @@ operator|&
 name|SI_NOSPLIT
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
 literal|"%s: request ptr %p is not "
-literal|"on a page boundary, cannot split "
+literal|"on a page boundary; cannot split "
 literal|"request\n"
 argument_list|,
 name|devtoname

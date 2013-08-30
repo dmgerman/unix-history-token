@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -478,7 +478,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|gnttab_free_callback_list
 operator|!=
@@ -572,7 +572,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|error
 argument_list|)
@@ -1026,7 +1026,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|error
 argument_list|)
@@ -1383,7 +1383,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|error
 argument_list|)
@@ -1444,7 +1444,7 @@ name|private_head
 decl_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|g
 operator|==

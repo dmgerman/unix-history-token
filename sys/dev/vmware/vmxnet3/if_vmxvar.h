@@ -74,21 +74,63 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * The maximum number of descriptors in each Rx/Tx ring.  */
+comment|/*  * The number of descriptors in each Rx/Tx ring.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VMXNET3_MAX_TX_NDESC
+name|VMXNET3_DEF_TX_NDESC
 value|512
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMXNET3_MAX_RX_NDESC
+name|VMXNET3_MAX_TX_NDESC
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MIN_TX_NDESC
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MASK_TX_NDESC
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_DEF_RX_NDESC
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MAX_RX_NDESC
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MIN_RX_NDESC
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MASK_RX_NDESC
+value|0x1F
 end_define
 
 begin_define
@@ -104,17 +146,6 @@ directive|define
 name|VMXNET3_MAX_RX_NCOMPDESC
 define|\
 value|(VMXNET3_MAX_RX_NDESC * VMXNET3_RXRINGS_PERQ)
-end_define
-
-begin_comment
-comment|/*  * The maximum number of Rx segments we accept. When LRO is enabled,  * this allows us to receive the maximum sized frame with one MCLBYTES  * cluster followed by 16 MJUMPAGESIZE clusters.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMXNET3_MAX_RX_SEGS
-value|17
 end_define
 
 begin_struct
@@ -886,6 +917,17 @@ define|#
 directive|define
 name|VMXNET3_TX_MAXSEGSIZE
 value|(1<< 14)
+end_define
+
+begin_comment
+comment|/*  * The maximum number of Rx segments we accept. When LRO is enabled,  * this allows us to receive the maximum sized frame with one MCLBYTES  * cluster followed by 16 MJUMPAGESIZE clusters.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MAX_RX_SEGS
+value|17
 end_define
 
 begin_comment

@@ -12840,6 +12840,29 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	This function is advisory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_advise
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  *	Clear the modify bits on the specified physical page.  */
 end_comment
 

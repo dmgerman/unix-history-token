@@ -9564,11 +9564,6 @@ name|MADV_FREE
 condition|)
 block|{
 comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * up by the system.  However, such pages are often reused 		 * quickly by malloc() so we do not do anything that would 		 * cause a page fault if we can help it. 		 * 		 * Specifically, we do not try to actually free the page now 		 * nor do we try to put it in the cache (which would cause a 		 * page fault on reuse). 		 * 		 * But we do make the page is freeable as we can without 		 * actually taking the step of unmapping it. 		 */
-name|pmap_clear_modify
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|dirty
@@ -9635,12 +9630,7 @@ name|act_count
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 * 	 * Perform the pmap_clear_reference() first.  Otherwise, a concurrent 	 * pmap operation, such as pmap_remove(), could clear a reference in 	 * the pmap and set PGA_REFERENCED on the page before the 	 * pmap_clear_reference() had completed.  Consequently, the page would 	 * appear referenced based upon an old reference that occurred before 	 * this function ran. 	 */
-name|pmap_clear_reference
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 */
 name|vm_page_aflag_clear
 argument_list|(
 name|m

@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/interrupt.h>
 end_include
 
@@ -235,6 +241,30 @@ define|#
 directive|define
 name|OCW3_POLL_PENDING
 value|(1U<< 7)
+end_define
+
+begin_comment
+comment|/*  * Galileo controller's registers are LE so convert to then  * to/from native byte order. We rely on boot loader or emulator  * to set "swap bytes" configuration correctly for us  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GT_PCI_DATA
+parameter_list|(
+name|v
+parameter_list|)
+value|htole32((v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GT_HOST_DATA
+parameter_list|(
+name|v
+parameter_list|)
+value|le32toh((v))
 end_define
 
 begin_struct_decl
@@ -1172,6 +1202,7 @@ name|rm_descr
 operator|=
 literal|"GT64120 PCI I/O Ports"
 expr_stmt|;
+comment|/*  	 * First 256 bytes are ISA's registers: e.g. i8259's 	 * So do not use them for general purpose PCI I/O window 	 */
 if|if
 condition|(
 name|rman_init
@@ -1191,7 +1222,7 @@ name|sc
 operator|->
 name|sc_io_rman
 argument_list|,
-literal|0
+literal|0x100
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -2010,13 +2041,18 @@ argument_list|(
 name|GT_INTR_CAUSE
 argument_list|)
 operator|=
+name|GT_PCI_DATA
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|GT_REGVAL
 argument_list|(
 name|GT_PCI0_CFG_ADDR
 argument_list|)
 operator|=
+name|GT_PCI_DATA
+argument_list|(
 operator|(
 literal|1
 operator|<<
@@ -2024,7 +2060,34 @@ literal|31
 operator|)
 operator||
 name|addr
+argument_list|)
 expr_stmt|;
+comment|/*  	 * Galileo system controller is special 	 */
+if|if
+condition|(
+operator|(
+name|bus
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|slot
+operator|==
+literal|0
+operator|)
+condition|)
+name|data
+operator|=
+name|GT_PCI_DATA
+argument_list|(
+name|GT_REGVAL
+argument_list|(
+name|GT_PCI0_CFG_DATA
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|data
 operator|=
 name|GT_REGVAL
@@ -2035,9 +2098,12 @@ expr_stmt|;
 comment|/* Check for master abort. */
 if|if
 condition|(
+name|GT_HOST_DATA
+argument_list|(
 name|GT_REGVAL
 argument_list|(
 name|GT_INTR_CAUSE
+argument_list|)
 argument_list|)
 operator|&
 operator|(
@@ -2054,7 +2120,6 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * XXX: We assume that words readed from GT chip are BE. 	 *	Should we set the mode explicitly during chip 	 *	Initialization? 	 */
 switch|switch
 condition|(
 name|reg
@@ -2247,7 +2312,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 		* XXX: We assume that words readed from GT chip are BE. 		*	Should we set the mode explicitly during chip 		*	Initialization? 		*/
 name|shift
 operator|=
 literal|8
@@ -2398,13 +2462,18 @@ argument_list|(
 name|GT_INTR_CAUSE
 argument_list|)
 operator|=
+name|GT_PCI_DATA
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 name|GT_REGVAL
 argument_list|(
 name|GT_PCI0_CFG_ADDR
 argument_list|)
 operator|=
+name|GT_PCI_DATA
+argument_list|(
 operator|(
 literal|1
 operator|<<
@@ -2412,7 +2481,34 @@ literal|31
 operator|)
 operator||
 name|addr
+argument_list|)
 expr_stmt|;
+comment|/*  	 * Galileo system controller is special 	 */
+if|if
+condition|(
+operator|(
+name|bus
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|slot
+operator|==
+literal|0
+operator|)
+condition|)
+name|GT_REGVAL
+argument_list|(
+name|GT_PCI0_CFG_DATA
+argument_list|)
+operator|=
+name|GT_PCI_DATA
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+else|else
 name|GT_REGVAL
 argument_list|(
 name|GT_PCI0_CFG_DATA
@@ -2420,6 +2516,12 @@ argument_list|)
 operator|=
 name|data
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("PCICONF_WRITE(%02x:%02x.%02x[%04x] -> %02x(%d)\n",  	  bus, slot, func, reg, data, bytes);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2482,10 +2584,19 @@ comment|/* 		 * PIIX4 IDE adapter. HW IRQ0 		 */
 return|return
 literal|0
 return|;
+case|case
+literal|11
+case|:
+comment|/* Ethernet */
+return|return
+literal|10
+return|;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
-literal|"No mapping for %d/%d/%d/%d\n"
+name|pcib
+argument_list|,
+literal|"no IRQ mapping for %d/%d/%d/%d\n"
 argument_list|,
 name|bus
 argument_list|,

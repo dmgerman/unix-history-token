@@ -254,6 +254,8 @@ argument_list|(
 name|path
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 expr_stmt|;
 if|if

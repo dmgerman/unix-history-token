@@ -15,6 +15,12 @@ directive|define
 name|_TCP_LRO_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_struct
 struct|struct
 name|lro_entry
@@ -116,6 +122,10 @@ name|uint16_t
 name|timestamp
 decl_stmt|;
 comment|/* flag, not a TCP hdr field. */
+name|struct
+name|timeval
+name|mtime
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -226,6 +236,22 @@ name|tcp_lro_free
 parameter_list|(
 name|struct
 name|lro_ctrl
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_lro_flush_inactive
+parameter_list|(
+name|struct
+name|lro_ctrl
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|timeval
 modifier|*
 parameter_list|)
 function_decl|;

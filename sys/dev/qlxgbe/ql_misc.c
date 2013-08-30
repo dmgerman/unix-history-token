@@ -1320,10 +1320,6 @@ condition|)
 do|;
 if|if
 condition|(
-name|count
-operator|==
-literal|0
-operator|&&
 name|data32
 operator|!=
 literal|0x6
@@ -1683,10 +1679,6 @@ condition|)
 do|;
 if|if
 condition|(
-name|count
-operator|==
-literal|0
-operator|&&
 name|data32
 operator|!=
 literal|0x6
@@ -1808,10 +1800,6 @@ condition|)
 do|;
 if|if
 condition|(
-name|count
-operator|==
-literal|0
-operator|&&
 name|data32
 operator|!=
 literal|0x6
@@ -2035,10 +2023,6 @@ condition|)
 do|;
 if|if
 condition|(
-name|count
-operator|==
-literal|0
-operator|&&
 name|data32
 operator|!=
 literal|0x6
@@ -2454,10 +2438,6 @@ condition|)
 do|;
 if|if
 condition|(
-name|count
-operator|==
-literal|0
-operator|&&
 name|data32
 operator|!=
 literal|0x6
