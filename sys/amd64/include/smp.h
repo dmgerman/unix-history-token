@@ -250,6 +250,12 @@ begin_comment
 comment|/* handle CPU rendezvous */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* functions in mp_machdep.c */
 end_comment
@@ -385,6 +391,11 @@ begin_function_decl
 name|void
 name|smp_invlpg
 parameter_list|(
+name|struct
+name|pmap
+modifier|*
+name|pmap
+parameter_list|,
 name|vm_offset_t
 name|addr
 parameter_list|)
@@ -398,6 +409,11 @@ parameter_list|(
 name|cpuset_t
 name|mask
 parameter_list|,
+name|struct
+name|pmap
+modifier|*
+name|pmap
+parameter_list|,
 name|vm_offset_t
 name|addr
 parameter_list|)
@@ -408,6 +424,11 @@ begin_function_decl
 name|void
 name|smp_invlpg_range
 parameter_list|(
+name|struct
+name|pmap
+modifier|*
+name|pmap
+parameter_list|,
 name|vm_offset_t
 name|startva
 parameter_list|,
@@ -424,6 +445,11 @@ parameter_list|(
 name|cpuset_t
 name|mask
 parameter_list|,
+name|struct
+name|pmap
+modifier|*
+name|pmap
+parameter_list|,
 name|vm_offset_t
 name|startva
 parameter_list|,
@@ -437,7 +463,10 @@ begin_function_decl
 name|void
 name|smp_invltlb
 parameter_list|(
-name|void
+name|struct
+name|pmap
+modifier|*
+name|pmap
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -448,6 +477,11 @@ name|smp_masked_invltlb
 parameter_list|(
 name|cpuset_t
 name|mask
+parameter_list|,
+name|struct
+name|pmap
+modifier|*
+name|pmap
 parameter_list|)
 function_decl|;
 end_function_decl

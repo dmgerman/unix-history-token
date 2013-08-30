@@ -9034,6 +9034,7 @@ name|pcb_cr3
 operator|=
 name|KPML4phys
 expr_stmt|;
+comment|/* PCID 0 is reserved for kernel */
 name|thread0
 operator|.
 name|td_frame
