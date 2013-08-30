@@ -74,21 +74,63 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * The maximum number of descriptors in each Rx/Tx ring.  */
+comment|/*  * The number of descriptors in each Rx/Tx ring.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VMXNET3_MAX_TX_NDESC
+name|VMXNET3_DEF_TX_NDESC
 value|512
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMXNET3_MAX_RX_NDESC
+name|VMXNET3_MAX_TX_NDESC
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MIN_TX_NDESC
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MASK_TX_NDESC
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_DEF_RX_NDESC
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MAX_RX_NDESC
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MIN_RX_NDESC
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMXNET3_MASK_RX_NDESC
+value|0x1F
 end_define
 
 begin_define
