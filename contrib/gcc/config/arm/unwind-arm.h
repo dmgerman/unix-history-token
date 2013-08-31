@@ -773,6 +773,9 @@ return|return
 name|val
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 comment|/* Return the address of the instruction, not the actual IP value.  */
 define|#
 directive|define
@@ -792,6 +795,29 @@ name|ip_before_insn
 parameter_list|)
 define|\
 value|(*ip_before_insn = 0, _Unwind_GetGR (context, 15)& ~(_Unwind_Word)1)
+else|#
+directive|else
+name|_Unwind_Ptr
+name|_Unwind_GetIP
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+parameter_list|)
+function_decl|;
+name|_Unwind_Ptr
+name|_Unwind_GetIPInfo
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 specifier|static
 specifier|inline
 name|void
