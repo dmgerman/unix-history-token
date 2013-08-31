@@ -348,6 +348,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|OF_finddevice
+argument_list|(
+literal|"mac-io/backlight"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+if|if
+condition|(
 name|device_find_child
 argument_list|(
 name|parent
