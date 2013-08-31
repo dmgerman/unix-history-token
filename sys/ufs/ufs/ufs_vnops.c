@@ -6153,11 +6153,9 @@ condition|)
 goto|goto
 name|releout
 goto|;
-name|VOP_UNLOCK
+name|vput
 argument_list|(
 name|nvp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|atomic_add_int
