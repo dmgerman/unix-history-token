@@ -71,7 +71,7 @@ value|0xf
 end_define
 
 begin_comment
-comment|/* Mask for the type */
+comment|/* mask for the type */
 end_comment
 
 begin_define
@@ -334,7 +334,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* oid is being removed */
+comment|/* Oid is being removed */
 end_comment
 
 begin_define
@@ -378,7 +378,7 @@ value|(CTLFLAG_CAPRD|CTLFLAG_CAPWR)
 end_define
 
 begin_comment
-comment|/*  * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.    *  * Secure when the securelevel is raised to at least N.  */
+comment|/*  * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.  *  * Secure when the securelevel is raised to at least N.  */
 end_comment
 
 begin_define
@@ -839,7 +839,7 @@ value|extern struct sysctl_oid_list sysctl_##name##_children
 end_define
 
 begin_comment
-comment|/* Hide these in macros */
+comment|/* Hide these in macros. */
 end_comment
 
 begin_define
@@ -849,7 +849,8 @@ name|SYSCTL_CHILDREN
 parameter_list|(
 name|oid_ptr
 parameter_list|)
-value|(struct sysctl_oid_list *) \ 	(oid_ptr)->oid_arg1
+define|\
+value|(struct sysctl_oid_list *)(oid_ptr)->oid_arg1
 end_define
 
 begin_define
@@ -861,8 +862,7 @@ name|oid_ptr
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|(oid_ptr)->oid_arg1 = (val);
+value|(oid_ptr)->oid_arg1 = (val)
 end_define
 
 begin_define
@@ -872,12 +872,11 @@ name|SYSCTL_STATIC_CHILDREN
 parameter_list|(
 name|oid_name
 parameter_list|)
-define|\
 value|(&sysctl_##oid_name##_children)
 end_define
 
 begin_comment
-comment|/* === Structs and macros related to context handling === */
+comment|/* === Structs and macros related to context handling. === */
 end_comment
 
 begin_comment
@@ -1192,7 +1191,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		 \&sysctl_##parent##_children, { NULL }, nbr, kind,	 \ 		a1, a2, #name, handler, fmt, 0, 0, __DESCR(descr) };	 \ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		\&sysctl_##parent##_children,				\ 		{ NULL },						\ 		nbr,							\ 		kind,							\ 		a1,							\ 		a2,							\ 		#name,							\ 		handler,						\ 		fmt,							\ 		0,							\ 		0,							\ 		__DESCR(descr)						\ 		};							\ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_define
@@ -1856,7 +1855,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD | CTLFLAG_CAPRD, \ 	    0, 1, desc)
+value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD | CTLFLAG_CAPRD, \ 	    NULL, 1, desc)
 end_define
 
 begin_endif

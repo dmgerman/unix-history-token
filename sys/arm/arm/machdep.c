@@ -5974,7 +5974,7 @@ operator|>=
 name|end
 condition|)
 break|break;
-comment|/* 			 * Restricted region includes memory region 			 * skip availble region 			 */
+comment|/* 			 * Restricted region includes memory region 			 * skip available region 			 */
 if|if
 condition|(
 operator|(

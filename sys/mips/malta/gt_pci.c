@@ -169,6 +169,12 @@ directive|include
 file|"pcib_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/malta/gt_pci_bus_space.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2798,11 +2804,6 @@ name|rman
 modifier|*
 name|rm
 decl_stmt|;
-name|bus_space_tag_t
-name|bt
-init|=
-literal|0
-decl_stmt|;
 name|bus_space_handle_t
 name|bh
 init|=
@@ -2834,12 +2835,6 @@ name|sc
 operator|->
 name|sc_mem_rman
 expr_stmt|;
-name|bt
-operator|=
-name|sc
-operator|->
-name|sc_st
-expr_stmt|;
 name|bh
 operator|=
 name|sc
@@ -2856,12 +2851,6 @@ operator|&
 name|sc
 operator|->
 name|sc_io_rman
-expr_stmt|;
-name|bt
-operator|=
-name|sc
-operator|->
-name|sc_st
 expr_stmt|;
 name|bh
 operator|=
@@ -2933,7 +2922,7 @@ name|rman_set_bustag
 argument_list|(
 name|rv
 argument_list|,
-name|bt
+name|gt_pci_bus_space
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle

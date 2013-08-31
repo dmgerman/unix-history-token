@@ -4106,7 +4106,7 @@ name|object
 argument_list|,
 name|i
 argument_list|,
-name|VM_ALLOC_NORMAL
+name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
 if|if
