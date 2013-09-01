@@ -481,10 +481,8 @@ operator|<
 literal|0x00800000
 condition|)
 return|return
-literal|0.125
-operator|*
 operator|(
-literal|8.0
+literal|8
 operator|*
 name|x
 operator|+
@@ -492,8 +490,10 @@ name|efx8
 operator|*
 name|x
 operator|)
+operator|/
+literal|8
 return|;
-comment|/*avoid underflow */
+comment|/* avoid spurious underflow */
 return|return
 name|x
 operator|+

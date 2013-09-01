@@ -1141,6 +1141,10 @@ parameter_list|,
 name|void
 modifier|*
 name|owner
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|result
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -242,6 +242,22 @@ return|;
 endif|#
 directive|endif
 case|case
+name|SHT_ARM_PREEMPTMAP
+case|:
+comment|/* FALLTHROUGH */
+case|case
+name|SHT_ARM_ATTRIBUTES
+case|:
+comment|/* FALLTHROUGH */
+case|case
+name|SHT_ARM_DEBUGOVERLAY
+case|:
+comment|/* FALLTHROUGH */
+case|case
+name|SHT_ARM_OVERLAYSECTION
+case|:
+comment|/* FALLTHROUGH */
+case|case
 name|SHT_MIPS_DWARF
 case|:
 comment|/* FALLTHROUGH */
@@ -256,7 +272,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|SHT_AMD64_UNWIND
 case|:
-comment|/* == SHT_IA_64_UNWIND */
+comment|/* == SHT_IA_64_UNWIND == SHT_ARM_EXIDX */
 return|return
 operator|(
 name|ELF_T_BYTE

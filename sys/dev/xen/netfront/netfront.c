@@ -259,19 +259,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenfunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xenvar.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -284,12 +272,6 @@ begin_include
 include|#
 directive|include
 file|<xen/xen_intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/evtchn.h>
 end_include
 
 begin_include
@@ -314,6 +296,12 @@ begin_include
 include|#
 directive|include
 file|<xen/xenbus/xenbusvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/xenvar.h>
 end_include
 
 begin_include
@@ -1209,11 +1197,8 @@ name|struct
 name|mtx
 name|sc_lock
 decl_stmt|;
-name|u_int
-name|handle
-decl_stmt|;
-name|u_int
-name|irq
+name|xen_intr_handle_t
+name|xen_intr_handle
 decl_stmt|;
 name|u_int
 name|copying_receiver
@@ -2481,11 +2466,11 @@ literal|"event-channel"
 argument_list|,
 literal|"%u"
 argument_list|,
-name|irq_to_evtchn_port
+name|xen_intr_port
 argument_list|(
 name|info
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2761,12 +2746,6 @@ name|sring
 operator|=
 name|NULL
 expr_stmt|;
-name|info
-operator|->
-name|irq
-operator|=
-literal|0
-expr_stmt|;
 name|txs
 operator|=
 operator|(
@@ -2931,14 +2910,17 @@ name|fail
 goto|;
 name|error
 operator|=
-name|bind_listening_port_to_irqhandler
+name|xen_intr_alloc_and_bind_local_port
 argument_list|(
+name|dev
+argument_list|,
 name|xenbus_get_otherend_id
 argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"xn"
+comment|/*filter*/
+name|NULL
 argument_list|,
 name|xn_intr
 argument_list|,
@@ -2947,11 +2929,13 @@ argument_list|,
 name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
+operator||
+name|INTR_ENTROPY
 argument_list|,
 operator|&
 name|info
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -2965,7 +2949,7 @@ name|dev
 argument_list|,
 name|error
 argument_list|,
-literal|"bind_evtchn_to_irqhandler failed"
+literal|"xen_intr_alloc_and_bind_local_port failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3471,7 +3455,7 @@ name|req_prod_pvt
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|sc
 operator|->
@@ -4142,7 +4126,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|sc
 operator|->
@@ -4209,11 +4193,11 @@ if|if
 condition|(
 name|notify
 condition|)
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|sc
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -4436,7 +4420,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|err
 argument_list|)
@@ -5035,7 +5019,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|gnttab_query_foreign_access
 argument_list|(
@@ -5483,7 +5467,7 @@ name|ref
 decl_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 operator|*
 name|cons
@@ -5529,7 +5513,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 operator|!
 name|extra
@@ -5809,7 +5793,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|rx
 operator|->
@@ -7111,11 +7095,11 @@ if|if
 condition|(
 name|notify
 condition|)
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|sc
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -8319,11 +8303,11 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|np
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 name|XN_TX_LOCK
@@ -8760,7 +8744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** Create a network device.  * @param handle device handle  */
+comment|/**  * Create a network device.  * @param dev  Newbus device representing this virtual NIC.  */
 end_comment
 
 begin_function
@@ -9407,24 +9391,13 @@ operator|.
 name|sring
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|info
-operator|->
-name|irq
-condition|)
-name|unbind_from_irqhandler
+name|xen_intr_unbind
 argument_list|(
+operator|&
 name|info
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
-expr_stmt|;
-name|info
-operator|->
-name|irq
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function

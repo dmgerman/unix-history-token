@@ -7873,11 +7873,6 @@ literal|"moea_pinit: virt pmap"
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|RB_INIT
 argument_list|(
 operator|&
@@ -8163,6 +8158,11 @@ name|pmap_t
 name|pm
 parameter_list|)
 block|{
+name|PMAP_LOCK_INIT
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
 name|moea_pinit
 argument_list|(
 name|mmu
@@ -8623,11 +8623,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|moea_vsid_mutex
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 block|}

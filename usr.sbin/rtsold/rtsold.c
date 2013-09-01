@@ -184,14 +184,6 @@ end_define
 
 begin_decl_stmt
 name|struct
-name|ifinfo
-modifier|*
-name|iflist
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|timespec
 name|tm_max
 decl_stmt|;

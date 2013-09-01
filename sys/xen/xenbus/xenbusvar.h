@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -320,41 +320,6 @@ parameter_list|,
 name|grant_ref_t
 modifier|*
 name|refp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Allocate an event channel for the given XenBus device.  *  * \param dev        The device for which to allocate the event channel.  * \param port[out]  The port identifier for the allocated event channel.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * A successfully allocated event channel should be free'd using  * xenbus_free_evtchn().  *  * \note  On error, \a dev will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for \a dev in the XenStore.  */
-end_comment
-
-begin_function_decl
-name|int
-name|xenbus_alloc_evtchn
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|evtchn_port_t
-modifier|*
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Free an existing event channel.  *  * \param dev   The device which allocated this event channel.  * \param port  The port identifier for the event channel to free.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * \note  On error, \a dev will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for \a dev in the XenStore.  */
-end_comment
-
-begin_function_decl
-name|int
-name|xenbus_free_evtchn
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|evtchn_port_t
-name|port
 parameter_list|)
 function_decl|;
 end_function_decl

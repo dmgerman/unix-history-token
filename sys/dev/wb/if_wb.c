@@ -337,9 +337,13 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|wb_bfree
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 name|addr
@@ -3576,22 +3580,29 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|wb_bfree
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|void
+modifier|*
 name|buf
 parameter_list|,
+name|void
+modifier|*
 name|args
 parameter_list|)
-name|void
-modifier|*
-name|buf
-decl_stmt|;
-name|void
-modifier|*
-name|args
-decl_stmt|;
-block|{  }
+block|{
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
+block|}
 end_function
 
 begin_comment

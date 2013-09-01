@@ -422,6 +422,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-fe<file>"
+argument_list|,
+literal|"Specify external symbol declaration file"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-g"
 argument_list|,
 literal|"Get ACPI tables and write to files (*.dat)"

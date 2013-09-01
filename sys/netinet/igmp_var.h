@@ -842,13 +842,6 @@ name|IGMPCTL_MAXID
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|IGMPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "stats", CTLTYPE_STRUCT } \ }
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -864,24 +864,46 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\treceive spare char1: %u\n"
+literal|"\tlink state: %u\n"
 argument_list|,
 name|ifmd
 operator|->
 name|ifmd_data
 operator|.
-name|ifi_spare_char1
+name|ifi_link_state
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ttransmit spare char2: %u\n"
+literal|"\tvhid: %u\n"
 argument_list|,
 name|ifmd
 operator|->
 name|ifmd_data
 operator|.
-name|ifi_spare_char2
+name|ifi_vhid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tbaudrate power factor: %u\n"
+argument_list|,
+name|ifmd
+operator|->
+name|ifmd_data
+operator|.
+name|ifi_baudrate_pf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tdatalen: %u\n"
+argument_list|,
+name|ifmd
+operator|->
+name|ifmd_data
+operator|.
+name|ifi_datalen
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1036,6 +1058,28 @@ operator|->
 name|ifmd_data
 operator|.
 name|ifi_noproto
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tHW offload capabilities: 0x%lx\n"
+argument_list|,
+name|ifmd
+operator|->
+name|ifmd_data
+operator|.
+name|ifi_hwassist
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tuptime at attach or stat reset: %lu\n"
+argument_list|,
+name|ifmd
+operator|->
+name|ifmd_data
+operator|.
+name|ifi_epoch
 argument_list|)
 expr_stmt|;
 ifdef|#

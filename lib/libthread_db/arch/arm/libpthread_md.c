@@ -529,14 +529,14 @@ operator|&
 name|mc
 operator|->
 name|__fpu
-operator|.
-name|__fpregs
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|__fpregset_t
+name|mc
+operator|->
+name|__fpu
 argument_list|)
 argument_list|)
 expr_stmt|;

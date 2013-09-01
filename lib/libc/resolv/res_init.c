@@ -1214,7 +1214,7 @@ name|fopen
 argument_list|(
 name|_PATH_RESCONF
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|!=

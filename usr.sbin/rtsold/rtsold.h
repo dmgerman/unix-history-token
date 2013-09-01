@@ -681,6 +681,13 @@ begin_comment
 comment|/* rtsol.c */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|rssock
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int

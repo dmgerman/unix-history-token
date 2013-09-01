@@ -22412,6 +22412,11 @@ argument_list|,
 name|l2hdr
 operator|->
 name|b_asize
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|SPA_MINBLOCKSIZE
 argument_list|)
 expr_stmt|;
 if|if

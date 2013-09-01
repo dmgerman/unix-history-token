@@ -2651,7 +2651,7 @@ operator|&=
 operator|~
 name|KN_DETACHED
 expr_stmt|;
-comment|/* knlist_add usually sets it */
+comment|/* knlist_add clears it */
 name|calloutp
 operator|=
 name|malloc
@@ -2786,7 +2786,7 @@ name|kn_status
 operator||=
 name|KN_DETACHED
 expr_stmt|;
-comment|/* knlist_remove usually clears it */
+comment|/* knlist_remove sets it */
 block|}
 end_function
 
@@ -8959,7 +8959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove all knotes from a specified klist  */
+comment|/*  * remove knote from the specified knlist  */
 end_comment
 
 begin_function
@@ -8995,7 +8995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove knote from a specified klist while in f_event handler.  */
+comment|/*  * remove knote from the specified knlist while in f_event handler.  */
 end_comment
 
 begin_function
@@ -9541,7 +9541,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-comment|/* 	 * if we run across this error, we need to find the offending 	 * driver and have it call knlist_clear. 	 */
+comment|/* 	 * if we run across this error, we need to find the offending 	 * driver and have it call knlist_clear or knlist_delete. 	 */
 if|if
 condition|(
 operator|!

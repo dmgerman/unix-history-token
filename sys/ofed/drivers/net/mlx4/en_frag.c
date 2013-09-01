@@ -277,7 +277,9 @@ name|mb
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 decl_stmt|;
 name|struct
 name|net_device
@@ -540,7 +542,9 @@ name|mb
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|iph
 expr_stmt|;

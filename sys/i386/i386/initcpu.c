@@ -1704,6 +1704,26 @@ name|I586_CPU
 end_ifdef
 
 begin_comment
+comment|/*  * Rise mP6  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|init_rise
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * The CMPXCHG8B instruction is always available but hidden. 	 */
+name|cpu_feature
+operator||=
+name|CPUID_CX8
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * IDT WinChip C6/2/2A/2B/3  *  * http://www.centtech.com/winchip_bios_writers_guide_v4_0.pdf  */
 end_comment
 
@@ -2667,6 +2687,13 @@ case|case
 name|CPU_VENDOR_TRANSMETA
 case|:
 name|init_transmeta
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|CPU_VENDOR_RISE
+case|:
+name|init_rise
 argument_list|()
 expr_stmt|;
 break|break;

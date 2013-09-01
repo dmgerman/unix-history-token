@@ -934,6 +934,8 @@ literal|0
 index|]
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|>=

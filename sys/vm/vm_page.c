@@ -6360,7 +6360,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Enqueue the vnode for deferred vdrop(). 				 * 				 * Once the pages are removed from the free 				 * page list, "pageq" can be safely abused to 				 * construct a short-lived list of vnodes. 				 */
+comment|/* 				 * Enqueue the vnode for deferred vdrop(). 				 */
 name|m
 operator|->
 name|plinks
@@ -7116,10 +7116,12 @@ operator|=
 name|VM_ALLOC_SYSTEM
 expr_stmt|;
 comment|/* 	 * Do not allocate reserved pages unless the req has asked for it. 	 */
-name|mtx_lock
+name|mtx_lock_flags
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
+argument_list|,
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -9395,6 +9397,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * The above call to vm_radix_insert() could reclaim the one pre- 	 * existing cached page from this object, resulting in a call to 	 * vdrop(). 	 */
+if|if
+condition|(
+operator|!
+name|cache_was_empty
+condition|)
+name|cache_was_empty
+operator|=
+name|vm_radix_is_singleton
+argument_list|(
+operator|&
+name|object
+operator|->
+name|cache
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|flags
@@ -9546,11 +9564,6 @@ name|MADV_FREE
 condition|)
 block|{
 comment|/* 		 * Mark the page clean.  This will allow the page to be freed 		 * up by the system.  However, such pages are often reused 		 * quickly by malloc() so we do not do anything that would 		 * cause a page fault if we can help it. 		 * 		 * Specifically, we do not try to actually free the page now 		 * nor do we try to put it in the cache (which would cause a 		 * page fault on reuse). 		 * 		 * But we do make the page is freeable as we can without 		 * actually taking the step of unmapping it. 		 */
-name|pmap_clear_modify
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|dirty
@@ -9617,12 +9630,7 @@ name|act_count
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 * 	 * Perform the pmap_clear_reference() first.  Otherwise, a concurrent 	 * pmap operation, such as pmap_remove(), could clear a reference in 	 * the pmap and set PGA_REFERENCED on the page before the 	 * pmap_clear_reference() had completed.  Consequently, the page would 	 * appear referenced based upon an old reference that occurred before 	 * this function ran. 	 */
-name|pmap_clear_reference
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 */
 name|vm_page_aflag_clear
 argument_list|(
 name|m
@@ -9689,7 +9697,7 @@ name|head
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * The caller must always specify the VM_ALLOC_RETRY flag.  This is intended  * to facilitate its eventual removal.  *  * This routine may sleep.  *  * The object must be locked on entry.  The lock will, however, be released  * and reacquired if the routine sleeps.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * This routine may sleep.  *  * The object must be locked on entry.  The lock will, however, be released  * and reacquired if the routine sleeps.  */
 name|vm_page_t
 name|vm_page_grab
 parameter_list|(
@@ -9712,21 +9720,6 @@ decl_stmt|;
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|object
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|allocflags
-operator|&
-name|VM_ALLOC_RETRY
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"vm_page_grab: VM_ALLOC_RETRY is required"
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -9910,11 +9903,7 @@ argument_list|,
 name|allocflags
 operator|&
 operator|~
-operator|(
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_IGN_SBUSY
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -320,6 +320,13 @@ argument|void AcpiDbGenerateGpe (     char                    *GpeArg,     char 
 argument_list|)
 end_macro
 
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiDbGenerateSci (     void)
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*  * dbconvert - miscellaneous conversion routines  */
 end_comment
@@ -510,6 +517,15 @@ parameter_list|,
 name|char
 modifier|*
 name|DepthArg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDbDumpNamespacePaths
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

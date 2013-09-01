@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|DLZ_DLOPEN_VERSION
-value|1
+value|2
 end_define
 
 begin_comment
@@ -157,6 +157,14 @@ parameter_list|,
 name|dns_sdlzlookup_t
 modifier|*
 name|lookup
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|)
 function_decl|;
 end_typedef
@@ -300,6 +308,26 @@ begin_typedef
 typedef|typedef
 name|isc_result_t
 name|dlz_dlopen_configure_t
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|void
+modifier|*
+name|dbdata
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * dlz_dlopen_setclientcallback() is optional, but must be supplied if you  * want to retrieve information about the client (e.g., source address)  * before sending a replay.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+name|dlz_dlopen_setclientcallback_t
 parameter_list|(
 name|dns_view_t
 modifier|*

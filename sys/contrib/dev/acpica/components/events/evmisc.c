@@ -622,30 +622,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Remove SCI handler */
-name|Status
-operator|=
-name|AcpiEvRemoveSciHandler
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_ERROR
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Could not remove SCI handler"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 name|Status
 operator|=
 name|AcpiEvRemoveGlobalLockHandler
@@ -672,6 +648,30 @@ block|}
 name|AcpiGbl_EventsInitialized
 operator|=
 name|FALSE
+expr_stmt|;
+block|}
+comment|/* Remove SCI handlers */
+name|Status
+operator|=
+name|AcpiEvRemoveAllSciHandlers
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Could not remove SCI handler"
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Deallocate all handler objects installed within GPE info structs */

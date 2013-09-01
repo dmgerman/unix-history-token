@@ -611,7 +611,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3439,7 +3439,7 @@ name|dev_private
 expr_stmt|;
 if|if
 condition|(
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3604,7 +3604,7 @@ argument_list|,
 name|seqno
 argument_list|)
 operator|||
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3647,7 +3647,7 @@ name|ret
 operator|==
 literal|0
 operator|&&
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -3682,7 +3682,7 @@ argument_list|,
 name|seqno
 argument_list|)
 operator|||
-name|atomic_read
+name|atomic_load_acq_int
 argument_list|(
 operator|&
 name|dev_priv
@@ -10058,7 +10058,7 @@ name|gtt_space
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * i915_gem_object_get_pages_gtt() cannot return 		 * ENOMEM, since we use vm_page_grab(VM_ALLOC_RETRY) 		 * (which does not support operation without a flag 		 * anyway). 		 */
+comment|/* 		 * i915_gem_object_get_pages_gtt() cannot return 		 * ENOMEM, since we use vm_page_grab(). 		 */
 return|return
 operator|(
 name|ret
@@ -12200,8 +12200,6 @@ argument_list|,
 name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 if|if

@@ -57,11 +57,15 @@ directive|ifndef
 name|NOXENDEBUG
 end_ifndef
 
+begin_comment
+comment|/* Print directly to the Xen console during debugging. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|XENPRINTF
-value|printk
+value|xc_printf
 end_define
 
 begin_else

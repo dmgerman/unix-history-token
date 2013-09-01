@@ -302,9 +302,13 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|lge_jfree
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -3789,21 +3793,22 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|lge_jfree
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|void
+modifier|*
 name|buf
 parameter_list|,
+name|void
+modifier|*
 name|args
 parameter_list|)
-name|void
-modifier|*
-name|buf
-decl_stmt|;
-name|void
-modifier|*
-name|args
-decl_stmt|;
 block|{
 name|struct
 name|lge_softc
@@ -3923,7 +3928,11 @@ argument_list|,
 name|jpool_entries
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 

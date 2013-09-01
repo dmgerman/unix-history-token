@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: journal.h,v 1.43 2011/12/22 07:32:41 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -77,6 +77,35 @@ define|#
 directive|define
 name|DNS_JOURNALOPT_RESIGN
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_JOURNAL_READ
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* ISC_FALSE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_JOURNAL_CREATE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* ISC_TRUE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_JOURNAL_WRITE
+value|0x00000002
 end_define
 
 begin_comment
@@ -189,8 +218,9 @@ name|char
 modifier|*
 name|filename
 parameter_list|,
-name|isc_boolean_t
-name|write
+name|unsigned
+name|int
+name|mode
 parameter_list|,
 name|dns_journal_t
 modifier|*
@@ -201,7 +231,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Open the journal file 'filename' and create a dns_journal_t object for it.  *  * If 'write' is ISC_TRUE, the journal is open for writing.  If it does  * not exist, it is created.  *  * If 'write' is ISC_FALSE, the journal is open for reading.  If it does  * not exist, ISC_R_NOTFOUND is returned.  */
+comment|/*%<  * Open the journal file 'filename' and create a dns_journal_t object for it.  *  * DNS_JOURNAL_CREATE open the journal for reading and writing and create  * the journal if it does not exist.  * DNS_JOURNAL_WRITE open the journal for reading and writing.  * DNS_JOURNAL_READ open the journal for reading only.  */
 end_comment
 
 begin_function_decl
@@ -533,8 +563,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_db_diffx
+parameter_list|(
+name|dns_diff_t
+modifier|*
+name|diff
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|dba
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|dbvera
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|dbb
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|dbverb
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|journal_filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Compare the databases 'dba' and 'dbb' and generate a journal  * entry containing the changes to make 'dba' from 'dbb' (note  * the order).  This journal entry will consist of a single,  * possibly very large transaction.  Append the journal  * entry to the journal file specified by 'journal_filename'.  */
+comment|/*%<  * Compare the databases 'dba' and 'dbb' and generate a diff/journal  * entry containing the changes to make 'dba' from 'dbb' (note  * the order).  This journal entry will consist of a single,  * possibly very large transaction.  Append the journal  * entry to the journal file specified by 'journal_filename' if  * non-NULL.  */
 end_comment
 
 begin_function_decl
@@ -560,6 +622,39 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Attempt to compact the journal if it is greater that 'target_size'.  * Changes from 'serial' onwards will be preserved.  If the journal  * exists and is non-empty 'serial' must exist in the journal.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_journal_get_sourceserial
+parameter_list|(
+name|dns_journal_t
+modifier|*
+name|j
+parameter_list|,
+name|isc_uint32_t
+modifier|*
+name|sourceserial
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_journal_set_sourceserial
+parameter_list|(
+name|dns_journal_t
+modifier|*
+name|j
+parameter_list|,
+name|isc_uint32_t
+name|sourceserial
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get and set source serial.  *  * Returns:  *	 ISC_TRUE if sourceserial has previously been set.  */
 end_comment
 
 begin_macro

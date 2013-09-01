@@ -64,6 +64,25 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*  * Hint on how long the next interrupt should be postponed. This is  * only used when the EVENT_IDX feature is negotiated.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|VQ_POSTPONE_SHORT
+block|,
+name|VQ_POSTPONE_LONG
+block|,
+name|VQ_POSTPONE_EMPTIED
+comment|/* Until all available desc are used. */
+block|}
+name|vq_postpone_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -259,6 +278,9 @@ name|struct
 name|virtqueue
 modifier|*
 name|vq
+parameter_list|,
+name|vq_postpone_t
+name|hint
 parameter_list|)
 function_decl|;
 end_function_decl

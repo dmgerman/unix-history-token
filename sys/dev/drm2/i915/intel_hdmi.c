@@ -1379,6 +1379,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*

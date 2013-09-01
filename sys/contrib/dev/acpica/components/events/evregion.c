@@ -486,25 +486,19 @@ name|Flags
 operator||=
 name|AOPOBJ_SETUP_COMPLETE
 expr_stmt|;
+comment|/*              * Save the returned context for use in all accesses to              * the handler for this particular region              */
 if|if
 condition|(
+operator|!
+operator|(
 name|RegionObj2
 operator|->
 name|Extra
 operator|.
 name|RegionContext
+operator|)
 condition|)
 block|{
-comment|/* The handler for this region was already installed */
-name|ACPI_FREE
-argument_list|(
-name|RegionContext
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*                  * Save the returned context for use in all accesses to                  * this particular region                  */
 name|RegionObj2
 operator|->
 name|Extra
@@ -1012,6 +1006,18 @@ argument_list|,
 name|RegionContext
 argument_list|)
 expr_stmt|;
+comment|/*                  * RegionContext should have been released by the deactivate                  * operation. We don't need access to it anymore here.                  */
+if|if
+condition|(
+name|RegionContext
+condition|)
+block|{
+operator|*
+name|RegionContext
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Init routine may fail, Just ignore errors */
 if|if
 condition|(

@@ -103,7 +103,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTEL_VENDOR_ID
+name|INTEL_VENDOR_ID_IIR
 value|0x8086
 end_define
 

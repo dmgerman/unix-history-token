@@ -9916,7 +9916,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator||=
+operator|&=
 operator|~
 operator|(
 name|CAM_STATUS_MASK
@@ -10134,7 +10134,7 @@ operator|->
 name|ccb_h
 operator|.
 name|status
-operator||=
+operator|=
 name|CAM_REQUEUE_REQ
 expr_stmt|;
 comment|/* 		 * Currently the only error included in the mask is 		 * MPS_CM_FLAGS_CHAIN_FAILED, which means we're out of 		 * chain frames.  We need to freeze the queue until we get 		 * a command that completed without this error, which will 		 * hopefully have some chain frames attached that we can 		 * use.  If we wanted to get smarter about it, we would 		 * only unfreeze the queue in this condition when we're 		 * sure that we're getting some chain frames back.  That's 		 * probably unnecessary. 		 */

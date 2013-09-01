@@ -9146,11 +9146,6 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"pmap_release()\n"
@@ -14677,11 +14672,6 @@ name|pmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|pmap_alloc_l1
 argument_list|(
 name|pmap
@@ -17123,6 +17113,29 @@ name|count
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  *	This function is advisory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_advise
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

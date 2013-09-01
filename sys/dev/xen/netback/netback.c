@@ -211,19 +211,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/evtchn.h>
+file|<xen/hypervisor.h>
 end_include
 
 begin_include
@@ -242,6 +236,12 @@ begin_include
 include|#
 directive|include
 file|<xen/xenbus/xenbusvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/xenvar.h>
 end_include
 
 begin_comment
@@ -1486,9 +1486,9 @@ comment|/** Xen device handle.*/
 name|long
 name|handle
 decl_stmt|;
-comment|/** IRQ mapping for the communication ring event channel. */
-name|int
-name|irq
+comment|/** Handle to the communication ring event channel. */
+name|xen_intr_handle_t
+name|xen_intr_handle
 decl_stmt|;
 comment|/** 	 * \brief Cached value of the front-end's domain id. 	 * 	 * This value is used at once for each mapped page in 	 * a transaction.  We cache it to avoid incuring the 	 * cost of an ivar access every time this is needed. 	 */
 name|domid_t
@@ -2061,6 +2061,9 @@ name|m_pkthdr
 operator|.
 name|flowid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m
 operator|->
 name|m_pkthdr
@@ -2082,19 +2085,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    rcvif=%16p,  header=%18p, len=%19d\n"
+literal|"    rcvif=%16p,  len=%19d\n"
 argument_list|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|header
 argument_list|,
 name|m
 operator|->
@@ -2123,7 +2120,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    m_len=%17d, m_flags=%#15x, m_type=%18hd\n"
+literal|"    m_len=%17d, m_flags=%#15x, m_type=%18u\n"
 argument_list|,
 name|m
 operator|->
@@ -2348,29 +2345,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|xnb
-operator|->
-name|irq
-operator|!=
-literal|0
-condition|)
-block|{
-name|unbind_from_irqhandler
+name|xen_intr_unbind
 argument_list|(
 name|xnb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
-name|xnb
-operator|->
-name|irq
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* 	 * We may still have another thread currently processing requests.  We 	 * must acquire the rx and tx locks to make sure those threads are done, 	 * but we can release those locks as soon as we acquire them, because no 	 * more interrupts will be arriving. 	 */
 name|mtx_lock
 argument_list|(
@@ -2905,8 +2886,12 @@ name|XNBF_RING_CONNECTED
 expr_stmt|;
 name|error
 operator|=
-name|bind_interdomain_evtchn_to_irqhandler
+name|xen_intr_bind_remote_port
 argument_list|(
+name|xnb
+operator|->
+name|dev
+argument_list|,
 name|xnb
 operator|->
 name|otherend_id
@@ -2915,12 +2900,8 @@ name|xnb
 operator|->
 name|evtchn
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|xnb
-operator|->
-name|dev
-argument_list|)
+comment|/*filter*/
+name|NULL
 argument_list|,
 name|xnb_intr
 argument_list|,
@@ -2934,7 +2915,7 @@ argument_list|,
 operator|&
 name|xnb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -5316,11 +5297,11 @@ name|notify
 operator|!=
 literal|0
 condition|)
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|xnb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 name|txb
@@ -9074,11 +9055,11 @@ operator|!=
 literal|0
 operator|)
 condition|)
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|xnb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 name|rxb

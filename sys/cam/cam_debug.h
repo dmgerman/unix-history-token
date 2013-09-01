@@ -278,6 +278,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|CAM_DEBUG_DEV
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|,
+name|printfargs
+parameter_list|)
+define|\
+value|if (((flag)& (CAM_DEBUG_COMPILE)& cam_dflags)	\&& (cam_dpath != NULL)				\&& (xpt_path_comp_dev(cam_dpath, dev)>= 0)	\&& (xpt_path_comp_dev(cam_dpath, dev)< 2)) {	\ 		xpt_print_device(dev);			\ 		printf printfargs;			\ 		if (cam_debug_delay != 0)		\ 			DELAY(cam_debug_delay);		\ 	}
+end_define
+
+begin_define
+define|#
+directive|define
 name|CAM_DEBUG_PRINT
 parameter_list|(
 name|flag

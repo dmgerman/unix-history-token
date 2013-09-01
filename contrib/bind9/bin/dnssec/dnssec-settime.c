@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-settime.c,v 1.28.16.3 2011/06/02 20:24:11 each Exp $ */
+comment|/* $Id: dnssec-settime.c,v 1.32 2011/06/02 20:24:45 each Exp $ */
 end_comment
 
 begin_comment
@@ -238,6 +238,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    -K directory:       set key file location\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    -L ttl:             set default key TTL\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -601,6 +608,11 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|dns_ttl_t
+name|ttl
+init|=
+literal|0
+decl_stmt|;
 name|isc_stdtime_t
 name|now
 decl_stmt|;
@@ -658,6 +670,10 @@ name|ISC_FALSE
 decl_stmt|;
 name|isc_boolean_t
 name|setdel
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|setttl
 init|=
 name|ISC_FALSE
 decl_stmt|;
@@ -790,7 +806,7 @@ expr_stmt|;
 define|#
 directive|define
 name|CMDLINE_FLAGS
-value|"A:D:E:fhI:i:K:P:p:R:S:uv:"
+value|"A:D:E:fhI:i:K:L:P:p:R:S:uv:"
 while|while
 condition|(
 operator|(
@@ -987,6 +1003,37 @@ literal|"directory"
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'L'
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|ttl
+operator|=
+name|strtottl
+argument_list|(
+name|isc_commandline_argument
+argument_list|)
+expr_stmt|;
+name|setttl
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 break|break;
 case|case
 literal|'v'
@@ -2383,6 +2430,17 @@ argument_list|,
 name|DST_TIME_DELETE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setttl
+condition|)
+name|dst_key_setttl
+argument_list|(
+name|key
+argument_list|,
+name|ttl
+argument_list|)
+expr_stmt|;
 comment|/* 	 * No metadata changes were made but we're forcing an upgrade 	 * to the new format anyway: use "-P now -A now" as the default 	 */
 if|if
 condition|(
@@ -2415,6 +2473,17 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|changed
+operator|&&
+name|setttl
+condition|)
+name|changed
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 comment|/* 	 * Print out time values, if -p was used. 	 */
 if|if
 condition|(

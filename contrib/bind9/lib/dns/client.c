@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: client.c,v 1.14 2011/03/12 04:59:47 tbox Exp $ */
 end_comment
 
 begin_include
@@ -1180,6 +1180,8 @@ argument_list|,
 name|taskmgr
 argument_list|,
 name|ntasks
+argument_list|,
+literal|1
 argument_list|,
 name|socketmgr
 argument_list|,

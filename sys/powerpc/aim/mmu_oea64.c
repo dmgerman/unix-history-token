@@ -8543,11 +8543,6 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|RB_INIT
 argument_list|(
 operator|&
@@ -8601,11 +8596,6 @@ decl_stmt|;
 name|uint32_t
 name|hash
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 name|RB_INIT
 argument_list|(
 operator|&
@@ -8714,6 +8704,11 @@ name|pmap_t
 name|pm
 parameter_list|)
 block|{
+name|PMAP_LOCK_INIT
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
 name|moea64_pinit
 argument_list|(
 name|mmu
@@ -9477,11 +9472,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

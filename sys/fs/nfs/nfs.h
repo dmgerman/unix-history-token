@@ -1665,13 +1665,6 @@ begin_comment
 comment|/* struct: struct nfsstats */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FS_NFS_NAMES
-value|{ 							\ 		       { 0, 0 }, 					\ 		       { "nfsstats", CTLTYPE_STRUCT }, 			\ }
-end_define
-
 begin_comment
 comment|/*  * Here is the definition of the attribute bits array and macros that  * manipulate it.  * THE MACROS MUST BE MANUALLY MODIFIED IF NFSATTRBIT_MAXWORDS CHANGES!!  * It is (NFSATTRBIT_MAX + 31) / 32.  */
 end_comment

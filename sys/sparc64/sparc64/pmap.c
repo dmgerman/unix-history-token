@@ -5358,11 +5358,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate KVA space for the TSB. 	 */
 if|if
 condition|(
@@ -5491,8 +5486,6 @@ argument_list|,
 name|i
 argument_list|,
 name|VM_ALLOC_NOBUSY
-operator||
-name|VM_ALLOC_RETRY
 operator||
 name|VM_ALLOC_WIRED
 operator||
@@ -5786,11 +5779,6 @@ block|}
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pm
 argument_list|)
 expr_stmt|;
 block|}
@@ -10062,6 +10050,29 @@ name|rv
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * This function is advisory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_advise
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+block|{ }
 end_function
 
 begin_function

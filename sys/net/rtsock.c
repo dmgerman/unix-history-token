@@ -309,7 +309,7 @@ name|uint8_t
 name|ifi_vhid
 decl_stmt|;
 name|uint8_t
-name|ifi_spare_char2
+name|ifi_baudrate_pf
 decl_stmt|;
 name|uint8_t
 name|ifi_datalen
@@ -8156,6 +8156,17 @@ operator|*
 name|dst
 argument_list|,
 name|ifi_vhid
+argument_list|)
+expr_stmt|;
+name|CP
+argument_list|(
+operator|*
+name|src
+argument_list|,
+operator|*
+name|dst
+argument_list|,
+name|ifi_baudrate_pf
 argument_list|)
 expr_stmt|;
 name|dst

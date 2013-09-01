@@ -13626,7 +13626,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: %s: node %p: bf=%p: addbaw=%d, dobaw=%d, "
+literal|"%s: %s: %6D: bf=%p: addbaw=%d, dobaw=%d, "
 literal|"seqno=%d, retry=%d\n"
 argument_list|,
 name|__func__
@@ -13634,6 +13634,10 @@ argument_list|,
 name|pfx
 argument_list|,
 name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|bf
 argument_list|,
@@ -13671,11 +13675,17 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: node %p: bf=%p: txq[%d] axq_depth=%d, axq_aggr_depth=%d\n"
+literal|"%s: %s: %6D: bf=%p: txq[%d] axq_depth=%d, axq_aggr_depth=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|pfx
+argument_list|,
 name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|bf
 argument_list|,
@@ -13698,11 +13708,18 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d, isfiltered=%d\n"
+literal|"%s: %s: %6D: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d, "
+literal|"isfiltered=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|pfx
+argument_list|,
 name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|bf
 argument_list|,
@@ -13729,14 +13746,20 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: node %p: tid %d: "
+literal|"%s: %s: %6D: tid %d: "
 literal|"sched=%d, paused=%d, "
 literal|"incomp=%d, baw_head=%d, "
 literal|"baw_tail=%d txa_start=%d, ni_txseqs=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|pfx
+argument_list|,
 name|ni
+operator|->
+name|ni_macaddr
+argument_list|,
+literal|":"
 argument_list|,
 name|tid
 operator|->

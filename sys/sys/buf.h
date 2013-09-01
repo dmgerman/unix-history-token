@@ -2177,6 +2177,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vfs_drain_busy_pages
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|buf
 modifier|*

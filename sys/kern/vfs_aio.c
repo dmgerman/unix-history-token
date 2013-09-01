@@ -6515,11 +6515,11 @@ argument_list|(
 name|bp
 argument_list|,
 operator|(
-name|csw
+name|dev
 operator|->
-name|d_flags
+name|si_flags
 operator|&
-name|D_UNMAPPED_IO
+name|SI_UNMAPPED
 operator|)
 operator|==
 literal|0

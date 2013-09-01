@@ -1269,7 +1269,7 @@ value|min(atop(MAXPHYS) - 1, UINT8_MAX)
 end_define
 
 begin_comment
-comment|/*  * The following "find_space" options are supported by vm_map_find()  */
+comment|/*  * The following "find_space" options are supported by vm_map_find().  *  * For VMFS_ALIGNED_SPACE, the desired alignment is specified to  * the macro argument as log base 2 of the desired alignment.  */
 end_comment
 
 begin_define
@@ -1308,12 +1308,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMFS_ALIGNED_SPACE
+name|VMFS_SUPER_SPACE
 value|3
 end_define
 
 begin_comment
 comment|/* find a superpage-aligned range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMFS_ALIGNED_SPACE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
+end_define
+
+begin_comment
+comment|/* find a range with fixed alignment */
 end_comment
 
 begin_comment

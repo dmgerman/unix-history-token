@@ -164,13 +164,6 @@ file|"rtsold.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|rssock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|ifsock
@@ -1445,6 +1438,10 @@ expr|struct
 name|if_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|next
 expr_stmt|;
 if|if
@@ -1508,6 +1505,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_dl
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|sa
@@ -1984,6 +1985,10 @@ operator|=
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|ifa

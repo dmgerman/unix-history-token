@@ -118,13 +118,6 @@ name|KEYCTL_MAXID
 value|13
 end_define
 
-begin_define
-define|#
-directive|define
-name|KEYCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ 	{ "esp_keymin", CTLTYPE_INT }, \ 	{ "esp_auth", CTLTYPE_INT }, \ 	{ "ah_keymin", CTLTYPE_INT }, \ 	{ "prefered_oldsa", CTLTYPE_INT }, \ }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

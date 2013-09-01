@@ -6996,7 +6996,7 @@ condition|)
 continue|continue;
 name|result
 operator|=
-name|dns_dnssec_verify2
+name|dns_dnssec_verify3
 argument_list|(
 name|name
 argument_list|,
@@ -7005,6 +7005,12 @@ argument_list|,
 name|dstkey
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|val
+operator|->
+name|view
+operator|->
+name|maxbits
 argument_list|,
 name|mctx
 argument_list|,
@@ -7138,7 +7144,7 @@ name|again
 label|:
 name|result
 operator|=
-name|dns_dnssec_verify2
+name|dns_dnssec_verify3
 argument_list|(
 name|val
 operator|->
@@ -7155,6 +7161,12 @@ argument_list|,
 name|key
 argument_list|,
 name|ignore
+argument_list|,
+name|val
+operator|->
+name|view
+operator|->
+name|maxbits
 argument_list|,
 name|val
 operator|->

@@ -1021,12 +1021,62 @@ begin_comment
 comment|/* ok for A-MPDU aggregation */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD-HEAD from 1000046 retired M_*FRAG* flags and turned them  * into header flags instead.  So, we use the new protocol-specific  * flags.  *  * Earlier FreeBSD versions overload M_FRAG, M_FIRSTFRAG and M_LASTFRAG.  *  * XXX TODO: rename these fields so there are no namespace clashes!  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000046
+end_if
+
+begin_define
+define|#
+directive|define
+name|M_FRAG
+value|M_PROTO9
+end_define
+
+begin_comment
+comment|/* frame fragmentation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FIRSTFRAG
+value|M_PROTO10
+end_define
+
+begin_comment
+comment|/* first frame fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LASTFRAG
+value|M_PROTO11
+end_define
+
+begin_comment
+comment|/* last frame fragment */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|M_80211_TX
 define|\
-value|(M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_ENCAP|M_EAPOL|M_PWR_SAV|\ 	 M_MORE_DATA|M_FF|M_TXCB|M_AMPDU_MPDU)
+value|(M_ENCAP|M_EAPOL|M_PWR_SAV|M_MORE_DATA|M_FF|M_TXCB| \ 	 M_AMPDU_MPDU|M_FRAG|M_FIRSTFRAG|M_LASTFRAG)
 end_define
 
 begin_comment
@@ -1084,20 +1134,54 @@ name|M_80211_RX
 value|(M_AMPDU|M_WEP|M_AMPDU_MPDU)
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1000046
+end_if
+
 begin_define
 define|#
 directive|define
 name|IEEE80211_MBUF_TX_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_ENCAP\6M_WEP\7M_EAPOL" \ 	"\10M_PWR_SAV\11M_MORE_DATA\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG" \ 	"\16M_LASTFRAG\17M_SKIP_FIREWALL\20M_FREELIST\21M_VLANTAG\22M_PROMISC" \ 	"\23M_NOFREE\24M_FF\25M_TXCB\26M_AMPDU_MPDU\27M_FLOWID"
+value|M_FLAG_BITS \ 	"\15M_ENCAP\17M_EAPOL\20M_PWR_SAV\21M_MORE_DATA\22M_FF\23M_TXCB" \ 	"\24M_AMPDU_MPDU\25M_FRAG\26M_FIRSTFRAG\27M_LASTFRAG"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* There aren't any flag bits available for versions before this */
+end_comment
+
+begin_comment
+comment|/* XXX TODO: implement M_FLAG_BITS for this! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MBUF_TX_FLAG_BITS
+define|\
+value|"\15M_ENCAP\17M_EAPOL\20M_PWR_SAV\21M_MORE_DATA\22M_FF\23M_TXCB" \ 	"\24M_AMPDU_MPDU"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_MBUF_RX_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_AMPDU\6M_WEP\7M_PROTO3" \ 	"\10M_PROTO4\11M_PROTO5\12M_BCAST\13M_MCAST\14M_FRAG\15M_FIRSTFRAG" \ 	"\16M_LASTFRAG\17M_SKIP_FIREWALL\20M_FREELIST\21M_VLANTAG\22M_PROMISC" \ 	"\23M_NOFREE\24M_PROTO6\25M_PROTO7\26M_AMPDU_MPDU\27M_FLOWID"
+value|M_FLAG_BITS \ 	"\15M_AMPDU\16M_WEP\24M_AMPDU_MPDU"
 end_define
 
 begin_comment

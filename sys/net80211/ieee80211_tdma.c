@@ -3353,7 +3353,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|EOPNOTSUPP
+name|ENOSYS
 return|;
 switch|switch
 condition|(
@@ -3469,7 +3469,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|EOPNOTSUPP
+name|ENOSYS
 return|;
 switch|switch
 condition|(

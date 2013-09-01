@@ -1429,6 +1429,30 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Support for the special RSDP signature (8 characters) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALIDATE_RSDP_SIG
+parameter_list|(
+name|a
+parameter_list|)
+value|(!ACPI_STRNCMP (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAKE_RSDP_SIG
+parameter_list|(
+name|dest
+parameter_list|)
+value|(ACPI_MEMCPY (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
+end_define
+
+begin_comment
 comment|/*******************************************************************************  *  * Miscellaneous constants  *  ******************************************************************************/
 end_comment
 
@@ -3210,6 +3234,21 @@ end_typedef
 begin_comment
 comment|/*  * Various handlers and callback procedures  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT32
+function_decl|(
+modifier|*
+name|ACPI_SCI_HANDLER
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_typedef
 typedef|typedef

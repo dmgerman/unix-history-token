@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: gssapi_link.c,v 1.17 2011/03/28 05:32:16 marka Exp $  */
 end_comment
 
 begin_include
@@ -1509,6 +1509,9 @@ name|gssapi_sign
 block|,
 name|gssapi_verify
 block|,
+name|NULL
+block|,
+comment|/*%< verify2 */
 name|NULL
 block|,
 comment|/*%< computesecret */

@@ -735,8 +735,12 @@ name|sc_ifp
 decl_stmt|;
 comment|/* virtual interface */
 name|struct
-name|rwlock
+name|rmlock
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_call_mtx
 decl_stmt|;
 name|int
 name|sc_proto
@@ -1102,7 +1106,7 @@ name|LAGG_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_init(&(_sc)->sc_mtx, "if_lagg rwlock")
+value|rm_init(&(_sc)->sc_mtx, "if_lagg rmlock")
 end_define
 
 begin_define
@@ -1112,7 +1116,7 @@ name|LAGG_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_destroy(&(_sc)->sc_mtx)
+value|rm_destroy(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -1121,8 +1125,10 @@ directive|define
 name|LAGG_RLOCK
 parameter_list|(
 name|_sc
+parameter_list|,
+name|_p
 parameter_list|)
-value|rw_rlock(&(_sc)->sc_mtx)
+value|rm_rlock(&(_sc)->sc_mtx, (_p))
 end_define
 
 begin_define
@@ -1132,7 +1138,7 @@ name|LAGG_WLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_wlock(&(_sc)->sc_mtx)
+value|rm_wlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -1141,8 +1147,10 @@ directive|define
 name|LAGG_RUNLOCK
 parameter_list|(
 name|_sc
+parameter_list|,
+name|_p
 parameter_list|)
-value|rw_runlock(&(_sc)->sc_mtx)
+value|rm_runlock(&(_sc)->sc_mtx, (_p))
 end_define
 
 begin_define
@@ -1152,7 +1160,7 @@ name|LAGG_WUNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_wunlock(&(_sc)->sc_mtx)
+value|rm_wunlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -1162,7 +1170,7 @@ name|LAGG_RLOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_assert(&(_sc)->sc_mtx, RA_RLOCKED)
+value|rm_assert(&(_sc)->sc_mtx, RA_RLOCKED)
 end_define
 
 begin_define
@@ -1172,7 +1180,28 @@ name|LAGG_WLOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_assert(&(_sc)->sc_mtx, RA_WLOCKED)
+value|rm_assert(&(_sc)->sc_mtx, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_CALLOUT_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->sc_call_mtx, "if_lagg callout mutex", NULL,\ 	    MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_CALLOUT_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_call_mtx)
 end_define
 
 begin_function_decl

@@ -1006,6 +1006,10 @@ expr|struct
 name|in6_pktinfo
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|CMSG_DATA
 argument_list|(
 name|cm
@@ -1433,6 +1437,10 @@ name|in6_pktinfo
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|CMSG_DATA
 argument_list|(
 name|cm
@@ -1476,6 +1484,10 @@ name|hlimp
 operator|=
 operator|(
 name|int
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|CMSG_DATA
@@ -2162,6 +2174,10 @@ operator|=
 operator|(
 expr|struct
 name|in6_addr
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(

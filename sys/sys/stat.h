@@ -1332,6 +1332,124 @@ comment|/* file may not be removed or renamed */
 end_comment
 
 begin_comment
+comment|/*  * These two bits are defined in MacOS X.  They are not currently used in  * FreeBSD.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|UF_COMPRESSED
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* file is compressed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_TRACKED
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* renames and deletes are tracked */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|UF_SYSTEM
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Windows system file bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_SPARSE
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* sparse file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_OFFLINE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* file is offline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_REPARSE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Windows reparse point file bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_ARCHIVE
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* file needs to be archived */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_READONLY
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Windows readonly file bit */
+end_comment
+
+begin_comment
+comment|/* This is the same as the MacOS X definition of UF_HIDDEN. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UF_HIDDEN
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* file is hidden */
+end_comment
+
+begin_comment
 comment|/*  * Super-user changeable flags.  */
 end_comment
 

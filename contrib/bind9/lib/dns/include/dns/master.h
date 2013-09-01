@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -207,16 +207,41 @@ begin_define
 define|#
 directive|define
 name|DNS_RAWFORMAT_VERSION
-value|0
+value|1
+end_define
+
+begin_comment
+comment|/*  * Flags to indicate the status of the data in the raw file header  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_MASTERRAW_COMPAT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_MASTERRAW_SOURCESERIALSET
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_MASTERRAW_LASTXFRINSET
+value|0x04
 end_define
 
 begin_comment
 comment|/* Common header */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|dns_masterrawheader
 block|{
 name|isc_uint32_t
 name|format
@@ -229,11 +254,22 @@ comment|/* compatibility for future 						 * extensions */
 name|isc_uint32_t
 name|dumptime
 decl_stmt|;
-comment|/* timestamp on creation 						 * (currently unused) 						 */
+comment|/* timestamp on creation 						 * (currently unused) */
+name|isc_uint32_t
+name|flags
+decl_stmt|;
+comment|/* Flags */
+name|isc_uint32_t
+name|sourceserial
+decl_stmt|;
+comment|/* Source serial number (used 						 * by inline-signing zones) */
+name|isc_uint32_t
+name|lastxfrin
+decl_stmt|;
+comment|/* timestamp of last transfer 						 * (used by slave zones) */
 block|}
-name|dns_masterrawheader_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* The structure for each RRset */
@@ -858,6 +894,21 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Cancel loading the zone file associated with this load context.  *  * Requires:  *\li	'ctx' to be valid  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_master_initrawheader
+parameter_list|(
+name|dns_masterrawheader_t
+modifier|*
+name|header
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Initializes the header for a raw master file, setting all  * values to zero.  */
 end_comment
 
 begin_macro

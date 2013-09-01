@@ -800,12 +800,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|fo_sendfile_t
-name|vn_sendfile
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Convert a user file descriptor to a kernel file entry and check if required  * capability rights are present.  * A reference on the file entry is held upon returning.  */
 end_comment
@@ -9300,9 +9294,14 @@ comment|/*  * Detach mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|sf_buf_mext
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mb
+parameter_list|,
 name|void
 modifier|*
 name|addr
@@ -9375,7 +9374,11 @@ name|addr
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 name|sfs
 operator|=
 name|addr
@@ -9426,6 +9429,11 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -10856,11 +10864,11 @@ name|pindex
 argument_list|,
 name|VM_ALLOC_NOBUSY
 operator||
+name|VM_ALLOC_IGN_SBUSY
+operator||
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_WIRED
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Check if page is valid for what we need, 			 * otherwise initiate I/O. 			 * If we already turned some pages into mbufs, 			 * send them off before we come here again and 			 * block. 			 */
@@ -11166,8 +11174,13 @@ else|:
 name|ENOBUFS
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sf_buf_mext
 argument_list|(
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 name|sf
@@ -11223,8 +11236,13 @@ else|:
 name|ENOBUFS
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sf_buf_mext
 argument_list|(
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 name|sf

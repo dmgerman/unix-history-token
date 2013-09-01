@@ -993,7 +993,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 end_ifdef
 
 begin_expr_stmt

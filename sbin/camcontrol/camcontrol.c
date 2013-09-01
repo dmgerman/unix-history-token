@@ -21650,7 +21650,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%sWWNN: 0x%llx"
+literal|"%sWWNN: 0x%llx\n"
 argument_list|,
 name|pathstr
 argument_list|,
@@ -21675,7 +21675,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%sWWPN: 0x%llx"
+literal|"%sWWPN: 0x%llx\n"
 argument_list|,
 name|pathstr
 argument_list|,
@@ -21700,7 +21700,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%sPortID: 0x%x"
+literal|"%sPortID: 0x%x\n"
 argument_list|,
 name|pathstr
 argument_list|,

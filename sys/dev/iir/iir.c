@@ -2187,7 +2187,7 @@ name|gdt
 operator|->
 name|sc_vendor
 operator|==
-name|INTEL_VENDOR_ID
+name|INTEL_VENDOR_ID_IIR
 condition|)
 name|strcpy
 argument_list|(
@@ -7992,7 +7992,7 @@ name|gdt
 operator|->
 name|sc_vendor
 operator|==
-name|INTEL_VENDOR_ID
+name|INTEL_VENDOR_ID_IIR
 condition|)
 name|strncpy
 argument_list|(
