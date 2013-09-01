@@ -1229,7 +1229,7 @@ operator|++
 control|)
 block|{
 name|struct
-name|ccb_immed_notify
+name|ccb_immediate_notify
 modifier|*
 name|inot
 decl_stmt|;
@@ -1237,7 +1237,7 @@ name|inot
 operator|=
 operator|(
 expr|struct
-name|ccb_immed_notify
+name|ccb_immediate_notify
 operator|*
 operator|)
 name|malloc
@@ -1286,7 +1286,7 @@ name|ccb_h
 operator|.
 name|func_code
 operator|=
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 expr_stmt|;
 name|inot
 operator|->
@@ -3166,7 +3166,7 @@ block|}
 break|break;
 block|}
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 block|{
 name|int
