@@ -623,6 +623,13 @@ name|nfs_sysctl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vfs_purge_t
+name|nfs_purge
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * nfs vfs operations.  */
 end_comment
@@ -678,6 +685,11 @@ operator|.
 name|vfs_sysctl
 operator|=
 name|nfs_sysctl
+block|,
+operator|.
+name|vfs_purge
+operator|=
+name|nfs_purge
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -9412,6 +9424,39 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Purge any RPCs in progress, so that they will all return errors.  * This allows dounmount() to continue as far as VFS_UNMOUNT() for a  * forced dismount.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|nfs_purge
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+block|{
+name|struct
+name|nfsmount
+modifier|*
+name|nmp
+init|=
+name|VFSTONFS
+argument_list|(
+name|mp
+argument_list|)
+decl_stmt|;
+name|newnfs_nmcancelreqs
+argument_list|(
+name|nmp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
