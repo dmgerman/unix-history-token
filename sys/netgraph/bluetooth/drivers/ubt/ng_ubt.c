@@ -1737,6 +1737,17 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
+argument|USB_VENDOR_ASUS
+argument_list|,
+literal|0x17cb
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
 argument|USB_VENDOR_LITEON
 argument_list|,
 literal|0x2003
