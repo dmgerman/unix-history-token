@@ -8659,12 +8659,6 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 return|return;
-name|rw_wlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -8967,12 +8961,6 @@ name|sva
 argument_list|)
 expr_stmt|;
 block|}
-name|rw_wunlock
-argument_list|(
-operator|&
-name|pvh_global_lock
-argument_list|)
-expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
