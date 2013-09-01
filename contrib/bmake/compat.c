@@ -914,6 +914,8 @@ expr_stmt|;
 comment|/* 	 * The following work for any of the builtin shell specs. 	 */
 if|if
 condition|(
+name|errCheck
+operator|&&
 name|shellErrFlag
 condition|)
 block|{
