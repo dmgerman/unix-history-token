@@ -1767,6 +1767,13 @@ name|dev
 argument_list|,
 literal|"fsl,imx51-gpio"
 argument_list|)
+operator|||
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"fsl,imx53-gpio"
+argument_list|)
 condition|)
 block|{
 name|device_set_desc
