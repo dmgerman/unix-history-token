@@ -1875,7 +1875,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_timeo: %d\n"
+literal|"sb_timeo: %jd\n"
 argument_list|,
 name|sb
 operator|->
