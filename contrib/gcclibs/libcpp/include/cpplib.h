@@ -2251,6 +2251,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPP_N_BINARY
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPP_N_UNSIGNED
 value|0x1000
 end_define

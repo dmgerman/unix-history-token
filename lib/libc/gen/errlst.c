@@ -57,6 +57,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"errlst.h"
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -389,6 +395,37 @@ index|]
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PIC
+end_ifdef
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|sys_errlist
+argument_list|,
+name|__hidden_sys_errlist
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|sys_nerr
+argument_list|,
+name|__hidden_sys_nerr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

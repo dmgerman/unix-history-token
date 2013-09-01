@@ -3496,9 +3496,6 @@ comment|/* Initialize the PAT MSR. */
 name|pmap_init_pat
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 comment|/* Initialize TLB Context Id. */
 name|TUNABLE_INT_FETCH
 argument_list|(
@@ -3577,10 +3574,17 @@ name|pm_pcid
 operator|=
 literal|0
 expr_stmt|;
-block|}
-else|else
+ifndef|#
+directive|ifndef
+name|SMP
+name|pmap_pcid_enabled
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
+block|}
+else|else
 name|pmap_pcid_enabled
 operator|=
 literal|0
