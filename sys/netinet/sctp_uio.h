@@ -2334,27 +2334,6 @@ name|SCTP_AUTH_HMAC_ID_SHA256
 value|0x0003
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_AUTH_HMAC_ID_SHA224
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_AUTH_HMAC_ID_SHA384
-value|0x0005
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_AUTH_HMAC_ID_SHA512
-value|0x0006
-end_define
-
 begin_comment
 comment|/* SCTP_AUTH_ACTIVE_KEY / SCTP_AUTH_DELETE_KEY */
 end_comment
