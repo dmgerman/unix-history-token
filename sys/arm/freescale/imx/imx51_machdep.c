@@ -244,7 +244,7 @@ index|]
 operator|.
 name|pd_pa
 operator|=
-literal|0x53f00000
+literal|0x73f00000
 expr_stmt|;
 name|fdt_devmap
 index|[
