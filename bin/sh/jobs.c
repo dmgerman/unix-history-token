@@ -340,31 +340,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|int
-name|in_waitcmd
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are we in waitcmd()? */
-end_comment
-
-begin_decl_stmt
-specifier|volatile
-name|sig_atomic_t
-name|breakwaitcmd
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* should wait be terminated? */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|ttyfd
@@ -397,7 +372,18 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* if DOWAIT_BLOCK, abort on signals */
+comment|/* if DOWAIT_BLOCK, abort on SIGINT/SIGQUIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOWAIT_SIG_ANY
+value|0x4
+end_define
+
+begin_comment
+comment|/* if DOWAIT_SIG, abort on any signal */
 end_comment
 
 begin_if
@@ -2406,6 +2392,8 @@ name|int
 name|status
 decl_stmt|,
 name|retval
+decl_stmt|,
+name|sig
 decl_stmt|;
 name|struct
 name|job
@@ -2413,9 +2401,6 @@ modifier|*
 name|jp
 decl_stmt|;
 comment|/* 	 * Loop until a process is terminated or stopped, or a SIGINT is 	 * received. 	 */
-name|in_waitcmd
-operator|++
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -2507,9 +2492,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|in_waitcmd
-operator|--
-expr_stmt|;
 return|return
 name|retval
 return|;
@@ -2601,9 +2583,6 @@ name|njobs
 condition|)
 block|{
 comment|/* no running procs */
-name|in_waitcmd
-operator|--
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2644,11 +2623,16 @@ operator|-
 literal|1
 condition|)
 do|;
-name|in_waitcmd
-operator|--
+name|sig
+operator|=
+name|pendingsig_waitcmd
+expr_stmt|;
+name|pendingsig_waitcmd
+operator|=
+literal|0
 expr_stmt|;
 return|return
-name|pendingsig
+name|sig
 operator|+
 literal|128
 return|;
@@ -5033,6 +5017,8 @@ operator|(
 name|Tflag
 condition|?
 name|DOWAIT_SIG
+operator||
+name|DOWAIT_SIG_ANY
 else|:
 literal|0
 operator|)
@@ -5505,16 +5491,41 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|mode
+operator|&
+name|DOWAIT_SIG_ANY
+operator|)
+operator|!=
+literal|0
+condition|?
+name|pendingsig
+else|:
+name|pendingsig_waitcmd
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|EINTR
+expr_stmt|;
+break|break;
+block|}
 name|sigsuspend
 argument_list|(
 operator|&
 name|omask
 argument_list|)
-expr_stmt|;
-name|pid
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -5534,10 +5545,6 @@ operator|&&
 name|errno
 operator|==
 name|EINTR
-operator|&&
-name|breakwaitcmd
-operator|==
-literal|0
 condition|)
 do|;
 if|if
@@ -5598,28 +5605,6 @@ argument_list|)
 expr_stmt|;
 name|INTON
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|breakwaitcmd
-operator|!=
-literal|0
-condition|)
-block|{
-name|breakwaitcmd
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|<=
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 block|}
 if|if
 condition|(
