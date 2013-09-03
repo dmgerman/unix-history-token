@@ -90,9 +90,9 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|int32_t
+name|daddr_t
 parameter_list|,
-name|int32_t
+name|e4fs_daddr_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -100,7 +100,7 @@ name|struct
 name|ucred
 modifier|*
 parameter_list|,
-name|int32_t
+name|e4fs_daddr_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -162,7 +162,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|int32_t
+name|e4fs_daddr_t
 parameter_list|,
 name|long
 parameter_list|)
@@ -170,7 +170,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|e4fs_daddr_t
 name|ext2_blkpref
 parameter_list|(
 name|struct
@@ -181,10 +181,10 @@ name|e2fs_lbn_t
 parameter_list|,
 name|int
 parameter_list|,
-name|int32_t
+name|e2fs_daddr_t
 modifier|*
 parameter_list|,
-name|int32_t
+name|e2fs_daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -208,9 +208,9 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int32_t
+name|daddr_t
 parameter_list|,
-name|int64_t
+name|daddr_t
 modifier|*
 parameter_list|,
 name|int
@@ -284,7 +284,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|int32_t
+name|daddr_t
 parameter_list|,
 name|struct
 name|indir
@@ -341,22 +341,6 @@ parameter_list|(
 name|struct
 name|vop_reclaim_args
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ext2_setblock
-parameter_list|(
-name|struct
-name|m_ext2fs
-modifier|*
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|,
-name|int32_t
 parameter_list|)
 function_decl|;
 end_function_decl

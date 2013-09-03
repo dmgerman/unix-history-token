@@ -156,12 +156,12 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|uint32_t
+name|e4fs_daddr_t
 name|nb
 decl_stmt|,
 name|newb
 decl_stmt|;
-name|int32_t
+name|e2fs_daddr_t
 modifier|*
 name|bap
 decl_stmt|,
@@ -899,7 +899,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp

@@ -130,7 +130,7 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-name|int64_t
+name|daddr_t
 name|blkno
 decl_stmt|;
 name|int
@@ -436,10 +436,10 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int32_t
+name|daddr_t
 name|bn
 parameter_list|,
-name|int64_t
+name|daddr_t
 modifier|*
 name|bnp
 parameter_list|,
@@ -660,7 +660,7 @@ condition|(
 name|runp
 condition|)
 block|{
-name|int32_t
+name|daddr_t
 name|bnb
 init|=
 name|bn
@@ -981,7 +981,7 @@ name|daddr
 operator|=
 operator|(
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1033,7 +1033,7 @@ name|ump
 argument_list|,
 operator|(
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1048,7 +1048,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1101,7 +1101,7 @@ name|ump
 argument_list|,
 operator|(
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1114,7 +1114,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1228,7 +1228,7 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
-name|int32_t
+name|daddr_t
 name|bn
 parameter_list|,
 name|struct

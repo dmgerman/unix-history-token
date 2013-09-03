@@ -238,10 +238,10 @@ name|inode
 modifier|*
 name|ip
 parameter_list|,
-name|int32_t
+name|daddr_t
 name|lbn
 parameter_list|,
-name|int32_t
+name|e4fs_daddr_t
 name|bpref
 parameter_list|,
 name|int
@@ -252,7 +252,7 @@ name|ucred
 modifier|*
 name|cred
 parameter_list|,
-name|int32_t
+name|e4fs_daddr_t
 modifier|*
 name|bnp
 parameter_list|)
@@ -718,9 +718,10 @@ name|start_lbn
 decl_stmt|,
 name|end_lbn
 decl_stmt|;
-name|int32_t
+name|int
 name|soff
-decl_stmt|,
+decl_stmt|;
+name|e2fs_daddr_t
 name|newblk
 decl_stmt|,
 name|blkno
@@ -1173,7 +1174,7 @@ operator|(
 name|newblk
 operator|=
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|)
 name|ext2_hashalloc
 argument_list|(
@@ -2626,7 +2627,7 @@ comment|/*  * Select the desired position for the next block in a file.    *  * 
 end_comment
 
 begin_function
-name|int32_t
+name|e4fs_daddr_t
 name|ext2_blkpref
 parameter_list|(
 name|struct
@@ -2640,11 +2641,11 @@ parameter_list|,
 name|int
 name|indx
 parameter_list|,
-name|int32_t
+name|e2fs_daddr_t
 modifier|*
 name|bap
 parameter_list|,
-name|int32_t
+name|e2fs_daddr_t
 name|blocknr
 parameter_list|)
 block|{
@@ -2723,7 +2724,7 @@ condition|?
 name|blocknr
 else|:
 call|(
-name|int32_t
+name|e2fs_daddr_t
 call|)
 argument_list|(
 name|ip
@@ -4690,7 +4691,7 @@ name|inode
 modifier|*
 name|ip
 parameter_list|,
-name|int32_t
+name|e4fs_daddr_t
 name|bno
 parameter_list|,
 name|long
