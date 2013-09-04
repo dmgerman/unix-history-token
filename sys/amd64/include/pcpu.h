@@ -116,7 +116,7 @@ value|\ 	struct user_segment_descriptor	*pc_gs32p;			\
 comment|/* Pointer to the CPU LDT descriptor */
 value|\ 	struct system_segment_descriptor *pc_ldt;			\
 comment|/* Pointer to the CPU TSS descriptor */
-value|\ 	struct system_segment_descriptor *pc_tss;			\ 	uint64_t	pc_pm_save_cnt;					\ 	char		pc_invpcid_descr[16];				\ 	u_int	pc_cmci_mask;
+value|\ 	struct system_segment_descriptor *pc_tss;			\ 	uint64_t	pc_pm_save_cnt;					\ 	u_int	pc_cmci_mask;
 comment|/* MCx banks for CMCI */
 value|\ 	uint64_t pc_dbreg[16];
 comment|/* ddb debugging regs */

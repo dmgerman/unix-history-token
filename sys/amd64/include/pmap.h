@@ -825,6 +825,9 @@ modifier|*
 name|pm_pml4
 decl_stmt|;
 comment|/* KVA of level 4 page table */
+name|uint64_t
+name|pm_cr3
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
