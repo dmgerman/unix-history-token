@@ -2862,6 +2862,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vfs_purge_t
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vfsops
@@ -2934,6 +2947,18 @@ name|vfs_notify_lowervp_t
 modifier|*
 name|vfs_unlink_lowervp
 decl_stmt|;
+name|vfs_purge_t
+modifier|*
+name|vfs_purge
+decl_stmt|;
+name|vfs_mount_t
+modifier|*
+name|vfs_spare
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* spares for ABI compat */
 block|}
 struct|;
 end_struct
@@ -3157,6 +3182,16 @@ parameter_list|,
 name|VP
 parameter_list|)
 value|do {					\ 	if (*(MP)->mnt_op->vfs_unlink_lowervp != NULL) {		\ 		VFS_PROLOGUE(MP);					\ 		(*(MP)->mnt_op->vfs_unlink_lowervp)((MP), (VP));	\ 		VFS_EPILOGUE(MP);					\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_PURGE
+parameter_list|(
+name|MP
+parameter_list|)
+value|do {						\ 	if (*(MP)->mnt_op->vfs_purge != NULL) {				\ 		VFS_PROLOGUE(MP);					\ 		(*(MP)->mnt_op->vfs_purge)(MP);				\ 		VFS_EPILOGUE(MP);					\ 	}								\ } while (0)
 end_define
 
 begin_define

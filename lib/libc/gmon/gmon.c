@@ -792,6 +792,8 @@ operator||
 name|O_TRUNC
 operator||
 name|O_WRONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0666
 argument_list|)
@@ -826,6 +828,8 @@ operator||
 name|O_TRUNC
 operator||
 name|O_WRONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0664
 argument_list|)

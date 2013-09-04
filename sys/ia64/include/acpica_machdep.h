@@ -97,29 +97,27 @@ comment|/* XXX ia64_fc()? */
 end_comment
 
 begin_comment
-comment|/* Section 5.2.9.1:  global lock acquire/release functions */
+comment|/* Section 5.2.10.1: global lock acquire/release functions */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_acquire_global_lock
 parameter_list|(
+specifier|volatile
 name|uint32_t
 modifier|*
-name|lock
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_release_global_lock
 parameter_list|(
+specifier|volatile
 name|uint32_t
 modifier|*
-name|lock
 parameter_list|)
 function_decl|;
 end_function_decl

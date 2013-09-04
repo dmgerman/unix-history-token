@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_mkexrc.c	10.11 (Berkeley) 3/6/96"
+literal|"$Id: ex_mkexrc.c,v 10.13 2001/06/25 15:19:17 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,18 +121,14 @@ begin_function
 name|int
 name|ex_mkexrc
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -150,6 +146,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|fname
+decl_stmt|;
+name|size_t
+name|flen
 decl_stmt|;
 switch|switch
 condition|(
@@ -169,8 +168,10 @@ break|break;
 case|case
 literal|1
 case|:
-name|fname
-operator|=
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
 name|cmdp
 operator|->
 name|argv
@@ -179,6 +180,22 @@ literal|0
 index|]
 operator|->
 name|bp
+argument_list|,
+name|cmdp
+operator|->
+name|argv
+index|[
+literal|0
+index|]
+operator|->
+name|len
+operator|+
+literal|1
+argument_list|,
+name|fname
+argument_list|,
+name|flen
+argument_list|)
 expr_stmt|;
 name|set_alt_name
 argument_list|(

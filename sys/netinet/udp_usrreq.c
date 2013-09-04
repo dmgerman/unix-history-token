@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -110,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -171,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -2755,6 +2773,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|UDP_PROBE
+argument_list|(
+name|receive
+argument_list|,
+name|NULL
+argument_list|,
+name|inp
+argument_list|,
+name|ip
+argument_list|,
+name|inp
+argument_list|,
+name|uh
+argument_list|)
+expr_stmt|;
 name|udp_append
 argument_list|(
 name|inp
@@ -5367,6 +5400,14 @@ expr_stmt|;
 comment|/* XXX still needed? */
 name|ui
 operator|->
+name|ui_v
+operator|=
+name|IPVERSION
+operator|<<
+literal|4
+expr_stmt|;
+name|ui
+operator|->
 name|ui_pr
 operator|=
 name|IPPROTO_UDP
@@ -5669,6 +5710,27 @@ name|INP_HASH_RUNLOCK
 argument_list|(
 operator|&
 name|V_udbinfo
+argument_list|)
+expr_stmt|;
+name|UDP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|inp
+argument_list|,
+operator|&
+name|ui
+operator|->
+name|ui_i
+argument_list|,
+name|inp
+argument_list|,
+operator|&
+name|ui
+operator|->
+name|ui_u
 argument_list|)
 expr_stmt|;
 name|error

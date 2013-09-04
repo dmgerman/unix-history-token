@@ -4488,7 +4488,7 @@ name|SCSI_PROTO_RDMA
 value|0x04
 define|#
 directive|define
-name|SCSI_PROTO_iSCSI
+name|SCSI_PROTO_ISCSI
 value|0x05
 define|#
 directive|define

@@ -81,7 +81,7 @@ end_typedef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DEBUG
+name|OPENSOLARIS_WITNESS
 end_ifndef
 
 begin_define

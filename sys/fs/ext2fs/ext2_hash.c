@@ -130,7 +130,7 @@ value|(((x)<< (n)) | ((x)>> (32 - (n))))
 end_define
 
 begin_comment
-comment|/*  * FF, GG, and HH are transformations for rounds 1, 2, and 3.  * Rotation is separated from addition to prevent recompuatation  */
+comment|/*  * FF, GG, and HH are transformations for rounds 1, 2, and 3.  * Rotation is separated from addition to prevent recomputation.  */
 end_comment
 
 begin_define

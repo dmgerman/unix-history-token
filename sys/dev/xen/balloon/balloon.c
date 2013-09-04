@@ -62,19 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
+file|<vm/vm_page.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenfunc.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -86,19 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/features.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/xenstore/xenstorevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_page.h>
+file|<machine/xen/xenvar.h>
 end_include
 
 begin_expr_stmt

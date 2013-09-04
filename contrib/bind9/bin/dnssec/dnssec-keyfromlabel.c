@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2007-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keyfromlabel.c,v 1.32.14.4 2011/11/30 00:51:38 marka Exp $ */
+comment|/* $Id: dnssec-keyfromlabel.c,v 1.38 2011/11/30 00:48:51 marka Exp $ */
 end_comment
 
 begin_comment
@@ -343,6 +343,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    -L ttl: default key TTL\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    -n nametype: ZONE | HOST | ENTITY | USER | OTHER\n"
 argument_list|)
 expr_stmt|;
@@ -633,6 +640,11 @@ name|label
 init|=
 name|NULL
 decl_stmt|;
+name|dns_ttl_t
+name|ttl
+init|=
+literal|0
+decl_stmt|;
 name|isc_stdtime_t
 name|publish
 init|=
@@ -678,6 +690,10 @@ name|ISC_FALSE
 decl_stmt|;
 name|isc_boolean_t
 name|setdel
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|setttl
 init|=
 name|ISC_FALSE
 decl_stmt|;
@@ -774,7 +790,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"3a:Cc:E:f:K:kl:n:p:t:v:yFhGP:A:R:I:D:"
+literal|"3a:Cc:E:f:K:kl:L:n:p:t:v:yFhGP:A:R:I:D:"
 argument_list|)
 operator|)
 operator|!=
@@ -918,6 +934,37 @@ case|:
 name|options
 operator||=
 name|DST_TYPE_KEY
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|ttl
+operator|=
+name|strtottl
+argument_list|(
+name|isc_commandline_argument
+argument_list|)
+expr_stmt|;
+name|setttl
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1581,6 +1628,17 @@ argument_list|,
 literal|"The use of RSA (RSAMD5) is not recommended.\n"
 literal|"If you still wish to use RSA (RSAMD5) please "
 literal|"specify \"-a RSAMD5\"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|freeit
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|freeit
 argument_list|)
 expr_stmt|;
 return|return
@@ -2442,6 +2500,18 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set default key TTL */
+if|if
+condition|(
+name|setttl
+condition|)
+name|dst_key_setttl
+argument_list|(
+name|key
+argument_list|,
+name|ttl
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do not overwrite an existing key.  Warn LOUDLY if there 	 * is a risk of ID collision due to this key or another key 	 * being revoked. 	 */
 if|if
 condition|(

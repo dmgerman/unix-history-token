@@ -242,6 +242,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|fdclosedir
+parameter_list|(
+name|DIR
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|getdents
 parameter_list|(
 name|int

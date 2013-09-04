@@ -403,7 +403,7 @@ specifier|static
 name|int
 name|ufs_dirhashreclaimage
 init|=
-literal|5
+literal|60
 decl_stmt|;
 end_decl_stmt
 

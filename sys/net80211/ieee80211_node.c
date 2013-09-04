@@ -4549,13 +4549,6 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4763,7 +4756,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|ni
 operator|->
@@ -4811,9 +4804,6 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

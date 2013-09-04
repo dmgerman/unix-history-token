@@ -436,17 +436,14 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* ### pool allocation! */
+comment|/* Create a new bucket for this string with a flat string.  */
 name|new_data
 operator|=
-name|apr_pstrcatv
-argument_list|(
-name|serf_bucket_allocator_get_pool
+name|serf_bstrcatv
 argument_list|(
 name|bucket
 operator|->
 name|allocator
-argument_list|)
 argument_list|,
 name|iov
 argument_list|,
@@ -456,10 +453,9 @@ operator|&
 name|nbytes
 argument_list|)
 expr_stmt|;
-comment|/* Create a new bucket for this string. A free function isn't needed      * since the string is residing in a pool.      */
 name|new_bucket
 operator|=
-name|SERF_BUCKET_SIMPLE_STRING_LEN
+name|serf_bucket_simple_own_create
 argument_list|(
 name|new_data
 argument_list|,

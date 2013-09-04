@@ -8055,11 +8055,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|ql_minidump
-argument_list|(
-name|ha
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8114,6 +8109,11 @@ operator|->
 name|msg_from_peer
 operator|=
 literal|0
+expr_stmt|;
+name|ql_minidump
+argument_list|(
+name|ha
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

@@ -3441,14 +3441,6 @@ name|m
 operator|->
 name|md
 operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|m
-operator|->
-name|md
-operator|.
 name|pmap
 operator|=
 name|NULL
@@ -5366,11 +5358,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate KVA space for the TSB. 	 */
 if|if
 condition|(
@@ -5390,10 +5377,8 @@ expr|struct
 name|tte
 operator|*
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|TSB_BSIZE
 argument_list|)
 expr_stmt|;
@@ -5501,8 +5486,6 @@ argument_list|,
 name|i
 argument_list|,
 name|VM_ALLOC_NOBUSY
-operator||
-name|VM_ALLOC_RETRY
 operator||
 name|VM_ALLOC_WIRED
 operator||
@@ -5796,11 +5779,6 @@ block|}
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pm
 argument_list|)
 expr_stmt|;
 block|}
@@ -6821,14 +6799,16 @@ name|m
 operator|->
 name|oflags
 operator|&
-operator|(
 name|VPO_UNMANAGED
-operator||
-name|VPO_BUSY
-operator|)
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|vm_page_xbusied
+argument_list|(
+name|m
+argument_list|)
 condition|)
 name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
@@ -9827,7 +9807,7 @@ name|rv
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no TTEs can have TD_W set. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no TTEs can have TD_W set. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -9837,15 +9817,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|(
 name|m
@@ -10076,6 +10052,29 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function is advisory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_advise
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+block|{ }
+end_function
+
 begin_function
 name|void
 name|pmap_clear_modify
@@ -10120,24 +10119,20 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
-literal|"pmap_clear_modify: page %p is busy"
+literal|"pmap_clear_modify: page %p is exclusive busied"
 operator|,
 name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not PGA_WRITEABLE, then no TTEs can have TD_W set. 	 * If the object containing the page is locked and the page is not 	 * VPO_BUSY, then PGA_WRITEABLE cannot be concurrently set. 	 */
+comment|/* 	 * If the page is not PGA_WRITEABLE, then no TTEs can have TD_W set. 	 * If the object containing the page is locked and the page is not 	 * exclusive busied, then PGA_WRITEABLE cannot be concurrently set. 	 */
 if|if
 condition|(
 operator|(
@@ -10367,7 +10362,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * set by another thread while the object is locked.  Thus, 	 * if PGA_WRITEABLE is clear, no page table entries need updating. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -10377,15 +10372,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|&&
 operator|(
 name|m
@@ -10618,7 +10609,7 @@ operator|->
 name|pm_active
 argument_list|)
 expr_stmt|;
-name|atomic_store_rel_ptr
+name|atomic_store_acq_ptr
 argument_list|(
 operator|(
 name|uintptr_t

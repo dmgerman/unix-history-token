@@ -17008,7 +17008,7 @@ modifier|*
 modifier|*
 name|inp_p
 parameter_list|,
-name|in_port_t
+name|uint16_t
 name|port
 parameter_list|,
 name|struct
@@ -27242,6 +27242,21 @@ expr|struct
 name|sctp_init_chunk
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We might not overwrite the identification[] completely and on 	 * some platforms time_entered will contain some padding. Therefore 	 * zero out the cookie to avoid putting uninitialized memory on the 	 * wire. 	 */
+name|memset
+argument_list|(
+operator|&
+name|stc
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_state_cookie
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* the time I built cookie */
 operator|(
 name|void
@@ -30529,12 +30544,6 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|sp
-operator|->
-name|pr_sctp_on
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * We assume that the user wants PR_SCTP_TTL if the user provides a 	 * positive lifetime but does not specify any PR_SCTP policy. This 	 * is a BAD assumption and causes problems at least with the 	 * U-Vancovers MPI folks. I will change this to be no policy means 	 * NO PR-SCTP. 	 */
 if|if
 condition|(
@@ -30556,12 +30565,6 @@ name|sp
 operator|->
 name|sinfo_flags
 argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|pr_sctp_on
-operator|=
-literal|1
 expr_stmt|;
 block|}
 else|else
@@ -37269,38 +37272,20 @@ operator|+=
 name|pads
 expr_stmt|;
 block|}
-comment|/* We only re-set the policy if it is on */
 if|if
 condition|(
-name|sp
+name|PR_SCTP_ENABLED
+argument_list|(
+name|chk
 operator|->
-name|pr_sctp_on
+name|flags
+argument_list|)
 condition|)
 block|{
-name|sctp_set_prsctp_policy
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
 name|asoc
 operator|->
 name|pr_sctp_cnt
 operator|++
-expr_stmt|;
-name|chk
-operator|->
-name|pr_sctp_on
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|chk
-operator|->
-name|pr_sctp_on
-operator|=
-literal|0
 expr_stmt|;
 block|}
 if|if
@@ -38254,7 +38239,7 @@ endif|#
 directive|endif
 parameter_list|)
 block|{
-comment|/* 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - Service the stream queue that is next, moving any 	 * message (note I must get a complete message i.e. FIRST/MIDDLE and 	 * LAST to the out queue in one pass) and assigning TSN's - Check to 	 * see if the cwnd/rwnd allows any output, if so we go ahead and 	 * fomulate and send the low level chunks. Making sure to combine 	 * any control in the control chunk queue also. 	 */
+comment|/** 	 * Ok this is the generic chunk service queue. we must do the 	 * following: - Service the stream queue that is next, moving any 	 * message (note I must get a complete message i.e. FIRST/MIDDLE and 	 * LAST to the out queue in one pass) and assigning TSN's - Check to 	 * see if the cwnd/rwnd allows any output, if so we go ahead and 	 * fomulate and send the low level chunks. Making sure to combine 	 * any control in the control chunk queue also. 	 */
 name|struct
 name|sctp_nets
 modifier|*

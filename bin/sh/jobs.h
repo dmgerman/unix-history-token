@@ -180,29 +180,6 @@ begin_comment
 comment|/* user was warned about stopped jobs */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|in_waitcmd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are we in waitcmd()? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|sig_atomic_t
-name|breakwaitcmd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* break wait to process traps? */
-end_comment
-
 begin_function_decl
 name|void
 name|setjobctl

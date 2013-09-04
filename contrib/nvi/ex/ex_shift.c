@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_shift.c	10.11 (Berkeley) 9/15/96"
+literal|"$Id: ex_shift.c,v 10.17 2001/06/25 15:19:20 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -122,18 +128,14 @@ begin_function
 name|int
 name|ex_shiftl
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -158,18 +160,14 @@ begin_function
 name|int
 name|ex_shiftr
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -195,24 +193,18 @@ specifier|static
 name|int
 name|shift
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|,
-name|rl
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|,
 name|enum
 name|which
 name|rl
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|from
@@ -237,10 +229,11 @@ decl_stmt|;
 name|int
 name|curset
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|CHAR_T
 modifier|*
 name|bp
 decl_stmt|,
@@ -348,7 +341,7 @@ argument_list|,
 name|O_SHIFTWIDTH
 argument_list|)
 expr_stmt|;
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -539,7 +532,7 @@ continue|continue;
 block|}
 block|}
 comment|/* Get a buffer that will hold the new line. */
-name|ADD_SPACE_RET
+name|ADD_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -612,7 +605,7 @@ operator|=
 literal|' '
 expr_stmt|;
 comment|/* Add the original line. */
-name|memcpy
+name|MEMCPY
 argument_list|(
 name|tbp
 argument_list|,
@@ -652,7 +645,7 @@ condition|)
 block|{
 name|err
 label|:
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,
@@ -750,7 +743,7 @@ name|cno
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,

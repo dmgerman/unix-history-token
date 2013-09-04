@@ -4106,9 +4106,7 @@ name|object
 argument_list|,
 name|i
 argument_list|,
-name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_RETRY
+name|VM_ALLOC_SYSTEM
 argument_list|)
 expr_stmt|;
 if|if
@@ -4156,7 +4154,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4289,7 +4287,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4400,7 +4398,7 @@ operator|==
 name|VM_PAGER_ERROR
 condition|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -4446,7 +4444,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)

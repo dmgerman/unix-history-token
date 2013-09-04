@@ -69342,9 +69342,7 @@ name|m
 operator|->
 name|m_flags
 argument_list|,
-literal|"\20\12M_BCAST\13M_MCAST\14M_FRAG"
-literal|"\15M_FIRSTFRAG\16M_LASTFRAG\21M_VLANTAG"
-literal|"\22M_PROMISC\23M_NOFREE"
+name|M_FLAG_PRINTF
 argument_list|,
 name|m
 operator|->

@@ -1183,7 +1183,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++

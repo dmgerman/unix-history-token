@@ -301,7 +301,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
 argument_list|,
@@ -310,52 +310,10 @@ argument_list|, ,
 name|create
 argument_list|,
 name|create
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|create
-argument_list|,
-literal|0
 argument_list|,
 literal|"struct proc *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|create
-argument_list|,
-literal|1
 argument_list|,
 literal|"struct proc *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|create
-argument_list|,
-literal|2
 argument_list|,
 literal|"int"
 argument_list|)

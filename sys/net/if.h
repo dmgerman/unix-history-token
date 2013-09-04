@@ -251,7 +251,7 @@ name|u_long
 name|ifi_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
-name|u_long
+name|uint64_t
 name|ifi_hwassist
 decl_stmt|;
 comment|/* HW offload capabilities, see IFCAP */

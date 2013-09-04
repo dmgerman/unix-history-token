@@ -1743,7 +1743,7 @@ name|fopen
 argument_list|(
 name|_PATH_SERVICES
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 operator|==
@@ -2294,7 +2294,7 @@ name|fopen
 argument_list|(
 name|_PATH_SERVICES
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 else|else

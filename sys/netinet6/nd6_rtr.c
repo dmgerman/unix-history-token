@@ -1350,7 +1350,7 @@ name|dr0
 operator|.
 name|expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|dr0
 operator|.
@@ -3855,7 +3855,7 @@ name|new
 operator|->
 name|ndpr_lastupdate
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 if|if
 condition|(
@@ -4373,7 +4373,7 @@ name|pr
 operator|->
 name|ndpr_lastupdate
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 if|if
@@ -4761,7 +4761,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|time_second
+name|time_uptime
 operator|-
 name|ifa6
 operator|->
@@ -4786,7 +4786,7 @@ operator|.
 name|ia6t_vltime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ifa6
 operator|->
@@ -4902,7 +4902,7 @@ name|u_int32_t
 call|)
 argument_list|(
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ifa6
 operator|->
@@ -4918,7 +4918,7 @@ operator|=
 name|V_ip6_temp_valid_lifetime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ifa6
 operator|->
@@ -4942,7 +4942,7 @@ name|u_int32_t
 call|)
 argument_list|(
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ifa6
 operator|->
@@ -4958,7 +4958,7 @@ operator|=
 name|V_ip6_temp_preferred_lifetime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ifa6
 operator|->
@@ -5028,7 +5028,7 @@ name|ifa6
 operator|->
 name|ia6_updatetime
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 name|IF_ADDR_RUNLOCK
@@ -8278,7 +8278,7 @@ operator|.
 name|ia6t_vltime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ia0
 operator|->
@@ -8330,7 +8330,7 @@ operator|.
 name|ia6t_pltime
 operator|-
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|ia0
 operator|->
@@ -8547,7 +8547,7 @@ name|ndpr
 operator|->
 name|ndpr_preferred
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|ndpr
 operator|->
@@ -8572,7 +8572,7 @@ name|ndpr
 operator|->
 name|ndpr_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|ndpr
 operator|->
@@ -8621,7 +8621,7 @@ name|lt6
 operator|->
 name|ia6t_expire
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|lt6
 operator|->
@@ -8653,7 +8653,7 @@ name|lt6
 operator|->
 name|ia6t_preferred
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|lt6
 operator|->

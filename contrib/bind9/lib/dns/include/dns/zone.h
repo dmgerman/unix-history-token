@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/master.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/masterdump.h>
 end_include
 
@@ -67,7 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dns/rpz.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/zt.h>
 end_include
 
 begin_typedef
@@ -87,8 +105,26 @@ block|,
 name|dns_zone_key
 block|,
 name|dns_zone_dlz
+block|,
+name|dns_zone_redirect
 block|}
 name|dns_zonetype_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|dns_zonestat_none
+init|=
+literal|0
+block|,
+name|dns_zonestat_terse
+block|,
+name|dns_zonestat_full
+block|}
+name|dns_zonestat_level_t
 typedef|;
 end_typedef
 
@@ -433,6 +469,17 @@ begin_comment
 comment|/*%< fatal check-dup-records failures */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DNS_ZONEOPT_CHECKSPF
+value|0x80000000U
+end_define
+
+begin_comment
+comment|/*%< check SPF records */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -509,6 +556,17 @@ end_define
 
 begin_comment
 comment|/*%< roll to new keys immediately */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEKEY_NORESIGN
+value|0x00000010U
+end_define
+
+begin_comment
+comment|/*%< no automatic resigning */
 end_comment
 
 begin_ifndef
@@ -939,6 +997,43 @@ comment|/*%<  *	Cause the database to be loaded from its backing store.  *	Confi
 end_comment
 
 begin_function_decl
+name|isc_result_t
+name|dns_zone_asyncload
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_zt_zoneloaded_t
+name|done
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Cause the database to be loaded from its backing store asynchronously.  * Other zone maintenance functions are suspended until this is complete.  * When finished, 'done' is called to inform the caller, with 'arg' as  * its first argument and 'zone' as its second.  (Normally, 'arg' is  * expected to point to the zone table but is left undefined for testing  * purposes.)  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns__zone_loadpending
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Indicates whether the zone is waiting to be loaded asynchronously.  * (Not currently intended for use outside of this module and associated  * tests.)  */
+end_comment
+
+begin_function_decl
 name|void
 name|dns_zone_attach
 parameter_list|(
@@ -1235,8 +1330,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_zone_dumptostream3
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|FILE
+modifier|*
+name|fd
+parameter_list|,
+name|dns_masterformat_t
+name|format
+parameter_list|,
+specifier|const
+name|dns_master_style_t
+modifier|*
+name|style
+parameter_list|,
+specifier|const
+name|isc_uint32_t
+name|rawversion
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  *    Write the zone to stream 'fd' in the specified 'format'.  *    If the 'format' is dns_masterformat_text (RFC1035), 'style' also  *    specifies the file style (e.g.,&dns_master_style_default).  *  *    dns_zone_dumptostream() is a backward-compatible form of  *    dns_zone_dumptostream2(), which always uses the dns_masterformat_text  *    format and the dns_master_style_default style.  *  *    Note that dns_zone_dumptostream2() is the most flexible form.  It  *    can also provide the functionality of dns_zone_fulldumptostream().  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'fd' to be a stream open for writing.  */
+comment|/*%<  *    Write the zone to stream 'fd' in the specified 'format'.  *    If the 'format' is dns_masterformat_text (RFC1035), 'style' also  *    specifies the file style (e.g.,&dns_master_style_default).  *  *    dns_zone_dumptostream() is a backward-compatible form of  *    dns_zone_dumptostream2(), which always uses the dns_masterformat_text  *    format and the dns_master_style_default style.  *  *    dns_zone_dumptostream2() is a backward-compatible form of  *    dns_zone_dumptostream3(), which always uses the current  *    default raw file format version.  *  *    Note that dns_zone_dumptostream3() is the most flexible form.  It  *    can also provide the functionality of dns_zone_fulldumptostream().  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'fd' to be a stream open for writing.  */
 end_comment
 
 begin_function_decl
@@ -1339,8 +1461,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_zone_setalsonotifywithkeys
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+specifier|const
+name|isc_sockaddr_t
+modifier|*
+name|notify
+parameter_list|,
+name|dns_name_t
+modifier|*
+modifier|*
+name|keynames
+parameter_list|,
+name|isc_uint32_t
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  *	Set the list of additional servers to be notified when  *	a zone changes.	 To clear the list use 'count = 0'.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'notify' to be non-NULL if count != 0.  *\li	'count' to be the number of notifiees.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  *	Set the list of additional servers to be notified when  *	a zone changes.	 To clear the list use 'count = 0'.  *  *	dns_zone_alsonotifywithkeys() allows each notify address to  *	be associated with a TSIG key.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'notify' to be non-NULL if count != 0.  *\li	'count' to be the number of notifiees.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -2730,6 +2876,26 @@ end_comment
 
 begin_function_decl
 name|isc_result_t
+name|dns_zonemgr_createzone
+parameter_list|(
+name|dns_zonemgr_t
+modifier|*
+name|zmgr
+parameter_list|,
+name|dns_zone_t
+modifier|*
+modifier|*
+name|zonep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  *	Allocate a new zone using a memory context from the  *	zone manager's memory context pool.  *  * Require:  *\li	'zmgr' to be a valid zone manager.  *\li	'zonep' != NULL and '*zonep' == NULL.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
 name|dns_zonemgr_managezone
 parameter_list|(
 name|dns_zonemgr_t
@@ -2760,6 +2926,25 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Force zone maintenance of all zones managed by 'zmgr' at its  * earliest convenience.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns__zonemgr_run
+parameter_list|(
+name|isc_task_t
+modifier|*
+name|task
+parameter_list|,
+name|isc_event_t
+modifier|*
+name|event
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Event handler to call dns_zonemgr_forcemaint(); used to start  * zone operations from a unit test.  Not intended for use outside  * libdns or related tests.  */
 end_comment
 
 begin_function_decl
@@ -3175,9 +3360,50 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|dns_zone_setrcvquerystats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Set an additional statistics set to zone.  It is attached in the zone  * but is not counted in the zone module; only the caller updates the counters.  *  * Requires:  * \li	'zone' to be a valid zone.  *  *\li	stats is a valid statistics.  */
+comment|/*%<  * Set additional statistics sets to zone.  These are attached to the zone  * but are not counted in the zone module; only the caller updates the  * counters.  *  * Requires:  * \li	'zone' to be a valid zone.  *  *\li	stats is a valid statistics.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWSTATS
+end_ifdef
+
+begin_function_decl
+name|void
+name|dns_zone_setrcvquerystats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_stats_t
+modifier|*
+name|stats
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|isc_stats_t
@@ -3190,6 +3416,29 @@ name|zone
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWSTATS
+end_ifdef
+
+begin_function_decl
+name|dns_stats_t
+modifier|*
+name|dns_zone_getrcvquerystats
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*%<  * Get the additional statistics for zone, if one is installed.  *  * Requires:  * \li	'zone' to be a valid zone.  *  * Returns:  * \li	when available, a pointer to the statistics set installed in zone;  *	otherwise NULL.  */
@@ -3680,6 +3929,209 @@ comment|/*%  * Load the origin names for a writeable DLZ database.  */
 end_comment
 
 begin_function_decl
+name|isc_boolean_t
+name|dns_zone_isdynamic
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_boolean_t
+name|ignore_freeze
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Return true iff the zone is "dynamic", in the sense that the zone's  * master file (if any) is written by the server, rather than being  * updated manually and read by the server.  *  * This is true for slave zones, stub zones, key zones, and zones that  * allow dynamic updates either by having an update policy ("ssutable")  * or an "allow-update" ACL with a value other than exactly "{ none; }".  *  * If 'ignore_freeze' is true, then the zone which has had updates disabled  * will still report itself to be dynamic.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_setrefreshkeyinterval
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_uint32_t
+name|interval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Sets the frequency, in minutes, with which the key repository will be  * checked to see if the keys for this zone have been updated.  Any value  * higher than 1440 minutes (24 hours) will be silently reduced.  A  * value of zero will return an out-of-range error.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_zone_getrequestixfr
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Returns the true/false value of the request-ixfr option in the zone.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setrequestixfr
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_boolean_t
+name|flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Sets the request-ixfr option for the zone. Either true or false. The  * default value is determined by the setting of this option in the view.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setserialupdatemethod
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_updatemethod_t
+name|method
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Sets the update method to use when incrementing the zone serial number  * due to a DDNS update.  Valid options are dns_updatemethod_increment  * and dns_updatemethod_unixtime.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|dns_updatemethod_t
+name|dns_zone_getserialupdatemethod
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Returns the update method to be used when incrementing the zone serial  * number due to a DDNS update.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_link
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|raw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_zone_getraw
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_zone_t
+modifier|*
+modifier|*
+name|raw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_keydone
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_setnsec3param
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_uint8_t
+name|hash
+parameter_list|,
+name|isc_uint8_t
+name|flags
+parameter_list|,
+name|isc_uint16_t
+name|iter
+parameter_list|,
+name|isc_uint8_t
+name|saltlen
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|salt
+parameter_list|,
+name|isc_boolean_t
+name|replace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Set the NSEC3 parameters for the zone.  *  * If 'replace' is ISC_TRUE, then the existing NSEC3 chain, if any, will  * be replaced with the new one.  If 'hash' is zero, then the replacement  * chain will be NSEC rather than NSEC3.  *  * Requires:  * \li	'zone' to be valid.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_zone_setrawdata
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_masterrawheader_t
+modifier|*
+name|header
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Set the data to be included in the header when the zone is dumped in  * binary format.  */
+end_comment
+
+begin_function_decl
 name|isc_result_t
 name|dns_zone_synckeyzone
 parameter_list|(
@@ -3692,6 +4144,61 @@ end_function_decl
 
 begin_comment
 comment|/*%  * Force the managed key zone to synchronize, and start the key  * maintenance timer.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_zone_rpz_enable
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Set the response policy associated with a zone.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_zone_get_rpz
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_zone_setstatlevel
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_zonestat_level_t
+name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dns_zonestat_level_t
+name|dns_zone_getstatlevel
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Set and get the statistics reporting level for the zone;  * full, terse, or none.  */
 end_comment
 
 begin_macro

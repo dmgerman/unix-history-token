@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009, 2011  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: ddns-confgen.c,v 1.9.308.2 2011/03/12 04:59:13 tbox Exp $ */
+comment|/* $Id: ddns-confgen.c,v 1.11 2011/03/12 04:59:46 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dst.h,v 1.34 2011/10/20 21:20:02 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<dns/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/log.h>
 end_include
 
 begin_include
@@ -551,6 +557,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dst_context_create2
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_logcategory_t
+modifier|*
+name|category
+parameter_list|,
+name|dst_context_t
+modifier|*
+modifier|*
+name|dctxp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*%<  * Creates a context to be used for a sign or verify operation.  *  * Requires:  * \li	"key" is a valid key.  * \li	"mctx" is a valid memory context.  * \li	dctxp != NULL&& *dctxp == NULL  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  *  * Ensures:  * \li	*dctxp will contain a usable context.  */
 end_comment
@@ -625,8 +655,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dst_context_verify2
+parameter_list|(
+name|dst_context_t
+modifier|*
+name|dctx
+parameter_list|,
+name|unsigned
+name|int
+name|maxbits
+parameter_list|,
+name|isc_region_t
+modifier|*
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Verifies the signature using the data and key stored in the context.  *  * Requires:  * \li	"dctx" is a valid context.  * \li	"sig" is a valid region.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	all other errors indicate failure  *  * Ensures:  * \li	"sig" will contain the signature  */
+comment|/*%<  * Verifies the signature using the data and key stored in the context.  *  * 'maxbits' specifies the maximum number of bits permitted in the RSA  * exponent.  *  * Requires:  * \li	"dctx" is a valid context.  * \li	"sig" is a valid region.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	all other errors indicate failure  *  * Ensures:  * \li	"sig" will contain the signature  */
 end_comment
 
 begin_function_decl
@@ -957,6 +1006,60 @@ end_function_decl
 begin_comment
 comment|/*%<  * Converts a GSSAPI opaque context id into a DST key.  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"gssctx" is a GSSAPI context id.  *\li	"mctx" is a valid memory context.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key and be responsible for  *	the context id.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DST_KEY_INTERNAL
+end_ifdef
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_buildinternal
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|int
+name|alg
+parameter_list|,
+name|unsigned
+name|int
+name|bits
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|,
+name|unsigned
+name|int
+name|protocol
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dst_key_t
+modifier|*
+modifier|*
+name|keyp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|isc_result_t
@@ -1486,6 +1589,40 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Set the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_setttl
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|dns_ttl_t
+name|ttl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the default TTL to use when converting the key  * to a KEY or DNSKEY RR.  *  * Requires:  *	"key" is a valid key.  */
+end_comment
+
+begin_function_decl
+name|dns_ttl_t
+name|dst_key_getttl
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the default TTL to use when converting the key  * to a KEY or DNSKEY RR.  *  * Requires:  *	"key" is a valid key.  */
 end_comment
 
 begin_function_decl

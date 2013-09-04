@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2012  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dst_internal.h,v 1.31 2011/10/20 21:20:02 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -303,6 +303,10 @@ name|dns_rdataclass_t
 name|key_class
 decl_stmt|;
 comment|/*%< class of the key record */
+name|dns_ttl_t
+name|key_ttl
+decl_stmt|;
+comment|/*%< default/initial dnskey ttl */
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -462,6 +466,10 @@ name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
+name|isc_logcategory_t
+modifier|*
+name|category
+decl_stmt|;
 union|union
 block|{
 name|void
@@ -600,6 +608,25 @@ parameter_list|(
 name|dst_context_t
 modifier|*
 name|dctx
+parameter_list|,
+specifier|const
+name|isc_region_t
+modifier|*
+name|sig
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|verify2
+function_decl|)
+parameter_list|(
+name|dst_context_t
+modifier|*
+name|dctx
+parameter_list|,
+name|int
+name|maxbits
 parameter_list|,
 specifier|const
 name|isc_region_t

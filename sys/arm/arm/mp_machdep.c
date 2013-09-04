@@ -152,7 +152,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 end_ifdef
 
 begin_include
@@ -432,11 +432,15 @@ operator|(
 name|void
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|DPCPU_SIZE
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|temp_pagetable_va
@@ -863,7 +867,7 @@ name|td_pcb
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 name|pc
 operator|->
 name|pc_cpu

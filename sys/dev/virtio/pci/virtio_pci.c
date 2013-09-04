@@ -3428,6 +3428,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|vtpci_set_status
 argument_list|(
 name|dev
@@ -3435,6 +3436,12 @@ argument_list|,
 name|VIRTIO_CONFIG_STATUS_DRIVER_OK
 argument_list|)
 expr_stmt|;
+name|VIRTIO_ATTACH_COMPLETED
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

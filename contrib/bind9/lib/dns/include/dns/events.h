@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009, 2010, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: events.h,v 1.61 2011/10/28 06:20:06 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -357,6 +357,41 @@ define|#
 directive|define
 name|DNS_EVENT_ADBGROWNAMES
 value|(ISC_EVENTCLASS_DNS + 46)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ZONESECURESERIAL
+value|(ISC_EVENTCLASS_DNS + 47)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ZONESECUREDB
+value|(ISC_EVENTCLASS_DNS + 48)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ZONELOAD
+value|(ISC_EVENTCLASS_DNS + 49)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_KEYDONE
+value|(ISC_EVENTCLASS_DNS + 50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_SETNSEC3PARAM
+value|(ISC_EVENTCLASS_DNS + 51)
 end_define
 
 begin_define

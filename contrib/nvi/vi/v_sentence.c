@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_sentence.c	10.7 (Berkeley) 3/6/96"
+literal|"$Id: v_sentence.c,v 10.9 2001/06/25 15:19:35 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,18 +101,14 @@ begin_function
 name|int
 name|v_sentencef
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 enum|enum
 block|{
@@ -192,6 +188,7 @@ name|cs_flags
 operator|==
 name|CS_EMP
 operator|||
+operator|(
 name|cs
 operator|.
 name|cs_flags
@@ -204,6 +201,7 @@ name|cs
 operator|.
 name|cs_ch
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -740,18 +738,14 @@ begin_function
 name|int
 name|v_sentenceb
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|VCS
 name|cs

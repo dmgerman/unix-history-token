@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009-2012  Internet Systems Consor
 end_comment
 
 begin_comment
-comment|/* $Id: builtin.c,v 1.20.14.3 2012/01/11 20:19:40 ckb Exp $ */
+comment|/* $Id: builtin.c,v 1.26 2012/01/21 19:44:18 each Exp $ */
 end_comment
 
 begin_comment
@@ -1695,6 +1695,14 @@ parameter_list|,
 name|dns_sdblookup_t
 modifier|*
 name|lookup
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|)
 block|{
 name|builtin_t
@@ -1710,6 +1718,16 @@ decl_stmt|;
 name|UNUSED
 argument_list|(
 name|zone
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|methods
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|clientinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1764,6 +1782,14 @@ parameter_list|,
 name|dns_sdblookup_t
 modifier|*
 name|lookup
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|)
 block|{
 name|builtin_t
@@ -1776,6 +1802,16 @@ operator|*
 operator|)
 name|dbdata
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|methods
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|clientinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|name
@@ -2083,6 +2119,10 @@ block|,
 literal|"James Brister"
 block|,
 literal|"Ben Cottrell"
+block|,
+literal|"John H. DuBois III"
+block|,
+literal|"Francis Dupont"
 block|,
 literal|"Michael Graff"
 block|,

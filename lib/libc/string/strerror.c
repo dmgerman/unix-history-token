@@ -95,6 +95,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"errlst.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -298,7 +304,7 @@ literal|0
 operator|||
 name|errnum
 operator|>=
-name|sys_nerr
+name|__hidden_sys_nerr
 condition|)
 block|{
 name|errstr
@@ -360,7 +366,7 @@ literal|1
 argument_list|,
 name|errnum
 argument_list|,
-name|sys_errlist
+name|__hidden_sys_errlist
 index|[
 name|errnum
 index|]
@@ -368,7 +374,7 @@ argument_list|)
 argument_list|,
 else|#
 directive|else
-name|sys_errlist
+name|__hidden_sys_errlist
 index|[
 name|errnum
 index|]

@@ -350,6 +350,14 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+name|vdev_ashift_optimize
+parameter_list|(
+name|vdev_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|vdev_expand
 parameter_list|(
 name|vdev_t

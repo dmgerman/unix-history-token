@@ -394,9 +394,6 @@ name|tdfx_softc
 modifier|*
 name|tdfx_info
 decl_stmt|;
-name|u_long
-name|val
-decl_stmt|;
 comment|/* rid value tells bus_alloc_resource where to find the addresses of ports or 	 * of memory ranges in the PCI config space*/
 name|int
 name|rid
@@ -409,46 +406,6 @@ decl_stmt|;
 comment|/* Increment the card counter (for the ioctl code) */
 name|tdfx_count
 operator|++
-expr_stmt|;
-comment|/* Enable MemMap on Voodoo */
-name|val
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|val
-operator||=
-operator|(
-name|PCIM_CMD_MEMEN
-operator|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|val
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|val
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
 expr_stmt|;
 comment|/* Fill the soft config struct with info about this device*/
 name|tdfx_info

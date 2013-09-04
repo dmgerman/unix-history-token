@@ -2307,9 +2307,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%spolled mode"
+literal|"%spolled mode (%dHz)"
 argument_list|,
 name|sep
+argument_list|,
+name|uart_poll_freq
 argument_list|)
 expr_stmt|;
 name|sep

@@ -2401,8 +2401,6 @@ argument_list|,
 name|VM_ALLOC_WIRED
 operator||
 name|VM_ALLOC_ZERO
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 name|AGP_DPF
@@ -2610,7 +2608,7 @@ name|bad
 goto|;
 block|}
 block|}
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -2710,7 +2708,7 @@ name|k
 operator|>=
 name|i
 condition|)
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)

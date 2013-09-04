@@ -406,19 +406,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vfs_drain_busy_pages
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vfs_clean_pages_dirty_buf
 parameter_list|(
 name|struct
@@ -2636,7 +2623,7 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->
@@ -3593,10 +3580,8 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|MAXPHYS
 argument_list|)
 expr_stmt|;
@@ -7497,33 +7482,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We don't mess with busy pages, it is 		 * the responsibility of the process that 		 * busied the pages to deal with them. 		 */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
-operator|&&
-name|m
-operator|->
-name|busy
-operator|==
-literal|0
-operator|&&
-name|m
-operator|->
-name|wire_count
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * Might as well free the page if we can and it has 			 * no valid data.  We also free the page if the 			 * buffer was used for direct I/O 			 */
+comment|/* 		 * Might as well free the page if we can and it has 		 * no valid data.  We also free the page if the 		 * buffer was used for direct I/O 		 */
 if|if
 condition|(
 operator|(
@@ -7542,6 +7501,20 @@ operator|->
 name|valid
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|->
+name|wire_count
+operator|==
+literal|0
+operator|&&
+operator|!
+name|vm_page_busied
+argument_list|(
+name|m
+argument_list|)
+condition|)
 name|vm_page_free
 argument_list|(
 name|m
@@ -7557,27 +7530,22 @@ name|b_flags
 operator|&
 name|B_DIRECT
 condition|)
-block|{
 name|vm_page_try_to_free
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
 name|buf_vm_page_count_severe
 argument_list|()
 condition|)
-block|{
 name|vm_page_try_to_cache
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|vm_page_unlock
 argument_list|(
 name|m
@@ -13679,8 +13647,6 @@ name|vm_page_sleep_if_busy
 argument_list|(
 name|m
 argument_list|,
-name|TRUE
-argument_list|,
 literal|"biodep"
 argument_list|)
 condition|)
@@ -13775,7 +13741,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-comment|/* 				 * We must allocate system pages since blocking 				 * here could interfere with paging I/O, no 				 * matter which process we are. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * Thus, we specify VM_ALLOC_IGN_SBUSY. 				 */
+comment|/* 				 * We must allocate system pages since blocking 				 * here could interfere with paging I/O, no 				 * matter which process we are. 				 * 				 * Only exclusive busy can be tested here. 				 * Blocking on shared busy might lead to 				 * deadlocks once allocbuf() is called after 				 * pages are vfs_busy_pages(). 				 */
 name|m
 operator|=
 name|vm_page_grab
@@ -13798,8 +13764,6 @@ operator||
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_WIRED
-operator||
-name|VM_ALLOC_RETRY
 operator||
 name|VM_ALLOC_IGN_SBUSY
 operator||
@@ -15387,7 +15351,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_io_finish
+name|vm_page_sunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -15702,7 +15666,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|vm_page_io_finish
+name|vm_page_sunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -15910,11 +15874,10 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ensure that all buffer pages are not busied by VPO_BUSY flag. If  * any page is busy, drain the flag.  */
+comment|/*  * Ensure that all buffer pages are not exclusive busied.  If any page is  * exclusive busy, drain it.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vfs_drain_busy_pages
 parameter_list|(
@@ -15972,15 +15935,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 for|for
@@ -15993,7 +15951,7 @@ condition|;
 name|last_busied
 operator|++
 control|)
-name|vm_page_busy
+name|vm_page_xbusy
 argument_list|(
 name|bp
 operator|->
@@ -16005,23 +15963,43 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|(
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
-name|vm_page_sleep
+block|{
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_WUNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+operator|->
+name|bo_object
+argument_list|)
+expr_stmt|;
+name|vm_page_busy_sleep
 argument_list|(
 name|m
 argument_list|,
 literal|"vbpage"
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_WLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+operator|->
+name|bo_object
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 for|for
@@ -16037,7 +16015,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|bp
 operator|->
@@ -16051,7 +16029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being VPO_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
+comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being exclusive busy.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
 end_comment
 
 begin_function
@@ -16192,7 +16170,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|vm_page_io_start
+name|vm_page_sbusy
 argument_list|(
 name|m
 argument_list|)
@@ -17352,11 +17330,10 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|vm_page_sbusied
+argument_list|(
 name|p
-operator|->
-name|busy
-operator|!=
-literal|0
+argument_list|)
 condition|)
 name|printf
 argument_list|(

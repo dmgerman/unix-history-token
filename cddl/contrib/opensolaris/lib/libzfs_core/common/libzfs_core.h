@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -261,6 +261,22 @@ specifier|const
 name|char
 modifier|*
 name|dataset
+parameter_list|)
+function_decl|;
+name|int
+name|lzc_rollback
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fsname
+parameter_list|,
+name|char
+modifier|*
+name|snapnamebuf
+parameter_list|,
+name|int
+name|snapnamelen
 parameter_list|)
 function_decl|;
 ifdef|#

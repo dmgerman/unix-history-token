@@ -1381,6 +1381,12 @@ name|m_flags
 operator||=
 name|M_BCAST
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* Avoid confusing lower layers. */
 call|(
 modifier|*
 name|ifp
@@ -3973,6 +3979,12 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Avoid confusing lower layers. */
+name|m_clrprotoflags
+argument_list|(
+name|m_hold
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -4571,6 +4583,12 @@ name|sa_len
 operator|=
 literal|2
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* Avoid confusing lower layers. */
 call|(
 modifier|*
 name|ifp

@@ -1510,6 +1510,10 @@ name|st_value
 operator|=
 name|rsym
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|out
 goto|;

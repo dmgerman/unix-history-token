@@ -33198,15 +33198,12 @@ operator|~
 name|CSUM_IP
 expr_stmt|;
 block|}
+name|m_clrprotoflags
+argument_list|(
 name|m0
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
+comment|/* Avoid confusing lower layers. */
 name|error
 operator|=
 call|(
@@ -33349,14 +33346,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|m_clrprotoflags
+argument_list|(
 name|m0
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

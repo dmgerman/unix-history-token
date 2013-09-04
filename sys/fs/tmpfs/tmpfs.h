@@ -614,6 +614,13 @@ name|TMPFS_VNODE_DOOMED
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|TMPFS_VNODE_WRECLAIM
+value|8
+end_define
+
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment

@@ -642,11 +642,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ACPI_COMPARE_NAME
+name|ACPI_VALIDATE_RSDP_SIG
 argument_list|(
 name|Signature
-argument_list|,
-name|ACPI_SIG_RSDP
 argument_list|)
 condition|)
 block|{

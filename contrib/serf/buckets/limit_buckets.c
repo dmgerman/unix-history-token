@@ -21,39 +21,11 @@ directive|include
 file|"serf_bucket_util.h"
 end_include
 
-begin_comment
-comment|/* Older versions of APR do not have this macro.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APR_SIZE_MAX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|REQUESTED_MAX
-value|APR_SIZE_MAX
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|REQUESTED_MAX
-value|(~((apr_size_t)0))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"serf_private.h"
+end_include
 
 begin_typedef
 typedef|typedef

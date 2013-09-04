@@ -108,6 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|scc_driver_name
 index|[]

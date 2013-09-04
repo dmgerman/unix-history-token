@@ -362,6 +362,11 @@ operator|.
 name|fo_chown
 operator|=
 name|invfo_chown
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
 block|, }
 decl_stmt|;
 end_decl_stmt

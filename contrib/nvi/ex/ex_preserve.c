@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_preserve.c	10.12 (Berkeley) 4/27/96"
+literal|"$Id: ex_preserve.c,v 10.15 2001/06/25 15:19:18 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -91,18 +97,14 @@ begin_function
 name|int
 name|ex_preserve
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|lno
@@ -220,18 +222,14 @@ begin_function
 name|int
 name|ex_recover
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|ARGS
 modifier|*
@@ -240,6 +238,13 @@ decl_stmt|;
 name|FREF
 modifier|*
 name|frp
+decl_stmt|;
+name|char
+modifier|*
+name|np
+decl_stmt|;
+name|size_t
+name|nlen
 decl_stmt|;
 name|ap
 operator|=
@@ -251,13 +256,30 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* Set the alternate file name. */
-name|set_alt_name
+name|INT2CHAR
 argument_list|(
 name|sp
 argument_list|,
 name|ap
 operator|->
 name|bp
+argument_list|,
+name|ap
+operator|->
+name|len
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
+name|set_alt_name
+argument_list|(
+name|sp
+argument_list|,
+name|np
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for modifications.  Autowrite did not historically 	 * affect :recover. 	 */
@@ -283,6 +305,25 @@ literal|1
 operator|)
 return|;
 comment|/* Get a file structure for the file. */
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
+name|ap
+operator|->
+name|bp
+argument_list|,
+name|ap
+operator|->
+name|len
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -292,9 +333,7 @@ name|file_add
 argument_list|(
 name|sp
 argument_list|,
-name|ap
-operator|->
-name|bp
+name|np
 argument_list|)
 operator|)
 operator|==

@@ -4771,6 +4771,12 @@ parameter_list|(
 name|processorid_t
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 specifier|extern
 name|void
 function_decl|(
@@ -4793,6 +4799,8 @@ name|modctl_t
 modifier|*
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 specifier|extern
 name|void
 function_decl|(

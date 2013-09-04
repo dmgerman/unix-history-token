@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<xen/xen-os.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/interface/hvm/params.h>
 end_include
 
@@ -239,6 +251,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|xen_hvm_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xen_hvm_init_cpu
 parameter_list|(
 name|void
 parameter_list|)

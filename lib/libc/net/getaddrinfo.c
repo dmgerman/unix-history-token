@@ -11175,7 +11175,7 @@ name|fopen
 argument_list|(
 name|_PATH_HOSTS
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 else|else
@@ -11302,7 +11302,7 @@ name|fopen
 argument_list|(
 name|_PATH_HOSTS
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 operator|)
 condition|)

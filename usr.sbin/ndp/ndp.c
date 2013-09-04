@@ -1484,9 +1484,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|time_t
 name|expire_time
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|flags
 decl_stmt|,
 name|found_entry
@@ -1761,19 +1765,19 @@ condition|)
 block|{
 name|struct
 name|timeval
-name|time
+name|now
 decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|expire_time
 operator|=
-name|time
+name|now
 operator|.
 name|tv_sec
 operator|+
@@ -2610,7 +2614,7 @@ name|nbi
 decl_stmt|;
 name|struct
 name|timeval
-name|time
+name|now
 decl_stmt|;
 name|int
 name|addrwidth
@@ -3077,7 +3081,7 @@ block|}
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
@@ -3089,7 +3093,7 @@ condition|)
 name|ts_print
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|)
 expr_stmt|;
 name|addrwidth
@@ -3244,7 +3248,7 @@ name|nbi
 operator|->
 name|expire
 operator|>
-name|time
+name|now
 operator|.
 name|tv_sec
 condition|)
@@ -3259,7 +3263,7 @@ name|nbi
 operator|->
 name|expire
 operator|-
-name|time
+name|now
 operator|.
 name|tv_sec
 argument_list|)
@@ -5104,7 +5108,7 @@ name|l
 decl_stmt|;
 name|struct
 name|timeval
-name|time
+name|now
 decl_stmt|;
 if|if
 condition|(
@@ -5376,7 +5380,7 @@ expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
@@ -5405,7 +5409,7 @@ name|p
 operator|->
 name|expire
 operator|-
-name|time
+name|now
 operator|.
 name|tv_sec
 argument_list|)
@@ -5430,7 +5434,7 @@ name|i
 decl_stmt|;
 name|struct
 name|timeval
-name|time
+name|now
 decl_stmt|;
 if|if
 condition|(
@@ -5652,7 +5656,7 @@ expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
@@ -5681,7 +5685,7 @@ name|DR
 operator|.
 name|expire
 operator|-
-name|time
+name|now
 operator|.
 name|tv_sec
 argument_list|)
@@ -5748,7 +5752,7 @@ name|l
 decl_stmt|;
 name|struct
 name|timeval
-name|time
+name|now
 decl_stmt|;
 specifier|const
 name|int
@@ -6007,7 +6011,7 @@ expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
@@ -6162,7 +6166,7 @@ name|p
 operator|->
 name|expire
 operator|>=
-name|time
+name|now
 operator|.
 name|tv_sec
 condition|)
@@ -6176,7 +6180,7 @@ name|p
 operator|->
 name|expire
 operator|-
-name|time
+name|now
 operator|.
 name|tv_sec
 argument_list|)
@@ -6388,12 +6392,12 @@ name|i
 decl_stmt|;
 name|struct
 name|timeval
-name|time
+name|now
 decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
@@ -6630,7 +6634,7 @@ expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
-name|time
+name|now
 argument_list|,
 literal|0
 argument_list|)
@@ -6815,7 +6819,7 @@ name|PR
 operator|.
 name|expire
 operator|>=
-name|time
+name|now
 operator|.
 name|tv_sec
 condition|)
@@ -6829,7 +6833,7 @@ name|PR
 operator|.
 name|expire
 operator|-
-name|time
+name|now
 operator|.
 name|tv_sec
 argument_list|)

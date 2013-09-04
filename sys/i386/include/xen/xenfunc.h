@@ -18,13 +18,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<xen/hypervisor.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
 end_include
 
 begin_include

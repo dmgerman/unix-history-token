@@ -552,5 +552,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|mpssas_check_id
+parameter_list|(
+name|struct
+name|mpssas_softc
+modifier|*
+name|sassc
+parameter_list|,
+name|int
+name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

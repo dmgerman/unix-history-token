@@ -2891,6 +2891,24 @@ name|DA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * Intel X25-M Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"INTEL SSDSA2M*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * Kingston E100 Series SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
@@ -2918,6 +2936,42 @@ block|,
 literal|"ATA"
 block|,
 literal|"KINGSTON SH103S3*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Marvell SSDs (entry taken from OpenSolaris) 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"MARVELL SD88SA02*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * OCZ Agility 2 SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"OCZ-AGILITY2*"
 block|,
 literal|"*"
 block|}
@@ -11393,6 +11447,15 @@ operator|->
 name|quirks
 operator||=
 name|DA_Q_NO_SYNC_CACHE
+expr_stmt|;
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_flags
+operator|&=
+operator|~
+name|DISKFLAG_CANFLUSHCACHE
 expr_stmt|;
 return|return
 operator|(

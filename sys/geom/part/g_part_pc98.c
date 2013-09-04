@@ -604,12 +604,12 @@ block|,
 operator|.
 name|gps_minent
 operator|=
-name|NDOSPART
+name|PC98_NPARTS
 block|,
 operator|.
 name|gps_maxent
 operator|=
-name|NDOSPART
+name|PC98_NPARTS
 block|,
 operator|.
 name|gps_bootcodesz
@@ -1550,9 +1550,9 @@ name|table
 operator|->
 name|boot
 operator|+
-name|DOSMAGICOFFSET
+name|PC98_MAGICOFS
 argument_list|,
-name|DOSMAGIC
+name|PC98_MAGIC
 argument_list|)
 expr_stmt|;
 return|return
@@ -2290,14 +2290,14 @@ name|le16dec
 argument_list|(
 name|buf
 operator|+
-name|DOSMAGICOFFSET
+name|PC98_MAGICOFS
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|magic
 operator|!=
-name|DOSMAGIC
+name|PC98_MAGIC
 condition|)
 goto|goto
 name|out
@@ -2351,7 +2351,7 @@ literal|0
 init|;
 name|index
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|index
 operator|++
@@ -2365,7 +2365,7 @@ name|SECSIZE
 operator|+
 name|index
 operator|*
-name|DOSPARTSIZE
+name|PC98_PARTSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -2646,7 +2646,7 @@ for|for
 control|(
 name|index
 operator|=
-name|NDOSPART
+name|PC98_NPARTS
 operator|-
 literal|1
 init|;
@@ -2666,7 +2666,7 @@ name|SECSIZE
 operator|+
 name|index
 operator|*
-name|DOSPARTSIZE
+name|PC98_PARTSIZE
 expr_stmt|;
 name|ent
 operator|.
@@ -2871,7 +2871,7 @@ name|basetable
 operator|->
 name|gpt_entries
 operator|=
-name|NDOSPART
+name|PC98_NPARTS
 expr_stmt|;
 name|basetable
 operator|->
@@ -3386,7 +3386,7 @@ operator|-
 literal|1
 operator|)
 operator|*
-name|DOSPARTSIZE
+name|PC98_PARTSIZE
 expr_stmt|;
 name|entry
 operator|=
@@ -3600,7 +3600,7 @@ name|bzero
 argument_list|(
 name|p
 argument_list|,
-name|DOSPARTSIZE
+name|PC98_PARTSIZE
 argument_list|)
 expr_stmt|;
 if|if

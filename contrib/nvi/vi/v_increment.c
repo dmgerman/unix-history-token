@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_increment.c	10.12 (Berkeley) 3/19/96"
+literal|"$Id: v_increment.c,v 10.17 2011/12/02 01:17:53 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|char
+name|CHAR_T
 modifier|*
 specifier|const
 name|fmt
@@ -120,31 +120,46 @@ define|#
 directive|define
 name|DEC
 value|0
+name|L
+argument_list|(
 literal|"%ld"
+argument_list|)
 block|,
 define|#
 directive|define
 name|SDEC
 value|1
+name|L
+argument_list|(
 literal|"%+ld"
+argument_list|)
 block|,
 define|#
 directive|define
 name|HEXC
 value|2
+name|L
+argument_list|(
 literal|"0X%0*lX"
+argument_list|)
 block|,
 define|#
 directive|define
 name|HEXL
 value|3
+name|L
+argument_list|(
 literal|"0x%0*lx"
+argument_list|)
 block|,
 define|#
 directive|define
 name|OCTAL
 value|4
+name|L
+argument_list|(
 literal|"%#0*lo"
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -174,18 +189,14 @@ begin_function
 name|int
 name|v_increment
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|nresult
@@ -221,23 +232,24 @@ name|isempty
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|char
-modifier|*
-name|bp
-decl_stmt|,
+name|CHAR_T
 modifier|*
 name|ntype
+decl_stmt|,
+name|nbuf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|CHAR_T
+modifier|*
+name|bp
 decl_stmt|,
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|t
-decl_stmt|,
-name|nbuf
-index|[
-literal|100
-index|]
 decl_stmt|;
 comment|/* Validate the operator. */
 if|if
@@ -385,7 +397,7 @@ name|beg
 operator|<
 name|len
 operator|&&
-name|isspace
+name|ISSPACE
 argument_list|(
 name|p
 index|[
@@ -443,7 +455,7 @@ name|ishex
 parameter_list|(
 name|c
 parameter_list|)
-value|(isdigit(c) || strchr("abcdefABCDEF", c))
+value|(ISXDIGIT(c))
 undef|#
 directive|undef
 name|isoctal
@@ -453,7 +465,7 @@ name|isoctal
 parameter_list|(
 name|c
 parameter_list|)
-value|(isdigit(c)&& (c) != '8'&& (c) != '9')
+value|((c)>= '0'&& (c)<= '7')
 comment|/* 	 * Look for 0[Xx], or leading + or - signs, guess at the base. 	 * The character after that must be a number.  Wlen is set to 	 * the remaining characters in the line that could be part of 	 * the number. 	 */
 name|wlen
 operator|=
@@ -799,7 +811,7 @@ name|beg
 operator|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * If the line was at the end of the buffer, we have to copy it 	 * so we can guarantee that it's NULL-terminated.  We make the 	 * buffer big enough to fit the line changes as well, and only 	 * allocate once. 	 */
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -819,7 +831,7 @@ operator|==
 name|len
 condition|)
 block|{
-name|memmove
+name|MEMMOVE
 argument_list|(
 name|bp
 argument_list|,
@@ -982,7 +994,7 @@ index|]
 expr_stmt|;
 name|nlen
 operator|=
-name|snprintf
+name|SPRINTF
 argument_list|(
 name|nbuf
 argument_list|,
@@ -1092,7 +1104,7 @@ literal|2
 expr_stmt|;
 name|nlen
 operator|=
-name|snprintf
+name|SPRINTF
 argument_list|(
 name|nbuf
 argument_list|,
@@ -1110,7 +1122,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Build the new line. */
-name|memmove
+name|MEMMOVE
 argument_list|(
 name|bp
 argument_list|,
@@ -1119,7 +1131,7 @@ argument_list|,
 name|beg
 argument_list|)
 expr_stmt|;
-name|memmove
+name|MEMMOVE
 argument_list|(
 name|bp
 operator|+
@@ -1130,7 +1142,7 @@ argument_list|,
 name|nlen
 argument_list|)
 expr_stmt|;
-name|memmove
+name|MEMMOVE
 argument_list|(
 name|bp
 operator|+
@@ -1217,7 +1229,7 @@ name|bp
 operator|!=
 name|NULL
 condition|)
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,
@@ -1239,18 +1251,14 @@ specifier|static
 name|void
 name|inc_err
 parameter_list|(
-name|sp
-parameter_list|,
-name|nret
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|enum
 name|nresult
 name|nret
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(

@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -1564,6 +1564,10 @@ name|lagg_port
 modifier|*
 name|lp
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1577,6 +1581,9 @@ return|return;
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -1614,6 +1621,9 @@ block|}
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 block|}
@@ -1655,6 +1665,10 @@ name|lagg_port
 modifier|*
 name|lp
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -1668,6 +1682,9 @@ return|return;
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -1705,6 +1722,9 @@ block|}
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 block|}
@@ -2140,6 +2160,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|LAGG_CALLOUT_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -2162,7 +2187,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|callout_init_rw
+comment|/* 	 * This uses the callout lock rather than the rmlock; one can't 	 * hold said rmlock during SWI. 	 */
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|sc
@@ -2172,9 +2198,9 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|sc_call_mtx
 argument_list|,
-name|CALLOUT_SHAREDLOCK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Initialise pseudo media types */
@@ -2491,6 +2517,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* This grabs sc_callout_mtx, serialising it correctly */
 name|callout_drain
 argument_list|(
 operator|&
@@ -2499,6 +2526,7 @@ operator|->
 name|sc_callout
 argument_list|)
 expr_stmt|;
+comment|/* At this point it's drained; we can free this */
 name|counter_u64_free
 argument_list|(
 name|sc
@@ -2562,6 +2590,11 @@ name|sc_lladdr_task
 argument_list|)
 expr_stmt|;
 name|LAGG_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|LAGG_CALLOUT_LOCK_DESTROY
 argument_list|(
 name|sc
 argument_list|)
@@ -4229,6 +4262,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 comment|/* Should be checked by the caller */
 if|if
 condition|(
@@ -4299,6 +4336,9 @@ block|}
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -4327,6 +4367,9 @@ expr_stmt|;
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4341,6 +4384,9 @@ expr_stmt|;
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5126,6 +5172,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -5148,6 +5198,9 @@ case|:
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|count
@@ -5178,6 +5231,9 @@ expr_stmt|;
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|outbuf
@@ -5196,6 +5252,9 @@ expr_stmt|;
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|ra
@@ -5312,6 +5371,9 @@ block|}
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|ra
@@ -5745,6 +5807,9 @@ block|}
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -5778,6 +5843,9 @@ expr_stmt|;
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5792,6 +5860,9 @@ expr_stmt|;
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6759,6 +6830,10 @@ name|len
 decl_stmt|,
 name|mcast
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|len
 operator|=
 name|m
@@ -6788,6 +6863,9 @@ expr_stmt|;
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 comment|/* We need a Tx algorithm and at least one port */
@@ -6809,6 +6887,9 @@ block|{
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -6851,6 +6932,9 @@ expr_stmt|;
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -6962,9 +7046,16 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 if|if
@@ -6997,6 +7088,9 @@ block|{
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -7085,6 +7179,9 @@ block|}
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 return|return
@@ -7179,6 +7276,10 @@ name|lagg_port
 modifier|*
 name|lp
 decl_stmt|;
+name|struct
+name|rm_priotracker
+name|tracker
+decl_stmt|;
 name|imr
 operator|->
 name|ifm_status
@@ -7196,6 +7297,9 @@ expr_stmt|;
 name|LAGG_RLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 name|SLIST_FOREACH
@@ -7224,6 +7328,9 @@ block|}
 name|LAGG_RUNLOCK
 argument_list|(
 name|sc
+argument_list|,
+operator|&
+name|tracker
 argument_list|)
 expr_stmt|;
 block|}

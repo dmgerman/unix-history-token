@@ -1405,7 +1405,7 @@ name|PS_FST_UFLAG_CTTY
 condition|)
 name|printf
 argument_list|(
-literal|"ctty "
+literal|" ctty "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1419,7 +1419,7 @@ name|PS_FST_UFLAG_CDIR
 condition|)
 name|printf
 argument_list|(
-literal|" cwd "
+literal|"  cwd "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1433,7 +1433,7 @@ name|PS_FST_UFLAG_JAIL
 condition|)
 name|printf
 argument_list|(
-literal|"jail "
+literal|" jail "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1447,7 +1447,7 @@ name|PS_FST_UFLAG_RDIR
 condition|)
 name|printf
 argument_list|(
-literal|"root "
+literal|" root "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1461,7 +1461,7 @@ name|PS_FST_UFLAG_TEXT
 condition|)
 name|printf
 argument_list|(
-literal|"text "
+literal|" text "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1481,7 +1481,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%4d "
+literal|"%5d "
 argument_list|,
 name|fst
 operator|->

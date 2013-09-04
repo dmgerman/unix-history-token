@@ -570,8 +570,12 @@ return|;
 default|default:
 return|return
 operator|(
-name|dst__openssl_toresult2
+name|dst__openssl_toresult3
 argument_list|(
+name|dctx
+operator|->
+name|category
+argument_list|,
 literal|"EVP_VerifyFinal"
 argument_list|,
 name|DST_R_VERIFYFAILURE
@@ -1935,6 +1939,9 @@ name|opensslgost_sign
 block|,
 name|opensslgost_verify
 block|,
+name|NULL
+block|,
+comment|/*%< verify2 */
 name|NULL
 block|,
 comment|/*%< computesecret */

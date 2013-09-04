@@ -12,7 +12,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<xen/interface/grant_table.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -24,19 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/interface/grant_table.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<xen/features.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/interface/grant_table.h>
 end_include
 
 begin_define

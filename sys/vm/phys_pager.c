@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -577,6 +583,15 @@ name|i
 operator|==
 name|reqpage
 condition|)
+block|{
+name|vm_page_lock
+argument_list|(
+name|m
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|vm_page_flash
 argument_list|(
 name|m
@@ -585,8 +600,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 else|else
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 index|[

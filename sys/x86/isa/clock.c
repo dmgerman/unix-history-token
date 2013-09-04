@@ -1868,7 +1868,7 @@ expr_stmt|;
 else|else
 name|set_i8254_freq
 argument_list|(
-literal|0
+name|MODE_STOP
 argument_list|,
 literal|0
 argument_list|)
@@ -1957,7 +1957,7 @@ endif|#
 directive|endif
 name|set_i8254_freq
 argument_list|(
-literal|0
+name|MODE_STOP
 argument_list|,
 literal|0
 argument_list|)
@@ -2070,7 +2070,7 @@ else|else
 block|{
 name|set_i8254_freq
 argument_list|(
-literal|0
+name|MODE_STOP
 argument_list|,
 literal|0
 argument_list|)
@@ -2990,7 +2990,7 @@ argument_list|)
 expr_stmt|;
 name|set_i8254_freq
 argument_list|(
-literal|0
+name|MODE_STOP
 argument_list|,
 literal|0
 argument_list|)

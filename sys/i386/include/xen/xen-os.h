@@ -1,25 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  * os.h  *   * random collection of macros and definition  */
+comment|/*****************************************************************************  * i386/xen/xen-os.h  *   * Random collection of macros and definition  *  * Copyright (c) 2003, 2004 Keir Fraser (on behalf of the Xen team)  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to  * deal in the Software without restriction, including without limitation the  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or  * sell copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *   * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER   * DEALINGS IN THE SOFTWARE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_XEN_OS_H_
+name|_MACHINE_XEN_XEN_OS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_XEN_OS_H_
+name|_MACHINE_XEN_XEN_OS_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -37,58 +31,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOCORE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__ASSEMBLY__
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__XEN_INTERFACE_VERSION__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__XEN_INTERFACE_VERSION__
-value|0x00030208
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|GRANT_REF_INVALID
-value|0xffffffff
-end_define
-
-begin_include
-include|#
-directive|include
-file|<xen/interface/xen.h>
-end_include
 
 begin_comment
 comment|/* Everything below this point is not included by assembler (.S) files. */
@@ -113,54 +55,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|likely
+begin_comment
+comment|/* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|rep_nop
 parameter_list|(
-name|x
+name|void
 parameter_list|)
-value|__builtin_expect((x),1)
-end_define
+block|{
+asm|__asm__
+specifier|__volatile__
+asm|( "rep;nop" : : : "memory" );
+block|}
+end_function
 
 begin_define
 define|#
 directive|define
-name|unlikely
-parameter_list|(
-name|x
-parameter_list|)
-value|__builtin_expect((x),0)
+name|cpu_relax
+parameter_list|()
+value|rep_nop()
 end_define
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|vtophys
+name|XENHVM
 end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
+begin_function_decl
+name|void
+name|xc_printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -168,12 +114,6 @@ name|int
 name|gdtset
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
 
 begin_include
 include|#
@@ -206,7 +146,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|likely
+name|__predict_true
 argument_list|(
 name|gdtset
 argument_list|)
@@ -244,24 +184,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|(void *)0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|PANIC_IF
 end_ifndef
 
@@ -272,7 +194,7 @@ name|PANIC_IF
 parameter_list|(
 name|exp
 parameter_list|)
-value|if (unlikely(exp)) {printk("panic - %s: %s:%d\n",#exp, __FILE__, __LINE__); panic("%s: %s:%d", #exp, __FILE__, __LINE__);}
+value|if (__predict_false(exp)) {printf("panic - %s: %s:%d\n",#exp, __FILE__, __LINE__); panic("%s: %s:%d", #exp, __FILE__, __LINE__);}
 end_define
 
 begin_endif
@@ -280,88 +202,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|shared_info_t
-modifier|*
-name|HYPERVISOR_shared_info
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Somewhere in the middle of the GCC 2.96 development cycle, we implemented    a mechanism by which the user can annotate likely branch directions and    expect the blocks to be reordered appropriately.  Define __builtin_expect    to nothing for earlier compilers.  */
-end_comment
-
-begin_comment
-comment|/* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|rep_nop
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm__
-specifier|__volatile__
-asm|( "rep;nop" : : : "memory" );
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|cpu_relax
-parameter_list|()
-value|rep_nop()
-end_define
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|<
-literal|96
-end_if
-
-begin_define
-define|#
-directive|define
-name|__builtin_expect
-parameter_list|(
-name|x
-parameter_list|,
-name|expected_value
-parameter_list|)
-value|(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|per_cpu
-parameter_list|(
-name|var
-parameter_list|,
-name|cpu
-parameter_list|)
-value|(pcpu_find((cpu))->pc_ ## var)
-end_define
-
-begin_comment
-comment|/* crude memory allocator for memory allocation early in   *  boot  */
+comment|/*  * Crude memory allocator for memory allocation early in boot.  */
 end_comment
 
 begin_function_decl
@@ -391,45 +233,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_function_decl
-name|void
-name|printk
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* some function prototypes */
-end_comment
-
-begin_function_decl
-name|void
-name|trap_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XENHVM
-end_ifndef
-
 begin_comment
 comment|/*  * STI/CLI equivalents. These basically set and clear the virtual  * event_enable flag in the shared_info structure. Note that when  * the enable bit is set, there may be pending events to be handled.  * We may therefore call into do_hypervisor_callback() directly.  */
 end_comment
@@ -451,7 +254,7 @@ parameter_list|()
 define|\
 value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         barrier();                                                      \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         _vcpu->evtchn_upcall_mask = 0;                                  \         barrier();
 comment|/* unmask then check (avoid races) */
-value|\         if ( unlikely(_vcpu->evtchn_upcall_pending) )                   \                 force_evtchn_callback();                                \ } while (0)
+value|\         if (__predict_false(_vcpu->evtchn_upcall_pending))              \                 force_evtchn_callback();                                \ } while (0)
 end_define
 
 begin_define
@@ -464,7 +267,7 @@ parameter_list|)
 define|\
 value|do {                                                                    \         vcpu_info_t *_vcpu;                                             \         barrier();                                                      \         _vcpu =&HYPERVISOR_shared_info->vcpu_info[smp_processor_id()]; \         if ((_vcpu->evtchn_upcall_mask = (x)) == 0) {                   \                 barrier();
 comment|/* unmask then check (avoid races) */
-value|\                 if ( unlikely(_vcpu->evtchn_upcall_pending) )           \                         force_evtchn_callback();                        \         } 								\ } while (0)
+value|\                 if (__predict_false(_vcpu->evtchn_upcall_pending))      \                         force_evtchn_callback();                        \         } 								\ } while (0)
 end_define
 
 begin_comment
@@ -607,166 +410,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|xen_mb
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|xen_mb
-parameter_list|()
-value|mb()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|xen_rmb
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|xen_rmb
-parameter_list|()
-value|rmb()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|xen_wmb
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|xen_wmb
-parameter_list|()
-value|wmb()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|smp_mb
-parameter_list|()
-value|mb()
-end_define
-
-begin_define
-define|#
-directive|define
-name|smp_rmb
-parameter_list|()
-value|rmb()
-end_define
-
-begin_define
-define|#
-directive|define
-name|smp_wmb
-parameter_list|()
-value|wmb()
-end_define
-
-begin_define
-define|#
-directive|define
-name|smp_read_barrier_depends
-parameter_list|()
-value|read_barrier_depends()
-end_define
-
-begin_define
-define|#
-directive|define
-name|set_mb
-parameter_list|(
-name|var
-parameter_list|,
-name|value
-parameter_list|)
-value|do { xchg(&var, value); } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|smp_mb
-parameter_list|()
-value|barrier()
-end_define
-
-begin_define
-define|#
-directive|define
-name|smp_rmb
-parameter_list|()
-value|barrier()
-end_define
-
-begin_define
-define|#
-directive|define
-name|smp_wmb
-parameter_list|()
-value|barrier()
-end_define
-
-begin_define
-define|#
-directive|define
-name|smp_read_barrier_depends
-parameter_list|()
-value|do { } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|set_mb
-parameter_list|(
-name|var
-parameter_list|,
-name|value
-parameter_list|)
-value|do { var = value; barrier(); } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* !XENHVM */
+end_comment
 
 begin_comment
 comment|/* This is a barrier for the compiler only, NOT the processor! */
@@ -1114,87 +760,6 @@ define|\
 value|__asm__ __volatile__("rdtsc" : "=A" (val))
 end_define
 
-begin_comment
-comment|/*  * Kernel pointers have redundant information, so we can use a  * scheme where we can return either an error code or a dentry  * pointer with the same return value.  *  * This should be a per-architecture thing, to allow different  * error and pointer decisions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IS_ERR_VALUE
-parameter_list|(
-name|x
-parameter_list|)
-value|unlikely((x)> (unsigned long)-1000L)
-end_define
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-modifier|*
-name|ERR_PTR
-parameter_list|(
-name|long
-name|error
-parameter_list|)
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-name|error
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|long
-name|PTR_ERR
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-return|return
-operator|(
-name|long
-operator|)
-name|ptr
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|long
-name|IS_ERR
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-return|return
-name|IS_ERR_VALUE
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|ptr
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
@@ -1210,7 +775,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _OS_H_ */
+comment|/* _MACHINE_XEN_XEN_OS_H_ */
 end_comment
 
 end_unit

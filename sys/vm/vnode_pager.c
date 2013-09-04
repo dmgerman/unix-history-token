@@ -4927,19 +4927,9 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|KASSERT
+name|vm_page_assert_sbusied
 argument_list|(
 name|m
-operator|->
-name|busy
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"vnode_pager_generic_putpages: page %p is not busy"
-operator|,
-name|m
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT

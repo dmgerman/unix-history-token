@@ -332,10 +332,8 @@ name|CPU_ID_CPU_MASK
 expr_stmt|;
 name|smp_boot
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -386,10 +384,8 @@ operator|*
 name|src
 expr_stmt|;
 block|}
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|smp_boot
 argument_list|,
 name|PAGE_SIZE

@@ -844,12 +844,45 @@ comment|/* #undef HAVE_NET_IF6_H */
 end_comment
 
 begin_comment
+comment|/* Define if your OpenSSL version supports ECDSA. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_OPENSSL_ECDSA
+value|1
+end_define
+
+begin_comment
 comment|/* Define if your OpenSSL version supports GOST. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_OPENSSL_GOST */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `readline' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_READLINE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<regex.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REGEX_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setegid' function. */
@@ -1090,6 +1123,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `usleep' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USLEEP
+value|1
+end_define
+
+begin_comment
 comment|/* return type of gai_strerror */
 end_comment
 
@@ -1158,6 +1202,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NEED_SECURE_DIRECTORY */
+end_comment
+
+begin_comment
+comment|/* Use the new XML schema for statistics */
+end_comment
+
+begin_comment
+comment|/* #undef NEWSTATS */
 end_comment
 
 begin_comment

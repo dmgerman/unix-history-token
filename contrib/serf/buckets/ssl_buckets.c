@@ -1861,6 +1861,30 @@ name|subpool
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Return a specific error if the server certificate is not accepted by        OpenSSL and the application has not set callbacks to override this. */
+if|if
+condition|(
+operator|!
+name|cert_valid
+operator|&&
+operator|!
+name|ctx
+operator|->
+name|server_cert_chain_callback
+operator|&&
+operator|!
+name|ctx
+operator|->
+name|server_cert_callback
+condition|)
+block|{
+name|ctx
+operator|->
+name|pending_err
+operator|=
+name|SERF_ERROR_SSL_CERT_FAILED
+expr_stmt|;
+block|}
 return|return
 name|cert_valid
 return|;
@@ -2114,6 +2138,7 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Return the underlying network error that caused OpenSSL                    to fail. ### This can be a crypt error! */
 name|status
 operator|=
 name|ctx
@@ -2125,6 +2150,9 @@ expr_stmt|;
 break|break;
 case|case
 name|SSL_ERROR_WANT_READ
+case|:
+case|case
+name|SSL_ERROR_WANT_WRITE
 case|:
 operator|*
 name|len
@@ -2828,16 +2856,6 @@ argument_list|,
 name|ssl_len
 argument_list|)
 expr_stmt|;
-comment|/* We're done. */
-name|serf_bucket_mem_free
-argument_list|(
-name|ctx
-operator|->
-name|allocator
-argument_list|,
-name|vecs_data
-argument_list|)
-expr_stmt|;
 comment|/* If we failed to write... */
 if|if
 condition|(
@@ -2849,8 +2867,23 @@ block|{
 name|int
 name|ssl_err
 decl_stmt|;
-comment|/* Ah, bugger. We need to put that data back. */
-name|serf_bucket_aggregate_prepend_iovec
+comment|/* Ah, bugger. We need to put that data back.                        Note: use the copy here, we do not own the original iovec                        data buffer so it will be freed on next read. */
+name|serf_bucket_t
+modifier|*
+name|vecs_copy
+init|=
+name|serf_bucket_simple_own_create
+argument_list|(
+name|vecs_data
+argument_list|,
+name|vecs_data_len
+argument_list|,
+name|ctx
+operator|->
+name|allocator
+argument_list|)
+decl_stmt|;
+name|serf_bucket_aggregate_prepend
 argument_list|(
 name|ctx
 operator|->
@@ -2858,9 +2891,7 @@ name|encrypt
 operator|.
 name|stream
 argument_list|,
-name|vecs
-argument_list|,
-name|vecs_read
+name|vecs_copy
 argument_list|)
 expr_stmt|;
 name|ssl_err
@@ -2892,6 +2923,7 @@ operator|==
 name|SSL_ERROR_SYSCALL
 condition|)
 block|{
+comment|/* Return the underlying network error that caused OpenSSL                            to fail. ### This can be a decrypt error! */
 name|status
 operator|=
 name|ctx
@@ -2952,6 +2984,19 @@ name|status
 argument_list|,
 operator|*
 name|len
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* We're done with this data. */
+name|serf_bucket_mem_free
+argument_list|(
+name|ctx
+operator|->
+name|allocator
+argument_list|,
+name|vecs_data
 argument_list|)
 expr_stmt|;
 block|}

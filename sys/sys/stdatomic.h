@@ -1418,7 +1418,7 @@ name|success
 parameter_list|,
 name|failure
 parameter_list|)
-value|__extension__ ({			\ 	__typeof__(expected) __ep = (expected);				\ 	__typeof__(*__ep) __e = *__ep;					\ 	(void)(success); (void)(failure);				\ 	(*__ep = __sync_val_compare_and_swap(&(object)->__val,		\ 	    __e, desired)) == __e;					\ })
+value|__extension__ ({			\ 	__typeof__(expected) __ep = (expected);				\ 	__typeof__(*__ep) __e = *__ep;					\ 	(void)(success); (void)(failure);				\ 	(_Bool)((*__ep = __sync_val_compare_and_swap(&(object)->__val,	\ 	    __e, desired)) == __e);					\ })
 end_define
 
 begin_define
@@ -1794,28 +1794,16 @@ name|memory_order
 name|__order
 parameter_list|)
 block|{
-name|_Bool
-name|__expected
-decl_stmt|;
-name|__expected
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
-name|atomic_compare_exchange_strong_explicit
+name|atomic_exchange_explicit
 argument_list|(
 operator|&
 name|__object
 operator|->
 name|__flag
 argument_list|,
-operator|&
-name|__expected
-argument_list|,
 literal|1
-argument_list|,
-name|__order
 argument_list|,
 name|__order
 argument_list|)

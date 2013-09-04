@@ -1187,6 +1187,25 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* Recalculate timeout clock frequency based on the new sd clock. */
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK
+condition|)
+name|slot
+operator|->
+name|timeout_clk
+operator|=
+name|slot
+operator|->
+name|clock
+operator|/
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|slot
@@ -1624,7 +1643,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Handle unalligned and alligned buffer cases. */
+comment|/* Handle unaligned and aligned buffer cases. */
 if|if
 condition|(
 operator|(
@@ -1834,7 +1853,7 @@ name|offset
 operator|+=
 name|left
 expr_stmt|;
-comment|/* Handle unalligned and alligned buffer cases. */
+comment|/* Handle unaligned and aligned buffer cases. */
 if|if
 condition|(
 operator|(
@@ -2261,6 +2280,8 @@ parameter_list|)
 block|{
 name|uint32_t
 name|caps
+decl_stmt|,
+name|freq
 decl_stmt|;
 name|int
 name|err
@@ -2529,9 +2550,7 @@ name|version
 operator|>=
 name|SDHCI_SPEC_300
 condition|)
-name|slot
-operator|->
-name|max_clk
+name|freq
 operator|=
 operator|(
 name|caps
@@ -2542,9 +2561,7 @@ operator|>>
 name|SDHCI_CLOCK_BASE_SHIFT
 expr_stmt|;
 else|else
-name|slot
-operator|->
-name|max_clk
+name|freq
 operator|=
 operator|(
 name|caps
@@ -2554,6 +2571,21 @@ operator|)
 operator|>>
 name|SDHCI_CLOCK_BASE_SHIFT
 expr_stmt|;
+if|if
+condition|(
+name|freq
+operator|!=
+literal|0
+condition|)
+name|slot
+operator|->
+name|max_clk
+operator|=
+name|freq
+operator|*
+literal|1000000
+expr_stmt|;
+comment|/* 	 * If the frequency wasn't in the capabilities and the hardware driver 	 * hasn't already set max_clk we're probably not going to work right 	 * with an assumption, so complain about it. 	 */
 if|if
 condition|(
 name|slot
@@ -2568,6 +2600,8 @@ operator|->
 name|max_clk
 operator|=
 name|SDHCI_DEFAULT_MAX_FREQ
+operator|*
+literal|1000000
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -2580,12 +2614,6 @@ name|SDHCI_DEFAULT_MAX_FREQ
 argument_list|)
 expr_stmt|;
 block|}
-name|slot
-operator|->
-name|max_clk
-operator|*=
-literal|1000000
-expr_stmt|;
 comment|/* Calculate timeout clock frequency. */
 if|if
 condition|(
@@ -2634,6 +2662,7 @@ operator|*=
 literal|1000
 expr_stmt|;
 block|}
+comment|/* 	 * If the frequency wasn't in the capabilities and the hardware driver 	 * hasn't already set timeout_clk we'll probably work okay using the 	 * max timeout, but still mention it. 	 */
 if|if
 condition|(
 name|slot
@@ -2648,8 +2677,14 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Hardware doesn't specify timeout clock "
-literal|"frequency.\n"
+literal|"frequency, setting BROKEN_TIMEOUT quirk.\n"
 argument_list|)
+expr_stmt|;
+name|slot
+operator|->
+name|quirks
+operator||=
+name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
 expr_stmt|;
 block|}
 name|slot
@@ -4033,6 +4068,29 @@ operator|*
 literal|4
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_DONT_SHIFT_RESPONSE
+condition|)
+name|slot
+operator|->
+name|curcmd
+operator|->
+name|resp
+index|[
+literal|3
+operator|-
+name|i
+index|]
+operator|=
+name|val
+expr_stmt|;
+else|else
+block|{
 name|slot
 operator|->
 name|curcmd
@@ -4049,7 +4107,7 @@ name|val
 operator|<<
 literal|8
 operator|)
-operator|+
+operator||
 name|extra
 expr_stmt|;
 name|extra
@@ -4058,6 +4116,7 @@ name|val
 operator|>>
 literal|24
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -4152,6 +4211,22 @@ literal|0
 expr_stmt|;
 comment|/* Calculate and set data timeout.*/
 comment|/* XXX: We should have this from mmc layer, now assume 1 sec. */
+if|if
+condition|(
+name|slot
+operator|->
+name|quirks
+operator|&
+name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
+condition|)
+block|{
+name|div
+operator|=
+literal|0xE
+expr_stmt|;
+block|}
+else|else
+block|{
 name|target_timeout
 operator|=
 literal|1000000
@@ -4179,66 +4254,41 @@ condition|(
 name|current_timeout
 operator|<
 name|target_timeout
+operator|&&
+name|div
+operator|<
+literal|0xE
 condition|)
 block|{
-name|div
 operator|++
+name|div
 expr_stmt|;
 name|current_timeout
 operator|<<=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|div
-operator|>=
-literal|0xF
-condition|)
-break|break;
 block|}
 comment|/* Compensate for an off-by-one error in the CaFe chip.*/
 if|if
 condition|(
+name|div
+operator|<
+literal|0xE
+operator|&&
+operator|(
 name|slot
 operator|->
 name|quirks
 operator|&
 name|SDHCI_QUIRK_INCR_TIMEOUT_CONTROL
-condition|)
-name|div
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|div
-operator|>=
-literal|0xF
+operator|)
 condition|)
 block|{
-name|slot_printf
-argument_list|(
-name|slot
-argument_list|,
-literal|"Timeout too large!\n"
-argument_list|)
-expr_stmt|;
+operator|++
 name|div
-operator|=
-literal|0xE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|slot
-operator|->
-name|quirks
-operator|&
-name|SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
-condition|)
-name|div
-operator|=
-literal|0xE
-expr_stmt|;
+block|}
 name|WR1
 argument_list|(
 name|slot
@@ -4526,7 +4576,7 @@ name|data_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Interrupt aggregation: Restore command interrupt. 	 * Auxillary restore point for the case when data interrupt 	 * happened first. */
+comment|/* Interrupt aggregation: Restore command interrupt. 	 * Auxiliary restore point for the case when data interrupt 	 * happened first. */
 if|if
 condition|(
 operator|!

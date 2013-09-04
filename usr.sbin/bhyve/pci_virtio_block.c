@@ -526,7 +526,7 @@ operator|>=
 literal|3
 operator|&&
 name|n
-operator|<
+operator|<=
 name|VTBLK_MAXSEGS
 operator|+
 literal|2

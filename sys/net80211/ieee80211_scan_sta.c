@@ -2315,13 +2315,6 @@ name|int
 name|nfreq
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof(a[0]))
 name|struct
 name|ieee80211com
 modifier|*
@@ -2349,7 +2342,7 @@ name|KASSERT
 argument_list|(
 name|mode
 operator|<
-name|N
+name|nitems
 argument_list|(
 name|chanflags
 argument_list|)
@@ -2469,9 +2462,6 @@ operator|=
 name|c
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 

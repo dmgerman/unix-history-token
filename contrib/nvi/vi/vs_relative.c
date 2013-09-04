@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vs_relative.c	10.11 (Berkeley) 5/13/96"
+literal|"$Id: vs_relative.c,v 10.19 2011/12/01 15:22:59 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,18 +97,14 @@ begin_function
 name|int
 name|vs_column
 parameter_list|(
-name|sp
-parameter_list|,
-name|colp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|size_t
 modifier|*
 name|colp
-decl_stmt|;
+parameter_list|)
 block|{
 name|VI_PRIVATE
 modifier|*
@@ -186,23 +182,17 @@ begin_function
 name|size_t
 name|vs_screens
 parameter_list|(
-name|sp
-parameter_list|,
-name|lno
-parameter_list|,
-name|cnop
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|recno_t
 name|lno
-decl_stmt|;
+parameter_list|,
 name|size_t
 modifier|*
 name|cnop
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|cols
@@ -351,44 +341,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_columns --  *	Return the screen columns necessary to display the line, or,  *	if specified, the physical character column within the line.  *  * PUBLIC: size_t vs_columns __P((SCR *, char *, recno_t, size_t *, size_t *));  */
+comment|/*  * vs_columns --  *	Return the screen columns necessary to display the line, or,  *	if specified, the physical character column within the line.  *  * PUBLIC: size_t vs_columns __P((SCR *, CHAR_T *, recno_t, size_t *, size_t *));  */
 end_comment
 
 begin_function
 name|size_t
 name|vs_columns
 parameter_list|(
-name|sp
-parameter_list|,
-name|lp
-parameter_list|,
-name|lno
-parameter_list|,
-name|cnop
-parameter_list|,
-name|diffp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
-name|char
+parameter_list|,
+name|CHAR_T
 modifier|*
 name|lp
-decl_stmt|;
+parameter_list|,
 name|recno_t
 name|lno
-decl_stmt|;
+parameter_list|,
 name|size_t
 modifier|*
 name|cnop
-decl_stmt|,
-decl|*
+parameter_list|,
+name|size_t
+modifier|*
 name|diffp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|size_t
 name|chlen
@@ -398,6 +376,8 @@ decl_stmt|,
 name|curoff
 decl_stmt|,
 name|last
+init|=
+literal|0
 decl_stmt|,
 name|len
 decl_stmt|,
@@ -410,7 +390,7 @@ name|leftright
 decl_stmt|,
 name|listset
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
 decl_stmt|;
@@ -521,7 +501,7 @@ name|lp
 expr_stmt|;
 name|curoff
 operator|=
-literal|0
+name|scno
 expr_stmt|;
 comment|/* Macro to return the display length of any signal character. */
 define|#
@@ -530,7 +510,7 @@ name|CHLEN
 parameter_list|(
 name|val
 parameter_list|)
-value|(ch = *(u_char *)p++) == '\t'&&			\ 	    !listset ? TAB_OFF(val) : KEY_LEN(sp, ch);
+value|(ch = *(UCHAR_T *)p++) == '\t'&&			\ 	    !listset ? TAB_OFF(val) : KEY_COL(sp, ch);
 comment|/* 	 * If folding screens (the historic vi screen format), past the end 	 * of the current screen, and the character was a tab, reset the 	 * current screen column to 0, and the total screen columns to the 	 * last column of the screen.  Otherwise, display the rest of the 	 * character in the next screen. 	 */
 define|#
 directive|define
@@ -642,7 +622,7 @@ name|scno
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * vs_rcm --  *	Return the physical column from the line that will display a  *	character closest to the currently most attractive character  *	position (which is stored as a screen column).  *  * PUBLIC: size_t vs_rcm __P((SCR *, recno_t, int));  */
@@ -652,22 +632,16 @@ begin_function
 name|size_t
 name|vs_rcm
 parameter_list|(
-name|sp
-parameter_list|,
-name|lno
-parameter_list|,
-name|islast
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|recno_t
 name|lno
-decl_stmt|;
+parameter_list|,
 name|int
 name|islast
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -750,22 +724,16 @@ begin_function
 name|size_t
 name|vs_colpos
 parameter_list|(
-name|sp
-parameter_list|,
-name|lno
-parameter_list|,
-name|cno
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|recno_t
 name|lno
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|cno
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|chlen
@@ -782,12 +750,14 @@ name|scno
 decl_stmt|;
 name|int
 name|ch
+init|=
+literal|0
 decl_stmt|,
 name|leftright
 decl_stmt|,
 name|listset
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|lp
 decl_stmt|,

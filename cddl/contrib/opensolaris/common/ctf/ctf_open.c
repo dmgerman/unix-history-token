@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2012, Joyent, Inc.  All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -4179,11 +4176,12 @@ operator|->
 name|ctf_parent
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note, to work properly with reference counting on the dynamic 	 * section, we must delete the list in reverse. 	 */
 for|for
 control|(
 name|dtd
 operator|=
-name|ctf_list_next
+name|ctf_list_prev
 argument_list|(
 operator|&
 name|fp
@@ -4202,7 +4200,7 @@ control|)
 block|{
 name|ntd
 operator|=
-name|ctf_list_next
+name|ctf_list_prev
 argument_list|(
 name|dtd
 argument_list|)

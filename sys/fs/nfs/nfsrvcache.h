@@ -37,8 +37,12 @@ begin_define
 define|#
 directive|define
 name|NFSRVCACHE_HASHSIZE
-value|20
+value|500
 end_define
+
+begin_comment
+comment|/* Cache table entry. */
+end_comment
 
 begin_struct
 struct|struct
@@ -342,6 +346,32 @@ name|nfsrvcache
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* The fine-grained locked cache hash table for TCP. */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsrchash_bucket
+block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+name|char
+name|lock_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|struct
+name|nfsrvhashhead
+name|tbl
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

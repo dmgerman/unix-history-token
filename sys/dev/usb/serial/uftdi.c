@@ -1288,6 +1288,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+literal|232EX
+argument_list|,
+name|UFTDI_TYPE_AUTO
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 literal|232H
 argument_list|,
 name|UFTDI_TYPE_AUTO

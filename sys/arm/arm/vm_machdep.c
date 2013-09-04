@@ -180,7 +180,7 @@ file|<machine/md_var.h>
 end_include
 
 begin_comment
-comment|/*  * struct switchframe must be a multiple of 8 for correct stack alignment  */
+comment|/*  * struct switchframe and trapframe must both be a multiple of 8  * for correct stack alignment.  */
 end_comment
 
 begin_expr_stmt
@@ -206,7 +206,7 @@ expr|struct
 name|trapframe
 argument_list|)
 operator|==
-literal|76
+literal|80
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -877,10 +877,8 @@ argument_list|)
 expr_stmt|;
 name|sf_base
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|nsfbufs
 operator|*
 name|PAGE_SIZE
@@ -3165,7 +3163,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|bytes
 argument_list|,
@@ -3361,7 +3359,7 @@ name|UMA_SLAB_KMEM
 condition|)
 name|kmem_free
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 operator|(
 name|vm_offset_t

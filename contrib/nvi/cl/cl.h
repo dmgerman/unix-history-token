@@ -1,20 +1,73 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)cl.h	10.19 (Berkeley) 9/24/96  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: cl.h,v 10.34 2011/08/15 20:07:32 zy Exp $  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_WIDECHAR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_XOPEN_SOURCE_EXTENDED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NCURSES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ncurses.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|_cl_private
 block|{
-name|CHAR_T
+name|char
 name|ibuf
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* Input keys. */
+name|size_t
+name|skip
+decl_stmt|;
+comment|/* Remaining keys. */
+name|CONVWIN
+name|cw
+decl_stmt|;
+comment|/* Conversion buffer. */
 name|int
 name|eof_count
 decl_stmt|;
@@ -65,6 +118,16 @@ modifier|*
 name|rmcup
 decl_stmt|;
 comment|/* Terminal start/stop strings. */
+name|char
+modifier|*
+name|oname
+decl_stmt|;
+comment|/* Original screen window name. */
+name|SCR
+modifier|*
+name|focus
+decl_stmt|;
+comment|/* Screen that has the "focus". */
 name|int
 name|killersig
 decl_stmt|;
@@ -128,48 +191,53 @@ value|0x0001
 comment|/* Currently running ex. */
 define|#
 directive|define
-name|CL_RENAME
+name|CL_LAYOUT
 value|0x0002
+comment|/* Screen layout changed. */
+define|#
+directive|define
+name|CL_RENAME
+value|0x0004
 comment|/* X11 xterm icon/window renamed. */
 define|#
 directive|define
 name|CL_RENAME_OK
-value|0x0004
+value|0x0008
 comment|/* User wants the windows renamed. */
 define|#
 directive|define
 name|CL_SCR_EX_INIT
-value|0x0008
+value|0x0010
 comment|/* Ex screen initialized. */
 define|#
 directive|define
 name|CL_SCR_VI_INIT
-value|0x0010
+value|0x0020
 comment|/* Vi screen initialized. */
 define|#
 directive|define
 name|CL_SIGHUP
-value|0x0020
+value|0x0040
 comment|/* SIGHUP arrived. */
 define|#
 directive|define
 name|CL_SIGINT
-value|0x0040
+value|0x0080
 comment|/* SIGINT arrived. */
 define|#
 directive|define
 name|CL_SIGTERM
-value|0x0080
+value|0x0100
 comment|/* SIGTERM arrived. */
 define|#
 directive|define
 name|CL_SIGWINCH
-value|0x0100
+value|0x0200
 comment|/* SIGWINCH arrived. */
 define|#
 directive|define
 name|CL_STDIN_TTY
-value|0x0200
+value|0x0400
 comment|/* Talking to a terminal. */
 name|u_int32_t
 name|flags
@@ -199,6 +267,16 @@ parameter_list|)
 value|((CL_PRIVATE *)gp->cl_private)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLSP
+parameter_list|(
+name|sp
+parameter_list|)
+value|((WINDOW *)((sp)->cl_private))
+end_define
+
 begin_comment
 comment|/* Return possibilities from the keyboard read routine. */
 end_comment
@@ -224,8 +302,20 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* The screen line relative to a specific window. */
+comment|/* The screen position relative to a specific window. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RCNO
+parameter_list|(
+name|sp
+parameter_list|,
+name|cno
+parameter_list|)
+value|(cno)
+end_define
 
 begin_define
 define|#
@@ -236,18 +326,7 @@ name|sp
 parameter_list|,
 name|lno
 parameter_list|)
-value|(sp)->woff + (lno)
-end_define
-
-begin_comment
-comment|/* X11 xterm escape sequence to rename the icon/window. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XTERM_RENAME
-value|"\033]0;%s\007"
+value|(lno)
 end_define
 
 begin_comment
@@ -293,7 +372,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"cl_extern.h"
+file|"extern.h"
 end_include
 
 end_unit

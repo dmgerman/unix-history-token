@@ -4597,6 +4597,13 @@ begin_comment
 comment|/**  *	omap_prcm_attach - attach function for the driver  *	@dev: prcm device handle  *  *	Allocates and sets up the driver context, this simply entails creating a  *	bus mappings for the PRCM register set.  *  *	LOCKING:  *	None  *  *	RETURNS:  *	Always returns 0  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|platform_arm_tmr_freq
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -4615,6 +4622,10 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+decl_stmt|;
+name|unsigned
+name|int
+name|freq
 decl_stmt|;
 if|if
 condition|(
@@ -4650,6 +4661,20 @@ expr_stmt|;
 name|ti_cpu_reset
 operator|=
 name|omap4_prcm_reset
+expr_stmt|;
+name|omap4_clk_get_arm_fclk_freq
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|freq
+argument_list|)
+expr_stmt|;
+name|platform_arm_tmr_freq
+operator|=
+name|freq
+operator|/
+literal|2
 expr_stmt|;
 return|return
 operator|(

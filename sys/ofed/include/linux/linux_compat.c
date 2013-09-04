@@ -2857,6 +2857,11 @@ operator|.
 name|fo_chown
 operator|=
 name|invfo_chown
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -3222,10 +3227,8 @@ name|PAGE_SIZE
 expr_stmt|;
 name|off
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -3314,10 +3317,8 @@ operator|/
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)

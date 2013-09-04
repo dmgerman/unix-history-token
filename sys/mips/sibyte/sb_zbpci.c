@@ -508,10 +508,8 @@ comment|/* _BYTE_ORDER ==_BIG_ENDIAN */
 comment|/* 	 * Allocate KVA for accessing PCI config space. 	 */
 name|va
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 operator|*
 name|mp_ncpus

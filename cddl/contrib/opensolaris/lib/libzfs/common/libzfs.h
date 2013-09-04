@@ -1147,6 +1147,9 @@ comment|/* device online */
 name|ZPOOL_STATUS_REMOVED_DEV
 block|,
 comment|/* removed device */
+name|ZPOOL_STATUS_NON_NATIVE_ASHIFT
+block|,
+comment|/* (e.g. 512e dev with ashift of 9) */
 comment|/* 	 * Finally, the following indicates a healthy pool. 	 */
 name|ZPOOL_STATUS_OK
 block|}

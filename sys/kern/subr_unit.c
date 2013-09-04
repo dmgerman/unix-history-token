@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/bitstring.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/bitstring.h>
+file|<sys/_unrhdr.h>
 end_include
 
 begin_ifdef
@@ -474,64 +474,6 @@ directive|define
 name|NBITS
 value|((int)sizeof(((struct unrb *)NULL)->map) * 8)
 end_define
-
-begin_comment
-comment|/* Header element for a unr number space. */
-end_comment
-
-begin_struct
-struct|struct
-name|unrhdr
-block|{
-name|TAILQ_HEAD
-argument_list|(
-argument|unrhd
-argument_list|,
-argument|unr
-argument_list|)
-name|head
-expr_stmt|;
-name|u_int
-name|low
-decl_stmt|;
-comment|/* Lowest item */
-name|u_int
-name|high
-decl_stmt|;
-comment|/* Highest item */
-name|u_int
-name|busy
-decl_stmt|;
-comment|/* Count of allocated items */
-name|u_int
-name|alloc
-decl_stmt|;
-comment|/* Count of memory allocations */
-name|u_int
-name|first
-decl_stmt|;
-comment|/* items in allocated from start */
-name|u_int
-name|last
-decl_stmt|;
-comment|/* items free at end */
-name|struct
-name|mtx
-modifier|*
-name|mtx
-decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument|unrfr
-argument_list|,
-argument|unr
-argument_list|)
-name|ppfree
-expr_stmt|;
-comment|/* Items to be freed after mtx 					   lock dropped */
-block|}
-struct|;
-end_struct
 
 begin_if
 if|#
@@ -1050,16 +992,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Allocate a new unrheader set.  *  * Highest and lowest valid values given as parameters.  */
-end_comment
-
 begin_function
+name|void
+name|init_unrhdr
+parameter_list|(
 name|struct
 name|unrhdr
 modifier|*
-name|new_unrhdr
-parameter_list|(
+name|uh
+parameter_list|,
 name|int
 name|low
 parameter_list|,
@@ -1072,11 +1013,6 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
-name|struct
-name|unrhdr
-modifier|*
-name|uh
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|low
@@ -1094,15 +1030,6 @@ name|low
 operator|,
 name|high
 operator|)
-argument_list|)
-expr_stmt|;
-name|uh
-operator|=
-name|Malloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|uh
 argument_list|)
 expr_stmt|;
 if|if
@@ -1176,6 +1103,56 @@ argument_list|(
 name|uh
 argument_list|,
 name|__LINE__
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Allocate a new unrheader set.  *  * Highest and lowest valid values given as parameters.  */
+end_comment
+
+begin_function
+name|struct
+name|unrhdr
+modifier|*
+name|new_unrhdr
+parameter_list|(
+name|int
+name|low
+parameter_list|,
+name|int
+name|high
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+name|struct
+name|unrhdr
+modifier|*
+name|uh
+decl_stmt|;
+name|uh
+operator|=
+name|Malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|uh
+argument_list|)
+expr_stmt|;
+name|init_unrhdr
+argument_list|(
+name|uh
+argument_list|,
+name|low
+argument_list|,
+name|high
+argument_list|,
+name|mutex
 argument_list|)
 expr_stmt|;
 return|return

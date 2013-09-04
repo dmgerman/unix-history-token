@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compat.c,v 1.91 2013/01/25 02:01:10 sjg Exp $	*/
+comment|/*	$NetBSD: compat.c,v 1.92 2013/07/05 22:14:56 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: compat.c,v 1.91 2013/01/25 02:01:10 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.92 2013/07/05 22:14:56 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compat.c,v 1.91 2013/01/25 02:01:10 sjg Exp $"
+literal|"$NetBSD: compat.c,v 1.92 2013/07/05 22:14:56 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -893,17 +893,41 @@ name|char
 modifier|*
 name|shargv
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
+name|int
+name|shargc
+decl_stmt|;
+name|shargc
+operator|=
+literal|0
+expr_stmt|;
 name|shargv
 index|[
-literal|0
+name|shargc
+operator|++
 index|]
 operator|=
 name|shellPath
 expr_stmt|;
 comment|/* 	 * The following work for any of the builtin shell specs. 	 */
+if|if
+condition|(
+name|errCheck
+operator|&&
+name|shellErrFlag
+condition|)
+block|{
+name|shargv
+index|[
+name|shargc
+operator|++
+index|]
+operator|=
+name|shellErrFlag
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|DEBUG
@@ -913,7 +937,8 @@ argument_list|)
 condition|)
 name|shargv
 index|[
-literal|1
+name|shargc
+operator|++
 index|]
 operator|=
 literal|"-xc"
@@ -921,21 +946,24 @@ expr_stmt|;
 else|else
 name|shargv
 index|[
-literal|1
+name|shargc
+operator|++
 index|]
 operator|=
 literal|"-c"
 expr_stmt|;
 name|shargv
 index|[
-literal|2
+name|shargc
+operator|++
 index|]
 operator|=
 name|cmd
 expr_stmt|;
 name|shargv
 index|[
-literal|3
+name|shargc
+operator|++
 index|]
 operator|=
 name|NULL

@@ -534,7 +534,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|VM_MEMATTR_UNCACHEABLE
-comment|/* Inform UMA that this allocator uses kernel_map/object. */
+comment|/* Inform UMA that this allocator uses kernel_arena/object. */
 operator|*
 name|pflag
 operator|=
@@ -548,7 +548,7 @@ operator|*
 operator|)
 name|kmem_alloc_attr
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|size
 argument_list|,
@@ -592,7 +592,7 @@ parameter_list|)
 block|{
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t

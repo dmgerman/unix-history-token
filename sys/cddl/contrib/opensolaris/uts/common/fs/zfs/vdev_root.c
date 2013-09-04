@@ -102,7 +102,11 @@ name|max_asize
 parameter_list|,
 name|uint64_t
 modifier|*
-name|ashift
+name|logical_ashift
+parameter_list|,
+name|uint64_t
+modifier|*
+name|physical_ashift
 parameter_list|)
 block|{
 name|int
@@ -232,7 +236,12 @@ operator|=
 literal|0
 expr_stmt|;
 operator|*
-name|ashift
+name|logical_ashift
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|physical_ashift
 operator|=
 literal|0
 expr_stmt|;

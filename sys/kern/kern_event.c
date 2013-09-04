@@ -636,6 +636,11 @@ operator|.
 name|fo_chown
 operator|=
 name|invfo_chown
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2076,19 +2081,41 @@ operator|)
 expr_stmt|;
 name|kn
 operator|->
+name|kn_ptr
+operator|.
+name|p_proc
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|kn
+operator|->
+name|kn_fflags
+operator|&
+name|NOTE_EXIT
+condition|)
+name|kn
+operator|->
 name|kn_data
 operator|=
 name|p
 operator|->
 name|p_xstat
 expr_stmt|;
+if|if
+condition|(
 name|kn
 operator|->
-name|kn_ptr
-operator|.
-name|p_proc
-operator|=
-name|NULL
+name|kn_fflags
+operator|==
+literal|0
+condition|)
+name|kn
+operator|->
+name|kn_flags
+operator||=
+name|EV_DROP
 expr_stmt|;
 return|return
 operator|(
@@ -2242,8 +2269,6 @@ argument_list|(
 name|kn
 argument_list|,
 name|NOTE_FORK
-operator||
-name|pid
 argument_list|)
 condition|)
 name|KNOTE_ACTIVATE
@@ -2361,6 +2386,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+condition|)
+name|kn
+operator|->
+name|kn_fflags
+operator||=
+name|NOTE_TRACKERR
+expr_stmt|;
+if|if
+condition|(
 name|kn
 operator|->
 name|kn_fop
@@ -2370,8 +2405,6 @@ argument_list|(
 name|kn
 argument_list|,
 name|NOTE_FORK
-operator||
-name|pid
 argument_list|)
 condition|)
 name|KNOTE_ACTIVATE
@@ -2380,16 +2413,6 @@ name|kn
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|kn
-operator|->
-name|kn_fflags
-operator||=
-name|NOTE_TRACKERR
 expr_stmt|;
 name|KQ_LOCK
 argument_list|(
@@ -2628,7 +2651,7 @@ operator|&=
 operator|~
 name|KN_DETACHED
 expr_stmt|;
-comment|/* knlist_add usually sets it */
+comment|/* knlist_add clears it */
 name|calloutp
 operator|=
 name|malloc
@@ -2763,7 +2786,7 @@ name|kn_status
 operator||=
 name|KN_DETACHED
 expr_stmt|;
-comment|/* knlist_remove usually clears it */
+comment|/* knlist_remove sets it */
 block|}
 end_function
 
@@ -6737,6 +6760,78 @@ name|kn
 operator|->
 name|kn_flags
 operator|&
+name|EV_DROP
+operator|)
+operator|==
+name|EV_DROP
+condition|)
+block|{
+name|kn
+operator|->
+name|kn_status
+operator|&=
+operator|~
+name|KN_QUEUED
+expr_stmt|;
+name|kn
+operator|->
+name|kn_status
+operator||=
+name|KN_INFLUX
+expr_stmt|;
+name|kq
+operator|->
+name|kq_count
+operator|--
+expr_stmt|;
+name|KQ_UNLOCK
+argument_list|(
+name|kq
+argument_list|)
+expr_stmt|;
+comment|/* 			 * We don't need to lock the list since we've marked 			 * it _INFLUX. 			 */
+if|if
+condition|(
+operator|!
+operator|(
+name|kn
+operator|->
+name|kn_status
+operator|&
+name|KN_DETACHED
+operator|)
+condition|)
+name|kn
+operator|->
+name|kn_fop
+operator|->
+name|f_detach
+argument_list|(
+name|kn
+argument_list|)
+expr_stmt|;
+name|knote_drop
+argument_list|(
+name|kn
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|KQ_LOCK
+argument_list|(
+name|kq
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|kn
+operator|->
+name|kn_flags
+operator|&
 name|EV_ONESHOT
 operator|)
 operator|==
@@ -8864,7 +8959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove all knotes from a specified klist  */
+comment|/*  * remove knote from the specified knlist  */
 end_comment
 
 begin_function
@@ -8900,7 +8995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove knote from a specified klist while in f_event handler.  */
+comment|/*  * remove knote from the specified knlist while in f_event handler.  */
 end_comment
 
 begin_function
@@ -9446,7 +9541,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-comment|/* 	 * if we run across this error, we need to find the offending 	 * driver and have it call knlist_clear. 	 */
+comment|/* 	 * if we run across this error, we need to find the offending 	 * driver and have it call knlist_clear or knlist_delete. 	 */
 if|if
 condition|(
 operator|!

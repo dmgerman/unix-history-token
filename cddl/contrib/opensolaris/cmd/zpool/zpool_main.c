@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2012 by Frederik Wessels. All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 by Prasad Joshi (sTec). All rights reserved.  */
 end_comment
 
 begin_include
@@ -5636,6 +5636,8 @@ decl_stmt|;
 name|uint_t
 name|c
 decl_stmt|,
+name|vsc
+decl_stmt|,
 name|children
 decl_stmt|;
 name|pool_scan_stat_t
@@ -5670,6 +5672,9 @@ name|vname
 decl_stmt|;
 name|uint64_t
 name|notpresent
+decl_stmt|;
+name|uint64_t
+name|ashift
 decl_stmt|;
 name|spare_cbdata_t
 name|cb
@@ -5717,7 +5722,7 @@ operator|&
 name|vs
 argument_list|,
 operator|&
-name|c
+name|vsc
 argument_list|)
 operator|==
 literal|0
@@ -6002,6 +6007,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|VDEV_AUX_ASHIFT_TOO_BIG
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"unsupported minimum blocksize"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|VDEV_AUX_SPARED
 case|:
 name|verify
@@ -6199,6 +6219,56 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|children
+operator|==
+literal|0
+operator|&&
+operator|!
+name|isspare
+operator|&&
+name|VDEV_STAT_VALID
+argument_list|(
+name|vs_physical_ashift
+argument_list|,
+name|vsc
+argument_list|)
+operator|&&
+name|vs
+operator|->
+name|vs_configured_ashift
+operator|<
+name|vs
+operator|->
+name|vs_physical_ashift
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"  block size: %dB configured, %dB native"
+argument_list|)
+argument_list|,
+literal|1
+operator|<<
+name|vs
+operator|->
+name|vs_configured_ashift
+argument_list|,
+literal|1
+operator|<<
+name|vs
+operator|->
+name|vs_physical_ashift
+argument_list|)
+expr_stmt|;
 block|}
 operator|(
 name|void
@@ -9254,6 +9324,7 @@ name|endptr
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|searchname
 operator|=
 name|argv
@@ -9261,6 +9332,11 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|searchguid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|found_config
 operator|=
 name|NULL
@@ -18561,6 +18637,36 @@ literal|"action: Either restore the affected "
 literal|"device(s) and run 'zpool online',\n"
 literal|"\tor ignore the intent log records by running "
 literal|"'zpool clear'.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ZPOOL_STATUS_NON_NATIVE_ASHIFT
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"status: One or more devices are "
+literal|"configured to use a non-native block size.\n"
+literal|"\tExpect reduced performance.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"action: Replace affected devices with "
+literal|"devices that support the\n\tconfigured block size, or "
+literal|"migrate data to a properly configured\n\tpool.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

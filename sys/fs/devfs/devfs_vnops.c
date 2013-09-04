@@ -8811,6 +8811,16 @@ operator|=
 name|vn_chown
 block|,
 operator|.
+name|fo_sendfile
+operator|=
+name|vn_sendfile
+block|,
+operator|.
+name|fo_seek
+operator|=
+name|vn_seek
+block|,
+operator|.
 name|fo_flags
 operator|=
 name|DFLAG_PASSABLE

@@ -58,15 +58,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|resetredir
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fd0_redirected_p
 parameter_list|(

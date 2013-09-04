@@ -577,83 +577,149 @@ begin_comment
 comment|/*  * Brief design of carp(4).  *  * Any carp-capable ifnet may have a list of carp softcs hanging off  * its ifp->if_carp pointer. Each softc represents one unique virtual  * host id, or vhid. The softc has a back pointer to the ifnet. All  * softcs are joined in a global list, which has quite limited use.  *  * Any interface address that takes part in CARP negotiation has a  * pointer to the softc of its vhid, ifa->ifa_carp. That could be either  * AF_INET or AF_INET6 address.  *  * Although, one can get the softc's backpointer to ifnet and traverse  * through its ifp->if_addrhead queue to find all interface addresses  * involved in CARP, we keep a growable array of ifaddr pointers. This  * allows us to avoid grabbing the IF_ADDR_LOCK() in many traversals that  * do calls into the network stack, thus avoiding LORs.  *  * Locking:  *  * Each softc has a lock sc_mtx. It is used to synchronise carp_input_c(),  * callout-driven events and ioctl()s.  *  * To traverse the list of softcs on an ifnet we use CIF_LOCK(), to  * traverse the global list we use the mutex carp_mtx.  *  * Known issues with locking:  *  * - There is no protection for races between two ioctl() requests,  *   neither SIOCSVH, nor SIOCAIFADDR& SIOCAIFADDR_IN6. I think that all  *   interface ioctl()s should be serialized right in net/if.c.  * - Sending ad, we put the pointer to the softc in an mtag, and no reference  *   counting is done on the softc.  * - On module unload we may race (?) with packet processing thread  *   dereferencing our function pointers.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|carp_allow
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Accept incoming CARP packets. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
-name|carp_preempt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|carp_allow
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_carp_allow
+value|VNET(carp_allow)
+end_define
 
 begin_comment
 comment|/* Preempt slower nodes. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
-name|carp_log
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|carp_preempt
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_carp_preempt
+value|VNET(carp_preempt)
+end_define
 
 begin_comment
 comment|/* Log level. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
-name|carp_demotion
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|carp_log
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_carp_log
+value|VNET(carp_log)
+end_define
 
 begin_comment
 comment|/* Global advskew demotion. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
+name|carp_demotion
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_carp_demotion
+value|VNET(carp_demotion)
+end_define
+
+begin_comment
+comment|/* Send error demotion factor. */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|carp_senderr_adj
-init|=
+argument_list|)
+operator|=
 name|CARP_MAXSKEW
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_carp_senderr_adj
+value|VNET(carp_senderr_adj)
+end_define
 
 begin_comment
-comment|/* Send error demotion factor */
+comment|/* Iface down demotion factor. */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|carp_ifdown_adj
-init|=
+argument_list|)
+operator|=
 name|CARP_MAXSKEW
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_comment
-comment|/* Iface down demotion factor */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_carp_ifdown_adj
+value|VNET(carp_ifdown_adj)
+end_define
 
 begin_function_decl
 specifier|static
@@ -684,7 +750,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -695,7 +761,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|carp_allow
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -705,7 +774,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -716,7 +785,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|carp_preempt
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -726,7 +798,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -737,7 +809,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|carp_log
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -747,7 +822,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -773,7 +848,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -784,7 +859,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|carp_senderr_adj
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -794,7 +872,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -805,7 +883,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|carp_ifdown_adj
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -814,24 +895,32 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|counter_u64_t
-name|carpstats
-index|[
-sizeof|sizeof
+begin_expr_stmt
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|carpstats
+argument_list|,
+name|carpstats
 argument_list|)
-operator|/
-sizeof|sizeof
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
 argument_list|(
-name|uint64_t
+name|carpstats
 argument_list|)
-index|]
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|carpstats
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -843,7 +932,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|counter_u64_add(carpstats[offsetof(struct carpstats, name) / \ 	sizeof(uint64_t)], (val))
+value|counter_u64_add(VNET(carpstats)[offsetof(struct carpstats, name) / \ 	sizeof(uint64_t)], (val))
 end_define
 
 begin_define
@@ -856,78 +945,8 @@ parameter_list|)
 value|CARPSTATS_ADD(name, 1)
 end_define
 
-begin_function
-specifier|static
-name|int
-name|carpstats_sysctl
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-block|{
-name|struct
-name|carpstats
-name|s
-decl_stmt|;
-name|COUNTER_ARRAY_COPY
-argument_list|(
-name|carpstats
-argument_list|,
-operator|&
-name|s
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|req
-operator|->
-name|newptr
-condition|)
-name|COUNTER_ARRAY_ZERO
-argument_list|(
-name|carpstats
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-operator|&
-name|s
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -935,17 +954,10 @@ name|OID_AUTO
 argument_list|,
 name|stats
 argument_list|,
-name|CTLTYPE_OPAQUE
-operator||
-name|CTLFLAG_RW
+expr|struct
+name|carpstats
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|carpstats_sysctl
-argument_list|,
-literal|"I"
+name|carpstats
 argument_list|,
 literal|"CARP statistics (struct carpstats, netinet/ip_carp.h)"
 argument_list|)
@@ -1069,7 +1081,7 @@ name|CARP_LOG
 parameter_list|(
 modifier|...
 parameter_list|)
-value|do {				\ 	if (carp_log> 0)				\ 		log(LOG_INFO, "carp: " __VA_ARGS__);	\ } while (0)
+value|do {				\ 	if (V_carp_log> 0)				\ 		log(LOG_INFO, "carp: " __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_define
@@ -1079,7 +1091,7 @@ name|CARP_DEBUG
 parameter_list|(
 modifier|...
 parameter_list|)
-value|do {				\ 	if (carp_log> 1)				\ 		log(LOG_DEBUG, __VA_ARGS__);		\ } while (0)
+value|do {				\ 	if (V_carp_log> 1)				\ 		log(LOG_DEBUG, __VA_ARGS__);		\ } while (0)
 end_define
 
 begin_define
@@ -1129,7 +1141,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|(((sc)->sc_advskew + carp_demotion> CARP_MAXSKEW) ?	\     CARP_MAXSKEW : ((sc)->sc_advskew + carp_demotion))
+value|(((sc)->sc_advskew + V_carp_demotion> CARP_MAXSKEW) ?	\     CARP_MAXSKEW : ((sc)->sc_advskew + V_carp_demotion))
 end_define
 
 begin_function_decl
@@ -2191,7 +2203,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|carp_allow
+name|V_carp_allow
 condition|)
 block|{
 name|m_freem
@@ -2622,7 +2634,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|carp_allow
+name|V_carp_allow
 condition|)
 block|{
 name|m_freem
@@ -3250,7 +3262,7 @@ case|:
 comment|/* 		 * If we're pre-empting masters who advertise slower than us, 		 * and this one claims to be slower, treat him as down. 		 */
 if|if
 condition|(
-name|carp_preempt
+name|V_carp_preempt
 operator|&&
 name|timevalcmp
 argument_list|(
@@ -4186,7 +4198,7 @@ name|CARP_SENDAD_MAX_ERRORS
 condition|)
 name|carp_demote_adj
 argument_list|(
-name|carp_senderr_adj
+name|V_carp_senderr_adj
 argument_list|,
 literal|"send error"
 argument_list|)
@@ -4222,7 +4234,7 @@ block|{
 name|carp_demote_adj
 argument_list|(
 operator|-
-name|carp_senderr_adj
+name|V_carp_senderr_adj
 argument_list|,
 literal|"send ok"
 argument_list|)
@@ -4650,7 +4662,7 @@ name|CARP_SENDAD_MAX_ERRORS
 condition|)
 name|carp_demote_adj
 argument_list|(
-name|carp_senderr_adj
+name|V_carp_senderr_adj
 argument_list|,
 literal|"send6 error"
 argument_list|)
@@ -4686,7 +4698,7 @@ block|{
 name|carp_demote_adj
 argument_list|(
 operator|-
-name|carp_senderr_adj
+name|V_carp_senderr_adj
 argument_list|,
 literal|"send6 ok"
 argument_list|)
@@ -7744,7 +7756,7 @@ condition|)
 name|carp_demote_adj
 argument_list|(
 operator|-
-name|carp_ifdown_adj
+name|V_carp_ifdown_adj
 argument_list|,
 literal|"vhid removed"
 argument_list|)
@@ -9926,7 +9938,7 @@ name|sc_suppress
 condition|)
 name|carp_demote_adj
 argument_list|(
-name|carp_ifdown_adj
+name|V_carp_ifdown_adj
 argument_list|,
 literal|"interface down"
 argument_list|)
@@ -9963,7 +9975,7 @@ condition|)
 name|carp_demote_adj
 argument_list|(
 operator|-
-name|carp_ifdown_adj
+name|V_carp_ifdown_adj
 argument_list|,
 literal|"interface up"
 argument_list|)
@@ -9994,7 +10006,7 @@ block|{
 name|atomic_add_int
 argument_list|(
 operator|&
-name|carp_demotion
+name|V_carp_demotion
 argument_list|,
 name|adj
 argument_list|)
@@ -10005,7 +10017,7 @@ literal|"demoted by %d to %d (%s)\n"
 argument_list|,
 name|adj
 argument_list|,
-name|carp_demotion
+name|V_carp_demotion
 argument_list|,
 name|reason
 argument_list|)
@@ -10036,7 +10048,7 @@ name|error
 decl_stmt|;
 name|new
 operator|=
-name|carp_demotion
+name|V_carp_demotion
 expr_stmt|;
 name|error
 operator|=
@@ -10389,22 +10401,6 @@ operator|&
 name|carp_mtx
 argument_list|)
 expr_stmt|;
-name|COUNTER_ARRAY_FREE
-argument_list|(
-name|carpstats
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|carpstats
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -10435,24 +10431,6 @@ name|LIST_INIT
 argument_list|(
 operator|&
 name|carp_list
-argument_list|)
-expr_stmt|;
-name|COUNTER_ARRAY_ALLOC
-argument_list|(
-name|carpstats
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|carpstats
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|,
-name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|carp_get_vhid_p

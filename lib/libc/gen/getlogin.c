@@ -143,6 +143,7 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|_logname_valid
+name|__hidden
 decl_stmt|;
 end_decl_stmt
 

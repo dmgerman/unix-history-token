@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"errlst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"printf.h"
 end_include
 
@@ -165,7 +171,7 @@ literal|0
 operator|&&
 name|error
 operator|<
-name|sys_nerr
+name|__hidden_sys_nerr
 condition|)
 block|{
 name|p

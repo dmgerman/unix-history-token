@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)exf.h	10.7 (Berkeley) 7/9/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: exf.h,v 10.10 2012/07/06 16:03:37 zy Exp $  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ modifier|*
 name|db
 decl_stmt|;
 comment|/* File db structure. */
-name|char
+name|CHAR_T
 modifier|*
 name|c_lp
 decl_stmt|;
@@ -34,6 +34,10 @@ name|size_t
 name|c_len
 decl_stmt|;
 comment|/* Cached line length. */
+name|size_t
+name|c_blen
+decl_stmt|;
+comment|/* Cached line buffer length. */
 name|recno_t
 name|c_lno
 decl_stmt|;
@@ -72,16 +76,18 @@ name|dir_t
 name|lundo
 decl_stmt|;
 comment|/* Last undo direction. */
-name|LIST_HEAD
+comment|/* Linked list of file MARK's. */
+name|SLIST_HEAD
 argument_list|(
 argument|_markh
 argument_list|,
 argument|_lmark
 argument_list|)
 name|marks
+index|[
+literal|1
+index|]
 expr_stmt|;
-comment|/* Linked list of file MARK's. */
-comment|/* 	 * XXX 	 * Mtime should be a struct timespec, but time_t is more portable. 	 */
 name|dev_t
 name|mdev
 decl_stmt|;
@@ -90,14 +96,11 @@ name|ino_t
 name|minode
 decl_stmt|;
 comment|/* Inode. */
-name|time_t
-name|mtime
+name|struct
+name|timespec
+name|mtim
 decl_stmt|;
 comment|/* Last modification time. */
-name|int
-name|fcntl_fd
-decl_stmt|;
-comment|/* Fcntl locking fd; see exf.c. */
 comment|/* 	 * Recovery in general, and these fields specifically, are described 	 * in recover.c. 	 */
 define|#
 directive|define

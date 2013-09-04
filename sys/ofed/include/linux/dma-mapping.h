@@ -657,7 +657,7 @@ operator|*
 operator|)
 name|kmem_alloc_contig
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 name|size
 argument_list|,
@@ -724,7 +724,7 @@ parameter_list|)
 block|{
 name|kmem_free
 argument_list|(
-name|kmem_map
+name|kmem_arena
 argument_list|,
 operator|(
 name|vm_offset_t

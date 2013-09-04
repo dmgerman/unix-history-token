@@ -3574,13 +3574,6 @@ name|IPCTL_MAXID
 value|17
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ 	{ "sourceroute", CTLTYPE_INT }, \ 	{ "directed-broadcast", CTLTYPE_INT }, \ 	{ "intr-queue-maxlen", CTLTYPE_INT }, \ 	{ "intr-queue-drops", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "accept_sourceroute", CTLTYPE_INT }, \ 	{ "fastforwarding", CTLTYPE_INT }, \ }
-end_define
-
 begin_endif
 endif|#
 directive|endif

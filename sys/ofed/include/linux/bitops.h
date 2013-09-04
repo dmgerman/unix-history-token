@@ -1232,8 +1232,8 @@ end_function
 begin_define
 define|#
 directive|define
-name|NBINT
-value|(NBBY * sizeof(int))
+name|NBLONG
+value|(NBBY * sizeof(long))
 end_define
 
 begin_define
@@ -1246,7 +1246,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_set_int(&((volatile int *)(a))[(i)/NBINT], 1<< (i) % NBINT)
+value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1<< (i) % NBLONG)
 end_define
 
 begin_define
@@ -1259,7 +1259,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_clear_int(&((volatile int *)(a))[(i)/NBINT], 1<< (i) % NBINT)
+value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1<< (i) % NBLONG)
 end_define
 
 begin_define
@@ -1272,7 +1272,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|!!(atomic_load_acq_int(&((volatile int *)(a))[(i)/NBINT])& 1<< ((i) % NBINT))
+value|!!(atomic_load_acq_long(&((volatile long *)(a))[(i)/NBLONG])&	\     1<< ((i) % NBLONG))
 end_define
 
 begin_function
@@ -1292,6 +1292,28 @@ block|{
 name|long
 name|val
 decl_stmt|;
+name|var
+operator|+=
+name|bit
+operator|/
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|*
+name|NBBY
+operator|)
+expr_stmt|;
+name|bit
+operator|%=
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|*
+name|NBBY
+expr_stmt|;
 name|bit
 operator|=
 literal|1
@@ -1357,6 +1379,28 @@ block|{
 name|long
 name|val
 decl_stmt|;
+name|var
+operator|+=
+name|bit
+operator|/
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|*
+name|NBBY
+operator|)
+expr_stmt|;
+name|bit
+operator|%=
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|*
+name|NBBY
+expr_stmt|;
 name|bit
 operator|=
 literal|1

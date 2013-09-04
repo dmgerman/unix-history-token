@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)gs.h	10.34 (Berkeley) 9/24/96  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: gs.h,v 11.0 2012/10/17 06:34:37 zy Exp $  */
 end_comment
 
 begin_define
@@ -14,6 +14,12 @@ begin_comment
 comment|/* Default temporary file name. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<nl_types.h>
+end_include
+
 begin_comment
 comment|/*  * File reference structure (FREF).  The structure contains the name of the  * file, along with the information that follows the name.  *  * !!!  * The read-only bit follows the file name, not the file itself.  */
 end_comment
@@ -22,7 +28,7 @@ begin_struct
 struct|struct
 name|_fref
 block|{
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_fref
 argument_list|)
@@ -168,22 +174,28 @@ name|int
 name|id
 decl_stmt|;
 comment|/* Last allocated screen id. */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_dqh
 argument_list|,
 argument|_scr
 argument_list|)
 name|dq
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* Displayed screens. */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_hqh
 argument_list|,
 argument|_scr
 argument_list|)
 name|hq
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* Hidden screens. */
 name|SCR
@@ -193,37 +205,20 @@ decl_stmt|;
 comment|/* Colon command-line screen. */
 name|void
 modifier|*
-name|perl_interp
-decl_stmt|;
-comment|/* Perl interpreter. */
-name|void
-modifier|*
-name|tcl_interp
-decl_stmt|;
-comment|/* Tcl_Interp *: Tcl interpreter. */
-name|void
-modifier|*
 name|cl_private
 decl_stmt|;
 comment|/* Curses support private area. */
-name|void
-modifier|*
-name|ip_private
-decl_stmt|;
-comment|/* IP support private area. */
-name|void
-modifier|*
-name|tk_private
-decl_stmt|;
-comment|/* Tk/Tcl support private area. */
 comment|/* File references. */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_frefh
 argument_list|,
 argument|_fref
 argument_list|)
 name|frefq
+index|[
+literal|1
+index|]
 expr_stmt|;
 define|#
 directive|define
@@ -253,13 +248,15 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|DB
-modifier|*
-name|msg
+name|nl_catd
+name|catd
 decl_stmt|;
-comment|/* Message catalog DB. */
+comment|/* Message catalog descriptor. */
 name|MSGH
 name|msgq
+index|[
+literal|1
+index|]
 decl_stmt|;
 comment|/* User message list. */
 define|#
@@ -267,7 +264,7 @@ directive|define
 name|DEFAULT_NOPRINT
 value|'\1'
 comment|/* Emergency non-printable character. */
-name|CHAR_T
+name|int
 name|noprint
 decl_stmt|;
 comment|/* Cached, unprintable character. */
@@ -287,16 +284,19 @@ name|EXCMD_RUNNING
 parameter_list|(
 name|gp
 parameter_list|)
-value|((gp)->ecq.lh_first->clen != 0)
-name|LIST_HEAD
+value|(SLIST_FIRST((gp)->ecq)->clen != 0)
+comment|/* Ex command linked list. */
+name|SLIST_HEAD
 argument_list|(
 argument|_excmdh
 argument_list|,
 argument|_excmd
 argument_list|)
 name|ecq
+index|[
+literal|1
+index|]
 expr_stmt|;
-comment|/* Ex command linked list. */
 name|EXCMD
 name|excmd
 decl_stmt|;
@@ -351,41 +351,49 @@ name|CB
 name|dcb_store
 decl_stmt|;
 comment|/* Default cut buffer storage. */
-name|LIST_HEAD
+name|SLIST_HEAD
 argument_list|(
 argument|_cuth
 argument_list|,
 argument|_cb
 argument_list|)
 name|cutq
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* Linked list of cut buffers. */
 define|#
 directive|define
 name|MAX_BIT_SEQ
-value|128
+value|0x7f
 comment|/* Max + 1 fast check character. */
-name|LIST_HEAD
+name|SLIST_HEAD
 argument_list|(
 argument|_seqh
 argument_list|,
 argument|_seq
 argument_list|)
 name|seqq
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* Linked list of maps, abbrevs. */
 name|bitstr_t
 name|bit_decl
-parameter_list|(
+argument_list|(
 name|seqb
-parameter_list|,
+argument_list|,
 name|MAX_BIT_SEQ
-parameter_list|)
-function_decl|;
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
 define|#
 directive|define
 name|MAX_FAST_KEY
-value|254
+value|0xff
 comment|/* Max fast check character.*/
 define|#
 directive|define
@@ -396,7 +404,7 @@ parameter_list|,
 name|ch
 parameter_list|)
 define|\
-value|((unsigned char)(ch)<= MAX_FAST_KEY ?				\ 	    sp->gp->cname[(unsigned char)ch].len : v_key_len(sp, ch))
+value|(((ch)& ~MAX_FAST_KEY) == 0 ?					\ 	    sp->gp->cname[(unsigned char)ch].len : v_key_len(sp, ch))
 define|#
 directive|define
 name|KEY_NAME
@@ -406,10 +414,10 @@ parameter_list|,
 name|ch
 parameter_list|)
 define|\
-value|((unsigned char)(ch)<= MAX_FAST_KEY ?				\ 	    sp->gp->cname[(unsigned char)ch].name : v_key_name(sp, ch))
+value|(((ch)& ~MAX_FAST_KEY) == 0 ?					\ 	    sp->gp->cname[(unsigned char)ch].name : v_key_name(sp, ch))
 struct|struct
 block|{
-name|CHAR_T
+name|char
 name|name
 index|[
 name|MAX_CHARACTER_COLUMNS
@@ -438,12 +446,8 @@ parameter_list|,
 name|ch
 parameter_list|)
 define|\
-value|((unsigned char)(ch)<= MAX_FAST_KEY ? 				\ 	    sp->gp->special_key[(unsigned char)ch] :			\ 	    (unsigned char)(ch)> sp->gp->max_special ? 0 : v_key_val(sp,ch))
-name|CHAR_T
-name|max_special
-decl_stmt|;
-comment|/* Max special character. */
-name|u_char
+value|(((ch)& ~MAX_FAST_KEY) == 0 ? 					\ 	    sp->gp->special_key[(unsigned char)ch] : v_key_val(sp,ch))
+name|e_key_t
 comment|/* Fast lookup table. */
 name|special_key
 index|[
@@ -521,6 +525,25 @@ name|size_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Add a string to the screen. */
+name|int
+argument_list|(
+argument|*scr_waddstr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+specifier|const
+name|CHAR_T
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Toggle a screen attribute. */
 name|int
 argument_list|(
@@ -586,6 +609,19 @@ name|busy_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Prepare child. */
+name|int
+argument_list|(
+argument|*scr_child
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Clear to the end of the line. */
 name|int
 argument_list|(
@@ -627,6 +663,23 @@ name|__P
 argument_list|(
 operator|(
 name|SCR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Discard a screen. */
+name|int
+argument_list|(
+argument|*scr_discard
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|SCR
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -816,6 +869,24 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Reply to an event. */
+name|int
+argument_list|(
+argument|*scr_reply
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Set the screen type. */
 name|int
 argument_list|(
@@ -828,6 +899,22 @@ name|SCR
 operator|*
 operator|,
 name|u_int32_t
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Split the screen. */
+name|int
+argument_list|(
+argument|*scr_split
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|SCR
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;

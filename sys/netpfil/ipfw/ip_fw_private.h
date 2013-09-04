@@ -1509,6 +1509,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|ipfw_nat_ready
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipfw_nat_ready
+value|VNET(ipfw_nat_ready)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_NAT_LOADED
+value|(V_ipfw_nat_ready)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|ipfw_nat_t
@@ -1516,13 +1540,6 @@ modifier|*
 name|ipfw_nat_ptr
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IPFW_NAT_LOADED
-value|(ipfw_nat_ptr != NULL)
-end_define
 
 begin_decl_stmt
 specifier|extern

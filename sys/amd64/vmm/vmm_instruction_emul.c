@@ -219,6 +219,22 @@ name|VIE_OP_TYPE_MOV
 block|, 	}
 block|,
 index|[
+literal|0x8A
+index|]
+operator|=
+block|{
+operator|.
+name|op_byte
+operator|=
+literal|0x8A
+block|,
+operator|.
+name|op_type
+operator|=
+name|VIE_OP_TYPE_MOV
+block|, 	}
+block|,
+index|[
 literal|0x8B
 index|]
 operator|=
@@ -916,9 +932,27 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|0x8A
+case|:
+case|case
 literal|0x8B
 case|:
-comment|/* 		 * MOV from mem (ModRM:r/m) to reg (ModRM:reg) 		 * 8B/r:	mov r32, r/m32 		 * REX.W 8B/r:	mov r64, r/m64 		 */
+comment|/* 		 * MOV from mem (ModRM:r/m) to reg (ModRM:reg) 		 * 8A/r:	mov r/m8, r8 		 * REX + 8A/r:	mov r/m8, r8 		 * 8B/r:	mov r32, r/m32 		 * REX.W 8B/r:	mov r64, r/m64 		 */
+if|if
+condition|(
+name|vie
+operator|->
+name|op
+operator|.
+name|op_byte
+operator|==
+literal|0x8A
+condition|)
+name|size
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|vie

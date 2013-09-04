@@ -2355,12 +2355,6 @@ directive|ifdef
 name|XEN
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<xen/hypervisor.h>
-end_include
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -2380,9 +2374,9 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|HYPERVISOR_VIRT_START
+name|XEN_HYPERVISOR_VIRT_START
 argument_list|,
-name|__HYPERVISOR_VIRT_START
+name|HYPERVISOR_VIRT_START
 argument_list|)
 expr_stmt|;
 end_expr_stmt

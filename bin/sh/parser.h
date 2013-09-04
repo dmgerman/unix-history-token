@@ -256,21 +256,14 @@ comment|/* Syntax error, issue when expanded */
 end_comment
 
 begin_comment
-comment|/*  * NEOF is returned by parsecmd when it encounters an end of file.  It  * must be distinct from NULL, so we use the address of a variable that  * happens to be handy.  */
+comment|/*  * NEOF is returned by parsecmd when it encounters an end of file.  It  * must be distinct from NULL.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tokpushback
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|NEOF
-value|((union node *)&tokpushback)
+value|((union node *)-1)
 end_define
 
 begin_decl_stmt
@@ -319,15 +312,6 @@ name|char
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|resetparser
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

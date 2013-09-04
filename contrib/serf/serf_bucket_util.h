@@ -232,6 +232,28 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
+comment|/**  * Analogous to apr_pstrcatv, using a bucket allocator instead.  */
+name|char
+modifier|*
+name|serf_bstrcatv
+parameter_list|(
+name|serf_bucket_alloc_t
+modifier|*
+name|allocator
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+name|vec
+parameter_list|,
+name|int
+name|vecs
+parameter_list|,
+name|apr_size_t
+modifier|*
+name|bytes_written
+parameter_list|)
+function_decl|;
 comment|/**  * Read data up to a newline.  *  * @a acceptable contains the allowed forms of a newline, and @a found  * will return the particular newline type that was found. If a newline  * is not found, then SERF_NEWLINE_NONE will be placed in @a found.  *  * @a data should contain a pointer to the data to be scanned. @a len  * should specify the length of that data buffer. On exit, @a data will  * be advanced past the newline, and @a len will specify the remaining  * amount of data in the buffer.  *  * Given this pattern of behavior, the caller should store the initial  * value of @a data as the line start. The difference between the  * returned value of @a data and the saved start is the length of the  * line.  *  * Note that the newline character(s) will remain within the buffer.  * This function scans at a byte level for the newline characters. Thus,  * the data buffer may contain NUL characters. As a corollary, this  * function only works on 8-bit character encodings.  *  * If the data is fully consumed (@a len gets set to zero) and a CR  * character is found at the end and the CRLF sequence is allowed, then  * this function may store SERF_NEWLINE_CRLF_SPLIT into @a found. The  * caller should take particular consideration for the CRLF sequence  * that may be split across data buffer boundaries.  */
 name|void
 name|serf_util_readline

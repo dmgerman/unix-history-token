@@ -752,6 +752,15 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
+name|AcpiEvSciDispatch
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT32
 name|AcpiEvInstallSciHandler
 parameter_list|(
 name|void
@@ -761,19 +770,9 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiEvRemoveSciHandler
+name|AcpiEvRemoveAllSciHandlers
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT32
-name|AcpiEvInitializeSCI
-parameter_list|(
-name|UINT32
-name|ProgramSCI
 parameter_list|)
 function_decl|;
 end_function_decl
