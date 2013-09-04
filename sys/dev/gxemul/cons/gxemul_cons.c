@@ -251,27 +251,13 @@ begin_comment
 comment|/*  * I/O routines lifted from Deimos.  *  * XXXRW: Should be using FreeBSD's bus routines here, but they are not  * available until later in the boot.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|uint64_t
-name|paddr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint64_t
-name|vaddr_t
-typedef|;
-end_typedef
-
 begin_function
 specifier|static
 specifier|inline
-name|vaddr_t
+name|vm_offset_t
 name|mips_phys_to_uncached
 parameter_list|(
-name|paddr_t
+name|vm_paddr_t
 name|phys
 parameter_list|)
 block|{
@@ -292,7 +278,7 @@ specifier|inline
 name|uint8_t
 name|mips_ioread_uint8
 parameter_list|(
-name|vaddr_t
+name|vm_offset_t
 name|vaddr
 parameter_list|)
 block|{
@@ -316,7 +302,7 @@ specifier|inline
 name|void
 name|mips_iowrite_uint8
 parameter_list|(
-name|vaddr_t
+name|vm_offset_t
 name|vaddr
 parameter_list|,
 name|uint8_t
