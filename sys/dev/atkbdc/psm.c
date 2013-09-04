@@ -1230,7 +1230,7 @@ specifier|static
 name|int
 name|synaptics_support
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1250,7 +1250,7 @@ specifier|static
 name|int
 name|trackpoint_support
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
