@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -84,18 +96,6 @@ name|x
 parameter_list|)
 value|(((vm_offset_t)(x))<= VM_MAX_KERNEL_ADDRESS&& \ 		((vm_offset_t)(x))>= VM_MIN_KERNEL_ADDRESS)
 end_define
-
-begin_comment
-comment|/*  * Per-processor information.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|ppc_npmcs
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -301,25 +301,6 @@ operator|,
 name|__LINE__
 operator|,
 name|cpu
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ri
-operator|>=
-literal|0
-operator|&&
-name|ri
-operator|<
-name|ppc_npmcs
-argument_list|,
-operator|(
-literal|"[powerpc,%d] row-index %d out of range"
-operator|,
-name|__LINE__
-operator|,
-name|ri
 operator|)
 argument_list|)
 expr_stmt|;
