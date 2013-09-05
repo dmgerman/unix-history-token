@@ -3066,7 +3066,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* kernel driver is active */
+comment|/* kernel driver is detached */
 block|}
 end_function
 
@@ -3208,7 +3208,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* kernel driver is active */
+comment|/* request was successful */
 block|}
 end_function
 
