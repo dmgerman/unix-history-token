@@ -2442,7 +2442,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|cap___rights_get_args
+name|__cap_rights_get_args
 modifier|*
 name|uap
 parameter_list|)
