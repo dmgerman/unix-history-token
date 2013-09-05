@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -10059,6 +10059,18 @@ operator|+
 name|swapfs_reserve
 operator|+
 name|extra
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * Check that we have enough availrmem that memory locking (e.g., via 	 * mlock(3C) or memcntl(2)) can still succeed.  (pages_pp_maximum 	 * stores the number of pages that cannot be locked; when availrmem 	 * drops below pages_pp_maximum, page locking mechanisms such as 	 * page_pp_lock() will fail.) 	 */
+if|if
+condition|(
+name|availrmem
+operator|<=
+name|pages_pp_maximum
 condition|)
 return|return
 operator|(
