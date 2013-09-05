@@ -1450,10 +1450,10 @@ end_function
 begin_decl_stmt
 specifier|static
 name|moduledata_t
-name|ntb_transport_mod
+name|if_ntb_mod
 init|=
 block|{
-literal|"ntb_transport"
+literal|"if_ntb"
 block|,
 name|ntb_handle_module_events
 block|,
@@ -1465,9 +1465,9 @@ end_decl_stmt
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-name|ntb_transport
+name|if_ntb
 argument_list|,
-name|ntb_transport_mod
+name|if_ntb_mod
 argument_list|,
 name|SI_SUB_KLD
 argument_list|,
@@ -1479,7 +1479,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ntb_transport
+name|if_ntb
 argument_list|,
 name|ntb_hw
 argument_list|,
