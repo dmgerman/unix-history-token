@@ -342,7 +342,7 @@ decl_stmt|;
 name|uint8_t
 name|qp_num
 decl_stmt|;
-comment|/* Only 64 QP's are allowed.  0-63 */
+comment|/* Only 64 QPs are allowed.  0-63 */
 name|struct
 name|ntb_rx_info
 modifier|*
@@ -1540,7 +1540,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntb: Can't find devclass\n"
+literal|"ntb: Cannot find devclass\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2088,7 +2088,7 @@ name|CTR1
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"TX: couldn't tx mbuf %p. Returning to snd q"
+literal|"TX: could not tx mbuf %p. Returning to snd q"
 argument_list|,
 name|m_head
 argument_list|)
@@ -2533,7 +2533,7 @@ operator|->
 name|link_work
 argument_list|)
 expr_stmt|;
-comment|/* verify that all the qp's are freed */
+comment|/* verify that all the qps are freed */
 for|for
 control|(
 name|i
@@ -3637,7 +3637,7 @@ name|CTR0
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"TX: couldn't get entry from tx_free_q"
+literal|"TX: could not get entry from tx_free_q"
 argument_list|)
 expr_stmt|;
 return|return

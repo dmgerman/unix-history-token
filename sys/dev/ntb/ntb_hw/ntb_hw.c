@@ -4036,7 +4036,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* SOC doesn't have link status interrupt, poll on that platform */
+comment|/* SOC does not have link status interrupt, poll on that platform */
 end_comment
 
 begin_function
@@ -4495,7 +4495,7 @@ name|event
 operator|=
 name|NTB_EVENT_HW_LINK_DOWN
 expr_stmt|;
-comment|/* Don't modify link width/speed, we need it in link recovery */
+comment|/* Do not modify link width/speed, we need it in link recovery */
 block|}
 comment|/* notify the upper layer if we have an event change */
 if|if
