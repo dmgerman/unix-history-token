@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|XEON_LINK_STATUS_OFFSET
-value|0x01A2
+value|0x01a2
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|XEON_SBDF_OFFSET
-value|0x005C
+value|0x005c
 end_define
 
 begin_define
@@ -485,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|SOC_IP_BASE
-value|0xC000
+value|0xc000
 end_define
 
 begin_define
@@ -541,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|SOC_IBIST_ERR_OFLOW
-value|0x7FFF7FFF
+value|0x7fff7fff
 end_define
 
 begin_define
@@ -583,7 +583,7 @@ begin_define
 define|#
 directive|define
 name|NTB_PPD_OFFSET
-value|0x00D4
+value|0x00d4
 end_define
 
 begin_define
@@ -674,14 +674,14 @@ begin_define
 define|#
 directive|define
 name|SOC_MBAR23_USD_ADDR
-value|0x000000410000000C
+value|0x000000410000000c
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOC_MBAR45_USD_ADDR
-value|0x000000810000000C
+value|0x000000810000000c
 end_define
 
 begin_define
@@ -702,14 +702,14 @@ begin_define
 define|#
 directive|define
 name|SOC_MBAR23_DSD_ADDR
-value|0x000000400000000C
+value|0x000000400000000c
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOC_MBAR45_DSD_ADDR
-value|0x000000800000000C
+value|0x000000800000000c
 end_define
 
 begin_endif
