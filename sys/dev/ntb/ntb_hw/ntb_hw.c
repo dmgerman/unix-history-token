@@ -5256,5 +5256,25 @@ return|;
 block|}
 end_function
 
+begin_function
+name|device_t
+name|ntb_get_device
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ntb
+operator|->
+name|device
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
