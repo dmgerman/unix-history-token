@@ -585,6 +585,21 @@ name|register_t
 operator|)
 name|cf
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pcb
+operator|->
+name|pcb_sp
+operator|%
+literal|16
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"stack misaligned"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
