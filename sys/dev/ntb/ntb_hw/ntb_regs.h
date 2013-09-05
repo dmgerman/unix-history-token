@@ -659,57 +659,89 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOC_PBAR2XLAT_USD_ADDR
+name|PBAR2XLAT_USD_ADDR
 value|0x0000004000000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PBAR4XLAT_USD_ADDR
+name|PBAR4XLAT_USD_ADDR
 value|0x0000008000000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MBAR23_USD_ADDR
+name|MBAR01_USD_ADDR
+value|0x000000210000000c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBAR23_USD_ADDR
 value|0x000000410000000c
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MBAR45_USD_ADDR
+name|MBAR45_USD_ADDR
 value|0x000000810000000c
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PBAR2XLAT_DSD_ADDR
+name|PBAR2XLAT_DSD_ADDR
 value|0x0000004100000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_PBAR4XLAT_DSD_ADDR
+name|PBAR4XLAT_DSD_ADDR
 value|0x0000008100000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MBAR23_DSD_ADDR
+name|MBAR01_DSD_ADDR
+value|0x000000200000000c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBAR23_DSD_ADDR
 value|0x000000400000000c
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOC_MBAR45_DSD_ADDR
+name|MBAR45_DSD_ADDR
 value|0x000000800000000c
+end_define
+
+begin_comment
+comment|/* XEON Shadowed MMIO Space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XEON_SHADOW_PDOORBELL_OFFSET
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEON_SHADOW_SPAD_OFFSET
+value|0x80
 end_define
 
 begin_endif
