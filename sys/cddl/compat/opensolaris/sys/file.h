@@ -123,7 +123,7 @@ name|curthread
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|fp
