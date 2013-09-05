@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7462,6 +7462,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|Job_SetPrefix
+argument_list|()
+expr_stmt|;
 comment|/* Allocate space for all the job info */
 name|job_table
 operator|=
