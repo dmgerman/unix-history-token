@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Oleksandr Rybalko under sponsorship  * from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.	Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2.	Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2012, 2013 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Oleksandr Rybalko under sponsorship  * from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.	Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2.	Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ value|0xe3fbc000
 end_define
 
 begin_comment
-comment|/* UART1 */
+comment|/* imx51 UART1 */
 end_comment
 
 begin_endif
@@ -87,28 +87,28 @@ begin_define
 define|#
 directive|define
 name|IMX_RXD
-value|(u_int32_t *)(IMX_UART_BASE + 0x00)
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMX_TXD
-value|(u_int32_t *)(IMX_UART_BASE + 0x40)
+value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMX_UFCR
-value|(u_int32_t *)(IMX_UART_BASE + 0x90)
+value|0x90
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMX_USR1
-value|(u_int32_t *)(IMX_UART_BASE + 0x94)
+value|0x94
 end_define
 
 begin_define
@@ -122,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|IMX_USR2
-value|(u_int32_t *)(IMX_UART_BASE + 0x98)
+value|0x98
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|IMX_UTS
-value|(u_int32_t *)(IMX_UART_BASE + 0xb4)
+value|0xb4
 end_define
 
 begin_define
@@ -161,17 +161,28 @@ value|(1<< 4)
 end_define
 
 begin_comment
+comment|/*  * The base address of the uart registers.  *  * This is global so that it can be changed on the fly from the outside.  For  * example, set imx_uart_base=physaddr and then call cninit() as the first two  * lines of initarm() and enjoy printf() availability through the tricky bits of  * startup.  After initarm() switches from physical to virtual addressing, just  * set imx_uart_base=virtaddr and printf keeps working.  */
+end_comment
+
+begin_decl_stmt
+name|uint32_t
+name|imx_uart_base
+init|=
+name|IMX_UART_BASE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * uart related funcs  */
 end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
-name|uart_getreg
+name|uint32_t
+name|ub_getreg
 parameter_list|(
-name|u_int32_t
-modifier|*
-name|bas
+name|uint32_t
+name|off
 parameter_list|)
 block|{
 return|return
@@ -179,15 +190,15 @@ operator|*
 operator|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
-name|bas
+name|imx_uart_base
+operator|+
+name|off
 operator|)
 operator|)
-operator|&
-literal|0xff
 return|;
 block|}
 end_function
@@ -195,13 +206,12 @@ end_function
 begin_function
 specifier|static
 name|void
-name|uart_setreg
+name|ub_setreg
 parameter_list|(
-name|u_int32_t
-modifier|*
-name|bas
+name|uint32_t
+name|off
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|val
 parameter_list|)
 block|{
@@ -209,17 +219,16 @@ operator|*
 operator|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
-name|bas
+name|imx_uart_base
+operator|+
+name|off
 operator|)
 operator|)
 operator|=
-operator|(
-name|u_int32_t
-operator|)
 name|val
 expr_stmt|;
 block|}
@@ -236,7 +245,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|uart_getreg
+name|ub_getreg
 argument_list|(
 name|IMX_USR2
 argument_list|)
@@ -270,7 +279,7 @@ empty_stmt|;
 asm|__asm __volatile("nop");
 return|return
 operator|(
-name|uart_getreg
+name|ub_getreg
 argument_list|(
 name|IMX_RXD
 argument_list|)
@@ -304,7 +313,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|uart_getreg
+name|ub_getreg
 argument_list|(
 name|IMX_UTS
 argument_list|)
@@ -312,7 +321,7 @@ operator|&
 name|IMX_UTS_TXFULL
 condition|)
 asm|__asm __volatile("nop");
-name|uart_setreg
+name|ub_setreg
 argument_list|(
 name|IMX_TXD
 argument_list|,
@@ -437,7 +446,8 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|uart_setreg
+comment|/* Init fifo trigger levels to 32 bytes, refclock div to 2. */
+name|ub_setreg
 argument_list|(
 name|IMX_UFCR
 argument_list|,
@@ -448,6 +458,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|uart_cnputc
 parameter_list|(
@@ -469,6 +480,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|uart_cngetc
 parameter_list|(

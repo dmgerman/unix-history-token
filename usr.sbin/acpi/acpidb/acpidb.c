@@ -110,6 +110,7 @@ comment|/*  * Dummy DSDT Table Header  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_HEADER
 name|dummy_dsdt_table
 init|=
@@ -140,6 +141,7 @@ comment|/*  * Region space I/O routines on virtual machine  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aml_debug_prompt
 init|=
@@ -181,6 +183,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ACPIRegionContentList
 name|RegionContentList
@@ -195,6 +198,29 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|ACPI_PHYSICAL_ADDRESS
+name|AeLocalGetRootPointer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AeTableOverride
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -305,7 +331,7 @@ comment|/* Stubs to simplify linkage to the ACPI CA core subsystem. */
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|ACPI_PHYSICAL_ADDRESS
 name|AeLocalGetRootPointer
 parameter_list|(
 name|void
@@ -313,7 +339,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|AE_ERROR
+literal|0
 operator|)
 return|;
 block|}
@@ -673,6 +699,9 @@ name|printf
 argument_list|(
 literal|"(default: 0x%jx "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -680,6 +709,9 @@ name|printf
 argument_list|(
 literal|" / %ju)>>"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;

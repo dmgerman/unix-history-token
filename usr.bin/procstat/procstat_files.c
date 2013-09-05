@@ -473,7 +473,7 @@ specifier|static
 struct|struct
 name|cap_desc
 block|{
-name|cap_rights_t
+name|uint64_t
 name|cd_right
 decl_stmt|;
 specifier|const
@@ -961,7 +961,8 @@ name|u_int
 name|width_capability
 parameter_list|(
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|)
 block|{
 name|u_int
@@ -995,19 +996,17 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
+name|cap_rights_is_set
+argument_list|(
+name|rightsp
+argument_list|,
 name|cap_desc
 index|[
 name|i
 index|]
 operator|.
 name|cd_right
-operator|&
-operator|~
-name|rights
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 name|width
@@ -1048,7 +1047,8 @@ name|void
 name|print_capability
 parameter_list|(
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|u_int
 name|capwidth
@@ -1075,7 +1075,7 @@ name|i
 operator|=
 name|width_capability
 argument_list|(
-name|rights
+name|rightsp
 argument_list|)
 init|;
 name|i
@@ -1088,8 +1088,6 @@ control|)
 block|{
 if|if
 condition|(
-name|rights
-operator|||
 name|i
 operator|!=
 literal|0
@@ -1122,19 +1120,17 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
+name|cap_rights_is_set
+argument_list|(
+name|rightsp
+argument_list|,
 name|cap_desc
 index|[
 name|i
 index|]
 operator|.
 name|cd_right
-operator|&
-operator|~
-name|rights
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -1266,6 +1262,7 @@ name|width
 operator|=
 name|width_capability
 argument_list|(
+operator|&
 name|fst
 operator|->
 name|fs_cap_rights
@@ -1405,7 +1402,7 @@ name|PS_FST_UFLAG_CTTY
 condition|)
 name|printf
 argument_list|(
-literal|"ctty "
+literal|" ctty "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1419,7 +1416,7 @@ name|PS_FST_UFLAG_CDIR
 condition|)
 name|printf
 argument_list|(
-literal|" cwd "
+literal|"  cwd "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1433,7 +1430,7 @@ name|PS_FST_UFLAG_JAIL
 condition|)
 name|printf
 argument_list|(
-literal|"jail "
+literal|" jail "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1447,7 +1444,7 @@ name|PS_FST_UFLAG_RDIR
 condition|)
 name|printf
 argument_list|(
-literal|"root "
+literal|" root "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1461,7 +1458,7 @@ name|PS_FST_UFLAG_TEXT
 condition|)
 name|printf
 argument_list|(
-literal|"text "
+literal|" text "
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1481,7 +1478,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%4d "
+literal|"%5d "
 argument_list|,
 name|fst
 operator|->
@@ -1910,6 +1907,7 @@ condition|)
 block|{
 name|print_capability
 argument_list|(
+operator|&
 name|fst
 operator|->
 name|fs_cap_rights

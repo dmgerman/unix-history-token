@@ -172,7 +172,10 @@ name|Reg
 parameter_list|)
 block|{
 name|UINT32
-name|Value
+name|ValueLo
+decl_stmt|;
+name|UINT32
+name|ValueHi
 decl_stmt|;
 name|UINT32
 name|Width
@@ -227,17 +230,7 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/* Initialize entire 64-bit return value to zero */
-operator|*
-name|ReturnValue
-operator|=
-literal|0
-expr_stmt|;
-name|Value
-operator|=
-literal|0
-expr_stmt|;
-comment|/*      * Two address spaces supported: Memory or IO. PCI_Config is      * not supported here because the GAS structure is insufficient      */
+comment|/*      * Two address spaces supported: Memory or I/O. PCI_Config is      * not supported here because the GAS structure is insufficient      */
 if|if
 condition|(
 name|Reg
@@ -281,6 +274,14 @@ block|}
 else|else
 comment|/* ACPI_ADR_SPACE_SYSTEM_IO, validated earlier */
 block|{
+name|ValueLo
+operator|=
+literal|0
+expr_stmt|;
+name|ValueHi
+operator|=
+literal|0
+expr_stmt|;
 name|Width
 operator|=
 name|Reg
@@ -310,7 +311,7 @@ operator|)
 name|Address
 argument_list|,
 operator|&
-name|Value
+name|ValueLo
 argument_list|,
 name|Width
 argument_list|)
@@ -329,11 +330,6 @@ name|Status
 operator|)
 return|;
 block|}
-operator|*
-name|ReturnValue
-operator|=
-name|Value
-expr_stmt|;
 if|if
 condition|(
 name|Reg
@@ -358,7 +354,7 @@ literal|4
 argument_list|)
 argument_list|,
 operator|&
-name|Value
+name|ValueHi
 argument_list|,
 literal|32
 argument_list|)
@@ -377,19 +373,24 @@ name|Status
 operator|)
 return|;
 block|}
+block|}
+comment|/* Set the return value only if status is AE_OK */
 operator|*
 name|ReturnValue
-operator||=
+operator|=
+operator|(
+name|ValueLo
+operator||
 operator|(
 operator|(
 name|UINT64
 operator|)
-name|Value
+name|ValueHi
 operator|<<
 literal|32
 operator|)
+operator|)
 expr_stmt|;
-block|}
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -424,7 +425,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|Status
+name|AE_OK
 operator|)
 return|;
 block|}
@@ -1126,7 +1127,7 @@ block|}
 comment|/*      * Evaluate the \_Sx namespace object containing the register values      * for this state      */
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1175,7 +1176,7 @@ literal|"No Sleep State object returned from [%s]"
 operator|,
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1409,7 +1410,7 @@ literal|"While evaluating Sleep State [%s]"
 operator|,
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|)
 argument_list|)
 expr_stmt|;

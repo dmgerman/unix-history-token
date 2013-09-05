@@ -216,7 +216,7 @@ comment|/* temporary - to reset a hard ignored sig */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|char
 name|sigmode
 index|[
@@ -238,6 +238,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* indicates some signal received */
+end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|pendingsig_waitcmd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indicates SIGINT/SIGQUIT received */
 end_comment
 
 begin_decl_stmt
@@ -1544,7 +1555,6 @@ block|}
 comment|/* If we are currently in a wait builtin, prepare to break it */
 if|if
 condition|(
-operator|(
 name|signo
 operator|==
 name|SIGINT
@@ -1552,22 +1562,11 @@ operator|||
 name|signo
 operator|==
 name|SIGQUIT
-operator|)
-operator|&&
-name|in_waitcmd
-operator|!=
-literal|0
 condition|)
-block|{
-name|breakwaitcmd
-operator|=
-literal|1
-expr_stmt|;
-name|pendingsig
+name|pendingsig_waitcmd
 operator|=
 name|signo
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|trap
@@ -1607,38 +1606,6 @@ expr_stmt|;
 name|pendingsig
 operator|=
 name|signo
-expr_stmt|;
-comment|/* 		 * If a trap is set, not ignored and not the null command, we 		 * need to make sure traps are executed even when a child 		 * blocks signals. 		 */
-if|if
-condition|(
-name|Tflag
-operator|&&
-operator|!
-operator|(
-name|trap
-index|[
-name|signo
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|':'
-operator|&&
-name|trap
-index|[
-name|signo
-index|]
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-operator|)
-condition|)
-name|breakwaitcmd
-operator|=
-literal|1
 expr_stmt|;
 block|}
 ifndef|#
@@ -1690,6 +1657,10 @@ condition|;
 control|)
 block|{
 name|pendingsig
+operator|=
+literal|0
+expr_stmt|;
+name|pendingsig_waitcmd
 operator|=
 literal|0
 expr_stmt|;

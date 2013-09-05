@@ -375,7 +375,7 @@ modifier|*
 name|fs
 parameter_list|)
 block|{
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|fs
 operator|->
@@ -944,6 +944,96 @@ name|vaddr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fs
+operator|.
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_IN_TRANSITION
+operator|&&
+name|fs
+operator|.
+name|entry
+operator|->
+name|wiring_thread
+operator|!=
+name|curthread
+condition|)
+block|{
+name|vm_map_unlock_read
+argument_list|(
+name|fs
+operator|.
+name|map
+argument_list|)
+expr_stmt|;
+name|vm_map_lock
+argument_list|(
+name|fs
+operator|.
+name|map
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vm_map_lookup_entry
+argument_list|(
+name|fs
+operator|.
+name|map
+argument_list|,
+name|vaddr
+argument_list|,
+operator|&
+name|fs
+operator|.
+name|entry
+argument_list|)
+operator|&&
+operator|(
+name|fs
+operator|.
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_IN_TRANSITION
+operator|)
+condition|)
+block|{
+name|fs
+operator|.
+name|entry
+operator|->
+name|eflags
+operator||=
+name|MAP_ENTRY_NEEDS_WAKEUP
+expr_stmt|;
+name|vm_map_unlock_and_wait
+argument_list|(
+name|fs
+operator|.
+name|map
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|vm_map_unlock
+argument_list|(
+name|fs
+operator|.
+name|map
+argument_list|)
+expr_stmt|;
+goto|goto
+name|RetryFault
+goto|;
+block|}
 comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O.  This must be done after 	 * obtaining the vnode lock in order to avoid possible deadlocks. 	 */
 name|VM_OBJECT_WLOCK
 argument_list|(
@@ -1117,24 +1207,15 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
-comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either VPO_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaneously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
+comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is either exclusive or shared busy 			 * because the vm_pager may be using read busy for 			 * pageouts (and even pageins if it is the vnode 			 * pager), and we could end up trying to pagein and 			 * pageout the same page simultaneously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a shared busied page except, perhaps, 			 * to pmap it. 			 */
 if|if
 condition|(
-operator|(
+name|vm_page_busied
+argument_list|(
 name|fs
 operator|.
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|||
-name|fs
-operator|.
-name|m
-operator|->
-name|busy
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it.  				 */
@@ -1270,8 +1351,6 @@ name|fs
 operator|.
 name|m
 argument_list|,
-name|TRUE
-argument_list|,
 literal|"vmpfw"
 argument_list|)
 expr_stmt|;
@@ -1323,7 +1402,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Mark page busy for other processes, and the  			 * pagedaemon.  If it still isn't completely valid 			 * (readable), jump to readrest, else break-out ( we 			 * found the page ). 			 */
-name|vm_page_busy
+name|vm_page_xbusy
 argument_list|(
 name|fs
 operator|.
@@ -1767,7 +1846,7 @@ operator|=
 name|ahead
 expr_stmt|;
 block|}
-comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map.  We hold a ref on 			 * fs.object and the pages are VPO_BUSY'd. 			 */
+comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map.  We hold a ref on 			 * fs.object and the pages are exclusive busied. 			 */
 name|unlock_map
 argument_list|(
 operator|&
@@ -1955,7 +2034,7 @@ literal|"vm_fault: vnode-backed object mapped by system map"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are VPO_BUSY'd. 			 */
+comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are exclusive busied. 			 */
 name|faultcount
 operator|=
 name|vm_fault_additional_pages
@@ -2401,23 +2480,11 @@ name|next_object
 expr_stmt|;
 block|}
 block|}
-name|KASSERT
+name|vm_page_assert_xbusied
 argument_list|(
-operator|(
 name|fs
 operator|.
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"vm_fault: not busy after main loop"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * PAGE HAS BEEN FOUND. [Loop invariant still holds -- the object lock 	 * is held.] 	 */
@@ -2558,13 +2625,8 @@ name|first_m
 argument_list|)
 expr_stmt|;
 comment|/* 				 * grab the page and put it into the  				 * process'es object.  The page is  				 * automatically made dirty. 				 */
-name|vm_page_lock
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
 name|vm_page_rename
 argument_list|(
 name|fs
@@ -2579,15 +2641,19 @@ name|fs
 operator|.
 name|first_pindex
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock
+condition|)
+block|{
+name|unlock_and_deallocate
 argument_list|(
+operator|&
 name|fs
-operator|.
-name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_busy
+goto|goto
+name|RetryFault
+goto|;
+block|}
+name|vm_page_xbusy
 argument_list|(
 name|fs
 operator|.
@@ -3083,24 +3149,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Page had better still be busy 	 */
-name|KASSERT
+name|vm_page_assert_xbusied
 argument_list|(
 name|fs
 operator|.
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-argument_list|,
-operator|(
-literal|"vm_fault: page %p not busy!"
-operator|,
-name|fs
-operator|.
-name|m
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Page must be completely valid or it is not fit to 	 * map into user space.  vm_pager_get_pages() ensures this. 	 */
@@ -3262,7 +3315,7 @@ operator|.
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|fs
 operator|.
@@ -3471,23 +3524,9 @@ name|fs
 operator|->
 name|m
 expr_stmt|;
-name|KASSERT
+name|vm_page_assert_xbusied
 argument_list|(
-operator|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"vm_fault_cache_behind: page %p is not busy"
-operator|,
-name|m
-operator|)
 argument_list|)
 expr_stmt|;
 name|m_prev
@@ -3529,21 +3568,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|vm_page_busied
+argument_list|(
 name|m
-operator|->
-name|busy
-operator|!=
-literal|0
-operator|||
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 continue|continue;
 name|vm_page_lock
@@ -3804,7 +3832,7 @@ name|lobject
 operator|=
 name|object
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3866,12 +3894,12 @@ name|backing_object_offset
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3889,7 +3917,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -3927,7 +3955,7 @@ operator|->
 name|protection
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobject
 argument_list|)
@@ -4802,7 +4830,7 @@ name|NULL
 condition|)
 do|;
 comment|/* 		 * Find the page in the source object, and copy it in. 		 * (Because the source is wired down, the page will be in 		 * memory.) 		 */
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|src_object
 argument_list|)
@@ -4846,7 +4874,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Allow fallback to backing objects if we are reading. 			 */
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -4860,7 +4888,7 @@ operator|->
 name|backing_object_offset
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4888,7 +4916,7 @@ argument_list|,
 name|dst_m
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -4990,7 +5018,7 @@ name|dst_m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|dst_m
 argument_list|)

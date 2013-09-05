@@ -750,6 +750,11 @@ define|#
 directive|define
 name|AHCI_Q_NOMSI
 value|4096
+define|#
+directive|define
+name|AHCI_Q_BIT_STRING
+define|\
+value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"
 block|}
 name|ahci_ids
 index|[]
@@ -1396,6 +1401,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x23a38086
+block|,
+literal|0x00
+block|,
+literal|"Intel Coleto Creek"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x8c028086
 block|,
 literal|0x00
@@ -1716,6 +1731,36 @@ name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
+literal|0x91831b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SS9183"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x91a01b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE91Ax"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x92151b4b
+block|,
+literal|0x00
+block|,
+literal|"Marvell 88SE9215"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
 literal|0x92201b4b
 block|,
 literal|0x00
@@ -1825,6 +1870,36 @@ block|,
 literal|0x00
 block|,
 literal|"HighPoint RocketRAID 644"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x06411103
+block|,
+literal|0x00
+block|,
+literal|"HighPoint RocketRAID 640L"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x06421103
+block|,
+literal|0x00
+block|,
+literal|"HighPoint RocketRAID 642L"
+block|,
+name|AHCI_Q_NOBSYRES
+block|}
+block|,
+block|{
+literal|0x06451103
+block|,
+literal|0x00
+block|,
+literal|"HighPoint RocketRAID 644L"
 block|,
 name|AHCI_Q_NOBSYRES
 block|}
@@ -3882,6 +3957,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"quirks=0x%b\n"
+argument_list|,
+name|ctlr
+operator|->
+name|quirks
+argument_list|,
+name|AHCI_Q_BIT_STRING
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|bootverbose
 condition|)
 block|{
@@ -4171,7 +4269,43 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Caps2:%s%s%s\n"
+literal|"Caps2:%s%s%s%s%s%s\n"
+argument_list|,
+operator|(
+name|ctlr
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_DESO
+operator|)
+condition|?
+literal|" DESO"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|ctlr
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_SADM
+operator|)
+condition|?
+literal|" SADM"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|ctlr
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_SDS
+operator|)
+condition|?
+literal|" SDS"
+else|:
+literal|""
 argument_list|,
 operator|(
 name|ctlr

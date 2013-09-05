@@ -2087,6 +2087,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|'O'
 case|:
@@ -2098,6 +2099,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|'U'
 case|:
@@ -2109,6 +2111,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|'L'
 case|:

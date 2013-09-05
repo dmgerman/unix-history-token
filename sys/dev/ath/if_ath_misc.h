@@ -653,6 +653,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ath_tx_dump
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_txq
+modifier|*
+name|txq
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Kick the frame TX task.  */
 end_comment
@@ -669,23 +687,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|ATH_TX_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ath_start
-argument_list|(
-name|sc
-operator|->
-name|sc_ifp
-argument_list|)
-expr_stmt|;
-name|ATH_TX_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* XXX NULL for now */
 block|}
 end_function
 

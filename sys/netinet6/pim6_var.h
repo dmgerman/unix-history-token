@@ -23,31 +23,31 @@ begin_struct
 struct|struct
 name|pim6stat
 block|{
-name|u_quad_t
+name|uint64_t
 name|pim6s_rcv_total
 decl_stmt|;
 comment|/* total PIM messages received	*/
-name|u_quad_t
+name|uint64_t
 name|pim6s_rcv_tooshort
 decl_stmt|;
 comment|/* received with too few bytes	*/
-name|u_quad_t
+name|uint64_t
 name|pim6s_rcv_badsum
 decl_stmt|;
 comment|/* received with bad checksum	*/
-name|u_quad_t
+name|uint64_t
 name|pim6s_rcv_badversion
 decl_stmt|;
 comment|/* received bad PIM version	*/
-name|u_quad_t
+name|uint64_t
 name|pim6s_rcv_registers
 decl_stmt|;
 comment|/* received registers		*/
-name|u_quad_t
+name|uint64_t
 name|pim6s_rcv_badregisters
 decl_stmt|;
 comment|/* received invalid registers	*/
-name|u_quad_t
+name|uint64_t
 name|pim6s_snd_registers
 decl_stmt|;
 comment|/* sent registers		*/
@@ -119,13 +119,6 @@ define|#
 directive|define
 name|PIM6CTL_MAXID
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIM6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ }
 end_define
 
 begin_endif

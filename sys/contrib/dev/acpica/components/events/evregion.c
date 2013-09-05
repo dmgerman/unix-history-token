@@ -74,7 +74,9 @@ specifier|static
 name|void
 name|AcpiEvOrphanEcRegMethod
 parameter_list|(
-name|void
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|EcDeviceNode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -484,25 +486,19 @@ name|Flags
 operator||=
 name|AOPOBJ_SETUP_COMPLETE
 expr_stmt|;
+comment|/*              * Save the returned context for use in all accesses to              * the handler for this particular region              */
 if|if
 condition|(
+operator|!
+operator|(
 name|RegionObj2
 operator|->
 name|Extra
 operator|.
 name|RegionContext
+operator|)
 condition|)
 block|{
-comment|/* The handler for this region was already installed */
-name|ACPI_FREE
-argument_list|(
-name|RegionContext
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*                  * Save the returned context for use in all accesses to                  * this particular region                  */
 name|RegionObj2
 operator|->
 name|Extra
@@ -1010,6 +1006,18 @@ argument_list|,
 name|RegionContext
 argument_list|)
 expr_stmt|;
+comment|/*                  * RegionContext should have been released by the deactivate                  * operation. We don't need access to it anymore here.                  */
+if|if
+condition|(
+name|RegionContext
+condition|)
+block|{
+operator|*
+name|RegionContext
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Init routine may fail, Just ignore errors */
 if|if
 condition|(
@@ -1331,7 +1339,7 @@ name|Method_REG
 expr_stmt|;
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|NULL
 expr_stmt|;
@@ -1531,7 +1539,9 @@ name|ACPI_ADR_SPACE_EC
 condition|)
 block|{
 name|AcpiEvOrphanEcRegMethod
-argument_list|()
+argument_list|(
+name|Node
+argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
@@ -1693,7 +1703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvOrphanEcRegMethod  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Execute an "orphan" _REG method that appears under the EC  *              device. This is a _REG method that has no corresponding region  *              within the EC device scope. The orphan _REG method appears to  *              have been enabled by the description of the ECDT in the ACPI  *              specification: "The availability of the region space can be  *              detected by providing a _REG method object underneath the  *              Embedded Controller device."  *  *              To quickly access the EC device, we use the EC_ID that appears  *              within the ECDT. Otherwise, we would need to perform a time-  *              consuming namespace walk, executing _HID methods to find the  *              EC device.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvOrphanEcRegMethod  *  * PARAMETERS:  EcDeviceNode        - Namespace node for an EC device  *  * RETURN:      None  *  * DESCRIPTION: Execute an "orphan" _REG method that appears under the EC  *              device. This is a _REG method that has no corresponding region  *              within the EC device scope. The orphan _REG method appears to  *              have been enabled by the description of the ECDT in the ACPI  *              specification: "The availability of the region space can be  *              detected by providing a _REG method object underneath the  *              Embedded Controller device."  *  *              To quickly access the EC device, we use the EcDeviceNode used  *              during EC handler installation. Otherwise, we would need to  *              perform a time consuming namespace walk, executing _HID  *              methods to find the EC device.  *  *  MUTEX:      Assumes the namespace is locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1701,12 +1711,17 @@ specifier|static
 name|void
 name|AcpiEvOrphanEcRegMethod
 parameter_list|(
-name|void
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|EcDeviceNode
 parameter_list|)
 block|{
-name|ACPI_TABLE_ECDT
+name|ACPI_HANDLE
+name|RegMethod
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
 modifier|*
-name|Table
+name|NextNode
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -1720,62 +1735,15 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|EcDeviceNode
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|RegMethod
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|NextNode
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|EvOrphanEcRegMethod
 argument_list|)
 expr_stmt|;
-comment|/* Get the ECDT (if present in system) */
-name|Status
-operator|=
-name|AcpiGetTable
-argument_list|(
-name|ACPI_SIG_ECDT
-argument_list|,
-literal|0
-argument_list|,
-name|ACPI_CAST_INDIRECT_PTR
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|,
-operator|&
-name|Table
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/* We need a valid EC_ID string */
 if|if
 condition|(
 operator|!
-operator|(
-operator|*
-name|Table
-operator|->
-name|Id
-operator|)
+name|EcDeviceNode
 condition|)
 block|{
 name|return_VOID
@@ -1790,43 +1758,6 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
-comment|/* Get a handle to the EC device referenced in the ECDT */
-name|Status
-operator|=
-name|AcpiGetHandle
-argument_list|(
-name|NULL
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
-name|Table
-operator|->
-name|Id
-argument_list|)
-argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_HANDLE
-argument_list|,
-operator|&
-name|EcDeviceNode
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|Exit
-goto|;
-block|}
 comment|/* Get a handle to a _REG method immediately under the EC device */
 name|Status
 operator|=
@@ -1836,13 +1767,8 @@ name|EcDeviceNode
 argument_list|,
 name|METHOD_NAME__REG
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_HANDLE
-argument_list|,
 operator|&
 name|RegMethod
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1856,8 +1782,9 @@ block|{
 goto|goto
 name|Exit
 goto|;
+comment|/* There is no _REG method present */
 block|}
-comment|/*      * Execute the _REG method only if there is no Operation Region in      * this scope with the Embedded Controller space ID. Otherwise, it      * will already have been executed. Note, this allows for Regions      * with other space IDs to be present; but the code below will then      * execute the _REG method with the EC space ID argument.      */
+comment|/*      * Execute the _REG method only if there is no Operation Region in      * this scope with the Embedded Controller space ID. Otherwise, it      * will already have been executed. Note, this allows for Regions      * with other space IDs to be present; but the code below will then      * execute the _REG method with the EmbeddedControl SpaceID argument.      */
 name|NextNode
 operator|=
 name|AcpiNsGetNextNode
@@ -1904,7 +1831,7 @@ block|{
 goto|goto
 name|Exit
 goto|;
-comment|/* Do not execute _REG */
+comment|/* Do not execute the _REG */
 block|}
 name|NextNode
 operator|=
@@ -1916,7 +1843,7 @@ name|NextNode
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Evaluate the _REG(EC,Connect) method */
+comment|/* Evaluate the _REG(EmbeddedControl,Connect) method */
 name|Args
 operator|.
 name|Count

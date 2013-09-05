@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_TOOL_OUTPUT_FILE_H
+name|LLVM_SUPPORT_TOOLOUTPUTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_TOOL_OUTPUT_FILE_H
+name|LLVM_SUPPORT_TOOLOUTPUTFILE_H
 end_define
 
 begin_include

@@ -2385,6 +2385,11 @@ condition|)
 block|{
 return|return;
 block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|SubTable
@@ -2546,6 +2551,11 @@ condition|)
 block|{
 return|return;
 block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 comment|/* Dump the PCI Path entries for this device scope */
 name|PathOffset
 operator|=
@@ -2616,6 +2626,11 @@ expr_stmt|;
 name|PciPath
 operator|+=
 literal|2
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Point to next device scope entry */

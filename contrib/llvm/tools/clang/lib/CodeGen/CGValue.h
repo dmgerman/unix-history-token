@@ -81,6 +81,12 @@ directive|include
 file|"clang/AST/Type.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Value.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -89,7 +95,7 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
-name|Value
+name|MDNode
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -104,9 +110,9 @@ block|{
 name|class
 name|AggValueSlot
 decl_stmt|;
-name|class
+struct_decl|struct
 name|CGBitFieldInfo
-decl_stmt|;
+struct_decl|;
 comment|/// RValue - This trivial value class is used to represent the result of an
 comment|/// expression that is evaluated.  It can be one of three things: either a
 comment|/// simple LLVM SSA value, a pair of SSA values for complex numbers, or the
@@ -493,6 +499,15 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Does an ARC strong l-value have precise lifetime?
+enum|enum
+name|ARCPreciseLifetime_t
+block|{
+name|ARCImpreciseLifetime
+block|,
+name|ARCPreciseLifetime
+block|}
+enum|;
 comment|/// LValue - This represents an lvalue references.  Because C/C++ allow
 comment|/// bitfields, this is not a simple LLVM pointer, it may be a pointer plus a
 comment|/// bitrange.
@@ -588,9 +603,24 @@ name|ThreadLocalRef
 range|:
 literal|1
 decl_stmt|;
+comment|// Lvalue has ARC imprecise lifetime.  We store this inverted to try
+comment|// to make the default bitfield pattern all-zeroes.
+name|bool
+name|ImpreciseLifetime
+range|:
+literal|1
+decl_stmt|;
 name|Expr
 modifier|*
 name|BaseIvarExp
+decl_stmt|;
+comment|/// Used by struct-path-aware TBAA.
+name|QualType
+name|TBAABaseType
+decl_stmt|;
+comment|/// Offset relative to the base type.
+name|uint64_t
+name|TBAAOffset
 decl_stmt|;
 comment|/// TBAAInfo - TBAA information to attach to dereferences of this LValue.
 name|llvm
@@ -678,6 +708,12 @@ name|false
 expr_stmt|;
 name|this
 operator|->
+name|ImpreciseLifetime
+operator|=
+name|false
+expr_stmt|;
+name|this
+operator|->
 name|ThreadLocalRef
 operator|=
 name|false
@@ -685,6 +721,19 @@ expr_stmt|;
 name|this
 operator|->
 name|BaseIvarExp
+operator|=
+literal|0
+expr_stmt|;
+comment|// Initialize fields for TBAA.
+name|this
+operator|->
+name|TBAABaseType
+operator|=
+name|Type
+expr_stmt|;
+name|this
+operator|->
+name|TBAAOffset
 operator|=
 literal|0
 expr_stmt|;
@@ -910,6 +959,35 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+name|ARCPreciseLifetime_t
+name|isARCPreciseLifetime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARCPreciseLifetime_t
+argument_list|(
+operator|!
+name|ImpreciseLifetime
+argument_list|)
+return|;
+block|}
+name|void
+name|setARCPreciseLifetime
+parameter_list|(
+name|ARCPreciseLifetime_t
+name|value
+parameter_list|)
+block|{
+name|ImpreciseLifetime
+operator|=
+operator|(
+name|value
+operator|==
+name|ARCImpreciseLifetime
+operator|)
+expr_stmt|;
+block|}
 name|bool
 name|isObjCWeak
 argument_list|()
@@ -975,6 +1053,48 @@ block|{
 name|BaseIvarExp
 operator|=
 name|V
+expr_stmt|;
+block|}
+name|QualType
+name|getTBAABaseType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TBAABaseType
+return|;
+block|}
+name|void
+name|setTBAABaseType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|TBAABaseType
+operator|=
+name|T
+expr_stmt|;
+block|}
+name|uint64_t
+name|getTBAAOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TBAAOffset
+return|;
+block|}
+name|void
+name|setTBAAOffset
+parameter_list|(
+name|uint64_t
+name|O
+parameter_list|)
+block|{
+name|TBAAOffset
+operator|=
+name|O
 expr_stmt|;
 block|}
 name|llvm
@@ -1184,7 +1304,7 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|getBitFieldBaseAddr
+name|getBitFieldAddr
 argument_list|()
 specifier|const
 block|{
@@ -1423,8 +1543,8 @@ return|;
 block|}
 comment|/// \brief Create a new object to represent a bit-field access.
 comment|///
-comment|/// \param BaseValue - The base address of the structure containing the
-comment|/// bit-field.
+comment|/// \param Addr - The base address of the bit-field sequence this
+comment|/// bit-field refers to.
 comment|/// \param Info - The information describing how to perform the bit-field
 comment|/// access.
 specifier|static
@@ -1435,7 +1555,7 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|BaseValue
+name|Addr
 argument_list|,
 specifier|const
 name|CGBitFieldInfo
@@ -1462,7 +1582,7 @@ name|R
 operator|.
 name|V
 operator|=
-name|BaseValue
+name|Addr
 expr_stmt|;
 name|R
 operator|.
@@ -1570,6 +1690,20 @@ name|AliasedFlag
 range|:
 literal|1
 decl_stmt|;
+comment|/// ValueOfAtomicFlag - This is set to true if the slot is the value
+comment|/// subobject of an object the size of an _Atomic(T).  The specific
+comment|/// guarantees this makes are:
+comment|///   - the address is guaranteed to be a getelementptr into the
+comment|///     padding struct and
+comment|///   - it is okay to store something the width of an _Atomic(T)
+comment|///     into the address.
+comment|/// Tracking this allows us to avoid some obviously unnecessary
+comment|/// memcpys.
+name|bool
+name|ValueOfAtomicFlag
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 enum|enum
@@ -1602,6 +1736,14 @@ block|{
 name|DoesNotNeedGCBarriers
 block|,
 name|NeedsGCBarriers
+block|}
+enum|;
+enum|enum
+name|IsValueOfAtomic_t
+block|{
+name|IsNotValueOfAtomic
+block|,
+name|IsValueOfAtomic
 block|}
 enum|;
 comment|/// ignored - Returns an aggregate value slot indicating that the
@@ -1669,6 +1811,11 @@ name|IsZeroed_t
 name|isZeroed
 operator|=
 name|IsNotZeroed
+argument_list|,
+name|IsValueOfAtomic_t
+name|isValueOfAtomic
+operator|=
+name|IsNotValueOfAtomic
 argument_list|)
 block|{
 name|AggValueSlot
@@ -1719,6 +1866,12 @@ name|AliasedFlag
 operator|=
 name|isAliased
 expr_stmt|;
+name|AV
+operator|.
+name|ValueOfAtomicFlag
+operator|=
+name|isValueOfAtomic
+expr_stmt|;
 return|return
 name|AV
 return|;
@@ -1745,6 +1898,11 @@ name|IsZeroed_t
 name|isZeroed
 init|=
 name|IsNotZeroed
+parameter_list|,
+name|IsValueOfAtomic_t
+name|isValueOfAtomic
+init|=
+name|IsNotValueOfAtomic
 parameter_list|)
 block|{
 return|return
@@ -1772,6 +1930,8 @@ argument_list|,
 name|isAliased
 argument_list|,
 name|isZeroed
+argument_list|,
+name|isValueOfAtomic
 argument_list|)
 return|;
 block|}
@@ -1822,6 +1982,21 @@ name|hasVolatile
 argument_list|()
 return|;
 block|}
+name|void
+name|setVolatile
+parameter_list|(
+name|bool
+name|flag
+parameter_list|)
+block|{
+name|Quals
+operator|.
+name|setVolatile
+argument_list|(
+name|flag
+argument_list|)
+expr_stmt|;
+block|}
 name|Qualifiers
 operator|::
 name|ObjCLifetime
@@ -1860,6 +2035,26 @@ return|return
 name|Addr
 return|;
 block|}
+name|IsValueOfAtomic_t
+name|isValueOfAtomic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsValueOfAtomic_t
+argument_list|(
+name|ValueOfAtomicFlag
+argument_list|)
+return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getPaddedAtomicAddr
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|isIgnored
 argument_list|()

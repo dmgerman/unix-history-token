@@ -45,12 +45,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ALL_STD_EXCEPT
-value|(FE_DIVBYZERO | FE_INEXACT | FE_INVALID | \ 			 FE_OVERFLOW | FE_UNDERFLOW)
-end_define
+begin_include
+include|#
+directive|include
+file|"test-utils.h"
+end_include
 
 begin_pragma
 pragma|#
@@ -59,61 +58,6 @@ name|STDC
 name|FENV_ACCESS
 name|ON
 end_pragma
-
-begin_comment
-comment|/*  * Test for equality with two special rules:  *   fpequal(NaN, NaN) is true  *   fpequal(+0.0, -0.0) is false  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|fpequal
-parameter_list|(
-name|long
-name|double
-name|x
-parameter_list|,
-name|long
-name|double
-name|y
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|x
-operator|==
-name|y
-operator|&&
-operator|!
-name|signbit
-argument_list|(
-name|x
-argument_list|)
-operator|==
-operator|!
-name|signbit
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|isnan
-argument_list|(
-name|x
-argument_list|)
-operator|&&
-name|isnan
-argument_list|(
-name|y
-argument_list|)
-operator|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Test whether func(x, y) has the expected result, and make sure no  * exceptions are raised.  */

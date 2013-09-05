@@ -72,7 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cstddef>
+file|"clang/StaticAnalyzer/Core/PathSensitive/ExplodedGraph.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -85,12 +91,6 @@ decl_stmt|;
 name|namespace
 name|ento
 block|{
-name|class
-name|ExplodedNode
-decl_stmt|;
-name|class
-name|ExplodedNodeImpl
-decl_stmt|;
 name|class
 name|WorkListUnit
 block|{

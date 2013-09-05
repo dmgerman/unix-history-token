@@ -15,6 +15,12 @@ directive|define
 name|__XEN_PUBLIC_NMI_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"xen.h"
+end_include
+
 begin_comment
 comment|/*  * NMI reason codes:  * Currently these are x86-specific, stored in arch_shared_info.nmi_reason.  */
 end_comment

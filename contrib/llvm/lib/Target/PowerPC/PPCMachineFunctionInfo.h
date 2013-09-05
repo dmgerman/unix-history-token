@@ -99,9 +99,22 @@ comment|/// PEI.
 name|bool
 name|MustSaveLR
 block|;
+comment|/// Does this function have any stack spills.
+name|bool
+name|HasSpills
+block|;
+comment|/// Does this function spill using instructions with only r+r (not r+i)
+comment|/// forms.
+name|bool
+name|HasNonRISpills
+block|;
 comment|/// SpillsCR - Indicates whether CR is spilled in the current function.
 name|bool
 name|SpillsCR
+block|;
+comment|/// Indicates whether VRSAVE is spilled in the current function.
+name|bool
+name|SpillsVRSAVE
 block|;
 comment|/// LRStoreRequired - The bool indicates whether there is some explicit use of
 comment|/// the LR/LR8 stack slot that is not obvious from scanning the code.  This
@@ -145,6 +158,21 @@ comment|/// register for parameter passing.
 name|unsigned
 name|VarArgsNumFPR
 block|;
+comment|/// CRSpillFrameIndex - FrameIndex for CR spill slot for 32-bit SVR4.
+name|int
+name|CRSpillFrameIndex
+block|;
+comment|/// If any of CR[2-4] need to be saved in the prologue and restored in the
+comment|/// epilogue then they are added to this array. This is used for the
+comment|/// 64-bit SVR4 ABI.
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|3
+operator|>
+name|MustSaveCRs
+block|;
 name|public
 operator|:
 name|explicit
@@ -165,7 +193,22 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|HasSpills
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|HasNonRISpills
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|SpillsCR
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|SpillsVRSAVE
 argument_list|(
 name|false
 argument_list|)
@@ -206,6 +249,11 @@ literal|0
 argument_list|)
 block|,
 name|VarArgsNumFPR
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|CRSpillFrameIndex
 argument_list|(
 literal|0
 argument_list|)
@@ -311,6 +359,40 @@ name|MustSaveLR
 return|;
 block|}
 name|void
+name|setHasSpills
+argument_list|()
+block|{
+name|HasSpills
+operator|=
+name|true
+block|; }
+name|bool
+name|hasSpills
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSpills
+return|;
+block|}
+name|void
+name|setHasNonRISpills
+argument_list|()
+block|{
+name|HasNonRISpills
+operator|=
+name|true
+block|; }
+name|bool
+name|hasNonRISpills
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasNonRISpills
+return|;
+block|}
+name|void
 name|setSpillsCR
 argument_list|()
 block|{
@@ -325,6 +407,23 @@ specifier|const
 block|{
 return|return
 name|SpillsCR
+return|;
+block|}
+name|void
+name|setSpillsVRSAVE
+argument_list|()
+block|{
+name|SpillsVRSAVE
+operator|=
+name|true
+block|; }
+name|bool
+name|isVRSAVESpilled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SpillsVRSAVE
 return|;
 block|}
 name|void
@@ -436,6 +535,54 @@ block|{
 name|VarArgsNumFPR
 operator|=
 name|Num
+block|; }
+name|int
+name|getCRSpillFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CRSpillFrameIndex
+return|;
+block|}
+name|void
+name|setCRSpillFrameIndex
+argument_list|(
+argument|int idx
+argument_list|)
+block|{
+name|CRSpillFrameIndex
+operator|=
+name|idx
+block|; }
+specifier|const
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|3
+operator|>
+operator|&
+name|getMustSaveCRs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MustSaveCRs
+return|;
+block|}
+name|void
+name|addMustSaveCR
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|MustSaveCRs
+operator|.
+name|push_back
+argument_list|(
+name|Reg
+argument_list|)
 block|; }
 expr|}
 block|;  }

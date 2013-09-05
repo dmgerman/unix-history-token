@@ -1308,8 +1308,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AF_INET_SDP
+value|40
+end_define
+
+begin_comment
+comment|/* OFED Socket Direct Protocol ipv4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_INET6_SDP
+value|42
+end_define
+
+begin_comment
+comment|/* OFED Socket Direct Protocol ipv6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AF_MAX
-value|38
+value|42
 end_define
 
 begin_comment
@@ -2026,6 +2048,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_IEEE80211
+value|AF_IEEE80211
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_INET_SDP
+value|AF_INET_SDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_INET6_SDP
+value|AF_INET6_SDP
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_MAX
 value|AF_MAX
 end_define
@@ -2039,13 +2082,6 @@ define|#
 directive|define
 name|NET_MAXID
 value|AF_MAX
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_NET_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "unix", CTLTYPE_NODE }, \ 	{ "inet", CTLTYPE_NODE }, \ 	{ "implink", CTLTYPE_NODE }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ "chaos", CTLTYPE_NODE }, \ 	{ "xerox_ns", CTLTYPE_NODE }, \ 	{ "iso", CTLTYPE_NODE }, \ 	{ "emca", CTLTYPE_NODE }, \ 	{ "datakit", CTLTYPE_NODE }, \ 	{ "ccitt", CTLTYPE_NODE }, \ 	{ "ibm_sna", CTLTYPE_NODE }, \ 	{ "decnet", CTLTYPE_NODE }, \ 	{ "dec_dli", CTLTYPE_NODE }, \ 	{ "lat", CTLTYPE_NODE }, \ 	{ "hylink", CTLTYPE_NODE }, \ 	{ "appletalk", CTLTYPE_NODE }, \ 	{ "route", CTLTYPE_NODE }, \ 	{ "link_layer", CTLTYPE_NODE }, \ 	{ "xtp", CTLTYPE_NODE }, \ 	{ "coip", CTLTYPE_NODE }, \ 	{ "cnt", CTLTYPE_NODE }, \ 	{ "rtip", CTLTYPE_NODE }, \ 	{ "ipx", CTLTYPE_NODE }, \ 	{ "sip", CTLTYPE_NODE }, \ 	{ "pip", CTLTYPE_NODE }, \ 	{ "isdn", CTLTYPE_NODE }, \ 	{ "key", CTLTYPE_NODE }, \ 	{ "inet6", CTLTYPE_NODE }, \ 	{ "natm", CTLTYPE_NODE }, \ 	{ "atm", CTLTYPE_NODE }, \ 	{ "hdrcomplete", CTLTYPE_NODE }, \ 	{ "netgraph", CTLTYPE_NODE }, \ 	{ "snp", CTLTYPE_NODE }, \ 	{ "scp", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment
@@ -2112,13 +2148,6 @@ define|#
 directive|define
 name|NET_RT_MAXID
 value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTL_NET_RT_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ 	{ "ifmalist", CTLTYPE_STRUCT }, \ 	{ "iflistl", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_endif
@@ -2904,10 +2933,36 @@ name|SF_SYNC
 value|0x00000004
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SFK_COMPAT
+value|0x00000001
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2977,6 +3032,26 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_function_decl
+name|int
+name|accept4
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|__restrict
+parameter_list|,
+name|socklen_t
+modifier|*
+name|__restrict
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

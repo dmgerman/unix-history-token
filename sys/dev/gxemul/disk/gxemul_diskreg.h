@@ -43,12 +43,42 @@ name|GXEMUL_DISK_DEV_ID_END
 value|(0x0100)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LP64
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|GXEMUL_DISK_DEV_OFFSET
 value|(0x0000)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_DISK_DEV_OFFSET_LO
+value|(0x0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_DISK_DEV_OFFSET_HI
+value|(0x0008)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -78,6 +108,12 @@ name|GXEMUL_DISK_DEV_BLOCK
 value|(0x4000)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LP64
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -99,6 +135,38 @@ parameter_list|)
 define|\
 value|(volatile uint64_t)*GXEMUL_DISK_DEV_FUNCTION(f)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_DISK_DEV_FUNCTION
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(volatile uint32_t *)MIPS_PHYS_TO_DIRECT_UNCACHED(GXEMUL_DISK_DEV_BASE + (f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_DISK_DEV_READ
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(volatile uint32_t)*GXEMUL_DISK_DEV_FUNCTION(f)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

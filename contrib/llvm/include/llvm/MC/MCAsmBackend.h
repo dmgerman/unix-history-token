@@ -90,7 +90,7 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
-name|MCInstFragment
+name|MCRelaxableFragment
 decl_stmt|;
 name|class
 name|MCObjectWriter
@@ -147,6 +147,12 @@ operator|~
 name|MCAsmBackend
 argument_list|()
 expr_stmt|;
+comment|/// lifetime management
+name|virtual
+name|void
+name|reset
+parameter_list|()
+block|{ }
 comment|/// createObjectWriter - Create a new MCObjectWriter instance for use by the
 comment|/// assembler backend to emit the final object file.
 name|virtual
@@ -368,7 +374,7 @@ name|uint64_t
 name|Value
 argument_list|,
 specifier|const
-name|MCInstFragment
+name|MCRelaxableFragment
 operator|*
 name|DF
 argument_list|,

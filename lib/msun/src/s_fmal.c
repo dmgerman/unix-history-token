@@ -307,9 +307,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|bits_lost
 operator|!=
 literal|1
+operator|)
 operator|^
 call|(
 name|int
@@ -848,12 +850,20 @@ argument_list|(
 name|FE_TONEAREST
 argument_list|)
 expr_stmt|;
+comment|/* work around clang bug 8100 */
+specifier|volatile
+name|long
+name|double
+name|vxs
+init|=
+name|xs
+decl_stmt|;
 comment|/* 	 * Basic approach for round-to-nearest: 	 * 	 *     (xy.hi, xy.lo) = x * y		(exact) 	 *     (r.hi, r.lo)   = xy.hi + z	(exact) 	 *     adj = xy.lo + r.lo		(inexact; low bit is sticky) 	 *     result = r.hi + adj		(correctly rounded) 	 */
 name|xy
 operator|=
 name|dd_mul
 argument_list|(
-name|xs
+name|vxs
 argument_list|,
 name|ys
 argument_list|)
@@ -930,11 +940,19 @@ argument_list|(
 name|oround
 argument_list|)
 expr_stmt|;
-name|adj
-operator|=
+comment|/* work around clang bug 8100 */
+specifier|volatile
+name|long
+name|double
+name|vrlo
+init|=
 name|r
 operator|.
 name|lo
+decl_stmt|;
+name|adj
+operator|=
+name|vrlo
 operator|+
 name|xy
 operator|.

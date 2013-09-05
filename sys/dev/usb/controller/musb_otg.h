@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|MUSB2_MAX_DEVICES
-value|(USB_MIN_DEVICES + 1)
+value|USB_MAX_DEVICES
 end_define
 
 begin_comment
@@ -533,6 +533,21 @@ value|0x80
 end_define
 
 begin_comment
+comment|/* Device mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUSB2_MASK_CSRL_TXNAKTO
+value|0x80
+end_define
+
+begin_comment
+comment|/* Host mode */
+end_comment
+
+begin_comment
 comment|/* Device Side Mode */
 end_comment
 
@@ -599,6 +614,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MUSB2_MASK_CSR0L_TXFIFONEMPTY
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|MUSB2_MASK_CSR0L_RXSTALL
 value|0x04
 end_define
@@ -659,7 +681,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MUSB2_MASK_CSRH_TXDT_WR
+name|MUSB2_MASK_CSRH_TXDT_WREN
 value|0x02
 end_define
 
@@ -745,7 +767,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MUSB2_MASK_CSR0H_DT_SET
+name|MUSB2_MASK_CSR0H_DT_WREN
 value|0x04
 end_define
 
@@ -792,12 +814,42 @@ name|MUSB2_MASK_CSRL_RXOVERRUN
 value|0x04
 end_define
 
+begin_comment
+comment|/* Device Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUSB2_MASK_CSRL_RXERROR
+value|0x04
+end_define
+
+begin_comment
+comment|/* Host Mode */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MUSB2_MASK_CSRL_RXDATAERR
 value|0x08
 end_define
+
+begin_comment
+comment|/* Device Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUSB2_MASK_CSRL_RXNAKTO
+value|0x08
+end_define
+
+begin_comment
+comment|/* Host Mode */
+end_comment
 
 begin_define
 define|#
@@ -885,7 +937,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MUSB2_MASK_CSRH_RXDT_SET
+name|MUSB2_MASK_CSRH_RXDT_WREN
 value|0x04
 end_define
 
@@ -1612,7 +1664,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MUSB2_REG_RXHPORT
+name|MUSB2_REG_RXHUBPORT
 parameter_list|(
 name|n
 parameter_list|)
@@ -1629,6 +1681,20 @@ end_define
 begin_comment
 comment|/* maximum number of endpoints */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MUSB2_DEVICE_MODE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUSB2_HOST_MODE
+value|1
+end_define
 
 begin_define
 define|#
@@ -1776,6 +1842,12 @@ name|uint8_t
 name|ep_no
 decl_stmt|;
 name|uint8_t
+name|transfer_type
+decl_stmt|;
+name|uint8_t
+name|max_packet
+decl_stmt|;
+name|uint8_t
 name|error
 range|:
 literal|1
@@ -1804,6 +1876,26 @@ name|uint8_t
 name|dma_enabled
 range|:
 literal|1
+decl_stmt|;
+name|uint8_t
+name|transaction_started
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|dev_addr
+decl_stmt|;
+name|uint8_t
+name|toggle
+decl_stmt|;
+name|int8_t
+name|channel
+decl_stmt|;
+name|uint8_t
+name|haddr
+decl_stmt|;
+name|uint8_t
+name|hport
 decl_stmt|;
 block|}
 struct|;
@@ -1850,6 +1942,21 @@ name|setup_alt_next
 decl_stmt|;
 name|uint8_t
 name|did_stall
+decl_stmt|;
+name|uint8_t
+name|dev_addr
+decl_stmt|;
+name|int8_t
+name|channel
+decl_stmt|;
+name|uint8_t
+name|haddr
+decl_stmt|;
+name|uint8_t
+name|hport
+decl_stmt|;
+name|uint8_t
+name|transfer_type
 decl_stmt|;
 block|}
 struct|;
@@ -1906,6 +2013,21 @@ range|:
 literal|1
 decl_stmt|;
 name|uint8_t
+name|change_reset
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|change_over_current
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|change_enabled
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
 name|status_suspend
 range|:
 literal|1
@@ -1951,6 +2073,11 @@ literal|1
 decl_stmt|;
 name|uint8_t
 name|port_enabled
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|port_over_current
 range|:
 literal|1
 decl_stmt|;
@@ -2036,6 +2163,24 @@ name|arg
 parameter_list|)
 function_decl|;
 name|void
+function_decl|(
+modifier|*
+name|sc_ep_int_set
+function_decl|)
+parameter_list|(
+name|struct
+name|musbotg_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|ep
+parameter_list|,
+name|int
+name|on
+parameter_list|)
+function_decl|;
+name|void
 modifier|*
 name|sc_clocks_arg
 decl_stmt|;
@@ -2086,9 +2231,23 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+name|uint16_t
+name|sc_channel_mask
+decl_stmt|;
+comment|/* 16 endpoints */
 name|struct
 name|musbotg_flags
 name|sc_flags
+decl_stmt|;
+name|uint8_t
+name|sc_id
+decl_stmt|;
+name|uint8_t
+name|sc_mode
+decl_stmt|;
+name|void
+modifier|*
+name|sc_platform_data
 decl_stmt|;
 block|}
 struct|;
@@ -2130,6 +2289,15 @@ name|struct
 name|musbotg_softc
 modifier|*
 name|sc
+parameter_list|,
+name|uint16_t
+name|rxstat
+parameter_list|,
+name|uint16_t
+name|txstat
+parameter_list|,
+name|uint8_t
+name|stat
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2145,6 +2313,18 @@ name|sc
 parameter_list|,
 name|uint8_t
 name|is_on
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|musbotg_connect_interrupt
+parameter_list|(
+name|struct
+name|musbotg_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl

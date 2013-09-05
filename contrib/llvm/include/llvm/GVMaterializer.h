@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|GVMATERIALIZER_H
+name|LLVM_GVMATERIALIZER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|GVMATERIALIZER_H
+name|LLVM_GVMATERIALIZER_H
 end_define
 
 begin_include

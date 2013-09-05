@@ -4076,7 +4076,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * Valid combinations: 		 *  - CAM_SEND_STATUS, SCATTER_VALID = 0, dxfer_len = 0, 		 *    sglist_cnt = 0 		 *  - CAM_SEND_STATUS = 0, SCATTER_VALID = 0, dxfer_len != 0, 		 *    sglist_cnt = 0  		 *  - CAM_SEND_STATUS = 0, SCATTER_VALID, dxfer_len != 0, 		 *    sglist_cnt != 0 		 */
+comment|/* 		 * Valid combinations: 		 *  - CAM_SEND_STATUS, CAM_DATA_SG = 0, dxfer_len = 0, 		 *    sglist_cnt = 0 		 *  - CAM_SEND_STATUS = 0, CAM_DATA_SG = 0, dxfer_len != 0, 		 *    sglist_cnt = 0  		 *  - CAM_SEND_STATUS = 0, CAM_DATA_SG, dxfer_len != 0, 		 *    sglist_cnt != 0 		 */
 ifdef|#
 directive|ifdef
 name|CTLFEDEBUG
@@ -4094,7 +4094,7 @@ operator|(
 operator|(
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_SG
 operator|)
 operator|!=
 literal|0
@@ -4138,7 +4138,7 @@ operator|(
 operator|(
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_SG
 operator|)
 operator|&&
 operator|(
@@ -4155,7 +4155,7 @@ operator|(
 operator|(
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_SG
 operator|)
 operator|==
 literal|0
@@ -8512,9 +8512,6 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%s%d: max tagged openings: %d, max dev openings: %d\n"
@@ -8586,87 +8583,6 @@ else|:
 literal|"NOT "
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s%d: alloc_queue.entries %d, alloc_openings %d\n"
-argument_list|,
-name|sim
-operator|->
-name|sim_name
-argument_list|,
-name|sim
-operator|->
-name|unit_number
-argument_list|,
-name|sim
-operator|->
-name|devq
-operator|->
-name|alloc_queue
-operator|.
-name|entries
-argument_list|,
-name|sim
-operator|->
-name|devq
-operator|->
-name|alloc_openings
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s%d: qfrozen_cnt:"
-argument_list|,
-name|sim
-operator|->
-name|sim_name
-argument_list|,
-name|sim
-operator|->
-name|unit_number
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|CAM_RL_VALUES
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"%s%u"
-argument_list|,
-operator|(
-name|i
-operator|!=
-literal|0
-operator|)
-condition|?
-literal|":"
-else|:
-literal|""
-argument_list|,
-name|sim
-operator|->
-name|devq
-operator|->
-name|alloc_queue
-operator|.
-name|qfrozen_cnt
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -8844,7 +8760,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%ju CCBs oustanding (%ju allocated, %ju "
+literal|"%ju CCBs outstanding (%ju allocated, %ju "
 literal|"freed)\n"
 argument_list|,
 call|(

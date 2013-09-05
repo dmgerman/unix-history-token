@@ -34,25 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MCDISASSEMBLER_H
+name|LLVM_MC_MCDISASSEMBLER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MCDISASSEMBLER_H
+name|LLVM_MC_MCDISASSEMBLER_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm-c/Disassembler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm-c/Disassembler.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -74,9 +74,6 @@ decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
-struct_decl|struct
-name|EDInstInfo
-struct_decl|;
 comment|/// MCDisassembler - Superclass for all disassemblers.  Consumes a memory region
 comment|///   and provides an array of assembly instructions.
 name|class
@@ -214,28 +211,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// getEDInfo - Returns the enhanced instruction information corresponding to
-comment|///   the disassembler.
-comment|///
-comment|/// @return         - An array of instruction information, with one entry for
-comment|///                   each MCInst opcode this disassembler returns.
-comment|///                   NULL if there is no info for this target.
-name|virtual
-specifier|const
-name|EDInstInfo
-operator|*
-name|getEDInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|EDInstInfo
-operator|*
-operator|)
-literal|0
-return|;
-block|}
 name|private
 label|:
 comment|//

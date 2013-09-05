@@ -177,6 +177,8 @@ name|int
 name|rflag
 decl_stmt|,
 name|Iflag
+decl_stmt|,
+name|xflag
 decl_stmt|;
 end_decl_stmt
 
@@ -196,12 +198,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|check
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -213,6 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|check2
 parameter_list|(
@@ -224,6 +230,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|checkdot
 parameter_list|(
@@ -235,6 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|checkslash
 parameter_list|(
@@ -246,6 +254,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rm_file
 parameter_list|(
@@ -257,9 +266,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rm_overwrite
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -271,6 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rm_tree
 parameter_list|(
@@ -293,6 +305,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -420,6 +433,8 @@ name|Pflag
 operator|=
 name|rflag
 operator|=
+name|xflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -433,7 +448,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dfiIPRrvW"
+literal|"dfiIPRrvWx"
 argument_list|)
 operator|)
 operator|!=
@@ -517,6 +532,14 @@ case|case
 literal|'W'
 case|:
 name|Wflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
 operator|=
 literal|1
 expr_stmt|;
@@ -646,6 +669,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rm_tree
 parameter_list|(
@@ -713,6 +737,14 @@ condition|)
 name|flags
 operator||=
 name|FTS_WHITEOUT
+expr_stmt|;
+if|if
+condition|(
+name|xflag
+condition|)
+name|flags
+operator||=
+name|FTS_XDEV
 expr_stmt|;
 if|if
 condition|(
@@ -1392,6 +1424,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rm_file
 parameter_list|(
@@ -1760,9 +1793,11 @@ comment|/*  * rm_overwrite --  *	Overwrite the file 3 times with varying bit pat
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rm_overwrite
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|file
@@ -2134,13 +2169,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|check
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2184,7 +2222,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.	Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
+comment|/* 		 * If it's not a symbolic link and it's unwritable and we're 		 * talking to a terminal, ask.  Symbolic links are excluded 		 * because their permissions are meaningless.  Check stdin_ok 		 * first because we may not have stat'ed the file. 		 */
 if|if
 condition|(
 operator|!
@@ -2407,6 +2445,7 @@ value|((a)[0] == '/'&& (a)[1] == '\0')
 end_define
 
 begin_function
+specifier|static
 name|void
 name|checkslash
 parameter_list|(
@@ -2505,6 +2544,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|check2
 parameter_list|(
@@ -2794,6 +2834,7 @@ value|((a)[0] == '.'&& (!(a)[1] || ((a)[1] == '.'&& !(a)[2])))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|checkdot
 parameter_list|(
@@ -2919,6 +2960,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2934,7 +2976,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rm [-f | -i] [-dIPRrvW] file ..."
+literal|"usage: rm [-f | -i] [-dIPRrvWx] file ..."
 argument_list|,
 literal|"       unlink file"
 argument_list|)

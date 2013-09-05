@@ -307,7 +307,7 @@ operator|*
 name|timeout
 argument_list|,
 name|int
-name|check_unpaking
+name|flags
 argument_list|)
 name|__hidden
 decl_stmt|;

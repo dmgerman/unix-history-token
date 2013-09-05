@@ -114,9 +114,15 @@ decl_stmt|;
 name|bool
 name|ProperSubClass
 decl_stmt|;
+name|uint8_t
+name|MinCost
+decl_stmt|;
+name|uint16_t
+name|LastCostChange
+decl_stmt|;
 name|OwningArrayPtr
 operator|<
-name|unsigned
+name|MCPhysReg
 operator|>
 name|Order
 expr_stmt|;
@@ -135,13 +141,23 @@ argument_list|)
 operator|,
 name|ProperSubClass
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|MinCost
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|LastCostChange
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|operator
 name|ArrayRef
 operator|<
-name|unsigned
+name|MCPhysReg
 operator|>
 operator|(
 operator|)
@@ -299,7 +315,7 @@ comment|/// contains no reserved registers, and registers that alias callee save
 comment|/// registers come last.
 name|ArrayRef
 operator|<
-name|unsigned
+name|MCPhysReg
 operator|>
 name|getOrder
 argument_list|(
@@ -379,6 +395,49 @@ index|]
 return|;
 return|return
 literal|0
+return|;
+block|}
+comment|/// Get the minimum register cost in RC's allocation order.
+comment|/// This is the smallest value returned by TRI->getCostPerUse(Reg) for all
+comment|/// the registers in getOrder(RC).
+name|unsigned
+name|getMinCost
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|RC
+argument_list|)
+operator|.
+name|MinCost
+return|;
+block|}
+comment|/// Get the position of the last cost change in getOrder(RC).
+comment|///
+comment|/// All registers in getOrder(RC).slice(getLastCostChange(RC)) will have the
+comment|/// same cost according to TRI->getCostPerUse().
+name|unsigned
+name|getLastCostChange
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|RC
+argument_list|)
+operator|.
+name|LastCostChange
 return|;
 block|}
 block|}

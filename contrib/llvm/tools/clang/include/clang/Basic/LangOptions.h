@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"clang/Basic/CommentOptions.h"
 end_include
 
 begin_include
@@ -93,10 +93,39 @@ directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+struct|struct
+name|SanitizerOptions
+block|{
+define|#
+directive|define
+name|SANITIZER
+parameter_list|(
+name|NAME
+parameter_list|,
+name|ID
+parameter_list|)
+value|unsigned ID : 1;
+include|#
+directive|include
+file|"clang/Basic/Sanitizers.def"
+comment|/// \brief Cached set of sanitizer options with all sanitizers disabled.
+specifier|static
+specifier|const
+name|SanitizerOptions
+name|Disabled
+decl_stmt|;
+block|}
+struct|;
 comment|/// Bitfields of LangOptions, split out from LangOptions in order to ensure that
 comment|/// this large collection of bitfields is a trivial class type.
 name|class
@@ -135,6 +164,9 @@ parameter_list|)
 include|#
 directive|include
 file|"clang/Basic/LangOptions.def"
+name|SanitizerOptions
+name|Sanitize
+decl_stmt|;
 name|protected
 label|:
 comment|// Define language options of enumeration type. These are private, and will
@@ -227,19 +259,6 @@ name|SOB_Trapping
 comment|// -ftrapv
 block|}
 enum|;
-enum|enum
-name|FPContractModeKind
-block|{
-name|FPC_Off
-block|,
-comment|// Form fused FP ops only where result will not be affected.
-name|FPC_On
-block|,
-comment|// Form fused FP ops according to FP_CONTRACT rules.
-name|FPC_Fast
-comment|// Aggressively fuse FP ops (E.g. FMA).
-block|}
-enum|;
 name|public
 label|:
 name|clang
@@ -267,6 +286,10 @@ operator|::
 name|string
 name|CurrentModule
 expr_stmt|;
+comment|/// \brief Options for parsing comments.
+name|CommentOptions
+name|CommentOpts
+decl_stmt|;
 name|LangOptions
 argument_list|()
 expr_stmt|;

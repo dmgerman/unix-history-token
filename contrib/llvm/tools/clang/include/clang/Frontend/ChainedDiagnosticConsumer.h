@@ -219,34 +219,6 @@ argument_list|,
 name|Info
 argument_list|)
 block|;   }
-name|DiagnosticConsumer
-operator|*
-name|clone
-argument_list|(
-argument|DiagnosticsEngine&Diags
-argument_list|)
-specifier|const
-block|{
-return|return
-name|new
-name|ChainedDiagnosticConsumer
-argument_list|(
-name|Primary
-operator|->
-name|clone
-argument_list|(
-name|Diags
-argument_list|)
-argument_list|,
-name|Secondary
-operator|->
-name|clone
-argument_list|(
-name|Diags
-argument_list|)
-argument_list|)
-return|;
-block|}
 expr|}
 block|;  }
 end_decl_stmt

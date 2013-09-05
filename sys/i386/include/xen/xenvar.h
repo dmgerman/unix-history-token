@@ -57,11 +57,15 @@ directive|ifndef
 name|NOXENDEBUG
 end_ifndef
 
+begin_comment
+comment|/* Print directly to the Xen console during debugging. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|XENPRINTF
-value|printk
+value|xc_printf
 end_define
 
 begin_else
@@ -366,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|NR_CPUS
-value|MAX_VIRT_CPUS
+value|XEN_LEGACY_MAX_VCPUS
 end_define
 
 begin_define

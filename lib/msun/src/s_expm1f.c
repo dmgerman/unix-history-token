@@ -47,10 +47,6 @@ name|one
 init|=
 literal|1.0
 decl_stmt|,
-name|huge
-init|=
-literal|1.0e+30
-decl_stmt|,
 name|tiny
 init|=
 literal|1.0e-30
@@ -91,6 +87,16 @@ end_decl_stmt
 begin_comment
 comment|/*  0xcf3010.0p-33 */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|float
+name|huge
+init|=
+literal|1.0e+30
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|float

@@ -743,173 +743,67 @@ begin_struct
 struct|struct
 name|ipsecstat
 block|{
-name|u_quad_t
-name|in_success
-decl_stmt|;
-comment|/* succeeded inbound process */
-name|u_quad_t
-name|in_polvio
-decl_stmt|;
-comment|/* security policy violation for inbound process */
-name|u_quad_t
-name|in_nosa
-decl_stmt|;
-comment|/* inbound SA is unavailable */
-name|u_quad_t
-name|in_inval
-decl_stmt|;
-comment|/* inbound processing failed due to EINVAL */
-name|u_quad_t
-name|in_nomem
-decl_stmt|;
-comment|/* inbound processing failed due to ENOBUFS */
-name|u_quad_t
-name|in_badspi
-decl_stmt|;
-comment|/* failed getting a SPI */
-name|u_quad_t
-name|in_ahreplay
-decl_stmt|;
-comment|/* AH replay check failed */
-name|u_quad_t
-name|in_espreplay
-decl_stmt|;
-comment|/* ESP replay check failed */
-name|u_quad_t
-name|in_ahauthsucc
-decl_stmt|;
-comment|/* AH authentication success */
-name|u_quad_t
-name|in_ahauthfail
-decl_stmt|;
-comment|/* AH authentication failure */
-name|u_quad_t
-name|in_espauthsucc
-decl_stmt|;
-comment|/* ESP authentication success */
-name|u_quad_t
-name|in_espauthfail
-decl_stmt|;
-comment|/* ESP authentication failure */
-name|u_quad_t
-name|in_esphist
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|u_quad_t
-name|in_ahhist
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|u_quad_t
-name|in_comphist
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|u_quad_t
-name|out_success
-decl_stmt|;
-comment|/* succeeded outbound process */
-name|u_quad_t
-name|out_polvio
-decl_stmt|;
-comment|/* security policy violation for outbound process */
-name|u_quad_t
-name|out_nosa
-decl_stmt|;
-comment|/* outbound SA is unavailable */
-name|u_quad_t
-name|out_inval
-decl_stmt|;
-comment|/* outbound process failed due to EINVAL */
-name|u_quad_t
-name|out_nomem
-decl_stmt|;
-comment|/* inbound processing failed due to ENOBUFS */
-name|u_quad_t
-name|out_noroute
-decl_stmt|;
-comment|/* there is no route */
-name|u_quad_t
-name|out_esphist
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|u_quad_t
-name|out_ahhist
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|u_quad_t
-name|out_comphist
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|u_quad_t
-name|spdcachelookup
-decl_stmt|;
-name|u_quad_t
-name|spdcachemiss
-decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ips_in_polvio
 decl_stmt|;
 comment|/* input: sec policy violation */
-name|u_int32_t
+name|uint64_t
+name|ips_in_nomem
+decl_stmt|;
+comment|/* input: no memory available */
+name|uint64_t
+name|ips_in_inval
+decl_stmt|;
+comment|/* input: generic error */
+name|uint64_t
 name|ips_out_polvio
 decl_stmt|;
 comment|/* output: sec policy violation */
-name|u_int32_t
+name|uint64_t
 name|ips_out_nosa
 decl_stmt|;
 comment|/* output: SA unavailable  */
-name|u_int32_t
+name|uint64_t
 name|ips_out_nomem
 decl_stmt|;
 comment|/* output: no memory available */
-name|u_int32_t
+name|uint64_t
 name|ips_out_noroute
 decl_stmt|;
 comment|/* output: no route available */
-name|u_int32_t
+name|uint64_t
 name|ips_out_inval
 decl_stmt|;
 comment|/* output: generic error */
-name|u_int32_t
+name|uint64_t
 name|ips_out_bundlesa
 decl_stmt|;
 comment|/* output: bundled SA processed */
-name|u_int32_t
+name|uint64_t
 name|ips_mbcoalesced
 decl_stmt|;
 comment|/* mbufs coalesced during clone */
-name|u_int32_t
+name|uint64_t
 name|ips_clcoalesced
 decl_stmt|;
 comment|/* clusters coalesced during clone */
-name|u_int32_t
+name|uint64_t
 name|ips_clcopied
 decl_stmt|;
 comment|/* clusters copied during clone */
-name|u_int32_t
+name|uint64_t
 name|ips_mbinserted
 decl_stmt|;
 comment|/* mbufs inserted during makespace */
 comment|/*  	 * Temporary statistics for performance analysis. 	 */
 comment|/* See where ESP/AH/IPCOMP header land in mbuf on input */
-name|u_int32_t
+name|uint64_t
 name|ips_input_front
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ips_input_middle
 decl_stmt|;
-name|u_int32_t
+name|uint64_t
 name|ips_input_end
 decl_stmt|;
 block|}
@@ -1057,25 +951,17 @@ name|IPSECCTL_MAXID
 value|14
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPSECCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "ah_cleartos", CTLTYPE_INT }, \ 	{ "ah_offsetmask", CTLTYPE_INT }, \ 	{ "dfbit", CTLTYPE_INT }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "esp_randpad", CTLTYPE_INT }, \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPSEC6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "esp_randpad", CTLTYPE_INT }, \ }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
 
 begin_struct
 struct|struct
@@ -1177,7 +1063,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|VNET_DECLARE
+name|VNET_PCPUSTAT_DECLARE
 argument_list|(
 expr|struct
 name|ipsecstat
@@ -1291,8 +1177,12 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|V_ipsec4stat
-value|VNET(ipsec4stat)
+name|IPSECSTAT_INC
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|VNET_PCPUSTAT_ADD(struct ipsecstat, ipsec4stat, name, 1)
 end_define
 
 begin_define

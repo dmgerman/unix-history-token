@@ -469,7 +469,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEBUGGER_MAX_ARGS
-value|ACPI_METHOD_NUM_ARGS + 2
+value|ACPI_METHOD_NUM_ARGS + 4
 end_define
 
 begin_comment

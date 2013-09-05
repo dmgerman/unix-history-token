@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011, 2012  Internet Systems 
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: dst_openssl.h,v 1.11 2011/03/12 04:59:48 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|<isc/lang.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/log.h>
 end_include
 
 begin_include
@@ -111,6 +117,25 @@ begin_function_decl
 name|isc_result_t
 name|dst__openssl_toresult2
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|funcname
+parameter_list|,
+name|isc_result_t
+name|fallback
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dst__openssl_toresult3
+parameter_list|(
+name|isc_logcategory_t
+modifier|*
+name|category
+parameter_list|,
 specifier|const
 name|char
 modifier|*

@@ -528,6 +528,46 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|ARC4_ENTR_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* Don't have entropy yet. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARC4_ENTR_HAVE
+value|1
+end_define
+
+begin_comment
+comment|/* Have entropy. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARC4_ENTR_SEED
+value|2
+end_define
+
+begin_comment
+comment|/* Reseeding. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|arc4rand_iniseed_state
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Prototypes for non-quad routines. */
 end_comment
@@ -685,6 +725,27 @@ begin_function_decl
 name|int
 name|flsl
 parameter_list|(
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_INLINE_FLSLL
+end_ifndef
+
+begin_function_decl
+name|int
+name|flsll
+parameter_list|(
+name|long
 name|long
 parameter_list|)
 function_decl|;

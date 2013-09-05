@@ -59,44 +59,50 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<_libiconv_compat.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LIBICONV_COMPAT
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|iconv_open
-value|libiconv_open
+name|libiconv_open
+value|iconv_open
 end_define
 
 begin_define
 define|#
 directive|define
-name|iconv_close
-value|libiconv_close
+name|libiconv_close
+value|iconv_close
 end_define
 
 begin_define
 define|#
 directive|define
-name|iconv
-parameter_list|(
-name|cd
-parameter_list|,
-name|in
-parameter_list|,
-name|insize
-parameter_list|,
-name|out
-parameter_list|,
-name|outsize
-parameter_list|)
-value|libiconv(cd, __DECONST(char **, in), insize, out, outsize)
+name|libiconv
+value|iconv
 end_define
 
 begin_define
 define|#
 directive|define
-name|iconv_t
-value|libiconv_t
+name|libiconv_t
+value|iconv_t
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -116,7 +122,7 @@ end_typedef
 begin_function_decl
 name|__BEGIN_DECLS
 name|iconv_t
-name|libiconv_open
+name|iconv_open
 parameter_list|(
 specifier|const
 name|char
@@ -131,10 +137,11 @@ end_function_decl
 
 begin_function_decl
 name|size_t
-name|libiconv
+name|iconv
 parameter_list|(
 name|iconv_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -158,7 +165,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|libiconv_close
+name|iconv_close
 parameter_list|(
 name|iconv_t
 parameter_list|)
@@ -205,6 +212,7 @@ name|__iconv
 parameter_list|(
 name|iconv_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -238,26 +246,44 @@ begin_comment
 comment|/*  * GNU interfaces for iconv  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LIBICONV_COMPAT
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|iconv_open_into
-value|libiconv_open_into
+name|libiconv_open_into
+value|iconv_open_into
 end_define
 
 begin_define
 define|#
 directive|define
-name|iconvctl
-value|libiconvctl
+name|libiconvctl
+value|iconvctl
 end_define
 
 begin_define
 define|#
 directive|define
-name|iconvlist
-value|libiconvlist
+name|libiconvlist
+value|iconvlist
 end_define
+
+begin_define
+define|#
+directive|define
+name|libiconv_set_relocation_prefix
+value|iconv_set_relocation_prefix
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* We have iconvctl() */
@@ -266,16 +292,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_LIBICONV_VERSION
+name|_ICONV_VERSION
 value|0x0108
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|_libiconv_version
+name|_iconv_version
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LIBICONV_COMPAT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_libiconv_version
+value|_iconv_version
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBICONV_VERSION
+value|_ICONV_VERSION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -313,7 +364,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|libiconv_set_relocation_prefix
+name|iconv_set_relocation_prefix
 parameter_list|(
 specifier|const
 name|char

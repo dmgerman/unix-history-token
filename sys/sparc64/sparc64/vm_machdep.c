@@ -1842,10 +1842,8 @@ argument_list|)
 expr_stmt|;
 name|sf_base
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|nsfbufs
 operator|*
 name|PAGE_SIZE
@@ -1983,10 +1981,10 @@ break|break;
 name|sf_buf_alloc_want
 operator|++
 expr_stmt|;
-name|mbstat
-operator|.
+name|SFSTAT_INC
+argument_list|(
 name|sf_allocwait
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

@@ -57,7 +57,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|const
+name|z_const
 name|char
 modifier|*
 specifier|const

@@ -301,7 +301,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
 argument_list|,
@@ -310,52 +310,10 @@ argument_list|, ,
 name|create
 argument_list|,
 name|create
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|create
-argument_list|,
-literal|0
 argument_list|,
 literal|"struct proc *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|create
-argument_list|,
-literal|1
 argument_list|,
 literal|"struct proc *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|create
-argument_list|,
-literal|2
 argument_list|,
 literal|"int"
 argument_list|)
@@ -3858,13 +3816,17 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"maxproc limit exceeded by uid %i, please see tuning(7) and login.conf(5).\n"
+literal|"maxproc limit exceeded by uid %u (pid %d); see tuning(7) and login.conf(5)\n"
 argument_list|,
 name|td
 operator|->
 name|td_ucred
 operator|->
 name|cr_ruid
+argument_list|,
+name|p1
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
 name|sx_xunlock

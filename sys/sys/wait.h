@@ -105,7 +105,7 @@ name|WIFSIGNALED
 parameter_list|(
 name|x
 parameter_list|)
-value|(_WSTATUS(x) != _WSTOPPED&& _WSTATUS(x) != 0)
+value|(_WSTATUS(x) != _WSTOPPED&& _WSTATUS(x) != 0&& (x) != 0x13)
 end_define
 
 begin_define

@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Intrinsics.h"
+file|"llvm/IR/Intrinsics.h"
 end_include
 
 begin_decl_stmt

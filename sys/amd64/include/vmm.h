@@ -1005,6 +1005,10 @@ name|vm
 parameter_list|,
 name|int
 name|vcpu
+parameter_list|,
+name|int
+modifier|*
+name|hostcpu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1022,6 +1026,10 @@ name|vm
 parameter_list|,
 name|int
 name|vcpu
+parameter_list|,
+name|int
+modifier|*
+name|hostcpu
 parameter_list|)
 block|{
 return|return
@@ -1031,6 +1039,8 @@ argument_list|(
 name|vm
 argument_list|,
 name|vcpu
+argument_list|,
+name|hostcpu
 argument_list|)
 operator|==
 name|VCPU_RUNNING

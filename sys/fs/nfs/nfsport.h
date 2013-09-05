@@ -2436,44 +2436,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSCACHEMUTEX
-value|extern struct mtx nfs_cache_mutex
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSCACHEMUTEXPTR
-value|(&nfs_cache_mutex)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSLOCKCACHE
-parameter_list|()
-value|mtx_lock(&nfs_cache_mutex)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSUNLOCKCACHE
-parameter_list|()
-value|mtx_unlock(&nfs_cache_mutex)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSCACHELOCKREQUIRED
-parameter_list|()
-value|mtx_assert(&nfs_cache_mutex, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFSSOCKMUTEX
 value|extern struct mtx nfs_slock_mutex
 end_define
@@ -3518,13 +3480,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|newnfs_realign
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

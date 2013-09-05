@@ -34,20 +34,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCASMPARSER_H
+name|LLVM_MC_MCPARSER_MCASMPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCASMPARSER_H
+name|LLVM_MC_MCPARSER_MCASMPARSER_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
 
 begin_include
 include|#
@@ -55,13 +49,28 @@ directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCParser/AsmLexer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AsmToken
-decl_stmt|;
 name|class
 name|MCAsmInfo
 decl_stmt|;
@@ -84,9 +93,6 @@ name|class
 name|MCInstrInfo
 decl_stmt|;
 name|class
-name|MCParsedAsmOperand
-decl_stmt|;
-name|class
 name|MCStreamer
 decl_stmt|;
 name|class
@@ -102,9 +108,6 @@ name|class
 name|SourceMgr
 decl_stmt|;
 name|class
-name|StringRef
-decl_stmt|;
-name|class
 name|Twine
 decl_stmt|;
 comment|/// MCAsmParserSemaCallback - Generic Sema callback for assembly parser.
@@ -113,6 +116,51 @@ name|MCAsmParserSemaCallback
 block|{
 name|public
 label|:
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|OpDecl
+decl_stmt|;
+name|bool
+name|IsVarDecl
+decl_stmt|;
+name|unsigned
+name|Length
+decl_stmt|,
+name|Size
+decl_stmt|,
+name|Type
+decl_stmt|;
+name|void
+name|clear
+parameter_list|()
+block|{
+name|OpDecl
+operator|=
+literal|0
+expr_stmt|;
+name|IsVarDecl
+operator|=
+name|false
+expr_stmt|;
+name|Length
+operator|=
+literal|1
+expr_stmt|;
+name|Size
+operator|=
+literal|0
+expr_stmt|;
+name|Type
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+name|InlineAsmIdentifierInfo
+typedef|;
 name|virtual
 operator|~
 name|MCAsmParserSemaCallback
@@ -124,15 +172,15 @@ modifier|*
 name|LookupInlineAsmIdentifier
 parameter_list|(
 name|StringRef
-name|Name
-parameter_list|,
-name|void
-modifier|*
-name|Loc
-parameter_list|,
-name|unsigned
 modifier|&
-name|Size
+name|LineBuf
+parameter_list|,
+name|InlineAsmIdentifierInfo
+modifier|&
+name|Info
+parameter_list|,
+name|bool
+name|IsUnevaluatedContext
 parameter_list|)
 init|=
 literal|0
@@ -156,6 +204,12 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+typedef|typedef
+name|MCAsmParserSemaCallback
+operator|::
+name|InlineAsmIdentifierInfo
+name|InlineAsmIdentifierInfo
+expr_stmt|;
 comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
 comment|/// assembly parsers.
 name|class
@@ -178,6 +232,18 @@ parameter_list|,
 name|SMLoc
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|MCAsmParserExtension
+operator|*
+operator|,
+name|DirectiveHandler
+operator|>
+name|ExtensionDirectiveHandler
+expr_stmt|;
 name|private
 label|:
 name|MCAsmParser
@@ -220,16 +286,12 @@ argument_list|()
 expr_stmt|;
 name|virtual
 name|void
-name|AddDirectiveHandler
+name|addDirectiveHandler
 parameter_list|(
-name|MCAsmParserExtension
-modifier|*
-name|Object
-parameter_list|,
 name|StringRef
 name|Directive
 parameter_list|,
-name|DirectiveHandler
+name|ExtensionDirectiveHandler
 name|Handler
 parameter_list|)
 init|=
@@ -358,10 +420,10 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// ParseMSInlineAsm - Parse ms-style inline assembly.
+comment|/// parseMSInlineAsm - Parse ms-style inline assembly.
 name|virtual
 name|bool
-name|ParseMSInlineAsm
+name|parseMSInlineAsm
 argument_list|(
 name|void
 operator|*
@@ -452,12 +514,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 init|=
 literal|0
@@ -484,12 +541,7 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 init|=
 literal|0
@@ -527,19 +579,14 @@ name|SMRange
 operator|>
 name|Ranges
 operator|=
-name|ArrayRef
-operator|<
-name|SMRange
-operator|>
-operator|(
-operator|)
+name|None
 argument_list|)
 decl_stmt|;
-comment|/// ParseIdentifier - Parse an identifier or string (as a quoted identifier)
+comment|/// parseIdentifier - Parse an identifier or string (as a quoted identifier)
 comment|/// and set \p Res to the identifier contents.
 name|virtual
 name|bool
-name|ParseIdentifier
+name|parseIdentifier
 parameter_list|(
 name|StringRef
 modifier|&
@@ -553,28 +600,43 @@ comment|/// current token until the end of the statement; the current token on e
 comment|/// will be either the EndOfStatement or EOF.
 name|virtual
 name|StringRef
-name|ParseStringToEndOfStatement
+name|parseStringToEndOfStatement
 parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// EatToEndOfStatement - Skip to the end of the current statement, for error
+comment|/// parseEscapedString - Parse the current token as a string which may include
+comment|/// escaped characters and return the string contents.
+name|virtual
+name|bool
+name|parseEscapedString
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Data
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// eatToEndOfStatement - Skip to the end of the current statement, for error
 comment|/// recovery.
 name|virtual
 name|void
-name|EatToEndOfStatement
+name|eatToEndOfStatement
 parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// ParseExpression - Parse an arbitrary expression.
+comment|/// parseExpression - Parse an arbitrary expression.
 comment|///
 comment|/// @param Res - The value of the expression. The result is undefined
 comment|/// on error.
 comment|/// @result - False on success.
 name|virtual
 name|bool
-name|ParseExpression
+name|parseExpression
 parameter_list|(
 specifier|const
 name|MCExpr
@@ -590,7 +652,7 @@ init|=
 literal|0
 function_decl|;
 name|bool
-name|ParseExpression
+name|parseExpression
 parameter_list|(
 specifier|const
 name|MCExpr
@@ -599,7 +661,29 @@ modifier|&
 name|Res
 parameter_list|)
 function_decl|;
-comment|/// ParseParenExpression - Parse an arbitrary expression, assuming that an
+comment|/// parsePrimaryExpr - Parse a primary expression.
+comment|///
+comment|/// @param Res - The value of the expression. The result is undefined
+comment|/// on error.
+comment|/// @result - False on success.
+name|virtual
+name|bool
+name|parsePrimaryExpr
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+modifier|&
+name|Res
+parameter_list|,
+name|SMLoc
+modifier|&
+name|EndLoc
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// parseParenExpression - Parse an arbitrary expression, assuming that an
 comment|/// initial '(' has already been consumed.
 comment|///
 comment|/// @param Res - The value of the expression. The result is undefined
@@ -607,7 +691,7 @@ comment|/// on error.
 comment|/// @result - False on success.
 name|virtual
 name|bool
-name|ParseParenExpression
+name|parseParenExpression
 parameter_list|(
 specifier|const
 name|MCExpr
@@ -622,7 +706,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// ParseAbsoluteExpression - Parse an expression which must evaluate to an
+comment|/// parseAbsoluteExpression - Parse an expression which must evaluate to an
 comment|/// absolute value.
 comment|///
 comment|/// @param Res - The value of the absolute expression. The result is undefined
@@ -630,12 +714,21 @@ comment|/// on error.
 comment|/// @result - False on success.
 name|virtual
 name|bool
-name|ParseAbsoluteExpression
+name|parseAbsoluteExpression
 parameter_list|(
 name|int64_t
 modifier|&
 name|Res
 parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// checkForValidSection - Ensure that we have a valid section set in the
+comment|/// streamer. Otherwise, report an error and switch to .text.
+name|virtual
+name|void
+name|checkForValidSection
+parameter_list|()
 init|=
 literal|0
 function_decl|;

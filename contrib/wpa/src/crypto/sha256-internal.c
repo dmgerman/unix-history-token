@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * SHA-256 hash implementation and interface functions  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * SHA-256 hash implementation and interface functions  * Copyright (c) 2003-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -24,87 +24,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"crypto.h"
+file|"sha256_i.h"
 end_include
 
-begin_struct
-struct|struct
-name|sha256_state
-block|{
-name|u64
-name|length
-decl_stmt|;
-name|u32
-name|state
-index|[
-literal|8
-index|]
-decl_stmt|,
-name|curlen
-decl_stmt|;
-name|u8
-name|buf
-index|[
-literal|64
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-specifier|static
-name|void
-name|sha256_init
-parameter_list|(
-name|struct
-name|sha256_state
-modifier|*
-name|md
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|sha256_process
-parameter_list|(
-name|struct
-name|sha256_state
-modifier|*
-name|md
-parameter_list|,
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|in
-parameter_list|,
-name|unsigned
-name|long
-name|inlen
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|sha256_done
-parameter_list|(
-name|struct
-name|sha256_state
-modifier|*
-name|md
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|out
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"crypto.h"
+end_include
 
 begin_comment
 comment|/**  * sha256_vector - SHA256 hash for data vector  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for the hash  * Returns: 0 on success, -1 of failure  */
@@ -856,7 +783,6 @@ comment|/* Initialize the hash state */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|sha256_init
 parameter_list|(
@@ -958,7 +884,6 @@ comment|/**    Process a block of memory though the hash    @param md     The ha
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|sha256_process
 parameter_list|(
@@ -982,16 +907,12 @@ name|unsigned
 name|long
 name|n
 decl_stmt|;
-define|#
-directive|define
-name|block_size
-value|64
 if|if
 condition|(
 name|md
 operator|->
 name|curlen
-operator|>
+operator|>=
 sizeof|sizeof
 argument_list|(
 name|md
@@ -1020,7 +941,7 @@ literal|0
 operator|&&
 name|inlen
 operator|>=
-name|block_size
+name|SHA256_BLOCK_SIZE
 condition|)
 block|{
 if|if
@@ -1047,17 +968,17 @@ name|md
 operator|->
 name|length
 operator|+=
-name|block_size
+name|SHA256_BLOCK_SIZE
 operator|*
 literal|8
 expr_stmt|;
 name|in
 operator|+=
-name|block_size
+name|SHA256_BLOCK_SIZE
 expr_stmt|;
 name|inlen
 operator|-=
-name|block_size
+name|SHA256_BLOCK_SIZE
 expr_stmt|;
 block|}
 else|else
@@ -1069,7 +990,7 @@ argument_list|(
 name|inlen
 argument_list|,
 operator|(
-name|block_size
+name|SHA256_BLOCK_SIZE
 operator|-
 name|md
 operator|->
@@ -1112,7 +1033,7 @@ name|md
 operator|->
 name|curlen
 operator|==
-name|block_size
+name|SHA256_BLOCK_SIZE
 condition|)
 block|{
 if|if
@@ -1138,7 +1059,7 @@ name|length
 operator|+=
 literal|8
 operator|*
-name|block_size
+name|SHA256_BLOCK_SIZE
 expr_stmt|;
 name|md
 operator|->
@@ -1160,7 +1081,6 @@ comment|/**    Terminate the hash to get the digest    @param md  The hash state
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|sha256_done
 parameter_list|(
@@ -1239,7 +1159,7 @@ name|md
 operator|->
 name|curlen
 operator|<
-literal|64
+name|SHA256_BLOCK_SIZE
 condition|)
 block|{
 name|md
@@ -1275,7 +1195,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* pad upto 56 bytes of zeroes */
+comment|/* pad up to 56 bytes of zeroes */
 while|while
 condition|(
 name|md

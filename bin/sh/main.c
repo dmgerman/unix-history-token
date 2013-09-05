@@ -211,12 +211,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"init.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mystring.h"
 end_include
 
@@ -230,6 +224,12 @@ begin_include
 include|#
 directive|include
 file|"cd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"redir.h"
 end_include
 
 begin_include
@@ -264,6 +264,16 @@ decl_stmt|,
 name|initial_localeisutf8
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -652,6 +662,8 @@ name|EV_EXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|state4
+label|:
 if|if
 condition|(
 name|sflag
@@ -661,9 +673,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|state4
-label|:
-comment|/* XXX ??? - why isn't this before the "if" statement */
 name|cmdloop
 argument_list|(
 literal|1
@@ -679,6 +688,23 @@ comment|/*NOTREACHED*/
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|reset
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|reseteval
+argument_list|()
+expr_stmt|;
+name|resetinput
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -880,7 +906,7 @@ if|if
 condition|(
 name|evalskip
 operator|==
-name|SKIPFILE
+name|SKIPRETURN
 condition|)
 name|evalskip
 operator|=
@@ -947,6 +973,8 @@ argument_list|(
 name|expandedname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|>=

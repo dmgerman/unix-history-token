@@ -70,37 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineOperand.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCInstrDesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetOpcodes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ilist.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ilist_node.h"
+file|"llvm/ADT/DenseMapInfo.h"
 end_include
 
 begin_include
@@ -118,19 +94,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMapInfo.h"
+file|"llvm/ADT/ilist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/InlineAsm.h"
+file|"llvm/ADT/ilist_node.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCInstrDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ArrayRecycler.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOpcodes.h"
 end_include
 
 begin_include
@@ -171,6 +177,10 @@ name|MachineMemOperand
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MachineInstr - Representation of each machine instruction.
+comment|///
+comment|/// This class isn't a POD type, but it must have a trivial destructor. When a
+comment|/// MachineFunction is deleted, all the contained MachineInstrs are deallocated
+comment|/// without having their destructor called.
 comment|///
 name|class
 name|MachineInstr
@@ -216,13 +226,19 @@ literal|0
 block|,
 comment|// Instruction is used as a part of
 comment|// function frame setup code.
-name|InsideBundle
+name|BundledPred
 init|=
 literal|1
 operator|<<
 literal|1
-comment|// Instruction is inside a bundle (not
-comment|// the first MI in a bundle)
+block|,
+comment|// Instruction has bundled predecessors.
+name|BundledSucc
+init|=
+literal|1
+operator|<<
+literal|2
+comment|// Instruction has bundled successors.
 block|}
 enum|;
 name|private
@@ -233,6 +249,34 @@ modifier|*
 name|MCID
 decl_stmt|;
 comment|// Instruction descriptor.
+name|MachineBasicBlock
+modifier|*
+name|Parent
+decl_stmt|;
+comment|// Pointer to the owning basic block.
+comment|// Operands are allocated by an ArrayRecycler.
+name|MachineOperand
+modifier|*
+name|Operands
+decl_stmt|;
+comment|// Pointer to the first operand.
+name|unsigned
+name|NumOperands
+decl_stmt|;
+comment|// Number of operands on instruction.
+typedef|typedef
+name|ArrayRecycler
+operator|<
+name|MachineOperand
+operator|>
+operator|::
+name|Capacity
+name|OperandCapacity
+expr_stmt|;
+name|OperandCapacity
+name|CapOperands
+decl_stmt|;
+comment|// Capacity of the Operands array.
 name|uint8_t
 name|Flags
 decl_stmt|;
@@ -248,27 +292,13 @@ comment|// comments.  This is *not* semantic
 comment|// information.  Do not use this for
 comment|// anything other than to convey comment
 comment|// information to AsmPrinter.
-name|uint16_t
+name|uint8_t
 name|NumMemRefs
 decl_stmt|;
-comment|// information on memory references
+comment|// Information on memory references.
 name|mmo_iterator
 name|MemRefs
 decl_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineOperand
-operator|>
-name|Operands
-expr_stmt|;
-comment|// the operands
-name|MachineBasicBlock
-modifier|*
-name|Parent
-decl_stmt|;
-comment|// Pointer to the owning basic block.
 name|DebugLoc
 name|debugLoc
 decl_stmt|;
@@ -289,6 +319,12 @@ operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
 decl_stmt|;
+comment|// Use MachineFunction::DeleteMachineInstr() instead.
+operator|~
+name|MachineInstr
+argument_list|()
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
 comment|// Intrusive list support
 name|friend
 block|struct
@@ -329,16 +365,13 @@ name|MachineInstr
 operator|&
 argument_list|)
 expr_stmt|;
-comment|/// MachineInstr ctor - This constructor creates a dummy MachineInstr with
-comment|/// MCID NULL and no operands.
-name|MachineInstr
-argument_list|()
-expr_stmt|;
 comment|/// MachineInstr ctor - This constructor create a MachineInstr and add the
 comment|/// implicit operands.  It reserves space for number of operands specified by
 comment|/// MCInstrDesc.  An explicit DebugLoc is supplied.
 name|MachineInstr
 argument_list|(
+argument|MachineFunction&
+argument_list|,
 argument|const MCInstrDesc&MCID
 argument_list|,
 argument|const DebugLoc dl
@@ -346,22 +379,6 @@ argument_list|,
 argument|bool NoImp = false
 argument_list|)
 empty_stmt|;
-comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
-comment|/// the MachineInstr is created and added to the end of the specified basic
-comment|/// block.
-name|MachineInstr
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|,
-argument|const DebugLoc dl
-argument_list|,
-argument|const MCInstrDesc&MCID
-argument_list|)
-empty_stmt|;
-operator|~
-name|MachineInstr
-argument_list|()
-expr_stmt|;
 comment|// MachineInstrs are pool-allocated and owned by MachineFunction.
 name|friend
 name|class
@@ -507,9 +524,28 @@ name|unsigned
 name|flags
 parameter_list|)
 block|{
+comment|// Filter out the automatically maintained flags.
+name|unsigned
+name|Mask
+init|=
+name|BundledPred
+operator||
+name|BundledSucc
+decl_stmt|;
 name|Flags
 operator|=
+operator|(
+name|Flags
+operator|&
+name|Mask
+operator|)
+operator||
+operator|(
 name|flags
+operator|&
+operator|~
+name|Mask
+operator|)
 expr_stmt|;
 block|}
 comment|/// clearFlag - Clear a MI flag.
@@ -575,36 +611,9 @@ block|{
 return|return
 name|getFlag
 argument_list|(
-name|InsideBundle
+name|BundledPred
 argument_list|)
 return|;
-block|}
-comment|/// setIsInsideBundle - Set InsideBundle bit.
-comment|///
-name|void
-name|setIsInsideBundle
-parameter_list|(
-name|bool
-name|Val
-init|=
-name|true
-parameter_list|)
-block|{
-if|if
-condition|(
-name|Val
-condition|)
-name|setFlag
-argument_list|(
-name|InsideBundle
-argument_list|)
-expr_stmt|;
-else|else
-name|clearFlag
-argument_list|(
-name|InsideBundle
-argument_list|)
-expr_stmt|;
 block|}
 comment|/// isBundled - Return true if this instruction part of a bundle. This is true
 comment|/// if either itself or its following instruction is marked "InsideBundle".
@@ -612,7 +621,65 @@ name|bool
 name|isBundled
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|isBundledWithPred
+argument_list|()
+operator|||
+name|isBundledWithSucc
+argument_list|()
+return|;
+block|}
+comment|/// Return true if this instruction is part of a bundle, and it is not the
+comment|/// first instruction in the bundle.
+name|bool
+name|isBundledWithPred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlag
+argument_list|(
+name|BundledPred
+argument_list|)
+return|;
+block|}
+comment|/// Return true if this instruction is part of a bundle, and it is not the
+comment|/// last instruction in the bundle.
+name|bool
+name|isBundledWithSucc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFlag
+argument_list|(
+name|BundledSucc
+argument_list|)
+return|;
+block|}
+comment|/// Bundle this instruction with its predecessor. This can be an unbundled
+comment|/// instruction, or it can be the first instruction in a bundle.
+name|void
+name|bundleWithPred
+parameter_list|()
+function_decl|;
+comment|/// Bundle this instruction with its successor. This can be an unbundled
+comment|/// instruction, or it can be the last instruction in a bundle.
+name|void
+name|bundleWithSucc
+parameter_list|()
+function_decl|;
+comment|/// Break bundle above this instruction.
+name|void
+name|unbundleFromPred
+parameter_list|()
+function_decl|;
+comment|/// Break bundle below this instruction.
+name|void
+name|unbundleFromSucc
+parameter_list|()
+function_decl|;
 comment|/// getDebugLoc - Returns the debug location id of this MachineInstr.
 comment|///
 name|DebugLoc
@@ -674,13 +741,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|unsigned
-operator|)
-name|Operands
-operator|.
-name|size
-argument_list|()
+name|NumOperands
 return|;
 block|}
 specifier|const
@@ -744,36 +805,22 @@ specifier|const
 expr_stmt|;
 comment|/// iterator/begin/end - Iterate over all operands of a machine instruction.
 typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
 name|MachineOperand
-operator|>
-operator|::
-name|iterator
+modifier|*
 name|mop_iterator
-expr_stmt|;
+typedef|;
 typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
+specifier|const
 name|MachineOperand
-operator|>
-operator|::
-name|const_iterator
+modifier|*
 name|const_mop_iterator
-expr_stmt|;
+typedef|;
 name|mop_iterator
 name|operands_begin
 parameter_list|()
 block|{
 return|return
 name|Operands
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
 name|mop_iterator
@@ -782,9 +829,8 @@ parameter_list|()
 block|{
 return|return
 name|Operands
-operator|.
-name|end
-argument_list|()
+operator|+
+name|NumOperands
 return|;
 block|}
 name|const_mop_iterator
@@ -794,9 +840,6 @@ specifier|const
 block|{
 return|return
 name|Operands
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
 name|const_mop_iterator
@@ -806,9 +849,8 @@ specifier|const
 block|{
 return|return
 name|Operands
-operator|.
-name|end
-argument_list|()
+operator|+
+name|NumOperands
 return|;
 block|}
 comment|/// Access to memory operands of the instruction
@@ -889,7 +931,7 @@ name|AnyInBundle
 argument_list|)
 decl|const
 block|{
-comment|// Inline the fast path.
+comment|// Inline the fast path for unbundled or bundle-internal instructions.
 if|if
 condition|(
 name|Type
@@ -897,7 +939,10 @@ operator|==
 name|IgnoreBundle
 operator|||
 operator|!
-name|isBundle
+name|isBundled
+argument_list|()
+operator|||
+name|isBundledWithPred
 argument_list|()
 condition|)
 return|return
@@ -913,7 +958,7 @@ operator|<<
 name|MCFlag
 operator|)
 return|;
-comment|// If we have a bundle, take the slow path.
+comment|// If this is the first instruction in a bundle, take the slow path.
 return|return
 name|hasPropertyInBundle
 argument_list|(
@@ -1777,17 +1822,41 @@ name|CheckDefs
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// removeFromParent - This method unlinks 'this' from the containing basic
-comment|/// block, and returns it, but does not delete it.
+comment|/// Unlink 'this' from the containing basic block, and return it without
+comment|/// deleting it.
+comment|///
+comment|/// This function can not be used on bundled instructions, use
+comment|/// removeFromBundle() to remove individual instructions from a bundle.
 name|MachineInstr
 modifier|*
 name|removeFromParent
 parameter_list|()
 function_decl|;
-comment|/// eraseFromParent - This method unlinks 'this' from the containing basic
-comment|/// block and deletes it.
+comment|/// Unlink this instruction from its basic block and return it without
+comment|/// deleting it.
+comment|///
+comment|/// If the instruction is part of a bundle, the other instructions in the
+comment|/// bundle remain bundled.
+name|MachineInstr
+modifier|*
+name|removeFromBundle
+parameter_list|()
+function_decl|;
+comment|/// Unlink 'this' from the containing basic block and delete it.
+comment|///
+comment|/// If this instruction is the header of a bundle, the whole bundle is erased.
+comment|/// This function can not be used for instructions inside a bundle, use
+comment|/// eraseFromBundle() to erase individual bundled instructions.
 name|void
 name|eraseFromParent
+parameter_list|()
+function_decl|;
+comment|/// Unlink 'this' form its basic block and delete it.
+comment|///
+comment|/// If the instruction is part of a bundle, the other instructions in the
+comment|/// bundle remain bundled.
+name|void
+name|eraseFromBundle
 parameter_list|()
 function_decl|;
 comment|/// isLabel - Returns true if the MachineInstr represents a label.
@@ -1930,6 +1999,23 @@ operator|==
 name|TargetOpcode
 operator|::
 name|INLINEASM
+return|;
+block|}
+name|bool
+name|isMSInlineAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetOpcode
+operator|::
+name|INLINEASM
+operator|&&
+name|getInlineAsmDialect
+argument_list|()
 return|;
 block|}
 name|bool
@@ -2181,7 +2267,11 @@ name|true
 return|;
 block|}
 block|}
-comment|/// getBundleSize - Return the number of instructions inside the MI bundle.
+comment|/// Return the number of instructions inside the MI bundle, excluding the
+comment|/// bundle header.
+comment|///
+comment|/// This is the number of instructions that MachineBasicBlock::iterator
+comment|/// skips, 0 for unbundled instructions.
 name|unsigned
 name|getBundleSize
 argument_list|()
@@ -2778,27 +2868,6 @@ name|void
 name|clearKillInfo
 parameter_list|()
 function_decl|;
-comment|/// copyKillDeadInfo - Copies kill / dead operand properties from MI.
-comment|///
-name|void
-name|copyKillDeadInfo
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-comment|/// copyPredicates - Copies predicate operand(s) from MI.
-name|void
-name|copyPredicates
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
 comment|/// substituteRegister - Replace all occurrences of FromReg with ToReg:SubIdx,
 comment|/// properly composing subreg indices where necessary.
 name|void
@@ -3006,6 +3075,10 @@ comment|/// instruction to this instruction.
 name|void
 name|copyImplicitOps
 parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
 specifier|const
 name|MachineInstr
 modifier|*
@@ -3028,6 +3101,11 @@ operator|*
 name|TM
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|SkipOpers
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3038,10 +3116,34 @@ specifier|const
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors used to build up machine instructions.
-comment|/// addOperand - Add the specified operand to the instruction.  If it is an
-comment|/// implicit operand, it is added to the end of the operand list.  If it is
-comment|/// an explicit operand it is added at the end of the explicit operand list
+comment|/// Add the specified operand to the instruction.  If it is an implicit
+comment|/// operand, it is added to the end of the operand list.  If it is an
+comment|/// explicit operand it is added at the end of the explicit operand list
 comment|/// (before the first implicit operand).
+comment|///
+comment|/// MF must be the machine function that was used to allocate this
+comment|/// instruction.
+comment|///
+comment|/// MachineInstrBuilder provides a more convenient interface for creating
+comment|/// instructions and adding operands.
+name|void
+name|addOperand
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|Op
+parameter_list|)
+function_decl|;
+comment|/// Add an operand without providing an MF reference. This only works for
+comment|/// instructions that are inserted in a basic block.
+comment|///
+comment|/// MachineInstrBuilder and the two-argument addOperand(MF, MO) should be
+comment|/// preferred.
 name|void
 name|addOperand
 parameter_list|(
@@ -3128,9 +3230,23 @@ name|NewMemRefs
 expr_stmt|;
 name|NumMemRefs
 operator|=
+name|uint8_t
+argument_list|(
 name|NewMemRefsEnd
 operator|-
 name|NewMemRefs
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|NumMemRefs
+operator|==
+name|NewMemRefsEnd
+operator|-
+name|NewMemRefs
+operator|&&
+literal|"Too many memrefs"
+argument_list|)
 expr_stmt|;
 block|}
 name|private
@@ -3197,7 +3313,11 @@ comment|/// addImplicitDefUseOperands - Add all implicit def and use operands to
 comment|/// this instruction.
 name|void
 name|addImplicitDefUseOperands
-parameter_list|()
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
 function_decl|;
 comment|/// RemoveRegOperandsFromUseLists - Unlink all of the register operands in
 comment|/// this instruction from their respective use lists.  This requires that the

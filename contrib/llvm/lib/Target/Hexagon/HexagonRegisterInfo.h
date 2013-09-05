@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MachineLocation.h"
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_define
@@ -220,22 +220,13 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|eliminateCallFramePseudoInstr
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|)
-specifier|const
-block|;
-name|void
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
+argument_list|,
+argument|unsigned FIOperandNum
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)
@@ -313,45 +304,6 @@ block|;
 name|unsigned
 name|getEHHandlerRegister
 argument_list|()
-specifier|const
-block|;
-specifier|const
-name|RegClassWeight
-operator|&
-name|getRegClassWeight
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getNumRegPressureSets
-argument_list|()
-specifier|const
-block|;
-specifier|const
-name|char
-operator|*
-name|getRegPressureSetName
-argument_list|(
-argument|unsigned Idx
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getRegPressureSetLimit
-argument_list|(
-argument|unsigned Idx
-argument_list|)
-specifier|const
-block|;
-specifier|const
-name|int
-operator|*
-name|getRegClassPressureSets
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

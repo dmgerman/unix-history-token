@@ -2572,7 +2572,7 @@ name|fopen
 argument_list|(
 name|_PATH_HEQUIV
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 name|again
@@ -2703,7 +2703,7 @@ name|fopen
 argument_list|(
 name|pbuf
 argument_list|,
-literal|"r"
+literal|"re"
 argument_list|)
 expr_stmt|;
 operator|(

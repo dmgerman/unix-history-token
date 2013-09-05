@@ -40,19 +40,6 @@ end_include
 begin_function_decl
 specifier|static
 name|s32
-name|ixgbe_update_flash_X540
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
 name|ixgbe_poll_flash_update_done_X540
 parameter_list|(
 name|struct
@@ -625,6 +612,15 @@ operator|=
 operator|&
 name|ixgbe_set_fw_drv_ver_generic
 expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|get_rtrup2tc
+operator|=
+operator|&
+name|ixgbe_dcb_get_rtrup2tc_generic
+expr_stmt|;
 return|return
 name|ret_val
 return|;
@@ -874,8 +870,10 @@ name|status
 operator|=
 name|IXGBE_ERR_RESET_FAILED
 expr_stmt|;
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
 literal|"Reset polling failed to complete.\n"
 argument_list|)
 expr_stmt|;
@@ -1381,6 +1379,7 @@ argument_list|)
 operator|==
 name|IXGBE_SUCCESS
 condition|)
+block|{
 name|status
 operator|=
 name|ixgbe_read_eerd_generic
@@ -1391,11 +1390,6 @@ name|offset
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-else|else
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
 expr_stmt|;
 name|hw
 operator|->
@@ -1410,6 +1404,14 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
+expr_stmt|;
+block|}
 return|return
 name|status
 return|;
@@ -1467,6 +1469,7 @@ argument_list|)
 operator|==
 name|IXGBE_SUCCESS
 condition|)
+block|{
 name|status
 operator|=
 name|ixgbe_read_eerd_buffer_generic
@@ -1479,11 +1482,6 @@ name|words
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-else|else
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
 expr_stmt|;
 name|hw
 operator|->
@@ -1498,6 +1496,14 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
+expr_stmt|;
+block|}
 return|return
 name|status
 return|;
@@ -1551,6 +1557,7 @@ argument_list|)
 operator|==
 name|IXGBE_SUCCESS
 condition|)
+block|{
 name|status
 operator|=
 name|ixgbe_write_eewr_generic
@@ -1561,11 +1568,6 @@ name|offset
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-else|else
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
 expr_stmt|;
 name|hw
 operator|->
@@ -1580,6 +1582,14 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
+expr_stmt|;
+block|}
 return|return
 name|status
 return|;
@@ -1637,6 +1647,7 @@ argument_list|)
 operator|==
 name|IXGBE_SUCCESS
 condition|)
+block|{
 name|status
 operator|=
 name|ixgbe_write_eewr_buffer_generic
@@ -1649,11 +1660,6 @@ name|words
 argument_list|,
 name|data
 argument_list|)
-expr_stmt|;
-else|else
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
 expr_stmt|;
 name|hw
 operator|->
@@ -1668,6 +1674,14 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
+expr_stmt|;
+block|}
 return|return
 name|status
 return|;
@@ -2055,10 +2069,19 @@ name|read_checksum
 operator|!=
 name|checksum
 condition|)
+block|{
 name|status
 operator|=
 name|IXGBE_ERR_EEPROM_CHECKSUM
 expr_stmt|;
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_INVALID_STATE
+argument_list|,
+literal|"Invalid EEPROM checksum"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If the user cares, return the calculated checksum */
 if|if
 condition|(
@@ -2069,14 +2092,6 @@ name|checksum_val
 operator|=
 name|checksum
 expr_stmt|;
-block|}
-else|else
-block|{
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
-block|}
 name|hw
 operator|->
 name|mac
@@ -2090,6 +2105,14 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
+expr_stmt|;
+block|}
 name|out
 label|:
 return|return
@@ -2209,12 +2232,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-else|else
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
-block|}
 name|hw
 operator|->
 name|mac
@@ -2228,6 +2245,14 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
+expr_stmt|;
+block|}
 return|return
 name|status
 return|;
@@ -2239,7 +2264,6 @@ comment|/**  *  ixgbe_update_flash_X540 - Instruct HW to copy EEPROM to Flash de
 end_comment
 
 begin_function
-specifier|static
 name|s32
 name|ixgbe_update_flash_X540
 parameter_list|(
@@ -2331,6 +2355,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|ixgbe_mac_X540
+operator|&&
 name|hw
 operator|->
 name|revision_id
@@ -2474,6 +2506,19 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|==
+name|IXGBE_FLUDONE_ATTEMPTS
+condition|)
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"Flash update status polling timed out"
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;
@@ -2630,11 +2675,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|msec_delay
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2666,11 +2706,18 @@ name|ret_val
 operator|=
 name|IXGBE_ERR_SWFW_SYNC
 expr_stmt|;
+name|ERROR_REPORT1
+argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"Failed to get SW only semaphore"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-comment|/* If the resource is not released by the FW/HW the SW can assume that 	 * the FW/HW malfunctions. In that case the SW should sets the SW bit(s) 	 * of the requested resource(s) while ignoring the corresponding FW/HW 	 * bits in the SW_FW_SYNC register. 	 */
+comment|/* If the resource is not released by the FW/HW the SW can assume that 	 * the FW/HW malfunctions. In that case the SW should set the SW bit(s) 	 * of the requested resource(s) while ignoring the corresponding FW/HW 	 * bits in the SW_FW_SYNC register. 	 */
 name|swfw_sync
 operator|=
 name|IXGBE_READ_REG
@@ -2729,6 +2776,33 @@ name|msec_delay
 argument_list|(
 literal|5
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* If the resource is not released by other SW the SW can assume that 	 * the other SW malfunctions. In that case the SW should clear all SW 	 * flags that it does not own and then repeat the whole process once 	 * again. 	 */
+elseif|else
+if|if
+condition|(
+name|swfw_sync
+operator|&
+name|swmask
+condition|)
+block|{
+name|ixgbe_release_swfw_sync_X540
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_GSSR_EEP_SM
+operator||
+name|IXGBE_GSSR_PHY0_SM
+operator||
+name|IXGBE_GSSR_PHY1_SM
+operator||
+name|IXGBE_GSSR_MAC_CSR_SM
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|IXGBE_ERR_SWFW_SYNC
 expr_stmt|;
 block|}
 name|out
@@ -2800,11 +2874,6 @@ expr_stmt|;
 name|ixgbe_release_swfw_sync_semaphore
 argument_list|(
 name|hw
-argument_list|)
-expr_stmt|;
-name|msec_delay
-argument_list|(
-literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2948,10 +3017,11 @@ operator|>=
 name|timeout
 condition|)
 block|{
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
-literal|"REGSMP Software NVM semaphore not "
-literal|"granted.\n"
+name|IXGBE_ERROR_POLLING
+argument_list|,
+literal|"REGSMP Software NVM semaphore not granted.\n"
 argument_list|)
 expr_stmt|;
 name|ixgbe_release_swfw_sync_semaphore
@@ -2967,8 +3037,10 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUGOUT
+name|ERROR_REPORT1
 argument_list|(
+name|IXGBE_ERROR_POLLING
+argument_list|,
 literal|"Software semaphore SMBI between device drivers "
 literal|"not granted.\n"
 argument_list|)

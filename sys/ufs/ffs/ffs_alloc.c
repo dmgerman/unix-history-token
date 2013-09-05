@@ -2448,12 +2448,22 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
+comment|/* 	 * If we are not tracking block clusters or if we have less than 2% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
 if|if
 condition|(
 name|fs
 operator|->
 name|fs_contigsumsize
 operator|<=
+literal|0
+operator|||
+name|freespace
+argument_list|(
+name|fs
+argument_list|,
+literal|2
+argument_list|)
+operator|<
 literal|0
 condition|)
 return|return
@@ -3670,12 +3680,22 @@ name|ip
 operator|->
 name|i_ump
 expr_stmt|;
+comment|/* 	 * If we are not tracking block clusters or if we have less than 2% 	 * free blocks left, then do not attempt to cluster. Running with 	 * less than 5% free block reserve is not recommended and those that 	 * choose to do so do not expect to have good file layout. 	 */
 if|if
 condition|(
 name|fs
 operator|->
 name|fs_contigsumsize
 operator|<=
+literal|0
+operator|||
+name|freespace
+argument_list|(
+name|fs
+argument_list|,
+literal|2
+argument_list|)
+operator|<
 literal|0
 condition|)
 return|return
@@ -6028,16 +6048,14 @@ for|for
 control|(
 name|cg
 operator|=
-name|prefcg
-operator|-
-literal|1
+literal|0
 init|;
 name|cg
-operator|>=
-literal|0
+operator|<
+name|prefcg
 condition|;
 name|cg
-operator|--
+operator|++
 control|)
 if|if
 condition|(
@@ -6156,16 +6174,14 @@ for|for
 control|(
 name|cg
 operator|=
-name|prefcg
-operator|-
-literal|1
+literal|0
 init|;
 name|cg
-operator|>=
-literal|0
+operator|<
+name|prefcg
 condition|;
 name|cg
-operator|--
+operator|++
 control|)
 if|if
 condition|(
@@ -6201,7 +6217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Select the desired position for the next block in a file.  The file is  * logically divided into sections. The first section is composed of the  * direct blocks. Each additional section contains fs_maxbpg blocks.  *  * If no blocks have been allocated in the first section, the policy is to  * request a block in the same cylinder group as the inode that describes  * the file. The first indirect is allocated immediately following the last  * direct block and the data blocks for the first indirect immediately  * follow it.  *  * If no blocks have been allocated in any other section, the indirect   * block(s) are allocated in the same cylinder group as its inode in an  * area reserved immediately following the inode blocks. The policy for  * the data blocks is to place them in a cylinder group with a greater than  * average number of free blocks. An appropriate cylinder group is found  * by using a rotor that sweeps the cylinder groups. When a new group of  * blocks is needed, the sweep begins in the cylinder group following the  * cylinder group from which the previous allocation was made. The sweep  * continues until a cylinder group with greater than the average number  * of free blocks is found. If the allocation is for the first block in an  * indirect block, the information on the previous allocation is unavailable;  * here a best guess is made based upon the logical block number being  * allocated.  *  * If a section is already partially allocated, the policy is to  * contiguously allocate fs_maxcontig blocks. The end of one of these  * contiguous blocks and the beginning of the next is laid out  * contiguously if possible.  */
+comment|/*  * Select the desired position for the next block in a file.  The file is  * logically divided into sections. The first section is composed of the  * direct blocks and the next fs_maxbpg blocks. Each additional section  * contains fs_maxbpg blocks.  *  * If no blocks have been allocated in the first section, the policy is to  * request a block in the same cylinder group as the inode that describes  * the file. The first indirect is allocated immediately following the last  * direct block and the data blocks for the first indirect immediately  * follow it.  *  * If no blocks have been allocated in any other section, the indirect   * block(s) are allocated in the same cylinder group as its inode in an  * area reserved immediately following the inode blocks. The policy for  * the data blocks is to place them in a cylinder group with a greater than  * average number of free blocks. An appropriate cylinder group is found  * by using a rotor that sweeps the cylinder groups. When a new group of  * blocks is needed, the sweep begins in the cylinder group following the  * cylinder group from which the previous allocation was made. The sweep  * continues until a cylinder group with greater than the average number  * of free blocks is found. If the allocation is for the first block in an  * indirect block or the previous block is a hole, then the information on  * the previous allocation is unavailable; here a best guess is made based  * on the logical block number being allocated.  *  * If a section is already partially allocated, the policy is to  * allocate blocks contiguously within the section if possible.  */
 end_comment
 
 begin_function
@@ -8591,9 +8607,22 @@ condition|)
 block|{
 name|bpref
 operator|=
+name|cgbase
+argument_list|(
+name|fs
+argument_list|,
+name|cgp
+operator|->
+name|cg_cgx
+argument_list|)
+operator|+
 name|cgp
 operator|->
 name|cg_rotor
+operator|+
+name|fs
+operator|->
+name|fs_frag
 expr_stmt|;
 block|}
 elseif|else
@@ -13881,6 +13910,9 @@ decl_stmt|,
 modifier|*
 name|vfp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|filetype
 decl_stmt|,
@@ -13962,7 +13994,13 @@ name|cmd
 operator|.
 name|handle
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FSCK
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -15659,7 +15697,13 @@ name|cmd
 operator|.
 name|value
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FSCK
+argument_list|)
 argument_list|,
 operator|&
 name|vfp

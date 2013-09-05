@@ -21,36 +21,17 @@ directive|include
 file|<sys/_cpuset.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/bitset.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|CPUSETBUFSIZ
 value|((2 + sizeof(long) * 2) * _NCPUWORDS)
-end_define
-
-begin_comment
-comment|/*  * Macros addressing word and bit within it, tuned to make compiler  * optimize cases when CPU_SETSIZE fits into single machine word.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__cpuset_mask
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|((long)1<< ((_NCPUWORDS == 1) ? (__size_t)(n) : ((n) % _NCPUBITS)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__cpuset_word
-parameter_list|(
-name|n
-parameter_list|)
-value|((_NCPUWORDS == 1) ? 0 : ((n) / _NCPUBITS))
 end_define
 
 begin_define
@@ -62,7 +43,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->__bits[__cpuset_word(n)]&= ~__cpuset_mask(n))
+value|BIT_CLR(CPU_SETSIZE, n, p)
 end_define
 
 begin_define
@@ -74,7 +55,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|(void)(*(t) = *(f))
+value|BIT_COPY(CPU_SETSIZE, f, t)
 end_define
 
 begin_define
@@ -86,7 +67,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(((p)->__bits[__cpuset_word(n)]& __cpuset_mask(n)) != 0)
+value|BIT_ISSET(CPU_SETSIZE, n, p)
 end_define
 
 begin_define
@@ -98,7 +79,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->__bits[__cpuset_word(n)] |= __cpuset_mask(n))
+value|BIT_SET(CPU_SETSIZE, n, p)
 end_define
 
 begin_define
@@ -108,7 +89,7 @@ name|CPU_ZERO
 parameter_list|(
 name|p
 parameter_list|)
-value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = 0;			\ } while (0)
+value|BIT_ZERO(CPU_SETSIZE, p)
 end_define
 
 begin_define
@@ -118,7 +99,7 @@ name|CPU_FILL
 parameter_list|(
 name|p
 parameter_list|)
-value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(p)->__bits[__i] = -1;			\ } while (0)
+value|BIT_FILL(CPU_SETSIZE, p)
 end_define
 
 begin_define
@@ -130,12 +111,8 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|do {					\ 	CPU_ZERO(p);						\ 	((p)->__bits[__cpuset_word(n)] = __cpuset_mask(n));	\ } while (0)
+value|BIT_SETOF(CPU_SETSIZE, n, p)
 end_define
-
-begin_comment
-comment|/* Is p empty. */
-end_comment
 
 begin_define
 define|#
@@ -144,12 +121,8 @@ name|CPU_EMPTY
 parameter_list|(
 name|p
 parameter_list|)
-value|__extension__ ({			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if ((p)->__bits[__i])			\ 			break;				\ 	__i == _NCPUWORDS;				\ })
+value|BIT_EMPTY(CPU_SETSIZE, p)
 end_define
-
-begin_comment
-comment|/* Is p full set. */
-end_comment
 
 begin_define
 define|#
@@ -158,12 +131,8 @@ name|CPU_ISFULLSET
 parameter_list|(
 name|p
 parameter_list|)
-value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if ((p)->__bits[__i] != (long)-1)	\ 			break;				\ 	__i == _NCPUWORDS;				\ })
+value|BIT_ISFULLSET(CPU_SETSIZE, p)
 end_define
-
-begin_comment
-comment|/* Is c a subset of p. */
-end_comment
 
 begin_define
 define|#
@@ -174,12 +143,8 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i]&			\ 		    (p)->__bits[__i]) !=		\ 		    (c)->__bits[__i])			\ 			break;				\ 	__i == _NCPUWORDS;				\ })
+value|BIT_SUBSET(CPU_SETSIZE, p, c)
 end_define
-
-begin_comment
-comment|/* Are there any common bits between b& c? */
-end_comment
 
 begin_define
 define|#
@@ -190,12 +155,8 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({		\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i]&			\ 		    (p)->__bits[__i]) != 0)		\ 			break;				\ 	__i != _NCPUWORDS;				\ })
+value|BIT_OVERLAP(CPU_SETSIZE, p, c)
 end_define
-
-begin_comment
-comment|/* Compare two sets, returns 0 if equal 1 otherwise. */
-end_comment
 
 begin_define
 define|#
@@ -206,7 +167,7 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|__extension__ ({			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		if (((c)->__bits[__i] !=		\ 		    (p)->__bits[__i]))			\ 			break;				\ 	__i != _NCPUWORDS;				\ })
+value|BIT_CMP(CPU_SETSIZE, p, c)
 end_define
 
 begin_define
@@ -218,7 +179,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(d)->__bits[__i] |= (s)->__bits[__i];	\ } while (0)
+value|BIT_OR(CPU_SETSIZE, d, s)
 end_define
 
 begin_define
@@ -230,7 +191,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(d)->__bits[__i]&= (s)->__bits[__i];	\ } while (0)
+value|BIT_AND(CPU_SETSIZE, d, s)
 end_define
 
 begin_define
@@ -242,7 +203,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|do {				\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		(d)->__bits[__i]&= ~(s)->__bits[__i];	\ } while (0)
+value|BIT_NAND(CPU_SETSIZE, d, s)
 end_define
 
 begin_define
@@ -254,8 +215,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-define|\
-value|atomic_clear_long(&(p)->__bits[__cpuset_word(n)], __cpuset_mask(n))
+value|BIT_CLR_ATOMIC(CPU_SETSIZE, n, p)
 end_define
 
 begin_define
@@ -267,13 +227,20 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-define|\
-value|atomic_set_long(&(p)->__bits[__cpuset_word(n)], __cpuset_mask(n))
+value|BIT_SET_ATOMIC(CPU_SETSIZE, n, p)
 end_define
 
-begin_comment
-comment|/* Convenience functions catering special cases. */
-end_comment
+begin_define
+define|#
+directive|define
+name|CPU_AND_ATOMIC
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|BIT_AND_ATOMIC(CPU_SETSIZE, n, p)
+end_define
 
 begin_define
 define|#
@@ -284,7 +251,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|do {			\ 	__size_t __i;					\ 	for (__i = 0; __i< _NCPUWORDS; __i++)		\ 		atomic_set_long(&(d)->__bits[__i],	\ 		    (s)->__bits[__i]);			\ } while (0)
+value|BIT_OR_ATOMIC(CPU_SETSIZE, d, s)
 end_define
 
 begin_define
@@ -296,7 +263,17 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|do {				\ 	__size_t __i;						\ 	for (__i = 0; __i< _NCPUWORDS; __i++)			\ 		atomic_store_rel_long(&(t)->__bits[__i],	\ 		    (f)->__bits[__i]);				\ } while (0)
+value|BIT_COPY_STORE_REL(CPU_SETSIZE, f, t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_FFS
+parameter_list|(
+name|p
+parameter_list|)
+value|BIT_FFS(CPU_SETSIZE, p)
 end_define
 
 begin_comment
@@ -605,17 +582,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|cpusetobj_ffs
-parameter_list|(
-specifier|const
-name|cpuset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|cpusetobj_strprint
@@ -643,6 +609,28 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_function_decl
+name|void
+name|ddb_display_cpuset
+parameter_list|(
+specifier|const
+name|cpuset_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

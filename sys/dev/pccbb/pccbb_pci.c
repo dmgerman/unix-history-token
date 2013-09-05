@@ -2279,22 +2279,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Enable memory access */
-name|PCI_MASK_CONFIG
+name|pci_enable_busmaster
 argument_list|(
 name|sc
 operator|->
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-operator||
-name|PCIM_CMD_MEMEN
-operator||
-name|PCIM_CMD_PORTEN
-operator||
-name|PCIM_CMD_BUSMASTEREN
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 comment|/* disable Legacy IO */

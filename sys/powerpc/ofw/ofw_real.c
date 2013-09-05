@@ -973,6 +973,8 @@ name|of_bounce_virt
 operator|=
 name|contigmalloc
 argument_list|(
+literal|4
+operator|*
 name|PAGE_SIZE
 argument_list|,
 name|M_OFWREAL
@@ -991,6 +993,8 @@ argument_list|)
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
+literal|4
+operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -1003,6 +1007,8 @@ argument_list|)
 expr_stmt|;
 name|of_bounce_size
 operator|=
+literal|4
+operator|*
 name|PAGE_SIZE
 expr_stmt|;
 comment|/* 	 * For virtual-mode OF, direct map this physical address so that 	 * we have a 32-bit virtual address to give OF. 	 */

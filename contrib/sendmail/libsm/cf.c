@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: cf.c,v 1.6 2001/09/11 04:04:47 gshapiro Exp $"
+literal|"@(#)$Id: cf.c,v 1.7 2013/03/12 15:24:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -146,8 +146,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|p

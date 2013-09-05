@@ -42,13 +42,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<set>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<set>
+file|<vector>
 end_include
 
 begin_decl_stmt

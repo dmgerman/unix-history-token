@@ -72,19 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CallingConv.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/CallingConvLower.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/CallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_decl_stmt
@@ -107,6 +107,8 @@ block|,
 name|CONST32_GP
 block|,
 comment|// For marking data present in GP.
+name|CONST32_Int_Real
+block|,
 name|FCONST32
 block|,
 name|SETCC
@@ -160,7 +162,31 @@ name|WrapperJT
 block|,
 name|WrapperCP
 block|,
+name|WrapperCombineII
+block|,
+name|WrapperCombineRR
+block|,
+name|WrapperCombineRI_V4
+block|,
+name|WrapperCombineIR_V4
+block|,
+name|WrapperPackhl
+block|,
+name|WrapperSplatB
+block|,
+name|WrapperSplatH
+block|,
+name|WrapperShuffEB
+block|,
+name|WrapperShuffEH
+block|,
+name|WrapperShuffOB
+block|,
+name|WrapperShuffOH
+block|,
 name|TC_RETURN
+block|,
+name|EH_RETURN
 block|}
 enum|;
 block|}
@@ -300,6 +326,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerEH_RETURN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerFormalArguments
 argument_list|(
 argument|SDValue Chain
@@ -320,6 +355,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerGLOBALADDRESS
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerBlockAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -376,15 +420,6 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerMEMBARRIER
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
 block|;

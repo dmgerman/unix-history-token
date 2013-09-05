@@ -7714,6 +7714,11 @@ condition|(
 name|tlen
 condition|)
 block|{
+name|int
+name|nnh
+init|=
+literal|0
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"\n\t    nexthop: "
@@ -7726,6 +7731,20 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|nnh
+operator|++
+operator|>
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", "
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|af

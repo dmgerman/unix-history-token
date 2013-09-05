@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2012 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-2013 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-specifier|const
+name|z_const
 name|char
 modifier|*
 specifier|const
@@ -243,7 +243,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|return (strm->msg = (char*)ERR_MSG(err), (err))
+value|return (strm->msg = ERR_MSG(err), (err))
 end_define
 
 begin_comment
@@ -1006,6 +1006,7 @@ argument_list|(
 name|_WIN32
 argument_list|)
 operator|&&
+expr|\
 operator|(
 operator|!
 name|defined

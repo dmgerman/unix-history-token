@@ -840,6 +840,12 @@ name|null_lowervp
 operator|=
 name|lowervp
 expr_stmt|;
+name|xp
+operator|->
+name|null_flags
+operator|=
+literal|0
+expr_stmt|;
 name|vp
 operator|->
 name|v_type

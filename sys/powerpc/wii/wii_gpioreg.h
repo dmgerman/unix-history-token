@@ -19,7 +19,14 @@ begin_define
 define|#
 directive|define
 name|WIIGPIO_NPINS
-value|32
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|WIIGPIO_POWEROFF_PIN
+value|33
 end_define
 
 begin_define
@@ -33,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|WIIGPIO_REG_LEN
-value|0x4
+value|0x40
 end_define
 
 begin_endif

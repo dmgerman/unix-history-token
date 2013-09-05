@@ -1495,6 +1495,7 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If parent indirect has just been allocated, try to cluster 		 * immediately following it. 		 */
 if|if
 condition|(
 name|pref
@@ -1870,11 +1871,24 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If allocating metadata at the front of the cylinder 		 * group and parent indirect block has just been allocated, 		 * then cluster next to it if it is the first indirect in 		 * the file. Otherwise it has been allocated in the metadata 		 * area, so we want to find our own place out in the data area. 		 */
 if|if
 condition|(
 name|pref
 operator|==
 literal|0
+operator|||
+operator|(
+name|lbn
+operator|>
+name|NDADDR
+operator|&&
+name|fs
+operator|->
+name|fs_metaspace
+operator|!=
+literal|0
+operator|)
 condition|)
 name|pref
 operator|=
@@ -2349,7 +2363,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 * 	 * XXX Still have to journal the free below 	 */
+comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurrence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 * 	 * XXX Still have to journal the free below 	 */
 operator|(
 name|void
 operator|)
@@ -4806,6 +4820,7 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If parent indirect has just been allocated, try to cluster 		 * immediately following it. 		 */
 if|if
 condition|(
 name|pref
@@ -5181,11 +5196,24 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If allocating metadata at the front of the cylinder 		 * group and parent indirect block has just been allocated, 		 * then cluster next to it if it is the first indirect in 		 * the file. Otherwise it has been allocated in the metadata 		 * area, so we want to find our own place out in the data area. 		 */
 if|if
 condition|(
 name|pref
 operator|==
 literal|0
+operator|||
+operator|(
+name|lbn
+operator|>
+name|NDADDR
+operator|&&
+name|fs
+operator|->
+name|fs_metaspace
+operator|!=
+literal|0
+operator|)
 condition|)
 name|pref
 operator|=
@@ -5661,7 +5689,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 * 	 * XXX Still have to journal the free below 	 */
+comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurrence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 * 	 * XXX Still have to journal the free below 	 */
 operator|(
 name|void
 operator|)

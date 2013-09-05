@@ -585,7 +585,7 @@ struct|;
 end_struct
 
 begin_function_decl
-name|void
+name|int
 name|init_pci
 parameter_list|(
 name|struct
@@ -872,7 +872,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pci_parse_slot
 parameter_list|(
 name|char

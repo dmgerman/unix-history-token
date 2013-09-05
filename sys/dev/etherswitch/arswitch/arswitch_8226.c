@@ -255,6 +255,14 @@ name|arswitch_hw_global_setup
 operator|=
 name|ar8226_hw_global_setup
 expr_stmt|;
+name|sc
+operator|->
+name|info
+operator|.
+name|es_nvlangroups
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

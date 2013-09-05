@@ -84,6 +84,11 @@ init|=
 literal|64
 block|,
 comment|/* mailbox size in bytes */
+name|NTRACE
+init|=
+literal|4
+block|,
+comment|/* # of tracing filters */
 name|TRACE_LEN
 init|=
 literal|112
@@ -962,6 +967,29 @@ argument_list|(
 name|FLASH_FW_NSECS
 argument_list|)
 block|,
+comment|/* 	 * Location of bootstrap firmware image in FLASH. 	 */
+name|FLASH_FWBOOTSTRAP_START_SEC
+init|=
+literal|27
+block|,
+name|FLASH_FWBOOTSTRAP_NSECS
+init|=
+literal|1
+block|,
+name|FLASH_FWBOOTSTRAP_START
+init|=
+name|FLASH_START
+argument_list|(
+name|FLASH_FWBOOTSTRAP_START_SEC
+argument_list|)
+block|,
+name|FLASH_FWBOOTSTRAP_MAX_SIZE
+init|=
+name|FLASH_MAX_SIZE
+argument_list|(
+name|FLASH_FWBOOTSTRAP_NSECS
+argument_list|)
+block|,
 comment|/* 	 * iSCSI persistent/crash information. 	 */
 name|FLASH_ISCSI_CRASH_START_SEC
 init|=
@@ -1008,7 +1036,7 @@ argument_list|(
 name|FLASH_FCOE_CRASH_NSECS
 argument_list|)
 block|,
-comment|/* 	 * Location of Firmware Configuration File in FLASH.  Since the FPGA 	 * "FLASH" is smaller we need to store the Configuration File in a 	 * different location -- which will overlap the end of the firmware 	 * image if firmware ever gets that large ... 	 */
+comment|/* 	 * Location of Firmware Configuration File in FLASH. 	 */
 name|FLASH_CFG_START_SEC
 init|=
 literal|31
@@ -1029,17 +1057,6 @@ init|=
 name|FLASH_MAX_SIZE
 argument_list|(
 name|FLASH_CFG_NSECS
-argument_list|)
-block|,
-name|FLASH_FPGA_CFG_START_SEC
-init|=
-literal|15
-block|,
-name|FLASH_FPGA_CFG_START
-init|=
-name|FLASH_START
-argument_list|(
-name|FLASH_FPGA_CFG_START_SEC
 argument_list|)
 block|,
 comment|/* 	 * Sectors 32-63 are reserved for FLASH failover. 	 */

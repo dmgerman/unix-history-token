@@ -214,7 +214,7 @@ name|freq
 decl_stmt|;
 name|freq
 operator|=
-name|ar71xx_refclk
+name|ar71xx_uart_freq
 argument_list|()
 expr_stmt|;
 name|sc

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -115,7 +115,11 @@ name|max_size
 parameter_list|,
 name|uint64_t
 modifier|*
-name|ashift
+name|logical_ashift
+parameter_list|,
+name|uint64_t
+modifier|*
+name|physical_ashift
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -342,6 +346,14 @@ name|uint64_t
 name|vdev_ashift
 decl_stmt|;
 comment|/* block alignment shift	*/
+comment|/* 	 * Logical block alignment shift 	 * 	 * The smallest sized/aligned I/O supported by the device. 	 */
+name|uint64_t
+name|vdev_logical_ashift
+decl_stmt|;
+comment|/* 	 * Physical block alignment shift 	 * 	 * The device supports logical I/Os with vdev_logical_ashift 	 * size/alignment, but optimum performance will be achieved by 	 * aligning/sizing requests to vdev_physical_ashift.  Smaller 	 * requests may be inflated or incur device level read-modify-write 	 * operations. 	 * 	 * May be 0 to indicate no preference (i.e. use vdev_logical_ashift).          */
+name|uint64_t
+name|vdev_physical_ashift
+decl_stmt|;
 name|uint64_t
 name|vdev_state
 decl_stmt|;
@@ -529,7 +541,7 @@ name|vdev_removed
 decl_stmt|;
 comment|/* persistent removed state	*/
 name|uint64_t
-name|vdev_resilvering
+name|vdev_resilver_txg
 decl_stmt|;
 comment|/* persistent resilvering state */
 name|uint64_t
@@ -775,16 +787,17 @@ define|#
 directive|define
 name|VDD_DTL
 value|0x02
-comment|/*  * Size and offset of embedded boot loader region on each label.  * The total size of the first two labels plus the boot area is 4MB.  */
+comment|/* Offset of embedded boot loader region on each label */
 define|#
 directive|define
 name|VDEV_BOOT_OFFSET
 value|(2 * sizeof (vdev_label_t))
+comment|/*  * Size of embedded boot loader region on each label.  * The total size of the first two labels plus the boot area is 4MB.  */
 define|#
 directive|define
 name|VDEV_BOOT_SIZE
 value|(7ULL<< 19)
-comment|/* 3.5M	*/
+comment|/* 3.5M */
 comment|/*  * Size of label regions at the start and end of each leaf device.  */
 define|#
 directive|define
@@ -1101,7 +1114,8 @@ modifier|*
 name|vd
 parameter_list|)
 function_decl|;
-comment|/*  * zdb uses this tunable, so it must be declared here to make lint happy.  */
+comment|/*  * Global variables  */
+comment|/* zdb uses this tunable, so it must be declared here to make lint happy. */
 specifier|extern
 name|int
 name|zfs_vdev_cache_size

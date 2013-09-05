@@ -2474,17 +2474,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPR_970MMCR0
-value|0x31b
-end_define
-
-begin_comment
-comment|/* ... Monitor Mode Control Register 0 (PPC 970) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SPR_970PMC1
 value|0x313
 end_define

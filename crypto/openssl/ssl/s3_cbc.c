@@ -357,7 +357,7 @@ name|s
 operator|->
 name|version
 operator|==
-name|DTLS1_VERSION
+name|DTLS1_BAD_VER
 condition|)
 block|{
 comment|/* These lengths are all public so we can test them in 		 * non-constant time. 		 */

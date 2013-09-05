@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: krl.c,v 1.9 2013/01/27 10:06:12 djm Exp $ */
+comment|/* $OpenBSD: krl.c,v 1.10 2013/02/19 02:12:47 dtucker Exp $ */
 end_comment
 
 begin_include

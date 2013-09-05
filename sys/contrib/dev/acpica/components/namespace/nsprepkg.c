@@ -54,9 +54,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackageList
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 specifier|const
 name|ACPI_PREDEFINED_INFO
@@ -79,9 +79,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackageElements
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -107,16 +107,16 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackage  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check a returned package object for the correct count and  *              correct type of all sub-objects.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackage  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status  *  * DESCRIPTION: Check a returned package object for the correct count and  *              correct type of all sub-objects.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiNsCheckPackage
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -163,7 +163,7 @@ expr_stmt|;
 comment|/* The package info for this name is in the next table entry */
 name|Package
 operator|=
-name|Data
+name|Info
 operator|->
 name|Predefined
 operator|+
@@ -176,9 +176,9 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%s Validating return Package of Type %X, Count %X\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|Package
 operator|->
@@ -197,7 +197,7 @@ expr_stmt|;
 comment|/*      * For variable-length Packages, we can safely remove all embedded      * and trailing NULL package elements      */
 name|AcpiNsRemoveNullElements
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Package
 operator|->
@@ -254,11 +254,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -327,9 +327,9 @@ operator|,
 literal|"%s: Return Package is larger than needed - "
 literal|"found %u, expected %u\n"
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
 name|Count
 operator|,
@@ -343,7 +343,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Elements
 argument_list|,
@@ -397,7 +397,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Elements
 argument_list|,
@@ -483,7 +483,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Elements
 argument_list|,
@@ -521,7 +521,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Elements
 argument_list|,
@@ -562,7 +562,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Elements
 argument_list|,
@@ -596,7 +596,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageList
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Package
 argument_list|,
@@ -614,7 +614,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Elements
 argument_list|,
@@ -675,7 +675,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageList
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Package
 argument_list|,
@@ -725,7 +725,7 @@ name|Status
 operator|=
 name|AcpiNsWrapWithPackage
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ReturnObject
 argument_list|,
@@ -770,7 +770,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageList
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|Package
 argument_list|,
@@ -787,11 +787,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -824,11 +824,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -849,7 +849,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackageList  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              Package         - Pointer to package-specific info for method  *              Elements        - Element list of parent package. All elements  *                                of this list should be of type Package.  *              Count           - Count of subpackages  *  * RETURN:      Status  *  * DESCRIPTION: Examine a list of subpackages  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackageList  *  * PARAMETERS:  Info            - Method execution information block  *              Package         - Pointer to package-specific info for method  *              Elements        - Element list of parent package. All elements  *                                of this list should be of type Package.  *              Count           - Count of subpackages  *  * RETURN:      Status  *  * DESCRIPTION: Examine a list of subpackages  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -857,9 +857,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackageList
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 specifier|const
 name|ACPI_PREDEFINED_INFO
@@ -924,7 +924,7 @@ name|Package
 operator|.
 name|Elements
 expr_stmt|;
-name|Data
+name|Info
 operator|->
 name|ParentPackage
 operator|=
@@ -935,7 +935,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 operator|&
 name|SubPackage
@@ -960,7 +960,7 @@ operator|)
 return|;
 block|}
 comment|/* Examine the different types of expected sub-packages */
-name|Data
+name|Info
 operator|->
 name|ParentPackage
 operator|=
@@ -1018,7 +1018,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1101,7 +1101,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1199,7 +1199,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 operator|&
 name|SubElements
@@ -1267,7 +1267,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1313,7 +1313,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|SubElements
 argument_list|,
@@ -1426,7 +1426,7 @@ name|Status
 operator|=
 name|AcpiNsCheckPackageElements
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 operator|(
 name|SubElements
@@ -1493,11 +1493,11 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-name|Data
+name|Info
 operator|->
-name|Pathname
+name|FullPathname
 operator|,
-name|Data
+name|Info
 operator|->
 name|NodeFlags
 operator|,
@@ -1524,7 +1524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackageElements  *  * PARAMETERS:  Data            - Pointer to validation data structure  *              Elements        - Pointer to the package elements array  *              Type1           - Object type for first group  *              Count1          - Count for first group  *              Type2           - Object type for second group  *              Count2          - Count for second group  *              StartIndex      - Start of the first group of elements  *  * RETURN:      Status  *  * DESCRIPTION: Check that all elements of a package are of the correct object  *              type. Supports up to two groups of different object types.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCheckPackageElements  *  * PARAMETERS:  Info            - Method execution information block  *              Elements        - Pointer to the package elements array  *              Type1           - Object type for first group  *              Count1          - Count for first group  *              Type2           - Object type for second group  *              Count2          - Count for second group  *              StartIndex      - Start of the first group of elements  *  * RETURN:      Status  *  * DESCRIPTION: Check that all elements of a package are of the correct object  *              type. Supports up to two groups of different object types.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1532,9 +1532,9 @@ specifier|static
 name|ACPI_STATUS
 name|AcpiNsCheckPackageElements
 parameter_list|(
-name|ACPI_PREDEFINED_DATA
+name|ACPI_EVALUATE_INFO
 modifier|*
-name|Data
+name|Info
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1589,7 +1589,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ThisElement
 argument_list|,
@@ -1636,7 +1636,7 @@ name|Status
 operator|=
 name|AcpiNsCheckObjectType
 argument_list|(
-name|Data
+name|Info
 argument_list|,
 name|ThisElement
 argument_list|,

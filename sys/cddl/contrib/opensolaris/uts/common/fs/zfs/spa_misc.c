@@ -5196,7 +5196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is a stripped-down version of strtoull, suitable only for converting  * lowercase hexidecimal numbers that don't overflow.  */
+comment|/*  * This is a stripped-down version of strtoull, suitable only for converting  * lowercase hexadecimal numbers that don't overflow.  */
 end_comment
 
 begin_function
@@ -6330,6 +6330,31 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|EVENTHANDLER_DEFINE
+argument_list|(
+name|mountroot
+argument_list|,
+name|spa_boot_init
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

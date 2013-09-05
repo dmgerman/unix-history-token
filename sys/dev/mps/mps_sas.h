@@ -217,10 +217,6 @@ define|#
 directive|define
 name|MPSSAS_SHUTDOWN
 value|(1<< 4)
-define|#
-directive|define
-name|MPSSAS_SCANTHREAD
-value|(1<< 5)
 name|struct
 name|mpssas_target
 modifier|*
@@ -267,18 +263,6 @@ name|struct
 name|proc
 modifier|*
 name|sysctl_proc
-decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ccb_hdr
-argument_list|)
-name|ccb_scanq
-expr_stmt|;
-name|struct
-name|proc
-modifier|*
-name|rescan_thread
 decl_stmt|;
 name|struct
 name|taskqueue
@@ -564,6 +548,21 @@ name|arg
 parameter_list|,
 name|int
 name|pending
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mpssas_check_id
+parameter_list|(
+name|struct
+name|mpssas_softc
+modifier|*
+name|sassc
+parameter_list|,
+name|int
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl

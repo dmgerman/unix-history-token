@@ -634,6 +634,12 @@ name|dn_dbufs_count
 operator|=
 literal|0
 expr_stmt|;
+name|dn
+operator|->
+name|dn_unlisted_l0_blkid
+operator|=
+literal|0
+expr_stmt|;
 name|list_create
 argument_list|(
 operator|&
@@ -1008,6 +1014,13 @@ argument_list|(
 name|dn
 operator|->
 name|dn_dbufs_count
+argument_list|)
+expr_stmt|;
+name|ASSERT0
+argument_list|(
+name|dn
+operator|->
+name|dn_unlisted_l0_blkid
 argument_list|)
 expr_stmt|;
 name|list_destroy
@@ -2795,6 +2808,12 @@ name|dn_id_flags
 operator|=
 literal|0
 expr_stmt|;
+name|dn
+operator|->
+name|dn_unlisted_l0_blkid
+operator|=
+literal|0
+expr_stmt|;
 name|dmu_zfetch_rele
 argument_list|(
 operator|&
@@ -4488,6 +4507,14 @@ name|dn_dbufs_count
 expr_stmt|;
 name|ndn
 operator|->
+name|dn_unlisted_l0_blkid
+operator|=
+name|odn
+operator|->
+name|dn_unlisted_l0_blkid
+expr_stmt|;
+name|ndn
+operator|->
 name|dn_bonus
 operator|=
 name|odn
@@ -4705,6 +4732,12 @@ expr_stmt|;
 name|odn
 operator|->
 name|dn_dbufs_count
+operator|=
+literal|0
+expr_stmt|;
+name|odn
+operator|->
+name|dn_unlisted_l0_blkid
 operator|=
 literal|0
 expr_stmt|;
@@ -8556,8 +8589,7 @@ if|if
 condition|(
 name|len
 operator|==
-operator|-
-literal|1ULL
+name|DMU_OBJECT_END
 condition|)
 block|{
 name|len
@@ -10009,7 +10041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function scans a block at the indicated "level" looking for  * a hole or data (depending on 'flags').  If level> 0, then we are  * scanning an indirect block looking at its pointers.  If level == 0,  * then we are looking at a block of dnodes.  If we don't find what we  * are looking for in the block, we return ESRCH.  Otherwise, return  * with *offset pointing to the beginning (if searching forwards) or  * end (if searching backwards) of the range covered by the block  * pointer we matched on (or dnode).  *  * The basic search algorithm used below by dnode_next_offset() is to  * use this function to search up the block tree (widen the search) until  * we find something (i.e., we don't return ESRCH) and then search back  * down the tree (narrow the search) until we reach our original search  * level.  */
+comment|/*  * Scans a block at the indicated "level" looking for a hole or data,  * depending on 'flags'.  *  * If level> 0, then we are scanning an indirect block looking at its  * pointers.  If level == 0, then we are looking at a block of dnodes.  *  * If we don't find what we are looking for in the block, we return ESRCH.  * Otherwise, return with *offset pointing to the beginning (if searching  * forwards) or end (if searching backwards) of the range covered by the  * block pointer we matched on (or dnode).  *  * The basic search algorithm used below by dnode_next_offset() is to  * use this function to search up the block tree (widen the search) until  * we find something (i.e., we don't return ESRCH) and then search back  * down the tree (narrow the search) until we reach our original search  * level.  */
 end_comment
 
 begin_function

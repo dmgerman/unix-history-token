@@ -14881,7 +14881,15 @@ argument_list|,
 name|dtp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: assert(timestamp>= dtp->dt_last_timestamp); */
+name|assert
+argument_list|(
+name|timestamp
+operator|>=
+name|dtp
+operator|->
+name|dt_last_timestamp
+argument_list|)
+expr_stmt|;
 name|dtp
 operator|->
 name|dt_last_timestamp

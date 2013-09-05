@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: config.c,v 1.113.16.2 2011/02/28 01:19:58 tbox Exp $ */
+comment|/* $Id: config.c,v 1.123 2012/01/06 23:46:41 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -162,7 +162,7 @@ endif|#
 directive|endif
 literal|"#	session-keyfile \""
 name|NS_LOCALSTATEDIR
-literal|"/run/named/session.key\";\n\ 	session-keyname local-ddns;\n\ 	session-keyalg hmac-sha256;\n\ 	deallocate-on-exit true;\n\ #	directory<none>\n\ 	dump-file \"named_dump.db\";\n\ 	fake-iquery no;\n\ 	has-old-clients false;\n\ 	heartbeat-interval 60;\n\ 	host-statistics no;\n\ 	interface-interval 60;\n\ 	listen-on {any;};\n\ 	listen-on-v6 {none;};\n\ 	match-mapped-addresses no;\n\ 	memstatistics-file \"named.memstats\";\n\ 	multiple-cnames no;\n\ #	named-xfer<obsolete>;\n\ #	pid-file \""
+literal|"/run/named/session.key\";\n\ 	session-keyname local-ddns;\n\ 	session-keyalg hmac-sha256;\n\ 	deallocate-on-exit true;\n\ #	directory<none>\n\ 	dump-file \"named_dump.db\";\n\ 	fake-iquery no;\n\ 	has-old-clients false;\n\ 	heartbeat-interval 60;\n\ 	host-statistics no;\n\ 	interface-interval 60;\n\ 	listen-on {any;};\n\ 	listen-on-v6 {none;};\n\ 	match-mapped-addresses no;\n\ 	max-rsa-exponent-size 0; /* no limit */\n\ 	memstatistics-file \"named.memstats\";\n\ 	multiple-cnames no;\n\ #	named-xfer<obsolete>;\n\ #	pid-file \""
 name|NS_LOCALSTATEDIR
 literal|"/run/named/named.pid\"; /* or /lwresd.pid */\n\ 	bindkeys-file \""
 name|NS_SYSCONFDIR
@@ -175,14 +175,14 @@ name|PATH_RANDOMDEV
 literal|"\";\n\ "
 endif|#
 directive|endif
-literal|"\ 	recursive-clients 1000;\n\ 	resolver-query-timeout 10;\n\ 	rrset-order {type NS order random; order cyclic; };\n\ 	serial-queries 20;\n\ 	serial-query-rate 20;\n\ 	server-id none;\n\ 	statistics-file \"named.stats\";\n\ 	statistics-interval 60;\n\ 	tcp-clients 100;\n\ 	tcp-listen-queue 3;\n\ #	tkey-dhkey<none>\n\ #	tkey-gssapi-credential<none>\n\ #	tkey-domain<none>\n\ 	transfers-per-ns 2;\n\ 	transfers-in 10;\n\ 	transfers-out 10;\n\ 	treat-cr-as-space true;\n\ 	use-id-pool true;\n\ 	use-ixfr true;\n\ 	edns-udp-size 4096;\n\ 	max-udp-size 4096;\n\ 	request-nsid false;\n\ 	reserved-sockets 512;\n\ \n\ 	/* DLV */\n\ 	dnssec-lookaside . trust-anchor dlv.isc.org;\n\ \n\ 	/* view */\n\ 	allow-notify {none;};\n\ 	allow-update-forwarding {none;};\n\ 	allow-query-cache { localnets; localhost; };\n\ 	allow-query-cache-on { any; };\n\ 	allow-recursion { localnets; localhost; };\n\ 	allow-recursion-on { any; };\n\ #	allow-v6-synthesis<obsolete>;\n\ #	sortlist<none>\n\ #	topology<none>\n\ 	auth-nxdomain false;\n\ 	minimal-responses false;\n\ 	recursion true;\n\ 	provide-ixfr true;\n\ 	request-ixfr true;\n\ 	fetch-glue no;\n\ 	rfc2308-type1 no;\n\ 	additional-from-auth true;\n\ 	additional-from-cache true;\n\ 	query-source address *;\n\ 	query-source-v6 address *;\n\ 	notify-source *;\n\ 	notify-source-v6 *;\n\ 	cleaning-interval 0;  /* now meaningless */\n\ 	min-roots 2;\n\ 	lame-ttl 600;\n\ 	max-ncache-ttl 10800; /* 3 hours */\n\ 	max-cache-ttl 604800; /* 1 week */\n\ 	transfer-format many-answers;\n\ 	max-cache-size 0;\n\ 	check-names master fail;\n\ 	check-names slave warn;\n\ 	check-names response ignore;\n\ 	check-dup-records warn;\n\ 	check-mx warn;\n\ 	acache-enable no;\n\ 	acache-cleaning-interval 60;\n\ 	max-acache-size 16M;\n\ 	dnssec-enable yes;\n\ 	dnssec-validation yes; \n\ 	dnssec-accept-expired no;\n\ 	clients-per-query 10;\n\ 	max-clients-per-query 100;\n\ 	zero-no-soa-ttl-cache no;\n\ 	nsec3-test-zone no;\n\ 	allow-new-zones no;\n\ "
+literal|"\ 	recursive-clients 1000;\n\ 	resolver-query-timeout 10;\n\ 	rrset-order { order random; };\n\ 	serial-queries 20;\n\ 	serial-query-rate 20;\n\ 	server-id none;\n\ 	statistics-file \"named.stats\";\n\ 	statistics-interval 60;\n\ 	tcp-clients 100;\n\ 	tcp-listen-queue 3;\n\ #	tkey-dhkey<none>\n\ #	tkey-gssapi-credential<none>\n\ #	tkey-domain<none>\n\ 	transfers-per-ns 2;\n\ 	transfers-in 10;\n\ 	transfers-out 10;\n\ 	treat-cr-as-space true;\n\ 	use-id-pool true;\n\ 	use-ixfr true;\n\ 	edns-udp-size 4096;\n\ 	max-udp-size 4096;\n\ 	request-nsid false;\n\ 	reserved-sockets 512;\n\ \n\ 	/* DLV */\n\ 	dnssec-lookaside . trust-anchor dlv.isc.org;\n\ \n\ 	/* view */\n\ 	allow-notify {none;};\n\ 	allow-update-forwarding {none;};\n\ 	allow-query-cache { localnets; localhost; };\n\ 	allow-query-cache-on { any; };\n\ 	allow-recursion { localnets; localhost; };\n\ 	allow-recursion-on { any; };\n\ #	allow-v6-synthesis<obsolete>;\n\ #	sortlist<none>\n\ #	topology<none>\n\ 	auth-nxdomain false;\n\ 	minimal-responses false;\n\ 	recursion true;\n\ 	provide-ixfr true;\n\ 	request-ixfr true;\n\ 	fetch-glue no;\n\ 	rfc2308-type1 no;\n\ 	additional-from-auth true;\n\ 	additional-from-cache true;\n\ 	query-source address *;\n\ 	query-source-v6 address *;\n\ 	notify-source *;\n\ 	notify-source-v6 *;\n\ 	cleaning-interval 0;  /* now meaningless */\n\ 	min-roots 2;\n\ 	lame-ttl 600;\n\ 	max-ncache-ttl 10800; /* 3 hours */\n\ 	max-cache-ttl 604800; /* 1 week */\n\ 	transfer-format many-answers;\n\ 	max-cache-size 0;\n\ 	check-names master fail;\n\ 	check-names slave warn;\n\ 	check-names response ignore;\n\ 	check-dup-records warn;\n\ 	check-mx warn;\n\ 	check-spf warn;\n\ 	acache-enable no;\n\ 	acache-cleaning-interval 60;\n\ 	max-acache-size 16M;\n\ 	dnssec-enable yes;\n\ 	dnssec-validation yes; \n\ 	dnssec-accept-expired no;\n\ 	clients-per-query 10;\n\ 	max-clients-per-query 100;\n\ 	zero-no-soa-ttl-cache no;\n\ 	nsec3-test-zone no;\n\ 	allow-new-zones no;\n\ "
 ifdef|#
 directive|ifdef
 name|ALLOW_FILTER_AAAA_ON_V4
 literal|"	filter-aaaa-on-v4 no;\n\ 	filter-aaaa { any; };\n\ "
 endif|#
 directive|endif
-literal|"	/* zone */\n\ 	allow-query {any;};\n\ 	allow-query-on {any;};\n\ 	allow-transfer {any;};\n\ 	notify yes;\n\ #	also-notify<none>\n\ 	notify-delay 5;\n\ 	notify-to-soa no;\n\ 	dialup no;\n\ #	forward<none>\n\ #	forwarders<none>\n\ 	maintain-ixfr-base no;\n\ #	max-ixfr-log-size<obsolete>\n\ 	transfer-source *;\n\ 	transfer-source-v6 *;\n\ 	alt-transfer-source *;\n\ 	alt-transfer-source-v6 *;\n\ 	max-transfer-time-in 120;\n\ 	max-transfer-time-out 120;\n\ 	max-transfer-idle-in 60;\n\ 	max-transfer-idle-out 60;\n\ 	max-retry-time 1209600; /* 2 weeks */\n\ 	min-retry-time 500;\n\ 	max-refresh-time 2419200; /* 4 weeks */\n\ 	min-refresh-time 300;\n\ 	multi-master no;\n\ 	dnssec-secure-to-insecure no;\n\ 	sig-validity-interval 30; /* days */\n\ 	sig-signing-nodes 100;\n\ 	sig-signing-signatures 10;\n\ 	sig-signing-type 65534;\n\ 	zone-statistics false;\n\ 	max-journal-size unlimited;\n\ 	ixfr-from-differences false;\n\ 	check-wildcard yes;\n\ 	check-sibling yes;\n\ 	check-integrity yes;\n\ 	check-mx-cname warn;\n\ 	check-srv-cname warn;\n\ 	zero-no-soa-ttl yes;\n\ 	update-check-ksk yes;\n\ 	dnssec-dnskey-kskonly no;\n\ 	try-tcp-refresh yes; /* BIND 8 compat */\n\ };\n\ "
+literal|"	/* zone */\n\ 	allow-query {any;};\n\ 	allow-query-on {any;};\n\ 	allow-transfer {any;};\n\ 	notify yes;\n\ #	also-notify<none>\n\ 	notify-delay 5;\n\ 	notify-to-soa no;\n\ 	dialup no;\n\ #	forward<none>\n\ #	forwarders<none>\n\ 	maintain-ixfr-base no;\n\ #	max-ixfr-log-size<obsolete>\n\ 	transfer-source *;\n\ 	transfer-source-v6 *;\n\ 	alt-transfer-source *;\n\ 	alt-transfer-source-v6 *;\n\ 	max-transfer-time-in 120;\n\ 	max-transfer-time-out 120;\n\ 	max-transfer-idle-in 60;\n\ 	max-transfer-idle-out 60;\n\ 	max-retry-time 1209600; /* 2 weeks */\n\ 	min-retry-time 500;\n\ 	max-refresh-time 2419200; /* 4 weeks */\n\ 	min-refresh-time 300;\n\ 	multi-master no;\n\ 	dnssec-secure-to-insecure no;\n\ 	sig-validity-interval 30; /* days */\n\ 	sig-signing-nodes 100;\n\ 	sig-signing-signatures 10;\n\ 	sig-signing-type 65534;\n\ 	inline-signing no;\n\ 	zone-statistics terse;\n\ 	max-journal-size unlimited;\n\ 	ixfr-from-differences false;\n\ 	check-wildcard yes;\n\ 	check-sibling yes;\n\ 	check-integrity yes;\n\ 	check-mx-cname warn;\n\ 	check-srv-cname warn;\n\ 	zero-no-soa-ttl yes;\n\ 	update-check-ksk yes;\n\ 	serial-update-method increment;\n\ 	dnssec-update-mode maintain;\n\ 	dnssec-dnskey-kskonly no;\n\ 	dnssec-loadkeys-interval 60;\n\ 	try-tcp-refresh yes; /* BIND 8 compat */\n\ };\n\ "
 literal|"#\n\ #  Zones in the \"_bind\" view are NOT counted in the count of zones.\n\ #\n\ view \"_bind\" chaos {\n\ 	recursion no;\n\ 	notify no;\n\ 	allow-new-zones no;\n\ \n\ 	zone \"version.bind\" chaos {\n\ 		type master;\n\ 		database \"_builtin version\";\n\ 	};\n\ \n\ 	zone \"hostname.bind\" chaos {\n\ 		type master;\n\ 		database \"_builtin hostname\";\n\ 	};\n\ \n\ 	zone \"authors.bind\" chaos {\n\ 		type master;\n\ 		database \"_builtin authors\";\n\ 	};\n\ \n\ 	zone \"id.server\" chaos {\n\ 		type master;\n\ 		database \"_builtin id\";\n\ 	};\n\ };\n\ "
 literal|"#\n\ #  Default trusted key(s) for builtin DLV support\n\ #  (used if \"dnssec-lookaside auto;\" is set and\n\ #  sysconfdir/bind.keys doesn't exist).\n\ #\n\ # BEGIN MANAGED KEYS\n"
 comment|/* Imported from bind.keys.h: */
@@ -871,6 +871,22 @@ condition|)
 name|ztype
 operator|=
 name|dns_zone_staticstub
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|str
+argument_list|,
+literal|"redirect"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ztype
+operator|=
+name|dns_zone_redirect
 expr_stmt|;
 else|else
 name|INSIST
@@ -2270,6 +2286,10 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+comment|/* Increment here so that cleanup on error works. */
 if|if
 condition|(
 operator|!
@@ -2278,15 +2298,12 @@ argument_list|(
 name|key
 argument_list|)
 condition|)
-block|{
-name|i
-operator|++
-expr_stmt|;
 continue|continue;
-block|}
 name|keys
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|=
 name|isc_mem_get
@@ -2304,6 +2321,8 @@ condition|(
 name|keys
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|==
 name|NULL
@@ -2316,6 +2335,8 @@ argument_list|(
 name|keys
 index|[
 name|i
+operator|-
+literal|1
 index|]
 argument_list|,
 name|NULL
@@ -2328,7 +2349,7 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -2402,6 +2423,8 @@ argument_list|,
 name|keys
 index|[
 name|i
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -2414,9 +2437,6 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-name|i
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2724,7 +2744,7 @@ operator|=
 literal|0
 init|;
 name|j
-operator|<=
+operator|<
 name|i
 condition|;
 name|j

@@ -142,6 +142,9 @@ name|uint32_t
 name|sctp_add_more_threshold
 decl_stmt|;
 name|uint32_t
+name|sctp_nr_incoming_streams_default
+decl_stmt|;
+name|uint32_t
 name|sctp_nr_outgoing_streams_default
 decl_stmt|;
 name|uint32_t
@@ -1355,6 +1358,38 @@ define|#
 directive|define
 name|SCTPCTL_ADD_MORE_ON_OUTPUT_DEFAULT
 value|SCTP_DEFAULT_ADD_MORE
+end_define
+
+begin_comment
+comment|/* incoming_streams: Default number of incoming streams */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INCOMING_STREAMS_DESC
+value|"Default number of incoming streams"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INCOMING_STREAMS_MIN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INCOMING_STREAMS_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INCOMING_STREAMS_DEFAULT
+value|SCTP_ISTREAM_INITIAL
 end_define
 
 begin_comment

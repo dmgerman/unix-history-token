@@ -244,6 +244,15 @@ name|shared_unused
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|pthread_rwlock_t
+name|ci_lock
+init|=
+name|PTHREAD_RWLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -254,6 +263,10 @@ name|void
 parameter_list|)
 block|{
 name|WLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -317,6 +330,10 @@ name|true
 expr_stmt|;
 block|}
 name|UNLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -447,6 +464,10 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INCOMPATIBLE_WITH_GNU_ICONV
+comment|/* 	 * Sadly, the gnu tools expect iconv to actually parse the 	 * byte stream and don't allow for a pass-through when 	 * the (src,dest) encodings are the same. 	 * See gettext-0.18.3+ NEWS: 	 *   msgfmt now checks PO file headers more strictly with less 	 *   false-positives. 	 * NetBSD don't do this either. 	 */
 name|module
 operator|=
 operator|(
@@ -464,6 +485,14 @@ literal|"iconv_std"
 else|:
 literal|"iconv_none"
 expr_stmt|;
+else|#
+directive|else
+name|module
+operator|=
+literal|"iconv_std"
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* initialize iconv handle */
 name|len_convname
 operator|=
@@ -861,6 +890,10 @@ name|dst
 argument_list|)
 expr_stmt|;
 name|WLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 comment|/* lookup alread existing entry */
 name|hashval
@@ -979,6 +1012,10 @@ expr_stmt|;
 name|quit
 label|:
 name|UNLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1001,6 +1038,10 @@ name|ci
 parameter_list|)
 block|{
 name|WLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 name|ci
 operator|->
@@ -1074,6 +1115,10 @@ expr_stmt|;
 block|}
 block|}
 name|UNLOCK
+argument_list|(
+operator|&
+name|ci_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1111,6 +1156,8 @@ name|struct
 name|_citrus_iconv
 modifier|*
 name|cv
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|_citrus_iconv_shared
@@ -1393,8 +1440,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|*
-name|rcv
+name|cv
 argument_list|)
 expr_stmt|;
 return|return

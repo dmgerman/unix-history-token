@@ -981,9 +981,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|env_pos
-operator|>
-literal|0
+name|kern_envp
+operator|&&
+operator|*
+name|kern_envp
+operator|!=
+literal|'\0'
 condition|)
 block|{
 for|for

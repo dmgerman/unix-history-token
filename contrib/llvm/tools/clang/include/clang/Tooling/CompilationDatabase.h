@@ -331,6 +331,21 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// \brief Returns all compile commands for all the files in the compilation
+comment|/// database.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|CompileCommand
+operator|>
+name|getAllCompileCommands
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Interface for compilation database plugins.
@@ -401,7 +416,7 @@ comment|///
 comment|/// The argument list is meant to be compatible with normal llvm command line
 comment|/// parsing in main methods.
 comment|/// int main(int argc, char **argv) {
-comment|///   llvm::OwningPtr<FixedCompilationDatabase> Compilations(
+comment|///   OwningPtr<FixedCompilationDatabase> Compilations(
 comment|///     FixedCompilationDatabase::loadFromCommandLine(argc, argv));
 comment|///   cl::ParseCommandLineOptions(argc, argv);
 comment|///   ...
@@ -465,6 +480,21 @@ operator|::
 name|string
 operator|>
 name|getAllFiles
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Returns all compile commands for all the files in the compilation
+comment|/// database.
+comment|///
+comment|/// Note: This is always an empty list for the fixed compilation database.
+name|virtual
+name|std
+operator|::
+name|vector
+operator|<
+name|CompileCommand
+operator|>
+name|getAllCompileCommands
 argument_list|()
 specifier|const
 block|;

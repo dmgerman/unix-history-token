@@ -59,6 +59,30 @@ directive|define
 name|LLVM_TARGET_POWERPC_PPCPREDICATES_H
 end_define
 
+begin_comment
+comment|// GCC #defines PPC on Linux but we use it as our namespace name
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPC
+end_undef
+
+begin_comment
+comment|// Generated files will use "namespace PPC". To avoid symbol clash,
+end_comment
+
+begin_comment
+comment|// undefine PPC here. PPC may be predefined on some hosts.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPC
+end_undef
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -70,16 +94,6 @@ comment|/// Predicate - These are "(BI<< 5) | BO"  for various predicates.
 enum|enum
 name|Predicate
 block|{
-name|PRED_ALWAYS
-init|=
-operator|(
-literal|0
-operator|<<
-literal|5
-operator|)
-operator||
-literal|20
-block|,
 name|PRED_LT
 init|=
 operator|(
@@ -164,6 +178,15 @@ enum|;
 comment|/// Invert the specified predicate.  != -> ==,< ->>=.
 name|Predicate
 name|InvertPredicate
+parameter_list|(
+name|Predicate
+name|Opcode
+parameter_list|)
+function_decl|;
+comment|/// Assume the condition register is set by MI(a,b), return the predicate if
+comment|/// we modify the instructions such that condition register is set by MI(b,a).
+name|Predicate
+name|getSwappedPredicate
 parameter_list|(
 name|Predicate
 name|Opcode

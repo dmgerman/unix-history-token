@@ -2474,6 +2474,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Gets the full dataset name that corresponds to the given snapshot name  * Example:  * 	zfsctl_snapshot_zname("snap1") -> "mypool/myfs@snap1"  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -5584,7 +5588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pvp is the '.zfs' directory (zfsctl_node_t).  * Creates vp, which is '.zfs/snapshot' (zfsctl_snapdir_t).  *  * This function is the callback to create a GFS vnode for '.zfs/snapshot'  * when a lookup is performed on .zfs for "snapshot".  */
+comment|/*  * pvp is the '.zfs' directory (zfsctl_node_t).  *  * Creates vp, which is '.zfs/snapshot' (zfsctl_snapdir_t).  *  * This function is the callback to create a GFS vnode for '.zfs/snapshot'  * when a lookup is performed on .zfs for "snapshot".  */
 end_comment
 
 begin_function

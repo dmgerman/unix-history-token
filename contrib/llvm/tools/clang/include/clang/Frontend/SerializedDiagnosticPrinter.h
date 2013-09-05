@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Bitcode/BitstreamWriter.h"
 end_include
 
@@ -132,18 +138,16 @@ comment|///
 name|DiagnosticConsumer
 modifier|*
 name|create
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|raw_ostream
-operator|*
+modifier|*
 name|OS
-argument_list|,
+parameter_list|,
 name|DiagnosticOptions
-operator|*
+modifier|*
 name|diags
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 comment|// end serialized_diags namespace
 block|}

@@ -405,6 +405,7 @@ name|mbuf
 modifier|*
 name|m0
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1296,6 +1297,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1483,7 +1485,6 @@ name|sa_family
 operator|==
 name|AF_UNSPEC
 condition|)
-block|{
 name|bcopy
 argument_list|(
 name|dst
@@ -1499,13 +1500,13 @@ name|af
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|af
+operator|=
 name|dst
 operator|->
 name|sa_family
-operator|=
-name|af
 expr_stmt|;
-block|}
 comment|/* Berkeley packet filter */
 name|ng_iface_bpftap
 argument_list|(
@@ -1513,9 +1514,7 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
-name|dst
-operator|->
-name|sa_family
+name|af
 argument_list|)
 expr_stmt|;
 if|if
@@ -1592,9 +1591,7 @@ name|m
 operator|->
 name|m_data
 operator|=
-name|dst
-operator|->
-name|sa_family
+name|af
 expr_stmt|;
 name|error
 operator|=
@@ -1619,9 +1616,7 @@ name|ifp
 argument_list|,
 name|m
 argument_list|,
-name|dst
-operator|->
-name|sa_family
+name|af
 argument_list|)
 expr_stmt|;
 return|return

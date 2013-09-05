@@ -185,6 +185,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/caprights.h>
+end_include
+
 begin_comment
 comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * This struct includes several arrays of spare space, with different arrays  * for different standard C-types.  When adding new variables to this struct,  * the space for byte-aligned data should be taken from the ki_sparestring,  * pointers from ki_spareptrs, word-aligned data from ki_spareints, and  * doubleword-aligned data from ki_sparelongs.  Make sure the space for new  * variables come from the array which matches the size and alignment of  * those variables on ALL hardware platforms, and then adjust the appropriate  * KI_NSPARE_* value(s) to match.  *  * Always verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE on all  * platforms after you have added new variables.  Note that if you change  * the value of KINFO_PROC_SIZE, then many userland programs will stop  * working until they are recompiled!  *  * Once you have added the new field, you will need to add code to initialize  * it in two places: function fill_kinfo_proc in sys/kern/kern_proc.c and  * function kvm_proclist in lib/libkvm/kvm_proc.c .  */
 end_comment
@@ -193,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|9
+value|8
 end_define
 
 begin_define
@@ -704,6 +710,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|int
+name|ki_fibnum
+decl_stmt|;
+comment|/* Default FIB number */
 name|u_int
 name|ki_cr_flags
 decl_stmt|;
@@ -1366,7 +1376,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_FILE_SIZE
-value|1392
+value|1424
 end_define
 
 begin_endif
@@ -1497,6 +1507,17 @@ name|kf_file
 struct|;
 struct|struct
 block|{
+name|uint32_t
+name|kf_sem_value
+decl_stmt|;
+name|uint16_t
+name|kf_sem_mode
+decl_stmt|;
+block|}
+name|kf_sem
+struct|;
+struct|struct
+block|{
 name|uint64_t
 name|kf_pipe_addr
 decl_stmt|;
@@ -1558,6 +1579,13 @@ name|cap_rights_t
 name|kf_cap_rights
 decl_stmt|;
 comment|/* Capability rights. */
+name|uint64_t
+name|_kf_cap_spare
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Space for future cap_rights_t. */
 name|int
 name|_kf_ispare
 index|[
@@ -2059,6 +2087,91 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_comment
+comment|/* Flags for kern_proc_out function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_NOTHREADS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_MASK32
+value|0x2
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * The kern_proc out functions are helper functions to dump process  * miscellaneous kinfo structures to sbuf.  The main consumers are KERN_PROC  * sysctls but they may also be used by other kernel subsystems.  *  * The functions manipulate the process locking state and expect the process  * to be locked on enter.  On return the process is unlocked.  */
+end_comment
+
+begin_function_decl
+name|int
+name|kern_proc_filedesc_out
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+name|ssize_t
+name|maxlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kern_proc_out
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kern_proc_vmmap_out
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

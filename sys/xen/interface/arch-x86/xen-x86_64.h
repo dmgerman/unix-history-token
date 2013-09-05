@@ -16,32 +16,8 @@ name|__XEN_PUBLIC_ARCH_X86_XEN_X86_64_H__
 end_define
 
 begin_comment
-comment|/*  * Hypercall interface:  *  Input:  %rdi, %rsi, %rdx, %r10, %r8 (arguments 1-5)  *  Output: %rax  * Access is via hypercall page (set up by guest loader or via a Xen MSR):  *  call hypercall_page + hypercall-number * 32  * Clobbered: argument registers (e.g., 2-arg hypercall clobbers %rdi,%rsi)  */
+comment|/*  * Hypercall interface:  *  Input:  %rdi, %rsi, %rdx, %r10, %r8, %r9 (arguments 1-6)  *  Output: %rax  * Access is via hypercall page (set up by guest loader or via a Xen MSR):  *  call hypercall_page + hypercall-number * 32  * Clobbered: argument registers (e.g., 2-arg hypercall clobbers %rdi,%rsi)  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|__XEN_INTERFACE_VERSION__
-operator|<
-literal|0x00030203
-end_if
-
-begin_comment
-comment|/*  * Legacy hypercall interface:  * As above, except the entry sequence to the hypervisor is:  *  mov $hypercall-number*32,%eax ; syscall  * Clobbered: %rcx, %r11, argument registers (as above)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TRAP_INSTR
-value|"syscall"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * 64-bit segment selectors  * These flat segments are in the Xen-private section of every GDT. Since these  * are also present in the initial GDT, many OSes will be able to avoid  * installing their own GDT.  */

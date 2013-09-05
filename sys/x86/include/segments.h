@@ -1230,6 +1230,17 @@ begin_comment
 comment|/* DTrace pid provider Interrupt Vector */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IDT_EVTCHN
+value|0x93
+end_define
+
+begin_comment
+comment|/* Xen HVM Event Channel Interrupt Vector */
+end_comment
+
 begin_if
 if|#
 directive|if

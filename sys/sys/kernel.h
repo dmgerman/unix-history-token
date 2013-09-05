@@ -139,7 +139,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Enumerated types for known system startup interfaces.  *  * Startup occurs in ascending numeric order; the list entries are  * sorted prior to attempting startup to guarantee order.  Items  * of the same level are arbitrated for order based on the 'order'  * element.  *  * These numbers are arbitrary and are chosen ONLY for ordering; the  * enumeration values are explicit rather than implicit to provide  * for binary compatibility with inserted elements.  *  * The SI_SUB_RUN_SCHEDULER value must have the highest lexical value.  *  * The SI_SUB_SWAP values represent a value used by  * the BSD 4.4Lite but not by FreeBSD; it is maintained in dependent  * order to support porting.  */
+comment|/*  * Enumerated types for known system startup interfaces.  *  * Startup occurs in ascending numeric order; the list entries are  * sorted prior to attempting startup to guarantee order.  Items  * of the same level are arbitrated for order based on the 'order'  * element.  *  * These numbers are arbitrary and are chosen ONLY for ordering; the  * enumeration values are explicit rather than implicit to provide  * for binary compatibility with inserted elements.  *  * The SI_SUB_LAST value must have the highest lexical value.  *  * The SI_SUB_SWAP values represent a value used by  * the BSD 4.4Lite but not by FreeBSD; it is maintained in dependent  * order to support porting.  */
 end_comment
 
 begin_enum
@@ -196,6 +196,11 @@ init|=
 literal|0x1A00000
 block|,
 comment|/* kvm operational limits*/
+name|SI_SUB_HYPERVISOR
+init|=
+literal|0x1A40000
+block|,
+comment|/* 						 * Hypervisor detection and 						 * virtualization support  						 * setup. 						 */
 name|SI_SUB_WITNESS
 init|=
 literal|0x1A80000
@@ -541,10 +546,10 @@ init|=
 literal|0xf100000
 block|,
 comment|/* start raccd*/
-name|SI_SUB_RUN_SCHEDULER
+name|SI_SUB_LAST
 init|=
 literal|0xfffffff
-comment|/* scheduler*/
+comment|/* final initialization */
 block|}
 enum|;
 end_enum

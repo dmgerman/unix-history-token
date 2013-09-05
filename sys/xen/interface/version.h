@@ -248,6 +248,23 @@ name|XENVER_guest_handle
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|XENVER_commandline
+value|9
+end_define
+
+begin_typedef
+typedef|typedef
+name|char
+name|xen_commandline_t
+index|[
+literal|1024
+index|]
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif

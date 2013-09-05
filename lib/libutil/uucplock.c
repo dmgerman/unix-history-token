@@ -265,9 +265,17 @@ condition|(
 operator|(
 name|tmpfd
 operator|=
-name|creat
+name|open
 argument_list|(
 name|lcktmpname
+argument_list|,
+name|O_CREAT
+operator||
+name|O_TRUNC
+operator||
+name|O_WRONLY
+operator||
+name|O_CLOEXEC
 argument_list|,
 literal|0664
 argument_list|)
@@ -332,6 +340,8 @@ argument_list|(
 name|lckname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<
@@ -545,6 +555,8 @@ argument_list|(
 name|lckname
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CLOEXEC
 argument_list|)
 operator|)
 operator|<

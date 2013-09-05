@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant - WPA2/RSN PMKSA cache functions  * Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant - WPA2/RSN PMKSA cache functions  * Copyright (c) 2003-2009, 2011-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -77,6 +77,19 @@ name|rsn_pmksa_cache
 struct_decl|;
 end_struct_decl
 
+begin_enum
+enum|enum
+name|pmksa_free_reason
+block|{
+name|PMKSA_FREE
+block|,
+name|PMKSA_REPLACE
+block|,
+name|PMKSA_EXPIRE
+block|, }
+enum|;
+end_enum
+
 begin_if
 if|#
 directive|if
@@ -113,8 +126,9 @@ name|void
 modifier|*
 name|ctx
 parameter_list|,
-name|int
-name|replace
+name|enum
+name|pmksa_free_reason
+name|reason
 parameter_list|)
 parameter_list|,
 name|void
@@ -161,6 +175,11 @@ specifier|const
 name|u8
 modifier|*
 name|pmkid
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|network_ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -219,18 +238,6 @@ name|network_ctx
 parameter_list|,
 name|int
 name|akmp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pmksa_cache_notify_reconfig
-parameter_list|(
-name|struct
-name|rsn_pmksa_cache
-modifier|*
-name|pmksa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -313,6 +320,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmksa_cache_flush
+parameter_list|(
+name|struct
+name|rsn_pmksa_cache
+modifier|*
+name|pmksa
+parameter_list|,
+name|void
+modifier|*
+name|network_ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -346,7 +369,7 @@ modifier|*
 name|ctx
 parameter_list|,
 name|int
-name|replace
+name|reason
 parameter_list|)
 parameter_list|,
 name|void
@@ -406,6 +429,11 @@ specifier|const
 name|u8
 modifier|*
 name|pmkid
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|network_ctx
 parameter_list|)
 block|{
 return|return
@@ -509,20 +537,6 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|pmksa_cache_notify_reconfig
-parameter_list|(
-name|struct
-name|rsn_pmksa_cache
-modifier|*
-name|pmksa
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
 name|pmksa_cache_clear_current
 parameter_list|(
 name|struct
@@ -567,6 +581,24 @@ operator|-
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|pmksa_cache_flush
+parameter_list|(
+name|struct
+name|rsn_pmksa_cache
+modifier|*
+name|pmksa
+parameter_list|,
+name|void
+modifier|*
+name|network_ctx
+parameter_list|)
+block|{ }
 end_function
 
 begin_endif

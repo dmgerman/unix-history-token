@@ -27,47 +27,47 @@ begin_struct
 struct|struct
 name|pimstat
 block|{
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_total_msgs
 decl_stmt|;
 comment|/* total PIM messages received    */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_total_bytes
 decl_stmt|;
 comment|/* total PIM bytes received	     */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_tooshort
 decl_stmt|;
 comment|/* rcvd with too few bytes	     */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_badsum
 decl_stmt|;
 comment|/* rcvd with bad checksum	     */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_badversion
 decl_stmt|;
 comment|/* rcvd bad PIM version	     */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_registers_msgs
 decl_stmt|;
 comment|/* rcvd regs. msgs (data only)    */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_registers_bytes
 decl_stmt|;
 comment|/* rcvd regs. bytes (data only)   */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_registers_wrongiif
 decl_stmt|;
 comment|/* rcvd regs. on wrong iif     */
-name|u_quad_t
+name|uint64_t
 name|pims_rcv_badregisters
 decl_stmt|;
 comment|/* rcvd invalid registers	     */
-name|u_quad_t
+name|uint64_t
 name|pims_snd_registers_msgs
 decl_stmt|;
 comment|/* sent regs. msgs (data only)    */
-name|u_quad_t
+name|uint64_t
 name|pims_snd_registers_bytes
 decl_stmt|;
 comment|/* sent regs. bytes (data only)   */
@@ -90,7 +90,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_pimstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct pimstat, pimstat, name, (val))
 end_define
 
 begin_define
@@ -128,13 +129,6 @@ define|#
 directive|define
 name|PIMCTL_MAXID
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIMCTL_NAMES
-value|{			\ 	{ 0, 0 },			\ 	{ "stats", CTLTYPE_STRUCT },	\ }
 end_define
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -587,7 +587,7 @@ name|buf
 index|[
 sizeof|sizeof
 argument_list|(
-literal|"281474976710655 "
+literal|" 281474976710655 "
 argument_list|)
 index|]
 decl_stmt|;
@@ -1002,6 +1002,31 @@ name|target
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tctx
+operator|->
+name|width
+operator|==
+literal|0
+condition|)
+comment|/* No splitting */
+name|RETERR
+argument_list|(
+name|isc_base64_totext
+argument_list|(
+operator|&
+name|sigr
+argument_list|,
+literal|60
+argument_list|,
+literal|""
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|RETERR
 argument_list|(
 name|isc_base64_totext
@@ -1117,8 +1142,8 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|RETERR
+argument_list|(
 name|dns_tsigrcode_totext
 argument_list|(
 operator|(
@@ -1128,41 +1153,8 @@ name|n
 argument_list|,
 name|target
 argument_list|)
-operator|==
-name|ISC_R_SUCCESS
-condition|)
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-literal|" "
-argument_list|,
-name|target
-argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%u "
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-name|buf
-argument_list|,
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Other Size. 	 */
 name|n
 operator|=
@@ -1184,7 +1176,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%u "
+literal|" %u "
 argument_list|,
 name|n
 argument_list|)
@@ -1200,6 +1192,31 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Other. 	 */
+if|if
+condition|(
+name|tctx
+operator|->
+name|width
+operator|==
+literal|0
+condition|)
+comment|/* No splitting */
+return|return
+operator|(
+name|isc_base64_totext
+argument_list|(
+operator|&
+name|sr
+argument_list|,
+literal|60
+argument_list|,
+literal|""
+argument_list|,
+name|target
+argument_list|)
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|isc_base64_totext

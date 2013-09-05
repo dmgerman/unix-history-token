@@ -49,6 +49,12 @@ directive|include
 file|"llvm/MC/MCFixup.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|PPC
+end_undef
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -77,19 +83,16 @@ comment|/// fixup_ppc_ha16 - A 16-bit fixup corresponding to ha16(_foo) for inst
 comment|/// like 'lis'.
 name|fixup_ppc_ha16
 block|,
-comment|/// fixup_ppc_lo14 - A 14-bit fixup corresponding to lo16(_foo) for instrs
-comment|/// like 'std'.
-name|fixup_ppc_lo14
+comment|/// fixup_ppc_lo16_ds - A 14-bit fixup corresponding to lo16(_foo) with
+comment|/// implied 2 zero bits for instrs like 'std'.
+name|fixup_ppc_lo16_ds
 block|,
-comment|/// fixup_ppc_toc - Insert value of TOC base (.TOC.).
-name|fixup_ppc_toc
+comment|/// fixup_ppc_tlsreg - Insert thread-pointer register number.
+name|fixup_ppc_tlsreg
 block|,
-comment|/// fixup_ppc_toc16 - A 16-bit signed fixup relative to the TOC base.
-name|fixup_ppc_toc16
-block|,
-comment|/// fixup_ppc_toc16_ds - A 14-bit signed fixup relative to the TOC base with
-comment|/// implied 2 zero bits
-name|fixup_ppc_toc16_ds
+comment|/// fixup_ppc_nofixup - Not a true fixup, but ties a symbol to a call
+comment|/// to __tls_get_addr for the TLS general and local dynamic models.
+name|fixup_ppc_nofixup
 block|,
 comment|// Marker
 name|LastTargetFixupKind

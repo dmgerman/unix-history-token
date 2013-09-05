@@ -244,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|SSH_BUG_LARGEWINDOW
-value|0x08000000
+value|0x10000000
 end_define
 
 begin_function_decl

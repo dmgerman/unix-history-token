@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -78,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Host.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -85,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/raw_ostream.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Host.h"
 end_include
 
 begin_include
@@ -723,8 +729,7 @@ name|llvm
 operator|::
 name|sys
 operator|::
-name|isBigEndianHost
-argument_list|()
+name|IsBigEndianHost
 condition|)
 name|V
 operator|=

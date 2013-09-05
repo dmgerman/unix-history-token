@@ -827,6 +827,10 @@ name|int
 name|td_no_sleeping
 decl_stmt|;
 comment|/* (k) Sleeping disabled count. */
+name|int
+name|td_dom_rr_idx
+decl_stmt|;
+comment|/* (k) RR Numa domain selection. */
 define|#
 directive|define
 name|td_endzero
@@ -4731,6 +4735,28 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|proc_getauxv
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|proc_getenvv
 parameter_list|(
 name|struct
@@ -4965,15 +4991,6 @@ name|sigonstack
 parameter_list|(
 name|size_t
 name|sp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sleepinit
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

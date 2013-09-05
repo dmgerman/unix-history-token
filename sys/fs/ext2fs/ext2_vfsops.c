@@ -2058,12 +2058,85 @@ operator|=
 literal|0x7fffffff
 expr_stmt|;
 else|else
+block|{
+name|fs
+operator|->
+name|e2fs_maxfilesize
+operator|=
+literal|0xffffffffffff
+expr_stmt|;
+if|if
+condition|(
+name|EXT2_HAS_RO_COMPAT_FEATURE
+argument_list|(
+name|fs
+argument_list|,
+name|EXT2F_ROCOMPAT_HUGE_FILE
+argument_list|)
+condition|)
 name|fs
 operator|->
 name|e2fs_maxfilesize
 operator|=
 literal|0x7fffffffffffffff
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|es
+operator|->
+name|e4fs_flags
+operator|&
+name|E2FS_UNSIGNED_HASH
+condition|)
+block|{
+name|fs
+operator|->
+name|e2fs_uhash
+operator|=
+literal|3
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|es
+operator|->
+name|e4fs_flags
+operator|&
+name|E2FS_SIGNED_HASH
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__CHAR_UNSIGNED__
+name|es
+operator|->
+name|e4fs_flags
+operator||=
+name|E2FS_UNSIGNED_HASH
+expr_stmt|;
+name|fs
+operator|->
+name|e2fs_uhash
+operator|=
+literal|3
+expr_stmt|;
+else|#
+directive|else
+name|es
+operator|->
+name|e4fs_flags
+operator||=
+name|E2FS_SIGNED_HASH
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 return|return
 operator|(
 literal|0
@@ -3951,7 +4024,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get file system statistics.  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function
@@ -4483,7 +4556,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Force stale file system control information to be flushed. 	 */
+comment|/* 	 * Force stale filesystem control information to be flushed. 	 */
 if|if
 condition|(
 name|waitfor
@@ -4996,9 +5069,19 @@ name|i_next_alloc_goal
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 */
+comment|/* 	 * Now we want to make sure that block pointers for unused 	 * blocks are zeroed out - ext2_balloc depends on this 	 * although for regular files and directories only 	 * 	 * If EXT4_EXTENTS flag is enabled, unused blocks aren't 	 * zeroed out because we could corrupt the extent tree. 	 */
 if|if
 condition|(
+operator|!
+operator|(
+name|ip
+operator|->
+name|i_flags
+operator|&
+name|EXT4_EXTENTS
+operator|)
+operator|&&
+operator|(
 name|S_ISDIR
 argument_list|(
 name|ip
@@ -5012,6 +5095,7 @@ name|ip
 operator|->
 name|i_mode
 argument_list|)
+operator|)
 condition|)
 block|{
 name|used_blocks
@@ -5115,8 +5199,6 @@ name|i_gen
 operator|=
 name|random
 argument_list|()
-operator|/
-literal|2
 operator|+
 literal|1
 expr_stmt|;

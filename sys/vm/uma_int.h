@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2005, 2009 Jeffrey Roberson<jeff@FreeBSD.org>  * Copyright (c) 2004, 2005 Bosko Milekic<bmilekic@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 2002-2005, 2009, 2013 Jeffrey Roberson<jeff@FreeBSD.org>  * Copyright (c) 2004, 2005 Bosko Milekic<bmilekic@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*   * This file includes definitions, structures, prototypes, and inlin
 end_comment
 
 begin_comment
-comment|/*   * Here's a quick description of the relationship between the objects:  *  * Kegs contain lists of slabs which are stored in either the full bin, empty  * bin, or partially allocated bin, to reduce fragmentation.  They also contain  * the user supplied value for size, which is adjusted for alignment purposes  * and rsize is the result of that.  The Keg also stores information for  * managing a hash of page addresses that maps pages to uma_slab_t structures  * for pages that don't have embedded uma_slab_t's.  *    * The uma_slab_t may be embedded in a UMA_SLAB_SIZE chunk of memory or it may  * be allocated off the page from a special slab zone.  The free list within a  * slab is managed with a linked list of indices, which are 8 bit values.  If  * UMA_SLAB_SIZE is defined to be too large I will have to switch to 16bit  * values.  Currently on alpha you can get 250 or so 32 byte items and on x86  * you can get 250 or so 16byte items.  For item sizes that would yield more  * than 10% memory waste we potentially allocate a separate uma_slab_t if this  * will improve the number of items per slab that will fit.    *  * Other potential space optimizations are storing the 8bit of linkage in space  * wasted between items due to alignment problems.  This may yield a much better  * memory footprint for certain sizes of objects.  Another alternative is to  * increase the UMA_SLAB_SIZE, or allow for dynamic slab sizes.  I prefer  * dynamic slab sizes because we could stick with 8 bit indices and only use  * large slab sizes for zones with a lot of waste per slab.  This may create  * inefficiencies in the vm subsystem due to fragmentation in the address space.  *  * The only really gross cases, with regards to memory waste, are for those  * items that are just over half the page size.   You can get nearly 50% waste,  * so you fall back to the memory footprint of the power of two allocator. I  * have looked at memory allocation sizes on many of the machines available to  * me, and there does not seem to be an abundance of allocations at this range  * so at this time it may not make sense to optimize for it.  This can, of   * course, be solved with dynamic slab sizes.  *  * Kegs may serve multiple Zones but by far most of the time they only serve  * one.  When a Zone is created, a Keg is allocated and setup for it.  While  * the backing Keg stores slabs, the Zone caches Buckets of items allocated  * from the slabs.  Each Zone is equipped with an init/fini and ctor/dtor  * pair, as well as with its own set of small per-CPU caches, layered above  * the Zone's general Bucket cache.  *  * The PCPU caches are protected by critical sections, and may be accessed  * safely only from their associated CPU, while the Zones backed by the same  * Keg all share a common Keg lock (to coalesce contention on the backing  * slabs).  The backing Keg typically only serves one Zone but in the case of  * multiple Zones, one of the Zones is considered the Master Zone and all  * Zone-related stats from the Keg are done in the Master Zone.  For an  * example of a Multi-Zone setup, refer to the Mbuf allocation code.  */
+comment|/*   * Here's a quick description of the relationship between the objects:  *  * Kegs contain lists of slabs which are stored in either the full bin, empty  * bin, or partially allocated bin, to reduce fragmentation.  They also contain  * the user supplied value for size, which is adjusted for alignment purposes  * and rsize is the result of that.  The Keg also stores information for  * managing a hash of page addresses that maps pages to uma_slab_t structures  * for pages that don't have embedded uma_slab_t's.  *    * The uma_slab_t may be embedded in a UMA_SLAB_SIZE chunk of memory or it may  * be allocated off the page from a special slab zone.  The free list within a  * slab is managed with a bitmask.  For item sizes that would yield more than  * 10% memory waste we potentially allocate a separate uma_slab_t if this will  * improve the number of items per slab that will fit.    *  * The only really gross cases, with regards to memory waste, are for those  * items that are just over half the page size.   You can get nearly 50% waste,  * so you fall back to the memory footprint of the power of two allocator. I  * have looked at memory allocation sizes on many of the machines available to  * me, and there does not seem to be an abundance of allocations at this range  * so at this time it may not make sense to optimize for it.  This can, of   * course, be solved with dynamic slab sizes.  *  * Kegs may serve multiple Zones but by far most of the time they only serve  * one.  When a Zone is created, a Keg is allocated and setup for it.  While  * the backing Keg stores slabs, the Zone caches Buckets of items allocated  * from the slabs.  Each Zone is equipped with an init/fini and ctor/dtor  * pair, as well as with its own set of small per-CPU caches, layered above  * the Zone's general Bucket cache.  *  * The PCPU caches are protected by critical sections, and may be accessed  * safely only from their associated CPU, while the Zones backed by the same  * Keg all share a common Keg lock (to coalesce contention on the backing  * slabs).  The backing Keg typically only serves one Zone but in the case of  * multiple Zones, one of the Zones is considered the Master Zone and all  * Zone-related stats from the Keg are done in the Master Zone.  For an  * example of a Multi-Zone setup, refer to the Mbuf allocation code.  */
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*   * I should investigate other hashing algorithms.  This should yield a low  * number of collisions if the pages are relatively contiguous.  *  * This is the same algorithm that most processor caches use.  *  * I'm shifting and masking instead of % because it should be faster.  */
+comment|/*   * I should investigate other hashing algorithms.  This should yield a low  * number of collisions if the pages are relatively contiguous.  */
 end_comment
 
 begin_define
@@ -106,7 +106,7 @@ name|h
 parameter_list|,
 name|s
 parameter_list|)
-value|((((unsigned long)s)>> UMA_SLAB_SHIFT)&	\     (h)->uh_hashmask)
+value|((((uintptr_t)s)>> UMA_SLAB_SHIFT)& (h)->uh_hashmask)
 end_define
 
 begin_define
@@ -296,7 +296,7 @@ struct|struct
 name|uma_keg
 block|{
 name|struct
-name|mtx
+name|mtx_padalign
 name|uk_lock
 decl_stmt|;
 comment|/* Lock for the keg */
@@ -337,10 +337,6 @@ name|uk_full_slab
 expr_stmt|;
 comment|/* full slabs */
 name|uint32_t
-name|uk_recurse
-decl_stmt|;
-comment|/* Allocation recursion count */
-name|uint32_t
 name|uk_align
 decl_stmt|;
 comment|/* Alignment mask */
@@ -352,6 +348,10 @@ name|uint32_t
 name|uk_free
 decl_stmt|;
 comment|/* Count of items free in slabs */
+name|uint32_t
+name|uk_reserve
+decl_stmt|;
+comment|/* Number of reserved items. */
 name|uint32_t
 name|uk_size
 decl_stmt|;
@@ -440,16 +440,33 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Page management structure */
+comment|/*  * Free bits per-slab.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SLAB_SETSIZE
+value|(PAGE_SIZE / UMA_SMALLEST_UNIT)
+end_define
+
+begin_expr_stmt
+name|BITSET_DEFINE
+argument_list|(
+name|slabbits
+argument_list|,
+name|SLAB_SETSIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/* Sorry for the union, but space efficiency is important */
+comment|/*  * The slab structure manages a single contiguous allocation from backing  * store and subdivides it into individually allocatable items.  */
 end_comment
 
 begin_struct
 struct|struct
-name|uma_slab_head
+name|uma_slab
 block|{
 name|uma_keg_t
 name|us_keg
@@ -484,6 +501,21 @@ modifier|*
 name|us_data
 decl_stmt|;
 comment|/* First item */
+name|struct
+name|slabbits
+name|us_free
+decl_stmt|;
+comment|/* Free bitmask. */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|struct
+name|slabbits
+name|us_debugfree
+decl_stmt|;
+comment|/* Debug bitmask. */
+endif|#
+directive|endif
 name|uint16_t
 name|us_freecount
 decl_stmt|;
@@ -493,41 +525,26 @@ name|us_flags
 decl_stmt|;
 comment|/* Page flags see uma.h */
 name|uint8_t
-name|us_firstfree
+name|us_pad
 decl_stmt|;
-comment|/* First free item index */
+comment|/* Pad to 32bits, unused. */
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* The standard slab structure */
-end_comment
+begin_define
+define|#
+directive|define
+name|us_link
+value|us_type._us_link
+end_define
 
-begin_struct
-struct|struct
-name|uma_slab
-block|{
-name|struct
-name|uma_slab_head
-name|us_head
-decl_stmt|;
-comment|/* slab header data */
-struct|struct
-block|{
-name|uint8_t
-name|us_item
-decl_stmt|;
-block|}
-name|us_freelist
-index|[
-literal|1
-index|]
-struct|;
-comment|/* actual number bigger */
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|us_size
+value|us_type._us_size
+end_define
 
 begin_comment
 comment|/*  * The slab structure for UMA_ZONE_REFCNT zones for whose items we  * maintain reference counters in the slab for.  */
@@ -538,84 +555,20 @@ struct|struct
 name|uma_slab_refcnt
 block|{
 name|struct
-name|uma_slab_head
+name|uma_slab
 name|us_head
 decl_stmt|;
 comment|/* slab header data */
-struct|struct
-block|{
-name|uint8_t
-name|us_item
-decl_stmt|;
 name|uint32_t
 name|us_refcnt
-decl_stmt|;
-block|}
-name|us_freelist
 index|[
-literal|1
+literal|0
 index|]
-struct|;
-comment|/* actual number bigger */
+decl_stmt|;
+comment|/* Actually larger. */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|us_keg
-value|us_head.us_keg
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_link
-value|us_head.us_type._us_link
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_size
-value|us_head.us_type._us_size
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_hlink
-value|us_head.us_hlink
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_data
-value|us_head.us_data
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_flags
-value|us_head.us_flags
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_freecount
-value|us_head.us_freecount
-end_define
-
-begin_define
-define|#
-directive|define
-name|us_firstfree
-value|us_head.us_firstfree
-end_define
 
 begin_typedef
 typedef|typedef
@@ -652,24 +605,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|/*  * These give us the size of one free item reference within our corresponding  * uma_slab structures, so that our calculations during zone setup are correct  * regardless of what the compiler decides to do with padding the structure  * arrays within uma_slab.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_FRITM_SZ
-value|(sizeof(struct uma_slab) - sizeof(struct uma_slab_head))
-end_define
-
-begin_define
-define|#
-directive|define
-name|UMA_FRITMREF_SZ
-value|(sizeof(struct uma_slab_refcnt) -	\     sizeof(struct uma_slab_head))
-end_define
-
 begin_struct
 struct|struct
 name|uma_klink
@@ -704,18 +639,22 @@ begin_struct
 struct|struct
 name|uma_zone
 block|{
+name|struct
+name|mtx_padalign
+name|uz_lock
+decl_stmt|;
+comment|/* Lock for the zone */
+name|struct
+name|mtx_padalign
+modifier|*
+name|uz_lockptr
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|uz_name
 decl_stmt|;
 comment|/* Text name of the zone */
-name|struct
-name|mtx
-modifier|*
-name|uz_lock
-decl_stmt|;
-comment|/* Lock for the zone (keg's lock) */
 name|LIST_ENTRY
 argument_list|(
 argument|uma_zone
@@ -728,17 +667,9 @@ argument_list|(
 argument_list|,
 argument|uma_bucket
 argument_list|)
-name|uz_full_bucket
+name|uz_buckets
 expr_stmt|;
 comment|/* full buckets */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|uma_bucket
-argument_list|)
-name|uz_free_bucket
-expr_stmt|;
-comment|/* Buckets for frees */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -771,7 +702,20 @@ comment|/* Initializer for each item */
 name|uma_fini
 name|uz_fini
 decl_stmt|;
-comment|/* Discards memory */
+comment|/* Finalizer for each item. */
+name|uma_import
+name|uz_import
+decl_stmt|;
+comment|/* Import new memory to cache. */
+name|uma_release
+name|uz_release
+decl_stmt|;
+comment|/* Release memory from cache. */
+name|void
+modifier|*
+name|uz_arg
+decl_stmt|;
+comment|/* Import/release argument. */
 name|uint32_t
 name|uz_flags
 decl_stmt|;
@@ -780,27 +724,26 @@ name|uint32_t
 name|uz_size
 decl_stmt|;
 comment|/* Size inherited from kegs */
-name|uint64_t
+specifier|volatile
+name|u_long
 name|uz_allocs
 name|UMA_ALIGN
 decl_stmt|;
 comment|/* Total number of allocations */
-name|uint64_t
+specifier|volatile
+name|u_long
+name|uz_fails
+decl_stmt|;
+comment|/* Total number of alloc failures */
+specifier|volatile
+name|u_long
 name|uz_frees
 decl_stmt|;
 comment|/* Total number of frees */
 name|uint64_t
-name|uz_fails
-decl_stmt|;
-comment|/* Total number of alloc failures */
-name|uint64_t
 name|uz_sleeps
 decl_stmt|;
 comment|/* Total number of alloc sleeps */
-name|uint16_t
-name|uz_fills
-decl_stmt|;
-comment|/* Outstanding bucket fills */
 name|uint16_t
 name|uz_count
 decl_stmt|;
@@ -837,17 +780,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMA_ZFLAG_BUCKET
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* Bucket zone. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UMA_ZFLAG_MULTI
 value|0x04000000
 end_define
@@ -870,12 +802,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UMA_ZFLAG_PRIVALLOC
+name|UMA_ZFLAG_BUCKET
 value|0x10000000
 end_define
 
 begin_comment
-comment|/* Use uz_allocf. */
+comment|/* Bucket zone. */
 end_comment
 
 begin_define
@@ -915,8 +847,48 @@ begin_define
 define|#
 directive|define
 name|UMA_ZFLAG_INHERIT
-value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
+define|\
+value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | UMA_ZFLAG_BUCKET)
 end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|uma_keg_t
+name|zone_first_keg
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+name|uma_klink_t
+name|klink
+decl_stmt|;
+name|klink
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|zone
+operator|->
+name|uz_kegs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|klink
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|klink
+operator|->
+name|kl_keg
+else|:
+name|NULL
+return|;
+block|}
+end_function
 
 begin_undef
 undef|#
@@ -1026,11 +998,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|ZONE_LOCK_INIT
+parameter_list|(
+name|z
+parameter_list|,
+name|lc
+parameter_list|)
+define|\
+value|do {							\ 		if ((lc))					\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    (z)->uz_name, MTX_DEF | MTX_DUPOK);	\ 		else						\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    "UMA zone", MTX_DEF | MTX_DUPOK);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZONE_LOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_lock((z)->uz_lock)
+value|mtx_lock((z)->uz_lockptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_TRYLOCK
+parameter_list|(
+name|z
+parameter_list|)
+value|mtx_trylock((z)->uz_lockptr)
 end_define
 
 begin_define
@@ -1040,7 +1035,17 @@ name|ZONE_UNLOCK
 parameter_list|(
 name|z
 parameter_list|)
-value|mtx_unlock((z)->uz_lock)
+value|mtx_unlock((z)->uz_lockptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZONE_LOCK_FINI
+parameter_list|(
+name|z
+parameter_list|)
+value|mtx_destroy(&(z)->uz_lock)
 end_define
 
 begin_comment
@@ -1146,7 +1151,11 @@ name|uma_slab_t
 operator|)
 name|p
 operator|->
-name|object
+name|plinks
+operator|.
+name|s
+operator|.
+name|pv
 expr_stmt|;
 if|if
 condition|(
@@ -1198,59 +1207,18 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|object
+name|plinks
+operator|.
+name|s
+operator|.
+name|pv
 operator|=
-operator|(
-name|vm_object_t
-operator|)
 name|slab
 expr_stmt|;
 name|p
 operator|->
 name|flags
 operator||=
-name|PG_SLAB
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|vsetobj
-parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|,
-name|vm_object_t
-name|obj
-parameter_list|)
-block|{
-name|vm_page_t
-name|p
-decl_stmt|;
-name|p
-operator|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|pmap_kextract
-argument_list|(
-name|va
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|object
-operator|=
-name|obj
-expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
 name|PG_SLAB
 expr_stmt|;
 block|}

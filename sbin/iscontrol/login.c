@@ -63,25 +63,6 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -109,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/iscsi/initiator/iscsi.h>
+file|<dev/iscsi_initiator/iscsi.h>
 end_include
 
 begin_include

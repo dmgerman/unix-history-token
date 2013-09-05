@@ -78,6 +78,15 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|reseteval
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* flags in argument to evaltree/evalstring */
 end_comment
@@ -219,15 +228,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SKIPFUNC
+name|SKIPRETURN
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SKIPFILE
-value|4
 end_define
 
 end_unit

@@ -732,6 +732,13 @@ argument_list|)
 block|,
 name|MII_PHY_DESC
 argument_list|(
+name|BROADCOM4
+argument_list|,
+name|BCM5725C
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
 name|xxBROADCOM_ALT1
 argument_list|,
 name|BCM5906
@@ -4218,6 +4225,10 @@ case|:
 return|return;
 block|}
 break|break;
+case|case
+name|MII_OUI_BROADCOM4
+case|:
+return|return;
 block|}
 name|ifp
 operator|=

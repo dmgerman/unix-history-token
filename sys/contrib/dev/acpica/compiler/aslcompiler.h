@@ -695,6 +695,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|AslDisableException
+parameter_list|(
+name|char
+modifier|*
+name|MessageIdString
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AslIsExceptionDisabled
+parameter_list|(
+name|UINT8
+name|Level
+parameter_list|,
+name|UINT8
+name|MessageId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|AslCoreSubsystemError
 parameter_list|(
@@ -1961,6 +1985,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * aslmain - startup  */
+end_comment
+
+begin_function_decl
+name|void
+name|Usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AslFilenameHelp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * aslnamesp - namespace output file generation  */
 end_comment
 
@@ -1980,6 +2026,25 @@ parameter_list|(
 name|void
 modifier|*
 name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * asloptions - command line processing  */
+end_comment
+
+begin_function_decl
+name|int
+name|AslCommandLine
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
 parameter_list|)
 function_decl|;
 end_function_decl

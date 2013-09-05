@@ -1182,11 +1182,6 @@ goto|goto
 name|close
 goto|;
 block|}
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ipv6only_result
 operator|=
 name|ISC_R_SUCCESS
@@ -1396,11 +1391,6 @@ goto|goto
 name|close
 goto|;
 block|}
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ipv6pktinfo_result
 operator|=
 name|ISC_R_SUCCESS

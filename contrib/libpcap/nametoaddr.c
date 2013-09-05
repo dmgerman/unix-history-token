@@ -1003,6 +1003,11 @@ return|return
 literal|0
 return|;
 block|}
+name|free
+argument_list|(
+name|cpy
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*

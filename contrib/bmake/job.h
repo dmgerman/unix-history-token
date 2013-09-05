@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.h,v 1.41 2013/03/05 22:01:44 christos Exp $	*/
+comment|/*	$NetBSD: job.h,v 1.42 2013/07/05 22:14:56 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -410,6 +410,14 @@ specifier|const
 name|char
 modifier|*
 name|shellName
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|shellErrFlag
 decl_stmt|;
 end_decl_stmt
 

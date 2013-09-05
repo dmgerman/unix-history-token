@@ -6155,6 +6155,226 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
+comment|/* freebsd32_ktimer_create */
+case|case
+literal|235
+case|:
+block|{
+name|struct
+name|freebsd32_ktimer_create_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|clock_id
+expr_stmt|;
+comment|/* clockid_t */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|evp
+expr_stmt|;
+comment|/* struct sigevent32 * */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int * */
+operator|*
+name|n_args
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+block|}
+comment|/* ktimer_delete */
+case|case
+literal|236
+case|:
+block|{
+name|struct
+name|ktimer_delete_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_ktimer_settime */
+case|case
+literal|237
+case|:
+block|{
+name|struct
+name|freebsd32_ktimer_settime_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|value
+expr_stmt|;
+comment|/* const struct itimerspec32 * */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|ovalue
+expr_stmt|;
+comment|/* struct itimerspec32 * */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_ktimer_gettime */
+case|case
+literal|238
+case|:
+block|{
+name|struct
+name|freebsd32_ktimer_gettime_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|value
+expr_stmt|;
+comment|/* struct itimerspec32 * */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* ktimer_getoverrun */
+case|case
+literal|239
+case|:
+block|{
+name|struct
+name|ktimer_getoverrun_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|timerid
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* freebsd32_nanosleep */
 case|case
 literal|240
@@ -6296,31 +6516,41 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* clock_getcpuclockid2 */
+comment|/* freebsd32_clock_getcpuclockid2 */
 case|case
 literal|247
 case|:
 block|{
 name|struct
-name|clock_getcpuclockid2_args
+name|freebsd32_clock_getcpuclockid2_args
 modifier|*
 name|p
 init|=
 name|params
 decl_stmt|;
-name|iarg
+name|uarg
 index|[
 literal|0
 index|]
 operator|=
 name|p
 operator|->
-name|id
+name|id1
 expr_stmt|;
-comment|/* id_t */
-name|iarg
+comment|/* uint32_t */
+name|uarg
 index|[
 literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|id2
+expr_stmt|;
+comment|/* uint32_t */
+name|iarg
+index|[
+literal|2
 index|]
 operator|=
 name|p
@@ -6330,7 +6560,7 @@ expr_stmt|;
 comment|/* int */
 name|uarg
 index|[
-literal|2
+literal|3
 index|]
 operator|=
 operator|(
@@ -6344,7 +6574,7 @@ comment|/* clockid_t * */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -6666,7 +6896,7 @@ name|p
 operator|->
 name|sig
 expr_stmt|;
-comment|/* struct sigevent * */
+comment|/* struct sigevent32 * */
 operator|*
 name|n_args
 operator|=
@@ -12765,13 +12995,13 @@ literal|5
 expr_stmt|;
 break|break;
 block|}
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
 block|{
 name|struct
-name|kmq_notify_args
+name|freebsd32_kmq_notify_args
 modifier|*
 name|p
 init|=
@@ -12799,7 +13029,7 @@ name|p
 operator|->
 name|sigev
 expr_stmt|;
-comment|/* const struct sigevent * */
+comment|/* const struct sigevent32 * */
 operator|*
 name|n_args
 operator|=
@@ -16074,52 +16304,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_new */
-case|case
-literal|514
-case|:
-block|{
-name|struct
-name|cap_new_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|iarg
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|fd
-expr_stmt|;
-comment|/* int */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-name|p
-operator|->
-name|rights
-expr_stmt|;
-comment|/* uint64_t */
-operator|*
-name|n_args
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-block|}
-comment|/* cap_rights_get */
+comment|/* __cap_rights_get */
 case|case
 literal|515
 case|:
 block|{
 name|struct
-name|cap_rights_get_args
+name|__cap_rights_get_args
 modifier|*
 name|p
 init|=
@@ -16132,12 +16323,22 @@ index|]
 operator|=
 name|p
 operator|->
+name|version
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
 name|fd
 expr_stmt|;
 comment|/* int */
 name|uarg
 index|[
-literal|1
+literal|2
 index|]
 operator|=
 operator|(
@@ -16147,11 +16348,11 @@ name|p
 operator|->
 name|rightsp
 expr_stmt|;
-comment|/* uint64_t * */
+comment|/* cap_rights_t * */
 operator|*
 name|n_args
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -16196,6 +16397,129 @@ operator|*
 name|n_args
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* pdfork */
+case|case
+literal|518
+case|:
+block|{
+name|struct
+name|pdfork_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|fdp
+expr_stmt|;
+comment|/* int * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* pdkill */
+case|case
+literal|519
+case|:
+block|{
+name|struct
+name|pdkill_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|signum
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* pdgetpid */
+case|case
+literal|520
+case|:
+block|{
+name|struct
+name|pdgetpid_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|pidp
+expr_stmt|;
+comment|/* pid_t * */
+operator|*
+name|n_args
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -16692,6 +17016,287 @@ literal|4
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|PAD64_REQUIRED
+comment|/* freebsd32_posix_fallocate */
+case|case
+literal|530
+case|:
+block|{
+name|struct
+name|freebsd32_posix_fallocate_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|pad
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|offset1
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|offset2
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|4
+index|]
+operator|=
+name|p
+operator|->
+name|len1
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|5
+index|]
+operator|=
+name|p
+operator|->
+name|len2
+expr_stmt|;
+comment|/* uint32_t */
+operator|*
+name|n_args
+operator|=
+literal|6
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_posix_fadvise */
+case|case
+literal|531
+case|:
+block|{
+name|struct
+name|freebsd32_posix_fadvise_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|pad
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|offset1
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|offset2
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|4
+index|]
+operator|=
+name|p
+operator|->
+name|len1
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|5
+index|]
+operator|=
+name|p
+operator|->
+name|len2
+expr_stmt|;
+comment|/* uint32_t */
+name|iarg
+index|[
+literal|6
+index|]
+operator|=
+name|p
+operator|->
+name|advice
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|7
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_wait6 */
+case|case
+literal|532
+case|:
+block|{
+name|struct
+name|freebsd32_wait6_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|idtype
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|pad
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|id1
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|id2
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|4
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|status
+expr_stmt|;
+comment|/* int * */
+name|iarg
+index|[
+literal|5
+index|]
+operator|=
+name|p
+operator|->
+name|options
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|6
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|wrusage
+expr_stmt|;
+comment|/* struct wrusage32 * */
+name|uarg
+index|[
+literal|7
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|info
+expr_stmt|;
+comment|/* siginfo_t * */
+operator|*
+name|n_args
+operator|=
+literal|8
+expr_stmt|;
+break|break;
+block|}
+else|#
+directive|else
 comment|/* freebsd32_posix_fallocate */
 case|case
 literal|530
@@ -16862,19 +17467,29 @@ operator|->
 name|idtype
 expr_stmt|;
 comment|/* int */
-name|iarg
+name|uarg
 index|[
 literal|1
 index|]
 operator|=
 name|p
 operator|->
-name|id
+name|id1
 expr_stmt|;
-comment|/* int */
+comment|/* uint32_t */
 name|uarg
 index|[
 literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|id2
+expr_stmt|;
+comment|/* uint32_t */
+name|uarg
+index|[
+literal|3
 index|]
 operator|=
 operator|(
@@ -16887,7 +17502,7 @@ expr_stmt|;
 comment|/* int * */
 name|iarg
 index|[
-literal|3
+literal|4
 index|]
 operator|=
 name|p
@@ -16897,7 +17512,7 @@ expr_stmt|;
 comment|/* int */
 name|uarg
 index|[
-literal|4
+literal|5
 index|]
 operator|=
 operator|(
@@ -16910,7 +17525,7 @@ expr_stmt|;
 comment|/* struct wrusage32 * */
 name|uarg
 index|[
-literal|5
+literal|6
 index|]
 operator|=
 operator|(
@@ -16924,10 +17539,12 @@ comment|/* siginfo_t * */
 operator|*
 name|n_args
 operator|=
-literal|6
+literal|7
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 comment|/* cap_rights_limit */
 case|case
 literal|533
@@ -16955,11 +17572,14 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|intptr_t
+operator|)
 name|p
 operator|->
-name|rights
+name|rightsp
 expr_stmt|;
-comment|/* uint64_t */
+comment|/* cap_rights_t * */
 operator|*
 name|n_args
 operator|=
@@ -16967,13 +17587,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
 block|{
 name|struct
-name|cap_ioctls_limit_args
+name|freebsd32_cap_ioctls_limit_args
 modifier|*
 name|p
 init|=
@@ -17001,7 +17621,7 @@ name|p
 operator|->
 name|cmds
 expr_stmt|;
-comment|/* const u_long * */
+comment|/* const uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -17019,13 +17639,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
 block|{
 name|struct
-name|cap_ioctls_get_args
+name|freebsd32_cap_ioctls_get_args
 modifier|*
 name|p
 init|=
@@ -17053,7 +17673,7 @@ name|p
 operator|->
 name|cmds
 expr_stmt|;
-comment|/* u_long * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -17335,6 +17955,145 @@ operator|*
 name|n_args
 operator|=
 literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* accept4 */
+case|case
+literal|541
+case|:
+block|{
+name|struct
+name|accept4_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|s
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|name
+expr_stmt|;
+comment|/* struct sockaddr *__restrict */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|anamelen
+expr_stmt|;
+comment|/* __socklen_t *__restrict */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
+comment|/* pipe2 */
+case|case
+literal|542
+case|:
+block|{
+name|struct
+name|pipe2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|fildes
+expr_stmt|;
+comment|/* int * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* freebsd32_aio_mlock */
+case|case
+literal|543
+case|:
+block|{
+name|struct
+name|freebsd32_aio_mlock_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|aiocbp
+expr_stmt|;
+comment|/* struct aiocb32 * */
+operator|*
+name|n_args
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -21728,6 +22487,164 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+comment|/* freebsd32_ktimer_create */
+case|case
+literal|235
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"clockid_t"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"struct sigevent32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* ktimer_delete */
+case|case
+literal|236
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_settime */
+case|case
+literal|237
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"const struct itimerspec32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"struct itimerspec32 *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_gettime */
+case|case
+literal|238
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"struct itimerspec32 *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* ktimer_getoverrun */
+case|case
+literal|239
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 comment|/* freebsd32_nanosleep */
 case|case
 literal|240
@@ -21824,7 +22741,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* clock_getcpuclockid2 */
+comment|/* freebsd32_clock_getcpuclockid2 */
 case|case
 literal|247
 case|:
@@ -21838,7 +22755,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"id_t"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -21846,11 +22763,19 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
 literal|2
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|3
 case|:
 name|p
 operator|=
@@ -22085,7 +23010,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"struct sigevent *"
+literal|"struct sigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
@@ -26405,7 +27330,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
@@ -26427,7 +27352,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct sigevent *"
+literal|"const struct sigevent32 *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28845,37 +29770,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_new */
-case|case
-literal|514
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"uint64_t"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* cap_rights_get */
+comment|/* __cap_rights_get */
 case|case
 literal|515
 case|:
@@ -28897,7 +29792,15 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uint64_t *"
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"cap_rights_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -28925,6 +29828,96 @@ case|:
 name|p
 operator|=
 literal|"u_int *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pdfork */
+case|case
+literal|518
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pdkill */
+case|case
+literal|519
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pdgetpid */
+case|case
+literal|520
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"pid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29276,6 +30269,221 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PAD64_REQUIRED
+comment|/* freebsd32_posix_fallocate */
+case|case
+literal|530
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_posix_fadvise */
+case|case
+literal|531
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|6
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_wait6 */
+case|case
+literal|532
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"uint32_t"
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|6
+case|:
+name|p
+operator|=
+literal|"struct wrusage32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|7
+case|:
+name|p
+operator|=
+literal|"siginfo_t *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+else|#
+directive|else
 comment|/* freebsd32_posix_fallocate */
 case|case
 literal|530
@@ -29414,7 +30622,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -29422,7 +30630,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"int *"
+literal|"uint32_t"
 expr_stmt|;
 break|break;
 case|case
@@ -29430,7 +30638,7 @@ literal|3
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"int *"
 expr_stmt|;
 break|break;
 case|case
@@ -29438,11 +30646,19 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct wrusage32 *"
+literal|"int"
 expr_stmt|;
 break|break;
 case|case
 literal|5
+case|:
+name|p
+operator|=
+literal|"struct wrusage32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|6
 case|:
 name|p
 operator|=
@@ -29454,6 +30670,8 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* cap_rights_limit */
 case|case
 literal|533
@@ -29476,7 +30694,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uint64_t"
+literal|"cap_rights_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29484,7 +30702,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
@@ -29506,7 +30724,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const u_long *"
+literal|"const uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -29522,7 +30740,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
@@ -29544,7 +30762,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_long *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -29751,6 +30969,104 @@ case|:
 name|p
 operator|=
 literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* accept4 */
+case|case
+literal|541
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"struct sockaddr *__restrict"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"__socklen_t *__restrict"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pipe2 */
+case|case
+literal|542
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* freebsd32_aio_mlock */
+case|case
+literal|543
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"struct aiocb32 *"
 expr_stmt|;
 break|break;
 default|default:
@@ -32310,6 +33626,101 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+comment|/* freebsd32_ktimer_create */
+case|case
+literal|235
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* ktimer_delete */
+case|case
+literal|236
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_settime */
+case|case
+literal|237
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_ktimer_gettime */
+case|case
+literal|238
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* ktimer_getoverrun */
+case|case
+literal|239
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* freebsd32_nanosleep */
 case|case
 literal|240
@@ -32386,7 +33797,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* clock_getcpuclockid2 */
+comment|/* freebsd32_clock_getcpuclockid2 */
 case|case
 literal|247
 case|:
@@ -35028,7 +36439,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* kmq_notify */
+comment|/* freebsd32_kmq_notify */
 case|case
 literal|461
 case|:
@@ -36087,26 +37498,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_new */
-case|case
-literal|514
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* cap_rights_get */
+comment|/* __cap_rights_get */
 case|case
 literal|515
 case|:
@@ -36132,6 +37524,63 @@ case|:
 comment|/* cap_getmode */
 case|case
 literal|517
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pdfork */
+case|case
+literal|518
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pdkill */
+case|case
+literal|519
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pdgetpid */
+case|case
+literal|520
 case|:
 if|if
 condition|(
@@ -36300,6 +37749,9 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PAD64_REQUIRED
 comment|/* freebsd32_posix_fallocate */
 case|case
 literal|530
@@ -36357,6 +37809,67 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
+else|#
+directive|else
+comment|/* freebsd32_posix_fallocate */
+case|case
+literal|530
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_posix_fadvise */
+case|case
+literal|531
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_wait6 */
+case|case
+literal|532
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 comment|/* cap_rights_limit */
 case|case
 literal|533
@@ -36376,7 +37889,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
@@ -36395,7 +37908,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
@@ -36493,6 +38006,63 @@ break|break;
 comment|/* chflagsat */
 case|case
 literal|540
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* accept4 */
+case|case
+literal|541
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pipe2 */
+case|case
+literal|542
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* freebsd32_aio_mlock */
+case|case
+literal|543
 case|:
 if|if
 condition|(

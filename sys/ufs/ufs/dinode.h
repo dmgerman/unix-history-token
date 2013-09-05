@@ -343,7 +343,7 @@ name|int32_t
 name|di_birthnsec
 decl_stmt|;
 comment|/*  76: Inode creation time. */
-name|int32_t
+name|u_int32_t
 name|di_gen
 decl_stmt|;
 comment|/*  80: Generation number. */
@@ -480,7 +480,7 @@ name|int32_t
 name|di_blocks
 decl_stmt|;
 comment|/* 104: Blocks actually held. */
-name|int32_t
+name|u_int32_t
 name|di_gen
 decl_stmt|;
 comment|/* 108: Generation number. */

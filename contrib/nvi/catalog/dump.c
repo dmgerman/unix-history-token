@@ -283,11 +283,11 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|parse
 argument_list|(
@@ -303,11 +303,11 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

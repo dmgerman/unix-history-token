@@ -49,6 +49,12 @@ directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -58,6 +64,9 @@ name|driver
 block|{
 name|class
 name|Action
+decl_stmt|;
+name|class
+name|JobAction
 decl_stmt|;
 comment|/// ArgStringList - Type used for constructing argv lists for subprocesses.
 typedef|typedef
@@ -70,6 +79,22 @@ operator|,
 literal|16
 operator|>
 name|ArgStringList
+expr_stmt|;
+comment|/// ArgStringMap - Type used to map a JobAction to its result file.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|JobAction
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|>
+name|ArgStringMap
 expr_stmt|;
 comment|/// ActionList - Type used for lists of actions.
 typedef|typedef

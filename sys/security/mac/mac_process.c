@@ -1028,7 +1028,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1046,7 +1046,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|backing_object
 argument_list|)
@@ -1057,7 +1057,7 @@ name|object
 operator|->
 name|backing_object_offset
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)
@@ -1067,7 +1067,7 @@ operator|=
 name|backing_object
 expr_stmt|;
 block|}
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|object
 argument_list|)

@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sf_buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -93,24 +87,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mvec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_page.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
 end_include
 
 begin_ifdef

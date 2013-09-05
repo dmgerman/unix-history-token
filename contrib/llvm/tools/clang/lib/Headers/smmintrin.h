@@ -981,7 +981,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__                      \                               ({ union { int i; float f; } __t;  \                                  __v4sf __a = (__v4sf)(X);       \                                  __t.f = __a[N];                 \                                  __t.i;}))
+value|(__extension__                      \                               ({ union { int __i; float __f; } __t;  \                                  __v4sf __a = (__v4sf)(X);       \                                  __t.__f = __a[N];                 \                                  __t.__i;}))
 end_define
 
 begin_comment

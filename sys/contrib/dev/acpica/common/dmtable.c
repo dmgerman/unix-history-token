@@ -193,6 +193,8 @@ literal|"Check Busy Status"
 block|,
 literal|"Get Command Status"
 block|,
+literal|"Set Error Type With Address"
+block|,
 literal|"Unknown Action"
 block|}
 decl_stmt|;
@@ -216,6 +218,8 @@ block|,
 literal|"Write Register Value"
 block|,
 literal|"Noop"
+block|,
+literal|"Flush Cacheline"
 block|,
 literal|"Unknown Instruction"
 block|}
@@ -377,6 +381,12 @@ literal|"SCI"
 block|,
 literal|"NMI"
 block|,
+literal|"CMCI"
+block|,
+comment|/* ACPI 5.0 */
+literal|"MCE"
+block|,
+comment|/* ACPI 5.0 */
 literal|"Unknown Notify Type"
 comment|/* Reserved */
 block|}
@@ -1461,13 +1471,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ACPI_COMPARE_NAME
+name|ACPI_VALIDATE_RSDP_SIG
 argument_list|(
 name|Table
 operator|->
 name|Signature
-argument_list|,
-name|ACPI_SIG_RSDP
 argument_list|)
 condition|)
 block|{
@@ -2209,6 +2217,14 @@ literal|8
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_BUF10
+case|:
+name|ByteLength
+operator|=
+literal|10
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_BUF16
 case|:
 case|case
@@ -2540,6 +2556,9 @@ expr_stmt|;
 break|break;
 case|case
 name|ACPI_DMT_BUF7
+case|:
+case|case
+name|ACPI_DMT_BUF10
 case|:
 case|case
 name|ACPI_DMT_BUF16

@@ -322,8 +322,9 @@ name|nd
 operator|=
 name|parse_char_class
 argument_list|(
-operator|++
 name|nd
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==

@@ -62,48 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Lex/MacroInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/Lexer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PTHLexer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PPCallbacks.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PPMutationListener.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/TokenLexer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Lex/PTHManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/Builtins.h"
 end_include
 
@@ -128,6 +86,48 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/Lexer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/MacroInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PPCallbacks.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PTHLexer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/PTHManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Lex/TokenLexer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -140,25 +140,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -386,8 +380,6 @@ operator|<
 name|Preprocessor
 operator|>
 block|{
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|PreprocessorOptions
@@ -618,6 +610,16 @@ name|PragmasEnabled
 operator|:
 literal|1
 block|;
+comment|/// \brief True if the current build action is a preprocessing action.
+name|bool
+name|PreprocessedOutput
+operator|:
+literal|1
+block|;
+comment|/// \brief True if we are currently preprocessing a #if or #elif directive
+name|bool
+name|ParsingIfOrElifDirective
+block|;
 comment|/// \brief True if we are pre-expanding macro arguments.
 name|bool
 name|InMacroArgPreExpansion
@@ -699,8 +701,6 @@ name|SourceLocation
 name|ModuleImportLoc
 block|;
 comment|/// \brief The module import path that we're currently processing.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -892,22 +892,15 @@ comment|/// encountered (e.g. a file is \#included, etc).
 name|PPCallbacks
 operator|*
 name|Callbacks
-block|;
-comment|/// \brief Listener whose actions are invoked when an entity in the
-comment|/// preprocessor (e.g., a macro) that was loaded from an AST file is
-comment|/// later mutated.
-name|PPMutationListener
-operator|*
-name|Listener
 block|;    struct
 name|MacroExpandsInfo
 block|{
 name|Token
 name|Tok
 block|;
-name|MacroInfo
+name|MacroDirective
 operator|*
-name|MI
+name|MD
 block|;
 name|SourceRange
 name|Range
@@ -916,7 +909,7 @@ name|MacroExpandsInfo
 argument_list|(
 argument|Token Tok
 argument_list|,
-argument|MacroInfo *MI
+argument|MacroDirective *MD
 argument_list|,
 argument|SourceRange Range
 argument_list|)
@@ -926,9 +919,9 @@ argument_list|(
 name|Tok
 argument_list|)
 block|,
-name|MI
+name|MD
 argument_list|(
-name|MI
+name|MD
 argument_list|)
 block|,
 name|Range
@@ -953,10 +946,11 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|IdentifierInfo
 operator|*
 block|,
-name|MacroInfo
+name|MacroDirective
 operator|*
 operator|>
 name|Macros
@@ -1064,6 +1058,10 @@ operator|::
 name|string
 name|Predefines
 expr_stmt|;
+comment|/// \brief The file ID for the preprocessor predefines.
+name|FileID
+name|PredefinesFileID
+decl_stmt|;
 comment|/// TokenLexerCache - Cache macro expanders to reduce malloc traffic.
 enum|enum
 block|{
@@ -1187,11 +1185,32 @@ name|MacroInfoChain
 modifier|*
 name|MICache
 decl_stmt|;
+struct|struct
+name|DeserializedMacroInfoChain
+block|{
+name|MacroInfo
+name|MI
+decl_stmt|;
+name|unsigned
+name|OwningModuleID
+decl_stmt|;
+comment|// MUST be immediately after the MacroInfo object
+comment|// so it can be accessed by MacroInfo::getOwningModuleID().
+name|DeserializedMacroInfoChain
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+struct|;
+name|DeserializedMacroInfoChain
+modifier|*
+name|DeserialMIChainHead
+decl_stmt|;
 name|public
 label|:
 name|Preprocessor
 argument_list|(
-argument|llvm::IntrusiveRefCntPtr<PreprocessorOptions> PPOpts
+argument|IntrusiveRefCntPtr<PreprocessorOptions> PPOpts
 argument_list|,
 argument|DiagnosticsEngine&diags
 argument_list|,
@@ -1417,6 +1436,16 @@ return|return
 name|TheModuleLoader
 return|;
 block|}
+comment|/// \brief True if we are currently preprocessing a #if or #elif directive
+name|bool
+name|isParsingIfOrElifDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParsingIfOrElifDirective
+return|;
+block|}
 comment|/// SetCommentRetentionState - Control whether or not the preprocessor retains
 comment|/// comments in output.
 name|void
@@ -1494,6 +1523,31 @@ return|return
 name|SuppressIncludeNotFoundError
 return|;
 block|}
+comment|/// Sets whether the preprocessor is responsible for producing output or if
+comment|/// it is producing tokens to be consumed by Parse and Sema.
+name|void
+name|setPreprocessedOutput
+parameter_list|(
+name|bool
+name|IsPreprocessedOutput
+parameter_list|)
+block|{
+name|PreprocessedOutput
+operator|=
+name|IsPreprocessedOutput
+expr_stmt|;
+block|}
+comment|/// Returns true if the preprocessor is responsible for generating output,
+comment|/// false if it is producing tokens to be consumed by Parse and Sema.
+name|bool
+name|isPreprocessedOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreprocessedOutput
+return|;
+block|}
 comment|/// isCurrentLexer - Return true if we are lexing directly from the specified
 comment|/// lexer.
 name|bool
@@ -1534,6 +1588,16 @@ name|getCurrentFileLexer
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns the file ID for the preprocessor predefines.
+name|FileID
+name|getPredefinesFileID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PredefinesFileID
+return|;
+block|}
 comment|/// getPPCallbacks/addPPCallbacks - Accessors for preprocessor callbacks.
 comment|/// Note that this class takes ownership of any PPCallbacks object given to
 comment|/// it.
@@ -1574,43 +1638,11 @@ operator|=
 name|C
 expr_stmt|;
 block|}
-comment|/// \brief Attach an preprocessor mutation listener to the preprocessor.
-comment|///
-comment|/// The preprocessor mutation listener provides the ability to track
-comment|/// modifications to the preprocessor entities committed after they were
-comment|/// initially created.
-name|void
-name|setPPMutationListener
-parameter_list|(
-name|PPMutationListener
+comment|/// \brief Given an identifier, return its latest MacroDirective if it is
+comment|// \#defined or null if it isn't \#define'd.
+name|MacroDirective
 modifier|*
-name|Listener
-parameter_list|)
-block|{
-name|this
-operator|->
-name|Listener
-operator|=
-name|Listener
-expr_stmt|;
-block|}
-comment|/// \brief Retrieve a pointer to the preprocessor mutation listener
-comment|/// associated with this preprocessor, if any.
-name|PPMutationListener
-operator|*
-name|getPPMutationListener
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Listener
-return|;
-block|}
-comment|/// \brief Given an identifier, return the MacroInfo it is \#defined to
-comment|/// or null if it isn't \#define'd.
-name|MacroInfo
-modifier|*
-name|getMacroInfo
+name|getMacroDirective
 argument_list|(
 name|IdentifierInfo
 operator|*
@@ -1629,82 +1661,160 @@ condition|)
 return|return
 literal|0
 return|;
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 init|=
-name|getMacroInfoHistory
+name|getMacroDirectiveHistory
 argument_list|(
 name|II
 argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
-name|MI
+name|MD
 operator|->
-name|getUndefLoc
-argument_list|()
-operator|.
-name|isInvalid
+name|isDefined
 argument_list|()
 operator|&&
 literal|"Macro is undefined!"
 argument_list|)
 expr_stmt|;
 return|return
-name|MI
+name|MD
 return|;
 block|}
-comment|/// \brief Given an identifier, return the (probably #undef'd) MacroInfo
-comment|/// representing the most recent macro definition. One can iterate over all
-comment|/// previous macro definitions from it. This method should only be called for
-comment|/// identifiers that hadMacroDefinition().
+specifier|const
 name|MacroInfo
 modifier|*
-name|getMacroInfoHistory
+name|getMacroInfo
 argument_list|(
 name|IdentifierInfo
 operator|*
 name|II
 argument_list|)
 decl|const
-decl_stmt|;
-comment|/// \brief Specify a macro for this identifier.
-name|void
-name|setMacroInfo
+block|{
+return|return
+name|const_cast
+operator|<
+name|Preprocessor
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMacroInfo
+argument_list|(
+name|II
+argument_list|)
+return|;
+block|}
+name|MacroInfo
+modifier|*
+name|getMacroInfo
 parameter_list|(
 name|IdentifierInfo
 modifier|*
 name|II
-parameter_list|,
-name|MacroInfo
-modifier|*
-name|MI
 parameter_list|)
-function_decl|;
-comment|/// \brief Add a MacroInfo that was loaded from an AST file.
-name|void
-name|addLoadedMacroInfo
-parameter_list|(
-name|IdentifierInfo
+block|{
+if|if
+condition|(
+name|MacroDirective
 modifier|*
-name|II
-parameter_list|,
-name|MacroInfo
-modifier|*
-name|MI
-parameter_list|,
-name|MacroInfo
-modifier|*
-name|Hint
+name|MD
 init|=
+name|getMacroDirective
+argument_list|(
+name|II
+argument_list|)
+condition|)
+return|return
+name|MD
+operator|->
+name|getMacroInfo
+argument_list|()
+return|;
+return|return
 literal|0
+return|;
+block|}
+comment|/// \brief Given an identifier, return the (probably #undef'd) MacroInfo
+comment|/// representing the most recent macro definition. One can iterate over all
+comment|/// previous macro definitions from it. This method should only be called for
+comment|/// identifiers that hadMacroDefinition().
+name|MacroDirective
+modifier|*
+name|getMacroDirectiveHistory
+argument_list|(
+specifier|const
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Add a directive to the macro directive history for this identifier.
+name|void
+name|appendMacroDirective
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 function_decl|;
-comment|/// \brief Make the given MacroInfo, that was loaded from an AST file and
-comment|/// previously hidden, visible.
-name|void
-name|makeLoadedMacroInfoVisible
+name|DefMacroDirective
+modifier|*
+name|appendDefMacroDirective
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|bool
+name|isImported
+parameter_list|)
+block|{
+name|DefMacroDirective
+modifier|*
+name|MD
+init|=
+name|AllocateDefMacroDirective
+argument_list|(
+name|MI
+argument_list|,
+name|Loc
+argument_list|,
+name|isImported
+argument_list|)
+decl_stmt|;
+name|appendMacroDirective
+argument_list|(
+name|II
+argument_list|,
+name|MD
+argument_list|)
+expr_stmt|;
+return|return
+name|MD
+return|;
+block|}
+name|DefMacroDirective
+modifier|*
+name|appendDefMacroDirective
 parameter_list|(
 name|IdentifierInfo
 modifier|*
@@ -1714,14 +1824,34 @@ name|MacroInfo
 modifier|*
 name|MI
 parameter_list|)
-function_decl|;
-comment|/// \brief Undefine a macro for this identifier.
+block|{
+return|return
+name|appendDefMacroDirective
+argument_list|(
+name|II
+argument_list|,
+name|MI
+argument_list|,
+name|MI
+operator|->
+name|getDefinitionLoc
+argument_list|()
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set a MacroDirective that was loaded from a PCH file.
 name|void
-name|clearMacroInfo
+name|setLoadedMacroDirective
 parameter_list|(
 name|IdentifierInfo
 modifier|*
 name|II
+parameter_list|,
+name|MacroDirective
+modifier|*
+name|MD
 parameter_list|)
 function_decl|;
 comment|/// macro_iterator/macro_begin/macro_end - This allows you to walk the macro
@@ -1733,10 +1863,11 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|IdentifierInfo
 operator|*
 operator|,
-name|MacroInfo
+name|MacroDirective
 operator|*
 operator|>
 operator|::
@@ -1987,10 +2118,7 @@ comment|/// \brief Create a new preprocessing record, which will keep track of
 comment|/// all macro expansions, macro definitions, etc.
 name|void
 name|createPreprocessingRecord
-parameter_list|(
-name|bool
-name|RecordConditionalDirectives
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// EnterMainSourceFile - Enter the specified FileID as the main source file,
 comment|/// which implicitly adds the builtin defines etc.
@@ -2203,6 +2331,83 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
+comment|/// \brief Lex a string literal, which may be the concatenation of multiple
+comment|/// string literals and may even come from macro expansion.
+comment|/// \returns true on success, false if a error diagnostic has been generated.
+name|bool
+name|LexStringLiteral
+argument_list|(
+name|Token
+operator|&
+name|Result
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|String
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|DiagnosticTag
+argument_list|,
+name|bool
+name|AllowMacroExpansion
+argument_list|)
+block|{
+if|if
+condition|(
+name|AllowMacroExpansion
+condition|)
+name|Lex
+argument_list|(
+name|Result
+argument_list|)
+expr_stmt|;
+else|else
+name|LexUnexpandedToken
+argument_list|(
+name|Result
+argument_list|)
+expr_stmt|;
+return|return
+name|FinishLexStringLiteral
+argument_list|(
+name|Result
+argument_list|,
+name|String
+argument_list|,
+name|DiagnosticTag
+argument_list|,
+name|AllowMacroExpansion
+argument_list|)
+return|;
+block|}
+comment|/// \brief Complete the lexing of a string literal where the first token has
+comment|/// already been lexed (see LexStringLiteral).
+name|bool
+name|FinishLexStringLiteral
+argument_list|(
+name|Token
+operator|&
+name|Result
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|String
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|DiagnosticTag
+argument_list|,
+name|bool
+name|AllowMacroExpansion
+argument_list|)
+decl_stmt|;
 comment|/// LexNonComment - Lex a token.  If it's a comment, keep lexing until we get
 comment|/// something not a comment.  This is useful in -E -C mode where comments
 comment|/// would foul up preprocessor directive handling.
@@ -2968,6 +3173,34 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Relex the token at the specified location.
+comment|/// \returns true if there was a failure, false on success.
+name|bool
+name|getRawToken
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|Token
+modifier|&
+name|Result
+parameter_list|)
+block|{
+return|return
+name|Lexer
+operator|::
+name|getRawToken
+argument_list|(
+name|Loc
+argument_list|,
+name|Result
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|LangOpts
+argument_list|)
+return|;
+block|}
 comment|/// getSpellingOfSingleCharacterNumericConstant - Tok is a numeric constant
 comment|/// with length 1, return the character.
 name|char
@@ -3592,15 +3825,16 @@ name|SourceLocation
 name|L
 parameter_list|)
 function_decl|;
-comment|/// \brief Allocate a new MacroInfo object which is clone of \p MI.
+comment|/// \brief Allocate a new MacroInfo object loaded from an AST file.
 name|MacroInfo
 modifier|*
-name|CloneMacroInfo
+name|AllocateDeserializedMacroInfo
 parameter_list|(
-specifier|const
-name|MacroInfo
-modifier|&
-name|MI
+name|SourceLocation
+name|L
+parameter_list|,
+name|unsigned
+name|SubModuleID
 parameter_list|)
 function_decl|;
 comment|/// \brief Turn the specified lexer token into a fully checked and spelled
@@ -3851,6 +4085,40 @@ modifier|*
 name|AllocateMacroInfo
 parameter_list|()
 function_decl|;
+name|DefMacroDirective
+modifier|*
+name|AllocateDefMacroDirective
+parameter_list|(
+name|MacroInfo
+modifier|*
+name|MI
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|bool
+name|isImported
+parameter_list|)
+function_decl|;
+name|UndefMacroDirective
+modifier|*
+name|AllocateUndefMacroDirective
+parameter_list|(
+name|SourceLocation
+name|UndefLoc
+parameter_list|)
+function_decl|;
+name|VisibilityMacroDirective
+modifier|*
+name|AllocateVisibilityMacroDirective
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|bool
+name|isPublic
+parameter_list|)
+function_decl|;
 comment|/// \brief Release the specified MacroInfo for re-use.
 comment|///
 comment|/// This memory will  be reused for allocating new MacroInfo objects.
@@ -3960,9 +4228,9 @@ name|Token
 modifier|&
 name|Tok
 parameter_list|,
-name|MacroInfo
+name|MacroDirective
 modifier|*
-name|MI
+name|MD
 parameter_list|)
 function_decl|;
 comment|/// \brief Cache macro expanded tokens for TokenLexers.
@@ -4084,6 +4352,29 @@ modifier|*
 name|Dir
 parameter_list|)
 function_decl|;
+comment|/// \brief Set the file ID for the preprocessor predefines.
+name|void
+name|setPredefinesFileID
+parameter_list|(
+name|FileID
+name|FID
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|PredefinesFileID
+operator|.
+name|isInvalid
+argument_list|()
+operator|&&
+literal|"PredefinesFileID already set!"
+argument_list|)
+expr_stmt|;
+name|PredefinesFileID
+operator|=
+name|FID
+expr_stmt|;
+block|}
 comment|/// IsFileLexer - Returns true if we are lexing from a file and not a
 comment|///  pragma or a macro.
 specifier|static
@@ -4364,21 +4655,6 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
-name|void
-name|UndefineMacro
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|II
-parameter_list|,
-name|MacroInfo
-modifier|*
-name|MI
-parameter_list|,
-name|SourceLocation
-name|UndefLoc
-parameter_list|)
-function_decl|;
 comment|// Conditional Inclusion.
 name|void
 name|HandleIfdefDirective
@@ -4473,22 +4749,6 @@ parameter_list|(
 name|Token
 modifier|&
 name|DependencyTok
-parameter_list|)
-function_decl|;
-name|void
-name|HandlePragmaComment
-parameter_list|(
-name|Token
-modifier|&
-name|CommentTok
-parameter_list|)
-function_decl|;
-name|void
-name|HandlePragmaMessage
-parameter_list|(
-name|Token
-modifier|&
-name|MessageTok
 parameter_list|)
 function_decl|;
 name|void

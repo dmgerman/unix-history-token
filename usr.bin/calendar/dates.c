@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-2009 Edwin Groothuis<edwin@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*-  * Copyright (c) 1992-2009 Edwin Groothuis<edwin@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -268,13 +268,13 @@ begin_decl_stmt
 specifier|static
 name|int
 modifier|*
-name|mondays
+name|monthdays
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|mondaytab
+name|monthdaytab
 index|[]
 index|[
 literal|14
@@ -950,9 +950,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * Same year, different month. 		 * - Take the leftover days from m1 		 * - Take all days from<m1 .. m2> 		 * - Take the first days from m2 		 */
-name|mondays
+name|monthdays
 operator|=
-name|mondaytab
+name|monthdaytab
 index|[
 name|isleap
 argument_list|(
@@ -968,7 +968,7 @@ name|d1
 init|;
 name|d
 operator|<=
-name|mondays
+name|monthdays
 index|[
 name|m1
 index|]
@@ -1008,7 +1008,7 @@ literal|1
 init|;
 name|d
 operator|<=
-name|mondays
+name|monthdays
 index|[
 name|m
 index|]
@@ -1050,9 +1050,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Different year, different month. 	 * - Take the leftover days from y1-m1 	 * - Take all days from y1-<m1 .. 12] 	 * - Take all days from<y1 .. y2> 	 * - Take all days from y2-[1 .. m2> 	 * - Take the first days of y2-m2 	 */
-name|mondays
+name|monthdays
 operator|=
-name|mondaytab
+name|monthdaytab
 index|[
 name|isleap
 argument_list|(
@@ -1068,7 +1068,7 @@ name|d1
 init|;
 name|d
 operator|<=
-name|mondays
+name|monthdays
 index|[
 name|m1
 index|]
@@ -1108,7 +1108,7 @@ literal|1
 init|;
 name|d
 operator|<=
-name|mondays
+name|monthdays
 index|[
 name|m
 index|]
@@ -1141,9 +1141,9 @@ name|y
 operator|++
 control|)
 block|{
-name|mondays
+name|monthdays
 operator|=
-name|mondaytab
+name|monthdaytab
 index|[
 name|isleap
 argument_list|(
@@ -1172,7 +1172,7 @@ literal|1
 init|;
 name|d
 operator|<=
-name|mondays
+name|monthdays
 index|[
 name|m
 index|]
@@ -1190,9 +1190,9 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-name|mondays
+name|monthdays
 operator|=
-name|mondaytab
+name|monthdaytab
 index|[
 name|isleap
 argument_list|(
@@ -1221,7 +1221,7 @@ literal|1
 init|;
 name|d
 operator|<=
-name|mondays
+name|monthdays
 index|[
 name|m
 index|]
@@ -1847,7 +1847,7 @@ operator|->
 name|nextmonth
 expr_stmt|;
 block|}
-comment|/* Should not happen */
+comment|/* No data for this month */
 return|return
 operator|(
 operator|-
@@ -1855,7 +1855,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Should not happen */
+comment|/* No data for this year.  Error? */
 return|return
 operator|(
 operator|-

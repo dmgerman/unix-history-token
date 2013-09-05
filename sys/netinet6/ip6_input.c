@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_route.h"
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -175,6 +187,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -453,7 +471,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|ip6stat
@@ -462,6 +480,37 @@ name|ip6stat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|ip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|ip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -1818,10 +1867,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-define|#
-directive|define
-name|M2MMAX
-value|(sizeof(V_ip6stat.ip6s_m2m)/sizeof(V_ip6stat.ip6s_m2m[0]))
 if|if
 condition|(
 name|m
@@ -1860,7 +1905,7 @@ name|rcvif
 operator|->
 name|if_index
 operator|<
-name|M2MMAX
+name|IP6S_M2MMAX
 condition|)
 name|IP6STAT_INC
 argument_list|(
@@ -1892,9 +1937,6 @@ argument_list|(
 name|ip6s_m1
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|M2MMAX
 block|}
 comment|/* drop the packet if IPv6 operation is disabled on the IF */
 if|if
@@ -2189,6 +2231,27 @@ name|ip6
 operator|->
 name|ip6_nxt
 index|]
+argument_list|)
+expr_stmt|;
+name|IP_PROBE
+argument_list|(
+name|receive
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip6
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|,
+name|NULL
+argument_list|,
+name|ip6
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check against address spoofing/corruption. 	 */

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -90,8 +96,6 @@ name|uint64_t
 name|Align
 block|;
 comment|/// \brief The offsets of the fields, in source order.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|uint64_t
@@ -119,7 +123,7 @@ comment|/// The file is the result of passing -fdump-record-layouts to a file.
 name|explicit
 name|LayoutOverrideSource
 argument_list|(
-argument|llvm::StringRef Filename
+argument|StringRef Filename
 argument_list|)
 block|;
 comment|/// \brief If this particular record type has an overridden layout,

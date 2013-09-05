@@ -576,9 +576,14 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cas_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|arg1
@@ -9939,9 +9944,14 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cas_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|arg1
@@ -10024,7 +10034,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 comment|/* 	 * NB: this function can be called via m_freem(9) within 	 * this driver! 	 */
 if|if
 condition|(
@@ -10062,6 +10076,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 

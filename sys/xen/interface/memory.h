@@ -15,6 +15,12 @@ directive|define
 name|__XEN_PUBLIC_MEMORY_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|"xen.h"
+end_include
+
 begin_comment
 comment|/*  * Increase or decrease the specified domain's memory reservation. Returns the  * number of extents successfully allocated or freed.  * arg == addr of struct xen_memory_reservation.  */
 end_comment
@@ -94,6 +100,38 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((((x)>> 8) - 1)& 0xffu)
+end_define
+
+begin_comment
+comment|/* Flag to populate physmap with populate-on-demand entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_populate_on_demand
+value|(1<<16)
+end_define
+
+begin_comment
+comment|/* Flag to request allocation only from the node specified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_exact_node_request
+value|(1<<17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEMF_exact_node
+parameter_list|(
+name|n
+parameter_list|)
+value|(XENMEMF_node(n) | XENMEMF_exact_node_request)
 end_define
 
 begin_endif
@@ -367,6 +405,10 @@ comment|/* Which domain to change the mapping for. */
 name|domid_t
 name|domid
 decl_stmt|;
+comment|/* Number of pages to go through for gmfn_range */
+name|uint16_t
+name|size
+decl_stmt|;
 comment|/* Source mapping space. */
 define|#
 directive|define
@@ -380,13 +422,22 @@ value|1
 comment|/* grant table page */
 define|#
 directive|define
-name|XENMAPSPACE_mfn
+name|XENMAPSPACE_gmfn
 value|2
-comment|/* usual MFN */
+comment|/* GMFN */
+define|#
+directive|define
+name|XENMAPSPACE_gmfn_range
+value|3
+comment|/* GMFN range */
 name|unsigned
 name|int
 name|space
 decl_stmt|;
+define|#
+directive|define
+name|XENMAPIDX_grant_table_status
+value|0x80000000
 comment|/* Index into source mapping space. */
 name|xen_ulong_t
 name|idx
@@ -459,61 +510,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Translates a list of domain-specific GPFNs into MFNs. Returns a -ve error  * code on failure. This call only works for auto-translated guests.  */
+comment|/*** REMOVED ***/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XENMEM_translate_gpfn_list
-value|8
-end_define
-
-begin_struct
-struct|struct
-name|xen_translate_gpfn_list
-block|{
-comment|/* Which domain to translate for? */
-name|domid_t
-name|domid
-decl_stmt|;
-comment|/* Length of list. */
-name|xen_ulong_t
-name|nr_gpfns
-decl_stmt|;
-comment|/* List of GPFNs to translate. */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
-name|gpfn_list
-expr_stmt|;
-comment|/*      * Output list to contain MFN translations. May be the same as the input      * list (in which case each input GPFN is overwritten with the output MFN).      */
-name|XEN_GUEST_HANDLE
-argument_list|(
-argument|xen_pfn_t
-argument_list|)
-name|mfn_list
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|xen_translate_gpfn_list
-name|xen_translate_gpfn_list_t
-typedef|;
-end_typedef
-
-begin_expr_stmt
-name|DEFINE_XEN_GUEST_HANDLE
-argument_list|(
-name|xen_translate_gpfn_list_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*#define XENMEM_translate_gpfn_list  8*/
+end_comment
 
 begin_comment
 comment|/*  * Returns the pseudo-physical memory map as it was when the domain  * was started (specified by XENMEM_set_memory_map).  * arg == addr of xen_memory_map_t.  */
@@ -614,6 +616,436 @@ name|xen_foreign_memory_map_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|XENMEM_set_pod_target
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_get_pod_target
+value|17
+end_define
+
+begin_struct
+struct|struct
+name|xen_pod_target
+block|{
+comment|/* IN */
+name|uint64_t
+name|target_pages
+decl_stmt|;
+comment|/* OUT */
+name|uint64_t
+name|tot_pages
+decl_stmt|;
+name|uint64_t
+name|pod_cache_pages
+decl_stmt|;
+name|uint64_t
+name|pod_entries
+decl_stmt|;
+comment|/* IN */
+name|domid_t
+name|domid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_pod_target
+name|xen_pod_target_t
+typedef|;
+end_typedef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__XEN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__XEN_TOOLS__
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|uint64_aligned_t
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|uint64_aligned_t
+value|uint64_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Get the number of MFNs saved through memory sharing.  * The call never fails.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_get_sharing_freed_pages
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_get_sharing_shared_pages
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_paging_op
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_paging_op_nominate
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_paging_op_evict
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_paging_op_prep
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_access_op_resume
+value|0
+end_define
+
+begin_struct
+struct|struct
+name|xen_mem_event_op
+block|{
+name|uint8_t
+name|op
+decl_stmt|;
+comment|/* XENMEM_*_op_* */
+name|domid_t
+name|domain
+decl_stmt|;
+comment|/* PAGING_PREP IN: buffer to immediately fill page in */
+name|uint64_aligned_t
+name|buffer
+decl_stmt|;
+comment|/* Other OPs */
+name|uint64_aligned_t
+name|gfn
+decl_stmt|;
+comment|/* IN:  gfn of page being operated on */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_mem_event_op
+name|xen_mem_event_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_mem_event_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_nominate_gfn
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_nominate_gref
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_share
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_resume
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_debug_gfn
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_debug_mfn
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_debug_gref
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_add_physmap
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_sharing_op_audit
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_SHARING_OP_S_HANDLE_INVALID
+value|(-10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_SHARING_OP_C_HANDLE_INVALID
+value|(-9)
+end_define
+
+begin_comment
+comment|/* The following allows sharing of grant refs. This is useful  * for sharing utilities sitting as "filters" in IO backends  * (e.g. memshr + blktap(2)). The IO backend is only exposed   * to grant references, and this allows sharing of the grefs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_SHARING_OP_FIELD_IS_GREF_FLAG
+value|(1ULL<< 62)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_SHARING_OP_FIELD_MAKE_GREF
+parameter_list|(
+name|field
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|(field) = (XENMEM_SHARING_OP_FIELD_IS_GREF_FLAG | val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_SHARING_OP_FIELD_IS_GREF
+parameter_list|(
+name|field
+parameter_list|)
+define|\
+value|((field)& XENMEM_SHARING_OP_FIELD_IS_GREF_FLAG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENMEM_SHARING_OP_FIELD_GET_GREF
+parameter_list|(
+name|field
+parameter_list|)
+define|\
+value|((field)& (~XENMEM_SHARING_OP_FIELD_IS_GREF_FLAG))
+end_define
+
+begin_struct
+struct|struct
+name|xen_mem_sharing_op
+block|{
+name|uint8_t
+name|op
+decl_stmt|;
+comment|/* XENMEM_sharing_op_* */
+name|domid_t
+name|domain
+decl_stmt|;
+union|union
+block|{
+struct|struct
+name|mem_sharing_op_nominate
+block|{
+comment|/* OP_NOMINATE_xxx           */
+union|union
+block|{
+name|uint64_aligned_t
+name|gfn
+decl_stmt|;
+comment|/* IN: gfn to nominate       */
+name|uint32_t
+name|grant_ref
+decl_stmt|;
+comment|/* IN: grant ref to nominate */
+block|}
+name|u
+union|;
+name|uint64_aligned_t
+name|handle
+decl_stmt|;
+comment|/* OUT: the handle           */
+block|}
+name|nominate
+struct|;
+struct|struct
+name|mem_sharing_op_share
+block|{
+comment|/* OP_SHARE/ADD_PHYSMAP */
+name|uint64_aligned_t
+name|source_gfn
+decl_stmt|;
+comment|/* IN: the gfn of the source page */
+name|uint64_aligned_t
+name|source_handle
+decl_stmt|;
+comment|/* IN: handle to the source page */
+name|uint64_aligned_t
+name|client_gfn
+decl_stmt|;
+comment|/* IN: the client gfn */
+name|uint64_aligned_t
+name|client_handle
+decl_stmt|;
+comment|/* IN: handle to the client page */
+name|domid_t
+name|client_domain
+decl_stmt|;
+comment|/* IN: the client domain id */
+block|}
+name|share
+struct|;
+struct|struct
+name|mem_sharing_op_debug
+block|{
+comment|/* OP_DEBUG_xxx */
+union|union
+block|{
+name|uint64_aligned_t
+name|gfn
+decl_stmt|;
+comment|/* IN: gfn to debug          */
+name|uint64_aligned_t
+name|mfn
+decl_stmt|;
+comment|/* IN: mfn to debug          */
+name|uint32_t
+name|gref
+decl_stmt|;
+comment|/* IN: gref to debug         */
+block|}
+name|u
+union|;
+block|}
+name|debug
+struct|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_mem_sharing_op
+name|xen_mem_sharing_op_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_mem_sharing_op_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__XEN__) || defined(__XEN_TOOLS__) */
+end_comment
 
 begin_endif
 endif|#

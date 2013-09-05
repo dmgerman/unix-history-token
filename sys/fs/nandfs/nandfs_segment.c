@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -3621,7 +3627,7 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bp
 operator|->

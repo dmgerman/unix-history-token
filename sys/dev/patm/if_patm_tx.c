@@ -1771,7 +1771,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|vcc
 expr_stmt|;
@@ -2296,7 +2298,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 expr_stmt|;
 comment|/* we must know the number of segments beforehand - count 		 * this may actually give a wrong number of segments for 		 * AAL_RAW where we still need to remove the cell header */
 name|segs
@@ -2399,7 +2403,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|map
 expr_stmt|;
@@ -3389,7 +3395,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 expr_stmt|;
 name|scd
 operator|->

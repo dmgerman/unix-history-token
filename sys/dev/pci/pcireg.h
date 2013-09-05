@@ -3952,6 +3952,50 @@ begin_comment
 comment|/* 11001 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_GEN3
+value|0xd000
+end_define
+
+begin_comment
+comment|/* 11010 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_FLE
+value|0xd800
+end_define
+
+begin_comment
+comment|/* 11011 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_PM
+value|0xe000
+end_define
+
+begin_comment
+comment|/* 11100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIM_HTCAP_HIGH_NODE_COUNT
+value|0xe800
+end_define
+
+begin_comment
+comment|/* 11101 */
+end_comment
+
 begin_comment
 comment|/* HT MSI Mapping Capability definitions. */
 end_comment

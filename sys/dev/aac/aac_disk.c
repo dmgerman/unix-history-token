@@ -553,7 +553,6 @@ operator|->
 name|aac_io_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1705,6 +1704,14 @@ operator|->
 name|d_drv1
 operator|=
 name|sc
+expr_stmt|;
+name|sc
+operator|->
+name|ad_disk
+operator|->
+name|d_flags
+operator|=
+name|DISKFLAG_UNMAPPED_BIO
 expr_stmt|;
 name|sc
 operator|->

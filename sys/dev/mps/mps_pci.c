@@ -902,9 +902,6 @@ name|mps_ident
 modifier|*
 name|m
 decl_stmt|;
-name|uint16_t
-name|command
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -948,91 +945,11 @@ operator|->
 name|flags
 expr_stmt|;
 comment|/* Twiddle basic PCI config bits for a sanity check */
-name|command
-operator|=
-name|pci_read_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
-name|command
-operator||=
-name|PCIM_CMD_BUSMASTEREN
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|command
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|command
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|command
-operator|&
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Cannot enable PCI busmaster\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-operator|(
-name|command
-operator|&
-name|PCIM_CMD_MEMEN
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"PCI memory window not available\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Allocate the System Interface Register Set */
 name|sc
 operator|->
@@ -1068,9 +985,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate PCI registers\n"
 argument_list|)
@@ -1154,9 +1071,9 @@ name|mps_parent_dmat
 argument_list|)
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate parent DMA tag\n"
 argument_list|)
@@ -1358,9 +1275,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate INTx interrupt\n"
 argument_list|)
@@ -1407,9 +1324,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot setup INTx interrupt\n"
 argument_list|)
@@ -1484,9 +1401,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot allocate MSI interrupt\n"
 argument_list|)
@@ -1534,9 +1451,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|device_printf
+name|mps_printf
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 literal|"Cannot setup MSI interrupt %d\n"
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Wi-Fi Protected Setup - External Registrar (SSDP)  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Wi-Fi Protected Setup - External Registrar (SSDP)  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -178,6 +178,27 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|er
+operator|->
+name|filter_addr
+operator|.
+name|s_addr
+operator|&&
+name|er
+operator|->
+name|filter_addr
+operator|.
+name|s_addr
+operator|!=
+name|addr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+condition|)
+return|return;
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -552,6 +573,16 @@ condition|(
 name|byebye
 condition|)
 block|{
+name|wps_er_ap_cache_settings
+argument_list|(
+name|er
+argument_list|,
+operator|&
+name|addr
+operator|.
+name|sin_addr
+argument_list|)
+expr_stmt|;
 name|wps_er_ap_remove
 argument_list|(
 name|er
@@ -780,10 +811,20 @@ operator|->
 name|ifname
 argument_list|)
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"WPS ER: Failed to add routing entry for "
+literal|"SSDP"
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|er
 operator|->
 name|multicast_sd
@@ -803,10 +844,20 @@ name|multicast_sd
 operator|<
 literal|0
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"WPS ER: Failed to open multicast socket "
+literal|"for SSDP"
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|er
 operator|->
 name|ssdp_sd
@@ -822,10 +873,20 @@ name|ssdp_sd
 operator|<
 literal|0
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_INFO
+argument_list|,
+literal|"WPS ER: Failed to open SSDP listener "
+literal|"socket"
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 name|eloop_register_sock

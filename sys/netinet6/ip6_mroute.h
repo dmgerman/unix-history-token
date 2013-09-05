@@ -417,55 +417,55 @@ begin_struct
 struct|struct
 name|mrt6stat
 block|{
-name|u_quad_t
+name|uint64_t
 name|mrt6s_mfc_lookups
 decl_stmt|;
 comment|/* # forw. cache hash table hits   */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_mfc_misses
 decl_stmt|;
 comment|/* # forw. cache hash table misses */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_upcalls
 decl_stmt|;
 comment|/* # calls to multicast routing daemon */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_no_route
 decl_stmt|;
 comment|/* no route for packet's origin    */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_bad_tunnel
 decl_stmt|;
 comment|/* malformed tunnel options        */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_cant_tunnel
 decl_stmt|;
 comment|/* no room for tunnel options      */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_wrong_if
 decl_stmt|;
 comment|/* arrived on wrong interface	   */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_upq_ovflw
 decl_stmt|;
 comment|/* upcall Q overflow		   */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_cache_cleanups
 decl_stmt|;
 comment|/* # entries with no upcalls	   */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_drop_sel
 decl_stmt|;
 comment|/* pkts dropped selectively        */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_q_overflow
 decl_stmt|;
 comment|/* pkts dropped - Q overflow       */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_pkt2large
 decl_stmt|;
 comment|/* pkts dropped - size> BKT SIZE  */
-name|u_quad_t
+name|uint64_t
 name|mrt6s_upq_sockfull
 decl_stmt|;
 comment|/* upcalls dropped - socket full   */

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Serialization/ContinuousRangeMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/SourceLocation.h"
 end_include
 
 begin_include
@@ -189,6 +189,139 @@ name|NumLexicalDecls
 decl_stmt|;
 block|}
 struct|;
+comment|/// \brief The input file that has been loaded from this AST file, along with
+comment|/// bools indicating whether this was an overridden buffer or if it was
+comment|/// out-of-date.
+name|class
+name|InputFile
+block|{
+enum|enum
+block|{
+name|Overridden
+init|=
+literal|1
+block|,
+name|OutOfDate
+init|=
+literal|2
+block|}
+enum|;
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|,
+name|unsigned
+operator|>
+name|Val
+expr_stmt|;
+name|public
+label|:
+name|InputFile
+argument_list|()
+block|{}
+name|InputFile
+argument_list|(
+argument|const FileEntry *File
+argument_list|,
+argument|bool isOverridden = false
+argument_list|,
+argument|bool isOutOfDate = false
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|isOverridden
+operator|&&
+name|isOutOfDate
+operator|)
+operator|&&
+literal|"an overridden cannot be out-of-date"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|intVal
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|isOverridden
+condition|)
+name|intVal
+operator|=
+name|Overridden
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|isOutOfDate
+condition|)
+name|intVal
+operator|=
+name|OutOfDate
+expr_stmt|;
+name|Val
+operator|.
+name|setPointerAndInt
+argument_list|(
+name|File
+argument_list|,
+name|intVal
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|FileEntry
+operator|*
+name|getFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|bool
+name|isOverridden
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|Overridden
+return|;
+block|}
+name|bool
+name|isOutOfDate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|OutOfDate
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Information about a module that has been loaded by the ASTReader.
 comment|///
 comment|/// Each instance of the Module class corresponds to a single AST file, which
@@ -213,6 +346,10 @@ name|ModuleFile
 argument_list|()
 expr_stmt|;
 comment|// === General information ===
+comment|/// \brief The index of this module in the list of modules.
+name|unsigned
+name|Index
+decl_stmt|;
 comment|/// \brief The type of this module.
 name|ModuleKind
 name|Kind
@@ -299,8 +436,16 @@ operator|::
 name|BitstreamCursor
 name|Stream
 expr_stmt|;
+comment|/// \brief The source location where the module was explicitly or implicitly
+comment|/// imported in the local translation unit.
+comment|///
+comment|/// If module A depends on and imports module B, both modules will have the
+comment|/// same DirectImportLoc, but different ImportLoc (B's ImportLoc will be a
+comment|/// source location inside module A).
+name|SourceLocation
+name|DirectImportLoc
+decl_stmt|;
 comment|/// \brief The source location where this module was first imported.
-comment|/// FIXME: This is not properly initialized yet.
 name|SourceLocation
 name|ImportLoc
 decl_stmt|;
@@ -321,25 +466,13 @@ name|uint32_t
 modifier|*
 name|InputFileOffsets
 decl_stmt|;
-comment|/// \brief The input files that have been loaded from this AST file, along
-comment|/// with a bool indicating whether this was an overridden buffer.
+comment|/// \brief The input files that have been loaded from this AST file.
 name|std
 operator|::
 name|vector
 operator|<
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|1
-operator|,
-name|bool
+name|InputFile
 operator|>
-expr|>
 name|InputFilesLoaded
 expr_stmt|;
 comment|// === Source Locations ===
@@ -536,13 +669,6 @@ comment|/// the header files.
 name|void
 modifier|*
 name|HeaderFileInfoTable
-decl_stmt|;
-comment|/// \brief Actual data for the list of framework names used in the header
-comment|/// search information.
-specifier|const
-name|char
-modifier|*
-name|HeaderFileFrameworkStrings
 decl_stmt|;
 comment|// === Submodule information ===
 comment|/// \brief The number of submodules in this module.

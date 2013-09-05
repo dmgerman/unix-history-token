@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|STREAMABLEMEMORYOBJECT_H_
+name|LLVM_SUPPORT_STREAMABLEMEMORYOBJECT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|STREAMABLEMEMORYOBJECT_H_
+name|LLVM_SUPPORT_STREAMABLEMEMORYOBJECT_H
 end_define
 
 begin_include
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MemoryObject.h"
+file|"llvm/Support/DataStream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataStream.h"
+file|"llvm/Support/MemoryObject.h"
 end_include
 
 begin_include

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: nsec.h,v 1.14 2011/06/10 23:47:32 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -154,7 +154,124 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Report whether the DNSKEY RRset has a NSEC only algorithm.  Unknown  * algorithms are assumed to support NSEC3.  *  * Requires:  * 	'answer' to be non NULL.  */
+comment|/*  * Report whether the DNSKEY RRset has a NSEC only algorithm.  Unknown  * algorithms are assumed to support NSEC3.  If DNSKEY is not found,  * *answer is set to ISC_FALSE, and ISC_R_NOTFOUND is returned.  *  * Requires:  * 	'answer' to be non NULL.  */
+end_comment
+
+begin_function_decl
+name|unsigned
+name|int
+name|dns_nsec_compressbitmap
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|map
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|raw
+parameter_list|,
+name|unsigned
+name|int
+name|max_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Convert a raw bitmap into a compressed windowed bit map.  'map' and 'raw'  * may overlap.  *  * Returns the length of the compressed windowed bit map.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_nsec_setbit
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+name|array
+parameter_list|,
+name|unsigned
+name|int
+name|type
+parameter_list|,
+name|unsigned
+name|int
+name|bit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set type bit in raw 'array' to 'bit'.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_nsec_isset
+parameter_list|(
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|array
+parameter_list|,
+name|unsigned
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Test if the corresponding 'type' bit is set in 'array'.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_nsec_noexistnodata
+parameter_list|(
+name|dns_rdatatype_t
+name|type
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|nsecname
+parameter_list|,
+name|dns_rdataset_t
+modifier|*
+name|nsecset
+parameter_list|,
+name|isc_boolean_t
+modifier|*
+name|exists
+parameter_list|,
+name|isc_boolean_t
+modifier|*
+name|data
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|wild
+parameter_list|,
+name|dns_nseclog_t
+name|log
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Return ISC_R_SUCCESS if we can determine that the name doesn't exist  * or we can determine whether there is data or not at the name.  * If the name does not exist return the wildcard name.  *  * Return ISC_R_IGNORE when the NSEC is not the appropriate one.  */
 end_comment
 
 begin_macro

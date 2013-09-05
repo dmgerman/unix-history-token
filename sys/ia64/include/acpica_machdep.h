@@ -25,12 +25,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|_IA64
-end_define
-
 begin_comment
 comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces   * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
 end_comment
@@ -103,29 +97,27 @@ comment|/* XXX ia64_fc()? */
 end_comment
 
 begin_comment
-comment|/* Section 5.2.9.1:  global lock acquire/release functions */
+comment|/* Section 5.2.10.1: global lock acquire/release functions */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_acquire_global_lock
 parameter_list|(
+specifier|volatile
 name|uint32_t
 modifier|*
-name|lock
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|acpi_release_global_lock
 parameter_list|(
+specifier|volatile
 name|uint32_t
 modifier|*
-name|lock
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -154,36 +146,6 @@ parameter_list|)
 value|do {			\ 	(Acq) = acpi_release_global_lock(&((GLptr)->GlobalLock));	\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MACHINE_WIDTH
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_INT64
-value|long
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILER_DEPENDENT_UINT64
-value|unsigned long
-end_define
-
 begin_function_decl
 name|void
 name|acpi_cpu_c1
@@ -192,6 +154,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

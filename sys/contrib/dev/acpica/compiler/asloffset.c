@@ -62,10 +62,10 @@ modifier|*
 name|Node
 parameter_list|,
 name|UINT32
-name|Offset
+name|NamepathOffset
 parameter_list|,
 name|UINT32
-name|Length
+name|Offset
 parameter_list|,
 name|char
 modifier|*
@@ -76,12 +76,15 @@ name|Value
 parameter_list|,
 name|UINT8
 name|AmlOpcode
+parameter_list|,
+name|UINT16
+name|ParentOpcode
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsAmlOffsetWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Process one node during a offset table file generation.  *  * Three types of objects are currently emitted to the offset table:  *   1) Tagged (named) resource descriptors  *   2) Named integer objects with constant integer values  *   3) Operation Regions that have constant Offset (address) parameters  *  * The offset table allows the BIOS to dynamically update the values of these  * objects at boot time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsAmlOffsetWalk  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Process one node during a offset table file generation.  *  * Three types of objects are currently emitted to the offset table:  *   1) Tagged (named) resource descriptors  *   2) Named integer objects with constant integer values  *   3) Named package objects  *   4) Operation Regions that have constant Offset (address) parameters  *   5) Control methods  *  * The offset table allows the BIOS to dynamically update the values of these  * objects at boot time.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -119,11 +122,14 @@ name|UINT32
 name|Length
 decl_stmt|;
 name|UINT32
-name|OffsetOfOpcode
+name|NamepathOffset
+decl_stmt|;
+name|UINT32
+name|DataOffset
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
-name|AddressOp
+name|NextOp
 decl_stmt|;
 comment|/* Ignore actual data blocks for resource descriptors */
 if|if
@@ -201,13 +207,9 @@ name|FileId
 argument_list|,
 name|Node
 argument_list|,
-name|Gbl_CurrentAmlOffset
+literal|0
 argument_list|,
-name|Op
-operator|->
-name|Asl
-operator|.
-name|FinalAmlLength
+name|Gbl_CurrentAmlOffset
 argument_list|,
 name|Op
 operator|->
@@ -222,22 +224,37 @@ operator|->
 name|Asl
 operator|.
 name|Extra
+argument_list|,
+name|AML_BUFFER_OP
 argument_list|)
 expr_stmt|;
+name|Gbl_CurrentAmlOffset
+operator|+=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
-comment|/* Named object -- Name (NameString, DataRefObject) */
-elseif|else
-if|if
+switch|switch
 condition|(
 name|Op
 operator|->
 name|Asl
 operator|.
 name|AmlOpcode
-operator|==
-name|AML_NAME_OP
 condition|)
 block|{
+case|case
+name|AML_NAME_OP
+case|:
+comment|/* Named object -- Name (NameString, DataRefObject) */
 if|if
 condition|(
 operator|!
@@ -271,6 +288,12 @@ name|Asl
 operator|.
 name|FinalAmlLength
 expr_stmt|;
+name|NamepathOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+expr_stmt|;
 comment|/* Get to the NameSeg/NamePath Op (and length of the name) */
 name|Op
 operator|=
@@ -280,8 +303,27 @@ name|Asl
 operator|.
 name|Child
 expr_stmt|;
-name|OffsetOfOpcode
+comment|/* Get offset of last nameseg and the actual data */
+name|NamepathOffset
 operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+operator|-
+name|ACPI_NAME_SIZE
+operator|)
+expr_stmt|;
+name|DataOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
 name|Length
 operator|+
 name|Op
@@ -308,7 +350,6 @@ operator|.
 name|AmlOpcode
 condition|)
 block|{
-comment|/*          * We are only interested in integer constants that can be changed          * at boot time. Note, the One/Ones/Zero opcodes are considered          * non-changeable, so we ignore them here.          */
 case|case
 name|AML_BYTE_OP
 case|:
@@ -321,28 +362,18 @@ case|:
 case|case
 name|AML_QWORD_OP
 case|:
-comment|/* The +1/-1 is to handle the integer size prefix (opcode) */
+comment|/* The +1 is to handle the integer size prefix (opcode) */
 name|LsEmitOffsetTableEntry
 argument_list|(
 name|FileId
 argument_list|,
 name|Node
 argument_list|,
-operator|(
-name|Gbl_CurrentAmlOffset
-operator|+
-name|OffsetOfOpcode
-operator|+
-literal|1
-operator|)
+name|NamepathOffset
 argument_list|,
 operator|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|FinalAmlLength
-operator|-
+name|DataOffset
+operator|+
 literal|1
 operator|)
 argument_list|,
@@ -368,6 +399,107 @@ operator|->
 name|Asl
 operator|.
 name|AmlOpcode
+argument_list|,
+name|AML_NAME_OP
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_ONE_OP
+case|:
+case|case
+name|AML_ONES_OP
+case|:
+case|case
+name|AML_ZERO_OP
+case|:
+comment|/* For these, offset will point to the opcode */
+name|LsEmitOffsetTableEntry
+argument_list|(
+name|FileId
+argument_list|,
+name|Node
+argument_list|,
+name|NamepathOffset
+argument_list|,
+name|DataOffset
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|,
+name|AML_NAME_OP
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_PACKAGE_OP
+case|:
+case|case
+name|AML_VAR_PACKAGE_OP
+case|:
+comment|/* Get the package element count */
+name|NextOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+name|LsEmitOffsetTableEntry
+argument_list|(
+name|FileId
+argument_list|,
+name|Node
+argument_list|,
+name|NamepathOffset
+argument_list|,
+name|DataOffset
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|,
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|,
+name|AML_NAME_OP
 argument_list|)
 expr_stmt|;
 break|break;
@@ -383,20 +515,10 @@ operator|(
 name|AE_OK
 operator|)
 return|;
-block|}
-comment|/* OperationRegion (NameString, RegionSpace, RegionOffset, RegionLength) */
-elseif|else
-if|if
-condition|(
-name|Op
-operator|->
-name|Asl
-operator|.
-name|AmlOpcode
-operator|==
+case|case
 name|AML_REGION_OP
-condition|)
-block|{
+case|:
+comment|/* OperationRegion (NameString, RegionSpace, RegionOffset, RegionLength) */
 name|Length
 operator|=
 name|Op
@@ -406,7 +528,7 @@ operator|.
 name|FinalAmlLength
 expr_stmt|;
 comment|/* Get the name/namepath node */
-name|AddressOp
+name|NextOp
 operator|=
 name|Op
 operator|->
@@ -414,30 +536,51 @@ name|Asl
 operator|.
 name|Child
 expr_stmt|;
-name|OffsetOfOpcode
+comment|/* Get offset of last nameseg and the actual data */
+name|NamepathOffset
 operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
 name|Length
 operator|+
-name|AddressOp
+operator|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+operator|-
+name|ACPI_NAME_SIZE
+operator|)
+expr_stmt|;
+name|DataOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+operator|(
+name|NextOp
 operator|->
 name|Asl
 operator|.
 name|FinalAmlLength
 operator|+
 literal|1
+operator|)
 expr_stmt|;
 comment|/* Get the SpaceId node, then the Offset (address) node */
-name|AddressOp
+name|NextOp
 operator|=
-name|AddressOp
+name|NextOp
 operator|->
 name|Asl
 operator|.
 name|Next
 expr_stmt|;
-name|AddressOp
+name|NextOp
 operator|=
-name|AddressOp
+name|NextOp
 operator|->
 name|Asl
 operator|.
@@ -445,7 +588,7 @@ name|Next
 expr_stmt|;
 switch|switch
 condition|(
-name|AddressOp
+name|NextOp
 operator|->
 name|Asl
 operator|.
@@ -465,28 +608,17 @@ case|:
 case|case
 name|AML_QWORD_OP
 case|:
-comment|/* The +1/-1 is to handle the integer size prefix (opcode) */
 name|LsEmitOffsetTableEntry
 argument_list|(
 name|FileId
 argument_list|,
 name|Node
 argument_list|,
-operator|(
-name|Gbl_CurrentAmlOffset
-operator|+
-name|OffsetOfOpcode
-operator|+
-literal|1
-operator|)
+name|NamepathOffset
 argument_list|,
 operator|(
-name|AddressOp
-operator|->
-name|Asl
-operator|.
-name|FinalAmlLength
-operator|-
+name|DataOffset
+operator|+
 literal|1
 operator|)
 argument_list|,
@@ -496,7 +628,7 @@ name|Asl
 operator|.
 name|ParseOpName
 argument_list|,
-name|AddressOp
+name|NextOp
 operator|->
 name|Asl
 operator|.
@@ -507,11 +639,13 @@ argument_list|,
 operator|(
 name|UINT8
 operator|)
-name|AddressOp
+name|NextOp
 operator|->
 name|Asl
 operator|.
 name|AmlOpcode
+argument_list|,
+name|AML_REGION_OP
 argument_list|)
 expr_stmt|;
 name|Gbl_CurrentAmlOffset
@@ -526,6 +660,285 @@ return|;
 default|default:
 break|break;
 block|}
+break|break;
+case|case
+name|AML_METHOD_OP
+case|:
+comment|/* Method (Namepath, ...) */
+name|Length
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+expr_stmt|;
+comment|/* Get the NameSeg/NamePath Op */
+name|NextOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+comment|/* Get offset of last nameseg and the actual data (flags byte) */
+name|NamepathOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+operator|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+operator|-
+name|ACPI_NAME_SIZE
+operator|)
+expr_stmt|;
+name|DataOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+expr_stmt|;
+comment|/* Get the flags byte Op */
+name|NextOp
+operator|=
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+name|LsEmitOffsetTableEntry
+argument_list|(
+name|FileId
+argument_list|,
+name|Node
+argument_list|,
+name|NamepathOffset
+argument_list|,
+name|DataOffset
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|,
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|,
+name|AML_METHOD_OP
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_PROCESSOR_OP
+case|:
+comment|/* Processor (Namepath, ProcessorId, Address, Length) */
+name|Length
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+expr_stmt|;
+name|NextOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+comment|/* Get Namepath */
+comment|/* Get offset of last nameseg and the actual data (PBlock address) */
+name|NamepathOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+operator|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+operator|-
+name|ACPI_NAME_SIZE
+operator|)
+expr_stmt|;
+name|DataOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+operator|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|NextOp
+operator|=
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+comment|/* Get ProcessorID (BYTE) */
+name|NextOp
+operator|=
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+comment|/* Get Address (DWORD) */
+name|LsEmitOffsetTableEntry
+argument_list|(
+name|FileId
+argument_list|,
+name|Node
+argument_list|,
+name|NamepathOffset
+argument_list|,
+name|DataOffset
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|,
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+name|AML_DWORD_OP
+argument_list|,
+name|AML_PROCESSOR_OP
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_DEVICE_OP
+case|:
+case|case
+name|AML_SCOPE_OP
+case|:
+case|case
+name|AML_THERMAL_ZONE_OP
+case|:
+comment|/* Device/Scope/ThermalZone (Namepath) */
+name|Length
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+expr_stmt|;
+name|NextOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+comment|/* Get Namepath */
+comment|/* Get offset of last nameseg */
+name|NamepathOffset
+operator|=
+name|Gbl_CurrentAmlOffset
+operator|+
+name|Length
+operator|+
+operator|(
+name|NextOp
+operator|->
+name|Asl
+operator|.
+name|FinalAmlLength
+operator|-
+name|ACPI_NAME_SIZE
+operator|)
+expr_stmt|;
+name|LsEmitOffsetTableEntry
+argument_list|(
+name|FileId
+argument_list|,
+name|Node
+argument_list|,
+name|NamepathOffset
+argument_list|,
+literal|0
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpName
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+literal|0
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
 block|}
 name|Gbl_CurrentAmlOffset
 operator|+=
@@ -544,7 +957,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LsEmitOffsetTableEntry  *  * PARAMETERS:  FileId          - ID of current listing file  *              Node            - Namespace node associated with the name  *              Offset          - Offset of the value within the AML table  *              Length          - Length in bytes of the value  *              OpName          - Name of the AML opcode  *              Value           - Current value of the AML field  *              AmlOpcode       - Opcode associated with the field  *  * RETURN:      None  *  * DESCRIPTION: Emit a line of the offset table (-so option)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LsEmitOffsetTableEntry  *  * PARAMETERS:  FileId          - ID of current listing file  *              Node            - Namespace node associated with the name  *              Offset          - Offset of the value within the AML table  *              OpName          - Name of the AML opcode  *              Value           - Current value of the AML field  *              AmlOpcode       - Opcode associated with the field  *              ObjectType      - ACPI object type  *  * RETURN:      None  *  * DESCRIPTION: Emit a line of the offset table (-so option)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -560,10 +973,10 @@ modifier|*
 name|Node
 parameter_list|,
 name|UINT32
-name|Offset
+name|NamepathOffset
 parameter_list|,
 name|UINT32
-name|Length
+name|Offset
 parameter_list|,
 name|char
 modifier|*
@@ -574,6 +987,9 @@ name|Value
 parameter_list|,
 name|UINT8
 name|AmlOpcode
+parameter_list|,
+name|UINT16
+name|ParentOpcode
 parameter_list|)
 block|{
 name|ACPI_BUFFER
@@ -655,13 +1071,17 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"    {%-29s 0x%8.8X, 0x%2.2X, 0x%8.8X%8.8X}, /* %s */\n"
+literal|"    {%-29s 0x%4.4X, 0x%8.8X, 0x%2.2X, 0x%8.8X, 0x%8.8X%8.8X}, /* %s */\n"
 argument_list|,
 name|MsgBuffer
 argument_list|,
-name|Offset
+name|ParentOpcode
+argument_list|,
+name|NamepathOffset
 argument_list|,
 name|AmlOpcode
+argument_list|,
+name|Offset
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -686,10 +1106,6 @@ name|UINT32
 name|FileId
 parameter_list|)
 block|{
-name|Gbl_CurrentAmlOffset
-operator|=
-literal|0
-expr_stmt|;
 name|FlPrintFile
 argument_list|(
 name|FileId
@@ -703,10 +1119,12 @@ argument_list|(
 name|FileId
 argument_list|,
 literal|"typedef struct {\n"
-literal|"    char                   *Pathname;\n"
-literal|"    unsigned long          Offset;\n"
-literal|"    unsigned char          AmlOpcode;\n"
-literal|"    unsigned long long     AmlValue;\n"
+literal|"    char                   *Pathname;      /* Full pathname (from root) to the object */\n"
+literal|"    unsigned short         ParentOpcode;   /* AML opcode for the parent object */\n"
+literal|"    unsigned long          NamesegOffset;  /* Offset of last nameseg in the parent namepath */\n"
+literal|"    unsigned char          Opcode;         /* AML opcode for the data */\n"
+literal|"    unsigned long          Offset;         /* Offset for the data */\n"
+literal|"    unsigned long long     Value;          /* Original value of the data (as applicable) */\n"
 literal|"} AML_OFFSET_TABLE_ENTRY;\n\n"
 argument_list|)
 expr_stmt|;
@@ -715,6 +1133,45 @@ argument_list|(
 name|FileId
 argument_list|,
 literal|"#endif /* __AML_OFFSET_TABLE_H */\n\n"
+argument_list|)
+expr_stmt|;
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"/*\n"
+literal|" * Information specific to the supported object types:\n"
+literal|" *\n"
+literal|" * Integers:\n"
+literal|" *    Opcode is the integer prefix, indicates length of the data\n"
+literal|" *        (One of: BYTE, WORD, DWORD, QWORD, ZERO, ONE, ONES)\n"
+literal|" *    Offset points to the actual integer data\n"
+literal|" *    Value is the existing value in the AML\n"
+literal|" *\n"
+literal|" * Packages:\n"
+literal|" *    Opcode is the package or var_package opcode\n"
+literal|" *    Offset points to the package opcode\n"
+literal|" *    Value is the package element count\n"
+literal|" *\n"
+literal|" * Operation Regions:\n"
+literal|" *    Opcode is the address integer prefix, indicates length of the data\n"
+literal|" *    Offset points to the region address\n"
+literal|" *    Value is the existing address value in the AML\n"
+literal|" *\n"
+literal|" * Control Methods:\n"
+literal|" *    Offset points to the method flags byte\n"
+literal|" *    Value is the existing flags value in the AML\n"
+literal|" *\n"
+literal|" * Processors:\n"
+literal|" *    Offset points to the first byte of the PBlock Address\n"
+literal|" *\n"
+literal|" * Resource Descriptors:\n"
+literal|" *    Opcode is the descriptor type\n"
+literal|" *    Offset points to the start of the descriptor\n"
+literal|" *\n"
+literal|" * Scopes/Devices/ThermalZones:\n"
+literal|" *    Nameseg offset only\n"
+literal|" */\n"
 argument_list|)
 expr_stmt|;
 name|FlPrintFile
@@ -743,7 +1200,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"    {0,0,0,0} /* Table terminator */\n};\n\n"
+literal|"    {NULL,0,0,0,0,0} /* Table terminator */\n};\n\n"
 argument_list|)
 expr_stmt|;
 name|Gbl_CurrentAmlOffset

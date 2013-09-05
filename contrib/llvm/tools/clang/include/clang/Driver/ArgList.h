@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Option.h"
+file|"clang/Driver/OptSpecifier.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Driver/OptSpecifier.h"
+file|"clang/Driver/Option.h"
 end_include
 
 begin_include
@@ -1030,6 +1030,29 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// hasFlag - Given an option \p Pos, an alias \p PosAlias and its negative
+comment|/// form \p Neg, return true if the option or its alias is present, false if
+comment|/// the negation is present, and \p Default if none of the options are
+comment|/// given. If multiple options are present, the last one wins.
+name|bool
+name|hasFlag
+argument_list|(
+name|OptSpecifier
+name|Pos
+argument_list|,
+name|OptSpecifier
+name|PosAlias
+argument_list|,
+name|OptSpecifier
+name|Neg
+argument_list|,
+name|bool
+name|Default
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// AddLastArg - Render only the last argument match \p Id0, if present.
 name|void
 name|AddLastArg
@@ -1040,6 +1063,21 @@ name|Output
 argument_list|,
 name|OptSpecifier
 name|Id0
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|AddLastArg
+argument_list|(
+name|ArgStringList
+operator|&
+name|Output
+argument_list|,
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1228,6 +1266,10 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
+name|void
+name|dump
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 name|class

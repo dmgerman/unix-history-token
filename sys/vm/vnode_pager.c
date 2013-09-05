@@ -628,7 +628,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * vclean() may be called twice. The first time 		 * removes the primary reference to the object, 		 * the second time goes one further and is a 		 * special-case to terminate the object. 		 * 		 * don't double-terminate the object 		 */
+comment|/* 		 * don't double-terminate the object 		 */
 if|if
 condition|(
 operator|(
@@ -789,17 +789,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|vp
 operator|->
 name|v_usecount
-operator|==
+operator|!=
 literal|0
-condition|)
-name|panic
-argument_list|(
+argument_list|,
+operator|(
 literal|"vnode_pager_alloc: no vnode reference"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1468,6 +1468,37 @@ comment|/* 	ASSERT_VOP_ELOCKED(vp, "vnode_pager_setsize and not locked vnode"); 
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEAD
+condition|)
+block|{
+name|VM_OBJECT_WUNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_VNODE
+argument_list|,
+operator|(
+literal|"not vnode-backed object %p"
+operator|,
+name|object
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4896,19 +4927,9 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|KASSERT
+name|vm_page_assert_sbusied
 argument_list|(
 name|m
-operator|->
-name|busy
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"vnode_pager_generic_putpages: page %p is not busy"
-operator|,
-name|m
-operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT

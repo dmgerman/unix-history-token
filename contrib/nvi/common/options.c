@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	10.51 (Berkeley) 10/14/96"
+literal|"$Id: options.c,v 10.73 2012/10/09 06:14:07 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -181,6 +175,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_WIDECHAR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OPT_WC
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPT_WC
+value|(OPT_NOSAVE | OPT_NDISP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * O'Reilly noted options and abbreviations are from "Learning the VI Editor",  * Fifth Edition, May 1992.  There's no way of knowing what systems they are  * actually from.  *  * HPUX noted options and abbreviations are from "The Ultimate Guide to the  * VI and EX Text Editors", 1990.  */
 end_comment
@@ -194,7 +218,10 @@ init|=
 block|{
 comment|/* O_ALTWERASE	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"altwerase"
+argument_list|)
 block|,
 name|f_altwerase
 block|,
@@ -205,7 +232,10 @@ block|}
 block|,
 comment|/* O_AUTOINDENT	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"autoindent"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -216,7 +246,10 @@ block|}
 block|,
 comment|/* O_AUTOPRINT	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"autoprint"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -227,7 +260,10 @@ block|}
 block|,
 comment|/* O_AUTOWRITE	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"autowrite"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -238,7 +274,10 @@ block|}
 block|,
 comment|/* O_BACKUP	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"backup"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -249,7 +288,10 @@ block|}
 block|,
 comment|/* O_BEAUTIFY	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"beautify"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -260,7 +302,10 @@ block|}
 block|,
 comment|/* O_CDPATH	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"cdpath"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -271,7 +316,10 @@ block|}
 block|,
 comment|/* O_CEDIT	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"cedit"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -282,7 +330,10 @@ block|}
 block|,
 comment|/* O_COLUMNS	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"columns"
+argument_list|)
 block|,
 name|f_columns
 block|,
@@ -291,9 +342,28 @@ block|,
 name|OPT_NOSAVE
 block|}
 block|,
+comment|/* O_COMBINED */
+block|{
+name|L
+argument_list|(
+literal|"combined"
+argument_list|)
+block|,
+name|NULL
+block|,
+name|OPT_0BOOL
+block|,
+name|OPT_NOSET
+operator||
+name|OPT_WC
+block|}
+block|,
 comment|/* O_COMMENT	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"comment"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -302,9 +372,12 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* O_DIRECTORY	    4BSD */
+comment|/* O_TMPDIR	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"directory"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -315,7 +388,24 @@ block|}
 block|,
 comment|/* O_EDCOMPATIBLE   4BSD */
 block|{
+name|L
+argument_list|(
 literal|"edcompatible"
+argument_list|)
+block|,
+name|NULL
+block|,
+name|OPT_0BOOL
+block|,
+literal|0
+block|}
+block|,
+comment|/* O_ERRORBELLS	    4BSD */
+block|{
+name|L
+argument_list|(
+literal|"errorbells"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -326,7 +416,10 @@ block|}
 block|,
 comment|/* O_ESCAPETIME	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"escapetime"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -335,20 +428,12 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* O_ERRORBELLS	    4BSD */
-block|{
-literal|"errorbells"
-block|,
-name|NULL
-block|,
-name|OPT_0BOOL
-block|,
-literal|0
-block|}
-block|,
 comment|/* O_EXRC	System V (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"exrc"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -359,7 +444,10 @@ block|}
 block|,
 comment|/* O_EXTENDED	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"extended"
+argument_list|)
 block|,
 name|f_recompile
 block|,
@@ -370,7 +458,10 @@ block|}
 block|,
 comment|/* O_FILEC	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"filec"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -379,9 +470,26 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* O_FILEENCODING */
+block|{
+name|L
+argument_list|(
+literal|"fileencoding"
+argument_list|)
+block|,
+name|f_encoding
+block|,
+name|OPT_STR
+block|,
+name|OPT_WC
+block|}
+block|,
 comment|/* O_FLASH	    HPUX */
 block|{
+name|L
+argument_list|(
 literal|"flash"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -390,25 +498,12 @@ block|,
 literal|0
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|GTAGS
-comment|/* O_GTAGSMODE      FreeBSD2.2 */
-block|{
-literal|"gtagsmode"
-block|,
-name|NULL
-block|,
-name|OPT_0BOOL
-block|,
-literal|0
-block|}
-block|,
-endif|#
-directive|endif
 comment|/* O_HARDTABS	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"hardtabs"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -419,7 +514,10 @@ block|}
 block|,
 comment|/* O_ICLOWER	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"iclower"
+argument_list|)
 block|,
 name|f_recompile
 block|,
@@ -430,7 +528,10 @@ block|}
 block|,
 comment|/* O_IGNORECASE	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ignorecase"
+argument_list|)
 block|,
 name|f_recompile
 block|,
@@ -439,9 +540,26 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* O_INPUTENCODING */
+block|{
+name|L
+argument_list|(
+literal|"inputencoding"
+argument_list|)
+block|,
+name|f_encoding
+block|,
+name|OPT_STR
+block|,
+name|OPT_WC
+block|}
+block|,
 comment|/* O_KEYTIME	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"keytime"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -452,7 +570,10 @@ block|}
 block|,
 comment|/* O_LEFTRIGHT	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"leftright"
+argument_list|)
 block|,
 name|f_reformat
 block|,
@@ -463,7 +584,10 @@ block|}
 block|,
 comment|/* O_LINES	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"lines"
+argument_list|)
 block|,
 name|f_lines
 block|,
@@ -474,7 +598,10 @@ block|}
 block|,
 comment|/* O_LISP	    4BSD  *	XXX  *	When the lisp option is implemented, delete the OPT_NOSAVE flag,  *	so that :mkexrc dumps it.  */
 block|{
+name|L
+argument_list|(
 literal|"lisp"
+argument_list|)
 block|,
 name|f_lisp
 block|,
@@ -485,7 +612,10 @@ block|}
 block|,
 comment|/* O_LIST	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"list"
+argument_list|)
 block|,
 name|f_reformat
 block|,
@@ -496,7 +626,10 @@ block|}
 block|,
 comment|/* O_LOCKFILES	  4.4BSD  *	XXX  *	Locking isn't reliable enough over NFS to require it, in addition,  *	it's a serious startup performance problem over some remote links.  */
 block|{
+name|L
+argument_list|(
 literal|"lock"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -507,7 +640,10 @@ block|}
 block|,
 comment|/* O_MAGIC	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"magic"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -516,9 +652,26 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* O_MATCHCHARS	  NetBSD 2.0 */
+block|{
+name|L
+argument_list|(
+literal|"matchchars"
+argument_list|)
+block|,
+name|NULL
+block|,
+name|OPT_STR
+block|,
+name|OPT_PAIRS
+block|}
+block|,
 comment|/* O_MATCHTIME	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"matchtime"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -529,7 +682,10 @@ block|}
 block|,
 comment|/* O_MESG	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"mesg"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -540,7 +696,10 @@ block|}
 block|,
 comment|/* O_MODELINE	    4BSD  *	!!!  *	This has been documented in historical systems as both "modeline"  *	and as "modelines".  Regardless of the name, this option represents  *	a security problem of mammoth proportions, not to mention a stunning  *	example of what your intro CS professor referred to as the perils of  *	mixing code and data.  Don't add it, or I will kill you.  */
 block|{
+name|L
+argument_list|(
 literal|"modeline"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -551,7 +710,10 @@ block|}
 block|,
 comment|/* O_MSGCAT	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"msgcat"
+argument_list|)
 block|,
 name|f_msgcat
 block|,
@@ -562,7 +724,10 @@ block|}
 block|,
 comment|/* O_NOPRINT	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"noprint"
+argument_list|)
 block|,
 name|f_print
 block|,
@@ -573,7 +738,10 @@ block|}
 block|,
 comment|/* O_NUMBER	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"number"
+argument_list|)
 block|,
 name|f_reformat
 block|,
@@ -584,7 +752,10 @@ block|}
 block|,
 comment|/* O_OCTAL	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"octal"
+argument_list|)
 block|,
 name|f_print
 block|,
@@ -595,7 +766,10 @@ block|}
 block|,
 comment|/* O_OPEN	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"open"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -606,7 +780,10 @@ block|}
 block|,
 comment|/* O_OPTIMIZE	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"optimize"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -617,18 +794,24 @@ block|}
 block|,
 comment|/* O_PARAGRAPHS	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"paragraphs"
+argument_list|)
 block|,
-name|f_paragraph
+name|NULL
 block|,
 name|OPT_STR
 block|,
-literal|0
+name|OPT_PAIRS
 block|}
 block|,
 comment|/* O_PATH	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"path"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -639,7 +822,10 @@ block|}
 block|,
 comment|/* O_PRINT	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"print"
+argument_list|)
 block|,
 name|f_print
 block|,
@@ -650,7 +836,10 @@ block|}
 block|,
 comment|/* O_PROMPT	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"prompt"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -661,7 +850,10 @@ block|}
 block|,
 comment|/* O_READONLY	    4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"readonly"
+argument_list|)
 block|,
 name|f_readonly
 block|,
@@ -672,7 +864,10 @@ block|}
 block|,
 comment|/* O_RECDIR	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"recdir"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -683,7 +878,10 @@ block|}
 block|,
 comment|/* O_REDRAW	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"redraw"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -694,7 +892,10 @@ block|}
 block|,
 comment|/* O_REMAP	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"remap"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -705,7 +906,10 @@ block|}
 block|,
 comment|/* O_REPORT	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"report"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -716,7 +920,10 @@ block|}
 block|,
 comment|/* O_RULER	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ruler"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -727,7 +934,10 @@ block|}
 block|,
 comment|/* O_SCROLL	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"scroll"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -738,7 +948,10 @@ block|}
 block|,
 comment|/* O_SEARCHINCR	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"searchincr"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -749,18 +962,24 @@ block|}
 block|,
 comment|/* O_SECTIONS	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"sections"
+argument_list|)
 block|,
-name|f_section
+name|NULL
 block|,
 name|OPT_STR
 block|,
-literal|0
+name|OPT_PAIRS
 block|}
 block|,
 comment|/* O_SECURE	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"secure"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -771,7 +990,10 @@ block|}
 block|,
 comment|/* O_SHELL	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"shell"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -782,7 +1004,10 @@ block|}
 block|,
 comment|/* O_SHELLMETA	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"shellmeta"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -793,7 +1018,10 @@ block|}
 block|,
 comment|/* O_SHIFTWIDTH	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"shiftwidth"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -804,7 +1032,10 @@ block|}
 block|,
 comment|/* O_SHOWMATCH	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"showmatch"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -815,7 +1046,10 @@ block|}
 block|,
 comment|/* O_SHOWMODE	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"showmode"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -826,7 +1060,10 @@ block|}
 block|,
 comment|/* O_SIDESCROLL	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"sidescroll"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -837,7 +1074,10 @@ block|}
 block|,
 comment|/* O_SLOWOPEN	    4BSD  */
 block|{
+name|L
+argument_list|(
 literal|"slowopen"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -848,7 +1088,10 @@ block|}
 block|,
 comment|/* O_SOURCEANY	    4BSD (undocumented)  *	!!!  *	Historic vi, on startup, source'd $HOME/.exrc and ./.exrc, if they  *	were owned by the user.  The sourceany option was an undocumented  *	feature of historic vi which permitted the startup source'ing of  *	.exrc files the user didn't own.  This is an obvious security problem,  *	and we ignore the option.  */
 block|{
+name|L
+argument_list|(
 literal|"sourceany"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -859,7 +1102,10 @@ block|}
 block|,
 comment|/* O_TABSTOP	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"tabstop"
+argument_list|)
 block|,
 name|f_reformat
 block|,
@@ -870,7 +1116,10 @@ block|}
 block|,
 comment|/* O_TAGLENGTH	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"taglength"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -881,7 +1130,10 @@ block|}
 block|,
 comment|/* O_TAGS	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"tags"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -892,7 +1144,10 @@ block|}
 block|,
 comment|/* O_TERM	    4BSD  *	!!!  *	By default, the historic vi always displayed information about two  *	options, redraw and term.  Term seems sufficient.  */
 block|{
+name|L
+argument_list|(
 literal|"term"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -905,7 +1160,10 @@ block|}
 block|,
 comment|/* O_TERSE	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"terse"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -916,7 +1174,10 @@ block|}
 block|,
 comment|/* O_TILDEOP      4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"tildeop"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -927,7 +1188,10 @@ block|}
 block|,
 comment|/* O_TIMEOUT	    4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"timeout"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -938,7 +1202,10 @@ block|}
 block|,
 comment|/* O_TTYWERASE	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ttywerase"
+argument_list|)
 block|,
 name|f_ttywerase
 block|,
@@ -949,7 +1216,10 @@ block|}
 block|,
 comment|/* O_VERBOSE	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"verbose"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -960,7 +1230,10 @@ block|}
 block|,
 comment|/* O_W1200	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"w1200"
+argument_list|)
 block|,
 name|f_w1200
 block|,
@@ -973,7 +1246,10 @@ block|}
 block|,
 comment|/* O_W300	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"w300"
+argument_list|)
 block|,
 name|f_w300
 block|,
@@ -986,7 +1262,10 @@ block|}
 block|,
 comment|/* O_W9600	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"w9600"
+argument_list|)
 block|,
 name|f_w9600
 block|,
@@ -999,7 +1278,10 @@ block|}
 block|,
 comment|/* O_WARN	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"warn"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -1010,7 +1292,10 @@ block|}
 block|,
 comment|/* O_WINDOW	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"window"
+argument_list|)
 block|,
 name|f_window
 block|,
@@ -1021,7 +1306,10 @@ block|}
 block|,
 comment|/* O_WINDOWNAME	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"windowname"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -1032,7 +1320,10 @@ block|}
 block|,
 comment|/* O_WRAPLEN	  4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"wraplen"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -1043,7 +1334,10 @@ block|}
 block|,
 comment|/* O_WRAPMARGIN	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"wrapmargin"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -1054,7 +1348,10 @@ block|}
 block|,
 comment|/* O_WRAPSCAN	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"wrapscan"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -1065,7 +1362,10 @@ block|}
 block|,
 comment|/* O_WRITEANY	    4BSD */
 block|{
+name|L
+argument_list|(
 literal|"writeany"
+argument_list|)
 block|,
 name|NULL
 block|,
@@ -1086,7 +1386,7 @@ typedef|typedef
 struct|struct
 name|abbrev
 block|{
-name|char
+name|CHAR_T
 modifier|*
 name|name
 decl_stmt|;
@@ -1107,271 +1407,388 @@ index|[]
 init|=
 block|{
 block|{
+name|L
+argument_list|(
 literal|"ai"
+argument_list|)
 block|,
 name|O_AUTOINDENT
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ap"
+argument_list|)
 block|,
 name|O_AUTOPRINT
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"aw"
+argument_list|)
 block|,
 name|O_AUTOWRITE
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"bf"
+argument_list|)
 block|,
 name|O_BEAUTIFY
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"co"
+argument_list|)
 block|,
 name|O_COLUMNS
 block|}
 block|,
 comment|/*   4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"dir"
+argument_list|)
 block|,
-name|O_DIRECTORY
+name|O_TMPDIR
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"eb"
+argument_list|)
 block|,
 name|O_ERRORBELLS
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ed"
+argument_list|)
 block|,
 name|O_EDCOMPATIBLE
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ex"
+argument_list|)
 block|,
 name|O_EXRC
 block|}
 block|,
 comment|/* System V (undocumented) */
-ifdef|#
-directive|ifdef
-name|GTAGS
 block|{
-literal|"gt"
+name|L
+argument_list|(
+literal|"fe"
+argument_list|)
 block|,
-name|O_GTAGSMODE
+name|O_FILEENCODING
 block|}
 block|,
-comment|/* FreeBSD2.2 */
-endif|#
-directive|endif
 block|{
+name|L
+argument_list|(
 literal|"ht"
+argument_list|)
 block|,
 name|O_HARDTABS
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ic"
+argument_list|)
 block|,
 name|O_IGNORECASE
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
+literal|"ie"
+argument_list|)
+block|,
+name|O_INPUTENCODING
+block|}
+block|,
+block|{
+name|L
+argument_list|(
 literal|"li"
+argument_list|)
 block|,
 name|O_LINES
 block|}
 block|,
 comment|/*   4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"modelines"
+argument_list|)
 block|,
 name|O_MODELINE
 block|}
 block|,
 comment|/*     HPUX */
 block|{
+name|L
+argument_list|(
 literal|"nu"
+argument_list|)
 block|,
 name|O_NUMBER
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"opt"
+argument_list|)
 block|,
 name|O_OPTIMIZE
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"para"
+argument_list|)
 block|,
 name|O_PARAGRAPHS
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"re"
+argument_list|)
 block|,
 name|O_REDRAW
 block|}
 block|,
 comment|/* O'Reilly */
 block|{
+name|L
+argument_list|(
 literal|"ro"
+argument_list|)
 block|,
 name|O_READONLY
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"scr"
+argument_list|)
 block|,
 name|O_SCROLL
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"sect"
+argument_list|)
 block|,
 name|O_SECTIONS
 block|}
 block|,
 comment|/* O'Reilly */
 block|{
+name|L
+argument_list|(
 literal|"sh"
+argument_list|)
 block|,
 name|O_SHELL
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"slow"
+argument_list|)
 block|,
 name|O_SLOWOPEN
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"sm"
+argument_list|)
 block|,
 name|O_SHOWMATCH
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"smd"
+argument_list|)
 block|,
 name|O_SHOWMODE
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"sw"
+argument_list|)
 block|,
 name|O_SHIFTWIDTH
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"tag"
+argument_list|)
 block|,
 name|O_TAGS
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"tl"
+argument_list|)
 block|,
 name|O_TAGLENGTH
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"to"
+argument_list|)
 block|,
 name|O_TIMEOUT
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"ts"
+argument_list|)
 block|,
 name|O_TABSTOP
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"tty"
+argument_list|)
 block|,
 name|O_TERM
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"ttytype"
+argument_list|)
 block|,
 name|O_TERM
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"w"
+argument_list|)
 block|,
 name|O_WINDOW
 block|}
 block|,
 comment|/* O'Reilly */
 block|{
+name|L
+argument_list|(
 literal|"wa"
+argument_list|)
 block|,
 name|O_WRITEANY
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"wi"
+argument_list|)
 block|,
 name|O_WINDOW
 block|}
 block|,
 comment|/*     4BSD (undocumented) */
 block|{
+name|L
+argument_list|(
 literal|"wl"
+argument_list|)
 block|,
 name|O_WRAPLEN
 block|}
 block|,
 comment|/*   4.4BSD */
 block|{
+name|L
+argument_list|(
 literal|"wm"
+argument_list|)
 block|,
 name|O_WRAPMARGIN
 block|}
 block|,
 comment|/*     4BSD */
 block|{
+name|L
+argument_list|(
 literal|"ws"
+argument_list|)
 block|,
 name|O_WRAPSCAN
 block|}
@@ -1392,18 +1809,14 @@ begin_function
 name|int
 name|opts_init
 parameter_list|(
-name|sp
-parameter_list|,
-name|oargs
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|oargs
-decl_stmt|;
+parameter_list|)
 block|{
 name|ARGS
 modifier|*
@@ -1428,12 +1841,15 @@ name|int
 name|cnt
 decl_stmt|,
 name|optindx
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
 name|s
-decl_stmt|,
-name|b1
+decl_stmt|;
+name|CHAR_T
+name|b2
 index|[
 literal|1024
 index|]
@@ -1442,7 +1858,7 @@ name|a
 operator|.
 name|bp
 operator|=
-name|b1
+name|b2
 expr_stmt|;
 name|b
 operator|.
@@ -1485,9 +1901,9 @@ name|indx
 parameter_list|,
 name|str
 parameter_list|)
-value|{							\ 	if (str != b1)
+value|{							\ 	a.len = STRLEN(str);						\ 	if ((CHAR_T*)str != b2)
 comment|/* GCC puts strings in text-space. */
-value|\ 		(void)strcpy(b1, str);					\ 	a.len = strlen(b1);						\ 	if (opts_set(sp, argv, NULL)) {					\ 		 optindx = indx;					\ 		goto err;						\ 	}								\ }
+value|\ 		(void)MEMCPY(b2, str, a.len+1);				\ 	if (opts_set(sp, argv, NULL)) {					\ 		 optindx = indx;					\ 		goto err;						\ 	}								\ }
 comment|/* 	 * Indirect global options to global space.  Specifically, set up 	 * terminal, lines, columns first, they're used by other options. 	 * Note, don't set the flags until we've set up the indirection. 	 */
 if|if
 condition|(
@@ -1617,16 +2033,19 @@ comment|/* Initialize string values. */
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"cdpath=%s"
+argument_list|)
 argument_list|,
 operator|(
 name|s
@@ -1648,23 +2067,36 @@ name|OI
 argument_list|(
 name|O_CDPATH
 argument_list|,
-name|b1
+name|b2
+argument_list|)
+expr_stmt|;
+name|OI
+argument_list|(
+name|O_CEDIT
+argument_list|,
+name|L
+argument_list|(
+literal|"cedit=\033"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * !!! 	 * Vi historically stored temporary files in /var/tmp.  We store them 	 * in /tmp by default, hoping it's a memory based file system.  There 	 * are two ways to change this -- the user can set either the directory 	 * option or the TMPDIR environmental variable. 	 */
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"directory=%s"
+argument_list|)
 argument_list|,
 operator|(
 name|s
@@ -1684,45 +2116,77 @@ argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
-name|O_DIRECTORY
+name|O_TMPDIR
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_ESCAPETIME
 argument_list|,
+name|L
+argument_list|(
 literal|"escapetime=6"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OI
+argument_list|(
+name|O_FILEC
+argument_list|,
+name|L
+argument_list|(
+literal|"filec=\t"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_KEYTIME
 argument_list|,
+name|L
+argument_list|(
 literal|"keytime=6"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OI
+argument_list|(
+name|O_MATCHCHARS
+argument_list|,
+name|L
+argument_list|(
+literal|"matchchars=()[]{}"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_MATCHTIME
 argument_list|,
+name|L
+argument_list|(
 literal|"matchtime=7"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"msgcat=%s"
+argument_list|)
 argument_list|,
 name|_PATH_MSGCAT
 argument_list|)
@@ -1731,36 +2195,45 @@ name|OI
 argument_list|(
 name|O_MSGCAT
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_REPORT
 argument_list|,
+name|L
+argument_list|(
 literal|"report=5"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_PARAGRAPHS
 argument_list|,
+name|L
+argument_list|(
 literal|"paragraphs=IPLPPPQPP LIpplpipbp"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"path=%s"
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
@@ -1769,22 +2242,25 @@ name|OI
 argument_list|(
 name|O_PATH
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"recdir=%s"
+argument_list|)
 argument_list|,
 name|_PATH_PRESERVE
 argument_list|)
@@ -1793,29 +2269,35 @@ name|OI
 argument_list|(
 name|O_RECDIR
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_SECTIONS
 argument_list|,
+name|L
+argument_list|(
 literal|"sections=NHSHH HUnhsh"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"shell=%s"
+argument_list|)
 argument_list|,
 operator|(
 name|s
@@ -1837,50 +2319,65 @@ name|OI
 argument_list|(
 name|O_SHELL
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_SHELLMETA
 argument_list|,
+name|L
+argument_list|(
 literal|"shellmeta=~{[*?$`'\"\\"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_SHIFTWIDTH
 argument_list|,
+name|L
+argument_list|(
 literal|"shiftwidth=8"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_SIDESCROLL
 argument_list|,
+name|L
+argument_list|(
 literal|"sidescroll=16"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|OI
 argument_list|(
 name|O_TABSTOP
 argument_list|,
+name|L
+argument_list|(
 literal|"tabstop=8"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"tags=%s"
+argument_list|)
 argument_list|,
 name|_PATH_TAGS
 argument_list|)
@@ -1889,7 +2386,7 @@ name|OI
 argument_list|(
 name|O_TAGS
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * Initialize O_SCROLL here, after term; initializing term should 	 * have created a LINES/COLUMNS value. 	 */
@@ -1921,16 +2418,19 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"scroll=%ld"
+argument_list|)
 argument_list|,
 name|v
 argument_list|)
@@ -1939,7 +2439,7 @@ name|OI
 argument_list|(
 name|O_SCROLL
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The default window option values are: 	 *		8 if baud rate<=  600 	 *	       16 if baud rate<= 1200 	 *	LINES - 1 if baud rate> 1200 	 * 	 * Note, the windows option code will correct any too-large value 	 * or when the O_LINES value is 1. 	 */
@@ -1983,7 +2483,10 @@ name|v
 operator|=
 literal|16
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
 name|v
 operator|=
 name|O_VAL
@@ -1994,20 +2497,30 @@ name|O_LINES
 argument_list|)
 operator|-
 literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+name|v
+operator|=
+literal|1
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|SPRINTF
 argument_list|(
-name|b1
+name|b2
 argument_list|,
-sizeof|sizeof
+name|SIZE
 argument_list|(
-name|b1
+name|b2
 argument_list|)
 argument_list|,
+name|L
+argument_list|(
 literal|"window=%lu"
+argument_list|)
 argument_list|,
 name|v
 argument_list|)
@@ -2016,7 +2529,7 @@ name|OI
 argument_list|(
 name|O_WINDOW
 argument_list|,
-name|b1
+name|b2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set boolean default values, and copy all settings into the default 	 * information.  OS_NOFREE is set, we're copying, not replacing. 	 */
@@ -2042,6 +2555,17 @@ operator|,
 operator|++
 name|cnt
 control|)
+block|{
+if|if
+condition|(
+name|F_ISSET
+argument_list|(
+name|op
+argument_list|,
+name|OPT_GLOBAL
+argument_list|)
+condition|)
+continue|continue;
 switch|switch
 condition|(
 name|op
@@ -2138,6 +2662,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+block|}
 comment|/* 	 * !!! 	 * Some options can be initialized by the command name or the 	 * command-line arguments.  They don't set the default values, 	 * it's historic practice. 	 */
 for|for
 control|(
@@ -2165,23 +2690,21 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|OI
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-undef|#
-directive|undef
-name|OI
 name|err
 label|:
-name|msgq
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
 name|M_ERR
-argument_list|,
-literal|"031|Unable to set default %s option"
 argument_list|,
 name|optlist
 index|[
@@ -2189,6 +2712,8 @@ name|optindx
 index|]
 operator|.
 name|name
+argument_list|,
+literal|"031|Unable to set default %s option"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2207,25 +2732,19 @@ begin_function
 name|int
 name|opts_set
 parameter_list|(
-name|sp
-parameter_list|,
-name|argv
-parameter_list|,
-name|usage
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|ARGS
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|usage
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|optdisp
@@ -2245,9 +2764,11 @@ modifier|*
 name|spo
 decl_stmt|;
 name|u_long
-name|value
+name|isset
 decl_stmt|,
 name|turnoff
+decl_stmt|,
+name|value
 decl_stmt|;
 name|int
 name|ch
@@ -2264,7 +2785,7 @@ name|qmark
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|endp
 decl_stmt|,
@@ -2276,9 +2797,20 @@ name|p
 decl_stmt|,
 modifier|*
 name|sep
+decl_stmt|;
+name|char
+modifier|*
+name|p2
 decl_stmt|,
 modifier|*
-name|t
+name|t2
+decl_stmt|;
+name|char
+modifier|*
+name|np
+decl_stmt|;
+name|size_t
+name|nlen
 decl_stmt|;
 name|disp
 operator|=
@@ -2307,7 +2839,7 @@ comment|/* 		 * The historic vi dumped the options for each occurrence of 		 * "
 if|if
 condition|(
 operator|!
-name|strcmp
+name|STRCMP
 argument_list|(
 name|argv
 index|[
@@ -2316,7 +2848,10 @@ index|]
 operator|->
 name|bp
 argument_list|,
+name|L
+argument_list|(
 literal|"all"
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -2590,7 +3125,7 @@ operator|&&
 name|turnoff
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -2621,7 +3156,7 @@ operator|!
 name|turnoff
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -2643,7 +3178,7 @@ condition|(
 name|equals
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -2684,6 +3219,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 			 * Do nothing if the value is unchanged, the underlying 			 * functions can be expensive. 			 */
+name|isset
+operator|=
+operator|!
+name|turnoff
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2696,9 +3236,21 @@ argument_list|)
 condition|)
 if|if
 condition|(
-name|turnoff
+name|isset
 condition|)
 block|{
+if|if
+condition|(
+name|O_ISSET
+argument_list|(
+name|sp
+argument_list|,
+name|offset
+argument_list|)
+condition|)
+break|break;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -2710,23 +3262,10 @@ name|offset
 argument_list|)
 condition|)
 break|break;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|O_ISSET
-argument_list|(
-name|sp
-argument_list|,
-name|offset
-argument_list|)
-condition|)
-break|break;
-block|}
 comment|/* Report to subsystems. */
 if|if
 condition|(
+operator|(
 name|op
 operator|->
 name|func
@@ -2744,8 +3283,9 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|turnoff
+name|isset
 argument_list|)
+operator|)
 operator|||
 name|ex_optchange
 argument_list|(
@@ -2756,7 +3296,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|turnoff
+name|isset
 argument_list|)
 operator|||
 name|v_optchange
@@ -2768,7 +3308,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|turnoff
+name|isset
 argument_list|)
 operator|||
 name|sp
@@ -2784,7 +3324,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|turnoff
+name|isset
 argument_list|)
 condition|)
 block|{
@@ -2797,9 +3337,9 @@ block|}
 comment|/* Set the value. */
 if|if
 condition|(
-name|turnoff
+name|isset
 condition|)
-name|O_CLR
+name|O_SET
 argument_list|(
 name|sp
 argument_list|,
@@ -2807,7 +3347,7 @@ name|offset
 argument_list|)
 expr_stmt|;
 else|else
-name|O_SET
+name|O_CLR
 argument_list|(
 name|sp
 argument_list|,
@@ -2823,7 +3363,7 @@ condition|(
 name|turnoff
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -2869,7 +3409,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|sep
 index|[
@@ -2902,25 +3442,61 @@ operator|!=
 name|NUM_OK
 condition|)
 block|{
-name|p
-operator|=
-name|msg_print
+name|INT2CHAR
 argument_list|(
 name|sp
 argument_list|,
 name|name
 argument_list|,
-operator|&
-name|nf
+name|STRLEN
+argument_list|(
+name|name
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
 argument_list|)
 expr_stmt|;
-name|t
+name|p2
 operator|=
 name|msg_print
 argument_list|(
 name|sp
 argument_list|,
+name|np
+argument_list|,
+operator|&
+name|nf
+argument_list|)
+expr_stmt|;
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
 name|sep
+argument_list|,
+name|STRLEN
+argument_list|(
+name|sep
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
+name|t2
+operator|=
+name|msg_print
+argument_list|(
+name|sp
+argument_list|,
+name|np
 argument_list|,
 operator|&
 name|nf2
@@ -2942,9 +3518,9 @@ name|M_SYSERR
 argument_list|,
 literal|"036|set: %s option: %s"
 argument_list|,
-name|p
+name|p2
 argument_list|,
-name|t
+name|t2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2959,9 +3535,9 @@ name|M_ERR
 argument_list|,
 literal|"037|set: %s option: %s: value overflow"
 argument_list|,
-name|p
+name|p2
 argument_list|,
-name|t
+name|t2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2983,7 +3559,7 @@ name|FREE_SPACE
 argument_list|(
 name|sp
 argument_list|,
-name|p
+name|p2
 argument_list|,
 literal|0
 argument_list|)
@@ -2996,7 +3572,7 @@ name|FREE_SPACE
 argument_list|(
 name|sp
 argument_list|,
-name|t
+name|t2
 argument_list|,
 literal|0
 argument_list|)
@@ -3013,7 +3589,7 @@ operator|*
 name|endp
 operator|&&
 operator|!
-name|isblank
+name|cmdskip
 argument_list|(
 operator|*
 name|endp
@@ -3022,25 +3598,61 @@ condition|)
 block|{
 name|badnum
 label|:
-name|p
-operator|=
-name|msg_print
+name|INT2CHAR
 argument_list|(
 name|sp
 argument_list|,
 name|name
 argument_list|,
-operator|&
-name|nf
+name|STRLEN
+argument_list|(
+name|name
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
 argument_list|)
 expr_stmt|;
-name|t
+name|p2
 operator|=
 name|msg_print
 argument_list|(
 name|sp
 argument_list|,
+name|np
+argument_list|,
+operator|&
+name|nf
+argument_list|)
+expr_stmt|;
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
 name|sep
+argument_list|,
+name|STRLEN
+argument_list|(
+name|sep
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
+name|t2
+operator|=
+name|msg_print
+argument_list|(
+name|sp
+argument_list|,
+name|np
 argument_list|,
 operator|&
 name|nf2
@@ -3054,9 +3666,9 @@ name|M_ERR
 argument_list|,
 literal|"038|set: %s option: %s is an illegal number"
 argument_list|,
-name|p
+name|p2
 argument_list|,
-name|t
+name|t2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3067,7 +3679,7 @@ name|FREE_SPACE
 argument_list|(
 name|sp
 argument_list|,
-name|p
+name|p2
 argument_list|,
 literal|0
 argument_list|)
@@ -3080,7 +3692,7 @@ name|FREE_SPACE
 argument_list|(
 name|sp
 argument_list|,
-name|t
+name|t2
 argument_list|,
 literal|0
 argument_list|)
@@ -3106,7 +3718,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -3145,8 +3757,27 @@ name|value
 condition|)
 break|break;
 comment|/* Report to subsystems. */
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
+name|sep
+argument_list|,
+name|STRLEN
+argument_list|(
+name|sep
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|op
 operator|->
 name|func
@@ -3161,11 +3792,12 @@ name|sp
 argument_list|,
 name|spo
 argument_list|,
-name|sep
+name|np
 argument_list|,
 operator|&
 name|value
 argument_list|)
+operator|)
 operator|||
 name|ex_optchange
 argument_list|(
@@ -3173,7 +3805,7 @@ name|sp
 argument_list|,
 name|offset
 argument_list|,
-name|sep
+name|np
 argument_list|,
 operator|&
 name|value
@@ -3185,7 +3817,7 @@ name|sp
 argument_list|,
 name|offset
 argument_list|,
-name|sep
+name|np
 argument_list|,
 operator|&
 name|value
@@ -3201,7 +3833,7 @@ name|sp
 argument_list|,
 name|offset
 argument_list|,
-name|sep
+name|np
 argument_list|,
 operator|&
 name|value
@@ -3243,7 +3875,7 @@ condition|(
 name|turnoff
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -3286,7 +3918,60 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* Check for strings that must have even length. */
+if|if
+condition|(
+name|F_ISSET
+argument_list|(
+name|op
+argument_list|,
+name|OPT_PAIRS
+argument_list|)
+operator|&&
+name|STRLEN
+argument_list|(
+name|sep
+argument_list|)
+operator|&
+literal|1
+condition|)
+block|{
+name|msgq_wstr
+argument_list|(
+name|sp
+argument_list|,
+name|M_ERR
+argument_list|,
+name|name
+argument_list|,
+literal|"047|The %s option must be in two character groups"
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* 			 * Do nothing if the value is unchanged, the underlying 			 * functions can be expensive. 			 */
+name|INT2CHAR
+argument_list|(
+name|sp
+argument_list|,
+name|sep
+argument_list|,
+name|STRLEN
+argument_list|(
+name|sep
+argument_list|)
+operator|+
+literal|1
+argument_list|,
+name|np
+argument_list|,
+name|nlen
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3316,13 +4001,14 @@ argument_list|,
 name|offset
 argument_list|)
 argument_list|,
-name|sep
+name|np
 argument_list|)
 condition|)
 break|break;
 comment|/* Report to subsystems. */
 if|if
 condition|(
+operator|(
 name|op
 operator|->
 name|func
@@ -3337,10 +4023,11 @@ name|sp
 argument_list|,
 name|spo
 argument_list|,
-name|sep
+name|np
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|||
 name|ex_optchange
 argument_list|(
@@ -3348,7 +4035,7 @@ name|sp
 argument_list|,
 name|offset
 argument_list|,
-name|sep
+name|np
 argument_list|,
 name|NULL
 argument_list|)
@@ -3359,7 +4046,7 @@ name|sp
 argument_list|,
 name|offset
 argument_list|,
-name|sep
+name|np
 argument_list|,
 name|NULL
 argument_list|)
@@ -3374,7 +4061,7 @@ name|sp
 argument_list|,
 name|offset
 argument_list|,
-name|sep
+name|np
 argument_list|,
 name|NULL
 argument_list|)
@@ -3397,7 +4084,7 @@ name|offset
 argument_list|,
 name|OS_STRDUP
 argument_list|,
-name|sep
+name|np
 argument_list|,
 literal|0
 argument_list|)
@@ -3442,33 +4129,23 @@ begin_function
 name|int
 name|o_set
 parameter_list|(
-name|sp
-parameter_list|,
-name|opt
-parameter_list|,
-name|flags
-parameter_list|,
-name|str
-parameter_list|,
-name|val
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|int
 name|opt
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|flags
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|OPTION
 modifier|*
@@ -3680,21 +4357,16 @@ begin_function
 name|int
 name|opts_empty
 parameter_list|(
-name|sp
-parameter_list|,
-name|off
-parameter_list|,
-name|silent
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|,
+parameter_list|,
+name|int
 name|silent
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3728,7 +4400,7 @@ condition|(
 operator|!
 name|silent
 condition|)
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -3766,18 +4438,14 @@ begin_function
 name|void
 name|opts_dump
 parameter_list|(
-name|sp
-parameter_list|,
-name|type
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|enum
 name|optdisp
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 name|OPTLIST
 specifier|const
@@ -4008,6 +4676,7 @@ argument_list|,
 name|cnt
 argument_list|)
 operator|||
+operator|(
 name|O_D_STR
 argument_list|(
 name|sp
@@ -4034,6 +4703,7 @@ argument_list|,
 name|cnt
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 continue|continue;
 break|break;
@@ -4084,7 +4754,7 @@ argument_list|)
 expr_stmt|;
 name|curlen
 operator|=
-name|strlen
+name|STRLEN
 argument_list|(
 name|op
 operator|->
@@ -4417,19 +5087,15 @@ specifier|static
 name|int
 name|opts_print
 parameter_list|(
-name|sp
-parameter_list|,
-name|op
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|OPTLIST
 specifier|const
 modifier|*
 name|op
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|curlen
@@ -4465,7 +5131,8 @@ name|ex_printf
 argument_list|(
 name|sp
 argument_list|,
-literal|"%s%s"
+literal|"%s"
+name|WS
 argument_list|,
 name|O_ISSET
 argument_list|(
@@ -4493,7 +5160,8 @@ name|ex_printf
 argument_list|(
 name|sp
 argument_list|,
-literal|"%s=%ld"
+name|WS
+literal|"=%ld"
 argument_list|,
 name|op
 operator|->
@@ -4517,7 +5185,8 @@ name|ex_printf
 argument_list|(
 name|sp
 argument_list|,
-literal|"%s=\"%s\""
+name|WS
+literal|"=\"%s\""
 argument_list|,
 name|op
 operator|->
@@ -4560,32 +5229,34 @@ begin_function
 name|int
 name|opts_save
 parameter_list|(
-name|sp
-parameter_list|,
-name|fp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|OPTLIST
 specifier|const
 modifier|*
 name|op
 decl_stmt|;
-name|int
+name|CHAR_T
 name|ch
 decl_stmt|,
-name|cnt
-decl_stmt|;
-name|char
 modifier|*
 name|p
+decl_stmt|;
+name|char
+name|nch
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|;
+name|int
+name|cnt
 decl_stmt|;
 for|for
 control|(
@@ -4648,7 +5319,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"set %s\n"
+literal|"set "
+name|WS
+literal|"\n"
 argument_list|,
 name|op
 operator|->
@@ -4663,7 +5336,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"set no%s\n"
+literal|"set no"
+name|WS
+literal|"\n"
 argument_list|,
 name|op
 operator|->
@@ -4681,7 +5356,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"set %s=%-3ld\n"
+literal|"set "
+name|WS
+literal|"=%-3ld\n"
 argument_list|,
 name|op
 operator|->
@@ -4744,7 +5421,7 @@ control|)
 block|{
 if|if
 condition|(
-name|isblank
+name|cmdskip
 argument_list|(
 name|ch
 argument_list|)
@@ -4763,14 +5440,13 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|putc
+name|fprintf
 argument_list|(
-name|ch
-argument_list|,
 name|fp
+argument_list|,
+name|WC
+argument_list|,
+name|ch
 argument_list|)
 expr_stmt|;
 block|}
@@ -4786,7 +5462,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|p
+name|np
 operator|=
 name|O_STR
 argument_list|(
@@ -4796,26 +5472,26 @@ name|cnt
 argument_list|)
 init|;
 operator|(
-name|ch
+name|nch
 operator|=
 operator|*
-name|p
+name|np
 operator|)
 operator|!=
 literal|'\0'
 condition|;
 operator|++
-name|p
+name|np
 control|)
 block|{
 if|if
 condition|(
-name|isblank
+name|cmdskip
 argument_list|(
-name|ch
+name|nch
 argument_list|)
 operator|||
-name|ch
+name|nch
 operator|==
 literal|'\\'
 condition|)
@@ -4834,7 +5510,7 @@ name|void
 operator|)
 name|putc
 argument_list|(
-name|ch
+name|nch
 argument_list|,
 name|fp
 argument_list|)
@@ -4885,7 +5561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * opts_search --  *	Search for an option.  *  * PUBLIC: OPTLIST const *opts_search __P((char *));  */
+comment|/*   * opts_search --  *	Search for an option.  *  * PUBLIC: OPTLIST const *opts_search __P((CHAR_T *));  */
 end_comment
 
 begin_function
@@ -4894,12 +5570,10 @@ specifier|const
 modifier|*
 name|opts_search
 parameter_list|(
-name|name
-parameter_list|)
-name|char
+name|CHAR_T
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|OPTLIST
 specifier|const
@@ -5022,7 +5696,7 @@ return|;
 comment|/* 	 * Check to see if the name is the prefix of one (and only one) 	 * option.  If so, return the option. 	 */
 name|len
 operator|=
-name|strlen
+name|STRLEN
 argument_list|(
 name|name
 argument_list|)
@@ -5080,7 +5754,7 @@ break|break;
 if|if
 condition|(
 operator|!
-name|memcmp
+name|MEMCMP
 argument_list|(
 name|op
 operator|->
@@ -5118,27 +5792,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * opts_nomatch --  *	Standard nomatch error message for options.  *  * PUBLIC: void opts_nomatch __P((SCR *, char *));  */
+comment|/*   * opts_nomatch --  *	Standard nomatch error message for options.  *  * PUBLIC: void opts_nomatch __P((SCR *, CHAR_T *));  */
 end_comment
 
 begin_function
 name|void
 name|opts_nomatch
 parameter_list|(
-name|sp
-parameter_list|,
-name|name
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
-name|char
+parameter_list|,
+name|CHAR_T
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,
@@ -5157,25 +5827,20 @@ specifier|static
 name|int
 name|opts_abbcmp
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
-name|strcmp
+name|STRCMP
 argument_list|(
 operator|(
 operator|(
@@ -5200,32 +5865,27 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|int
 name|opts_cmp
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
-name|strcmp
+name|STRCMP
 argument_list|(
 operator|(
 operator|(
@@ -5250,7 +5910,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * opts_copy --  *	Copy a screen's OPTION array.  *  * PUBLIC: int opts_copy __P((SCR *, SCR *));  */
@@ -5260,20 +5920,14 @@ begin_function
 name|int
 name|opts_copy
 parameter_list|(
-name|orig
-parameter_list|,
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|orig
-decl_stmt|,
-decl|*
+parameter_list|,
+name|SCR
+modifier|*
 name|sp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|cnt
@@ -5330,7 +5984,9 @@ operator|||
 name|F_ISSET
 argument_list|(
 operator|&
-name|optlist
+name|sp
+operator|->
+name|opts
 index|[
 name|cnt
 index|]
@@ -5491,7 +6147,7 @@ name|rval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * opts_free --  *	Free all option strings  *  * PUBLIC: void opts_free __P((SCR *));  */
@@ -5501,12 +6157,10 @@ begin_function
 name|void
 name|opts_free
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cnt
@@ -5539,7 +6193,9 @@ operator|||
 name|F_ISSET
 argument_list|(
 operator|&
-name|optlist
+name|sp
+operator|->
+name|opts
 index|[
 name|cnt
 index|]

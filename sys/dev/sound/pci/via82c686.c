@@ -2248,46 +2248,9 @@ argument_list|,
 literal|"snd_via82c686 softc"
 argument_list|)
 expr_stmt|;
-comment|/* Get resources */
-name|data
-operator|=
-name|pci_read_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|data
-operator||=
-operator|(
-name|PCIM_CMD_PORTEN
-operator||
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|data
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|data
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Wake up and reset AC97 if necessary */

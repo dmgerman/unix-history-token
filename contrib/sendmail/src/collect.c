@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.285 2012/06/14 23:54:02 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.286 2013/03/15 17:54:12 ca Exp $"
 argument_list|)
 end_macro
 
@@ -938,6 +938,16 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+name|bool
+name|hasNUL
+decl_stmt|;
+comment|/* has at least one NUL input byte */
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 name|df
 operator|=
 name|NULL
@@ -1011,6 +1021,16 @@ name|HasEightBits
 operator|=
 name|false
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+name|hasNUL
+operator|=
+name|false
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 name|buf
 operator|=
 name|bp
@@ -1281,6 +1301,22 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+if|if
+condition|(
+name|c
+operator|==
+literal|'\0'
+condition|)
+name|hasNUL
+operator|=
+name|true
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 if|if
 condition|(
 name|c
@@ -3300,6 +3336,35 @@ operator|=
 literal|"7BIT"
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_REJECT_NUL_BYTE
+if|if
+condition|(
+name|hasNUL
+operator|&&
+name|RejectNUL
+condition|)
+block|{
+name|e
+operator|->
+name|e_status
+operator|=
+literal|"5.6.1"
+expr_stmt|;
+name|usrerrenh
+argument_list|(
+name|e
+operator|->
+name|e_status
+argument_list|,
+literal|"554 NUL byte not allowed"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_REJECT_NUL_BYTE */
 if|if
 condition|(
 name|SuperSafe

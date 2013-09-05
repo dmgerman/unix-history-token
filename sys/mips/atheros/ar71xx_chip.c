@@ -275,6 +275,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uint32_t
+name|u_ar71xx_uart_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|u_ar71xx_wdt_freq
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
 name|u_ar71xx_refclk
 decl_stmt|;
 end_decl_stmt
@@ -396,6 +408,18 @@ operator|*
 literal|2
 expr_stmt|;
 name|u_ar71xx_ahb_freq
+operator|=
+name|u_ar71xx_cpu_freq
+operator|/
+name|div
+expr_stmt|;
+name|u_ar71xx_wdt_freq
+operator|=
+name|u_ar71xx_cpu_freq
+operator|/
+name|div
+expr_stmt|;
+name|u_ar71xx_uart_freq
 operator|=
 name|u_ar71xx_cpu_freq
 operator|/

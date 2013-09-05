@@ -1198,14 +1198,16 @@ literal|"Length mismatch for %d range: %jx vs %jx\n"
 argument_list|,
 name|type
 argument_list|,
-operator|(
+call|(
 name|uintmax_t
-operator|)
+call|)
+argument_list|(
 name|max
 operator|-
 name|min
 operator|+
 literal|1
+argument_list|)
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1406,6 +1408,20 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/*      * Don't attach if we're not really there.      */
+if|if
+condition|(
+operator|!
+name|acpi_DeviceIsPresent
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/*      * Get our segment number by evaluating _SEG.      * It's OK for this to not exist.      */
 name|status
 operator|=
@@ -1630,11 +1646,11 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|return_VALUE
-argument_list|(
+return|return
+operator|(
 name|ENXIO
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 block|{

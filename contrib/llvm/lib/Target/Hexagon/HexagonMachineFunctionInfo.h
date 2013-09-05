@@ -99,6 +99,9 @@ block|;
 name|bool
 name|HasClobberLR
 block|;
+name|bool
+name|HasEHReturn
+block|;
 name|std
 operator|::
 name|map
@@ -125,6 +128,11 @@ name|HasClobberLR
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|HasEHReturn
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|HexagonMachineFunctionInfo
 argument_list|(
@@ -141,6 +149,11 @@ block|,
 name|HasClobberLR
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HasEHReturn
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|unsigned
@@ -324,8 +337,29 @@ return|return
 name|HasClobberLR
 return|;
 block|}
-expr|}
+name|bool
+name|hasEHReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasEHReturn
+return|;
+block|}
+block|;
+name|void
+name|setHasEHReturn
+argument_list|(
+argument|bool H = true
+argument_list|)
+block|{
+name|HasEHReturn
+operator|=
+name|H
 block|; }
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

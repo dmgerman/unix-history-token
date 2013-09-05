@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: editbox.c,v 1.55 2011/06/21 00:10:46 tom Exp $  *  *  editbox.c -- implements the edit box  *  *  Copyright 2007-2010,2011 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: editbox.c,v 1.62 2013/03/17 15:03:41 tom Exp $  *  *  editbox.c -- implements the edit box  *  *  Copyright 2007-2012,2013 Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -132,6 +132,8 @@ name|fail_list
 argument_list|()
 expr_stmt|;
 block|}
+else|else
+block|{
 while|while
 condition|(
 operator|++
@@ -150,6 +152,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -266,9 +269,13 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|fail_list
 argument_list|()
 expr_stmt|;
+block|}
+else|else
+block|{
 name|blob
 index|[
 name|size
@@ -517,6 +524,7 @@ argument_list|(
 name|blob
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1506,6 +1514,11 @@ name|show_one
 decl_stmt|,
 name|was_mouse
 decl_stmt|;
+name|bool
+name|first_trace
+init|=
+name|TRUE
+decl_stmt|;
 name|WINDOW
 modifier|*
 name|dialog
@@ -1593,15 +1606,15 @@ name|state
 operator|=
 name|dialog_vars
 operator|.
-name|defaultno
+name|default_button
+operator|>=
+literal|0
 condition|?
-name|dlg_defaultno_button
+name|dlg_default_button
 argument_list|()
 else|:
 name|sTEXT
 expr_stmt|;
-name|key
-operator|=
 name|fkey
 operator|=
 literal|0
@@ -1701,7 +1714,7 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
-name|dlg_draw_box
+name|dlg_draw_box2
 argument_list|(
 name|dialog
 argument_list|,
@@ -1716,11 +1729,19 @@ argument_list|,
 name|dialog_attr
 argument_list|,
 name|border_attr
+argument_list|,
+name|border2_attr
 argument_list|)
 expr_stmt|;
-name|dlg_draw_bottom_box
+name|dlg_draw_bottom_box2
 argument_list|(
 name|dialog
+argument_list|,
+name|border_attr
+argument_list|,
+name|border2_attr
+argument_list|,
+name|dialog_attr
 argument_list|)
 expr_stmt|;
 name|dlg_draw_title
@@ -1730,6 +1751,9 @@ argument_list|,
 name|title
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wattrset
 argument_list|(
 name|dialog
@@ -1786,7 +1810,7 @@ name|box_width
 argument_list|,
 name|border_attr
 argument_list|,
-name|dialog_attr
+name|border2_attr
 argument_list|)
 expr_stmt|;
 name|dlg_mouse_mkbigregion
@@ -1869,7 +1893,7 @@ name|dlg_register_window
 argument_list|(
 name|editing
 argument_list|,
-literal|"editbox"
+literal|"editbox2"
 argument_list|,
 name|binding2
 argument_list|)
@@ -2047,7 +2071,7 @@ argument_list|)
 operator|+
 literal|1
 argument_list|,
-name|dialog_attr
+name|border2_attr
 argument_list|,
 name|border_attr
 argument_list|)
@@ -2168,6 +2192,21 @@ name|chr_offset
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|first_trace
+condition|)
+block|{
+name|first_trace
+operator|=
+name|FALSE
+expr_stmt|;
+name|dlg_trace_win
+argument_list|(
+name|dialog
+argument_list|)
+expr_stmt|;
 block|}
 name|key
 operator|=
@@ -3139,6 +3178,12 @@ name|dlg_add_separator
 argument_list|()
 expr_stmt|;
 block|}
+name|dlg_add_last_key
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|free
 argument_list|(

@@ -1767,7 +1767,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Get number of occurances of each 4 bit pattern */
+comment|/* Get number of occurrences of each 4 bit pattern */
 for|for
 control|(
 name|i

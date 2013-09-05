@@ -2595,6 +2595,7 @@ name|MPI_SGE_FLAGS_END_OF_BUFFER
 operator||
 name|MPI_SGE_FLAGS_END_OF_LIST
 operator||
+operator|(
 name|raid_act
 operator|->
 name|write
@@ -2602,6 +2603,7 @@ condition|?
 name|MPI_SGE_FLAGS_HOST_TO_IOC
 else|:
 name|MPI_SGE_FLAGS_IOC_TO_HOST
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;

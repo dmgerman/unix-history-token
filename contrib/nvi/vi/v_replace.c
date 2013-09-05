@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_replace.c	10.17 (Berkeley) 6/30/96"
+literal|"$Id: v_replace.c,v 10.24 2001/06/25 15:19:34 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,18 +115,14 @@ begin_function
 name|int
 name|v_replace
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|EVENT
 name|ev
@@ -152,10 +148,11 @@ name|quote
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|bp
-decl_stmt|,
+decl_stmt|;
+name|CHAR_T
 modifier|*
 name|p
 decl_stmt|;
@@ -493,7 +490,7 @@ return|;
 block|}
 block|}
 comment|/* Copy the line. */
-name|GET_SPACE_RET
+name|GET_SPACE_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -504,7 +501,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|memmove
+name|MEMMOVE
 argument_list|(
 name|bp
 argument_list|,
@@ -520,6 +517,7 @@ expr_stmt|;
 comment|/* 	 * Versions of nvi before 1.57 created N new lines when they replaced 	 * N characters with<carriage-return> or<newline> characters.  This 	 * is different from the historic vi, which replaced N characters with 	 * a single new line.  Users complained, so we match historic practice. 	 */
 if|if
 condition|(
+operator|(
 operator|!
 name|quote
 operator|&&
@@ -528,6 +526,7 @@ operator|->
 name|rvalue
 operator|==
 name|K_CR
+operator|)
 operator|||
 name|vip
 operator|->
@@ -784,7 +783,7 @@ block|}
 block|}
 else|else
 block|{
-name|memset
+name|STRSET
 argument_list|(
 name|bp
 operator|+
@@ -819,7 +818,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|FREE_SPACE
+name|FREE_SPACEW
 argument_list|(
 name|sp
 argument_list|,

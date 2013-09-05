@@ -843,7 +843,7 @@ decl_stmt|;
 comment|/* (c) */
 comment|/* 	 * Global lock protecting non-pcbgroup hash lookup tables. 	 */
 name|struct
-name|rwlock_padalign
+name|rwlock
 name|ipi_hash_lock
 decl_stmt|;
 comment|/* 	 * Global hash of inpcbs, hashed by local and foreign addresses and 	 * port numbers. 	 */
@@ -1317,6 +1317,19 @@ parameter_list|,
 name|uint16_t
 modifier|*
 name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|short
+name|inp_so_options
+parameter_list|(
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2077,6 +2090,17 @@ end_define
 
 begin_comment
 comment|/* inp itself is not valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_REUSEADDR
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* SO_REUSEADDR option is set */
 end_comment
 
 begin_comment

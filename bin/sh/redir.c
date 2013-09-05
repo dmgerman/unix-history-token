@@ -172,10 +172,6 @@ begin_comment
 comment|/* fd was not open before redir */
 end_comment
 
-begin_macro
-name|MKINIT
-end_macro
-
 begin_struct
 struct|struct
 name|redirtab
@@ -196,7 +192,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|MKINIT
+specifier|static
 name|struct
 name|redirtab
 modifier|*
@@ -451,7 +447,7 @@ name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|F_DUPFD
+name|F_DUPFD_CLOEXEC
 argument_list|,
 literal|10
 argument_list|)
@@ -492,19 +488,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-else|else
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|i
-argument_list|,
-name|F_SETFD
-argument_list|,
-name|FD_CLOEXEC
-argument_list|)
-expr_stmt|;
 name|sv
 operator|->
 name|renamed
@@ -1533,36 +1516,6 @@ name|INTON
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Undo all redirections.  Called on error or interrupt.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_expr_stmt
-name|INCLUDE
-literal|"redir.h"
-name|RESET
-block|{
-while|while
-condition|(
-name|redirlist
-condition|)
-name|popredir
-argument_list|()
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Return true if fd 0 has already been redirected at least once.  */

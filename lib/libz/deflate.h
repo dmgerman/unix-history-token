@@ -369,7 +369,7 @@ comment|/* where in extra, name, or comment */
 name|Byte
 name|method
 decl_stmt|;
-comment|/* STORED (for zip only) or DEFLATED */
+comment|/* can only be DEFLATED */
 name|int
 name|last_flush
 decl_stmt|;

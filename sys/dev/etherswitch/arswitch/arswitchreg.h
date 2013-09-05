@@ -512,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|AR8X16_VLAN_MEMBER
-value|0x000003ff
+value|0x0000003f
 end_define
 
 begin_define

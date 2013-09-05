@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"X86Subtarget.h"
+file|"X86MachineFunctionInfo.h"
 end_include
 
 begin_include
@@ -78,25 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"X86MachineFunctionInfo.h"
+file|"X86Subtarget.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetTransformImpl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetOptions.h"
+file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
@@ -114,7 +102,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
+file|"llvm/Target/TargetLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOptions.h"
 end_include
 
 begin_decl_stmt
@@ -290,15 +284,14 @@ block|,
 comment|/// PSIGN - Copy integer sign.
 name|PSIGN
 block|,
-comment|/// BLENDV - Blend where the selector is an XMM.
+comment|/// BLENDV - Blend where the selector is a register.
 name|BLENDV
 block|,
-comment|/// BLENDxx - Blend where the selector is an immediate.
-name|BLENDPW
+comment|/// BLENDI - Blend where the selector is an immediate.
+name|BLENDI
 block|,
-name|BLENDPS
-block|,
-name|BLENDPD
+comment|// SUBUS - Integer sub with unsigned saturation.
+name|SUBUS
 block|,
 comment|/// HADD - Integer horizontal add.
 name|HADD
@@ -311,6 +304,16 @@ name|FHADD
 block|,
 comment|/// FHSUB - Floating point horizontal sub.
 name|FHSUB
+block|,
+comment|/// UMAX, UMIN - Unsigned integer max and min.
+name|UMAX
+block|,
+name|UMIN
+block|,
+comment|/// SMAX, SMIN - Signed integer max and min.
+name|SMAX
+block|,
+name|SMIN
 block|,
 comment|/// FMAX, FMIN - Floating point max and min.
 comment|///
@@ -350,11 +353,8 @@ block|,
 comment|// EH_SJLJ_LONGJMP - SjLj exception handling longjmp.
 name|EH_SJLJ_LONGJMP
 block|,
-comment|/// TC_RETURN - Tail call return.
-comment|///   operand #0 chain
-comment|///   operand #1 callee (register or absolute)
-comment|///   operand #2 stack adjustment
-comment|///   operand #3 optional in flag
+comment|/// TC_RETURN - Tail call return. See X86TargetLowering::LowerCall for
+comment|/// the list of operands.
 name|TC_RETURN
 block|,
 comment|// VZEXT_MOVL - Vector move low and zero extend.
@@ -423,9 +423,6 @@ name|XOR
 block|,
 name|AND
 block|,
-name|ANDN
-block|,
-comment|// ANDN - Bitwise AND NOT with FLAGS results.
 name|BLSI
 block|,
 comment|// BLSI - Extract lowest set isolated bit
@@ -448,7 +445,7 @@ comment|// TESTP - Vector packed fp sign bitwise comparisons
 name|TESTP
 block|,
 comment|// Several flavors of instructions with vector shuffle behaviors.
-name|PALIGN
+name|PALIGNR
 block|,
 name|PSHUFD
 block|,
@@ -542,10 +539,17 @@ block|,
 comment|// RDRAND - Get a random integer and indicate whether it is valid in CF.
 name|RDRAND
 block|,
+comment|// RDSEED - Get a NIST SP800-90B& C compliant random integer and
+comment|// indicate whether it is valid in CF.
+name|RDSEED
+block|,
 comment|// PCMP*STRI
 name|PCMPISTRI
 block|,
 name|PCMPESTRI
+block|,
+comment|// XTEST - Test if in transactional execution.
+name|XTEST
 block|,
 comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
 comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
@@ -753,7 +757,7 @@ specifier|const
 block|;
 name|virtual
 name|MVT
-name|getShiftAmountTy
+name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
@@ -824,11 +828,10 @@ comment|/// and store operations as a result of memset, memcpy, and memmove
 comment|/// lowering. If DstAlign is zero that means it's safe to destination
 comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
 comment|/// means there isn't a need to check it against alignment requirement,
-comment|/// probably because the source does not need to be loaded. If
-comment|/// 'IsZeroVal' is true, that means it's safe to return a
-comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
-comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
-comment|/// constant so it does not need to be loaded.
+comment|/// probably because the source does not need to be loaded. If 'IsMemset' is
+comment|/// true, that means it's expanding a memset. If 'ZeroMemset' is true, that
+comment|/// means it's a memset of zero. 'MemcpyStrSrc' indicates whether the memcpy
+comment|/// source is constant so it does not need to be loaded.
 comment|/// It returns EVT::Other if the type should be determined using generic
 comment|/// target-independent logic.
 name|virtual
@@ -841,7 +844,9 @@ argument|unsigned DstAlign
 argument_list|,
 argument|unsigned SrcAlign
 argument_list|,
-argument|bool IsZeroVal
+argument|bool IsMemset
+argument_list|,
+argument|bool ZeroMemset
 argument_list|,
 argument|bool MemcpyStrSrc
 argument_list|,
@@ -849,20 +854,33 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+comment|/// isSafeMemOpType - Returns true if it's safe to use load / store of the
+comment|/// specified type to expand memcpy / memset inline. This is mostly true
+comment|/// for all types except for some special cases. For example, on X86
+comment|/// targets without SSE2 f64 load / store are done with fldl / fstpl which
+comment|/// also does type conversion. Note the specified type doesn't have to be
+comment|/// legal as the hook is used before type legalization.
+name|virtual
+name|bool
+name|isSafeMemOpType
+argument_list|(
+argument|MVT VT
+argument_list|)
+specifier|const
+block|;
 comment|/// allowsUnalignedMemoryAccesses - Returns true if the target allows
-comment|/// unaligned memory accesses. of the specified type.
+comment|/// unaligned memory accesses. of the specified type. Returns whether it
+comment|/// is "fast" by reference in the second argument.
 name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
+argument_list|,
+argument|bool *Fast
 argument_list|)
 specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
+block|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 comment|///
 name|virtual
@@ -1175,6 +1193,16 @@ argument|EVT VT2
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|isZExtFree
+argument_list|(
+argument|SDValue Val
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+block|;
 comment|/// isFMAFasterThanMulAndAdd - Return true if an FMA operation is faster than
 comment|/// a pair of mul and add instructions. fmuladd intrinsics will be expanded to
 comment|/// FMAs when this method returns true (and FMAs are legal), otherwise fmuladd
@@ -1396,6 +1424,12 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Reset the operation actions based on target options.
+name|virtual
+name|void
+name|resetOperationActions
+argument_list|()
+block|;
 name|protected
 operator|:
 name|std
@@ -1410,7 +1444,7 @@ name|uint8_t
 operator|>
 name|findRepresentativeClass
 argument_list|(
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1432,6 +1466,11 @@ specifier|const
 name|DataLayout
 operator|*
 name|TD
+block|;
+comment|/// Used to store the TargetOptions so that we don't waste time resetting
+comment|/// the operation actions unless we have to.
+name|TargetOptions
+name|TO
 block|;
 comment|/// X86ScalarSSEf32, X86ScalarSSEf64 - Select between SSE or x87
 comment|/// floating point ops.
@@ -1655,25 +1694,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerEXTRACT_VECTOR_ELT_SSE4
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerINSERT_VECTOR_ELT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerINSERT_VECTOR_ELT_SSE4
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1803,7 +1824,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerTRUNCATE
+name|LowerTRUNCATE
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1812,7 +1833,25 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerZERO_EXTEND
+name|LowerZERO_EXTEND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSIGN_EXTEND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerANY_EXTEND
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1831,15 +1870,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerFP_TO_UINT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|lowerFP_EXTEND
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1889,15 +1919,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerSETCC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerVSETCC
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2050,7 +2071,25 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSDIV
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerSIGN_EXTEND_INREG
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFSINCOS
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2096,7 +2135,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|lowerVectorIntExtend
+name|LowerVectorIntExtend
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2173,12 +2212,10 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|EVT
+name|MVT
 name|getTypeForExtArgOrReturn
 argument_list|(
-argument|LLVMContext&Context
-argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|,
 argument|ISD::NodeType ExtendKind
 argument_list|)
@@ -2377,74 +2414,6 @@ name|libInfo
 parameter_list|)
 function_decl|;
 block|}
-name|class
-name|X86VectorTargetTransformInfo
-range|:
-name|public
-name|VectorTargetTransformImpl
-block|{
-name|public
-operator|:
-name|explicit
-name|X86VectorTargetTransformInfo
-argument_list|(
-specifier|const
-name|TargetLowering
-operator|*
-name|TL
-argument_list|)
-operator|:
-name|VectorTargetTransformImpl
-argument_list|(
-argument|TL
-argument_list|)
-block|{}
-name|virtual
-name|unsigned
-name|getArithmeticInstrCost
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|Type *Ty
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getVectorInstrCost
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|Type *Val
-argument_list|,
-argument|unsigned Index
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getCmpSelInstrCost
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|Type *ValTy
-argument_list|,
-argument|Type *CondTy
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getCastInstrCost
-argument_list|(
-argument|unsigned Opcode
-argument_list|,
-argument|Type *Dst
-argument_list|,
-argument|Type *Src
-argument_list|)
-specifier|const
-block|;   }
-decl_stmt|;
 block|}
 end_decl_stmt
 

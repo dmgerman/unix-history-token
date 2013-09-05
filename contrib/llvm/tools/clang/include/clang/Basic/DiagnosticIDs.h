@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -74,29 +80,6 @@ include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/LLVM.h"
-end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|unsigned
-operator|>
-name|class
-name|SmallVector
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -508,7 +491,7 @@ argument_list|()
 block|;
 comment|/// \brief Return an ID for a diagnostic with the specified message and level.
 comment|///
-comment|/// If this is the first request for this diagnosic, it is registered and
+comment|/// If this is the first request for this diagnostic, it is registered and
 comment|/// created, otherwise the existing ID is returned.
 name|unsigned
 name|getCustomDiagID
@@ -690,7 +673,7 @@ name|getDiagnosticsInGroup
 argument_list|(
 argument|StringRef Group
 argument_list|,
-argument|llvm::SmallVectorImpl<diag::kind>&Diags
+argument|SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
 block|;
@@ -698,7 +681,7 @@ comment|/// \brief Get the set of all diagnostic IDs.
 name|void
 name|getAllDiagnostics
 argument_list|(
-argument|llvm::SmallVectorImpl<diag::kind>&Diags
+argument|SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
 block|;
@@ -721,7 +704,7 @@ name|getDiagnosticsInGroup
 argument_list|(
 argument|const WarningOption *Group
 argument_list|,
-argument|llvm::SmallVectorImpl<diag::kind>&Diags
+argument|SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
 block|;

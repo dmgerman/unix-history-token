@@ -99,6 +99,23 @@ operator|&
 name|TM
 argument_list|)
 block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getTTypeGlobalReference
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+block|;
 name|virtual
 specifier|const
 name|MCSection

@@ -2504,7 +2504,7 @@ name|LK_INTERLOCK
 operator||
 name|LK_SLEEPFAIL
 argument_list|,
-name|BO_MTX
+name|BO_LOCKPTR
 argument_list|(
 name|bo
 argument_list|)

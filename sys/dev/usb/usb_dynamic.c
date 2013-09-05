@@ -168,6 +168,12 @@ directive|include
 file|<dev/usb/usb_dynamic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_request.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -397,20 +403,13 @@ modifier|*
 name|udev
 parameter_list|)
 block|{
-if|if
-condition|(
-name|udev
-operator|->
-name|usb_template_ptr
-condition|)
-block|{
-name|free
+name|usbd_free_config_desc
 argument_list|(
 name|udev
+argument_list|,
+name|udev
 operator|->
 name|usb_template_ptr
-argument_list|,
-name|M_USB
 argument_list|)
 expr_stmt|;
 name|udev
@@ -419,7 +418,6 @@ name|usb_template_ptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 end_function
 

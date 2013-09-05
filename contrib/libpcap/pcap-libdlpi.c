@@ -926,7 +926,7 @@ name|dlpi_promiscon
 argument_list|(
 name|p
 operator|->
-name|hd
+name|dlpi_hd
 argument_list|,
 name|level
 argument_list|)
@@ -1569,7 +1569,7 @@ end_function
 begin_function
 name|pcap_t
 modifier|*
-name|pcap_create
+name|pcap_create_interface
 parameter_list|(
 specifier|const
 name|char

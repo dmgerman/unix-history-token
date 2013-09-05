@@ -227,6 +227,12 @@ begin_comment
 comment|/* KMEM_DEBUG */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/vmem.h>
+end_include
+
 begin_function
 name|void
 modifier|*
@@ -547,9 +553,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kmem_map
-operator|->
-name|size
+name|vmem_size
+argument_list|(
+name|kmem_arena
+argument_list|,
+name|VMEM_ALLOC
+argument_list|)
 operator|)
 return|;
 block|}

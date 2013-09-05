@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -239,16 +239,12 @@ name|ModulePass
 modifier|*
 name|createInternalizePass
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 specifier|const
 name|char
 operator|*
 operator|>
-operator|&
 name|exportList
 argument_list|)
 decl_stmt|;

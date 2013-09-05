@@ -587,9 +587,10 @@ name|root
 init|=
 literal|"/"
 decl_stmt|;
-name|int
+name|long
 name|maxargs
-decl_stmt|,
+decl_stmt|;
+name|int
 name|where_count
 init|=
 literal|0

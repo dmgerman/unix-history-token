@@ -6523,23 +6523,6 @@ name|pmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
-argument_list|(
-literal|"pmap_pinit0: pmap = %08x, pm_pdir = %08x\n"
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|pmap
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|pmap
-operator|->
-name|pm_pdir
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|kernel_pmap
@@ -9159,11 +9142,6 @@ name|pcb_pagedir
 expr_stmt|;
 block|}
 name|pmap_free_l1
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_DESTROY
 argument_list|(
 name|pmap
 argument_list|)
@@ -12649,14 +12627,15 @@ name|m
 operator|->
 name|oflags
 operator|&
-operator|(
 name|VPO_UNMANAGED
-operator||
-name|VPO_BUSY
-operator|)
 operator|)
 operator|!=
 literal|0
+operator|||
+name|vm_page_xbusied
+argument_list|(
+name|m
+argument_list|)
 operator|||
 operator|(
 name|flags
@@ -13700,6 +13679,13 @@ name|diff
 decl_stmt|,
 name|psize
 decl_stmt|;
+name|VM_OBJECT_ASSERT_LOCKED
+argument_list|(
+name|m_start
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
 name|psize
 operator|=
 name|atop
@@ -14684,11 +14670,6 @@ name|uint32_t
 operator|)
 name|pmap
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|PMAP_LOCK_INIT
-argument_list|(
-name|pmap
 argument_list|)
 expr_stmt|;
 name|pmap_alloc_l1
@@ -17135,6 +17116,29 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	This function is advisory.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_advise
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
+parameter_list|,
+name|int
+name|advice
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  *	pmap_ts_referenced:  *  *	Return the count of reference bits for a page, clearing all of them.  */
 end_comment
 
@@ -17268,24 +17272,20 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
+operator|!
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|==
-literal|0
+argument_list|)
 argument_list|,
 operator|(
-literal|"pmap_clear_modify: page %p is busy"
+literal|"pmap_clear_modify: page %p is exclusive busied"
 operator|,
 name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not PGA_WRITEABLE, then no mappings can be modified. 	 * If the object containing the page is locked and the page is not 	 * VPO_BUSY, then PGA_WRITEABLE cannot be concurrently set. 	 */
+comment|/* 	 * If the page is not PGA_WRITEABLE, then no mappings can be modified. 	 * If the object containing the page is locked and the page is not 	 * exclusive busied, then PGA_WRITEABLE cannot be concurrently set. 	 */
 if|if
 condition|(
 operator|(
@@ -17450,7 +17450,7 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the page is not VPO_BUSY, then PGA_WRITEABLE cannot be set by 	 * another thread while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no page table entries need updating. 	 */
+comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * set by another thread while the object is locked.  Thus, 	 * if PGA_WRITEABLE is clear, no page table entries need updating. 	 */
 name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
 name|m
@@ -17460,15 +17460,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|vm_page_xbusied
+argument_list|(
 name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|!=
-literal|0
+argument_list|)
 operator|||
 operator|(
 name|m
@@ -17819,10 +17814,8 @@ name|GIANT_REQUIRED
 expr_stmt|;
 name|va
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|size
 argument_list|)
 expr_stmt|;

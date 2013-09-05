@@ -379,7 +379,7 @@ comment|/* NB: name changed so netstat doesn't use it. */
 end_comment
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|ipsecstat
@@ -388,6 +388,37 @@ name|ipsec4stat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|ipsec4stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|ipsec4stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -837,7 +868,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -845,15 +876,10 @@ name|OID_AUTO
 argument_list|,
 name|ipsecstats
 argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|ipsec4stat
-argument_list|)
-argument_list|,
+expr|struct
 name|ipsecstat
+argument_list|,
+name|ipsec4stat
 argument_list|,
 literal|"IPsec IPv4 statistics."
 argument_list|)
@@ -958,7 +984,7 @@ name|INET6
 end_ifdef
 
 begin_expr_stmt
-name|VNET_DEFINE
+name|VNET_PCPUSTAT_DEFINE
 argument_list|(
 expr|struct
 name|ipsecstat
@@ -967,6 +993,37 @@ name|ipsec6stat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSINIT
+argument_list|(
+name|ipsec6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_SYSUNINIT
+argument_list|(
+name|ipsec6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1042,45 +1099,6 @@ end_expr_stmt
 
 begin_comment
 comment|/* net.inet6.ipsec6 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_KAME
-end_ifdef
-
-begin_expr_stmt
-name|SYSCTL_OID
-argument_list|(
-name|_net_inet6_ipsec6
-argument_list|,
-name|IPSECCTL_STATS
-argument_list|,
-name|stats
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|compat_ipsecstats_sysctl
-argument_list|,
-literal|"S"
-argument_list|,
-literal|"IPsec IPv6 statistics."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_KAME */
 end_comment
 
 begin_expr_stmt
@@ -1254,7 +1272,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_VNET_PCPUSTAT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1262,15 +1280,10 @@ name|IPSECCTL_STATS
 argument_list|,
 name|ipsecstats
 argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|ipsec6stat
-argument_list|)
-argument_list|,
+expr|struct
 name|ipsecstat
+argument_list|,
+name|ipsec6stat
 argument_list|,
 literal|"IPsec IPv6 statistics."
 argument_list|)
@@ -2401,10 +2414,10 @@ literal|"getpolicy failed w/o error"
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_out_inval
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2453,10 +2466,10 @@ comment|/* FALLTHROUGH */
 case|case
 name|IPSEC_POLICY_DISCARD
 case|:
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_out_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 operator|*
 name|error
@@ -6752,10 +6765,10 @@ if|if
 condition|(
 name|result
 condition|)
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_in_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6806,10 +6819,10 @@ if|if
 condition|(
 name|result
 condition|)
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_in_polvio
-operator|++
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

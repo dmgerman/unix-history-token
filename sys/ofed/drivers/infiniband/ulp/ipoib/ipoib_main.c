@@ -356,6 +356,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -5201,6 +5202,11 @@ operator|!=
 name|IB_LINK_LAYER_INFINIBAND
 condition|)
 continue|continue;
+name|ipoib_stop
+argument_list|(
+name|priv
+argument_list|)
+expr_stmt|;
 name|ib_unregister_event_handler
 argument_list|(
 operator|&
@@ -5993,6 +5999,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -6824,14 +6831,10 @@ operator|&=
 operator|~
 name|M_VLANTAG
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
 expr_stmt|;
 name|m_adj
 argument_list|(

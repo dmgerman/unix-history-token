@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -101,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
@@ -148,6 +148,9 @@ name|class
 name|FileEntry
 decl_stmt|;
 name|class
+name|FileManager
+decl_stmt|;
+name|class
 name|LangOptions
 decl_stmt|;
 name|class
@@ -155,8 +158,6 @@ name|TargetInfo
 decl_stmt|;
 comment|/// \brief Describes the name of a module.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -240,34 +241,6 @@ name|FileEntry
 modifier|*
 name|ASTFile
 decl_stmt|;
-name|public
-label|:
-comment|/// \brief The headers that are part of this module.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|2
-operator|>
-name|Headers
-expr_stmt|;
-comment|/// \brief The headers that are explicitly excluded from this module.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-specifier|const
-name|FileEntry
-operator|*
-operator|,
-literal|2
-operator|>
-name|ExcludedHeaders
-expr_stmt|;
 comment|/// \brief The top-level headers associated with this module.
 name|llvm
 operator|::
@@ -281,13 +254,46 @@ literal|2
 operator|>
 name|TopHeaders
 expr_stmt|;
+comment|/// \brief top-level header filenames that aren't resolved to FileEntries yet.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|TopHeaderNames
+expr_stmt|;
+name|public
+label|:
+comment|/// \brief The headers that are part of this module.
+name|SmallVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|Headers
+expr_stmt|;
+comment|/// \brief The headers that are explicitly excluded from this module.
+name|SmallVector
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|ExcludedHeaders
+expr_stmt|;
 comment|/// \brief The set of language features required to use this module.
 comment|///
 comment|/// If any of these features is not present, the \c IsAvailable bit
 comment|/// will be false to indicate that this (sub)module is not
 comment|/// available.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -353,6 +359,16 @@ name|InferExportWildcard
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether the set of configuration macros is exhaustive.
+comment|///
+comment|/// When the set of configuration macros is exhaustive, meaning
+comment|/// that no identifier not in this list should affect how the module is
+comment|/// built.
+name|unsigned
+name|ConfigMacrosExhaustive
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Describes the visibility of the various names within a
 comment|/// particular module.
 enum|enum
@@ -379,8 +395,6 @@ name|InferredSubmoduleLoc
 decl_stmt|;
 comment|/// \brief The set of modules imported by this module, and on which this
 comment|/// module depends.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Module
@@ -409,8 +423,6 @@ operator|>
 name|ExportDecl
 expr_stmt|;
 comment|/// \brief The set of export declarations.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ExportDecl
@@ -441,8 +453,6 @@ decl_stmt|;
 block|}
 struct|;
 comment|/// \brief The set of export declarations that have yet to be resolved.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UnresolvedExportDecl
@@ -450,6 +460,127 @@ operator|,
 literal|2
 operator|>
 name|UnresolvedExports
+expr_stmt|;
+comment|/// \brief A library or framework to link against when an entity from this
+comment|/// module is used.
+struct|struct
+name|LinkLibrary
+block|{
+name|LinkLibrary
+argument_list|()
+operator|:
+name|IsFramework
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
+name|LinkLibrary
+argument_list|(
+argument|const std::string&Library
+argument_list|,
+argument|bool IsFramework
+argument_list|)
+operator|:
+name|Library
+argument_list|(
+name|Library
+argument_list|)
+operator|,
+name|IsFramework
+argument_list|(
+argument|IsFramework
+argument_list|)
+block|{ }
+comment|/// \brief The library to link against.
+comment|///
+comment|/// This will typically be a library or framework name, but can also
+comment|/// be an absolute path to the library or framework.
+name|std
+operator|::
+name|string
+name|Library
+expr_stmt|;
+comment|/// \brief Whether this is a framework rather than a library.
+name|bool
+name|IsFramework
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief The set of libraries or frameworks to link against when
+comment|/// an entity from this module is used.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|LinkLibrary
+operator|,
+literal|2
+operator|>
+name|LinkLibraries
+expr_stmt|;
+comment|/// \brief The set of "configuration macros", which are macros that
+comment|/// (intentionally) change how this module is built.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ConfigMacros
+expr_stmt|;
+comment|/// \brief An unresolved conflict with another module.
+struct|struct
+name|UnresolvedConflict
+block|{
+comment|/// \brief The (unresolved) module id.
+name|ModuleId
+name|Id
+decl_stmt|;
+comment|/// \brief The message provided to the user when there is a conflict.
+name|std
+operator|::
+name|string
+name|Message
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief The list of conflicts for which the module-id has not yet been
+comment|/// resolved.
+name|std
+operator|::
+name|vector
+operator|<
+name|UnresolvedConflict
+operator|>
+name|UnresolvedConflicts
+expr_stmt|;
+comment|/// \brief A conflict between two modules.
+struct|struct
+name|Conflict
+block|{
+comment|/// \brief The module that this module conflicts with.
+name|Module
+modifier|*
+name|Other
+decl_stmt|;
+comment|/// \brief The message provided to the user when there is a conflict.
+name|std
+operator|::
+name|string
+name|Message
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief The list of conflicts.
+name|std
+operator|::
+name|vector
+operator|<
+name|Conflict
+operator|>
+name|Conflicts
 expr_stmt|;
 comment|/// \brief Construct a top-level module.
 name|explicit
@@ -521,6 +652,11 @@ name|false
 argument_list|)
 operator|,
 name|InferExportWildcard
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ConfigMacrosExhaustive
 argument_list|(
 name|false
 argument_list|)
@@ -648,6 +784,24 @@ name|true
 return|;
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Determine whether this module is a subframework of another
+comment|/// framework.
+name|bool
+name|isSubFramework
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFramework
+operator|&&
+name|Parent
+operator|&&
+name|Parent
+operator|->
+name|isPartOfFramework
+argument_list|()
 return|;
 block|}
 comment|/// \brief Retrieve the full name of this module, including the path from
@@ -814,6 +968,59 @@ operator|(
 operator|)
 return|;
 block|}
+comment|/// \brief Add a top-level header associated with this module.
+name|void
+name|addTopHeader
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+name|TopHeaders
+operator|.
+name|insert
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add a top-level header filename associated with this module.
+name|void
+name|addTopHeaderFilename
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|)
+block|{
+name|TopHeaderNames
+operator|.
+name|push_back
+argument_list|(
+name|Filename
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief The top-level headers associated with this module.
+name|ArrayRef
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+name|getTopHeaders
+argument_list|(
+name|FileManager
+operator|&
+name|FileMgr
+argument_list|)
+expr_stmt|;
 comment|/// \brief Add the given feature requirement to the list of features
 comment|/// required by this module.
 comment|///
@@ -924,6 +1131,20 @@ name|end
 argument_list|()
 return|;
 block|}
+comment|/// \brief Returns the exported modules based on the wildcard restrictions.
+name|void
+name|getExportedModules
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|Module
+operator|*
+operator|>
+operator|&
+name|Exported
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|static
 name|StringRef
 name|getModuleInputBufferName
@@ -938,8 +1159,6 @@ comment|///
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS

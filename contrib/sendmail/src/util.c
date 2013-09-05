@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.425 2012/03/03 00:10:43 ca Exp $"
+literal|"@(#)$Id: util.c,v 8.426 2013/03/12 15:24:54 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4005,9 +4005,10 @@ name|p
 decl_stmt|;
 name|int
 name|save_errno
-decl_stmt|;
-name|int
+decl_stmt|,
 name|io_timeout
+decl_stmt|,
+name|l
 decl_stmt|;
 name|SM_REQUIRE
 argument_list|(
@@ -4046,9 +4047,10 @@ name|NULL
 return|;
 block|}
 comment|/* try to read */
-name|p
+name|l
 operator|=
-name|NULL
+operator|-
+literal|1
 expr_stmt|;
 name|errno
 operator|=
@@ -4088,7 +4090,7 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|p
+name|l
 operator|=
 name|sm_io_fgets
 argument_list|(
@@ -4103,9 +4105,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|==
-name|NULL
+name|l
+operator|<
+literal|0
 operator|&&
 name|errno
 operator|==
@@ -4185,9 +4187,9 @@ return|;
 block|}
 if|if
 condition|(
-name|p
-operator|!=
-name|NULL
+name|l
+operator|>=
+literal|0
 operator|||
 name|errno
 operator|!=
@@ -4213,9 +4215,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|==
-name|NULL
+name|l
+operator|<
+literal|0
 condition|)
 block|{
 name|buf

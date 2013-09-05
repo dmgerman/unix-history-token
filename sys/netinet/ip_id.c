@@ -177,7 +177,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx_padalign
+name|mtx
 name|ip_id_mtx
 decl_stmt|;
 end_decl_stmt

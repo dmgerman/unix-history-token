@@ -300,6 +300,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Temporary boot environment used at startup.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|boot1_env
+index|[
+literal|4096
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Offsets to MALTA LCD characters.  */
 end_comment
 
@@ -955,26 +969,22 @@ name|argc
 init|=
 name|a0
 decl_stmt|;
-name|char
-modifier|*
+name|int32_t
 modifier|*
 name|argv
 init|=
 operator|(
-name|char
-operator|*
+name|int32_t
 operator|*
 operator|)
 name|a1
 decl_stmt|;
-name|char
-modifier|*
+name|int32_t
 modifier|*
 name|envp
 init|=
 operator|(
-name|char
-operator|*
+name|int32_t
 operator|*
 operator|)
 name|a2
@@ -1031,6 +1041,16 @@ argument_list|(
 name|platform_counter_freq
 argument_list|)
 expr_stmt|;
+name|init_static_kenv
+argument_list|(
+name|boot1_env
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|boot1_env
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
@@ -1043,6 +1063,7 @@ name|bootverbose
 operator|=
 literal|1
 expr_stmt|;
+comment|/*  	 * YAMON uses 32bit pointers to strings so 	 * convert them to proper type manually 	 */
 if|if
 condition|(
 name|bootverbose
@@ -1070,6 +1091,13 @@ name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|argv
 index|[
 name|i
@@ -1105,11 +1133,25 @@ name|printf
 argument_list|(
 literal|"\t%s = %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|envp
 index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|envp
 index|[
 name|i

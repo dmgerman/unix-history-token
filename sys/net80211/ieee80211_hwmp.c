@@ -7651,7 +7651,7 @@ comment|/* 		 * If the mbuf has M_ENCAP set, ensure we free it. 		 * Note that a
 operator|(
 name|void
 operator|)
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 argument_list|(
 name|vap
 argument_list|,

@@ -53,6 +53,47 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|slotstatus
+block|{
+name|NONE
+block|,
+name|COMPACT
+block|,
+name|FOUND
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|ext2fs_searchslot
+block|{
+name|enum
+name|slotstatus
+name|slotstatus
+decl_stmt|;
+name|doff_t
+name|slotoffset
+decl_stmt|;
+comment|/* offset of area with free space */
+name|int
+name|slotsize
+decl_stmt|;
+comment|/* size of area at slotoffset */
+name|int
+name|slotfreespace
+decl_stmt|;
+comment|/* amount of space free in slot */
+name|int
+name|slotneeded
+decl_stmt|;
+comment|/* sizeof the entry we are seeking */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The new version of the directory entry.  Since EXT2 structures are  * stored in intel byte order, and the name_len field could never be  * bigger than 255 chars, it's safe to reclaim the extra byte for the  * file_type field.  */
 end_comment
@@ -87,6 +128,17 @@ comment|/* name with length<=EXT2FS_MAXNAMLEN */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Maximal count of links to a file  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_LINK_MAX
+value|32000
+end_define
 
 begin_comment
 comment|/*  * Ext2 directory file types.  Only the low 3 bits are used.  The  * other bits are reserved for now.  */

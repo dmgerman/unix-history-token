@@ -22,7 +22,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * The maximum number of I/O interrupts we allow.  This number is rather  * arbitrary as it is just the maximum IRQ resource value.  The interrupt  * source for a given IRQ maps that I/O interrupt to device interrupt  * source whether it be a pin on an interrupt controller or an MSI interrupt.  * The 16 ISA IRQs are assigned fixed IDT vectors, but all other device  * interrupts allocate IDT vectors on demand.  Currently we have 191 IDT  * vectors available for device interrupts.  On many systems with I/O APICs,  * a lot of the IRQs are not used, so this number can be much larger than  * 191 and still be safe since only interrupt sources in actual use will  * allocate IDT vectors.  *  * The first 255 IRQs (0 - 254) are reserved for ISA IRQs and PCI intline IRQs.  * IRQ values beyond 256 are used by MSI.  We leave 255 unused to avoid  * confusion since 255 is used in PCI to indicate an invalid IRQ.  */
+comment|/*  * The maximum number of I/O interrupts we allow.  This number is rather  * arbitrary as it is just the maximum IRQ resource value.  The interrupt  * source for a given IRQ maps that I/O interrupt to device interrupt  * source whether it be a pin on an interrupt controller or an MSI interrupt.  * The 16 ISA IRQs are assigned fixed IDT vectors, but all other device  * interrupts allocate IDT vectors on demand.  Currently we have 191 IDT  * vectors available for device interrupts.  On many systems with I/O APICs,  * a lot of the IRQs are not used, so this number can be much larger than  * 191 and still be safe since only interrupt sources in actual use will  * allocate IDT vectors.  *  * The first 255 IRQs (0 - 254) are reserved for ISA IRQs and PCI intline IRQs.  * IRQ values from 256 to 767 are used by MSI.  When running under the Xen  * Hypervisor, IRQ values from 768 to 4863 are available for binding to  * event channel events.  We leave 255 unused to avoid confusion since 255 is  * used in PCI to indicate an invalid IRQ.  */
 end_comment
 
 begin_define
@@ -39,11 +39,104 @@ name|FIRST_MSI_INT
 value|256
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENHVM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<xen/xen-os.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|NUM_EVTCHN_INTS
+value|NR_EVENT_CHANNELS
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIRST_EVTCHN_INT
+define|\
+value|(FIRST_MSI_INT + NUM_MSI_INTS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAST_EVTCHN_INT
+define|\
+value|(FIRST_EVTCHN_INT + NUM_EVTCHN_INTS - 1)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<xen/xen-os.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|NUM_EVTCHN_INTS
+value|NR_EVENT_CHANNELS
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIRST_EVTCHN_INT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAST_EVTCHN_INT
+define|\
+value|(FIRST_EVTCHN_INT + NUM_EVTCHN_INTS - 1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !XEN&& !XENHVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_EVTCHN_INTS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|NUM_IO_INTS
-value|(FIRST_MSI_INT + NUM_MSI_INTS)
+value|(FIRST_MSI_INT + NUM_MSI_INTS + NUM_EVTCHN_INTS)
 end_define
 
 begin_comment

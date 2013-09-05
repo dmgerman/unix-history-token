@@ -65,6 +65,23 @@ directive|include
 file|"llvm/Support/SwapByteOrder.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<intrin.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -310,7 +327,9 @@ argument_list|(
 literal|1
 argument_list|)
 operator|<<
+operator|(
 name|N
+operator|)
 operator|)
 return|;
 block|}
@@ -1171,12 +1190,19 @@ block|,
 literal|18
 block|}
 decl_stmt|;
+comment|// Replace "-Value" by "1+~Value" in the following commented code to avoid
+comment|// MSVC warning C4146
+comment|//    return Mod37BitPosition[(-Value& Value) % 37];
 return|return
 name|Mod37BitPosition
 index|[
 operator|(
-operator|-
+operator|(
+literal|1
+operator|+
+operator|~
 name|Value
+operator|)
 operator|&
 name|Value
 operator|)
@@ -1380,12 +1406,19 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+comment|// Replace "-Value" by "1+~Value" in the following commented code to avoid
+comment|// MSVC warning C4146
+comment|//    return Mod67Position[(-Value& Value) % 67];
 return|return
 name|Mod67Position
 index|[
 operator|(
-operator|-
+operator|(
+literal|1
+operator|+
+operator|~
 name|Value
+operator|)
 operator|&
 name|Value
 operator|)
@@ -1883,6 +1916,10 @@ name|B
 parameter_list|)
 block|{
 comment|// The largest power of 2 that divides both A and B.
+comment|//
+comment|// Replace "-Value" by "1+~Value" in the following commented code to avoid
+comment|// MSVC warning C4146
+comment|//    return (A | B)& -(A | B);
 return|return
 operator|(
 name|A
@@ -1890,11 +1927,15 @@ operator||
 name|B
 operator|)
 operator|&
-operator|-
+operator|(
+literal|1
+operator|+
+operator|~
 operator|(
 name|A
 operator||
 name|B
+operator|)
 operator|)
 return|;
 block|}

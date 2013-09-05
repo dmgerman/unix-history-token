@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFP
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -163,6 +169,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* If true the VFP unit has 32 double registers, otherwise it has 16 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|is_d32
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The VFMXR command using coprocessor commands */
 end_comment
 
@@ -176,7 +193,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|__asm __volatile("mcr p10, 7, %0, " #reg " , c0, 0" :: "r" (val));
+value|__asm __volatile("mcr p10, 7, %0, " __STRING(reg) " , c0, 0" :: "r"(val));
 end_define
 
 begin_comment
@@ -191,7 +208,7 @@ parameter_list|(
 name|reg
 parameter_list|)
 define|\
-value|({ u_int val = 0;\ 	__asm __volatile("mrc p10, 7, %0, " #reg " , c0, 0" : "=r" (val));\ 	val; \ })
+value|({ u_int val = 0;\     __asm __volatile("mrc p10, 7, %0, " __STRING(reg) " , c0, 0" : "=r"(val));\     val; \ })
 end_define
 
 begin_function
@@ -261,6 +278,8 @@ name|tmp
 decl_stmt|;
 name|u_int
 name|coproc
+decl_stmt|,
+name|vfp_arch
 decl_stmt|;
 name|coproc
 operator|=
@@ -282,7 +301,7 @@ name|fpsid
 operator|=
 name|fmrx
 argument_list|(
-name|cr0
+name|VFPSID
 argument_list|)
 expr_stmt|;
 comment|/* read the vfp system id */
@@ -290,7 +309,7 @@ name|fpexc
 operator|=
 name|fmrx
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|)
 expr_stmt|;
 comment|/* read the vfp exception reg */
@@ -308,6 +327,10 @@ name|vfp_exists
 operator|=
 literal|1
 expr_stmt|;
+name|is_d32
+operator|=
+literal|0
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|vfpsid
@@ -316,14 +339,20 @@ name|fpsid
 argument_list|)
 expr_stmt|;
 comment|/* save the VFPSID */
-if|if
-condition|(
+name|vfp_arch
+operator|=
 operator|(
 name|fpsid
 operator|&
 name|VFPSID_SUBVERSION2_MASK
 operator|)
-operator|==
+operator|>>
+name|VFPSID_SUBVERSION_OFF
+expr_stmt|;
+if|if
+condition|(
+name|vfp_arch
+operator|>=
 name|VFP_ARCH3
 condition|)
 block|{
@@ -331,10 +360,9 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|cr7
+name|VMVFR0
 argument_list|)
 expr_stmt|;
-comment|/* extended registers */
 name|PCPU_SET
 argument_list|(
 name|vfpmvfr0
@@ -342,14 +370,27 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|&
+name|VMVFR0_RB_MASK
+operator|)
+operator|==
+literal|2
+condition|)
+name|is_d32
+operator|=
+literal|1
+expr_stmt|;
 name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|cr6
+name|VMVFR1
 argument_list|)
 expr_stmt|;
-comment|/* extended registers */
 name|PCPU_SET
 argument_list|(
 name|vfpmvfr1
@@ -466,7 +507,7 @@ name|fpexc
 operator|=
 name|fmrx
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|)
 expr_stmt|;
 comment|/* read the vfp exception reg */
@@ -534,7 +575,7 @@ name|VFPEXC_EN
 expr_stmt|;
 name|fmxr
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|,
 name|fpexc
 argument_list|)
@@ -578,7 +619,7 @@ name|VFPEXC_EN
 expr_stmt|;
 name|fmxr
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|,
 name|fpexc
 argument_list|)
@@ -649,28 +690,53 @@ name|vfpscr
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Work around an issue with GCC where the asm it generates is 	 * not unified syntax and fails to assemble because it expects 	 * the ldcleq instruction in the form ldc<c>l, not in the UAL 	 * form ldcl<c>, and similar for stcleq. 	 */
+ifdef|#
+directive|ifdef
+name|__clang__
+define|#
+directive|define
+name|ldclne
+value|"ldclne"
+define|#
+directive|define
+name|stclne
+value|"stclne"
+else|#
+directive|else
+define|#
+directive|define
+name|ldclne
+value|"ldcnel"
+define|#
+directive|define
+name|stclne
+value|"stcnel"
+endif|#
+directive|endif
 if|if
 condition|(
 name|vfpsave
 condition|)
 block|{
-asm|__asm __volatile("ldc	p10, c0, [%0], #128\n"
-comment|/* d0-d31 */
-ifndef|#
-directive|ifndef
-name|VFPv2
-literal|"ldcl	p11, c0, [%0], #128\n"
+asm|__asm __volatile("ldc	p10, c0, [%1], #128\n"
+comment|/* d0-d15 */
+literal|"cmp	%2, #0\n"
+comment|/* -D16 or -D32? */
+name|ldclne
+literal|"	p11, c0, [%1], #128\n"
 comment|/* d16-d31 */
-else|#
-directive|else
-literal|"add	%0, %0, #128\n"
-comment|/* slip missing regs */
-endif|#
-directive|endif
-literal|"ldr	%1, [%0]\n"
+literal|"addeq	%1, %1, #128\n"
+comment|/* skip missing regs */
+literal|"ldr	%0, [%1]\n"
 comment|/* set old vfpscr */
-literal|"mcr	p10, 7, %1, cr1, c0, 0\n"
-operator|::
+literal|"mcr	p10, 7, %0, cr1, c0, 0\n"
+operator|:
+literal|"=&r"
+operator|(
+name|vfpscr
+operator|)
+operator|:
 literal|"r"
 operator|(
 name|vfpsave
@@ -678,8 +744,10 @@ operator|)
 operator|,
 literal|"r"
 operator|(
-name|vfpscr
+name|is_d32
 operator|)
+operator|:
+literal|"cc"
 block|)
 empty_stmt|;
 name|PCPU_SET
@@ -721,7 +789,7 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|)
 expr_stmt|;
 comment|/* Is the vfp enabled? */
@@ -735,18 +803,18 @@ name|VFPEXC_EN
 condition|)
 block|{
 asm|__asm __volatile("stc	p11, c0, [%1], #128\n"
-comment|/* d0-d31 */
-ifndef|#
-directive|ifndef
-name|VFPv2
-literal|"stcl	p11, c0, [%1], #128\n"
-else|#
-directive|else
-literal|"add	%1, %1, #128\n"
-endif|#
-directive|endif
+comment|/* d0-d15 */
+literal|"cmp	%2, #0\n"
+comment|/* -D16 or -D32? */
+name|stclne
+literal|"	p11, c0, [%1], #128\n"
+comment|/* d16-d31 */
+literal|"addeq	%1, %1, #128\n"
+comment|/* skip missing regs */
 literal|"mrc	p10, 7, %0, cr1, c0, 0\n"
+comment|/* fmxr(VFPSCR) */
 literal|"str	%0, [%1]\n"
+comment|/* save vfpscr */
 operator|:
 literal|"=&r"
 operator|(
@@ -757,10 +825,29 @@ literal|"r"
 operator|(
 name|vfpsave
 operator|)
+operator|,
+literal|"r"
+operator|(
+name|is_d32
+operator|)
+operator|:
+literal|"cc"
 block|)
 empty_stmt|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|ldcleq
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|stcleq
+end_undef
 
 begin_ifndef
 ifndef|#
@@ -802,7 +889,7 @@ end_comment
 begin_expr_stmt
 name|fmxr
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|,
 name|tmp
 argument_list|)
@@ -839,7 +926,7 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|)
 expr_stmt|;
 name|tmp
@@ -850,7 +937,7 @@ expr_stmt|;
 comment|/* turn off VFP hardware */
 name|fmxr
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|,
 name|tmp
 argument_list|)
@@ -876,7 +963,7 @@ name|tmp
 operator|=
 name|fmrx
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|)
 expr_stmt|;
 name|tmp
@@ -885,13 +972,18 @@ name|VFPEXC_EN
 expr_stmt|;
 name|fmxr
 argument_list|(
-name|cr8
+name|VFPEXC
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

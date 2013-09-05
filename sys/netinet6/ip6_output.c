@@ -693,7 +693,7 @@ block|{
 name|printf
 argument_list|(
 literal|"%s: delayed m_pullup, m->len: %d plen %u off %u "
-literal|"csum_flags=0x%04x\n"
+literal|"csum_flags=%b\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -705,11 +705,16 @@ name|plen
 argument_list|,
 name|offset
 argument_list|,
+operator|(
+name|int
+operator|)
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
+argument_list|,
+name|CSUM_BITS
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX this should not happen, but if it does, the correct 		 * behavior may be to insert the checksum in the appropriate 		 * next mbuf in the chain. 		 */
@@ -4407,7 +4412,6 @@ name|m_flags
 operator|&
 name|M_COPYFLAGS
 expr_stmt|;
-comment|/* incl. FIB */
 operator|*
 name|mnext
 operator|=
@@ -4604,6 +4608,18 @@ argument_list|(
 operator|*
 name|ip6f
 argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|fibnum
+operator|=
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|fibnum
 expr_stmt|;
 name|m
 operator|->
@@ -6086,31 +6102,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|IN_MULTICAST
-argument_list|(
-name|ntohl
-argument_list|(
-name|in6p
-operator|->
-name|inp_laddr
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 operator|(
 name|so
 operator|->
 name|so_options
 operator|&
-operator|(
 name|SO_REUSEADDR
-operator||
-name|SO_REUSEPORT
-operator|)
 operator|)
 operator|!=
 literal|0
@@ -6119,7 +6116,7 @@ name|in6p
 operator|->
 name|inp_flags2
 operator||=
-name|INP_REUSEPORT
+name|INP_REUSEADDR
 expr_stmt|;
 else|else
 name|in6p
@@ -6127,9 +6124,8 @@ operator|->
 name|inp_flags2
 operator|&=
 operator|~
-name|INP_REUSEPORT
+name|INP_REUSEADDR
 expr_stmt|;
-block|}
 name|INP_WUNLOCK
 argument_list|(
 name|in6p

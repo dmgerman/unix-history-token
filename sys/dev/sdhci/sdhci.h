@@ -177,6 +177,17 @@ value|(1<<12)
 end_define
 
 begin_comment
+comment|/* Hardware shifts the 136-bit response, don't do it in software. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHCI_QUIRK_DONT_SHIFT_RESPONSE
+value|(1<<13)
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
@@ -526,6 +537,20 @@ define|#
 directive|define
 name|SDHCI_CTRL_ADMA264
 value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL_DMA_MASK
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CTRL_8BITBUS
+value|0x20
 end_define
 
 begin_define
@@ -946,6 +971,13 @@ define|#
 directive|define
 name|SDHCI_MAX_BLOCK_SHIFT
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHCI_CAN_DO_8BITBUS
+value|0x00040000
 end_define
 
 begin_define

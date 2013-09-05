@@ -242,6 +242,21 @@ decl_stmt|;
 name|UINT32
 name|j
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ExpectedBtypes
+condition|)
+block|{
+name|ACPI_STRCPY
+argument_list|(
+name|Buffer
+argument_list|,
+literal|"NONE"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|j
 operator|=
 literal|1
@@ -693,15 +708,10 @@ expr_stmt|;
 comment|/* First field in the types list is the count of args to follow */
 name|ArgCount
 operator|=
-operator|(
+name|METHOD_GET_ARG_COUNT
+argument_list|(
 name|ArgumentTypes
-operator|&
-name|METHOD_ARG_MASK
-operator|)
-expr_stmt|;
-name|ArgumentTypes
-operator|>>=
-name|METHOD_ARG_BIT_WIDTH
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -741,11 +751,10 @@ control|)
 block|{
 name|ThisArgumentType
 operator|=
-operator|(
+name|METHOD_GET_NEXT_TYPE
+argument_list|(
 name|ArgumentTypes
-operator|&
-name|METHOD_ARG_MASK
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -784,11 +793,6 @@ index|]
 operator|+
 name|SubIndex
 argument_list|)
-expr_stmt|;
-comment|/* Shift to next argument type field */
-name|ArgumentTypes
-operator|>>=
-name|METHOD_ARG_BIT_WIDTH
 expr_stmt|;
 name|SubIndex
 operator|=

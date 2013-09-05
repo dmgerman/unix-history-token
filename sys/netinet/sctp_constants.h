@@ -2291,17 +2291,6 @@ value|60000
 end_define
 
 begin_comment
-comment|/* resource limit of streams */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_SCTP_STREAMS
-value|2048
-end_define
-
-begin_comment
 comment|/* Maximum the mapping array will  grow to (TSN mapping array) */
 end_comment
 
@@ -2842,6 +2831,13 @@ define|#
 directive|define
 name|SCTP_OSTREAM_INITIAL
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ISTREAM_INITIAL
+value|2048
 end_define
 
 begin_comment

@@ -819,6 +819,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|resource_list_release_active
+parameter_list|(
+name|struct
+name|resource_list
+modifier|*
+name|rl
+parameter_list|,
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|resource
 modifier|*

@@ -50,6 +50,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createSLPVectorizerPass function. */
+name|void
+name|LLVMAddSLPVectorizePass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: skeleton.c,v 1.31 2011/09/07 09:37:59 tom Exp $ */
+comment|/* $Id: skeleton.c,v 1.32 2013/03/04 23:19:39 tom Exp $ */
 end_comment
 
 begin_include
@@ -382,7 +382,7 @@ literal|"        newsize = YYMAXDEPTH;"
 block|,
 literal|""
 block|,
-literal|"    i = data->s_mark - data->s_base;"
+literal|"    i = (int) (data->s_mark - data->s_base);"
 block|,
 literal|"    newss = (short *)realloc(data->s_base, newsize * sizeof(*newss));"
 block|,

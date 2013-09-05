@@ -1250,7 +1250,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|fp
@@ -1319,7 +1319,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Unlock our root node (dvp) when doing this, since we might 		 * deadlock since the vnode might be locked by another thread 		 * and the root vnode lock will be obtained afterwards (in case 		 * we're looking up the fd of the root vnode), which will be the 		 * opposite lock order. Vhold the root vnode first so we don't 		 * loose it. 		 */
+comment|/* 		 * Unlock our root node (dvp) when doing this, since we might 		 * deadlock since the vnode might be locked by another thread 		 * and the root vnode lock will be obtained afterwards (in case 		 * we're looking up the fd of the root vnode), which will be the 		 * opposite lock order. Vhold the root vnode first so we don't 		 * lose it. 		 */
 name|vhold
 argument_list|(
 name|dvp
@@ -1746,6 +1746,9 @@ name|td
 init|=
 name|curthread
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|unsigned
 name|fd
 decl_stmt|;
@@ -1795,7 +1798,13 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_EXTATTR_SET
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -2215,7 +2224,7 @@ name|dp
 operator|->
 name|d_type
 operator|=
-name|DT_UNKNOWN
+name|DT_CHR
 expr_stmt|;
 name|dp
 operator|->

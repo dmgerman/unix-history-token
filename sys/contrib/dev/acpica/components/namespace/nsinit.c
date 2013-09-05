@@ -433,7 +433,7 @@ name|Info
 operator|.
 name|EvaluateInfo
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|METHOD_NAME__INI
 expr_stmt|;
@@ -1276,6 +1276,18 @@ name|METHOD_NAME__INI
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ACPI_MEMSET
+argument_list|(
+name|Info
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_EVALUATE_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Info
 operator|->
 name|PrefixNode
@@ -1284,7 +1296,7 @@ name|DeviceNode
 expr_stmt|;
 name|Info
 operator|->
-name|Pathname
+name|RelativePathname
 operator|=
 name|METHOD_NAME__INI
 expr_stmt|;
@@ -1341,7 +1353,7 @@ name|AcpiNsGetExternalPathname
 argument_list|(
 name|Info
 operator|->
-name|ResolvedNode
+name|Node
 argument_list|)
 decl_stmt|;
 name|ACPI_EXCEPTION

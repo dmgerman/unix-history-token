@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.h,v 1.110 2010/08/16 23:46:52 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -489,9 +489,13 @@ name|dns_nsstatscounter_updatebadprereq
 init|=
 literal|35
 block|,
-name|dns_nsstatscounter_max
+name|dns_nsstatscounter_rpz_rewrites
 init|=
 literal|36
+block|,
+name|dns_nsstatscounter_max
+init|=
+literal|37
 block|}
 enum|;
 end_enum
@@ -679,12 +683,16 @@ parameter_list|(
 name|ns_server_t
 modifier|*
 name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Toggle logging of queries, as in BIND 8.  */
+comment|/*%<  * Enable/disable logging of queries.  (Takes "yes" or "no" argument,  * but can also be used as a toggle for backward comptibility.)  */
 end_comment
 
 begin_comment
@@ -779,12 +787,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%  * Flush a particular name from the server's cache(s)  */
+comment|/*%  * Flush a particular name from the server's cache.  If 'tree' is false,  * also flush the name from the ADB and badcache.  If 'tree' is true, also  * flush all the names under the specified name.  */
 end_comment
 
 begin_function_decl
 name|isc_result_t
-name|ns_server_flushname
+name|ns_server_flushnode
 parameter_list|(
 name|ns_server_t
 modifier|*
@@ -793,6 +801,9 @@ parameter_list|,
 name|char
 modifier|*
 name|args
+parameter_list|,
+name|isc_boolean_t
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -872,6 +883,29 @@ name|server
 parameter_list|,
 name|isc_boolean_t
 name|freeze
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Dump zone updates to disk, optionally removing the journal file  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_sync
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
 parameter_list|,
 name|char
 modifier|*
@@ -991,6 +1025,29 @@ parameter_list|,
 name|char
 modifier|*
 name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%  * Lists the status of the signing records for a given zone.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_server_signing
+parameter_list|(
+name|ns_server_t
+modifier|*
+name|server
+parameter_list|,
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
 parameter_list|)
 function_decl|;
 end_function_decl

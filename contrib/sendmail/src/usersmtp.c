@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.485 2010/07/23 21:09:38 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.486 2013/03/12 15:24:54 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3198,8 +3198,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 if|if

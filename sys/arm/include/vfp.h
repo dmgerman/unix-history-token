@@ -144,8 +144,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VFP_ARCH1
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFP_ARCH2
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFP_ARCH3
-value|(0x00030000)
+value|0x2
 end_define
 
 begin_define

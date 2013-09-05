@@ -174,15 +174,11 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_comment
-comment|/* We use 4 bits in the mbuf flags, thus we are limited to 16 FIBS. */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|RT_MAXFIBS
-value|16
+value|UINT16_MAX
 end_define
 
 begin_comment
@@ -271,6 +267,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* This is read-only.. */
+end_comment
+
 begin_decl_stmt
 name|u_int
 name|rt_numfibs
@@ -301,7 +301,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow the boot code to allow LESS than RT_MAXFIBS to be used.  * We can't do more because storage is statically allocated for now.  * (for compatibility reasons.. this will change. When this changes, code should  * be refactored to protocol independent parts and protocol dependent parts,  * probably hanging of domain(9) specific storage to not need the full  * fib * af RNH allocation etc. but allow tuning the number of tables per  * address family).  */
+comment|/* and this can be set too big but will be fixed before it is used */
 end_comment
 
 begin_expr_stmt
@@ -6475,8 +6475,7 @@ argument_list|,
 operator|&
 name|info
 argument_list|,
-operator|&
-name|rt
+name|NULL
 argument_list|,
 name|fibnum
 argument_list|)

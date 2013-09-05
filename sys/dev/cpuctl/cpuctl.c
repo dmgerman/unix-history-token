@@ -211,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|UCODE_SIZE_MAX
-value|(10 * 1024)
+value|(16 * 1024)
 end_define
 
 begin_function_decl
@@ -1705,7 +1705,7 @@ operator|&
 name|rev0
 argument_list|)
 expr_stmt|;
-comment|/* Get current micorcode revision. */
+comment|/* Get current microcode revision. */
 comment|/* 	 * Perform update. 	 */
 name|wrmsr_safe
 argument_list|(
@@ -1745,7 +1745,7 @@ operator|&
 name|rev1
 argument_list|)
 expr_stmt|;
-comment|/* Get new micorcode revision. */
+comment|/* Get new microcode revision. */
 name|restore_cpu
 argument_list|(
 name|oldcpu
@@ -1772,19 +1772,9 @@ name|EEXIST
 expr_stmt|;
 name|fail
 label|:
-if|if
-condition|(
-name|ptr
-operator|!=
-name|NULL
-condition|)
-name|contigfree
+name|free
 argument_list|(
 name|ptr
-argument_list|,
-name|args
-operator|->
-name|size
 argument_list|,
 name|M_CPUCTL
 argument_list|)
@@ -2270,7 +2260,7 @@ operator|&
 name|rev0
 argument_list|)
 expr_stmt|;
-comment|/* Get current micorcode revision. */
+comment|/* Get current microcode revision. */
 comment|/* 	 * Perform update. 	 */
 name|wrmsr_safe
 argument_list|(
@@ -2372,19 +2362,9 @@ literal|0
 expr_stmt|;
 name|fail
 label|:
-if|if
-condition|(
-name|ptr
-operator|!=
-name|NULL
-condition|)
-name|contigfree
+name|free
 argument_list|(
 name|ptr
-argument_list|,
-name|args
-operator|->
-name|size
 argument_list|,
 name|M_CPUCTL
 argument_list|)

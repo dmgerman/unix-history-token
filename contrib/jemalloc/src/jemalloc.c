@@ -1161,6 +1161,31 @@ name|JEMALLOC_ATTR
 argument_list|(
 argument|always_inline
 argument_list|)
+name|void
+name|malloc_thread_init
+argument_list|(
+argument|void
+argument_list|)
+block|{
+comment|/* 	 * TSD initialization can't be safely done as a side effect of 	 * deallocation, because it is possible for a thread to do nothing but 	 * deallocate its TLS data via free(), in which case writing to TLS 	 * would cause write-after-free memory corruption.  The quarantine 	 * facility *only* gets used as a side effect of deallocation, so make 	 * a best effort attempt at initializing its TSD by hooking all 	 * allocation events. 	 */
+if|if
+condition|(
+name|config_fill
+operator|&&
+name|opt_quarantine
+condition|)
+name|quarantine_alloc_hook
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|JEMALLOC_ATTR
+argument_list|(
+argument|always_inline
+argument_list|)
 name|bool
 name|malloc_init
 argument_list|(
@@ -1172,13 +1197,18 @@ condition|(
 name|malloc_initialized
 operator|==
 name|false
+operator|&&
+name|malloc_init_hard
+argument_list|()
 condition|)
 return|return
 operator|(
-name|malloc_init_hard
-argument_list|()
+name|true
 operator|)
 return|;
+name|malloc_thread_init
+argument_list|()
+expr_stmt|;
 end_expr_stmt
 
 begin_return
@@ -4336,6 +4366,13 @@ name|NULL
 condition|)
 block|{
 comment|/* realloc(ptr, 0) is equivalent to free(p). */
+name|assert
+argument_list|(
+name|malloc_initialized
+operator|||
+name|IS_INITIALIZER
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|config_prof
@@ -4469,6 +4506,9 @@ name|malloc_initialized
 operator|||
 name|IS_INITIALIZER
 argument_list|)
+expr_stmt|;
+name|malloc_thread_init
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5471,6 +5511,9 @@ operator|||
 name|IS_INITIALIZER
 argument_list|)
 expr_stmt|;
+name|malloc_thread_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|config_ivsalloc
@@ -6410,6 +6453,9 @@ operator|||
 name|IS_INITIALIZER
 argument_list|)
 expr_stmt|;
+name|malloc_thread_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|arena_ind
@@ -7035,6 +7081,9 @@ operator|||
 name|IS_INITIALIZER
 argument_list|)
 expr_stmt|;
+name|malloc_thread_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|config_ivsalloc
@@ -7485,6 +7534,9 @@ comment|/* Acquire all mutexes in a safe order. */
 name|ctl_prefork
 argument_list|()
 expr_stmt|;
+name|prof_prefork
+argument_list|()
+expr_stmt|;
 name|malloc_mutex_prefork
 argument_list|(
 operator|&
@@ -7523,9 +7575,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|prof_prefork
-argument_list|()
-expr_stmt|;
 name|chunk_prefork
 argument_list|()
 expr_stmt|;
@@ -7591,9 +7640,6 @@ expr_stmt|;
 name|chunk_postfork_parent
 argument_list|()
 expr_stmt|;
-name|prof_postfork_parent
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -7632,6 +7678,9 @@ operator|&
 name|arenas_lock
 argument_list|)
 expr_stmt|;
+name|prof_postfork_parent
+argument_list|()
+expr_stmt|;
 name|ctl_postfork_parent
 argument_list|()
 expr_stmt|;
@@ -7661,9 +7710,6 @@ name|base_postfork_child
 argument_list|()
 expr_stmt|;
 name|chunk_postfork_child
-argument_list|()
-expr_stmt|;
-name|prof_postfork_child
 argument_list|()
 expr_stmt|;
 for|for
@@ -7703,6 +7749,9 @@ argument_list|(
 operator|&
 name|arenas_lock
 argument_list|)
+expr_stmt|;
+name|prof_postfork_child
+argument_list|()
 expr_stmt|;
 name|ctl_postfork_child
 argument_list|()

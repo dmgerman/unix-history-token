@@ -188,7 +188,7 @@ name|char
 name|driver_ver
 index|[]
 init|=
-literal|"v1.0"
+literal|"v1.1"
 decl_stmt|;
 end_decl_stmt
 

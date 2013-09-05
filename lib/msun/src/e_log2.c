@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -72,6 +78,16 @@ specifier|static
 specifier|const
 name|double
 name|zero
+init|=
+literal|0.0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|vzero
 init|=
 literal|0.0
 decl_stmt|;
@@ -153,7 +169,7 @@ return|return
 operator|-
 name|two54
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* log(+-0)=-inf */
 if|if
@@ -362,6 +378,31 @@ name|val_hi
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|log2
+argument_list|,
+name|log2l
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

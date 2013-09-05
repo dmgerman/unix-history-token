@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: control.c,v 8.128 2006/08/15 23:24:56 ca Exp $"
+literal|"@(#)$Id: control.c,v 8.129 2013/03/12 15:24:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1032,8 +1032,8 @@ argument_list|(
 name|inp
 argument_list|)
 argument_list|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 block|{
 operator|(

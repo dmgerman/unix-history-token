@@ -116,19 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<xen/evtchn.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -153,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<xen/interface/hvm/params.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/hvm.h>
 end_include
 
 begin_include
@@ -373,9 +373,9 @@ comment|/** 	 * The event channel for communicating with the 	 * XenStore servic
 name|int
 name|evtchn
 decl_stmt|;
-comment|/** Interrupt number for our event channel. */
-name|u_int
-name|irq
+comment|/** Handle for XenStore interrupts. */
+name|xen_intr_handle_t
+name|xen_intr_handle
 decl_stmt|;
 comment|/** 	 * Interrupt driven config hook allowing us to defer 	 * attaching children until interrupts (and thus communication 	 * with the XenStore service) are available. 	 */
 name|struct
@@ -515,6 +515,12 @@ modifier|*
 name|ret
 decl_stmt|;
 comment|/* Protect against unterminated buffers. */
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
 name|strings
 index|[
 name|len
@@ -1133,12 +1139,12 @@ name|req_prod
 operator|+=
 name|avail
 expr_stmt|;
-comment|/* 		 * notify_remote_via_evtchn implies mb(). The other side 		 * will see the change to req_prod at the time of the 		 * interrupt. 		 */
-name|notify_remote_via_evtchn
+comment|/* 		 * xen_intr_signal() implies mb(). The other side will see 		 * the change to req_prod at the time of the interrupt. 		 */
+name|xen_intr_signal
 argument_list|(
 name|xs
 operator|.
-name|evtchn
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -1358,12 +1364,12 @@ name|rsp_cons
 operator|+=
 name|avail
 expr_stmt|;
-comment|/* 		 * notify_remote_via_evtchn implies mb(). The producer 		 * will see the updated consumer index when the event 		 * is delivered. 		 */
-name|notify_remote_via_evtchn
+comment|/* 		 * xen_intr_signal() implies mb(). The producer will see 		 * the updated consumer index when the event is delivered. 		 */
+name|xen_intr_signal
 argument_list|(
 name|xs
 operator|.
-name|evtchn
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -3217,39 +3223,42 @@ operator|->
 name|rsp_prod
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|xs
-operator|.
-name|irq
-condition|)
-name|unbind_from_irqhandler
+name|xen_intr_unbind
 argument_list|(
+operator|&
 name|xs
 operator|.
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|bind_caller_port_to_irqhandler
+name|xen_intr_bind_local_port
 argument_list|(
+name|xs
+operator|.
+name|xs_dev
+argument_list|,
 name|xs
 operator|.
 name|evtchn
 argument_list|,
-literal|"xenstore"
+comment|/*filter*/
+name|NULL
 argument_list|,
 name|xs_intr
 argument_list|,
+comment|/*arg*/
 name|NULL
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 operator|&
 name|xs
 operator|.
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -3590,12 +3599,6 @@ name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
-expr_stmt|;
-name|xs
-operator|.
-name|irq
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Initialize the shared memory rings to talk to xenstored */
 name|error

@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_left.c	10.7 (Berkeley) 3/6/96"
+literal|"$Id: v_left.c,v 10.9 2001/06/25 15:19:32 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,18 +91,14 @@ begin_function
 name|int
 name|v_left
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|cnt
@@ -218,18 +214,14 @@ begin_function
 name|int
 name|v_cfirst
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|recno_t
 name|cnt
@@ -430,18 +422,14 @@ begin_function
 name|int
 name|v_first
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * !!! 	 * Yielding to none in our quest for compatibility with every 	 * historical blemish of vi, no matter how strange it might be, 	 * we permit the user to enter a count and then ignore it. 	 */
 comment|/* 	 * Move to the first non-blank. 	 * 	 * Can't just use RCM_SET_FNB, in case ^ is used as the motion 	 * component of another command. 	 */
@@ -599,18 +587,14 @@ begin_function
 name|int
 name|v_ncol
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -818,18 +802,14 @@ begin_function
 name|int
 name|v_zero
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * !!! 	 * The 0 command succeeded if used as a command in the first column 	 * but failed if used as a motion component in the same situation. 	 */
 if|if

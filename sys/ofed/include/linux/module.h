@@ -216,7 +216,7 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|SYSINIT(fn, SI_SUB_RUN_SCHEDULER, SI_ORDER_FIRST, _module_run, (fn))
+value|SYSINIT(fn, SI_SUB_LAST, SI_ORDER_FIRST, _module_run, (fn))
 end_define
 
 begin_comment
@@ -233,7 +233,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|SYSINIT(fn, SI_SUB_RUN_SCHEDULER, (order), _module_run, (fn))
+value|SYSINIT(fn, SI_SUB_LAST, (order), _module_run, (fn))
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|SYSUNINIT(fn, SI_SUB_RUN_SCHEDULER, SI_ORDER_FIRST, _module_run, (fn))
+value|SYSUNINIT(fn, SI_SUB_LAST, SI_ORDER_FIRST, _module_run, (fn))
 end_define
 
 begin_define

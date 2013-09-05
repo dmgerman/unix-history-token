@@ -78,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -97,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -612,6 +618,27 @@ name|BumpPtrAllocator
 operator|>
 name|SeenFileEntries
 block|;
+comment|/// \brief The canonical names of directories.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+block|,
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|CanonicalDirNames
+block|;
+comment|/// \brief Storage for canonical names that we have computed.
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|CanonicalNameStorage
+block|;
 comment|/// \brief Each FileEntry we create is assigned a unique ID #.
 comment|///
 name|unsigned
@@ -638,19 +665,13 @@ block|;
 name|bool
 name|getStatValue
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Path
+argument|const char *Path
 argument_list|,
-expr|struct
-name|stat
-operator|&
-name|StatBuf
+argument|struct stat&StatBuf
 argument_list|,
-name|int
-operator|*
-name|FileDescriptor
+argument|bool isFile
+argument_list|,
+argument|int *FileDescriptor
 argument_list|)
 block|;
 comment|/// Add all ancestors of the given path (pointing to either a file
@@ -853,6 +874,20 @@ argument_list|,
 argument|off_t Size
 argument_list|,
 argument|time_t ModificationTime
+argument_list|)
+block|;
+comment|/// \brief Retrieve the canonical name for a given directory.
+comment|///
+comment|/// This is a very expensive operation, despite its results being cached,
+comment|/// and should only be used when the physical layout of the file system is
+comment|/// required, which is (almost) never.
+name|StringRef
+name|getCanonicalName
+argument_list|(
+specifier|const
+name|DirectoryEntry
+operator|*
+name|Dir
 argument_list|)
 block|;
 name|void

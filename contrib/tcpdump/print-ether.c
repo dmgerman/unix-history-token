@@ -322,6 +322,12 @@ literal|"RRCP"
 block|}
 block|,
 block|{
+name|ETHERTYPE_MS_NLB_HB
+block|,
+literal|"MS NLB heartbeat"
+block|}
+block|,
+block|{
 name|ETHERTYPE_JUMBO
 block|,
 literal|"Jumbo"
@@ -1759,6 +1765,23 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|ETHERTYPE_MS_NLB_HB
+case|:
+name|msnlb_print
+argument_list|(
+name|ndo
+argument_list|,
+name|p
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 return|return

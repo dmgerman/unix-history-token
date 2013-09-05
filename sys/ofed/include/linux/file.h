@@ -101,7 +101,7 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -113,11 +113,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 return|return
 operator|(
 expr|struct
@@ -218,7 +220,7 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -230,7 +232,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 return|return;
+block|}
 name|fdclose
 argument_list|(
 name|curthread
@@ -282,7 +286,7 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -294,10 +298,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|file
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|filp
 operator|->
 name|_file

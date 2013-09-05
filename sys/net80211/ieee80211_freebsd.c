@@ -2495,7 +2495,7 @@ end_comment
 
 begin_function
 name|int
-name|ieee80211_parent_transmit
+name|ieee80211_parent_xmitpkt
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -2544,7 +2544,7 @@ end_comment
 
 begin_function
 name|int
-name|ieee80211_vap_transmit
+name|ieee80211_vap_xmitpkt
 parameter_list|(
 name|struct
 name|ieee80211vap
@@ -4090,9 +4090,9 @@ name|DLT_IEEE802_11_RADIO
 operator|&&
 name|ifp
 operator|->
-name|if_start
+name|if_transmit
 operator|==
-name|ieee80211_start
+name|ieee80211_vap_transmit
 condition|)
 block|{
 name|struct

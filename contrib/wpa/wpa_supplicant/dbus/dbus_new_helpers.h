@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / dbus-based control interface  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  * Copyright (c) 2009, Witold Sowa<witold.sowa@gmail.com>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant / dbus-based control interface  * Copyright (c) 2006, Dan Williams<dcbw@redhat.com> and Red Hat, Inc.  * Copyright (c) 2009, Witold Sowa<witold.sowa@gmail.com>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -58,18 +58,20 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|DBusMessage
-modifier|*
+name|dbus_bool_t
 function_decl|(
 modifier|*
 name|WPADBusPropertyAccessor
 function_decl|)
 parameter_list|(
-name|DBusMessage
+name|DBusMessageIter
 modifier|*
-name|message
+name|iter
 parameter_list|,
-specifier|const
+name|DBusError
+modifier|*
+name|error
+parameter_list|,
 name|void
 modifier|*
 name|user_data
@@ -125,19 +127,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_enum
-enum|enum
-name|dbus_prop_access
-block|{
-name|R
-block|,
-name|W
-block|,
-name|RW
-block|}
-enum|;
-end_enum
 
 begin_enum
 enum|enum
@@ -206,7 +195,7 @@ name|struct
 name|wpa_dbus_argument
 name|args
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 block|}
@@ -238,7 +227,7 @@ name|struct
 name|wpa_dbus_argument
 name|args
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 block|}
@@ -279,11 +268,6 @@ comment|/* property setter function */
 name|WPADBusPropertyAccessor
 name|setter
 decl_stmt|;
-comment|/* property access permissions */
-name|enum
-name|dbus_prop_access
-name|access
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -307,6 +291,13 @@ define|#
 directive|define
 name|WPAS_DBUS_METHOD_SIGNAL_PROP_MAX
 value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPAS_DBUS_AUTH_MODE_MAX
+value|64
 end_define
 
 begin_define
@@ -433,7 +424,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|dbus_bool_t
 name|wpa_dbus_get_object_properties
 parameter_list|(
 name|struct
@@ -453,7 +444,7 @@ name|interface
 parameter_list|,
 name|DBusMessageIter
 modifier|*
-name|dict_iter
+name|iter
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -525,6 +516,58 @@ name|struct
 name|wpa_dbus_object_desc
 modifier|*
 name|obj_dsc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|wpas_dbus_new_decompose_object_path
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|int
+name|p2p_persistent_group
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|network
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|bssid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|DBusMessage
+modifier|*
+name|wpas_dbus_reply_new_from_error
+parameter_list|(
+name|DBusMessage
+modifier|*
+name|message
+parameter_list|,
+name|DBusError
+modifier|*
+name|error
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fallback_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fallback_string
 parameter_list|)
 function_decl|;
 end_function_decl

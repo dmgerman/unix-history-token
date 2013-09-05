@@ -301,9 +301,10 @@ block|{
 return|return
 name|options
 operator|.
-name|IPAMode
+name|getIPAMode
+argument_list|()
 operator|!=
-name|None
+name|IPAK_None
 return|;
 block|}
 name|CFG

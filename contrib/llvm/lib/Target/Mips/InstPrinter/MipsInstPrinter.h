@@ -258,6 +258,29 @@ argument_list|,
 argument|StringRef Annot
 argument_list|)
 block|;
+name|void
+name|printCPURegs
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|bool
+name|printAliasInstr
+argument_list|(
+specifier|const
+name|MCInst
+operator|*
+name|MI
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|;
 name|private
 operator|:
 name|void

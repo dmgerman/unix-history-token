@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -415,6 +415,23 @@ name|avail_space
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|xen_vector_callback_enabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|enum
+name|xen_domain_type
+name|xen_domain_type
+init|=
+name|XEN_PV_DOMAIN
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ni_cli
@@ -470,6 +487,26 @@ asm|__asm__("popl %eax;" 		"popl %esi;" 		"popl %edx;" 		);
 block|}
 end_function
 
+begin_function
+name|void
+name|force_evtchn_callback
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|HYPERVISOR_xen_version
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Modify the cmd_line by converting ',' to NULLs so that it is in a  format   * suitable for the static env vars.  */
 end_comment
@@ -501,7 +538,7 @@ name|cmd_line
 operator|++
 control|)
 empty_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"xen_setbootenv(): cmd_line='%s'\n"
 argument_list|,
@@ -685,13 +722,13 @@ end_function
 begin_define
 define|#
 directive|define
-name|PRINTK_BUFSIZE
+name|XC_PRINTF_BUFSIZE
 value|1024
 end_define
 
 begin_function
 name|void
-name|printk
+name|xc_printf
 parameter_list|(
 specifier|const
 name|char
@@ -711,7 +748,7 @@ specifier|static
 name|char
 name|buf
 index|[
-name|PRINTK_BUFSIZE
+name|XC_PRINTF_BUFSIZE
 index|]
 decl_stmt|;
 name|va_start
@@ -727,7 +764,7 @@ name|vsnprintf
 argument_list|(
 name|buf
 argument_list|,
-name|PRINTK_BUFSIZE
+name|XC_PRINTF_BUFSIZE
 operator|-
 literal|1
 argument_list|,
@@ -805,7 +842,7 @@ name|struct
 name|mmu_log
 name|xpq_queue_log
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 index|[
 name|XPQUEUE_SIZE
@@ -823,7 +860,7 @@ specifier|static
 name|int
 name|xpq_idx
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -833,7 +870,7 @@ specifier|static
 name|mmu_update_t
 name|xpq_queue
 index|[
-name|MAX_VIRT_CPUS
+name|XEN_LEGACY_MAX_VCPUS
 index|]
 index|[
 name|XPQUEUE_SIZE
@@ -967,7 +1004,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void xen_dump_queue(void) { 	int _xpq_idx = XPQ_IDX; 	int i;  	if (_xpq_idx<= 1) 		return;  	printk("xen_dump_queue(): %u entries\n", _xpq_idx); 	for (i = 0; i< _xpq_idx; i++) { 		printk(" val: %llx ptr: %llx\n", XPQ_QUEUE[i].val, XPQ_QUEUE[i].ptr); 	} }
+unit|static void xen_dump_queue(void) { 	int _xpq_idx = XPQ_IDX; 	int i;  	if (_xpq_idx<= 1) 		return;  	xc_printf("xen_dump_queue(): %u entries\n", _xpq_idx); 	for (i = 0; i< _xpq_idx; i++) { 		xc_printf(" val: %llx ptr: %llx\n", XPQ_QUEUE[i].val, 		    XPQ_QUEUE[i].ptr); 	} }
 endif|#
 directive|endif
 end_endif
@@ -3794,7 +3831,7 @@ operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"initvalues(): wooh - availmem=%x,%x\n"
 argument_list|,
@@ -3803,7 +3840,7 @@ argument_list|,
 name|cur_space
 argument_list|)
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"KERNBASE=%x,pt_base=%x, VTOPFN(base)=%x, nr_pt_frames=%x\n"
 argument_list|,
@@ -4023,7 +4060,7 @@ operator|*
 name|PAGE_SIZE
 operator|)
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"proc0kstack=%u\n"
 argument_list|,
@@ -4539,7 +4576,7 @@ operator||
 name|PG_KERNEL
 argument_list|)
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"#4\n"
 argument_list|)
@@ -4596,7 +4633,7 @@ operator||
 name|PG_KERNEL
 argument_list|)
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"#5\n"
 argument_list|)
@@ -4618,7 +4655,7 @@ name|set_iopl
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"#6\n"
 argument_list|)
@@ -4637,7 +4674,7 @@ directive|else
 block|xen_queue_pt_update(pdir_shadow_ma + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_V | PG_A);
 endif|#
 directive|endif
-block|xen_flush_queue(); 	cur_space += PAGE_SIZE; 	printk("#6\n");
+block|xen_flush_queue(); 	cur_space += PAGE_SIZE; 	xc_printf("#6\n");
 endif|#
 directive|endif
 comment|/* 0 */
@@ -4742,7 +4779,7 @@ operator||
 name|PG_A
 argument_list|)
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"#7\n"
 argument_list|)
@@ -4785,7 +4822,7 @@ expr_stmt|;
 name|setup_xen_features
 argument_list|()
 expr_stmt|;
-name|printk
+name|xc_printf
 argument_list|(
 literal|"#8, proc0kstack=%u\n"
 argument_list|,
@@ -5313,7 +5350,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|call_list
 index|[
@@ -5330,7 +5367,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|ret
 operator|>

@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -92,21 +92,23 @@ comment|/// An error handler callback.
 typedef|typedef
 name|void
 argument_list|(
-operator|*
-name|fatal_error_handler_t
+argument|*fatal_error_handler_t
 argument_list|)
-argument_list|(
+operator|(
 name|void
 operator|*
 name|user_data
-argument_list|,
+operator|,
 specifier|const
 name|std
 operator|::
 name|string
 operator|&
 name|reason
-argument_list|)
+operator|,
+name|bool
+name|gen_crash_diag
+operator|)
 expr_stmt|;
 comment|/// install_fatal_error_handler - Installs a new error handler to be used
 comment|/// whenever a serious (non-recoverable) error is encountered by LLVM.
@@ -199,6 +201,11 @@ specifier|const
 name|char
 modifier|*
 name|reason
+parameter_list|,
+name|bool
+name|gen_crash_diag
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|LLVM_ATTRIBUTE_NORETURN
@@ -211,6 +218,11 @@ operator|::
 name|string
 operator|&
 name|reason
+argument_list|,
+name|bool
+name|gen_crash_diag
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 name|LLVM_ATTRIBUTE_NORETURN
@@ -219,6 +231,11 @@ name|report_fatal_error
 parameter_list|(
 name|StringRef
 name|reason
+parameter_list|,
+name|bool
+name|gen_crash_diag
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|LLVM_ATTRIBUTE_NORETURN
@@ -229,6 +246,11 @@ specifier|const
 name|Twine
 modifier|&
 name|reason
+parameter_list|,
+name|bool
+name|gen_crash_diag
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|/// This function calls abort(), and prints the optional message to stderr.

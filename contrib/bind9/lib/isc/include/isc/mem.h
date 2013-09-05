@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -127,28 +127,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/*%  * Define ISC_MEM_DEBUG=1 to make all functions that free memory  * set the pointer being freed to NULL after being freed.  * This is the default; set ISC_MEM_DEBUG=0 to disable it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISC_MEM_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISC_MEM_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*%  * Define ISC_MEM_TRACKLINES=1 to turn on detailed tracing of memory  * allocation and freeing by file and line number.  */
@@ -1038,12 +1016,6 @@ parameter_list|)
 value|((mp) != NULL&& \ 				 (mp)->magic == ISCAPI_MPOOL_MAGIC)
 end_define
 
-begin_if
-if|#
-directive|if
-name|ISC_MEM_DEBUG
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1099,69 +1071,6 @@ parameter_list|)
 define|\
 value|do { \ 		ISCMEMPOOLFUNC(put)((c), (p) _ISC_MEM_FILELINE);	\ 		(p) = NULL; \ 	} while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|isc_mem_put
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|)
-value|ISCMEMFUNC(put)((c), (p), (s) _ISC_MEM_FILELINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isc_mem_putanddetach
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|)
-define|\
-value|ISCMEMFUNC(putanddetach)((c), (p), (s) _ISC_MEM_FILELINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isc_mem_free
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|)
-value|ISCMEMFUNC(free)((c), (p) _ISC_MEM_FILELINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isc_mempool_put
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|)
-value|ISCMEMPOOLFUNC(put)((c), (p) _ISC_MEM_FILELINE)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*@{*/
@@ -1268,7 +1177,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Create a memory context.  *  * 'max_size' and 'target_size' are tuning parameters.  When  * ISC_MEMFLAG_INTERNAL is set, allocations smaller than 'max_size'  * will be satisfied by getting blocks of size 'target_size' from the  * system allocator and breaking them up into pieces; larger allocations  * will use the system allocator directly. If 'max_size' and/or  * 'target_size' are zero, default values will be * used.  When  * ISC_MEMFLAG_INTERNAL is not set, 'target_size' is ignored.  *  * 'max_size' is also used to size the statistics arrays and the array  * used to record active memory when ISC_MEM_DEBUGRECORD is set.  Settin  * 'max_size' too low can have detrimental effects on performance.  *  * A memory context created using isc_mem_createx() will obtain  * memory from the system by calling 'memalloc' and 'memfree',  * passing them the argument 'arg'.  A memory context created  * using isc_mem_create() will use the standard library malloc()  * and free().  *  * If ISC_MEMFLAG_NOLOCK is set in 'flags', the corresponding memory context  * will be accessed without locking.  The user who creates the context must  * ensure there be no race.  Since this can be a source of bug, it is generally  * inadvisable to use this flag unless the user is very sure about the race  * condition and the access to the object is highly performance sensitive.  *  * Requires:  * mctxp != NULL&& *mctxp == NULL */
+comment|/*!<  * \brief Create a memory context.  *  * 'max_size' and 'target_size' are tuning parameters.  When  * ISC_MEMFLAG_INTERNAL is set, allocations smaller than 'max_size'  * will be satisfied by getting blocks of size 'target_size' from the  * system allocator and breaking them up into pieces; larger allocations  * will use the system allocator directly. If 'max_size' and/or  * 'target_size' are zero, default values will be * used.  When  * ISC_MEMFLAG_INTERNAL is not set, 'target_size' is ignored.  *  * 'max_size' is also used to size the statistics arrays and the array  * used to record active memory when ISC_MEM_DEBUGRECORD is set.  Setting  * 'max_size' too low can have detrimental effects on performance.  *  * A memory context created using isc_mem_createx() will obtain  * memory from the system by calling 'memalloc' and 'memfree',  * passing them the argument 'arg'.  A memory context created  * using isc_mem_create() will use the standard library malloc()  * and free().  *  * If ISC_MEMFLAG_NOLOCK is set in 'flags', the corresponding memory context  * will be accessed without locking.  The user who creates the context must  * ensure there be no race.  Since this can be a source of bug, it is generally  * inadvisable to use this flag unless the user is very sure about the race  * condition and the access to the object is highly performance sensitive.  *  * Requires:  * mctxp != NULL&& *mctxp == NULL */
 end_comment
 
 begin_comment
@@ -1627,7 +1536,7 @@ name|HAVE_LIBXML2
 end_ifdef
 
 begin_function_decl
-name|void
+name|int
 name|isc_mem_renderxml
 parameter_list|(
 name|xmlTextWriterPtr

@@ -47,6 +47,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ui_v
+value|ui_i.ih_x1[0]
+end_define
+
+begin_define
+define|#
+directive|define
 name|ui_pr
 value|ui_i.ih_pr
 end_define
@@ -209,60 +216,60 @@ struct|struct
 name|udpstat
 block|{
 comment|/* input statistics: */
-name|u_long
+name|uint64_t
 name|udps_ipackets
 decl_stmt|;
 comment|/* total input packets */
-name|u_long
+name|uint64_t
 name|udps_hdrops
 decl_stmt|;
 comment|/* packet shorter than header */
-name|u_long
+name|uint64_t
 name|udps_badsum
 decl_stmt|;
 comment|/* checksum error */
-name|u_long
+name|uint64_t
 name|udps_nosum
 decl_stmt|;
 comment|/* no checksum */
-name|u_long
+name|uint64_t
 name|udps_badlen
 decl_stmt|;
 comment|/* data length larger than packet */
-name|u_long
+name|uint64_t
 name|udps_noport
 decl_stmt|;
 comment|/* no socket on port */
-name|u_long
+name|uint64_t
 name|udps_noportbcast
 decl_stmt|;
 comment|/* of above, arrived as broadcast */
-name|u_long
+name|uint64_t
 name|udps_fullsock
 decl_stmt|;
 comment|/* not delivered, input socket full */
-name|u_long
+name|uint64_t
 name|udpps_pcbcachemiss
 decl_stmt|;
 comment|/* input packets missing pcb cache */
-name|u_long
+name|uint64_t
 name|udpps_pcbhashmiss
 decl_stmt|;
 comment|/* input packets not for hashed pcb */
 comment|/* output statistics: */
-name|u_long
+name|uint64_t
 name|udps_opackets
 decl_stmt|;
 comment|/* total output packets */
-name|u_long
+name|uint64_t
 name|udps_fastout
 decl_stmt|;
 comment|/* output packets on fast path */
 comment|/* of no socket on port, arrived as multicast */
-name|u_long
+name|uint64_t
 name|udps_noportmcast
 decl_stmt|;
-name|u_long
+name|uint64_t
 name|udps_filtermcast
 decl_stmt|;
 comment|/* blocked by multicast filter */
@@ -275,6 +282,23 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|udpstat
+argument_list|,
+name|udpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
@@ -289,7 +313,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_udpstat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct udpstat, udpstat, name, (val))
 end_define
 
 begin_define
@@ -324,7 +349,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_udpstat_inc(offsetof(struct udpstat, name) / sizeof(u_long))
+value|kmod_udpstat_inc(offsetof(struct udpstat, name) / sizeof(uint64_t))
 end_define
 
 begin_endif
@@ -396,13 +421,6 @@ define|#
 directive|define
 name|UDPCTL_MAXID
 value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDPCTL_NAMES
-value|{						\ 	{ 0, 0 },							\ 	{ "checksum", CTLTYPE_INT },					\ 	{ "stats", CTLTYPE_STRUCT },					\ 	{ "maxdgram", CTLTYPE_INT },					\ 	{ "recvspace", CTLTYPE_INT },					\ 	{ "pcblist", CTLTYPE_STRUCT },					\ }
 end_define
 
 begin_ifdef
@@ -490,17 +508,6 @@ end_expr_stmt
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-expr|struct
-name|udpstat
-argument_list|,
-name|udpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|int
 argument_list|,
 name|udp_blackhole
@@ -513,13 +520,6 @@ define|#
 directive|define
 name|V_udp_cksum
 value|VNET(udp_cksum)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_udpstat
-value|VNET(udpstat)
 end_define
 
 begin_define

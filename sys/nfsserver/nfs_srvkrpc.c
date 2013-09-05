@@ -247,6 +247,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<nfs/nfs_fha.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nfsserver/nfs.h>
 end_include
 
@@ -265,7 +271,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsserver/nfs_fha.h>
+file|<nfsserver/nfs_fha_old.h>
 end_include
 
 begin_include
@@ -597,6 +603,9 @@ name|struct
 name|nfsd_nfsd_args
 name|nfsdarg
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -648,7 +657,13 @@ name|addsockarg
 operator|.
 name|sock
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_SOCK_SERVER
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -2115,7 +2130,7 @@ name|nfsrv_pool
 operator|->
 name|sp_assign
 operator|=
-name|fha_assign
+name|fhaold_assign
 expr_stmt|;
 name|nfsrv_pool
 operator|->

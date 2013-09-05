@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -75,24 +81,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetOptions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/TargetTransformInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetTransformImpl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -139,6 +127,9 @@ name|class
 name|DataLayout
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|TargetFrameLowering
 decl_stmt|;
 name|class
@@ -164,6 +155,12 @@ name|TargetSelectionDAGInfo
 decl_stmt|;
 name|class
 name|TargetSubtargetInfo
+decl_stmt|;
+name|class
+name|ScalarTargetTransformInfo
+decl_stmt|;
+name|class
+name|VectorTargetTransformInfo
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
@@ -212,20 +209,6 @@ argument_list|,
 argument|const TargetOptions&Options
 argument_list|)
 empty_stmt|;
-comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
-comment|/// a reference to that target's TargetSubtargetInfo-derived member variable.
-name|virtual
-specifier|const
-name|TargetSubtargetInfo
-operator|*
-name|getSubtargetImpl
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// TheTarget - The Target that this machine was created for.
 specifier|const
 name|Target
@@ -340,8 +323,34 @@ return|return
 name|TargetFS
 return|;
 block|}
+comment|/// getSubtargetImpl - virtual method implemented by subclasses that returns
+comment|/// a reference to that target's TargetSubtargetInfo-derived member variable.
+name|virtual
+specifier|const
+name|TargetSubtargetInfo
+operator|*
+name|getSubtargetImpl
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|mutable
 name|TargetOptions
 name|Options
+decl_stmt|;
+comment|/// \brief Reset the target options based on the function's attributes.
+name|void
+name|resetTargetOptions
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+decl|const
 decl_stmt|;
 comment|// Interfaces to the major aspects of target machine information:
 comment|// -- Instruction opcode and operand information
@@ -402,30 +411,6 @@ specifier|const
 name|DataLayout
 operator|*
 name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
 argument_list|()
 specifier|const
 block|{
@@ -788,6 +773,15 @@ parameter_list|(
 name|bool
 parameter_list|)
 function_decl|;
+comment|/// \brief Register analysis passes for this target with a pass manager.
+name|virtual
+name|void
+name|addAnalysisPasses
+parameter_list|(
+name|PassManagerBase
+modifier|&
+parameter_list|)
+block|{}
 comment|/// CodeGenFileType - These enums are meant to be passed into
 comment|/// addPassesToEmitFile to indicate what type of file to emit, and returned by
 comment|/// it to indicate what type of file could actually be made.
@@ -928,6 +922,18 @@ argument_list|)
 block|;
 name|public
 operator|:
+comment|/// \brief Register analysis passes for this target with a pass manager.
+comment|///
+comment|/// This registers target independent analysis passes.
+name|virtual
+name|void
+name|addAnalysisPasses
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|)
+block|;
 comment|/// createPassConfig - Create a pass configuration object to be used by
 comment|/// addPassToEmitX methods for generating a pipeline of CodeGen passes.
 name|virtual

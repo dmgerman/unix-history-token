@@ -54,19 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_EXECUTION_ENGINE_H
+name|LLVM_EXECUTIONENGINE_EXECUTIONENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_EXECUTION_ENGINE_H
+name|LLVM_EXECUTIONENGINE_EXECUTIONENGINE_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCCodeGenInfo.h"
+file|"llvm-c/ExecutionEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -90,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/MC/MCCodeGenInfo.h"
 end_include
 
 begin_include
@@ -102,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Mutex.h"
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -126,12 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<map>
 end_include
 
@@ -139,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -177,6 +183,9 @@ name|Module
 decl_stmt|;
 name|class
 name|MutexGuard
+decl_stmt|;
+name|class
+name|ObjectCache
 decl_stmt|;
 name|class
 name|DataLayout
@@ -1121,6 +1130,22 @@ name|JITEventListener
 modifier|*
 parameter_list|)
 block|{}
+comment|/// Sets the pre-compiled object cache.  The ownership of the ObjectCache is
+comment|/// not changed.  Supported by MCJIT but not JIT.
+name|virtual
+name|void
+name|setObjectCache
+parameter_list|(
+name|ObjectCache
+modifier|*
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"No support for an object cache"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// DisableLazyCompilation - When lazy compilation is off (the default), the
 comment|/// JIT will eagerly compile every function reachable from the argument to
 comment|/// getPointerToFunction.  If lazy compilation is turned on, the JIT will only
@@ -1964,6 +1989,19 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
+end_comment
+
+begin_macro
+name|DEFINE_SIMPLE_CONVERSION_FUNCTIONS
+argument_list|(
+argument|ExecutionEngine
+argument_list|,
+argument|LLVMExecutionEngineRef
+argument_list|)
+end_macro
 
 begin_comment
 unit|}

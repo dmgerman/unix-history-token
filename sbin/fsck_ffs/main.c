@@ -305,7 +305,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:CdEfFm:npry"
+literal|"b:Bc:CdEfFm:nprSyZ"
 argument_list|)
 operator|)
 operator|!=
@@ -493,6 +493,14 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|surrender
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'y'
 case|:
 name|yflag
@@ -501,6 +509,13 @@ expr_stmt|;
 name|nflag
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|Zflag
+operator|++
 expr_stmt|;
 break|break;
 default|default:

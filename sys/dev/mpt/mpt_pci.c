@@ -1288,7 +1288,7 @@ else|:
 literal|0
 expr_stmt|;
 block|}
-comment|/* Make sure memory access decoders are enabled */
+comment|/* 	 * Make sure that SERR, PERR, WRITE INVALIDATE and BUSMASTER are set. 	 */
 name|cmd
 operator|=
 name|pci_read_config
@@ -1300,31 +1300,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cmd
-operator|&
-name|PCIM_CMD_MEMEN
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Memory accesses disabled"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-comment|/* 	 * Make sure that SERR, PERR, WRITE INVALIDATE and BUSMASTER are set. 	 */
 name|cmd
 operator||=
 name|PCIM_CMD_SERRESPEN
@@ -1958,7 +1933,7 @@ name|mpt_pci_shutdown
 argument_list|,
 name|dev
 argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
+name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 if|if

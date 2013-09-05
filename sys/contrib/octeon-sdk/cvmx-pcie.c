@@ -1702,7 +1702,7 @@ argument_list|()
 operator|-
 name|start_cycle
 operator|>
-literal|2
+literal|100
 operator|*
 name|cvmx_clock_get_rate
 argument_list|(
@@ -1724,7 +1724,7 @@ return|;
 block|}
 name|cvmx_wait
 argument_list|(
-literal|10000
+literal|50000
 argument_list|)
 expr_stmt|;
 name|pciercx_cfg032
@@ -5620,7 +5620,9 @@ parameter_list|)
 block|{
 name|uint64_t
 name|address
-init|=
+decl_stmt|;
+name|address
+operator|=
 name|__cvmx_pcie_build_config_addr
 argument_list|(
 name|pcie_port
@@ -5633,7 +5635,7 @@ name|fn
 argument_list|,
 name|reg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|address

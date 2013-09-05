@@ -146,6 +146,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|option
 name|long_options
@@ -294,6 +295,7 @@ decl_stmt|,
 modifier|*
 name|out
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|in

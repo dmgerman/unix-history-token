@@ -86,7 +86,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
@@ -98,13 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/Twine.h"
+file|"llvm/Support/type_traits.h"
 end_include
 
 begin_include
@@ -382,6 +388,89 @@ comment|// Should this cl::list eat all unknown options?
 block|}
 enum|;
 comment|//===----------------------------------------------------------------------===//
+comment|// Option Category class
+comment|//
+name|class
+name|OptionCategory
+block|{
+name|private
+label|:
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|Name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|Description
+decl_stmt|;
+name|void
+name|registerCategory
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|OptionCategory
+argument_list|(
+specifier|const
+name|char
+operator|*
+specifier|const
+name|Name
+argument_list|,
+specifier|const
+name|char
+operator|*
+specifier|const
+name|Description
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+operator|,
+name|Description
+argument_list|(
+argument|Description
+argument_list|)
+block|{
+name|registerCategory
+argument_list|()
+block|; }
+specifier|const
+name|char
+operator|*
+name|getName
+argument_list|()
+block|{
+return|return
+name|Name
+return|;
+block|}
+specifier|const
+name|char
+modifier|*
+name|getDescription
+parameter_list|()
+block|{
+return|return
+name|Description
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|// The general Option Category (used as default category).
+specifier|extern
+name|OptionCategory
+name|GeneralCategory
+decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
 comment|// Option Base class
 comment|//
 name|class
@@ -500,6 +589,11 @@ modifier|*
 name|ValueStr
 decl_stmt|;
 comment|// String describing what the value of this option is
+name|OptionCategory
+modifier|*
+name|Category
+decl_stmt|;
+comment|// The Category this option belongs to
 specifier|inline
 expr|enum
 name|NumOccurrencesFlag
@@ -734,6 +828,20 @@ operator|=
 name|pos
 expr_stmt|;
 block|}
+name|void
+name|setCategory
+parameter_list|(
+name|OptionCategory
+modifier|&
+name|C
+parameter_list|)
+block|{
+name|Category
+operator|=
+operator|&
+name|C
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|explicit
@@ -802,6 +910,11 @@ operator|,
 name|ValueStr
 argument_list|(
 literal|""
+argument_list|)
+operator|,
+name|Category
+argument_list|(
+argument|&GeneralCategory
 argument_list|)
 block|{   }
 specifier|inline
@@ -1169,6 +1282,48 @@ name|L
 operator|)
 return|;
 block|}
+comment|// cat - Specifiy the Option category for the command line argument to belong
+comment|// to.
+struct|struct
+name|cat
+block|{
+name|OptionCategory
+modifier|&
+name|Category
+decl_stmt|;
+name|cat
+argument_list|(
+name|OptionCategory
+operator|&
+name|c
+argument_list|)
+operator|:
+name|Category
+argument_list|(
+argument|c
+argument_list|)
+block|{}
+name|template
+operator|<
+name|class
+name|Opt
+operator|>
+name|void
+name|apply
+argument_list|(
+argument|Opt&O
+argument_list|)
+specifier|const
+block|{
+name|O
+operator|.
+name|setCategory
+argument_list|(
+name|Category
+argument_list|)
+block|; }
+block|}
+struct|;
 comment|//===----------------------------------------------------------------------===//
 comment|// OptionValue class
 comment|// Support value comparison outside the template.
@@ -1959,23 +2114,17 @@ specifier|const
 block|{
 for|for
 control|(
-name|unsigned
+name|size_t
 name|i
 init|=
 literal|0
 init|,
 name|e
 init|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|Values
 operator|.
 name|size
 argument_list|()
-operator|)
 init|;
 name|i
 operator|!=
@@ -2621,23 +2770,17 @@ end_expr_stmt
 begin_for
 for|for
 control|(
-name|unsigned
+name|size_t
 name|i
 init|=
 literal|0
 init|,
 name|e
 init|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|Values
 operator|.
 name|size
 argument_list|()
-operator|)
 init|;
 name|i
 operator|!=
@@ -4870,6 +5013,12 @@ name|opt_storage
 argument_list|()
 operator|:
 name|Value
+argument_list|(
+name|DataType
+argument_list|()
+argument_list|)
+block|,
+name|Default
 argument_list|(
 argument|DataType()
 argument_list|)
@@ -9057,23 +9206,180 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// This function just prints the help message, exactly the same way as if the
+comment|/// This function just prints the help message, exactly the same way as if the
 end_comment
 
 begin_comment
-comment|// -help option had been given on the command line.
+comment|/// -help or -help-hidden option had been given on the command line.
 end_comment
 
 begin_comment
-comment|// NOTE: THIS FUNCTION TERMINATES THE PROGRAM!
+comment|///
+end_comment
+
+begin_comment
+comment|/// NOTE: THIS FUNCTION TERMINATES THE PROGRAM!
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param hidden if true will print hidden options
+end_comment
+
+begin_comment
+comment|/// \param categorized if true print options in categories
 end_comment
 
 begin_function_decl
 name|void
 name|PrintHelpMessage
-parameter_list|()
+parameter_list|(
+name|bool
+name|Hidden
+init|=
+name|false
+parameter_list|,
+name|bool
+name|Categorized
+init|=
+name|false
+parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// Public interface for accessing registered options.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|/// \brief Use this to get a StringMap to all registered named options
+end_comment
+
+begin_comment
+comment|/// (e.g. -help). Note \p Map Should be an empty StringMap.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param [out] map will be filled with mappings where the key is the
+end_comment
+
+begin_comment
+comment|/// Option argument string (e.g. "help") and value is the corresponding
+end_comment
+
+begin_comment
+comment|/// Option*.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Access to unnamed arguments (i.e. positional) are not provided because
+end_comment
+
+begin_comment
+comment|/// it is expected that the client already has access to these.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Typical usage:
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|/// main(int argc,char* argv[]) {
+end_comment
+
+begin_comment
+comment|/// StringMap<llvm::cl::Option*> opts;
+end_comment
+
+begin_comment
+comment|/// llvm::cl::getRegisteredOptions(opts);
+end_comment
+
+begin_comment
+comment|/// assert(opts.count("help") == 1)
+end_comment
+
+begin_comment
+comment|/// opts["help"]->setDescription("Show alphabetical help information")
+end_comment
+
+begin_comment
+comment|/// // More code
+end_comment
+
+begin_comment
+comment|/// llvm::cl::ParseCommandLineOptions(argc,argv);
+end_comment
+
+begin_comment
+comment|/// //More code
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This interface is useful for modifying options in libraries that are out of
+end_comment
+
+begin_comment
+comment|/// the control of the client. The options should be modified before calling
+end_comment
+
+begin_comment
+comment|/// llvm::cl::ParseCommandLineOptions().
+end_comment
+
+begin_decl_stmt
+name|void
+name|getRegisteredOptions
+argument_list|(
+name|StringMap
+operator|<
+name|Option
+operator|*
+operator|>
+operator|&
+name|Map
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|}

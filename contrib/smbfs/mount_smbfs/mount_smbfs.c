@@ -240,7 +240,7 @@ name|mntflags
 decl_stmt|,
 name|caseopt
 decl_stmt|,
-name|dev
+name|fd
 decl_stmt|;
 name|uid_t
 name|uid
@@ -271,7 +271,7 @@ name|iovlen
 operator|=
 literal|0
 expr_stmt|;
-name|dev
+name|fd
 operator|=
 literal|0
 expr_stmt|;
@@ -1153,7 +1153,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|dev
+name|fd
 operator|=
 name|ctx
 operator|->
@@ -1202,11 +1202,11 @@ argument_list|,
 operator|&
 name|iovlen
 argument_list|,
-literal|"dev"
+literal|"fd"
 argument_list|,
 literal|"%d"
 argument_list|,
-name|dev
+name|fd
 argument_list|)
 expr_stmt|;
 name|build_iovec

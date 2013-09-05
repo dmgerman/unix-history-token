@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -122,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -177,6 +189,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -290,7 +308,7 @@ name|SIN6
 parameter_list|(
 name|s
 parameter_list|)
-value|((struct sockaddr_in6 *)s)
+value|((const struct sockaddr_in6 *)(s))
 end_define
 
 begin_comment
@@ -867,10 +885,18 @@ name|flags
 operator|=
 name|ND6_IFF_PERFORMNUD
 expr_stmt|;
-comment|/* A loopback interface always has ND6_IFF_AUTO_LINKLOCAL. */
+comment|/* A loopback interface always has ND6_IFF_AUTO_LINKLOCAL. 	 * XXXHRS: Clear ND6_IFF_AUTO_LINKLOCAL on an IFT_BRIDGE interface by 	 * default regardless of the V_ip6_auto_linklocal configuration to 	 * give a reasonable default behavior. 	 */
 if|if
 condition|(
+operator|(
 name|V_ip6_auto_linklocal
+operator|&&
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
+operator|)
 operator|||
 operator|(
 name|ifp
@@ -886,7 +912,7 @@ name|flags
 operator||=
 name|ND6_IFF_AUTO_LINKLOCAL
 expr_stmt|;
-comment|/* A loopback interface does not need to accept RTADV. */
+comment|/* 	 * A loopback interface does not need to accept RTADV. 	 * XXXHRS: Clear ND6_IFF_ACCEPT_RTADV on an IFT_BRIDGE interface by 	 * default regardless of the V_ip6_accept_rtadv configuration to 	 * prevent the interface from accepting RA messages arrived 	 * on one of the member interfaces with ND6_IFF_ACCEPT_RTADV. 	 */
 if|if
 condition|(
 name|V_ip6_accept_rtadv
@@ -898,6 +924,14 @@ operator|->
 name|if_flags
 operator|&
 name|IFF_LOOPBACK
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_BRIDGE
 operator|)
 condition|)
 name|nd
@@ -1791,7 +1825,7 @@ name|ln
 operator|->
 name|la_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|tick
 operator|/
@@ -2607,7 +2641,7 @@ name|dr
 operator|->
 name|expire
 operator|<
-name|time_second
+name|time_uptime
 condition|)
 name|defrtrlist_del
 argument_list|(
@@ -2786,7 +2820,7 @@ name|ndpr_vltime
 operator|!=
 name|ND6_INFINITE_LIFETIME
 operator|&&
-name|time_second
+name|time_uptime
 operator|-
 name|pr
 operator|->
@@ -3910,7 +3944,7 @@ name|dr
 operator|->
 name|expire
 operator|>
-name|time_second
+name|time_uptime
 condition|)
 name|nd6_llinfo_settimer_locked
 argument_list|(
@@ -3921,7 +3955,7 @@ name|dr
 operator|->
 name|expire
 operator|-
-name|time_second
+name|time_uptime
 operator|)
 operator|*
 name|hz
@@ -4503,6 +4537,22 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_afdata
+index|[
+name|AF_INET6
+index|]
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EPFNOSUPPORT
+operator|)
+return|;
 switch|switch
 condition|(
 name|cmd
@@ -4603,6 +4653,12 @@ operator|=
 name|dr
 operator|->
 name|expire
+operator|+
+operator|(
+name|time_second
+operator|-
+name|time_uptime
+operator|)
 expr_stmt|;
 name|drl
 operator|->
@@ -4828,6 +4884,12 @@ operator|+
 name|pr
 operator|->
 name|ndpr_vltime
+operator|+
+operator|(
+name|time_second
+operator|-
+name|time_uptime
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -5817,6 +5879,21 @@ name|ln
 operator|->
 name|ln_router
 expr_stmt|;
+if|if
+condition|(
+name|ln
+operator|->
+name|la_expire
+operator|==
+literal|0
+condition|)
+name|nbi
+operator|->
+name|expire
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|nbi
 operator|->
 name|expire
@@ -5824,6 +5901,12 @@ operator|=
 name|ln
 operator|->
 name|la_expire
+operator|+
+operator|(
+name|time_second
+operator|-
+name|time_uptime
+operator|)
 expr_stmt|;
 name|LLE_RUNLOCK
 argument_list|(
@@ -6688,6 +6771,18 @@ argument_list|,
 argument|if_list
 argument_list|)
 block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_afdata
+index|[
+name|AF_INET6
+index|]
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|nd6if
 operator|=
 name|ND_IFINFO
@@ -7716,15 +7811,42 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* Reset layer specific mbuf flags to avoid confusing lower layers. */
+name|m_clrprotoflags
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_PROTOFLAGS
-operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Avoid confusing lower layers. */
+name|IP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+argument_list|,
+name|ifp
+argument_list|,
+name|NULL
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8070,6 +8192,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -8609,6 +8732,12 @@ operator|=
 name|dr
 operator|->
 name|expire
+operator|+
+operator|(
+name|time_second
+operator|-
+name|time_uptime
+operator|)
 expr_stmt|;
 name|d
 operator|.
@@ -8907,6 +9036,12 @@ operator|+
 name|pr
 operator|->
 name|ndpr_vltime
+operator|+
+operator|(
+name|time_second
+operator|-
+name|time_uptime
+operator|)
 expr_stmt|;
 else|else
 name|p

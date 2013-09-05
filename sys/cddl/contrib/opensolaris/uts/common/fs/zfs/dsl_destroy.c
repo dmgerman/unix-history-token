@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_include
@@ -116,12 +116,7 @@ name|dmu_snapshots_destroy_arg_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * ds must be owned.  */
-end_comment
-
 begin_function
-specifier|static
 name|int
 name|dsl_destroy_snapshot_check_impl
 parameter_list|(
@@ -3764,6 +3759,14 @@ name|async_destroy
 argument_list|)
 condition|)
 block|{
+name|dsl_scan_t
+modifier|*
+name|scn
+init|=
+name|dp
+operator|->
+name|dp_scan
+decl_stmt|;
 name|spa_feature_incr
 argument_list|(
 name|dp
@@ -3811,6 +3814,20 @@ argument_list|,
 name|tx
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|scn
+operator|->
+name|scn_async_destroying
+argument_list|)
+expr_stmt|;
+name|scn
+operator|->
+name|scn_async_destroying
+operator|=
+name|B_TRUE
 expr_stmt|;
 block|}
 name|used
@@ -4534,7 +4551,7 @@ control|)
 operator|(
 name|void
 operator|)
-name|dmu_free_object
+name|dmu_free_long_object
 argument_list|(
 name|os
 argument_list|,

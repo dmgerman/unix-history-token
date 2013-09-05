@@ -478,13 +478,6 @@ name|PFSYNCCTL_MAXID
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|PFSYNCCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "stats", CTLTYPE_STRUCT }, \ }
-end_define
-
 begin_struct
 struct|struct
 name|pfsyncstats

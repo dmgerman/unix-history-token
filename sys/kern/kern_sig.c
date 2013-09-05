@@ -325,7 +325,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
 argument_list|,
@@ -336,52 +336,10 @@ argument_list|,
 name|signal
 operator|-
 name|send
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_send
-argument_list|,
-literal|0
 argument_list|,
 literal|"struct thread *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_send
-argument_list|,
-literal|1
 argument_list|,
 literal|"struct proc *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_send
-argument_list|,
-literal|2
 argument_list|,
 literal|"int"
 argument_list|)
@@ -389,7 +347,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|proc
 argument_list|,
@@ -400,36 +358,8 @@ argument_list|,
 name|signal
 operator|-
 name|clear
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_clear
-argument_list|,
-literal|0
 argument_list|,
 literal|"int"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_clear
-argument_list|,
-literal|1
 argument_list|,
 literal|"ksiginfo_t *"
 argument_list|)
@@ -437,7 +367,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE3
 argument_list|(
 name|proc
 argument_list|,
@@ -448,52 +378,10 @@ argument_list|,
 name|signal
 operator|-
 name|discard
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_discard
-argument_list|,
-literal|0
 argument_list|,
 literal|"struct thread *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_discard
-argument_list|,
-literal|1
 argument_list|,
 literal|"struct proc *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|signal_discard
-argument_list|,
-literal|2
 argument_list|,
 literal|"int"
 argument_list|)
@@ -9091,6 +8979,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -9134,7 +9025,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_PDKILL
+argument_list|)
 argument_list|,
 operator|&
 name|p
@@ -10753,20 +10650,6 @@ name|p_sigqueue
 expr_stmt|;
 block|}
 else|else
-block|{
-name|KASSERT
-argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|==
-name|p
-argument_list|,
-operator|(
-literal|"invalid thread"
-operator|)
-argument_list|)
-expr_stmt|;
 name|sigqueue
 operator|=
 operator|&
@@ -10774,7 +10657,6 @@ name|td
 operator|->
 name|td_sigqueue
 expr_stmt|;
-block|}
 name|SDT_PROBE
 argument_list|(
 name|proc

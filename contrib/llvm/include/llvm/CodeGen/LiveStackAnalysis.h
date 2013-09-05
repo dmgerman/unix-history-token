@@ -58,20 +58,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_LIVESTACK_ANALYSIS_H
+name|LLVM_CODEGEN_LIVESTACKANALYSIS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_LIVESTACK_ANALYSIS_H
+name|LLVM_CODEGEN_LIVESTACKANALYSIS_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
-end_include
 
 begin_include
 include|#
@@ -82,13 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include

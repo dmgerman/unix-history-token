@@ -19,12 +19,6 @@ directive|define
 name|_NET_LAGG_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_comment
 comment|/*  * Global definitions  */
 end_comment
@@ -530,6 +524,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_comment
 comment|/*  * Internal kernel part  */
 end_comment
@@ -735,8 +735,12 @@ name|sc_ifp
 decl_stmt|;
 comment|/* virtual interface */
 name|struct
-name|rwlock
+name|rmlock
 name|sc_mtx
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_call_mtx
 decl_stmt|;
 name|int
 name|sc_proto
@@ -746,6 +750,14 @@ name|u_int
 name|sc_count
 decl_stmt|;
 comment|/* number of ports */
+name|u_int
+name|sc_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|sc_flapping
+decl_stmt|;
+comment|/* number of flapping 							 * events */
 name|struct
 name|lagg_port
 modifier|*
@@ -767,6 +779,18 @@ decl_stmt|;
 comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
+decl_stmt|;
+name|counter_u64_t
+name|sc_ipackets
+decl_stmt|;
+name|counter_u64_t
+name|sc_opackets
+decl_stmt|;
+name|counter_u64_t
+name|sc_ibytes
+decl_stmt|;
+name|counter_u64_t
+name|sc_obytes
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -943,10 +967,20 @@ name|eventhandler_tag
 name|vlan_detach
 decl_stmt|;
 name|struct
+name|callout
+name|sc_callout
+decl_stmt|;
+name|struct
 name|sysctl_ctx_list
 name|ctx
 decl_stmt|;
 comment|/* sysctl variables */
+name|struct
+name|sysctl_oid
+modifier|*
+name|sc_oid
+decl_stmt|;
+comment|/* sysctl tree oid */
 name|int
 name|use_flowid
 decl_stmt|;
@@ -1045,6 +1079,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1071,7 +1106,7 @@ name|LAGG_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_init(&(_sc)->sc_mtx, "if_lagg rwlock")
+value|rm_init(&(_sc)->sc_mtx, "if_lagg rmlock")
 end_define
 
 begin_define
@@ -1081,7 +1116,7 @@ name|LAGG_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_destroy(&(_sc)->sc_mtx)
+value|rm_destroy(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -1090,8 +1125,10 @@ directive|define
 name|LAGG_RLOCK
 parameter_list|(
 name|_sc
+parameter_list|,
+name|_p
 parameter_list|)
-value|rw_rlock(&(_sc)->sc_mtx)
+value|rm_rlock(&(_sc)->sc_mtx, (_p))
 end_define
 
 begin_define
@@ -1101,7 +1138,7 @@ name|LAGG_WLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_wlock(&(_sc)->sc_mtx)
+value|rm_wlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -1110,8 +1147,10 @@ directive|define
 name|LAGG_RUNLOCK
 parameter_list|(
 name|_sc
+parameter_list|,
+name|_p
 parameter_list|)
-value|rw_runlock(&(_sc)->sc_mtx)
+value|rm_runlock(&(_sc)->sc_mtx, (_p))
 end_define
 
 begin_define
@@ -1121,7 +1160,7 @@ name|LAGG_WUNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_wunlock(&(_sc)->sc_mtx)
+value|rm_wunlock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -1131,7 +1170,7 @@ name|LAGG_RLOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_assert(&(_sc)->sc_mtx, RA_RLOCKED)
+value|rm_assert(&(_sc)->sc_mtx, RA_RLOCKED)
 end_define
 
 begin_define
@@ -1141,7 +1180,28 @@ name|LAGG_WLOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|rw_assert(&(_sc)->sc_mtx, RA_WLOCKED)
+value|rm_assert(&(_sc)->sc_mtx, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_CALLOUT_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->sc_call_mtx, "if_lagg callout mutex", NULL,\ 	    MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_CALLOUT_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_call_mtx)
 end_define
 
 begin_function_decl
@@ -1213,6 +1273,14 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_link_lagg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

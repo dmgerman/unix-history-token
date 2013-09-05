@@ -205,7 +205,22 @@ parameter_list|,
 name|DefineMatcher
 parameter_list|)
 define|\
-value|namespace internal {                                                         \   class matcher_##DefineMatcher##Matcher                                       \       : public MatcherInterface<Type> {                                        \    public:                                                                     \     explicit matcher_##DefineMatcher##Matcher() {}                             \     virtual bool matches(                                                      \         const Type&Node, ASTMatchFinder *Finder,                              \         BoundNodesTreeBuilder *Builder) const;                                 \   };                                                                           \   }                                                                            \   inline internal::Matcher<Type> DefineMatcher() {                             \     return internal::makeMatcher(                                              \       new internal::matcher_##DefineMatcher##Matcher());                       \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##Matcher::matches(             \       const Type&Node, ASTMatchFinder *Finder,                                \       BoundNodesTreeBuilder *Builder) const
+value|AST_MATCHER_OVERLOAD(Type, DefineMatcher, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_MATCHER_OVERLOAD
+parameter_list|(
+name|Type
+parameter_list|,
+name|DefineMatcher
+parameter_list|,
+name|OverloadId
+parameter_list|)
+define|\
+value|namespace internal {                                                         \   class matcher_##DefineMatcher##OverloadId##Matcher                           \       : public MatcherInterface<Type> {                                        \   public:                                                                      \     explicit matcher_##DefineMatcher##OverloadId##Matcher() {}                 \     virtual bool matches(const Type&Node, ASTMatchFinder *Finder,             \                          BoundNodesTreeBuilder *Builder) const;                \   };                                                                           \   }                                                                            \   inline internal::Matcher<Type> DefineMatcher() {                             \     return internal::makeMatcher(                                              \         new internal::matcher_##DefineMatcher##OverloadId##Matcher());         \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##OverloadId##Matcher::matches( \       const Type&Node, ASTMatchFinder *Finder,                                \       BoundNodesTreeBuilder *Builder) const
 end_define
 
 begin_comment
@@ -274,7 +289,26 @@ parameter_list|,
 name|Param
 parameter_list|)
 define|\
-value|namespace internal {                                                         \   class matcher_##DefineMatcher##Matcher                                       \       : public MatcherInterface<Type> {                                        \    public:                                                                     \     explicit matcher_##DefineMatcher##Matcher(                                 \         const ParamType&A##Param) : Param(A##Param) {}                        \     virtual bool matches(                                                      \         const Type&Node, ASTMatchFinder *Finder,                              \         BoundNodesTreeBuilder *Builder) const;                                 \    private:                                                                    \     const ParamType Param;                                                     \   };                                                                           \   }                                                                            \   inline internal::Matcher<Type> DefineMatcher(const ParamType&Param) {       \     return internal::makeMatcher(                                              \       new internal::matcher_##DefineMatcher##Matcher(Param));                  \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##Matcher::matches(             \       const Type&Node, ASTMatchFinder *Finder,                                \       BoundNodesTreeBuilder *Builder) const
+value|AST_MATCHER_P_OVERLOAD(Type, DefineMatcher, ParamType, Param, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_MATCHER_P_OVERLOAD
+parameter_list|(
+name|Type
+parameter_list|,
+name|DefineMatcher
+parameter_list|,
+name|ParamType
+parameter_list|,
+name|Param
+parameter_list|,          \
+name|OverloadId
+parameter_list|)
+define|\
+value|namespace internal {                                                         \   class matcher_##DefineMatcher##OverloadId##Matcher                           \       : public MatcherInterface<Type> {                                        \   public:                                                                      \     explicit matcher_##DefineMatcher##OverloadId##Matcher(                     \         const ParamType&A##Param)                                             \         : Param(A##Param) {                                                    \     }                                                                          \     virtual bool matches(const Type&Node, ASTMatchFinder *Finder,             \                          BoundNodesTreeBuilder *Builder) const;                \   private:                                                                     \     const ParamType Param;                                                     \   };                                                                           \   }                                                                            \   inline internal::Matcher<Type> DefineMatcher(const ParamType&Param) {       \     return internal::makeMatcher(                                              \         new internal::matcher_##DefineMatcher##OverloadId##Matcher(Param));    \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##OverloadId##Matcher::matches( \       const Type&Node, ASTMatchFinder *Finder,                                \       BoundNodesTreeBuilder *Builder) const
 end_define
 
 begin_comment
@@ -337,7 +371,7 @@ begin_define
 define|#
 directive|define
 name|AST_MATCHER_P2
-parameter_list|(                                                        \
+parameter_list|(
 name|Type
 parameter_list|,
 name|DefineMatcher
@@ -347,11 +381,82 @@ parameter_list|,
 name|Param1
 parameter_list|,
 name|ParamType2
-parameter_list|,
+parameter_list|,    \
 name|Param2
 parameter_list|)
 define|\
-value|namespace internal {                                                         \   class matcher_##DefineMatcher##Matcher                                       \       : public MatcherInterface<Type> {                                        \    public:                                                                     \     matcher_##DefineMatcher##Matcher(                                          \         const ParamType1&A##Param1, const ParamType2&A##Param2)              \         : Param1(A##Param1), Param2(A##Param2) {}                              \     virtual bool matches(                                                      \         const Type&Node, ASTMatchFinder *Finder,                              \         BoundNodesTreeBuilder *Builder) const;                                 \    private:                                                                    \     const ParamType1 Param1;                                                   \     const ParamType2 Param2;                                                   \   };                                                                           \   }                                                                            \   inline internal::Matcher<Type> DefineMatcher(                                \       const ParamType1&Param1, const ParamType2&Param2) {                    \     return internal::makeMatcher(                                              \       new internal::matcher_##DefineMatcher##Matcher(                          \         Param1, Param2));                                                      \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##Matcher::matches(             \       const Type&Node, ASTMatchFinder *Finder,                                \       BoundNodesTreeBuilder *Builder) const
+value|AST_MATCHER_P2_OVERLOAD(Type, DefineMatcher, ParamType1, Param1, ParamType2, \                           Param2, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_MATCHER_P2_OVERLOAD
+parameter_list|(
+name|Type
+parameter_list|,
+name|DefineMatcher
+parameter_list|,
+name|ParamType1
+parameter_list|,
+name|Param1
+parameter_list|,       \
+name|ParamType2
+parameter_list|,
+name|Param2
+parameter_list|,
+name|OverloadId
+parameter_list|)
+define|\
+value|namespace internal {                                                         \   class matcher_##DefineMatcher##OverloadId##Matcher                           \       : public MatcherInterface<Type> {                                        \   public:                                                                      \     matcher_##DefineMatcher##OverloadId##Matcher(const ParamType1&A##Param1,  \                                                  const ParamType2&A##Param2)  \         : Param1(A##Param1), Param2(A##Param2) {                               \     }                                                                          \     virtual bool matches(const Type&Node, ASTMatchFinder *Finder,             \                          BoundNodesTreeBuilder *Builder) const;                \   private:                                                                     \     const ParamType1 Param1;                                                   \     const ParamType2 Param2;                                                   \   };                                                                           \   }                                                                            \   inline internal::Matcher<Type>                                               \   DefineMatcher(const ParamType1&Param1, const ParamType2&Param2) {          \     return internal::makeMatcher(                                              \         new internal::matcher_##DefineMatcher##OverloadId##Matcher(Param1,     \                                                                    Param2));   \   }                                                                            \   inline bool internal::matcher_##DefineMatcher##OverloadId##Matcher::matches( \       const Type&Node, ASTMatchFinder *Finder,                                \       BoundNodesTreeBuilder *Builder) const
+end_define
+
+begin_comment
+comment|/// \brief AST_POLYMORPHIC_MATCHER(DefineMatcher) { ... }
+end_comment
+
+begin_comment
+comment|/// defines a single-parameter function named DefineMatcher() that is
+end_comment
+
+begin_comment
+comment|/// polymorphic in the return type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The variables are the same as for AST_MATCHER, but NodeType will be deduced
+end_comment
+
+begin_comment
+comment|/// from the calling context.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_POLYMORPHIC_MATCHER
+parameter_list|(
+name|DefineMatcher
+parameter_list|)
+define|\
+value|AST_POLYMORPHIC_MATCHER_OVERLOAD(DefineMatcher, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_POLYMORPHIC_MATCHER_OVERLOAD
+parameter_list|(
+name|DefineMatcher
+parameter_list|,
+name|OverloadId
+parameter_list|)
+define|\
+value|namespace internal {                                                         \   template<typename NodeType>                                                 \   class matcher_##DefineMatcher##OverloadId##Matcher                           \       : public MatcherInterface<NodeType> {                                    \   public:                                                                      \     virtual bool matches(const NodeType&Node, ASTMatchFinder *Finder,         \                          BoundNodesTreeBuilder *Builder) const;                \   };                                                                           \   }                                                                            \   inline internal::PolymorphicMatcherWithParam0<                               \       internal::matcher_##DefineMatcher##OverloadId##Matcher> DefineMatcher() {\     return internal::PolymorphicMatcherWithParam0<                             \         internal::matcher_##DefineMatcher##OverloadId##Matcher>();             \   }                                                                            \   template<typename NodeType>                                                 \   bool internal::matcher_##DefineMatcher##OverloadId##Matcher<                 \       NodeType>::matches(const NodeType&Node, ASTMatchFinder *Finder,         \                          BoundNodesTreeBuilder *Builder) const
 end_define
 
 begin_comment
@@ -402,7 +507,24 @@ parameter_list|,
 name|Param
 parameter_list|)
 define|\
-value|namespace internal {                                                         \   template<typename NodeType, typename ParamT>                                \   class matcher_##DefineMatcher##Matcher                                       \       : public MatcherInterface<NodeType> {                                    \    public:                                                                     \     explicit matcher_##DefineMatcher##Matcher(                                 \         const ParamType&A##Param) : Param(A##Param) {}                        \     virtual bool matches(                                                      \         const NodeType&Node, ASTMatchFinder *Finder,                          \         BoundNodesTreeBuilder *Builder) const;                                 \    private:                                                                    \     const ParamType Param;                                                     \   };                                                                           \   }                                                                            \   inline internal::PolymorphicMatcherWithParam1<                               \       internal::matcher_##DefineMatcher##Matcher,                              \       ParamType>                                                              \     DefineMatcher(const ParamType&Param) {                                    \     return internal::PolymorphicMatcherWithParam1<                             \         internal::matcher_##DefineMatcher##Matcher,                            \         ParamType>(Param);                                                    \   }                                                                            \   template<typename NodeType, typename ParamT>                                \   bool internal::matcher_##DefineMatcher##Matcher<NodeType, ParamT>::matches(  \       const NodeType&Node, ASTMatchFinder *Finder,                            \       BoundNodesTreeBuilder *Builder) const
+value|AST_POLYMORPHIC_MATCHER_P_OVERLOAD(DefineMatcher, ParamType, Param, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_POLYMORPHIC_MATCHER_P_OVERLOAD
+parameter_list|(
+name|DefineMatcher
+parameter_list|,
+name|ParamType
+parameter_list|,
+name|Param
+parameter_list|,    \
+name|OverloadId
+parameter_list|)
+define|\
+value|namespace internal {                                                         \   template<typename NodeType, typename ParamT>                                \   class matcher_##DefineMatcher##OverloadId##Matcher                           \       : public MatcherInterface<NodeType> {                                    \   public:                                                                      \     explicit matcher_##DefineMatcher##OverloadId##Matcher(                     \         const ParamType&A##Param)                                             \         : Param(A##Param) {                                                    \     }                                                                          \     virtual bool matches(const NodeType&Node, ASTMatchFinder *Finder,         \                          BoundNodesTreeBuilder *Builder) const;                \   private:                                                                     \     const ParamType Param;                                                     \   };                                                                           \   }                                                                            \   inline internal::PolymorphicMatcherWithParam1<                               \       internal::matcher_##DefineMatcher##OverloadId##Matcher, ParamType>       \   DefineMatcher(const ParamType&Param) {                                      \     return internal::PolymorphicMatcherWithParam1<                             \         internal::matcher_##DefineMatcher##OverloadId##Matcher, ParamType>(    \         Param);                                                                \   }                                                                            \   template<typename NodeType, typename ParamT>                                \   bool internal::matcher_##DefineMatcher##OverloadId##Matcher<                 \       NodeType, ParamT>::matches(const NodeType&Node, ASTMatchFinder *Finder, \                                  BoundNodesTreeBuilder *Builder) const
 end_define
 
 begin_comment
@@ -441,19 +563,40 @@ begin_define
 define|#
 directive|define
 name|AST_POLYMORPHIC_MATCHER_P2
-parameter_list|(                                            \
+parameter_list|(
 name|DefineMatcher
 parameter_list|,
 name|ParamType1
 parameter_list|,
 name|Param1
-parameter_list|,
+parameter_list|,          \
 name|ParamType2
 parameter_list|,
 name|Param2
 parameter_list|)
 define|\
-value|namespace internal {                                                         \   template<typename NodeType, typename ParamT1, typename ParamT2>             \   class matcher_##DefineMatcher##Matcher                                       \       : public MatcherInterface<NodeType> {                                    \    public:                                                                     \     matcher_##DefineMatcher##Matcher(                                          \         const ParamType1&A##Param1, const ParamType2&A##Param2)              \         : Param1(A##Param1), Param2(A##Param2) {}                              \     virtual bool matches(                                                      \         const NodeType&Node, ASTMatchFinder *Finder,                          \         BoundNodesTreeBuilder *Builder) const;                                 \    private:                                                                    \     const ParamType1 Param1;                                                   \     const ParamType2 Param2;                                                   \   };                                                                           \   }                                                                            \   inline internal::PolymorphicMatcherWithParam2<                               \       internal::matcher_##DefineMatcher##Matcher,                              \       ParamType1, ParamType2>                                                 \     DefineMatcher(const ParamType1&Param1, const ParamType2&Param2) {        \     return internal::PolymorphicMatcherWithParam2<                             \         internal::matcher_##DefineMatcher##Matcher,                            \         ParamType1, ParamType2>(                                              \         Param1, Param2);                                                       \   }                                                                            \   template<typename NodeType, typename ParamT1, typename ParamT2>             \   bool internal::matcher_##DefineMatcher##Matcher<                             \       NodeType, ParamT1, ParamT2>::matches(                                    \       const NodeType&Node, ASTMatchFinder *Finder,                            \       BoundNodesTreeBuilder *Builder) const
+value|AST_POLYMORPHIC_MATCHER_P2_OVERLOAD(DefineMatcher, ParamType1, Param1,       \                                       ParamType2, Param2, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_POLYMORPHIC_MATCHER_P2_OVERLOAD
+parameter_list|(
+name|DefineMatcher
+parameter_list|,
+name|ParamType1
+parameter_list|,
+name|Param1
+parameter_list|, \
+name|ParamType2
+parameter_list|,
+name|Param2
+parameter_list|,
+name|OverloadId
+parameter_list|)
+define|\
+value|namespace internal {                                                         \   template<typename NodeType, typename ParamT1, typename ParamT2>             \   class matcher_##DefineMatcher##OverloadId##Matcher                           \       : public MatcherInterface<NodeType> {                                    \   public:                                                                      \     matcher_##DefineMatcher##OverloadId##Matcher(const ParamType1&A##Param1,  \                                                  const ParamType2&A##Param2)  \         : Param1(A##Param1), Param2(A##Param2) {                               \     }                                                                          \     virtual bool matches(const NodeType&Node, ASTMatchFinder *Finder,         \                          BoundNodesTreeBuilder *Builder) const;                \   private:                                                                     \     const ParamType1 Param1;                                                   \     const ParamType2 Param2;                                                   \   };                                                                           \   }                                                                            \   inline internal::PolymorphicMatcherWithParam2<                               \       internal::matcher_##DefineMatcher##OverloadId##Matcher, ParamType1,      \       ParamType2>                                                              \   DefineMatcher(const ParamType1&Param1, const ParamType2&Param2) {          \     return internal::PolymorphicMatcherWithParam2<                             \         internal::matcher_##DefineMatcher##OverloadId##Matcher, ParamType1,    \         ParamType2>(Param1, Param2);                                           \   }                                                                            \   template<typename NodeType, typename ParamT1, typename ParamT2>             \   bool internal::matcher_##DefineMatcher##OverloadId##Matcher<                 \       NodeType, ParamT1, ParamT2>::matches(                                    \       const NodeType&Node, ASTMatchFinder *Finder,                            \       BoundNodesTreeBuilder *Builder) const
 end_define
 
 begin_comment
@@ -474,8 +617,16 @@ parameter_list|,
 name|MatcherName
 parameter_list|)
 define|\
-value|const internal::VariadicDynCastAllOfMatcher<Type, NodeType> MatcherName;     \   const internal::VariadicDynCastAllOfMatcher<TypeLoc,                         \                                               NodeType##Loc> MatcherName##Loc
+value|const internal::VariadicDynCastAllOfMatcher<Type, NodeType> MatcherName
 end_define
+
+begin_comment
+comment|// FIXME: add a matcher for TypeLoc derived classes using its custom casting
+end_comment
+
+begin_comment
+comment|// API (no longer dyn_cast) if/when we need such matching
+end_comment
 
 begin_comment
 comment|/// \brief AST_TYPE_TRAVERSE_MATCHER(MatcherName, FunctionName) defines
@@ -515,7 +666,7 @@ parameter_list|,
 name|FunctionName
 parameter_list|)
 define|\
-value|class Polymorphic##MatcherName##TypeMatcher {                                  \ public:                                                                        \   Polymorphic##MatcherName##TypeMatcher(                                       \       const internal::Matcher<QualType>&InnerMatcher)                         \     : InnerMatcher(InnerMatcher) {}                                            \   template<typename T> operator internal::Matcher<T>() {                      \     return internal::Matcher<T>(new internal::TypeTraverseMatcher<T>(          \       InnerMatcher,&T::FunctionName));                                        \   }                                                                            \ private:                                                                       \   const internal::Matcher<QualType> InnerMatcher;                              \ };                                                                             \ class Variadic##MatcherName##TypeTraverseMatcher                               \     : public llvm::VariadicFunction<                                           \         Polymorphic##MatcherName##TypeMatcher,                                 \         internal::Matcher<QualType>,                                           \         internal::makeTypeAllOfComposite<                                      \           Polymorphic##MatcherName##TypeMatcher, QualType>> {                 \ public:                                                                        \   Variadic##MatcherName##TypeTraverseMatcher() {}                              \ };                                                                             \ const Variadic##MatcherName##TypeTraverseMatcher MatcherName
+value|class Polymorphic##MatcherName##TypeMatcher {                                \   public:                                                                      \     Polymorphic##MatcherName##TypeMatcher(                                     \         const internal::Matcher<QualType>&InnerMatcher)                       \         : InnerMatcher(InnerMatcher) {                                         \     }                                                                          \     template<typename T> operator internal:: Matcher< T>() {                  \       return internal::Matcher<T>(new internal::TypeTraverseMatcher<T>(        \                                           InnerMatcher,&T::FunctionName));    \     }                                                                          \   private:                                                                     \     const internal::Matcher<QualType> InnerMatcher;                            \   }                                                                            \   ;                                                                            \   class Variadic##MatcherName##TypeTraverseMatcher                             \       : public llvm::VariadicFunction<                                         \           Polymorphic##MatcherName##TypeMatcher, internal::Matcher<QualType>,  \           internal::makeTypeAllOfComposite<                                    \               Polymorphic##MatcherName##TypeMatcher, QualType>> {             \   public:                                                                      \     Variadic##MatcherName##TypeTraverseMatcher() {                             \     }                                                                          \   }                                                                            \   ;                                                                            \   const Variadic##MatcherName##TypeTraverseMatcher MatcherName
 end_define
 
 begin_comment
@@ -536,7 +687,7 @@ parameter_list|,
 name|FunctionName
 parameter_list|)
 define|\
-value|class Polymorphic##MatcherName##TypeLocMatcher {                               \ public:                                                                        \   Polymorphic##MatcherName##TypeLocMatcher(                                    \       const internal::Matcher<TypeLoc>&InnerMatcher)                          \     : InnerMatcher(InnerMatcher) {}                                            \   template<typename T> operator internal::Matcher<T>() {                      \     return internal::Matcher<T>(new internal::TypeLocTraverseMatcher<T>(       \       InnerMatcher,&T::FunctionName##Loc));                                   \   }                                                                            \ private:                                                                       \   const internal::Matcher<TypeLoc> InnerMatcher;                               \ };                                                                             \ class Variadic##MatcherName##TypeLocTraverseMatcher                            \     : public llvm::VariadicFunction<                                           \         Polymorphic##MatcherName##TypeLocMatcher,                              \         internal::Matcher<TypeLoc>,                                            \         internal::makeTypeAllOfComposite<                                      \           Polymorphic##MatcherName##TypeLocMatcher, TypeLoc>> {               \ public:                                                                        \   Variadic##MatcherName##TypeLocTraverseMatcher() {}                           \ };                                                                             \ const Variadic##MatcherName##TypeLocTraverseMatcher MatcherName##Loc;          \ AST_TYPE_TRAVERSE_MATCHER(MatcherName, FunctionName##Type)
+value|class Polymorphic##MatcherName##TypeLocMatcher {                             \   public:                                                                      \     Polymorphic##MatcherName##TypeLocMatcher(                                  \         const internal::Matcher<TypeLoc>&InnerMatcher)                        \         : InnerMatcher(InnerMatcher) {                                         \     }                                                                          \     template<typename T> operator internal:: Matcher< T>() {                  \       return internal::Matcher<T>(                                             \           new internal::TypeLocTraverseMatcher<T>(InnerMatcher,                \&T::FunctionName##Loc));     \     }                                                                          \   private:                                                                     \     const internal::Matcher<TypeLoc> InnerMatcher;                             \   }                                                                            \   ;                                                                            \   class Variadic##MatcherName##TypeLocTraverseMatcher                          \       : public llvm::VariadicFunction<                                         \           Polymorphic##MatcherName##TypeLocMatcher, internal::Matcher<TypeLoc>,\           internal::makeTypeAllOfComposite<                                    \               Polymorphic##MatcherName##TypeLocMatcher, TypeLoc>> {           \   public:                                                                      \     Variadic##MatcherName##TypeLocTraverseMatcher() {                          \     }                                                                          \   }                                                                            \   ;                                                                            \   const Variadic##MatcherName##TypeLocTraverseMatcher MatcherName##Loc;        \   AST_TYPE_TRAVERSE_MATCHER(MatcherName, FunctionName##Type)
 end_define
 
 begin_endif

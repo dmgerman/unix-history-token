@@ -243,6 +243,11 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|bool
+name|AlwaysPrintImm0
+operator|>
 name|void
 name|printAddrMode3Operand
 argument_list|(
@@ -281,6 +286,8 @@ argument_list|,
 argument|unsigned Op
 argument_list|,
 argument|raw_ostream&O
+argument_list|,
+argument|bool AlwaysPrintImm0
 argument_list|)
 block|;
 name|void
@@ -323,6 +330,11 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|bool
+name|AlwaysPrintImm0
+operator|>
 name|void
 name|printAddrMode5Operand
 argument_list|(
@@ -525,6 +537,11 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|bool
+name|AlwaysPrintImm0
+operator|>
 name|void
 name|printAddrModeImm12Operand
 argument_list|(
@@ -747,6 +764,16 @@ argument_list|)
 block|;
 name|void
 name|printRotImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printGPRPairOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

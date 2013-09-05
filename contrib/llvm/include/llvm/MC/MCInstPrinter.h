@@ -43,6 +43,18 @@ directive|define
 name|LLVM_MC_MCINSTPRINTER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Format.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -65,6 +77,20 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
+name|namespace
+name|HexStyle
+block|{
+enum|enum
+name|Style
+block|{
+name|C
+block|,
+comment|///< 0xff
+name|Asm
+comment|///< 0ffh
+block|}
+enum|;
+block|}
 comment|/// MCInstPrinter - This is an instance of a target assembly language printer
 comment|/// that converts an MCInst to valid target assembly syntax.
 name|class
@@ -102,6 +128,16 @@ comment|/// True if we are printing marked up assembly.
 name|bool
 name|UseMarkup
 decl_stmt|;
+comment|/// True if we are printing immediates as hex.
+name|bool
+name|PrintImmHex
+decl_stmt|;
+comment|/// Which style to use for printing hexadecimal values.
+name|HexStyle
+operator|::
+name|Style
+name|PrintHexStyle
+expr_stmt|;
 comment|/// Utility function for printing annotations.
 name|void
 name|printAnnotation
@@ -162,6 +198,16 @@ operator|,
 name|UseMarkup
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|PrintImmHex
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|PrintHexStyle
+argument_list|(
+argument|HexStyle::C
 argument_list|)
 block|{}
 name|virtual
@@ -291,6 +337,108 @@ name|b
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|getPrintImmHex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrintImmHex
+return|;
+block|}
+name|void
+name|setPrintImmHex
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|PrintImmHex
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|HexStyle
+operator|::
+name|Style
+name|getPrintHexStyleHex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrintHexStyle
+return|;
+block|}
+name|void
+name|setPrintImmHex
+argument_list|(
+name|HexStyle
+operator|::
+name|Style
+name|Value
+argument_list|)
+block|{
+name|PrintHexStyle
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// Utility function to print immediates in decimal or hex.
+name|format_object1
+operator|<
+name|int64_t
+operator|>
+name|formatImm
+argument_list|(
+argument|const int64_t Value
+argument_list|)
+specifier|const
+block|{
+return|return
+name|PrintImmHex
+operator|?
+name|formatHex
+argument_list|(
+name|Value
+argument_list|)
+operator|:
+name|formatDec
+argument_list|(
+name|Value
+argument_list|)
+return|;
+block|}
+comment|/// Utility functions to print decimal/hexadecimal values.
+name|format_object1
+operator|<
+name|int64_t
+operator|>
+name|formatDec
+argument_list|(
+argument|const int64_t Value
+argument_list|)
+specifier|const
+expr_stmt|;
+name|format_object1
+operator|<
+name|int64_t
+operator|>
+name|formatHex
+argument_list|(
+argument|const int64_t Value
+argument_list|)
+specifier|const
+expr_stmt|;
+name|format_object1
+operator|<
+name|uint64_t
+operator|>
+name|formatHex
+argument_list|(
+argument|const uint64_t Value
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

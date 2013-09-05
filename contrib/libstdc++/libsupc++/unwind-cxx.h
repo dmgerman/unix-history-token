@@ -474,7 +474,7 @@ literal|"C"
 name|void
 name|__cxa_call_terminate
 parameter_list|(
-name|void
+name|_Unwind_Exception
 modifier|*
 parameter_list|)
 function_decl|__attribute__

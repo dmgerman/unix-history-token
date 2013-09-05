@@ -105,7 +105,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|CPlusPlus0x
+name|CPlusPlus11
 init|=
 operator|(
 literal|1
@@ -292,9 +292,9 @@ operator|::
 name|CPlusPlus
 return|;
 block|}
-comment|/// isCPlusPlus0x - Language is a C++0x variant.
+comment|/// isCPlusPlus11 - Language is a C++0x variant.
 name|bool
-name|isCPlusPlus0x
+name|isCPlusPlus11
 argument_list|()
 specifier|const
 block|{
@@ -303,7 +303,7 @@ name|Flags
 operator|&
 name|frontend
 operator|::
-name|CPlusPlus0x
+name|CPlusPlus11
 return|;
 block|}
 comment|/// isCPlusPlus1y - Language is a C++1y variant.

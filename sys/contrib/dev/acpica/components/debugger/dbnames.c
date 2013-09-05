@@ -598,6 +598,54 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpNamespacePaths  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump entire namespace with full object pathnames and object  *              type information. Alternative to "namespace" command.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDbDumpNamespacePaths
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|AcpiDbSetOutputDestination
+argument_list|(
+name|ACPI_DB_DUPLICATE_OUTPUT
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"ACPI Namespace (from root):\n"
+argument_list|)
+expr_stmt|;
+comment|/* Display the entire namespace */
+name|AcpiDbSetOutputDestination
+argument_list|(
+name|ACPI_DB_REDIRECTABLE_OUTPUT
+argument_list|)
+expr_stmt|;
+name|AcpiNsDumpObjectPaths
+argument_list|(
+name|ACPI_TYPE_ANY
+argument_list|,
+name|ACPI_DISPLAY_SUMMARY
+argument_list|,
+name|ACPI_UINT32_MAX
+argument_list|,
+name|ACPI_OWNER_ID_MAX
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
+name|AcpiDbSetOutputDestination
+argument_list|(
+name|ACPI_DB_CONSOLE_OUTPUT
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDumpNamespaceByOwner  *  * PARAMETERS:  OwnerArg        - Owner ID whose nodes will be displayed  *              DepthArg        - Maximum tree depth to be dumped  *  * RETURN:      None  *  * DESCRIPTION: Dump elements of the namespace that are owned by the OwnerId.  *  ******************************************************************************/
 end_comment
 
@@ -1070,6 +1118,12 @@ name|char
 modifier|*
 name|Pathname
 decl_stmt|;
+name|char
+name|StringBuffer
+index|[
+literal|48
+index|]
+decl_stmt|;
 name|Predefined
 operator|=
 name|AcpiUtMatchPredefinedMethod
@@ -1131,27 +1185,33 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|AcpiOsPrintf
+name|AcpiUtGetExpectedReturnTypes
 argument_list|(
-literal|"%-32s arg %X ret %2.2X"
-argument_list|,
-name|Pathname
-argument_list|,
-operator|(
-name|Predefined
-operator|->
-name|Info
-operator|.
-name|ArgumentList
-operator|&
-name|METHOD_ARG_MASK
-operator|)
+name|StringBuffer
 argument_list|,
 name|Predefined
 operator|->
 name|Info
 operator|.
 name|ExpectedBtypes
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%-32s Arguments %X, Return Types: %s"
+argument_list|,
+name|Pathname
+argument_list|,
+name|METHOD_GET_ARG_COUNT
+argument_list|(
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|ArgumentList
+argument_list|)
+argument_list|,
+name|StringBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,7 +1221,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" PkgType %2.2X ObjType %2.2X Count %2.2X"
+literal|" (PkgType %2.2X, ObjType %2.2X, Count %2.2X)"
 argument_list|,
 name|Package
 operator|->
@@ -1188,13 +1248,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|AcpiNsCheckParameterCount
+comment|/* Check that the declared argument count matches the ACPI spec */
+name|AcpiNsCheckAcpiCompliance
 argument_list|(
 name|Pathname
 argument_list|,
 name|Node
-argument_list|,
-name|ACPI_UINT32_MAX
 argument_list|,
 name|Predefined
 argument_list|)
@@ -1720,7 +1779,7 @@ name|Node
 operator|->
 name|Name
 operator|.
-name|Integer
+name|Ascii
 argument_list|)
 condition|)
 block|{
@@ -1965,11 +2024,12 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_SIZE
+name|Address
+decl_stmt|;
 comment|/* Convert string to object pointer */
-name|ObjDesc
+name|Address
 operator|=
-name|ACPI_TO_POINTER
-argument_list|(
 name|ACPI_STRTOUL
 argument_list|(
 name|ObjectArg
@@ -1978,6 +2038,12 @@ name|NULL
 argument_list|,
 literal|16
 argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|=
+name|ACPI_TO_POINTER
+argument_list|(
+name|Address
 argument_list|)
 expr_stmt|;
 comment|/* Search all nodes in namespace */

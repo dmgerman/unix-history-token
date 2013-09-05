@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLS PRF (SHA1 + MD5)  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * TLS PRF (SHA1 + MD5)  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -27,19 +27,13 @@ directive|include
 file|"md5.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"crypto.h"
-end_include
-
 begin_comment
-comment|/**  * tls_prf - Pseudo-Random Function for TLS (TLS-PRF, RFC 2246)  * @secret: Key for PRF  * @secret_len: Length of the key in bytes  * @label: A unique label for each purpose of the PRF  * @seed: Seed value to bind into the key  * @seed_len: Length of the seed  * @out: Buffer for the generated pseudo-random key  * @outlen: Number of bytes of key to generate  * Returns: 0 on success, -1 on failure.  *  * This function is used to derive new, cryptographically separate keys from a  * given key in TLS. This PRF is defined in RFC 2246, Chapter 5.  */
+comment|/**  * tls_prf_sha1_md5 - Pseudo-Random Function for TLS (TLS-PRF, RFC 2246)  * @secret: Key for PRF  * @secret_len: Length of the key in bytes  * @label: A unique label for each purpose of the PRF  * @seed: Seed value to bind into the key  * @seed_len: Length of the seed  * @out: Buffer for the generated pseudo-random key  * @outlen: Number of bytes of key to generate  * Returns: 0 on success, -1 on failure.  *  * This function is used to derive new, cryptographically separate keys from a  * given key in TLS. This PRF is defined in RFC 2246, Chapter 5.  */
 end_comment
 
 begin_function
 name|int
-name|tls_prf
+name|tls_prf_sha1_md5
 parameter_list|(
 specifier|const
 name|u8
@@ -286,7 +280,7 @@ name|S2
 operator|--
 expr_stmt|;
 block|}
-name|hmac_md5_vector_non_fips_allow
+name|hmac_md5_vector
 argument_list|(
 name|S1
 argument_list|,
@@ -361,7 +355,7 @@ operator|==
 name|MD5_MAC_LEN
 condition|)
 block|{
-name|hmac_md5_vector_non_fips_allow
+name|hmac_md5_vector
 argument_list|(
 name|S1
 argument_list|,
@@ -380,7 +374,7 @@ name|MD5_pos
 operator|=
 literal|0
 expr_stmt|;
-name|hmac_md5_non_fips_allow
+name|hmac_md5
 argument_list|(
 name|S1
 argument_list|,

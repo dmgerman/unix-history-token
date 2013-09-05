@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_right.c	10.7 (Berkeley) 3/6/96"
+literal|"$Id: v_right.c,v 10.8 2001/06/25 15:19:34 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,18 +91,14 @@ begin_function
 name|int
 name|v_right
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -317,18 +313,14 @@ begin_function
 name|int
 name|v_dollar
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len

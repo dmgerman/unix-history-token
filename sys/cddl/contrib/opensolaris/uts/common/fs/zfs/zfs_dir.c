@@ -4431,7 +4431,7 @@ expr_stmt|;
 comment|/* 	 * In FreeBSD, access checking for creating an EA is being done 	 * in zfs_setextattr(), 	 */
 ifndef|#
 directive|ifndef
-name|__FreeBSD__
+name|__FreeBSD_kernel__
 if|if
 condition|(
 name|error

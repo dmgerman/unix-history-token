@@ -484,6 +484,7 @@ name|mbuf
 modifier|*
 name|m0
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -527,6 +528,7 @@ name|atmllc
 modifier|*
 name|atmllc
 decl_stmt|;
+specifier|const
 name|struct
 name|atmllc
 modifier|*
@@ -692,6 +694,7 @@ expr_stmt|;
 name|llc_hdr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|atmllc
 operator|*

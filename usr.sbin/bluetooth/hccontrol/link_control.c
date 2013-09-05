@@ -1776,7 +1776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* hci_diconnect */
+comment|/* hci_disconnect */
 end_comment
 
 begin_comment

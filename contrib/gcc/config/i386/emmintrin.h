@@ -23,11 +23,26 @@ directive|define
 name|_EMMINTRIN_H_INCLUDED
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__SSE2__
-end_ifdef
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"SSE2 instruction set not enabled"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* We need definitions from the SSE header files*/
+end_comment
 
 begin_include
 include|#

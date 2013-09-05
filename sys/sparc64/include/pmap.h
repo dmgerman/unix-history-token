@@ -98,9 +98,6 @@ decl_stmt|;
 name|int32_t
 name|color
 decl_stmt|;
-name|uint32_t
-name|flags
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -3085,9 +3085,22 @@ argument_list|,
 literal|"</ctlfelist>\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sbuf_finish
 argument_list|(
 name|sb
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: sbuf_finish"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|printf
@@ -16687,6 +16700,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sbuf_finish
 argument_list|(
 name|devlist
@@ -16697,6 +16712,17 @@ name|devlist
 operator|->
 name|level
 index|]
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: sbuf_finish"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|str

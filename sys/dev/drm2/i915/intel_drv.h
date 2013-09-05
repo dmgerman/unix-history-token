@@ -1503,6 +1503,7 @@ parameter_list|,
 name|int
 name|fitting_mode
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*

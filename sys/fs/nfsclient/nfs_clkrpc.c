@@ -206,6 +206,8 @@ operator|&
 name|nd
 operator|.
 name|nd_mrep
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|nd
@@ -932,20 +934,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|svcpool_destroy
-argument_list|(
-name|nfscbd_pool
-argument_list|)
-expr_stmt|;
-name|nfscbd_pool
-operator|=
-name|NULL
-expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+name|nfscbd_pool
+operator|==
+name|NULL
+condition|)
+block|{
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -979,6 +975,7 @@ expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 

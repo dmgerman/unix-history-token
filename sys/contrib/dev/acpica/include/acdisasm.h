@@ -213,6 +213,8 @@ name|ACPI_DMT_UINT64
 block|,
 name|ACPI_DMT_BUF7
 block|,
+name|ACPI_DMT_BUF10
+block|,
 name|ACPI_DMT_BUF16
 block|,
 name|ACPI_DMT_BUF128
@@ -2448,6 +2450,15 @@ name|AcpiDmUnresolvedWarning
 parameter_list|(
 name|UINT8
 name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmGetExternalsFromFile
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

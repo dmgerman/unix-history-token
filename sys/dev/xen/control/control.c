@@ -187,7 +187,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<machine/intr_machdep.h>
 end_include
 
 begin_include
@@ -206,6 +206,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -248,6 +254,18 @@ begin_include
 include|#
 directive|include
 file|<xen/xenbus/xenbusvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/xenvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/xen/xenfunc.h>
 end_include
 
 begin_comment
@@ -635,6 +653,9 @@ expr_stmt|;
 name|gnttab_suspend
 argument_list|()
 expr_stmt|;
+name|intr_suspend
+argument_list|()
+expr_stmt|;
 name|max_pfn
 operator|=
 name|HYPERVISOR_shared_info
@@ -838,7 +859,7 @@ expr_stmt|;
 name|gnttab_resume
 argument_list|()
 expr_stmt|;
-name|irq_resume
+name|intr_resume
 argument_list|()
 expr_stmt|;
 name|local_irq_enable
@@ -1034,7 +1055,7 @@ comment|/* 	 * Prevent any races with evtchn_interrupt() handler. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
-name|irq_suspend
+name|intr_suspend
 argument_list|()
 expr_stmt|;
 name|suspend_cancelled
@@ -1044,15 +1065,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|suspend_cancelled
-condition|)
-name|irq_resume
-argument_list|()
-expr_stmt|;
-else|else
-name|xenpci_resume
+name|intr_resume
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Re-enable interrupts and put the scheduler back to normal. 	 */

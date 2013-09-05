@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -71,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -131,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -1831,7 +1849,30 @@ literal|0
 operator|)
 condition|)
 block|{
+comment|/* 		 * Avoid confusing lower layers. 		 */
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Send off the packet via outgoing interface 		 */
+name|IP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip
+argument_list|,
+name|ifp
+argument_list|,
+name|ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 call|(
@@ -1948,6 +1989,29 @@ operator|->
 name|m_nextpkt
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* 				 * Avoid confusing lower layers. 				 */
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|IP_PROBE
+argument_list|(
+name|send
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip
+argument_list|,
+name|ifp
+argument_list|,
+name|ip
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

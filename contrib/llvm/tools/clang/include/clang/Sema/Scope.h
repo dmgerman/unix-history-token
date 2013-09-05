@@ -101,41 +101,41 @@ comment|/// scope, which defines the sorts of things the scope contains.
 enum|enum
 name|ScopeFlags
 block|{
-comment|/// FnScope - This indicates that the scope corresponds to a function, which
+comment|/// \brief This indicates that the scope corresponds to a function, which
 comment|/// means that labels are set here.
 name|FnScope
 init|=
 literal|0x01
 block|,
-comment|/// BreakScope - This is a while,do,switch,for, etc that can have break
-comment|/// stmts embedded into it.
+comment|/// \brief This is a while, do, switch, for, etc that can have break
+comment|/// statements embedded into it.
 name|BreakScope
 init|=
 literal|0x02
 block|,
-comment|/// ContinueScope - This is a while,do,for, which can have continue
-comment|/// stmt embedded into it.
+comment|/// \brief This is a while, do, for, which can have continue statements
+comment|/// embedded into it.
 name|ContinueScope
 init|=
 literal|0x04
 block|,
-comment|/// DeclScope - This is a scope that can contain a declaration.  Some scopes
+comment|/// \brief This is a scope that can contain a declaration.  Some scopes
 comment|/// just contain loop constructs but don't contain decls.
 name|DeclScope
 init|=
 literal|0x08
 block|,
-comment|/// ControlScope - The controlling scope in a if/switch/while/for statement.
+comment|/// \brief The controlling scope in a if/switch/while/for statement.
 name|ControlScope
 init|=
 literal|0x10
 block|,
-comment|/// ClassScope - The scope of a struct/union/class definition.
+comment|/// \brief The scope of a struct/union/class definition.
 name|ClassScope
 init|=
 literal|0x20
 block|,
-comment|/// BlockScope - This is a scope that corresponds to a block/closure object.
+comment|/// \brief This is a scope that corresponds to a block/closure object.
 comment|/// Blocks serve as top-level scopes for some objects like labels, they
 comment|/// also prevent things like break and continue.  BlockScopes always have
 comment|/// the FnScope and DeclScope flags set as well.
@@ -143,7 +143,7 @@ name|BlockScope
 init|=
 literal|0x40
 block|,
-comment|/// TemplateParamScope - This is a scope that corresponds to the
+comment|/// \brief This is a scope that corresponds to the
 comment|/// template parameters of a C++ template. Template parameter
 comment|/// scope starts at the 'template' keyword and ends when the
 comment|/// template declaration ends.
@@ -151,58 +151,46 @@ name|TemplateParamScope
 init|=
 literal|0x80
 block|,
-comment|/// FunctionPrototypeScope - This is a scope that corresponds to the
+comment|/// \brief This is a scope that corresponds to the
 comment|/// parameters within a function prototype.
 name|FunctionPrototypeScope
 init|=
 literal|0x100
 block|,
-comment|/// AtCatchScope - This is a scope that corresponds to the Objective-C
-comment|/// \@catch statement.
-name|AtCatchScope
+comment|/// \brief This is a scope that corresponds to the parameters within
+comment|/// a function prototype for a function declaration (as opposed to any
+comment|/// other kind of function declarator). Always has FunctionPrototypeScope
+comment|/// set as well.
+name|FunctionDeclarationScope
 init|=
 literal|0x200
 block|,
-comment|/// ObjCMethodScope - This scope corresponds to an Objective-C method body.
-comment|/// It always has FnScope and DeclScope set as well.
-name|ObjCMethodScope
+comment|/// \brief This is a scope that corresponds to the Objective-C
+comment|/// \@catch statement.
+name|AtCatchScope
 init|=
 literal|0x400
 block|,
-comment|/// SwitchScope - This is a scope that corresponds to a switch statement.
-name|SwitchScope
+comment|/// \brief This scope corresponds to an Objective-C method body.
+comment|/// It always has FnScope and DeclScope set as well.
+name|ObjCMethodScope
 init|=
 literal|0x800
 block|,
-comment|/// TryScope - This is the scope of a C++ try statement.
-name|TryScope
+comment|/// \brief This is a scope that corresponds to a switch statement.
+name|SwitchScope
 init|=
 literal|0x1000
 block|,
-comment|/// CatchScope - This is the scope of a C++ catch statement.
-name|CatchScope
+comment|/// \brief This is the scope of a C++ try statement.
+name|TryScope
 init|=
 literal|0x2000
 block|,
-comment|/// FnTryCatchScope - This is the scope for a function-level C++ try or
-comment|/// catch scope.
+comment|/// \brief This is the scope for a function-level C++ try or catch scope.
 name|FnTryCatchScope
 init|=
 literal|0x4000
-block|,
-comment|/// FnTryScope - This is the scope of a function-level C++ try scope.
-name|FnTryScope
-init|=
-name|TryScope
-operator||
-name|FnTryCatchScope
-block|,
-comment|/// FnCatchScope - This is the scope of a function-level C++ catch scope.
-name|FnCatchScope
-init|=
-name|CatchScope
-operator||
-name|FnTryCatchScope
 block|}
 enum|;
 name|private
@@ -676,6 +664,18 @@ return|return
 name|ErrorTrap
 operator|.
 name|hasErrorOccurred
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasUnrecoverableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ErrorTrap
+operator|.
+name|hasUnrecoverableErrorOccurred
 argument_list|()
 return|;
 block|}

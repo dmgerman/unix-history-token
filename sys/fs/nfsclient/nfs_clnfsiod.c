@@ -1348,6 +1348,21 @@ operator|&
 name|ncl_iod_mutex
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Make sure the nmp hasn't been dismounted as soon as 		 * ncl_doio() completes for the last buffer. 		 */
+name|nmp
+operator|=
+name|ncl_iodmount
+index|[
+name|myiod
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|nmp
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* 		 * If there are more than one iod on this mount, then defect 		 * so that the iods can be shared out fairly between the mounts 		 */
 if|if
 condition|(

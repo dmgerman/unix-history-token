@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * wpa_supplicant - Temporary BSSID blacklist  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * wpa_supplicant - Temporary BSSID blacklist  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -53,6 +53,19 @@ name|wpa_blacklist
 modifier|*
 name|e
 decl_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|==
+name|NULL
+operator|||
+name|bssid
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|e
 operator|=
 name|wpa_s
@@ -96,7 +109,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * wpa_blacklist_add - Add an BSSID to the blacklist  * @wpa_s: Pointer to wpa_supplicant data  * @bssid: BSSID to be added to the blacklist  * Returns: 0 on success, -1 on failure  *  * This function adds the specified BSSID to the blacklist or increases the  * blacklist count if the BSSID was already listed. It should be called when  * an association attempt fails either due to the selected BSS rejecting  * association or due to timeout.  *  * This blacklist is used to force %wpa_supplicant to go through all available  * BSSes before retrying to associate with an BSS that rejected or timed out  * association. It does not prevent the listed BSS from being used; it only  * changes the order in which they are tried.  */
+comment|/**  * wpa_blacklist_add - Add an BSSID to the blacklist  * @wpa_s: Pointer to wpa_supplicant data  * @bssid: BSSID to be added to the blacklist  * Returns: Current blacklist count on success, -1 on failure  *  * This function adds the specified BSSID to the blacklist or increases the  * blacklist count if the BSSID was already listed. It should be called when  * an association attempt fails either due to the selected BSS rejecting  * association or due to timeout.  *  * This blacklist is used to force %wpa_supplicant to go through all available  * BSSes before retrying to associate with an BSS that rejected or timed out  * association. It does not prevent the listed BSS from being used; it only  * changes the order in which they are tried.  */
 end_comment
 
 begin_function
@@ -119,6 +132,20 @@ name|wpa_blacklist
 modifier|*
 name|e
 decl_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|==
+name|NULL
+operator|||
+name|bssid
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|e
 operator|=
 name|wpa_blacklist_get
@@ -158,7 +185,9 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|e
+operator|->
+name|count
 return|;
 block|}
 name|e
@@ -228,7 +257,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|e
+operator|->
+name|count
 return|;
 block|}
 end_function
@@ -262,6 +293,20 @@ name|prev
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|wpa_s
+operator|==
+name|NULL
+operator|||
+name|bssid
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|e
 operator|=
 name|wpa_s
@@ -380,6 +425,11 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
+name|int
+name|max_count
+init|=
+literal|0
+decl_stmt|;
 name|e
 operator|=
 name|wpa_s
@@ -397,6 +447,20 @@ condition|(
 name|e
 condition|)
 block|{
+if|if
+condition|(
+name|e
+operator|->
+name|count
+operator|>
+name|max_count
+condition|)
+name|max_count
+operator|=
+name|e
+operator|->
+name|count
+expr_stmt|;
 name|prev
 operator|=
 name|e
@@ -430,6 +494,12 @@ name|prev
 argument_list|)
 expr_stmt|;
 block|}
+name|wpa_s
+operator|->
+name|extra_blacklist_count
+operator|+=
+name|max_count
+expr_stmt|;
 block|}
 end_function
 

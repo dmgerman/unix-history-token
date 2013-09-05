@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/inode.h>
 end_include
 
@@ -64,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/fs.h>
+file|<fs/ext2fs/ext2_dinode.h>
 end_include
 
 begin_include
@@ -80,7 +86,7 @@ file|<fs/ext2fs/ext2_mount.h>
 end_include
 
 begin_comment
-comment|/*  * Balloc defines the structure of file system storage  * by allocating the physical blocks on a device given  * the inode and the logical block number in a file.  */
+comment|/*  * Balloc defines the structure of filesystem storage  * by allocating the physical blocks on a device given  * the inode and the logical block number in a file.  */
 end_comment
 
 begin_function
@@ -92,7 +98,7 @@ name|inode
 modifier|*
 name|ip
 parameter_list|,
-name|int32_t
+name|e2fs_lbn_t
 name|lbn
 parameter_list|,
 name|int
@@ -123,9 +129,6 @@ name|ext2mount
 modifier|*
 name|ump
 decl_stmt|;
-name|int32_t
-name|nb
-decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -153,9 +156,12 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|uint32_t
-name|newb
+name|e4fs_daddr_t
+name|nb
 decl_stmt|,
+name|newb
+decl_stmt|;
+name|e2fs_daddr_t
 modifier|*
 name|bap
 decl_stmt|,
@@ -638,7 +644,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|num
@@ -723,9 +729,6 @@ name|lbn
 argument_list|,
 name|pref
 argument_list|,
-operator|(
-name|int
-operator|)
 name|fs
 operator|->
 name|e2fs_bsize
@@ -896,7 +899,7 @@ block|}
 name|bap
 operator|=
 operator|(
-name|int32_t
+name|e2fs_daddr_t
 operator|*
 operator|)
 name|bp

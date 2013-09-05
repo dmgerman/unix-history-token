@@ -93,7 +93,7 @@ end_typedef
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DEBUG
+name|OPENSOLARIS_WITNESS
 end_ifndef
 
 begin_define
@@ -186,10 +186,6 @@ parameter_list|)
 value|sx_xlocked(lock)
 end_define
 
-begin_comment
-comment|/* TODO: Change to sx_xholder() once it is moved from kern_sx.c to sx.h. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -197,7 +193,7 @@ name|mutex_owner
 parameter_list|(
 name|lock
 parameter_list|)
-value|((lock)->sx_lock& SX_LOCK_SHARED ? NULL : (struct thread *)SX_OWNER((lock)->sx_lock))
+value|sx_xholder(lock)
 end_define
 
 begin_endif

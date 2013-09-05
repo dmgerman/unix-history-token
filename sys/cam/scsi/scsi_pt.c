@@ -1838,7 +1838,7 @@ name|ccb_state
 operator|=
 name|PT_CCB_BUFFER_IO_UA
 expr_stmt|;
-comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
+comment|/* 		 * Block out any asynchronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -2215,7 +2215,7 @@ operator||=
 name|BIO_ERROR
 expr_stmt|;
 block|}
-comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
+comment|/* 		 * Block out any asynchronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|LIST_REMOVE
 argument_list|(
 operator|&

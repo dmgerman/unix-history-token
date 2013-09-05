@@ -41,7 +41,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Common signature for all zio compress/decompress functions.  */
+comment|/* Common signature for all zio compress functions. */
 typedef|typedef
 name|size_t
 name|zio_compress_func_t
@@ -63,6 +63,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/* Common signature for all zio decompress functions. */
 typedef|typedef
 name|int
 name|zio_decompress_func_t
@@ -314,6 +315,9 @@ name|dst
 parameter_list|,
 name|size_t
 name|s_len
+parameter_list|,
+name|size_t
+name|minblocksize
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -337,6 +341,21 @@ name|s_len
 parameter_list|,
 name|size_t
 name|d_len
+parameter_list|)
+function_decl|;
+comment|/*  * Module lifetime management.  */
+specifier|extern
+name|void
+name|zio_compress_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zio_compress_fini
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
@@ -165,10 +165,8 @@ value|console.domU.evtchn
 end_define
 
 begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|console_irq
+name|xen_intr_handle_t
+name|console_handle
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +183,13 @@ specifier|extern
 name|struct
 name|mtx
 name|cn_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|device_t
+name|xencons_dev
 decl_stmt|;
 end_decl_stmt
 
@@ -364,11 +369,9 @@ name|out_prod
 operator|=
 name|prod
 expr_stmt|;
-name|notify_remote_via_evtchn
+name|xen_intr_signal
 argument_list|(
-name|xen_start_info
-operator|->
-name|console_evtchn
+name|console_handle
 argument_list|)
 expr_stmt|;
 return|return
@@ -475,11 +478,9 @@ argument_list|(
 name|cn_mtx
 argument_list|)
 expr_stmt|;
-name|notify_remote_via_evtchn
+name|xen_intr_signal
 argument_list|(
-name|xen_start_info
-operator|->
-name|console_evtchn
+name|console_handle
 argument_list|)
 expr_stmt|;
 name|xencons_tx
@@ -531,13 +532,15 @@ literal|0
 return|;
 name|err
 operator|=
-name|bind_caller_port_to_irqhandler
+name|xen_intr_bind_local_port
 argument_list|(
+name|xencons_dev
+argument_list|,
 name|xen_start_info
 operator|->
 name|console_evtchn
 argument_list|,
-literal|"xencons"
+name|NULL
 argument_list|,
 name|xencons_handle_input
 argument_list|,
@@ -548,7 +551,7 @@ operator||
 name|INTR_MPSAFE
 argument_list|,
 operator|&
-name|console_irq
+name|console_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -601,9 +604,10 @@ operator|->
 name|console_evtchn
 condition|)
 return|return;
-name|unbind_from_irqhandler
+name|xen_intr_unbind
 argument_list|(
-name|console_irq
+operator|&
+name|console_handle
 argument_list|)
 expr_stmt|;
 block|}

@@ -466,10 +466,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|sleepinit
 parameter_list|(
 name|void
+modifier|*
+name|unused
 parameter_list|)
 block|{
 name|hogticks
@@ -490,7 +493,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * General sleep call.  Suspends the current thread until a wakeup is  * performed on the specified identifier.  The thread will then be made  * runnable with the specified priority.  Sleeps at most timo/hz seconds  * (0 means no timeout).  If pri includes the PCATCH flag, let signals  * interrupt the sleep, otherwise ignore them while sleeping.  Returns 0 if  * awakened, EWOULDBLOCK if the timeout expires.  If PCATCH is set and a  * signal becomes pending, ERESTART is returned if the current system  * call should be restarted if possible, and EINTR is returned if the system  * call should be interrupted by the signal (return EINTR).  *  * The lock argument is unlocked before the caller is suspended, and  * re-locked before _sleep() returns.  If priority includes the PDROP  * flag the lock is not re-locked before returning.  */
+comment|/*  * vmem tries to lock the sleepq mutexes when free'ing kva, so make sure  * it is available.  */
+end_comment
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|sleepinit
+argument_list|,
+name|SI_SUB_KMEM
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|sleepinit
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * General sleep call.  Suspends the current thread until a wakeup is  * performed on the specified identifier.  The thread will then be made  * runnable with the specified priority.  Sleeps at most sbt units of time  * (0 means no timeout).  If pri includes the PCATCH flag, let signals  * interrupt the sleep, otherwise ignore them while sleeping.  Returns 0 if  * awakened, EWOULDBLOCK if the timeout expires.  If PCATCH is set and a  * signal becomes pending, ERESTART is returned if the current system  * call should be restarted if possible, and EINTR is returned if the system  * call should be interrupted by the signal (return EINTR).  *  * The lock argument is unlocked before the caller is suspended, and  * re-locked before _sleep() returns.  If priority includes the PDROP  * flag the lock is not re-locked before returning.  */
 end_comment
 
 begin_function
@@ -1459,24 +1482,14 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|sbt_sec
-decl_stmt|;
-name|sbt_sec
-operator|=
-name|sbintime_getsec
-argument_list|(
-name|sbt
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
-name|sbt_sec
+name|sbt
 operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"pause: timo must be>= 0"
+literal|"pause: timeout must be>= 0"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1499,9 +1512,9 @@ block|{
 comment|/* 		 * We delay one second at a time to avoid overflowing the 		 * system specific DELAY() function(s): 		 */
 while|while
 condition|(
-name|sbt_sec
-operator|>
-literal|0
+name|sbt
+operator|>=
+name|SBT_1S
 condition|)
 block|{
 name|DELAY
@@ -1509,19 +1522,33 @@ argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|sbt_sec
-operator|--
+name|sbt
+operator|-=
+name|SBT_1S
 expr_stmt|;
 block|}
-name|DELAY
-argument_list|(
+comment|/* Do the delay remainder, if any */
+name|sbt
+operator|=
 operator|(
 name|sbt
-operator|&
-literal|0xffffffff
+operator|+
+name|SBT_1US
+operator|-
+literal|1
 operator|)
 operator|/
 name|SBT_1US
+expr_stmt|;
+if|if
+condition|(
+name|sbt
+operator|>
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+name|sbt
 argument_list|)
 expr_stmt|;
 return|return
@@ -2459,11 +2486,17 @@ parameter_list|)
 block|{
 return|return
 operator|(
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|ticks
 operator|-
 name|curthread
 operator|->
 name|td_swvoltick
+argument_list|)
 operator|>=
 name|hogticks
 operator|)

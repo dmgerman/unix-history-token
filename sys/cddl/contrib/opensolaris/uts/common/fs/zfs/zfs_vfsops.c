@@ -852,7 +852,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__FreeBSD__
+name|__FreeBSD_kernel__
 end_ifndef
 
 begin_function
@@ -1040,7 +1040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__FreeBSD__ */
+comment|/* !__FreeBSD_kernel__ */
 end_comment
 
 begin_function
@@ -6500,7 +6500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_check_global_label:  *	Check that the hex label string is appropriate for the dataset  *	being mounted into the global_zone proper.  *  *	Return an error if the hex label string is not default or  *	admin_low/admin_high.  For admin_low labels, the corresponding  *	dataset must be readonly.  */
+comment|/*  * Check that the hex label string is appropriate for the dataset being  * mounted into the global_zone proper.  *  * Return an error if the hex label string is not default or  * admin_low/admin_high.  For admin_low labels, the corresponding  * dataset must be readonly.  */
 end_comment
 
 begin_function
@@ -6613,7 +6613,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs_mount_label_policy:  *	Determine whether the mount is allowed according to MAC check.  *	by comparing (where appropriate) label of the dataset against  *	the label of the zone being mounted into.  If the dataset has  *	no label, create one.  *  *	Returns:  *		 0 :	access allowed  *>0 :	error code, such as EACCES  */
+comment|/*  * Determine whether the mount is allowed according to MAC check.  * by comparing (where appropriate) label of the dataset against  * the label of the zone being mounted into.  If the dataset has  * no label, create one.  *  * Returns 0 if access allowed, error otherwise (e.g. EACCES)  */
 end_comment
 
 begin_function
@@ -8371,45 +8371,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|zfs_vnode_lock
-parameter_list|(
-name|vnode_t
-modifier|*
-name|vp
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-name|ASSERT
-argument_list|(
-name|vp
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|vn_lock
-argument_list|(
-name|vp
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|zfs_root
@@ -8489,7 +8450,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|zfs_vnode_lock
+name|vn_lock
 argument_list|(
 operator|*
 name|vpp
@@ -9470,7 +9431,7 @@ literal|0
 condition|)
 name|err
 operator|=
-name|zfs_vnode_lock
+name|vn_lock
 argument_list|(
 operator|*
 name|vpp
@@ -10075,7 +10036,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|zfs_vnode_lock
+name|vn_lock
 argument_list|(
 operator|*
 name|vpp
@@ -10246,7 +10207,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|zfs_vnode_lock
+name|vn_lock
 argument_list|(
 operator|*
 name|vpp
@@ -10289,7 +10250,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Block out VOPs and close zfsvfs_t::z_os  *  * Note, if successful, then we return with the 'z_teardown_lock' and  * 'z_teardown_inactive_lock' write held.  */
+comment|/*  * Block out VOPs and close zfsvfs_t::z_os  *  * Note, if successful, then we return with the 'z_teardown_lock' and  * 'z_teardown_inactive_lock' write held.  We leave ownership of the underlying  * dataset and objset intact so that they can be atomically handed off during  * a subsequent rollback or recv operation and the resume thereafter.  */
 end_comment
 
 begin_function
@@ -10324,15 +10285,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|dmu_objset_disown
-argument_list|(
-name|zfsvfs
-operator|->
-name|z_os
-argument_list|,
-name|zfsvfs
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10342,7 +10294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reopen zfsvfs_t::z_os and release VOPs.  */
+comment|/*  * Rebuild SA and release VOPs.  Note that ownership of the underlying dataset  * is an invariant across any of the operations that can be performed while the  * filesystem was suspended.  Whether it succeeded or failed, the preconditions  * are the same: the relevant objset and associated dataset are owned by  * zfsvfs, held, and long held on entry.  */
 end_comment
 
 begin_function
@@ -10361,6 +10313,15 @@ parameter_list|)
 block|{
 name|int
 name|err
+decl_stmt|;
+name|znode_t
+modifier|*
+name|zp
+decl_stmt|;
+name|uint64_t
+name|sa_obj
+init|=
+literal|0
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -10384,15 +10345,12 @@ name|z_teardown_inactive_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-name|dmu_objset_own
+comment|/* 	 * We already own this, so just hold and rele it to update the 	 * objset_t, as the one we had before may have been evicted. 	 */
+name|VERIFY0
+argument_list|(
+name|dmu_objset_hold
 argument_list|(
 name|osname
-argument_list|,
-name|DMU_OST_ZFS
-argument_list|,
-name|B_FALSE
 argument_list|,
 name|zfsvfs
 argument_list|,
@@ -10401,31 +10359,45 @@ name|zfsvfs
 operator|->
 name|z_os
 argument_list|)
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
+name|VERIFY3P
+argument_list|(
 name|zfsvfs
 operator|->
 name|z_os
-operator|=
-name|NULL
+operator|->
+name|os_dsl_dataset
+operator|->
+name|ds_owner
+argument_list|,
+operator|==
+argument_list|,
+name|zfsvfs
+argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|znode_t
-modifier|*
-name|zp
-decl_stmt|;
-name|uint64_t
-name|sa_obj
-init|=
-literal|0
-decl_stmt|;
-comment|/* 		 * Make sure version hasn't changed 		 */
+name|VERIFY
+argument_list|(
+name|dsl_dataset_long_held
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_os
+operator|->
+name|os_dsl_dataset
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dmu_objset_rele
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_os
+argument_list|,
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Make sure version hasn't changed 	 */
 name|err
 operator|=
 name|zfs_get_zplprop
@@ -10545,7 +10517,7 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Attempt to re-establish all the active znodes with 		 * their dbufs.  If a zfs_rezget() fails, then we'll let 		 * any potential callers discover that via ZFS_ENTER_VERIFY_VP 		 * when they try to use their znode. 		 */
+comment|/* 	 * Attempt to re-establish all the active znodes with 	 * their dbufs.  If a zfs_rezget() fails, then we'll let 	 * any potential callers discover that via ZFS_ENTER_VERIFY_VP 	 * when they try to use their znode. 	 */
 name|mutex_enter
 argument_list|(
 operator|&
@@ -10598,7 +10570,6 @@ operator|->
 name|z_znodes_lock
 argument_list|)
 expr_stmt|;
-block|}
 name|bail
 label|:
 comment|/* release the VOPs */
@@ -10625,7 +10596,7 @@ condition|(
 name|err
 condition|)
 block|{
-comment|/* 		 * Since we couldn't reopen zfsvfs::z_os, or 		 * setup the sa framework force unmount this file system. 		 */
+comment|/* 		 * Since we couldn't setup the sa framework, try to force 		 * unmount this file system. 		 */
 if|if
 condition|(
 name|vn_vfswlock

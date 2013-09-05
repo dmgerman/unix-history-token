@@ -18,7 +18,7 @@ begin_define
 define|#
 directive|define
 name|SSH_PORTABLE
-value|"p1"
+value|"p2"
 end_define
 
 begin_define
@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|SSH_VERSION_FREEBSD
-value|"FreeBSD-20130322"
+value|"FreeBSD-20130515"
 end_define
 
 begin_define

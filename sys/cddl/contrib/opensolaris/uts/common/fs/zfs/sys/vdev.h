@@ -87,7 +87,7 @@ name|zfs_nocacheflush
 decl_stmt|;
 specifier|extern
 name|boolean_t
-name|zfs_notrim
+name|zfs_trim_enabled
 decl_stmt|;
 specifier|extern
 name|int
@@ -343,6 +343,14 @@ function_decl|;
 specifier|extern
 name|void
 name|vdev_metaslab_set_size
+parameter_list|(
+name|vdev_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|vdev_ashift_optimize
 parameter_list|(
 name|vdev_t
 modifier|*

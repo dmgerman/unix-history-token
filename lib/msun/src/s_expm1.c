@@ -51,10 +51,6 @@ name|one
 init|=
 literal|1.0
 decl_stmt|,
-name|huge
-init|=
-literal|1.0e+300
-decl_stmt|,
 name|tiny
 init|=
 literal|1.0e-300
@@ -112,6 +108,16 @@ end_decl_stmt
 begin_comment
 comment|/* BE8AFDB7 6E09C32D */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|double
+name|huge
+init|=
+literal|1.0e+300
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|double
@@ -756,6 +762,31 @@ name|y
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|expm1
+argument_list|,
+name|expm1l
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

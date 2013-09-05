@@ -382,6 +382,14 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uint32_t
+name|platform_arm_tmr_freq
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -808,6 +816,20 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|platform_arm_tmr_freq
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|clkfreq
+operator|=
+name|platform_arm_tmr_freq
+expr_stmt|;
+else|else
+block|{
 comment|/* Get the base clock frequency */
 name|node
 operator|=
@@ -860,6 +882,7 @@ argument_list|(
 name|clock
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bus_alloc_resources

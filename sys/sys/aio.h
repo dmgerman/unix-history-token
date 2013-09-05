@@ -90,6 +90,13 @@ name|LIO_SYNC
 value|0x3
 end_define
 
+begin_define
+define|#
+directive|define
+name|LIO_MLOCK
+value|0x4
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -342,6 +349,21 @@ operator|*
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Asynchronous mlock  */
+end_comment
+
+begin_function_decl
+name|int
+name|aio_mlock
+parameter_list|(
+name|struct
+name|aiocb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

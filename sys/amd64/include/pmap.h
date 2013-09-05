@@ -370,16 +370,16 @@ parameter_list|)
 value|( \ 	((unsigned long)(l4)<< PML4SHIFT) | \ 	((unsigned long)(l3)<< PDPSHIFT) | \ 	((unsigned long)(l2)<< PDRSHIFT) | \ 	((unsigned long)(l1)<< PAGE_SHIFT))
 end_define
 
+begin_comment
+comment|/*  * Number of kernel PML4 slots.  Can be anywhere from 1 to 64 or so,  * but setting it larger than NDMPML4E makes no sense.  *  * Each slot provides .5 TB of kernel virtual space.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NKPML4E
-value|1
+value|4
 end_define
-
-begin_comment
-comment|/* number of kernel PML4 slots */
-end_comment
 
 begin_define
 define|#
@@ -415,18 +415,18 @@ comment|/* number of userland PD entries */
 end_comment
 
 begin_comment
-comment|/*  * NDMPML4E is the number of PML4 entries that are used to implement the  * direct map.  It must be a power of two.  */
+comment|/*  * NDMPML4E is the maximum number of PML4 entries that will be  * used to implement the direct map.  It must be a power of two,  * and should generally exceed NKPML4E.  The maximum possible  * value is 64; using 128 will make the direct map intrude into  * the recursive page table map.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NDMPML4E
-value|2
+value|8
 end_define
 
 begin_comment
-comment|/*  * The *PDI values control the layout of virtual memory.  The starting address  * of the direct map, which is controlled by DMPML4I, must be a multiple of  * its size.  (See the PHYS_TO_DMAP() and DMAP_TO_PHYS() macros.)  */
+comment|/*  * These values control the layout of virtual memory.  The starting address  * of the direct map, which is controlled by DMPML4I, must be a multiple of  * its size.  (See the PHYS_TO_DMAP() and DMAP_TO_PHYS() macros.)  *  * Note: KPML4I is the index of the (single) level 4 page that maps  * the KVA that holds KERNBASE, while KPML4BASE is the index of the  * first level 4 page that maps VM_MIN_KERNEL_ADDRESS.  If NKPML4E  * is 1, these are the same, otherwise KPML4BASE< KPML4I and extra  * level 4 PDEs are needed to map from VM_MIN_KERNEL_ADDRESS up to  * KERNBASE.  *  * (KPML4I combines with KPDPI to choose where KERNBASE starts.  * Or, in other words, KPML4I provides bits 39..47 of KERNBASE,  * and KPDPI provides bits 30..38.)  */
 end_comment
 
 begin_define
@@ -443,24 +443,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KPML4I
-value|(NPML4EPG-1)
+name|KPML4BASE
+value|(NPML4EPG-NKPML4E)
 end_define
 
 begin_comment
-comment|/* Top 512GB for KVM */
+comment|/* KVM at highest addresses */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DMPML4I
-value|rounddown(KPML4I - NDMPML4E, NDMPML4E)
+value|rounddown(KPML4BASE-NDMPML4E, NDMPML4E)
 end_define
 
 begin_comment
 comment|/* Below KVM */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KPML4I
+value|(NPML4EPG-1)
+end_define
 
 begin_define
 define|#
@@ -554,34 +561,6 @@ name|u_int64_t
 name|pml4_entry_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|PML4ESHIFT
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PDPESHIFT
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTESHIFT
-value|(3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PDESHIFT
-value|(3)
-end_define
 
 begin_comment
 comment|/*  * Address of current address space page table maps and directories.  */
@@ -720,118 +699,39 @@ parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
-name|pte_load
-parameter_list|(
-name|pt_entry_t
-modifier|*
-name|ptep
-parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-name|r
-operator|=
-operator|*
-name|ptep
-expr_stmt|;
-return|return
-operator|(
-name|r
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|pt_entry_t
+begin_define
+define|#
+directive|define
 name|pte_load_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
 name|pte
 parameter_list|)
-block|{
-name|pt_entry_t
-name|r
-decl_stmt|;
-asm|__asm __volatile(
-literal|"xchgq %0,%1"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|ptep
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|r
-operator|)
-operator|:
-literal|"1"
-operator|(
-name|pte
-operator|)
-operator|,
-literal|"m"
-operator|(
-operator|*
-name|ptep
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|r
-operator|)
-return|;
-end_return
+value|atomic_swap_long(ptep, pte)
+end_define
 
 begin_define
-unit|}
 define|#
 directive|define
 name|pte_load_clear
 parameter_list|(
-name|pte
+name|ptep
 parameter_list|)
-value|atomic_readandclear_long(pte)
+value|atomic_swap_long(ptep, 0)
 end_define
 
-begin_function
-unit|static
-name|__inline
-name|void
+begin_define
+define|#
+directive|define
 name|pte_store
 parameter_list|(
-name|pt_entry_t
-modifier|*
 name|ptep
 parameter_list|,
-name|pt_entry_t
 name|pte
 parameter_list|)
-block|{
-operator|*
-name|ptep
-operator|=
-name|pte
-expr_stmt|;
-block|}
-end_function
+value|do { \ 	*(u_long *)(ptep) = (u_long)(pte); \ } while (0)
+end_define
 
 begin_define
 define|#
@@ -840,7 +740,7 @@ name|pte_clear
 parameter_list|(
 name|ptep
 parameter_list|)
-value|pte_store((ptep), (pt_entry_t)0ULL)
+value|pte_store(ptep, 0)
 end_define
 
 begin_define
@@ -852,7 +752,7 @@ name|pdep
 parameter_list|,
 name|pde
 parameter_list|)
-value|pte_store((pdep), (pde))
+value|pte_store(pdep, pde)
 end_define
 
 begin_decl_stmt
@@ -899,6 +799,9 @@ argument_list|)
 name|pv_list
 expr_stmt|;
 name|int
+name|pv_gen
+decl_stmt|;
+name|int
 name|pat_mode
 decl_stmt|;
 block|}
@@ -922,6 +825,9 @@ modifier|*
 name|pm_pml4
 decl_stmt|;
 comment|/* KVA of level 4 page table */
+name|uint64_t
+name|pm_cr3
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -934,6 +840,14 @@ name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
+name|cpuset_t
+name|pm_save
+decl_stmt|;
+comment|/* Context valid on cpus mask */
+name|int
+name|pm_pcid
+decl_stmt|;
+comment|/* context id */
 comment|/* spare u_int here due to padding */
 name|struct
 name|pmap_statistics

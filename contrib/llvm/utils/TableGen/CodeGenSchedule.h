@@ -72,7 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/TableGen/Record.h"
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
 end_include
 
 begin_include
@@ -84,13 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
+file|"llvm/TableGen/Record.h"
 end_include
 
 begin_decl_stmt
@@ -219,6 +219,11 @@ operator|,
 name|TheDef
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|IsRead
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|IsAlias
@@ -619,6 +624,9 @@ begin_struct
 struct|struct
 name|CodeGenSchedClass
 block|{
+name|unsigned
+name|Index
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -656,47 +664,65 @@ decl_stmt|;
 name|CodeGenSchedClass
 argument_list|()
 operator|:
+name|Index
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|ItinClassDef
 argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|CodeGenSchedClass
+name|bool
+name|isKeyEqual
 argument_list|(
-name|Record
-operator|*
-name|rec
-argument_list|)
-operator|:
-name|ItinClassDef
-argument_list|(
-argument|rec
+argument|Record *IC
+argument_list|,
+argument|const IdxVec&W
+argument_list|,
+argument|const IdxVec&R
 argument_list|)
 block|{
-name|Name
-operator|=
-name|rec
-operator|->
-name|getName
+return|return
+name|ItinClassDef
+operator|==
+name|IC
+operator|&&
+name|Writes
+operator|==
+name|W
+operator|&&
+name|Reads
+operator|==
+name|R
+return|;
+block|}
+comment|// Is this class generated from a variants if existing classes? Instructions
+comment|// are never mapped directly to inferred scheduling classes.
+name|bool
+name|isInferred
 argument_list|()
-block|;
-name|ProcIndices
-operator|.
-name|push_back
-argument_list|(
-literal|0
-argument_list|)
-block|;   }
+specifier|const
+block|{
+return|return
+operator|!
+name|ItinClassDef
+return|;
+block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
 name|dump
 argument_list|(
-argument|const CodeGenSchedModels *SchedModels
-argument_list|)
 specifier|const
-expr_stmt|;
+name|CodeGenSchedModels
+operator|*
+name|SchedModels
+argument_list|)
+decl|const
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -802,6 +828,9 @@ comment|// Per-operand machine model resources associated with this processor.
 name|RecVec
 name|ProcResourceDefs
 decl_stmt|;
+name|RecVec
+name|ProcResGroupDefs
+decl_stmt|;
 name|CodeGenProcModel
 argument_list|(
 argument|unsigned Idx
@@ -833,6 +862,24 @@ argument_list|(
 argument|IDef
 argument_list|)
 block|{}
+name|bool
+name|hasItineraries
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|ItinsDef
+operator|->
+name|getValueAsListOfDefs
+argument_list|(
+literal|"IID"
+argument_list|)
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 name|bool
 name|hasInstrSchedModel
 argument_list|()
@@ -945,30 +992,12 @@ name|CodeGenSchedClass
 operator|>
 name|SchedClasses
 expr_stmt|;
-comment|// Map SchedClass name to itinerary index.
-comment|// These are either explicit itinerary classes or classes implied by
-comment|// instruction definitions with SchedReadWrite lists.
-name|StringMap
-operator|<
-name|unsigned
-operator|>
-name|SchedClassIdxMap
-expr_stmt|;
-comment|// SchedClass indices 1 up to and including NumItineraryClasses identify
-comment|// itinerary classes that are explicitly used for this target's instruction
-comment|// definitions. NoItinerary always has index 0 regardless of whether it is
-comment|// explicitly referenced.
-comment|//
-comment|// Any implied SchedClass has an index greater than NumItineraryClasses.
-name|unsigned
-name|NumItineraryClasses
-decl_stmt|;
 comment|// Any inferred SchedClass has an index greater than NumInstrSchedClassses.
 name|unsigned
 name|NumInstrSchedClasses
 decl_stmt|;
-comment|// Map Instruction to SchedClass index. Only for Instructions mentioned in
-comment|// InstRW records.
+comment|// Map each instruction to its unique SchedClass index considering the
+comment|// combination of it's itinerary class, SchedRW list, and InstRW records.
 typedef|typedef
 name|DenseMap
 operator|<
@@ -1195,6 +1224,12 @@ name|end
 argument_list|()
 return|;
 block|}
+comment|// Return true if any processors have itineraries.
+name|bool
+name|hasItineraries
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Get a SchedWrite from its index.
 specifier|const
 name|CodeGenSchedRW
@@ -1413,30 +1448,6 @@ name|WriteDef
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Check if any instructions are assigned to an explicit itinerary class other
-comment|// than NoItinerary.
-name|bool
-name|hasItineraryClasses
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumItineraryClasses
-operator|>
-literal|0
-return|;
-block|}
-comment|// Return the number of itinerary classes in use by this target's instruction
-comment|// descriptions, not including "NoItinerary".
-name|unsigned
-name|numItineraryClasses
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumItineraryClasses
-return|;
-block|}
 comment|// Get a SchedClass from its index.
 name|CodeGenSchedClass
 modifier|&
@@ -1507,35 +1518,6 @@ name|Inst
 argument_list|)
 decl|const
 decl_stmt|;
-name|unsigned
-name|getSchedClassIdx
-argument_list|(
-specifier|const
-name|RecVec
-operator|&
-name|RWDefs
-argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|getSchedClassIdxForItin
-parameter_list|(
-specifier|const
-name|Record
-modifier|*
-name|ItinDef
-parameter_list|)
-block|{
-return|return
-name|SchedClassIdxMap
-index|[
-name|ItinDef
-operator|->
-name|getName
-argument_list|()
-index|]
-return|;
-block|}
 typedef|typedef
 name|std
 operator|::
@@ -1569,6 +1551,15 @@ name|SchedClasses
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+name|unsigned
+name|numInstrSchedClasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumInstrSchedClasses
 return|;
 block|}
 name|void
@@ -1644,6 +1635,10 @@ decl_stmt|;
 name|unsigned
 name|addSchedClass
 parameter_list|(
+name|Record
+modifier|*
+name|ItinDef
+parameter_list|,
 specifier|const
 name|IdxVec
 modifier|&
@@ -1676,6 +1671,10 @@ decl_stmt|;
 name|unsigned
 name|findSchedClassIdx
 argument_list|(
+name|Record
+operator|*
+name|ItinClassDef
+argument_list|,
 specifier|const
 name|IdxVec
 operator|&
@@ -1753,6 +1752,10 @@ operator|::
 name|string
 name|createSchedClassName
 argument_list|(
+name|Record
+operator|*
+name|ItinClassDef
+argument_list|,
 specifier|const
 name|IdxVec
 operator|&
@@ -1833,6 +1836,26 @@ name|inferFromInstRWs
 parameter_list|(
 name|unsigned
 name|SCIdx
+parameter_list|)
+function_decl|;
+name|bool
+name|hasSuperGroup
+parameter_list|(
+name|RecVec
+modifier|&
+name|SubUnits
+parameter_list|,
+name|CodeGenProcModel
+modifier|&
+name|PM
+parameter_list|)
+function_decl|;
+name|void
+name|verifyProcResourceGroups
+parameter_list|(
+name|CodeGenProcModel
+modifier|&
+name|PM
 parameter_list|)
 function_decl|;
 name|void

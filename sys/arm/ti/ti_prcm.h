@@ -83,15 +83,25 @@ block|,
 name|USBP2_HSIC_CLK
 block|,
 comment|/* UART modules */
-name|UART1_CLK
+name|UART0_CLK
 init|=
 literal|400
+block|,
+name|UART1_CLK
 block|,
 name|UART2_CLK
 block|,
 name|UART3_CLK
 block|,
 name|UART4_CLK
+block|,
+name|UART5_CLK
+block|,
+name|UART6_CLK
+block|,
+name|UART7_CLK
+block|,
+name|UART8_CLK
 block|,
 comment|/* General purpose timer modules */
 name|GPTIMER1_CLK
@@ -194,6 +204,34 @@ block|,
 name|EDMA_TPTC1_CLK
 block|,
 name|EDMA_TPTC2_CLK
+block|,
+comment|/* LCD controller module */
+name|LCDC_CLK
+init|=
+literal|1300
+block|,
+comment|/* PWM modules */
+name|PWMSS0_CLK
+init|=
+literal|1400
+block|,
+name|PWMSS1_CLK
+block|,
+name|PWMSS2_CLK
+block|,
+comment|/* Mailbox modules */
+name|MAILBOX0_CLK
+init|=
+literal|1500
+block|,
+comment|/* Spinlock modules */
+name|SPINLOCK0_CLK
+init|=
+literal|1600
+block|,
+name|PRUSS_CLK
+init|=
+literal|1700
 block|,
 name|INVALID_CLK_IDENT
 block|}

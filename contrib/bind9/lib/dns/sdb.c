@@ -1818,7 +1818,7 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -2153,7 +2153,7 @@ name|origin
 operator|=
 name|dns_rootname
 expr_stmt|;
-name|isc_buffer_init
+name|isc_buffer_constinit
 argument_list|(
 operator|&
 name|b
@@ -3764,7 +3764,7 @@ end_function
 begin_function
 specifier|static
 name|isc_result_t
-name|findnode
+name|findnodeext
 parameter_list|(
 name|dns_db_t
 modifier|*
@@ -3776,6 +3776,14 @@ name|name
 parameter_list|,
 name|isc_boolean_t
 name|create
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|,
 name|dns_dbnode_t
 modifier|*
@@ -4131,6 +4139,10 @@ operator|->
 name|dbdata
 argument_list|,
 name|node
+argument_list|,
+name|methods
+argument_list|,
+name|clientinfo
 argument_list|)
 expr_stmt|;
 else|else
@@ -4153,6 +4165,10 @@ operator|->
 name|dbdata
 argument_list|,
 name|node
+argument_list|,
+name|methods
+argument_list|,
+name|clientinfo
 argument_list|)
 expr_stmt|;
 name|MAYBE_UNLOCK
@@ -4272,7 +4288,7 @@ end_function
 begin_function
 specifier|static
 name|isc_result_t
-name|find
+name|findext
 parameter_list|(
 name|dns_db_t
 modifier|*
@@ -4304,6 +4320,14 @@ parameter_list|,
 name|dns_name_t
 modifier|*
 name|foundname
+parameter_list|,
+name|dns_clientinfomethods_t
+modifier|*
+name|methods
+parameter_list|,
+name|dns_clientinfo_t
+modifier|*
+name|clientinfo
 parameter_list|,
 name|dns_rdataset_t
 modifier|*
@@ -4519,13 +4543,17 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|findnode
+name|findnodeext
 argument_list|(
 name|db
 argument_list|,
 name|xname
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|methods
+argument_list|,
+name|clientinfo
 argument_list|,
 operator|&
 name|node
@@ -6307,9 +6335,9 @@ name|attachversion
 block|,
 name|closeversion
 block|,
-name|findnode
+name|NULL
 block|,
-name|find
+name|NULL
 block|,
 name|findzonecut
 block|,
@@ -6345,25 +6373,40 @@ name|settask
 block|,
 name|NULL
 block|,
+comment|/* getoriginnode */
 name|NULL
 block|,
+comment|/* transfernode */
 name|NULL
 block|,
+comment|/* getnsec3parameters */
 name|NULL
 block|,
+comment|/* findnsec3node */
 name|NULL
 block|,
+comment|/* setsigningtime */
 name|NULL
 block|,
+comment|/* getsigningtime */
 name|NULL
 block|,
+comment|/* resigned */
 name|NULL
 block|,
+comment|/* isdnssec */
 name|NULL
 block|,
+comment|/* getrrsetstats */
 name|NULL
 block|,
+comment|/* rpz_enabled */
 name|NULL
+block|,
+comment|/* rpz_findips */
+name|findnodeext
+block|,
+name|findext
 block|}
 decl_stmt|;
 end_decl_stmt

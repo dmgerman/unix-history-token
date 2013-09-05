@@ -718,6 +718,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ETHERTYPE_MS_NLB_HB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_MS_NLB_HB
+value|0x886f
+end_define
+
+begin_comment
+comment|/* MS Network Load Balancing Heartbeat */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ETHERTYPE_JUMBO
 end_ifndef
 

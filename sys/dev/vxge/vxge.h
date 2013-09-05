@@ -16,7 +16,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|__VXGE_H_
+name|_VXGE_H_
 end_define
 
 begin_include

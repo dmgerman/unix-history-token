@@ -16,7 +16,7 @@ comment|/*-  * Copyright (c) 2003  *     Shingo WATANABE<nabe@nabechan.org>.  Al
 end_comment
 
 begin_comment
-comment|/*  * DM9601(DAVICOM USB to Ethernet MAC Controller with Integrated 10/100 PHY)  * The spec can be found at the following url.  *   http://www.davicom.com.tw/big5/download/Data%20Sheet/DM9601-DS-P01-930914.pdf  */
+comment|/*  * DM9601(DAVICOM USB to Ethernet MAC Controller with Integrated 10/100 PHY)  * The spec can be found at the following url.  *   http://ptm2.cc.utu.fi/ftp/network/cards/DM9601/From_NET/DM9601-DS-P01-930914.pdf  */
 end_comment
 
 begin_comment
@@ -3275,6 +3275,9 @@ name|mii_softc
 modifier|*
 name|miisc
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|UDAV_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -3302,6 +3305,8 @@ argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|mii_mediachg
 argument_list|(
 name|mii
@@ -3309,7 +3314,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

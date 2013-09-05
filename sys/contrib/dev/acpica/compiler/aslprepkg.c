@@ -164,7 +164,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPackage  *  * PARAMETERS:  ParentOp        - Parser op for the package  *              Predefined      - Pointer to package-specific info for method  *  * RETURN:      None  *  * DESCRIPTION: Top-level validation for predefined name return package  *              objects.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPackage  *  * PARAMETERS:  ParentOp            - Parser op for the package  *              Predefined          - Pointer to package-specific info for  *                                    the method  *  * RETURN:      None  *  * DESCRIPTION: Top-level validation for predefined name return package  *              objects.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -406,7 +406,7 @@ break|break;
 case|case
 name|ACPI_PTYPE1_VAR
 case|:
-comment|/*          * The package count is variable, there are no sub-packages, and all          * elements must be of the same type          */
+comment|/*          * The package count is variable, there are no sub-packages,          * and all elements must be of the same type          */
 for|for
 control|(
 name|i
@@ -453,7 +453,7 @@ break|break;
 case|case
 name|ACPI_PTYPE1_OPTION
 case|:
-comment|/*          * The package count is variable, there are no sub-packages. There are          * a fixed number of required elements, and a variable number of          * optional elements.          *          * Check if package is at least as large as the minimum required          */
+comment|/*          * The package count is variable, there are no sub-packages.          * There are a fixed number of required elements, and a variable          * number of optional elements.          *          * Check if package is at least as large as the minimum required          */
 name|ExpectedCount
 operator|=
 name|Package
@@ -635,7 +635,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/*              * Count cannot be larger than the parent package length, but allow it              * to be smaller. The>= accounts for the Integer above.              */
+comment|/*              * Count cannot be larger than the parent package length, but              * allow it to be smaller. The>= accounts for the Integer above.              */
 name|ExpectedCount
 operator|=
 operator|(
@@ -752,7 +752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPackageElements  *  * PARAMETERS:  PredefinedName  - Pointer to validation data structure  *              Op              - Parser op for the package  *              Type1           - Object type for first group  *              Count1          - Count for first group  *              Type2           - Object type for second group  *              Count2          - Count for second group  *  * RETURN:      None  *  * DESCRIPTION: Validate all elements of a package. Works with packages that  *              are defined to contain up to two groups of different object  *              types.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPackageElements  *  * PARAMETERS:  PredefinedName      - Name of the predefined object  *              Op                  - Parser op for the package  *              Type1               - Object type for first group  *              Count1              - Count for first group  *              Type2               - Object type for second group  *              Count2              - Count for second group  *  * RETURN:      None  *  * DESCRIPTION: Validate all elements of a package. Works with packages that  *              are defined to contain up to two groups of different object  *              types.  *  ******************************************************************************/
 end_comment
 
 begin_function

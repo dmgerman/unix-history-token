@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MBlazeSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MBlazeInstrInfo.h"
+file|"MBlazeFrameLowering.h"
 end_include
 
 begin_include
@@ -80,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MBlazeSelectionDAGInfo.h"
+file|"MBlazeInstrInfo.h"
 end_include
 
 begin_include
@@ -92,7 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MBlazeFrameLowering.h"
+file|"MBlazeSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MBlazeSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -104,25 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetTransformImpl.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -163,12 +157,6 @@ name|IntrinsicInfo
 block|;
 name|InstrItineraryData
 name|InstrItins
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -308,32 +296,6 @@ block|{
 return|return
 operator|&
 name|IntrinsicInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
 return|;
 block|}
 comment|// Pass Pipeline Configuration

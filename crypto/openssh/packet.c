@@ -4,7 +4,7 @@ comment|/* $OpenBSD: packet.c,v 1.181 2013/02/10 23:35:24 djm Exp $ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $OpenBSD: packet.c,v 1.182 2013/04/11 02:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -6879,8 +6879,21 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|error
+comment|/* Ignore normal client exit notifications */
+name|do_log2
 argument_list|(
+name|active_state
+operator|->
+name|server_side
+operator|&&
+name|reason
+operator|==
+name|SSH2_DISCONNECT_BY_APPLICATION
+condition|?
+name|SYSLOG_LEVEL_INFO
+else|:
+name|SYSLOG_LEVEL_ERROR
+argument_list|,
 literal|"Received disconnect from %s: %u: %.400s"
 argument_list|,
 name|get_remote_ipaddr
@@ -6973,7 +6986,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|error
+name|logit
 argument_list|(
 literal|"Received disconnect from %s: %.400s"
 argument_list|,

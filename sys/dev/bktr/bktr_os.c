@@ -1565,9 +1565,6 @@ decl_stmt|;
 name|u_long
 name|fun
 decl_stmt|;
-name|u_long
-name|val
-decl_stmt|;
 name|unsigned
 name|int
 name|rev
@@ -1628,34 +1625,9 @@ name|unit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enable bus mastering and Memory Mapped device 	 */
-name|val
-operator|=
-name|pci_read_config
+name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|val
-operator||=
-operator|(
-name|PCIM_CMD_MEMEN
-operator||
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|val
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
@@ -1958,7 +1930,7 @@ name|fun
 operator||
 literal|4
 expr_stmt|;
-comment|/* Enable SiS/VIA compatibility mode (usefull for                            OPTi chipset motherboards too */
+comment|/* Enable SiS/VIA compatibility mode (useful for                            OPTi chipset motherboards too */
 endif|#
 directive|endif
 name|pci_write_config

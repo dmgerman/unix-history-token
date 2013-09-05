@@ -1648,7 +1648,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(

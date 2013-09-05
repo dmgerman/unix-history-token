@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -157,6 +157,11 @@ directive|define
 name|ARC_L2CACHE
 value|(1<< 5)
 comment|/* cache in L2ARC */
+define|#
+directive|define
+name|ARC_L2COMPRESS
+value|(1<< 6)
+comment|/* compress in L2ARC */
 comment|/*  * The following breakdows of arc_size exist for kstat only.  */
 typedef|typedef
 enum|enum
@@ -431,6 +436,9 @@ parameter_list|,
 name|boolean_t
 name|l2arc
 parameter_list|,
+name|boolean_t
+name|l2arc_compress
+parameter_list|,
 specifier|const
 name|zio_prop_t
 modifier|*
@@ -458,6 +466,19 @@ specifier|const
 name|zbookmark_t
 modifier|*
 name|zb
+parameter_list|)
+function_decl|;
+name|void
+name|arc_freed
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|blkptr_t
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2009  *	Damien Bergamini<damien.bergamini@free.fr>  * Copyright (c) 2008  *	Benjamin Close<benjsc@FreeBSD.org>  * Copyright (c) 2008 Sam Leffler, Errno Consulting  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*-  * Copyright (c) 2013 Cedric GROSS<c.gross@kreiz-it.fr>  * Copyright (c) 2011 Intel Corporation  * Copyright (c) 2007-2009  *	Damien Bergamini<damien.bergamini@free.fr>  * Copyright (c) 2008  *	Benjamin Close<benjsc@FreeBSD.org>  * Copyright (c) 2008 Sam Leffler, Errno Consulting  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"opt_wlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_iwn.h"
 end_include
 
 begin_include
@@ -261,6 +267,12 @@ directive|include
 file|<dev/iwn/if_iwnvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/iwn/if_iwn_devid.h>
+end_include
+
 begin_struct
 struct|struct
 name|iwn_ident
@@ -292,7 +304,7 @@ block|{
 block|{
 literal|0x8086
 block|,
-literal|0x0082
+name|IWN_DID_6x05_1
 block|,
 literal|"Intel Centrino Advanced-N 6205"
 block|}
@@ -300,7 +312,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0083
+name|IWN_DID_1000_1
 block|,
 literal|"Intel Centrino Wireless-N 1000"
 block|}
@@ -308,7 +320,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0084
+name|IWN_DID_1000_2
 block|,
 literal|"Intel Centrino Wireless-N 1000"
 block|}
@@ -316,7 +328,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0085
+name|IWN_DID_6x05_2
 block|,
 literal|"Intel Centrino Advanced-N 6205"
 block|}
@@ -324,7 +336,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0087
+name|IWN_DID_6050_1
 block|,
 literal|"Intel Centrino Advanced-N + WiMAX 6250"
 block|}
@@ -332,7 +344,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0089
+name|IWN_DID_6050_2
 block|,
 literal|"Intel Centrino Advanced-N + WiMAX 6250"
 block|}
@@ -340,7 +352,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x008a
+name|IWN_DID_x030_1
 block|,
 literal|"Intel Centrino Wireless-N 1030"
 block|}
@@ -348,7 +360,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x008b
+name|IWN_DID_x030_2
 block|,
 literal|"Intel Centrino Wireless-N 1030"
 block|}
@@ -356,7 +368,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0090
+name|IWN_DID_x030_3
 block|,
 literal|"Intel Centrino Advanced-N 6230"
 block|}
@@ -364,7 +376,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0091
+name|IWN_DID_x030_4
 block|,
 literal|"Intel Centrino Advanced-N 6230"
 block|}
@@ -372,7 +384,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0885
+name|IWN_DID_6150_1
 block|,
 literal|"Intel Centrino Wireless-N + WiMAX 6150"
 block|}
@@ -380,7 +392,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0886
+name|IWN_DID_6150_2
 block|,
 literal|"Intel Centrino Wireless-N + WiMAX 6150"
 block|}
@@ -388,7 +400,23 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0896
+name|IWN_DID_2x30_1
+block|,
+literal|"Intel Centrino Wireless-N 2230"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|IWN_DID_2x30_2
+block|,
+literal|"Intel Centrino Wireless-N 2230"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|IWN_DID_130_1
 block|,
 literal|"Intel Centrino Wireless-N 130"
 block|}
@@ -396,7 +424,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0887
+name|IWN_DID_130_2
 block|,
 literal|"Intel Centrino Wireless-N 130"
 block|}
@@ -404,7 +432,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x08ae
+name|IWN_DID_100_1
 block|,
 literal|"Intel Centrino Wireless-N 100"
 block|}
@@ -412,7 +440,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x08af
+name|IWN_DID_100_2
 block|,
 literal|"Intel Centrino Wireless-N 100"
 block|}
@@ -420,7 +448,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4229
+name|IWN_DID_4965_1
 block|,
 literal|"Intel Wireless WiFi Link 4965"
 block|}
@@ -428,7 +456,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x422b
+name|IWN_DID_6x00_1
 block|,
 literal|"Intel Centrino Ultimate-N 6300"
 block|}
@@ -436,7 +464,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x422c
+name|IWN_DID_6x00_2
 block|,
 literal|"Intel Centrino Advanced-N 6200"
 block|}
@@ -444,7 +472,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x422d
+name|IWN_DID_4965_2
 block|,
 literal|"Intel Wireless WiFi Link 4965"
 block|}
@@ -452,7 +480,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4230
+name|IWN_DID_4965_3
 block|,
 literal|"Intel Wireless WiFi Link 4965"
 block|}
@@ -460,7 +488,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4232
+name|IWN_DID_5x00_1
 block|,
 literal|"Intel WiFi Link 5100"
 block|}
@@ -468,7 +496,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4233
+name|IWN_DID_4965_4
 block|,
 literal|"Intel Wireless WiFi Link 4965"
 block|}
@@ -476,7 +504,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4235
+name|IWN_DID_5x00_3
 block|,
 literal|"Intel Ultimate N WiFi Link 5300"
 block|}
@@ -484,7 +512,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4236
+name|IWN_DID_5x00_4
 block|,
 literal|"Intel Ultimate N WiFi Link 5300"
 block|}
@@ -492,7 +520,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4237
+name|IWN_DID_5x00_2
 block|,
 literal|"Intel WiFi Link 5100"
 block|}
@@ -500,7 +528,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4238
+name|IWN_DID_6x00_3
 block|,
 literal|"Intel Centrino Ultimate-N 6300"
 block|}
@@ -508,7 +536,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4239
+name|IWN_DID_6x00_4
 block|,
 literal|"Intel Centrino Advanced-N 6200"
 block|}
@@ -516,7 +544,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x423a
+name|IWN_DID_5x50_1
 block|,
 literal|"Intel WiMAX/WiFi Link 5350"
 block|}
@@ -524,7 +552,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x423b
+name|IWN_DID_5x50_2
 block|,
 literal|"Intel WiMAX/WiFi Link 5350"
 block|}
@@ -532,7 +560,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x423c
+name|IWN_DID_5x50_3
 block|,
 literal|"Intel WiMAX/WiFi Link 5150"
 block|}
@@ -540,7 +568,7 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x423d
+name|IWN_DID_5x50_4
 block|,
 literal|"Intel WiMAX/WiFi Link 5150"
 block|}
@@ -1064,6 +1092,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -1077,6 +1111,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2872,11 +2911,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IWN_DEBUG
-end_define
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|iwn_get_csr_string
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|iwn_debug_register
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2952,6 +3019,26 @@ init|=
 literal|0x00001000
 block|,
 comment|/* cmd submission */
+name|IWN_DEBUG_TXRATE
+init|=
+literal|0x00002000
+block|,
+comment|/* TX rate debugging */
+name|IWN_DEBUG_PWRSAVE
+init|=
+literal|0x00004000
+block|,
+comment|/* Power save operations */
+name|IWN_DEBUG_REGISTER
+init|=
+literal|0x20000000
+block|,
+comment|/* print chipset register */
+name|IWN_DEBUG_TRACE
+init|=
+literal|0x40000000
+block|,
+comment|/* Print begin and start driver function */
 name|IWN_DEBUG_FATAL
 init|=
 literal|0x80000000
@@ -3512,6 +3599,70 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
+name|error
+operator|=
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+literal|"debug"
+argument_list|,
+operator|&
+operator|(
+name|sc
+operator|->
+name|sc_debug
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_debug
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|sc_debug
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Get the offset of the PCI Express Capability Structure in PCI 	 * Configuration Space. 	 */
 name|error
 operator|=
@@ -3566,7 +3717,7 @@ name|dev
 argument_list|,
 name|PCIR_COMMAND
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3600,7 +3751,7 @@ name|PCIR_COMMAND
 argument_list|,
 name|reg
 argument_list|,
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3781,10 +3932,19 @@ argument_list|,
 name|IWN_HW_REV
 argument_list|)
 operator|>>
-literal|4
+name|IWN_HW_REV_TYPE_SHIFT
 operator|)
 operator|&
-literal|0xf
+name|IWN_HW_REV_TYPE_MASK
+expr_stmt|;
+name|sc
+operator|->
+name|subdevice_id
+operator|=
+name|pci_get_subdevice
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4173,6 +4333,9 @@ directive|endif
 operator||
 name|IEEE80211_C_WME
 comment|/* WME */
+operator||
+name|IEEE80211_C_PMGT
+comment|/* Station-side power mgmt */
 expr_stmt|;
 comment|/* Read MAC address, channels, etc from EEPROM. */
 if|if
@@ -4338,6 +4501,35 @@ operator|=
 name|sc
 operator|->
 name|ntxchains
+expr_stmt|;
+comment|/* 		 * The NICs we currently support cap out at 2x2 support 		 * separate from the chains being used. 		 * 		 * This is a total hack to work around that until some 		 * per-device method is implemented to return the 		 * actual stream support. 		 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_rxstream
+operator|>
+literal|2
+condition|)
+name|ic
+operator|->
+name|ic_rxstream
+operator|=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_txstream
+operator|>
+literal|2
+condition|)
+name|ic
+operator|->
+name|ic_txstream
+operator|=
+literal|2
 expr_stmt|;
 name|ic
 operator|->
@@ -4763,6 +4955,17 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -4771,6 +4974,17 @@ label|:
 name|iwn_detach
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end in error\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4803,6 +5017,17 @@ name|sc
 operator|->
 name|ops
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ops
 operator|->
 name|load_firmware
@@ -4973,6 +5198,17 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_ABC
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5003,6 +5239,17 @@ name|sc
 operator|->
 name|ops
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ops
 operator|->
 name|load_firmware
@@ -5384,6 +5631,17 @@ operator|->
 name|hw_type
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end in error\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOTSUP
 return|;
@@ -5427,6 +5685,17 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ieee80211_radiotap_attach
 argument_list|(
 name|ic
@@ -5464,6 +5733,17 @@ argument_list|,
 name|IWN_RX_RADIOTAP_PRESENT
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5478,6 +5758,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
 name|struct
 name|sysctl_ctx_list
 modifier|*
@@ -5502,15 +5785,6 @@ operator|->
 name|sc_dev
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IWN_DEBUG
-name|sc
-operator|->
-name|sc_debug
-operator|=
-literal|0
-expr_stmt|;
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -5531,7 +5805,9 @@ name|sc
 operator|->
 name|sc_debug
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|sc_debug
 argument_list|,
 literal|"control debugging printfs"
 argument_list|)
@@ -5595,6 +5871,23 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
+name|uint8_t
+name|mac1
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+init|=
+name|ic
+operator|->
+name|ic_ifp
+operator|->
+name|if_softc
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5610,6 +5903,13 @@ comment|/* only one at a time */
 return|return
 name|NULL
 return|;
+name|IEEE80211_ADDR_COPY
+argument_list|(
+name|mac1
+argument_list|,
+name|mac
+argument_list|)
+expr_stmt|;
 name|ivp
 operator|=
 operator|(
@@ -5664,7 +5964,22 @@ name|flags
 argument_list|,
 name|bssid
 argument_list|,
-name|mac
+name|mac1
+argument_list|)
+expr_stmt|;
+name|ivp
+operator|->
+name|ctx
+operator|=
+name|IWN_RXON_BSS_CTX
+expr_stmt|;
+name|IEEE80211_ADDR_COPY
+argument_list|(
+name|ivp
+operator|->
+name|macaddr
+argument_list|,
+name|mac1
 argument_list|)
 expr_stmt|;
 name|vap
@@ -5688,6 +6003,15 @@ operator|->
 name|iv_newstate
 operator|=
 name|iwn_newstate
+expr_stmt|;
+name|sc
+operator|->
+name|ivap
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+operator|=
+name|vap
 expr_stmt|;
 name|ieee80211_ratectl_init
 argument_list|(
@@ -5793,6 +6117,17 @@ decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6014,6 +6349,17 @@ condition|)
 name|if_free
 argument_list|(
 name|ifp
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|IWN_LOCK_DESTROY
@@ -6798,6 +7144,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end timeout\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|ETIMEDOUT
 return|;
@@ -6855,6 +7212,17 @@ name|count
 decl_stmt|,
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Wait for clock stabilization before accessing prph. */
 if|if
 condition|(
@@ -7063,6 +7431,17 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -7104,6 +7483,17 @@ decl_stmt|;
 name|int
 name|ntries
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|addr
 operator|+=
 name|sc
@@ -7277,6 +7667,17 @@ operator|>>
 literal|24
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -7937,6 +8338,17 @@ name|cur
 operator|=
 literal|0
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Allocate RX descriptors (256-byte aligned). */
 name|size
 operator|=
@@ -8325,6 +8737,17 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8335,6 +8758,17 @@ argument_list|(
 name|sc
 argument_list|,
 name|ring
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end in error\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -8362,6 +8796,17 @@ block|{
 name|int
 name|ntries
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|iwn_nic_lock
@@ -8453,6 +8898,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s \n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|iwn_dma_contig_free
 argument_list|(
 operator|&
@@ -8636,6 +9092,17 @@ operator|->
 name|cur
 operator|=
 literal|0
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 comment|/* Allocate TX descriptors (256-byte aligned). */
 name|size
@@ -8923,6 +9390,17 @@ name|fail
 goto|;
 block|}
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8933,6 +9411,17 @@ argument_list|(
 name|sc
 argument_list|,
 name|ring
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end in error\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -8960,6 +9449,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->doing %s \n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9115,6 +9615,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s \n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|iwn_dma_contig_free
 argument_list|(
 operator|&
@@ -9386,6 +9897,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Check whether adapter has an EEPROM or an OTPROM. */
 if|if
 condition|(
@@ -9714,6 +10236,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -9740,6 +10273,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Read regulatory domain (4 ASCII characters). */
 name|iwn_read_prom_data
 argument_list|(
@@ -9964,6 +10508,17 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10295,6 +10850,17 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Read regulatory domain (4 ASCII characters). */
 name|iwn_read_prom_data
 argument_list|(
@@ -10590,6 +11156,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10741,6 +11318,17 @@ name|i
 decl_stmt|,
 name|nflags
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -11030,6 +11618,17 @@ name|IEEE80211_CHAN_HT20
 expr_stmt|;
 block|}
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11108,6 +11707,17 @@ name|i
 decl_stmt|,
 name|nflags
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s start\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -11119,7 +11729,20 @@ operator|&
 name|IWN_FLAG_HAS_11N
 operator|)
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end no 11n\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 for|for
 control|(
 name|i
@@ -11409,6 +12032,17 @@ operator||
 name|nflags
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11883,6 +12517,17 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|iwn_read_prom_data
 argument_list|(
 name|sc
@@ -12242,6 +12887,17 @@ name|maxpwr
 expr_stmt|;
 block|}
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -12380,18 +13036,27 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Calculate the required PLCP value from the given rate,  * to the given node.  *  * This will take the node configuration (eg 11n, rate table  * setup, etc) into consideration.  */
+end_comment
+
 begin_function
 specifier|static
-name|void
-name|iwn_newassoc
+name|uint32_t
+name|iwn_rate_to_plcp
 parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+parameter_list|,
 name|struct
 name|ieee80211_node
 modifier|*
 name|ni
 parameter_list|,
-name|int
-name|isnew
+name|uint8_t
+name|rate
 parameter_list|)
 block|{
 define|#
@@ -12410,40 +13075,17 @@ name|ni
 operator|->
 name|ni_ic
 decl_stmt|;
-name|struct
-name|iwn_softc
-modifier|*
-name|sc
-init|=
-name|ic
-operator|->
-name|ic_ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|iwn_node
-modifier|*
-name|wn
-init|=
-operator|(
-name|void
-operator|*
-operator|)
-name|ni
-decl_stmt|;
 name|uint8_t
 name|txant1
 decl_stmt|,
 name|txant2
 decl_stmt|;
-name|int
-name|i
-decl_stmt|,
+name|uint32_t
 name|plcp
-decl_stmt|,
-name|rate
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|ridx
 decl_stmt|;
 comment|/* Use the first valid TX antenna. */
@@ -12468,6 +13110,7 @@ operator|~
 name|txant1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If it's an MCS rate, let's set the plcp correctly 	 * and set the relevant flags based on the node config. 	 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT
@@ -12478,52 +13121,18 @@ name|ni_chan
 argument_list|)
 condition|)
 block|{
-name|ridx
-operator|=
-name|ni
-operator|->
-name|ni_rates
-operator|.
-name|rs_nrates
-operator|-
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|ni
-operator|->
-name|ni_htrates
-operator|.
-name|rs_nrates
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
+comment|/* 		 * Set the initial PLCP value to be between 0->31 for 		 * MCS 0 -> MCS 31, then set the "I'm an MCS rate!" 		 * flag. 		 */
 name|plcp
 operator|=
 name|RV
 argument_list|(
-name|ni
-operator|->
-name|ni_htrates
-operator|.
-name|rs_rates
-index|[
-name|i
-index|]
+name|rate
 argument_list|)
 operator||
 name|IWN_RFLAG_MCS
 expr_stmt|;
+comment|/* 		 * XXX the following should only occur if both 		 * the local configuration _and_ the remote node 		 * advertise these capabilities.  Thus this code 		 * may need fixing! 		 */
+comment|/* 		 * Set the channel width and guard interval. 		 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT40
@@ -12560,25 +13169,18 @@ name|ni_htcap
 operator|&
 name|IEEE80211_HTCAP_SHORTGI20
 condition|)
+block|{
 name|plcp
 operator||=
 name|IWN_RFLAG_SGI
 expr_stmt|;
+block|}
+comment|/* 		 * If it's a two stream rate, enable TX on both 		 * antennas. 		 * 		 * XXX three stream rates? 		 */
 if|if
 condition|(
-name|RV
-argument_list|(
-name|ni
-operator|->
-name|ni_htrates
-operator|.
-name|rs_rates
-index|[
-name|i
-index|]
-argument_list|)
+name|rate
 operator|>
-literal|7
+literal|0x87
 condition|)
 name|plcp
 operator||=
@@ -12597,87 +13199,10 @@ argument_list|(
 name|txant1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ridx
-operator|>=
-literal|0
-condition|)
-block|{
-name|rate
-operator|=
-name|RV
-argument_list|(
-name|ni
-operator|->
-name|ni_rates
-operator|.
-name|rs_rates
-index|[
-name|ridx
-index|]
-argument_list|)
-expr_stmt|;
-name|wn
-operator|->
-name|ridx
-index|[
-name|rate
-index|]
-operator|=
-name|plcp
-expr_stmt|;
-block|}
-name|wn
-operator|->
-name|ridx
-index|[
-name|IEEE80211_RATE_MCS
-operator||
-name|i
-index|]
-operator|=
-name|plcp
-expr_stmt|;
-name|ridx
-operator|--
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ni
-operator|->
-name|ni_rates
-operator|.
-name|rs_nrates
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|rate
-operator|=
-name|RV
-argument_list|(
-name|ni
-operator|->
-name|ni_rates
-operator|.
-name|rs_rates
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Set the initial PLCP - fine for both 		 * OFDM and CCK rates. 		 */
 name|plcp
 operator|=
 name|rate2plcp
@@ -12685,16 +13210,20 @@ argument_list|(
 name|rate
 argument_list|)
 expr_stmt|;
+comment|/* Set CCK flag if it's CCK */
+comment|/* XXX It would be nice to have a method 		 * to map the ridx -> phy table entry 		 * so we could just query that, rather than 		 * this hack to check against IWN_RIDX_OFDM6. 		 */
 name|ridx
 operator|=
+name|ieee80211_legacy_rate_lookup
+argument_list|(
 name|ic
 operator|->
 name|ic_rt
-operator|->
-name|rateCodeToIndex
-index|[
+argument_list|,
 name|rate
-index|]
+operator|&
+name|IEEE80211_RATE_VAL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12713,6 +13242,7 @@ name|plcp
 operator||=
 name|IWN_RFLAG_CCK
 expr_stmt|;
+comment|/* Set antenna configuration */
 name|plcp
 operator||=
 name|IWN_RFLAG_ANT
@@ -12720,23 +13250,51 @@ argument_list|(
 name|txant1
 argument_list|)
 expr_stmt|;
-name|wn
-operator|->
-name|ridx
-index|[
+block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TXRATE
+argument_list|,
+literal|"%s: rate=0x%02x, plcp=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
 name|rate
-index|]
-operator|=
+argument_list|,
+name|plcp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 name|htole32
 argument_list|(
 name|plcp
 argument_list|)
-expr_stmt|;
-block|}
-block|}
+operator|)
+return|;
 undef|#
 directive|undef
 name|RV
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|iwn_newassoc
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|int
+name|isnew
+parameter_list|)
+block|{
+comment|/* Doesn't do anything at the moment */
 block|}
 end_function
 
@@ -12833,6 +13391,17 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
 name|IWN_DEBUG_STATE
 argument_list|,
 literal|"%s: %s -> %s\n"
@@ -12870,6 +13439,18 @@ operator|->
 name|calib_to
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 switch|switch
 condition|(
 name|nstate
@@ -12904,7 +13485,7 @@ comment|/* 		 * !AUTH -> AUTH transition requires state reset to handle 		 * rea
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|associd
 operator|=
 literal|0
@@ -12912,7 +13493,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|filter
 operator|&=
 operator|~
@@ -13040,9 +13621,33 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end in error\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|ivp
 operator|->
@@ -13349,6 +13954,17 @@ name|rssi
 decl_stmt|,
 name|nf
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|desc
@@ -14214,6 +14830,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -14332,6 +14959,17 @@ name|res
 decl_stmt|,
 name|shift
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -14531,31 +15169,13 @@ literal|"no mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_TXCB
-condition|)
-name|ieee80211_process_callback
+name|ieee80211_tx_complete
 argument_list|(
 name|ni
 argument_list|,
 name|m
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 name|txq
@@ -14802,6 +15422,17 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -14854,6 +15485,17 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Runtime firmware should not send such a notification. */
 if|if
 condition|(
@@ -14863,7 +15505,20 @@ name|sc_flags
 operator|&
 name|IWN_FLAG_CALIB_DONE
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s received after clib done\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|len
 operator|=
 operator|(
@@ -15212,6 +15867,17 @@ decl_stmt|;
 name|int
 name|temp
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Ignore statistics received during a scan. */
 if|if
 condition|(
@@ -15229,7 +15895,20 @@ operator|&
 name|IEEE80211_F_SCAN
 operator|)
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s received during calib\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -15437,6 +16116,17 @@ operator|&
 name|stats
 operator|->
 name|rx
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -15918,6 +16608,17 @@ literal|"no node"
 operator|)
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Unmap and free mbuf. */
 name|bus_dmamap_sync
 argument_list|(
@@ -15973,56 +16674,6 @@ name|ni
 operator|->
 name|ni_vap
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_TXCB
-condition|)
-block|{
-comment|/* 		 * Channels marked for "radar" require traffic to be received 		 * to unlock before we can transmit.  Until traffic is seen 		 * any attempt to transmit is returned immediately with status 		 * set to IWN_TX_FAIL_TX_LOCKED.  Unfortunately this can easily 		 * happen on first authenticate after scanning.  To workaround 		 * this we ignore a failure of this sort in AUTH state so the 		 * 802.11 layer will fall back to using a timeout to wait for 		 * the AUTH reply.  This allows the firmware time to see 		 * traffic so a subsequent retry of AUTH succeeds.  It's 		 * unclear why the firmware does not maintain state for 		 * channels recently visited as this would allow immediate 		 * use of the channel after a scan (where we see traffic). 		 */
-if|if
-condition|(
-name|status
-operator|==
-name|IWN_TX_FAIL_TX_LOCKED
-operator|&&
-name|ni
-operator|->
-name|ni_vap
-operator|->
-name|iv_state
-operator|==
-name|IEEE80211_S_AUTH
-condition|)
-name|ieee80211_process_callback
-argument_list|(
-name|ni
-argument_list|,
-name|m
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
-name|ieee80211_process_callback
-argument_list|(
-name|ni
-argument_list|,
-name|m
-argument_list|,
-operator|(
-name|status
-operator|&
-name|IWN_TX_FAIL
-operator|)
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Update rate control statistics for the node. 	 */
 if|if
 condition|(
@@ -16073,14 +16724,44 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
+comment|/* 	 * Channels marked for "radar" require traffic to be received 	 * to unlock before we can transmit.  Until traffic is seen 	 * any attempt to transmit is returned immediately with status 	 * set to IWN_TX_FAIL_TX_LOCKED.  Unfortunately this can easily 	 * happen on first authenticate after scanning.  To workaround 	 * this we ignore a failure of this sort in AUTH state so the 	 * 802.11 layer will fall back to using a timeout to wait for 	 * the AUTH reply.  This allows the firmware time to see 	 * traffic so a subsequent retry of AUTH succeeds.  It's 	 * unclear why the firmware does not maintain state for 	 * channels recently visited as this would allow immediate 	 * use of the channel after a scan (where we see traffic). 	 */
+if|if
+condition|(
+name|status
+operator|==
+name|IWN_TX_FAIL_TX_LOCKED
+operator|&&
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_AUTH
+condition|)
+name|ieee80211_tx_complete
 argument_list|(
 name|ni
+argument_list|,
+name|m
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|ieee80211_tx_complete
+argument_list|(
+name|ni
+argument_list|,
+name|m
+argument_list|,
+operator|(
+name|status
+operator|&
+name|IWN_TX_FAIL
+operator|)
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
@@ -16143,6 +16824,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -16392,6 +17084,17 @@ name|shift
 decl_stmt|,
 name|start
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NOT_YET
@@ -16774,31 +17477,13 @@ literal|"no mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_TXCB
-condition|)
-name|ieee80211_process_callback
+name|ieee80211_tx_complete
 argument_list|(
 name|ni
 argument_list|,
 name|m
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
 argument_list|)
 expr_stmt|;
 name|ring
@@ -16934,6 +17619,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -17503,20 +18199,6 @@ case|case
 name|IWN_STATE_CHANGED
 case|:
 block|{
-name|uint32_t
-modifier|*
-name|status
-init|=
-operator|(
-name|uint32_t
-operator|*
-operator|)
-operator|(
-name|desc
-operator|+
-literal|1
-operator|)
-decl_stmt|;
 comment|/* 			 * State change allows hardware switch change to be 			 * noted. However, we handle this in iwn_intr as we 			 * get both the enable/disble intr. 			 */
 name|bus_dmamap_sync
 argument_list|(
@@ -17533,6 +18215,23 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
+name|uint32_t
+modifier|*
+name|status
+init|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|desc
+operator|+
+literal|1
+operator|)
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -17548,12 +18247,32 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 case|case
 name|IWN_START_SCAN
 case|:
 block|{
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|rxq
+operator|.
+name|data_dmat
+argument_list|,
+name|data
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
 name|struct
 name|iwn_start_scan
 modifier|*
@@ -17570,21 +18289,6 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|rxq
-operator|.
-name|data_dmat
-argument_list|,
-name|data
-operator|->
-name|map
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -17607,12 +18311,32 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 case|case
 name|IWN_STOP_SCAN
 case|:
 block|{
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|rxq
+operator|.
+name|data_dmat
+argument_list|,
+name|data
+operator|->
+name|map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
 name|struct
 name|iwn_stop_scan
 modifier|*
@@ -17629,21 +18353,6 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|rxq
-operator|.
-name|data_dmat
-argument_list|,
-name|data
-operator|->
-name|map
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -17665,6 +18374,8 @@ operator|->
 name|chan
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|IWN_UNLOCK
 argument_list|(
 name|sc
@@ -18490,7 +19201,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_INTR
 argument_list|,
-literal|"interrupt reg1=%x reg2=%x\n"
+literal|"interrupt reg1=0x%08x reg2=0x%08x\n"
 argument_list|,
 name|r1
 argument_list|,
@@ -18598,6 +19309,16 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
+name|iwn_debug_register
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Dump firmware error log and stop. */
 name|iwn_fatal_intr
 argument_list|(
@@ -18847,6 +19568,17 @@ operator|+
 name|idx
 index|]
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 operator|*
 name|w
 operator|=
@@ -18951,6 +19683,17 @@ operator|+
 name|idx
 index|]
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 operator|*
 name|w
 operator|=
@@ -19061,6 +19804,17 @@ operator|+
 name|idx
 index|]
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 operator|*
 name|w
 operator|=
@@ -19291,6 +20045,17 @@ literal|0
 decl_stmt|,
 name|rate
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -19574,14 +20339,16 @@ expr_stmt|;
 block|}
 name|ridx
 operator|=
+name|ieee80211_legacy_rate_lookup
+argument_list|(
 name|ic
 operator|->
 name|ic_rt
-operator|->
-name|rateCodeToIndex
-index|[
+argument_list|,
 name|rate
-index|]
+operator|&
+name|IEEE80211_RATE_VAL
+argument_list|)
 expr_stmt|;
 comment|/* Encrypt the frame if need be. */
 if|if
@@ -20112,12 +20879,14 @@ name|tx
 operator|->
 name|rate
 operator|=
-name|wn
-operator|->
-name|ridx
-index|[
+name|iwn_rate_to_plcp
+argument_list|(
+name|sc
+argument_list|,
+name|ni
+argument_list|,
 name|rate
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -20717,6 +21486,17 @@ name|ring
 operator|->
 name|qid
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -20861,6 +21641,17 @@ name|type
 decl_stmt|,
 name|txant
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -20946,14 +21737,16 @@ name|ibp_rate0
 expr_stmt|;
 name|ridx
 operator|=
+name|ieee80211_legacy_rate_lookup
+argument_list|(
 name|ic
 operator|->
 name|ic_rt
-operator|->
-name|rateCodeToIndex
-index|[
+argument_list|,
 name|rate
-index|]
+operator|&
+name|IEEE80211_RATE_VAL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -21322,6 +22115,7 @@ argument_list|(
 name|IWN_LIFETIME_INFINITE
 argument_list|)
 expr_stmt|;
+comment|/* XXX should just use  iwn_rate_to_plcp() */
 name|tx
 operator|->
 name|rate
@@ -21919,6 +22713,17 @@ name|ring
 operator|->
 name|qid
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -21979,6 +22784,17 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -22076,6 +22892,17 @@ expr_stmt|;
 name|IWN_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -22318,6 +23145,17 @@ argument_list|,
 operator|(
 literal|"not running"
 operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -22673,6 +23511,17 @@ name|totlen
 decl_stmt|,
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|async
@@ -23043,6 +23892,17 @@ operator|->
 name|cur
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|async
 condition|?
@@ -23095,6 +23955,17 @@ name|src
 decl_stmt|,
 name|dst
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We use the node structure for 5000 Series internally (it is 	 * a superset of the one for 4965AGN). We thus copy the common 	 * fields before sending the command. 	 */
 name|src
 operator|=
@@ -23172,6 +24043,17 @@ name|int
 name|async
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Direct mapping. */
 return|return
 name|iwn_cmd
@@ -23252,6 +24134,17 @@ name|rate
 decl_stmt|,
 name|txrate
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Use the first valid TX antenna. */
 name|txant
 operator|=
@@ -23358,6 +24251,9 @@ name|i
 operator|++
 control|)
 block|{
+name|uint32_t
+name|plcp
+decl_stmt|;
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT
@@ -23386,6 +24282,18 @@ name|txrate
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Do rate -> PLCP config mapping */
+name|plcp
+operator|=
+name|iwn_rate_to_plcp
+argument_list|(
+name|sc
+argument_list|,
+name|ni
+argument_list|,
+name|rate
+argument_list|)
+expr_stmt|;
 name|linkq
 operator|.
 name|retry
@@ -23393,24 +24301,15 @@ index|[
 name|i
 index|]
 operator|=
-name|wn
-operator|->
-name|ridx
-index|[
-name|rate
-index|]
+name|plcp
 expr_stmt|;
+comment|/* Special case for dual-stream rates? */
 if|if
 condition|(
 operator|(
 name|le32toh
 argument_list|(
-name|wn
-operator|->
-name|ridx
-index|[
-name|rate
-index|]
+name|plcp
 argument_list|)
 operator|&
 name|IWN_RFLAG_MCS
@@ -23420,12 +24319,7 @@ name|RV
 argument_list|(
 name|le32toh
 argument_list|(
-name|wn
-operator|->
-name|ridx
-index|[
-name|rate
-index|]
+name|plcp
 argument_list|)
 argument_list|)
 operator|>
@@ -23450,6 +24344,17 @@ name|txrate
 operator|--
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|iwn_cmd
 argument_list|(
@@ -23534,6 +24439,29 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -23743,6 +24671,17 @@ literal|0
 index|]
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|iwn_cmd
 argument_list|(
@@ -23799,6 +24738,17 @@ decl_stmt|;
 name|int
 name|aci
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -23960,6 +24910,17 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -24008,6 +24969,17 @@ name|struct
 name|iwn_cmd_led
 name|led
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Clear microcode LED ownership. */
 name|IWN_CLRBITS
 argument_list|(
@@ -24089,6 +25061,17 @@ decl_stmt|;
 name|int32_t
 name|temp
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_WRITE
 argument_list|(
 name|sc
@@ -24218,6 +25201,17 @@ name|val
 decl_stmt|,
 name|mod
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -24387,6 +25381,17 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Adjust TX power if need be (delta>= 3 degC). */
 name|DPRINTF
 argument_list|(
@@ -24563,13 +25568,25 @@ decl_stmt|;
 name|uint8_t
 name|chan
 decl_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 comment|/* Retrieve current channel from last RXON. */
 name|chan
 operator|=
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 expr_stmt|;
 name|DPRINTF
@@ -25450,6 +26467,17 @@ name|struct
 name|iwn5000_cmd_txpower
 name|cmd
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 	 * TX power calibration is handled automatically by the firmware 	 * for 5000 Series. 	 */
 name|memset
 argument_list|(
@@ -25554,6 +26582,17 @@ decl_stmt|;
 name|int
 name|rssi
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|mask
 operator|=
 operator|(
@@ -25735,6 +26774,17 @@ decl_stmt|;
 name|int
 name|rssi
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|agc
 operator|=
 operator|(
@@ -25980,6 +27030,17 @@ name|r4
 decl_stmt|,
 name|temp
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|r1
 operator|=
 name|le32toh
@@ -26126,6 +27187,17 @@ block|{
 name|int32_t
 name|temp
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Temperature is not used by the driver for 5000 Series because 	 * TX power calibration is handled by firmware. 	 */
 name|temp
 operator|=
@@ -26213,6 +27285,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Reset calibration state machine. */
 name|memset
 argument_list|(
@@ -26418,12 +27501,41 @@ name|sc
 operator|->
 name|calib
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|sc_ifp
+decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ifp
+operator|->
+name|if_l2com
+decl_stmt|;
 name|uint32_t
 name|val
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Accumulate RSSI and noise for all 3 antennas. */
 for|for
 control|(
@@ -26639,7 +27751,7 @@ comment|/* XXX Disable RX chains with no antennas connected. */
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|rxchain
 operator|=
 name|htole16
@@ -26661,7 +27773,6 @@ name|sc
 argument_list|,
 name|IWN_CMD_RXON
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|rxon
@@ -26675,14 +27786,40 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* XXX: not yet */
 comment|/* Enable power-saving mode if requested by user. */
-block|if (sc->sc_ic.ic_flags& IEEE80211_F_PMGTON) 		(void)iwn_set_pslevel(sc, 0, 3, 1);
-endif|#
-directive|endif
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_PMGTON
+condition|)
+operator|(
+name|void
+operator|)
+name|iwn_set_pslevel
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -26701,6 +27838,17 @@ name|struct
 name|iwn_phy_calib_gain
 name|cmd
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -26764,6 +27912,17 @@ name|struct
 name|iwn_phy_calib
 name|cmd
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -26857,6 +28016,17 @@ name|delta
 decl_stmt|,
 name|noise
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Get minimal noise among connected antennas. */
 name|noise
 operator|=
@@ -27092,6 +28262,17 @@ name|div
 decl_stmt|,
 name|delta
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* We collected 20 beacons and !=6050 need a 1.5 factor. */
 name|div
 operator|=
@@ -27388,6 +28569,17 @@ name|needs_update
 init|=
 literal|0
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Check that we've been enabled long enough. */
 if|if
 condition|(
@@ -27406,7 +28598,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end not so long\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* Compute number of false alarms since last call for OFDM. */
 name|fa
 operator|=
@@ -28238,6 +29443,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|dec
@@ -28619,6 +29835,23 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_PWRSAVE
+argument_list|,
+literal|"%s: dtim=%d, level=%d, async=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|dtim
+argument_list|,
+name|level
+argument_list|,
+name|async
+argument_list|)
+expr_stmt|;
 comment|/* Select which PS parameters to use. */
 if|if
 condition|(
@@ -29311,7 +30544,7 @@ argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
-name|btprio
+name|btprot
 argument_list|)
 expr_stmt|;
 name|btprot
@@ -29507,6 +30740,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -29711,9 +30955,20 @@ name|error
 return|;
 block|}
 comment|/* Set mode, channel, RX filter and enable RX. */
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 name|memset
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|rxon
@@ -29732,7 +30987,7 @@ argument_list|(
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|myaddr
 argument_list|,
 name|IF_LLADDR
@@ -29746,7 +31001,7 @@ argument_list|(
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|wlap
 argument_list|,
 name|IF_LLADDR
@@ -29758,7 +31013,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 operator|=
 name|ieee80211_chan2ieee
@@ -29773,7 +31028,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator|=
 name|htole32
@@ -29795,7 +31050,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -29818,7 +31073,7 @@ case|:
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|mode
 operator|=
 name|IWN_MODE_STA
@@ -29826,7 +31081,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|filter
 operator|=
 name|htole32
@@ -29841,7 +31096,7 @@ case|:
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|mode
 operator|=
 name|IWN_MODE_MONITOR
@@ -29849,7 +31104,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|filter
 operator|=
 name|htole32
@@ -29869,7 +31124,7 @@ block|}
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0x0f
@@ -29878,7 +31133,7 @@ comment|/* not yet negotiated */
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0xff
@@ -29887,7 +31142,7 @@ comment|/* not yet negotiated */
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ht_single_mask
 operator|=
 literal|0xff
@@ -29895,7 +31150,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ht_dual_mask
 operator|=
 literal|0xff
@@ -29903,7 +31158,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ht_triple_mask
 operator|=
 literal|0xff
@@ -29930,7 +31185,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|rxchain
 operator|=
 name|htole16
@@ -29957,7 +31212,6 @@ name|sc
 argument_list|,
 name|IWN_CMD_RXON
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|rxon
@@ -30125,6 +31379,17 @@ return|return
 name|error
 return|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -30286,6 +31551,29 @@ name|buflen
 decl_stmt|,
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 name|buf
 operator|=
 name|malloc
@@ -30520,13 +31808,13 @@ operator|&&
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|associd
 operator|&&
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 operator|>
 literal|14
@@ -30994,7 +32282,7 @@ condition|(
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|associd
 condition|)
 name|chan
@@ -31092,7 +32380,7 @@ condition|(
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|associd
 condition|)
 name|chan
@@ -31219,6 +32507,17 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -31281,13 +32580,36 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 comment|/* Update adapter configuration. */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|bssid
 argument_list|,
 name|ni
@@ -31298,7 +32620,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 operator|=
 name|ieee80211_chan2ieee
@@ -31313,7 +32635,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator|=
 name|htole32
@@ -31335,7 +32657,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -31356,7 +32678,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -31375,7 +32697,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -31396,7 +32718,7 @@ block|{
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0
@@ -31404,7 +32726,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0x15
@@ -31424,7 +32746,7 @@ block|{
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0x03
@@ -31432,7 +32754,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0
@@ -31444,7 +32766,7 @@ comment|/* Assume 802.11b/g. */
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0x0f
@@ -31452,7 +32774,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0x15
@@ -31469,25 +32791,25 @@ argument_list|,
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 argument_list|,
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 argument_list|,
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 argument_list|,
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 argument_list|)
 expr_stmt|;
@@ -31499,7 +32821,6 @@ name|sc
 argument_list|,
 name|IWN_CMD_RXON
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|rxon
@@ -31609,6 +32930,17 @@ return|return
 name|error
 return|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -31680,6 +33012,29 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|rxon
+operator|=
+operator|&
+name|sc
+operator|->
+name|rx_on
+index|[
+name|IWN_RXON_BSS_CTX
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|ic
@@ -31744,7 +33099,7 @@ argument_list|(
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|bssid
 argument_list|,
 name|ni
@@ -31755,7 +33110,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|associd
 operator|=
 name|htole16
@@ -31771,7 +33126,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 operator|=
 name|ieee80211_chan2ieee
@@ -31786,7 +33141,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator|=
 name|htole32
@@ -31808,7 +33163,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -31829,7 +33184,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -31848,7 +33203,7 @@ condition|)
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -31869,7 +33224,7 @@ block|{
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0
@@ -31877,7 +33232,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0x15
@@ -31897,7 +33252,7 @@ block|{
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0x03
@@ -31905,7 +33260,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0
@@ -31917,7 +33272,7 @@ comment|/* Assume 802.11b/g. */
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|cck_mask
 operator|=
 literal|0x0f
@@ -31925,7 +33280,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|ofdm_mask
 operator|=
 literal|0x15
@@ -32000,7 +33355,7 @@ block|}
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 operator||=
 name|htole32
@@ -32011,7 +33366,7 @@ expr_stmt|;
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|filter
 operator||=
 name|htole32
@@ -32030,13 +33385,13 @@ argument_list|,
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|chan
 argument_list|,
 name|sc
 operator|->
 name|rxon
-operator|.
+operator|->
 name|flags
 argument_list|)
 expr_stmt|;
@@ -32048,7 +33403,6 @@ name|sc
 argument_list|,
 name|IWN_CMD_RXON
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|rxon
@@ -32433,6 +33787,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -32524,6 +33889,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|tid
 operator|=
 name|MS
@@ -32724,6 +34100,17 @@ decl_stmt|;
 name|uint8_t
 name|tid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* XXX: tid as an argument */
 for|for
 control|(
@@ -32873,6 +34260,17 @@ decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|qid
@@ -33067,6 +34465,17 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|code
@@ -33235,6 +34644,17 @@ name|error
 decl_stmt|,
 name|qid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Enable TX for the specified RA/TID. */
 name|wn
 operator|->
@@ -33448,6 +34868,17 @@ decl_stmt|;
 name|int
 name|qid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_addba_stop
@@ -33586,6 +35017,17 @@ operator|*
 operator|)
 name|ni
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 name|iwn_prph_write
 argument_list|(
@@ -33783,6 +35225,17 @@ name|uint16_t
 name|ssn
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 name|iwn_prph_write
 argument_list|(
@@ -33886,6 +35339,17 @@ name|uint16_t
 name|ssn
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|struct
 name|iwn_node
 modifier|*
@@ -34087,6 +35551,17 @@ name|uint16_t
 name|ssn
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 name|iwn_prph_write
 argument_list|(
@@ -34825,6 +36300,17 @@ condition|)
 return|return
 name|error
 return|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Clear TX scheduler state in SRAM. */
 name|sc
 operator|->
@@ -35077,6 +36563,17 @@ name|error
 decl_stmt|,
 name|qid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Switch to using ICT interrupt mode. */
 name|iwn5000_ict_reset
 argument_list|(
@@ -35096,9 +36593,22 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s end in error\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 comment|/* Clear TX scheduler state in SRAM. */
 name|sc
 operator|->
@@ -35476,6 +36986,17 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -36158,6 +37679,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Copy firmware section into pre-allocated DMA-safe memory. */
 name|memcpy
 argument_list|(
@@ -36345,6 +37877,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Load the initialization firmware on first boot only. */
 name|fw
 operator|=
@@ -37284,6 +38827,85 @@ literal|1
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|IWN_FW_TLV_PAN
+case|:
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_PAN_SUPPORT
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_RESET
+argument_list|,
+literal|"PAN Support found: %d\n"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IWN_FW_TLV_FLAGS
+case|:
+name|sc
+operator|->
+name|tlv_feature_flags
+operator|=
+name|htole32
+argument_list|(
+operator|*
+name|ptr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IWN_FW_TLV_PBREQ_MAXLEN
+case|:
+case|case
+name|IWN_FW_TLV_RUNT_EVTLOG_PTR
+case|:
+case|case
+name|IWN_FW_TLV_RUNT_EVTLOG_SIZE
+case|:
+case|case
+name|IWN_FW_TLV_RUNT_ERRLOG_PTR
+case|:
+case|case
+name|IWN_FW_TLV_INIT_EVTLOG_PTR
+case|:
+case|case
+name|IWN_FW_TLV_INIT_EVTLOG_SIZE
+case|:
+case|case
+name|IWN_FW_TLV_INIT_ERRLOG_PTR
+case|:
+case|case
+name|IWN_FW_TLV_WOWLAN_INST
+case|:
+case|case
+name|IWN_FW_TLV_WOWLAN_DATA
+case|:
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_RESET
+argument_list|,
+literal|"TLV type %d reconized but not handled\n"
+argument_list|,
+name|le16toh
+argument_list|(
+name|tlv
+operator|->
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|DPRINTF
 argument_list|(
@@ -37348,6 +38970,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_UNLOCK
 argument_list|(
 name|sc
@@ -37757,6 +39390,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Disable L0s exit timer (NMI bug workaround). */
 name|IWN_SETBITS
 argument_list|(
@@ -38084,6 +39728,17 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IWN_RFCFG_TYPE
@@ -38160,6 +39815,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IWN_RFCFG_TYPE
@@ -38375,6 +40041,17 @@ block|{
 name|int
 name|ntries
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Check if hardware is ready. */
 name|IWN_SETBITS
 argument_list|(
@@ -38551,6 +40228,17 @@ name|chnl
 decl_stmt|,
 name|qid
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 comment|/* Clear pending interrupts. */
 name|IWN_WRITE
 argument_list|(
@@ -39059,6 +40747,17 @@ name|error
 return|;
 block|}
 comment|/* Do post-firmware initialization. */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 name|ops
 operator|->
@@ -39088,6 +40787,17 @@ name|qid
 decl_stmt|,
 name|ntries
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_WRITE
 argument_list|(
 name|sc
@@ -39361,6 +41071,17 @@ operator|->
 name|ic_vaps
 argument_list|)
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -39433,6 +41154,17 @@ operator|->
 name|ic_vaps
 argument_list|)
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|iwn_stop
 argument_list|(
 name|sc
@@ -39506,6 +41238,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s begin\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -39742,12 +41485,34 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return;
 name|fail
 label|:
 name|iwn_stop_locked
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->%s: end in error\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -40100,6 +41865,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|IWN_LOCK
 argument_list|(
 name|sc
@@ -40334,6 +42110,17 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_TRACE
+argument_list|,
+literal|"->Doing %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|iwn_stop
 argument_list|(
 name|sc
@@ -40353,6 +42140,344 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IWN_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IWN_DESC
+parameter_list|(
+name|x
+parameter_list|)
+value|case x:	return #x
+end_define
+
+begin_define
+define|#
+directive|define
+name|COUNTOF
+parameter_list|(
+name|array
+parameter_list|)
+value|(sizeof(array) / sizeof(array[0]))
+end_define
+
+begin_comment
+comment|/*  * Translate CSR code to string  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|iwn_get_csr_string
+parameter_list|(
+name|int
+name|csr
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|csr
+condition|)
+block|{
+name|IWN_DESC
+argument_list|(
+name|IWN_HW_IF_CONFIG
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_INT_COALESCING
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_INT
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_INT_MASK
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_FH_INT
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_GPIO_IN
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_RESET
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_GP_CNTRL
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_HW_REV
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_EEPROM
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_EEPROM_GP
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_OTP_GP
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_GIO
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_GP_UCODE
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_GP_DRIVER
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_UCODE_GP1
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_UCODE_GP2
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_LED
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_DRAM_INT_TBL
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_GIO_CHICKEN
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_ANA_PLL
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_HW_REV_WA
+argument_list|)
+expr_stmt|;
+name|IWN_DESC
+argument_list|(
+name|IWN_DBG_HPET_MEM
+argument_list|)
+expr_stmt|;
+default|default:
+return|return
+literal|"UNKNOWN CSR"
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * This function print firmware register  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|iwn_debug_register
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint32_t
+name|csr_tbl
+index|[]
+init|=
+block|{
+name|IWN_HW_IF_CONFIG
+block|,
+name|IWN_INT_COALESCING
+block|,
+name|IWN_INT
+block|,
+name|IWN_INT_MASK
+block|,
+name|IWN_FH_INT
+block|,
+name|IWN_GPIO_IN
+block|,
+name|IWN_RESET
+block|,
+name|IWN_GP_CNTRL
+block|,
+name|IWN_HW_REV
+block|,
+name|IWN_EEPROM
+block|,
+name|IWN_EEPROM_GP
+block|,
+name|IWN_OTP_GP
+block|,
+name|IWN_GIO
+block|,
+name|IWN_GP_UCODE
+block|,
+name|IWN_GP_DRIVER
+block|,
+name|IWN_UCODE_GP1
+block|,
+name|IWN_UCODE_GP2
+block|,
+name|IWN_LED
+block|,
+name|IWN_DRAM_INT_TBL
+block|,
+name|IWN_GIO_CHICKEN
+block|,
+name|IWN_ANA_PLL
+block|,
+name|IWN_HW_REV_WA
+block|,
+name|IWN_DBG_HPET_MEM
+block|, 	}
+decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_REGISTER
+argument_list|,
+literal|"CSR values: (2nd byte of IWN_INT_COALESCING is IWN_INT_PERIODIC)%s"
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|COUNTOF
+argument_list|(
+name|csr_tbl
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_REGISTER
+argument_list|,
+literal|"  %10s: 0x%08x "
+argument_list|,
+name|iwn_get_csr_string
+argument_list|(
+name|csr_tbl
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|,
+name|IWN_READ
+argument_list|(
+name|sc
+argument_list|,
+name|csr_tbl
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|+
+literal|1
+operator|)
+operator|%
+literal|3
+operator|==
+literal|0
+condition|)
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_REGISTER
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_REGISTER
+argument_list|,
+literal|"%s"
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

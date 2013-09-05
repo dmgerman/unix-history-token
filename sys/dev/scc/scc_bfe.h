@@ -363,6 +363,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 name|scc_driver_name
 index|[]

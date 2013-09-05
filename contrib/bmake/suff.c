@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: suff.c,v 1.69 2011/09/29 23:38:04 sjg Exp $	*/
+comment|/*	$NetBSD: suff.c,v 1.70 2013/05/18 13:13:34 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: suff.c,v 1.69 2011/09/29 23:38:04 sjg Exp $"
+literal|"$NetBSD: suff.c,v 1.70 2013/05/18 13:13:34 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: suff.c,v 1.69 2011/09/29 23:38:04 sjg Exp $"
+literal|"$NetBSD: suff.c,v 1.70 2013/05/18 13:13:34 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6368,6 +6368,26 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/*      * We're caught in a catch-22 here. On the one hand, we want to use any      * transformation implied by the target's sources, but we can't examine      * the sources until we've expanded any variables/wildcards they may hold,      * and we can't do that until we've set up the target's local variables      * and we can't do that until we know what the proper suffix for the      * target is (in case there are two suffixes one of which is a suffix of      * the other) and we can't know that until we've found its implied      * source, which we may not want to use if there's an existing source      * that implies a different transformation.      *      * In an attempt to get around this, which may not work all the time,      * but should work most of the time, we look for implied sources first,      * checking transformations to all possible suffixes of the target,      * use what we find to set the target's local variables, expand the      * children, then look for any overriding transformations they imply.      * Should we find one, we discard the one we found before.      */
+name|bottom
+operator|=
+name|NULL
+expr_stmt|;
+name|targ
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|gn
+operator|->
+name|type
+operator|&
+name|OP_PHONY
+operator|)
+condition|)
+block|{
 while|while
 condition|(
 name|ln
@@ -6375,7 +6395,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Look for next possible suffix... 	 */
+comment|/* 	     * Look for next possible suffix... 	     */
 name|ln
 operator|=
 name|Lst_FindFrom
@@ -6401,7 +6421,7 @@ name|int
 name|prefLen
 decl_stmt|;
 comment|/* Length of the prefix */
-comment|/* 	     * Allocate a Src structure to which things can be transformed 	     */
+comment|/* 		 * Allocate a Src structure to which things can be transformed 		 */
 name|targ
 operator|=
 name|bmake_malloc
@@ -6475,7 +6495,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	     * Allocate room for the prefix, whose end is found by subtracting 	     * the length of the suffix from the end of the name. 	     */
+comment|/* 		 * Allocate room for the prefix, whose end is found by 		 * subtracting the length of the suffix from 		 * the end of the name. 		 */
 name|prefLen
 operator|=
 operator|(
@@ -6521,7 +6541,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	     * Add nodes from which the target can be made 	     */
+comment|/* 		 * Add nodes from which the target can be made 		 */
 name|SuffAddLevel
 argument_list|(
 name|srcs
@@ -6529,7 +6549,7 @@ argument_list|,
 name|targ
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Record the target so we can nuke it 	     */
+comment|/* 		 * Record the target so we can nuke it 		 */
 operator|(
 name|void
 operator|)
@@ -6540,7 +6560,7 @@ argument_list|,
 name|targ
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Search from this suffix's successor... 	     */
+comment|/* 		 * Search from this suffix's successor... 		 */
 name|ln
 operator|=
 name|Lst_Succ
@@ -6550,7 +6570,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Handle target of unknown suffix...      */
+comment|/* 	 * Handle target of unknown suffix... 	 */
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -6658,7 +6678,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Only use the default suffix rules if we don't have commands 	 * defined for this gnode; traditional make programs used to 	 * not define suffix rules if the gnode had children but we 	 * don't do this anymore. 	 */
+comment|/* 	     * Only use the default suffix rules if we don't have commands 	     * defined for this gnode; traditional make programs used to 	     * not define suffix rules if the gnode had children but we 	     * don't do this anymore. 	     */
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -6717,7 +6737,7 @@ name|targ
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Using the list of possible sources built up from the target suffix(es),      * try and find an existing file/target that matches.      */
+comment|/* 	 * Using the list of possible sources built up from the target 	 * suffix(es), try and find an existing file/target that matches. 	 */
 name|bottom
 operator|=
 name|SuffFindThem
@@ -6734,7 +6754,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * No known transformations -- use the first suffix found for setting 	 * the local variables. 	 */
+comment|/* 	     * No known transformations -- use the first suffix found 	     * for setting the local variables. 	     */
 if|if
 condition|(
 operator|!
@@ -6769,7 +6789,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	 * Work up the transformation path to find the suffix of the 	 * target to which the transformation was made. 	 */
+comment|/* 	     * Work up the transformation path to find the suffix of the 	     * target to which the transformation was made. 	     */
 for|for
 control|(
 name|targ
@@ -6789,6 +6809,7 @@ operator|->
 name|parent
 control|)
 continue|continue;
+block|}
 block|}
 name|Var_Set
 argument_list|(
@@ -7641,18 +7662,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|gn
-operator|->
-name|type
-operator|&
-name|OP_PHONY
-condition|)
-block|{
-comment|/* 	 * If this is a .PHONY target, we do not apply suffix rules. 	 */
-return|return;
-block|}
 if|if
 condition|(
 name|DEBUG

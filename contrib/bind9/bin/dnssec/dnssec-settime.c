@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2013  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-settime.c,v 1.28.16.3 2011/06/02 20:24:11 each Exp $ */
+comment|/* $Id: dnssec-settime.c,v 1.32 2011/06/02 20:24:45 each Exp $ */
 end_comment
 
 begin_comment
@@ -15,12 +15,6 @@ begin_include
 include|#
 directive|include
 file|<config.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libgen.h>
 end_include
 
 begin_include
@@ -244,6 +238,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    -K directory:       set key file location\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    -L ttl:             set default key TTL\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -607,6 +608,11 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|dns_ttl_t
+name|ttl
+init|=
+literal|0
+decl_stmt|;
 name|isc_stdtime_t
 name|now
 decl_stmt|;
@@ -631,6 +637,19 @@ name|del
 init|=
 literal|0
 decl_stmt|;
+name|isc_stdtime_t
+name|prevact
+init|=
+literal|0
+decl_stmt|,
+name|previnact
+init|=
+literal|0
+decl_stmt|,
+name|prevdel
+init|=
+literal|0
+decl_stmt|;
 name|isc_boolean_t
 name|setpub
 init|=
@@ -651,6 +670,10 @@ name|ISC_FALSE
 decl_stmt|;
 name|isc_boolean_t
 name|setdel
+init|=
+name|ISC_FALSE
+decl_stmt|,
+name|setttl
 init|=
 name|ISC_FALSE
 decl_stmt|;
@@ -783,7 +806,7 @@ expr_stmt|;
 define|#
 directive|define
 name|CMDLINE_FLAGS
-value|"A:D:E:fhI:i:K:P:p:R:S:uv:"
+value|"A:D:E:fhI:i:K:L:P:p:R:S:uv:"
 while|while
 condition|(
 operator|(
@@ -980,6 +1003,37 @@ literal|"directory"
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'L'
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ttl
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|ttl
+operator|=
+name|strtottl
+argument_list|(
+name|isc_commandline_argument
+argument_list|)
+expr_stmt|;
+name|setttl
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 break|break;
 case|case
 literal|'v'
@@ -1459,9 +1513,6 @@ index|[
 name|DST_KEY_FORMATSIZE
 index|]
 decl_stmt|;
-name|isc_stdtime_t
-name|when
-decl_stmt|;
 name|int
 name|major
 decl_stmt|,
@@ -1635,7 +1686,7 @@ argument_list|,
 name|DST_TIME_ACTIVATE
 argument_list|,
 operator|&
-name|when
+name|prevact
 argument_list|)
 expr_stmt|;
 if|if
@@ -1660,7 +1711,7 @@ argument_list|,
 name|DST_TIME_INACTIVE
 argument_list|,
 operator|&
-name|act
+name|previnact
 argument_list|)
 expr_stmt|;
 if|if
@@ -1678,7 +1729,7 @@ argument_list|)
 expr_stmt|;
 name|pub
 operator|=
-name|act
+name|prevact
 operator|-
 name|prepub
 expr_stmt|;
@@ -1710,7 +1761,7 @@ argument_list|,
 name|DST_TIME_DELETE
 argument_list|,
 operator|&
-name|when
+name|prevdel
 argument_list|)
 expr_stmt|;
 if|if
@@ -1723,10 +1774,29 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: WARNING: Predecessor has no "
+literal|"%s: warning: Predecessor has no "
 literal|"removal date;\n\t"
 literal|"it will remain in the zone "
 literal|"indefinitely after rollover.\n"
+argument_list|,
+name|program
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|prevdel
+operator|<
+name|previnact
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: warning: Predecessor is "
+literal|"scheduled to be deleted\n\t"
+literal|"before it is scheduled to be "
+literal|"inactive.\n"
 argument_list|,
 name|program
 argument_list|)
@@ -2031,6 +2101,93 @@ literal|"Key flags mismatch"
 argument_list|)
 expr_stmt|;
 block|}
+name|prevdel
+operator|=
+name|previnact
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|setdel
+operator|&&
+name|setinact
+operator|&&
+name|del
+operator|<
+name|inact
+operator|)
+operator|||
+operator|(
+name|dst_key_gettime
+argument_list|(
+name|key
+argument_list|,
+name|DST_TIME_INACTIVE
+argument_list|,
+operator|&
+name|previnact
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+operator|&&
+name|setdel
+operator|&&
+operator|!
+name|setinact
+operator|&&
+name|del
+operator|<
+name|previnact
+operator|)
+operator|||
+operator|(
+name|dst_key_gettime
+argument_list|(
+name|key
+argument_list|,
+name|DST_TIME_DELETE
+argument_list|,
+operator|&
+name|prevdel
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+operator|&&
+name|setinact
+operator|&&
+operator|!
+name|setdel
+operator|&&
+name|prevdel
+operator|<
+name|inact
+operator|)
+operator|||
+operator|(
+operator|!
+name|setdel
+operator|&&
+operator|!
+name|setinact
+operator|&&
+name|prevdel
+operator|<
+name|previnact
+operator|)
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: warning: Key is scheduled to "
+literal|"be deleted before it is\n\t"
+literal|"scheduled to be inactive.\n"
+argument_list|,
+name|program
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|force
@@ -2273,6 +2430,17 @@ argument_list|,
 name|DST_TIME_DELETE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setttl
+condition|)
+name|dst_key_setttl
+argument_list|(
+name|key
+argument_list|,
+name|ttl
+argument_list|)
+expr_stmt|;
 comment|/* 	 * No metadata changes were made but we're forcing an upgrade 	 * to the new format anyway: use "-P now -A now" as the default 	 */
 if|if
 condition|(
@@ -2305,6 +2473,17 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|changed
+operator|&&
+name|setttl
+condition|)
+name|changed
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 comment|/* 	 * Print out time values, if -p was used. 	 */
 if|if
 condition|(

@@ -2500,6 +2500,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 comment|/* 	 * As long as it is possible to get a LOR between pmc_sx lock and 	 * proctree/allproc sx locks used for adding a new process, assure 	 * the former is not held here. 	 */
 name|sx_assert
 argument_list|(
@@ -2595,7 +2598,13 @@ name|curthread
 argument_list|,
 name|logfd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_WRITE
+argument_list|)
 argument_list|,
 operator|&
 name|po

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20130328
+value|0x20130823
 end_define
 
 begin_include
@@ -89,6 +89,13 @@ end_decl_stmt
 begin_comment
 comment|/* ACPI 5.0 */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_OsiData
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Runtime configuration of debug print levels */
@@ -179,6 +186,13 @@ begin_decl_stmt
 specifier|extern
 name|UINT8
 name|AcpiGbl_DisableAutoRepair
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_DisableSsdtTableLoad
 decl_stmt|;
 end_decl_stmt
 
@@ -425,6 +439,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|AcpiUpdateInterfaces
+parameter_list|(
+name|UINT8
+name|Action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|UINT32
 name|AcpiCheckAddressRange
 parameter_list|(
@@ -649,10 +673,10 @@ name|UINT32
 name|MaxDepth
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PreOrderVisit
+name|DescendingCallback
 parameter_list|,
 name|ACPI_WALK_CALLBACK
-name|PostOrderVisit
+name|AscendingCallback
 parameter_list|,
 name|void
 modifier|*
@@ -930,6 +954,20 @@ name|Function
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiInstallSciHandler (     ACPI_SCI_HANDLER        Address,     void                    *Context)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiRemoveSciHandler (     ACPI_SCI_HANDLER        Address)
+argument_list|)
+end_macro
 
 begin_macro
 name|ACPI_HW_DEPENDENT_RETURN_STATUS

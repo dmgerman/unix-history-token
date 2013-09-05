@@ -254,7 +254,7 @@ literal|0
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* 	 * efx_mcdi_request_start() is naturally serialised against both 	 * efx_mcdi_request_poll() and efx_mcdi_ev_cpl()/efx_mcdi_ev_death(), 	 * by virtue of there only being one oustanding MCDI request. 	 * Unfortunately, upper layers may also call efx_mcdi_request_abort() 	 * at any time, to timeout a pending mcdi request, That request may 	 * then subsequently complete, meaning efx_mcdi_ev_cpl() or 	 * efx_mcdi_ev_death() may end up running in parallel with 	 * efx_mcdi_request_start(). This race is handled by ensuring that 	 * %emi_pending_req, %emi_ev_cpl and %emi_seq are protected by the 	 * en_eslp lock. 	 */
+comment|/* 	 * efx_mcdi_request_start() is naturally serialised against both 	 * efx_mcdi_request_poll() and efx_mcdi_ev_cpl()/efx_mcdi_ev_death(), 	 * by virtue of there only being one outstanding MCDI request. 	 * Unfortunately, upper layers may also call efx_mcdi_request_abort() 	 * at any time, to timeout a pending mcdi request, That request may 	 * then subsequently complete, meaning efx_mcdi_ev_cpl() or 	 * efx_mcdi_ev_death() may end up running in parallel with 	 * efx_mcdi_request_start(). This race is handled by ensuring that 	 * %emi_pending_req, %emi_ev_cpl and %emi_seq are protected by the 	 * en_eslp lock. 	 */
 name|EFSYS_LOCK
 argument_list|(
 name|enp
@@ -1922,7 +1922,7 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
-comment|/* 	 * The MCDI request (if there is one) has been terminated, either 	 * by a BADASSERT or REBOOT event. 	 * 	 * If there is an oustanding event-completed MCDI operation, then we 	 * will never receive the completion event (because both MCDI 	 * completions and BADASSERT events are sent to the same evq). So 	 * complete this MCDI op. 	 * 	 * This function might run in parallel with efx_mcdi_request_poll() 	 * for poll completed mcdi requests, and also with 	 * efx_mcdi_request_start() for post-watchdog completions. 	 */
+comment|/* 	 * The MCDI request (if there is one) has been terminated, either 	 * by a BADASSERT or REBOOT event. 	 * 	 * If there is an outstanding event-completed MCDI operation, then we 	 * will never receive the completion event (because both MCDI 	 * completions and BADASSERT events are sent to the same evq). So 	 * complete this MCDI op. 	 * 	 * This function might run in parallel with efx_mcdi_request_poll() 	 * for poll completed mcdi requests, and also with 	 * efx_mcdi_request_start() for post-watchdog completions. 	 */
 name|EFSYS_LOCK
 argument_list|(
 name|enp

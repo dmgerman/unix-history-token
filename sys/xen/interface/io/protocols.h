@@ -39,8 +39,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|XEN_IO_PROTO_ABI_POWERPC64
-value|"powerpc64-abi"
+name|XEN_IO_PROTO_ABI_ARM
+value|"arm-abi"
 end_define
 
 begin_if
@@ -96,7 +96,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__powerpc64__
+name|__arm__
 argument_list|)
 end_elif
 
@@ -104,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|XEN_IO_PROTO_ABI_NATIVE
-value|XEN_IO_PROTO_ABI_POWERPC64
+value|XEN_IO_PROTO_ABI_ARM
 end_define
 
 begin_else

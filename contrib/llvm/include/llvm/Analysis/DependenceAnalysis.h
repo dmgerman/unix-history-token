@@ -80,6 +80,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// This pass exists to support the DependenceGraph pass. There are two separate
+end_comment
+
+begin_comment
+comment|// passes because there's a useful separation of concerns. A dependence exists
+end_comment
+
+begin_comment
+comment|// if two conditions are met:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//    1) Two instructions reference the same memory location, and
+end_comment
+
+begin_comment
+comment|//    2) There is a flow of control leading from one instruction to the other.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// DependenceAnalysis attacks the first condition; DependenceGraph will attack
+end_comment
+
+begin_comment
+comment|// the second (it's not yet ready).
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Please note that this is work in progress and the interface is subject to
 end_comment
 
@@ -126,19 +166,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Instructions.h"
+file|"llvm/ADT/SmallBitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallBitVector.h"
 end_include
 
 begin_decl_stmt
@@ -181,12 +221,10 @@ name|public
 label|:
 name|Dependence
 argument_list|(
-specifier|const
 name|Instruction
 operator|*
 name|Source
 argument_list|,
-specifier|const
 name|Instruction
 operator|*
 name|Destination
@@ -321,7 +359,6 @@ block|}
 expr_stmt|;
 comment|/// getSrc - Returns the source instruction for this dependence.
 comment|///
-specifier|const
 name|Instruction
 operator|*
 name|getSrc
@@ -334,7 +371,6 @@ return|;
 block|}
 comment|/// getDst - Returns the destination instruction for this dependence.
 comment|///
-specifier|const
 name|Instruction
 operator|*
 name|getDst
@@ -556,7 +592,6 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-specifier|const
 name|Instruction
 modifier|*
 name|Src
@@ -572,7 +607,7 @@ block|}
 empty_stmt|;
 comment|/// FullDependence - This class represents a dependence between two memory
 comment|/// references in a function. It contains detailed information about the
-comment|/// dependence (direction vectors, etc) and is used when the compiler is
+comment|/// dependence (direction vectors, etc.) and is used when the compiler is
 comment|/// able to accurately analyze the interaction of the references; that is,
 comment|/// it is not a confused dependence (see Dependence). In most cases
 comment|/// (for output, flow, and anti dependences), the dependence implies an
@@ -588,9 +623,9 @@ name|public
 operator|:
 name|FullDependence
 argument_list|(
-argument|const Instruction *Src
+argument|Instruction *Src
 argument_list|,
-argument|const Instruction *Dst
+argument|Instruction *Dst
 argument_list|,
 argument|bool LoopIndependent
 argument_list|,
@@ -602,6 +637,7 @@ name|FullDependence
 argument_list|()
 block|{
 name|delete
+index|[]
 name|DV
 block|;     }
 comment|/// isLoopIndependent - Returns true if this is a loop-independent
@@ -744,16 +780,14 @@ specifier|const
 name|DependenceAnalysis
 operator|&
 operator|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|DependenceAnalysis
 argument_list|(
-specifier|const
-name|DependenceAnalysis
-operator|&
+argument|const DependenceAnalysis&
 argument_list|)
+name|LLVM_DELETED_FUNCTION
 block|;
-comment|// do not implement
 name|public
 operator|:
 comment|/// depends - Tests for a dependence between the Src and Dst instructions.
@@ -766,14 +800,14 @@ name|Dependence
 operator|*
 name|depends
 argument_list|(
-argument|const Instruction *Src
+argument|Instruction *Src
 argument_list|,
-argument|const Instruction *Dst
+argument|Instruction *Dst
 argument_list|,
 argument|bool PossiblyLoopIndependent
 argument_list|)
 block|;
-comment|/// getSplitIteration - Give a dependence that's splitable at some
+comment|/// getSplitIteration - Give a dependence that's splittable at some
 comment|/// particular level, return the iteration that should be used to split
 comment|/// the loop.
 comment|///

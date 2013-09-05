@@ -129,6 +129,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -8165,10 +8171,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|kmem_free
+name|contigfree
 argument_list|(
-name|kernel_map
-argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|bktr
 operator|->
 name|bigbuf
@@ -8180,6 +8191,8 @@ name|alloc_pages
 operator|*
 name|PAGE_SIZE
 operator|)
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8683,7 +8696,6 @@ block|{
 name|int
 name|tmp_int
 decl_stmt|;
-name|unsigned
 name|int
 name|temp
 decl_stmt|,

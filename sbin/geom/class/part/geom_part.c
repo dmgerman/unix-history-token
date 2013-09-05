@@ -926,7 +926,7 @@ literal|'i'
 block|,
 name|GPART_PARAM_INDEX
 block|,
-name|NULL
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -944,7 +944,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"-a attrib -i index [-f flags] geom"
+literal|"-a attrib [-i index] [-f flags] geom"
 block|}
 block|,
 block|{
@@ -1026,7 +1026,7 @@ literal|'i'
 block|,
 name|GPART_PARAM_INDEX
 block|,
-name|NULL
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -1044,7 +1044,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"-a attrib -i index [-f flags] geom"
+literal|"-a attrib [-i index] [-f flags] geom"
 block|}
 block|,
 block|{

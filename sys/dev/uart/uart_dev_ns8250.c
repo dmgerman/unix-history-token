@@ -115,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/uart/uart_dev_ns8250.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ic/ns16550.h>
 end_include
 
@@ -1047,7 +1053,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|uart_ops
 name|uart_ns8250_ops
@@ -1501,188 +1506,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * High-level UART interface.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ns8250_softc
-block|{
-name|struct
-name|uart_softc
-name|base
-decl_stmt|;
-name|uint8_t
-name|fcr
-decl_stmt|;
-name|uint8_t
-name|ier
-decl_stmt|;
-name|uint8_t
-name|mcr
-decl_stmt|;
-name|uint8_t
-name|ier_mask
-decl_stmt|;
-name|uint8_t
-name|ier_rxbits
-decl_stmt|;
-name|uint8_t
-name|busy_detect
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_attach
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_detach
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_flush
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_getsig
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_ioctl
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|intptr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_ipend
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_param
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_probe
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_receive
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_setsig
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ns8250_bus_transmit
-parameter_list|(
-name|struct
-name|uart_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|kobj_method_t
@@ -1829,7 +1652,6 @@ value|if (c) {					\ 		i |= (i& s) ? s : s | d;		\ 	} else {					\ 		i = (i& s) 
 end_define
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_attach
 parameter_list|(
@@ -2221,6 +2043,12 @@ argument_list|(
 name|bas
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Timing of the H/W access was changed with r253161 of uart_core.c 	 * It has been observed that an ITE IT8513E would signal a break 	 * condition with pretty much every character it received, unless 	 * it had enough time to settle between ns8250_bus_attach() and 	 * ns8250_bus_ipend() -- which it accidentally had before r253161. 	 * It's not understood why the UART chip behaves this way and it 	 * could very well be that the DELAY make the H/W work in the same 	 * accidental manner as before. More analysis is warranted, but 	 * at least now we fixed a known regression. 	 */
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2230,7 +2058,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_detach
 parameter_list|(
@@ -2310,7 +2137,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_flush
 parameter_list|(
@@ -2420,7 +2246,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_getsig
 parameter_list|(
@@ -2563,7 +2388,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_ioctl
 parameter_list|(
@@ -2955,7 +2779,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_ipend
 parameter_list|(
@@ -3182,7 +3005,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_param
 parameter_list|(
@@ -3257,7 +3079,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_probe
 parameter_list|(
@@ -3851,7 +3672,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_receive
 parameter_list|(
@@ -4018,7 +3838,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_setsig
 parameter_list|(
@@ -4205,7 +4024,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|ns8250_bus_transmit
 parameter_list|(

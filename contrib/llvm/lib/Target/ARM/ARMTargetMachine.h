@@ -62,25 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARMInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMJITInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
 end_include
 
 begin_include
@@ -92,13 +74,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ARMInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ARMJITInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ARMSelectionDAGInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Thumb1InstrInfo.h"
+file|"ARMSubtarget.h"
 end_include
 
 begin_include
@@ -110,25 +104,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"Thumb1InstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"Thumb2InstrInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetTransformImpl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DataLayout.h"
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -140,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/Target/TargetMachine.h"
 end_include
 
 begin_decl_stmt
@@ -213,6 +207,20 @@ return|;
 block|}
 name|virtual
 specifier|const
+name|ARMTargetLowering
+operator|*
+name|getTargetLowering
+argument_list|()
+specifier|const
+block|{
+comment|// Implemented by derived classes
+name|llvm_unreachable
+argument_list|(
+literal|"getTargetLowering not implemented"
+argument_list|)
+block|;   }
+name|virtual
+specifier|const
 name|InstrItineraryData
 operator|*
 name|getInstrItineraryData
@@ -224,6 +232,16 @@ operator|&
 name|InstrItins
 return|;
 block|}
+comment|/// \brief Register ARM analysis passes with a pass manager.
+name|virtual
+name|void
+name|addAnalysisPasses
+argument_list|(
+name|PassManagerBase
+operator|&
+name|PM
+argument_list|)
+block|;
 comment|// Pass Pipeline Configuration
 name|virtual
 name|TargetPassConfig
@@ -278,12 +296,6 @@ name|TSInfo
 block|;
 name|ARMFrameLowering
 name|FrameLowering
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -363,32 +375,6 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
-return|;
-block|}
-name|virtual
-specifier|const
 name|ARMInstrInfo
 operator|*
 name|getInstrInfo
@@ -454,12 +440,6 @@ operator|<
 name|ARMFrameLowering
 operator|>
 name|FrameLowering
-block|;
-name|ScalarTargetTransformImpl
-name|STTI
-block|;
-name|VectorTargetTransformImpl
-name|VTTI
 block|;
 name|public
 operator|:
@@ -555,32 +535,6 @@ name|FrameLowering
 operator|.
 name|get
 argument_list|()
-return|;
-block|}
-name|virtual
-specifier|const
-name|ScalarTargetTransformInfo
-operator|*
-name|getScalarTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|STTI
-return|;
-block|}
-name|virtual
-specifier|const
-name|VectorTargetTransformInfo
-operator|*
-name|getVectorTargetTransformInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|VTTI
 return|;
 block|}
 name|virtual

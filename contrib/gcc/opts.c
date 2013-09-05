@@ -2221,7 +2221,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* XXX: some issues with ports have been traced to -ftree-vrp.          So remove it from -O2 and above.  Note that jdk1{5,6} are affected          and they build with w/-O3 - so we cannot just move it to -O3. */
-comment|// flag_tree_vrp = 1;
+comment|/* flag_tree_vrp = 1; // See GCC tree-optimization/33099 */
 if|if
 condition|(
 operator|!

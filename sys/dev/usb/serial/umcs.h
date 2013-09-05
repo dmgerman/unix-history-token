@@ -2999,7 +2999,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* BREAK sigmal received */
+comment|/* BREAK signal received */
 end_comment
 
 begin_define

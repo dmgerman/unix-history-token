@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/Type.h"
+file|"CGBuilder.h"
 end_include
 
 begin_include
@@ -74,19 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DIBuilder.h"
 end_include
 
 begin_include
@@ -98,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/DIBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/DebugInfo.h"
 end_include
 
 begin_include
@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGBuilder.h"
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -135,6 +135,9 @@ name|VarDecl
 decl_stmt|;
 name|class
 name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
+name|ObjCIvarDecl
 decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
@@ -191,13 +194,39 @@ name|ClassTy
 expr_stmt|;
 name|llvm
 operator|::
-name|DIType
+name|DICompositeType
 name|ObjTy
 expr_stmt|;
 name|llvm
 operator|::
 name|DIType
 name|SelTy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|OCLImage1dDITy
+operator|,
+name|OCLImage1dArrayDITy
+operator|,
+name|OCLImage1dBufferDITy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|OCLImage2dDITy
+operator|,
+name|OCLImage2dArrayDITy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|OCLImage3dDITy
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|OCLEventDITy
 expr_stmt|;
 comment|/// TypeCache - Cache of previously constructed Types.
 name|llvm
@@ -212,6 +241,38 @@ operator|::
 name|WeakVH
 operator|>
 name|TypeCache
+expr_stmt|;
+comment|/// ObjCInterfaceCache - Cache of previously constructed interfaces
+comment|/// which may change. Storing a pair of DIType and checksum.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|void
+operator|*
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|WeakVH
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|ObjCInterfaceCache
+expr_stmt|;
+comment|/// RetainedTypes - list of interfaces we want to keep even if orphaned.
+name|std
+operator|::
+name|vector
+operator|<
+name|void
+operator|*
+operator|>
+name|RetainedTypes
 expr_stmt|;
 comment|/// CompleteTypeCache - Cache of previously constructed complete RecordTypes.
 name|llvm
@@ -348,7 +409,30 @@ name|WeakVH
 operator|>
 name|NameSpaceCache
 expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|StaticDataMemberCache
+expr_stmt|;
 comment|/// Helper functions for getOrCreateType.
+name|unsigned
+name|Checksum
+parameter_list|(
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|InterfaceDecl
+parameter_list|)
+function_decl|;
 name|llvm
 operator|::
 name|DIType
@@ -547,6 +631,16 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateSelfType
+argument_list|(
+argument|const QualType&QualTy
+argument_list|,
+argument|llvm::DIType Ty
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|getTypeOrNull
 argument_list|(
 specifier|const
@@ -570,6 +664,18 @@ argument_list|(
 argument|const CXXMethodDecl *Method
 argument_list|,
 argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|getOrCreateInstanceMethodType
+argument_list|(
+argument|QualType ThisPtr
+argument_list|,
+argument|const FunctionProtoType *Func
+argument_list|,
+argument|llvm::DIFile Unit
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -625,6 +731,25 @@ argument_list|,
 argument|QualType PointeeTy
 argument_list|,
 argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getCachedInterfaceTypeOrNull
+argument_list|(
+argument|const QualType Ty
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|getOrCreateStructPtrType
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|llvm::DIType&Cache
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -780,16 +905,85 @@ argument_list|,
 argument|llvm::DIDescriptor scope
 argument_list|)
 expr_stmt|;
+comment|// Helpers for collecting fields of a record.
 name|void
-name|CollectRecordStaticVars
+name|CollectRecordLambdaFields
 argument_list|(
 specifier|const
-name|RecordDecl
+name|CXXRecordDecl
 operator|*
+name|CXXDecl
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+operator|&
+name|E
 argument_list|,
 name|llvm
 operator|::
 name|DIType
+name|RecordTy
+argument_list|)
+decl_stmt|;
+name|void
+name|CollectRecordStaticField
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|Var
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+operator|&
+name|E
+argument_list|,
+name|llvm
+operator|::
+name|DIType
+name|RecordTy
+argument_list|)
+decl_stmt|;
+name|void
+name|CollectRecordNormalField
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|Field
+argument_list|,
+name|uint64_t
+name|OffsetInBits
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+name|F
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+operator|&
+name|E
+argument_list|,
+name|llvm
+operator|::
+name|DIType
+name|RecordTy
 argument_list|)
 decl_stmt|;
 name|void
@@ -869,9 +1063,7 @@ argument_list|()
 expr_stmt|;
 name|void
 name|finalize
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// setLocation - Update the current source location. If \arg loc is
 comment|/// invalid it is ignored.
@@ -884,6 +1076,7 @@ parameter_list|)
 function_decl|;
 comment|/// EmitLocation - Emit metadata to indicate a change in line/column
 comment|/// information in the source file.
+comment|/// \param ForceColumnInfo  Assume DebugColumnInfo option is true.
 name|void
 name|EmitLocation
 parameter_list|(
@@ -893,6 +1086,11 @@ name|Builder
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|bool
+name|ForceColumnInfo
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// EmitFunctionStart - Emit a call to llvm.dbg.function.start to indicate
@@ -1038,7 +1236,13 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|addr
+name|Arg
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|LocalAddr
 argument_list|,
 name|CGBuilderTy
 operator|&
@@ -1092,6 +1296,16 @@ operator|*
 name|Init
 argument_list|)
 decl_stmt|;
+comment|/// \brief - Emit C++ using directive.
+name|void
+name|EmitUsingDirective
+parameter_list|(
+specifier|const
+name|UsingDirectiveDecl
+modifier|&
+name|UD
+parameter_list|)
+function_decl|;
 comment|/// getOrCreateRecordType - Emit record type's standalone debug info.
 name|llvm
 operator|::
@@ -1151,7 +1365,7 @@ name|DIType
 name|EmitTypeForVarWithBlocksAttr
 argument_list|(
 specifier|const
-name|ValueDecl
+name|VarDecl
 operator|*
 name|VD
 argument_list|,
@@ -1163,7 +1377,7 @@ expr_stmt|;
 comment|/// getContextDescriptor - Get context info for the decl.
 name|llvm
 operator|::
-name|DIDescriptor
+name|DIScope
 name|getContextDescriptor
 argument_list|(
 specifier|const
@@ -1262,6 +1476,16 @@ argument_list|,
 argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
+comment|/// getObjCInterfaceDecl - return the underlying ObjCInterfaceDecl
+comment|/// if Ty is an ObjCInterface or a pointer to one.
+name|ObjCInterfaceDecl
+modifier|*
+name|getObjCInterfaceDecl
+parameter_list|(
+name|QualType
+name|Ty
+parameter_list|)
+function_decl|;
 comment|/// CreateLimitedTypeNode - Create type metadata for a source language
 comment|/// type, but only partial types for records.
 name|llvm
@@ -1295,6 +1519,20 @@ name|llvm
 operator|::
 name|DISubprogram
 name|getFunctionDeclaration
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+expr_stmt|;
+comment|/// getStaticDataMemberDeclaration - Return debug info descriptor to
+comment|/// describe in-class static data member declaration for the given
+comment|/// out-of-class definition.
+name|llvm
+operator|::
+name|DIDerivedType
+name|getStaticDataMemberDeclaration
 argument_list|(
 specifier|const
 name|Decl
@@ -1365,11 +1603,17 @@ parameter_list|)
 function_decl|;
 comment|/// getColumnNumber - Get column number for the location. If location is
 comment|/// invalid then use current location.
+comment|/// \param Force  Assume DebugColumnInfo option is true.
 name|unsigned
 name|getColumnNumber
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|bool
+name|Force
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

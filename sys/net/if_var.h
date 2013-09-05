@@ -476,6 +476,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -670,16 +671,16 @@ name|int
 name|if_afdata_initialized
 decl_stmt|;
 name|struct
+name|rwlock
+name|if_afdata_lock
+decl_stmt|;
+name|struct
 name|task
 name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
 name|struct
-name|rwlock_padalign
-name|if_afdata_lock
-decl_stmt|;
-name|struct
-name|rwlock_padalign
+name|rwlock
 name|if_addr_lock
 decl_stmt|;
 comment|/* lock to protect address lists */
@@ -721,6 +722,10 @@ name|u_char
 name|if_alloctype
 decl_stmt|;
 comment|/* if_type at time of allocation */
+name|u_int
+name|if_hw_tsomax
+decl_stmt|;
+comment|/* tso burst length limit, the minimum 					 * is (IP_MAXPACKET / 8). 					 * XXXAO: Have to find a better place 					 * for it eventually. */
 comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
 name|char
 name|if_cspare
@@ -3225,7 +3230,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|rwlock_padalign
+name|rwlock
 name|ifnet_rwlock
 decl_stmt|;
 end_decl_stmt

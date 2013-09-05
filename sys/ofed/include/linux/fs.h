@@ -223,6 +223,11 @@ name|sigio
 modifier|*
 name|f_sigio
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|f_vnode
+decl_stmt|;
 block|}
 struct|;
 end_struct

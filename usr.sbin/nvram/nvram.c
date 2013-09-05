@@ -147,6 +147,7 @@ struct|;
 end_struct
 
 begin_union
+specifier|static
 union|union
 block|{
 name|uint8_t

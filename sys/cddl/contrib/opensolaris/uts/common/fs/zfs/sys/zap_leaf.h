@@ -151,6 +151,7 @@ block|{
 struct|struct
 name|zap_leaf_header
 block|{
+comment|/* Public to ZAP */
 name|uint64_t
 name|lh_block_type
 decl_stmt|;
@@ -178,7 +179,7 @@ name|uint16_t
 name|lh_prefix_len
 decl_stmt|;
 comment|/* num bits used to id this */
-comment|/* above is accessable to zap, below is zap_leaf private */
+comment|/* Private to zap_leaf */
 name|uint16_t
 name|lh_freelist
 decl_stmt|;
@@ -326,7 +327,7 @@ typedef|typedef
 struct|struct
 name|zap_entry_handle
 block|{
-comment|/* below is set by zap_leaf.c and is public to zap.c */
+comment|/* Set by zap_leaf and public to ZAP */
 name|uint64_t
 name|zeh_num_integers
 decl_stmt|;
@@ -339,7 +340,7 @@ decl_stmt|;
 name|uint8_t
 name|zeh_integer_size
 decl_stmt|;
-comment|/* below is private to zap_leaf.c */
+comment|/* Private to zap_leaf */
 name|uint16_t
 name|zeh_fakechunk
 decl_stmt|;
@@ -436,7 +437,7 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
-comment|/*  * Replace the value of an existing entry.  *  * zap_entry_update may fail if it runs out of space (ENOSPC).  */
+comment|/*  * Replace the value of an existing entry.  *  * May fail if it runs out of space (ENOSPC).  */
 specifier|extern
 name|int
 name|zap_entry_update
@@ -500,7 +501,7 @@ modifier|*
 name|zeh
 parameter_list|)
 function_decl|;
-comment|/*  * Return true if there are additional entries with the same normalized  * form.  */
+comment|/* Determine whether there is another entry with the same normalized form. */
 specifier|extern
 name|boolean_t
 name|zap_entry_normalization_conflict

@@ -484,6 +484,14 @@ literal|"AMD SB7x0/SB8x0/SB9x0 USB controller"
 operator|)
 return|;
 case|case
+literal|0x43981002
+case|:
+return|return
+operator|(
+literal|"AMD SB7x0/SB8x0/SB9x0 USB controller"
+operator|)
+return|;
+case|case
 literal|0x43991002
 case|:
 return|return
@@ -529,6 +537,14 @@ case|:
 return|return
 operator|(
 literal|"nVidia nForce3 USB Controller"
+operator|)
+return|;
+case|case
+literal|0x005a10de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce CK804 USB Controller"
 operator|)
 return|;
 case|case

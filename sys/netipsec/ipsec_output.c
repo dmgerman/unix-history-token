@@ -653,10 +653,10 @@ operator|->
 name|next
 condition|)
 block|{
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_out_bundlesa
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX-BZ currently only support same AF bundles. */
 switch|switch
@@ -1135,13 +1135,9 @@ define|#
 directive|define
 name|IPSEC_OSTAT
 parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
+name|name
 parameter_list|)
-value|(isr->saidx.proto == IPPROTO_ESP ? (x)++ : \ 			    isr->saidx.proto == IPPROTO_AH ? (y)++ : (z)++)
+value|do {		\ 	if (isr->saidx.proto == IPPROTO_ESP)	\ 		ESPSTAT_INC(esps_##name);	\ 	else if (isr->saidx.proto == IPPROTO_AH)\ 		AHSTAT_INC(ahs_##name);		\ 	else					\ 		IPCOMPSTAT_INC(ipcomps_##name);	\ } while (0)
 name|struct
 name|secasvar
 modifier|*
@@ -1559,10 +1555,10 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * IPsec processing is required, but no SA found. 		 * I assume that key_acquire() had been called 		 * to get/establish the SA. Here I discard 		 * this packet because it is responsibility for 		 * upper layer to retransmit the packet. 		 */
-name|V_ipsec4stat
-operator|.
+name|IPSECSTAT_INC
+argument_list|(
 name|ips_out_nosa
-operator|++
+argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
@@ -1685,17 +1681,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_OSTAT
 argument_list|(
-name|V_espstat
-operator|.
-name|esps_pdrops
-argument_list|,
-name|V_ahstat
-operator|.
-name|ahs_pdrops
-argument_list|,
-name|V_ipcompstat
-operator|.
-name|ipcomps_pdrops
+name|pdrops
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1728,17 +1714,7 @@ argument_list|)
 expr_stmt|;
 name|IPSEC_OSTAT
 argument_list|(
-name|V_espstat
-operator|.
-name|esps_noxform
-argument_list|,
-name|V_ahstat
-operator|.
-name|ahs_noxform
-argument_list|,
-name|V_ipcompstat
-operator|.
-name|ipcomps_noxform
+name|noxform
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3832,10 +3808,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_inval
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -3858,10 +3834,10 @@ operator|!
 name|m
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_nomem
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4087,10 +4063,10 @@ argument_list|(
 name|ip6s_noroute
 argument_list|)
 expr_stmt|;
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_noroute
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4144,10 +4120,10 @@ operator|!
 name|m
 condition|)
 block|{
-name|V_ipsec6stat
-operator|.
+name|IPSEC6STAT_INC
+argument_list|(
 name|ips_out_nomem
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

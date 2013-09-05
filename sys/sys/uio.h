@@ -466,6 +466,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|uiomove_object
+parameter_list|(
+name|struct
+name|vm_object
+modifier|*
+name|obj
+parameter_list|,
+name|off_t
+name|obj_size
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|uiomoveco
 parameter_list|(
 name|void

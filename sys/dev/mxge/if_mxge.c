@@ -17156,7 +17156,7 @@ return|return
 name|err
 return|;
 block|}
-comment|/* now allocate TX resouces */
+comment|/* now allocate TX resources */
 ifndef|#
 directive|ifndef
 name|IFNET_BUF_RING
@@ -19276,8 +19276,6 @@ name|int
 name|reg
 decl_stmt|;
 name|uint16_t
-name|cmd
-decl_stmt|,
 name|lnk
 decl_stmt|,
 name|pectl
@@ -19404,32 +19402,6 @@ comment|/* Enable DMA and Memory space access */
 name|pci_enable_busmaster
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|cmd
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|cmd
-operator||=
-name|PCIM_CMD_MEMEN
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|cmd
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 block|}

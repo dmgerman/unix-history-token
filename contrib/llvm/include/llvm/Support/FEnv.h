@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_FENV_H
+name|LLVM_SUPPORT_FENV_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_FENV_H
+name|LLVM_SUPPORT_FENV_H
 end_define
 
 begin_include
@@ -139,9 +139,14 @@ name|void
 name|llvm_fenv_clearexcept
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_FENV_H
+argument_list|)
+operator|&&
+name|HAVE_DECL_FE_ALL_EXCEPT
 name|feclearexcept
 argument_list|(
 name|FE_ALL_EXCEPT
@@ -179,9 +184,16 @@ condition|)
 return|return
 name|true
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_FENV_H
+argument_list|)
+operator|&&
+name|HAVE_DECL_FE_ALL_EXCEPT
+operator|&&
+name|HAVE_DECL_FE_INEXACT
 if|if
 condition|(
 name|fetestexcept

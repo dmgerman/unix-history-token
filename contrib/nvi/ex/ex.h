@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)ex.h	10.24 (Berkeley) 8/12/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: ex.h,v 10.31 2012/10/03 02:33:24 zy Exp $  */
 end_comment
 
 begin_define
@@ -20,7 +20,7 @@ struct|struct
 name|_excmdlist
 block|{
 comment|/* Ex command table structure. */
-name|char
+name|CHAR_T
 modifier|*
 name|name
 decl_stmt|;
@@ -166,6 +166,19 @@ define|\
 value|(F_ISSET(cmdp, E_VLITONLY) ?					\ 	    (ch) == CH_LITERAL : KEY_VAL(sp, ch) == K_VLNEXT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IS_SHELLMETA
+parameter_list|(
+name|sp
+parameter_list|,
+name|ch
+parameter_list|)
+define|\
+value|((ch)<= CHAR_MAX&& strchr(O_STR(sp, O_SHELLMETA), ch) != NULL)
+end_define
+
 begin_comment
 comment|/*  * File state must be checked for each command -- any ex command may be entered  * at any time, and most of them won't work well if a file hasn't yet been read  * in.  Historic vi generally took the easy way out and dropped core.  */
 end_comment
@@ -179,7 +192,7 @@ name|sp
 parameter_list|,
 name|cmdp
 parameter_list|)
-value|{						\ 	if ((sp)->ep == NULL) {						\ 		ex_emsg(sp, (cmdp)->cmd->name, EXM_NOFILEYET);		\ 		return (1);						\ 	}								\ }
+value|{						\ 	if ((sp)->ep == NULL) {						\ 		ex_wemsg(sp, (cmdp)->cmd->name, EXM_NOFILEYET);		\ 		return (1);						\ 	}								\ }
 end_define
 
 begin_comment
@@ -199,7 +212,7 @@ struct|struct
 name|_range
 block|{
 comment|/* Global command range. */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_range
 argument_list|)
@@ -224,7 +237,7 @@ begin_struct
 struct|struct
 name|_excmd
 block|{
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|_excmd
 argument_list|)
@@ -249,7 +262,7 @@ name|cmdp
 parameter_list|)
 define|\
 value|memset(&((cmdp)->cp), 0, ((char *)&(cmdp)->flags -		\ 	    (char *)&((cmdp)->cp)) + sizeof((cmdp)->flags))
-name|char
+name|CHAR_T
 modifier|*
 name|cp
 decl_stmt|;
@@ -258,7 +271,7 @@ name|size_t
 name|clen
 decl_stmt|;
 comment|/* Current command length. */
-name|char
+name|CHAR_T
 modifier|*
 name|save_cmd
 decl_stmt|;
@@ -277,20 +290,23 @@ name|EXCMDLIST
 name|rcmd
 decl_stmt|;
 comment|/* Command: table entry/replacement. */
-name|CIRCLEQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
 argument|_rh
 argument_list|,
 argument|_range
 argument_list|)
 name|rq
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* @/global range: linked list. */
 name|recno_t
 name|range_lno
 decl_stmt|;
 comment|/* @/global range: set line number. */
-name|char
+name|CHAR_T
 modifier|*
 name|o_cp
 decl_stmt|;
@@ -444,7 +460,7 @@ comment|/* User input information. */
 define|#
 directive|define
 name|__INUSE2
-value|0x000004ff
+value|0x000007ff
 comment|/* Same name space as EXCMDLIST. */
 define|#
 directive|define
@@ -531,16 +547,6 @@ directive|define
 name|E_VISEARCH
 value|0x04000000
 comment|/* It's really a vi search command. */
-ifdef|#
-directive|ifdef
-name|GTAGS
-define|#
-directive|define
-name|E_REFERENCE
-value|0x08000000
-comment|/* locate function references */
-endif|#
-directive|endif
 name|u_int32_t
 name|flags
 decl_stmt|;
@@ -558,15 +564,7 @@ typedef|typedef
 struct|struct
 name|_ex_private
 block|{
-name|CIRCLEQ_HEAD
-argument_list|(
-argument|_tqh
-argument_list|,
-argument|_tagq
-argument_list|)
-name|tq
-expr_stmt|;
-comment|/* Tag queue. */
+comment|/* Tag file list. */
 name|TAILQ_HEAD
 argument_list|(
 argument|_tagfh
@@ -574,18 +572,35 @@ argument_list|,
 argument|_tagf
 argument_list|)
 name|tagfq
+index|[
+literal|1
+index|]
 expr_stmt|;
-comment|/* Tag file list. */
-name|LIST_HEAD
+name|TAILQ_HEAD
+argument_list|(
+argument|_tqh
+argument_list|,
+argument|_tagq
+argument_list|)
+name|tq
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|/* Tag queue. */
+name|SLIST_HEAD
 argument_list|(
 argument|_csch
 argument_list|,
 argument|_csc
 argument_list|)
 name|cscq
+index|[
+literal|1
+index|]
 expr_stmt|;
 comment|/* Cscope connection list. */
-name|char
+name|CHAR_T
 modifier|*
 name|tag_last
 decl_stmt|;
@@ -622,6 +637,10 @@ name|size_t
 name|ibp_len
 decl_stmt|;
 comment|/* File line input buffer length. */
+name|CONVWIN
+name|ibcw
+decl_stmt|;
+comment|/* File line input conversion buffer. */
 comment|/* 	 * Buffers for the ex output.  The screen/vi support doesn't do any 	 * character buffering of any kind.  We do it here so that we're not 	 * calling the screen output routines on every character. 	 * 	 * XXX 	 * Change to grow dynamically. 	 */
 name|char
 name|obp
@@ -772,7 +791,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ex_extern.h"
+file|"extern.h"
 end_include
 
 end_unit

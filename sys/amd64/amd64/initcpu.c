@@ -318,6 +318,36 @@ name|cpu_max_ext_state_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|cpu_mon_mwait_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MONITOR/MWAIT flags (CPUID.05H.ECX) */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_mon_min_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MONITOR minimum range size, bytes */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_mon_max_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MONITOR minimum range size, bytes */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
@@ -716,7 +746,9 @@ end_function
 begin_function
 name|void
 name|initializecpucache
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * CPUID with %eax = 1, %ebx returns 	 * Bits 15-8: CLFLUSH line size 	 * 	(Value * 8 = cache line size in bytes) 	 */
 if|if

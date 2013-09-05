@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: client.h,v 1.91.278.2 2012/01/31 23:46:39 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -59,6 +59,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/db.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/fixedname.h>
 end_include
 
@@ -107,16 +119,6 @@ end_include
 begin_comment
 comment|/***  *** Types  ***/
 end_comment
-
-begin_typedef
-typedef|typedef
-name|ISC_LIST
-argument_list|(
-argument|ns_client_t
-argument_list|)
-name|client_list_t
-expr_stmt|;
-end_typedef
 
 begin_comment
 comment|/*% nameserver client structure */
@@ -353,14 +355,41 @@ argument|ns_client_t
 argument_list|)
 name|link
 expr_stmt|;
-comment|/*% 	 * The list 'link' is part of, or NULL if not on any list. 	 */
-name|client_list_t
-modifier|*
-name|list
-decl_stmt|;
+name|ISC_LINK
+argument_list|(
+argument|ns_client_t
+argument_list|)
+name|rlink
+expr_stmt|;
+name|ISC_QLINK
+argument_list|(
+argument|ns_client_t
+argument_list|)
+name|ilink
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|ISC_QUEUE
+argument_list|(
+argument|ns_client_t
+argument_list|)
+name|client_queue_t
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ISC_LIST
+argument_list|(
+argument|ns_client_t
+argument_list|)
+name|client_list_t
+expr_stmt|;
+end_typedef
 
 begin_define
 define|#
@@ -383,14 +412,14 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_TCP
-value|0x01
+value|0x001
 end_define
 
 begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_RA
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -401,7 +430,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_PKTINFO
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -412,7 +441,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_MULTICAST
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -423,7 +452,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_WANTDNSSEC
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -434,7 +463,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_WANTNSID
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -451,7 +480,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_FILTER_AAAA
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -462,7 +491,7 @@ begin_define
 define|#
 directive|define
 name|NS_CLIENTATTR_FILTER_AAAA_RC
-value|0x80
+value|0x080
 end_define
 
 begin_comment
@@ -473,6 +502,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NS_CLIENTATTR_WANTAD
+value|0x100
+end_define
+
+begin_comment
+comment|/*%< want AD in response if possible */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1009,6 +1049,22 @@ end_function_decl
 begin_comment
 comment|/*%  * Isself callback.  */
 end_comment
+
+begin_function_decl
+name|isc_result_t
+name|ns_client_sourceip
+parameter_list|(
+name|dns_clientinfo_t
+modifier|*
+name|ci
+parameter_list|,
+name|isc_sockaddr_t
+modifier|*
+modifier|*
+name|addrp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

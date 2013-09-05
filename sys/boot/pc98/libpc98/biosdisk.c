@@ -247,7 +247,7 @@ name|struct
 name|pc98_partition
 name|od_slicetab
 index|[
-name|NDOSPART
+name|PC98_NPARTS
 index|]
 decl_stmt|;
 block|}
@@ -1456,7 +1456,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%.6ld%cB"
+literal|"%6ld%cB"
 argument_list|,
 operator|(
 name|long
@@ -2543,7 +2543,7 @@ name|bcopy
 argument_list|(
 name|buf
 operator|+
-name|DOSPARTOFF
+name|PC98_PARTOFF
 argument_list|,
 operator|&
 name|od
@@ -2556,14 +2556,14 @@ expr|struct
 name|pc98_partition
 argument_list|)
 operator|*
-name|NDOSPART
+name|PC98_NPARTS
 argument_list|)
 expr_stmt|;
 name|od
 operator|->
 name|od_nslices
 operator|=
-name|NDOSPART
+name|PC98_NPARTS
 expr_stmt|;
 comment|/* extended slices start here */
 name|od
@@ -3147,7 +3147,7 @@ value|7
 end_define
 
 begin_comment
-comment|/*  * slicelimit is in the range 0 .. NDOSPART  */
+comment|/*  * slicelimit is in the range 0 .. PC98_NPARTS  */
 end_comment
 
 begin_function

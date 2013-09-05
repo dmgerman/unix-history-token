@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.139.16.4 2011/12/01 01:00:50 marka Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -871,7 +871,19 @@ name|common
 operator|.
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|s
+operator|->
+name|common
+operator|.
+name|mctx
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -896,7 +908,7 @@ name|mctx
 argument_list|,
 name|journal_filename
 argument_list|,
-name|ISC_FALSE
+name|DNS_JOURNAL_READ
 argument_list|,
 operator|&
 name|s
@@ -1112,8 +1124,9 @@ operator|->
 name|journal
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|common
@@ -1274,7 +1287,19 @@ name|common
 operator|.
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|s
+operator|->
+name|common
+operator|.
+name|mctx
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -1692,8 +1717,9 @@ operator|->
 name|it
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|common
@@ -1852,7 +1878,19 @@ name|common
 operator|.
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|s
+operator|->
+name|common
+operator|.
+name|mctx
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -2077,8 +2115,9 @@ operator|->
 name|soa_tuple
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|common
@@ -2261,7 +2300,19 @@ name|common
 operator|.
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|s
+operator|->
+name|common
+operator|.
+name|mctx
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -2765,8 +2816,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Copy of components[0]. */
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|common
@@ -3663,23 +3715,6 @@ name|is_dlz
 operator|=
 name|ISC_TRUE
 expr_stmt|;
-comment|/* 			 * DLZ only support full zone transfer, not incremental 			 */
-if|if
-condition|(
-name|reqtype
-operator|!=
-name|dns_rdatatype_axfr
-condition|)
-block|{
-name|mnemonic
-operator|=
-literal|"AXFR-style IXFR"
-expr_stmt|;
-name|reqtype
-operator|=
-name|dns_rdatatype_axfr
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -3708,6 +3743,7 @@ name|zone
 argument_list|)
 condition|)
 block|{
+comment|/* Master and slave zones are OK for transfer. */
 case|case
 name|dns_zone_master
 case|:
@@ -3718,7 +3754,6 @@ case|case
 name|dns_zone_dlz
 case|:
 break|break;
-comment|/* Master and slave zones are OK for transfer. */
 default|default:
 name|FAILQ
 argument_list|(
@@ -4222,6 +4257,10 @@ goto|;
 block|}
 name|journalfile
 operator|=
+name|is_dlz
+condition|?
+name|NULL
+else|:
 name|dns_zone_getjournal
 argument_list|(
 name|zone

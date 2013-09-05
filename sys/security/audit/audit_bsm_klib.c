@@ -1774,7 +1774,7 @@ name|td
 argument_list|,
 name|dirfd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|cvnp

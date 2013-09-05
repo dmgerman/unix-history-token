@@ -1202,11 +1202,30 @@ argument_list|,
 name|cpu_stdext_feature
 argument_list|,
 literal|"\020"
+comment|/* RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE */
 literal|"\001GSFSBASE"
 literal|"\002TSCADJ"
+comment|/* Bit Manipulation Instructions */
+literal|"\004BMI1"
+comment|/* Hardware Lock Elision */
+literal|"\005HLE"
+comment|/* Advanced Vector Instructions 2 */
+literal|"\006AVX2"
+comment|/* Supervisor Mode Execution Prot. */
 literal|"\010SMEP"
+comment|/* Bit Manipulation Instructions */
+literal|"\011BMI2"
 literal|"\012ENHMOVSB"
+comment|/* Invalidate Processor Context ID */
 literal|"\013INVPCID"
+comment|/* Restricted Transactional Memory */
+literal|"\014RTM"
+comment|/* Enhanced NRBG */
+literal|"\023RDSEED"
+comment|/* ADCX + ADOX */
+literal|"\024ADX"
+comment|/* Supervisor Mode Access Prevention */
+literal|"\025SMAP"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1622,6 +1641,54 @@ literal|0
 index|]
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|cpu_high
+operator|>=
+literal|5
+operator|&&
+operator|(
+name|cpu_feature2
+operator|&
+name|CPUID2_MON
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|do_cpuid
+argument_list|(
+literal|5
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|cpu_mon_mwait_flags
+operator|=
+name|regs
+index|[
+literal|2
+index|]
+expr_stmt|;
+name|cpu_mon_min_size
+operator|=
+name|regs
+index|[
+literal|0
+index|]
+operator|&
+name|CPUID5_MON_MIN_SIZE
+expr_stmt|;
+name|cpu_mon_max_size
+operator|=
+name|regs
+index|[
+literal|1
+index|]
+operator|&
+name|CPUID5_MON_MAX_SIZE
+expr_stmt|;
 block|}
 if|if
 condition|(

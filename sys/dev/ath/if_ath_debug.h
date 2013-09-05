@@ -189,6 +189,11 @@ init|=
 literal|0x800000000ULL
 block|,
 comment|/* node powersave */
+name|ATH_DEBUG_DIVERSITY
+init|=
+literal|0x1000000000ULL
+block|,
+comment|/* Diversity logic */
 name|ATH_DEBUG_ANY
 init|=
 literal|0xffffffffffffffffULL

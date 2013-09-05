@@ -227,6 +227,24 @@ begin_comment
 comment|/* SMP || KLD_MODULE */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXMEMDOM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXMEMDOM
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -331,6 +349,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PDRMASK
+value|(NBPDR - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NPDEPG
 value|(1<< (32 - PDR_SHIFT))
 end_define
@@ -339,7 +364,7 @@ begin_define
 define|#
 directive|define
 name|MAXPAGESIZES
-value|1
+value|2
 end_define
 
 begin_comment
@@ -463,7 +488,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|trunc_4mpage
+name|trunc_1mpage
 parameter_list|(
 name|x
 parameter_list|)
@@ -473,7 +498,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|round_4mpage
+name|round_1mpage
 parameter_list|(
 name|x
 parameter_list|)

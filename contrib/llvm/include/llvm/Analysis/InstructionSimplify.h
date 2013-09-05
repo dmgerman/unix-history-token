@@ -64,6 +64,58 @@ comment|//
 end_comment
 
 begin_comment
+comment|// These routines implicitly resolve undef uses. The easiest way to be safe when
+end_comment
+
+begin_comment
+comment|// using these routines to obtain simplified values for existing instructions is
+end_comment
+
+begin_comment
+comment|// to always replace all uses of the instructions with the resulting simplified
+end_comment
+
+begin_comment
+comment|// values. This will prevent other code from seeing the same undef uses and
+end_comment
+
+begin_comment
+comment|// resolving them to different values.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// These routines are designed to tolerate moderately incomplete IR, such as
+end_comment
+
+begin_comment
+comment|// instructions that are not connected to basic blocks yet. However, they do
+end_comment
+
+begin_comment
+comment|// require that all the IR that they encounter be valid. In particular, they
+end_comment
+
+begin_comment
+comment|// require that all non-constant values be defined in the same function, and the
+end_comment
+
+begin_comment
+comment|// same call context of that function (and not split between caller and callee
+end_comment
+
+begin_comment
+comment|// contexts of a directly recursive call, for example).
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -78,6 +130,12 @@ define|#
 directive|define
 name|LLVM_ANALYSIS_INSTRUCTIONSIMPLIFY_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/User.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -99,6 +157,9 @@ name|Instruction
 decl_stmt|;
 name|class
 name|DataLayout
+decl_stmt|;
+name|class
+name|FastMathFlags
 decl_stmt|;
 name|class
 name|TargetLibraryInfo
@@ -170,6 +231,123 @@ name|isNSW
 parameter_list|,
 name|bool
 name|isNUW
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Given operands for an FAdd, see if we can fold the result.  If not, this
+comment|/// returns null.
+name|Value
+modifier|*
+name|SimplifyFAddInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+name|FastMathFlags
+name|FMF
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Given operands for an FSub, see if we can fold the result.  If not, this
+comment|/// returns null.
+name|Value
+modifier|*
+name|SimplifyFSubInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+name|FastMathFlags
+name|FMF
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Given operands for an FMul, see if we can fold the result.  If not, this
+comment|/// returns null.
+name|Value
+modifier|*
+name|SimplifyFMulInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+name|FastMathFlags
+name|FMF
 parameter_list|,
 specifier|const
 name|DataLayout
@@ -983,6 +1161,91 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// \brief Given a function and iterators over arguments, see if we can fold
+comment|/// the result.
+comment|///
+comment|/// If this call could not be simplified returns null.
+name|Value
+modifier|*
+name|SimplifyCall
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|User
+operator|::
+name|op_iterator
+name|ArgBegin
+argument_list|,
+name|User
+operator|::
+name|op_iterator
+name|ArgEnd
+argument_list|,
+specifier|const
+name|DataLayout
+operator|*
+name|TD
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// \brief Given a function and set of arguments, see if we can fold the
+comment|/// result.
+comment|///
+comment|/// If this call could not be simplified returns null.
+name|Value
+modifier|*
+name|SimplifyCall
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|,
+specifier|const
+name|DataLayout
+operator|*
+name|TD
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|TLI
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// SimplifyInstruction - See if we can compute a simplified version of this
 comment|/// instruction.  If not, this returns null.
 name|Value

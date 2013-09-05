@@ -647,9 +647,9 @@ expr|union
 name|descriptor
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|kargs
 operator|.
@@ -662,6 +662,8 @@ argument_list|(
 expr|union
 name|descriptor
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -724,7 +726,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1371,9 +1373,9 @@ expr|struct
 name|pcb_ext
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|ctob
 argument_list|(
@@ -1381,6 +1383,8 @@ name|IOPAGES
 operator|+
 literal|1
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2333,9 +2337,9 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|round_page
 argument_list|(
@@ -2347,6 +2351,8 @@ expr|union
 name|descriptor
 argument_list|)
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2577,9 +2583,9 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|len
 operator|*
@@ -2588,6 +2594,8 @@ argument_list|(
 expr|union
 name|descriptor
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2914,7 +2922,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -4391,7 +4399,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -4541,7 +4549,7 @@ condition|)
 block|{
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t

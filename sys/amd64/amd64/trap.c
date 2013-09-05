@@ -2080,7 +2080,7 @@ block|{
 name|uprintf
 argument_list|(
 literal|"pid %d comm %s: signal %d err %lx code %d type %d "
-literal|"addr 0x%lx rip 0x%lx "
+literal|"addr 0x%lx rsp 0x%lx rip 0x%lx "
 literal|"<%02x %02x %02x %02x %02x %02x %02x %02x>\n"
 argument_list|,
 name|p
@@ -2102,6 +2102,10 @@ argument_list|,
 name|type
 argument_list|,
 name|addr
+argument_list|,
+name|frame
+operator|->
+name|tf_rsp
 argument_list|,
 name|frame
 operator|->
@@ -2229,6 +2233,22 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+operator|(
+name|read_rflags
+argument_list|()
+operator|&
+name|PSL_I
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"interrupts disabled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|trapsignal
 argument_list|(
 name|td

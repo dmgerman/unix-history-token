@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.997 2012/06/14 23:54:03 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.998 2013/03/12 15:24:53 ca Exp $"
 argument_list|)
 end_macro
 
@@ -10455,8 +10455,8 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 name|int
@@ -18864,8 +18864,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|!=
-name|NULL
+operator|>=
+literal|0
 condition|)
 block|{
 specifier|register

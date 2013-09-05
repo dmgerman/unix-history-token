@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vi.c	10.57 (Berkeley) 10/13/96"
+literal|"$Id: vi.c,v 10.61 2011/12/21 13:08:30 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,20 +256,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|v_keyword
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|v_motion
 name|__P
 argument_list|(
@@ -352,13 +338,11 @@ begin_function
 name|int
 name|vi
 parameter_list|(
-name|spp
-parameter_list|)
 name|SCR
 modifier|*
 modifier|*
 name|spp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GS
 modifier|*
@@ -376,6 +360,10 @@ name|sp
 decl_stmt|;
 name|VICMD
 name|cmd
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|,
 modifier|*
 name|vp
@@ -403,23 +391,11 @@ name|sp
 operator|->
 name|gp
 expr_stmt|;
-comment|/* Initialize the command structure. */
+comment|/* Point to the command structure. */
 name|vp
 operator|=
 operator|&
 name|cmd
-expr_stmt|;
-name|memset
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|VICMD
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* Reset strange attraction. */
 name|F_SET
@@ -675,18 +651,6 @@ goto|;
 case|case
 name|GC_EVENT
 case|:
-if|if
-condition|(
-name|v_event_exec
-argument_list|(
-name|sp
-argument_list|,
-name|vp
-argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
 goto|goto
 name|gc_event
 goto|;
@@ -1315,6 +1279,7 @@ argument_list|,
 name|V_ABS
 argument_list|)
 operator|||
+operator|(
 name|F_ISSET
 argument_list|(
 name|vp
@@ -1329,7 +1294,9 @@ operator|!=
 name|abs
 operator|.
 name|lno
+operator|)
 operator|||
+operator|(
 name|F_ISSET
 argument_list|(
 name|vp
@@ -1353,6 +1320,7 @@ operator|!=
 name|abs
 operator|.
 name|cno
+operator|)
 operator|)
 operator|)
 operator|&&
@@ -1595,6 +1563,15 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+name|gp
+operator|->
+name|scr_discard
+argument_list|(
+name|sp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -1664,53 +1641,31 @@ specifier|static
 name|gcret_t
 name|v_cmd
 parameter_list|(
-name|sp
-parameter_list|,
-name|dp
-parameter_list|,
-name|vp
-parameter_list|,
-name|ismotion
-parameter_list|,
-name|comcountp
-parameter_list|,
-name|mappedp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|dp
-decl_stmt|,
-decl|*
+parameter_list|,
+name|VICMD
+modifier|*
 name|vp
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|VICMD
 modifier|*
 name|ismotion
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+parameter_list|,
 comment|/* Previous key if getting motion component. */
-end_comment
-
-begin_decl_stmt
 name|int
 modifier|*
 name|comcountp
-decl_stmt|,
+parameter_list|,
+name|int
 modifier|*
 name|mappedp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 enum|enum
 block|{
@@ -1839,7 +1794,7 @@ name|cpart
 operator|=
 name|NOTPARTIAL
 expr_stmt|;
-comment|/* Pick up optional buffer. */
+comment|/* Pick up an optional buffer. */
 if|if
 condition|(
 name|key
@@ -1897,10 +1852,10 @@ name|EC_MAPCOMMAND
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Pick up optional count, where a leading 0 is not a count, 	 * it's a command. 	 */
+comment|/* 	 * Pick up an optional count, where a leading 0 is not a count, 	 * it's a command. 	 */
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|key
 argument_list|)
@@ -2450,7 +2405,7 @@ operator|==
 literal|'Z'
 condition|)
 block|{
-comment|/* 		 * Historically, half entered [[, ]] or Z commands weren't 		 * cancelled by<escape>, the terminal was beeped instead. 		 * POSIX.2-1992 probably didn't notice, and requires that 		 * they be cancelled instead of beeping.  Seems fine to me. 		 * 		 * Don't set the EC_MAPCOMMAND flag, apparently ] is a popular 		 * vi meta-character, and we don't want the user to wait while 		 * we time out a possible mapping.  This *appears* to match 		 * historic vi practice, but with mapping characters, you Just 		 * Never Know. 		 */
+comment|/* 		 * Historically, half entered [[, ]] or Z commands weren't 		 * cancelled by<escape>, the terminal was beeped instead. 		 * POSIX.2-1992 probably didn't notice, and requires that 		 * they be cancelled instead of beeping.  Seems fine to me. 		 * 		 * Don't set the EC_MAPCOMMAND flag, apparently ] is a popular 		 * vi meta-character, and we don't want the user to wait while 		 * we time out a possible mapping.  This *appears* to match 		 * historic vi practice, but with mapping characters, You Just 		 * Never Know. 		 */
 name|KEY
 argument_list|(
 name|key
@@ -2552,7 +2507,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|vp
 operator|->
@@ -2599,7 +2554,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Commands that have motion components can be doubled to 	 * imply the current line. 	 */
+comment|/* 	 * Commands that have motion components can be doubled to imply the 	 * current line. 	 */
 if|if
 condition|(
 name|ismotion
@@ -2641,7 +2596,7 @@ name|GC_ERR
 operator|)
 return|;
 block|}
-comment|/* Required character. */
+comment|/* Pick up required trailing character. */
 if|if
 condition|(
 name|LF_ISSET
@@ -2668,7 +2623,7 @@ argument_list|,
 name|V_KEYW
 argument_list|)
 operator|&&
-name|v_keyword
+name|v_curword
 argument_list|(
 name|sp
 argument_list|)
@@ -2734,7 +2689,7 @@ name|GC_ERR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * v_motion --  *  * Get resulting motion mark.  */
@@ -2745,35 +2700,22 @@ specifier|static
 name|int
 name|v_motion
 parameter_list|(
-name|sp
-parameter_list|,
-name|dm
-parameter_list|,
-name|vp
-parameter_list|,
-name|mappedp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|dm
-decl_stmt|,
-decl|*
+parameter_list|,
+name|VICMD
+modifier|*
 name|vp
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|mappedp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|VICMD
 name|motion
@@ -3018,6 +2960,7 @@ name|lno
 operator|!=
 literal|1
 operator|||
+operator|(
 name|vp
 operator|->
 name|key
@@ -3029,6 +2972,7 @@ operator|->
 name|key
 operator|!=
 literal|'!'
+operator|)
 condition|)
 block|{
 name|v_emsg
@@ -3257,6 +3201,7 @@ name|lno
 operator|!=
 literal|1
 operator|||
+operator|(
 name|vp
 operator|->
 name|key
@@ -3268,6 +3213,7 @@ operator|->
 name|key
 operator|!=
 literal|'!'
+operator|)
 condition|)
 block|{
 name|v_emsg
@@ -3364,6 +3310,7 @@ name|m_stop
 operator|.
 name|lno
 operator|||
+operator|(
 name|motion
 operator|.
 name|m_start
@@ -3387,6 +3334,7 @@ operator|.
 name|m_stop
 operator|.
 name|cno
+operator|)
 condition|)
 block|{
 name|vp
@@ -3465,7 +3413,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * v_init --  *	Initialize the vi screen.  */
@@ -3476,12 +3424,10 @@ specifier|static
 name|int
 name|v_init
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GS
 modifier|*
@@ -3637,6 +3583,9 @@ name|M_INFO
 argument_list|,
 literal|"214|Windows option value is too large, max is %u"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|sp
 operator|->
 name|t_rows
@@ -3663,7 +3612,11 @@ literal|1
 expr_stmt|;
 name|sp
 operator|->
-name|woff
+name|roff
+operator|=
+name|sp
+operator|->
+name|coff
 operator|=
 literal|0
 expr_stmt|;
@@ -3763,12 +3716,10 @@ specifier|static
 name|void
 name|v_dtoh
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GS
 modifier|*
@@ -3797,21 +3748,15 @@ init|;
 operator|(
 name|tsp
 operator|=
+name|TAILQ_FIRST
+argument_list|(
 name|gp
 operator|->
 name|dq
-operator|.
-name|cqh_first
+argument_list|)
 operator|)
 operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|gp
-operator|->
-name|dq
+name|NULL
 condition|;
 operator|++
 name|hidden
@@ -3843,9 +3788,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
-operator|&
 name|gp
 operator|->
 name|dq
@@ -3855,9 +3799,8 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
-operator|&
 name|gp
 operator|->
 name|hq
@@ -3865,13 +3808,22 @@ argument_list|,
 name|tsp
 argument_list|,
 name|q
+argument_list|)
+expr_stmt|;
+comment|/* XXXX Change if hidden screens per window */
+name|gp
+operator|->
+name|scr_discard
+argument_list|(
+name|tsp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* Move current screen back to the display queue. */
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
-operator|&
 name|gp
 operator|->
 name|hq
@@ -3881,9 +3833,8 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
-operator|&
 name|gp
 operator|->
 name|dq
@@ -3893,7 +3844,6 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * Don't bother internationalizing this message, it's going to 	 * go away as soon as we have one-line screens.  --TK 	 */
 if|if
 condition|(
 name|hidden
@@ -3906,7 +3856,7 @@ name|sp
 argument_list|,
 name|M_INFO
 argument_list|,
-literal|"%d screens backgrounded; use :display to list them"
+literal|"319|%d screens backgrounded; use :display to list them"
 argument_list|,
 name|hidden
 operator|-
@@ -3917,20 +3867,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_keyword --  *	Get the word (or non-word) the cursor is on.  */
+comment|/*  * v_curword --  *	Get the word (tagstring, actually) the cursor is on.  *  * PUBLIC: int v_curword __P((SCR *));  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|v_keyword
+name|v_curword
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|VI_PRIVATE
 modifier|*
@@ -3945,10 +3892,8 @@ name|len
 decl_stmt|;
 name|int
 name|moved
-decl_stmt|,
-name|state
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
 decl_stmt|;
@@ -3993,7 +3938,7 @@ name|beg
 operator|<
 name|len
 operator|&&
-name|isspace
+name|ISSPACE
 argument_list|(
 name|p
 index|[
@@ -4053,19 +3998,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Find the end of the word. */
+comment|/* 	 * Find the end of the word. 	 * 	 * !!! 	 * Historically, vi accepted any non-blank as initial character 	 * when building up a tagstring.  Required by IEEE 1003.1-2001. 	 */
 for|for
 control|(
-name|state
-operator|=
-name|inword
-argument_list|(
-name|p
-index|[
-name|beg
-index|]
-argument_list|)
-operator|,
 name|end
 operator|=
 name|beg
@@ -4075,8 +4010,6 @@ name|end
 operator|<
 name|len
 operator|&&
-name|state
-operator|==
 name|inword
 argument_list|(
 name|p
@@ -4094,6 +4027,10 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+name|vip
+operator|->
+name|klen
+operator|=
 name|len
 operator|=
 operator|(
@@ -4102,7 +4039,7 @@ operator|-
 name|beg
 operator|)
 expr_stmt|;
-name|BINC_RET
+name|BINC_RETW
 argument_list|(
 name|sp
 argument_list|,
@@ -4112,12 +4049,14 @@ name|keyw
 argument_list|,
 name|vip
 operator|->
-name|klen
+name|keywlen
 argument_list|,
 name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
-name|memmove
+name|MEMMOVE
 argument_list|(
 name|vip
 operator|->
@@ -4159,25 +4098,19 @@ specifier|const
 modifier|*
 name|v_alias
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|,
-name|kp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|,
 name|VIKEYS
 specifier|const
 modifier|*
 name|kp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CHAR_T
 name|push
@@ -4297,23 +4230,17 @@ specifier|static
 name|int
 name|v_count
 parameter_list|(
-name|sp
-parameter_list|,
-name|fkey
-parameter_list|,
-name|countp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|ARG_CHAR_T
 name|fkey
-decl_stmt|;
+parameter_list|,
 name|u_long
 modifier|*
 name|countp
-decl_stmt|;
+parameter_list|)
 block|{
 name|EVENT
 name|ev
@@ -4386,7 +4313,7 @@ return|;
 block|}
 do|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ev
 operator|.
@@ -4441,7 +4368,7 @@ return|;
 block|}
 do|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|ev
 operator|.
@@ -4471,28 +4398,20 @@ specifier|static
 name|gcret_t
 name|v_key
 parameter_list|(
-name|sp
-parameter_list|,
-name|command_events
-parameter_list|,
-name|evp
-parameter_list|,
-name|ec_flags
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|int
 name|command_events
-decl_stmt|;
+parameter_list|,
 name|EVENT
 modifier|*
 name|evp
-decl_stmt|;
+parameter_list|,
 name|u_int32_t
 name|ec_flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int32_t
 name|quote
@@ -4619,21 +4538,6 @@ operator|(
 name|GC_ERR
 operator|)
 return|;
-case|case
-name|E_QUIT
-case|:
-case|case
-name|E_WRITE
-case|:
-if|if
-condition|(
-name|command_events
-condition|)
-return|return
-operator|(
-name|GC_EVENT
-operator|)
-return|;
 comment|/* FALLTHROUGH */
 default|default:
 name|v_event_err
@@ -4677,24 +4581,21 @@ specifier|static
 name|void
 name|v_comlog
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|TRACE
 argument_list|(
 name|sp
 argument_list|,
-literal|"vcmd: %c"
+literal|"vcmd: "
+name|WC
 argument_list|,
 name|vp
 operator|->
@@ -4714,7 +4615,8 @@ name|TRACE
 argument_list|(
 name|sp
 argument_list|,
-literal|" buffer: %c"
+literal|" buffer: "
+name|WC
 argument_list|,
 name|vp
 operator|->

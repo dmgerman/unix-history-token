@@ -94,6 +94,17 @@ begin_comment
 comment|/* size of buffer to read inodes in pass1 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ZEROBUFSIZE
+value|(dev_bsize * 128)
+end_define
+
+begin_comment
+comment|/* size of zero buffer used by -Z */
+end_comment
+
 begin_union
 union|union
 name|dinode
@@ -1208,7 +1219,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* zero out empty data blocks */
+comment|/* delete empty data blocks */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Zflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero empty data blocks */
 end_comment
 
 begin_decl_stmt
@@ -1359,6 +1380,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* file descriptor for writing file system */
+end_comment
+
+begin_decl_stmt
+name|int
+name|surrender
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Give up if reads fail */
 end_comment
 
 begin_decl_stmt
@@ -1818,6 +1849,22 @@ end_function_decl
 begin_function_decl
 name|void
 name|blerase
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|ufs2_daddr_t
+name|blk
+parameter_list|,
+name|long
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|blzero
 parameter_list|(
 name|int
 name|fd

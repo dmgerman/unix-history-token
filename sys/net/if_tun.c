@@ -625,6 +625,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -1632,6 +1633,16 @@ argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|if_tun
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2935,6 +2946,7 @@ name|mbuf
 modifier|*
 name|m0
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -3090,7 +3102,6 @@ name|sa_family
 operator|==
 name|AF_UNSPEC
 condition|)
-block|{
 name|bcopy
 argument_list|(
 name|dst
@@ -3106,13 +3117,13 @@ name|af
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|af
+operator|=
 name|dst
 operator|->
 name|sa_family
-operator|=
-name|af
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bpf_peers_present
@@ -3122,13 +3133,6 @@ operator|->
 name|if_bpf
 argument_list|)
 condition|)
-block|{
-name|af
-operator|=
-name|dst
-operator|->
-name|sa_family
-expr_stmt|;
 name|bpf_mtap2
 argument_list|(
 name|ifp
@@ -3146,7 +3150,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* prepend sockaddr? this may abort if the mbuf allocation fails */
 if|if
 condition|(
@@ -3261,9 +3264,7 @@ name|m_data
 operator|=
 name|htonl
 argument_list|(
-name|dst
-operator|->
-name|sa_family
+name|af
 argument_list|)
 expr_stmt|;
 block|}
@@ -3274,9 +3275,7 @@ directive|ifdef
 name|INET
 if|if
 condition|(
-name|dst
-operator|->
-name|sa_family
+name|af
 operator|!=
 name|AF_INET
 condition|)

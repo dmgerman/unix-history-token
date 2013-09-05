@@ -382,6 +382,15 @@ operator|/
 name|t
 expr_stmt|;
 block|}
+comment|/* XXX uart should be the refclk, no? */
+name|u_ar71xx_uart_freq
+operator|=
+name|u_ar71xx_ahb_freq
+expr_stmt|;
+name|u_ar71xx_wdt_freq
+operator|=
+name|u_ar71xx_ahb_freq
+expr_stmt|;
 block|}
 end_function
 

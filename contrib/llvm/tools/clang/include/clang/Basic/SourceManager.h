@@ -48,7 +48,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// There are three different types of locations in a file: a spelling
+comment|/// There are three different types of locations in a %file: a spelling
 end_comment
 
 begin_comment
@@ -146,13 +146,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LLVM.h"
+file|"clang/Basic/FileManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/FileManager.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -164,37 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PointerUnion.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -212,7 +182,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
 end_include
 
 begin_include
@@ -225,12 +237,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
 end_include
 
 begin_decl_stmt
@@ -285,7 +291,7 @@ name|C_ExternCSystem
 block|}
 enum|;
 comment|/// \brief One instance of this struct is kept for every file loaded or used.
-comment|////
+comment|///
 comment|/// This object owns the MemoryBuffer object.
 name|class
 name|ContentCache
@@ -901,7 +907,10 @@ operator|(
 name|Data
 operator|&
 operator|~
-literal|7UL
+name|uintptr_t
+argument_list|(
+literal|7
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1076,6 +1085,29 @@ name|ExpansionLocEnd
 argument_list|)
 operator|.
 name|isInvalid
+argument_list|()
+return|;
+block|}
+name|bool
+name|isMacroBodyExpansion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getExpansionLocStart
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|ExpansionLocEnd
+argument_list|)
+operator|.
+name|isValid
 argument_list|()
 return|;
 block|}
@@ -1395,6 +1427,25 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Retrieve the module import location and name for the given ID, if
+comment|/// in fact it was loaded from a module (rather than, say, a precompiled
+comment|/// header).
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|SourceLocation
+operator|,
+name|StringRef
+operator|>
+name|getModuleImportLoc
+argument_list|(
+argument|int ID
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Holds the cache used by isBeforeInTranslationUnit.
@@ -1402,7 +1453,7 @@ comment|///
 comment|/// The cache structure is complex enough to be worth breaking out of
 comment|/// SourceManager.
 name|class
-name|IsBeforeInTranslationUnitCache
+name|InBeforeInTUCacheEntry
 block|{
 comment|/// \brief The FileID's of the cached query.
 comment|///
@@ -1593,6 +1644,25 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
+comment|/// \brief The stack used when building modules on demand, which is used
+comment|/// to provide a link between the source managers of the different compiler
+comment|/// instances.
+typedef|typedef
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|FullSourceLoc
+operator|>
+expr|>
+name|ModuleBuildStack
+expr_stmt|;
 comment|/// \brief This class handles loading and caching of source files into memory.
 comment|///
 comment|/// This object owns the MemoryBuffer objects for all of the loaded
@@ -1739,13 +1809,13 @@ comment|/// \brief The table of SLocEntries that are local to this module.
 comment|///
 comment|/// Positive FileIDs are indexes into this table. Entry 0 indicates an invalid
 comment|/// expansion.
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SrcMgr
 operator|::
 name|SLocEntry
+operator|,
+literal|0
 operator|>
 name|LocalSLocEntryTable
 expr_stmt|;
@@ -1754,13 +1824,13 @@ comment|///
 comment|/// Negative FileIDs are indexes into this table. To get from ID to an index,
 comment|/// use (-ID - 2).
 name|mutable
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|SrcMgr
 operator|::
 name|SLocEntry
+operator|,
+literal|0
 operator|>
 name|LoadedSLocEntryTable
 expr_stmt|;
@@ -1856,10 +1926,76 @@ name|NumLinearScans
 decl_stmt|,
 name|NumBinaryProbes
 decl_stmt|;
-comment|// Cache results for the isBeforeInTranslationUnit method.
+comment|/// \brief Associates a FileID with its "included/expanded in" decomposed
+comment|/// location.
+comment|///
+comment|/// Used to cache results from and speed-up \c getDecomposedIncludedLoc
+comment|/// function.
 name|mutable
-name|IsBeforeInTranslationUnitCache
-name|IsBeforeInTUCache
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|FileID
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|FileID
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|IncludedLocMap
+expr_stmt|;
+comment|/// The key value into the IsBeforeInTUCache table.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|FileID
+operator|,
+name|FileID
+operator|>
+name|IsBeforeInTUCacheKey
+expr_stmt|;
+comment|/// The IsBeforeInTranslationUnitCache is a mapping from FileID pairs
+comment|/// to cache results.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|IsBeforeInTUCacheKey
+operator|,
+name|InBeforeInTUCacheEntry
+operator|>
+name|InBeforeInTUCache
+expr_stmt|;
+comment|/// Cache results for the isBeforeInTranslationUnit method.
+name|mutable
+name|InBeforeInTUCache
+name|IBTUCache
+decl_stmt|;
+name|mutable
+name|InBeforeInTUCacheEntry
+name|IBTUCacheOverflow
+decl_stmt|;
+comment|/// Return the cache entry for comparing the given file IDs
+comment|/// for isBeforeInTranslationUnit.
+name|InBeforeInTUCacheEntry
+modifier|&
+name|getInBeforeInTUCache
+argument_list|(
+name|FileID
+name|LFID
+argument_list|,
+name|FileID
+name|RFID
+argument_list|)
+decl|const
 decl_stmt|;
 comment|// Cache for the "fake" buffer used for error-recovery purposes.
 name|mutable
@@ -1900,6 +2036,30 @@ name|MacroArgsMap
 operator|*
 operator|>
 name|MacroArgsCacheMap
+expr_stmt|;
+comment|/// \brief The stack of modules being built, which is used to detect
+comment|/// cycles in the module dependency graph as modules are being built, as
+comment|/// well as to describe why we're rebuilding a particular module.
+comment|///
+comment|/// There is no way to set this value from the command line. If we ever need
+comment|/// to do so (e.g., if on-demand module construction moves out-of-process),
+comment|/// we can add a cc1-level option to do so.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|FullSourceLoc
+operator|>
+operator|,
+literal|2
+operator|>
+name|StoredModuleBuildStack
 expr_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
@@ -1984,6 +2144,74 @@ block|{
 return|return
 name|UserFilesAreVolatile
 return|;
+block|}
+comment|/// \brief Retrieve the module build stack.
+name|ModuleBuildStack
+name|getModuleBuildStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StoredModuleBuildStack
+return|;
+block|}
+comment|/// \brief Set the module build stack.
+name|void
+name|setModuleBuildStack
+parameter_list|(
+name|ModuleBuildStack
+name|stack
+parameter_list|)
+block|{
+name|StoredModuleBuildStack
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|StoredModuleBuildStack
+operator|.
+name|append
+argument_list|(
+name|stack
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|stack
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Push an entry to the module build stack.
+name|void
+name|pushModuleBuildStack
+parameter_list|(
+name|StringRef
+name|moduleName
+parameter_list|,
+name|FullSourceLoc
+name|importLoc
+parameter_list|)
+block|{
+name|StoredModuleBuildStack
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|moduleName
+operator|.
+name|str
+argument_list|()
+argument_list|,
+name|importLoc
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// \brief Create the FileID for a memory buffer that will represent the
 comment|/// FileID for the main source.
@@ -3168,8 +3396,75 @@ name|getIncludeLoc
 argument_list|()
 return|;
 block|}
+comment|// \brief Returns the import location if the given source location is
+comment|// located within a module, or an invalid location if the source location
+comment|// is within the current translation unit.
+name|std
+operator|::
+name|pair
+operator|<
+name|SourceLocation
+operator|,
+name|StringRef
+operator|>
+name|getModuleImportLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+specifier|const
+block|{
+name|FileID
+name|FID
+operator|=
+name|getFileID
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+comment|// Positive file IDs are in the current translation unit, and -1 is a
+comment|// placeholder.
+if|if
+condition|(
+name|FID
+operator|.
+name|ID
+operator|>=
+operator|-
+literal|1
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|""
+argument_list|)
+return|;
+return|return
+name|ExternalSLocEntries
+operator|->
+name|getModuleImportLoc
+argument_list|(
+name|FID
+operator|.
+name|ID
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Given a SourceLocation object \p Loc, return the expansion
+end_comment
+
+begin_comment
 comment|/// location referenced by the ID.
+end_comment
+
+begin_decl_stmt
 name|SourceLocation
 name|getExpansionLoc
 argument_list|(
@@ -3197,9 +3492,21 @@ name|Loc
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Given \p Loc, if it is a macro location return the expansion
+end_comment
+
+begin_comment
 comment|/// location or the spelling location, depending on if it comes from a
+end_comment
+
+begin_comment
 comment|/// macro argument or not.
+end_comment
+
+begin_decl_stmt
 name|SourceLocation
 name|getFileLoc
 argument_list|(
@@ -3225,10 +3532,25 @@ name|Loc
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the start/end of the expansion information for an
+end_comment
+
+begin_comment
 comment|/// expansion location.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \pre \p Loc is required to be an expansion location.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -3243,8 +3565,17 @@ argument|SourceLocation Loc
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Given a SourceLocation object, return the range of
+end_comment
+
+begin_comment
 comment|/// tokens covered by the expansion the ultimate file.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -3259,11 +3590,29 @@ argument|SourceLocation Loc
 argument_list|)
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Given a SourceLocation object, return the spelling
+end_comment
+
+begin_comment
 comment|/// location referenced by the ID.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is the place where the characters that make up the lexed token
+end_comment
+
+begin_comment
 comment|/// can be found.
+end_comment
+
+begin_decl_stmt
 name|SourceLocation
 name|getSpellingLoc
 argument_list|(
@@ -3291,12 +3640,33 @@ name|Loc
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Given a SourceLocation object, return the spelling location
+end_comment
+
+begin_comment
 comment|/// referenced by the ID.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is the first level down towards the place where the characters
+end_comment
+
+begin_comment
 comment|/// that make up the lexed token can be found.  This should not generally
+end_comment
+
+begin_comment
 comment|/// be used by clients.
+end_comment
+
+begin_decl_stmt
 name|SourceLocation
 name|getImmediateSpellingLoc
 argument_list|(
@@ -3305,10 +3675,25 @@ name|Loc
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Decompose the specified location into a raw FileID + Offset pair.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The first element is the FileID, the second is the offset from the
+end_comment
+
+begin_comment
 comment|/// start of the buffer of the location.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -3366,6 +3751,9 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|std
 operator|::
@@ -3384,10 +3772,10 @@ name|getOffset
 argument_list|()
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Decompose the specified location into a raw FileID + Offset pair.
 end_comment
 
@@ -3404,7 +3792,7 @@ comment|/// the final location expanded.
 end_comment
 
 begin_expr_stmt
-name|std
+unit|std
 operator|::
 name|pair
 operator|<
@@ -3630,6 +4018,31 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Returns the "included/expanded in" decomposed location of the given
+end_comment
+
+begin_comment
+comment|/// FileID.
+end_comment
+
+begin_expr_stmt
+unit|std
+operator|::
+name|pair
+operator|<
+name|FileID
+operator|,
+name|unsigned
+operator|>
+name|getDecomposedIncludedLoc
+argument_list|(
+argument|FileID FID
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns the offset from the start of the file that the
 end_comment
 
@@ -3645,16 +4058,14 @@ begin_comment
 comment|/// This is not very meaningful for a macro ID.
 end_comment
 
-begin_macro
-unit|unsigned
+begin_decl_stmt
+name|unsigned
 name|getFileOffset
 argument_list|(
-argument|SourceLocation SpellingLoc
+name|SourceLocation
+name|SpellingLoc
 argument_list|)
-end_macro
-
-begin_expr_stmt
-specifier|const
+decl|const
 block|{
 return|return
 name|getDecomposedLoc
@@ -3665,7 +4076,7 @@ operator|.
 name|second
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Tests whether the given source location represents a macro
@@ -3694,6 +4105,37 @@ end_comment
 begin_decl_stmt
 name|bool
 name|isMacroArgExpansion
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Tests whether the given source location represents the expansion of
+end_comment
+
+begin_comment
+comment|/// a macro body.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is equivalent to testing whether the location is part of a macro
+end_comment
+
+begin_comment
+comment|/// expansion but not the expansion of an argument to a function-like macro.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isMacroBodyExpansion
 argument_list|(
 name|SourceLocation
 name|Loc
@@ -4320,6 +4762,11 @@ name|getPresumedLoc
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|bool
+name|UseLineDirectives
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5533,120 +5980,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Get a presumed location suitable for displaying in a diagnostic message,
-end_comment
-
-begin_comment
-comment|/// taking into account macro arguments and expansions.
-end_comment
-
-begin_decl_stmt
-name|PresumedLoc
-name|getPresumedLocForDisplay
-argument_list|(
-name|SourceLocation
-name|Loc
-argument_list|)
-decl|const
-block|{
-comment|// This is a condensed form of the algorithm used by emitCaretDiagnostic to
-comment|// walk to the top of the macro call stack.
-while|while
-condition|(
-name|Loc
-operator|.
-name|isMacroID
-argument_list|()
-condition|)
-block|{
-name|Loc
-operator|=
-name|skipToMacroArgExpansion
-argument_list|(
-name|Loc
-argument_list|)
-expr_stmt|;
-name|Loc
-operator|=
-name|getImmediateMacroCallerLoc
-argument_list|(
-name|Loc
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|getPresumedLoc
-argument_list|(
-name|Loc
-argument_list|)
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// Look through spelling locations for a macro argument expansion, and if
-end_comment
-
-begin_comment
-comment|/// found skip to it so that we can trace the argument rather than the macros
-end_comment
-
-begin_comment
-comment|/// in which that argument is used. If no macro argument expansion is found,
-end_comment
-
-begin_comment
-comment|/// don't skip anything and return the starting location.
-end_comment
-
-begin_decl_stmt
-name|SourceLocation
-name|skipToMacroArgExpansion
-argument_list|(
-name|SourceLocation
-name|StartLoc
-argument_list|)
-decl|const
-block|{
-for|for
-control|(
-name|SourceLocation
-name|L
-init|=
-name|StartLoc
-init|;
-name|L
-operator|.
-name|isMacroID
-argument_list|()
-condition|;
-name|L
-operator|=
-name|getImmediateSpellingLoc
-argument_list|(
-name|L
-argument_list|)
-control|)
-block|{
-if|if
-condition|(
-name|isMacroArgExpansion
-argument_list|(
-name|L
-argument_list|)
-condition|)
-return|return
-name|L
-return|;
-block|}
-comment|// Otherwise just return initial location, there's nothing to skip.
-return|return
-name|StartLoc
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// Gets the location of the immediate macro caller, one level up the stack
 end_comment
 
@@ -5675,7 +6008,7 @@ return|return
 name|Loc
 return|;
 comment|// When we have the location of (part of) an expanded parameter, its
-comment|// spelling location points to the argument as typed into the macro call,
+comment|// spelling location points to the argument as expanded in the macro call,
 comment|// and therefore is used to locate the macro caller.
 if|if
 condition|(
@@ -5699,63 +6032,6 @@ name|Loc
 argument_list|)
 operator|.
 name|first
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// Gets the location of the immediate macro callee, one level down the stack
-end_comment
-
-begin_comment
-comment|/// toward the leaf macro.
-end_comment
-
-begin_decl_stmt
-name|SourceLocation
-name|getImmediateMacroCalleeLoc
-argument_list|(
-name|SourceLocation
-name|Loc
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|Loc
-operator|.
-name|isMacroID
-argument_list|()
-condition|)
-return|return
-name|Loc
-return|;
-comment|// When we have the location of (part of) an expanded parameter, its
-comment|// expansion location points to the unexpanded parameter reference within
-comment|// the macro definition (or callee).
-if|if
-condition|(
-name|isMacroArgExpansion
-argument_list|(
-name|Loc
-argument_list|)
-condition|)
-return|return
-name|getImmediateExpansionRange
-argument_list|(
-name|Loc
-argument_list|)
-operator|.
-name|first
-return|;
-comment|// Otherwise, the callee of the macro is located where this location was
-comment|// spelled inside the macro definition.
-return|return
-name|getImmediateSpellingLoc
-argument_list|(
-name|Loc
-argument_list|)
 return|;
 block|}
 end_decl_stmt

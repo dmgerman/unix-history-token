@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011, Bryan Venteicher<bryanv@daemoninthecloset.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2011, Bryan Venteicher<bryanv@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1734,7 +1734,7 @@ end_function
 
 begin_function
 name|int
-name|virtqueue_intr
+name|virtqueue_intr_filter
 parameter_list|(
 name|struct
 name|virtqueue
@@ -1744,12 +1744,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|vq
-operator|->
-name|vq_intrhand
-operator|==
-name|NULL
-operator|||
 name|vq
 operator|->
 name|vq_used_cons_idx
@@ -1767,6 +1761,29 @@ operator|(
 literal|0
 operator|)
 return|;
+name|virtqueue_disable_intr
+argument_list|(
+name|vq
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|virtqueue_intr
+parameter_list|(
+name|struct
+name|virtqueue
+modifier|*
+name|vq
+parameter_list|)
+block|{
 name|vq
 operator|->
 name|vq_intrhand
@@ -1776,11 +1793,6 @@ operator|->
 name|vq_intrhand_arg
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -1815,6 +1827,9 @@ name|struct
 name|virtqueue
 modifier|*
 name|vq
+parameter_list|,
+name|vq_postpone_t
+name|hint
 parameter_list|)
 block|{
 name|uint16_t
@@ -1822,7 +1837,6 @@ name|ndesc
 decl_stmt|,
 name|avail_idx
 decl_stmt|;
-comment|/* 	 * Request the next interrupt be postponed until at least half 	 * of the available descriptors have been consumed. 	 */
 name|avail_idx
 operator|=
 name|vq
@@ -1845,9 +1859,41 @@ name|vq
 operator|->
 name|vq_used_cons_idx
 argument_list|)
-operator|/
-literal|2
 expr_stmt|;
+switch|switch
+condition|(
+name|hint
+condition|)
+block|{
+case|case
+name|VQ_POSTPONE_SHORT
+case|:
+name|ndesc
+operator|=
+name|ndesc
+operator|/
+literal|4
+expr_stmt|;
+break|break;
+case|case
+name|VQ_POSTPONE_LONG
+case|:
+name|ndesc
+operator|=
+operator|(
+name|ndesc
+operator|*
+literal|3
+operator|)
+operator|/
+literal|4
+expr_stmt|;
+break|break;
+case|case
+name|VQ_POSTPONE_EMPTIED
+case|:
+break|break;
+block|}
 return|return
 operator|(
 name|vq_ring_enable_interrupt
@@ -1861,6 +1907,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Note this is only considered a hint to the host.  */
+end_comment
+
 begin_function
 name|void
 name|virtqueue_disable_intr
@@ -1871,19 +1921,35 @@ modifier|*
 name|vq
 parameter_list|)
 block|{
-comment|/* 	 * Note this is only considered a hint to the host. 	 */
 if|if
 condition|(
-operator|(
 name|vq
 operator|->
 name|vq_flags
 operator|&
 name|VIRTQUEUE_FLAG_EVENT_IDX
-operator|)
-operator|==
-literal|0
 condition|)
+block|{
+name|vring_used_event
+argument_list|(
+operator|&
+name|vq
+operator|->
+name|vq_ring
+argument_list|)
+operator|=
+name|vq
+operator|->
+name|vq_used_cons_idx
+operator|-
+name|vq
+operator|->
+name|vq_nentries
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
 name|vq
 operator|->
 name|vq_ring

@@ -402,7 +402,7 @@ operator|.
 name|ResSourceOffset
 argument_list|)
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -1208,7 +1208,7 @@ argument_list|,
 name|ResourceSourceOffset
 argument_list|)
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 comment|/* ResourceSourceIndex, ResourceUsage */
@@ -1450,7 +1450,7 @@ argument_list|,
 name|ResourceSourceOffset
 argument_list|)
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 comment|/* ResourceSourceIndex, ResourceUsage */
@@ -1703,7 +1703,7 @@ argument_list|,
 name|ResourceSourceOffset
 argument_list|)
 argument_list|,
-name|ACPI_UINT8_MAX
+name|ACPI_UINT16_MAX
 argument_list|)
 expr_stmt|;
 comment|/* ResourceSourceIndex, ResourceUsage */

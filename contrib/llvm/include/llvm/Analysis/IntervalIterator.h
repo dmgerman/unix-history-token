@@ -126,13 +126,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_INTERVAL_ITERATOR_H
+name|LLVM_ANALYSIS_INTERVALITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_INTERVAL_ITERATOR_H
+name|LLVM_ANALYSIS_INTERVALITERATOR_H
 end_define
 
 begin_include
@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Function.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -811,7 +811,7 @@ comment|// interval graph.  It walks through the source graph, recursively creat
 end_comment
 
 begin_comment
-comment|// an interval per invokation until the entire graph is covered.  This uses
+comment|// an interval per invocation until the entire graph is covered.  This uses
 end_comment
 
 begin_comment

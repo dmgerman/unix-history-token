@@ -3014,10 +3014,10 @@ name|uart_oct16550_class
 operator|.
 name|uc_rclk
 operator|=
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|cpu_clock_hz
+name|cvmx_clock_get_rate
+argument_list|(
+name|CVMX_CLOCK_SCLK
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

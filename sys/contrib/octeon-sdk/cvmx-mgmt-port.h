@@ -270,6 +270,14 @@ name|cvmx_helper_link_info_t
 name|link_info
 parameter_list|)
 function_decl|;
+comment|/**  * Return the number of management ports supported on this board.  *  * @return Number of ports  */
+specifier|extern
+name|int
+name|cvmx_mgmt_port_num_ports
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

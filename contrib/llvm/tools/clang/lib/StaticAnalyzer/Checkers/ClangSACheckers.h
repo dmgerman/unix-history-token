@@ -51,12 +51,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Checkers/CommonBugCategories.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -68,6 +62,12 @@ define|#
 directive|define
 name|LLVM_CLANG_SA_LIB_CHECKERS_CLANGSACHECKERS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Checkers/CommonBugCategories.h"
+end_include
 
 begin_decl_stmt
 name|namespace

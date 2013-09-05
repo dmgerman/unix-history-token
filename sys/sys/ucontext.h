@@ -257,9 +257,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|__fillcontextx
+argument_list|(
+name|char
+operator|*
+name|ctx
+argument_list|)
+name|__returns_twice
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|__fillcontextx2
 parameter_list|(
 name|char
 modifier|*

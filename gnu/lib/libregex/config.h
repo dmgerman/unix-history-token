@@ -73,5 +73,26 @@ name|HAVE_WCSCOLL
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_ALLOCA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDBOOL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
+value|1
+end_define
+
 end_unit
 

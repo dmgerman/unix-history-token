@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Oleksandr Rybalko under sponsorship  * from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.	Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2.	Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2012, 2013 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Oleksandr Rybalko under sponsorship  * from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1.	Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2.	Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -186,6 +186,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GPT_CR_24MEN
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPT_CR_FRR
 value|(1<< 9)
 end_define
@@ -194,35 +201,42 @@ begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_NONE
-value|0x00000000
+value|(0<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_IPG
-value|0x00000040
+value|(1<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_IPG_HIGH
-value|0x00000080
+value|(2<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_EXT
-value|0x000000c0
+value|(3<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPT_CR_CLKSRC_32K
-value|0x00000100
+value|(4<< 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_CR_CLKSRC_24M
+value|(5<< 6)
 end_define
 
 begin_define
@@ -230,6 +244,13 @@ define|#
 directive|define
 name|GPT_CR_STOPEN
 value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_CR_DOZEEN
+value|(1<< 4)
 end_define
 
 begin_define
@@ -283,6 +304,20 @@ define|#
 directive|define
 name|GPT_PR_VALUE_MASK
 value|0x00000fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_PR_VALUE_SHIFT_24M
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPT_PR_VALUE_MASK_24M
+value|0x0000f000
 end_define
 
 begin_comment

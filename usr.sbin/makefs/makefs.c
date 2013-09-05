@@ -447,7 +447,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"B:b:Dd:f:F:M:m:N:o:ps:S:t:x"
+literal|"B:b:Dd:f:F:M:m:N:o:ps:S:t:xZ"
 argument_list|)
 operator|)
 operator|!=
@@ -845,6 +845,7 @@ block|}
 case|case
 literal|'p'
 case|:
+comment|/* Deprecated in favor of 'Z' */
 name|fsoptions
 operator|.
 name|sparse
@@ -958,6 +959,17 @@ case|:
 name|fsoptions
 operator|.
 name|onlyspec
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+comment|/* Superscedes 'p' for compatibility with NetBSD makefs(8) */
+name|fsoptions
+operator|.
+name|sparse
 operator|=
 literal|1
 expr_stmt|;
@@ -1596,7 +1608,7 @@ name|stderr
 argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
 literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-s image-size]\n"
-literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-px]\n"
+literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-xZ]\n"
 literal|"\t[-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog

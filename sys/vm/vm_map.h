@@ -174,6 +174,11 @@ modifier|*
 name|cred
 decl_stmt|;
 comment|/* tmp storage for creator ref */
+name|struct
+name|thread
+modifier|*
+name|wiring_thread
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1264,7 +1269,7 @@ value|min(atop(MAXPHYS) - 1, UINT8_MAX)
 end_define
 
 begin_comment
-comment|/*  * The following "find_space" options are supported by vm_map_find()  */
+comment|/*  * The following "find_space" options are supported by vm_map_find().  *  * For VMFS_ALIGNED_SPACE, the desired alignment is specified to  * the macro argument as log base 2 of the desired alignment.  */
 end_comment
 
 begin_define
@@ -1292,38 +1297,38 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMFS_ALIGNED_SPACE
+name|VMFS_OPTIMAL_SPACE
 value|2
+end_define
+
+begin_comment
+comment|/* find a range with optimal alignment*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMFS_SUPER_SPACE
+value|3
 end_define
 
 begin_comment
 comment|/* find a superpage-aligned range */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|VMFS_TLB_ALIGNED_SPACE
-value|3
+name|VMFS_ALIGNED_SPACE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 8)
 end_define
 
 begin_comment
-comment|/* find a TLB entry aligned range */
+comment|/* find a range with fixed alignment */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * vm_map_wire and vm_map_unwire option flags  */
@@ -1753,15 +1758,6 @@ parameter_list|(
 name|vm_map_t
 parameter_list|,
 name|vm_map_entry_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_init2
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

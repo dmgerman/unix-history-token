@@ -6371,7 +6371,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't llocate IRQ resources for "
+literal|"couldn't allocate IRQ resources for "
 literal|"message %d\n"
 argument_list|,
 name|rid
@@ -7947,7 +7947,7 @@ operator||
 name|IFCAP_WOL_MCAST
 operator|)
 expr_stmt|;
-comment|/* 	 * Don't enable TSO by default.  It is known to generate 	 * corrupted TCP segments(bad TCP options) under certain 	 * circumtances. 	 */
+comment|/* 	 * Don't enable TSO by default.  It is known to generate 	 * corrupted TCP segments(bad TCP options) under certain 	 * circumstances. 	 */
 name|ifp
 operator|->
 name|if_hwassist
@@ -10529,49 +10529,25 @@ directive|ifdef
 name|DEV_NETMAP
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_NETMAP
-condition|)
-block|{
-name|NA
+name|netmap_rx_irq
 argument_list|(
 name|ifp
-argument_list|)
-operator|->
-name|rx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|nr_kflags
-operator||=
-name|NKR_PENDINTR
-expr_stmt|;
-name|selwakeuppri
-argument_list|(
-operator|&
-name|NA
-argument_list|(
-name|ifp
-argument_list|)
-operator|->
-name|rx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|si
 argument_list|,
-name|PI_NET
+literal|0
+operator||
+operator|(
+name|NETMAP_LOCKED_ENTER
+operator||
+name|NETMAP_LOCKED_EXIT
+operator|)
+argument_list|,
+operator|&
+name|rx_npkts
 argument_list|)
-expr_stmt|;
+condition|)
 return|return
 literal|0
 return|;
-block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
@@ -11619,33 +11595,20 @@ directive|ifdef
 name|DEV_NETMAP
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_NETMAP
-condition|)
-block|{
-name|selwakeuppri
-argument_list|(
-operator|&
-name|NA
+name|netmap_tx_irq
 argument_list|(
 name|ifp
-argument_list|)
-operator|->
-name|tx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|si
 argument_list|,
-name|PI_NET
+literal|0
+operator||
+operator|(
+name|NETMAP_LOCKED_ENTER
+operator||
+name|NETMAP_LOCKED_EXIT
+operator|)
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
-block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
@@ -13567,7 +13530,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Unconditionally enable IP checksum if TCP or UDP 		 * checksum is required. Otherwise, TCP/UDP checksum 		 * does't make effects. 		 */
+comment|/* 		 * Unconditionally enable IP checksum if TCP or UDP 		 * checksum is required. Otherwise, TCP/UDP checksum 		 * doesn't make effects. 		 */
 if|if
 condition|(
 operator|(
@@ -15591,7 +15554,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * For controllers that use new jumbo frame scheme, 			 * set maximum size of jumbo frame depedning on 			 * controller revisions. 			 */
+comment|/* 			 * For controllers that use new jumbo frame scheme, 			 * set maximum size of jumbo frame depending on 			 * controller revisions. 			 */
 if|if
 condition|(
 name|ifp
@@ -19140,7 +19103,7 @@ name|sc
 operator|->
 name|rl_dev
 argument_list|,
-literal|"DUMP statistics request timedout\n"
+literal|"DUMP statistics request timed out\n"
 argument_list|)
 expr_stmt|;
 return|return

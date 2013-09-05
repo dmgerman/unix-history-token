@@ -614,6 +614,13 @@ name|TMPFS_VNODE_DOOMED
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|TMPFS_VNODE_WRECLAIM
+value|8
+end_define
+
 begin_comment
 comment|/* --------------------------------------------------------------------- */
 end_comment
@@ -852,6 +859,21 @@ name|char
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tmpfs_destroy_vobject
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|vm_object_t
+name|obj
 parameter_list|)
 function_decl|;
 end_function_decl

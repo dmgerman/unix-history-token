@@ -58,19 +58,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_REGION_PASS_H
+name|LLVM_ANALYSIS_REGIONPASS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_REGION_PASS_H
+name|LLVM_ANALYSIS_REGIONPASS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/Analysis/RegionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include
@@ -83,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/PassManagers.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Function.h"
 end_include
 
 begin_include
@@ -176,6 +176,20 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+block|;
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
+name|doInitialization
+block|;
+name|using
+name|llvm
+operator|::
+name|Pass
+operator|::
+name|doFinalization
 block|;
 name|virtual
 name|bool

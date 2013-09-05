@@ -30387,7 +30387,7 @@ name|reg
 operator|<<
 literal|8
 expr_stmt|;
-comment|/* rdhi, rdlo and rm must all be different.  */
+comment|/* rdhi, rdlo and rm must all be different prior to ARMv6.  */
 if|if
 condition|(
 name|inst
@@ -30408,6 +30408,8 @@ index|]
 operator|.
 name|reg
 operator|||
+operator|(
+operator|(
 name|inst
 operator|.
 name|operands
@@ -30443,6 +30445,16 @@ literal|2
 index|]
 operator|.
 name|reg
+operator|)
+operator|&&
+operator|!
+name|ARM_CPU_HAS_FEATURE
+argument_list|(
+name|selected_cpu
+argument_list|,
+name|arm_ext_v6
+argument_list|)
+operator|)
 condition|)
 name|as_tsktsk
 argument_list|(

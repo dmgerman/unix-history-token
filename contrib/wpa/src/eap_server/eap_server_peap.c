@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP-PEAP (draft-josefsson-pppext-eap-tls-eap-10.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / EAP-PEAP (draft-josefsson-pppext-eap-tls-eap-10.txt)  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"crypto/tls.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/random.h"
 end_include
 
 begin_include
@@ -1542,6 +1548,8 @@ argument_list|,
 literal|40
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|peap_prfplus
 argument_list|(
 name|data
@@ -1568,7 +1576,20 @@ argument_list|(
 name|imck
 argument_list|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|os_free
+argument_list|(
+name|tk
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG
@@ -1881,7 +1902,7 @@ argument_list|)
 operator|<
 literal|0
 operator|||
-name|os_get_random
+name|random_get_bytes
 argument_list|(
 name|data
 operator|->
@@ -5093,13 +5114,6 @@ argument_list|,
 name|in_decrypted
 argument_list|)
 expr_stmt|;
-name|hdr
-operator|=
-name|wpabuf_head
-argument_list|(
-name|in_decrypted
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|data
@@ -6342,6 +6356,8 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* 		 * Note: It looks like Microsoft implementation requires null 		 * termination for this label while the one used for deriving 		 * IPMK|CMK did not use null termination. 		 */
+if|if
+condition|(
 name|peap_prfplus
 argument_list|(
 name|data
@@ -6371,7 +6387,12 @@ argument_list|(
 name|csk
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 name|wpa_hexdump_key
 argument_list|(
 name|MSG_DEBUG

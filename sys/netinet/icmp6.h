@@ -2574,44 +2574,44 @@ begin_struct
 struct|struct
 name|icmp6errstat
 block|{
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_noroute
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_admin
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_beyondscope
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_addr
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_dst_unreach_noport
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_packet_too_big
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_time_exceed_transit
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_time_exceed_reassembly
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_paramprob_header
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_paramprob_nextheader
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_paramprob_option
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6errs_redirect
 decl_stmt|;
 comment|/* we regard redirect as an error here */
-name|u_quad_t
+name|uint64_t
 name|icp6errs_unknown
 decl_stmt|;
 block|}
@@ -2623,52 +2623,52 @@ struct|struct
 name|icmp6stat
 block|{
 comment|/* statistics related to icmp6 packets generated */
-name|u_quad_t
+name|uint64_t
 name|icp6s_error
 decl_stmt|;
 comment|/* # of calls to icmp6_error */
-name|u_quad_t
+name|uint64_t
 name|icp6s_canterror
 decl_stmt|;
 comment|/* no error 'cuz old was icmp */
-name|u_quad_t
+name|uint64_t
 name|icp6s_toofreq
 decl_stmt|;
 comment|/* no error 'cuz rate limitation */
-name|u_quad_t
+name|uint64_t
 name|icp6s_outhist
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* statistics related to input message processed */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badcode
 decl_stmt|;
 comment|/* icmp6_code out of range */
-name|u_quad_t
+name|uint64_t
 name|icp6s_tooshort
 decl_stmt|;
 comment|/* packet< sizeof(struct icmp6_hdr) */
-name|u_quad_t
+name|uint64_t
 name|icp6s_checksum
 decl_stmt|;
 comment|/* bad checksum */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badlen
 decl_stmt|;
 comment|/* calculated bound mismatch */
 comment|/* 	 * number of responses: this member is inherited from netinet code, but 	 * for netinet6 code, it is already available in icp6s_outhist[]. 	 */
-name|u_quad_t
+name|uint64_t
 name|icp6s_reflect
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6s_inhist
 index|[
 literal|256
 index|]
 decl_stmt|;
-name|u_quad_t
+name|uint64_t
 name|icp6s_nd_toomanyopt
 decl_stmt|;
 comment|/* too many ND options */
@@ -2733,31 +2733,31 @@ define|#
 directive|define
 name|icp6s_ounknown
 value|icp6s_outerrhist.icp6errs_unknown
-name|u_quad_t
+name|uint64_t
 name|icp6s_pmtuchg
 decl_stmt|;
 comment|/* path MTU changes */
-name|u_quad_t
+name|uint64_t
 name|icp6s_nd_badopt
 decl_stmt|;
 comment|/* bad ND options */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badns
 decl_stmt|;
 comment|/* bad neighbor solicitation */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badna
 decl_stmt|;
 comment|/* bad neighbor advertisement */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badrs
 decl_stmt|;
 comment|/* bad router advertisement */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badra
 decl_stmt|;
 comment|/* bad router advertisement */
-name|u_quad_t
+name|uint64_t
 name|icp6s_badredirect
 decl_stmt|;
 comment|/* bad redirect message */
@@ -2770,6 +2770,23 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
+begin_expr_stmt
+name|VNET_PCPUSTAT_DECLARE
+argument_list|(
+expr|struct
+name|icmp6stat
+argument_list|,
+name|icmp6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * In-kernel consumers can use these accessor macros directly to update  * stats.  */
@@ -2784,7 +2801,8 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|V_icmp6stat.name += (val)
+define|\
+value|VNET_PCPUSTAT_ADD(struct icmp6stat, icmp6stat, name, (val))
 end_define
 
 begin_define
@@ -2819,7 +2837,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|kmod_icmp6stat_inc(offsetof(struct icmp6stat, name) / sizeof(u_quad_t))
+value|kmod_icmp6stat_inc(offsetof(struct icmp6stat, name) / sizeof(uint64_t))
 end_define
 
 begin_endif
@@ -3016,8 +3034,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMPV6CTL_MAXID
+name|ICMPV6CTL_NODEINFO_OLDMCPREFIX
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICMPV6CTL_MAXID
+value|26
 end_define
 
 begin_define
@@ -3233,7 +3258,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|do {								\ 	if (ifp)						\ 		((struct in6_ifextra *)((ifp)->if_afdata[AF_INET6]))->icmp6_ifstat->tag++; \ } while (
+value|do {								\ 	if (ifp)						\ 		counter_u64_add(((struct in6_ifextra *)		\ 		    ((ifp)->if_afdata[AF_INET6]))->icmp6_ifstat[\ 		    offsetof(struct icmp6_ifstat, tag) / sizeof(uint64_t)], 1);\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define

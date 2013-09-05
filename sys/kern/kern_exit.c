@@ -334,7 +334,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -343,20 +343,6 @@ argument_list|, ,
 name|exit
 argument_list|,
 name|exit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exit
-argument_list|,
-literal|0
 argument_list|,
 literal|"int"
 argument_list|)
@@ -3455,15 +3441,6 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_prison
-operator|==
-name|NULL
-operator|||
-operator|(
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_prison
 operator|->
 name|pr_id
 operator|!=
@@ -3471,7 +3448,6 @@ operator|(
 name|int
 operator|)
 name|id
-operator|)
 condition|)
 block|{
 name|PROC_UNLOCK

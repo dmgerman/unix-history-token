@@ -89,6 +89,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// An unsigned integer type large enough to represent all physical registers,
+comment|/// but not necessarily virtual registers.
+typedef|typedef
+name|uint16_t
+name|MCPhysReg
+typedef|;
 comment|/// MCRegisterClass - Base class of TargetRegisterClass.
 name|class
 name|MCRegisterClass
@@ -97,13 +103,13 @@ name|public
 label|:
 typedef|typedef
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|iterator
 typedef|;
 typedef|typedef
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|const_iterator
 typedef|;
@@ -464,6 +470,10 @@ name|unsigned
 name|RAReg
 decl_stmt|;
 comment|// Return address register
+name|unsigned
+name|PCReg
+decl_stmt|;
+comment|// Program counter register
 specifier|const
 name|MCRegisterClass
 modifier|*
@@ -490,7 +500,7 @@ index|]
 expr_stmt|;
 comment|// Pointer to regunit root table.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|DiffLists
 decl_stmt|;
@@ -577,7 +587,7 @@ name|uint16_t
 name|Val
 decl_stmt|;
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|List
 decl_stmt|;
@@ -603,9 +613,9 @@ comment|/// responsible for skipping the seed value if it is not part of the lis
 name|void
 name|init
 argument_list|(
-argument|uint16_t InitVal
+argument|MCPhysReg InitVal
 argument_list|,
-argument|const uint16_t *DiffList
+argument|const MCPhysReg *DiffList
 argument_list|)
 block|{
 name|Val
@@ -631,7 +641,7 @@ operator|&&
 literal|"Cannot move off the end of the list."
 argument_list|)
 block|;
-name|uint16_t
+name|MCPhysReg
 name|D
 operator|=
 operator|*
@@ -713,7 +723,7 @@ name|friend
 name|class
 name|MCRegUnitRootIterator
 decl_stmt|;
-comment|/// InitMCRegisterInfo - Initialize MCRegisterInfo, called by TableGen
+comment|/// \brief Initialize MCRegisterInfo, called by TableGen
 comment|/// auto-generated routines. *DO NOT USE*.
 name|void
 name|InitMCRegisterInfo
@@ -728,6 +738,9 @@ name|NR
 argument_list|,
 name|unsigned
 name|RA
+argument_list|,
+name|unsigned
+name|PC
 argument_list|,
 specifier|const
 name|MCRegisterClass
@@ -751,7 +764,7 @@ name|unsigned
 name|NRU
 argument_list|,
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|DL
 argument_list|,
@@ -785,6 +798,10 @@ expr_stmt|;
 name|RAReg
 operator|=
 name|RA
+expr_stmt|;
+name|PCReg
+operator|=
+name|PC
 expr_stmt|;
 name|Classes
 operator|=
@@ -823,7 +840,7 @@ operator|=
 name|RET
 expr_stmt|;
 block|}
-comment|/// mapLLVMRegsToDwarfRegs - Used to initialize LLVM register to Dwarf
+comment|/// \brief Used to initialize LLVM register to Dwarf
 comment|/// register number mapping. Called by TableGen auto-generated routines.
 comment|/// *DO NOT USE*.
 name|void
@@ -867,7 +884,7 @@ name|Size
 expr_stmt|;
 block|}
 block|}
-comment|/// mapDwarfRegsToLLVMRegs - Used to initialize Dwarf register to LLVM
+comment|/// \brief Used to initialize Dwarf register to LLVM
 comment|/// register number mapping. Called by TableGen auto-generated routines.
 comment|/// *DO NOT USE*.
 name|void
@@ -934,7 +951,7 @@ operator|=
 name|SEHReg
 expr_stmt|;
 block|}
-comment|/// getRARegister - This method should return the register where the return
+comment|/// \brief This method should return the register where the return
 comment|/// address can be found.
 name|unsigned
 name|getRARegister
@@ -943,6 +960,16 @@ specifier|const
 block|{
 return|return
 name|RAReg
+return|;
+block|}
+comment|/// Return the register which is the program counter.
+name|unsigned
+name|getProgramCounter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PCReg
 return|;
 block|}
 specifier|const
@@ -972,9 +999,8 @@ name|RegNo
 index|]
 return|;
 block|}
-comment|/// Provide a get method, equivalent to [], but more useful if we have a
+comment|/// \brief Provide a get method, equivalent to [], but more useful with a
 comment|/// pointer to this object.
-comment|///
 specifier|const
 name|MCRegisterDesc
 modifier|&
@@ -993,7 +1019,7 @@ name|RegNo
 operator|)
 return|;
 block|}
-comment|/// getSubReg - Returns the physical register number of sub-register "Index"
+comment|/// \brief Returns the physical register number of sub-register "Index"
 comment|/// for physical register RegNo. Return zero if the sub-register does not
 comment|/// exist.
 name|unsigned
@@ -1007,7 +1033,7 @@ name|Idx
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getMatchingSuperReg - Return a super-register of the specified register
+comment|/// \brief Return a super-register of the specified register
 comment|/// Reg so its sub-register of index SubIdx is Reg.
 name|unsigned
 name|getMatchingSuperReg
@@ -1025,7 +1051,7 @@ name|RC
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getSubRegIndex - For a given register pair, return the sub-register index
+comment|/// \brief For a given register pair, return the sub-register index
 comment|/// if the second register is a sub-register of the first. Return zero
 comment|/// otherwise.
 name|unsigned
@@ -1039,7 +1065,7 @@ name|SubRegNo
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getName - Return the human-readable symbolic target-specific name for the
+comment|/// \brief Return the human-readable symbolic target-specific name for the
 comment|/// specified physical register.
 specifier|const
 name|char
@@ -1062,7 +1088,7 @@ operator|.
 name|Name
 return|;
 block|}
-comment|/// getNumRegs - Return the number of registers this target has (useful for
+comment|/// \brief Return the number of registers this target has (useful for
 comment|/// sizing arrays holding per register information)
 name|unsigned
 name|getNumRegs
@@ -1073,7 +1099,7 @@ return|return
 name|NumRegs
 return|;
 block|}
-comment|/// getNumSubRegIndices - Return the number of sub-register indices
+comment|/// \brief Return the number of sub-register indices
 comment|/// understood by the target. Index 0 is reserved for the no-op sub-register,
 comment|/// while 1 to getNumSubRegIndices() - 1 represent real sub-registers.
 name|unsigned
@@ -1085,7 +1111,7 @@ return|return
 name|NumSubRegIndices
 return|;
 block|}
-comment|/// getNumRegUnits - Return the number of (native) register units in the
+comment|/// \brief Return the number of (native) register units in the
 comment|/// target. Register units are numbered from 0 to getNumRegUnits() - 1. They
 comment|/// can be accessed through MCRegUnitIterator defined below.
 name|unsigned
@@ -1097,7 +1123,7 @@ return|return
 name|NumRegUnits
 return|;
 block|}
-comment|/// getDwarfRegNum - Map a target register to an equivalent dwarf register
+comment|/// \brief Map a target register to an equivalent dwarf register
 comment|/// number.  Returns -1 if there is no equivalent value.  The second
 comment|/// parameter allows targets to use different numberings for EH info and
 comment|/// debugging info.
@@ -1112,8 +1138,7 @@ name|isEH
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getLLVMRegNum - Map a dwarf register back to a target register.
-comment|///
+comment|/// \brief Map a dwarf register back to a target register.
 name|int
 name|getLLVMRegNum
 argument_list|(
@@ -1125,7 +1150,7 @@ name|isEH
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getSEHRegNum - Map a target register to an equivalent SEH register
+comment|/// \brief Map a target register to an equivalent SEH register
 comment|/// number.  Returns LLVM register number if there is no equivalent value.
 name|int
 name|getSEHRegNum
@@ -1173,7 +1198,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getRegClass - Returns the register class associated with the enumeration
+comment|/// \brief Returns the register class associated with the enumeration
 comment|/// value.  See class MCOperandInfo.
 specifier|const
 name|MCRegisterClass
@@ -1202,7 +1227,7 @@ name|i
 index|]
 return|;
 block|}
-comment|/// getEncodingValue - Returns the encoding for RegNo
+comment|/// \brief Returns the encoding for RegNo
 name|uint16_t
 name|getEncodingValue
 argument_list|(
@@ -1225,6 +1250,86 @@ name|RegEncodingTable
 index|[
 name|RegNo
 index|]
+return|;
+block|}
+comment|/// \brief Returns true if RegB is a sub-register of RegA.
+name|bool
+name|isSubRegister
+argument_list|(
+name|unsigned
+name|RegA
+argument_list|,
+name|unsigned
+name|RegB
+argument_list|)
+decl|const
+block|{
+return|return
+name|isSuperRegister
+argument_list|(
+name|RegB
+argument_list|,
+name|RegA
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns true if RegB is a super-register of RegA.
+name|bool
+name|isSuperRegister
+argument_list|(
+name|unsigned
+name|RegA
+argument_list|,
+name|unsigned
+name|RegB
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Returns true if RegB is a sub-register of RegA or if RegB == RegA.
+name|bool
+name|isSubRegisterEq
+argument_list|(
+name|unsigned
+name|RegA
+argument_list|,
+name|unsigned
+name|RegB
+argument_list|)
+decl|const
+block|{
+return|return
+name|isSuperRegisterEq
+argument_list|(
+name|RegB
+argument_list|,
+name|RegA
+argument_list|)
+return|;
+block|}
+comment|/// \brief Returns true if RegB is a super-register of RegA or if
+comment|/// RegB == RegA.
+name|bool
+name|isSuperRegisterEq
+argument_list|(
+name|unsigned
+name|RegA
+argument_list|,
+name|unsigned
+name|RegB
+argument_list|)
+decl|const
+block|{
+return|return
+name|RegA
+operator|==
+name|RegB
+operator|||
+name|isSuperRegister
+argument_list|(
+name|RegA
+argument_list|,
+name|RegB
+argument_list|)
 return|;
 block|}
 block|}
@@ -1370,6 +1475,52 @@ expr_stmt|;
 block|}
 expr|}
 block|;
+comment|// Definition for isSuperRegister. Put it down here since it needs the
+comment|// iterator defined above in addition to the MCRegisterInfo class itself.
+specifier|inline
+name|bool
+name|MCRegisterInfo
+operator|::
+name|isSuperRegister
+argument_list|(
+argument|unsigned RegA
+argument_list|,
+argument|unsigned RegB
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+name|MCSuperRegIterator
+name|I
+argument_list|(
+name|RegA
+argument_list|,
+name|this
+argument_list|)
+init|;
+name|I
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|I
+control|)
+if|if
+condition|(
+operator|*
+name|I
+operator|==
+name|RegB
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|//                               Register Units
 comment|//===----------------------------------------------------------------------===//
@@ -1384,7 +1535,7 @@ comment|// MCRegUnitIterator enumerates a list of register units for Reg. The li
 comment|// in ascending numerical order.
 name|class
 name|MCRegUnitIterator
-operator|:
+range|:
 name|public
 name|MCRegisterInfo
 operator|::
@@ -1401,6 +1552,13 @@ argument_list|,
 argument|const MCRegisterInfo *MCRI
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Reg
+operator|&&
+literal|"Null register has no regunits"
+argument_list|)
+block|;
 comment|// Decode the RegUnits MCRegisterDesc field.
 name|unsigned
 name|RU
@@ -1451,7 +1609,7 @@ name|advance
 argument_list|()
 block|;   }
 block|}
-block|;
+decl_stmt|;
 comment|// Each register unit has one or two root registers. The complete set of
 comment|// registers containing a register unit is the union of the roots and their
 comment|// super-registers. All registers aliasing Unit can be visited like this:
@@ -1468,12 +1626,12 @@ name|MCRegUnitRootIterator
 block|{
 name|uint16_t
 name|Reg0
-block|;
+decl_stmt|;
 name|uint16_t
 name|Reg1
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|MCRegUnitRootIterator
 argument_list|(
 argument|unsigned RegUnit
@@ -1492,7 +1650,7 @@ argument_list|()
 operator|&&
 literal|"Invalid register unit"
 argument_list|)
-block|;
+expr_stmt|;
 name|Reg0
 operator|=
 name|MCRI
@@ -1504,7 +1662,7 @@ index|]
 index|[
 literal|0
 index|]
-block|;
+expr_stmt|;
 name|Reg1
 operator|=
 name|MCRI
@@ -1516,8 +1674,9 @@ index|]
 index|[
 literal|1
 index|]
-block|;   }
-comment|/// Dereference to get the current root register.
+expr_stmt|;
+block|}
+comment|/// \brief Dereference to get the current root register.
 name|unsigned
 name|operator
 operator|*
@@ -1529,7 +1688,7 @@ return|return
 name|Reg0
 return|;
 block|}
-comment|/// isValid - Check if the iterator is at the end of the list.
+comment|/// \brief Check if the iterator is at the end of the list.
 name|bool
 name|isValid
 argument_list|()
@@ -1539,7 +1698,7 @@ return|return
 name|Reg0
 return|;
 block|}
-comment|/// Preincrement to move to the next root register.
+comment|/// \brief Preincrement to move to the next root register.
 name|void
 name|operator
 operator|++
@@ -1562,8 +1721,9 @@ name|Reg1
 operator|=
 literal|0
 block|;   }
-expr|}
-block|;  }
+block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -127,21 +127,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* FACS is the odd table, has no standard ACPI header and no checksum */
-if|if
-condition|(
-operator|!
-name|ACPI_COMPARE_NAME
-argument_list|(
-operator|&
-name|TableDesc
-operator|->
-name|Signature
-argument_list|,
-name|ACPI_SIG_FACS
-argument_list|)
-condition|)
-block|{
 comment|/* Always calculate checksum, ignore bad checksum if requested */
 name|Status
 operator|=
@@ -156,7 +141,6 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -286,11 +270,6 @@ literal|"must be SSDT or OEMx"
 operator|,
 name|AcpiUtValidAcpiName
 argument_list|(
-operator|*
-operator|(
-name|UINT32
-operator|*
-operator|)
 name|TableDesc
 operator|->
 name|Pointer

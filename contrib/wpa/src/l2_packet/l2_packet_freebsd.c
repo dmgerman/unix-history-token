@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - Layer2 packet handling with FreeBSD  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  * Copyright (c) 2005, Sam Leffler<sam@errno.com>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * WPA Supplicant - Layer2 packet handling with FreeBSD  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  * Copyright (c) 2005, Sam Leffler<sam@errno.com>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -50,11 +50,41 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sun__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libdlpi.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __sun__ */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __sun__ */
+end_comment
 
 begin_include
 include|#
@@ -791,6 +821,9 @@ operator|&
 name|pcap_fp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sun__
 comment|/* 	 * When libpcap uses BPF we must enable "immediate mode" to 	 * receive frames right away; otherwise the system may 	 * buffer them for us. 	 */
 block|{
 name|unsigned
@@ -841,6 +874,9 @@ expr_stmt|;
 comment|/* XXX should we fail? */
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* __sun__ */
 name|eloop_register_read_sock
 argument_list|(
 name|pcap_get_selectable_fd
@@ -882,6 +918,122 @@ name|ETH_ALEN
 index|]
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__sun__
+name|dlpi_handle_t
+name|dh
+decl_stmt|;
+name|u32
+name|physaddrlen
+init|=
+name|DLPI_PHYSADDR_MAX
+decl_stmt|;
+name|u8
+name|physaddr
+index|[
+name|DLPI_PHYSADDR_MAX
+index|]
+decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+name|retval
+operator|=
+name|dlpi_open
+argument_list|(
+name|device
+argument_list|,
+operator|&
+name|dh
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+name|DLPI_SUCCESS
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"dlpi_open error: %s"
+argument_list|,
+name|dlpi_strerror
+argument_list|(
+name|retval
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|retval
+operator|=
+name|dlpi_get_physaddr
+argument_list|(
+name|dh
+argument_list|,
+name|DL_CURR_PHYS_ADDR
+argument_list|,
+name|physaddr
+argument_list|,
+operator|&
+name|physaddrlen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+name|DLPI_SUCCESS
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"dlpi_get_physaddr error: %s"
+argument_list|,
+name|dlpi_strerror
+argument_list|(
+name|retval
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dlpi_close
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|os_memcpy
+argument_list|(
+name|ea
+argument_list|,
+name|physaddr
+argument_list|,
+name|ETH_ALEN
+argument_list|)
+expr_stmt|;
+name|dlpi_close
+argument_list|(
+name|dh
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* __sun__ */
 name|struct
 name|if_msghdr
 modifier|*
@@ -1121,6 +1273,9 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* __sun__ */
 return|return
 literal|0
 return|;

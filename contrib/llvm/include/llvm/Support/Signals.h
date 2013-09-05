@@ -54,19 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SYSTEM_SIGNALS_H
+name|LLVM_SUPPORT_SIGNALS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SYSTEM_SIGNALS_H
+name|LLVM_SUPPORT_SIGNALS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Path.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdio>
 end_include
 
 begin_decl_stmt
@@ -119,6 +125,14 @@ comment|/// @brief Print a stack trace if a fatal signal occurs.
 name|void
 name|PrintStackTraceOnErrorSignal
 parameter_list|()
+function_decl|;
+comment|/// \brief Print the stack trace using the given \c FILE object.
+name|void
+name|PrintStackTrace
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/// AddSignalHandler - Add a function to be called when an abort/kill signal
 comment|/// is delivered to the process.  The handler can have a cookie passed to it

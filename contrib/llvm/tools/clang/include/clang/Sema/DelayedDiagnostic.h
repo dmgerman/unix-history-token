@@ -790,10 +790,8 @@ return|;
 block|}
 name|private
 label|:
-union|union
-block|{
-comment|/// Deprecation.
 struct|struct
+name|DD
 block|{
 specifier|const
 name|NamedDecl
@@ -819,9 +817,9 @@ name|size_t
 name|MessageLen
 decl_stmt|;
 block|}
-name|DeprecationData
 struct|;
 struct|struct
+name|FTD
 block|{
 name|unsigned
 name|Diagnostic
@@ -834,8 +832,18 @@ modifier|*
 name|OperandType
 decl_stmt|;
 block|}
-name|ForbiddenTypeData
 struct|;
+union|union
+block|{
+comment|/// Deprecation
+name|struct
+name|DD
+name|DeprecationData
+decl_stmt|;
+name|struct
+name|FTD
+name|ForbiddenTypeData
+decl_stmt|;
 comment|/// Access control.
 name|char
 name|AccessData
@@ -860,8 +868,6 @@ name|DelayedDiagnosticPool
 modifier|*
 name|Parent
 decl_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|DelayedDiagnostic
@@ -907,8 +913,6 @@ argument_list|()
 block|{
 for|for
 control|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|DelayedDiagnostic
@@ -1061,8 +1065,6 @@ argument_list|()
 expr_stmt|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|DelayedDiagnostic

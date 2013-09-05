@@ -73,6 +73,41 @@ begin_comment
 comment|/*   * Each entry has a datatype associated with it: for example, the CPU state   * is saved as a HVM_SAVE_TYPE(CPU), which has HVM_SAVE_LENGTH(CPU),   * and is identified by a descriptor with typecode HVM_SAVE_CODE(CPU).  * DECLARE_HVM_SAVE_TYPE binds these things together with some type-system  * ugliness.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__XEN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DECLARE_HVM_SAVE_TYPE_COMPAT
+parameter_list|(
+name|_x
+parameter_list|,
+name|_code
+parameter_list|,
+name|_type
+parameter_list|,
+name|_ctype
+parameter_list|,
+name|_fix
+parameter_list|)
+define|\
+value|static inline int __HVM_SAVE_FIX_COMPAT_##_x(void *h) { return _fix(h); } \     struct __HVM_SAVE_TYPE_##_x { _type t; char c[_code]; char cpt[2];}; \     struct __HVM_SAVE_TYPE_COMPAT_##_x { _ctype t; }
+end_define
+
+begin_include
+include|#
+directive|include
+file|<xen/lib.h>
+end_include
+
+begin_comment
+comment|/* BUG() */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -85,8 +120,52 @@ parameter_list|,
 name|_type
 parameter_list|)
 define|\
-value|struct __HVM_SAVE_TYPE_##_x { _type t; char c[_code]; }
+value|static inline int __HVM_SAVE_FIX_COMPAT_##_x(void *h) { BUG(); return -1; } \     struct __HVM_SAVE_TYPE_##_x { _type t; char c[_code]; char cpt[1];}; \     struct __HVM_SAVE_TYPE_COMPAT_##_x { _type t; }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DECLARE_HVM_SAVE_TYPE_COMPAT
+parameter_list|(
+name|_x
+parameter_list|,
+name|_code
+parameter_list|,
+name|_type
+parameter_list|,
+name|_ctype
+parameter_list|,
+name|_fix
+parameter_list|)
+define|\
+value|struct __HVM_SAVE_TYPE_##_x { _type t; char c[_code]; char cpt[2];}
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_HVM_SAVE_TYPE
+parameter_list|(
+name|_x
+parameter_list|,
+name|_code
+parameter_list|,
+name|_type
+parameter_list|)
+define|\
+value|struct __HVM_SAVE_TYPE_##_x { _type t; char c[_code]; char cpt[1];}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -117,6 +196,59 @@ name|_x
 parameter_list|)
 value|(sizeof (((struct __HVM_SAVE_TYPE_##_x *)(0))->c))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__XEN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HVM_SAVE_TYPE_COMPAT
+parameter_list|(
+name|_x
+parameter_list|)
+value|typeof (((struct __HVM_SAVE_TYPE_COMPAT_##_x *)(0))->t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVM_SAVE_LENGTH_COMPAT
+parameter_list|(
+name|_x
+parameter_list|)
+value|(sizeof (HVM_SAVE_TYPE_COMPAT(_x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVM_SAVE_HAS_COMPAT
+parameter_list|(
+name|_x
+parameter_list|)
+value|(sizeof (((struct __HVM_SAVE_TYPE_##_x *)(0))->cpt)-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HVM_SAVE_FIX_COMPAT
+parameter_list|(
+name|_x
+parameter_list|,
+name|_dst
+parameter_list|)
+value|__HVM_SAVE_FIX_COMPAT_##_x(_dst)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*   * The series of save records is teminated by a zero-type, zero-length   * descriptor.  */
@@ -175,6 +307,21 @@ begin_include
 include|#
 directive|include
 file|"../arch-ia64/hvm/save.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"../arch-arm/hvm/save.h"
 end_include
 
 begin_else

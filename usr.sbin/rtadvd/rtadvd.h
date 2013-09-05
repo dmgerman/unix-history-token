@@ -746,7 +746,7 @@ name|ifi_ra_timer
 decl_stmt|;
 comment|/* timestamp when the latest RA was sent */
 name|struct
-name|timeval
+name|timespec
 name|ifi_ra_lastsent
 decl_stmt|;
 name|uint16_t
@@ -817,7 +817,7 @@ name|void
 modifier|*
 parameter_list|,
 name|struct
-name|timeval
+name|timespec
 modifier|*
 parameter_list|)
 function_decl|;

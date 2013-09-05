@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclarationName.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/DeclBase.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"clang/AST/DeclCXX.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclarationName.h"
 end_include
 
 begin_include
@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<list>
 end_include
 
@@ -117,12 +123,6 @@ begin_include
 include|#
 directive|include
 file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cassert>
 end_include
 
 begin_decl_stmt

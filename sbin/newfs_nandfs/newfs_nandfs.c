@@ -289,6 +289,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_info
 name|user_files
@@ -317,6 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_info
 name|ifile
@@ -341,6 +343,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_info
 name|sufile
@@ -365,6 +368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_info
 name|cpfile
@@ -389,6 +393,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_info
 name|datfile
@@ -493,6 +498,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nandfs_fsdata
 name|fsdata
@@ -500,6 +506,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nandfs_super_block
 name|super_block
@@ -579,6 +586,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 modifier|*
 name|volumelabel
@@ -588,6 +596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|nandfs_super_root
 modifier|*
@@ -596,24 +605,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint32_t
 name|nuserfiles
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uint32_t
-name|seg_segsum_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|uint32_t
 name|seg_nblocks
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint32_t
 name|seg_endblock
 decl_stmt|;

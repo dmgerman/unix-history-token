@@ -237,6 +237,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|mutex_init
+argument_list|(
+operator|&
+name|tx
+operator|->
+name|tx_cpu
+index|[
+name|c
+index|]
+operator|.
+name|tc_open_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|MUTEX_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -495,6 +514,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|tx
+operator|->
+name|tx_cpu
+index|[
+name|c
+index|]
+operator|.
+name|tc_open_lock
+argument_list|)
+expr_stmt|;
 name|mutex_destroy
 argument_list|(
 operator|&
@@ -1056,7 +1088,7 @@ argument_list|(
 operator|&
 name|tc
 operator|->
-name|tc_lock
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 name|txg
@@ -1064,6 +1096,14 @@ operator|=
 name|tx
 operator|->
 name|tx_open_txg
+expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_lock
+argument_list|)
 expr_stmt|;
 name|tc
 operator|->
@@ -1074,6 +1114,14 @@ operator|&
 name|TXG_MASK
 index|]
 operator|++
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_lock
+argument_list|)
 expr_stmt|;
 name|th
 operator|->
@@ -1112,12 +1160,24 @@ name|th
 operator|->
 name|th_cpu
 decl_stmt|;
-name|mutex_exit
+name|ASSERT
+argument_list|(
+operator|!
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|tc
 operator|->
 name|tc_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1272,6 +1332,10 @@ comment|/* defensive */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Blocks until all transactions in the group are committed.  *  * On return, the transaction group has reached a stable state in which it can  * then be passed off to the syncing context.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1304,7 +1368,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-comment|/* 	 * Grab all tx_cpu locks so nobody else can get into this txg. 	 */
+comment|/* 	 * Grab all tc_open_locks so nobody else can get into this txg. 	 */
 for|for
 control|(
 name|c
@@ -1328,7 +1392,7 @@ index|[
 name|c
 index|]
 operator|.
-name|tc_lock
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -1369,7 +1433,7 @@ index|[
 name|c
 index|]
 operator|.
-name|tc_lock
+name|tc_open_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Quiesce the transaction group by waiting for everyone to txg_exit(). 	 */
@@ -1488,7 +1552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispatch the commit callbacks registered on this txg to worker threads.  */
+comment|/*  * Dispatch the commit callbacks registered on this txg to worker threads.  *  * If no callbacks are registered for a given TXG, nothing happens.  * This function creates a taskq for the associated pool, if needed.  */
 end_comment
 
 begin_function
@@ -1546,7 +1610,7 @@ index|[
 name|c
 index|]
 decl_stmt|;
-comment|/* No need to lock tx_cpu_t at this point */
+comment|/* 		 * No need to lock tx_cpu_t at this point, since this can 		 * only be called once a txg has been synced. 		 */
 name|int
 name|g
 init|=
@@ -1631,6 +1695,8 @@ argument_list|)
 expr_stmt|;
 name|list_move_tail
 argument_list|(
+name|cb_list
+argument_list|,
 operator|&
 name|tc
 operator|->
@@ -1638,8 +1704,6 @@ name|tc_callbacks
 index|[
 name|g
 index|]
-argument_list|,
-name|cb_list
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2211,7 +2275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delay this thread by 'ticks' if we are still in the open transaction  * group and there is already a waiting txg quiesing or quiesced.  Abort  * the delay if this txg stalls or enters the quiesing state.  */
+comment|/*  * Delay this thread by 'ticks' if we are still in the open transaction  * group and there is already a waiting txg quiescing or quiesced.  * Abort the delay if this txg stalls or enters the quiescing state.  */
 end_comment
 
 begin_function
@@ -2246,7 +2310,7 @@ argument_list|()
 operator|+
 name|ticks
 decl_stmt|;
-comment|/* don't delay if this txg could transition to quiesing immediately */
+comment|/* don't delay if this txg could transition to quiescing immediately */
 if|if
 condition|(
 name|tx

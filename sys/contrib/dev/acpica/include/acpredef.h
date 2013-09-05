@@ -112,21 +112,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|METHOD_GET_COUNT
+name|METHOD_GET_ARG_COUNT
 parameter_list|(
 name|ArgList
 parameter_list|)
-value|(ArgList& METHOD_ARG_MASK)
+value|((ArgList)& METHOD_ARG_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_GET_NEXT_ARG
+name|METHOD_GET_NEXT_TYPE
 parameter_list|(
 name|ArgList
 parameter_list|)
-value|(ArgList>> METHOD_ARG_BIT_WIDTH)
+value|(((ArgList)>>= METHOD_ARG_BIT_WIDTH)& METHOD_ARG_MASK)
 end_define
 
 begin_comment

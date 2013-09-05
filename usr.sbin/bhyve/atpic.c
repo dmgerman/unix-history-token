@@ -47,10 +47,6 @@ directive|include
 file|"inout.h"
 end_include
 
-begin_comment
-comment|/*  * FreeBSD only writes to the 8259 interrupt controllers to put them in a  * shutdown state.  *  * So, we just ignore the writes.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -119,12 +115,30 @@ if|if
 condition|(
 name|in
 condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+block|{
+if|if
+condition|(
+name|port
+operator|&
+name|ICU_IMR_OFFSET
+condition|)
+block|{
+comment|/* all interrupts masked */
+operator|*
+name|eax
+operator|=
+literal|0xff
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|eax
+operator|=
+literal|0x00
+expr_stmt|;
+block|}
+block|}
 comment|/* Pretend all writes to the 8259 are alright */
 return|return
 operator|(

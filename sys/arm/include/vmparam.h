@@ -264,19 +264,19 @@ value|9
 end_define
 
 begin_comment
-comment|/*  * Only one memory domain.  */
+comment|/*  * Enable superpage reservations: 1 level.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VM_NDOMAIN
+name|VM_NRESERVLEVEL
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VM_NDOMAIN
+name|VM_NRESERVLEVEL
 value|1
 end_define
 
@@ -286,20 +286,20 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Disable superpage reservations.  */
+comment|/*  * Level 0 reservations consist of 256 pages.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VM_NRESERVLEVEL
+name|VM_LEVEL_0_ORDER
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VM_NRESERVLEVEL
-value|0
+name|VM_LEVEL_0_ORDER
+value|8
 end_define
 
 begin_endif

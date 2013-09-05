@@ -1498,6 +1498,9 @@ operator|&
 name|sc
 operator|->
 name|sc_rx_rxlist
+index|[
+name|qtype
+index|]
 argument_list|,
 name|bf
 argument_list|,
@@ -1607,6 +1610,12 @@ argument_list|,
 literal|"ath_edma_recv_proc_queue(): kickpcu"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|npkts
+operator|>
+literal|0
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -1670,7 +1679,27 @@ name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bf
 argument_list|,
-argument|&sc->sc_rx_rxlist
+argument|&sc->sc_rx_rxlist[HAL_RX_QUEUE_LP]
+argument_list|,
+argument|bf_list
+argument_list|,
+argument|next
+argument_list|)
+block|{
+comment|/* Free the buffer/mbuf */
+name|ath_edma_rxbuf_free
+argument_list|(
+name|sc
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+block|}
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|bf
+argument_list|,
+argument|&sc->sc_rx_rxlist[HAL_RX_QUEUE_HP]
 argument_list|,
 argument|bf_list
 argument_list|,
@@ -1782,6 +1811,9 @@ operator|&
 name|sc
 operator|->
 name|sc_rx_rxlist
+index|[
+name|qtype
+index|]
 argument_list|,
 name|bf_list
 argument_list|)

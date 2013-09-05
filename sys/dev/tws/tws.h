@@ -493,7 +493,7 @@ literal|0x8
 block|,
 name|TWS_DATA_CCB
 init|=
-literal|0x16
+literal|0x10
 block|, }
 enum|;
 end_enum

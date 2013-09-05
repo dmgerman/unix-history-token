@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/MemRegion.h"
 end_include
 
@@ -75,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/SValBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
 end_include
 
 begin_include
@@ -123,6 +123,15 @@ decl_stmt|;
 name|class
 name|ScanReachableSymbols
 decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+name|SymbolRef
+operator|>
+name|InvalidatedSymbols
+expr_stmt|;
 name|class
 name|StoreManager
 block|{
@@ -230,39 +239,6 @@ name|ST
 parameter_list|,
 name|Loc
 name|L
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// \brief Create a new store that binds a value to a compound literal.
-comment|///
-comment|/// \param ST The original store whose bindings are the basis for the new
-comment|///        store.
-comment|///
-comment|/// \param CL The compound literal to bind (the binding key).
-comment|///
-comment|/// \param LC The LocationContext for the binding.
-comment|///
-comment|/// \param V The value to bind to the compound literal.
-name|virtual
-name|StoreRef
-name|bindCompoundLiteral
-parameter_list|(
-name|Store
-name|ST
-parameter_list|,
-specifier|const
-name|CompoundLiteralExpr
-modifier|*
-name|CL
-parameter_list|,
-specifier|const
-name|LocationContext
-modifier|*
-name|LC
-parameter_list|,
-name|SVal
-name|V
 parameter_list|)
 init|=
 literal|0
@@ -473,6 +449,9 @@ name|Derived
 parameter_list|,
 name|QualType
 name|DerivedPtrType
+parameter_list|,
+name|bool
+name|IsVirtual
 parameter_list|)
 function_decl|;
 comment|/// \brief Evaluates C++ dynamic_cast cast.
@@ -585,15 +564,6 @@ name|store
 parameter_list|)
 block|{}
 typedef|typedef
-name|llvm
-operator|::
-name|DenseSet
-operator|<
-name|SymbolRef
-operator|>
-name|InvalidatedSymbols
-expr_stmt|;
-typedef|typedef
 name|SmallVector
 operator|<
 specifier|const
@@ -609,15 +579,25 @@ comment|///  marking their values as unknown. Depending on the store, this may a
 comment|///  invalidate additional regions that may have changed based on accessing
 comment|///  the given regions. Optionally, invalidates non-static globals as well.
 comment|/// \param[in] store The initial store
-comment|/// \param[in] Regions The regions to invalidate.
+comment|/// \param[in] Values The values to invalidate.
+comment|/// \param[in] ConstValues The values to invalidate; these are known to be
+comment|///   const, so only regions accesible from them should be invalidated.
 comment|/// \param[in] E The current statement being evaluated. Used to conjure
 comment|///   symbols to mark the values of invalidated regions.
 comment|/// \param[in] Count The current block count. Used to conjure
 comment|///   symbols to mark the values of invalidated regions.
-comment|/// \param[in,out] IS A set to fill with any symbols that are no longer
-comment|///   accessible. Pass \c NULL if this information will not be used.
 comment|/// \param[in] Call The call expression which will be used to determine which
 comment|///   globals should get invalidated.
+comment|/// \param[in,out] IS A set to fill with any symbols that are no longer
+comment|///   accessible. Pass \c NULL if this information will not be used.
+comment|/// \param[in,out] ConstIS A set to fill with any symbols corresponding to
+comment|///   the ConstValues.
+comment|/// \param[in,out] InvalidatedTopLevel A vector to fill with regions
+comment|////  explicitely being invalidated. Pass \c NULL if this
+comment|///   information will not be used.
+comment|/// \param[in,out] InvalidatedTopLevelConst A vector to fill with const
+comment|////  regions explicitely being invalidated. Pass \c NULL if this
+comment|///   information will not be used.
 comment|/// \param[in,out] Invalidated A vector to fill with any regions being
 comment|///   invalidated. This should include any regions explicitly invalidated
 comment|///   even if they do not currently have bindings. Pass \c NULL if this
@@ -631,11 +611,15 @@ name|store
 argument_list|,
 name|ArrayRef
 operator|<
-specifier|const
-name|MemRegion
-operator|*
+name|SVal
 operator|>
-name|Regions
+name|Values
+argument_list|,
+name|ArrayRef
+operator|<
+name|SVal
+operator|>
+name|ConstValues
 argument_list|,
 specifier|const
 name|Expr
@@ -650,14 +634,26 @@ name|LocationContext
 operator|*
 name|LCtx
 argument_list|,
-name|InvalidatedSymbols
-operator|&
-name|IS
-argument_list|,
 specifier|const
 name|CallEvent
 operator|*
 name|Call
+argument_list|,
+name|InvalidatedSymbols
+operator|&
+name|IS
+argument_list|,
+name|InvalidatedSymbols
+operator|&
+name|ConstIS
+argument_list|,
+name|InvalidatedRegions
+operator|*
+name|InvalidatedTopLevel
+argument_list|,
+name|InvalidatedRegions
+operator|*
+name|InvalidatedTopLevelConst
 argument_list|,
 name|InvalidatedRegions
 operator|*

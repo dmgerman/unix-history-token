@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.405 2012/02/27 22:49:08 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.406 2013/04/17 16:53:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -10615,6 +10615,19 @@ operator|!=
 name|b
 operator|->
 name|q_mailer
+condition|)
+return|return
+name|false
+return|;
+comment|/* 	**  Addresses resolving to error mailer 	**  should not be considered identical 	*/
+if|if
+condition|(
+name|a
+operator|->
+name|q_mailer
+operator|==
+operator|&
+name|errormailer
 condition|)
 return|return
 name|false

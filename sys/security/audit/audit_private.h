@@ -39,6 +39,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/caprights.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ipc.h>
 end_include
 

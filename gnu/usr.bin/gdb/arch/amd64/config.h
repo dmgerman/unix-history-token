@@ -1384,17 +1384,6 @@ value|"gdb"
 end_define
 
 begin_comment
-comment|/* Global directory for separate debug files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEBUGDIR
-value|"/usr/local/lib/debug"
-end_define
-
-begin_comment
 comment|/* Define to BFD's default architecture.  */
 end_comment
 

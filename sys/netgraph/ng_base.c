@@ -307,7 +307,7 @@ comment|/* NETGRAPH_DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * DEAD versions of the structures.  * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is  * INVALID. Use these to avoid these races.  */
+comment|/*  * DEAD versions of the structures.  * In order to avoid races, it is sometimes necessary to point  * at SOMETHING even though theoretically, the current entity is  * INVALID. Use these to avoid these races.  */
 end_comment
 
 begin_decl_stmt
@@ -3027,6 +3027,13 @@ operator|&
 name|ng_deadnode
 condition|)
 return|return;
+name|CURVNET_SET
+argument_list|(
+name|node
+operator|->
+name|nd_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|refcount_release
@@ -3104,6 +3111,9 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

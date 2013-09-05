@@ -816,7 +816,7 @@ operator|(
 operator|!
 name|ACPI_REDUCED_HARDWARE
 operator|)
-comment|/* GPE support */
+comment|/* GPE/SCI support */
 name|AcpiGbl_AllGpesInitialized
 operator|=
 name|FALSE
@@ -844,6 +844,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|AcpiGbl_GlobalEventHandler
+operator|=
+name|NULL
+expr_stmt|;
+name|AcpiGbl_SciHandlerList
 operator|=
 name|NULL
 expr_stmt|;
@@ -962,10 +966,6 @@ expr_stmt|;
 name|AcpiGbl_DbOutputFlags
 operator|=
 name|ACPI_DB_CONSOLE_OUTPUT
-expr_stmt|;
-name|AcpiGbl_OsiData
-operator|=
-literal|0
 expr_stmt|;
 name|AcpiGbl_OsiMutex
 operator|=

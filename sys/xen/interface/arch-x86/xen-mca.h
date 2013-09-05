@@ -30,38 +30,49 @@ name|__HYPERVISOR_mca
 value|__HYPERVISOR_arch_0
 end_define
 
+begin_comment
+comment|/*  * The xen-unstable repo has interface version 0x03000001; out interface  * is incompatible with that and any future minor revisions, so we  * choose a different version number range that is numerically less  * than that used in xen-unstable.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|XEN_MCA_INTERFACE_VERSION
-value|0x03000001
+value|0x01ecc003
 end_define
 
 begin_comment
-comment|/* IN: Dom0 calls hypercall from MC event handler. */
+comment|/* IN: Dom0 calls hypercall to retrieve nonurgent telemetry */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XEN_MC_CORRECTABLE
-value|0x0
+name|XEN_MC_NONURGENT
+value|0x0001
 end_define
 
 begin_comment
-comment|/* IN: Dom0/DomU calls hypercall from MC trap handler. */
+comment|/* IN: Dom0/DomU calls hypercall to retrieve urgent telemetry */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XEN_MC_TRAP
-value|0x1
+name|XEN_MC_URGENT
+value|0x0002
 end_define
 
 begin_comment
-comment|/* XEN_MC_CORRECTABLE and XEN_MC_TRAP are mutually exclusive. */
+comment|/* IN: Dom0 acknowledges previosly-fetched telemetry */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_ACK
+value|0x0004
+end_define
 
 begin_comment
 comment|/* OUT: All is ok */
@@ -175,6 +186,13 @@ name|MC_TYPE_EXTENDED
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|MC_TYPE_RECOVERY
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|mcinfo_common
@@ -205,6 +223,41 @@ name|MC_FLAG_UNCORRECTABLE
 value|(1<< 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MC_FLAG_RECOVERABLE
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_FLAG_POLLED
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_FLAG_RESET
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_FLAG_CMCI
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_FLAG_MCE
+value|(1<< 6)
+end_define
+
 begin_comment
 comment|/* contains global x86 mc information */
 end_comment
@@ -221,6 +274,10 @@ comment|/* running domain at the time in error (most likely the impacted one) */
 name|uint16_t
 name|mc_domid
 decl_stmt|;
+name|uint16_t
+name|mc_vcpuid
+decl_stmt|;
+comment|/* virtual cpu scheduled for mc_domid */
 name|uint32_t
 name|mc_socketid
 decl_stmt|;
@@ -233,17 +290,16 @@ name|uint16_t
 name|mc_core_threadid
 decl_stmt|;
 comment|/* core thread of physical core */
-name|uint16_t
-name|mc_vcpuid
+name|uint32_t
+name|mc_apicid
 decl_stmt|;
-comment|/* virtual cpu scheduled for mc_domid */
+name|uint32_t
+name|mc_flags
+decl_stmt|;
 name|uint64_t
 name|mc_gstatus
 decl_stmt|;
 comment|/* global status */
-name|uint32_t
-name|mc_flags
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -278,6 +334,12 @@ decl_stmt|;
 comment|/* bank address, only valid                          * if addr bit is set in mc_status */
 name|uint64_t
 name|mc_misc
+decl_stmt|;
+name|uint64_t
+name|mc_ctrl2
+decl_stmt|;
+name|uint64_t
+name|mc_tsc
 decl_stmt|;
 block|}
 struct|;
@@ -316,13 +378,179 @@ name|uint32_t
 name|mc_msrs
 decl_stmt|;
 comment|/* Number of msr with valid values. */
+comment|/*      * Currently Intel extended MSR (32/64) include all gp registers      * and E(R)FLAGS, E(R)IP, E(R)MISC, up to 11/19 of them might be      * useful at present. So expand this array to 16/32 to leave room.      */
 name|struct
 name|mcinfo_msr
 name|mc_msr
 index|[
-literal|5
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|*
+literal|4
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Recovery Action flags. Giving recovery result information to DOM0 */
+end_comment
+
+begin_comment
+comment|/* Xen takes successful recovery action, the error is recovered */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REC_ACTION_RECOVERED
+value|(0x1<< 0)
+end_define
+
+begin_comment
+comment|/* No action is performed by XEN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REC_ACTION_NONE
+value|(0x1<< 1)
+end_define
+
+begin_comment
+comment|/* It's possible DOM0 might take action ownership in some case */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REC_ACTION_NEED_RESET
+value|(0x1<< 2)
+end_define
+
+begin_comment
+comment|/* Different Recovery Action types, if the action is performed successfully,  * REC_ACTION_RECOVERED flag will be returned.  */
+end_comment
+
+begin_comment
+comment|/* Page Offline Action */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_ACTION_PAGE_OFFLINE
+value|(0x1<< 0)
+end_define
+
+begin_comment
+comment|/* CPU offline Action */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_ACTION_CPU_OFFLINE
+value|(0x1<< 1)
+end_define
+
+begin_comment
+comment|/* L3 cache disable Action */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_ACTION_CACHE_SHRINK
+value|(0x1<< 2)
+end_define
+
+begin_comment
+comment|/* Below interface used between XEN/DOM0 for passing XEN's recovery action   * information to DOM0.   * usage Senario: After offlining broken page, XEN might pass its page offline  * recovery action result to DOM0. DOM0 will save the information in   * non-volatile memory for further proactive actions, such as offlining the  * easy broken page earlier when doing next reboot. */
+end_comment
+
+begin_struct
+struct|struct
+name|page_offline_action
+block|{
+comment|/* Params for passing the offlined page number to DOM0 */
+name|uint64_t
+name|mfn
+decl_stmt|;
+name|uint64_t
+name|status
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cpu_offline_action
+block|{
+comment|/* Params for passing the identity of the offlined CPU to DOM0 */
+name|uint32_t
+name|mc_socketid
+decl_stmt|;
+name|uint16_t
+name|mc_coreid
+decl_stmt|;
+name|uint16_t
+name|mc_core_threadid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|MAX_UNION_SIZE
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|mcinfo_recovery
+block|{
+name|struct
+name|mcinfo_common
+name|common
+decl_stmt|;
+name|uint16_t
+name|mc_bank
+decl_stmt|;
+comment|/* bank nr */
+name|uint8_t
+name|action_flags
+decl_stmt|;
+name|uint8_t
+name|action_types
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|page_offline_action
+name|page_retire
+decl_stmt|;
+name|struct
+name|cpu_offline_action
+name|cpu_offline
+decl_stmt|;
+name|uint8_t
+name|pad
+index|[
+name|MAX_UNION_SIZE
+index|]
+decl_stmt|;
+block|}
+name|action_info
+union|;
 block|}
 struct|;
 end_struct
@@ -341,6 +569,13 @@ name|MCINFO_MAXSIZE
 value|768
 end_define
 
+begin_define
+define|#
+directive|define
+name|MCINFO_FLAGS_UNCOMPLETE
+value|0x1
+end_define
+
 begin_struct
 struct|struct
 name|mc_info
@@ -349,15 +584,19 @@ comment|/* Number of mcinfo_* entries in mi_data */
 name|uint32_t
 name|mi_nentries
 decl_stmt|;
-name|uint8_t
+name|uint32_t
+name|flags
+decl_stmt|;
+name|uint64_t
 name|mi_data
 index|[
+operator|(
 name|MCINFO_MAXSIZE
 operator|-
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
+literal|1
+operator|)
+operator|/
+literal|8
 index|]
 decl_stmt|;
 block|}
@@ -371,6 +610,216 @@ name|mc_info
 name|mc_info_t
 typedef|;
 end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|mc_info_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|__MC_MSR_ARRAYSIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|__MC_NMSRS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_NCAPS
+value|7
+end_define
+
+begin_comment
+comment|/* 7 CPU feature flag words */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_STD_EDX
+value|0
+end_define
+
+begin_comment
+comment|/* cpuid level 0x00000001 (%edx) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_AMD_EDX
+value|1
+end_define
+
+begin_comment
+comment|/* cpuid level 0x80000001 (%edx) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_TM
+value|2
+end_define
+
+begin_comment
+comment|/* cpuid level 0x80860001 (TransMeta) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_LINUX
+value|3
+end_define
+
+begin_comment
+comment|/* Linux-defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_STD_ECX
+value|4
+end_define
+
+begin_comment
+comment|/* cpuid level 0x00000001 (%ecx) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_VIA
+value|5
+end_define
+
+begin_comment
+comment|/* cpuid level 0xc0000001 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CAPS_AMD_ECX
+value|6
+end_define
+
+begin_comment
+comment|/* cpuid level 0x80000001 (%ecx) */
+end_comment
+
+begin_struct
+struct|struct
+name|mcinfo_logical_cpu
+block|{
+name|uint32_t
+name|mc_cpunr
+decl_stmt|;
+name|uint32_t
+name|mc_chipid
+decl_stmt|;
+name|uint16_t
+name|mc_coreid
+decl_stmt|;
+name|uint16_t
+name|mc_threadid
+decl_stmt|;
+name|uint32_t
+name|mc_apicid
+decl_stmt|;
+name|uint32_t
+name|mc_clusterid
+decl_stmt|;
+name|uint32_t
+name|mc_ncores
+decl_stmt|;
+name|uint32_t
+name|mc_ncores_active
+decl_stmt|;
+name|uint32_t
+name|mc_nthreads
+decl_stmt|;
+name|int32_t
+name|mc_cpuid_level
+decl_stmt|;
+name|uint32_t
+name|mc_family
+decl_stmt|;
+name|uint32_t
+name|mc_vendor
+decl_stmt|;
+name|uint32_t
+name|mc_model
+decl_stmt|;
+name|uint32_t
+name|mc_step
+decl_stmt|;
+name|char
+name|mc_vendorid
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|mc_brandid
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|uint32_t
+name|mc_cpu_caps
+index|[
+name|MC_NCAPS
+index|]
+decl_stmt|;
+name|uint32_t
+name|mc_cache_size
+decl_stmt|;
+name|uint32_t
+name|mc_cache_alignment
+decl_stmt|;
+name|int32_t
+name|mc_nmsrvals
+decl_stmt|;
+name|struct
+name|mcinfo_msr
+name|mc_msrvalues
+index|[
+name|__MC_MSR_ARRAYSIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mcinfo_logical_cpu
+name|xen_mc_logical_cpu_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_mc_logical_cpu_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*   * OS's should use these instead of writing their own lookup function  * each with its own bugs and drawbacks.  * We use macros instead of static inline functions to allow guests  * to include this header in assembly files (*.S).  */
@@ -403,7 +852,7 @@ parameter_list|(
 name|_mi
 parameter_list|)
 define|\
-value|(struct mcinfo_common *)((_mi)->mi_data)
+value|((struct mcinfo_common *)(_mi)->mi_data)
 end_define
 
 begin_comment
@@ -418,7 +867,7 @@ parameter_list|(
 name|_mic
 parameter_list|)
 define|\
-value|(struct mcinfo_common *)((uint8_t *)(_mic) + (_mic)->size)
+value|((struct mcinfo_common *)((uint8_t *)(_mic) + (_mic)->size))
 end_define
 
 begin_comment
@@ -467,17 +916,22 @@ comment|/* IN/OUT variables. */
 name|uint32_t
 name|flags
 decl_stmt|;
-comment|/* IN: XEN_MC_CORRECTABLE, XEN_MC_TRAP */
-comment|/* OUT: XEN_MC_OK, XEN_MC_FETCHFAILED, XEN_MC_NODATA, XEN_MC_NOMATCH */
-comment|/* OUT variables. */
+comment|/* IN: XEN_MC_NONURGENT, XEN_MC_URGENT,                            XEN_MC_ACK if ack'ing an earlier fetch */
+comment|/* OUT: XEN_MC_OK, XEN_MC_FETCHFAILED, 			   XEN_MC_NODATA, XEN_MC_NOMATCH */
 name|uint32_t
-name|fetch_idx
+name|_pad0
 decl_stmt|;
-comment|/* only useful for Dom0 for the notify hypercall */
-name|struct
-name|mc_info
-name|mc_info
+name|uint64_t
+name|fetch_id
 decl_stmt|;
+comment|/* OUT: id for ack, IN: id we are ack'ing */
+comment|/* OUT variables. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|mc_info_t
+argument_list|)
+name|data
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -522,10 +976,6 @@ name|uint16_t
 name|mc_vcpuid
 decl_stmt|;
 comment|/* The vcpu in mc_domid to notify.                            * Usually echo'd value from the fetch hypercall. */
-name|uint32_t
-name|fetch_idx
-decl_stmt|;
-comment|/* echo'd value from the fetch hypercall. */
 comment|/* IN/OUT variables. */
 name|uint32_t
 name|flags
@@ -552,6 +1002,180 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|XEN_MC_physcpuinfo
+value|3
+end_define
+
+begin_struct
+struct|struct
+name|xen_mc_physcpuinfo
+block|{
+comment|/* IN/OUT */
+name|uint32_t
+name|ncpus
+decl_stmt|;
+name|uint32_t
+name|_pad0
+decl_stmt|;
+comment|/* OUT */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_mc_logical_cpu_t
+argument_list|)
+name|info
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_msrinject
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_MSRINJ_MAXMSRS
+value|8
+end_define
+
+begin_struct
+struct|struct
+name|xen_mc_msrinject
+block|{
+comment|/* IN */
+name|uint32_t
+name|mcinj_cpunr
+decl_stmt|;
+comment|/* target processor id */
+name|uint32_t
+name|mcinj_flags
+decl_stmt|;
+comment|/* see MC_MSRINJ_F_* below */
+name|uint32_t
+name|mcinj_count
+decl_stmt|;
+comment|/* 0 .. count-1 in array are valid */
+name|uint32_t
+name|_pad0
+decl_stmt|;
+name|struct
+name|mcinfo_msr
+name|mcinj_msr
+index|[
+name|MC_MSRINJ_MAXMSRS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Flags for mcinj_flags above; bits 16-31 are reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_MSRINJ_F_INTERPOSE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_mceinject
+value|5
+end_define
+
+begin_struct
+struct|struct
+name|xen_mc_mceinject
+block|{
+name|unsigned
+name|int
+name|mceinj_cpunr
+decl_stmt|;
+comment|/* target processor id */
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__XEN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__XEN_TOOLS__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_inject_v2
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_INJECT_TYPE_MASK
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_INJECT_TYPE_MCE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_INJECT_TYPE_CMCI
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|XEN_MC_INJECT_CPU_BROADCAST
+value|0x8
+end_define
+
+begin_struct
+struct|struct
+name|xen_mc_inject_v2
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+name|struct
+name|xenctl_cpumap
+name|cpumap
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|xen_mc
@@ -573,12 +1197,35 @@ name|struct
 name|xen_mc_notifydomain
 name|mc_notifydomain
 decl_stmt|;
-name|uint8_t
-name|pad
-index|[
-name|MCINFO_HYPERCALLSIZE
-index|]
+name|struct
+name|xen_mc_physcpuinfo
+name|mc_physcpuinfo
 decl_stmt|;
+name|struct
+name|xen_mc_msrinject
+name|mc_msrinject
+decl_stmt|;
+name|struct
+name|xen_mc_mceinject
+name|mc_mceinject
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__XEN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__XEN_TOOLS__
+argument_list|)
+name|struct
+name|xen_mc_inject_v2
+name|mc_inject_v2
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|u
 union|;

@@ -80,6 +80,8 @@ block|,
 name|RDMA_WRITE_COMPLETE
 block|,
 name|ERROR
+block|,
+name|CLEANUP
 block|}
 enum|;
 end_enum
@@ -312,6 +314,12 @@ decl_stmt|;
 comment|/* poll vs block in rlat */
 name|int
 name|txdepth
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 struct|;

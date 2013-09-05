@@ -4734,7 +4734,7 @@ operator|->
 name|backing_object
 control|)
 block|{
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_RLOCK
 argument_list|(
 name|tobj
 argument_list|)
@@ -4745,7 +4745,7 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
@@ -4820,7 +4820,7 @@ name|lobj
 operator|!=
 name|obj
 condition|)
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|lobj
 argument_list|)
@@ -4843,7 +4843,7 @@ name|obj
 operator|->
 name|shadow_count
 expr_stmt|;
-name|VM_OBJECT_WUNLOCK
+name|VM_OBJECT_RUNLOCK
 argument_list|(
 name|obj
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)vi.h	10.19 (Berkeley) 6/30/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: vi.h,v 10.29 2012/02/11 00:33:46 zy Exp $  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ name|inword
 parameter_list|(
 name|ch
 parameter_list|)
-value|(isalnum(ch) || (ch) == '_')
+value|((ch) == '_' || (ISGRAPH(ch)&& !ISPUNCT(ch)))
 end_define
 
 begin_typedef
@@ -483,7 +483,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We use a single "window" for each set of vi screens.  The model would be  * simpler with two windows (one for the text, and one for the modeline)  * because scrolling the text window down would work correctly then, not  * affecting the mode line.  As it is we have to play games to make it look  * right.  The reason for this choice is that it would be difficult for  * curses to optimize the movement, i.e. detect that the downward scroll  * isn't going to change the modeline, set the scrolling region on the  * terminal and only scroll the first part of the text window.  *  * Structure for mapping lines to the screen.  An SMAP is an array, with one  * structure element per screen line, which holds information describing the  * physical line which is displayed in the screen line.  The first two fields  * (lno and off) are all that are necessary to describe a line.  The rest of  * the information is useful to keep information from being re-calculated.  *  * The SMAP always has an entry for each line of the physical screen, plus a  * slot for the colon command line, so there is room to add any screen into  * another one at screen exit.  *  * Lno is the line number.  If doing the historic vi long line folding, off  * is the screen offset into the line.  For example, the pair 2:1 would be  * the first screen of line 2, and 2:2 would be the second.  In the case of  * long lines, the screen map will tend to be staggered, e.g., 1:1, 1:2, 1:3,  * 2:1, 3:1, etc.  If doing left-right scrolling, the off field is the screen  * column offset into the lines, and can take on any value, as it's adjusted  * by the user set value O_SIDESCROLL.  */
+comment|/*  * We use a single "window" for each set of vi screens.  The model would be  * simpler with two windows (one for the text, and one for the modeline)  * because scrolling the text window down would work correctly then, not  * affecting the mode line.  As it is we have to play games to make it look  * right.  The reason for this choice is that it would be difficult for  * curses to optimize the movement, i.e. detect that the downward scroll  * isn't going to change the modeline, set the scrolling region on the  * terminal and only scroll the first part of the text window.  *  * Structure for mapping lines to the screen.  An SMAP is an array, with one  * structure element per screen line, which holds information describing the  * physical line which is displayed in the screen line.  The first two fields  * (lno and off) are all that are necessary to describe a line.  The rest of  * the information is useful to keep information from being re-calculated.  *  * The SMAP always has an entry for each line of the physical screen, plus a  * slot for the colon command line, so there is room to add any screen into  * another one at screen exit.  *  * Lno is the line number.  If doing the historic vi long line folding, soff  * is the screen offset into the line.  For example, the pair 2:1 would be  * the first screen of line 2, and 2:2 would be the second.  In the case of  * long lines, the screen map will tend to be staggered, e.g., 1:1, 1:2, 1:3,  * 2:1, 3:1, etc.  If doing left-right scrolling, the coff field is the screen  * column offset into the lines, and can take on any value, as it's adjusted  * by the user set value O_SIDESCROLL.  */
 end_comment
 
 begin_typedef
@@ -507,15 +507,16 @@ comment|/* vs_line() cache information. */
 name|size_t
 name|c_sboff
 decl_stmt|;
-comment|/* 0-N: offset of first character byte. */
+comment|/* 0-N: offset of first character on screen. */
 name|size_t
 name|c_eboff
 decl_stmt|;
-comment|/* 0-N: offset of  last character byte. */
+comment|/* 0-N: offset of  last character on screen. */
 name|u_int8_t
 name|c_scoff
 decl_stmt|;
 comment|/* 0-N: offset into the first character. */
+comment|/* 255: no character of line visible. */
 name|u_int8_t
 name|c_eclen
 decl_stmt|;
@@ -703,10 +704,19 @@ name|busy_oldx
 decl_stmt|;
 comment|/* Saved x coordinate. */
 name|struct
-name|timeval
-name|busy_tv
+name|timespec
+name|busy_ts
 decl_stmt|;
 comment|/* Busy timer. */
+name|MARK
+name|sel
+decl_stmt|;
+comment|/* Select start position. */
+name|CHAR_T
+modifier|*
+name|mcs
+decl_stmt|;
+comment|/* Match character list. */
 name|char
 modifier|*
 name|ps
@@ -1000,6 +1010,36 @@ value|COL_OFF((c), O_VAL(sp, O_TABSTOP))
 end_define
 
 begin_comment
+comment|/* If more than one horizontal screen being shown. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_HSPLIT
+parameter_list|(
+name|sp
+parameter_list|)
+define|\
+value|((sp)->rows != O_VAL(sp, O_LINES))
+end_define
+
+begin_comment
+comment|/* If more than one vertical screen being shown. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_VSPLIT
+parameter_list|(
+name|sp
+parameter_list|)
+define|\
+value|((sp)->cols != O_VAL(sp, O_COLUMNS))
+end_define
+
+begin_comment
 comment|/* If more than one screen being shown. */
 end_comment
 
@@ -1011,7 +1051,7 @@ parameter_list|(
 name|sp
 parameter_list|)
 define|\
-value|((sp)->q.cqe_next != (void *)&(sp)->gp->dq ||			\ 	(sp)->q.cqe_prev != (void *)&(sp)->gp->dq)
+value|(IS_HSPLIT(sp) || IS_VSPLIT(sp))
 end_define
 
 begin_comment
@@ -1111,7 +1151,7 @@ end_typedef
 begin_include
 include|#
 directive|include
-file|"vi_extern.h"
+file|"extern.h"
 end_include
 
 end_unit

@@ -12819,7 +12819,7 @@ decl_stmt|,
 name|si
 decl_stmt|;
 name|uint32_t
-name|tso_segsz
+name|tsosegsz
 decl_stmt|;
 name|uint16_t
 name|cflags
@@ -13052,7 +13052,7 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|tso_segsz
+name|tsosegsz
 operator|=
 literal|0
 expr_stmt|;
@@ -13071,7 +13071,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|tso_segsz
+name|tsosegsz
 operator|=
 operator|(
 name|uint32_t
@@ -13413,7 +13413,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tso_segsz
+name|tsosegsz
 operator|!=
 literal|0
 condition|)
@@ -13428,7 +13428,7 @@ argument_list|(
 operator|(
 name|uint16_t
 operator|)
-name|tso_segsz
+name|tsosegsz
 argument_list|)
 expr_stmt|;
 name|desc64
@@ -13437,7 +13437,7 @@ name|flags
 operator||=
 name|htole16
 argument_list|(
-name|tso_segsz
+name|tsosegsz
 operator|>>
 literal|16
 argument_list|)
@@ -13499,7 +13499,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|tso_segsz
+name|tsosegsz
 operator|!=
 literal|0
 condition|)
@@ -13514,7 +13514,7 @@ argument_list|(
 operator|(
 name|uint16_t
 operator|)
-name|tso_segsz
+name|tsosegsz
 argument_list|)
 expr_stmt|;
 name|desc32
@@ -13523,7 +13523,7 @@ name|flags
 operator||=
 name|htole16
 argument_list|(
-name|tso_segsz
+name|tsosegsz
 operator|>>
 literal|16
 argument_list|)

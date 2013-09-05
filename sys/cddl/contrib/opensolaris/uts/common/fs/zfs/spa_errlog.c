@@ -671,6 +671,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|zap_cursor_fini
+argument_list|(
+operator|&
+name|zc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|SET_ERROR
@@ -679,6 +686,7 @@ name|EFAULT
 argument_list|)
 operator|)
 return|;
+block|}
 operator|*
 name|count
 operator|-=

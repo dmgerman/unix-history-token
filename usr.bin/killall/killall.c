@@ -150,7 +150,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: killall [-delmsvz] [-help] [-I] [-j jail]\n"
+literal|"usage: killall [-delmsqvz] [-help] [-I] [-j jail]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -364,6 +364,11 @@ modifier|*
 name|cmd
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|qflag
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|vflag
@@ -781,6 +786,13 @@ name|cmd
 operator|=
 operator|*
 name|av
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -2099,6 +2111,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
 name|fprintf
 argument_list|(
 name|stderr

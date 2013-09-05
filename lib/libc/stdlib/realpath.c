@@ -569,7 +569,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 			 * Handle consequential slashes.  The path 			 * before slash shall point to a directory. 			 * 			 * Only the trailing slashes are not covered 			 * by other checks in the loop, but we verify 			 * the prefix for any (rare) "//" or "/\0" 			 * occurence to not implement lookahead. 			 */
+comment|/* 			 * Handle consequential slashes.  The path 			 * before slash shall point to a directory. 			 * 			 * Only the trailing slashes are not covered 			 * by other checks in the loop, but we verify 			 * the prefix for any (rare) "//" or "/\0" 			 * occurrence to not implement lookahead. 			 */
 if|if
 condition|(
 name|lstat

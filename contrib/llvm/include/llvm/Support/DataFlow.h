@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/User.h"
+file|"llvm/ADT/GraphTraits.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/GraphTraits.h"
+file|"llvm/IR/User.h"
 end_include
 
 begin_decl_stmt

@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtargetInfo.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
@@ -112,6 +112,9 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|TargetOptions
+decl_stmt|;
+name|class
 name|ARMSubtarget
 range|:
 name|public
@@ -124,11 +127,15 @@ name|ARMProcFamilyEnum
 block|{
 name|Others
 block|,
+name|CortexA5
+block|,
 name|CortexA8
 block|,
 name|CortexA9
 block|,
 name|CortexA15
+block|,
+name|CortexR5
 block|,
 name|Swift
 block|}
@@ -271,6 +278,11 @@ comment|/// CPSR setting instruction.
 name|bool
 name|AvoidCPSRPartialUpdate
 block|;
+comment|/// AvoidMOVsShifterOperand - If true, codegen should avoid using flag setting
+comment|/// movs with shifter operand (i.e. asr, lsl, lsr).
+name|bool
+name|AvoidMOVsShifterOperand
+block|;
 comment|/// HasRAS - Some processors perform return stack prediction. CodeGen should
 comment|/// avoid issue "normal" call instructions to callees which do not return.
 name|bool
@@ -286,6 +298,10 @@ comment|/// precision.
 name|bool
 name|FPOnlySP
 block|;
+comment|/// HasTrustZone - if true, processor supports TrustZone security extensions
+name|bool
+name|HasTrustZone
+block|;
 comment|/// AllowsUnalignedMem - If true, the subtarget allows unaligned memory
 comment|/// accesses for some types.  For details, see
 comment|/// ARMTargetLowering::allowsUnalignedMemoryAccesses().
@@ -296,6 +312,14 @@ comment|/// Thumb2DSP - If true, the subtarget supports the v7 DSP (saturating a
 comment|/// and such) instructions in Thumb2 code.
 name|bool
 name|Thumb2DSP
+block|;
+comment|/// NaCl TRAP instruction is generated instead of the regular TRAP.
+name|bool
+name|UseNaClTrap
+block|;
+comment|/// Target machine allowed unsafe FP math (such as use of NEON fp)
+name|bool
+name|UnsafeFPMath
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -321,6 +345,12 @@ block|;
 comment|/// Selected instruction itineraries (one entry per itinerary class.)
 name|InstrItineraryData
 name|InstrItins
+block|;
+comment|/// Options passed via command line that could influence the target
+specifier|const
+name|TargetOptions
+operator|&
+name|Options
 block|;
 name|public
 operator|:
@@ -365,6 +395,11 @@ operator|::
 name|string
 operator|&
 name|FS
+argument_list|,
+specifier|const
+name|TargetOptions
+operator|&
+name|Options
 argument_list|)
 block|;
 comment|/// getMaxInlineSizeThreshold - Returns the maximum memset / memcpy size
@@ -395,6 +430,33 @@ argument_list|,
 argument|StringRef FS
 argument_list|)
 block|;
+comment|/// \brief Reset the features for the ARM target.
+name|virtual
+name|void
+name|resetSubtargetFeatures
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|initializeEnvironment
+argument_list|()
+block|;
+name|void
+name|resetSubtargetFeatures
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
+name|public
+operator|:
 name|void
 name|computeIssueWidth
 argument_list|()
@@ -451,6 +513,17 @@ specifier|const
 block|{
 return|return
 name|HasV7Ops
+return|;
+block|}
+name|bool
+name|isCortexA5
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcFamily
+operator|==
+name|CortexA5
 return|;
 block|}
 name|bool
@@ -519,6 +592,17 @@ argument_list|()
 operator|||
 name|isCortexA15
 argument_list|()
+return|;
+block|}
+name|bool
+name|isCortexR5
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcFamily
+operator|==
+name|CortexR5
 return|;
 block|}
 name|bool
@@ -662,6 +746,15 @@ name|FPOnlySP
 return|;
 block|}
 name|bool
+name|hasTrustZone
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasTrustZone
+return|;
+block|}
+name|bool
 name|prefers32BitThumb
 argument_list|()
 specifier|const
@@ -677,6 +770,15 @@ specifier|const
 block|{
 return|return
 name|AvoidCPSRPartialUpdate
+return|;
+block|}
+name|bool
+name|avoidMOVsShifterOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AvoidMOVsShifterOperand
 return|;
 block|}
 name|bool
@@ -704,6 +806,15 @@ specifier|const
 block|{
 return|return
 name|Thumb2DSP
+return|;
+block|}
+name|bool
+name|useNaClTrap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseNaClTrap
 return|;
 block|}
 name|bool
@@ -776,7 +887,7 @@ argument_list|()
 operator|==
 name|Triple
 operator|::
-name|NativeClient
+name|NaCl
 return|;
 block|}
 name|bool

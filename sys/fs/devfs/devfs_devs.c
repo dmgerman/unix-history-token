@@ -3330,7 +3330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * devfs_create() and devfs_destroy() are called from kern_conf.c and  * in both cases the devlock() mutex is held, so no further locking  * is necesary and no sleeping allowed.  */
+comment|/*  * devfs_create() and devfs_destroy() are called from kern_conf.c and  * in both cases the devlock() mutex is held, so no further locking  * is necessary and no sleeping allowed.  */
 end_comment
 
 begin_function

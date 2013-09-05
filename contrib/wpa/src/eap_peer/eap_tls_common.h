@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer: EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer: EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2009, 2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -65,15 +65,20 @@ comment|/** 	 * include_tls_length - Whether the TLS length field is included ev
 name|int
 name|include_tls_length
 decl_stmt|;
-comment|/** 	 * tls_ia - Whether TLS/IA is enabled for this TLS connection 	 */
-name|int
-name|tls_ia
-decl_stmt|;
 comment|/** 	 * eap - EAP state machine allocated with eap_peer_sm_init() 	 */
 name|struct
 name|eap_sm
 modifier|*
 name|eap
+decl_stmt|;
+comment|/** 	 * ssl_ctx - TLS library context to use for the connection 	 */
+name|void
+modifier|*
+name|ssl_ctx
+decl_stmt|;
+comment|/** 	 * eap_type - EAP method used in Phase 1 (EAP_TYPE_TLS/PEAP/TTLS/FAST) 	 */
+name|u8
+name|eap_type
 decl_stmt|;
 block|}
 struct|;
@@ -122,6 +127,17 @@ name|EAP_TLS_KEY_LEN
 value|64
 end_define
 
+begin_comment
+comment|/* dummy type used as a flag for UNAUTH-TLS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EAP_UNAUTH_TLS_TYPE
+value|255
+end_define
+
 begin_function_decl
 name|int
 name|eap_peer_tls_ssl_init
@@ -140,6 +156,9 @@ name|struct
 name|eap_peer_config
 modifier|*
 name|config
+parameter_list|,
+name|u8
+name|eap_type
 parameter_list|)
 function_decl|;
 end_function_decl

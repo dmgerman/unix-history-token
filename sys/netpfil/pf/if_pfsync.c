@@ -1346,6 +1346,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2235,14 +2236,16 @@ operator|->
 name|creatorid
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|V_pf_status
 operator|.
 name|debug
 operator|>=
 name|PF_DEBUG_MISC
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s: invalid creator id: %08x\n"
@@ -6778,6 +6781,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -7206,6 +7210,11 @@ operator|)
 return|;
 if|if
 condition|(
+name|sifp
+operator|!=
+name|NULL
+operator|&&
+operator|(
 name|pfsyncr
 operator|.
 name|pfsyncr_syncpeer
@@ -7213,10 +7222,18 @@ operator|.
 name|s_addr
 operator|==
 literal|0
-operator|&&
-name|sifp
-operator|!=
-name|NULL
+operator|||
+name|pfsyncr
+operator|.
+name|pfsyncr_syncpeer
+operator|.
+name|s_addr
+operator|==
+name|htonl
+argument_list|(
+name|INADDR_PFSYNC_GROUP
+argument_list|)
+operator|)
 condition|)
 name|mship
 operator|=
@@ -9024,9 +9041,13 @@ operator|==
 name|PFSYNC_S_NONE
 argument_list|,
 operator|(
-literal|"%s: st->sync_state == PFSYNC_S_NONE"
+literal|"%s: st->sync_state %u"
 operator|,
 name|__func__
+operator|,
+name|st
+operator|->
+name|sync_state
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10489,9 +10510,13 @@ operator|==
 name|PFSYNC_S_NONE
 argument_list|,
 operator|(
-literal|"%s: st->sync_state == PFSYNC_S_NONE"
+literal|"%s: st->sync_state %u"
 operator|,
 name|__func__
+operator|,
+name|st
+operator|->
+name|sync_state
 operator|)
 argument_list|)
 expr_stmt|;

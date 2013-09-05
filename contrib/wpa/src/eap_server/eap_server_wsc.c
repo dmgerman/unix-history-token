@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP-WSC server for Wi-Fi Protected Setup  * Copyright (c) 2007-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP-WSC server for Wi-Fi Protected Setup  * Copyright (c) 2007-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"eap_common/eap_wsc_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"p2p/p2p.h"
 end_include
 
 begin_include
@@ -551,16 +557,52 @@ name|sm
 operator|->
 name|peer_addr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_P2P
 if|if
 condition|(
-literal|0
-comment|/* TODO: could provide option for forcing PSK format */
+name|sm
+operator|->
+name|assoc_p2p_ie
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"EAP-WSC: Prefer PSK format for P2P "
+literal|"client"
+argument_list|)
+expr_stmt|;
 name|cfg
 operator|.
 name|use_psk_key
 operator|=
 literal|1
+expr_stmt|;
+name|cfg
+operator|.
+name|p2p_dev_addr
+operator|=
+name|p2p_get_go_dev_addr
+argument_list|(
+name|sm
+operator|->
+name|assoc_p2p_ie
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_P2P */
+name|cfg
+operator|.
+name|pbc_in_m1
+operator|=
+name|sm
+operator|->
+name|pbc_in_m1
 expr_stmt|;
 name|data
 operator|->
@@ -594,6 +636,16 @@ name|data
 operator|->
 name|fragment_size
 operator|=
+name|sm
+operator|->
+name|fragment_size
+operator|>
+literal|0
+condition|?
+name|sm
+operator|->
+name|fragment_size
+else|:
 name|WSC_FRAGMENT_SIZE
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.90 2013/02/25 01:57:14 dholland Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.92 2013/09/04 15:38:26 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -1433,6 +1433,18 @@ begin_decl_stmt
 specifier|extern
 name|GNode
 modifier|*
+name|VAR_INTERNAL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Variables defined internally by make 				 * which should not override those set by 				 * makefiles. 				 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|GNode
+modifier|*
 name|VAR_GLOBAL
 decl_stmt|;
 end_decl_stmt
@@ -1672,22 +1684,18 @@ name|MAKE_MODE
 value|".MAKE.MODE"
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_MAKE_LEVEL_SAFE
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAKE_LEVEL_ENV
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MAKE_LEVEL_SAFE
-value|"_MAKE_LEVEL"
+name|MAKE_LEVEL_ENV
+value|"MAKELEVEL"
 end_define
-
-begin_comment
-comment|/* some shells will not pass .MAKE. */
-end_comment
 
 begin_endif
 endif|#

@@ -342,57 +342,41 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|*
-operator|)
 name|OFFSETOF_CURTHREAD
 operator|==
-operator|&
-operator|(
-operator|(
+name|offsetof
+argument_list|(
 expr|struct
 name|pcpu
-operator|*
-operator|)
-name|NULL
-operator|)
-operator|->
+argument_list|,
 name|pc_curthread
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+argument_list|,
+literal|"OFFSETOF_CURTHREAD does not correspond with offset of pc_curthread."
+argument_list|)
+assert|;
+end_assert
 
-begin_expr_stmt
-name|CTASSERT
+begin_assert
+assert|_Static_assert
 argument_list|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|*
-operator|)
 name|OFFSETOF_CURPCB
 operator|==
-operator|&
-operator|(
-operator|(
+name|offsetof
+argument_list|(
 expr|struct
 name|pcpu
-operator|*
-operator|)
-name|NULL
-operator|)
-operator|->
+argument_list|,
 name|pc_curpcb
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+argument_list|,
+literal|"OFFSETOF_CURPCB does not correspond with offset of pc_curpcb."
+argument_list|)
+assert|;
+end_assert
 
 begin_function_decl
 specifier|static
@@ -1360,10 +1344,8 @@ condition|)
 block|{
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
 comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -2742,10 +2724,8 @@ argument_list|)
 expr_stmt|;
 name|sf_base
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|nsfbufs
 operator|*
 name|PAGE_SIZE
@@ -3126,10 +3106,10 @@ goto|;
 name|sf_buf_alloc_want
 operator|++
 expr_stmt|;
-name|mbstat
-operator|.
+name|SFSTAT_INC
+argument_list|(
 name|sf_allocwait
-operator|++
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

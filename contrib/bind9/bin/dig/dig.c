@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.237.124.4 2011/12/07 17:23:55 each Exp $ */
+comment|/* $Id: dig.c,v 1.245 2011/12/07 17:23:28 each Exp $ */
 end_comment
 
 begin_comment
@@ -262,6 +262,19 @@ decl_stmt|,
 name|onesoa
 init|=
 name|ISC_FALSE
+decl_stmt|,
+name|rrcomments
+init|=
+name|ISC_FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|isc_uint32_t
+name|splitwidth
+init|=
+literal|0xffffffff
 decl_stmt|;
 end_decl_stmt
 
@@ -599,7 +612,7 @@ literal|"                 +retry=###          (Set number of UDP retries) [2]\n"
 literal|"                 +domain=###         (Set default domainname)\n"
 literal|"                 +bufsize=###        (Set EDNS0 Max UDP packet size)\n"
 literal|"                 +ndots=###          (Set NDOTS value)\n"
-literal|"                 +edns=###           (Set EDNS version)\n"
+literal|"                 +[no]edns[=###]     (Set EDNS version) [0]\n"
 literal|"                 +[no]search         (Set whether to use searchlist)\n"
 literal|"                 +[no]showsearch     (Search with intermediate results)\n"
 literal|"                 +[no]defname        (Ditto)\n"
@@ -614,6 +627,8 @@ literal|"                 +[no]cdflag         (Set CD flag in query)\n"
 literal|"                 +[no]cl             (Control display of class in records)\n"
 literal|"                 +[no]cmd            (Control display of command line)\n"
 literal|"                 +[no]comments       (Control display of comment lines)\n"
+literal|"                 +[no]rrcomments     (Control display of per-record "
+literal|"comments)\n"
 literal|"                 +[no]question       (Control display of question)\n"
 literal|"                 +[no]answer         (Control display of answer)\n"
 literal|"                 +[no]authority      (Control display of authority)\n"
@@ -626,7 +641,7 @@ literal|"                 +[no]all            (Set or clear all display flags)\n
 literal|"                 +[no]qr             (Print question before sending)\n"
 literal|"                 +[no]nssearch       (Search all authoritative nameservers)\n"
 literal|"                 +[no]identify       (ID responders in short answers)\n"
-literal|"                 +[no]trace          (Trace delegation down from root)\n"
+literal|"                 +[no]trace          (Trace delegation down from root [+dnssec])\n"
 literal|"                 +[no]dnssec         (Request DNSSEC records)\n"
 literal|"                 +[no]nsid           (Request Name Server ID)\n"
 ifdef|#
@@ -642,6 +657,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+literal|"                 +[no]split=##       (Split hex/base64 fields into chunks)\n"
 literal|"                 +[no]multiline      (Print records in an expanded format)\n"
 literal|"                 +[no]onesoa         (AXFR prints only one soa record)\n"
 literal|"        global d-opts and servers (before host name) affect all queries.\n"
@@ -683,6 +699,16 @@ name|now
 decl_stmt|;
 name|time_t
 name|tnow
+decl_stmt|;
+name|struct
+name|tm
+name|tmnow
+decl_stmt|;
+name|char
+name|time_str
+index|[
+literal|100
+index|]
 decl_stmt|;
 name|char
 name|fromtext
@@ -763,15 +789,39 @@ operator|&
 name|tnow
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|";; WHEN: %s"
-argument_list|,
-name|ctime
+name|tmnow
+operator|=
+operator|*
+name|localtime
 argument_list|(
 operator|&
 name|tnow
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strftime
+argument_list|(
+name|time_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|time_str
+argument_list|)
+argument_list|,
+literal|"%a %b %d %H:%M:%S %Z %Y"
+argument_list|,
+operator|&
+name|tmnow
+argument_list|)
+operator|>
+literal|0U
+condition|)
+name|printf
+argument_list|(
+literal|";; WHEN: %s\n"
+argument_list|,
+name|time_str
 argument_list|)
 expr_stmt|;
 if|if
@@ -915,7 +965,7 @@ name|fromtext
 argument_list|,
 name|query
 operator|->
-name|servname
+name|userarg
 argument_list|,
 operator|(
 name|int
@@ -1475,6 +1525,14 @@ name|DNS_STYLEFLAG_NO_CLASS
 expr_stmt|;
 if|if
 condition|(
+name|rrcomments
+condition|)
+name|styleflags
+operator||=
+name|DNS_STYLEFLAG_RRCOMMENT
+expr_stmt|;
+if|if
+condition|(
 name|multiline
 condition|)
 block|{
@@ -1506,6 +1564,10 @@ name|styleflags
 operator||=
 name|DNS_STYLEFLAG_COMMENT
 expr_stmt|;
+name|styleflags
+operator||=
+name|DNS_STYLEFLAG_RRCOMMENT
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1519,7 +1581,7 @@ operator|)
 condition|)
 name|result
 operator|=
-name|dns_master_stylecreate
+name|dns_master_stylecreate2
 argument_list|(
 operator|&
 name|style
@@ -1538,6 +1600,8 @@ literal|80
 argument_list|,
 literal|8
 argument_list|,
+name|splitwidth
+argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
@@ -1550,7 +1614,7 @@ name|noclass
 condition|)
 name|result
 operator|=
-name|dns_master_stylecreate
+name|dns_master_stylecreate2
 argument_list|(
 operator|&
 name|style
@@ -1569,13 +1633,15 @@ literal|80
 argument_list|,
 literal|8
 argument_list|,
+name|splitwidth
+argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
 else|else
 name|result
 operator|=
-name|dns_master_stylecreate
+name|dns_master_stylecreate2
 argument_list|(
 operator|&
 name|style
@@ -1593,6 +1659,8 @@ argument_list|,
 literal|80
 argument_list|,
 literal|8
+argument_list|,
+name|splitwidth
 argument_list|,
 name|mctx
 argument_list|)
@@ -1700,6 +1768,26 @@ name|DNS_STYLEFLAG_REL_OWNER
 expr_stmt|;
 if|if
 condition|(
+name|query
+operator|->
+name|lookup
+operator|->
+name|comments
+condition|)
+name|styleflags
+operator||=
+name|DNS_STYLEFLAG_COMMENT
+expr_stmt|;
+if|if
+condition|(
+name|rrcomments
+condition|)
+name|styleflags
+operator||=
+name|DNS_STYLEFLAG_RRCOMMENT
+expr_stmt|;
+if|if
+condition|(
 name|nottl
 condition|)
 name|styleflags
@@ -1745,7 +1833,7 @@ name|DNS_STYLEFLAG_MULTILINE
 expr_stmt|;
 name|styleflags
 operator||=
-name|DNS_STYLEFLAG_COMMENT
+name|DNS_STYLEFLAG_RRCOMMENT
 expr_stmt|;
 block|}
 if|if
@@ -1760,7 +1848,7 @@ operator|)
 condition|)
 name|result
 operator|=
-name|dns_master_stylecreate
+name|dns_master_stylecreate2
 argument_list|(
 operator|&
 name|style
@@ -1779,6 +1867,8 @@ literal|80
 argument_list|,
 literal|8
 argument_list|,
+name|splitwidth
+argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
@@ -1791,7 +1881,7 @@ name|noclass
 condition|)
 name|result
 operator|=
-name|dns_master_stylecreate
+name|dns_master_stylecreate2
 argument_list|(
 operator|&
 name|style
@@ -1810,13 +1900,15 @@ literal|80
 argument_list|,
 literal|8
 argument_list|,
+name|splitwidth
+argument_list|,
 name|mctx
 argument_list|)
 expr_stmt|;
 else|else
 name|result
 operator|=
-name|dns_master_stylecreate
+name|dns_master_stylecreate2
 argument_list|(
 operator|&
 name|style
@@ -1834,6 +1926,8 @@ argument_list|,
 literal|80
 argument_list|,
 literal|8
+argument_list|,
+name|splitwidth
 argument_list|,
 name|mctx
 argument_list|)
@@ -2289,6 +2383,58 @@ literal|"but not available\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|msg
+operator|!=
+name|query
+operator|->
+name|lookup
+operator|->
+name|sendmsg
+operator|&&
+name|query
+operator|->
+name|lookup
+operator|->
+name|edns
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|msg
+operator|->
+name|opt
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|msg
+operator|->
+name|rcode
+operator|==
+name|dns_rcode_formerr
+operator|||
+name|msg
+operator|->
+name|rcode
+operator|==
+name|dns_rcode_notimp
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n;; WARNING: EDNS query returned status "
+literal|"%s - retry with '+noedns'\n"
+argument_list|,
+name|rcode_totext
+argument_list|(
+name|msg
+operator|->
+name|rcode
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msg
@@ -3354,6 +3500,10 @@ name|comments
 operator|=
 name|state
 expr_stmt|;
+name|rrcomments
+operator|=
+name|state
+expr_stmt|;
 name|lookup
 operator|->
 name|stats
@@ -3760,9 +3910,15 @@ name|value
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|need_value
-goto|;
+block|{
+name|lookup
+operator|->
+name|edns
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 name|result
 operator|=
 name|parse_uint
@@ -4032,6 +4188,10 @@ name|comments
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|rrcomments
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 name|lookup
 operator|->
 name|section_additional
@@ -4257,6 +4417,20 @@ name|invalid_option
 goto|;
 block|}
 break|break;
+case|case
+literal|'r'
+case|:
+comment|/* rrcomments */
+name|FULLCHECK
+argument_list|(
+literal|"rrcomments"
+argument_list|)
+expr_stmt|;
+name|rrcomments
+operator|=
+name|state
+expr_stmt|;
+break|break;
 default|default:
 goto|goto
 name|invalid_option
@@ -4372,6 +4546,10 @@ name|comments
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|rrcomments
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 name|lookup
 operator|->
 name|stats
@@ -4446,6 +4624,117 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'p'
+case|:
+comment|/* split */
+name|FULLCHECK
+argument_list|(
+literal|"split"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|state
+condition|)
+goto|goto
+name|invalid_option
+goto|;
+if|if
+condition|(
+operator|!
+name|state
+condition|)
+block|{
+name|splitwidth
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|value
+operator|==
+name|NULL
+condition|)
+break|break;
+name|result
+operator|=
+name|parse_uint
+argument_list|(
+operator|&
+name|splitwidth
+argument_list|,
+name|value
+argument_list|,
+literal|1023
+argument_list|,
+literal|"split"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|splitwidth
+operator|%
+literal|4
+operator|!=
+literal|0
+condition|)
+block|{
+name|splitwidth
+operator|=
+operator|(
+operator|(
+name|splitwidth
+operator|+
+literal|3
+operator|)
+operator|/
+literal|4
+operator|)
+operator|*
+literal|4
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|";; Warning, split must be "
+literal|"a multiple of 4; adjusting "
+literal|"to %d\n"
+argument_list|,
+name|splitwidth
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * There is an adjustment done in the 			 * totext_<rrtype>() functions which causes 			 * splitwidth to shrink.  This is okay when we're 			 * using the default width but incorrect in this 			 * case, so we correct for it 			 */
+if|if
+condition|(
+name|splitwidth
+condition|)
+name|splitwidth
+operator|+=
+literal|3
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|fatal
+argument_list|(
+literal|"Couldn't parse retries"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'t'
 case|:
@@ -4638,6 +4927,10 @@ name|comments
 operator|=
 name|ISC_FALSE
 expr_stmt|;
+name|rrcomments
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 name|lookup
 operator|->
 name|stats
@@ -4661,6 +4954,12 @@ operator|->
 name|section_question
 operator|=
 name|ISC_FALSE
+expr_stmt|;
+name|lookup
+operator|->
+name|dnssec
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 name|usesearch
 operator|=
@@ -6669,6 +6968,18 @@ name|default_lookup
 operator|=
 name|make_empty_lookup
 argument_list|()
+expr_stmt|;
+name|default_lookup
+operator|->
+name|adflag
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+name|default_lookup
+operator|->
+name|edns
+operator|=
+literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef

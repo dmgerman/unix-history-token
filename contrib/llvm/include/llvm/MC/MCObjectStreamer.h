@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCAssembler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
@@ -98,6 +104,11 @@ name|MCSectionData
 operator|*
 name|CurSectionData
 block|;
+name|MCSectionData
+operator|::
+name|iterator
+name|CurInsertionPoint
+block|;
 name|virtual
 name|void
 name|EmitInstToData
@@ -132,50 +143,46 @@ name|protected
 operator|:
 name|MCObjectStreamer
 argument_list|(
-name|MCContext
-operator|&
-name|Context
+argument|StreamerKind Kind
 argument_list|,
-name|MCAsmBackend
-operator|&
-name|TAB
+argument|MCContext&Context
 argument_list|,
-name|raw_ostream
-operator|&
-name|_OS
+argument|MCAsmBackend&TAB
 argument_list|,
-name|MCCodeEmitter
-operator|*
-name|_Emitter
+argument|raw_ostream&_OS
+argument_list|,
+argument|MCCodeEmitter *_Emitter
 argument_list|)
 block|;
 name|MCObjectStreamer
 argument_list|(
-name|MCContext
-operator|&
-name|Context
+argument|StreamerKind Kind
 argument_list|,
-name|MCAsmBackend
-operator|&
-name|TAB
+argument|MCContext&Context
 argument_list|,
-name|raw_ostream
-operator|&
-name|_OS
+argument|MCAsmBackend&TAB
 argument_list|,
-name|MCCodeEmitter
-operator|*
-name|_Emitter
+argument|raw_ostream&_OS
 argument_list|,
-name|MCAssembler
-operator|*
-name|_Assembler
+argument|MCCodeEmitter *_Emitter
+argument_list|,
+argument|MCAssembler *_Assembler
 argument_list|)
 block|;
 operator|~
 name|MCObjectStreamer
 argument_list|()
 block|;
+name|public
+operator|:
+comment|/// state management
+name|virtual
+name|void
+name|reset
+argument_list|()
+block|;
+name|protected
+operator|:
 name|MCSectionData
 operator|*
 name|getCurrentSectionData
@@ -192,6 +199,32 @@ name|getCurrentFragment
 argument_list|()
 specifier|const
 block|;
+name|void
+name|insert
+argument_list|(
+argument|MCFragment *F
+argument_list|)
+specifier|const
+block|{
+name|CurSectionData
+operator|->
+name|getFragmentList
+argument_list|()
+operator|.
+name|insert
+argument_list|(
+name|CurInsertionPoint
+argument_list|,
+name|F
+argument_list|)
+block|;
+name|F
+operator|->
+name|setParent
+argument_list|(
+name|CurSectionData
+argument_list|)
+block|;   }
 comment|/// Get a data fragment to write into, creating a new one if the current
 comment|/// fragment is not a data fragment.
 name|MCDataFragment
@@ -232,6 +265,29 @@ argument_list|(
 name|MCSymbol
 operator|*
 name|Symbol
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitDebugLabel
+argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitAssignment
+argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Value
 argument_list|)
 block|;
 name|virtual
@@ -287,6 +343,11 @@ specifier|const
 name|MCSection
 operator|*
 name|Section
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Subsection
 argument_list|)
 block|;
 name|virtual
@@ -299,6 +360,8 @@ operator|&
 name|Inst
 argument_list|)
 block|;
+comment|/// \brief Emit an instruction to a special fragment, because this instruction
+comment|/// can change its size during relaxation.
 name|virtual
 name|void
 name|EmitInstToFragment
@@ -311,11 +374,31 @@ argument_list|)
 block|;
 name|virtual
 name|void
+name|EmitBundleAlignMode
+argument_list|(
+argument|unsigned AlignPow2
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitBundleLock
+argument_list|(
+argument|bool AlignToEnd
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitBundleUnlock
+argument_list|()
+block|;
+name|virtual
+name|void
 name|EmitBytes
 argument_list|(
 argument|StringRef Data
 argument_list|,
-argument|unsigned AddrSpace
+argument|unsigned AddrSpace =
+literal|0
 argument_list|)
 block|;
 name|virtual
@@ -409,7 +492,8 @@ argument|uint64_t NumBytes
 argument_list|,
 argument|uint8_t FillValue
 argument_list|,
-argument|unsigned AddrSpace
+argument|unsigned AddrSpace =
+literal|0
 argument_list|)
 block|;
 name|virtual
@@ -418,9 +502,31 @@ name|FinishImpl
 argument_list|()
 block|;
 comment|/// @}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCStreamer *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|getKind
+argument_list|()
+operator|>=
+name|SK_ELFStreamer
+operator|&&
+name|S
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|SK_WinCOFFStreamer
+return|;
 block|}
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

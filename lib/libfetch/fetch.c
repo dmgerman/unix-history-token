@@ -1797,8 +1797,9 @@ name|u
 operator|->
 name|pwd
 argument_list|,
-operator|++
 name|q
+operator|+
+literal|1
 argument_list|,
 name|URL_PWDLEN
 argument_list|)

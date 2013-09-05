@@ -3,8 +3,7 @@ begin_define
 define|#
 directive|define
 name|VI_VERSION
-define|\
-value|"Version 1.79 (10/23/96) The CSRG, University of California, Berkeley."
+value|"2.1.1 (2012-10-07)"
 end_define
 
 end_unit

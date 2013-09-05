@@ -62,19 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Sema/Ownership.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Sema/Overload.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/ASTContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Attr.h"
 end_include
 
 begin_include
@@ -93,6 +87,18 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Overload.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Ownership.h"
 end_include
 
 begin_include
@@ -202,6 +208,10 @@ block|,
 comment|/// \brief The entity being initialized is the field that captures a
 comment|/// variable in a lambda.
 name|EK_LambdaCapture
+block|,
+comment|/// \brief The entity being initialized is the initializer for a compound
+comment|/// literal.
+name|EK_CompoundLiteralInit
 block|}
 enum|;
 name|private
@@ -221,26 +231,8 @@ comment|/// \brief The type of the object or reference being initialized.
 name|QualType
 name|Type
 decl_stmt|;
-union|union
-block|{
-comment|/// \brief When Kind == EK_Variable, or EK_Member, the VarDecl or
-comment|/// FieldDecl, respectively.
-name|DeclaratorDecl
-modifier|*
-name|VariableOrMember
-decl_stmt|;
-comment|/// \brief When Kind == EK_Parameter, the ParmVarDecl, with the
-comment|/// low bit indicating whether the parameter is "consumed".
-name|uintptr_t
-name|Parameter
-decl_stmt|;
-comment|/// \brief When Kind == EK_Temporary, the type source information for
-comment|/// the temporary.
-name|TypeSourceInfo
-modifier|*
-name|TypeInfo
-decl_stmt|;
 struct|struct
+name|LN
 block|{
 comment|/// \brief When Kind == EK_Result, EK_Exception, EK_New, the
 comment|/// location of the 'return', 'throw', or 'new' keyword,
@@ -255,8 +247,44 @@ name|bool
 name|NRVO
 decl_stmt|;
 block|}
-name|LocAndNRVO
 struct|;
+struct|struct
+name|C
+block|{
+comment|/// \brief The variable being captured by an EK_LambdaCapture.
+name|VarDecl
+modifier|*
+name|Var
+decl_stmt|;
+comment|/// \brief The source location at which the capture occurs.
+name|unsigned
+name|Location
+decl_stmt|;
+block|}
+struct|;
+union|union
+block|{
+comment|/// \brief When Kind == EK_Variable, or EK_Member, the VarDecl or
+comment|/// FieldDecl, respectively.
+name|DeclaratorDecl
+modifier|*
+name|VariableOrMember
+decl_stmt|;
+comment|/// \brief When Kind == EK_Parameter, the ParmVarDecl, with the
+comment|/// low bit indicating whether the parameter is "consumed".
+name|uintptr_t
+name|Parameter
+decl_stmt|;
+comment|/// \brief When Kind == EK_Temporary or EK_CompoundLiteralInit, the type
+comment|/// source information for the temporary.
+name|TypeSourceInfo
+modifier|*
+name|TypeInfo
+decl_stmt|;
+name|struct
+name|LN
+name|LocAndNRVO
+decl_stmt|;
 comment|/// \brief When Kind == EK_Base, the base specifier that provides the
 comment|/// base class. The lower bit specifies whether the base is an inherited
 comment|/// virtual base.
@@ -269,20 +297,10 @@ comment|/// initialized.
 name|unsigned
 name|Index
 decl_stmt|;
-struct|struct
-block|{
-comment|/// \brief The variable being captured by an EK_LambdaCapture.
-name|VarDecl
-modifier|*
-name|Var
-decl_stmt|;
-comment|/// \brief The source location at which the capture occurs.
-name|unsigned
-name|Location
-decl_stmt|;
-block|}
+name|struct
+name|C
 name|Capture
-struct|;
+decl_stmt|;
 block|}
 union|;
 name|InitializedEntity
@@ -480,6 +498,38 @@ modifier|*
 name|Parm
 parameter_list|)
 block|{
+return|return
+name|InitializeParameter
+argument_list|(
+name|Context
+argument_list|,
+name|Parm
+argument_list|,
+name|Parm
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create the initialization entity for a parameter, but use
+comment|/// another type.
+specifier|static
+name|InitializedEntity
+name|InitializeParameter
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|ParmVarDecl
+modifier|*
+name|Parm
+parameter_list|,
+name|QualType
+name|Type
+parameter_list|)
+block|{
 name|bool
 name|Consumed
 init|=
@@ -518,10 +568,7 @@ name|Context
 operator|.
 name|getVariableArrayDecayedType
 argument_list|(
-name|Parm
-operator|->
-name|getType
-argument_list|()
+name|Type
 operator|.
 name|getUnqualifiedType
 argument_list|()
@@ -934,6 +981,40 @@ name|Loc
 argument_list|)
 return|;
 block|}
+comment|/// \brief Create the entity for a compound literal initializer.
+specifier|static
+name|InitializedEntity
+name|InitializeCompoundLiteralInit
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|TSI
+parameter_list|)
+block|{
+name|InitializedEntity
+name|Result
+argument_list|(
+name|EK_CompoundLiteralInit
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|TSI
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|Result
+operator|.
+name|TypeInfo
+operator|=
+name|TSI
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// \brief Determine the kind of initialization.
 name|EntityKind
 name|getKind
@@ -981,6 +1062,10 @@ condition|(
 name|Kind
 operator|==
 name|EK_Temporary
+operator|||
+name|Kind
+operator|==
+name|EK_CompoundLiteralInit
 condition|)
 return|return
 name|TypeInfo
@@ -1918,6 +2003,9 @@ block|,
 comment|/// \brief Perform a qualification conversion, producing an lvalue.
 name|SK_QualificationConversionLValue
 block|,
+comment|/// \brief Perform a load from a glvalue, producing an rvalue.
+name|SK_LValueToRValue
+block|,
 comment|/// \brief Perform an implicit conversion sequence.
 name|SK_ConversionSequence
 block|,
@@ -1968,6 +2056,12 @@ name|SK_ProduceObjCObject
 block|,
 comment|/// \brief Construct a std::initializer_list from an initializer list.
 name|SK_StdInitializerList
+block|,
+comment|/// \brief Initialize an OpenCL sampler from an integer.
+name|SK_OCLSamplerInit
+block|,
+comment|/// \brief Passing zero to a function where OpenCL event_t is expected.
+name|SK_OCLZeroEvent
 block|}
 enum|;
 comment|/// \brief A single step in the initialization sequence.
@@ -1984,19 +2078,8 @@ comment|// \brief The type that results from this initialization.
 name|QualType
 name|Type
 decl_stmt|;
-union|union
-block|{
-comment|/// \brief When Kind == SK_ResolvedOverloadedFunction or Kind ==
-comment|/// SK_UserConversion, the function that the expression should be
-comment|/// resolved to or the conversion function to call, respectively.
-comment|/// When Kind == SK_ConstructorInitialization or SK_ListConstruction,
-comment|/// the constructor to be called.
-comment|///
-comment|/// Always a FunctionDecl, plus a Boolean flag telling if it was
-comment|/// selected from an overloaded set having size greater than 1.
-comment|/// For conversion decls, the naming class is the source type.
-comment|/// For construct decls, the naming class is the target type.
 struct|struct
+name|F
 block|{
 name|bool
 name|HadMultipleCandidates
@@ -2009,8 +2092,23 @@ name|DeclAccessPair
 name|FoundDecl
 decl_stmt|;
 block|}
-name|Function
 struct|;
+union|union
+block|{
+comment|/// \brief When Kind == SK_ResolvedOverloadedFunction or Kind ==
+comment|/// SK_UserConversion, the function that the expression should be
+comment|/// resolved to or the conversion function to call, respectively.
+comment|/// When Kind == SK_ConstructorInitialization or SK_ListConstruction,
+comment|/// the constructor to be called.
+comment|///
+comment|/// Always a FunctionDecl, plus a Boolean flag telling if it was
+comment|/// selected from an overloaded set having size greater than 1.
+comment|/// For conversion decls, the naming class is the source type.
+comment|/// For construct decls, the naming class is the target type.
+name|struct
+name|F
+name|Function
+decl_stmt|;
 comment|/// \brief When Kind = SK_ConversionSequence, the implicit conversion
 comment|/// sequence.
 name|ImplicitConversionSequence
@@ -2188,8 +2286,6 @@ comment|///
 comment|/// \param Kind the kind of initialization being performed.
 comment|///
 comment|/// \param Args the argument(s) provided for initialization.
-comment|///
-comment|/// \param NumArgs the number of arguments provided for initialization.
 name|InitializationSequence
 argument_list|(
 argument|Sema&S
@@ -2198,9 +2294,7 @@ argument|const InitializedEntity&Entity
 argument_list|,
 argument|const InitializationKind&Kind
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|MultiExprArg Args
 argument_list|)
 empty_stmt|;
 operator|~
@@ -2261,30 +2355,29 @@ comment|/// \returns true if the initialization sequence was ill-formed,
 comment|/// false otherwise.
 name|bool
 name|Diagnose
-parameter_list|(
+argument_list|(
 name|Sema
-modifier|&
+operator|&
 name|S
-parameter_list|,
+argument_list|,
 specifier|const
 name|InitializedEntity
-modifier|&
+operator|&
 name|Entity
-parameter_list|,
+argument_list|,
 specifier|const
 name|InitializationKind
-modifier|&
+operator|&
 name|Kind
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|Expr
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Args
-parameter_list|,
-name|unsigned
-name|NumArgs
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Determine the kind of initialization sequence computed.
 block|enum
 name|SequenceKind
@@ -2517,6 +2610,17 @@ name|ExprValueKind
 name|Category
 parameter_list|)
 function_decl|;
+comment|/// \brief Add a new step that performs a load of the given type.
+comment|///
+comment|/// Although the term "LValueToRValue" is conventional, this applies to both
+comment|/// lvalues and xvalues.
+name|void
+name|AddLValueToRValueStep
+parameter_list|(
+name|QualType
+name|Ty
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a new step that applies an implicit conversion sequence.
 name|void
 name|AddConversionSequenceStep
@@ -2643,6 +2747,24 @@ comment|/// \brief Add a step to construct a std::initializer_list object from a
 comment|/// initializer list.
 name|void
 name|AddStdInitializerListConstructionStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a step to initialize an OpenCL sampler from an integer
+comment|/// constant.
+name|void
+name|AddOCLSamplerInitStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a step to initialize an OpenCL event_t from a NULL
+comment|/// constant.
+name|void
+name|AddOCLZeroEventStep
 parameter_list|(
 name|QualType
 name|T

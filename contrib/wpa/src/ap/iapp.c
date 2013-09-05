@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / IEEE 802.11F-2003 Inter-Access Point Protocol (IAPP)  * Copyright (c) 2002-2007, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  *  * Note: IEEE 802.11F-2003 was a experimental use specification. It has expired  * and IEEE has withdrawn it. In other words, it is likely better to look at  * using some other mechanism for AP-to-AP communication than extending the  * implementation here.  */
+comment|/*  * hostapd / IEEE 802.11F-2003 Inter-Access Point Protocol (IAPP)  * Copyright (c) 2002-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * Note: IEEE 802.11F-2003 was a experimental use specification. It has expired  * and IEEE has withdrawn it. In other words, it is likely better to look at  * using some other mechanism for AP-to-AP communication than extending the  * implementation here.  */
 end_comment
 
 begin_comment

@@ -62,6 +62,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PriorityQueue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/LiveIntervalAnalysis.h"
 end_include
 
@@ -110,18 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/AliasAnalysis.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/CommandLine.h"
 end_include
 
@@ -146,13 +152,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/PriorityQueue.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_decl_stmt

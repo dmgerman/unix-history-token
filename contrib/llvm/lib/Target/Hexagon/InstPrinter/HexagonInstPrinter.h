@@ -62,19 +62,22 @@ end_define
 begin_include
 include|#
 directive|include
-file|"HexagonMCInst.h"
+file|"llvm/MC/MCInstPrinter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCInstPrinter.h"
+file|"llvm/MC/MCInstrInfo.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|HexagonMCInst
+decl_stmt|;
 name|class
 name|HexagonInstPrinter
 range|:
@@ -104,11 +107,16 @@ argument_list|)
 operator|:
 name|MCInstPrinter
 argument_list|(
-argument|MAI
+name|MAI
 argument_list|,
+name|MII
+argument_list|,
+name|MRI
+argument_list|)
+block|,
+name|MII
+argument_list|(
 argument|MII
-argument_list|,
-argument|MRI
 argument_list|)
 block|{}
 name|virtual
@@ -378,13 +386,17 @@ argument_list|,
 name|false
 argument_list|)
 block|; }
-name|bool
-name|isConstExtended
-argument_list|(
-argument|const MCInst *MI
-argument_list|)
 specifier|const
-block|;
+name|MCInstrInfo
+operator|&
+name|getMII
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MII
+return|;
+block|}
 name|protected
 operator|:
 name|void
@@ -399,7 +411,19 @@ argument_list|,
 argument|bool hi
 argument_list|)
 specifier|const
-block|;   }
+block|;
+specifier|static
+specifier|const
+name|char
+name|PacketPadding
+block|;
+name|private
+operator|:
+specifier|const
+name|MCInstrInfo
+operator|&
+name|MII
+block|;    }
 decl_stmt|;
 block|}
 end_decl_stmt
