@@ -659,6 +659,12 @@ index|]
 expr_stmt|;
 block|}
 comment|/* 	 * The zio write taskqs have 1 thread per cpu, allow 1/2 of the taskqs 	 * to fail 3 times per txg or 8 failures, whichever is greater. 	 */
+if|if
+condition|(
+name|zfs_mg_alloc_failures
+operator|==
+literal|0
+condition|)
 name|zfs_mg_alloc_failures
 operator|=
 name|MAX
@@ -11528,8 +11534,6 @@ argument_list|,
 name|old_bp
 argument_list|,
 name|METASLAB_HINTBP_AVOID
-operator||
-name|METASLAB_GANG_AVOID
 argument_list|)
 expr_stmt|;
 block|}
