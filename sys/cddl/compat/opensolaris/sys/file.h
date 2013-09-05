@@ -61,7 +61,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|)
 block|{
 name|struct
@@ -77,7 +78,7 @@ name|curthread
 argument_list|,
 name|fd
 argument_list|,
-name|rights
+name|rightsp
 argument_list|,
 operator|&
 name|fp

@@ -9541,6 +9541,9 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|off_t
 name|offset
 decl_stmt|;
@@ -9745,7 +9748,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_PREAD
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -9754,9 +9763,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 goto|goto
 name|out
 goto|;
+block|}
 name|error
 operator|=
 name|fo_sendfile

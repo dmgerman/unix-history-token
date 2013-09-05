@@ -391,7 +391,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|proc
@@ -421,7 +422,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|rights
+name|rightsp
 argument_list|,
 operator|&
 name|fp
@@ -581,7 +582,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|pid_t
 modifier|*
@@ -604,7 +606,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|rights
+name|rightsp
 argument_list|,
 operator|&
 name|fp
@@ -680,6 +682,9 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
@@ -703,7 +708,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_PDGETPID
+argument_list|)
 argument_list|,
 operator|&
 name|pid

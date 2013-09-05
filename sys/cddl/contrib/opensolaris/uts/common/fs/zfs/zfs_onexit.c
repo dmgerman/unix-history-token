@@ -326,6 +326,9 @@ name|zfs_onexit_t
 modifier|*
 name|zo
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|void
 modifier|*
 name|data
@@ -339,7 +342,11 @@ name|getf
 argument_list|(
 name|fd
 argument_list|,
-name|CAP_NONE
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

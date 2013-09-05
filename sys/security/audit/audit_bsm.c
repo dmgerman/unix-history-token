@@ -7143,9 +7143,6 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|AUE_CAP_NEW
-case|:
-case|case
 name|AUE_CAP_RIGHTS_LIMIT
 case|:
 comment|/* 		 * XXXRW/XXXJA: Would be nice to audit socket/etc information. 		 */
@@ -7163,12 +7160,9 @@ condition|)
 block|{
 name|tok
 operator|=
-name|au_to_arg64
+name|au_to_rights
 argument_list|(
-literal|2
-argument_list|,
-literal|"rights"
-argument_list|,
+operator|&
 name|ar
 operator|->
 name|ar_arg_rights

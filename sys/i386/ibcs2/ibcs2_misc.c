@@ -1506,6 +1506,9 @@ name|int
 name|resid
 decl_stmt|;
 comment|/* iBCS2-format */
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1560,9 +1563,6 @@ parameter_list|(
 name|reclen
 parameter_list|)
 value|(reclen + sizeof(u_short))
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|getvnode
@@ -1577,12 +1577,21 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -2278,6 +2287,9 @@ name|int
 name|resid
 decl_stmt|;
 comment|/* iBCS2-format */
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -2331,9 +2343,6 @@ decl_stmt|;
 name|int
 name|ncookies
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|getvnode
@@ -2348,12 +2357,21 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
