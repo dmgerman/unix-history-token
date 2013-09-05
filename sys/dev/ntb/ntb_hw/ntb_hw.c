@@ -3036,6 +3036,20 @@ operator||
 name|PCIM_CMD_BUSMASTEREN
 argument_list|)
 expr_stmt|;
+comment|/* Enable link training */
+name|ntb_write_4
+argument_list|(
+name|ntb
+operator|->
+name|reg_ofs
+operator|.
+name|lnk_cntl
+argument_list|,
+name|NTB_CNTL_BAR23_SNOOP
+operator||
+name|NTB_CNTL_BAR45_SNOOP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
