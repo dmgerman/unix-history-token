@@ -15951,7 +15951,7 @@ condition|;
 name|last_busied
 operator|++
 control|)
-name|vm_page_xbusy
+name|vm_page_sbusy
 argument_list|(
 name|bp
 operator|->
@@ -16015,7 +16015,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|vm_page_xunbusy
+name|vm_page_sunbusy
 argument_list|(
 name|bp
 operator|->
