@@ -11134,9 +11134,14 @@ modifier|*
 name|sigev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
 name|cap_rights_t
 name|rights
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|filedesc
 modifier|*
