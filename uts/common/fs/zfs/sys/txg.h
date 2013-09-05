@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -244,6 +244,16 @@ name|delta
 parameter_list|,
 name|hrtime_t
 name|resolution
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|txg_kick
+parameter_list|(
+name|struct
+name|dsl_pool
+modifier|*
+name|dp
 parameter_list|)
 function_decl|;
 comment|/*  * Wait until the given transaction group has finished syncing.  * Try to make this happen as soon as possible (eg. kick off any  * necessary syncs immediately).  If txg==0, wait for the currently open  * txg to finish syncing.  */

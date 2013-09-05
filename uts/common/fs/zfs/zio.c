@@ -80,62 +80,11 @@ file|<sys/ddt.h>
 end_include
 
 begin_comment
-comment|/*  * ==========================================================================  * I/O priority table  * ==========================================================================  */
-end_comment
-
-begin_decl_stmt
-name|uint8_t
-name|zio_priority_table
-index|[
-name|ZIO_PRIORITY_TABLE_SIZE
-index|]
-init|=
-block|{
-literal|0
-block|,
-comment|/* ZIO_PRIORITY_NOW		*/
-literal|0
-block|,
-comment|/* ZIO_PRIORITY_SYNC_READ	*/
-literal|0
-block|,
-comment|/* ZIO_PRIORITY_SYNC_WRITE	*/
-literal|0
-block|,
-comment|/* ZIO_PRIORITY_LOG_WRITE	*/
-literal|1
-block|,
-comment|/* ZIO_PRIORITY_CACHE_FILL	*/
-literal|1
-block|,
-comment|/* ZIO_PRIORITY_AGG		*/
-literal|4
-block|,
-comment|/* ZIO_PRIORITY_FREE		*/
-literal|4
-block|,
-comment|/* ZIO_PRIORITY_ASYNC_WRITE	*/
-literal|6
-block|,
-comment|/* ZIO_PRIORITY_ASYNC_READ	*/
-literal|10
-block|,
-comment|/* ZIO_PRIORITY_RESILVER	*/
-literal|20
-block|,
-comment|/* ZIO_PRIORITY_SCRUB		*/
-literal|2
-block|,
-comment|/* ZIO_PRIORITY_DDT_PREFETCH	*/
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * ==========================================================================  * I/O type descriptions  * ==========================================================================  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|zio_type_name
@@ -2040,9 +1989,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+name|countp
+operator|)
+operator|--
+expr_stmt|;
 if|if
 condition|(
-operator|--
 operator|*
 name|countp
 operator|==
@@ -2178,7 +2132,7 @@ parameter_list|,
 name|zio_type_t
 name|type
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -2896,7 +2850,7 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -3007,13 +2961,17 @@ name|ready
 parameter_list|,
 name|zio_done_func_t
 modifier|*
+name|physdone
+parameter_list|,
+name|zio_done_func_t
+modifier|*
 name|done
 parameter_list|,
 name|void
 modifier|*
 name|private
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -3138,6 +3096,12 @@ name|ready
 expr_stmt|;
 name|zio
 operator|->
+name|io_physdone
+operator|=
+name|physdone
+expr_stmt|;
+name|zio
+operator|->
 name|io_prop
 operator|=
 operator|*
@@ -3186,7 +3150,7 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -3578,7 +3542,7 @@ name|NULL
 argument_list|,
 name|ZIO_TYPE_FREE
 argument_list|,
-name|ZIO_PRIORITY_FREE
+name|ZIO_PRIORITY_NOW
 argument_list|,
 name|flags
 argument_list|,
@@ -3764,9 +3728,6 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|int
-name|priority
-parameter_list|,
 name|enum
 name|zio_flag
 name|flags
@@ -3810,7 +3771,7 @@ name|private
 argument_list|,
 name|ZIO_TYPE_IOCTL
 argument_list|,
-name|priority
+name|ZIO_PRIORITY_NOW
 argument_list|,
 name|flags
 argument_list|,
@@ -3887,8 +3848,6 @@ name|done
 argument_list|,
 name|private
 argument_list|,
-name|priority
-argument_list|,
 name|flags
 argument_list|)
 argument_list|)
@@ -3936,7 +3895,7 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -4082,7 +4041,7 @@ name|void
 modifier|*
 name|private
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -4271,7 +4230,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -4423,6 +4382,35 @@ argument_list|,
 name|pipeline
 argument_list|)
 expr_stmt|;
+name|zio
+operator|->
+name|io_physdone
+operator|=
+name|pio
+operator|->
+name|io_physdone
+expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_ops
+operator|->
+name|vdev_op_leaf
+operator|&&
+name|zio
+operator|->
+name|io_logical
+operator|!=
+name|NULL
+condition|)
+name|zio
+operator|->
+name|io_logical
+operator|->
+name|io_phys_children
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|zio
@@ -4453,7 +4441,7 @@ parameter_list|,
 name|int
 name|type
 parameter_list|,
-name|int
+name|zio_priority_t
 name|priority
 parameter_list|,
 name|enum
@@ -4513,6 +4501,8 @@ operator||
 name|ZIO_FLAG_CANFAIL
 operator||
 name|ZIO_FLAG_DONT_RETRY
+operator||
+name|ZIO_FLAG_DELEGATED
 argument_list|,
 name|vd
 argument_list|,
@@ -4565,8 +4555,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|ZIO_PRIORITY_NOW
 argument_list|,
 name|ZIO_FLAG_CANFAIL
 operator||
@@ -8609,6 +8597,8 @@ name|zio_write_gang_member_ready
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|gn
 operator|->
@@ -10603,6 +10593,8 @@ name|czp
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|zio_ddt_ditto_write_done
 argument_list|,
 name|dde
@@ -10781,6 +10773,8 @@ argument_list|,
 name|zp
 argument_list|,
 name|zio_ddt_child_write_ready
+argument_list|,
+name|NULL
 argument_list|,
 name|zio_ddt_child_write_done
 argument_list|,
@@ -12762,6 +12756,56 @@ name|io_pipeline
 operator|=
 name|ZIO_INTERLOCK_PIPELINE
 expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|!=
+name|NULL
+operator|&&
+name|vd
+operator|->
+name|vdev_ops
+operator|->
+name|vdev_op_leaf
+operator|&&
+name|zio
+operator|->
+name|io_physdone
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ASSERT
+argument_list|(
+operator|!
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_DELEGATED
+operator|)
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|zio
+operator|->
+name|io_child_type
+operator|==
+name|ZIO_CHILD_VDEV
+argument_list|)
+expr_stmt|;
+name|zio
+operator|->
+name|io_physdone
+argument_list|(
+name|zio
+operator|->
+name|io_logical
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ZIO_PIPELINE_CONTINUE

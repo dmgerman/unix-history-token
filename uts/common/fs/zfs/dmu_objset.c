@@ -4911,6 +4911,8 @@ name|zp
 argument_list|,
 name|dmu_objset_write_ready
 argument_list|,
+name|NULL
+argument_list|,
 name|dmu_objset_write_done
 argument_list|,
 name|os
