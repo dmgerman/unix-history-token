@@ -207,6 +207,35 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* Device features and workarounds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_FEATURE
+parameter_list|(
+name|feature
+parameter_list|)
+define|\
+value|((ntb->features& (feature)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_BAR_SIZE_4K
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTB_REGS_THRU_MW
+value|(1<< 1)
+end_define
+
 begin_struct
 struct|struct
 name|ntb_hw_info
@@ -214,14 +243,17 @@ block|{
 name|uint32_t
 name|device_id
 decl_stmt|;
-name|enum
-name|ntb_device_type
-name|type
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|desc
+decl_stmt|;
+name|enum
+name|ntb_device_type
+name|type
+decl_stmt|;
+name|uint64_t
+name|features
 decl_stmt|;
 block|}
 struct|;
@@ -313,6 +345,9 @@ decl_stmt|;
 name|enum
 name|ntb_device_type
 name|type
+decl_stmt|;
+name|uint64_t
+name|features
 decl_stmt|;
 name|struct
 name|ntb_pci_bar_info
@@ -885,11 +920,13 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|bool
-name|is_bar_for_data_transfer
+name|void
+name|save_bar_parameters
 parameter_list|(
-name|int
-name|bar_num
+name|struct
+name|ntb_pci_bar_info
+modifier|*
+name|bar
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -905,33 +942,43 @@ block|{
 block|{
 literal|0x3C0D8086
 block|,
+literal|"Xeon E5/Core i7 Non-Transparent Bridge B2B"
+block|,
 name|NTB_XEON
 block|,
-literal|"Xeon E5/Core i7 Non-Transparent Bridge B2B"
+name|NTB_REGS_THRU_MW
 block|}
 block|,
 block|{
 literal|0x0C4E8086
 block|,
+literal|"Atom Processor S1200 NTB Primary B2B"
+block|,
 name|NTB_SOC
 block|,
-literal|"Atom Processor S1200 NTB Primary B2B"
+literal|0
 block|}
 block|,
 block|{
 literal|0x0E0D8086
 block|,
+literal|"Xeon E5 V2 Non-Transparent Bridge B2B"
+block|,
 name|NTB_XEON
 block|,
-literal|"Xeon E5 V2 Non-Transparent Bridge B2B"
+name|NTB_REGS_THRU_MW
+operator||
+name|NTB_BAR_SIZE_4K
 block|}
 block|,
 block|{
 literal|0x00000000
 block|,
+name|NULL
+block|,
 name|NTB_SOC
 block|,
-name|NULL
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -1157,6 +1204,14 @@ operator|=
 name|p
 operator|->
 name|type
+expr_stmt|;
+name|ntb
+operator|->
+name|features
+operator|=
+name|p
+operator|->
+name|features
 expr_stmt|;
 comment|/* Heartbeat timer for NTB_SOC since there is no link interrupt */
 name|callout_init
