@@ -188,6 +188,10 @@ decl_stmt|;
 name|register_t
 name|cf_arg1
 decl_stmt|;
+name|register_t
+name|_padding
+decl_stmt|;
+comment|/* Maintain 16-byte alignment */
 block|}
 struct|;
 end_struct
