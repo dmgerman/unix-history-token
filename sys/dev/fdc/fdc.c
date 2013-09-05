@@ -2167,9 +2167,8 @@ name|I8207X_CONFIG
 argument_list|,
 literal|0
 argument_list|,
-literal|0x40
-operator||
-comment|/* Enable Implied Seek */
+comment|/* 0x40 | */
+comment|/* Enable Implied Seek - 						 * breaks 2step! */
 literal|0x10
 operator||
 comment|/* Polling disabled */
@@ -3314,6 +3313,9 @@ decl_stmt|;
 name|int
 name|head
 decl_stmt|;
+name|int
+name|override_error
+decl_stmt|;
 specifier|static
 name|int
 name|need_recal
@@ -3328,6 +3330,10 @@ name|fd_formb
 modifier|*
 name|finfo
 decl_stmt|;
+name|override_error
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Have we exhausted our retries ? */
 name|bp
 operator|=
@@ -4344,7 +4350,7 @@ name|settle
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * SEEK to where we want to be 	 * 	 * Enhanced controllers do implied seeks for read&write as long as 	 * we do not need multiple steps per track. 	 */
+comment|/* 	 * SEEK to where we want to be 	 */
 if|if
 condition|(
 name|cylinder
@@ -4352,30 +4358,6 @@ operator|!=
 name|fd
 operator|->
 name|track
-operator|&&
-operator|(
-name|fdc
-operator|->
-name|fdct
-operator|!=
-name|FDC_ENHANCED
-operator|||
-name|descyl
-operator|!=
-name|cylinder
-operator|||
-operator|(
-name|bp
-operator|->
-name|bio_cmd
-operator|&
-operator|(
-name|BIO_RDID
-operator||
-name|BIO_FMT
-operator|)
-operator|)
-operator|)
 condition|)
 block|{
 name|retry_line
@@ -5308,6 +5290,19 @@ name|retry_line
 operator|=
 name|__LINE__
 expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|->
+name|options
+operator|&
+name|FDOPT_NOERROR
+condition|)
+name|override_error
+operator|=
+literal|1
+expr_stmt|;
+else|else
 return|return
 operator|(
 literal|1
@@ -5445,7 +5440,28 @@ name|fd
 operator|->
 name|fd_iosize
 expr_stmt|;
-comment|/* Since we managed to get something done, reset the retry */
+if|if
+condition|(
+name|override_error
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|debugflags
+operator|&
+literal|4
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"FDOPT_NOERROR: returning bad data\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Since we managed to get something done, 			 * reset the retry */
 name|fdc
 operator|->
 name|retry
@@ -5465,6 +5481,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 break|break;
 case|case
 name|BIO_FMT
@@ -6878,6 +6895,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fd
+operator|->
+name|options
+operator|&=
+operator|~
+operator|(
+name|FDOPT_NORETRY
+operator||
+name|FDOPT_NOERRLOG
+operator||
+name|FDOPT_NOERROR
+operator|)
+expr_stmt|;
 name|device_unbusy
 argument_list|(
 name|fd
