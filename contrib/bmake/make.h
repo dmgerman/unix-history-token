@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.91 2013/06/18 20:06:09 sjg Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.92 2013/09/04 15:38:26 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -1427,6 +1427,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* .DEFAULT rule */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|GNode
+modifier|*
+name|VAR_INTERNAL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Variables defined internally by make 				 * which should not override those set by 				 * makefiles. 				 */
 end_comment
 
 begin_decl_stmt
