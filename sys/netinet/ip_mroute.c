@@ -2904,7 +2904,7 @@ block|{
 name|vifi_t
 name|vifi
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|MROUTER_LOCK
@@ -3227,7 +3227,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|vifi_t
@@ -3550,7 +3550,7 @@ modifier|*
 name|apival
 parameter_list|)
 block|{
-name|int
+name|u_long
 name|i
 decl_stmt|;
 comment|/*      * We can set the API capabilities only if it is the first operation      * after MRT_INIT. I.e.:      *  - there are no vifs installed      *  - pim_assert is not enabled      *  - the MFC table is empty      */
@@ -6250,7 +6250,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|CURVNET_SET
