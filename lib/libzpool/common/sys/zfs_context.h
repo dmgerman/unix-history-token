@@ -421,6 +421,13 @@ define|#
 directive|define
 name|curthread
 value|((void *)(uintptr_t)thr_self())
+define|#
+directive|define
+name|kpreempt
+parameter_list|(
+name|x
+parameter_list|)
+value|yield()
 typedef|typedef
 name|struct
 name|kthread

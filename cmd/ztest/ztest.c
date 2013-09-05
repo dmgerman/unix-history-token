@@ -540,7 +540,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|uint64_t
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
 decl_stmt|;
 end_decl_stmt
 
@@ -26447,7 +26447,6 @@ control|)
 block|{
 name|delta
 operator|=
-operator|(
 name|zs
 operator|->
 name|zs_thread_stop
@@ -26455,11 +26454,11 @@ operator|-
 name|zs
 operator|->
 name|zs_thread_start
-operator|)
-operator|/
-name|NANOSEC
 operator|+
-name|zfs_deadman_synctime
+name|MSEC2NSEC
+argument_list|(
+name|zfs_deadman_synctime_ms
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -26470,12 +26469,11 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-call|(
+operator|(
 name|int
-call|)
+operator|)
+name|NSEC2MSEC
 argument_list|(
-literal|1000
-operator|*
 name|delta
 argument_list|)
 argument_list|)
@@ -26496,7 +26494,9 @@ argument_list|,
 literal|"aborting test after %llu seconds because "
 literal|"pool has transitioned to a suspended state."
 argument_list|,
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 return|return
@@ -26514,7 +26514,9 @@ argument_list|)
 expr_stmt|;
 name|total
 operator|+=
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
+operator|/
+literal|1000
 expr_stmt|;
 operator|(
 name|void
@@ -30089,9 +30091,9 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|zfs_deadman_synctime
+name|zfs_deadman_synctime_ms
 operator|=
-literal|300
+literal|300000
 expr_stmt|;
 name|ztest_fd_rand
 operator|=
