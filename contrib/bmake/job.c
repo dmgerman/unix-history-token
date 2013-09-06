@@ -332,6 +332,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * FreeBSD: aborting entire parallel make isn't always  * desired. When doing tinderbox for example, failure of  * one architecture should not stop all.  * We still want to bail on interrupt though.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_JOB_ERROR_TOKEN
+value|"MAKE_JOB_ERROR_TOKEN"
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Job_error_token
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * error handling variables  */
 end_comment
 
@@ -7545,6 +7565,15 @@ argument_list|,
 name|Always_pass_job_queue
 argument_list|)
 expr_stmt|;
+name|Job_error_token
+operator|=
+name|getBoolean
+argument_list|(
+name|MAKE_JOB_ERROR_TOKEN
+argument_list|,
+name|Job_error_token
+argument_list|)
+expr_stmt|;
 comment|/*      * There is a non-zero chance that we already have children.      * eg after 'make -f-<<EOF'      * Since their termination causes a 'Child (pid) not in table' message,      * Collect the status of any that are already dead, and suppress the      * error message if there are any undead ones.      */
 for|for
 control|(
@@ -9643,6 +9672,29 @@ index|]
 decl_stmt|,
 name|tok1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Job_error_token
+operator|&&
+name|aborting
+operator|==
+name|ABORT_ERROR
+condition|)
+block|{
+if|if
+condition|(
+name|jobTokensRunning
+operator|==
+literal|0
+condition|)
+return|return;
+name|tok
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* no error token */
+block|}
 comment|/* If we are depositing an error token flush everything else */
 while|while
 condition|(
@@ -9683,10 +9735,7 @@ argument_list|()
 argument_list|,
 name|aborting
 argument_list|,
-name|JOB_TOKENS
-index|[
-name|aborting
-index|]
+name|tok
 argument_list|)
 expr_stmt|;
 while|while
