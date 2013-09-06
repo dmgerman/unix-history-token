@@ -1985,7 +1985,7 @@ operator|=
 literal|0
 init|;
 name|j
-operator|<
+operator|<=
 name|maxpin
 condition|;
 name|j

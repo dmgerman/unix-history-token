@@ -3519,8 +3519,6 @@ init|;
 name|j
 operator|<
 name|BCM_GPIO_PINS
-operator|-
-literal|1
 condition|;
 name|j
 operator|++
