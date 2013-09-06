@@ -78,7 +78,7 @@ name|uint8_t
 modifier|*
 name|ptr
 decl_stmt|;
-name|uint32_t
+name|ssize_t
 name|len
 decl_stmt|;
 name|off_t

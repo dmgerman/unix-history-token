@@ -3565,6 +3565,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PREGRP107
+value|NULL, { { NULL, USE_PREFIX_USER_TABLE }, { NULL, 107 } }
+end_define
+
+begin_define
+define|#
+directive|define
 name|X86_64_0
 value|NULL, { { NULL, X86_64_SPECIAL }, { NULL, 0 } }
 end_define
@@ -21524,6 +21531,43 @@ name|XX
 block|}
 block|}
 block|,   }
+block|,
+comment|/* PREGRP107 */
+block|{
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"invpcid"
+block|,
+block|{
+name|Gm
+block|,
+name|Mo
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,   }
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -22591,11 +22635,7 @@ name|PREGRP99
 block|}
 block|,
 block|{
-literal|"(bad)"
-block|,
-block|{
-name|XX
-block|}
+name|PREGRP107
 block|}
 block|,
 block|{

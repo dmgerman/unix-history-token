@@ -421,6 +421,9 @@ name|struct
 name|read_args
 name|ra
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -476,7 +479,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 operator|&
 name|fp

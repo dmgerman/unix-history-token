@@ -408,6 +408,15 @@ decl_stmt|;
 name|int
 name|capPassthrough
 decl_stmt|;
+name|int
+name|capMiddle
+decl_stmt|;
+name|int
+name|nExtendedButtons
+decl_stmt|;
+name|int
+name|nExtendedQueries
+decl_stmt|;
 block|}
 name|synapticshw_t
 typedef|;

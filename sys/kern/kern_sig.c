@@ -8979,6 +8979,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -9022,7 +9025,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_PDKILL
+argument_list|)
 argument_list|,
 operator|&
 name|p

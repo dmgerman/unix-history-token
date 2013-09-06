@@ -228,15 +228,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SKIPFUNC
+name|SKIPRETURN
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SKIPFILE
-value|4
 end_define
 
 end_unit

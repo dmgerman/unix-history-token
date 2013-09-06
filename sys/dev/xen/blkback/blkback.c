@@ -523,7 +523,7 @@ comment|/** 	 * Number of child requests in the list. 	 */
 name|int
 name|num_children
 decl_stmt|;
-comment|/** 	 * Number of I/O requests dispatched to the backend. 	 */
+comment|/** 	 * Number of I/O requests still pending on the backend. 	 */
 name|int
 name|pendcnt
 decl_stmt|;
@@ -624,10 +624,6 @@ decl_stmt|;
 comment|/** 	 * The number of 512 byte sectors comprising this requests. 	 */
 name|int
 name|nr_512b_sectors
-decl_stmt|;
-comment|/** 	 * The number of struct bio requests still outstanding for this 	 * request on the backend device.  This field is only used for	 	 * device (rather than file) backed I/O. 	 */
-name|int
-name|pendcnt
 decl_stmt|;
 comment|/** 	 * BLKIF_OP code for this request. 	 */
 name|int
@@ -2587,6 +2583,22 @@ name|req_ring_idx
 operator|=
 name|ring_idx
 expr_stmt|;
+name|nreq
+operator|->
+name|id
+operator|=
+name|ring_req
+operator|->
+name|id
+expr_stmt|;
+name|nreq
+operator|->
+name|operation
+operator|=
+name|ring_req
+operator|->
+name|operation
+expr_stmt|;
 if|if
 condition|(
 name|xbb
@@ -3795,14 +3807,6 @@ operator|=
 name|ring_req
 operator|->
 name|nr_segments
-expr_stmt|;
-name|nreq
-operator|->
-name|id
-operator|=
-name|ring_req
-operator|->
-name|id
 expr_stmt|;
 name|nreq
 operator|->
@@ -5293,11 +5297,6 @@ index|[
 name|XBB_MAX_SEGMENTS_PER_REQLIST
 index|]
 decl_stmt|;
-name|struct
-name|xbb_xen_req
-modifier|*
-name|nreq
-decl_stmt|;
 name|off_t
 name|bio_offset
 decl_stmt|;
@@ -5367,16 +5366,6 @@ operator|==
 name|BIO_FLUSH
 condition|)
 block|{
-name|nreq
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|reqlist
-operator|->
-name|contig_req_list
-argument_list|)
-expr_stmt|;
 name|bio
 operator|=
 name|g_new_bio
@@ -5449,7 +5438,7 @@ name|bio
 operator|->
 name|bio_caller1
 operator|=
-name|nreq
+name|reqlist
 expr_stmt|;
 name|bio
 operator|->
@@ -5457,7 +5446,7 @@ name|bio_pblkno
 operator|=
 literal|0
 expr_stmt|;
-name|nreq
+name|reqlist
 operator|->
 name|pendcnt
 operator|=

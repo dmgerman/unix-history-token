@@ -705,6 +705,9 @@ name|vfsoptlist
 modifier|*
 name|opts
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|subtype
 operator|=
 name|NULL
@@ -1024,7 +1027,13 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 operator|&
 name|fp

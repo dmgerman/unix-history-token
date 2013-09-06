@@ -413,7 +413,7 @@ name|SB_WAIT
 expr_stmt|;
 return|return
 operator|(
-name|msleep
+name|msleep_sbt
 argument_list|(
 operator|&
 name|sb
@@ -444,6 +444,10 @@ argument_list|,
 name|sb
 operator|->
 name|sb_timeo
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;

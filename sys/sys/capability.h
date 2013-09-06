@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/caprights.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -43,16 +49,42 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
-begin_comment
-comment|/*  * Possible rights on capabilities.  *  * Notes:  * Some system calls don't require a capability in order to perform an  * operation on an fd.  These include: close, dup, dup2.  *  * sendfile is authorized using CAP_READ on the file and CAP_WRITE on the  * socket.  *  * mmap() and aio*() system calls will need special attention as they may  * involve reads or writes depending a great deal on context.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|CAP_NONE
-value|0x0000000000000000ULL
+name|CAPRIGHT
+parameter_list|(
+name|idx
+parameter_list|,
+name|bit
+parameter_list|)
+value|((1ULL<< (57 + (idx))) | (bit))
 end_define
+
+begin_comment
+comment|/*  * Possible rights on capabilities.  *  * Notes:  * Some system calls don't require a capability in order to perform an  * operation on an fd.  These include: close, dup, dup2.  *  * sendfile is authorized using CAP_READ on the file and CAP_WRITE on the  * socket.  *  * mmap() and aio*() system calls will need special attention as they may  * involve reads or writes depending a great deal on context.  */
+end_comment
+
+begin_comment
+comment|/* INDEX 0 */
+end_comment
 
 begin_comment
 comment|/*  * General file I/O.  */
@@ -66,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|CAP_READ
-value|0x0000000000000001ULL
+value|CAPRIGHT(0, 0x0000000000000001ULL)
 end_define
 
 begin_comment
@@ -77,7 +109,18 @@ begin_define
 define|#
 directive|define
 name|CAP_WRITE
-value|0x0000000000000002ULL
+value|CAPRIGHT(0, 0x0000000000000002ULL)
+end_define
+
+begin_comment
+comment|/* Allows for lseek(fd, 0, SEEK_CUR). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_SEEK_TELL
+value|CAPRIGHT(0, 0x0000000000000004ULL)
 end_define
 
 begin_comment
@@ -88,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|CAP_SEEK
-value|0x0000000000000080ULL
+value|(CAP_SEEK_TELL | 0x0000000000000008ULL)
 end_define
 
 begin_comment
@@ -121,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MMAP
-value|0x0000000000000004ULL
+value|CAPRIGHT(0, 0x0000000000000010ULL)
 end_define
 
 begin_comment
@@ -154,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MMAP_X
-value|(CAP_MMAP | CAP_SEEK | 0x0000000000000008ULL)
+value|(CAP_MMAP | CAP_SEEK | 0x0000000000000020ULL)
 end_define
 
 begin_comment
@@ -209,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|CAP_CREATE
-value|0x0000000000080000ULL
+value|CAPRIGHT(0, 0x0000000000000040ULL)
 end_define
 
 begin_comment
@@ -220,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|CAP_FEXECVE
-value|0x0000000000000010ULL
+value|CAPRIGHT(0, 0x0000000000000080ULL)
 end_define
 
 begin_comment
@@ -231,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|CAP_FSYNC
-value|0x0000000000000020ULL
+value|CAPRIGHT(0, 0x0000000000000100ULL)
 end_define
 
 begin_comment
@@ -242,172 +285,7 @@ begin_define
 define|#
 directive|define
 name|CAP_FTRUNCATE
-value|0x0000000000000040ULL
-end_define
-
-begin_comment
-comment|/* VFS methods. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_FCHDIR
-value|0x0000000000000200ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FCHFLAGS
-value|0x0000000000000100ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_CHFLAGSAT
-value|CAP_FCHFLAGS
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FCHMOD
-value|0x0000000000000400ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FCHMODAT
-value|CAP_FCHMOD
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FCHOWN
-value|0x0000000000000800ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FCHOWNAT
-value|CAP_FCHOWN
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FCNTL
-value|0x0000000000001000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FLOCK
-value|0x0000000000004000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FPATHCONF
-value|0x0000000000002000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FSCK
-value|0x0000000000008000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FSTAT
-value|0x0000000000010000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FSTATAT
-value|CAP_FSTAT
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FSTATFS
-value|0x0000000000020000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FUTIMES
-value|0x0000000000040000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_FUTIMESAT
-value|CAP_FUTIMES
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_LINKAT
-value|0x0000000000400000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MKDIRAT
-value|0x0000000000200000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MKFIFOAT
-value|0x0000000000800000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MKNODAT
-value|0x0080000000000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_RENAMEAT
-value|0x0200000000000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_SYMLINKAT
-value|0x0100000000000000ULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_UNLINKAT
-value|0x0000000000100000ULL
+value|CAPRIGHT(0, 0x0000000000000200ULL)
 end_define
 
 begin_comment
@@ -418,7 +296,172 @@ begin_define
 define|#
 directive|define
 name|CAP_LOOKUP
-value|0x0000000001000000ULL
+value|CAPRIGHT(0, 0x0000000000000400ULL)
+end_define
+
+begin_comment
+comment|/* VFS methods. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_FCHDIR
+value|CAPRIGHT(0, 0x0000000000000800ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FCHFLAGS
+value|CAPRIGHT(0, 0x0000000000001000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_CHFLAGSAT
+value|(CAP_FCHFLAGS | CAP_LOOKUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FCHMOD
+value|CAPRIGHT(0, 0x0000000000002000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FCHMODAT
+value|(CAP_FCHMOD | CAP_LOOKUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FCHOWN
+value|CAPRIGHT(0, 0x0000000000004000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FCHOWNAT
+value|(CAP_FCHOWN | CAP_LOOKUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FCNTL
+value|CAPRIGHT(0, 0x0000000000008000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FLOCK
+value|CAPRIGHT(0, 0x0000000000010000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FPATHCONF
+value|CAPRIGHT(0, 0x0000000000020000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FSCK
+value|CAPRIGHT(0, 0x0000000000040000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FSTAT
+value|CAPRIGHT(0, 0x0000000000080000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FSTATAT
+value|(CAP_FSTAT | CAP_LOOKUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FSTATFS
+value|CAPRIGHT(0, 0x0000000000100000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FUTIMES
+value|CAPRIGHT(0, 0x0000000000200000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_FUTIMESAT
+value|(CAP_FUTIMES | CAP_LOOKUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_LINKAT
+value|CAPRIGHT(0, 0x0000000000400000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MKDIRAT
+value|CAPRIGHT(0, 0x0000000000800000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MKFIFOAT
+value|CAPRIGHT(0, 0x0000000001000000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_MKNODAT
+value|CAPRIGHT(0, 0x0000000002000000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_RENAMEAT
+value|CAPRIGHT(0, 0x0000000004000000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_SYMLINKAT
+value|CAPRIGHT(0, 0x0000000008000000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_UNLINKAT
+value|CAPRIGHT(0, 0x0000000010000000ULL)
 end_define
 
 begin_comment
@@ -429,28 +472,28 @@ begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_DELETE
-value|0x0000000002000000ULL
+value|CAPRIGHT(0, 0x0000000020000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_GET
-value|0x0000000004000000ULL
+value|CAPRIGHT(0, 0x0000000040000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_LIST
-value|0x0000000008000000ULL
+value|CAPRIGHT(0, 0x0000000080000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_EXTATTR_SET
-value|0x0000000010000000ULL
+value|CAPRIGHT(0, 0x0000000100000000ULL)
 end_define
 
 begin_comment
@@ -461,28 +504,28 @@ begin_define
 define|#
 directive|define
 name|CAP_ACL_CHECK
-value|0x0000000020000000ULL
+value|CAPRIGHT(0, 0x0000000200000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ACL_DELETE
-value|0x0000000040000000ULL
+value|CAPRIGHT(0, 0x0000000400000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ACL_GET
-value|0x0000000080000000ULL
+value|CAPRIGHT(0, 0x0000000800000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ACL_SET
-value|0x0000000100000000ULL
+value|CAPRIGHT(0, 0x0000001000000000ULL)
 end_define
 
 begin_comment
@@ -493,56 +536,56 @@ begin_define
 define|#
 directive|define
 name|CAP_ACCEPT
-value|0x0000000200000000ULL
+value|CAPRIGHT(0, 0x0000002000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_BIND
-value|0x0000000400000000ULL
+value|CAPRIGHT(0, 0x0000004000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_CONNECT
-value|0x0000000800000000ULL
+value|CAPRIGHT(0, 0x0000008000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_GETPEERNAME
-value|0x0000001000000000ULL
+value|CAPRIGHT(0, 0x0000010000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_GETSOCKNAME
-value|0x0000002000000000ULL
+value|CAPRIGHT(0, 0x0000020000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_GETSOCKOPT
-value|0x0000004000000000ULL
+value|CAPRIGHT(0, 0x0000040000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_LISTEN
-value|0x0000008000000000ULL
+value|CAPRIGHT(0, 0x0000080000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_PEELOFF
-value|0x0000010000000000ULL
+value|CAPRIGHT(0, 0x0000100000000000ULL)
 end_define
 
 begin_define
@@ -563,14 +606,14 @@ begin_define
 define|#
 directive|define
 name|CAP_SETSOCKOPT
-value|0x0000020000000000ULL
+value|CAPRIGHT(0, 0x0000200000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SHUTDOWN
-value|0x0000040000000000ULL
+value|CAPRIGHT(0, 0x0000400000000000ULL)
 end_define
 
 begin_define
@@ -590,6 +633,43 @@ value|(CAP_ACCEPT | CAP_BIND | CAP_GETPEERNAME | CAP_GETSOCKNAME | \ 	 CAP_GETSO
 end_define
 
 begin_comment
+comment|/* All used bits for index 0. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_ALL0
+value|CAPRIGHT(0, 0x00007FFFFFFFFFFFULL)
+end_define
+
+begin_comment
+comment|/* Available bits for index 0. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_UNUSED0_48
+value|CAPRIGHT(0, 0x0000800000000000ULL)
+end_define
+
+begin_comment
+comment|/* ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_UNUSED0_57
+value|CAPRIGHT(0, 0x0100000000000000ULL)
+end_define
+
+begin_comment
+comment|/* INDEX 1 */
+end_comment
+
+begin_comment
 comment|/* Mandatory Access Control. */
 end_comment
 
@@ -597,14 +677,14 @@ begin_define
 define|#
 directive|define
 name|CAP_MAC_GET
-value|0x0000080000000000ULL
+value|CAPRIGHT(1, 0x0000000000000001ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_MAC_SET
-value|0x0000100000000000ULL
+value|CAPRIGHT(1, 0x0000000000000002ULL)
 end_define
 
 begin_comment
@@ -615,21 +695,21 @@ begin_define
 define|#
 directive|define
 name|CAP_SEM_GETVALUE
-value|0x0000200000000000ULL
+value|CAPRIGHT(1, 0x0000000000000004ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SEM_POST
-value|0x0000400000000000ULL
+value|CAPRIGHT(1, 0x0000000000000008ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_SEM_WAIT
-value|0x0000800000000000ULL
+value|CAPRIGHT(1, 0x0000000000000010ULL)
 end_define
 
 begin_comment
@@ -640,14 +720,14 @@ begin_define
 define|#
 directive|define
 name|CAP_POLL_EVENT
-value|0x0001000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000020ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_POST_EVENT
-value|0x0002000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000040ULL)
 end_define
 
 begin_comment
@@ -658,14 +738,14 @@ begin_define
 define|#
 directive|define
 name|CAP_IOCTL
-value|0x0004000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000080ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_TTYHOOK
-value|0x0008000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000100ULL)
 end_define
 
 begin_comment
@@ -676,21 +756,21 @@ begin_define
 define|#
 directive|define
 name|CAP_PDGETPID
-value|0x0010000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000200ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_PDWAIT
-value|0x0020000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000400ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_PDKILL
-value|0x0040000000000000ULL
+value|CAPRIGHT(1, 0x0000000000000800ULL)
 end_define
 
 begin_comment
@@ -701,117 +781,107 @@ begin_define
 define|#
 directive|define
 name|CAP_BINDAT
-value|0x0400000000000000ULL
+value|CAPRIGHT(1, 0x0000000000001000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_CONNECTAT
-value|0x0800000000000000ULL
+value|CAPRIGHT(1, 0x0000000000002000ULL)
 end_define
 
 begin_comment
-comment|/* The mask of all valid method rights. */
+comment|/* All used bits for index 1. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_MASK_VALID
-value|0x0fffffffffffffffULL
+name|CAP_ALL1
+value|CAPRIGHT(1, 0x0000000000003FFFULL)
+end_define
+
+begin_comment
+comment|/* Available bits for index 1. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_UNUSED1_15
+value|CAPRIGHT(1, 0x0000000000004000ULL)
+end_define
+
+begin_comment
+comment|/* ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_UNUSED1_57
+value|CAPRIGHT(1, 0x0100000000000000ULL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CAP_ALL
-value|CAP_MASK_VALID
-end_define
-
-begin_comment
-comment|/* Available bits. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_UNUSED3
-value|0x1000000000000000ULL
+parameter_list|(
+name|rights
+parameter_list|)
+value|do {					\ 	(rights)->cr_rights[0] =					\ 	    ((uint64_t)CAP_RIGHTS_VERSION<< 62) | CAP_ALL0;		\ 	(rights)->cr_rights[1] = CAP_ALL1;				\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED2
-value|0x2000000000000000ULL
+name|CAP_NONE
+parameter_list|(
+name|rights
+parameter_list|)
+value|do {					\ 	(rights)->cr_rights[0] =					\ 	    ((uint64_t)CAP_RIGHTS_VERSION<< 62) | CAPRIGHT(0, 0ULL);	\ 	(rights)->cr_rights[1] = CAPRIGHT(1, 0ULL);			\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED1
-value|0x4000000000000000ULL
+name|CAPRVER
+parameter_list|(
+name|right
+parameter_list|)
+value|((int)((right)>> 62))
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED0
-value|0x8000000000000000ULL
-end_define
-
-begin_comment
-comment|/*  * The following defines are provided for backward API compatibility and  * should not be used in new code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_MAPEXEC
-value|CAP_MMAP_X
+name|CAPVER
+parameter_list|(
+name|rights
+parameter_list|)
+value|CAPRVER((rights)->cr_rights[0])
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_DELETE
-value|CAP_UNLINKAT
+name|CAPARSIZE
+parameter_list|(
+name|rights
+parameter_list|)
+value|(CAPVER(rights) + 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CAP_MKDIR
-value|CAP_MKDIRAT
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_RMDIR
-value|CAP_UNLINKAT
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MKFIFO
-value|CAP_MKFIFOAT
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_MKNOD
-value|CAP_MKNODAT
-end_define
-
-begin_define
-define|#
-directive|define
-name|CAP_SOCK_ALL
-value|(CAP_SOCK_CLIENT | CAP_SOCK_SERVER)
+name|CAPIDXBIT
+parameter_list|(
+name|right
+parameter_list|)
+value|((int)(((right)>> 57)& 0x1F))
 end_define
 
 begin_comment
@@ -906,6 +976,174 @@ name|CAP_IOCTLS_ALL
 value|SSIZE_MAX
 end_define
 
+begin_define
+define|#
+directive|define
+name|cap_rights_init
+parameter_list|(
+modifier|...
+parameter_list|)
+define|\
+value|__cap_rights_init(CAP_RIGHTS_VERSION, __VA_ARGS__, 0ULL)
+end_define
+
+begin_function_decl
+name|cap_rights_t
+modifier|*
+name|__cap_rights_init
+parameter_list|(
+name|int
+name|version
+parameter_list|,
+name|cap_rights_t
+modifier|*
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|cap_rights_set
+parameter_list|(
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__cap_rights_set((rights), __VA_ARGS__, 0ULL)
+end_define
+
+begin_function_decl
+name|void
+name|__cap_rights_set
+parameter_list|(
+name|cap_rights_t
+modifier|*
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|cap_rights_clear
+parameter_list|(
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__cap_rights_clear((rights), __VA_ARGS__, 0ULL)
+end_define
+
+begin_function_decl
+name|void
+name|__cap_rights_clear
+parameter_list|(
+name|cap_rights_t
+modifier|*
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|cap_rights_is_set
+parameter_list|(
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__cap_rights_is_set((rights), __VA_ARGS__, 0ULL)
+end_define
+
+begin_function_decl
+name|bool
+name|__cap_rights_is_set
+parameter_list|(
+specifier|const
+name|cap_rights_t
+modifier|*
+name|rights
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|cap_rights_is_valid
+parameter_list|(
+specifier|const
+name|cap_rights_t
+modifier|*
+name|rights
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cap_rights_merge
+parameter_list|(
+name|cap_rights_t
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|cap_rights_t
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cap_rights_remove
+parameter_list|(
+name|cap_rights_t
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|cap_rights_t
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|cap_rights_contains
+parameter_list|(
+specifier|const
+name|cap_rights_t
+modifier|*
+name|big
+parameter_list|,
+specifier|const
+name|cap_rights_t
+modifier|*
+name|little
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -942,11 +1180,15 @@ begin_function_decl
 name|int
 name|cap_check
 parameter_list|(
+specifier|const
 name|cap_rights_t
-name|have
+modifier|*
+name|havep
 parameter_list|,
+specifier|const
 name|cap_rights_t
-name|need
+modifier|*
+name|needp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -960,7 +1202,8 @@ name|u_char
 name|cap_rights_to_vmprot
 parameter_list|(
 name|cap_rights_t
-name|have
+modifier|*
+name|havep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -971,6 +1214,7 @@ end_comment
 
 begin_function_decl
 name|cap_rights_t
+modifier|*
 name|cap_rights
 parameter_list|(
 name|struct
@@ -1031,10 +1275,7 @@ end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
-include|#
-directive|include
-file|<stdbool.h>
-comment|/*  * cap_enter(): Cause the process to enter capability mode, which will  * prevent it from directly accessing global namespaces.  System calls will  * be limited to process-local, process-inherited, or file descriptor  * operations.  If already in capability mode, a no-op.  *  * Currently, process-inherited operations are not properly handled -- in  * particular, we're interested in things like waitpid(2), kill(2), etc,  * being properly constrained.  One possible solution is to introduce process  * descriptors.  */
+comment|/*  * cap_enter(): Cause the process to enter capability mode, which will  * prevent it from directly accessing global namespaces.  System calls will  * be limited to process-local, process-inherited, or file descriptor  * operations.  If already in capability mode, a no-op.  */
 name|int
 name|cap_enter
 parameter_list|(
@@ -1082,20 +1323,37 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|cap_rights_t
+modifier|*
 name|rights
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns bitmask of capability rights for the given descriptor.  */
+comment|/*  * Returns capability rights for the given descriptor.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|cap_rights_get
+parameter_list|(
+name|fd
+parameter_list|,
+name|rights
+parameter_list|)
+value|__cap_rights_get(CAP_RIGHTS_VERSION, (fd), (rights))
+end_define
 
 begin_function_decl
 name|int
-name|cap_rights_get
+name|__cap_rights_get
 parameter_list|(
+name|int
+name|version
+parameter_list|,
 name|int
 name|fd
 parameter_list|,
@@ -1185,35 +1443,6 @@ name|fcntlrightsp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* For backward compatibility. */
-end_comment
-
-begin_function_decl
-name|int
-name|cap_new
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|cap_rights_t
-name|rights
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|cap_getrights
-parameter_list|(
-name|fd
-parameter_list|,
-name|rightsp
-parameter_list|)
-value|cap_rights_get((fd), (rightsp))
-end_define
 
 begin_macro
 name|__END_DECLS

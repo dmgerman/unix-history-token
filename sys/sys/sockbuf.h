@@ -351,7 +351,7 @@ name|int
 name|sb_lowat
 decl_stmt|;
 comment|/* (c/d) low water mark */
-name|int
+name|sbintime_t
 name|sb_timeo
 decl_stmt|;
 comment|/* (c/d) timeout for read/write */

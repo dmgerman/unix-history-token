@@ -34,6 +34,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|cam_ed
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|cam_sim
 struct_decl|;
 end_struct_decl
@@ -358,6 +364,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|xpt_path_comp_dev
+parameter_list|(
+name|struct
+name|cam_path
+modifier|*
+name|path
+parameter_list|,
+name|struct
+name|cam_ed
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|xpt_print_path
 parameter_list|(
@@ -365,6 +388,18 @@ name|struct
 name|cam_path
 modifier|*
 name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|xpt_print_device
+parameter_list|(
+name|struct
+name|cam_ed
+modifier|*
+name|device
 parameter_list|)
 function_decl|;
 end_function_decl

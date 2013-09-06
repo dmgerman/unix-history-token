@@ -190,6 +190,12 @@ name|__STDC_LIMIT_MACROS
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__INT64_C
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -240,6 +246,11 @@ name|c
 parameter_list|)
 value|(c ## ULL)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

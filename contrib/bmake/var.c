@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.183 2013/07/16 20:00:56 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.184 2013/09/04 15:38:26 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.183 2013/07/16 20:00:56 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.184 2013/09/04 15:38:26 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.183 2013/07/16 20:00:56 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.184 2013/09/04 15:38:26 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -251,6 +251,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * Internally, variables are contained in four different contexts.  *	1) the environment. They may not be changed. If an environment  *	    variable is appended-to, the result is placed in the global  *	    context.  *	2) the global context. Variables set in the Makefile are located in  *	    the global context. It is the penultimate context searched when  *	    substituting.  *	3) the command-line context. All variables set on the command line  *	   are placed in this context. They are UNALTERABLE once placed here.  *	4) the local context. Each target has associated with it a context  *	   list. On this list are located the structures describing such  *	   local variables as $(@) and $(*)  * The four contexts are searched in the reverse order from which they are  * listed.  */
+end_comment
+
+begin_decl_stmt
+name|GNode
+modifier|*
+name|VAR_INTERNAL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* variables from make itself */
 end_comment
 
 begin_decl_stmt
@@ -1453,6 +1464,35 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|var
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|ctxt
+operator|!=
+name|VAR_INTERNAL
+operator|)
+condition|)
+block|{
+comment|/* VAR_INTERNAL is subordinate to VAR_GLOBAL */
+name|var
+operator|=
+name|Hash_FindEntry
+argument_list|(
+operator|&
+name|VAR_INTERNAL
+operator|->
+name|context
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1582,6 +1622,34 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|var
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|ctxt
+operator|!=
+name|VAR_INTERNAL
+operator|)
+condition|)
+block|{
+name|var
+operator|=
+name|Hash_FindEntry
+argument_list|(
+operator|&
+name|VAR_INTERNAL
+operator|->
+name|context
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|var
@@ -16101,6 +16169,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|VAR_INTERNAL
+operator|=
+name|Targ_NewGN
+argument_list|(
+literal|"Internal"
+argument_list|)
+expr_stmt|;
 name|VAR_GLOBAL
 operator|=
 name|Targ_NewGN

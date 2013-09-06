@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.189 2013/06/18 19:31:27 sjg Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.191 2013/08/28 21:56:49 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.189 2013/06/18 19:31:27 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.191 2013/08/28 21:56:49 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.189 2013/06/18 19:31:27 sjg Exp $"
+literal|"$NetBSD: parse.c,v 1.191 2013/08/28 21:56:49 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5801,6 +5801,35 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SUNSHCMD
+if|if
+condition|(
+name|ch
+operator|==
+literal|':'
+operator|&&
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"sh"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|line
+operator|+=
+literal|2
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ch

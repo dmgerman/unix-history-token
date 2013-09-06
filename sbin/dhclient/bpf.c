@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dhcpd.h"
 end_include
 
@@ -459,6 +465,9 @@ modifier|*
 name|info
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|bpf_version
 name|v
@@ -606,6 +615,14 @@ argument_list|(
 literal|"Cannot lock bpf"
 argument_list|)
 expr_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_WRITE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cap_rights_limit
@@ -614,7 +631,8 @@ name|info
 operator|->
 name|wfdesc
 argument_list|,
-name|CAP_WRITE
+operator|&
+name|rights
 argument_list|)
 operator|<
 literal|0
@@ -889,6 +907,9 @@ block|,
 name|SIOCGIFMEDIA
 block|}
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|bpf_version
 name|v
@@ -1114,6 +1135,18 @@ argument_list|(
 literal|"Cannot lock bpf"
 argument_list|)
 expr_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_IOCTL
+argument_list|,
+name|CAP_POLL_EVENT
+argument_list|,
+name|CAP_READ
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cap_rights_limit
@@ -1122,11 +1155,8 @@ name|info
 operator|->
 name|rfdesc
 argument_list|,
-name|CAP_IOCTL
-operator||
-name|CAP_POLL_EVENT
-operator||
-name|CAP_READ
+operator|&
+name|rights
 argument_list|)
 operator|<
 literal|0
@@ -1135,13 +1165,11 @@ name|errno
 operator|!=
 name|ENOSYS
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"Can't limit bpf descriptor: %m"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cap_ioctls_limit

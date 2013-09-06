@@ -5611,8 +5611,8 @@ condition|(
 name|tcpopt
 operator|->
 name|wsf
-operator|>
-literal|0
+operator|<=
+literal|14
 condition|)
 name|opt2
 operator||=

@@ -18571,6 +18571,10 @@ case|:
 case|case
 name|PRIV_VFS_STICKYFILE
 case|:
+comment|/* 		 * As in the non-jail case, non-root users are expected to be 		 * able to read kernel/phyiscal memory (provided /dev/[k]mem 		 * exists in the jail and they have permission to access it). 		 */
+case|case
+name|PRIV_KMEM_READ
+case|:
 return|return
 operator|(
 literal|0

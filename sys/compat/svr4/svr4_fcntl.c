@@ -1206,6 +1206,9 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -1218,7 +1221,13 @@ name|td
 operator|->
 name|td_retval
 expr_stmt|;
-comment|/* 	 * If we ever want to support Capsicum on SVR4 processes (unlikely) 	 * or FreeBSD grows a native frevoke() (more likely), we will need a 	 * CAP_FREVOKE here. 	 * 	 * In the meantime, use CAP_ALL: if a SVR4 process wants to 	 * do an frevoke(), it needs to do it on either a regular file 	 * descriptor or a fully-privileged capability (which is effectively 	 * the same as a non-capability-restricted file descriptor). 	 */
+comment|/* 	 * If we ever want to support Capsicum on SVR4 processes (unlikely) 	 * or FreeBSD grows a native frevoke() (more likely), we will need a 	 * CAP_FREVOKE here. 	 * 	 * In the meantime, use CAP_ALL(): if a SVR4 process wants to 	 * do an frevoke(), it needs to do it on either a regular file 	 * descriptor or a fully-privileged capability (which is effectively 	 * the same as a non-capability-restricted file descriptor). 	 */
+name|CAP_ALL
+argument_list|(
+operator|&
+name|rights
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1230,7 +1239,8 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|CAP_ALL
+operator|&
+name|rights
 argument_list|,
 operator|&
 name|vp
@@ -1468,6 +1478,9 @@ name|struct
 name|ftruncate_args
 name|ft
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|retval
 operator|=
 name|td
@@ -1475,9 +1488,6 @@ operator|->
 name|td_retval
 expr_stmt|;
 comment|/* 	 * We only support truncating the file. 	 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|fget
@@ -1486,12 +1496,21 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FTRUNCATE
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -1823,6 +1842,9 @@ name|defined
 argument_list|(
 name|NOTYET
 argument_list|)
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1836,7 +1858,13 @@ name|td
 argument_list|,
 name|retval
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_IOCTL
+argument_list|)
 argument_list|,
 operator|&
 name|fp

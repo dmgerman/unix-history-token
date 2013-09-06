@@ -15,6 +15,12 @@ directive|define
 name|_SYS_KTRACE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/caprights.h>
+end_include
+
 begin_comment
 comment|/*  * operations to ktrace system call  (KTROP(op))  */
 end_comment
@@ -940,12 +946,27 @@ parameter_list|(
 name|enum
 name|ktr_cap_fail_type
 parameter_list|,
+specifier|const
 name|cap_rights_t
+modifier|*
 parameter_list|,
+specifier|const
 name|cap_rights_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ktrcaprights
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|ktrstruct("caprights", (s), sizeof(cap_rights_t))
+end_define
 
 begin_define
 define|#

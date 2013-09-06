@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -379,34 +379,35 @@ name|ptr
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ch
 decl_stmt|,
 name|doall
 decl_stmt|;
 name|int
 name|sflag
-init|=
-literal|0
 decl_stmt|,
 name|lflag
-init|=
-literal|0
 decl_stmt|,
 name|late
-init|=
-literal|0
 decl_stmt|,
 name|hflag
-init|=
-literal|0
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|etc_fstab
 decl_stmt|;
+name|sflag
+operator|=
+name|lflag
+operator|=
+name|late
+operator|=
+name|hflag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -440,6 +441,8 @@ name|ptr
 argument_list|,
 literal|"swapon"
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|which_prog
 operator|=
@@ -454,6 +457,8 @@ name|ptr
 argument_list|,
 literal|"swapoff"
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|which_prog
 operator|=
@@ -515,11 +520,9 @@ name|SWAPON
 expr_stmt|;
 block|}
 else|else
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'a'
@@ -656,11 +659,9 @@ name|SWAPOFF
 expr_stmt|;
 block|}
 else|else
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'F'
@@ -740,6 +741,8 @@ name|fs_type
 argument_list|,
 name|FSTAB_SW
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -752,14 +755,18 @@ name|fs_mntops
 argument_list|,
 literal|"noauto"
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 continue|continue;
+comment|/* 				 * Forcibly enable "late" option when file= is 				 * specified.  This is because mounting file 				 * systems with rw option is typically 				 * required to make the backing store ready. 				 */
 if|if
 condition|(
 name|which_prog
 operator|!=
 name|SWAPOFF
 operator|&&
+operator|(
 name|strstr
 argument_list|(
 name|fsp
@@ -768,9 +775,24 @@ name|fs_mntops
 argument_list|,
 literal|"late"
 argument_list|)
+operator|!=
+name|NULL
+operator|||
+name|strstr
+argument_list|(
+name|fsp
+operator|->
+name|fs_mntops
+argument_list|,
+literal|"file="
+argument_list|)
+operator|!=
+name|NULL
+operator|)
 operator|&&
-operator|!
 name|late
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|swfile
@@ -803,8 +825,9 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|!
 name|qflag
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
@@ -833,9 +856,10 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
 operator|*
 name|argv
+operator|==
+name|NULL
 condition|)
 name|usage
 argument_list|()
@@ -1312,8 +1336,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|qflag
+operator|==
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -1409,8 +1434,9 @@ block|{
 comment|/* bde device not found.  Ignore it. */
 if|if
 condition|(
-operator|!
 name|qflag
+operator|==
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -1481,12 +1507,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|args
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|token
 decl_stmt|,
@@ -1507,7 +1531,7 @@ decl_stmt|;
 name|u_long
 name|ul
 decl_stmt|;
-comment|/* Use built-in defaults for geli(8) */
+comment|/* Use built-in defaults for geli(8). */
 name|aalgo
 operator|=
 name|ealgo
@@ -1524,7 +1548,7 @@ name|lflag
 operator|=
 literal|""
 expr_stmt|;
-comment|/* We will always specify sectorsize */
+comment|/* We will always specify sectorsize. */
 name|sflag
 operator|=
 literal|" -s "
@@ -1863,7 +1887,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Use pagesize as default sectorsize */
+comment|/* Use pagesize as default sectorsize. */
 name|pagesize
 operator|=
 name|getpagesize
@@ -1966,17 +1990,16 @@ name|int
 name|doingall
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|dname
-decl_stmt|;
-name|char
-modifier|*
-name|args
-decl_stmt|;
 name|struct
 name|stat
 name|sb
+decl_stmt|;
+name|char
+modifier|*
+name|dname
+decl_stmt|,
+modifier|*
+name|args
 decl_stmt|;
 name|int
 name|error
@@ -1999,7 +2022,7 @@ name|SWAPON
 condition|)
 do|do
 block|{
-comment|/* Skip if the .eli device already exists */
+comment|/* Skip if the .eli device already exists. */
 if|if
 condition|(
 name|error
@@ -2080,11 +2103,12 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* error occured during creation */
+comment|/* error occured during creation. */
 if|if
 condition|(
-operator|!
 name|qflag
+operator|==
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -2645,8 +2669,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|qflag
+operator|==
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -3659,8 +3684,9 @@ name|EBUSY
 case|:
 if|if
 condition|(
-operator|!
 name|doingall
+operator|==
+literal|0
 condition|)
 name|warnx
 argument_list|(
@@ -3689,8 +3715,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
 name|doingall
+operator|==
+literal|0
 condition|)
 name|warn
 argument_list|(
@@ -3807,6 +3834,12 @@ name|long
 name|blocksize
 parameter_list|)
 block|{
+name|char
+name|tmp
+index|[
+literal|16
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|hflag
@@ -3814,12 +3847,6 @@ operator|==
 literal|'H'
 condition|)
 block|{
-name|char
-name|tmp
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|humanize_number
 argument_list|(
 name|tmp
@@ -3857,7 +3884,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|snprintf
 argument_list|(
 name|buf
@@ -3873,7 +3899,6 @@ operator|/
 name|blocksize
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4083,14 +4108,10 @@ break|break;
 block|}
 name|mibsize
 operator|=
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|mib
-operator|/
-sizeof|sizeof
-name|mib
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

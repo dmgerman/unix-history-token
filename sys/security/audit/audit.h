@@ -689,7 +689,8 @@ name|void
 name|audit_arg_rights
 parameter_list|(
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|)
 function_decl|;
 end_function_decl
