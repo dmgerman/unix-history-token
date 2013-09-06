@@ -203,11 +203,22 @@ directive|include
 file|<sys/mbuf.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__mips_n64
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/sf_buf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -2164,11 +2175,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Get an sf_buf from the freelist.  Will block if none are available.  */
 end_comment
@@ -2188,9 +2194,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|__mips_n64
 name|struct
 name|sf_buf
 modifier|*
@@ -2341,20 +2344,6 @@ operator|(
 name|sf
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-operator|(
-expr|struct
-name|sf_buf
-operator|*
-operator|)
-name|m
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2372,9 +2361,6 @@ modifier|*
 name|sf
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|__mips_n64
 name|pmap_qremove
 argument_list|(
 name|sf
@@ -2427,10 +2413,17 @@ operator|.
 name|sf_lock
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__mips_n64 */
+end_comment
 
 begin_comment
 comment|/*  * Software interrupt handler for queued VM system processing.  */
