@@ -87,6 +87,35 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|struct
+name|sf_buf
+modifier|*
+name|sf_buf_alloc
+parameter_list|(
+name|struct
+name|vm_page
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sf_buf_free
+parameter_list|(
+name|struct
+name|sf_buf
+modifier|*
+name|sf
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * On 32-bit OEA, the only purpose for which sf_buf is used is to implement  * an opaque pointer required by the machine-independent parts of the kernel.  * That pointer references the vm_page that is "mapped" by the sf_buf.  The  * actual mapping is provided by the direct virtual-to-physical mapping.    *  * On OEA64 and Book-E, we need to do something a little more complicated. Use  * the runtime-detected hw_direct_map to pick between the two cases. Our  * friends in vm_machdep.c will do the same to ensure nothing gets confused.  */
 end_comment
