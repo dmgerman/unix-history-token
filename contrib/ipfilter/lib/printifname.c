@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printifname.c,v 1.2.4.1 2006/06/16 17:21:12 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -41,7 +41,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
+name|PRINTF
 argument_list|(
 literal|"%s%s"
 argument_list|,
@@ -72,7 +72,7 @@ argument_list|,
 literal|"*"
 argument_list|)
 condition|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"(!)"
 argument_list|)

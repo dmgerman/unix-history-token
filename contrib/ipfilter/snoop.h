@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__SNOOP_H__
 end_define
 
 begin_comment
-comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id: snoop.h,v 2.3 2001/06/09 17:09:23 darrenr Exp $  */
+comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id$  */
 end_comment
 
 begin_struct

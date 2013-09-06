@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2003-2005 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: ipf_dotuning.c,v 1.2.4.3 2006/06/16 17:21:02 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -167,8 +167,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|ipf_perror_fd
 argument_list|(
+name|fd
+argument_list|,
+name|iocfn
+argument_list|,
 literal|"ioctl(SIOCIPFGETNEXT)"
 argument_list|)
 expr_stmt|;
@@ -288,8 +292,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|ipf_perror_fd
 argument_list|(
+name|fd
+argument_list|,
+name|iocfn
+argument_list|,
 literal|"ioctl(SIOCIPFSET)"
 argument_list|)
 expr_stmt|;
@@ -353,8 +361,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|ipf_perror_fd
 argument_list|(
+name|fd
+argument_list|,
+name|iocfn
+argument_list|,
 literal|"ioctl(SIOCIPFGET)"
 argument_list|)
 expr_stmt|;

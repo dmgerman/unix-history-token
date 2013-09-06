@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: remove_hashnode.c,v 1.1.4.1 2006/06/16 17:21:16 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -36,16 +36,6 @@ include|#
 directive|include
 file|"netinet/ip_htable.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|hashfd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -82,50 +72,11 @@ name|ipe
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|hashfd
+name|pool_open
+argument_list|()
 operator|==
 operator|-
 literal|1
-operator|)
-operator|&&
-operator|(
-operator|(
-name|opts
-operator|&
-name|OPT_DONOTHING
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|hashfd
-operator|=
-name|open
-argument_list|(
-name|IPLOOKUP_NAME
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|hashfd
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-operator|(
-name|opts
-operator|&
-name|OPT_DONOTHING
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 return|return
 operator|-
@@ -290,12 +241,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-call|(
-modifier|*
-name|iocfunc
-call|)
+name|pool_ioctl
 argument_list|(
-name|hashfd
+name|iocfunc
 argument_list|,
 name|SIOCLOOKUPDELNODE
 argument_list|,
@@ -303,6 +251,7 @@ operator|&
 name|op
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -313,15 +262,18 @@ name|OPT_DONOTHING
 operator|)
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"remove_hash:SIOCLOOKUPDELNODE"
-argument_list|)
-expr_stmt|;
 return|return
-operator|-
-literal|1
+name|ipf_perror_fd
+argument_list|(
+name|pool_fd
+argument_list|()
+argument_list|,
+name|iocfunc
+argument_list|,
+literal|"remove lookup hash node"
+argument_list|)
 return|;
+block|}
 block|}
 return|return
 literal|0

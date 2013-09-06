@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  */
 end_comment
 
 begin_comment
@@ -375,7 +375,7 @@ condition|(
 operator|!
 name|i
 condition|)
-name|fr_refcnt
+name|ipf_refcnt
 operator|--
 expr_stmt|;
 ifdef|#
@@ -431,7 +431,7 @@ condition|(
 operator|!
 name|i
 condition|)
-name|fr_refcnt
+name|ipf_refcnt
 operator|--
 expr_stmt|;
 ifdef|#

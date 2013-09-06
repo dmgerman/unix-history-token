@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: nat_setgroupmap.c,v 1.1.4.1 2006/06/16 17:21:07 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,11 +54,11 @@ if|if
 condition|(
 name|n
 operator|->
-name|in_outmsk
+name|in_nsrcmsk
 operator|==
 name|n
 operator|->
-name|in_inmsk
+name|in_osrcmsk
 condition|)
 name|n
 operator|->
@@ -85,14 +85,14 @@ name|ntohl
 argument_list|(
 name|n
 operator|->
-name|in_inmsk
+name|in_osrcmsk
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|n
 operator|->
-name|in_outmsk
+name|in_nsrcmsk
 operator|!=
 literal|0xffffffff
 condition|)
@@ -106,7 +106,7 @@ name|ntohl
 argument_list|(
 name|n
 operator|->
-name|in_outmsk
+name|in_nsrcmsk
 argument_list|)
 operator|+
 literal|1
@@ -155,12 +155,12 @@ name|ntohl
 argument_list|(
 name|n
 operator|->
-name|in_outmsk
+name|in_nsrcmsk
 argument_list|)
 expr_stmt|;
 name|n
 operator|->
-name|in_nip
+name|in_snip
 operator|=
 literal|0
 expr_stmt|;
@@ -174,7 +174,7 @@ name|in_ppip
 operator|=
 name|n
 operator|->
-name|in_pmin
+name|in_spmin
 operator|)
 condition|)
 name|n

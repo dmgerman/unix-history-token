@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: mlfk_rule.c,v 2.4.4.2 2004/04/16 23:32:08 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -115,6 +115,13 @@ directive|include
 file|"ip_rules.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|ipf_main_softc_t
+name|ipfmain
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -154,7 +161,9 @@ condition|(
 operator|!
 name|error
 condition|)
-name|fr_refcnt
+name|ipfmain
+operator|.
+name|ipf_refcnt
 operator|++
 expr_stmt|;
 break|break;
@@ -171,7 +180,9 @@ condition|(
 operator|!
 name|error
 condition|)
-name|fr_refcnt
+name|ipfmain
+operator|.
+name|ipf_refcnt
 operator|--
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2007 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -35,7 +35,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"TCP Entries per state\n"
 argument_list|)
@@ -53,14 +53,14 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|" %5d"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -78,7 +78,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|" %5d"
 argument_list|,
@@ -92,7 +92,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\n"
 argument_list|)
