@@ -238,15 +238,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|random_adaptor
-modifier|*
-name|random_adaptor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|eventhandler_tag
 name|attach_tag
 decl_stmt|;
@@ -271,36 +262,6 @@ modifier|*
 name|random_dev
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Used to fake out unused random calls in random_adaptor */
-end_comment
-
-begin_function
-name|void
-name|random_null_func
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|struct
-name|random_adaptor
-modifier|*
-name|random_get_active_adaptor
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|random_adaptor
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/* ARGSUSED */

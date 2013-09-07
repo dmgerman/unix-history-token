@@ -320,7 +320,7 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|0
+literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -403,7 +403,7 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|0
+literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt

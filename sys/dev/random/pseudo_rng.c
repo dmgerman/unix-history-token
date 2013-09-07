@@ -73,6 +73,19 @@ name|pseudo_random_block_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Used to fake out unused random calls in random_adaptor */
+end_comment
+
+begin_function
+name|void
+name|random_null_func
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
 begin_function
 specifier|static
 name|int

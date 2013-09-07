@@ -154,6 +154,14 @@ name|random_clist
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|random_adaptor
+modifier|*
+name|random_adaptor
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -809,8 +817,7 @@ name|NULL
 expr_stmt|;
 name|rsp
 operator|=
-name|random_get_active_adaptor
-argument_list|()
+name|random_adaptor
 expr_stmt|;
 if|if
 condition|(
