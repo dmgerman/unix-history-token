@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_log.c 544 2012-03-31 22:47:15Z des $  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_log.c 686 2013-07-11 16:36:02Z des $  */
 end_comment
 
 begin_ifdef
@@ -62,24 +62,11 @@ directive|include
 file|"openpam_impl.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OPENPAM_DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|openpam_debug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+begin_include
+include|#
+directive|include
+file|"openpam_asprintf.h"
+end_include
 
 begin_decl_stmt
 name|int
@@ -88,11 +75,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -128,6 +110,9 @@ name|ap
 decl_stmt|;
 name|int
 name|priority
+decl_stmt|;
+name|int
+name|serrno
 decl_stmt|;
 switch|switch
 condition|(
@@ -177,6 +162,10 @@ name|LOG_ERR
 expr_stmt|;
 break|break;
 block|}
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -197,6 +186,10 @@ name|va_end
 argument_list|(
 name|ap
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|serrno
 expr_stmt|;
 block|}
 end_function
@@ -287,16 +280,16 @@ name|LOG_ERR
 expr_stmt|;
 break|break;
 block|}
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
 argument_list|,
 name|fmt
 argument_list|)
-expr_stmt|;
-name|serrno
-operator|=
-name|errno
 expr_stmt|;
 if|if
 condition|(
@@ -355,6 +348,10 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
 block|}
 end_function
 
@@ -364,7 +361,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * The =openpam_log function logs messages using =syslog.  * It is primarily intended for internal use by the library and modules.  *  * The =level argument indicates the importance of the message.  * The following levels are defined:  *  *	=PAM_LOG_LIBDEBUG:  *		Debugging messages.  *		For internal use only.  *	=PAM_LOG_DEBUG:  *		Debugging messages.  *		These messages are normally not logged unless the global  *		integer variable :openpam_debug is set to a non-zero  *		value, in which case they are logged with a =syslog  *		priority of =LOG_DEBUG.  *	=PAM_LOG_VERBOSE:  *		Information about the progress of the authentication  *		process, or other non-essential messages.  *		These messages are logged with a =syslog priority of  *		=LOG_INFO.  *	=PAM_LOG_NOTICE:  *		Messages relating to non-fatal errors.  *		These messages are logged with a =syslog priority of  *		=LOG_NOTICE.  *	=PAM_LOG_ERROR:  *		Messages relating to serious errors.  *		These messages are logged with a =syslog priority of  *		=LOG_ERR.  *  * The remaining arguments are a =printf format string and the  * corresponding arguments.  */
+comment|/**  * The =openpam_log function logs messages using =syslog.  * It is primarily intended for internal use by the library and modules.  *  * The =level argument indicates the importance of the message.  * The following levels are defined:  *  *	=PAM_LOG_LIBDEBUG:  *		Debugging messages.  *		For internal use only.  *	=PAM_LOG_DEBUG:  *		Debugging messages.  *		These messages are normally not logged unless the global  *		integer variable :openpam_debug is set to a non-zero  *		value, in which case they are logged with a =syslog  *		priority of =LOG_DEBUG.  *	=PAM_LOG_VERBOSE:  *		Information about the progress of the authentication  *		process, or other non-essential messages.  *		These messages are logged with a =syslog priority of  *		=LOG_INFO.  *	=PAM_LOG_NOTICE:  *		Messages relating to non-fatal errors.  *		These messages are logged with a =syslog priority of  *		=LOG_NOTICE.  *	=PAM_LOG_ERROR:  *		Messages relating to serious errors.  *		These messages are logged with a =syslog priority of  *		=LOG_ERR.  *  * The remaining arguments are a =printf format string and the  * corresponding arguments.  *  * The =openpam_log function does not modify the value of :errno.  */
 end_comment
 
 end_unit
