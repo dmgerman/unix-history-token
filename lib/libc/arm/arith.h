@@ -16,10 +16,17 @@ argument_list|(
 name|__ARMEB__
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|__VFP_FP__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ARM_EABI__
+argument_list|)
+operator|)
 end_if
 
 begin_define
