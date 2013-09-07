@@ -941,7 +941,7 @@ expr_stmt|;
 comment|/* Enable tx/rx frame */
 name|val
 operator|=
-literal|0xF00010A8
+literal|0x000010A8
 expr_stmt|;
 name|val
 operator||=
@@ -954,14 +954,6 @@ expr_stmt|;
 name|val
 operator||=
 name|XAUI_CONFIG_PAD_64
-expr_stmt|;
-name|val
-operator||=
-name|XAUI_CONFIG_TFEN
-expr_stmt|;
-name|val
-operator||=
-name|XAUI_CONFIG_RFEN
 expr_stmt|;
 name|nlm_write_nae_reg
 argument_list|(
