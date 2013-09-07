@@ -75,6 +75,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|random_adaptor_choose
+parameter_list|(
+name|struct
+name|random_adaptor
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * random_adaptor's should be registered prior to  * random module (SI_SUB_DRIVERS/SI_ORDER_MIDDLE)  */
 end_comment

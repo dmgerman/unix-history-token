@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/random/random_adaptors.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/randomdev.h>
 end_include
 
@@ -277,6 +283,23 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+name|struct
+name|random_adaptor
+modifier|*
+name|random_get_active_adaptor
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|random_adaptor
+operator|)
+return|;
+block|}
 end_function
 
 begin_comment
@@ -902,7 +925,7 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|random_ident_hardware
+name|random_adaptor_choose
 argument_list|(
 operator|&
 name|random_adaptor
