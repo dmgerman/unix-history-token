@@ -834,46 +834,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Perform the guaranteed invalidation of all TLB entries.  This  * includes the global entries, and entries in all PCIDs, not only the  * current context.  The function works both on non-PCID CPUs and CPUs  * with the PCID turned off or on.  See IA-32 SDM Vol. 3a 4.10.4.1  * Operations that Invalidate TLBs and Paging-Structure Caches.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|invltlb_globpcid
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint64_t
-name|cr4
-decl_stmt|;
-name|cr4
-operator|=
-name|rcr4
-argument_list|()
-expr_stmt|;
-name|load_cr4
-argument_list|(
-name|cr4
-operator|&
-operator|~
-name|CR4_PGE
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Although preemption at this point could be detrimental to 	 * performance, it would not lead to an error.  PG_G is simply 	 * ignored if CR4.PGE is clear.  Moreover, in case this block 	 * is re-entered, the load_cr4() either above or below will 	 * modify CR4.PGE flushing the TLB. 	 */
-name|load_cr4
-argument_list|(
-name|cr4
-operator||
-name|CR4_PGE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int

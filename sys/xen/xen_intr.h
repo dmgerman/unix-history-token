@@ -218,18 +218,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Associate an interprocessor interrupt vector with an interrupt handler.  *  * \param dev       The device making this bind request.  * \param ipi       The interprocessor interrupt vector number of the  *                  interrupt source being hooked.  * \param cpu       The cpu receiving the IPI.  * \param filter    An interrupt filter handler.  Specify NULL  *                  to always dispatch to the ithread handler.  * \param irqflags  Interrupt handler flags.  See sys/bus.h.  * \param handlep   Pointer to an opaque handle used to manage this  *                  registration.  *  * \returns  0 on success, otherwise an errno.  */
+comment|/**  * Allocate a local event channel port for servicing interprocessor  * interupts and, if successful, associate the port with the specified  * interrupt handler.  *  * \param dev       The device making this bind request.  * \param cpu       The cpu receiving the IPI.  * \param filter    The interrupt filter servicing this IPI.  * \param irqflags  Interrupt handler flags.  See sys/bus.h.  * \param handlep   Pointer to an opaque handle used to manage this  *                  registration.  *  * \returns  0 on success, otherwise an errno.  */
 end_comment
 
 begin_function_decl
 name|int
-name|xen_intr_bind_ipi
+name|xen_intr_alloc_and_bind_ipi
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|u_int
-name|ipi
 parameter_list|,
 name|u_int
 name|cpu

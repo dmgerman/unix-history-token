@@ -2664,6 +2664,8 @@ operator|.
 name|vec
 operator|=
 name|msg
+operator|&
+literal|0xFF
 expr_stmt|;
 name|ppt
 operator|->

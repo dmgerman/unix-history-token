@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * $Id: ip_netbios_pxy.c,v 2.8.2.1 2005/08/20 13:48:23 darrenr Exp $  */
+comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * $Id$  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Paul J. Ledbetter III  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ip_netbios_pxy.c,v 2.8.2.1 2005/08/20 13:48:23 darrenr Exp $  */
+comment|/*-  * Copyright (c) 2002-2003 Paul J. Ledbetter III  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_define
@@ -14,8 +14,8 @@ name|IPF_NETBIOS_PROXY
 end_define
 
 begin_decl_stmt
-name|int
-name|ippr_netbios_init
+name|void
+name|ipf_p_netbios_main_load
 name|__P
 argument_list|(
 operator|(
@@ -27,7 +27,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ippr_netbios_fini
+name|ipf_p_netbios_main_unload
 name|__P
 argument_list|(
 operator|(
@@ -39,10 +39,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ippr_netbios_out
+name|ipf_p_netbios_out
 name|__P
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|fr_info_t
 operator|*
 operator|,
@@ -76,8 +79,8 @@ comment|/*  * Initialize local structures.  */
 end_comment
 
 begin_function
-name|int
-name|ippr_netbios_init
+name|void
+name|ipf_p_netbios_main_load
 parameter_list|()
 block|{
 name|bzero
@@ -127,15 +130,12 @@ name|netbios_proxy_init
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
 begin_function
 name|void
-name|ippr_netbios_fini
+name|ipf_p_netbios_main_unload
 parameter_list|()
 block|{
 if|if
@@ -163,14 +163,20 @@ end_function
 
 begin_function
 name|int
-name|ippr_netbios_out
+name|ipf_p_netbios_out
 parameter_list|(
+name|arg
+parameter_list|,
 name|fin
 parameter_list|,
 name|aps
 parameter_list|,
 name|nat
 parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 name|fr_info_t
 modifier|*
 name|fin

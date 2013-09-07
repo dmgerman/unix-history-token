@@ -3772,6 +3772,8 @@ name|stcb
 operator|->
 name|sctp_socket
 argument_list|)
+operator|>>
+name|SCTP_PARTIAL_DELIVERY_SHIFT
 argument_list|,
 name|stcb
 operator|->
@@ -12961,6 +12963,8 @@ name|stcb
 operator|->
 name|sctp_socket
 argument_list|)
+operator|>>
+name|SCTP_PARTIAL_DELIVERY_SHIFT
 argument_list|,
 name|stcb
 operator|->

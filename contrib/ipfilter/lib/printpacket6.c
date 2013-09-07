@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: printpacket6.c,v 1.3.4.1 2006/06/16 17:21:13 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -21,12 +21,16 @@ begin_function
 name|void
 name|printpacket6
 parameter_list|(
-name|ip
+name|dir
+parameter_list|,
+name|m
 parameter_list|)
-name|struct
-name|ip
+name|int
+name|dir
+decl_stmt|;
+name|mb_t
 modifier|*
-name|ip
+name|m
 decl_stmt|;
 block|{
 name|u_char
@@ -54,7 +58,9 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|ip
+name|m
+operator|->
+name|mb_data
 expr_stmt|;
 name|tcp
 operator|=
@@ -117,7 +123,34 @@ name|buf
 operator|+
 literal|4
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|dir
+condition|)
+name|PRINTF
+argument_list|(
+literal|"> "
+argument_list|)
+expr_stmt|;
+else|else
+name|PRINTF
+argument_list|(
+literal|"< "
+argument_list|)
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|"%s "
+argument_list|,
+name|IFNAME
+argument_list|(
+name|m
+operator|->
+name|mb_ifp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PRINTF
 argument_list|(
 literal|"ip6/%d %d %#x %d"
 argument_list|,
@@ -135,9 +168,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
-literal|" %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x"
+literal|" %x:%x:%x:%x:%x:%x:%x:%x"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -223,7 +256,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|",%d"
 argument_list|,
@@ -235,7 +268,7 @@ name|th_sport
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|">"
 argument_list|)
@@ -244,9 +277,9 @@ name|addrs
 operator|+=
 literal|8
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
-literal|" %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x"
+literal|" %x:%x:%x:%x:%x:%x:%x:%x"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -329,10 +362,7 @@ name|p
 operator|==
 name|IPPROTO_UDP
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|",%d"
 argument_list|,
