@@ -511,6 +511,9 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|EXT2FS_HTREE
 if|if
 condition|(
 name|EXT2_HAS_COMPAT_FEATURE
@@ -534,6 +537,8 @@ literal|1
 operator|)
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
