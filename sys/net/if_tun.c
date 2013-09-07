@@ -1868,13 +1868,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 name|sc
 operator|=
 name|malloc
