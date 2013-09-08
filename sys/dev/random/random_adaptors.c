@@ -624,7 +624,7 @@ name|adaptor
 condition|)
 name|printf
 argument_list|(
-literal|"Falling back to<%s> random adaptor"
+literal|"Falling back to<%s> random adaptor\n"
 argument_list|,
 operator|(
 operator|*
