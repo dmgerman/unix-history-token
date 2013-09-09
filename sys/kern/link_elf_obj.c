@@ -3740,13 +3740,15 @@ argument_list|(
 name|mapsize
 argument_list|)
 argument_list|,
-name|TRUE
+literal|0
+argument_list|,
+name|VMFS_OPTIMAL_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

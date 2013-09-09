@@ -1451,6 +1451,8 @@ modifier|*
 parameter_list|,
 name|vm_size_t
 parameter_list|,
+name|vm_offset_t
+parameter_list|,
 name|int
 parameter_list|,
 name|vm_prot_t

@@ -3794,6 +3794,15 @@ name|X
 argument_list|(
 argument|MAP_PREFAULT_READ
 argument_list|)
+ifdef|#
+directive|ifdef
+name|MAP_32BIT
+name|X
+argument_list|(
+argument|MAP_32BIT
+argument_list|)
+endif|#
+directive|endif
 name|XEND
 block|}
 decl_stmt|;

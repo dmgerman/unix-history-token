@@ -2386,7 +2386,9 @@ name|buffer
 argument_list|,
 name|size
 argument_list|,
-literal|1
+literal|0
+argument_list|,
+name|VMFS_ANY_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
