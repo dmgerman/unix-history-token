@@ -356,7 +356,7 @@ name|key_load_private
 argument_list|(
 name|fn
 argument_list|,
-name|NULL
+literal|""
 argument_list|,
 operator|&
 name|comment
