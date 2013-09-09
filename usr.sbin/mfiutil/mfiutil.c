@@ -218,7 +218,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    good<drive>              - mark a bad physical drive as good\n"
+literal|"    good<drive>              - set a failed/SYSPD drive as UNCONFIGURED\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -226,6 +226,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    rebuild<drive>           - mark failed drive ready for rebuild\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    syspd<drive>             - set drive into use as SYSPD JBOD\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -441,7 +448,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"mfiutil version 1.0.14"
+literal|"mfiutil version 1.0.15"
 argument_list|)
 expr_stmt|;
 ifdef|#
