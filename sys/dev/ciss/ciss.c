@@ -2093,6 +2093,96 @@ literal|"HP Smart Array P721m"
 block|}
 block|,
 block|{
+literal|0x103C
+block|,
+literal|0x1920
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P430i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1921
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P830i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1922
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P430"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1923
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P431"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1924
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P830"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1926
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P731m"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1928
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P230i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x1929
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P530"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x192A
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P531"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
