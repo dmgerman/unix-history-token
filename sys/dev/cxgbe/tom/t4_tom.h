@@ -336,8 +336,7 @@ argument_list|)
 name|link
 expr_stmt|;
 comment|/* toep_list */
-name|unsigned
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 comment|/* miscellaneous flags */
@@ -389,13 +388,25 @@ name|int
 name|tid
 decl_stmt|;
 comment|/* Connection identifier */
-name|unsigned
-name|int
+comment|/* tx credit handling */
+name|u_int
+name|tx_total
+decl_stmt|;
+comment|/* total tx WR credits (in 16B units) */
+name|u_int
 name|tx_credits
 decl_stmt|;
-comment|/* tx WR credits (in 16 byte units) remaining */
-name|unsigned
-name|int
+comment|/* tx WR credits (in 16B units) available */
+name|u_int
+name|tx_nocompl
+decl_stmt|;
+comment|/* tx WR credits since last compl request */
+name|u_int
+name|plen_nocompl
+decl_stmt|;
+comment|/* payload since last compl request */
+comment|/* rx credit handling */
+name|u_int
 name|sb_cc
 decl_stmt|;
 comment|/* last noted value of so_rcv->sb_cc */
@@ -403,13 +414,11 @@ name|int
 name|rx_credits
 decl_stmt|;
 comment|/* rx credits (in bytes) to be returned to hw */
-name|unsigned
-name|int
+name|u_int
 name|ulp_mode
 decl_stmt|;
 comment|/* ULP mode */
-name|unsigned
-name|int
+name|u_int
 name|ddp_flags
 decl_stmt|;
 name|struct
