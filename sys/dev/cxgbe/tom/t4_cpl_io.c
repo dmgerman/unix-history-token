@@ -3376,8 +3376,6 @@ operator|->
 name|sb_hiwat
 operator|/
 literal|8
-operator|*
-literal|7
 condition|)
 block|{
 name|int
