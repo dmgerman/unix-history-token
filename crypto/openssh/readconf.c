@@ -7236,6 +7236,27 @@ name|rekey_limit
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|HAVE_LDNS
+if|if
+condition|(
+name|options
+operator|->
+name|verify_host_key_dns
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* automatically trust a verified SSHFP record */
+name|options
+operator|->
+name|verify_host_key_dns
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|options
@@ -7251,6 +7272,8 @@ name|verify_host_key_dns
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|options
