@@ -1333,6 +1333,24 @@ operator|->
 name|ifr_addr
 expr_stmt|;
 break|break;
+case|case
+name|SIOCSIFADDR
+case|:
+case|case
+name|SIOCSIFBRDADDR
+case|:
+case|case
+name|SIOCSIFDSTADDR
+case|:
+case|case
+name|SIOCSIFNETMASK
+case|:
+comment|/* 		 * Although we should pass any non-INET6 ioctl requests 		 * down to driver, we filter some legacy INET requests. 		 * Drivers trust SIOCSIFADDR et al to come from an already 		 * privileged layer, and do not perform any credentials 		 * checks or input validation. 		 */
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 default|default:
 name|sa6
 operator|=
