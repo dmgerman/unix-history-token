@@ -619,7 +619,7 @@ block|,
 operator|.
 name|fo_sendfile
 operator|=
-name|invfo_sendfile
+name|vn_sendfile
 block|,
 operator|.
 name|fo_seek
