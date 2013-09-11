@@ -2833,5 +2833,20 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|ppt_num_devices
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|num_pptdevs
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
