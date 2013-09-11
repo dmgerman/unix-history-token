@@ -11081,6 +11081,10 @@ decl_stmt|;
 name|bool
 name|inflight_called
 decl_stmt|;
+name|pg
+operator|=
+name|NULL
+expr_stmt|;
 name|obj
 operator|=
 name|NULL
@@ -11112,6 +11116,10 @@ expr_stmt|;
 name|rem
 operator|=
 name|nbytes
+expr_stmt|;
+name|obj_size
+operator|=
+literal|0
 expr_stmt|;
 name|inflight_called
 operator|=
