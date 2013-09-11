@@ -1569,6 +1569,9 @@ name|binvp
 init|=
 name|NULL
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|credential_changing
 decl_stmt|;
@@ -1958,7 +1961,13 @@ name|args
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FEXECVE
+argument_list|)
 argument_list|,
 operator|&
 name|binvp

@@ -1055,6 +1055,9 @@ name|P_CONTROLT
 operator|)
 condition|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1076,7 +1079,13 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_IOCTL
+argument_list|)
 argument_list|,
 operator|&
 name|fp

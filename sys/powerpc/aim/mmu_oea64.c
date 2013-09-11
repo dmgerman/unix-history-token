@@ -823,7 +823,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|uint64_t
 name|moea64_large_page_size
 init|=
 literal|0
@@ -2639,9 +2639,7 @@ name|isync
 argument_list|()
 expr_stmt|;
 comment|/* FALLTHROUGH */
-case|case
-name|IBMCELLBE
-case|:
+default|default:
 name|moea64_large_page_size
 operator|=
 literal|0x1000000
@@ -2650,12 +2648,6 @@ comment|/* 16 MB */
 name|moea64_large_page_shift
 operator|=
 literal|24
-expr_stmt|;
-break|break;
-default|default:
-name|moea64_large_page_size
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|moea64_large_page_mask

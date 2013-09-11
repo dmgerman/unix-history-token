@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000-2004 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2000-2013 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -101,6 +101,129 @@ directive|include
 file|<dev/random/yarrow.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TIMEBIN
+value|16
+end_define
+
+begin_comment
+comment|/* max value for Pt/t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAST
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLOW
+value|1
+end_define
+
+begin_comment
+comment|/* This is the beastie that needs protecting. It contains all of the  * state that we are excited about.  * Exactly one is instantiated.  */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+name|random_state
+block|{
+union|union
+block|{
+name|uint8_t
+name|byte
+index|[
+name|BLOCKSIZE
+index|]
+decl_stmt|;
+name|uint64_t
+name|qword
+index|[
+name|BLOCKSIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+index|]
+decl_stmt|;
+block|}
+name|counter
+union|;
+comment|/* C */
+name|struct
+name|randomdev_key
+name|key
+decl_stmt|;
+comment|/* K */
+name|u_int
+name|gengateinterval
+decl_stmt|;
+comment|/* Pg */
+name|u_int
+name|bins
+decl_stmt|;
+comment|/* Pt/t */
+name|u_int
+name|outputblocks
+decl_stmt|;
+comment|/* count output blocks for gates */
+name|u_int
+name|slowoverthresh
+decl_stmt|;
+comment|/* slow pool overthreshhold reseed count */
+struct|struct
+name|pool
+block|{
+struct|struct
+name|source
+block|{
+name|u_int
+name|bits
+decl_stmt|;
+comment|/* estimated bits of entropy */
+name|u_int
+name|frac
+decl_stmt|;
+comment|/* fractional bits of entropy 					   (given as 1024/n) */
+block|}
+name|source
+index|[
+name|ENTROPYSOURCE
+index|]
+struct|;
+name|u_int
+name|thresh
+decl_stmt|;
+comment|/* pool reseed threshhold */
+name|struct
+name|randomdev_hash
+name|hash
+decl_stmt|;
+comment|/* accumulated entropy */
+block|}
+name|pool
+index|[
+literal|2
+index|]
+struct|;
+comment|/* pool[0] is fast, pool[1] is slow */
+name|u_int
+name|which
+decl_stmt|;
+comment|/* toggle - sets the current insertion pool */
+block|}
+name|random_state
+struct|;
+end_struct
+
 begin_expr_stmt
 name|RANDOM_CHECK_UINT
 argument_list|(
@@ -130,28 +253,52 @@ name|RANDOM_CHECK_UINT
 argument_list|(
 name|fastthresh
 argument_list|,
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 operator|/
 literal|4
 argument_list|,
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Bit counts */
+end_comment
 
 begin_expr_stmt
 name|RANDOM_CHECK_UINT
 argument_list|(
 name|slowthresh
 argument_list|,
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 operator|/
 literal|4
 argument_list|,
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Bit counts */
+end_comment
 
 begin_expr_stmt
 name|RANDOM_CHECK_UINT
@@ -164,18 +311,6 @@ literal|5
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Structure holding the entropy state */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|random_state
-name|random_state
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -207,6 +342,98 @@ name|mtx
 name|random_reseed_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 128-bit C = 0 */
+end_comment
+
+begin_comment
+comment|/* Nothing to see here, folks, just an ugly mess. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|clear_counter
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|random_state
+operator|.
+name|counter
+operator|.
+name|qword
+index|[
+literal|0
+index|]
+operator|=
+literal|0UL
+expr_stmt|;
+name|random_state
+operator|.
+name|counter
+operator|.
+name|qword
+index|[
+literal|1
+index|]
+operator|=
+literal|0UL
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* 128-bit C = C + 1 */
+end_comment
+
+begin_comment
+comment|/* Nothing to see here, folks, just an ugly mess. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|increment_counter
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|random_state
+operator|.
+name|counter
+operator|.
+name|qword
+index|[
+literal|0
+index|]
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|random_state
+operator|.
+name|counter
+operator|.
+name|qword
+index|[
+literal|0
+index|]
+condition|)
+name|random_state
+operator|.
+name|counter
+operator|.
+name|qword
+index|[
+literal|1
+index|]
+operator|++
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Process a single stochastic event off the harvest queue */
@@ -263,7 +490,7 @@ operator|->
 name|source
 index|]
 expr_stmt|;
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|random_state
@@ -287,7 +514,7 @@ name|entropy
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|random_state
@@ -328,18 +555,22 @@ name|event
 operator|->
 name|bits
 operator|+
+operator|(
 name|source
 operator|->
 name|frac
-operator|/
-literal|1024
+operator|>>
+literal|12
+operator|)
 expr_stmt|;
+comment|/* bits + frac/0x1000 */
 name|source
 operator|->
 name|frac
-operator|%=
-literal|1024
+operator|&=
+literal|0xFFF
 expr_stmt|;
+comment|/* Keep the fractional bits */
 comment|/* Count the over-threshold sources in each pool */
 for|for
 control|(
@@ -585,7 +816,11 @@ argument_list|,
 operator|(
 literal|3
 operator|*
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 operator|)
 operator|/
 literal|4
@@ -624,7 +859,11 @@ index|]
 operator|.
 name|thresh
 argument_list|,
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 argument_list|,
 name|random_check_uint_slowthresh
 argument_list|,
@@ -688,7 +927,11 @@ operator|=
 operator|(
 literal|3
 operator|*
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 operator|)
 operator|/
 literal|4
@@ -702,7 +945,11 @@ index|]
 operator|.
 name|thresh
 operator|=
+operator|(
 name|BLOCKSIZE
+operator|*
+literal|8
+operator|)
 expr_stmt|;
 name|random_state
 operator|.
@@ -730,7 +977,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|yarrow_hash_init
+name|randomdev_hash_init
 argument_list|(
 operator|&
 name|random_state
@@ -744,27 +991,8 @@ name|hash
 argument_list|)
 expr_stmt|;
 comment|/* Clear the counter */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-name|random_state
-operator|.
-name|counter
-index|[
-name|i
-index|]
-operator|=
-literal|0
+name|clear_counter
+argument_list|()
 expr_stmt|;
 comment|/* Set up a lock for the reseed process */
 name|mtx_init
@@ -772,7 +1000,7 @@ argument_list|(
 operator|&
 name|random_reseed_mtx
 argument_list|,
-literal|"random reseed"
+literal|"Yarrow reseed"
 argument_list|,
 name|NULL
 argument_list|,
@@ -809,7 +1037,7 @@ parameter_list|)
 block|{
 comment|/* Interrupt-context stack is a limited resource; make large 	 * structures static. 	 */
 specifier|static
-name|u_char
+name|uint8_t
 name|v
 index|[
 name|TIMEBIN
@@ -821,17 +1049,17 @@ decl_stmt|;
 comment|/* v[i] */
 specifier|static
 name|struct
-name|yarrowhash
+name|randomdev_hash
 name|context
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|hash
 index|[
 name|KEYSIZE
 index|]
 decl_stmt|;
 comment|/* h' */
-name|u_char
+name|uint8_t
 name|temp
 index|[
 name|KEYSIZE
@@ -852,7 +1080,7 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 1. Hash the accumulated entropy into v[0] */
-name|yarrow_hash_init
+name|randomdev_hash_init
 argument_list|(
 operator|&
 name|context
@@ -865,7 +1093,7 @@ name|fastslow
 operator|==
 name|SLOW
 condition|)
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -883,11 +1111,11 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|yarrowhash
+name|randomdev_hash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -905,11 +1133,11 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|yarrowhash
+name|randomdev_hash
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|yarrow_hash_finish
+name|randomdev_hash_finish
 argument_list|(
 operator|&
 name|context
@@ -951,14 +1179,14 @@ name|i
 operator|++
 control|)
 block|{
-name|yarrow_hash_init
+name|randomdev_hash_init
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
 comment|/* v[i] #= h(v[i - 1]) */
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -974,7 +1202,7 @@ name|KEYSIZE
 argument_list|)
 expr_stmt|;
 comment|/* v[i] #= h(v[0]) */
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -988,7 +1216,7 @@ name|KEYSIZE
 argument_list|)
 expr_stmt|;
 comment|/* v[i] #= h(i) */
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -1003,7 +1231,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Return the hashval */
-name|yarrow_hash_finish
+name|randomdev_hash_finish
 argument_list|(
 operator|&
 name|context
@@ -1016,13 +1244,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 3. Compute a new key; h' is the identity function here; 	 *    it is not being ignored! 	 */
-name|yarrow_hash_init
+name|randomdev_hash_init
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -1050,7 +1278,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|yarrow_hash_iterate
+name|randomdev_hash_iterate
 argument_list|(
 operator|&
 name|context
@@ -1064,7 +1292,7 @@ argument_list|,
 name|KEYSIZE
 argument_list|)
 expr_stmt|;
-name|yarrow_hash_finish
+name|randomdev_hash_finish
 argument_list|(
 operator|&
 name|context
@@ -1072,7 +1300,7 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-name|yarrow_encrypt_init
+name|randomdev_encrypt_init
 argument_list|(
 operator|&
 name|random_state
@@ -1083,29 +1311,10 @@ name|temp
 argument_list|)
 expr_stmt|;
 comment|/* 4. Recompute the counter */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-name|random_state
-operator|.
-name|counter
-index|[
-name|i
-index|]
-operator|=
-literal|0
+name|clear_counter
+argument_list|()
 expr_stmt|;
-name|yarrow_encrypt
+name|randomdev_encrypt
 argument_list|(
 operator|&
 name|random_state
@@ -1115,8 +1324,12 @@ argument_list|,
 name|random_state
 operator|.
 name|counter
+operator|.
+name|byte
 argument_list|,
 name|temp
+argument_list|,
+name|BLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1124,15 +1337,12 @@ argument_list|(
 name|random_state
 operator|.
 name|counter
+operator|.
+name|byte
 argument_list|,
 name|temp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 argument_list|)
 expr_stmt|;
 comment|/* 5. Reset entropy estimate accumulators to zero */
@@ -1250,7 +1460,7 @@ expr_stmt|;
 comment|/* 7. Dump to seed file */
 comment|/* XXX Not done here yet */
 comment|/* Unblock the device if it was blocked due to being unseeded */
-name|random_yarrow_unblock
+name|randomdev_unblock
 argument_list|()
 expr_stmt|;
 comment|/* Release the reseed mutex */
@@ -1292,7 +1502,7 @@ init|=
 literal|1
 decl_stmt|;
 specifier|static
-name|u_char
+name|uint8_t
 name|genval
 index|[
 name|KEYSIZE
@@ -1344,12 +1554,7 @@ name|size_t
 operator|)
 name|count
 operator|>=
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 condition|)
 block|{
 name|retval
@@ -1368,26 +1573,13 @@ name|count
 condition|;
 name|i
 operator|+=
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 control|)
 block|{
-name|random_state
-operator|.
-name|counter
-index|[
-literal|0
-index|]
-operator|++
+name|increment_counter
+argument_list|()
 expr_stmt|;
-name|yarrow_encrypt
+name|randomdev_encrypt
 argument_list|(
 operator|&
 name|random_state
@@ -1397,24 +1589,23 @@ argument_list|,
 name|random_state
 operator|.
 name|counter
+operator|.
+name|byte
 argument_list|,
 name|genval
+argument_list|,
+name|BLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|tomove
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|count
 operator|-
 name|i
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1475,15 +1666,10 @@ operator|!
 name|cur
 condition|)
 block|{
-name|random_state
-operator|.
-name|counter
-index|[
-literal|0
-index|]
-operator|++
+name|increment_counter
+argument_list|()
 expr_stmt|;
-name|yarrow_encrypt
+name|randomdev_encrypt
 argument_list|(
 operator|&
 name|random_state
@@ -1493,8 +1679,12 @@ argument_list|,
 name|random_state
 operator|.
 name|counter
+operator|.
+name|byte
 argument_list|,
 name|genval
+argument_list|,
+name|BLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1511,15 +1701,7 @@ argument_list|)
 expr_stmt|;
 name|cur
 operator|=
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 operator|-
 name|count
 expr_stmt|;
@@ -1568,15 +1750,7 @@ argument_list|,
 operator|&
 name|genval
 index|[
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 operator|-
 name|cur
 index|]
@@ -1616,7 +1790,7 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|temp
 index|[
 name|KEYSIZE
@@ -1634,23 +1808,13 @@ name|KEYSIZE
 condition|;
 name|i
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|random_state
-operator|.
-name|counter
-argument_list|)
+name|BLOCKSIZE
 control|)
 block|{
-name|random_state
-operator|.
-name|counter
-index|[
-literal|0
-index|]
-operator|++
+name|increment_counter
+argument_list|()
 expr_stmt|;
-name|yarrow_encrypt
+name|randomdev_encrypt
 argument_list|(
 operator|&
 name|random_state
@@ -1660,18 +1824,18 @@ argument_list|,
 name|random_state
 operator|.
 name|counter
+operator|.
+name|byte
 argument_list|,
-operator|&
-operator|(
 name|temp
-index|[
+operator|+
 name|i
-index|]
-operator|)
+argument_list|,
+name|BLOCKSIZE
 argument_list|)
 expr_stmt|;
 block|}
-name|yarrow_encrypt_init
+name|randomdev_encrypt_init
 argument_list|(
 operator|&
 name|random_state

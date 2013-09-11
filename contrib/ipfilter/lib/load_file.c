@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_file.c,v 1.1.2.1 2006/08/25 21:13:04 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: load_file.c,v 1.6.2.2 2012/07/22 08:04:24 darren_r Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"ipf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_function
@@ -171,6 +177,19 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* 		 * Remove trailing spaces 		 */
+for|for
+control|(
+init|;
+name|ISSPACE
+argument_list|(
+operator|*
+name|s
+argument_list|)
+condition|;
+name|s
+operator|--
+control|)
 operator|*
 name|s
 operator|=
@@ -202,7 +221,7 @@ name|t
 operator|=
 name|line
 init|;
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|t
@@ -234,39 +253,35 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Remove comment markers 		 */
-for|for
-control|(
 name|s
 operator|=
+name|strchr
+argument_list|(
 name|t
-init|;
-operator|*
-name|s
-condition|;
-name|s
-operator|++
-control|)
-block|{
+argument_list|,
+literal|'#'
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|*
 name|s
-operator|==
-literal|'#'
+operator|!=
+name|NULL
 condition|)
+block|{
 operator|*
 name|s
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 if|if
 condition|(
-operator|!
-operator|*
+name|s
+operator|==
 name|t
 condition|)
 continue|continue;
+block|}
 comment|/* 		 * Trim off tailing white spaces 		 */
 name|s
 operator|=
@@ -281,7 +296,7 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|s
@@ -293,24 +308,22 @@ operator|--
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-name|isdigit
-argument_list|(
-operator|*
-name|t
-argument_list|)
-condition|)
-block|{
 name|a
 operator|=
 name|alist_new
 argument_list|(
-literal|4
+name|AF_UNSPEC
 argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|!=
+name|NULL
+condition|)
+block|{
 name|a
 operator|->
 name|al_not
@@ -345,11 +358,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: unrecognised content line %d\n"
+literal|"%s:%d unrecognised content :%s\n"
 argument_list|,
 name|filename
 argument_list|,
 name|linenum
+argument_list|,
+name|t
 argument_list|)
 expr_stmt|;
 block|}

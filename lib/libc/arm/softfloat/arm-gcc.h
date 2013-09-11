@@ -274,6 +274,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__ARM_EABI__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__VFP_FP__
 argument_list|)
 operator|||

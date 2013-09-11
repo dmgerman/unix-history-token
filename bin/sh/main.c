@@ -906,7 +906,7 @@ if|if
 condition|(
 name|evalskip
 operator|==
-name|SKIPFILE
+name|SKIPRETURN
 condition|)
 name|evalskip
 operator|=

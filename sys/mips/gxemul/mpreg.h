@@ -99,6 +99,12 @@ name|GXEMUL_MP_DEV_CYCLES
 value|0x00d0
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LP64
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -120,6 +126,38 @@ parameter_list|)
 define|\
 value|(volatile uint64_t)*GXEMUL_MP_DEV_FUNCTION(f)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_MP_DEV_FUNCTION
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(volatile uint32_t *)MIPS_PHYS_TO_DIRECT_UNCACHED(GXEMUL_MP_DEV_BASE + (f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GXEMUL_MP_DEV_READ
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(volatile uint32_t)*GXEMUL_MP_DEV_FUNCTION(f)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -4724,6 +4724,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AUE_CAP_GETRIGHTS
+value|AUE_CAP_RIGHTS_GET
+end_define
+
+begin_define
+define|#
+directive|define
 name|AUE_CAP_ENTER
 value|43188
 end_define

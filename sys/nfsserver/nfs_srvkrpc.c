@@ -603,6 +603,9 @@ name|struct
 name|nfsd_nfsd_args
 name|nfsdarg
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -654,7 +657,13 @@ name|addsockarg
 operator|.
 name|sock
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_SOCK_SERVER
+argument_list|)
 argument_list|,
 operator|&
 name|fp

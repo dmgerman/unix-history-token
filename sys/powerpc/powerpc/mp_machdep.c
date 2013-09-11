@@ -308,6 +308,10 @@ directive|endif
 name|decr_ap_init
 argument_list|()
 expr_stmt|;
+comment|/* Give platform code a chance to do anything necessary */
+name|platform_smp_ap_init
+argument_list|()
+expr_stmt|;
 comment|/* Serialize console output and AP count increment */
 name|mtx_lock_spin
 argument_list|(

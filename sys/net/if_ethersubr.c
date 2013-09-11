@@ -3069,7 +3069,6 @@ operator||=
 name|M_PROMISC
 expr_stmt|;
 block|}
-comment|/* First chunk of an mbuf contains good entropy */
 if|if
 condition|(
 name|harvest
@@ -3078,15 +3077,20 @@ name|ethernet
 condition|)
 name|random_harvest
 argument_list|(
+operator|&
+operator|(
 name|m
+operator|->
+name|m_data
+operator|)
 argument_list|,
-literal|16
+literal|12
 argument_list|,
 literal|3
 argument_list|,
 literal|0
 argument_list|,
-name|RANDOM_NET
+name|RANDOM_NET_ETHER
 argument_list|)
 expr_stmt|;
 name|ether_demux

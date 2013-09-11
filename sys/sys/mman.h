@@ -335,6 +335,28 @@ begin_comment
 comment|/* prefault mapping for reading */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAP_32BIT
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* map in the low 2GB of address space */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Request specific alignment (n == log2 of the desired alignment).  *  * MAP_ALIGNED_SUPER requests optimal superpage alignment, but does  * not enforce a specific alignment.  */
 end_comment

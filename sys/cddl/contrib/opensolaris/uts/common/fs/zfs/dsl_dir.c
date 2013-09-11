@@ -3683,7 +3683,15 @@ name|tx
 operator|->
 name|tx_txg
 argument_list|,
-literal|1
+name|MSEC2NSEC
+argument_list|(
+literal|10
+argument_list|)
+argument_list|,
+name|MSEC2NSEC
+argument_list|(
+literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|err

@@ -13910,6 +13910,9 @@ decl_stmt|,
 modifier|*
 name|vfp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|filetype
 decl_stmt|,
@@ -13991,7 +13994,13 @@ name|cmd
 operator|.
 name|handle
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FSCK
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -15688,7 +15697,13 @@ name|cmd
 operator|.
 name|value
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FSCK
+argument_list|)
 argument_list|,
 operator|&
 name|vfp

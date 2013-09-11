@@ -1868,13 +1868,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 name|sc
 operator|=
 name|malloc
@@ -4766,7 +4759,6 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-comment|/* First chunk of an mbuf contains good junk */
 if|if
 condition|(
 name|harvest
@@ -4775,15 +4767,20 @@ name|point_to_point
 condition|)
 name|random_harvest
 argument_list|(
+operator|&
+operator|(
 name|m
+operator|->
+name|m_data
+operator|)
 argument_list|,
-literal|16
+literal|12
 argument_list|,
 literal|3
 argument_list|,
 literal|0
 argument_list|,
-name|RANDOM_NET
+name|RANDOM_NET_TUN
 argument_list|)
 expr_stmt|;
 name|ifp

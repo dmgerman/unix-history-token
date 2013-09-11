@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2001-2006 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsyncm.c,v 1.4.2.5 2006/08/26 11:21:14 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -601,6 +601,9 @@ literal|"header : %d bytes read (header = %d bytes)\n"
 argument_list|,
 name|n1
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1003,7 +1006,7 @@ condition|(
 name|terminate
 condition|)
 break|break;
-comment|/* move buffer to the front,we might need to make 			 * this more efficient, by using a rolling pointer 			 * over the buffer and only copying it, when 			 * we are reaching the end  			 */
+comment|/* move buffer to the front,we might need to make 			 * this more efficient, by using a rolling pointer 			 * over the buffer and only copying it, when 			 * we are reaching the end 			 */
 name|inbuf
 operator|-=
 name|n2

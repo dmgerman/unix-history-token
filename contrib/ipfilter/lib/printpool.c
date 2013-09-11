@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -12,20 +12,6 @@ include|#
 directive|include
 file|"ipf.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|PRINTF
-value|(void)printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRINTF
-value|(void)fprintf
-end_define
 
 begin_function
 name|ip_pool_t
@@ -39,6 +25,8 @@ parameter_list|,
 name|name
 parameter_list|,
 name|opts
+parameter_list|,
+name|fields
 parameter_list|)
 name|ip_pool_t
 modifier|*
@@ -54,6 +42,10 @@ decl_stmt|;
 name|int
 name|opts
 decl_stmt|;
+name|wordtab_t
+modifier|*
+name|fields
+decl_stmt|;
 block|{
 name|ip_pool_node_t
 modifier|*
@@ -63,6 +55,10 @@ modifier|*
 name|ipnpn
 decl_stmt|,
 name|ipn
+decl_stmt|,
+modifier|*
+modifier|*
+name|pnext
 decl_stmt|;
 name|ip_pool_t
 name|ipp
@@ -164,6 +160,13 @@ name|ipo_list
 operator|=
 name|NULL
 expr_stmt|;
+name|pnext
+operator|=
+operator|&
+name|ipp
+operator|.
+name|ipo_list
+expr_stmt|;
 while|while
 condition|(
 name|ipnpn
@@ -207,19 +210,23 @@ name|ipnp
 operator|->
 name|ipn_next
 expr_stmt|;
+operator|*
+name|pnext
+operator|=
+name|ipnp
+expr_stmt|;
+name|pnext
+operator|=
+operator|&
+name|ipnp
+operator|->
+name|ipn_next
+expr_stmt|;
 name|ipnp
 operator|->
 name|ipn_next
 operator|=
-name|ipp
-operator|.
-name|ipo_list
-expr_stmt|;
-name|ipp
-operator|.
-name|ipo_list
-operator|=
-name|ipnp
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -251,15 +258,25 @@ name|ipnp
 operator|!=
 name|NULL
 condition|;
+name|ipnp
+operator|=
+name|ipnpn
 control|)
 block|{
-name|ipnp
+name|ipnpn
 operator|=
 name|printpoolnode
 argument_list|(
 name|ipnp
 argument_list|,
 name|opts
+argument_list|,
+name|fields
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ipnp
 argument_list|)
 expr_stmt|;
 if|if

@@ -2699,6 +2699,9 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|error
 operator|=
 literal|0
@@ -2883,9 +2886,6 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * Linux follows Solaris mmap(2) description: 		 * The file descriptor fildes is opened with 		 * read permission, regardless of the 		 * protection options specified. 		 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|fget
@@ -2896,12 +2896,21 @@ name|bsd_args
 operator|.
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_MMAP
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)

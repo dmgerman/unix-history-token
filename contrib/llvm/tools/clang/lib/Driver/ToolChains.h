@@ -1802,6 +1802,14 @@ name|Args
 argument_list|)
 block|;
 name|virtual
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|bool
 name|IsMathErrnoDefault
 argument_list|()
@@ -1821,6 +1829,16 @@ return|return
 name|true
 return|;
 block|}
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|UseSjLjExceptions

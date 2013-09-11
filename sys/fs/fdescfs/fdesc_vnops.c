@@ -1250,7 +1250,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|fp
@@ -1746,6 +1746,9 @@ name|td
 init|=
 name|curthread
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|unsigned
 name|fd
 decl_stmt|;
@@ -1795,7 +1798,13 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_EXTATTR_SET
+argument_list|)
 argument_list|,
 operator|&
 name|fp

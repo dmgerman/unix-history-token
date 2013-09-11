@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printaps.c,v 1.4.2.1 2006/06/16 17:21:10 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,8 @@ parameter_list|(
 name|aps
 parameter_list|,
 name|opts
+parameter_list|,
+name|proto
 parameter_list|)
 name|ap_session_t
 modifier|*
@@ -59,6 +61,8 @@ name|aps
 decl_stmt|;
 name|int
 name|opts
+decl_stmt|,
+name|proto
 decl_stmt|;
 block|{
 name|ipsec_pxy_t
@@ -124,7 +128,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\tproxy %s/%d use %d flags %x\n"
 argument_list|,
@@ -145,25 +149,16 @@ operator|.
 name|apr_flags
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t\tproto %d flags %#x bytes "
-argument_list|,
-name|ap
-operator|.
-name|aps_p
-argument_list|,
-name|ap
-operator|.
-name|aps_flags
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_QUAD_T
-name|printf
+name|PRINTF
 argument_list|(
-literal|"%qu pkts %qu"
+literal|"\tbytes %"
+name|PRIu64
+literal|" pkts %"
+name|PRIu64
+literal|""
 argument_list|,
 operator|(
 name|unsigned
@@ -186,9 +181,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|PRINTF
 argument_list|(
-literal|"%lu pkts %lu"
+literal|"\tbytes %lu pkts %lu"
 argument_list|,
 name|ap
 operator|.
@@ -201,9 +196,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
+name|PRINTF
 argument_list|(
-literal|" data %s size %d\n"
+literal|" data %s\n"
 argument_list|,
 name|ap
 operator|.
@@ -212,18 +207,12 @@ condition|?
 literal|"YES"
 else|:
 literal|"NO"
-argument_list|,
-name|ap
-operator|.
-name|aps_psiz
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|ap
-operator|.
-name|aps_p
+name|proto
 operator|==
 name|IPPROTO_TCP
 operator|)
@@ -235,7 +224,7 @@ name|OPT_VERBOSE
 operator|)
 condition|)
 block|{
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tstate[%u,%u], sel[%d,%d]\n"
 argument_list|,
@@ -300,7 +289,7 @@ name|defined
 argument_list|(
 name|OpenBSD
 argument_list|)
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tseq: off %hd/%hd min %x/%x\n"
 argument_list|,
@@ -333,7 +322,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tack: off %hd/%hd min %x/%x\n"
 argument_list|,
@@ -368,7 +357,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tseq: off %hd/%hd min %lx/%lx\n"
 argument_list|,
@@ -401,7 +390,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tack: off %hd/%hd min %lx/%lx\n"
 argument_list|,
@@ -484,12 +473,12 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\tReal Audio Proxy:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tSeen PNA: %d\tVersion: %d\tEOS: %d\n"
 argument_list|,
@@ -506,7 +495,7 @@ operator|.
 name|rap_eos
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tMode: %#x\tSBF: %#x\n"
 argument_list|,
@@ -519,7 +508,7 @@ operator|.
 name|rap_sbf
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tPorts:pl %hu, pr %hu, sr %hu\n"
 argument_list|,
@@ -587,12 +576,12 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\tFTP Proxy:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tpassok: %d\n"
 argument_list|,
@@ -633,12 +622,12 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\tClient:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tseq %x (ack %x) len %d junk %d cmds %d\n"
 argument_list|,
@@ -694,7 +683,7 @@ operator|.
 name|ftps_cmds
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tbuf ["
 argument_list|)
@@ -715,12 +704,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"]\n\tServer:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tseq %x (ack %x) len %d junk %d cmds %d\n"
 argument_list|,
@@ -776,7 +765,7 @@ operator|.
 name|ftps_cmds
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tbuf ["
 argument_list|)
@@ -797,7 +786,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"]\n"
 argument_list|)
@@ -853,12 +842,12 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\tIPSec Proxy:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\t\tICookie %08x%08x RCookie %08x%08x %s\n"
 argument_list|,

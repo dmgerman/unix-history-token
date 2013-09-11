@@ -635,7 +635,11 @@ literal|"cpu"
 block|,
 name|ofw_cpu_methods
 block|,
-literal|0
+expr|sizeof
+operator|(
+expr|struct
+name|ofw_cpu_softc
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt

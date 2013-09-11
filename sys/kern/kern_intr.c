@@ -5482,7 +5482,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|RANDOM_INTERRUPT
+name|RANDOM_SWI
 argument_list|)
 expr_stmt|;
 block|}

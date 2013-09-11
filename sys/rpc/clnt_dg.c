@@ -3136,6 +3136,12 @@ goto|goto
 name|send_again
 goto|;
 block|}
+name|cu
+operator|->
+name|cu_sent
+operator|+=
+name|CWNDSCALE
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3340,6 +3346,12 @@ name|cs
 operator|->
 name|cs_lock
 argument_list|)
+expr_stmt|;
+name|cu
+operator|->
+name|cu_sent
+operator|+=
+name|CWNDSCALE
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(

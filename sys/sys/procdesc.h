@@ -216,6 +216,7 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
+modifier|*
 parameter_list|,
 name|struct
 name|proc
@@ -237,6 +238,7 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
+modifier|*
 parameter_list|,
 name|pid_t
 modifier|*

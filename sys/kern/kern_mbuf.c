@@ -218,7 +218,7 @@ name|maxmbufmem
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum real memory allocateable to various mbuf types"
+literal|"Maximum real memory allocatable to various mbuf types"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

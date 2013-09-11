@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: resend.c,v 2.8.2.3 2007/02/17 12:41:51 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,23 +67,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__osf__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"radix_ipf_local.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -201,22 +184,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|u_char
-name|pbuf
-index|[
-literal|65536
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 big packet */
-end_comment
-
-begin_decl_stmt
 name|void
-name|printpacket
+name|dumppacket
 name|__P
 argument_list|(
 operator|(
@@ -229,7 +198,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|printpacket
+name|dumppacket
 parameter_list|(
 name|ip
 parameter_list|)
@@ -540,6 +509,9 @@ name|len
 decl_stmt|,
 name|i
 decl_stmt|;
+name|mb_t
+name|mb
+decl_stmt|;
 if|if
 condition|(
 name|wfd
@@ -599,7 +571,9 @@ expr|struct
 name|ip
 operator|*
 operator|)
-name|pbuf
+name|mb
+operator|.
+name|mb_buf
 expr_stmt|;
 name|eh
 operator|=
@@ -690,16 +664,8 @@ operator|->
 name|r_readip
 call|)
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|pbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pbuf
-argument_list|)
+operator|&
+name|mb
 argument_list|,
 name|NULL
 argument_list|,
@@ -855,7 +821,7 @@ operator|*
 name|eh
 argument_list|)
 expr_stmt|;
-name|printpacket
+name|dumppacket
 argument_list|(
 name|ip
 argument_list|)
@@ -869,7 +835,9 @@ operator|(
 name|ether_header_t
 operator|*
 operator|)
-name|pbuf
+name|mb
+operator|.
+name|mb_buf
 expr_stmt|;
 name|len
 operator|=

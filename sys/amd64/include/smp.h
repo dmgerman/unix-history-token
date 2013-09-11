@@ -199,10 +199,22 @@ begin_decl_stmt
 name|inthand_t
 name|IDTVEC
 argument_list|(
+name|invltlb_pcid
+argument_list|)
+decl_stmt|,
+comment|/* TLB shootdowns - global, pcid enabled */
+name|IDTVEC
+argument_list|(
 name|invltlb
 argument_list|)
 decl_stmt|,
 comment|/* TLB shootdowns - global */
+name|IDTVEC
+argument_list|(
+name|invlpg_pcid
+argument_list|)
+decl_stmt|,
+comment|/* TLB shootdowns - 1 page, pcid enabled */
 name|IDTVEC
 argument_list|(
 name|invlpg

@@ -931,6 +931,8 @@ argument_list|(
 name|PF_LOCAL
 argument_list|,
 name|SOCK_STREAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_scan.h,v 2.9.2.2 2006/07/14 06:12:19 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -419,10 +419,13 @@ end_typedef
 begin_decl_stmt
 specifier|extern
 name|int
-name|fr_scan_ioctl
+name|ipf_scan_ioctl
 name|__P
 argument_list|(
 operator|(
+name|ipf_main_softc_t
+operator|*
+operator|,
 name|caddr_t
 operator|,
 name|ioctlcmd_t
@@ -441,7 +444,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsc_init
+name|ipf_scan_init
 name|__P
 argument_list|(
 operator|(
@@ -454,7 +457,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsc_attachis
+name|ipf_scan_attachis
 name|__P
 argument_list|(
 operator|(
@@ -469,7 +472,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsc_attachfr
+name|ipf_scan_attachfr
 name|__P
 argument_list|(
 operator|(
@@ -484,7 +487,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsc_detachis
+name|ipf_scan_detachis
 name|__P
 argument_list|(
 operator|(
@@ -499,7 +502,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsc_detachfr
+name|ipf_scan_detachfr
 name|__P
 argument_list|(
 operator|(
@@ -514,7 +517,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsc_packet
+name|ipf_scan_packet
 name|__P
 argument_list|(
 operator|(
@@ -533,11 +536,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|fr_scanunload
+name|ipf_scan_unload
 name|__P
 argument_list|(
 operator|(
-name|void
+name|ipf_main_softc_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

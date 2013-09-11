@@ -3478,13 +3478,10 @@ end_function
 
 begin_function
 name|int
-name|xen_intr_bind_ipi
+name|xen_intr_alloc_and_bind_ipi
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|u_int
-name|ipi
 parameter_list|,
 name|u_int
 name|cpu

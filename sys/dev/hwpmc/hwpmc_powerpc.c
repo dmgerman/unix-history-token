@@ -97,6 +97,15 @@ parameter_list|)
 value|(((vm_offset_t)(x))<= VM_MAX_KERNEL_ADDRESS&& \ 		((vm_offset_t)(x))>= VM_MIN_KERNEL_ADDRESS)
 end_define
 
+begin_decl_stmt
+name|struct
+name|powerpc_cpu
+modifier|*
+modifier|*
+name|powerpc_pcpu
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|pmc_save_kernel_callchain
