@@ -2862,22 +2862,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SIOCSIFDSTADDR
-case|:
-name|tuninit
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|TUNDEBUG
-argument_list|(
-name|ifp
-argument_list|,
-literal|"destination address set\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|SIOCSIFMTU
 case|:
 name|ifp
