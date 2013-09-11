@@ -334,7 +334,7 @@ name|LLE_ADDREF
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt>= 0,				\ 		("negative refcnt %d", (lle)->lle_refcnt));	\ 	(lle)->lle_refcnt++;					\ } while (0)
+value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt>= 0,				\ 	    ("negative refcnt %d on lle %p",			\ 	    (lle)->lle_refcnt, (lle)));				\ 	(lle)->lle_refcnt++;					\ } while (0)
 end_define
 
 begin_define
@@ -344,7 +344,7 @@ name|LLE_REMREF
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt> 1,				\ 		("bogus refcnt %d", (lle)->lle_refcnt));	\ 	(lle)->lle_refcnt--;					\ } while (0)
+value|do {					\ 	LLE_WLOCK_ASSERT(lle);					\ 	KASSERT((lle)->lle_refcnt> 0,				\ 	    ("bogus refcnt %d on lle %p",			\ 	    (lle)->lle_refcnt, (lle)));				\ 	(lle)->lle_refcnt--;					\ } while (0)
 end_define
 
 begin_define
@@ -354,9 +354,9 @@ name|LLE_FREE_LOCKED
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {				\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
+value|do {				\ 	if ((lle)->lle_refcnt == 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		LLE_REMREF(lle);				\ 		LLE_WUNLOCK(lle);				\ 	}							\
 comment|/* guard against invalid refs */
-value|\ 	lle = NULL;						\ } while (0)
+value|\ 	(lle) = NULL;						\ } while (0)
 end_define
 
 begin_define
@@ -635,6 +635,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LLE_LINKED
+value|0x0040
+end_define
+
+begin_comment
+comment|/* linked to lookup structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLE_EXCLUSIVE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* return lle xlocked  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LLE_DELETE
 value|0x4000
 end_define
@@ -652,17 +674,6 @@ end_define
 
 begin_comment
 comment|/* create on a lookup miss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLE_EXCLUSIVE
-value|0x2000
-end_define
-
-begin_comment
-comment|/* return lle xlocked  */
 end_comment
 
 begin_define

@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_vlan.h"
 end_include
 
@@ -146,6 +152,29 @@ include|#
 directive|include
 file|<net/vnet.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

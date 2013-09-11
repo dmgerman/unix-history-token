@@ -1659,6 +1659,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|IF_AFDATA_RLOCK_ASSERT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_assert(&(ifp)->if_afdata_lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_AFDATA_WLOCK_ASSERT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|rw_assert(&(ifp)->if_afdata_lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IF_AFDATA_UNLOCK_ASSERT
 parameter_list|(
 name|ifp
