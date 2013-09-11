@@ -337,6 +337,12 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -744,6 +750,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Default cpu_ops implementation. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|cpu_ops
+name|cpu_ops
+init|=
+block|{
+operator|.
+name|ipi_vectored
+operator|=
+name|lapic_ipi_vectored
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Local data and functions.  */
@@ -5082,7 +5106,9 @@ name|old_pending
 condition|)
 return|return;
 block|}
-name|lapic_ipi_vectored
+name|cpu_ops
+operator|.
+name|ipi_vectored
 argument_list|(
 name|ipi
 argument_list|,
@@ -6043,7 +6069,9 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|lapic_ipi_vectored
+name|cpu_ops
+operator|.
+name|ipi_vectored
 argument_list|(
 name|ipi
 argument_list|,

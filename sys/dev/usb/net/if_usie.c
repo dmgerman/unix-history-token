@@ -6704,9 +6704,6 @@ break|break;
 case|case
 name|SIOCSIFADDR
 case|:
-case|case
-name|SIOCSIFDSTADDR
-case|:
 break|break;
 default|default:
 return|return

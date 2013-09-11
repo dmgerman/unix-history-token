@@ -5782,6 +5782,7 @@ name|sc_transfer
 operator|.
 name|cmd_len
 expr_stmt|;
+comment|/* copy SCSI command data */
 name|memcpy
 argument_list|(
 name|sc
@@ -5803,13 +5804,14 @@ operator|.
 name|cmd_len
 argument_list|)
 expr_stmt|;
+comment|/* clear remaining command area */
 name|memset
 argument_list|(
 name|sc
 operator|->
-name|sc_transfer
+name|cbw
 operator|.
-name|cmd_data
+name|CBWCDB
 operator|+
 name|sc
 operator|->

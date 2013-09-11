@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2001-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_if
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfcomp.c,v 1.24.2.7 2007/05/01 22:15:00 darrenr Exp $"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,9 +478,9 @@ if|if
 condition|(
 name|fr
 operator|->
-name|fr_v
-operator|!=
-literal|4
+name|fr_family
+operator|==
+literal|6
 condition|)
 return|return;
 if|if
@@ -581,7 +581,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"* Copyright (C) 1993-2000 by Darren Reed.\n"
+literal|"* Copyright (C) 2012 by Darren Reed.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -899,6 +899,27 @@ argument_list|,
 literal|"#ifdef IPFILTER_COMPILED\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"extern ipf_main_softc_t ipfmain;\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 name|addrule
 argument_list|(
@@ -1067,6 +1088,14 @@ name|ulp
 decl_stmt|;
 name|char
 modifier|*
+name|ghead
+decl_stmt|;
+name|char
+modifier|*
+name|gname
+decl_stmt|;
+name|char
+modifier|*
 name|and
 decl_stmt|;
 name|int
@@ -1168,6 +1197,15 @@ name|fr_next
 operator|=
 name|NULL
 expr_stmt|;
+name|gname
+operator|=
+name|FR_NAME
+argument_list|(
+name|fr
+argument_list|,
+name|fr_group
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|g
@@ -1193,9 +1231,7 @@ name|g
 operator|->
 name|fg_name
 argument_list|,
-name|f
-operator|->
-name|fr_group
+name|gname
 argument_list|,
 name|FR_GROUPLEN
 argument_list|)
@@ -1258,15 +1294,13 @@ name|fg_head
 operator|=
 name|f
 expr_stmt|;
-name|bcopy
+name|strncpy
 argument_list|(
-name|f
-operator|->
-name|fr_group
-argument_list|,
 name|g
 operator|->
 name|fg_name
+argument_list|,
+name|gname
 argument_list|,
 name|FR_GROUPLEN
 argument_list|)
@@ -1449,9 +1483,19 @@ name|f
 operator|->
 name|fr_grhead
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
+name|ghead
+operator|=
+name|FR_NAME
+argument_list|(
+name|f
+argument_list|,
+name|fr_grhead
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|g
@@ -1477,9 +1521,7 @@ name|g
 operator|->
 name|fg_name
 argument_list|,
-name|f
-operator|->
-name|fr_grhead
+name|ghead
 argument_list|,
 name|FR_GROUPLEN
 argument_list|)
@@ -1540,15 +1582,13 @@ name|fg_head
 operator|=
 name|f
 expr_stmt|;
-name|bcopy
+name|strncpy
 argument_list|(
-name|f
-operator|->
-name|fr_grhead
-argument_list|,
 name|g
 operator|->
 name|fg_name
+argument_list|,
+name|ghead
 argument_list|,
 name|FR_GROUPLEN
 argument_list|)
@@ -3106,9 +3146,12 @@ name|fp
 argument_list|,
 literal|"(frentry_t *)&in_rule_%s_%d"
 argument_list|,
+name|FR_NAME
+argument_list|(
 name|f
-operator|->
+argument_list|,
 name|fr_group
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -3239,9 +3282,12 @@ name|fp
 argument_list|,
 literal|"(frentry_t *)&out_rule_%s_%d"
 argument_list|,
+name|FR_NAME
+argument_list|(
 name|f
-operator|->
+argument_list|,
 name|fr_group
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -3492,10 +3538,15 @@ name|FRC_IFN
 case|:
 if|if
 condition|(
-operator|*
 name|fr
 operator|->
-name|fr_ifname
+name|fr_ifnames
+index|[
+literal|0
+index|]
+operator|!=
+operator|-
+literal|1
 condition|)
 name|m
 index|[
@@ -5420,9 +5471,12 @@ literal|"in"
 else|:
 literal|"out"
 argument_list|,
+name|FR_NAME
+argument_list|(
 name|fr
-operator|->
+argument_list|,
 name|fr_group
+argument_list|)
 argument_list|,
 name|num
 argument_list|)
@@ -5446,9 +5500,12 @@ literal|"in"
 else|:
 literal|"out"
 argument_list|,
+name|FR_NAME
+argument_list|(
 name|fr
-operator|->
+argument_list|,
 name|fr_group
+argument_list|)
 argument_list|,
 name|num
 argument_list|)
@@ -6028,11 +6085,25 @@ name|strcmp
 argument_list|(
 name|fr1
 operator|->
-name|fr_ifname
+name|fr_names
+operator|+
+name|fr1
+operator|->
+name|fr_ifnames
+index|[
+literal|0
+index|]
 argument_list|,
 name|fr
 operator|->
-name|fr_ifname
+name|fr_names
+operator|+
+name|fr
+operator|->
+name|fr_ifnames
+index|[
+literal|0
+index|]
 argument_list|)
 condition|)
 block|{
@@ -6070,11 +6141,11 @@ operator|&&
 operator|(
 name|fr1
 operator|->
-name|fr_v
+name|fr_family
 operator|==
 name|fr
 operator|->
-name|fr_v
+name|fr_family
 operator|)
 condition|)
 block|{
@@ -7493,11 +7564,6 @@ name|fg_name
 expr_stmt|;
 name|dogrp
 operator|=
-operator|*
-name|group
-condition|?
-literal|1
-else|:
 literal|0
 expr_stmt|;
 if|if
@@ -7672,7 +7738,23 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ 		for (j = i + 1; j< max; j++)\n\ 			if (strncmp(fp->fr_group,\n\ 				    ipf_rules_%s_%s[j]->fr_group,\n\ 				    FR_GROUPLEN) == 0) {\n\ 				fp->fr_next = ipf_rules_%s_%s[j];\n\ 				break;\n\ 			}\n"
+literal|"\ 		for (j = i + 1; j< max; j++)\n\ 			if (strncmp(fp->fr_names + fp->fr_group,\n\ 				    ipf_rules_%s_%s[j]->fr_names +\n\ 				    ipf_rules_%s_%s[j]->fr_group,\n\ 				    FR_GROUPLEN) == 0) {\n\ 				if (ipf_rules_%s_%s[j] != NULL)\n\ 					ipf_rules_%s_%s[j]->fr_pnext =\n\&fp->fr_next;\n\ 				fp->fr_pnext =&ipf_rules_%s_%s[j];\n\ 				fp->fr_next = ipf_rules_%s_%s[j];\n\ 				break;\n\ 			}\n"
+argument_list|,
+name|instr
+argument_list|,
+name|group
+argument_list|,
+name|instr
+argument_list|,
+name|group
+argument_list|,
+name|instr
+argument_list|,
+name|group
+argument_list|,
+name|instr
+argument_list|,
+name|group
 argument_list|,
 name|instr
 argument_list|,
@@ -7691,7 +7773,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ \n\ 		if (fp->fr_grhead != 0) {\n\ 			fg = fr_addgroup(fp->fr_grhead, fp, FR_INQUE,\n\ 					 IPL_LOGIPF, 0);\n\ 			if (fg != NULL)\n\ 				fp->fr_grp =&fg->fg_start;\n\ 		}\n"
+literal|"\ \n\ 		if (fp->fr_grhead != -1) {\n\ 			fg = fr_addgroup(fp->fr_names + fp->fr_grhead,\n\ 					 fp, FR_INQUE, IPL_LOGIPF, 0);\n\ 			if (fg != NULL)\n\ 				fp->fr_grp =&fg->fg_start;\n\ 		}\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -7709,7 +7791,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ 	bzero((char *)fp, sizeof(*fp));\n\ 	fp->fr_type = FR_T_CALLFUNC|FR_T_BUILTIN;\n\ 	fp->fr_flags = FR_%sQUE|FR_NOMATCH;\n\ 	fp->fr_data = (void *)ipf_rules_%s_%s[0];\n"
+literal|"\ 	bzero((char *)fp, sizeof(*fp));\n\ 	fp->fr_type = FR_T_CALLFUNC_BUILTIN;\n\ 	fp->fr_flags = FR_%sQUE|FR_NOMATCH;\n\ 	fp->fr_data = (void *)ipf_rules_%s_%s[0];\n"
 argument_list|,
 operator|(
 name|in
@@ -7741,7 +7823,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ 	fp->fr_v = 4;\n\ 	fp->fr_func = (ipfunc_t)ipfrule_match_%s_%s;\n\ 	err = frrequest(IPL_LOGIPF, SIOCADDFR, (caddr_t)fp, fr_active, 0);\n"
+literal|"\ 	fp->fr_family = AF_INET;\n\ 	fp->fr_func = (ipfunc_t)ipfrule_match_%s_%s;\n\ 	err = frrequest(&ipfmain, IPL_LOGIPF, SIOCADDFR, (caddr_t)fp,\n\ 			ipfmain.ipf_active, 0);\n"
 argument_list|,
 name|instr
 argument_list|,
@@ -7797,7 +7879,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ 		i = sizeof(ipf_rules_%s_%s)/sizeof(frentry_t *) - 1;\n\ 		for (; i>= 0; i--) {\n\ 			fp = ipf_rules_%s_%s[i];\n\ 			if (fp->fr_ref> 1) {\n\ 				err = EBUSY;\n\ 				break;\n\ 			}\n\ 		}\n\ 	}\n\ 	if (err == 0)\n\ 		err = frrequest(IPL_LOGIPF, SIOCDELFR,\n\ 				(caddr_t)&ipfrule_%s_%s, fr_active, 0);\n"
+literal|"\ 		i = sizeof(ipf_rules_%s_%s)/sizeof(frentry_t *) - 1;\n\ 		for (; i>= 0; i--) {\n\ 			fp = ipf_rules_%s_%s[i];\n\ 			if (fp->fr_ref> 1) {\n\ 				err = EBUSY;\n\ 				break;\n\ 			}\n\ 		}\n\ 	}\n\ 	if (err == 0)\n\ 		err = frrequest(&ipfmain, IPL_LOGIPF, SIOCDELFR,\n\ 				(caddr_t)&ipfrule_%s_%s,\n\ 				ipfmain.ipf_active, 0);\n"
 argument_list|,
 name|instr
 argument_list|,

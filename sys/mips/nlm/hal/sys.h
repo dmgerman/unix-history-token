@@ -428,6 +428,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYS_PLL_DFS_BYP_CTRL
+value|0x3a
+end_define
+
+begin_comment
+comment|/* Bx stepping */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SYS_UCO_INSTR
 value|0x3b
 end_define
@@ -445,6 +456,17 @@ directive|define
 name|SYS_MEM_BIST1
 value|0x3d
 end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_PLL_DFS_DIV_VALUE
+value|0x3d
+end_define
+
+begin_comment
+comment|/* Bx stepping */
+end_comment
 
 begin_define
 define|#

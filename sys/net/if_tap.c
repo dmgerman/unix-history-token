@@ -1943,13 +1943,6 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 comment|/* allocate driver storage and create device */
 name|tp
 operator|=

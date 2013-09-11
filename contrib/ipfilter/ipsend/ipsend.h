@@ -83,10 +83,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX:	The following is needed by tcpip.h */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|"tcpip.h"
+file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"netinet/tcpip.h"
 end_include
 
 begin_include

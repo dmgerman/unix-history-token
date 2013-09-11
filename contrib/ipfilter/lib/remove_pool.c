@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2003 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: remove_pool.c,v 1.1.4.1 2006/06/16 17:21:16 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -37,16 +37,6 @@ directive|include
 file|"netinet/ip_htable.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|poolfd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|remove_pool
@@ -71,50 +61,11 @@ name|pool
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|poolfd
+name|pool_open
+argument_list|()
 operator|==
 operator|-
 literal|1
-operator|)
-operator|&&
-operator|(
-operator|(
-name|opts
-operator|&
-name|OPT_DONOTHING
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-name|poolfd
-operator|=
-name|open
-argument_list|(
-name|IPLOOKUP_NAME
-argument_list|,
-name|O_RDWR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|poolfd
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-operator|(
-name|opts
-operator|&
-name|OPT_DONOTHING
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 return|return
 operator|-
@@ -219,12 +170,9 @@ name|ipo_flags
 expr_stmt|;
 if|if
 condition|(
-call|(
-modifier|*
-name|iocfunc
-call|)
+name|pool_ioctl
 argument_list|(
-name|poolfd
+name|iocfunc
 argument_list|,
 name|SIOCLOOKUPDELTABLE
 argument_list|,
@@ -232,6 +180,7 @@ operator|&
 name|op
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -243,15 +192,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"remove_pool:SIOCLOOKUPDELTABLE"
-argument_list|)
-expr_stmt|;
 return|return
-operator|-
-literal|1
+name|ipf_perror_fd
+argument_list|(
+name|pool_fd
+argument_list|()
+argument_list|,
+name|iocfunc
+argument_list|,
+literal|"delete lookup pool"
+argument_list|)
 return|;
+block|}
 block|}
 return|return
 literal|0

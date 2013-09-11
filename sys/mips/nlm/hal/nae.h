@@ -2890,6 +2890,20 @@ name|XLP_STORM_MAX_PORTS
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_FREE_FIFO_POOL_8XX
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_FREE_FIFO_POOL_3XX
+value|9
+end_define
+
 begin_if
 if|#
 directive|if
@@ -2999,6 +3013,11 @@ begin_enum
 enum|enum
 name|nblock_type
 block|{
+name|UNKNOWN
+init|=
+literal|0
+block|,
+comment|/* DONT MAKE IT NON-ZERO */
 name|SGMIIC
 init|=
 literal|1
@@ -3172,6 +3191,28 @@ begin_struct
 struct|struct
 name|nae_port_config
 block|{
+name|int
+name|node
+decl_stmt|;
+comment|/* node id (quickread) */
+name|int
+name|block
+decl_stmt|;
+comment|/* network block id (quickread) */
+name|int
+name|port
+decl_stmt|;
+comment|/* port id - among the 18 in XLP */
+name|int
+name|type
+decl_stmt|;
+comment|/* port type - see xlp_gmac_port_types */
+name|int
+name|mdio_bus
+decl_stmt|;
+name|int
+name|phy_addr
+decl_stmt|;
 name|int
 name|num_channels
 decl_stmt|;
@@ -3479,8 +3520,6 @@ name|void
 name|nlm_setup_freein_fifo_cfg
 parameter_list|(
 name|uint64_t
-parameter_list|,
-name|int
 parameter_list|,
 name|struct
 name|nae_port_config

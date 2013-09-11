@@ -619,7 +619,7 @@ block|,
 operator|.
 name|fo_sendfile
 operator|=
-name|invfo_sendfile
+name|vn_sendfile
 block|,
 operator|.
 name|fo_seek
@@ -4690,6 +4690,8 @@ operator|&
 name|kva
 argument_list|,
 name|size
+argument_list|,
+literal|0
 argument_list|,
 name|VMFS_OPTIMAL_SPACE
 argument_list|,

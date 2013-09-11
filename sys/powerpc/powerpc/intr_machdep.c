@@ -608,7 +608,7 @@ block|{
 name|char
 name|intrname
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 name|struct

@@ -6460,9 +6460,6 @@ block|{
 case|case
 name|SIOCAIFADDR
 case|:
-case|case
-name|SIOCSIFDSTADDR
-case|:
 break|break;
 case|case
 name|SIOCSIFADDR

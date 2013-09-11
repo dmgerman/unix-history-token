@@ -536,6 +536,19 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|platform_smp_ap_init
+parameter_list|()
+block|{
+name|PLATFORM_SMP_AP_INIT
+argument_list|(
+name|plat_obj
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef

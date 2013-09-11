@@ -487,6 +487,8 @@ name|map_addr
 argument_list|,
 name|map_len
 argument_list|,
+literal|0
+argument_list|,
 name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
@@ -2379,6 +2381,8 @@ operator|&
 name|hole
 argument_list|,
 name|PAGE_SIZE
+argument_list|,
+literal|0
 argument_list|,
 name|VMFS_NO_SPACE
 argument_list|,

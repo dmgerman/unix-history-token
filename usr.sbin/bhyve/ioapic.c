@@ -346,7 +346,7 @@ name|pin
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * XXX 	 * We only deal with: 	 * - edge triggered interrupts 	 * - physical destination mode 	 * - fixed delivery mode 	 */
+comment|/* 	 * XXX 	 * We only deal with: 	 * - edge triggered interrupts 	 * - fixed delivery mode 	 *  Level-triggered sources will work so long as there is 	 * no sharing. 	 */
 name|low
 operator|=
 name|ioapic
@@ -376,14 +376,6 @@ name|IOART_INTMASK
 operator|)
 operator|==
 name|IOART_INTMCLR
-operator|&&
-operator|(
-name|low
-operator|&
-name|IOART_TRGRMOD
-operator|)
-operator|==
-name|IOART_TRGREDG
 operator|&&
 operator|(
 name|low

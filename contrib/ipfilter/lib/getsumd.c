@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: getsumd.c,v 1.2.4.1 2006/06/16 17:21:01 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include

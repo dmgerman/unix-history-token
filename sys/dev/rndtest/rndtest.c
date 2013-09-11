@@ -700,6 +700,8 @@ argument_list|,
 name|len
 operator|*
 name|NBBY
+operator|/
+literal|2
 argument_list|,
 literal|0
 argument_list|,

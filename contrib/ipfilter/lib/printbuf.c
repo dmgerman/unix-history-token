@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000-2004 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printbuf.c,v 1.5.4.2 2006/06/16 17:21:10 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -42,7 +42,8 @@ block|{
 name|char
 modifier|*
 name|s
-decl_stmt|,
+decl_stmt|;
+name|int
 name|c
 decl_stmt|;
 name|int
@@ -72,7 +73,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ISPRINT
+name|isprint
 argument_list|(
 name|c
 argument_list|)
@@ -83,7 +84,7 @@ name|c
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\\%03o"
 argument_list|,

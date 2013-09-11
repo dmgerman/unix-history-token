@@ -532,6 +532,9 @@ case|:
 case|case
 name|CPUID_0000_000A
 case|:
+case|case
+name|CPUID_0000_000D
+case|:
 comment|/* 			 * Handle the access, but report 0 for 			 * all options 			 */
 name|regs
 index|[

@@ -3217,10 +3217,7 @@ name|errmsg
 argument_list|,
 literal|"unknown file system"
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|errmsg
-argument_list|)
+name|ERRMSGL
 argument_list|)
 expr_stmt|;
 name|error

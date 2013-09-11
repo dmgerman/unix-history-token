@@ -774,7 +774,7 @@ name|vmspace
 operator|->
 name|vm_map
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -786,6 +786,8 @@ operator|<<
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,

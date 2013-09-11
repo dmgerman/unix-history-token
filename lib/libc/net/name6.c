@@ -789,6 +789,8 @@ argument_list|(
 name|af
 argument_list|,
 name|SOCK_DGRAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -4415,6 +4417,8 @@ operator|.
 name|ss_family
 argument_list|,
 name|SOCK_DGRAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 name|IPPROTO_UDP
 argument_list|)

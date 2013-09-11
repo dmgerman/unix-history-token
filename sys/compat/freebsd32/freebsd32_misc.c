@@ -2641,7 +2641,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -2650,7 +2650,9 @@ name|addr
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|prot
 argument_list|,
@@ -3138,7 +3140,7 @@ name|vm_map_find
 argument_list|(
 name|map
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -3149,7 +3151,9 @@ name|end
 operator|-
 name|start
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|prot
 argument_list|,
