@@ -4264,6 +4264,11 @@ operator|->
 name|luns
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1000039
 if|if
 condition|(
 operator|(
@@ -4276,6 +4281,8 @@ operator|)
 operator|==
 literal|0
 condition|)
+endif|#
+directive|endif
 name|mpssas_rescan_target
 argument_list|(
 name|sc
