@@ -17836,7 +17836,7 @@ name|p
 operator|->
 name|idtype
 expr_stmt|;
-comment|/* int */
+comment|/* idtype_t */
 name|iarg
 index|[
 literal|1
@@ -31167,7 +31167,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"int"
+literal|"idtype_t"
 expr_stmt|;
 break|break;
 case|case
