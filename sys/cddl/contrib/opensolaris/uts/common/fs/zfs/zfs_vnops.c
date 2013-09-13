@@ -6404,7 +6404,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|zfs_vnode_lock
+name|vn_lock
 argument_list|(
 operator|*
 name|vpp
