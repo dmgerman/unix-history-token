@@ -152,9 +152,10 @@ block|{
 name|struct
 name|pidfh
 modifier|*
+name|ppfh
+decl_stmt|,
+modifier|*
 name|pfh
-init|=
-name|NULL
 decl_stmt|;
 name|sigset_t
 name|mask
@@ -176,6 +177,9 @@ modifier|*
 name|pidfile
 decl_stmt|,
 modifier|*
+name|ppidfile
+decl_stmt|,
+modifier|*
 name|user
 decl_stmt|;
 name|pid_t
@@ -193,6 +197,14 @@ name|restart
 operator|=
 literal|0
 expr_stmt|;
+name|ppfh
+operator|=
+name|pfh
+operator|=
+name|NULL
+expr_stmt|;
+name|ppidfile
+operator|=
 name|pidfile
 operator|=
 name|user
@@ -210,7 +222,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cfp:ru:"
+literal|"cfp:P:ru:"
 argument_list|)
 operator|)
 operator|!=
@@ -243,6 +255,14 @@ case|case
 literal|'p'
 case|:
 name|pidfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|ppidfile
 operator|=
 name|optarg
 expr_stmt|;
@@ -286,6 +306,8 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|ppfh
+operator|=
 name|pfh
 operator|=
 name|NULL
@@ -341,6 +363,61 @@ argument_list|,
 literal|"pidfile ``%s''"
 argument_list|,
 name|pidfile
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* do same for actual daemon process */
+if|if
+condition|(
+name|ppidfile
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ppfh
+operator|=
+name|pidfile_open
+argument_list|(
+name|ppidfile
+argument_list|,
+literal|0600
+argument_list|,
+operator|&
+name|otherpid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ppfh
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EEXIST
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|3
+argument_list|,
+literal|"process already running, pid: %d"
+argument_list|,
+name|otherpid
+argument_list|)
+expr_stmt|;
+block|}
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"ppidfile ``%s''"
+argument_list|,
+name|ppidfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -585,6 +662,18 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* write out parent pidfile if needed */
+if|if
+condition|(
+name|ppidfile
+operator|!=
+name|NULL
+condition|)
+name|pidfile_write
+argument_list|(
+name|ppfh
+argument_list|)
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s[%d]"
@@ -624,6 +713,11 @@ block|}
 name|pidfile_remove
 argument_list|(
 name|pfh
+argument_list|)
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|ppfh
 argument_list|)
 expr_stmt|;
 name|exit
@@ -877,8 +971,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: daemon [-cfr] [-p pidfile] [-u user] command "
-literal|"arguments ...\n"
+literal|"usage: daemon [-cfr] [-p child_pidfile] [-P supervisor_pidfile] "
+literal|"[-u user]\n              command arguments ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
