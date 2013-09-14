@@ -13571,6 +13571,17 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* We may be unable to read features if pool is suspended. */
+if|if
+condition|(
+name|spa_suspended
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|spa
@@ -13749,6 +13760,8 @@ name|zc
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
 name|VERIFY
 argument_list|(
 name|nvlist_add_nvlist
