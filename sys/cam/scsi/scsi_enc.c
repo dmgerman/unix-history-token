@@ -161,6 +161,12 @@ directive|include
 file|<cam/scsi/scsi_enc_internal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<opt_ses.h>
+end_include
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -3124,7 +3130,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|ENC_ENABLE_PASSTHROUGH
+name|SES_ENABLE_PASSTHROUGH
 if|if
 condition|(
 operator|(
@@ -3151,7 +3157,7 @@ block|{
 comment|/* 		 * PassThrough Device. 		 */
 return|return
 operator|(
-name|ENC_ENC_PASSTHROUGH
+name|ENC_SES_PASSTHROUGH
 operator|)
 return|;
 block|}
