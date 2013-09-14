@@ -14634,7 +14634,7 @@ name|CAM_RETRY_SELTO
 argument_list|,
 name|SF_RETRY_UA
 operator||
-name|SF_QUIET_IR
+name|SF_NO_PRINT
 argument_list|,
 name|softc
 operator|->
