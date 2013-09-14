@@ -4147,6 +4147,12 @@ name|SYNCHRONIZE_CACHE_16
 case|:
 name|beio
 operator|->
+name|bio_cmd
+operator|=
+name|BIO_FLUSH
+expr_stmt|;
+name|beio
+operator|->
 name|ds_trans_type
 operator|=
 name|DEVSTAT_NO_DATA
