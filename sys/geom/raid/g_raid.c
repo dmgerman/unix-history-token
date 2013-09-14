@@ -9658,6 +9658,26 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* Deny write opens for read-only volumes. */
+if|if
+condition|(
+name|vol
+operator|->
+name|v_read_only
+operator|&&
+name|acw
+operator|>
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EROFS
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|dcw
