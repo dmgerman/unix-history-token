@@ -1654,7 +1654,7 @@ modifier|*
 name|a_descr
 decl_stmt|;
 name|struct
-name|ccb_immed_notify
+name|ccb_immediate_notify
 modifier|*
 name|inot
 decl_stmt|;
@@ -1766,7 +1766,7 @@ name|inot
 operator|=
 operator|(
 expr|struct
-name|ccb_immed_notify
+name|ccb_immediate_notify
 operator|*
 operator|)
 name|malloc
@@ -2762,7 +2762,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 comment|/* INOTs are handled with priority */
 name|TAILQ_INSERT_HEAD
@@ -4254,7 +4254,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-name|XPT_IMMED_NOTIFY
+name|XPT_IMMEDIATE_NOTIFY
 case|:
 default|default:
 name|free
