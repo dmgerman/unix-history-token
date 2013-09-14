@@ -228,6 +228,21 @@ name|SSQ_PRINT_SENSE
 init|=
 literal|0x0800
 block|,
+name|SSQ_UA
+init|=
+literal|0x1000
+block|,
+comment|/* Broadcast UA. */
+name|SSQ_RESCAN
+init|=
+literal|0x2000
+block|,
+comment|/* Rescan target for LUNs. */
+name|SSQ_LOST
+init|=
+literal|0x4000
+block|,
+comment|/* Destroy the LUNs. */
 name|SSQ_MASK
 init|=
 literal|0xff00
