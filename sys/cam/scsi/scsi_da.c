@@ -11439,6 +11439,15 @@ name|quirks
 operator||=
 name|DA_Q_NO_SYNC_CACHE
 expr_stmt|;
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_flags
+operator|&=
+operator|~
+name|DISKFLAG_CANFLUSHCACHE
+expr_stmt|;
 return|return
 operator|(
 literal|0
