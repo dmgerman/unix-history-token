@@ -13940,9 +13940,12 @@ expr_stmt|;
 comment|/* save PCI state */
 name|pci_save_state
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|rdev
 operator|->
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* disable bus mastering */
@@ -14078,9 +14081,12 @@ expr_stmt|;
 comment|/* restore PCI& busmastering */
 name|pci_restore_state
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|rdev
 operator|->
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|r100_enable_bm
