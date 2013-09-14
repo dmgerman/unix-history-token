@@ -585,7 +585,7 @@ name|type
 parameter_list|,
 name|enum
 name|ddt_class
-name|class
+name|cls
 parameter_list|,
 name|uint64_t
 modifier|*
