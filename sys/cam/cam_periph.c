@@ -1057,6 +1057,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|xpt_unlock_buses
+argument_list|()
+expr_stmt|;
 name|xpt_free_path
 argument_list|(
 name|periph
@@ -1070,9 +1073,6 @@ name|periph
 argument_list|,
 name|M_CAMPERIPH
 argument_list|)
-expr_stmt|;
-name|xpt_unlock_buses
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
