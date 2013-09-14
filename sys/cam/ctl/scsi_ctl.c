@@ -4073,7 +4073,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * Valid combinations: 		 *  - CAM_SEND_STATUS, SCATTER_VALID = 0, dxfer_len = 0, 		 *    sglist_cnt = 0 		 *  - CAM_SEND_STATUS = 0, SCATTER_VALID = 0, dxfer_len != 0, 		 *    sglist_cnt = 0  		 *  - CAM_SEND_STATUS = 0, SCATTER_VALID, dxfer_len != 0, 		 *    sglist_cnt != 0 		 */
+comment|/* 		 * Valid combinations: 		 *  - CAM_SEND_STATUS, CAM_DATA_SG = 0, dxfer_len = 0, 		 *    sglist_cnt = 0 		 *  - CAM_SEND_STATUS = 0, CAM_DATA_SG = 0, dxfer_len != 0, 		 *    sglist_cnt = 0  		 *  - CAM_SEND_STATUS = 0, CAM_DATA_SG, dxfer_len != 0, 		 *    sglist_cnt != 0 		 */
 ifdef|#
 directive|ifdef
 name|CTLFEDEBUG
@@ -4091,7 +4091,7 @@ operator|(
 operator|(
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_SG
 operator|)
 operator|!=
 literal|0
@@ -4135,7 +4135,7 @@ operator|(
 operator|(
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_SG
 operator|)
 operator|&&
 operator|(
@@ -4152,7 +4152,7 @@ operator|(
 operator|(
 name|flags
 operator|&
-name|CAM_SCATTER_VALID
+name|CAM_DATA_SG
 operator|)
 operator|==
 literal|0
