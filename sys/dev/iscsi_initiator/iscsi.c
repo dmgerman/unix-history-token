@@ -4240,7 +4240,7 @@ name|moduledata_t
 name|iscsi_mod
 init|=
 block|{
-literal|"iscsi"
+literal|"iscsi_initiator"
 block|,
 operator|(
 name|modeventhand_t
@@ -4303,7 +4303,7 @@ end_endif
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-name|iscsi
+name|iscsi_initiator
 argument_list|,
 name|iscsi_mod
 argument_list|,
@@ -4317,7 +4317,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|iscsi
+name|iscsi_initiator
 argument_list|,
 name|cam
 argument_list|,
