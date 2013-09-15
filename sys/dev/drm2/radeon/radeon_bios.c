@@ -504,6 +504,9 @@ argument_list|,
 name|bios
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
 block|}
 name|rdev
 operator|->
