@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LIBUNBOUND_WORKER_H
+name|LIBUNBOUND_LIBWORKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LIBUNBOUND_WORKER_H
+name|LIBUNBOUND_LIBWORKER_H
 end_define
 
 begin_include
@@ -480,7 +480,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LIBUNBOUND_WORKER_H */
+comment|/* LIBUNBOUND_LIBWORKER_H */
 end_comment
 
 end_unit
