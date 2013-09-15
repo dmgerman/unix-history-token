@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"libunbound/worker.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"util/netevent.h"
 end_include
 

@@ -19,6 +19,16 @@ directive|define
 name|LIBUNBOUND_WORKER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"util/data/packed_rrset.h"
+end_include
+
+begin_comment
+comment|/* for enum sec_status */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|comm_reply
