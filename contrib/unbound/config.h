@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|CONFIGURE_BUILD_WITH
-value|" '--with-conf-file=/etc/unbound/unbound.conf' '--with-run-dir=/var/unbound' '--with-username=unbound'"
+value|" '--prefix=' '--exec-prefix=/usr' '--with-conf-file=/etc/unbound/unbound.conf' '--with-run-dir=/var/unbound' '--with-username=unbound'"
 end_define
 
 begin_comment
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|CONFIGURE_DATE
-value|"Sun Sep 15 02:01:38 CEST 2013"
+value|"Sun Sep 15 15:38:41 CEST 2013"
 end_define
 
 begin_comment
