@@ -6779,9 +6779,6 @@ block|{
 name|uint32_t
 name|status
 decl_stmt|;
-name|uint32_t
-name|iman
-decl_stmt|;
 name|USB_BUS_LOCK
 argument_list|(
 operator|&
@@ -6838,45 +6835,6 @@ operator|&
 name|XHCI_STS_EINT
 condition|)
 block|{
-comment|/* acknowledge pending event */
-name|iman
-operator|=
-name|XREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|runt
-argument_list|,
-name|XHCI_IMAN
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* reset interrupt */
-name|XWRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|runt
-argument_list|,
-name|XHCI_IMAN
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|iman
-argument_list|)
-expr_stmt|;
-name|DPRINTFN
-argument_list|(
-literal|16
-argument_list|,
-literal|"real interrupt (iman=0x%08x)\n"
-argument_list|,
-name|iman
-argument_list|)
-expr_stmt|;
 comment|/* check for event(s) */
 name|xhci_interrupt_poll
 argument_list|(
