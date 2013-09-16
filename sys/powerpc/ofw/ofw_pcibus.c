@@ -396,6 +396,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ofw_devices_only
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.ofw_devices_only"
+argument_list|,
+operator|&
+name|ofw_devices_only
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -429,7 +449,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -493,6 +513,11 @@ name|busno
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We now attach any laggard devices. FDT, for instance, allows 	 * the device tree to enumerate only some PCI devices. Apple's 	 * OF device tree on some Grackle-based hardware can also miss 	 * functions on multi-function cards. 	 */
+if|if
+condition|(
+operator|!
+name|ofw_devices_only
+condition|)
 name|ofw_pcibus_enum_bus
 argument_list|(
 name|dev
