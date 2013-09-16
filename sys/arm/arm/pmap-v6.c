@@ -3596,8 +3596,7 @@ name|PVF_WRITE
 expr_stmt|;
 operator|*
 name|ptep
-operator|&=
-operator|~
+operator||=
 name|L2_APX
 expr_stmt|;
 name|PTE_SYNC
