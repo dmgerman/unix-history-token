@@ -189,32 +189,23 @@ name|md_page
 name|md
 decl_stmt|;
 comment|/* machine dependant stuff */
-name|uint8_t
-name|queue
-decl_stmt|;
-comment|/* page queue index (P,Q) */
-name|int8_t
-name|segind
-decl_stmt|;
-name|short
-name|hold_count
-decl_stmt|;
-comment|/* page hold count (P) */
-name|uint8_t
-name|order
-decl_stmt|;
-comment|/* index of the buddy queue */
-name|uint8_t
-name|pool
-decl_stmt|;
-name|u_short
-name|cow
-decl_stmt|;
-comment|/* page cow mapping count (P) */
 name|u_int
 name|wire_count
 decl_stmt|;
 comment|/* wired down maps refs (P) */
+specifier|volatile
+name|u_int
+name|busy_lock
+decl_stmt|;
+comment|/* busy owners lock */
+name|uint16_t
+name|hold_count
+decl_stmt|;
+comment|/* page hold count (P) */
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* page PG_* flags (P) */
 name|uint8_t
 name|aflags
 decl_stmt|;
@@ -223,18 +214,24 @@ name|uint8_t
 name|oflags
 decl_stmt|;
 comment|/* page VPO_* flags (O) */
-name|uint16_t
-name|flags
+name|uint8_t
+name|queue
 decl_stmt|;
-comment|/* page PG_* flags (P) */
+comment|/* page queue index (P,Q) */
+name|int8_t
+name|segind
+decl_stmt|;
+name|uint8_t
+name|order
+decl_stmt|;
+comment|/* index of the buddy queue */
+name|uint8_t
+name|pool
+decl_stmt|;
 name|u_char
 name|act_count
 decl_stmt|;
 comment|/* page usage count (P) */
-name|u_char
-name|__pad0
-decl_stmt|;
-comment|/* unused padding */
 comment|/* NOTE that these must support one bit per DEV_BSIZE in a page */
 comment|/* so, on normal X86 kernels, they must be at least 8 bits wide */
 name|vm_page_bits_t
@@ -245,11 +242,6 @@ name|vm_page_bits_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
-specifier|volatile
-name|u_int
-name|busy_lock
-decl_stmt|;
-comment|/* busy owners lock */
 block|}
 struct|;
 end_struct
@@ -2131,33 +2123,6 @@ name|void
 name|vm_page_zero_idle_wakeup
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_cowfault
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vm_page_cowsetup
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_page_cowclear
-parameter_list|(
-name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl
