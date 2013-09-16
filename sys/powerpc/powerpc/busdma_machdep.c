@@ -3763,6 +3763,12 @@ name|int
 name|error
 parameter_list|)
 block|{
+name|map
+operator|->
+name|nsegs
+operator|=
+name|nsegs
+expr_stmt|;
 if|if
 condition|(
 name|segs
@@ -3796,12 +3802,6 @@ operator|=
 name|map
 operator|->
 name|segments
-expr_stmt|;
-name|map
-operator|->
-name|nsegs
-operator|=
-name|nsegs
 expr_stmt|;
 if|if
 condition|(
