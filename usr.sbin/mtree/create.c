@@ -1197,6 +1197,15 @@ condition|(
 name|keys
 operator|&
 name|F_SIZE
+operator|&&
+name|S_ISREG
+argument_list|(
+name|p
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
 condition|)
 name|output
 argument_list|(
