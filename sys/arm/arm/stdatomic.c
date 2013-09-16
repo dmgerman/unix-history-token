@@ -1946,6 +1946,11 @@ literal|"str"
 argument_list|,
 literal|"streq"
 argument_list|)
+endif|#
+directive|endif
+comment|/* _KERNEL */
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|__clang__
@@ -2157,20 +2162,6 @@ name|__sync_fetch_and_xor_4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 begin_endif
 endif|#
