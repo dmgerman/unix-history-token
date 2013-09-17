@@ -528,6 +528,38 @@ name|NULL
 block|}
 block|,
 block|{
+literal|"IBM POWER7+"
+block|,
+name|IBMPOWER7PLUS
+block|,
+name|REVFMT_MAJMIN
+block|,
+name|PPC_FEATURE_64
+operator||
+name|PPC_FEATURE_HAS_ALTIVEC
+operator||
+name|PPC_FEATURE_HAS_FPU
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"IBM POWER8"
+block|,
+name|IBMPOWER8
+block|,
+name|REVFMT_MAJMIN
+block|,
+name|PPC_FEATURE_64
+operator||
+name|PPC_FEATURE_HAS_ALTIVEC
+operator||
+name|PPC_FEATURE_HAS_FPU
+block|,
+name|NULL
+block|}
+block|,
+block|{
 literal|"Motorola PowerPC 7400"
 block|,
 name|MPC7400
