@@ -6170,7 +6170,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX try to re-enumerate the device */
+comment|/* try to enumerate two more times */
 name|err
 operator|=
 name|usbd_req_re_enumerate
@@ -6183,10 +6183,31 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
+block|{
+name|err
+operator|=
+name|usbd_req_re_enumerate
+argument_list|(
+name|udev
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+block|{
 goto|goto
 name|done
 goto|;
+block|}
+block|}
 block|}
 comment|/* 	 * Setup temporary USB attach args so that we can figure out some 	 * basic quirks for this device. 	 */
 name|usb_init_attach_arg

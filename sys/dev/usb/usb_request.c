@@ -246,6 +246,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_full_ddesc
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|full_ddesc
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|usb_full_ddesc
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB always read complete device descriptor, if set"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3518,7 +3546,8 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-literal|1000
+literal|500
+comment|/* ms */
 argument_list|)
 expr_stmt|;
 if|if
@@ -7222,9 +7251,37 @@ block|{
 case|case
 name|USB_SPEED_FULL
 case|:
-case|case
-name|USB_SPEED_LOW
-case|:
+if|if
+condition|(
+name|usb_full_ddesc
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* get full device descriptor */
+name|err
+operator|=
+name|usbd_req_get_device_desc
+argument_list|(
+name|udev
+argument_list|,
+name|mtx
+argument_list|,
+operator|&
+name|udev
+operator|->
+name|ddesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+comment|/* get partial device descriptor, some devices crash on this */
 name|err
 operator|=
 name|usbd_req_get_desc
@@ -7259,40 +7316,31 @@ name|err
 operator|!=
 literal|0
 condition|)
-block|{
-name|DPRINTFN
+break|break;
+comment|/* get the full device descriptor */
+name|err
+operator|=
+name|usbd_req_get_device_desc
 argument_list|(
-literal|0
+name|udev
 argument_list|,
-literal|"getting device descriptor "
-literal|"at addr %d failed, %s\n"
+name|mtx
 argument_list|,
+operator|&
 name|udev
 operator|->
-name|address
-argument_list|,
-name|usbd_errstr
-argument_list|(
-name|err
-argument_list|)
+name|ddesc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
 break|break;
 default|default:
 name|DPRINTF
 argument_list|(
 literal|"Minimum MaxPacketSize is large enough "
-literal|"to hold the complete device descriptor\n"
+literal|"to hold the complete device descriptor or "
+literal|"only once MaxPacketSize choice\n"
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 comment|/* get the full device descriptor */
 name|err
 operator|=
@@ -7312,6 +7360,8 @@ comment|/* try one more time, if error */
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 name|err
 operator|=
@@ -7327,18 +7377,30 @@ operator|->
 name|ddesc
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFN
 argument_list|(
-literal|"addr=%d, getting full desc failed\n"
+literal|0
+argument_list|,
+literal|"getting device descriptor "
+literal|"at addr %d failed, %s\n"
 argument_list|,
 name|udev
 operator|->
 name|address
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
