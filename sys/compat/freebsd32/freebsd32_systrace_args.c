@@ -16356,7 +16356,7 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_enter */
+comment|/* freebsd32_cap_enter */
 case|case
 literal|516
 case|:
@@ -29808,7 +29808,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_enter */
+comment|/* freebsd32_cap_enter */
 case|case
 literal|516
 case|:
@@ -37517,7 +37517,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_enter */
+comment|/* freebsd32_cap_enter */
 case|case
 literal|516
 case|:
