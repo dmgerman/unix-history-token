@@ -5844,6 +5844,23 @@ name|sc_id_events
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|HIO_VARIABLE
+condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Ignoring keyboard event control\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_flags
@@ -5854,9 +5871,10 @@ name|DPRINTFN
 argument_list|(
 literal|1
 argument_list|,
-literal|"Found keyboard events\n"
+literal|"Found keyboard event array\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* figure out leds on keyboard */
 name|sc
