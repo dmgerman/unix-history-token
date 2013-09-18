@@ -235,6 +235,10 @@ condition|(
 name|ctl_fd
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOENT
 condition|)
 block|{
 name|saved_errno
