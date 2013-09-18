@@ -924,6 +924,11 @@ modifier|*
 name|fvn_cdevpriv
 decl_stmt|;
 comment|/* (d) Private data for the cdev. */
+name|void
+modifier|*
+name|fvn_epollpriv
+decl_stmt|;
+comment|/* (d) Private data for the epoll. */
 name|struct
 name|fadvise_info
 modifier|*
