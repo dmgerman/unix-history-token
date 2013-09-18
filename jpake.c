@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: jpake.c,v 1.7 2012/06/18 11:43:53 dtucker Exp $ */
+comment|/* $OpenBSD: jpake.c,v 1.8 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -331,7 +331,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|do {					\ 		if ((v) != NULL) {		\ 			bzero((v), (l));	\ 			xfree(v);		\ 			(v) = NULL;		\ 			(l) = 0;		\ 		}				\ 	} while (0)
+value|do {					\ 		if ((v) != NULL) {		\ 			bzero((v), (l));	\ 			free(v);		\ 			(v) = NULL;		\ 			(l) = 0;		\ 		}				\ 	} while (0)
 name|JPAKE_BN_CLEAR_FREE
 argument_list|(
 name|pctx
@@ -477,7 +477,7 @@ name|pctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pctx
 argument_list|)
@@ -2250,7 +2250,7 @@ argument_list|,
 name|expected_confirm_hash_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|expected_confirm_hash
 argument_list|)

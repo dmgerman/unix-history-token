@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: modpipe.c,v 1.4 2013/02/20 08:29:27 djm Exp $ */
+comment|/* $OpenBSD: modpipe.c,v 1.5 2013/05/10 03:46:14 djm Exp $ */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"openbsd-compat/getopt.c"
+file|"openbsd-compat/getopt_long.c"
 end_include
 
 begin_function_decl

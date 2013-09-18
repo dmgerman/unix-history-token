@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.237 2013/02/22 19:13:56 markus Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.238 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -523,7 +523,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -773,7 +773,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Free the command name. */
-name|xfree
+name|free
 argument_list|(
 name|command_string
 argument_list|)
@@ -1447,7 +1447,7 @@ name|rc
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|fdset
 argument_list|)
@@ -2502,7 +2502,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fdset
 argument_list|)
@@ -2854,11 +2854,7 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -3886,12 +3882,12 @@ argument_list|,
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -4160,12 +4156,12 @@ argument_list|,
 name|msg2
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -4968,12 +4964,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|host
 argument_list|)
@@ -5060,12 +5056,12 @@ argument_list|(
 name|raw_key
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|host
 argument_list|)
@@ -5153,7 +5149,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -5443,7 +5439,7 @@ name|sensitive
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|local_user
 argument_list|)
@@ -5529,7 +5525,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|padded
 argument_list|)
@@ -5714,12 +5710,12 @@ argument_list|,
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -5807,7 +5803,7 @@ argument_list|(
 literal|"Please contact your system administrator."
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)

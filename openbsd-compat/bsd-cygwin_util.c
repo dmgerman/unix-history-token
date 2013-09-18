@@ -379,7 +379,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)

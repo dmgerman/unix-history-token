@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.373 2013/02/22 22:09:01 djm Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.381 2013/07/25 00:29:10 djm Exp $ */
 end_comment
 
 begin_comment
@@ -658,9 +658,9 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: ssh [-1246AaCfgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]\n"
-literal|"           [-D [bind_address:]port] [-e escape_char] [-F configfile]\n"
-literal|"           [-I pkcs11] [-i identity_file]\n"
-literal|"           [-L [bind_address:]port:host:hostport]\n"
+literal|"           [-D [bind_address:]port] [-E log_file] [-e escape_char]\n"
+literal|"           [-F configfile] [-I pkcs11] [-i identity_file]\n"
+literal|"           [-L [bind_address:]port:host:hostport] [-Q protocol_feature]\n"
 literal|"           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]\n"
 literal|"           [-R [bind_address:]port:host:hostport] [-S ctl_path]\n"
 literal|"           [-W host:port] [-w local_tun[:remote_tun]]\n"
@@ -790,7 +790,7 @@ argument_list|,
 name|original_real_uid
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|paths
 index|[
@@ -857,6 +857,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|host_arg
+decl_stmt|,
+modifier|*
+name|logfile
 decl_stmt|;
 name|char
 name|thishost
@@ -1075,7 +1078,12 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"You don't exist, go away!"
+literal|"No user exists for uid %lu"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|original_real_uid
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1114,6 +1122,10 @@ name|use_syslog
 operator|=
 literal|0
 expr_stmt|;
+name|logfile
+operator|=
+name|NULL
+expr_stmt|;
 name|argv0
 operator|=
 name|av
@@ -1135,7 +1147,7 @@ argument_list|,
 name|av
 argument_list|,
 literal|"1246ab:c:e:fgi:kl:m:no:p:qstvx"
-literal|"ACD:F:I:KL:MNO:PR:S:TVw:W:XYy"
+literal|"ACD:E:F:I:KL:MNO:PQ:R:S:TVw:W:XYy"
 argument_list|)
 operator|)
 operator|!=
@@ -1234,6 +1246,17 @@ case|:
 name|use_syslog
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|logfile
+operator|=
+name|xstrdup
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1384,6 +1407,112 @@ operator|.
 name|use_privileged_port
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+comment|/* deprecated */
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"cipher"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cp
+operator|=
+name|cipher_alg_list
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"mac"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cp
+operator|=
+name|mac_alg_list
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"kex"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cp
+operator|=
+name|kex_alg_list
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"key"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cp
+operator|=
+name|key_alg_list
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Unsupported query \"%s\""
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1566,9 +1695,8 @@ operator|.
 name|log_level
 operator|++
 expr_stmt|;
-break|break;
 block|}
-comment|/* FALLTHROUGH */
+break|break;
 case|case
 literal|'V'
 case|:
@@ -1707,7 +1835,7 @@ name|fwd
 operator|.
 name|listen_port
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fwd
 operator|.
@@ -2311,7 +2439,7 @@ argument_list|(
 literal|255
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|line
 argument_list|)
@@ -2604,7 +2732,38 @@ literal|"Cannot fork into background without a command "
 literal|"to execute."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize "log" output.  Since we are the client all output 	 * actually goes to stderr. 	 */
+comment|/* 	 * Initialize "log" output.  Since we are the client all output 	 * goes to stderr unless otherwise specified by -y or -E. 	 */
+if|if
+condition|(
+name|use_syslog
+operator|&&
+name|logfile
+operator|!=
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Can't specify both -y and -E"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|logfile
+operator|!=
+name|NULL
+condition|)
+block|{
+name|log_redirect_stderr_to
+argument_list|(
+name|logfile
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|logfile
+argument_list|)
+expr_stmt|;
+block|}
 name|log_init
 argument_list|(
 name|argv0
@@ -2628,6 +2787,22 @@ operator|!
 name|use_syslog
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|debug_flag
+condition|)
+name|logit
+argument_list|(
+literal|"%s, %s"
+argument_list|,
+name|SSH_VERSION
+argument_list|,
+name|SSLeay_version
+argument_list|(
+name|SSLEAY_VERSION
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Read per-user configuration file.  Ignore the system wide config 	 * file if the user specifies a config file on the command line. 	 */
 if|if
 condition|(
@@ -2638,6 +2813,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|strcasecmp
+argument_list|(
+name|config
+argument_list|,
+literal|"none"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
 operator|!
 name|read_config_file
 argument_list|(
@@ -3098,7 +3282,7 @@ operator|.
 name|local_command
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -3169,7 +3353,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|options
 operator|.
@@ -3203,7 +3387,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|options
 operator|.
@@ -3237,7 +3421,7 @@ argument_list|,
 name|original_real_uid
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|options
 operator|.
@@ -3291,7 +3475,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -4061,7 +4245,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|sensitive_data
 operator|.
@@ -4085,17 +4269,7 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|options
-operator|.
-name|identity_files
-index|[
-name|i
-index|]
-condition|)
-block|{
-name|xfree
+name|free
 argument_list|(
 name|options
 operator|.
@@ -4114,7 +4288,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|options
@@ -4378,6 +4551,13 @@ name|devnull
 argument_list|)
 expr_stmt|;
 block|}
+name|daemon
+argument_list|(
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s [mux]"
@@ -6368,6 +6548,26 @@ operator|=
 name|ssh_session2_open
 argument_list|()
 expr_stmt|;
+else|else
+block|{
+name|packet_set_interactive
+argument_list|(
+name|options
+operator|.
+name|control_master
+operator|==
+name|SSHCTL_MASTER_NO
+argument_list|,
+name|options
+operator|.
+name|ip_qos_interactive
+argument_list|,
+name|options
+operator|.
+name|ip_qos_bulk
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If we don't expect to open a new session, then disallow it */
 if|if
 condition|(
@@ -6693,7 +6893,7 @@ name|n_ids
 operator|++
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|keys
 argument_list|)
@@ -6800,7 +7000,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|options
 operator|.
@@ -6861,7 +7061,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -6891,7 +7091,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|options
 operator|.
@@ -6966,7 +7166,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -7001,7 +7201,7 @@ argument_list|(
 name|public
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -7074,7 +7274,7 @@ name|pwname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pwname
 argument_list|)
@@ -7089,7 +7289,7 @@ name|pwdir
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pwdir
 argument_list|)

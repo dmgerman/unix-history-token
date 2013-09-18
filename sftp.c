@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.142 2013/02/08 00:41:12 djm Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.148 2013/07/25 00:56:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -116,6 +116,23 @@ begin_include
 include|#
 directive|include
 file|<libgen.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LOCALE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_endif
@@ -313,6 +330,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Suppress diagnositic messages */
+end_comment
+
+begin_decl_stmt
+name|int
+name|quiet
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* This is set to 0 if the progressmeter is not desired. */
 end_comment
 
@@ -331,6 +360,18 @@ end_comment
 begin_decl_stmt
 name|int
 name|global_rflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* When this option is set, we resume download if possible */
+end_comment
+
+begin_decl_stmt
+name|int
+name|global_aflag
 init|=
 literal|0
 decl_stmt|;
@@ -744,6 +785,13 @@ name|I_PROGRESS
 value|23
 end_define
 
+begin_define
+define|#
+directive|define
+name|I_REGET
+value|26
+end_define
+
 begin_struct
 struct|struct
 name|CMD
@@ -1008,6 +1056,14 @@ name|NOARGS
 block|}
 block|,
 block|{
+literal|"reget"
+block|,
+name|I_REGET
+block|,
+name|REMOTE
+block|}
+block|,
+block|{
 literal|"rename"
 block|,
 name|I_RENAME
@@ -1165,6 +1221,9 @@ name|olderrno
 init|=
 name|errno
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|STDERR_FILENO
@@ -1210,6 +1269,7 @@ literal|"df [-hi] [path]                    Display statistics for current direc
 literal|"                                   filesystem containing 'path'\n"
 literal|"exit                               Quit sftp\n"
 literal|"get [-Ppr] remote [local]          Download file\n"
+literal|"reget remote [local]		Resume download file\n"
 literal|"help                               Display this help text\n"
 literal|"lcd path                           Change local directory to 'path'\n"
 literal|"lls [ls-options [path]]            Display local directory listing\n"
@@ -1529,7 +1589,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -1679,7 +1739,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -1719,6 +1779,10 @@ name|argc
 parameter_list|,
 name|int
 modifier|*
+name|aflag
+parameter_list|,
+name|int
+modifier|*
 name|pflag
 parameter_list|,
 name|int
@@ -1750,6 +1814,9 @@ operator|=
 literal|0
 expr_stmt|;
 operator|*
+name|aflag
+operator|=
+operator|*
 name|rflag
 operator|=
 operator|*
@@ -1768,7 +1835,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"PpRr"
+literal|"aPpRr"
 argument_list|)
 operator|)
 operator|!=
@@ -1781,6 +1848,15 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+operator|*
+name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -2442,6 +2518,9 @@ name|pflag
 parameter_list|,
 name|int
 name|rflag
+parameter_list|,
+name|int
+name|resume
 parameter_list|)
 block|{
 name|char
@@ -2639,7 +2718,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -2719,11 +2798,45 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+name|resume
+operator||=
+name|global_aflag
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+operator|&&
+name|resume
+condition|)
+name|printf
+argument_list|(
+literal|"Resuming %s to %s\n"
+argument_list|,
+name|g
+operator|.
+name|gl_pathv
+index|[
+name|i
+index|]
+argument_list|,
+name|abs_dst
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|quiet
+operator|&&
+operator|!
+name|resume
+condition|)
 name|printf
 argument_list|(
 literal|"Fetching %s to %s\n"
@@ -2779,6 +2892,8 @@ operator|||
 name|global_pflag
 argument_list|,
 literal|1
+argument_list|,
+name|resume
 argument_list|)
 operator|==
 operator|-
@@ -2812,6 +2927,8 @@ argument_list|,
 name|pflag
 operator|||
 name|global_pflag
+argument_list|,
+name|resume
 argument_list|)
 operator|==
 operator|-
@@ -2823,7 +2940,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|abs_dst
 argument_list|)
@@ -2835,7 +2952,7 @@ expr_stmt|;
 block|}
 name|out
 label|:
-name|xfree
+name|free
 argument_list|(
 name|abs_src
 argument_list|)
@@ -3149,7 +3266,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -3228,11 +3345,16 @@ name|pwd
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Uploading %s to %s\n"
@@ -3331,20 +3453,12 @@ block|}
 block|}
 name|out
 label|:
-if|if
-condition|(
-name|abs_dst
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|abs_dst
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tmp_dst
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|tmp_dst
 argument_list|)
@@ -3678,7 +3792,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -3865,7 +3979,7 @@ argument_list|,
 name|strip_path
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -3948,7 +4062,7 @@ argument_list|,
 name|lname
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|lname
 argument_list|)
@@ -4001,7 +4115,7 @@ name|c
 operator|++
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|fname
 argument_list|)
@@ -4430,7 +4544,7 @@ argument_list|,
 name|lname
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|lname
 argument_list|)
@@ -4469,7 +4583,7 @@ name|c
 operator|++
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|fname
 argument_list|)
@@ -5999,15 +6113,11 @@ name|cpp
 parameter_list|,
 name|int
 modifier|*
-name|pflag
+name|aflag
 parameter_list|,
 name|int
 modifier|*
-name|rflag
-parameter_list|,
-name|int
-modifier|*
-name|lflag
+name|hflag
 parameter_list|,
 name|int
 modifier|*
@@ -6015,7 +6125,15 @@ name|iflag
 parameter_list|,
 name|int
 modifier|*
-name|hflag
+name|lflag
+parameter_list|,
+name|int
+modifier|*
+name|pflag
+parameter_list|,
+name|int
+modifier|*
+name|rflag
 parameter_list|,
 name|int
 modifier|*
@@ -6267,6 +6385,9 @@ return|;
 block|}
 comment|/* Get arguments and parse flags */
 operator|*
+name|aflag
+operator|=
+operator|*
 name|lflag
 operator|=
 operator|*
@@ -6304,6 +6425,9 @@ case|case
 name|I_GET
 case|:
 case|case
+name|I_REGET
+case|:
+case|case
 name|I_PUT
 case|:
 if|if
@@ -6318,6 +6442,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|argc
+argument_list|,
+name|aflag
 argument_list|,
 name|pflag
 argument_list|,
@@ -6396,6 +6522,27 @@ operator|*
 name|path2
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|aflag
+operator|&&
+name|cmdnum
+operator|==
+name|I_PUT
+condition|)
+block|{
+comment|/* XXX implement resume for uploads */
+name|error
+argument_list|(
+literal|"Resume is not supported for uploads"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 break|break;
 case|case
@@ -6912,15 +7059,11 @@ modifier|*
 name|tmp
 decl_stmt|;
 name|int
-name|pflag
+name|aflag
 init|=
 literal|0
 decl_stmt|,
-name|rflag
-init|=
-literal|0
-decl_stmt|,
-name|lflag
+name|hflag
 init|=
 literal|0
 decl_stmt|,
@@ -6928,7 +7071,16 @@ name|iflag
 init|=
 literal|0
 decl_stmt|,
-name|hflag
+name|lflag
+init|=
+literal|0
+decl_stmt|,
+name|pflag
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rflag
 init|=
 literal|0
 decl_stmt|,
@@ -6981,19 +7133,22 @@ operator|&
 name|cmd
 argument_list|,
 operator|&
-name|pflag
+name|aflag
 argument_list|,
 operator|&
-name|rflag
-argument_list|,
-operator|&
-name|lflag
+name|hflag
 argument_list|,
 operator|&
 name|iflag
 argument_list|,
 operator|&
-name|hflag
+name|lflag
+argument_list|,
+operator|&
+name|pflag
+argument_list|,
+operator|&
+name|rflag
 argument_list|,
 operator|&
 name|sflag
@@ -7054,6 +7209,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|I_REGET
+case|:
+name|aflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|I_GET
 case|:
 name|err
@@ -7072,6 +7235,8 @@ argument_list|,
 name|pflag
 argument_list|,
 name|rflag
+argument_list|,
+name|aflag
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7142,11 +7307,6 @@ expr_stmt|;
 case|case
 name|I_LINK
 case|:
-if|if
-condition|(
-operator|!
-name|sflag
-condition|)
 name|path1
 operator|=
 name|make_absolute
@@ -7232,6 +7392,11 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Removing %s\n"
@@ -7391,7 +7556,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -7419,7 +7584,7 @@ argument_list|(
 literal|"Can't change directory: Can't check target"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -7449,7 +7614,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -7460,7 +7625,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|xfree
+name|free
 argument_list|(
 operator|*
 name|pwd
@@ -7746,6 +7911,11 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Changing mode on %s\n"
@@ -7926,6 +8096,11 @@ operator|==
 name|I_CHOWN
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Changing owner on %s\n"
@@ -7947,6 +8122,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Changing group on %s\n"
@@ -8118,20 +8298,12 @@ operator|&
 name|g
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|path1
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|path1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|path2
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|path2
 argument_list|)
@@ -8735,7 +8907,7 @@ condition|;
 name|y
 operator|++
 control|)
-name|xfree
+name|free
 argument_list|(
 name|list
 index|[
@@ -8743,7 +8915,7 @@ name|y
 index|]
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|list
 argument_list|)
@@ -8825,7 +8997,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|list
 argument_list|)
@@ -8873,7 +9045,7 @@ condition|;
 name|y
 operator|++
 control|)
-name|xfree
+name|free
 argument_list|(
 name|list
 index|[
@@ -8881,7 +9053,7 @@ name|y
 index|]
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|list
 argument_list|)
@@ -9015,7 +9187,7 @@ literal|"el_insertstr failed."
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -9163,7 +9335,7 @@ name|tmp2
 decl_stmt|,
 name|ins
 index|[
-literal|3
+literal|8
 index|]
 decl_stmt|;
 name|u_int
@@ -9184,6 +9356,9 @@ decl_stmt|,
 name|isesc
 decl_stmt|,
 name|isabs
+decl_stmt|;
+name|int
+name|clen
 decl_stmt|;
 specifier|const
 name|LineInfo
@@ -9388,7 +9563,7 @@ literal|1
 expr_stmt|;
 comment|/* track last seen '/' */
 block|}
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -9465,7 +9640,7 @@ else|:
 name|remote_path
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp2
 argument_list|)
@@ -9585,9 +9760,46 @@ operator|<
 name|len
 condition|;
 name|i
-operator|++
+operator|+=
+name|clen
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|clen
+operator|=
+name|mblen
+argument_list|(
+name|tmp2
+operator|+
+name|i
+argument_list|,
+name|len
+operator|-
+name|i
+argument_list|)
+operator|)
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|clen
+operator|>
+sizeof|sizeof
+argument_list|(
+name|ins
+argument_list|)
+operator|-
+literal|2
+condition|)
+name|fatal
+argument_list|(
+literal|"invalid multibyte character"
+argument_list|)
+expr_stmt|;
 name|ins
 index|[
 literal|0
@@ -9595,19 +9807,24 @@ index|]
 operator|=
 literal|'\\'
 expr_stmt|;
+name|memcpy
+argument_list|(
 name|ins
-index|[
+operator|+
 literal|1
-index|]
-operator|=
+argument_list|,
 name|tmp2
-index|[
+operator|+
 name|i
-index|]
+argument_list|,
+name|clen
+argument_list|)
 expr_stmt|;
 name|ins
 index|[
-literal|2
+name|clen
+operator|+
+literal|1
 index|]
 operator|=
 literal|'\0'
@@ -9799,7 +10016,7 @@ literal|"el_insertstr failed."
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -9848,11 +10065,12 @@ name|line
 decl_stmt|,
 name|quote
 decl_stmt|;
-name|u_int
+name|int
 name|argc
 decl_stmt|,
 name|carg
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|cursor
 decl_stmt|,
 name|len
@@ -9966,7 +10184,7 @@ operator|&
 name|terminated
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|line
 argument_list|)
@@ -10054,7 +10272,7 @@ operator|!=
 literal|'\n'
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|line
 argument_list|)
@@ -10229,7 +10447,7 @@ operator|=
 name|CC_REDISPLAY
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|line
 argument_list|)
@@ -10547,6 +10765,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"Changing to: %s\n"
@@ -10583,17 +10806,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|remote_path
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|conn
 argument_list|)
@@ -10609,36 +10832,37 @@ block|}
 else|else
 block|{
 comment|/* XXX this is wrong wrt quoting */
-if|if
-condition|(
+name|snprintf
+argument_list|(
+name|cmd
+argument_list|,
+sizeof|sizeof
+name|cmd
+argument_list|,
+literal|"get%s %s%s%s"
+argument_list|,
+name|global_aflag
+condition|?
+literal|" -a"
+else|:
+literal|""
+argument_list|,
+name|dir
+argument_list|,
 name|file2
 operator|==
 name|NULL
-condition|)
-name|snprintf
-argument_list|(
-name|cmd
+condition|?
+literal|""
+else|:
+literal|" "
 argument_list|,
-sizeof|sizeof
-name|cmd
-argument_list|,
-literal|"get %s"
-argument_list|,
-name|dir
-argument_list|)
-expr_stmt|;
-else|else
-name|snprintf
-argument_list|(
-name|cmd
-argument_list|,
-sizeof|sizeof
-name|cmd
-argument_list|,
-literal|"get %s %s"
-argument_list|,
-name|dir
-argument_list|,
+name|file2
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
 name|file2
 argument_list|)
 expr_stmt|;
@@ -10656,17 +10880,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|remote_path
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|conn
 argument_list|)
@@ -10677,7 +10901,7 @@ name|err
 operator|)
 return|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|dir
 argument_list|)
@@ -10950,12 +11174,12 @@ literal|0
 condition|)
 break|break;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|remote_path
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|conn
 argument_list|)
@@ -11489,6 +11713,13 @@ comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
 argument_list|()
 expr_stmt|;
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|__progname
 operator|=
 name|ssh_get_progname
@@ -11579,7 +11810,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1246hpqrvCc:D:i:l:o:s:S:b:B:F:P:R:"
+literal|"1246ahpqrvCc:D:i:l:o:s:S:b:B:F:P:R:"
 argument_list|)
 operator|)
 operator|!=
@@ -11650,6 +11881,14 @@ break|break;
 case|case
 literal|'q'
 case|:
+name|ll
+operator|=
+name|SYSLOG_LEVEL_ERROR
+expr_stmt|;
+name|quiet
+operator|=
+literal|1
+expr_stmt|;
 name|showprogress
 operator|=
 literal|0
@@ -11732,6 +11971,14 @@ case|:
 name|sshver
 operator|=
 literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|global_aflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -11821,6 +12068,8 @@ name|showprogress
 operator|=
 literal|0
 expr_stmt|;
+name|quiet
+operator|=
 name|batchmode
 operator|=
 literal|1
@@ -12303,7 +12552,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|batchmode
+name|quiet
 condition|)
 block|{
 if|if

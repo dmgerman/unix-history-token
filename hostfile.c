@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.c,v 1.50 2010/12/04 13:31:37 djm Exp $ */
+comment|/* $OpenBSD: hostfile.c,v 1.52 2013/07/12 00:19:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ parameter_list|,
 name|u_int
 name|l
 parameter_list|,
-name|char
+name|u_char
 modifier|*
 name|salt
 parameter_list|,
@@ -324,7 +324,7 @@ argument_list|,
 name|salt_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|b64salt
 argument_list|)
@@ -410,7 +410,7 @@ decl_stmt|;
 name|HMAC_CTX
 name|mac_ctx
 decl_stmt|;
-name|char
+name|u_char
 name|salt
 index|[
 literal|256
@@ -420,7 +420,8 @@ name|result
 index|[
 literal|256
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|uu_salt
 index|[
 literal|512
@@ -525,6 +526,10 @@ argument_list|(
 operator|&
 name|mac_ctx
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|host
 argument_list|,
 name|strlen
@@ -631,7 +636,7 @@ modifier|*
 modifier|*
 name|cpp
 parameter_list|,
-name|u_int
+name|int
 modifier|*
 name|bitsp
 parameter_list|,
@@ -711,6 +716,10 @@ name|bitsp
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|(
 operator|*
 name|bitsp
 operator|=
@@ -718,7 +727,14 @@ name|key_size
 argument_list|(
 name|ret
 argument_list|)
-expr_stmt|;
+operator|)
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+block|}
 return|return
 literal|1
 return|;
@@ -1616,7 +1632,7 @@ name|i
 operator|++
 control|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|hostkeys
 operator|->
@@ -1628,7 +1644,7 @@ operator|.
 name|host
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|hostkeys
 operator|->
@@ -1670,34 +1686,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|hostkeys
-operator|->
-name|entries
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|hostkeys
 operator|->
 name|entries
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
 name|hostkeys
-operator|->
-name|entries
-operator|=
-name|NULL
-expr_stmt|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
 name|hostkeys
-operator|->
-name|num_entries
-operator|=
-literal|0
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|hostkeys
 argument_list|)

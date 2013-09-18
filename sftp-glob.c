@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-glob.c,v 1.23 2011/10/04 14:17:32 djm Exp $ */
+comment|/* $OpenBSD: sftp-glob.c,v 1.24 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -189,7 +189,7 @@ name|dir
 argument_list|)
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|r
 argument_list|)
@@ -403,7 +403,7 @@ operator|->
 name|dir
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|od
 argument_list|)

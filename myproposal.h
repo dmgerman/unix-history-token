@@ -13,6 +13,10 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_comment
+comment|/* conditional algorithm support */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -71,17 +75,41 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Old OpenSSL doesn't support what we need for DHGEX-sha256 */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_HAVE_EVPGCM
+end_ifdef
 
-begin_if
-if|#
-directive|if
-name|OPENSSL_VERSION_NUMBER
-operator|>=
-literal|0x00907000L
-end_if
+begin_define
+define|#
+directive|define
+name|AESGCM_CIPHER_MODES
+define|\
+value|"aes128-gcm@openssh.com,aes256-gcm@openssh.com,"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AESGCM_CIPHER_MODES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_SHA256
+end_ifdef
 
 begin_define
 define|#
@@ -89,6 +117,14 @@ directive|define
 name|KEX_SHA256_METHODS
 define|\
 value|"diffie-hellman-group-exchange-sha256,"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_HMAC_MODES
+define|\
+value|"hmac-sha2-256," \ 	"hmac-sha2-512,"
 end_define
 
 begin_else
@@ -100,6 +136,12 @@ begin_define
 define|#
 directive|define
 name|KEX_SHA256_METHODS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA2_HMAC_MODES
 end_define
 
 begin_endif
@@ -123,43 +165,17 @@ define|\
 value|HOSTKEY_ECDSA_CERT_METHODS \ 	"ssh-rsa-cert-v01@openssh.com," \ 	"ssh-dss-cert-v01@openssh.com," \ 	"ssh-rsa-cert-v00@openssh.com," \ 	"ssh-dss-cert-v00@openssh.com," \ 	HOSTKEY_ECDSA_METHODS \ 	"ssh-rsa," \ 	"ssh-dss"
 end_define
 
+begin_comment
+comment|/* the actual algorithms */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KEX_DEFAULT_ENCRYPT
 define|\
-value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"arcfour256,arcfour128," \ 	"aes128-gcm@openssh.com,aes256-gcm@openssh.com," \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
+value|"aes128-ctr,aes192-ctr,aes256-ctr," \ 	"arcfour256,arcfour128," \ 	AESGCM_CIPHER_MODES \ 	"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc," \ 	"aes192-cbc,aes256-cbc,arcfour,rijndael-cbc@lysator.liu.se"
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_EVP_SHA256
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SHA2_HMAC_MODES
-define|\
-value|"hmac-sha2-256," \ 	"hmac-sha2-512,"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SHA2_HMAC_MODES
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
