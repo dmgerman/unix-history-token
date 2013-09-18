@@ -1546,13 +1546,6 @@ name|portal_group
 modifier|*
 name|pg
 decl_stmt|;
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-block|{
 name|pg
 operator|=
 name|portal_group_find
@@ -1581,7 +1574,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
 block|}
 name|pg
 operator|=

@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|ISCSI_REASON_LEN
-value|32
+value|64
 end_define
 
 begin_define
