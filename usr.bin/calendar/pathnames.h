@@ -12,13 +12,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|_PATH_CPP
-value|"/usr/bin/gcpp"
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_INCLUDE
 value|"/usr/share/calendar"
 end_define
