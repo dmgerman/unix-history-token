@@ -266,7 +266,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Disk thread (the one that do I/O requests) takes requests from this list.  */
+comment|/*  * Disk thread (the one that does I/O requests) takes requests from this list.  */
 end_comment
 
 begin_expr_stmt
@@ -295,7 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * There is one recv list for every component, although local components don't  * use recv lists as local requests are done synchronously.  */
+comment|/*  * Thread that sends requests back to primary takes requests from this list.  */
 end_comment
 
 begin_expr_stmt
