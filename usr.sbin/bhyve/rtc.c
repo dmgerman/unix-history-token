@@ -1526,7 +1526,7 @@ name|rtc_nvram
 index|[
 name|nvoff
 argument_list|(
-name|RTC_NVRAM_START
+name|RTC_HMEM_MSB
 argument_list|)
 index|]
 operator|=
