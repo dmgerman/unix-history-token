@@ -170,6 +170,8 @@ decl_stmt|,
 name|noclose
 decl_stmt|,
 name|restart
+decl_stmt|,
+name|serrno
 decl_stmt|;
 specifier|const
 name|char
@@ -196,12 +198,6 @@ expr_stmt|;
 name|restart
 operator|=
 literal|0
-expr_stmt|;
-name|ppfh
-operator|=
-name|pfh
-operator|=
-name|NULL
 expr_stmt|;
 name|ppidfile
 operator|=
@@ -367,7 +363,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* do same for actual daemon process */
+comment|/* Do the same for actual daemon process. */
 if|if
 condition|(
 name|ppidfile
@@ -394,6 +390,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pfh
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -434,11 +443,20 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
-name|NULL
+literal|"daemon"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
+comment|/* Write out parent pidfile if needed. */
+name|pidfile_write
+argument_list|(
+name|ppfh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the pidfile or restart option is specified the daemon 	 * executes the command in a forked process and wait on child 	 * exit to remove the pidfile or restart the command. Normally 	 * we don't want the monitoring daemon to be terminated 	 * leaving the running process and the stale pidfile, so we 	 * catch SIGTERM and forward it to the children expecting to 	 * get SIGCHLD eventually. 	 */
@@ -468,13 +486,16 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"signal"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 comment|/* 		 * Because SIGCHLD is ignored by default, setup dummy handler 		 * for it, so we can mask it. 		 */
 if|if
 condition|(
@@ -487,13 +508,16 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"signal"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 comment|/* 		 * Block interesting signals. 		 */
 name|sigemptyset
 argument_list|(
@@ -533,13 +557,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"sigprocmask"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 comment|/* 		 * Try to protect against pageout kill. Ignore the 		 * error, madvise(2) will fail only if a process does 		 * not have superuser privileges. 		 */
 operator|(
 name|void
@@ -569,18 +596,14 @@ operator|-
 literal|1
 condition|)
 block|{
-name|pidfile_remove
+name|warn
 argument_list|(
-name|pfh
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|1
-argument_list|,
 literal|"fork"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
 block|}
 block|}
 if|if
@@ -662,18 +685,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* write out parent pidfile if needed */
-if|if
-condition|(
-name|ppidfile
-operator|!=
-name|NULL
-condition|)
-name|pidfile_write
-argument_list|(
-name|ppfh
-argument_list|)
-expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s[%d]"
@@ -710,6 +721,8 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|exit
+label|:
 name|pidfile_remove
 argument_list|(
 name|pfh
@@ -722,10 +735,10 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Exit status does not matter. */
+comment|/* If daemon(3) succeeded exit status does not matter. */
 block|}
 end_function
 
