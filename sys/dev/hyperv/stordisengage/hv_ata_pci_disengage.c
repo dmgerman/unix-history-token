@@ -224,9 +224,23 @@ parameter_list|)
 block|{
 name|int
 name|ata_disk_enable
-init|=
-literal|0
 decl_stmt|;
+name|ata_disk_enable
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Don't probe if not running in a Hyper-V environment 	 */
+if|if
+condition|(
+operator|!
+name|hv_check_for_hyper_v
+argument_list|()
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|bootverbose
@@ -292,12 +306,6 @@ expr_stmt|;
 comment|/* 	 * On Hyper-V the default is to use the enlightened driver for 	 * IDE disks. However, if the user wishes to use the native 	 * ATA driver, the environment variable 	 * hw_ata.disk_enable must be explicitly set to 1. 	 */
 if|if
 condition|(
-name|hv_check_for_hyper_v
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
 name|getenv_int
 argument_list|(
 literal|"hw.ata.disk_enable"
@@ -324,7 +332,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -355,7 +362,9 @@ name|dev
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -370,7 +379,9 @@ name|dev
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -395,9 +406,11 @@ index|]
 decl_stmt|;
 name|int
 name|hyper_v_detected
-init|=
-literal|0
 decl_stmt|;
+name|hyper_v_detected
+operator|=
+literal|0
+expr_stmt|;
 name|do_cpuid
 argument_list|(
 literal|1
@@ -415,9 +428,7 @@ operator|&
 literal|0x80000000
 condition|)
 block|{
-comment|/* if(a hypervisor is detected) */
-comment|/* make sure this really is Hyper-V */
-comment|/* we look at the CPUID info */
+comment|/* 		 * if(a hypervisor is detected) 		 *  make sure this really is Hyper-V 		 */
 name|do_cpuid
 argument_list|(
 name|HV_X64_MSR_GUEST_OS_ID
