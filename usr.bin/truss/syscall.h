@@ -96,6 +96,8 @@ block|,
 name|Waitoptions
 block|,
 name|Idtype
+block|,
+name|Procctl
 block|}
 enum|;
 end_enum
