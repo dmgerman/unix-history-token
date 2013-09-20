@@ -562,10 +562,11 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+name|uintptr_t
+name|lock_state
+decl_stmt|;
 name|int
 name|catch
-decl_stmt|,
-name|lock_state
 decl_stmt|,
 name|pri
 decl_stmt|,

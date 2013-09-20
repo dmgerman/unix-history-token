@@ -326,7 +326,7 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
-name|int
+name|uintptr_t
 name|how
 parameter_list|)
 function_decl|;
@@ -365,7 +365,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|int
+name|uintptr_t
 name|unlock_sx
 parameter_list|(
 name|struct
@@ -592,7 +592,7 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
-name|int
+name|uintptr_t
 name|how
 parameter_list|)
 block|{
@@ -629,7 +629,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|uintptr_t
 name|unlock_sx
 parameter_list|(
 name|struct
