@@ -1127,16 +1127,6 @@ else|:
 literal|"AP"
 argument_list|)
 expr_stmt|;
-comment|/* Set the ACPI id (it is needed by VCPU operations) */
-name|pcpu_find
-argument_list|(
-name|apic_id
-argument_list|)
-operator|->
-name|pc_acpi_id
-operator|=
-name|apic_id
-expr_stmt|;
 block|}
 end_function
 
@@ -2955,6 +2945,16 @@ expr_stmt|;
 name|pc
 operator|->
 name|pc_apic_id
+operator|=
+name|cpu_apic_ids
+index|[
+name|bootAP
+index|]
+expr_stmt|;
+comment|/* 		 * The i386 PV port uses the apic_id as vCPU id, but the 		 * PVHVM port needs to use the acpi_id, so set it for PV 		 * also in order to work with shared devices between PV 		 * and PVHVM. 		 */
+name|pc
+operator|->
+name|pc_acpi_id
 operator|=
 name|cpu_apic_ids
 index|[
