@@ -153,6 +153,12 @@ begin_comment
 comment|/*--------------------------- Forward Declarations ---------------------------*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|driver_filter_t
@@ -233,6 +239,11 @@ name|driver_filter_t
 name|xen_cpustophard_handler
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*---------------------------- Extern Declarations ---------------------------*/
@@ -355,6 +366,19 @@ begin_comment
 comment|/*-------------------------------- Local Types -------------------------------*/
 end_comment
 
+begin_enum
+enum|enum
+name|xen_hvm_init_type
+block|{
+name|XEN_HVM_INIT_COLD
+block|,
+name|XEN_HVM_INIT_CANCELLED_SUSPEND
+block|,
+name|XEN_HVM_INIT_RESUME
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|xen_ipi_handler
@@ -397,6 +421,12 @@ literal|"Xen HVM PV Support"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -544,6 +574,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**  * If non-zero, the hypervisor has been configured to use a direct  * IDT event callback for interrupt injection.  */
 end_comment
@@ -581,6 +616,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_expr_stmt
 name|DPCPU_DEFINE
 argument_list|(
@@ -596,6 +637,11 @@ index|]
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*------------------ Hypervisor Access Shared Memory Regions -----------------*/
@@ -618,6 +664,12 @@ modifier|*
 name|HYPERVISOR_shared_info
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_comment
 comment|/*---------------------------- XEN PV IPI Handlers ---------------------------*/
@@ -2081,6 +2133,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*---------------------- XEN Hypervisor Probe and Setup ----------------------*/
 end_comment
@@ -2442,6 +2499,11 @@ decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
+if|if
+condition|(
+name|xen_vector_callback_enabled
+condition|)
+return|return;
 name|xhp
 operator|.
 name|domid
@@ -2671,6 +2733,111 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|xen_hvm_init
+parameter_list|(
+name|enum
+name|xen_hvm_init_type
+name|init_type
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|init_type
+operator|==
+name|XEN_HVM_INIT_CANCELLED_SUSPEND
+condition|)
+return|return;
+name|error
+operator|=
+name|xen_hvm_init_hypercall_stubs
+argument_list|()
+expr_stmt|;
+switch|switch
+condition|(
+name|init_type
+condition|)
+block|{
+case|case
+name|XEN_HVM_INIT_COLD
+case|:
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return;
+name|setup_xen_features
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|XEN_HVM_INIT_RESUME
+case|:
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Unable to init Xen hypercall stubs on resume"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"Unsupported HVM initialization type"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Clear any stale vcpu_info. */
+name|CPU_FOREACH
+argument_list|(
+argument|i
+argument_list|)
+name|DPCPU_ID_SET
+argument_list|(
+name|i
+argument_list|,
+name|vcpu_info
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|xen_vector_callback_enabled
+operator|=
+literal|0
+expr_stmt|;
+name|xen_domain_type
+operator|=
+name|XEN_HVM_DOMAIN
+expr_stmt|;
+name|xen_hvm_init_shared_info_page
+argument_list|()
+expr_stmt|;
+name|xen_hvm_set_callback
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|xen_hvm_disable_emulated_devices
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|xen_hvm_suspend
 parameter_list|(
@@ -2683,13 +2850,21 @@ begin_function
 name|void
 name|xen_hvm_resume
 parameter_list|(
-name|void
+name|bool
+name|suspend_cancelled
 parameter_list|)
 block|{
-name|xen_hvm_init_hypercall_stubs
-argument_list|()
+name|xen_hvm_init
+argument_list|(
+name|suspend_cancelled
+condition|?
+name|XEN_HVM_INIT_CANCELLED_SUSPEND
+else|:
+name|XEN_HVM_INIT_RESUME
+argument_list|)
 expr_stmt|;
-name|xen_hvm_init_shared_info_page
+comment|/* Register vcpu_info area for CPU#0. */
+name|xen_hvm_init_cpu
 argument_list|()
 expr_stmt|;
 block|}
@@ -2698,39 +2873,18 @@ end_function
 begin_function
 specifier|static
 name|void
-name|xen_hvm_init
+name|xen_hvm_sysinit
 parameter_list|(
 name|void
 modifier|*
-name|dummy
+name|arg
 name|__unused
 parameter_list|)
 block|{
-if|if
-condition|(
-name|xen_hvm_init_hypercall_stubs
-argument_list|()
-operator|!=
-literal|0
-condition|)
-return|return;
-name|xen_domain_type
-operator|=
-name|XEN_HVM_DOMAIN
-expr_stmt|;
-name|setup_xen_features
-argument_list|()
-expr_stmt|;
-name|xen_hvm_init_shared_info_page
-argument_list|()
-expr_stmt|;
-name|xen_hvm_set_callback
+name|xen_hvm_init
 argument_list|(
-name|NULL
+name|XEN_HVM_INIT_COLD
 argument_list|)
-expr_stmt|;
-name|xen_hvm_disable_emulated_devices
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2756,18 +2910,31 @@ name|cpu
 decl_stmt|,
 name|rc
 decl_stmt|;
-name|cpu
-operator|=
-name|PCPU_GET
+if|if
+condition|(
+name|DPCPU_GET
 argument_list|(
-name|acpi_id
+name|vcpu_info
 argument_list|)
-expr_stmt|;
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * vcpu_info is already set.  We're resuming 		 * from a failed migration and our pre-suspend 		 * configuration is still valid. 		 */
+return|return;
+block|}
 name|vcpu_info
 operator|=
 name|DPCPU_PTR
 argument_list|(
 name|vcpu_local_info
+argument_list|)
+expr_stmt|;
+name|cpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|acpi_id
 argument_list|)
 expr_stmt|;
 name|info
@@ -2849,12 +3016,18 @@ name|SI_SUB_HYPERVISOR
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|xen_hvm_init
+name|xen_hvm_sysinit
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_expr_stmt
 name|SYSINIT
@@ -2871,6 +3044,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSINIT

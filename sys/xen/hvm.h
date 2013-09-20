@@ -252,7 +252,8 @@ begin_function_decl
 name|void
 name|xen_hvm_resume
 parameter_list|(
-name|void
+name|bool
+name|suspend_cancelled
 parameter_list|)
 function_decl|;
 end_function_decl

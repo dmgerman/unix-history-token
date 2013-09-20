@@ -1200,7 +1200,8 @@ begin_function
 name|void
 name|intr_resume
 parameter_list|(
-name|void
+name|bool
+name|suspend_cancelled
 parameter_list|)
 block|{
 name|struct
@@ -1244,6 +1245,8 @@ operator|->
 name|pic_resume
 argument_list|(
 name|pic
+argument_list|,
+name|suspend_cancelled
 argument_list|)
 expr_stmt|;
 block|}

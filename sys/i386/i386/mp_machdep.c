@@ -6245,6 +6245,19 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XENHVM
+name|mtx_assert
+argument_list|(
+operator|&
+name|smp_ipi_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|savectx
@@ -6312,6 +6325,23 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XENHVM
+comment|/* 	 * Reset pending bitmap IPIs, because Xen doesn't preserve pending 	 * event channels on migration. 	 */
+name|cpu_ipi_pending
+index|[
+name|cpu
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* register vcpu_info area */
+name|xen_hvm_init_cpu
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Resume MCA and local APIC */
 name|mca_resume
 argument_list|()
@@ -6319,6 +6349,15 @@ expr_stmt|;
 name|lapic_setup
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Indicate that we are resumed */
+name|CPU_CLR_ATOMIC
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
+name|suspended_cpus
 argument_list|)
 expr_stmt|;
 name|CPU_CLR_ATOMIC
