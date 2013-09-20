@@ -892,10 +892,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
-comment|/* 	 * When migrating a PVHVM domain we need to make sure there are 	 * no IPIs in progress.  IPIs that have been issued, but not 	 * yet delivered (not pending on a vCPU) will be lost in the 	 * IPI rebinding process, violating FreeBSD's assumption of 	 * reliable IPI delivery. 	 */
+comment|/* 	 * When suspending, ensure there are are no IPIs in progress. 	 * IPIs that have been issued, but not yet delivered (e.g. 	 * not pending on a vCPU when running under virtualization) 	 * will be lost, violating FreeBSD's assumption of reliable 	 * IPI delivery. 	 */
 if|if
 condition|(
 name|type
@@ -908,8 +905,6 @@ operator|&
 name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|stopping_cpu
@@ -1022,9 +1017,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|XENHVM
 if|if
 condition|(
 name|type
@@ -1037,8 +1029,6 @@ operator|&
 name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|stopping_cpu
 operator|=
 name|NOCPU

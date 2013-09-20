@@ -343,23 +343,6 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XENHVM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<xen/hvm.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -871,7 +854,6 @@ comment|/* Holds pending bitmap based IPIs per CPU */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|volatile
 name|u_int
 name|cpu_ipi_pending
@@ -3086,15 +3068,17 @@ comment|/* set up SSE registers */
 name|enable_sse
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
-comment|/* register vcpu_info area */
-name|xen_hvm_init_cpu
+if|if
+condition|(
+name|cpu_ops
+operator|.
+name|cpu_init
+condition|)
+name|cpu_ops
+operator|.
+name|cpu_init
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|PAE
@@ -6238,16 +6222,6 @@ block|{
 name|u_int
 name|cpu
 decl_stmt|;
-name|cpu
-operator|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
 name|mtx_assert
 argument_list|(
 operator|&
@@ -6256,8 +6230,13 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|cpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|savectx
@@ -6325,23 +6304,17 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
-comment|/* 	 * Reset pending bitmap IPIs, because Xen doesn't preserve pending 	 * event channels on migration. 	 */
-name|cpu_ipi_pending
-index|[
-name|cpu
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* register vcpu_info area */
-name|xen_hvm_init_cpu
+if|if
+condition|(
+name|cpu_ops
+operator|.
+name|cpu_resume
+condition|)
+name|cpu_ops
+operator|.
+name|cpu_resume
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Resume MCA and local APIC */
 name|mca_resume
 argument_list|()

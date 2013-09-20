@@ -245,6 +245,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|xen_ipi_vectored
+parameter_list|(
+name|u_int
+name|vector
+parameter_list|,
+name|int
+name|dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|xen_hvm_cpu_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|xen_hvm_cpu_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*---------------------------- Extern Declarations ---------------------------*/
 end_comment
@@ -349,6 +383,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Variables used by mp_machdep to perform the bitmap IPI */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|cpu_ipi_pending
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*---------------------------------- Macros ----------------------------------*/
 end_comment
 
@@ -406,6 +455,30 @@ name|xen_domain_type
 name|xen_domain_type
 init|=
 name|XEN_NATIVE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cpu_ops
+name|xen_hvm_cpu_ops
+init|=
+block|{
+operator|.
+name|ipi_vectored
+operator|=
+name|xen_ipi_vectored
+block|,
+operator|.
+name|cpu_init
+operator|=
+name|xen_hvm_cpu_init
+block|,
+operator|.
+name|cpu_resume
+operator|=
+name|xen_hvm_cpu_resume
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1908,6 +1981,41 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* XEN diverged cpu operations */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|xen_hvm_cpu_resume
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|cpuid
+init|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+decl_stmt|;
+comment|/* 	 * Reset pending bitmap IPIs, because Xen doesn't preserve pending 	 * event channels on migration. 	 */
+name|cpu_ipi_pending
+index|[
+name|cpuid
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* register vcpu_info area */
+name|xen_hvm_cpu_init
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -2061,7 +2169,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|xen_init_ipis
+name|xen_setup_cpus
 parameter_list|(
 name|void
 parameter_list|)
@@ -2125,10 +2233,8 @@ argument_list|)
 expr_stmt|;
 comment|/* Set the xen pv ipi ops to replace the native ones */
 name|cpu_ops
-operator|.
-name|ipi_vectored
 operator|=
-name|xen_ipi_vectored
+name|xen_hvm_cpu_ops
 expr_stmt|;
 block|}
 end_function
@@ -2793,15 +2899,7 @@ argument_list|(
 literal|"Unable to init Xen hypercall stubs on resume"
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"Unsupported HVM initialization type"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Clear any stale vcpu_info. */
+comment|/* Clear stale vcpu_info. */
 name|CPU_FOREACH
 argument_list|(
 argument|i
@@ -2815,6 +2913,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"Unsupported HVM initialization type"
+argument_list|)
+expr_stmt|;
+block|}
 name|xen_vector_callback_enabled
 operator|=
 literal|0
@@ -2864,7 +2970,7 @@ name|XEN_HVM_INIT_RESUME
 argument_list|)
 expr_stmt|;
 comment|/* Register vcpu_info area for CPU#0. */
-name|xen_hvm_init_cpu
+name|xen_hvm_cpu_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -2890,8 +2996,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|xen_hvm_init_cpu
+name|xen_hvm_cpu_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -2910,6 +3017,13 @@ name|cpu
 decl_stmt|,
 name|rc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|xen_domain
+argument_list|()
+condition|)
+return|return;
 if|if
 condition|(
 name|DPCPU_GET
@@ -3032,13 +3146,13 @@ end_ifdef
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|xen_init_ipis
+name|xen_setup_cpus
 argument_list|,
 name|SI_SUB_SMP
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|xen_init_ipis
+name|xen_setup_cpus
 argument_list|,
 name|NULL
 argument_list|)
@@ -3053,13 +3167,13 @@ end_endif
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|xen_hvm_init_cpu
+name|xen_hvm_cpu_init
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
-name|xen_hvm_init_cpu
+name|xen_hvm_cpu_init
 argument_list|,
 name|NULL
 argument_list|)
