@@ -3198,7 +3198,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|fdp
@@ -8096,7 +8096,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|SLIST_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|fdp
@@ -8104,8 +8104,6 @@ operator|->
 name|fd_kqlist
 argument_list|,
 name|kq
-argument_list|,
-name|kqueue
 argument_list|,
 name|kq_list
 argument_list|)
@@ -9726,7 +9724,7 @@ name|fdp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We shouldn't have to worry about new kevents appearing on fd 	 * since filedesc is locked. 	 */
-name|SLIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|kq
 argument_list|,

@@ -622,7 +622,7 @@ struct_decl|;
 end_struct_decl
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|kqlist
 argument_list|,
