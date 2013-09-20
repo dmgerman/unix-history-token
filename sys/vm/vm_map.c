@@ -977,7 +977,7 @@ comment|/* INVARIANTS */
 end_comment
 
 begin_comment
-comment|/*  * Allocate a vmspace structure, including a vm_map and pmap,  * and initialize those structures.  The refcnt is set to 1.  */
+comment|/*  * Allocate a vmspace structure, including a vm_map and pmap,  * and initialize those structures.  The refcnt is set to 1.  *  * If 'pinit' is NULL then the embedded pmap is initialized via pmap_pinit().  */
 end_comment
 
 begin_function
@@ -986,15 +986,15 @@ name|vmspace
 modifier|*
 name|vmspace_alloc
 parameter_list|(
-name|min
-parameter_list|,
-name|max
-parameter_list|)
 name|vm_offset_t
 name|min
-decl_stmt|,
+parameter_list|,
+name|vm_offset_t
 name|max
-decl_stmt|;
+parameter_list|,
+name|pmap_pinit_t
+name|pinit
+parameter_list|)
 block|{
 name|struct
 name|vmspace
@@ -1010,8 +1010,8 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|vm
 operator|->
 name|vm_map
@@ -1019,9 +1019,27 @@ operator|.
 name|pmap
 operator|==
 name|NULL
-operator|&&
-operator|!
+argument_list|,
+operator|(
+literal|"vm_map.pmap must be NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pinit
+operator|==
+name|NULL
+condition|)
+name|pinit
+operator|=
+operator|&
 name|pmap_pinit
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pinit
 argument_list|(
 name|vmspace_pmap
 argument_list|(
@@ -12793,6 +12811,8 @@ argument_list|,
 name|old_map
 operator|->
 name|max_offset
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -15416,6 +15436,8 @@ argument_list|(
 name|minuser
 argument_list|,
 name|maxuser
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

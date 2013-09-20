@@ -808,6 +808,23 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|pmap_type
+block|{
+name|PT_X86
+block|,
+comment|/* regular x86 page tables */
+name|PT_EPT
+block|,
+comment|/* Intel's nested page tables */
+name|PT_RVI
+block|,
+comment|/* AMD's nested page tables */
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/*  * The kernel virtual address (KVA) of the level 4 page table page is always  * within the direct map (DMAP) region.  */
 end_comment
@@ -848,7 +865,11 @@ name|int
 name|pm_pcid
 decl_stmt|;
 comment|/* context id */
-comment|/* spare u_int here due to padding */
+name|enum
+name|pmap_type
+name|pm_type
+decl_stmt|;
+comment|/* regular or nested tables */
 name|struct
 name|pmap_statistics
 name|pm_stats
@@ -859,6 +880,13 @@ name|vm_radix
 name|pm_root
 decl_stmt|;
 comment|/* spare page table pages */
+name|long
+name|pm_eptgen
+decl_stmt|;
+comment|/* EPT pmap generation id */
+name|int
+name|pm_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
