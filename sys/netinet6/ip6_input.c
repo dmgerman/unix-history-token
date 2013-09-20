@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_route.h"
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -175,6 +187,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -1252,6 +1270,33 @@ name|void
 name|ip6_destroy
 parameter_list|()
 block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|pfil_head_unregister
+argument_list|(
+operator|&
+name|V_inet6_pfil_hook
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: WARNING: unable to unregister pfil hook, "
+literal|"error %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|hashdestroy
 argument_list|(
 name|V_in6_ifaddrhashtbl
@@ -2213,6 +2258,27 @@ name|ip6
 operator|->
 name|ip6_nxt
 index|]
+argument_list|)
+expr_stmt|;
+name|IP_PROBE
+argument_list|(
+name|receive
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip6
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|,
+name|NULL
+argument_list|,
+name|ip6
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check against address spoofing/corruption. 	 */

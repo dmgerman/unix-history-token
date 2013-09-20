@@ -487,6 +487,8 @@ name|map_addr
 argument_list|,
 name|map_len
 argument_list|,
+literal|0
+argument_list|,
 name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
@@ -565,7 +567,7 @@ argument_list|,
 name|copy_len
 argument_list|)
 expr_stmt|;
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -1269,7 +1271,7 @@ literal|0
 expr_stmt|;
 name|dealloc_and_fail
 label|:
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -2060,7 +2062,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -2379,6 +2381,8 @@ operator|&
 name|hole
 argument_list|,
 name|PAGE_SIZE
+argument_list|,
+literal|0
 argument_list|,
 name|VMFS_NO_SPACE
 argument_list|,

@@ -11239,7 +11239,7 @@ operator|*
 operator|)
 name|kmem_alloc_contig
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|size
 argument_list|,

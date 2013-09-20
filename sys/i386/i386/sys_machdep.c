@@ -478,9 +478,9 @@ name|ktrcapfail
 argument_list|(
 name|CAPFAIL_SYSCALL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -649,7 +649,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|kargs
 operator|.
@@ -726,7 +726,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1375,7 +1375,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|ctob
 argument_list|(
@@ -2339,7 +2339,7 @@ name|caddr_t
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|round_page
 argument_list|(
@@ -2585,7 +2585,7 @@ name|caddr_t
 operator|)
 name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|len
 operator|*
@@ -2922,7 +2922,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -4399,7 +4399,7 @@ argument_list|)
 expr_stmt|;
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -4549,7 +4549,7 @@ condition|)
 block|{
 name|kmem_free
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 operator|(
 name|vm_offset_t

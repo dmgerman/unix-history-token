@@ -1246,17 +1246,34 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
-comment|/* Flush out any remaining source after parse tree is complete */
-name|Event
+comment|/* Check for parse errors */
+name|Status
 operator|=
-name|UtBeginEvent
-argument_list|(
-literal|"Flush source input"
-argument_list|)
-expr_stmt|;
-name|CmFlushSourceCode
+name|AslCheckForErrorExit
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Compiler aborting due to parser-detected syntax error(s)\n"
+argument_list|)
+expr_stmt|;
+name|LsDumpParseTree
+argument_list|()
+expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
+block|}
 comment|/* Did the parse tree get successfully constructed? */
 if|if
 condition|(
@@ -1265,18 +1282,6 @@ name|RootNode
 condition|)
 block|{
 comment|/*          * If there are no errors, then we have some sort of          * internal problem.          */
-name|Status
-operator|=
-name|AslCheckForErrorExit
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_OK
-condition|)
-block|{
 name|AslError
 argument_list|(
 name|ASL_ERROR
@@ -1288,11 +1293,21 @@ argument_list|,
 literal|"- Could not resolve parse tree root node"
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|ErrorExit
 goto|;
 block|}
+comment|/* Flush out any remaining source after parse tree is complete */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Flush source input"
+argument_list|)
+expr_stmt|;
+name|CmFlushSourceCode
+argument_list|()
+expr_stmt|;
 comment|/* Optional parse tree dump, compiler debug output only */
 name|LsDumpParseTree
 argument_list|()

@@ -2232,7 +2232,9 @@ name|end
 operator|-
 name|start
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|prot
 operator||

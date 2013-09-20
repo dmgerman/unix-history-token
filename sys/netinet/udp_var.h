@@ -47,6 +47,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ui_v
+value|ui_i.ih_x1[0]
+end_define
+
+begin_define
+define|#
+directive|define
 name|ui_pr
 value|ui_i.ih_pr
 end_define
@@ -414,13 +421,6 @@ define|#
 directive|define
 name|UDPCTL_MAXID
 value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDPCTL_NAMES
-value|{						\ 	{ 0, 0 },							\ 	{ "checksum", CTLTYPE_INT },					\ 	{ "stats", CTLTYPE_STRUCT },					\ 	{ "maxdgram", CTLTYPE_INT },					\ 	{ "recvspace", CTLTYPE_INT },					\ 	{ "pcblist", CTLTYPE_STRUCT },					\ }
 end_define
 
 begin_ifdef

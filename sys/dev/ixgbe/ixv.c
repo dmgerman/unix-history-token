@@ -6790,6 +6790,11 @@ name|u16
 name|pci_cmd_word
 decl_stmt|;
 comment|/* 	** Make sure BUSMASTER is set, on a VM under 	** KVM it may not be and will break things. 	*/
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|pci_cmd_word
 operator|=
 name|pci_read_config
@@ -6801,50 +6806,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-operator|(
-name|pci_cmd_word
-operator|&
-name|PCIM_CMD_BUSMASTEREN
-operator|)
-operator|&&
-operator|(
-name|pci_cmd_word
-operator|&
-name|PCIM_CMD_MEMEN
-operator|)
-operator|)
-condition|)
-block|{
-name|INIT_DEBUGOUT
-argument_list|(
-literal|"Memory Access and/or Bus Master "
-literal|"bits were not set!\n"
-argument_list|)
-expr_stmt|;
-name|pci_cmd_word
-operator||=
-operator|(
-name|PCIM_CMD_BUSMASTEREN
-operator||
-name|PCIM_CMD_MEMEN
-operator|)
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-name|pci_cmd_word
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Save off the information about this board */
 name|adapter
 operator|->
@@ -7527,6 +7488,7 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pci_alloc_msix
 argument_list|(
 name|dev
@@ -7536,6 +7498,13 @@ name|want
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|want
+operator|==
+literal|2
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -7555,6 +7524,12 @@ name|want
 operator|)
 return|;
 block|}
+comment|/* Release in case alloc was insufficient */
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 if|if
@@ -16004,7 +15979,7 @@ operator|&
 name|IXGBE_RXD_STAT_L4CS
 condition|)
 block|{
-name|u16
+name|u64
 name|type
 init|=
 operator|(

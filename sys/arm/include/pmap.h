@@ -230,6 +230,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|pmap_page_is_write_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->aflags& PGA_WRITEABLE) != 0)
+end_define
+
+begin_if
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|>
+literal|0
+end_if
+
+begin_function_decl
+name|boolean_t
+name|pmap_page_is_mapped
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|pmap_page_is_mapped
 parameter_list|(
 name|m
@@ -237,15 +273,10 @@ parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_page_is_write_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(((m)->aflags& PGA_WRITEABLE) != 0)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -310,10 +341,21 @@ decl_stmt|;
 name|vm_memattr_t
 name|pv_memattr
 decl_stmt|;
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|==
+literal|0
 name|vm_offset_t
 name|pv_kva
 decl_stmt|;
 comment|/* first kernel VA mapping */
+endif|#
+directive|endif
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -953,6 +995,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|(
+name|ARM_MMU_V6
+operator|+
+name|ARM_MMU_V7
+operator|)
+operator|==
+literal|0
+end_if
+
 begin_function_decl
 name|void
 name|pmap_map_section
@@ -969,6 +1023,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1545,7 +1604,7 @@ begin_define
 define|#
 directive|define
 name|L2_S_PROT_MASK
-value|(L2_S_PROT_U|L2_S_PROT_R)
+value|(L2_S_PROT_U|L2_S_PROT_R|L2_APX)
 end_define
 
 begin_define
@@ -1659,6 +1718,31 @@ define|#
 directive|define
 name|L2_S_PROTO
 value|(L2_TYPE_S)
+end_define
+
+begin_comment
+comment|/*  * Promotion to a 1MB (SECTION) mapping requires that the corresponding  * 4KB (SMALL) page mappings have identical settings for the following fields:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L2_S_PROMOTE
+value|(L2_S_REF | L2_SHARED | L2_S_PROT_MASK | \ 				 L2_XN | L2_S_PROTO)
+end_define
+
+begin_comment
+comment|/*  * In order to compare 1MB (SECTION) entry settings with the 4KB (SMALL)  * page mapping it is necessary to read and shift appropriate bits from  * L1 entry to positions of the corresponding bits in the L2 entry.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_S_DEMOTE
+parameter_list|(
+name|l1pd
+parameter_list|)
+value|((((l1pd)& L1_S_PROTO)>> 0) | \ 				(((l1pd)& L1_SHARED)>> 6) | \ 				(((l1pd)& L1_S_REF)>> 6) | \ 				(((l1pd)& L1_S_PROT_MASK)>> 6) | \ 				(((l1pd)& L1_S_XN)>> 4))
 end_define
 
 begin_ifndef
@@ -2176,9 +2260,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|L1_S_PROT_MASK
-value|(L1_S_APX|L1_S_AP(0x3))
+name|L1_S_PROT_W
+value|(L1_S_APX)
 end_define
+
+begin_comment
+comment|/* Write disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L1_S_PROT_MASK
+value|(L1_S_PROT_W|L1_S_PROT_U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L1_S_REF
+value|(L1_S_AP(AP_REF))
+end_define
+
+begin_comment
+comment|/* Reference flag */
+end_comment
 
 begin_define
 define|#
@@ -2187,7 +2293,17 @@ name|L1_S_WRITABLE
 parameter_list|(
 name|pd
 parameter_list|)
-value|(!((pd)& L1_S_APX))
+value|(!((pd)& L1_S_PROT_W))
+end_define
+
+begin_define
+define|#
+directive|define
+name|L1_S_REFERENCED
+parameter_list|(
+name|pd
+parameter_list|)
+value|((pd)& L1_S_REF)
 end_define
 
 begin_define
@@ -2199,7 +2315,7 @@ name|ku
 parameter_list|,
 name|pr
 parameter_list|)
-value|(L1_S_PROT_MASK& ~((((ku) == PTE_KERNEL) ? L1_S_PROT_U : 0) | \ 				 (((pr)& VM_PROT_WRITE) ? L1_S_APX : 0)))
+value|(((((ku) == PTE_KERNEL) ? 0 : L1_S_PROT_U) | \ 				 (((pr)& VM_PROT_WRITE) ? 0 : L1_S_PROT_W) | \ 				 (((pr)& VM_PROT_EXECUTE) ? 0 : L1_S_XN)))
 end_define
 
 begin_define

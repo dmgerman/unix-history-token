@@ -2973,6 +2973,9 @@ modifier|*
 name|args
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -3064,7 +3067,13 @@ name|args
 operator|->
 name|s
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_CONNECT
+argument_list|)
 argument_list|,
 operator|&
 name|so

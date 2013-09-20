@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: resolver.h,v 1.72 2011/12/05 17:10:51 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -336,6 +336,10 @@ name|unsigned
 name|int
 name|ntasks
 parameter_list|,
+name|unsigned
+name|int
+name|ndisp
+parameter_list|,
 name|isc_socketmgr_t
 modifier|*
 name|socketmgr
@@ -369,7 +373,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create a resolver.  *  * Notes:  *  *\li	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  * Requires:  *  *\li	'view' is a valid view.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'ntasks'> 0.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	'dispatchv4' is a valid dispatcher with an IPv4 UDP socket, or is NULL.  *  *\li	'dispatchv6' is a valid dispatcher with an IPv6 UDP socket, or is NULL.  *  *\li	resp != NULL&& *resp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
+comment|/*%<  * Create a resolver.  *  * Notes:  *  *\li	Generally, applications should not create a resolver directly, but  *	should instead call dns_view_createresolver().  *  * Requires:  *  *\li	'view' is a valid view.  *  *\li	'taskmgr' is a valid task manager.  *  *\li	'ntasks'> 0.  *  *\li	'socketmgr' is a valid socket manager.  *  *\li	'timermgr' is a valid timer manager.  *  *\li	'dispatchv4' is a dispatch with an IPv4 UDP socket, or is NULL.  *	If not NULL, 'ndisp' clones of it will be created by the resolver.  *  *\li	'dispatchv6' is a dispatch with an IPv6 UDP socket, or is NULL.  *	If not NULL, 'ndisp' clones of it will be created by the resolver.  *  *\li	resp != NULL&& *resp == NULL.  *  * Returns:  *  *\li	#ISC_R_SUCCESS				On success.  *  *\li	Anything else				Failure.  */
 end_comment
 
 begin_function_decl

@@ -213,13 +213,6 @@ name|ICMPCTL_MAXID
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|ICMPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "maskrepl", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "icmplim", CTLTYPE_INT }, \ }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

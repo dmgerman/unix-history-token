@@ -1086,6 +1086,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* SVR4-format */
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1144,9 +1147,6 @@ name|nbytes
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|getvnode
@@ -1161,12 +1161,21 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -1930,6 +1939,9 @@ decl_stmt|,
 name|svr4_reclen
 decl_stmt|;
 comment|/* SVR4-format */
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|file
 modifier|*
@@ -1992,9 +2004,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|getvnode
@@ -2009,12 +2018,21 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)

@@ -1286,6 +1286,34 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* Dispatch info for each host-installed SCI handler */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sci_handler_info
+block|{
+name|struct
+name|acpi_sci_handler_info
+modifier|*
+name|Next
+decl_stmt|;
+name|ACPI_SCI_HANDLER
+name|Address
+decl_stmt|;
+comment|/* Address of handler */
+name|void
+modifier|*
+name|Context
+decl_stmt|;
+comment|/* Context to be passed to handler */
+block|}
+name|ACPI_SCI_HANDLER_INFO
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Dispatch info for each GPE -- either a method or handler, cannot be both */
 end_comment
 
@@ -3670,6 +3698,13 @@ define|#
 directive|define
 name|ACPI_IPATH_ALLOCATED
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FROM_REFERENCE_FILE
+value|0x02
 end_define
 
 begin_typedef

@@ -281,7 +281,7 @@ operator|)
 name|arg
 expr_stmt|;
 comment|/* UNUSED */
-name|taskqueue_enqueue
+name|taskqueue_enqueue_fast
 argument_list|(
 name|dn_tq
 argument_list|,
@@ -299,16 +299,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|callout_reset
+name|callout_reset_sbt
 argument_list|(
 operator|&
 name|dn_timeout
 argument_list|,
-literal|1
+name|tick_sbt
+argument_list|,
+literal|0
 argument_list|,
 name|dummynet
 argument_list|,
 name|NULL
+argument_list|,
+name|C_HARDCLOCK
+operator||
+name|C_DIRECT_EXEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -11494,7 +11500,7 @@ argument_list|)
 expr_stmt|;
 name|dn_tq
 operator|=
-name|taskqueue_create
+name|taskqueue_create_fast
 argument_list|(
 literal|"dummynet"
 argument_list|,
@@ -11526,17 +11532,8 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|dn_timeout
-argument_list|,
-literal|1
-argument_list|,
-name|dummynet
-argument_list|,
-name|NULL
-argument_list|)
+name|dn_reschedule
+argument_list|()
 expr_stmt|;
 comment|/* Initialize curr_time adjustment mechanics. */
 name|getmicrouptime

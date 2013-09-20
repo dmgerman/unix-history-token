@@ -81,6 +81,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID_0000_000D
+value|(0xD)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID_8000_0000
 value|(0x80000000)
 end_define

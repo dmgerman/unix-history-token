@@ -4270,7 +4270,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ARM_VFP_SUPPORT
+name|VFP
 name|PCPU_SET
 argument_list|(
 name|cpu
@@ -5974,7 +5974,7 @@ operator|>=
 name|end
 condition|)
 break|break;
-comment|/* 			 * Restricted region includes memory region 			 * skip availble region 			 */
+comment|/* 			 * Restricted region includes memory region 			 * skip available region 			 */
 if|if
 condition|(
 operator|(

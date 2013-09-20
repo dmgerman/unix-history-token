@@ -1277,9 +1277,6 @@ expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
-argument_list|,
-comment|/*topology_lock_held*/
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -2819,9 +2816,6 @@ expr_stmt|;
 name|xpt_remove_periph
 argument_list|(
 name|periph
-argument_list|,
-comment|/*topology_lock_held*/
-literal|1
 argument_list|)
 expr_stmt|;
 name|xpt_unlock_buses
@@ -5094,6 +5088,17 @@ name|struct
 name|ccb_hdr
 name|ccb_h
 decl_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"cam_freeze_devq\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -5157,6 +5162,25 @@ name|struct
 name|ccb_relsim
 name|crs
 decl_stmt|;
+name|CAM_DEBUG
+argument_list|(
+name|path
+argument_list|,
+name|CAM_DEBUG_TRACE
+argument_list|,
+operator|(
+literal|"cam_release_devq(%u, %u, %u, %d)\n"
+operator|,
+name|relsim_flags
+operator|,
+name|openings
+operator|,
+name|arg
+operator|,
+name|getcount_only
+operator|)
+argument_list|)
+expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&

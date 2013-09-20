@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/caprights.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -59,10 +65,6 @@ name|cap_rights_t
 name|fc_rights
 decl_stmt|;
 comment|/* per-descriptor capability rights */
-name|uint32_t
-name|fc_fcntls
-decl_stmt|;
-comment|/* per-descriptor allowed fcntls */
 name|u_long
 modifier|*
 name|fc_ioctls
@@ -72,6 +74,10 @@ name|int16_t
 name|fc_nioctls
 decl_stmt|;
 comment|/* fc_ioctls array size */
+name|uint32_t
+name|fc_fcntls
+decl_stmt|;
+comment|/* per-descriptor allowed fcntls */
 block|}
 struct|;
 end_struct
@@ -278,32 +284,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_comment
-comment|/* CTASSERT() */
-end_comment
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|cap_rights_t
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* Flags for do_dup() */
@@ -868,7 +848,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|file
@@ -925,7 +906,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|needrights
+modifier|*
+name|needrightsp
 parameter_list|,
 name|int
 name|needfcntl

@@ -30,13 +30,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|vm_map_t
-name|kmem_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_map_t
 name|exec_map
 decl_stmt|;
 end_decl_stmt
@@ -45,6 +38,24 @@ begin_decl_stmt
 specifier|extern
 name|vm_map_t
 name|pipe_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vmem
+modifier|*
+name|kernel_arena
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vmem
+modifier|*
+name|kmem_arena
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +74,15 @@ name|struct
 name|vmem
 modifier|*
 name|transient_arena
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vmem
+modifier|*
+name|memguard_arena
 decl_stmt|;
 end_decl_stmt
 

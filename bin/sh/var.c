@@ -3182,6 +3182,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|nextopt
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

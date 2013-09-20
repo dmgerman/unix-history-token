@@ -7079,9 +7079,13 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ndis_return_packet
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

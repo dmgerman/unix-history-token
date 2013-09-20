@@ -90,6 +90,12 @@ block|,
 name|Pathconf
 block|,
 name|Rforkflags
+block|,
+name|ExitStatus
+block|,
+name|Waitoptions
+block|,
+name|Idtype
 block|}
 enum|;
 end_enum

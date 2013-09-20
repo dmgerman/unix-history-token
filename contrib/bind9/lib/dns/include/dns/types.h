@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010, 2012, 2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -302,6 +302,14 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
+name|dns_dispatchset
+name|dns_dispatchset_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|dns_dispatchmgr
 name|dns_dispatchmgr_t
 typedef|;
@@ -467,6 +475,14 @@ typedef|typedef
 name|struct
 name|dns_loadmgr
 name|dns_loadmgr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|dns_masterrawheader
+name|dns_masterrawheader_t
 typedef|;
 end_typedef
 
@@ -1447,6 +1463,24 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*%  * DNS Serial Number Update Method.  *  * \li	_increment:	Add one to the current serial, skipping 0.  * \li	_unixtime:	Set to the seconds since 00:00 Jan 1, 1970,  *			if possible.  * \li	_yyyymmvv:	Set to Year, Month, Version, if possible.  *			(Not yet implemented)  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|dns_updatemethod_increment
+init|=
+literal|0
+block|,
+name|dns_updatemethod_unixtime
+block|}
+name|dns_updatemethod_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Functions.  */
 end_comment
 
@@ -1478,6 +1512,23 @@ name|void
 modifier|*
 parameter_list|,
 name|isc_result_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|dns_rawdatafunc_t
+function_decl|)
+parameter_list|(
+name|dns_zone_t
+modifier|*
+parameter_list|,
+name|dns_masterrawheader_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef

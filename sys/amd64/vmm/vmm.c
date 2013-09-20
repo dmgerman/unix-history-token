@@ -910,6 +910,13 @@ case|:
 name|vmmdev_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ppt_num_devices
+argument_list|()
+operator|>
+literal|0
+condition|)
 name|iommu_init
 argument_list|()
 expr_stmt|;

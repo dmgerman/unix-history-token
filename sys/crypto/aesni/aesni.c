@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cryptodev_if.h"
+file|<cryptodev_if.h>
 end_include
 
 begin_struct
@@ -258,6 +258,30 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"No AESNI support.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SSE2
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"No SSE2 support but AESNI!?!\n"
 argument_list|)
 expr_stmt|;
 return|return

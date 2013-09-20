@@ -2585,17 +2585,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|val
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_COMMAND
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Figure out which we should try first - memory mapping or i/o mapping? 	 * We default to memory mapping. Then we accept an override from the 	 * command line. Then we check to see which one is enabled. 	 */
 name|prefer_iomap
 operator|=
@@ -3247,6 +3236,17 @@ name|FXP_REV_82557
 condition|)
 block|{
 comment|/* 		 * If MWI is enabled in the PCI configuration, and there 		 * is a valid cacheline size (8 or 16 dwords), then tell 		 * the board to turn on MWI. 		 */
+name|val
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|val

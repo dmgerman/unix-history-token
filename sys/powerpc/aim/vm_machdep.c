@@ -585,6 +585,21 @@ name|register_t
 operator|)
 name|cf
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pcb
+operator|->
+name|pcb_sp
+operator|%
+literal|16
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"stack misaligned"
+operator|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
@@ -837,10 +852,8 @@ argument_list|)
 expr_stmt|;
 name|sf_base
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|nsfbufs
 operator|*
 name|PAGE_SIZE

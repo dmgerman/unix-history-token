@@ -1338,7 +1338,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -1637,7 +1637,7 @@ literal|1
 init|;
 name|i
 operator|<=
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -1865,7 +1865,7 @@ literal|1
 init|;
 name|i
 operator|<=
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -2090,7 +2090,7 @@ name|mboot
 operator|.
 name|signature
 operator|=
-name|DOSMAGIC
+name|PC98_MAGIC
 expr_stmt|;
 block|}
 end_function
@@ -2649,7 +2649,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -3462,7 +3462,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -3755,7 +3755,7 @@ name|mboot
 operator|.
 name|signature
 operator|!=
-name|DOSMAGIC
+name|PC98_MAGIC
 condition|)
 block|{
 name|warnx
@@ -4664,7 +4664,7 @@ literal|1
 init|;
 name|i
 operator|<=
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++

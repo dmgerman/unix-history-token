@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: gssapictx.c,v 1.29 2011/08/29 06:33:25 marka Exp $ */
 end_comment
 
 begin_include

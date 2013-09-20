@@ -442,6 +442,15 @@ operator|&=
 operator|~
 name|CPUID2_PDCM
 expr_stmt|;
+comment|/* 			 * No TSC deadline support in the APIC yet 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|CPUID2_TSCDLT
+expr_stmt|;
 comment|/* 			 * Hide thermal monitoring 			 */
 name|regs
 index|[
@@ -531,6 +540,9 @@ name|CPUID_0000_0007
 case|:
 case|case
 name|CPUID_0000_000A
+case|:
+case|case
+name|CPUID_0000_000D
 case|:
 comment|/* 			 * Handle the access, but report 0 for 			 * all options 			 */
 name|regs

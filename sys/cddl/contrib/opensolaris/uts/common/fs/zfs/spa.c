@@ -3383,6 +3383,14 @@ decl_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
+name|spa
+operator|->
+name|spa_vdev_top_lock
+argument_list|)
+expr_stmt|;
+name|mutex_enter
+argument_list|(
+operator|&
 name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
@@ -3441,6 +3449,14 @@ name|mutex_exit
 argument_list|(
 operator|&
 name|spa_namespace_lock
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_vdev_top_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -15357,6 +15373,16 @@ name|c
 operator|++
 control|)
 block|{
+name|vdev_ashift_optimize
+argument_list|(
+name|rvd
+operator|->
+name|vdev_child
+index|[
+name|c
+index|]
+argument_list|)
+expr_stmt|;
 name|vdev_metaslab_set_size
 argument_list|(
 name|rvd
@@ -20794,9 +20820,9 @@ block|}
 comment|/* mark the device being resilvered */
 name|newvd
 operator|->
-name|vdev_resilvering
+name|vdev_resilver_txg
 operator|=
-name|B_TRUE
+name|txg
 expr_stmt|;
 comment|/* 	 * If the parent is not a mirror, or if we're replacing, insert the new 	 * mirror/replacing/spare vdev above oldvd. 	 */
 if|if
@@ -21627,12 +21653,6 @@ name|vdev_remove_parent
 argument_list|(
 name|cvd
 argument_list|)
-expr_stmt|;
-name|cvd
-operator|->
-name|vdev_resilvering
-operator|=
-name|B_FALSE
 expr_stmt|;
 block|}
 comment|/* 	 * We don't set tvd until now because the parent we just removed 	 * may have been the previous top-level vdev. 	 */
@@ -25032,6 +25052,21 @@ operator|->
 name|vdev_guid
 expr_stmt|;
 block|}
+name|ASSERT
+argument_list|(
+name|vd
+operator|->
+name|vdev_resilver_txg
+operator|==
+literal|0
+operator|||
+operator|!
+name|vdev_dtl_required
+argument_list|(
+name|vd
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|spa_config_exit
 argument_list|(
 name|spa

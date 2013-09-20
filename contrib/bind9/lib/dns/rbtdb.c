@@ -32865,8 +32865,12 @@ directive|else
 name|NULL
 block|,
 name|NULL
+block|,
 endif|#
 directive|endif
+name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -32948,6 +32952,10 @@ block|,
 name|isdnssec
 block|,
 name|getrrsetstats
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,

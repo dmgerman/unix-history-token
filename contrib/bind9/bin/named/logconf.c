@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2011, 2013  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: logconf.c,v 1.42.816.3 2011/03/05 23:52:06 tbox Exp $ */
+comment|/* $Id: logconf.c,v 1.45 2011/03/05 23:52:29 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -180,12 +180,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -204,13 +198,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/blkif.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<xen/evtchn.h>
+file|<xen/blkif.h>
 end_include
 
 begin_include
@@ -529,7 +523,7 @@ comment|/** 	 * Number of child requests in the list. 	 */
 name|int
 name|num_children
 decl_stmt|;
-comment|/** 	 * Number of I/O requests dispatched to the backend. 	 */
+comment|/** 	 * Number of I/O requests still pending on the backend. 	 */
 name|int
 name|pendcnt
 decl_stmt|;
@@ -630,10 +624,6 @@ decl_stmt|;
 comment|/** 	 * The number of 512 byte sectors comprising this requests. 	 */
 name|int
 name|nr_512b_sectors
-decl_stmt|;
-comment|/** 	 * The number of struct bio requests still outstanding for this 	 * request on the backend device.  This field is only used for	 	 * device (rather than file) backed I/O. 	 */
-name|int
-name|pendcnt
 decl_stmt|;
 comment|/** 	 * BLKIF_OP code for this request. 	 */
 name|int
@@ -1070,8 +1060,8 @@ name|blkif_back_rings_t
 name|rings
 decl_stmt|;
 comment|/** IRQ mapping for the communication ring event channel. */
-name|int
-name|irq
+name|xen_intr_handle_t
+name|xen_intr_handle
 decl_stmt|;
 comment|/** 	 * \brief Backend access mode flags (e.g. write, or read-only). 	 * 	 * This value is passed to us by the front-end via the XenStore. 	 */
 name|char
@@ -2593,6 +2583,22 @@ name|req_ring_idx
 operator|=
 name|ring_idx
 expr_stmt|;
+name|nreq
+operator|->
+name|id
+operator|=
+name|ring_req
+operator|->
+name|id
+expr_stmt|;
+name|nreq
+operator|->
+name|operation
+operator|=
+name|ring_req
+operator|->
+name|operation
+expr_stmt|;
 if|if
 condition|(
 name|xbb
@@ -3029,11 +3035,11 @@ if|if
 condition|(
 name|notify
 condition|)
-name|notify_remote_via_irq
+name|xen_intr_signal
 argument_list|(
 name|xbb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 block|}
@@ -3804,14 +3810,6 @@ name|nr_segments
 expr_stmt|;
 name|nreq
 operator|->
-name|id
-operator|=
-name|ring_req
-operator|->
-name|id
-expr_stmt|;
-name|nreq
-operator|->
 name|nr_pages
 operator|=
 name|nseg
@@ -3833,14 +3831,14 @@ expr_stmt|;
 comment|/* Check that number of segments is sane. */
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|nseg
 operator|==
 literal|0
 argument_list|)
 operator|||
-name|unlikely
+name|__predict_false
 argument_list|(
 name|nseg
 operator|>
@@ -4337,7 +4335,7 @@ control|)
 block|{
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|map
 operator|->
@@ -5143,8 +5141,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|xbb_intr
+name|int
+name|xbb_filter
 parameter_list|(
 name|void
 modifier|*
@@ -5156,7 +5154,7 @@ name|xbb_softc
 modifier|*
 name|xbb
 decl_stmt|;
-comment|/* Defer to kernel thread. */
+comment|/* Defer to taskqueue thread. */
 name|xbb
 operator|=
 operator|(
@@ -5178,6 +5176,11 @@ operator|->
 name|io_task
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
@@ -5294,11 +5297,6 @@ index|[
 name|XBB_MAX_SEGMENTS_PER_REQLIST
 index|]
 decl_stmt|;
-name|struct
-name|xbb_xen_req
-modifier|*
-name|nreq
-decl_stmt|;
 name|off_t
 name|bio_offset
 decl_stmt|;
@@ -5368,16 +5366,6 @@ operator|==
 name|BIO_FLUSH
 condition|)
 block|{
-name|nreq
-operator|=
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|reqlist
-operator|->
-name|contig_req_list
-argument_list|)
-expr_stmt|;
 name|bio
 operator|=
 name|g_new_bio
@@ -5385,7 +5373,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|bio
 operator|==
@@ -5450,7 +5438,7 @@ name|bio
 operator|->
 name|bio_caller1
 operator|=
-name|nreq
+name|reqlist
 expr_stmt|;
 name|bio
 operator|->
@@ -5458,7 +5446,7 @@ name|bio_pblkno
 operator|=
 literal|0
 expr_stmt|;
-name|nreq
+name|reqlist
 operator|->
 name|pendcnt
 operator|=
@@ -5654,7 +5642,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|unlikely
+name|__predict_false
 argument_list|(
 name|bio
 operator|==
@@ -8193,10 +8181,8 @@ block|{
 ifndef|#
 directive|ifndef
 name|XENHVM
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 name|xbb
 operator|->
 name|kva
@@ -8339,29 +8325,14 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|xbb
-operator|->
-name|irq
-operator|!=
-literal|0
-condition|)
-block|{
-name|unbind_from_irqhandler
+name|xen_intr_unbind
 argument_list|(
+operator|&
 name|xbb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
-name|xbb
-operator|->
-name|irq
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -9098,8 +9069,12 @@ name|XBBF_RING_CONNECTED
 expr_stmt|;
 name|error
 operator|=
-name|bind_interdomain_evtchn_to_irqhandler
+name|xen_intr_bind_remote_port
 argument_list|(
+name|xbb
+operator|->
+name|dev
+argument_list|,
 name|xbb
 operator|->
 name|otherend_id
@@ -9110,14 +9085,10 @@ name|ring_config
 operator|.
 name|evtchn
 argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|xbb
-operator|->
-name|dev
-argument_list|)
+name|xbb_filter
 argument_list|,
-name|xbb_intr
+comment|/*ithread_handler*/
+name|NULL
 argument_list|,
 comment|/*arg*/
 name|xbb
@@ -9129,7 +9100,7 @@ argument_list|,
 operator|&
 name|xbb
 operator|->
-name|irq
+name|xen_intr_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -9295,10 +9266,8 @@ name|xbb
 operator|->
 name|kva
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|xbb
 operator|->
 name|kva_size
@@ -12399,7 +12368,7 @@ name|xbb
 operator|->
 name|io_taskqueue
 operator|=
-name|taskqueue_create
+name|taskqueue_create_fast
 argument_list|(
 name|device_get_nameunit
 argument_list|(
@@ -12410,7 +12379,7 @@ name|M_NOWAIT
 argument_list|,
 name|taskqueue_thread_enqueue
 argument_list|,
-comment|/*context*/
+comment|/*contxt*/
 operator|&
 name|xbb
 operator|->

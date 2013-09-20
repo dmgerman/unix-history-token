@@ -7848,18 +7848,21 @@ operator|>
 name|pri
 condition|)
 block|{
-comment|/* 				 * Probes that return BUS_PROBE_NOWILDCARD 				 * or lower only match when they are set 				 * in stone by the parent bus. 				 */
+comment|/* 				 * Probes that return BUS_PROBE_NOWILDCARD 				 * or lower only match on devices whose 				 * driver was explicitly specified. 				 */
 if|if
 condition|(
 name|result
 operator|<=
 name|BUS_PROBE_NOWILDCARD
 operator|&&
+operator|!
+operator|(
 name|child
 operator|->
 name|flags
 operator|&
-name|DF_WILDCARD
+name|DF_FIXEDCLASS
+operator|)
 condition|)
 continue|continue;
 name|best

@@ -3180,6 +3180,8 @@ operator|->
 name|sa_family
 argument_list|,
 name|SOCK_STREAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
@@ -4060,6 +4062,8 @@ operator|->
 name|sa_family
 argument_list|,
 name|SOCK_DGRAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)

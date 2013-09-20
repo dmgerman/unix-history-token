@@ -66,7 +66,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
+comment|/*  * Mbufs are of a single size, MSIZE (sys/param.h), which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES (also in  * sys/param.h), which has no additional overhead and is used instead of the  * internal data area; this is done when at least MINCLSIZE of data must be  * stored.  Additionally, it is possible to allocate a separate buffer  * externally and attach it to the mbuf in a way similar to that of mbuf  * clusters.  *  * NB: These calculation do not take actual compiler-induced alignment and  * padding inside the complete struct mbuf into account.  Appropriate  * attention is required when changing members of struct mbuf.  *  * MLEN is data length in a normal mbuf.  * MHLEN is data length in an mbuf with pktheader.  * MINCLSIZE is a smallest amount of data that should be put into cluster.  */
 end_comment
 
 begin_define
@@ -97,7 +97,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*-  * Macro for type conversion: convert mbuf pointer to data pointer of correct  * type:  *  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  */
+comment|/*-  * Macro for type conversion: convert mbuf pointer to data pointer of correct  * type:  *  * mtod(m, t)	-- Convert mbuf pointer to data pointer of correct type.  * mtodo(m, o) -- Same as above but with offset 'o' into data.  */
 end_comment
 
 begin_define
@@ -110,6 +110,18 @@ parameter_list|,
 name|t
 parameter_list|)
 value|((t)((m)->m_data))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtodo
+parameter_list|(
+name|m
+parameter_list|,
+name|o
+parameter_list|)
+value|((void *)(((m)->m_data) + (o)))
 end_define
 
 begin_comment
@@ -141,41 +153,8 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__LP64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|M_HDR_PAD
-value|6
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|M_HDR_PAD
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Header present at the beginning of every mbuf.  */
+comment|/*  * Header present at the beginning of every mbuf.  * Size ILP32: 24  *	 LP64: 32  */
 end_comment
 
 begin_struct
@@ -198,25 +177,34 @@ name|caddr_t
 name|mh_data
 decl_stmt|;
 comment|/* location of data */
-name|int
+name|int32_t
 name|mh_len
 decl_stmt|;
 comment|/* amount of data in this mbuf */
-name|int
+name|uint32_t
+name|mh_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of data in this mbuf */
 name|mh_flags
+range|:
+literal|24
 decl_stmt|;
 comment|/* flags; see below */
-name|short
-name|mh_type
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+name|uint32_t
+name|mh_pad
 decl_stmt|;
-comment|/* type of data in this mbuf */
-name|uint8_t
-name|pad
-index|[
-name|M_HDR_PAD
-index|]
-decl_stmt|;
-comment|/* word align                  */
+comment|/* pad for 64bit alignment */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -264,7 +252,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  */
+comment|/*  * Record/packet header in first mbuf of chain; valid only if M_PKTHDR is set.  * Size ILP32: 48  *	 LP64: 56  */
 end_comment
 
 begin_struct
@@ -277,54 +265,6 @@ modifier|*
 name|rcvif
 decl_stmt|;
 comment|/* rcv interface */
-comment|/* variables for ip and tcp reassembly */
-name|void
-modifier|*
-name|header
-decl_stmt|;
-comment|/* pointer to packet header */
-name|int
-name|len
-decl_stmt|;
-comment|/* total packet length */
-name|uint32_t
-name|flowid
-decl_stmt|;
-comment|/* packet's 4-tuple system 					 * flow identifier 					 */
-comment|/* variables for hardware checksum */
-name|int
-name|csum_flags
-decl_stmt|;
-comment|/* flags regarding checksum */
-name|int
-name|csum_data
-decl_stmt|;
-comment|/* data field used by csum routines */
-name|u_int16_t
-name|tso_segsz
-decl_stmt|;
-comment|/* TSO segment size */
-union|union
-block|{
-name|u_int16_t
-name|vt_vtag
-decl_stmt|;
-comment|/* Ethernet 802.1p+q vlan tag */
-name|u_int16_t
-name|vt_nrecs
-decl_stmt|;
-comment|/* # of IGMPv3 records in this chain */
-block|}
-name|PH_vt
-union|;
-name|u_int16_t
-name|fibnum
-decl_stmt|;
-comment|/* this packet should use this fib */
-name|u_int16_t
-name|pad2
-decl_stmt|;
-comment|/* align to 32 bits */
 name|SLIST_HEAD
 argument_list|(
 argument|packet_tags
@@ -334,6 +274,126 @@ argument_list|)
 name|tags
 expr_stmt|;
 comment|/* list of packet tags */
+name|int32_t
+name|len
+decl_stmt|;
+comment|/* total packet length */
+comment|/* Layer crossing persistent information. */
+name|uint32_t
+name|flowid
+decl_stmt|;
+comment|/* packet's 4-tuple system */
+name|uint64_t
+name|csum_flags
+decl_stmt|;
+comment|/* checksum and offload features */
+name|uint16_t
+name|fibnum
+decl_stmt|;
+comment|/* this packet should use this fib */
+name|uint8_t
+name|cosqos
+decl_stmt|;
+comment|/* class/quality of service */
+name|uint8_t
+name|rsstype
+decl_stmt|;
+comment|/* hash type */
+name|uint8_t
+name|l2hlen
+decl_stmt|;
+comment|/* layer 2 header length */
+name|uint8_t
+name|l3hlen
+decl_stmt|;
+comment|/* layer 3 header length */
+name|uint8_t
+name|l4hlen
+decl_stmt|;
+comment|/* layer 4 header length */
+name|uint8_t
+name|l5hlen
+decl_stmt|;
+comment|/* layer 5 header length */
+union|union
+block|{
+name|uint8_t
+name|eigth
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint16_t
+name|sixteen
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|thirtytwo
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint64_t
+name|sixtyfour
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uintptr_t
+name|unintptr
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+block|}
+name|PH_per
+union|;
+comment|/* Layer specific non-persistent local storage for reassembly, etc. */
+union|union
+block|{
+name|uint8_t
+name|eigth
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|uint16_t
+name|sixteen
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|uint32_t
+name|thirtytwo
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|uint64_t
+name|sixtyfour
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uintptr_t
+name|unintptr
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+block|}
+name|PH_loc
+union|;
 block|}
 struct|;
 end_struct
@@ -342,28 +402,88 @@ begin_define
 define|#
 directive|define
 name|ether_vtag
-value|PH_vt.vt_vtag
+value|PH_per.sixteen[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|PH_vt
+value|PH_per
+end_define
+
+begin_define
+define|#
+directive|define
+name|vt_nrecs
+value|sixteen[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|tso_segsz
+value|PH_per.sixteen[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|csum_phsum
+value|PH_per.sixteen[2]
+end_define
+
+begin_define
+define|#
+directive|define
+name|csum_data
+value|PH_per.thirtytwo[1]
 end_define
 
 begin_comment
-comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  */
+comment|/*  * Description of external storage mapped into mbuf; valid only if M_EXT is  * set.  * Size ILP32: 28  *	 LP64: 48  */
 end_comment
 
 begin_struct
 struct|struct
 name|m_ext
 block|{
+specifier|volatile
+name|u_int
+modifier|*
+name|ref_cnt
+decl_stmt|;
+comment|/* pointer to ref count info */
 name|caddr_t
 name|ext_buf
 decl_stmt|;
 comment|/* start of buffer */
-name|void
+name|uint32_t
+name|ext_size
+decl_stmt|;
+comment|/* size of buffer, for ext_free */
+name|uint32_t
+name|ext_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of external storage */
+name|ext_flags
+range|:
+literal|24
+decl_stmt|;
+comment|/* external storage mbuf flags */
+name|int
 function_decl|(
 modifier|*
 name|ext_free
 function_decl|)
 comment|/* free routine if not the usual */
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -381,20 +501,6 @@ modifier|*
 name|ext_arg2
 decl_stmt|;
 comment|/* optional argument pointer */
-name|u_int
-name|ext_size
-decl_stmt|;
-comment|/* size of buffer, for ext_free */
-specifier|volatile
-name|u_int
-modifier|*
-name|ref_cnt
-decl_stmt|;
-comment|/* pointer to ref count info */
-name|int
-name|ext_type
-decl_stmt|;
-comment|/* type of external storage */
 block|}
 struct|;
 end_struct
@@ -531,7 +637,7 @@ value|M_dat.M_databuf
 end_define
 
 begin_comment
-comment|/*  * mbuf flags.  */
+comment|/*  * mbuf flags of global significance and layer crossing.  * Those of only protocol/layer specific significance are to be mapped  * to M_PROTO[1-12] and cleared at layer handoff boundaries.  * NB: Limited to the lower 24 bits.  */
 end_comment
 
 begin_define
@@ -581,63 +687,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO1
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO2
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO3
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO4
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_PROTO5
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* protocol-specific */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_BCAST
-value|0x00000200
+value|0x00000010
 end_define
 
 begin_comment
@@ -648,7 +699,7 @@ begin_define
 define|#
 directive|define
 name|M_MCAST
-value|0x00000400
+value|0x00000020
 end_define
 
 begin_comment
@@ -658,67 +709,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FRAG
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* packet is a fragment of a larger packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_FIRSTFRAG
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* packet is first fragment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_LASTFRAG
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* packet is last fragment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_SKIP_FIREWALL
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* skip firewall processing */
-end_comment
-
-begin_comment
-comment|/*	0x00008000    free */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_VLANTAG
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* ether_vtag is valid */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_PROMISC
-value|0x00020000
+value|0x00000040
 end_define
 
 begin_comment
@@ -728,8 +720,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_VLANTAG
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* ether_vtag is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FLOWID
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* deprecated: flowid is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_NOFREE
-value|0x00040000
+value|0x00000200
 end_define
 
 begin_comment
@@ -739,8 +753,63 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_PROTO1
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO2
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO3
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO4
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO5
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_PROTO6
-value|0x00080000
+value|0x00020000
 end_define
 
 begin_comment
@@ -751,7 +820,7 @@ begin_define
 define|#
 directive|define
 name|M_PROTO7
-value|0x00100000
+value|0x00040000
 end_define
 
 begin_comment
@@ -762,6 +831,28 @@ begin_define
 define|#
 directive|define
 name|M_PROTO8
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO9
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO10
 value|0x00200000
 end_define
 
@@ -772,34 +863,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_FLOWID
+name|M_PROTO11
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* deprecated: flowid is valid */
+comment|/* protocol-specific */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_HASHTYPEBITS
-value|0x0F000000
+name|M_PROTO12
+value|0x00800000
 end_define
 
 begin_comment
-comment|/* mask of bits holding flowid hash type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_NOTIFICATION
-value|M_PROTO5
-end_define
-
-begin_comment
-comment|/* SCTP notification */
+comment|/* protocol-specific */
 end_comment
 
 begin_comment
@@ -811,7 +891,46 @@ define|#
 directive|define
 name|M_PROTOFLAGS
 define|\
-value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8)
+value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8|\      M_PROTO9|M_PROTO10|M_PROTO11|M_PROTO12)
+end_define
+
+begin_comment
+comment|/*  * Flags preserved when copying m_pkthdr.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COPYFLAGS
+define|\
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_VLANTAG|M_PROMISC| \      M_PROTOFLAGS)
+end_define
+
+begin_comment
+comment|/*  * Mbuf flag description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FLAG_BITS
+define|\
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\11M_FLOWID"
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FLAG_PROTOBITS
+define|\
+value|"\15M_PROTO1\16M_PROTO2\17M_PROTO3\20M_PROTO4\21M_PROTO5" \     "\22M_PROTO6\23M_PROTO7\24M_PROTO8\25M_PROTO9\26M_PROTO10" \     "\27M_PROTO11\30M_PROTO12"
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_FLAG_PRINTF
+value|(M_FLAG_BITS M_FLAG_PROTOBITS)
 end_define
 
 begin_comment
@@ -821,22 +940,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_HASHTYPE_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
 name|M_HASHTYPE_NONE
-value|0x0
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV4
-value|0x1
+value|1
 end_define
 
 begin_comment
@@ -847,7 +959,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV4
-value|0x2
+value|2
 end_define
 
 begin_comment
@@ -858,7 +970,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV6
-value|0x3
+value|3
 end_define
 
 begin_comment
@@ -869,7 +981,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV6
-value|0x4
+value|4
 end_define
 
 begin_comment
@@ -880,7 +992,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_IPV6_EX
-value|0x5
+value|5
 end_define
 
 begin_comment
@@ -891,7 +1003,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_RSS_TCP_IPV6_EX
-value|0x6
+value|6
 end_define
 
 begin_comment
@@ -902,7 +1014,7 @@ begin_define
 define|#
 directive|define
 name|M_HASHTYPE_OPAQUE
-value|0xf
+value|255
 end_define
 
 begin_comment
@@ -916,7 +1028,7 @@ name|M_HASHTYPE_CLEAR
 parameter_list|(
 name|m
 parameter_list|)
-value|(m)->m_flags&= ~(M_HASHTYPEBITS)
+value|((m)->m_pkthdr.rsstype = 0)
 end_define
 
 begin_define
@@ -926,7 +1038,7 @@ name|M_HASHTYPE_GET
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)->m_flags& M_HASHTYPEBITS)>> \ 				    M_HASHTYPE_SHIFT)
+value|((m)->m_pkthdr.rsstype)
 end_define
 
 begin_define
@@ -938,7 +1050,7 @@ name|m
 parameter_list|,
 name|v
 parameter_list|)
-value|do {					\ 	(m)->m_flags&= ~M_HASHTYPEBITS;				\ 	(m)->m_flags |= ((v)<< M_HASHTYPE_SHIFT);			\ } while (0)
+value|((m)->m_pkthdr.rsstype = (v))
 end_define
 
 begin_define
@@ -954,19 +1066,165 @@ value|(M_HASHTYPE_GET(m) == (v))
 end_define
 
 begin_comment
-comment|/*  * Flags preserved when copying m_pkthdr.  */
+comment|/*  * COS/QOS class and quality of service tags.  * It uses DSCP code points as base.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_COPYFLAGS
-define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_HASHTYPEBITS)
+name|QOS_DSCP_CS0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_DEF
+value|QOS_DSCP_CS0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS1
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF11
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF12
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF13
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS2
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF21
+value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF22
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF23
+value|0x58
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS3
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF31
+value|0x68
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF32
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF33
+value|0x78
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS4
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF41
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF42
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_AF43
+value|0x98
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS5
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_EF
+value|0xb8
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS6
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QOS_DSCP_CS7
+value|0xe0
 end_define
 
 begin_comment
-comment|/*  * External buffer types: identify ext_buf type.  */
+comment|/*  * External mbuf storage buffer types.  */
 end_comment
 
 begin_define
@@ -1049,8 +1307,96 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXT_VENDOR1
+value|224
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_VENDOR2
+value|225
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_VENDOR3
+value|226
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_VENDOR4
+value|227
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP1
+value|244
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP2
+value|245
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP3
+value|246
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_EXP4
+value|247
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXT_NET_DRV
-value|100
+value|252
 end_define
 
 begin_comment
@@ -1061,7 +1407,7 @@ begin_define
 define|#
 directive|define
 name|EXT_MOD_TYPE
-value|200
+value|253
 end_define
 
 begin_comment
@@ -1072,7 +1418,7 @@ begin_define
 define|#
 directive|define
 name|EXT_DISPOSABLE
-value|300
+value|254
 end_define
 
 begin_comment
@@ -1083,7 +1429,7 @@ begin_define
 define|#
 directive|define
 name|EXT_EXTREF
-value|400
+value|255
 end_define
 
 begin_comment
@@ -1091,176 +1437,437 @@ comment|/* has externally maintained ref_cnt ptr */
 end_comment
 
 begin_comment
-comment|/*  * Flags indicating hw checksum support and sw checksum requirements.  This  * field can be directly tested against if_data.ifi_hwassist.  */
+comment|/*  * Flags for external mbuf buffer types.  * NB: limited to the lower 24 bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EMBREF
+value|0x000001
+end_define
+
+begin_comment
+comment|/* embedded ref_cnt, notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXTREF
+value|0x000002
+end_define
+
+begin_comment
+comment|/* external ref_cnt, notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_NOFREE
+value|0x000010
+end_define
+
+begin_comment
+comment|/* don't free mbuf to pool, notyet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR1
+value|0x010000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR2
+value|0x020000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR3
+value|0x040000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_VENDOR4
+value|0x080000
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP1
+value|0x100000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP2
+value|0x200000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP3
+value|0x400000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_EXP4
+value|0x800000
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_comment
+comment|/*  * EXT flag description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FLAG_BITS
+define|\
+value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLAG_VENDOR1\22EXT_FLAG_VENDOR2\23EXT_FLAG_VENDOR3" \     "\24EXT_FLAG_VENDOR4\25EXT_FLAG_EXP1\26EXT_FLAG_EXP2\27EXT_FLAG_EXP3" \     "\30EXT_FLAG_EXP4"
+end_define
+
+begin_comment
+comment|/*  * Return values for (*ext_free).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_FREE_OK
+value|0
+end_define
+
+begin_comment
+comment|/* Normal return */
+end_comment
+
+begin_comment
+comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against if_data.ifi_hwassist.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_IP
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* will csum IP */
+comment|/* IP header checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_TCP
-value|0x0002
+name|CSUM_IP_UDP
+value|0x00000002
 end_define
 
 begin_comment
-comment|/* will csum TCP */
+comment|/* UDP checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_UDP
-value|0x0004
+name|CSUM_IP_TCP
+value|0x00000004
 end_define
 
 begin_comment
-comment|/* will csum UDP */
+comment|/* TCP checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_FRAGMENT
-value|0x0010
+name|CSUM_IP_SCTP
+value|0x00000008
 end_define
 
 begin_comment
-comment|/* will do IP fragmentation */
+comment|/* SCTP checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_TSO
-value|0x0020
+name|CSUM_IP_TSO
+value|0x00000010
 end_define
 
 begin_comment
-comment|/* will do TSO */
+comment|/* TCP segmentation offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_SCTP
-value|0x0040
+name|CSUM_IP_ISCSI
+value|0x00000020
 end_define
 
 begin_comment
-comment|/* will csum SCTP */
+comment|/* iSCSI checksum offload */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_SCTP_IPV6
-value|0x0080
+name|CSUM_IP6_UDP
+value|0x00000200
 end_define
 
 begin_comment
-comment|/* will csum IPv6/SCTP */
+comment|/* UDP checksum offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_TCP
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* TCP checksum offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_SCTP
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* SCTP checksum offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_TSO
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* TCP segmentation offload */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP6_ISCSI
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* iSCSI checksum offload */
+end_comment
+
+begin_comment
+comment|/* Inbound checksum support where the checksum was verified by hardware. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L3_CALC
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* calculated layer 3 csum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L3_VALID
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* checksum is correct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L4_CALC
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* calculated layer 4 csum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L4_VALID
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* checksum is correct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L5_CALC
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* calculated layer 5 csum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_L5_VALID
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* checksum is correct */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_COALESED
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* contains merged segments */
+end_comment
+
+begin_comment
+comment|/*  * CSUM flag description for use with printf(9) %b identifier.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_BITS
+define|\
+value|"\20\1CSUM_IP\2CSUM_IP_UDP\3CSUM_IP_TCP\4CSUM_IP_SCTP\5CSUM_IP_TSO" \     "\6CSUM_IP_ISCSI" \     "\12CSUM_IP6_UDP\13CSUM_IP6_TCP\14CSUM_IP6_SCTP\15CSUM_IP6_TSO" \     "\16CSUM_IP6_ISCSI" \     "\31CSUM_L3_CALC\32CSUM_L3_VALID\33CSUM_L4_CALC\34CSUM_L4_VALID" \     "\35CSUM_L5_CALC\36CSUM_L5_VALID\37CSUM_COALESED"
+end_define
+
+begin_comment
+comment|/* CSUM flags compatibility mappings. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_IP_CHECKED
-value|0x0100
+value|CSUM_L3_CALC
 end_define
-
-begin_comment
-comment|/* did csum IP */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_IP_VALID
-value|0x0200
+value|CSUM_L3_VALID
 end_define
-
-begin_comment
-comment|/*   ... the csum is valid */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_DATA_VALID
-value|0x0400
+value|CSUM_L4_VALID
 end_define
-
-begin_comment
-comment|/* csum_data field is valid */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_PSEUDO_HDR
-value|0x0800
+value|CSUM_L4_CALC
 end_define
-
-begin_comment
-comment|/* csum_data has pseudo hdr */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_SCTP_VALID
-value|0x1000
+value|CSUM_L4_VALID
 end_define
-
-begin_comment
-comment|/* SCTP checksum is valid */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_UDP_IPV6
-value|0x2000
+name|CSUM_DELAY_DATA
+value|(CSUM_TCP|CSUM_UDP)
 end_define
-
-begin_comment
-comment|/* will csum IPv6/UDP */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|CSUM_TCP_IPV6
-value|0x4000
+name|CSUM_DELAY_IP
+value|CSUM_IP
 end_define
 
 begin_comment
-comment|/* will csum IPv6/TCP */
-end_comment
-
-begin_comment
-comment|/*	CSUM_TSO_IPV6		0x8000		will do IPv6/TSO */
-end_comment
-
-begin_comment
-comment|/*	CSUM_FRAGMENT_IPV6	0x10000		will do IPv6 fragementation */
+comment|/* Only v4, no v6 IP hdr csum */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CSUM_DELAY_DATA_IPV6
-value|(CSUM_TCP_IPV6 | CSUM_UDP_IPV6)
+value|(CSUM_TCP_IPV6|CSUM_UDP_IPV6)
 end_define
 
 begin_define
@@ -1273,23 +1880,65 @@ end_define
 begin_define
 define|#
 directive|define
-name|CSUM_DELAY_DATA
-value|(CSUM_TCP | CSUM_UDP)
+name|CSUM_TCP
+value|CSUM_IP_TCP
 end_define
 
 begin_define
 define|#
 directive|define
-name|CSUM_DELAY_IP
-value|(CSUM_IP)
+name|CSUM_UDP
+value|CSUM_IP_UDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP
+value|CSUM_IP_SCTP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TSO
+value|(CSUM_IP_TSO|CSUM_IP6_TSO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_UDP_IPV6
+value|CSUM_IP6_UDP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP_IPV6
+value|CSUM_IP6_TCP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_SCTP_IPV6
+value|CSUM_IP6_SCTP
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_FRAGMENT
+value|0x0
 end_define
 
 begin_comment
-comment|/* Only v4, no v6 IP hdr csum */
+comment|/* Unused */
 end_comment
 
 begin_comment
-comment|/*  * mbuf types.  */
+comment|/*  * mbuf types describing the content of the mbuf (including external storage).  */
 end_comment
 
 begin_define
@@ -1328,12 +1977,100 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MT_VENDOR1
+value|4
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_VENDOR2
+value|5
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_VENDOR3
+value|6
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_VENDOR4
+value|7
+end_define
+
+begin_comment
+comment|/* for vendor-internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MT_SONAME
 value|8
 end_define
 
 begin_comment
 comment|/* socket name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP1
+value|9
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP2
+value|10
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP3
+value|11
+end_define
+
+begin_comment
+comment|/* for experimental use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_EXP4
+value|12
+end_define
+
+begin_comment
+comment|/* for experimental use */
 end_comment
 
 begin_define
@@ -1378,17 +2115,6 @@ end_define
 
 begin_comment
 comment|/* Not a type but a flag to allocate 				   a non-initialized mbuf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MB_NOTAGS
-value|0x1UL
-end_define
-
-begin_comment
-comment|/* no tags attached to mbuf */
 end_comment
 
 begin_comment
@@ -1683,6 +2409,152 @@ operator|(
 name|type
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Associated an external reference counted buffer with an mbuf.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_extaddref
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|caddr_t
+name|buf
+parameter_list|,
+name|u_int
+name|size
+parameter_list|,
+name|u_int
+modifier|*
+name|ref_cnt
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|freef
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|void
+modifier|*
+name|arg2
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|ref_cnt
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: ref_cnt not provided"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+name|ref_cnt
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_EXT
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+operator|=
+name|buf
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ref_cnt
+operator|=
+name|ref_cnt
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_size
+operator|=
+name|size
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_free
+operator|=
+name|freef
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
+operator|=
+name|arg1
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
+operator|=
+name|arg2
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+operator|=
+name|EXT_EXTREF
+expr_stmt|;
 block|}
 end_function
 
@@ -2082,126 +2954,6 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|m_free_fast
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-condition|)
-name|KASSERT
-argument_list|(
-name|SLIST_EMPTY
-argument_list|(
-operator|&
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|tags
-argument_list|)
-argument_list|,
-operator|(
-literal|"doing fast free of mbuf with tags"
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|uma_zfree_arg
-argument_list|(
-name|zone_mbuf
-argument_list|,
-name|m
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|MB_NOTAGS
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mbuf
-operator|*
-name|m_free
-argument_list|(
-argument|struct mbuf *m
-argument_list|)
-block|{ 	struct
-name|mbuf
-operator|*
-name|n
-operator|=
-name|m
-operator|->
-name|m_next
-block|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-condition|)
-name|mb_free_ext
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_NOFREE
-operator|)
-operator|==
-literal|0
-condition|)
-name|uma_zfree
-argument_list|(
-name|zone_mbuf
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-name|n
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
 name|m_clget
 parameter_list|(
 name|struct
@@ -2517,6 +3269,14 @@ name|m
 operator|->
 name|m_ext
 operator|.
+name|ext_flags
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
 name|ref_cnt
 operator|=
 name|uma_find_refcnt
@@ -2555,6 +3315,28 @@ operator|->
 name|m_type
 operator|=
 name|new_type
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_clrprotoflags
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_PROTOFLAGS
 expr_stmt|;
 block|}
 end_function
@@ -3038,11 +3820,15 @@ name|caddr_t
 parameter_list|,
 name|u_int
 parameter_list|,
-name|void
+name|int
 function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -4356,8 +5142,100 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_expr_stmt
 specifier|static
+name|__inline
+expr|struct
+name|mbuf
+operator|*
+name|m_free
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{ 	struct
+name|mbuf
+operator|*
+name|n
+operator|=
+name|m
+operator|->
+name|m_next
+block|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_PKTHDR
+operator||
+name|M_NOFREE
+operator|)
+operator|)
+operator|==
+operator|(
+name|M_PKTHDR
+operator||
+name|M_NOFREE
+operator|)
+condition|)
+name|m_tag_delete_chain
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+condition|)
+name|mb_free_ext
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_NOFREE
+operator|)
+operator|==
+literal|0
+condition|)
+name|uma_zfree
+argument_list|(
+name|zone_mbuf
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_return
+return|return
+operator|(
+name|n
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
 name|int
 specifier|inline
 name|rt_m_getfib

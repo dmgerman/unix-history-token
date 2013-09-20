@@ -636,6 +636,11 @@ operator|.
 name|fo_chown
 operator|=
 name|invfo_chown
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2076,19 +2081,41 @@ operator|)
 expr_stmt|;
 name|kn
 operator|->
+name|kn_ptr
+operator|.
+name|p_proc
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|kn
+operator|->
+name|kn_fflags
+operator|&
+name|NOTE_EXIT
+condition|)
+name|kn
+operator|->
 name|kn_data
 operator|=
 name|p
 operator|->
 name|p_xstat
 expr_stmt|;
+if|if
+condition|(
 name|kn
 operator|->
-name|kn_ptr
-operator|.
-name|p_proc
-operator|=
-name|NULL
+name|kn_fflags
+operator|==
+literal|0
+condition|)
+name|kn
+operator|->
+name|kn_flags
+operator||=
+name|EV_DROP
 expr_stmt|;
 return|return
 operator|(
@@ -2242,8 +2269,6 @@ argument_list|(
 name|kn
 argument_list|,
 name|NOTE_FORK
-operator||
-name|pid
 argument_list|)
 condition|)
 name|KNOTE_ACTIVATE
@@ -2361,6 +2386,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+condition|)
+name|kn
+operator|->
+name|kn_fflags
+operator||=
+name|NOTE_TRACKERR
+expr_stmt|;
+if|if
+condition|(
 name|kn
 operator|->
 name|kn_fop
@@ -2370,8 +2405,6 @@ argument_list|(
 name|kn
 argument_list|,
 name|NOTE_FORK
-operator||
-name|pid
 argument_list|)
 condition|)
 name|KNOTE_ACTIVATE
@@ -2380,16 +2413,6 @@ name|kn
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|kn
-operator|->
-name|kn_fflags
-operator||=
-name|NOTE_TRACKERR
 expr_stmt|;
 name|KQ_LOCK
 argument_list|(
@@ -2628,7 +2651,7 @@ operator|&=
 operator|~
 name|KN_DETACHED
 expr_stmt|;
-comment|/* knlist_add usually sets it */
+comment|/* knlist_add clears it */
 name|calloutp
 operator|=
 name|malloc
@@ -2763,7 +2786,7 @@ name|kn_status
 operator||=
 name|KN_DETACHED
 expr_stmt|;
-comment|/* knlist_remove usually clears it */
+comment|/* knlist_remove sets it */
 block|}
 end_function
 
@@ -3238,7 +3261,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|fdp
@@ -3897,6 +3920,9 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3906,9 +3932,6 @@ name|nerrors
 decl_stmt|,
 name|error
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|fget
@@ -3917,12 +3940,21 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_POST_EVENT
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -4604,6 +4636,9 @@ decl_stmt|,
 modifier|*
 name|tkn
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -4690,7 +4725,13 @@ name|kev
 operator|->
 name|ident
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_POLL_EVENT
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -6737,6 +6778,78 @@ name|kn
 operator|->
 name|kn_flags
 operator|&
+name|EV_DROP
+operator|)
+operator|==
+name|EV_DROP
+condition|)
+block|{
+name|kn
+operator|->
+name|kn_status
+operator|&=
+operator|~
+name|KN_QUEUED
+expr_stmt|;
+name|kn
+operator|->
+name|kn_status
+operator||=
+name|KN_INFLUX
+expr_stmt|;
+name|kq
+operator|->
+name|kq_count
+operator|--
+expr_stmt|;
+name|KQ_UNLOCK
+argument_list|(
+name|kq
+argument_list|)
+expr_stmt|;
+comment|/* 			 * We don't need to lock the list since we've marked 			 * it _INFLUX. 			 */
+if|if
+condition|(
+operator|!
+operator|(
+name|kn
+operator|->
+name|kn_status
+operator|&
+name|KN_DETACHED
+operator|)
+condition|)
+name|kn
+operator|->
+name|kn_fop
+operator|->
+name|f_detach
+argument_list|(
+name|kn
+argument_list|)
+expr_stmt|;
+name|knote_drop
+argument_list|(
+name|kn
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|KQ_LOCK
+argument_list|(
+name|kq
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|kn
+operator|->
+name|kn_flags
+operator|&
 name|EV_ONESHOT
 operator|)
 operator|==
@@ -8063,7 +8176,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|SLIST_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|fdp
@@ -8071,8 +8184,6 @@ operator|->
 name|fd_kqlist
 argument_list|,
 name|kq
-argument_list|,
-name|kqueue
 argument_list|,
 name|kq_list
 argument_list|)
@@ -8864,7 +8975,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove all knotes from a specified klist  */
+comment|/*  * remove knote from the specified knlist  */
 end_comment
 
 begin_function
@@ -8900,7 +9011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * remove knote from a specified klist while in f_event handler.  */
+comment|/*  * remove knote from the specified knlist while in f_event handler.  */
 end_comment
 
 begin_function
@@ -9446,7 +9557,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-comment|/* 	 * if we run across this error, we need to find the offending 	 * driver and have it call knlist_clear. 	 */
+comment|/* 	 * if we run across this error, we need to find the offending 	 * driver and have it call knlist_clear or knlist_delete. 	 */
 if|if
 condition|(
 operator|!
@@ -9822,7 +9933,7 @@ name|fdp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We shouldn't have to worry about new kevents appearing on fd 	 * since filedesc is locked. 	 */
-name|SLIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|kq
 argument_list|,
@@ -10573,12 +10684,12 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|fget
@@ -10587,12 +10698,21 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_POST_EVENT
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)

@@ -193,11 +193,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+specifier|const
 name|uint8_t
 modifier|*
 name|p
 init|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)
@@ -253,11 +255,13 @@ argument_list|)
 return|;
 else|#
 directive|else
+specifier|const
 name|uint8_t
 modifier|*
 name|p
 init|=
 operator|(
+specifier|const
 name|uint8_t
 operator|*
 operator|)

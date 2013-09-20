@@ -2756,7 +2756,11 @@ name|max_psize
 parameter_list|,
 name|uint64_t
 modifier|*
-name|ashift
+name|logical_ashift
+parameter_list|,
+name|uint64_t
+modifier|*
+name|physical_ashift
 parameter_list|)
 block|{
 name|struct
@@ -3119,9 +3123,9 @@ name|pp
 operator|->
 name|mediasize
 expr_stmt|;
-comment|/* 	 * Determine the device's minimum transfer size. 	 */
+comment|/* 	 * Determine the device's minimum transfer size and preferred 	 * transfer size. 	 */
 operator|*
-name|ashift
+name|logical_ashift
 operator|=
 name|highbit
 argument_list|(
@@ -3133,6 +3137,29 @@ name|sectorsize
 argument_list|,
 name|SPA_MINBLOCKSIZE
 argument_list|)
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+operator|*
+name|physical_ashift
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|stripesize
+condition|)
+operator|*
+name|physical_ashift
+operator|=
+name|highbit
+argument_list|(
+name|pp
+operator|->
+name|stripesize
 argument_list|)
 operator|-
 literal|1

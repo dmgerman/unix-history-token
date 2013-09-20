@@ -18634,41 +18634,14 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ni
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 		 * Do any callback and reclaim the node reference. 		 */
-if|if
-condition|(
-name|m0
-operator|->
-name|m_flags
-operator|&
-name|M_TXCB
-condition|)
-name|ieee80211_process_callback
+comment|/* Pass the buffer back to net80211 - completing it */
+name|ieee80211_tx_complete
 argument_list|(
 name|ni
 argument_list|,
 name|m0
 argument_list|,
 name|status
-argument_list|)
-expr_stmt|;
-name|ieee80211_free_node
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Finally, we don't need this mbuf any longer */
-name|m_freem
-argument_list|(
-name|m0
 argument_list|)
 expr_stmt|;
 block|}

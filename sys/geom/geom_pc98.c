@@ -138,7 +138,7 @@ decl_stmt|;
 name|int
 name|type
 index|[
-name|NDOSPART
+name|PC98_NPARTS
 index|]
 decl_stmt|;
 name|u_char
@@ -309,19 +309,19 @@ decl_stmt|;
 name|off_t
 name|s
 index|[
-name|NDOSPART
+name|PC98_NPARTS
 index|]
 decl_stmt|,
 name|l
 index|[
-name|NDOSPART
+name|PC98_NPARTS
 index|]
 decl_stmt|;
 name|struct
 name|pc98_partition
 name|dp
 index|[
-name|NDOSPART
+name|PC98_NPARTS
 index|]
 decl_stmt|;
 name|g_topology_assert
@@ -363,7 +363,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -397,7 +397,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -654,7 +654,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NDOSPART
+name|PC98_NPARTS
 condition|;
 name|i
 operator|++
@@ -1384,7 +1384,7 @@ name|g_slice_new
 argument_list|(
 name|mp
 argument_list|,
-name|NDOSPART
+name|PC98_NPARTS
 argument_list|,
 name|pp
 argument_list|,

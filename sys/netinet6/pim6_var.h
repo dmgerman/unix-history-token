@@ -121,13 +121,6 @@ name|PIM6CTL_MAXID
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|PIM6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ }
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -15815,12 +15815,6 @@ modifier|*
 name|parm
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|usb_hw_ep_profile
-modifier|*
-name|pf
-decl_stmt|;
 name|struct
 name|usb_xfer
 modifier|*
@@ -15931,7 +15925,6 @@ name|last_obj
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * get profile stuff 	 */
 name|ep_no
 operator|=
 name|xfer
@@ -15940,6 +15933,24 @@ name|endpointno
 operator|&
 name|UE_ADDR
 expr_stmt|;
+comment|/* 	 * Check for a valid endpoint profile in USB device mode: 	 */
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_DEVICE
+condition|)
+block|{
+specifier|const
+name|struct
+name|usb_hw_ep_profile
+modifier|*
+name|pf
+decl_stmt|;
 name|dwc_otg_get_hw_ep_profile
 argument_list|(
 name|parm
@@ -15967,6 +15978,7 @@ operator|=
 name|USB_ERR_INVAL
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* align data */
 name|parm

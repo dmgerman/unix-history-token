@@ -161,6 +161,7 @@ specifier|extern
 name|struct
 name|_spinlock
 name|__stdio_thread_lock
+name|__hidden
 decl_stmt|;
 end_decl_stmt
 
@@ -481,18 +482,18 @@ begin_comment
 comment|/*  * Function to clean up streams, called from abort() and exit().  */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_extern
+extern|extern void (*__cleanup
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|(
 name|void
-function_decl|(
-modifier|*
-name|__cleanup
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+name|__hidden
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Get kern.osreldate to detect ABI revisions.  Explicitly  * ignores value of $OSVERSION and caches result.  Prototypes  * for the wrapped "new" pad-less syscalls are here for now.  */

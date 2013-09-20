@@ -2210,7 +2210,7 @@ expr_stmt|;
 if|if
 condition|(
 name|blkid
-operator|>=
+operator|>
 name|dn
 operator|->
 name|dn_maxblkid
@@ -2243,6 +2243,8 @@ operator|->
 name|dn_maxblkid
 operator|-
 name|blkid
+operator|+
+literal|1
 expr_stmt|;
 block|}
 name|l0span
@@ -3024,6 +3026,18 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|off
+operator|!=
+literal|0
+operator|||
+name|len
+operator|<
+name|dn
+operator|->
+name|dn_datablksz
+condition|)
 name|dmu_tx_count_write
 argument_list|(
 name|txh

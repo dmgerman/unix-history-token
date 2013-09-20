@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_undo.c	10.6 (Berkeley) 3/6/96"
+literal|"$Id: ex_undo.c,v 10.7 2001/06/25 15:19:21 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -85,18 +91,14 @@ begin_function
 name|int
 name|ex_undo
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|EXF
 modifier|*

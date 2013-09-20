@@ -296,6 +296,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EV_DROP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* note should be dropped */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EV_FLAG1
 value|0x2000
 end_define
@@ -622,7 +633,7 @@ struct_decl|;
 end_struct_decl
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|TAILQ_HEAD
 argument_list|(
 name|kqlist
 argument_list|,

@@ -3549,13 +3549,6 @@ name|elf_file_t
 operator|)
 name|lf
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* this will be more trouble than it's worth for now */
-block|for (dp = ef->dynamic; dp->d_tag != DT_NULL; dp++) { 		if (dp->d_tag != DT_NEEDED) 			continue; 		modname = ef->strtab + dp->d_un.d_val; 		error = linker_load_module(modname, lf); 		if (error != 0) 			goto out;     }
-endif|#
-directive|endif
 name|error
 operator|=
 name|relocate_file
@@ -4401,7 +4394,9 @@ name|address
 argument_list|,
 name|mapsize
 argument_list|,
-literal|1
+literal|0
+argument_list|,
+name|VMFS_OPTIMAL_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -4783,13 +4778,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-if|#
-directive|if
-literal|0
-comment|/* this will be more trouble than it's worth for now */
-block|for (dp = ef->dynamic; dp->d_tag != DT_NULL; dp++) { 		if (dp->d_tag != DT_NEEDED) 			continue; 		modname = ef->strtab + dp->d_un.d_val; 		error = linker_load_module(modname, lf); 		if (error != 0) 			goto out;     }
-endif|#
-directive|endif
 name|error
 operator|=
 name|relocate_file

@@ -308,6 +308,16 @@ parameter_list|)
 value|(EXT2_HAS_RO_COMPAT_FEATURE(ip->i_e2fs,	\ 				    EXT2F_ROCOMPAT_EXTRA_ISIZE))
 end_define
 
+begin_define
+define|#
+directive|define
+name|E2DI_HAS_HUGE_FILE
+parameter_list|(
+name|ip
+parameter_list|)
+value|(EXT2_HAS_RO_COMPAT_FEATURE(ip->i_e2fs,	\ 				    EXT2F_ROCOMPAT_HUGE_FILE))
+end_define
+
 begin_comment
 comment|/*  * Constants relative to the data blocks  */
 end_comment

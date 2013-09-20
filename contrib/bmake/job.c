@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $	*/
+comment|/*	$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: job.c,v 1.175 2013/07/30 19:09:57 sjg Exp $"
+literal|"$NetBSD: job.c,v 1.176 2013/08/04 16:48:15 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -310,6 +310,46 @@ directive|define
 name|STATIC
 value|static
 end_define
+
+begin_comment
+comment|/*  * FreeBSD: traditionally .MAKE is not required to  * pass jobs queue to sub-makes.  * Use .MAKE.ALWAYS_PASS_JOB_QUEUE=no to disable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_ALWAYS_PASS_JOB_QUEUE
+value|".MAKE.ALWAYS_PASS_JOB_QUEUE"
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Always_pass_job_queue
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * FreeBSD: aborting entire parallel make isn't always  * desired. When doing tinderbox for example, failure of  * one architecture should not stop all.  * We still want to bail on interrupt though.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_JOB_ERROR_TOKEN
+value|"MAKE_JOB_ERROR_TOKEN"
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Job_error_token
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * error handling variables  */
@@ -4667,6 +4707,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Always_pass_job_queue
+operator|||
+operator|(
 name|job
 operator|->
 name|node
@@ -4674,6 +4717,7 @@ operator|->
 name|type
 operator|&
 name|OP_MAKE
+operator|)
 condition|)
 block|{
 comment|/* 		 * Pass job token pipe to submakes. 		 */
@@ -7512,6 +7556,24 @@ name|lastNode
 operator|=
 name|NULL
 expr_stmt|;
+name|Always_pass_job_queue
+operator|=
+name|getBoolean
+argument_list|(
+name|MAKE_ALWAYS_PASS_JOB_QUEUE
+argument_list|,
+name|Always_pass_job_queue
+argument_list|)
+expr_stmt|;
+name|Job_error_token
+operator|=
+name|getBoolean
+argument_list|(
+name|MAKE_JOB_ERROR_TOKEN
+argument_list|,
+name|Job_error_token
+argument_list|)
+expr_stmt|;
 comment|/*      * There is a non-zero chance that we already have children.      * eg after 'make -f-<<EOF'      * Since their termination causes a 'Child (pid) not in table' message,      * Collect the status of any that are already dead, and suppress the      * error message if there are any undead ones.      */
 for|for
 control|(
@@ -9610,6 +9672,29 @@ index|]
 decl_stmt|,
 name|tok1
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Job_error_token
+operator|&&
+name|aborting
+operator|==
+name|ABORT_ERROR
+condition|)
+block|{
+if|if
+condition|(
+name|jobTokensRunning
+operator|==
+literal|0
+condition|)
+return|return;
+name|tok
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* no error token */
+block|}
 comment|/* If we are depositing an error token flush everything else */
 while|while
 condition|(
@@ -9650,10 +9735,7 @@ argument_list|()
 argument_list|,
 name|aborting
 argument_list|,
-name|JOB_TOKENS
-index|[
-name|aborting
-index|]
+name|tok
 argument_list|)
 expr_stmt|;
 while|while

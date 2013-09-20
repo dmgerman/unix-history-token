@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sf_buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/smp.h>
 end_include
 
@@ -863,15 +857,9 @@ name|pcb2
 operator|->
 name|pcb_cr3
 operator|=
-name|DMAP_TO_PHYS
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|pmap2
 operator|->
-name|pm_pml4
-argument_list|)
+name|pm_cr3
 expr_stmt|;
 name|pcb2
 operator|->
@@ -1314,10 +1302,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|kmem_free
+name|kva_free
 argument_list|(
-name|kernel_map
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -2540,54 +2526,6 @@ literal|1
 condition|)
 empty_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/*  * Allocate an sf_buf for the given vm_page.  On this machine, however, there  * is no sf_buf object.  Instead, an opaque pointer to the given vm_page is  * returned.  */
-end_comment
-
-begin_function
-name|struct
-name|sf_buf
-modifier|*
-name|sf_buf_alloc
-parameter_list|(
-name|struct
-name|vm_page
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|pri
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-expr|struct
-name|sf_buf
-operator|*
-operator|)
-name|m
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Free the sf_buf.  In fact, do nothing because there are no resources  * associated with the sf_buf.  */
-end_comment
-
-begin_function
-name|void
-name|sf_buf_free
-parameter_list|(
-name|struct
-name|sf_buf
-modifier|*
-name|sf
-parameter_list|)
-block|{ }
 end_function
 
 begin_comment

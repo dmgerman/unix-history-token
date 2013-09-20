@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: kvatoname.c,v 1.1.4.1 2006/06/16 17:21:05 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ condition|(
 operator|(
 name|opts
 operator|&
-name|OPT_DONOTHING
+name|OPT_DONTOPEN
 operator|)
 operator|==
 literal|0

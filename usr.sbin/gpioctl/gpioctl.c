@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -189,28 +195,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tgpioctl -f ctldev -l [-v]\n"
+literal|"\tgpioctl [-f ctldev] -l [-v]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tgpioctl -f ctldev -t pin\n"
+literal|"\tgpioctl [-f ctldev] -t pin\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tgpioctl -f ctldev -c pin flag ...\n"
+literal|"\tgpioctl [-f ctldev] -c pin flag ...\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\tgpioctl -f ctldev pin [0|1]\n"
+literal|"\tgpioctl [-f ctldev] pin [0|1]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -710,6 +716,13 @@ name|gpio_req
 name|req
 decl_stmt|;
 name|char
+name|defctlfile
+index|[]
+init|=
+name|_PATH_DEVGPIOC
+literal|"0"
+decl_stmt|;
+name|char
 modifier|*
 name|ctlfile
 init|=
@@ -906,10 +919,9 @@ name|ctlfile
 operator|==
 name|NULL
 condition|)
-name|fail
-argument_list|(
-literal|"No gpioctl device provided\n"
-argument_list|)
+name|ctlfile
+operator|=
+name|defctlfile
 expr_stmt|;
 name|fd
 operator|=

@@ -386,6 +386,18 @@ directive|include
 file|<netinet/ip_options.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<crypto/sha1.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<crypto/sha2/sha2.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1918,6 +1930,21 @@ parameter_list|)
 end_define
 
 begin_comment
+comment|/*  * SCTP protocol specific mbuf flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOTIFICATION
+value|M_PROTO1
+end_define
+
+begin_comment
+comment|/* SCTP notification */
+end_comment
+
+begin_comment
 comment|/*  * IP output routines  */
 end_comment
 
@@ -1937,7 +1964,7 @@ parameter_list|,
 name|vrf_id
 parameter_list|)
 define|\
-value|{ \ 	int o_flgs = IP_RAWOUTPUT; \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& \ 	    local_stcb->sctp_ep&& \ 	    local_stcb->sctp_ep->sctp_socket) \ 		o_flgs |= local_stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE; \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
+value|{ \ 	int o_flgs = IP_RAWOUTPUT; \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& \ 	    local_stcb->sctp_ep&& \ 	    local_stcb->sctp_ep->sctp_socket) \ 		o_flgs |= local_stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE; \ 	m_clrprotoflags(o_pak); \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
 end_define
 
 begin_define
@@ -1958,7 +1985,7 @@ parameter_list|,
 name|vrf_id
 parameter_list|)
 define|\
-value|{ \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& local_stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(local_stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }
+value|{ \ 	struct sctp_tcb *local_stcb = stcb; \ 	m_clrprotoflags(o_pak); \ 	if (local_stcb&& local_stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(local_stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }
 end_define
 
 begin_function_decl
@@ -1993,12 +2020,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_SHA2
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_READ_RANDOM
 parameter_list|(
 name|buf
@@ -2008,29 +2029,6 @@ parameter_list|)
 value|read_random(buf, len)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_SCTP_SHA1
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/sctp_sha1.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<crypto/sha1.h>
-end_include
-
 begin_comment
 comment|/* map standard crypto API names */
 end_comment
@@ -2038,21 +2036,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SHA1_Init
+name|SCTP_SHA1_CTX
+value|SHA1_CTX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SHA1_INIT
 value|SHA1Init
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHA1_Update
+name|SCTP_SHA1_UPDATE
 value|SHA1Update
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHA1_Final
+name|SCTP_SHA1_FINAL
 parameter_list|(
 name|x
 parameter_list|,
@@ -2061,30 +2066,38 @@ parameter_list|)
 value|SHA1Final((caddr_t)x, y)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_CTX
+value|SHA256_CTX
+end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SHA2
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_INIT
+value|SHA256_Init
+end_define
 
-begin_include
-include|#
-directive|include
-file|<crypto/sha2/sha2.h>
-end_include
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_UPDATE
+value|SHA256_Update
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SCTP_SHA256_FINAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|SHA256_Final((caddr_t)x, y)
+end_define
 
 begin_endif
 endif|#

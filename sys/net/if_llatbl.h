@@ -32,12 +32,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"opt_ofed.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_rwlock.h>
 end_include
 
@@ -226,9 +220,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OFED
 name|uint8_t
 name|mac8
 index|[
@@ -236,8 +227,6 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* IB needs 20 bytes. */
-endif|#
-directive|endif
 block|}
 name|ll_addr
 union|;

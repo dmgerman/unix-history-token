@@ -1637,6 +1637,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|if_tun
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1858,13 +1868,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 name|sc
 operator|=
 name|malloc
@@ -2855,22 +2858,6 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|"address set\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SIOCSIFDSTADDR
-case|:
-name|tuninit
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|TUNDEBUG
-argument_list|(
-name|ifp
-argument_list|,
-literal|"destination address set\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4756,7 +4743,6 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-comment|/* First chunk of an mbuf contains good junk */
 if|if
 condition|(
 name|harvest
@@ -4765,15 +4751,20 @@ name|point_to_point
 condition|)
 name|random_harvest
 argument_list|(
+operator|&
+operator|(
 name|m
+operator|->
+name|m_data
+operator|)
 argument_list|,
-literal|16
+literal|12
 argument_list|,
 literal|3
 argument_list|,
 literal|0
 argument_list|,
-name|RANDOM_NET
+name|RANDOM_NET_TUN
 argument_list|)
 expr_stmt|;
 name|ifp

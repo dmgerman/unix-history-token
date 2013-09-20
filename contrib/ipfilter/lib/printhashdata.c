@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -9,19 +9,11 @@ directive|include
 file|"ipf.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PRINTF
-value|(void)printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|FPRINTF
-value|(void)fprintf
-end_define
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_function
 name|void
@@ -64,7 +56,11 @@ name|IPHASH_ANON
 condition|)
 name|PRINTF
 argument_list|(
-literal|"# 'anonymous' table\n"
+literal|"# 'anonymous' table refs %d\n"
+argument_list|,
+name|hp
+operator|->
+name|iph_ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -159,7 +155,7 @@ break|break;
 block|}
 name|PRINTF
 argument_list|(
-literal|" role = "
+literal|" role="
 argument_list|)
 expr_stmt|;
 block|}
@@ -169,7 +165,7 @@ name|PRINTF
 argument_list|(
 literal|"Hash Table %s: %s"
 argument_list|,
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|hp
@@ -214,61 +210,13 @@ literal|"Role: "
 argument_list|)
 expr_stmt|;
 block|}
-switch|switch
-condition|(
-name|hp
-operator|->
-name|iph_unit
-condition|)
-block|{
-case|case
-name|IPL_LOGNAT
-case|:
-name|PRINTF
+name|printunit
 argument_list|(
-literal|"nat"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGIPF
-case|:
-name|PRINTF
-argument_list|(
-literal|"ipf"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGAUTH
-case|:
-name|PRINTF
-argument_list|(
-literal|"auth"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IPL_LOGCOUNT
-case|:
-name|PRINTF
-argument_list|(
-literal|"count"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default :
-name|PRINTF
-argument_list|(
-literal|"#%d"
-argument_list|,
 name|hp
 operator|->
 name|iph_unit
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 operator|(
@@ -295,14 +243,14 @@ name|IPHASH_LOOKUP
 condition|)
 name|PRINTF
 argument_list|(
-literal|" type = hash"
+literal|" type=hash"
 argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|" %s = %s size = %lu"
+literal|" %s=%s size=%lu"
 argument_list|,
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|hp
@@ -336,7 +284,7 @@ literal|0
 condition|)
 name|PRINTF
 argument_list|(
-literal|" seed = %lu"
+literal|" seed=%lu"
 argument_list|,
 name|hp
 operator|->
@@ -422,7 +370,10 @@ name|iph_ref
 argument_list|,
 name|hp
 operator|->
-name|iph_masks
+name|iph_maskset
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -468,12 +419,15 @@ operator|)
 operator|&
 name|hp
 operator|->
-name|iph_masks
+name|iph_maskset
+index|[
+literal|0
+index|]
 condition|)
 block|{
 name|ntomask
 argument_list|(
-literal|4
+name|AF_INET
 argument_list|,
 name|i
 argument_list|,

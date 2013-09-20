@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_abbrev.c	10.7 (Berkeley) 3/6/96"
+literal|"$Id: ex_abbrev.c,v 10.10 2001/12/16 18:18:54 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,18 +109,14 @@ begin_function
 name|int
 name|ex_abbr
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|CHAR_T
 modifier|*
@@ -242,7 +238,7 @@ name|p
 control|)
 if|if
 condition|(
-name|isblank
+name|ISBLANK
 argument_list|(
 name|p
 index|[
@@ -428,18 +424,14 @@ begin_function
 name|int
 name|ex_unabbr
 parameter_list|(
-name|sp
-parameter_list|,
-name|cmdp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|EXCMD
 modifier|*
 name|cmdp
-decl_stmt|;
+parameter_list|)
 block|{
 name|ARGS
 modifier|*
@@ -482,7 +474,7 @@ name|SEQ_ABBREV
 argument_list|)
 condition|)
 block|{
-name|msgq_str
+name|msgq_wstr
 argument_list|(
 name|sp
 argument_list|,

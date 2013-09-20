@@ -22794,9 +22794,6 @@ case|:
 endif|#
 directive|endif
 case|case
-name|SIOCSIFDSTADDR
-case|:
-case|case
 name|SIOCAIFADDR
 case|:
 case|case

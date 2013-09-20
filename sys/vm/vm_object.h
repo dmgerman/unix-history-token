@@ -85,6 +85,7 @@ expr_stmt|;
 comment|/* chain of shadow objects */
 name|TAILQ_HEAD
 argument_list|(
+argument|respgs
 argument_list|,
 argument|vm_page
 argument_list|)

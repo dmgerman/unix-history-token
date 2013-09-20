@@ -3423,6 +3423,10 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Fill a contiguous region with all-zeroes.  Note ZEROBUFSIZE is by  * definition a multiple of dev_bsize.  */
+end_comment
+
 begin_function
 name|void
 name|blzero
@@ -3454,10 +3458,6 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|len
-operator|=
-name|ZEROBUFSIZE
-expr_stmt|;
 if|if
 condition|(
 name|zero
@@ -3469,7 +3469,7 @@ name|zero
 operator|=
 name|calloc
 argument_list|(
-name|len
+name|ZEROBUFSIZE
 argument_list|,
 literal|1
 argument_list|)
@@ -3521,19 +3521,14 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
+name|len
+operator|=
 name|size
 operator|>
-name|len
-condition|)
-name|size
-operator|=
-name|len
-expr_stmt|;
-else|else
-name|len
-operator|=
+name|ZEROBUFSIZE
+condition|?
+name|ZEROBUFSIZE
+else|:
 name|size
 expr_stmt|;
 if|if

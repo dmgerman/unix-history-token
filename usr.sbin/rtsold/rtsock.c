@@ -375,6 +375,10 @@ expr|struct
 name|rt_msghdr
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|next
 expr_stmt|;
 if|if
@@ -552,7 +556,7 @@ decl_stmt|;
 name|struct
 name|ifinfo
 modifier|*
-name|ifinfo
+name|ifi
 decl_stmt|;
 name|ifan
 operator|=
@@ -624,7 +628,7 @@ operator|->
 name|ifan_name
 argument_list|)
 expr_stmt|;
-name|ifinfo
+name|ifi
 operator|=
 name|find_ifinfo
 argument_list|(
@@ -635,7 +639,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ifinfo
+name|ifi
 condition|)
 block|{
 if|if
@@ -659,7 +663,7 @@ name|ifan_name
 argument_list|)
 expr_stmt|;
 block|}
-name|ifinfo
+name|ifi
 operator|->
 name|state
 operator|=

@@ -1254,9 +1254,14 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|hatm_mbuf0_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|buf
@@ -1336,14 +1341,24 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|hatm_mbuf1_free
 parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
 name|void
 modifier|*
 name|buf
@@ -1423,6 +1438,11 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EXT_FREE_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -2504,8 +2524,13 @@ name|MBUF0_OFFSET
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|hatm_mbuf0_free
 argument_list|(
+name|NULL
+argument_list|,
 name|c0
 argument_list|,
 name|sc
@@ -2690,8 +2715,13 @@ name|MBUF1_OFFSET
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|hatm_mbuf1_free
 argument_list|(
+name|NULL
+argument_list|,
 name|c1
 argument_list|,
 name|sc

@@ -162,10 +162,8 @@ name|gpio_npins
 decl_stmt|;
 name|struct
 name|gpio_pin
+modifier|*
 name|gpio_pins
-index|[
-name|AR71XX_GPIO_PINS
-index|]
 decl_stmt|;
 block|}
 struct|;

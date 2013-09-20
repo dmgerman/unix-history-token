@@ -97,9 +97,6 @@ name|struct
 name|cam_periph
 modifier|*
 name|periph
-parameter_list|,
-name|int
-name|topology_lock_held
 parameter_list|)
 function_decl|;
 end_function_decl

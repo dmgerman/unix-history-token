@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	10.15 (Berkeley) 9/15/96"
+literal|"$Id: screen.c,v 10.25 2011/12/04 04:06:45 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,27 +115,19 @@ begin_function
 name|int
 name|screen_init
 parameter_list|(
-name|gp
-parameter_list|,
-name|orig
-parameter_list|,
-name|spp
-parameter_list|)
 name|GS
 modifier|*
 name|gp
-decl_stmt|;
+parameter_list|,
 name|SCR
 modifier|*
 name|orig
-decl_stmt|,
-decl|*
+parameter_list|,
+name|SCR
+modifier|*
 modifier|*
 name|spp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|SCR
 modifier|*
@@ -202,9 +194,8 @@ literal|2
 expr_stmt|;
 comment|/* Anything> 1 */
 comment|/* 	 * XXX 	 * sp->defscroll is initialized by the opts_init() code because 	 * we don't have the option information yet. 	 */
-name|CIRCLEQ_INIT
+name|TAILQ_INIT
 argument_list|(
-operator|&
 name|sp
 operator|->
 name|tiq
@@ -309,7 +300,7 @@ name|sp
 operator|->
 name|re
 operator|=
-name|v_strdup
+name|v_wstrdup
 argument_list|(
 name|sp
 argument_list|,
@@ -349,7 +340,7 @@ name|sp
 operator|->
 name|subre
 operator|=
-name|v_strdup
+name|v_wstrdup
 argument_list|(
 name|sp
 argument_list|,
@@ -389,7 +380,7 @@ name|sp
 operator|->
 name|repl
 operator|=
-name|v_strdup
+name|v_wstrdup
 argument_list|(
 name|sp
 argument_list|,
@@ -555,6 +546,21 @@ comment|/* Vi. */
 goto|goto
 name|err
 goto|;
+name|sp
+operator|->
+name|cl_private
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
+name|conv_init
+argument_list|(
+name|orig
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 operator|*
 name|spp
 operator|=
@@ -578,7 +584,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * screen_end --  *	Release a screen, no matter what had (and had not) been  *	initialized.  *  * PUBLIC: int screen_end __P((SCR *));  */
@@ -588,12 +594,10 @@ begin_function
 name|int
 name|screen_end
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|rval
@@ -616,17 +620,15 @@ return|;
 comment|/* 	 * Remove the screen from the displayed queue. 	 * 	 * If a created screen failed during initialization, it may not 	 * be linked into the chain. 	 */
 if|if
 condition|(
-name|sp
-operator|->
-name|q
-operator|.
-name|cqe_next
-operator|!=
-name|NULL
-condition|)
-name|CIRCLEQ_REMOVE
+name|TAILQ_ENTRY_ISVALID
 argument_list|(
-operator|&
+name|sp
+argument_list|,
+name|q
+argument_list|)
+condition|)
+name|TAILQ_REMOVE
+argument_list|(
 name|sp
 operator|->
 name|gp
@@ -652,23 +654,6 @@ name|rval
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_PERL_INTERP
-if|if
-condition|(
-name|perl_screen_end
-argument_list|(
-name|sp
-argument_list|)
-condition|)
-comment|/* End perl. */
-name|rval
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|v_screen_end
@@ -751,17 +736,16 @@ block|}
 comment|/* Free any text input. */
 if|if
 condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
 name|sp
 operator|->
 name|tiq
-operator|.
-name|cqh_first
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 name|text_lfree
 argument_list|(
-operator|&
 name|sp
 operator|->
 name|tiq
@@ -878,6 +862,12 @@ operator|->
 name|newl
 argument_list|)
 expr_stmt|;
+comment|/* Free the iconv environment */
+name|conv_end
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 comment|/* Free all the options */
 name|opts_free
 argument_list|(
@@ -907,12 +897,10 @@ name|SCR
 modifier|*
 name|screen_next
 parameter_list|(
-name|sp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|)
 block|{
 name|GS
 modifier|*
@@ -929,35 +917,14 @@ name|sp
 operator|->
 name|gp
 expr_stmt|;
-for|for
-control|(
-name|next
-operator|=
-name|gp
-operator|->
-name|dq
-operator|.
-name|cqh_first
-init|;
-name|next
-operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|gp
-operator|->
-name|dq
-condition|;
-name|next
-operator|=
-name|next
-operator|->
-name|q
-operator|.
-name|cqe_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|next
+argument_list|,
+argument|gp->dq
+argument_list|,
+argument|q
+argument_list|)
 if|if
 condition|(
 name|next
@@ -969,14 +936,7 @@ if|if
 condition|(
 name|next
 operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|gp
-operator|->
-name|dq
+name|NULL
 condition|)
 return|return
 operator|(
@@ -986,33 +946,26 @@ return|;
 comment|/* Try the hidden queue; if found, move screen to the display queue. */
 if|if
 condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
 name|gp
 operator|->
 name|hq
-operator|.
-name|cqh_first
-operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|gp
-operator|->
-name|hq
+argument_list|)
 condition|)
 block|{
 name|next
 operator|=
+name|TAILQ_FIRST
+argument_list|(
 name|gp
 operator|->
 name|hq
-operator|.
-name|cqh_first
+argument_list|)
 expr_stmt|;
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
-operator|&
 name|gp
 operator|->
 name|hq
@@ -1022,9 +975,8 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
-operator|&
 name|gp
 operator|->
 name|dq

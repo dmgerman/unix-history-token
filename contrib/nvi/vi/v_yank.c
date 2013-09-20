@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_yank.c	10.9 (Berkeley) 5/19/96"
+literal|"$Id: v_yank.c,v 10.10 2001/06/25 15:19:36 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,18 +91,14 @@ begin_function
 name|int
 name|v_yank
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len

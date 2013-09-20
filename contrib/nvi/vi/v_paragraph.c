@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_paragraph.c	10.7 (Berkeley) 3/6/96"
+literal|"$Id: v_paragraph.c,v 10.10 2001/06/25 15:19:32 skimo Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,18 +118,14 @@ begin_function
 name|int
 name|v_paragraphf
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 enum|enum
 block|{
@@ -154,10 +150,11 @@ decl_stmt|;
 name|int
 name|isempty
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|lp
 decl_stmt|;
@@ -676,18 +673,14 @@ begin_function
 name|int
 name|v_paragraphb
 parameter_list|(
-name|sp
-parameter_list|,
-name|vp
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|VICMD
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|)
 block|{
 enum|enum
 block|{
@@ -705,10 +698,11 @@ name|cnt
 decl_stmt|,
 name|lno
 decl_stmt|;
-name|char
+name|CHAR_T
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|lp
 decl_stmt|;
@@ -1012,26 +1006,18 @@ begin_function
 name|int
 name|v_buildps
 parameter_list|(
-name|sp
-parameter_list|,
-name|p_p
-parameter_list|,
-name|s_p
-parameter_list|)
 name|SCR
 modifier|*
 name|sp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|p_p
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|s_p
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|VI_PRIVATE
 modifier|*
@@ -1174,7 +1160,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

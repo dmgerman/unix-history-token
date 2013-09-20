@@ -196,7 +196,7 @@ comment|/* (c) min pages desired on cache queue */
 name|u_int
 name|v_cache_max
 decl_stmt|;
-comment|/* (c) max pages in cached obj */
+comment|/* (c) max pages in cached obj (unused) */
 name|u_int
 name|v_pageout_free_min
 decl_stmt|;
@@ -257,6 +257,13 @@ specifier|extern
 name|struct
 name|vmmeter
 name|cnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_pageout_wakeup_thresh
 decl_stmt|;
 end_decl_stmt
 
@@ -374,15 +381,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
 name|cnt
 operator|.
 name|v_free_target
-operator|+
-name|cnt
-operator|.
-name|v_cache_min
-operator|)
 operator|-
 operator|(
 name|cnt
@@ -413,17 +414,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|cnt
-operator|.
-name|v_free_reserved
-operator|+
-name|cnt
-operator|.
-name|v_cache_min
-operator|)
-operator|>
-operator|(
 name|cnt
 operator|.
 name|v_free_count
@@ -431,7 +421,8 @@ operator|+
 name|cnt
 operator|.
 name|v_cache_count
-operator|)
+operator|<
+name|vm_pageout_wakeup_thresh
 operator|)
 return|;
 block|}

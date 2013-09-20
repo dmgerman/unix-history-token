@@ -55,61 +55,6 @@ name|defined
 argument_list|(
 name|XEN
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|XENHVM
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NR_VIRQS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NR_VIRQS
-value|24
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NR_IPIS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NR_IPIS
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
 end_if
 
 begin_comment
@@ -151,24 +96,7 @@ name|PCPU_XEN_FIELDS
 define|\
 value|;								\ 	u_int	pc_cr3;
 comment|/* track cr3 for R1/R3*/
-value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\ 	int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS];					\ 	char	__pad[77]
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|XENHVM
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|PCPU_XEN_FIELDS
-define|\
-value|;								\ 	unsigned int pc_last_processed_l1i;				\ 	unsigned int pc_last_processed_l2i;				\ 	char	__pad[229]
+value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	char	__pad[189]
 end_define
 
 begin_else
@@ -177,7 +105,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !XEN&& !XENHVM */
+comment|/* !XEN */
 end_comment
 
 begin_define

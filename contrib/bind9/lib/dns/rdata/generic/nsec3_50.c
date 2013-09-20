@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008, 2009, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2008, 2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -669,6 +669,9 @@ decl_stmt|;
 name|isc_uint32_t
 name|iterations
 decl_stmt|;
+name|isc_boolean_t
+name|first
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|rdata
@@ -687,11 +690,6 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-name|UNUSED
-argument_list|(
-name|tctx
-argument_list|)
-expr_stmt|;
 name|dns_rdata_toregion
 argument_list|(
 name|rdata
@@ -700,6 +698,7 @@ operator|&
 name|sr
 argument_list|)
 expr_stmt|;
+comment|/* Hash */
 name|hash
 operator|=
 name|uint8_fromregion
@@ -716,6 +715,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%u "
+argument_list|,
+name|hash
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+name|buf
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Flags */
 name|flags
 operator|=
 name|uint8_fromregion
@@ -732,6 +751,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%u "
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+name|buf
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Iterations */
 name|iterations
 operator|=
 name|uint16_fromregion
@@ -754,44 +793,6 @@ name|buf
 argument_list|,
 literal|"%u "
 argument_list|,
-name|hash
-argument_list|)
-expr_stmt|;
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-name|buf
-argument_list|,
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%u "
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-name|buf
-argument_list|,
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%u "
-argument_list|,
 name|iterations
 argument_list|)
 expr_stmt|;
@@ -805,6 +806,7 @@ name|target
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Salt */
 name|j
 operator|=
 name|uint8_fromregion
@@ -872,28 +874,53 @@ name|i
 operator|-
 name|j
 expr_stmt|;
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-literal|" "
-argument_list|,
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|RETERR
 argument_list|(
 name|str_totext
 argument_list|(
-literal|"- "
+literal|"-"
 argument_list|,
 name|target
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tctx
+operator|->
+name|flags
+operator|&
+name|DNS_STYLEFLAG_MULTILINE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+literal|" ("
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+name|tctx
+operator|->
+name|linebreak
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Next hash */
 name|j
 operator|=
 name|uint8_fromregion
@@ -954,6 +981,33 @@ name|i
 operator|-
 name|j
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tctx
+operator|->
+name|flags
+operator|&
+name|DNS_STYLEFLAG_MULTILINE
+operator|)
+operator|==
+literal|0
+condition|)
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+literal|" "
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Types covered */
+name|first
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -971,6 +1025,36 @@ operator|+=
 name|len
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|tctx
+operator|->
+name|flags
+operator|&
+name|DNS_STYLEFLAG_MULTILINE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+name|tctx
+operator|->
+name|linebreak
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
 name|INSIST
 argument_list|(
 name|i
@@ -1107,6 +1191,11 @@ literal|8
 operator|+
 name|k
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|first
+condition|)
 name|RETERR
 argument_list|(
 name|str_totext
@@ -1116,6 +1205,10 @@ argument_list|,
 name|target
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|first
+operator|=
+name|ISC_FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -1170,6 +1263,28 @@ block|}
 block|}
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|tctx
+operator|->
+name|flags
+operator|&
+name|DNS_STYLEFLAG_MULTILINE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|RETERR
+argument_list|(
+name|str_totext
+argument_list|(
+literal|" )"
+argument_list|,
+name|target
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_R_SUCCESS

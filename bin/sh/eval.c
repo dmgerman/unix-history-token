@@ -484,10 +484,6 @@ name|loopnest
 operator|=
 literal|0
 expr_stmt|;
-name|funcnest
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 
@@ -1445,11 +1441,7 @@ if|if
 condition|(
 name|evalskip
 operator|==
-name|SKIPFUNC
-operator|||
-name|evalskip
-operator|==
-name|SKIPFILE
+name|SKIPRETURN
 condition|)
 name|status
 operator|=
@@ -5220,7 +5212,7 @@ if|if
 condition|(
 name|evalskip
 operator|==
-name|SKIPFUNC
+name|SKIPRETURN
 condition|)
 block|{
 name|evalskip
@@ -6211,32 +6203,14 @@ argument_list|)
 else|:
 name|oexitstatus
 decl_stmt|;
-if|if
-condition|(
-name|funcnest
-condition|)
-block|{
 name|evalskip
 operator|=
-name|SKIPFUNC
+name|SKIPRETURN
 expr_stmt|;
 name|skipcount
 operator|=
 literal|1
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* skip the rest of the file */
-name|evalskip
-operator|=
-name|SKIPFILE
-expr_stmt|;
-name|skipcount
-operator|=
-literal|1
-expr_stmt|;
-block|}
 return|return
 name|ret
 return|;

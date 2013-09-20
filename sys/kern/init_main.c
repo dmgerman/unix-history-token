@@ -1836,14 +1836,6 @@ name|schedinit
 argument_list|()
 expr_stmt|;
 comment|/* scheduler gets its house in order */
-comment|/* 	 * Initialize sleep queue hash table 	 */
-name|sleepinit
-argument_list|()
-expr_stmt|;
-comment|/* 	 * additional VM structures 	 */
-name|vm_init2
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Create process 0 (the swapper). 	 */
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -3133,7 +3125,9 @@ name|addr
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,

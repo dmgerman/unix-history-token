@@ -24,64 +24,46 @@ end_include
 begin_define
 define|#
 directive|define
-name|DOSBBSECTOR
-value|0
+name|PC98_BBSECTOR
+value|1
 end_define
 
 begin_comment
 comment|/* DOS boot block relative sector number */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|DOSPARTOFF
-end_undef
-
 begin_define
 define|#
 directive|define
-name|DOSPARTOFF
+name|PC98_PARTOFF
 value|0
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|DOSPARTSIZE
-end_undef
-
 begin_define
 define|#
 directive|define
-name|DOSPARTSIZE
+name|PC98_PARTSIZE
 value|32
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|NDOSPART
-end_undef
-
 begin_define
 define|#
 directive|define
-name|NDOSPART
+name|PC98_NPARTS
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOSMAGICOFFSET
+name|PC98_MAGICOFS
 value|510
 end_define
 
 begin_define
 define|#
 directive|define
-name|DOSMAGIC
+name|PC98_MAGIC
 value|0xAA55
 end_define
 
@@ -141,16 +123,10 @@ name|DOSSID_386BSD
 value|(PC98_SID_386BSD | PC98_SID_ACTIVE)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|DOSPTYP_386BSD
-end_undef
-
 begin_define
 define|#
 directive|define
-name|DOSPTYP_386BSD
+name|PC98_PTYP_386BSD
 value|(DOSSID_386BSD<< 8 | DOSMID_386BSD)
 end_define
 
@@ -242,7 +218,7 @@ expr|struct
 name|pc98_partition
 argument_list|)
 operator|==
-name|DOSPARTSIZE
+name|PC98_PARTSIZE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

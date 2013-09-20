@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)screen.h	10.24 (Berkeley) 7/19/96  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: screen.h,v 10.26 2011/12/12 22:31:36 zy Exp $  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ struct|struct
 name|_scr
 block|{
 comment|/* INITIALIZED AT SCREEN CREATE. */
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|_scr
 argument_list|)
@@ -112,9 +112,13 @@ name|t_minrows
 decl_stmt|;
 comment|/* 1-N: min number of text rows. */
 name|size_t
-name|woff
+name|coff
 decl_stmt|;
-comment|/* 0-N: screen offset in frame. */
+comment|/* 0-N: screen col offset in display. */
+name|size_t
+name|roff
+decl_stmt|;
+comment|/* 0-N: screen row offset in display. */
 comment|/* Cursor's: */
 name|recno_t
 name|lno
@@ -178,6 +182,9 @@ decl_stmt|;
 comment|/* Ex/vi: lines changed by last op. */
 name|TEXTH
 name|tiq
+index|[
+literal|1
+index|]
 decl_stmt|;
 comment|/* Ex/vi: text input queue. */
 name|SCRIPT
@@ -190,7 +197,7 @@ name|defscroll
 decl_stmt|;
 comment|/* Vi: ^D, ^U scroll information. */
 comment|/* Display character. */
-name|CHAR_T
+name|char
 name|cname
 index|[
 name|MAX_CHARACTER_COLUMNS
@@ -202,6 +209,10 @@ name|size_t
 name|clen
 decl_stmt|;
 comment|/* Length of display character. */
+name|ARG_CHAR_T
+name|lastc
+decl_stmt|;
+comment|/* The last display character. */
 enum|enum
 block|{
 comment|/* Vi editor mode. */
@@ -231,9 +242,17 @@ decl_stmt|;
 comment|/* Vi private area. */
 name|void
 modifier|*
-name|perl_private
+name|cl_private
 decl_stmt|;
-comment|/* Perl private area. */
+comment|/* Curses private area. */
+name|CONV
+name|conv
+decl_stmt|;
+comment|/* Conversion functions. */
+name|CONVWIN
+name|cw
+decl_stmt|;
+comment|/* Conversion buffer. */
 comment|/* PARTIALLY OR COMPLETELY COPIED FROM PREVIOUS SCREEN. */
 name|char
 modifier|*
@@ -273,12 +292,20 @@ comment|/* Compile ctag pattern. */
 define|#
 directive|define
 name|RE_WSTART
-value|"[[:<:]]"
+value|L("[[:<:]]")
 comment|/* Ex/vi: not-in-word search pattern. */
 define|#
 directive|define
 name|RE_WSTOP
-value|"[[:>:]]"
+value|L("[[:>:]]")
+define|#
+directive|define
+name|RE_WSTART_LEN
+value|(SIZE(RE_WSTART) - 1)
+define|#
+directive|define
+name|RE_WSTOP_LEN
+value|(SIZE(RE_WSTOP) - 1)
 comment|/* Ex/vi: flags to search routines. */
 define|#
 directive|define
@@ -334,7 +361,7 @@ name|regex_t
 name|re_c
 decl_stmt|;
 comment|/* Search RE: compiled form. */
-name|char
+name|CHAR_T
 modifier|*
 name|re
 decl_stmt|;
@@ -347,7 +374,7 @@ name|regex_t
 name|subre_c
 decl_stmt|;
 comment|/* Substitute RE: compiled form. */
-name|char
+name|CHAR_T
 modifier|*
 name|subre
 decl_stmt|;
@@ -356,7 +383,7 @@ name|size_t
 name|subre_len
 decl_stmt|;
 comment|/* Substitute RE: uncompiled length). */
-name|char
+name|CHAR_T
 modifier|*
 name|repl
 decl_stmt|;
@@ -541,6 +568,11 @@ directive|define
 name|SC_TINPUT_INFO
 value|0x10000000
 comment|/* Doing text input on info line. */
+define|#
+directive|define
+name|SC_CONV_ERROR
+value|0x20000000
+comment|/* Met with a conversion error. */
 name|u_int32_t
 name|flags
 decl_stmt|;

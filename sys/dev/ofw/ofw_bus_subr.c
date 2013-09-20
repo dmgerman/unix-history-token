@@ -1413,7 +1413,10 @@ if|if
 condition|(
 name|OF_searchprop
 argument_list|(
+name|OF_xref_phandle
+argument_list|(
 name|parent
+argument_list|)
 argument_list|,
 literal|"#interrupt-cells"
 argument_list|,

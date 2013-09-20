@@ -643,7 +643,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/*  * Features supported in this implementation  *  * We support the following REV1 features:  * - EXT2F_ROCOMPAT_SPARSESUPER  * - EXT2F_ROCOMPAT_LARGEFILE  * - EXT2F_INCOMPAT_FTYPE  */
+comment|/*  * Features supported in this implementation  *  * We support the following REV1 features:  * - EXT2F_ROCOMPAT_SPARSESUPER  * - EXT2F_ROCOMPAT_LARGEFILE  * - EXT2F_INCOMPAT_FTYPE  *  * We partially (read-only) support the following EXT4 features:  * - EXT2F_ROCOMPAT_HUGE_FILE  * - EXT2F_ROCOMPAT_EXTRA_ISIZE  * - EXT2F_INCOMPAT_EXTENTS  */
 end_comment
 
 begin_define
@@ -664,7 +664,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_INCOMPAT_SUPP
-value|EXT2F_INCOMPAT_FTYPE
+value|(EXT2F_INCOMPAT_FTYPE |	\ 					 EXT2F_INCOMPAT_EXTENTS)
 end_define
 
 begin_comment

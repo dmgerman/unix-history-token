@@ -389,7 +389,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -398,20 +398,6 @@ argument_list|, ,
 name|exec
 argument_list|,
 name|exec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec
-argument_list|,
-literal|0
 argument_list|,
 literal|"char *"
 argument_list|)
@@ -419,7 +405,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -430,20 +416,6 @@ argument_list|,
 name|exec
 operator|-
 name|failure
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec_failure
-argument_list|,
-literal|0
 argument_list|,
 literal|"int"
 argument_list|)
@@ -451,7 +423,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -462,20 +434,6 @@ argument_list|,
 name|exec
 operator|-
 name|success
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec_success
-argument_list|,
-literal|0
 argument_list|,
 literal|"char *"
 argument_list|)
@@ -1611,6 +1569,9 @@ name|binvp
 init|=
 name|NULL
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|credential_changing
 decl_stmt|;
@@ -2000,7 +1961,13 @@ name|args
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_FEXECVE
+argument_list|)
 argument_list|,
 operator|&
 name|binvp
@@ -3901,10 +3868,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_NOBUSY
-operator||
-name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3919,14 +3882,6 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|vm_page_busy
-argument_list|(
-name|ma
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 name|initial_pagein
 operator|=
 name|VM_INITIAL_PAGEIN
@@ -3993,33 +3948,15 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
-name|ma
-index|[
-name|i
-index|]
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-operator|||
-name|ma
-index|[
-name|i
-index|]
-operator|->
-name|busy
-condition|)
-break|break;
-name|vm_page_busy
+name|vm_page_tryxbusy
 argument_list|(
 name|ma
 index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 else|else
 block|{
@@ -4144,7 +4081,8 @@ name|EIO
 operator|)
 return|;
 block|}
-name|vm_page_wakeup
+block|}
+name|vm_page_xunbusy
 argument_list|(
 name|ma
 index|[
@@ -4152,7 +4090,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_lock
 argument_list|(
 name|ma
@@ -5120,7 +5057,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|kmem_alloc_wait
+name|kmap_alloc_wait
 argument_list|(
 name|exec_map
 argument_list|,
@@ -5164,7 +5101,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,

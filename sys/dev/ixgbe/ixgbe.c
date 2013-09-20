@@ -10927,6 +10927,7 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|pci_alloc_msix
 argument_list|(
 name|dev
@@ -10936,6 +10937,13 @@ name|msgs
 argument_list|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|msgs
+operator|==
+name|want
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -10961,6 +10969,12 @@ name|msgs
 operator|)
 return|;
 block|}
+comment|/* 	** If MSIX alloc failed or provided us with 	** less than needed, free and fall through to MSI 	*/
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|msi
 label|:
 if|if
@@ -20491,7 +20505,7 @@ operator|&
 name|IXGBE_RXD_STAT_L4CS
 condition|)
 block|{
-name|u16
+name|u64
 name|type
 init|=
 operator|(

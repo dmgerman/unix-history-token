@@ -457,9 +457,9 @@ name|ktrcapfail
 argument_list|(
 name|CAPFAIL_SYSCALL
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#

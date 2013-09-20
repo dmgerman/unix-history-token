@@ -145,12 +145,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usbdi.h>
 end_include
 
@@ -7717,11 +7711,23 @@ block|{
 return|return
 operator|(
 operator|(
+operator|(
 name|udev
 operator|->
 name|power_mode
 operator|==
 name|USB_POWER_MODE_ON
+operator|)
+operator|&&
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
 operator|)
 operator|||
 operator|(

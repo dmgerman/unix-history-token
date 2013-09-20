@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: rdataset.h,v 1.72 2011/06/08 22:13:51 each Exp $ */
 end_comment
 
 begin_ifndef

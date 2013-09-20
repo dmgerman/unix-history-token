@@ -7823,6 +7823,9 @@ operator|&
 name|nspares
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * A root pool with concatenated devices is not supported. 	 * Thus, can not add a device to a root pool. 	 * 	 * Intent log device can not be added to a rootpool because 	 * during mountroot, zil is replayed, a seperated log device 	 * can not be accessed during the mountroot time. 	 * 	 * l2cache and spare devices are ok to be added to a rootpool. 	 */
 if|if
 condition|(
@@ -7863,6 +7866,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* illumos */
 if|if
 condition|(
 name|error
@@ -15242,7 +15248,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inputs:  * zc_name	name of dataset to rollback (to most recent snapshot)  *  * outputs:	none  */
+comment|/*  * fsname is name of dataset to rollback (to most recent snapshot)  *  * innvl is not used.  *  * outnvl: "target" -> name of most recent snapshot  * }  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -15250,9 +15260,18 @@ specifier|static
 name|int
 name|zfs_ioc_rollback
 parameter_list|(
-name|zfs_cmd_t
+specifier|const
+name|char
 modifier|*
-name|zc
+name|fsname
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|args
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|outnvl
 parameter_list|)
 block|{
 name|zfsvfs_t
@@ -15266,9 +15285,7 @@ if|if
 condition|(
 name|getzfsvfs
 argument_list|(
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|,
 operator|&
 name|zfsvfs
@@ -15298,11 +15315,11 @@ name|error
 operator|=
 name|dsl_dataset_rollback
 argument_list|(
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|,
 name|zfsvfs
+argument_list|,
+name|outnvl
 argument_list|)
 expr_stmt|;
 name|resume_err
@@ -15311,9 +15328,7 @@ name|zfs_resume_fs
 argument_list|(
 name|zfsvfs
 argument_list|,
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|)
 expr_stmt|;
 name|error
@@ -15339,11 +15354,11 @@ name|error
 operator|=
 name|dsl_dataset_rollback
 argument_list|(
-name|zc
-operator|->
-name|zc_name
+name|fsname
 argument_list|,
 name|NULL
+argument_list|,
+name|outnvl
 argument_list|)
 expr_stmt|;
 block|}
@@ -17158,6 +17173,9 @@ index|[
 name|ZFS_MAXNAMELEN
 index|]
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|boolean_t
 name|first_recvd_props
 init|=
@@ -17282,7 +17300,13 @@ name|getf
 argument_list|(
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_PREAD
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -18226,16 +18250,27 @@ block|{
 name|file_t
 modifier|*
 name|fp
-init|=
+decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
+name|fp
+operator|=
 name|getf
 argument_list|(
 name|zc
 operator|->
 name|zc_cookie
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_WRITE
 argument_list|)
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -20746,6 +20781,9 @@ name|file_t
 modifier|*
 name|fp
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|offset_t
 name|off
 decl_stmt|;
@@ -20760,7 +20798,13 @@ name|zc
 operator|->
 name|zc_cookie
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_WRITE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -22392,6 +22436,9 @@ modifier|*
 name|outnvl
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -22454,7 +22501,13 @@ name|getf
 argument_list|(
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -23535,6 +23588,27 @@ argument_list|,
 name|B_FALSE
 argument_list|)
 expr_stmt|;
+name|zfs_ioctl_register
+argument_list|(
+literal|"rollback"
+argument_list|,
+name|ZFS_IOC_ROLLBACK
+argument_list|,
+name|zfs_ioc_rollback
+argument_list|,
+name|zfs_secpolicy_rollback
+argument_list|,
+name|DATASET_NAME
+argument_list|,
+name|POOL_CHECK_SUSPENDED
+operator||
+name|POOL_CHECK_READONLY
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_TRUE
+argument_list|)
+expr_stmt|;
 comment|/* IOCTLS that use the legacy function signature */
 name|zfs_ioctl_register_legacy
 argument_list|(
@@ -23957,15 +24031,6 @@ argument_list|,
 name|zfs_ioc_destroy
 argument_list|,
 name|zfs_secpolicy_destroy
-argument_list|)
-expr_stmt|;
-name|zfs_ioctl_register_dataset_modify
-argument_list|(
-name|ZFS_IOC_ROLLBACK
-argument_list|,
-name|zfs_ioc_rollback
-argument_list|,
-name|zfs_secpolicy_rollback
 argument_list|)
 expr_stmt|;
 name|zfs_ioctl_register_dataset_modify

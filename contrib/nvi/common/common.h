@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	@(#)common.h	10.13 (Berkeley) 9/25/96  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: common.h,v 10.22 2012/04/13 05:21:50 zy Exp $  */
 end_comment
-
-begin_comment
-comment|/*  * Porting information built at configuration time.  Included before  * any of nvi's include files.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"port.h"
-end_include
 
 begin_comment
 comment|/*  * Pseudo-local includes.  These are files that are unlikely to exist  * on most machines to which we're porting vi, and we want to include  * them in a very specific order, regardless.  */
@@ -46,6 +36,22 @@ typedef|typedef
 name|struct
 name|_csc
 name|CSC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_conv
+name|CONV
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_conv_win
+name|CONVWIN
 typedef|;
 end_typedef
 
@@ -196,8 +202,6 @@ block|{
 name|C_NOTSET
 block|,
 name|C_CARATSET
-block|,
-name|C_NOCHANGE
 block|,
 name|C_ZEROSET
 block|}
@@ -404,6 +408,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"conv.h"
+end_include
+
+begin_comment
+comment|/* Required by ex.h and screen.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"../ex/ex.h"
 end_include
 
@@ -452,7 +466,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"com_extern.h"
+file|"extern.h"
 end_include
 
 end_unit

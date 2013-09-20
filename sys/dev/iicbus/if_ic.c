@@ -842,9 +842,6 @@ name|cmd
 condition|)
 block|{
 case|case
-name|SIOCSIFDSTADDR
-case|:
-case|case
 name|SIOCAIFADDR
 case|:
 case|case

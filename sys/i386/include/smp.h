@@ -503,27 +503,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|RESCHEDULE_VECTOR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CALL_FUNCTION_VECTOR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NR_IPIS
-value|2
-end_define
-
 begin_endif
 endif|#
 directive|endif

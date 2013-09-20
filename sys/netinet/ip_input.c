@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_route.h"
 end_include
 
@@ -116,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -183,6 +195,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -1778,6 +1796,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|pfil_head_unregister
+argument_list|(
+operator|&
+name|V_inet_pfil_hook
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"%s: WARNING: unable to unregister pfil hook, "
+literal|"error %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 comment|/* Cleanup in_ifaddr hash table; should be empty. */
 name|hashdestroy
 argument_list|(
@@ -2086,6 +2131,27 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
+name|IP_PROBE
+argument_list|(
+name|receive
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ip
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+argument_list|,
+name|ip
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 127/8 must not appear on wire - RFC1122 */
 name|ifp
 operator|=
@@ -3787,7 +3853,7 @@ name|m
 operator|->
 name|m_flags
 operator||=
-name|M_FRAG
+name|M_IP_FRAG
 expr_stmt|;
 block|}
 else|else
@@ -3796,7 +3862,7 @@ operator|->
 name|m_flags
 operator|&=
 operator|~
-name|M_FRAG
+name|M_IP_FRAG
 expr_stmt|;
 name|ip
 operator|->
@@ -3824,7 +3890,9 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
+name|PH_loc
+operator|.
+name|ptr
 operator|=
 name|ip
 expr_stmt|;
@@ -4005,7 +4073,7 @@ name|GETIP
 parameter_list|(
 name|m
 parameter_list|)
-value|((struct ip*)((m)->m_pkthdr.header))
+value|((struct ip*)((m)->m_pkthdr.PH_loc.ptr))
 comment|/* 	 * Handle ECN by comparing this segment with the first one; 	 * if CE is set, do not lose CE. 	 * drop if CE and not-ECT are mixed for the same packet. 	 */
 name|ecn
 operator|=
@@ -4520,7 +4588,7 @@ name|p
 operator|->
 name|m_flags
 operator|&
-name|M_FRAG
+name|M_IP_FRAG
 condition|)
 block|{
 if|if

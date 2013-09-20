@@ -1518,27 +1518,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Undo all redirections.  Called on error or interrupt.  */
-end_comment
-
-begin_function
-name|void
-name|resetredir
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-while|while
-condition|(
-name|redirlist
-condition|)
-name|popredir
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* Return true if fd 0 has already been redirected at least once.  */
 end_comment
 

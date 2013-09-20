@@ -9342,9 +9342,6 @@ case|case
 name|SIOCSIFADDR
 case|:
 case|case
-name|SIOCSIFDSTADDR
-case|:
-case|case
 name|SIOCADDMULTI
 case|:
 case|case

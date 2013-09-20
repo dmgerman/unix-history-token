@@ -2372,6 +2372,11 @@ operator|=
 name|invfo_chown
 block|,
 operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
+block|,
+operator|.
 name|fo_flags
 operator|=
 name|DFLAG_PASSABLE

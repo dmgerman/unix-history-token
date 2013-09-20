@@ -31,6 +31,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_comment
 comment|/* Building "kdump" depends on these includes */
 end_comment
@@ -83,6 +89,45 @@ end_define
 begin_comment
 comment|/* integer type */
 end_comment
+
+begin_comment
+comment|/*  * Align IOCTL structures to hide differences when running 32-bit  * programs under 64-bit kernels:  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USB_IOCTL_STRUCT_ALIGN
+parameter_list|(
+name|n
+parameter_list|)
+value|__aligned(n)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USB_IOCTL_STRUCT_ALIGN
+parameter_list|(
+name|n
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Definition of valid template sysctl values */
@@ -142,6 +187,10 @@ name|uint32_t
 name|urd_maxlen
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -179,6 +228,10 @@ name|usb_device_request
 name|ucr_request
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -193,6 +246,10 @@ name|uint8_t
 name|uai_alt_index
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -251,6 +308,10 @@ literal|8
 index|]
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -362,6 +423,10 @@ literal|8
 index|]
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|2
+argument_list|)
 struct|;
 end_struct
 
@@ -395,6 +460,10 @@ name|USB_DEVICE_PORT_PATH_MAX
 index|]
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -417,6 +486,10 @@ index|]
 decl_stmt|;
 comment|/* Indexed by transfer type UE_XXX */
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
@@ -428,6 +501,10 @@ name|uint8_t
 name|ep_index
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -439,6 +516,10 @@ name|uint8_t
 name|ep_index
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -450,6 +531,10 @@ name|uint8_t
 name|ep_index
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -535,6 +620,10 @@ name|status
 decl_stmt|;
 comment|/* see USB_ERR_XXX */
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -563,6 +652,10 @@ name|uint8_t
 name|ep_index_max
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|8
+argument_list|)
 struct|;
 end_struct
 
@@ -575,6 +668,10 @@ name|dummy
 decl_stmt|;
 comment|/* zero */
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -618,6 +715,10 @@ name|ep_no
 decl_stmt|;
 comment|/* bEndpointNumber */
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
@@ -632,7 +733,12 @@ decl_stmt|;
 name|uint16_t
 name|stream_id
 decl_stmt|;
+comment|/* stream ID */
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|4
+argument_list|)
 struct|;
 end_struct
 
@@ -644,6 +750,10 @@ name|uint8_t
 name|ep_index
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -655,6 +765,10 @@ name|uint8_t
 name|ep_index
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|1
+argument_list|)
 struct|;
 end_struct
 
@@ -688,7 +802,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* 	 * String version of quirk including terminating zero. See UQ_XXX in 	 * "usb_quirk.h". 	 */
+comment|/* 	 * String version of quirk including terminating zero. See 	 * UQ_XXX in "usb_quirk.h". 	 */
 name|char
 name|quirkname
 index|[
@@ -698,6 +812,10 @@ literal|14
 index|]
 decl_stmt|;
 block|}
+name|USB_IOCTL_STRUCT_ALIGN
+argument_list|(
+literal|2
+argument_list|)
 struct|;
 end_struct
 

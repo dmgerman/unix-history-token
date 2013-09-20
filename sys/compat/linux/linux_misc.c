@@ -1839,7 +1839,9 @@ name|a_out
 operator|->
 name|a_data
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -2077,7 +2079,9 @@ name|vmaddr
 argument_list|,
 name|bss_size
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -2113,7 +2117,7 @@ if|if
 condition|(
 name|a_out
 condition|)
-name|kmem_free_wakeup
+name|kmap_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,

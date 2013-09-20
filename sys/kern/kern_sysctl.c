@@ -1428,11 +1428,27 @@ condition|(
 operator|!
 name|recurse
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: failed attempt to "
+literal|"remove oid %s with child %s\n"
+argument_list|,
+name|oidp
+operator|->
+name|oid_name
+argument_list|,
+name|p
+operator|->
+name|oid_name
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOTEMPTY
 operator|)
 return|;
+block|}
 name|error
 operator|=
 name|sysctl_remove_oid_locked

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: adb.c,v 1.264 2011/12/05 17:10:51 each Exp $ */
 end_comment
 
 begin_comment
@@ -20227,14 +20227,13 @@ name|dns_adb_t
 modifier|*
 name|adb
 parameter_list|,
-name|isc_uint32_t
+name|size_t
 name|size
 parameter_list|)
 block|{
-name|isc_uint32_t
+name|size_t
 name|hiwater
-decl_stmt|;
-name|isc_uint32_t
+decl_stmt|,
 name|lowater
 decl_stmt|;
 name|INSIST

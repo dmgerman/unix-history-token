@@ -16304,52 +16304,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_new */
-case|case
-literal|514
-case|:
-block|{
-name|struct
-name|cap_new_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|iarg
-index|[
-literal|0
-index|]
-operator|=
-name|p
-operator|->
-name|fd
-expr_stmt|;
-comment|/* int */
-name|uarg
-index|[
-literal|1
-index|]
-operator|=
-name|p
-operator|->
-name|rights
-expr_stmt|;
-comment|/* uint64_t */
-operator|*
-name|n_args
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-block|}
-comment|/* cap_rights_get */
+comment|/* __cap_rights_get */
 case|case
 literal|515
 case|:
 block|{
 name|struct
-name|cap_rights_get_args
+name|__cap_rights_get_args
 modifier|*
 name|p
 init|=
@@ -16362,12 +16323,22 @@ index|]
 operator|=
 name|p
 operator|->
+name|version
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
 name|fd
 expr_stmt|;
 comment|/* int */
 name|uarg
 index|[
-literal|1
+literal|2
 index|]
 operator|=
 operator|(
@@ -16377,15 +16348,15 @@ name|p
 operator|->
 name|rightsp
 expr_stmt|;
-comment|/* uint64_t * */
+comment|/* cap_rights_t * */
 operator|*
 name|n_args
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_enter */
+comment|/* freebsd32_cap_enter */
 case|case
 literal|516
 case|:
@@ -16426,6 +16397,129 @@ operator|*
 name|n_args
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* pdfork */
+case|case
+literal|518
+case|:
+block|{
+name|struct
+name|pdfork_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|fdp
+expr_stmt|;
+comment|/* int * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* pdkill */
+case|case
+literal|519
+case|:
+block|{
+name|struct
+name|pdkill_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|signum
+expr_stmt|;
+comment|/* int */
+operator|*
+name|n_args
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+block|}
+comment|/* pdgetpid */
+case|case
+literal|520
+case|:
+block|{
+name|struct
+name|pdgetpid_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|pidp
+expr_stmt|;
+comment|/* pid_t * */
+operator|*
+name|n_args
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -17478,11 +17572,14 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|intptr_t
+operator|)
 name|p
 operator|->
-name|rights
+name|rightsp
 expr_stmt|;
-comment|/* uint64_t */
+comment|/* cap_rights_t * */
 operator|*
 name|n_args
 operator|=
@@ -17490,13 +17587,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
 block|{
 name|struct
-name|cap_ioctls_limit_args
+name|freebsd32_cap_ioctls_limit_args
 modifier|*
 name|p
 init|=
@@ -17524,7 +17621,7 @@ name|p
 operator|->
 name|cmds
 expr_stmt|;
-comment|/* const u_long * */
+comment|/* const uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -17542,13 +17639,13 @@ literal|3
 expr_stmt|;
 break|break;
 block|}
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
 block|{
 name|struct
-name|cap_ioctls_get_args
+name|freebsd32_cap_ioctls_get_args
 modifier|*
 name|p
 init|=
@@ -17576,7 +17673,7 @@ name|p
 operator|->
 name|cmds
 expr_stmt|;
-comment|/* u_long * */
+comment|/* uint32_t * */
 name|uarg
 index|[
 literal|2
@@ -29673,37 +29770,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_new */
-case|case
-literal|514
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-literal|"uint64_t"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* cap_rights_get */
+comment|/* __cap_rights_get */
 case|case
 literal|515
 case|:
@@ -29725,7 +29792,15 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uint64_t *"
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"cap_rights_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -29733,7 +29808,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_enter */
+comment|/* freebsd32_cap_enter */
 case|case
 literal|516
 case|:
@@ -29753,6 +29828,96 @@ case|:
 name|p
 operator|=
 literal|"u_int *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pdfork */
+case|case
+literal|518
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pdkill */
+case|case
+literal|519
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* pdgetpid */
+case|case
+literal|520
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"pid_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30529,7 +30694,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"uint64_t"
+literal|"cap_rights_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -30537,7 +30702,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
@@ -30559,7 +30724,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const u_long *"
+literal|"const uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -30575,7 +30740,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:
@@ -30597,7 +30762,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"u_long *"
+literal|"uint32_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -37333,26 +37498,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_new */
-case|case
-literal|514
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* cap_rights_get */
+comment|/* __cap_rights_get */
 case|case
 literal|515
 case|:
@@ -37371,13 +37517,70 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_enter */
+comment|/* freebsd32_cap_enter */
 case|case
 literal|516
 case|:
 comment|/* cap_getmode */
 case|case
 literal|517
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pdfork */
+case|case
+literal|518
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pdkill */
+case|case
+literal|519
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* pdgetpid */
+case|case
+literal|520
 case|:
 if|if
 condition|(
@@ -37686,7 +37889,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_ioctls_limit */
+comment|/* freebsd32_cap_ioctls_limit */
 case|case
 literal|534
 case|:
@@ -37705,7 +37908,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* cap_ioctls_get */
+comment|/* freebsd32_cap_ioctls_get */
 case|case
 literal|535
 case|:

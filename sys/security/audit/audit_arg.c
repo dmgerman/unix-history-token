@@ -3428,7 +3428,8 @@ name|void
 name|audit_arg_rights
 parameter_list|(
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|)
 block|{
 name|struct
@@ -3454,7 +3455,8 @@ name|k_ar
 operator|.
 name|ar_arg_rights
 operator|=
-name|rights
+operator|*
+name|rightsp
 expr_stmt|;
 name|ARG_SET_VALID
 argument_list|(

@@ -154,7 +154,15 @@ name|VMM_MSR_F_EMULATE
 operator||
 name|VMM_MSR_F_READONLY
 block|}
-block|, }
+block|,
+if|#
+directive|if
+literal|0
+comment|/* XXX unsupported on AMD */
+block|{ MSR_IA32_MISC_ENABLE, VMM_MSR_F_EMULATE | VMM_MSR_F_READONLY },
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -278,10 +286,18 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|uint64_t *guest_msrs, misc;
+else|#
+directive|else
 name|uint64_t
 modifier|*
 name|guest_msrs
 decl_stmt|;
+endif|#
+directive|endif
 name|guest_msrs
 operator|=
 name|vm_guest_msrs
@@ -406,6 +422,15 @@ name|PAT_UNCACHEABLE
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+literal|0
+comment|/* XXX unsupported on AMD */
+block|case MSR_IA32_MISC_ENABLE: 			misc = rdmsr(MSR_IA32_MISC_ENABLE);
+comment|/* 			 * Set mandatory bits 			 *  11:   branch trace disabled 			 *  12:   PEBS unavailable 			 * Clear unsupported features 			 *  16:   SpeedStep enable 			 *  18:   enable MONITOR FSM                          */
+block|misc |= (1<< 12) | (1<< 11); 			misc&= ~((1<< 18) | (1<< 16)); 			guest_msrs[i] = misc;                         break;
+endif|#
+directive|endif
 default|default:
 name|panic
 argument_list|(

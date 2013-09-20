@@ -311,6 +311,10 @@ block|{
 name|ULD_TOM
 init|=
 literal|1
+block|,
+name|ULD_IWARP
+init|=
+literal|2
 block|, }
 enum|;
 end_enum

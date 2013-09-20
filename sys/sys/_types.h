@@ -66,17 +66,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint64_t
-name|__cap_rights_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* capability rights */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|__uint32_t
 name|__fflags_t
 typedef|;

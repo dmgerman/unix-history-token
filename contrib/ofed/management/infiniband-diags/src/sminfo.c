@@ -168,21 +168,25 @@ block|{
 index|[
 name|SMINFO_NOTACT
 index|]
+operator|=
 literal|"SMINFO_NOTACT"
 block|,
 index|[
 name|SMINFO_DISCOVER
 index|]
+operator|=
 literal|"SMINFO_DISCOVER"
 block|,
 index|[
 name|SMINFO_STANDBY
 index|]
+operator|=
 literal|"SMINFO_STANDBY"
 block|,
 index|[
 name|SMINFO_MASTER
 index|]
+operator|=
 literal|"SMINFO_MASTER"
 block|, }
 decl_stmt|;

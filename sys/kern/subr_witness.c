@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_PENDLIST
-value|768
+value|1024
 end_define
 
 begin_comment
@@ -5203,8 +5203,7 @@ name|NULL
 condition|)
 name|kassert_panic
 argument_list|(
-literal|"interlock (%s) %s not locked while locking"
-literal|" %s @ %s:%d"
+literal|"interlock (%s) %s not locked @ %s:%d"
 argument_list|,
 name|iclass
 operator|->
@@ -5213,14 +5212,6 @@ argument_list|,
 name|interlock
 operator|->
 name|lo_name
-argument_list|,
-name|flags
-operator|&
-name|LOP_EXCLUSIVE
-condition|?
-literal|"exclusive"
-else|:
-literal|"shared"
 argument_list|,
 name|fixup_filename
 argument_list|(
@@ -5245,8 +5236,7 @@ literal|0
 condition|)
 name|kassert_panic
 argument_list|(
-literal|"interlock (%s) %s recursed while locking %s"
-literal|" @ %s:%d"
+literal|"interlock (%s) %s recursed @ %s:%d"
 argument_list|,
 name|iclass
 operator|->
@@ -5255,14 +5245,6 @@ argument_list|,
 name|interlock
 operator|->
 name|lo_name
-argument_list|,
-name|flags
-operator|&
-name|LOP_EXCLUSIVE
-condition|?
-literal|"exclusive"
-else|:
-literal|"shared"
 argument_list|,
 name|fixup_filename
 argument_list|(

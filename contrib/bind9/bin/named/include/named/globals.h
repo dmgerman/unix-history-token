@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2013  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: globals.h,v 1.89.54.2 2011/06/17 23:47:10 tbox Exp $ */
+comment|/* $Id: globals.h,v 1.92 2011/11/09 18:44:04 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -167,6 +167,18 @@ name|EXTERN
 name|unsigned
 name|int
 name|ns_g_cpus
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|unsigned
+name|int
+name|ns_g_udpdisp
 name|INIT
 argument_list|(
 literal|0

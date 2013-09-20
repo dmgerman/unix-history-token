@@ -3079,6 +3079,9 @@ name|openssldsa_verify
 block|,
 name|NULL
 block|,
+comment|/*%< verify2 */
+name|NULL
+block|,
 comment|/*%< computesecret */
 name|openssldsa_compare
 block|,

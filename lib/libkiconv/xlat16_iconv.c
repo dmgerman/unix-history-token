@@ -91,14 +91,6 @@ directive|include
 file|"quirks.h"
 end_include
 
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|iconv_t
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|xlat16_table
@@ -159,6 +151,14 @@ ifdef|#
 directive|ifdef
 name|ICONV_DLOPEN
 end_ifdef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|iconv_t
+typedef|;
+end_typedef
 
 begin_function_decl
 specifier|static

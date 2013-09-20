@@ -729,9 +729,12 @@ begin_comment
 comment|/* Define to 1 if you have the `log10l' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LOG10L */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LOG10L
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `logf' function. */
@@ -748,9 +751,12 @@ begin_comment
 comment|/* Define to 1 if you have the `logl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LOGL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LOGL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<machine/endian.h> header file. */

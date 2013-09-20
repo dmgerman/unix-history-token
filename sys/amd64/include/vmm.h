@@ -1099,7 +1099,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXCPU
-value|8
+value|16
 end_define
 
 begin_comment

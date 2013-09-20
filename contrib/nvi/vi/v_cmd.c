@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_cmd.c	10.9 (Berkeley) 3/28/96"
+literal|"$Id: v_cmd.c,v 10.9 1996/03/28 15:18:39 bostic Exp $"
 decl_stmt|;
 end_decl_stmt
 

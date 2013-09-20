@@ -548,10 +548,6 @@ operator|++
 argument_list|,
 name|cb
 operator|->
-name|pd
-operator|->
-name|device
-operator|->
 name|name
 argument_list|,
 name|cb

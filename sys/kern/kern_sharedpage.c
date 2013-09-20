@@ -409,8 +409,6 @@ name|shared_page_obj
 argument_list|,
 literal|0
 argument_list|,
-name|VM_ALLOC_RETRY
-operator||
 name|VM_ALLOC_NOBUSY
 operator||
 name|VM_ALLOC_ZERO
@@ -429,10 +427,8 @@ argument_list|)
 expr_stmt|;
 name|addr
 operator|=
-name|kmem_alloc_nofault
+name|kva_alloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;

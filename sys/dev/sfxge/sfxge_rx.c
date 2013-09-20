@@ -1262,16 +1262,6 @@ name|m
 operator|->
 name|m_pkthdr
 operator|.
-name|header
-operator|=
-name|m
-operator|->
-name|m_data
-expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
 name|csum_data
 operator|=
 literal|0xffff

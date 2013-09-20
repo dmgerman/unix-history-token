@@ -337,6 +337,29 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XENHVM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<xen/hvm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -727,6 +750,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Default cpu_ops implementation. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|cpu_ops
+name|cpu_ops
+init|=
+block|{
+operator|.
+name|ipi_vectored
+operator|=
+name|lapic_ipi_vectored
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Local data and functions.  */
@@ -3047,6 +3088,15 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|XENHVM
+comment|/* register vcpu_info area */
+name|xen_hvm_init_cpu
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|PAE
 comment|/* Enable the PTE no-execute bit. */
 if|if
@@ -3798,13 +3848,17 @@ operator|(
 name|char
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|dpcpu
@@ -3813,11 +3867,15 @@ operator|(
 name|void
 operator|*
 operator|)
-name|kmem_alloc
+name|kmem_malloc
 argument_list|(
-name|kernel_map
+name|kernel_arena
 argument_list|,
 name|DPCPU_SIZE
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* setup a vector to our boot code */
@@ -5048,7 +5106,9 @@ name|old_pending
 condition|)
 return|return;
 block|}
-name|lapic_ipi_vectored
+name|cpu_ops
+operator|.
+name|ipi_vectored
 argument_list|(
 name|ipi
 argument_list|,
@@ -6009,7 +6069,9 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|lapic_ipi_vectored
+name|cpu_ops
+operator|.
+name|ipi_vectored
 argument_list|(
 name|ipi
 argument_list|,

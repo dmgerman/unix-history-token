@@ -9851,6 +9851,12 @@ name|O_ACCMODE
 operator|)
 operator|==
 name|O_ACCMODE
+operator|||
+name|uap
+operator|->
+name|flags
+operator|&
+name|O_EXEC
 condition|)
 return|return
 operator|(
@@ -10119,6 +10125,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|cap_rights_t
+modifier|*
 parameter_list|,
 name|struct
 name|file
@@ -10146,7 +10153,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|_fgetf
 name|func
@@ -10186,7 +10194,7 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
-name|rights
+name|rightsp
 argument_list|,
 name|fpp
 argument_list|)
@@ -10297,6 +10305,9 @@ modifier|*
 name|pmq
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 return|return
 name|_getmq
 argument_list|(
@@ -10304,7 +10315,13 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_POLL_EVENT
+argument_list|)
 argument_list|,
 name|fget
 argument_list|,
@@ -10351,6 +10368,9 @@ modifier|*
 name|pmq
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 return|return
 name|_getmq
 argument_list|(
@@ -10358,7 +10378,13 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_READ
+argument_list|)
 argument_list|,
 name|fget_read
 argument_list|,
@@ -10405,6 +10431,9 @@ modifier|*
 name|pmq
 parameter_list|)
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 return|return
 name|_getmq
 argument_list|(
@@ -10412,7 +10441,13 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_WRITE
+argument_list|)
 argument_list|,
 name|fget_write
 argument_list|,
@@ -11099,6 +11134,14 @@ modifier|*
 name|sigev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+name|cap_rights_t
+name|rights
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|filedesc
 modifier|*
@@ -11287,7 +11330,13 @@ argument_list|,
 name|mqd
 argument_list|)
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_POLL_EVENT
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -13075,7 +13124,12 @@ operator|.
 name|fo_close
 operator|=
 name|mqf_close
-block|}
+block|,
+operator|.
+name|fo_sendfile
+operator|=
+name|invfo_sendfile
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -13474,6 +13528,12 @@ name|O_ACCMODE
 operator|)
 operator|==
 name|O_ACCMODE
+operator|||
+name|uap
+operator|->
+name|flags
+operator|&
+name|O_EXEC
 condition|)
 return|return
 operator|(

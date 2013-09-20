@@ -61,27 +61,13 @@ block|{
 comment|/*      * The signature and checksum must both be correct      *      * Note: Sometimes there exists more than one RSDP in memory; the valid      * RSDP has a valid checksum, all others have an invalid checksum.      */
 if|if
 condition|(
-name|ACPI_STRNCMP
+operator|!
+name|ACPI_VALIDATE_RSDP_SIG
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|Rsdp
 operator|->
 name|Signature
-argument_list|,
-name|ACPI_SIG_RSDP
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_SIG_RSDP
 argument_list|)
-operator|-
-literal|1
-argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 comment|/* Nope, BAD Signature */

@@ -18,13 +18,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_extents.h>
 end_include
 
 begin_comment
@@ -61,13 +79,27 @@ comment|/* Indirect addresses in inode. */
 end_comment
 
 begin_comment
-comment|/*  * The size of physical and logical block numbers and time fields in UFS.  */
+comment|/*  * The size of physical and logical block numbers in EXT2FS.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|uint32_t
+name|e2fs_daddr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int64_t
 name|e2fs_lbn_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int64_t
+name|e4fs_daddr_t
 typedef|;
 end_typedef
 
@@ -143,10 +175,22 @@ name|int16_t
 name|i_nlink
 decl_stmt|;
 comment|/* File link count. */
+name|uint32_t
+name|i_uid
+decl_stmt|;
+comment|/* File owner. */
+name|uint32_t
+name|i_gid
+decl_stmt|;
+comment|/* File group. */
 name|uint64_t
 name|i_size
 decl_stmt|;
 comment|/* File byte count. */
+name|uint64_t
+name|i_blocks
+decl_stmt|;
+comment|/* Blocks actually held. */
 name|int32_t
 name|i_atime
 decl_stmt|;
@@ -180,6 +224,14 @@ name|i_birthnsec
 decl_stmt|;
 comment|/* Inode creation time. */
 name|uint32_t
+name|i_gen
+decl_stmt|;
+comment|/* Generation number. */
+name|uint32_t
+name|i_flags
+decl_stmt|;
+comment|/* Status flags (chflags). */
+name|uint32_t
 name|i_db
 index|[
 name|NDADDR
@@ -193,26 +245,11 @@ name|NIADDR
 index|]
 decl_stmt|;
 comment|/* Indirect disk blocks. */
-name|uint32_t
-name|i_flags
+name|struct
+name|ext4_extent_cache
+name|i_ext_cache
 decl_stmt|;
-comment|/* Status flags (chflags). */
-name|uint32_t
-name|i_blocks
-decl_stmt|;
-comment|/* Blocks actually held. */
-name|uint32_t
-name|i_gen
-decl_stmt|;
-comment|/* Generation number. */
-name|uint32_t
-name|i_uid
-decl_stmt|;
-comment|/* File owner. */
-name|uint32_t
-name|i_gid
-decl_stmt|;
-comment|/* File group. */
+comment|/* cache for ext4 extent */
 block|}
 struct|;
 end_struct

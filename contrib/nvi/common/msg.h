@@ -70,7 +70,7 @@ comment|/* MSGS list head structure. */
 end_comment
 
 begin_expr_stmt
-name|LIST_HEAD
+name|SLIST_HEAD
 argument_list|(
 name|_msgh
 argument_list|,
@@ -83,7 +83,7 @@ begin_struct
 struct|struct
 name|_msg
 block|{
-name|LIST_ENTRY
+name|SLIST_ENTRY
 argument_list|(
 argument|_msg
 argument_list|)

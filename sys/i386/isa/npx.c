@@ -217,7 +217,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/xen/xen-os.h>
+file|<xen/xen-os.h>
 end_include
 
 begin_include

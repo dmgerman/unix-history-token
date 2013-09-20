@@ -4304,7 +4304,7 @@ name|mreq
 operator|->
 name|oflags
 operator||=
-name|VPO_WANTED
+name|VPO_SWAPSLEEP
 expr_stmt|;
 name|PCPU_INC
 argument_list|(
@@ -4319,7 +4319,10 @@ name|VM_OBJECT_SLEEP
 argument_list|(
 name|object
 argument_list|,
-name|mreq
+operator|&
+name|object
+operator|->
+name|paging_in_progress
 argument_list|,
 name|PSWP
 argument_list|,
@@ -4983,7 +4986,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	For READ operations, the pages are VPO_BUSY'd.  For WRITE operations,  *	the pages are vm_page_t->busy'd.  For READ operations, we VPO_BUSY  *	unbusy all pages except the 'main' request page.  For WRITE  *	operations, we vm_page_t->busy'd unbusy all pages ( we can do this  *	because we marked them all VM_PAGER_PEND on return from putpages ).  *  *	This routine may not sleep.  */
+comment|/*  *	swp_pager_async_iodone:  *  *	Completion routine for asynchronous reads and writes from/to swap.  *	Also called manually by synchronous code to finish up a bp.  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -5167,6 +5170,31 @@ name|VPO_SWAPINPROG
 expr_stmt|;
 if|if
 condition|(
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_SWAPSLEEP
+condition|)
+block|{
+name|m
+operator|->
+name|oflags
+operator|&=
+operator|~
+name|VPO_SWAPSLEEP
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|object
+operator|->
+name|paging_in_progress
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|bp
 operator|->
 name|b_ioflags
@@ -5207,11 +5235,23 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_flash
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 				 * If i == bp->b_pager.pg_reqpage, do not wake 				 * the page up.  The caller needs to. 				 */
 block|}
 else|else
@@ -5237,7 +5277,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_io_finish
+name|vm_page_sunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -5254,7 +5294,7 @@ operator|==
 name|BIO_READ
 condition|)
 block|{
-comment|/* 			 * NOTE: for reads, m->dirty will probably be 			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by 			 * vm_page_wakeup(). 			 */
+comment|/* 			 * NOTE: for reads, m->dirty will probably be 			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by 			 * vm_page_xunbusy(). 			 */
 name|KASSERT
 argument_list|(
 operator|!
@@ -5318,18 +5358,30 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_flash
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5355,7 +5407,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_io_finish
+name|vm_page_sunbusy
 argument_list|(
 name|m
 argument_list|)
@@ -5658,10 +5710,6 @@ argument_list|,
 name|pindex
 argument_list|,
 name|VM_ALLOC_NORMAL
-operator||
-name|VM_ALLOC_RETRY
-operator||
-name|VM_ALLOC_NOBUSY
 argument_list|)
 expr_stmt|;
 if|if
@@ -5700,6 +5748,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_xunbusy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_pager_page_unswapped
 argument_list|(
 name|m
@@ -5707,11 +5760,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|swap_pager_getpages
@@ -5761,7 +5809,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_wakeup
+name|vm_page_xunbusy
 argument_list|(
 name|m
 argument_list|)

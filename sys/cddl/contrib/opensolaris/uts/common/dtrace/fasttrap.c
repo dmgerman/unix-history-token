@@ -1620,9 +1620,20 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* 	 * fasttrap_tracepoint_remove() expects the child process to be 	 * unlocked and the VM then expects curproc to be unlocked. 	 */
 name|_PHOLD
 argument_list|(
 name|cp
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1765,6 +1776,16 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 name|_PRELE
 argument_list|(
 name|cp

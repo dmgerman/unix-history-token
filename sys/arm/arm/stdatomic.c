@@ -454,6 +454,12 @@ argument|uint64_t
 argument_list|)
 end_macro
 
+begin_undef
+undef|#
+directive|undef
+name|EMIT_ALL_OPS_N
+end_undef
+
 begin_else
 else|#
 directive|else
@@ -640,6 +646,12 @@ literal|"streq"
 argument_list|)
 end_macro
 
+begin_undef
+undef|#
+directive|undef
+name|EMIT_ALL_OPS_N
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -670,7 +682,191 @@ name|defined
 argument_list|(
 name|__SYNC_ATOMICS
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EMIT_SYNC_ATOMICS
+argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_lock_test_and_set_1_c
+name|__sync_lock_test_and_set_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_lock_test_and_set_2_c
+name|__sync_lock_test_and_set_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_lock_test_and_set_4_c
+name|__sync_lock_test_and_set_4
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_val_compare_and_swap_1_c
+name|__sync_val_compare_and_swap_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_val_compare_and_swap_2_c
+name|__sync_val_compare_and_swap_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_val_compare_and_swap_4_c
+name|__sync_val_compare_and_swap_4
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_add_1_c
+name|__sync_fetch_and_add_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_add_2_c
+name|__sync_fetch_and_add_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_add_4_c
+name|__sync_fetch_and_add_4
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_and_1_c
+name|__sync_fetch_and_and_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_and_2_c
+name|__sync_fetch_and_and_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_and_4_c
+name|__sync_fetch_and_and_4
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_or_1_c
+name|__sync_fetch_and_or_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_or_2_c
+name|__sync_fetch_and_or_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_or_4_c
+name|__sync_fetch_and_or_4
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_xor_1_c
+name|__sync_fetch_and_xor_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_xor_2_c
+name|__sync_fetch_and_xor_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_xor_4_c
+name|__sync_fetch_and_xor_4
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_sub_1_c
+name|__sync_fetch_and_sub_1
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_sub_2_c
+name|__sync_fetch_and_sub_2
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|redefine_extname
+name|__sync_fetch_and_sub_4_c
+name|__sync_fetch_and_sub_4
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Old __sync_* API.  */
@@ -1046,7 +1242,7 @@ parameter_list|,
 name|uintN_t
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_lock_test_and_set_##N(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, negmask, old;					\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	negmask.v32 = 0xffffffff;					\ 	put_##N(&negmask, mem, 0);					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %6\n"
+value|uintN_t									\ __sync_lock_test_and_set_##N##_c(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, negmask, old;					\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	negmask.v32 = 0xffffffff;					\ 	put_##N(&negmask, mem, 0);					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %6\n"
 comment|/* Load old value. */
 value|\ 		"\tand   %2, %5, %0\n"
 comment|/* Remove the old value. */
@@ -1089,7 +1285,7 @@ parameter_list|,
 name|uintN_t
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t *mem32;						\ 	reg_t expected32, desired32, posmask, old;			\ 	uint32_t negmask, temp1, temp2;					\ 									\ 	mem32 = round_to_word(mem);					\ 	expected32.v32 = 0x00000000;					\ 	put_##N(&expected32, mem, expected);				\ 	desired32.v32 = 0x00000000;					\ 	put_##N(&desired32, mem, desired);				\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask = ~posmask.v32;						\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %8\n"
+value|uintN_t									\ __sync_val_compare_and_swap_##N##_c(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t *mem32;						\ 	reg_t expected32, desired32, posmask, old;			\ 	uint32_t negmask, temp1, temp2;					\ 									\ 	mem32 = round_to_word(mem);					\ 	expected32.v32 = 0x00000000;					\ 	put_##N(&expected32, mem, expected);				\ 	desired32.v32 = 0x00000000;					\ 	put_##N(&desired32, mem, desired);				\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask = ~posmask.v32;						\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %8\n"
 comment|/* Load old value. */
 value|\ 		"\tand   %2, %6, %0\n"
 comment|/* Isolate the old value. */
@@ -1142,7 +1338,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask, old;					\ 	uint32_t negmask, temp1, temp2;					\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask = ~posmask.v32;						\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %7\n"
+value|uintN_t									\ __sync_##name##_##N##_c(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, posmask, old;					\ 	uint32_t negmask, temp1, temp2;					\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = 0x00000000;						\ 	put_##N(&val32, mem, val);					\ 	posmask.v32 = 0x00000000;					\ 	put_##N(&posmask, mem, ~0);					\ 	negmask = ~posmask.v32;						\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %7\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"  %2, %0, %4\n"
 comment|/* Calculate new value. */
@@ -1229,7 +1425,7 @@ parameter_list|,
 name|idempotence
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_##N(&val32, mem, val);					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %5\n"
+value|uintN_t									\ __sync_##name##_##N##_c(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t *mem32;						\ 	reg_t val32, old;						\ 	uint32_t temp1, temp2;						\ 									\ 	mem32 = round_to_word(mem);					\ 	val32.v32 = idempotence ? 0xffffffff : 0x00000000;		\ 	put_##N(&val32, mem, val);					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %5\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"  %2, %4, %0\n"
 comment|/* Calculate new value. */
@@ -1338,7 +1534,7 @@ end_comment
 
 begin_function
 name|uint32_t
-name|__sync_lock_test_and_set_4
+name|__sync_lock_test_and_set_4_c
 parameter_list|(
 name|uint32_t
 modifier|*
@@ -1407,7 +1603,7 @@ end_return
 
 begin_macro
 unit|}  uint32_t
-name|__sync_val_compare_and_swap_4
+name|__sync_val_compare_and_swap_4_c
 argument_list|(
 argument|uint32_t *mem
 argument_list|,
@@ -1500,7 +1696,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uint32_t								\ __sync_##name##_4(uint32_t *mem, uint32_t val)				\ {									\ 	uint32_t old, temp1, temp2;					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %5\n"
+value|uint32_t								\ __sync_##name##_4##_c(uint32_t *mem, uint32_t val)				\ {									\ 	uint32_t old, temp1, temp2;					\ 									\ 	do_sync();							\ 	__asm volatile (						\ 		"1:"							\ 		"\tldrex %0, %5\n"
 comment|/* Load old value. */
 value|\ 		"\t"op"  %2, %0, %4\n"
 comment|/* Calculate new value. */
@@ -1617,6 +1813,9 @@ literal|8
 argument_list|,
 argument|uint64_t
 argument_list|)
+undef|#
+directive|undef
+name|EMIT_ALL_OPS_N
 else|#
 directive|else
 comment|/* !_KERNEL */
@@ -1634,7 +1833,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_lock_test_and_set_##N(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+value|uintN_t									\ __sync_lock_test_and_set_##N##_c(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
 comment|/* Set up Restartable Atomic Sequence. */
 value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
 comment|/* Load old value. */
@@ -1656,7 +1855,7 @@ parameter_list|,
 name|streq
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+value|uintN_t									\ __sync_val_compare_and_swap_##N##_c(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
 comment|/* Set up Restartable Atomic Sequence. */
 value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%6]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%6, #4]\n"				\ 									\ 		"\t"ldr" %0, %5\n"
 comment|/* Load old value. */
@@ -1684,7 +1883,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+value|uintN_t									\ __sync_##name##_##N##_c(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
 comment|/* Set up Restartable Atomic Sequence. */
 value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
 comment|/* Load old value. */
@@ -1747,16 +1946,222 @@ literal|"str"
 argument_list|,
 literal|"streq"
 argument_list|)
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* _KERNEL */
-end_comment
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|__clang__
+name|__strong_reference
+argument_list|(
+name|__sync_lock_test_and_set_1_c
+argument_list|,
+name|__sync_lock_test_and_set_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_lock_test_and_set_2_c
+argument_list|,
+name|__sync_lock_test_and_set_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_lock_test_and_set_4_c
+argument_list|,
+name|__sync_lock_test_and_set_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_val_compare_and_swap_1_c
+argument_list|,
+name|__sync_val_compare_and_swap_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_val_compare_and_swap_2_c
+argument_list|,
+name|__sync_val_compare_and_swap_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_val_compare_and_swap_4_c
+argument_list|,
+name|__sync_val_compare_and_swap_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_add_1_c
+argument_list|,
+name|__sync_fetch_and_add_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_add_2_c
+argument_list|,
+name|__sync_fetch_and_add_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_add_4_c
+argument_list|,
+name|__sync_fetch_and_add_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_and_1_c
+argument_list|,
+name|__sync_fetch_and_and_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_and_2_c
+argument_list|,
+name|__sync_fetch_and_and_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_and_4_c
+argument_list|,
+name|__sync_fetch_and_and_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_sub_1_c
+argument_list|,
+name|__sync_fetch_and_sub_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_sub_2_c
+argument_list|,
+name|__sync_fetch_and_sub_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_sub_4_c
+argument_list|,
+name|__sync_fetch_and_sub_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_or_1_c
+argument_list|,
+name|__sync_fetch_and_or_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_or_2_c
+argument_list|,
+name|__sync_fetch_and_or_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_or_4_c
+argument_list|,
+name|__sync_fetch_and_or_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_xor_1_c
+argument_list|,
+name|__sync_fetch_and_xor_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_xor_2_c
+argument_list|,
+name|__sync_fetch_and_xor_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_xor_4_c
+argument_list|,
+name|__sync_fetch_and_xor_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

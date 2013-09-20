@@ -119,6 +119,12 @@ parameter_list|)
 value|log(LOG_WARNING, fmt, ##__VA_ARGS__)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_TYPES_DEFINED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|int8_t
@@ -826,6 +832,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LINUX_TYPES_DEFINED */
+end_comment
 
 begin_endif
 endif|#

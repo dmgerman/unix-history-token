@@ -1106,6 +1106,19 @@ name|Gbl_CurrentInputFilename
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ASL_EXTERN
+name|char
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_ExternalRefFilename
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|ASL_EXTERN
 name|BOOLEAN

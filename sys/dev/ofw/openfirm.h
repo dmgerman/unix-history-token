@@ -412,6 +412,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Some OF implementations (IBM, FDT) have a concept of effective phandles  * used for device-tree cross-references. Given one of these, returns the  * real phandle. If one can't be found (or running on OF implementations  * without this property), returns its input.  */
+end_comment
+
+begin_function_decl
+name|phandle_t
+name|OF_xref_phandle
+parameter_list|(
+name|phandle_t
+name|xref
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Device I/O functions */
 end_comment
 

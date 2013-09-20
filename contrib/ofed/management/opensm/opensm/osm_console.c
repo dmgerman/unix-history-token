@@ -213,18 +213,21 @@ block|}
 name|loop_command
 init|=
 block|{
+operator|.
 name|on
-operator|:
+operator|=
 literal|0
 block|,
+operator|.
 name|delay_s
-operator|:
+operator|=
 literal|2
 block|,
+operator|.
 name|loop_function
-operator|:
+operator|=
 name|NULL
-block|}
+block|, }
 struct|;
 end_struct
 

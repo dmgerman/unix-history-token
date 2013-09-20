@@ -1734,18 +1734,6 @@ name|fddi_header
 operator|*
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|header
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|fh
-expr_stmt|;
 comment|/* 	 * Discard packet if interface is not up. 	 */
 if|if
 condition|(
