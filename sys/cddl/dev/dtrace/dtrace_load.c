@@ -98,6 +98,33 @@ comment|/* Hang our hook for exceptions. */
 name|dtrace_invop_init
 argument_list|()
 expr_stmt|;
+comment|/* Register callbacks for linker file load and unload events. */
+name|dtrace_kld_load_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|kld_load
+argument_list|,
+name|dtrace_kld_load
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+name|dtrace_kld_unload_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|kld_unload
+argument_list|,
+name|dtrace_kld_unload
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX This is a short term hack to avoid having to comment 	 * out lots and lots of lock/unlock calls. 	 */
 name|mutex_init
 argument_list|(

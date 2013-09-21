@@ -383,7 +383,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -392,20 +392,6 @@ argument_list|, ,
 name|exec
 argument_list|,
 name|exec
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec
-argument_list|,
-literal|0
 argument_list|,
 literal|"char *"
 argument_list|)
@@ -413,7 +399,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -424,20 +410,6 @@ argument_list|,
 name|exec
 operator|-
 name|failure
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec_failure
-argument_list|,
-literal|0
 argument_list|,
 literal|"int"
 argument_list|)
@@ -445,7 +417,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|proc
 argument_list|,
@@ -456,20 +428,6 @@ argument_list|,
 name|exec
 operator|-
 name|success
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|proc
-argument_list|,
-name|kernel
-argument_list|, ,
-name|exec_success
-argument_list|,
-literal|0
 argument_list|,
 literal|"char *"
 argument_list|)

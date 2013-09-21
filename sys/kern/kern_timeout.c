@@ -145,7 +145,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|callout_execute
 argument_list|,
@@ -156,20 +156,6 @@ argument_list|,
 name|callout
 operator|-
 name|start
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|callout_execute
-argument_list|,
-name|kernel
-argument_list|, ,
-name|callout_start
-argument_list|,
-literal|0
 argument_list|,
 literal|"struct callout *"
 argument_list|)
@@ -177,7 +163,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE1
 argument_list|(
 name|callout_execute
 argument_list|,
@@ -188,20 +174,6 @@ argument_list|,
 name|callout
 operator|-
 name|end
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|callout_execute
-argument_list|,
-name|kernel
-argument_list|, ,
-name|callout_end
-argument_list|,
-literal|0
 argument_list|,
 literal|"struct callout *"
 argument_list|)

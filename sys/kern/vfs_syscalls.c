@@ -307,7 +307,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|vfs
 argument_list|, ,
@@ -316,36 +316,8 @@ argument_list|,
 name|mode
 argument_list|,
 name|mode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|vfs
-argument_list|, ,
-name|stat
-argument_list|,
-name|mode
-argument_list|,
-literal|0
 argument_list|,
 literal|"char *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|vfs
-argument_list|, ,
-name|stat
-argument_list|,
-name|mode
-argument_list|,
-literal|1
 argument_list|,
 literal|"int"
 argument_list|)
@@ -353,7 +325,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SDT_PROBE_DEFINE
+name|SDT_PROBE_DEFINE2
 argument_list|(
 name|vfs
 argument_list|, ,
@@ -362,36 +334,8 @@ argument_list|,
 name|reg
 argument_list|,
 name|reg
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|vfs
-argument_list|, ,
-name|stat
-argument_list|,
-name|reg
-argument_list|,
-literal|0
 argument_list|,
 literal|"char *"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_ARGTYPE
-argument_list|(
-name|vfs
-argument_list|, ,
-name|stat
-argument_list|,
-name|reg
-argument_list|,
-literal|1
 argument_list|,
 literal|"int"
 argument_list|)

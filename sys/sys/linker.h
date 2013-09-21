@@ -285,19 +285,6 @@ name|int
 name|fbt_nentries
 decl_stmt|;
 comment|/* number of fbt entries created. */
-name|void
-modifier|*
-name|sdt_probes
-decl_stmt|;
-name|int
-name|sdt_nentries
-decl_stmt|;
-name|size_t
-name|sdt_nprobes
-decl_stmt|;
-name|size_t
-name|sdt_size
-decl_stmt|;
 block|}
 struct|;
 end_struct
