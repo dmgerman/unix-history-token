@@ -17992,7 +17992,7 @@ name|p
 operator|->
 name|name
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -18005,7 +18005,7 @@ name|p
 operator|->
 name|anamelen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 name|iarg
 index|[
 literal|3
@@ -31159,7 +31159,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -31167,7 +31167,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 case|case
