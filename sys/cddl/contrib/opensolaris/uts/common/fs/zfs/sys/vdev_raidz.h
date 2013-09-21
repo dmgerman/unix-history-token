@@ -4,19 +4,19 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_VDEV_DISK_H
+name|_SYS_VDEV_RAIDZ_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_VDEV_DISK_H
+name|_SYS_VDEV_RAIDZ_H
 end_define
 
 begin_include
@@ -28,14 +28,20 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|illumos
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
+file|<sys/semaphore.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_include
 include|#
@@ -60,6 +66,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -75,28 +86,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|_KERNEL
-typedef|typedef
-struct|struct
-name|vdev_disk
-block|{
-name|ddi_devid_t
-name|vd_devid
-decl_stmt|;
-name|char
-modifier|*
-name|vd_minor
-decl_stmt|;
-name|ldi_handle_t
-name|vd_lh
-decl_stmt|;
-block|}
-name|vdev_disk_t
-typedef|;
-endif|#
-directive|endif
 specifier|extern
 name|int
-name|vdev_disk_physio
+name|vdev_raidz_physio
 parameter_list|(
 name|vdev_t
 modifier|*
@@ -107,28 +99,11 @@ name|size_t
 parameter_list|,
 name|uint64_t
 parameter_list|,
-name|int
-parameter_list|,
-name|boolean_t
-parameter_list|)
-function_decl|;
-comment|/*  * Since vdev_disk.c is not compiled into libzpool, this function should only be  * defined in the zfs kernel module.  */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-specifier|extern
-name|int
-name|vdev_disk_ldi_physio
-parameter_list|(
-name|ldi_handle_t
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|size_t
-parameter_list|,
 name|uint64_t
 parameter_list|,
-name|int
+name|boolean_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 endif|#
@@ -150,7 +125,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_VDEV_DISK_H */
+comment|/* _SYS_VDEV_RAIDZ_H */
 end_comment
 
 end_unit
