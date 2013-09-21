@@ -452,9 +452,12 @@ begin_comment
 comment|/* Define this if you want GSSAPI support in the version 2 protocol */
 end_comment
 
-begin_comment
-comment|/* #undef GSSAPI */
-end_comment
+begin_define
+define|#
+directive|define
+name|GSSAPI
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you want to use shadow password expire field */
@@ -679,6 +682,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Have clock_gettime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_GETTIME
+value|1
+end_define
+
+begin_comment
 comment|/* define if you have clock_t data type */
 end_comment
 
@@ -719,6 +733,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_CONTROL_IN_MSGHDR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `crypt' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRYPT
 value|1
 end_define
 
@@ -780,9 +805,23 @@ begin_comment
 comment|/* Define to 1 if you have the declaration of `GSS_C_NT_HOSTBASED_SERVICE',    and to 0 if you don't. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE
+value|1
+end_define
+
 begin_comment
-comment|/* #undef HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE */
+comment|/* Define to 1 if you have the declaration of `howmany', and to 0 if you    don't. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_HOWMANY
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `h_errno', and to 0 if you    don't. */
@@ -827,6 +866,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_MAXSYMLINKS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `NFDBITS', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_NFDBITS
 value|1
 end_define
 
@@ -913,6 +963,17 @@ value|0
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `DES_crypt' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DES_CRYPT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have /dev/ptmx */
 end_comment
 
@@ -980,6 +1041,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ELF_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `endgrent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENDGRENT
 value|1
 end_define
 
@@ -1086,6 +1158,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `fd_mask'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FD_MASK
 value|1
 end_define
 
@@ -1545,17 +1628,23 @@ begin_comment
 comment|/* Define to 1 if you have the<gssapi/gssapi.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GSSAPI_GSSAPI_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GSSAPI_GSSAPI_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<gssapi/gssapi_krb5.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GSSAPI_GSSAPI_KRB5_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GSSAPI_GSSAPI_KRB5_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<gssapi.h> header file. */
@@ -1760,6 +1849,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `krb5_cc_new_unique' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB5_CC_NEW_UNIQUE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `krb5_free_error_message' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB5_FREE_ERROR_MESSAGE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `krb5_get_error_message' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_KRB5_GET_ERROR_MESSAGE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
@@ -1935,6 +2057,17 @@ comment|/* #undef HAVE_LINUX_SECCOMP_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<locale.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `login' function. */
 end_comment
 
@@ -2017,6 +2150,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_MAILLOCK_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `mblen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBLEN
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `md5_crypt' function. */
@@ -2350,39 +2494,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if your password has a pw_change field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_CHANGE_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_class field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_CLASS_IN_PASSWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your password has a pw_expire field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PW_EXPIRE_IN_PASSWD
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `readpassphrase' function. */
 end_comment
 
@@ -2510,6 +2621,14 @@ directive|define
 name|HAVE_SA_FAMILY_T
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `scan_scaled' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SCAN_SCALED */
+end_comment
 
 begin_comment
 comment|/* Define if you have SecureWare-based protected password database */
@@ -3168,6 +3287,50 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRUCT_IN6_ADDR
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_change' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_CHANGE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_class' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_CLASS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_expire' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_EXPIRE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `pw_gecos' is a member of `struct passwd'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_PASSWD_PW_GECOS
 value|1
 end_define
 
@@ -4039,9 +4202,12 @@ begin_comment
 comment|/* Define this if you are using the Heimdal version of Kerberos V5 */
 end_comment
 
-begin_comment
-comment|/* #undef HEIMDAL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HEIMDAL
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you need to use IP address instead of hostname in $DISPLAY */
@@ -4071,9 +4237,12 @@ begin_comment
 comment|/* Define if you want Kerberos 5 support */
 end_comment
 
-begin_comment
-comment|/* #undef KRB5 */
-end_comment
+begin_define
+define|#
+directive|define
+name|KRB5
+value|1
+end_define
 
 begin_comment
 comment|/* Define if pututxline updates lastlog too */
@@ -4194,30 +4363,6 @@ end_comment
 
 begin_comment
 comment|/* #undef MAIL_DIRECTORY */
-end_comment
-
-begin_comment
-comment|/* Define on *nto-qnx systems */
-end_comment
-
-begin_comment
-comment|/* #undef MISSING_FD_MASK */
-end_comment
-
-begin_comment
-comment|/* Define on *nto-qnx systems */
-end_comment
-
-begin_comment
-comment|/* #undef MISSING_HOWMANY */
-end_comment
-
-begin_comment
-comment|/* Define on *nto-qnx systems */
-end_comment
-
-begin_comment
-comment|/* #undef MISSING_NFDBITS */
 end_comment
 
 begin_comment
@@ -4528,7 +4673,7 @@ begin_define
 define|#
 directive|define
 name|SIZEOF_LONG_INT
-value|4
+value|8
 end_define
 
 begin_comment
@@ -4932,28 +5077,6 @@ end_comment
 begin_comment
 comment|/* #undef XAUTH_PATH */
 end_comment
-
-begin_comment
-comment|/* Enable large inode numbers on Mac OS X 10.5.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_DARWIN_USE_64_BIT_INODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_DARWIN_USE_64_BIT_INODE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */

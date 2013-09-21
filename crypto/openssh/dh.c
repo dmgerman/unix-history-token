@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.c,v 1.49 2011/12/07 05:44:38 djm Exp $ */
+comment|/* $OpenBSD: dh.c,v 1.51 2013/07/02 12:31:43 markus Exp $ */
 end_comment
 
 begin_comment
@@ -125,6 +125,16 @@ name|long
 name|long
 name|n
 decl_stmt|;
+name|dhg
+operator|->
+name|p
+operator|=
+name|dhg
+operator|->
+name|g
+operator|=
+name|NULL
+expr_stmt|;
 name|cp
 operator|=
 name|line
@@ -192,7 +202,7 @@ operator|==
 literal|'\0'
 condition|)
 goto|goto
-name|fail
+name|truncated
 goto|;
 name|arg
 operator|=
@@ -217,7 +227,7 @@ operator|==
 literal|'\0'
 condition|)
 goto|goto
-name|fail
+name|truncated
 goto|;
 comment|/* Ensure this is a safe prime */
 name|n
@@ -244,9 +254,20 @@ name|n
 operator|!=
 name|MODULI_TYPE_SAFE
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: type is not %d"
+argument_list|,
+name|linenum
+argument_list|,
+name|MODULI_TYPE_SAFE
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|arg
 operator|=
 name|strsep
@@ -270,7 +291,7 @@ operator|==
 literal|'\0'
 condition|)
 goto|goto
-name|fail
+name|truncated
 goto|;
 comment|/* Ensure prime has been tested and is not composite */
 name|n
@@ -307,9 +328,18 @@ operator|~
 name|MODULI_TESTS_COMPOSITE
 operator|)
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: invalid moduli tests flag"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|arg
 operator|=
 name|strsep
@@ -333,7 +363,7 @@ operator|==
 literal|'\0'
 condition|)
 goto|goto
-name|fail
+name|truncated
 goto|;
 name|n
 operator|=
@@ -361,9 +391,18 @@ name|n
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: invalid primality trial count"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|strsize
 operator|=
 name|strsep
@@ -413,9 +452,18 @@ literal|0
 operator|||
 name|errstr
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: invalid prime length"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 comment|/* The whole group is one bit larger */
 name|dhg
 operator|->
@@ -445,7 +493,7 @@ operator|==
 literal|'\0'
 condition|)
 goto|goto
-name|fail
+name|truncated
 goto|;
 name|prime
 operator|=
@@ -469,9 +517,20 @@ name|prime
 operator|==
 literal|'\0'
 condition|)
+block|{
+name|truncated
+label|:
+name|error
+argument_list|(
+literal|"moduli:%d: truncated"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -522,9 +581,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: could not parse generator value"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
-name|failclean
+name|fail
 goto|;
+block|}
 if|if
 condition|(
 name|BN_hex2bn
@@ -539,9 +607,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: could not parse prime value"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
-name|failclean
+name|fail
 goto|;
+block|}
 if|if
 condition|(
 name|BN_num_bits
@@ -555,35 +632,70 @@ name|dhg
 operator|->
 name|size
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: prime has wrong size: actual %d listed %d"
+argument_list|,
+name|linenum
+argument_list|,
+name|BN_num_bits
+argument_list|(
+name|dhg
+operator|->
+name|p
+argument_list|)
+argument_list|,
+name|dhg
+operator|->
+name|size
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 goto|goto
-name|failclean
+name|fail
 goto|;
+block|}
 if|if
 condition|(
-name|BN_is_zero
+name|BN_cmp
 argument_list|(
 name|dhg
 operator|->
 name|g
+argument_list|,
+name|BN_value_one
+argument_list|()
 argument_list|)
-operator|||
-name|BN_is_one
-argument_list|(
-name|dhg
-operator|->
-name|g
-argument_list|)
+operator|<=
+literal|0
 condition|)
+block|{
+name|error
+argument_list|(
+literal|"moduli:%d: generator is invalid"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 goto|goto
-name|failclean
+name|fail
 goto|;
+block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
-name|failclean
+name|fail
 label|:
+if|if
+condition|(
+name|dhg
+operator|->
+name|g
+operator|!=
+name|NULL
+condition|)
 name|BN_clear_free
 argument_list|(
 name|dhg
@@ -591,6 +703,14 @@ operator|->
 name|g
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dhg
+operator|->
+name|p
+operator|!=
+name|NULL
+condition|)
 name|BN_clear_free
 argument_list|(
 name|dhg
@@ -598,8 +718,16 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
-name|fail
-label|:
+name|dhg
+operator|->
+name|g
+operator|=
+name|dhg
+operator|->
+name|p
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Bad prime description in line %d"
@@ -608,9 +736,7 @@ name|linenum
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

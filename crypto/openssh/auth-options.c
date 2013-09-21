@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.57 2012/12/02 20:46:11 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.59 2013/07/12 00:19:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -311,14 +311,14 @@ name|ce
 operator|->
 name|next
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ce
 operator|->
 name|s
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ce
 argument_list|)
@@ -329,7 +329,7 @@ condition|(
 name|forced_command
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|forced_command
 argument_list|)
@@ -344,7 +344,7 @@ condition|(
 name|authorized_principals
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|authorized_principals
 argument_list|)
@@ -701,7 +701,7 @@ name|forced_command
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|forced_command
 argument_list|)
@@ -801,7 +801,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|forced_command
 argument_list|)
@@ -867,7 +867,7 @@ name|authorized_principals
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|authorized_principals
 argument_list|)
@@ -967,7 +967,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|authorized_principals
 argument_list|)
@@ -1137,7 +1137,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|s
 argument_list|)
@@ -1346,7 +1346,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1380,7 +1380,7 @@ block|{
 case|case
 literal|1
 case|:
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1416,7 +1416,7 @@ comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1587,7 +1587,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1654,7 +1654,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1714,7 +1714,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1742,7 +1742,7 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|patterns
 argument_list|)
@@ -1851,7 +1851,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tun
 argument_list|)
@@ -1881,7 +1881,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tun
 argument_list|)
@@ -2091,12 +2091,13 @@ name|char
 modifier|*
 name|remote_ip
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|name
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+name|u_char
 modifier|*
 name|data_blob
 init|=
@@ -2417,7 +2418,7 @@ literal|"Certificate has multiple "
 literal|"force-command options"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|command
 argument_list|)
@@ -2493,7 +2494,7 @@ literal|"Certificate has multiple "
 literal|"source-address options"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|allowed
 argument_list|)
@@ -2521,7 +2522,7 @@ case|case
 literal|1
 case|:
 comment|/* accepted */
-name|xfree
+name|free
 argument_list|(
 name|allowed
 argument_list|)
@@ -2554,7 +2555,7 @@ argument_list|,
 name|remote_ip
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|allowed
 argument_list|)
@@ -2572,7 +2573,7 @@ literal|"Certificate source-address "
 literal|"contents invalid"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|allowed
 argument_list|)
@@ -2652,18 +2653,20 @@ operator|&
 name|data
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data_blob
 argument_list|)
 expr_stmt|;
 name|name
 operator|=
+name|NULL
+expr_stmt|;
 name|data_blob
 operator|=
 name|NULL
@@ -2692,7 +2695,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 operator|*
 name|cert_forced_command
@@ -2710,7 +2713,7 @@ name|name
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -2721,7 +2724,7 @@ name|data_blob
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|data_blob
 argument_list|)
@@ -3018,7 +3021,7 @@ name|forced_command
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|forced_command
 argument_list|)

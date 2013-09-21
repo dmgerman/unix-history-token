@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.107 2013/01/03 05:49:36 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.109 2013/07/19 07:37:48 markus Exp $ */
 end_comment
 
 begin_comment
@@ -342,6 +342,11 @@ decl_stmt|;
 comment|/* Number of files for host certs. */
 name|char
 modifier|*
+name|host_key_agent
+decl_stmt|;
+comment|/* ssh-agent socket for host keys. */
+name|char
+modifier|*
 name|pid_file
 decl_stmt|;
 comment|/* Where to put our pid */
@@ -676,6 +681,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|authorized_keys_command_user
+decl_stmt|;
+name|int64_t
+name|rekey_limit
+decl_stmt|;
+name|int
+name|rekey_interval
 decl_stmt|;
 name|char
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.c,v 1.80 2012/08/17 01:30:00 djm Exp $ */
+comment|/* $OpenBSD: compat.c,v 1.81 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -802,7 +802,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|s
 argument_list|)
@@ -962,7 +962,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|orig_prop
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.225 2013/02/10 23:32:10 djm Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.230 2013/07/20 01:44:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1186,7 +1186,7 @@ name|pass
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pass
 argument_list|)
@@ -1375,7 +1375,7 @@ argument_list|(
 name|k
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -2029,7 +2029,7 @@ argument_list|,
 name|cipher
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cipher
 argument_list|)
@@ -2040,7 +2040,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|type
 argument_list|)
@@ -2049,7 +2049,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|cipher
 argument_list|)
@@ -2093,7 +2093,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|type
 argument_list|)
@@ -2109,7 +2109,7 @@ argument_list|(
 name|ktype
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|type
 argument_list|)
@@ -2411,7 +2411,7 @@ name|data
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sig
 argument_list|)
@@ -2690,6 +2690,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|blen
+operator|>
+literal|0
+operator|&&
 name|line
 index|[
 name|blen
@@ -3931,12 +3935,12 @@ argument_list|,
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -3971,7 +3975,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|keys
 argument_list|)
@@ -4196,17 +4200,17 @@ argument_list|(
 name|public
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -4222,7 +4226,7 @@ condition|(
 name|comment
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -4610,12 +4614,12 @@ argument_list|,
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -5278,12 +5282,12 @@ argument_list|,
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -5489,7 +5493,7 @@ argument_list|(
 literal|"Specified known hosts path too long"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -6776,7 +6780,7 @@ name|old_passphrase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|old_passphrase
 argument_list|)
@@ -6883,12 +6887,12 @@ name|passphrase2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase1
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase2
 argument_list|)
@@ -6917,7 +6921,7 @@ name|passphrase2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase2
 argument_list|)
@@ -6958,7 +6962,7 @@ name|passphrase1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase1
 argument_list|)
@@ -6968,7 +6972,7 @@ argument_list|(
 name|private
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -6992,7 +6996,7 @@ name|passphrase1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase1
 argument_list|)
@@ -7003,7 +7007,7 @@ name|private
 argument_list|)
 expr_stmt|;
 comment|/* Destroys contents */
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -7064,11 +7068,11 @@ name|fname
 operator|==
 name|NULL
 condition|)
-name|ask_filename
+name|fatal
 argument_list|(
-name|pw
+literal|"%s: no filename"
 argument_list|,
-literal|"Enter file in which the key is"
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -7137,7 +7141,7 @@ argument_list|(
 name|public
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -7150,7 +7154,7 @@ if|if
 condition|(
 name|comment
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -7336,7 +7340,7 @@ name|passphrase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase
 argument_list|)
@@ -7514,7 +7518,7 @@ name|passphrase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase
 argument_list|)
@@ -7524,7 +7528,7 @@ argument_list|(
 name|private
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -7547,7 +7551,7 @@ name|passphrase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase
 argument_list|)
@@ -7677,7 +7681,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -8373,7 +8377,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|keys
 argument_list|)
@@ -8608,7 +8612,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -8713,7 +8717,7 @@ literal|"Empty principal name"
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|otmp
 argument_list|)
@@ -8988,7 +8992,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -9150,7 +9154,7 @@ argument_list|(
 name|public
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|out
 argument_list|)
@@ -9643,7 +9647,7 @@ argument_list|(
 literal|"Empty certificate validity interval"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|from
 argument_list|)
@@ -9993,10 +9997,11 @@ name|int
 name|in_critical
 parameter_list|)
 block|{
-name|u_char
+name|char
 modifier|*
 name|name
-decl_stmt|,
+decl_stmt|;
+name|u_char
 modifier|*
 name|data
 decl_stmt|;
@@ -10193,7 +10198,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)
@@ -10219,7 +10224,7 @@ name|option
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -11578,6 +11583,11 @@ argument_list|(
 name|krl_spec
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -11726,7 +11736,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|tmp
 argument_list|)
@@ -11928,6 +11938,17 @@ expr_stmt|;
 name|ssh_krl_free
 argument_list|(
 name|krl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ca
+operator|!=
+name|NULL
+condition|)
+name|key_free
+argument_list|(
+name|ca
 argument_list|)
 expr_stmt|;
 block|}
@@ -12653,7 +12674,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"You don't exist, go away!\n"
+literal|"No user exists for uid %lu\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|getuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
@@ -14388,12 +14415,12 @@ name|passphrase2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase1
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase2
 argument_list|)
@@ -14420,7 +14447,7 @@ name|passphrase2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase2
 argument_list|)
@@ -14499,7 +14526,7 @@ name|passphrase1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase1
 argument_list|)
@@ -14523,7 +14550,7 @@ name|passphrase1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase1
 argument_list|)
@@ -14722,12 +14749,12 @@ argument_list|,
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ra
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.h,v 1.13 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: xmalloc.h,v 1.14 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -40,16 +40,6 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|xfree
-parameter_list|(
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

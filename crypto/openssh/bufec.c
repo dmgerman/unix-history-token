@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufec.c,v 1.1 2010/08/31 11:54:45 djm Exp $ */
+comment|/* $OpenBSD: bufec.c,v 1.2 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)
@@ -513,7 +513,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)

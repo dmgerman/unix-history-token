@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: match.c,v 1.27 2008/06/10 23:06:19 djm Exp $ */
+comment|/* $OpenBSD: match.c,v 1.28 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -698,7 +704,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pat
 argument_list|)
@@ -710,7 +716,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns first item from client-list that is also supported by server-list,  * caller must xfree() returned string.  */
+comment|/*  * Returns first item from client-list that is also supported by server-list,  * caller must free the returned string.  */
 end_comment
 
 begin_define
@@ -965,12 +971,12 @@ operator|-
 name|c
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|s
 argument_list|)
@@ -995,12 +1001,12 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|s
 argument_list|)

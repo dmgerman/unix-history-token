@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.172 2011/06/03 01:37:40 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.177 2013/07/20 01:50:20 djm Exp $ */
 end_comment
 
 begin_comment
@@ -353,7 +353,7 @@ name|char
 modifier|*
 name|provider
 decl_stmt|;
-name|u_int
+name|time_t
 name|death
 decl_stmt|;
 name|u_int
@@ -419,7 +419,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|time_t
 name|parent_alive_interval
 init|=
 literal|0
@@ -478,12 +478,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Default lifetime (0 == forever) */
+comment|/* Default lifetime in seconds (0 == forever) */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|lifetime
 init|=
 literal|0
@@ -713,29 +713,21 @@ operator|->
 name|key
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|id
-operator|->
-name|provider
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|id
 operator|->
 name|provider
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|id
 operator|->
 name|comment
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|id
 argument_list|)
@@ -862,7 +854,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -1038,7 +1030,7 @@ argument_list|,
 name|blen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -1790,23 +1782,17 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|signature
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)
@@ -1955,7 +1941,7 @@ argument_list|,
 name|blen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -2182,23 +2168,21 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int
+name|time_t
 name|reaper
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|time_t
 name|deadline
 init|=
 literal|0
 decl_stmt|,
 name|now
 init|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 decl_stmt|;
 name|Identity
 modifier|*
@@ -2394,10 +2378,6 @@ name|success
 init|=
 literal|0
 decl_stmt|,
-name|death
-init|=
-literal|0
-decl_stmt|,
 name|confirm
 init|=
 literal|0
@@ -2408,6 +2388,11 @@ name|type_name
 decl_stmt|,
 modifier|*
 name|comment
+decl_stmt|;
+name|time_t
+name|death
+init|=
+literal|0
 decl_stmt|;
 name|Key
 modifier|*
@@ -2709,7 +2694,7 @@ argument_list|(
 literal|"Certificate parse failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cert
 argument_list|)
@@ -2786,7 +2771,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|curve
 argument_list|)
@@ -3020,7 +3005,7 @@ argument_list|(
 literal|"Certificate parse failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cert
 argument_list|)
@@ -3266,7 +3251,7 @@ argument_list|(
 literal|"Certificate parse failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cert
 argument_list|)
@@ -3334,7 +3319,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|xfree
+name|free
 argument_list|(
 name|type_name
 argument_list|)
@@ -3351,7 +3336,7 @@ goto|goto
 name|send
 goto|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|type_name
 argument_list|)
@@ -3427,7 +3412,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -3467,10 +3452,8 @@ name|SSH_AGENT_CONSTRAIN_LIFETIME
 case|:
 name|death
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 operator|+
 name|buffer_get_int
 argument_list|(
@@ -3498,7 +3481,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -3526,10 +3509,8 @@ name|death
 condition|)
 name|death
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 operator|+
 name|lifetime
 expr_stmt|;
@@ -3593,7 +3574,7 @@ argument_list|(
 name|k
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|id
 operator|->
@@ -3719,7 +3700,7 @@ name|lock_passwd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|lock_passwd
 argument_list|)
@@ -3770,7 +3751,7 @@ name|passwd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passwd
 argument_list|)
@@ -3931,11 +3912,12 @@ name|success
 init|=
 literal|0
 decl_stmt|,
-name|death
+name|confirm
 init|=
 literal|0
-decl_stmt|,
-name|confirm
+decl_stmt|;
+name|time_t
+name|death
 init|=
 literal|0
 decl_stmt|;
@@ -4012,10 +3994,8 @@ name|SSH_AGENT_CONSTRAIN_LIFETIME
 case|:
 name|death
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 operator|+
 name|buffer_get_int
 argument_list|(
@@ -4057,10 +4037,8 @@ name|death
 condition|)
 name|death
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 operator|+
 name|lifetime
 expr_stmt|;
@@ -4217,29 +4195,17 @@ expr_stmt|;
 block|}
 name|send
 label|:
-if|if
-condition|(
-name|pin
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|pin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|provider
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|provider
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|keys
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|keys
 argument_list|)
@@ -4334,7 +4300,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pin
 argument_list|)
@@ -4446,7 +4412,7 @@ literal|"process_remove_smartcard_key:"
 literal|" pkcs11_del_provider failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|provider
 argument_list|)
@@ -5178,8 +5144,6 @@ name|u_int
 name|i
 decl_stmt|,
 name|sz
-decl_stmt|,
-name|deadline
 decl_stmt|;
 name|int
 name|n
@@ -5190,6 +5154,9 @@ specifier|static
 name|struct
 name|timeval
 name|tv
+decl_stmt|;
+name|time_t
+name|deadline
 decl_stmt|;
 for|for
 control|(
@@ -5285,23 +5252,13 @@ operator|*
 name|nallocp
 condition|)
 block|{
-if|if
-condition|(
-operator|*
-name|fdrp
-condition|)
-name|xfree
+name|free
 argument_list|(
 operator|*
 name|fdrp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|fdwp
-condition|)
-name|xfree
+name|free
 argument_list|(
 operator|*
 name|fdwp
@@ -7349,19 +7306,19 @@ argument_list|()
 expr_stmt|;
 name|signal
 argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
 name|SIGINT
 argument_list|,
 name|d_flag
 condition|?
 name|cleanup_handler
 else|:
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGPIPE
-argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;

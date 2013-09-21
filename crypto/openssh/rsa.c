@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: rsa.c,v 1.29 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: rsa.c,v 1.30 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -203,12 +203,12 @@ argument_list|,
 name|ilen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|outbuf
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|inbuf
 argument_list|)
@@ -351,12 +351,12 @@ argument_list|,
 name|ilen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|outbuf
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|inbuf
 argument_list|)

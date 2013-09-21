@@ -90,16 +90,6 @@ parameter_list|)
 value|(xcalloc((x),(y)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|free
-parameter_list|(
-name|x
-parameter_list|)
-value|(xfree(x))
-end_define
-
 begin_function
 name|int
 name|getrrsetbyname
