@@ -382,11 +382,12 @@ operator|/
 name|t
 expr_stmt|;
 block|}
-comment|/* XXX uart should be the refclk, no? */
+comment|/* On the AR933x, the UART frequency is the reference clock, 	 * not the AHB bus clock. 	 */
 name|u_ar71xx_uart_freq
 operator|=
-name|u_ar71xx_ahb_freq
+name|u_ar71xx_refclk
 expr_stmt|;
+comment|/* 	 * XXX check what the watchdog frequency should be? 	 */
 name|u_ar71xx_wdt_freq
 operator|=
 name|u_ar71xx_ahb_freq
