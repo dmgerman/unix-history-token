@@ -885,25 +885,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|terminating
+name|nfscbd_pool
+operator|==
+name|NULL
 condition|)
 block|{
-name|NFSD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|svcpool_destroy
-argument_list|(
-name|nfscbd_pool
-argument_list|)
-expr_stmt|;
-name|nfscbd_pool
-operator|=
-name|NULL
-expr_stmt|;
-name|NFSD_LOCK
-argument_list|()
-expr_stmt|;
-block|}
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -937,6 +923,7 @@ expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
