@@ -1853,7 +1853,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|MUTEX_EXIT
+name|MUTEX_DESTROY
 argument_list|(
 operator|&
 name|softl
