@@ -892,6 +892,17 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 comment|/* 	 * When suspending, ensure there are are no IPIs in progress. 	 * IPIs that have been issued, but not yet delivered (e.g. 	 * not pending on a vCPU when running under virtualization) 	 * will be lost, violating FreeBSD's assumption of reliable 	 * IPI delivery. 	 */
 if|if
 condition|(
@@ -905,6 +916,8 @@ operator|&
 name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|stopping_cpu
@@ -1017,6 +1030,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 if|if
 condition|(
 name|type
@@ -1029,6 +1053,8 @@ operator|&
 name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|stopping_cpu
 operator|=
 name|NOCPU
