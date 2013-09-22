@@ -65,39 +65,6 @@ name|vm_page
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of sendfile(2) bufs alloced */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufspeak
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Peak of nsfbufsused */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufsused
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of sendfile(2) bufs in use */
-end_comment
-
 begin_struct
 struct|struct
 name|sfstat
