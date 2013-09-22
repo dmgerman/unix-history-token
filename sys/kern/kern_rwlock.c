@@ -585,13 +585,13 @@ if|if
 condition|(
 name|how
 condition|)
-name|rw_wlock
+name|rw_rlock
 argument_list|(
 name|rw
 argument_list|)
 expr_stmt|;
 else|else
-name|rw_rlock
+name|rw_wlock
 argument_list|(
 name|rw
 argument_list|)
@@ -648,7 +648,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -661,7 +661,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}

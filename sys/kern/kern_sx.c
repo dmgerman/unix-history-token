@@ -614,13 +614,13 @@ if|if
 condition|(
 name|how
 condition|)
-name|sx_xlock
+name|sx_slock
 argument_list|(
 name|sx
 argument_list|)
 expr_stmt|;
 else|else
-name|sx_slock
+name|sx_xlock
 argument_list|(
 name|sx
 argument_list|)
@@ -676,7 +676,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -689,7 +689,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
