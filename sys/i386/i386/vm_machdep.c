@@ -1428,8 +1428,10 @@ condition|)
 block|{
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
 comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
-name|kva_free
+name|kmem_free
 argument_list|(
+name|kernel_arena
+argument_list|,
 operator|(
 name|vm_offset_t
 operator|)

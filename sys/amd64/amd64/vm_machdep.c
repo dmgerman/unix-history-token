@@ -1302,8 +1302,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|kva_free
+name|kmem_free
 argument_list|(
+name|kernel_arena
+argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
