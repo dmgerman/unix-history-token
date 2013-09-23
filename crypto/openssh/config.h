@@ -452,12 +452,9 @@ begin_comment
 comment|/* Define this if you want GSSAPI support in the version 2 protocol */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GSSAPI
-value|1
-end_define
+begin_comment
+comment|/* #undef GSSAPI */
+end_comment
 
 begin_comment
 comment|/* Define if you want to use shadow password expire field */
@@ -805,12 +802,9 @@ begin_comment
 comment|/* Define to 1 if you have the declaration of `GSS_C_NT_HOSTBASED_SERVICE',    and to 0 if you don't. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_DECL_GSS_C_NT_HOSTBASED_SERVICE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the declaration of `howmany', and to 0 if you    don't. */
@@ -1628,23 +1622,17 @@ begin_comment
 comment|/* Define to 1 if you have the<gssapi/gssapi.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_GSSAPI_GSSAPI_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<gssapi/gssapi_krb5.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_GSSAPI_GSSAPI_KRB5_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_KRB5_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<gssapi.h> header file. */
@@ -1852,34 +1840,25 @@ begin_comment
 comment|/* Define to 1 if you have the `krb5_cc_new_unique' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB5_CC_NEW_UNIQUE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB5_CC_NEW_UNIQUE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `krb5_free_error_message' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB5_FREE_ERROR_MESSAGE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB5_FREE_ERROR_MESSAGE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `krb5_get_error_message' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_KRB5_GET_ERROR_MESSAGE
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_KRB5_GET_ERROR_MESSAGE */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
@@ -4202,12 +4181,9 @@ begin_comment
 comment|/* Define this if you are using the Heimdal version of Kerberos V5 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HEIMDAL
-value|1
-end_define
+begin_comment
+comment|/* #undef HEIMDAL */
+end_comment
 
 begin_comment
 comment|/* Define if you need to use IP address instead of hostname in $DISPLAY */
@@ -4237,12 +4213,9 @@ begin_comment
 comment|/* Define if you want Kerberos 5 support */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KRB5
-value|1
-end_define
+begin_comment
+comment|/* #undef KRB5 */
+end_comment
 
 begin_comment
 comment|/* Define if pututxline updates lastlog too */
