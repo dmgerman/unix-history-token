@@ -2435,9 +2435,25 @@ name|is
 operator|->
 name|is_conn
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|==
+name|NULL
+condition|)
+block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"failed to allocate PDU"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bhsno
 operator|=
 operator|(
