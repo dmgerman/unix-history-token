@@ -165,12 +165,6 @@ name|long
 name|private_2
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__aligned__
-operator|)
-argument_list|)
 struct|;
 specifier|extern
 name|_Unwind_Reason_Code
