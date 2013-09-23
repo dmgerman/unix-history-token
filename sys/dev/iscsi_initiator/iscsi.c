@@ -3739,7 +3739,7 @@ name|isc
 operator|->
 name|isc_mtx
 argument_list|,
-literal|"iscsi"
+literal|"iscsi-isc"
 argument_list|,
 name|NULL
 argument_list|,
