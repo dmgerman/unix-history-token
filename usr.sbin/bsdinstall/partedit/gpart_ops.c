@@ -5504,6 +5504,21 @@ block|}
 comment|/* If there isn't one, and we need one, ask */
 if|if
 condition|(
+operator|(
+name|strcmp
+argument_list|(
+name|items
+index|[
+literal|0
+index|]
+operator|.
+name|text
+argument_list|,
+literal|"freebsd"
+argument_list|)
+operator|==
+literal|0
+operator|||
 name|strcmp
 argument_list|(
 name|items
@@ -5517,6 +5532,7 @@ literal|"/"
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|&&
 name|bootpart_size
 argument_list|(
