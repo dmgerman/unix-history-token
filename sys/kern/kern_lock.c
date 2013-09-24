@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktr.h>
 end_include
 
@@ -2134,6 +2140,37 @@ operator|(
 literal|"%s: LK_INTERLOCK passed without valid interlock @ %s:%d"
 operator|,
 name|__func__
+operator|,
+name|file
+operator|,
+name|line
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|kdb_active
+operator|!=
+literal|0
+operator|||
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|curthread
+argument_list|)
+argument_list|,
+operator|(
+literal|"%s: idle thread %p on lockmgr %s @ %s:%d"
+operator|,
+name|__func__
+operator|,
+name|curthread
+operator|,
+name|lk
+operator|->
+name|lock_object
+operator|.
+name|lo_name
 operator|,
 name|file
 operator|,
