@@ -744,17 +744,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"configured for %s on %s with options:%s\n"
-argument_list|,
-name|CONFIGURE_TARGET
-argument_list|,
-name|CONFIGURE_DATE
-argument_list|,
-name|CONFIGURE_BUILD_WITH
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"BSD licensed, see LICENSE in source package for details.\n"
 argument_list|)
 expr_stmt|;
