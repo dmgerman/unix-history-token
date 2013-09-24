@@ -194,6 +194,12 @@ name|g_shutdown
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|g_notaste
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * G_UP and G_DOWN are the two threads which push I/O through the  * stack.  *  * Things are procesed in a FIFO order, but these threads could be  * part of I/O prioritization by deciding which bios/bioqs to service  * in what order.  *  * We have only one thread in each direction, it is belived that until  * a very non-trivial workload in the UP/DOWN path this will be enough,  * but more than one can actually be run without problems.  *  * Holding the "mymutex" is a debugging feature:  It prevents people  * from sleeping in the UP/DOWN I/O path by mistake or design (doing  * so almost invariably result in deadlocks since it stalls all I/O  * processing in the given direction.  */
 end_comment
@@ -788,6 +794,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Set various trace levels for GEOM debugging"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_geom
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|notaste
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|g_notaste
+argument_list|,
+literal|0
+argument_list|,
+literal|"Prevent GEOM tasting"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

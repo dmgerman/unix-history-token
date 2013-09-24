@@ -1128,6 +1128,8 @@ return|return;
 if|if
 condition|(
 name|g_shutdown
+operator|||
+name|g_notaste
 condition|)
 return|return;
 name|hh
@@ -2598,6 +2600,11 @@ literal|"GEOM::media"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|g_notaste
+condition|)
+return|return;
 name|LIST_FOREACH
 argument_list|(
 argument|mp
