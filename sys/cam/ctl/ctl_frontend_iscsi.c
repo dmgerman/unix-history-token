@@ -752,7 +752,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|bool
 name|cfiscsi_pdu_update_cmdsn
 parameter_list|(
 specifier|const
@@ -1025,7 +1025,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|cfiscsi_pdu_update_cmdsn
 parameter_list|(
 specifier|const
@@ -1081,7 +1081,11 @@ operator|)
 operator|==
 name|ISCSI_BHS_OPCODE_SCSI_DATA_OUT
 condition|)
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 comment|/* 	 * We're only using fields common for all the request 	 * (initiator -> target) PDUs. 	 */
 name|bhssc
 operator|=
@@ -1124,16 +1128,29 @@ literal|0
 block|if (expstatsn != cs->cs_statsn) { 		CFISCSI_SESSION_DEBUG(cs, "received PDU with ExpStatSN %d, " 		    "while current StatSN is %d", expstatsn, 		    cs->cs_statsn); 	}
 endif|#
 directive|endif
-comment|/* 	 * XXX: The target MUST silently ignore any non-immediate command 	 *	outside of this range or non-immediate duplicates within 	 *	the range. 	 */
+comment|/* 	 * The target MUST silently ignore any non-immediate command outside 	 * of this range. 	 * 	 * XXX:	... or non-immediate duplicates within the range. 	 */
 if|if
 condition|(
 name|cmdsn
-operator|!=
+operator|<
 name|cs
 operator|->
 name|cs_cmdsn
+operator|||
+name|cmdsn
+operator|>
+name|cs
+operator|->
+name|cs_cmdsn
+operator|+
+name|maxcmdsn_delta
 condition|)
 block|{
+name|CFISCSI_SESSION_UNLOCK
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
 name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
@@ -1148,22 +1165,12 @@ operator|->
 name|cs_cmdsn
 argument_list|)
 expr_stmt|;
-name|cs
-operator|->
-name|cs_cmdsn
-operator|=
-name|cmdsn
-operator|+
-literal|1
-expr_stmt|;
-name|CFISCSI_SESSION_UNLOCK
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
-comment|/* 	 * XXX: The CmdSN of the rejected command PDU (if it is a non-immediate 	 *	command) MUST NOT be considered received by the target 	 *	(i.e., a command sequence gap must be assumed for the CmdSN) 	 */
 if|if
 condition|(
 operator|(
@@ -1188,6 +1195,11 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
@@ -1207,6 +1219,9 @@ name|cfiscsi_session
 modifier|*
 name|cs
 decl_stmt|;
+name|bool
+name|ignore
+decl_stmt|;
 name|cs
 operator|=
 name|PDU_SESSION
@@ -1214,11 +1229,25 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+name|ignore
+operator|=
 name|cfiscsi_pdu_update_cmdsn
 argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ignore
+condition|)
+block|{
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Handle the PDU; this includes e.g. receiving the remaining 	 * part of PDU and submitting the SCSI command to CTL 	 * or queueing a reply.  The handling routine is responsible 	 * for freeing the PDU when it's no longer needed. 	 */
 switch|switch
 condition|(
