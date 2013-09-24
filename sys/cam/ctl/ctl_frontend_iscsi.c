@@ -10902,6 +10902,11 @@ literal|"failed to "
 literal|"allocate memory; dropping connection"
 argument_list|)
 expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
 name|cfiscsi_session_terminate
 argument_list|(
 name|cs
@@ -11062,6 +11067,11 @@ name|cs
 argument_list|,
 literal|"failed to "
 literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
 argument_list|)
 expr_stmt|;
 name|icl_pdu_free
@@ -11311,11 +11321,37 @@ name|uma_zalloc
 argument_list|(
 name|cfiscsi_data_wait_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cdw
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to "
+literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+block|}
 name|cdw
 operator|->
 name|cdw_ctl_io
@@ -11421,9 +11457,35 @@ name|cfiscsi_pdu_new_response
 argument_list|(
 name|request
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|response
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to "
+literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+block|}
 name|bhsr2t
 operator|=
 operator|(
