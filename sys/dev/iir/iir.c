@@ -1395,14 +1395,6 @@ name|GDT_SCRATCH_SZ
 operator|*
 name|i
 expr_stmt|;
-name|callout_handle_init
-argument_list|(
-operator|&
-name|gccb
-operator|->
-name|gc_timeout_ch
-argument_list|)
-expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -7251,9 +7243,11 @@ operator||=
 name|CAM_SIM_QUEUED
 expr_stmt|;
 comment|/* timeout handling */
-name|gccb
+name|ccb
 operator|->
-name|gc_timeout_ch
+name|ccb_h
+operator|.
+name|timeout_ch
 operator|=
 name|timeout
 argument_list|(
@@ -10306,9 +10300,11 @@ name|iir_timeout
 argument_list|,
 name|gccb
 argument_list|,
-name|gccb
+name|ccb
 operator|->
-name|gc_timeout_ch
+name|ccb_h
+operator|.
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 if|if

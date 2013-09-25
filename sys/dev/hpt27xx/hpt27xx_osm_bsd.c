@@ -2449,8 +2449,10 @@ name|hpt_timeout
 argument_list|,
 name|pCmd
 argument_list|,
-name|ext
+name|ccb
 operator|->
+name|ccb_h
+operator|.
 name|timeout_ch
 argument_list|)
 expr_stmt|;
@@ -2845,6 +2847,10 @@ block|}
 block|}
 name|ext
 operator|->
+name|ccb
+operator|->
+name|ccb_h
+operator|.
 name|timeout_ch
 operator|=
 name|timeout
@@ -5686,14 +5692,6 @@ argument_list|)
 expr_stmt|;
 return|return ;
 block|}
-name|callout_handle_init
-argument_list|(
-operator|&
-name|ext
-operator|->
-name|timeout_ch
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

@@ -60,24 +60,6 @@ name|lun_id_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-union|union
-block|{
-name|u_int64_t
-name|lun64
-decl_stmt|;
-name|u_int8_t
-name|lun
-index|[
-literal|8
-index|]
-decl_stmt|;
-block|}
-name|lun64_id_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -304,268 +286,172 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-comment|/* CCB request is in progress */
 name|CAM_REQ_INPROG
-init|=
-literal|0x00
+block|,
+comment|/* CCB request is in progress */
+name|CAM_REQ_CMP
 block|,
 comment|/* CCB request completed without error */
-name|CAM_REQ_CMP
-init|=
-literal|0x01
+name|CAM_REQ_ABORTED
 block|,
 comment|/* CCB request aborted by the host */
-name|CAM_REQ_ABORTED
-init|=
-literal|0x02
+name|CAM_UA_ABORT
 block|,
 comment|/* Unable to abort CCB request */
-name|CAM_UA_ABORT
-init|=
-literal|0x03
+name|CAM_REQ_CMP_ERR
 block|,
 comment|/* CCB request completed with an error */
-name|CAM_REQ_CMP_ERR
-init|=
-literal|0x04
+name|CAM_BUSY
 block|,
 comment|/* CAM subsystem is busy */
-name|CAM_BUSY
-init|=
-literal|0x05
+name|CAM_REQ_INVALID
 block|,
 comment|/* CCB request was invalid */
-name|CAM_REQ_INVALID
-init|=
-literal|0x06
+name|CAM_PATH_INVALID
 block|,
 comment|/* Supplied Path ID is invalid */
-name|CAM_PATH_INVALID
-init|=
-literal|0x07
+name|CAM_DEV_NOT_THERE
 block|,
 comment|/* SCSI Device Not Installed/there */
-name|CAM_DEV_NOT_THERE
-init|=
-literal|0x08
+name|CAM_UA_TERMIO
 block|,
 comment|/* Unable to terminate I/O CCB request */
-name|CAM_UA_TERMIO
-init|=
-literal|0x09
+name|CAM_SEL_TIMEOUT
 block|,
 comment|/* Target Selection Timeout */
-name|CAM_SEL_TIMEOUT
-init|=
-literal|0x0a
+name|CAM_CMD_TIMEOUT
 block|,
 comment|/* Command timeout */
-name|CAM_CMD_TIMEOUT
-init|=
-literal|0x0b
+name|CAM_SCSI_STATUS_ERROR
 block|,
 comment|/* SCSI error, look at error code in CCB */
-name|CAM_SCSI_STATUS_ERROR
-init|=
-literal|0x0c
+name|CAM_MSG_REJECT_REC
 block|,
 comment|/* Message Reject Received */
-name|CAM_MSG_REJECT_REC
-init|=
-literal|0x0d
+name|CAM_SCSI_BUS_RESET
 block|,
 comment|/* SCSI Bus Reset Sent/Received */
-name|CAM_SCSI_BUS_RESET
-init|=
-literal|0x0e
+name|CAM_UNCOR_PARITY
 block|,
 comment|/* Uncorrectable parity error occurred */
-name|CAM_UNCOR_PARITY
-init|=
-literal|0x0f
-block|,
-comment|/* Autosense: request sense cmd fail */
 name|CAM_AUTOSENSE_FAIL
 init|=
 literal|0x10
 block|,
-comment|/* No HBA Detected error */
+comment|/* Autosense: request sense cmd fail */
 name|CAM_NO_HBA
-init|=
-literal|0x11
+block|,
+comment|/* No HBA Detected error */
+name|CAM_DATA_RUN_ERR
 block|,
 comment|/* Data Overrun error */
-name|CAM_DATA_RUN_ERR
-init|=
-literal|0x12
+name|CAM_UNEXP_BUSFREE
 block|,
 comment|/* Unexpected Bus Free */
-name|CAM_UNEXP_BUSFREE
-init|=
-literal|0x13
+name|CAM_SEQUENCE_FAIL
 block|,
 comment|/* Target Bus Phase Sequence Failure */
-name|CAM_SEQUENCE_FAIL
-init|=
-literal|0x14
+name|CAM_CCB_LEN_ERR
 block|,
 comment|/* CCB length supplied is inadequate */
-name|CAM_CCB_LEN_ERR
-init|=
-literal|0x15
-block|,
-comment|/* Unable to provide requested capability*/
 name|CAM_PROVIDE_FAIL
-init|=
-literal|0x16
+block|,
+comment|/* Unable to provide requested capability */
+name|CAM_BDR_SENT
 block|,
 comment|/* A SCSI BDR msg was sent to target */
-name|CAM_BDR_SENT
-init|=
-literal|0x17
+name|CAM_REQ_TERMIO
 block|,
 comment|/* CCB request terminated by the host */
-name|CAM_REQ_TERMIO
-init|=
-literal|0x18
+name|CAM_UNREC_HBA_ERROR
 block|,
 comment|/* Unrecoverable Host Bus Adapter Error */
-name|CAM_UNREC_HBA_ERROR
-init|=
-literal|0x19
-block|,
-comment|/* Request was too large for this host */
 name|CAM_REQ_TOO_BIG
-init|=
-literal|0x1a
 block|,
-comment|/* 	 * This request should be requeued to preserve 	 * transaction ordering.  This typically occurs 	 * when the SIM recognizes an error that should 	 * freeze the queue and must place additional 	 * requests for the target at the sim level 	 * back into the XPT queue. 	 */
+comment|/* The request was too large for this host */
 name|CAM_REQUEUE_REQ
-init|=
-literal|0x1b
+block|,
+comment|/* 				 * This request should be requeued to preserve 				 * transaction ordering.  This typically occurs 				 * when the SIM recognizes an error that should 				 * freeze the queue and must place additional 				 * requests for the target at the sim level 				 * back into the XPT queue. 				 */
+name|CAM_ATA_STATUS_ERROR
 block|,
 comment|/* ATA error, look at error code in CCB */
-name|CAM_ATA_STATUS_ERROR
-init|=
-literal|0x1c
+name|CAM_SCSI_IT_NEXUS_LOST
 block|,
 comment|/* Initiator/Target Nexus lost. */
-name|CAM_SCSI_IT_NEXUS_LOST
-init|=
-literal|0x1d
+name|CAM_SMP_STATUS_ERROR
 block|,
 comment|/* SMP error, look at error code in CCB */
-name|CAM_SMP_STATUS_ERROR
-init|=
-literal|0x1e
-block|,
-comment|/* 	 * Command completed without error but  exceeded the soft 	 * timeout threshold. 	 */
-name|CAM_REQ_SOFTTIMEOUT
-init|=
-literal|0x1f
-block|,
-comment|/* 	 * 0x20 - 0x32 are unassigned 	 */
-comment|/* Initiator Detected Error */
 name|CAM_IDE
 init|=
 literal|0x33
 block|,
-comment|/* Resource Unavailable */
+comment|/* Initiator Detected Error */
 name|CAM_RESRC_UNAVAIL
-init|=
-literal|0x34
+block|,
+comment|/* Resource Unavailable */
+name|CAM_UNACKED_EVENT
 block|,
 comment|/* Unacknowledged Event by Host */
-name|CAM_UNACKED_EVENT
-init|=
-literal|0x35
+name|CAM_MESSAGE_RECV
 block|,
 comment|/* Message Received in Host Target Mode */
-name|CAM_MESSAGE_RECV
-init|=
-literal|0x36
+name|CAM_INVALID_CDB
 block|,
 comment|/* Invalid CDB received in Host Target Mode */
-name|CAM_INVALID_CDB
-init|=
-literal|0x37
+name|CAM_LUN_INVALID
 block|,
 comment|/* Lun supplied is invalid */
-name|CAM_LUN_INVALID
-init|=
-literal|0x38
+name|CAM_TID_INVALID
 block|,
 comment|/* Target ID supplied is invalid */
-name|CAM_TID_INVALID
-init|=
-literal|0x39
+name|CAM_FUNC_NOTAVAIL
 block|,
 comment|/* The requested function is not available */
-name|CAM_FUNC_NOTAVAIL
-init|=
-literal|0x3a
+name|CAM_NO_NEXUS
 block|,
 comment|/* Nexus is not established */
-name|CAM_NO_NEXUS
-init|=
-literal|0x3b
+name|CAM_IID_INVALID
 block|,
 comment|/* The initiator ID is invalid */
-name|CAM_IID_INVALID
-init|=
-literal|0x3c
+name|CAM_CDB_RECVD
 block|,
 comment|/* The SCSI CDB has been received */
-name|CAM_CDB_RECVD
-init|=
-literal|0x3d
+name|CAM_LUN_ALRDY_ENA
 block|,
 comment|/* The LUN is already enabled for target mode */
-name|CAM_LUN_ALRDY_ENA
-init|=
-literal|0x3e
+name|CAM_SCSI_BUSY
 block|,
 comment|/* SCSI Bus Busy */
-name|CAM_SCSI_BUSY
-init|=
-literal|0x3f
-block|,
-comment|/* 	 * Flags 	 */
-comment|/* The DEV queue is frozen w/this err */
 name|CAM_DEV_QFRZN
 init|=
 literal|0x40
 block|,
+comment|/* The DEV queue is frozen w/this err */
 comment|/* Autosense data valid for target */
 name|CAM_AUTOSNS_VALID
 init|=
 literal|0x80
 block|,
-comment|/* SIM ready to take more commands */
 name|CAM_RELEASE_SIMQ
 init|=
 literal|0x100
 block|,
-comment|/* SIM has this command in it's queue */
+comment|/* SIM ready to take more commands */
 name|CAM_SIM_QUEUED
 init|=
 literal|0x200
 block|,
-comment|/* Quality of service data is valid */
-name|CAM_QOS_VALID
-init|=
-literal|0x400
-block|,
-comment|/* Mask bits for just the status # */
+comment|/* SIM has this command in it's queue */
 name|CAM_STATUS_MASK
 init|=
 literal|0x3F
 block|,
-comment|/* 	 * Target Specific Adjunct Status 	 */
-comment|/* sent sense with status */
+comment|/* Mask bits for just the status # */
+comment|/* Target Specific Adjunct Status */
 name|CAM_SENT_SENSE
 init|=
 literal|0x40000000
+comment|/* sent sense with status */
 block|}
 name|cam_status
 typedef|;

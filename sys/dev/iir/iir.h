@@ -3957,10 +3957,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|gc_dmamap
 decl_stmt|;
-name|struct
-name|callout_handle
-name|gc_timeout_ch
-decl_stmt|;
 name|int
 name|gc_map_flag
 decl_stmt|;
