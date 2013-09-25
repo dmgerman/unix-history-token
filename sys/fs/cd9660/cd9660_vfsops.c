@@ -1933,7 +1933,16 @@ name|root_extent
 operator|+
 name|isonum_711
 argument_list|(
-name|rootp
+operator|(
+operator|(
+expr|struct
+name|iso_directory_record
+operator|*
+operator|)
+name|isomp
+operator|->
+name|root
+operator|)
 operator|->
 name|ext_attr_length
 argument_list|)
