@@ -10700,6 +10700,17 @@ argument_list|(
 literal|"> "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmdline
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|cmdline
+operator|!=
+literal|'\0'
+condition|)
 name|add_history
 argument_list|(
 name|cmdline

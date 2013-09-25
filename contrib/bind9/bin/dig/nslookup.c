@@ -4290,6 +4290,17 @@ argument_list|(
 literal|"> "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|ptr
+operator|!=
+literal|'\0'
+condition|)
 name|add_history
 argument_list|(
 name|ptr
