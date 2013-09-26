@@ -1897,17 +1897,11 @@ name|sbintime_t
 name|sbt
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NOTYET
-comment|/* Causes hangs on QEMU */
 name|phyp_hcall
 argument_list|(
 name|H_CEDE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
