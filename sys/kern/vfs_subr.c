@@ -19707,6 +19707,11 @@ name|vpi_selinfo
 operator|.
 name|si_note
 expr_stmt|;
+name|vhold
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|knlist_add
 argument_list|(
 name|knl
@@ -19780,6 +19785,11 @@ argument_list|,
 name|kn
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
