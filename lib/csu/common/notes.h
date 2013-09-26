@@ -43,6 +43,13 @@ name|CRT_NOINIT_NOTETYPE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARCH_NOTETYPE
+value|3
+end_define
+
 begin_endif
 endif|#
 directive|endif
