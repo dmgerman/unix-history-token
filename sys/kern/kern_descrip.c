@@ -7110,7 +7110,7 @@ name|fd_map
 operator|=
 name|nmap
 expr_stmt|;
-comment|/* 	 * In order to have a valid pattern for fget_unlocked() 	 * fdp->fd_nfiles might be the last member to be updated, otherwise 	 * fget_unlocked() consumers may reference a new, higher value for 	 * fdp->fd_nfiles before to access the fdp->fd_ofiles array, 	 * resulting in OOB accesses. 	 */
+comment|/* 	 * In order to have a valid pattern for fget_unlocked() 	 * fdp->fd_nfiles must be the last member to be updated, otherwise 	 * fget_unlocked() consumers may reference a new, higher value for 	 * fdp->fd_nfiles before to access the fdp->fd_ofiles array, 	 * resulting in OOB accesses. 	 */
 name|atomic_store_rel_int
 argument_list|(
 operator|&
