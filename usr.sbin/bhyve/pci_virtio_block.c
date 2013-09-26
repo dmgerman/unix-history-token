@@ -523,7 +523,7 @@ name|assert
 argument_list|(
 name|n
 operator|>=
-literal|3
+literal|2
 operator|&&
 name|n
 operator|<=
