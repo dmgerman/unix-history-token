@@ -467,7 +467,7 @@ block|{
 operator|.
 name|ipi_vectored
 operator|=
-name|xen_ipi_vectored
+name|lapic_ipi_vectored
 block|,
 operator|.
 name|cpu_init
@@ -2233,8 +2233,10 @@ argument_list|)
 expr_stmt|;
 comment|/* Set the xen pv ipi ops to replace the native ones */
 name|cpu_ops
+operator|.
+name|ipi_vectored
 operator|=
-name|xen_hvm_cpu_ops
+name|xen_ipi_vectored
 expr_stmt|;
 block|}
 end_function
@@ -2883,6 +2885,10 @@ condition|)
 return|return;
 name|setup_xen_features
 argument_list|()
+expr_stmt|;
+name|cpu_ops
+operator|=
+name|xen_hvm_cpu_ops
 expr_stmt|;
 break|break;
 case|case
