@@ -742,6 +742,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Some systems (e.g. QEMU) need Open Firmware to stand down */
+name|ofw_quiesce
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
