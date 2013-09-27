@@ -821,6 +821,9 @@ comment|/* Serial AT Attachment */
 name|XPORT_ISCSI
 block|,
 comment|/* iSCSI */
+name|XPORT_SRP
+block|,
+comment|/* SCSI RDMA Protocol */
 block|}
 name|cam_xport
 typedef|;
@@ -4277,6 +4280,14 @@ name|csio
 operator|->
 name|ccb_h
 operator|.
+name|xflags
+operator|=
+literal|0
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
 name|retry_count
 operator|=
 name|retries
@@ -4400,6 +4411,14 @@ operator|.
 name|flags
 operator|=
 name|flags
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|xflags
+operator|=
+literal|0
 expr_stmt|;
 name|csio
 operator|->

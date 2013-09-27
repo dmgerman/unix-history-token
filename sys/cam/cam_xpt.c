@@ -14701,6 +14701,12 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
+name|ccb_h
+operator|->
+name|xflags
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -17378,6 +17384,9 @@ name|XPORT_USB
 case|:
 case|case
 name|XPORT_ISCSI
+case|:
+case|case
+name|XPORT_SRP
 case|:
 case|case
 name|XPORT_PPB
