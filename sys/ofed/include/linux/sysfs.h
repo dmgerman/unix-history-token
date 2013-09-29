@@ -341,6 +341,23 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+comment|/* Trim trailing newline. */
+name|len
+operator|--
+expr_stmt|;
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+operator|)
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 comment|/* Leave one trailing byte to append a newline. */
 name|error
@@ -805,6 +822,16 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|sysfs_attr_init
+parameter_list|(
+name|attr
+parameter_list|)
+value|do {} while(0)
+end_define
 
 begin_endif
 endif|#
