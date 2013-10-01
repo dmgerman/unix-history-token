@@ -13665,9 +13665,11 @@ block|}
 end_function
 
 begin_expr_stmt
-name|module_init
+name|module_init_order
 argument_list|(
 name|mlx4_ib_init
+argument_list|,
+name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
