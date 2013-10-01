@@ -4186,6 +4186,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -4475,11 +4480,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -11322,9 +11322,6 @@ name|dealloc_ucontext
 operator|=
 name|mlx4_ib_dealloc_ucontext
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
 name|ibdev
 operator|->
 name|ib_dev
@@ -11333,6 +11330,9 @@ name|mmap
 operator|=
 name|mlx4_ib_mmap
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__linux__
 name|ibdev
 operator|->
 name|ib_dev
