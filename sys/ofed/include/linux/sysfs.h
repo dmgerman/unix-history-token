@@ -341,23 +341,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* Trim trailing newline. */
-name|len
-operator|--
-expr_stmt|;
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
-operator|)
-index|[
-name|len
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 block|}
 comment|/* Leave one trailing byte to append a newline. */
 name|error
