@@ -17678,7 +17678,7 @@ argument_list|)
 expr_stmt|;
 name|stats
 operator|->
-name|rx_broadcast
+name|tx_broadcast
 operator|+=
 name|NFE_READ
 argument_list|(
