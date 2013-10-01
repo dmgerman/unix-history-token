@@ -3223,6 +3223,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -4147,6 +4153,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -4259,6 +4270,9 @@ break|break;
 case|case
 name|IB_QPG_PARENT
 case|:
+ifdef|#
+directive|ifdef
+name|__linux__
 name|err
 operator|=
 name|init_qpg_parent
@@ -4272,6 +4286,8 @@ argument_list|,
 name|qpn
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|IB_QPG_CHILD_TX
@@ -4279,6 +4295,9 @@ case|:
 case|case
 name|IB_QPG_CHILD_RX
 case|:
+ifdef|#
+directive|ifdef
+name|__linux__
 name|err
 operator|=
 name|alloc_qpg_qpn
@@ -4290,6 +4309,8 @@ argument_list|,
 name|qpn
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|qp
@@ -4390,6 +4411,9 @@ break|break;
 case|case
 name|IB_QPG_PARENT
 case|:
+ifdef|#
+directive|ifdef
+name|__linux__
 name|free_qpg_parent
 argument_list|(
 name|dev
@@ -4397,6 +4421,8 @@ argument_list|,
 name|qp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|IB_QPG_CHILD_TX
@@ -4404,6 +4430,9 @@ case|:
 case|case
 name|IB_QPG_CHILD_RX
 case|:
+ifdef|#
+directive|ifdef
+name|__linux__
 name|free_qpg_qpn
 argument_list|(
 name|qp
@@ -4411,6 +4440,8 @@ argument_list|,
 name|qpn
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 break|break;
@@ -4561,6 +4592,17 @@ name|init_attr
 operator|->
 name|qp_type
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__linux__
+name|init_attr
+operator|->
+name|qpg_type
+operator|=
+name|IB_QPG_NONE
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* When tunneling special qps, we use a plain UD qp */
 if|if
 condition|(
@@ -7088,6 +7130,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -7349,6 +7397,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -7582,6 +7635,9 @@ operator|-
 name|EINVAL
 argument_list|)
 return|;
+ifdef|#
+directive|ifdef
+name|__linux__
 name|err
 operator|=
 name|check_qpg_attr
@@ -7604,6 +7660,8 @@ argument_list|(
 name|err
 argument_list|)
 return|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|init_attr
