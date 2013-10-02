@@ -785,7 +785,7 @@ decl_stmt|;
 name|eventhandler_tag
 name|vmx_vlan_detach
 decl_stmt|;
-name|uint8_t
+name|uint32_t
 name|vmx_vlan_filter
 index|[
 literal|4096

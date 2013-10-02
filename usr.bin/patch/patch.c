@@ -809,6 +809,8 @@ name|fd
 decl_stmt|;
 name|bool
 name|patch_seen
+decl_stmt|,
+name|reverse_seen
 decl_stmt|;
 name|LINENUM
 name|where
@@ -1310,6 +1312,10 @@ name|failed
 operator|=
 literal|0
 expr_stmt|;
+name|reverse_seen
+operator|=
+name|false
+expr_stmt|;
 name|out_of_mem
 operator|=
 name|false
@@ -1369,6 +1375,9 @@ literal|0
 operator|&&
 operator|!
 name|force
+operator|&&
+operator|!
+name|reverse_seen
 condition|)
 block|{
 comment|/* dwim for reversed patch? */
@@ -1532,6 +1541,11 @@ operator|!=
 literal|'y'
 condition|)
 name|skip_rest_of_patch
+operator|=
+name|true
+expr_stmt|;
+else|else
+name|reverse_seen
 operator|=
 name|true
 expr_stmt|;
@@ -2041,7 +2055,7 @@ expr_stmt|;
 else|else
 name|say
 argument_list|(
-literal|"%d out of %d hunks %s\n"
+literal|"%d out of %d hunks %s while patching %s\n"
 argument_list|,
 name|failed
 argument_list|,
@@ -2052,6 +2066,11 @@ condition|?
 literal|"ignored"
 else|:
 literal|"failed"
+argument_list|,
+name|filearg
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if

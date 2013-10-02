@@ -261,7 +261,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|int
+name|uintptr_t
 name|lock_state
 decl_stmt|;
 name|td
@@ -758,9 +758,10 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|int
+name|uintptr_t
 name|lock_state
-decl_stmt|,
+decl_stmt|;
+name|int
 name|rval
 decl_stmt|;
 name|td

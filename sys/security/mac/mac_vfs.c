@@ -3302,7 +3302,7 @@ literal|"struct ucred *"
 argument_list|,
 literal|"struct vnode *"
 argument_list|,
-literal|"acl_tpe_t"
+literal|"acl_type_t"
 argument_list|,
 literal|"struct acl *"
 argument_list|)

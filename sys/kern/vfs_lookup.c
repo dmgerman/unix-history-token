@@ -697,9 +697,9 @@ name|ktrcapfail
 argument_list|(
 name|CAPFAIL_LOOKUP
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1230,9 +1230,9 @@ name|ktrcapfail
 argument_list|(
 name|CAPFAIL_LOOKUP
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2701,9 +2701,9 @@ name|ktrcapfail
 argument_list|(
 name|CAPFAIL_LOOKUP
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#

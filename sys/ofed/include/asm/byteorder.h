@@ -27,6 +27,12 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<asm/types.h>
+end_include
+
 begin_if
 if|#
 directive|if

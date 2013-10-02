@@ -303,6 +303,11 @@ modifier|*
 name|sc_cred
 decl_stmt|;
 comment|/* cred cache for jail checks */
+name|void
+modifier|*
+name|sc_pspare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
 name|u_int32_t
 name|sc_spare
 index|[

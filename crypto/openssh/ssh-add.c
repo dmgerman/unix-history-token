@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.105 2012/12/05 15:42:52 markus Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.106 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -252,7 +252,7 @@ name|pass
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pass
 argument_list|)
@@ -870,7 +870,7 @@ block|{
 name|clear_pass
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1195,12 +1195,12 @@ name|certpath
 operator|!=
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|certpath
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1324,7 +1324,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|pin
 argument_list|)
@@ -1451,7 +1451,7 @@ name|key
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fp
 argument_list|)
@@ -1491,7 +1491,7 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1636,7 +1636,7 @@ name|p2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p2
 argument_list|)
@@ -1700,7 +1700,7 @@ name|p1
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p1
 argument_list|)

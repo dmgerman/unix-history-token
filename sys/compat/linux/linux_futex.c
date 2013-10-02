@@ -626,7 +626,7 @@ literal|"uint32_t"
 argument_list|,
 literal|"struct waiting_proc *"
 argument_list|,
-literal|"uin32_t"
+literal|"uint32_t"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

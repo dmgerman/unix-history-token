@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-jpake.c,v 1.5 2012/12/02 20:34:09 djm Exp $ */
+comment|/* $OpenBSD: auth2-jpake.c,v 1.6 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -765,7 +765,7 @@ argument_list|,
 name|digest_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|digest
 argument_list|)
@@ -1274,7 +1274,7 @@ literal|"bcrypt"
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|style
 argument_list|)
@@ -1929,7 +1929,7 @@ argument_list|,
 name|secret_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|secret
 argument_list|)
@@ -2153,12 +2153,12 @@ name|salt
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|hash_scheme
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|salt
 argument_list|)
@@ -2177,12 +2177,12 @@ argument_list|,
 name|x4_proof_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|x3_proof
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|x4_proof
 argument_list|)
@@ -2439,12 +2439,12 @@ argument_list|,
 name|x2_proof_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|x1_proof
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|x2_proof
 argument_list|)
@@ -2498,7 +2498,7 @@ argument_list|,
 name|x4_s_proof_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|x4_s_proof
 argument_list|)
@@ -2704,7 +2704,7 @@ argument_list|,
 name|x2_s_proof_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|x2_s_proof
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.26 2012/07/06 00:41:59 dtucker Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.27 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1637,17 +1637,17 @@ operator|&
 name|time_stop
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|LargeSieve
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|SmallSieve
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|TinySieve
 argument_list|)
@@ -2833,7 +2833,7 @@ operator|&
 name|time_stop
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|lp
 argument_list|)

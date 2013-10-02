@@ -2634,6 +2634,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NT_FILE
+value|0x46494c45
+end_define
+
+begin_define
+define|#
+directive|define
 name|NT_PRXFPREG
 value|0x46e62b7f
 end_define
@@ -2645,6 +2652,13 @@ end_comment
 begin_comment
 comment|/*   note name must be "LINUX".  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_SIGINFO
+value|0x53494749
+end_define
 
 begin_comment
 comment|/* Note segments for core files on dir-style procfs systems.  */
@@ -2893,6 +2907,17 @@ value|4
 end_define
 
 begin_comment
+comment|/* Values for GNU .note.gnu.build-id notes.  Note name is "GNU"." */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_GNU_BUILD_ID
+value|3
+end_define
+
+begin_comment
 comment|/* Values for NetBSD .note.netbsd.ident notes.  Note name is "NetBSD".  */
 end_comment
 
@@ -2941,6 +2966,13 @@ define|#
 directive|define
 name|NT_FREEBSD_NOINIT_TAG
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_ARCH_TAG
+value|3
 end_define
 
 begin_comment

@@ -27,6 +27,9 @@ name|cdev
 modifier|*
 name|sc_si
 decl_stmt|;
+name|bus_space_tag_t
+name|sc_tag
+decl_stmt|;
 name|phandle_t
 name|sc_node
 decl_stmt|;

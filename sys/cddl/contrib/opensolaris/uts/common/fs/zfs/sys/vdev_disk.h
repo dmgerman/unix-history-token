@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_VDEV_DISK_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -79,6 +72,9 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|_KERNEL
 typedef|typedef
 struct|struct
 name|vdev_disk
@@ -96,12 +92,33 @@ decl_stmt|;
 block|}
 name|vdev_disk_t
 typedef|;
+endif|#
+directive|endif
+specifier|extern
+name|int
+name|vdev_disk_physio
+parameter_list|(
+name|vdev_t
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|int
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+comment|/*  * Since vdev_disk.c is not compiled into libzpool, this function should only be  * defined in the zfs kernel module.  */
 ifdef|#
 directive|ifdef
 name|_KERNEL
 specifier|extern
 name|int
-name|vdev_disk_physio
+name|vdev_disk_ldi_physio
 parameter_list|(
 name|ldi_handle_t
 parameter_list|,

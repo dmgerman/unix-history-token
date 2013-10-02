@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect1.c,v 1.70 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: sshconnect1.c,v 1.71 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -333,7 +333,7 @@ argument_list|,
 name|comment
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -912,7 +912,7 @@ argument_list|(
 literal|"Server refused our key."
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1104,7 +1104,7 @@ name|passphrase
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|passphrase
 argument_list|)
@@ -1126,7 +1126,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* We no longer need the comment. */
-name|xfree
+name|free
 argument_list|(
 name|comment
 argument_list|)
@@ -1624,7 +1624,7 @@ else|:
 literal|"\nResponse: "
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|challenge
 argument_list|)
@@ -1675,7 +1675,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|response
 argument_list|)
@@ -1704,7 +1704,7 @@ name|response
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|response
 argument_list|)
@@ -1850,7 +1850,7 @@ name|password
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|password
 argument_list|)

@@ -2951,6 +2951,16 @@ index|[
 name|bootAP
 index|]
 expr_stmt|;
+comment|/* 		 * The i386 PV port uses the apic_id as vCPU id, but the 		 * PVHVM port needs to use the acpi_id, so set it for PV 		 * also in order to work with shared devices between PV 		 * and PVHVM. 		 */
+name|pc
+operator|->
+name|pc_acpi_id
+operator|=
+name|cpu_apic_ids
+index|[
+name|bootAP
+index|]
+expr_stmt|;
 name|pc
 operator|->
 name|pc_prvspace

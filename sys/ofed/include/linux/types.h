@@ -115,6 +115,13 @@ end_endif
 
 begin_typedef
 typedef|typedef
+name|u64
+name|phys_addr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|unsigned
 name|long
 name|kernel_ulong_t

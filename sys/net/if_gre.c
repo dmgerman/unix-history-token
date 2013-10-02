@@ -2652,10 +2652,6 @@ name|IFF_UP
 expr_stmt|;
 break|break;
 case|case
-name|SIOCSIFDSTADDR
-case|:
-break|break;
-case|case
 name|SIOCSIFFLAGS
 case|:
 comment|/* 		 * XXXRW: Isn't this priv_check() redundant to the ifnet 		 * layer check? 		 */

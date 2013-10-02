@@ -462,6 +462,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|hrtime_t
+name|zfs_throttle_delay
+init|=
+name|MSEC2NSEC
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|hrtime_t
+name|zfs_throttle_resolution
+init|=
+name|MSEC2NSEC
+argument_list|(
+literal|10
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|dsl_pool_open_special_dir
@@ -2698,7 +2720,7 @@ name|zfs_write_limit_lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Attempt to keep the sync time consistent by adjusting the 	 * amount of write traffic allowed into each transaction group. 	 * Weight the throughput calculation towards the current value: 	 * 	thru = 3/4 old_thru + 1/4 new_thru 	 * 	 * Note: write_time is in nanosecs, so write_time/MICROSEC 	 * yields millisecs 	 */
+comment|/* 	 * Attempt to keep the sync time consistent by adjusting the 	 * amount of write traffic allowed into each transaction group. 	 * Weight the throughput calculation towards the current value: 	 * 	thru = 3/4 old_thru + 1/4 new_thru 	 * 	 * Note: write_time is in nanosecs while dp_throughput is expressed in 	 * bytes per millisecond. 	 */
 name|ASSERT
 argument_list|(
 name|zfs_write_limit_min
@@ -2716,7 +2738,10 @@ literal|8
 operator|&&
 name|write_time
 operator|>
-name|MICROSEC
+name|MSEC2NSEC
+argument_list|(
+literal|1
+argument_list|)
 condition|)
 block|{
 name|uint64_t
@@ -2724,11 +2749,10 @@ name|throughput
 init|=
 name|data_written
 operator|/
-operator|(
+name|NSEC2MSEC
+argument_list|(
 name|write_time
-operator|/
-name|MICROSEC
-operator|)
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3112,6 +3136,7 @@ literal|3
 operator|)
 operator|)
 condition|)
+block|{
 name|txg_delay
 argument_list|(
 name|dp
@@ -3120,9 +3145,12 @@ name|tx
 operator|->
 name|tx_txg
 argument_list|,
-literal|1
+name|zfs_throttle_delay
+argument_list|,
+name|zfs_throttle_resolution
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

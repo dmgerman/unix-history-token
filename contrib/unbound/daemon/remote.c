@@ -3399,6 +3399,7 @@ name|SSL
 modifier|*
 name|ssl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -8282,6 +8283,7 @@ name|SSL
 modifier|*
 name|ssl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

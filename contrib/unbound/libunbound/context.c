@@ -547,6 +547,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

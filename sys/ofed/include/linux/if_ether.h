@@ -34,6 +34,21 @@ name|ETH_P_8021Q
 value|ETHERTYPE_VLAN
 end_define
 
+begin_comment
+comment|/*  * defined Ethernet Protocol ID's.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETH_P_IP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Internet Protocol packet     */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

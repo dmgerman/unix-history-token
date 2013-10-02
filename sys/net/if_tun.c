@@ -1868,13 +1868,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 name|sc
 operator|=
 name|malloc
@@ -2865,22 +2858,6 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|"address set\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SIOCSIFDSTADDR
-case|:
-name|tuninit
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|TUNDEBUG
-argument_list|(
-name|ifp
-argument_list|,
-literal|"destination address set\n"
 argument_list|)
 expr_stmt|;
 break|break;

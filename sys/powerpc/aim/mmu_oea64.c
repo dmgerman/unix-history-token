@@ -823,7 +823,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|uint64_t
 name|moea64_large_page_size
 init|=
 literal|0
@@ -984,17 +984,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|moea64_clear_modify
-parameter_list|(
-name|mmu_t
-parameter_list|,
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|moea64_clear_reference
 parameter_list|(
 name|mmu_t
 parameter_list|,
@@ -1559,13 +1548,6 @@ argument_list|(
 name|mmu_clear_modify
 argument_list|,
 name|moea64_clear_modify
-argument_list|)
-block|,
-name|MMUMETHOD
-argument_list|(
-name|mmu_clear_reference
-argument_list|,
-name|moea64_clear_reference
 argument_list|)
 block|,
 name|MMUMETHOD
@@ -2639,9 +2621,7 @@ name|isync
 argument_list|()
 expr_stmt|;
 comment|/* FALLTHROUGH */
-case|case
-name|IBMCELLBE
-case|:
+default|default:
 name|moea64_large_page_size
 operator|=
 literal|0x1000000
@@ -2650,12 +2630,6 @@ comment|/* 16 MB */
 name|moea64_large_page_shift
 operator|=
 literal|24
-expr_stmt|;
-break|break;
-default|default:
-name|moea64_large_page_size
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|moea64_large_page_mask
@@ -7044,7 +7018,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the page is not exclusive busied, then PGA_WRITEABLE cannot be 	 * concurrently set while the object is locked.  Thus, if PGA_WRITEABLE 	 * is clear, no PTEs can have LPTE_CHG set. 	 */
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->
@@ -7158,48 +7132,6 @@ operator|(
 name|rv
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|moea64_clear_reference
-parameter_list|(
-name|mmu_t
-name|mmu
-parameter_list|,
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_UNMANAGED
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"moea64_clear_reference: page %p is not managed"
-operator|,
-name|m
-operator|)
-argument_list|)
-expr_stmt|;
-name|moea64_clear_bit
-argument_list|(
-name|mmu
-argument_list|,
-name|m
-argument_list|,
-name|LPTE_REF
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

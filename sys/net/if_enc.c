@@ -823,7 +823,7 @@ name|enc_clone_create
 argument_list|,
 name|enc_clone_destroy
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;

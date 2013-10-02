@@ -633,7 +633,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 4 TBD */
+comment|/* 1 TCP_SIGNATURE, 3 TBD */
 name|uint64_t
 name|_pad
 index|[
@@ -1385,6 +1385,16 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
+name|void
+modifier|*
+name|tw_pspare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
+name|u_int
+modifier|*
+name|tw_spare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
 block|}
 struct|;
 end_struct

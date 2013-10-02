@@ -1037,6 +1037,8 @@ name|min
 argument_list|,
 name|size
 argument_list|,
+literal|0
+argument_list|,
 name|superpage_align
 condition|?
 name|VMFS_SUPER_SPACE

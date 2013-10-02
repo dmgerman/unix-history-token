@@ -71,7 +71,7 @@ decl_stmt|;
 name|int
 name|kq_refcnt
 decl_stmt|;
-name|SLIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|kqueue
 argument_list|)

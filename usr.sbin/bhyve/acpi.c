@@ -861,11 +861,12 @@ argument_list|,
 literal|"[0001]\t\tLength : 08\n"
 argument_list|)
 expr_stmt|;
+comment|/* iasl expects hex values for the proc and apic id's */
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tProcessor ID : %02d\n"
+literal|"[0001]\t\tProcessor ID : %02x\n"
 argument_list|,
 name|i
 argument_list|)
@@ -874,7 +875,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tLocal Apic ID : %02d\n"
+literal|"[0001]\t\tLocal Apic ID : %02x\n"
 argument_list|,
 name|i
 argument_list|)
@@ -916,11 +917,12 @@ argument_list|,
 literal|"[0001]\t\tLength : 0C\n"
 argument_list|)
 expr_stmt|;
+comment|/* iasl expects a hex value for the i/o apic id */
 name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tI/O Apic ID : %02d\n"
+literal|"[0001]\t\tI/O Apic ID : %02x\n"
 argument_list|,
 name|basl_ncpu
 argument_list|)

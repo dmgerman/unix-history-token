@@ -164,7 +164,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 return|return
-name|bswap16
+name|le16toh
 argument_list|(
 name|val
 argument_list|)
@@ -188,7 +188,9 @@ name|uint16_t
 name|data
 parameter_list|)
 block|{
-name|bswap16
+name|data
+operator|=
+name|htole16
 argument_list|(
 name|data
 argument_list|)

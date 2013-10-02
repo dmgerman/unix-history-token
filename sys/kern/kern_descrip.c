@@ -7081,12 +7081,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* update the pointers and counters */
-name|fdp
-operator|->
-name|fd_nfiles
-operator|=
-name|nnfiles
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|ntable
@@ -7115,6 +7109,17 @@ operator|->
 name|fd_map
 operator|=
 name|nmap
+expr_stmt|;
+comment|/* 	 * In order to have a valid pattern for fget_unlocked() 	 * fdp->fd_nfiles must be the last member to be updated, otherwise 	 * fget_unlocked() consumers may reference a new, higher value for 	 * fdp->fd_nfiles before to access the fdp->fd_ofiles array, 	 * resulting in OOB accesses. 	 */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
+name|fdp
+operator|->
+name|fd_nfiles
+argument_list|,
+name|nnfiles
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Do not free the old file table, as some threads may still 	 * reference entries within it.  Instead, place it on a freelist 	 * which will be processed when the struct filedesc is released. 	 * 	 * Do, however, free the old map. 	 * 	 * Note that if onfiles == NDFILE, we're dealing with the original 	 * static allocation contained within (struct filedesc0 *)fdp, 	 * which must not be freed. 	 */
 if|if
@@ -10833,6 +10838,7 @@ name|error
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Avoid reads reordering and then a first access to the 	 * fdp->fd_ofiles table which could result in OOB operation. 	 */
 if|if
 condition|(
 name|fd
@@ -10841,9 +10847,13 @@ literal|0
 operator|||
 name|fd
 operator|>=
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|fdp
 operator|->
 name|fd_nfiles
+argument_list|)
 condition|)
 return|return
 operator|(

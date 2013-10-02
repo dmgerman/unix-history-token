@@ -7983,11 +7983,6 @@ name|if_carp
 operator|=
 name|NULL
 expr_stmt|;
-name|if_rele
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
@@ -8003,6 +7998,11 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|if_rele
+argument_list|(
+name|ifp
 argument_list|)
 expr_stmt|;
 name|free
