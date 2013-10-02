@@ -1464,6 +1464,21 @@ value|(get_elf_backend_data (abfd)->s->sizeof_dyn)
 end_define
 
 begin_comment
+comment|/* The size of the rld_map pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_ELF_RLD_MAP_SIZE
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(get_elf_backend_data (abfd)->s->arch_size / 8)
+end_define
+
+begin_comment
 comment|/* The size of a GOT entry.  */
 end_comment
 
@@ -30993,7 +31008,10 @@ name|s
 operator|->
 name|size
 operator|+=
-literal|4
+name|MIPS_ELF_RLD_MAP_SIZE
+argument_list|(
+name|output_bfd
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
