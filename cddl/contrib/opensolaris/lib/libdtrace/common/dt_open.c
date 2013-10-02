@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -239,7 +239,7 @@ value|{ DTRACE_STABILITY_EVOLVING, \ 	DTRACE_STABILITY_EVOLVING, DTRACE_CLASS_CO
 end_define
 
 begin_comment
-comment|/*  * The version number should be increased for every customer visible release  * of Solaris. The major number should be incremented when a fundamental  * change has been made that would affect all consumers, and would reflect  * sweeping changes to DTrace or the D language. The minor number should be  * incremented when a change is introduced that could break scripts that had  * previously worked; for example, adding a new built-in variable could break  * a script which was already using that identifier. The micro number should  * be changed when introducing functionality changes or major bug fixes that  * do not affect backward compatibility -- this is merely to make capabilities  * easily determined from the version number. Minor bugs do not require any  * modification to the version number.  */
+comment|/*  * The version number should be increased for every customer visible release  * of DTrace. The major number should be incremented when a fundamental  * change has been made that would affect all consumers, and would reflect  * sweeping changes to DTrace or the D language. The minor number should be  * incremented when a change is introduced that could break scripts that had  * previously worked; for example, adding a new built-in variable could break  * a script which was already using that identifier. The micro number should  * be changed when introducing functionality changes or major bug fixes that  * do not affect backward compatibility -- this is merely to make capabilities  * easily determined from the version number. Minor bugs do not require any  * modification to the version number.  */
 end_comment
 
 begin_define
@@ -371,15 +371,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_9_1
+value|DT_VERSION_NUMBER(1, 9, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_9
+value|DT_VERS_1_9_1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.9"
+value|"Sun D 1.9.1"
 end_define
 
 begin_decl_stmt
@@ -443,6 +450,9 @@ comment|/* D API 1.8.1 */
 name|DT_VERS_1_9
 block|,
 comment|/* D API 1.9 */
+name|DT_VERS_1_9_1
+block|,
+comment|/* D API 1.9.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -10522,15 +10532,6 @@ expr_stmt|;
 name|dt_aggregate_destroy
 argument_list|(
 name|dtp
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|dtp
-operator|->
-name|dt_buf
-operator|.
-name|dtbd_data
 argument_list|)
 expr_stmt|;
 name|dt_pfdict_destroy

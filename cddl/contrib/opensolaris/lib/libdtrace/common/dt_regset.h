@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2003 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_REGSET_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -100,6 +97,14 @@ name|dt_regset_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dt_regset_assert_free
+parameter_list|(
+name|dt_regset_t
+modifier|*
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -6763,6 +6760,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|dtrace_setopt
+argument_list|(
+name|g_dtp
+argument_list|,
+literal|"temporal"
+argument_list|,
+literal|"yes"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If -G is specified, enable -xlink=dynamic and -xunodefs to permit 	 * references to undefined symbols to remain as unresolved relocations. 	 * If -A is specified, enable -xlink=primary to permit static linking 	 * only to kernel symbols that are defined in a primary kernel module. 	 */
 if|if
 condition|(
