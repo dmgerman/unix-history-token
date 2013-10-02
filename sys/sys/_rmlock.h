@@ -61,6 +61,10 @@ expr_stmt|;
 union|union
 block|{
 name|struct
+name|lock_object
+name|_rm_wlock_object
+decl_stmt|;
+name|struct
 name|mtx
 name|_rm_lock_mtx
 decl_stmt|;
@@ -74,6 +78,13 @@ union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|rm_wlock_object
+value|_rm_lock._rm_wlock_object
+end_define
 
 begin_define
 define|#

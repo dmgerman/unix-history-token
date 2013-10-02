@@ -175,6 +175,9 @@ operator|&
 name|lock_class_rm
 block|,
 operator|&
+name|lock_class_rm_sleepable
+block|,
+operator|&
 name|lock_class_rw
 block|,
 operator|&
