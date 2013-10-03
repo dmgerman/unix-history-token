@@ -152,9 +152,10 @@ block|{
 name|struct
 name|pidfh
 modifier|*
+name|ppfh
+decl_stmt|,
+modifier|*
 name|pfh
-init|=
-name|NULL
 decl_stmt|;
 name|sigset_t
 name|mask
@@ -169,11 +170,16 @@ decl_stmt|,
 name|noclose
 decl_stmt|,
 name|restart
+decl_stmt|,
+name|serrno
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|pidfile
+decl_stmt|,
+modifier|*
+name|ppidfile
 decl_stmt|,
 modifier|*
 name|user
@@ -193,6 +199,8 @@ name|restart
 operator|=
 literal|0
 expr_stmt|;
+name|ppidfile
+operator|=
 name|pidfile
 operator|=
 name|user
@@ -210,7 +218,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cfp:ru:"
+literal|"cfp:P:ru:"
 argument_list|)
 operator|)
 operator|!=
@@ -243,6 +251,14 @@ case|case
 literal|'p'
 case|:
 name|pidfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|ppidfile
 operator|=
 name|optarg
 expr_stmt|;
@@ -286,6 +302,8 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|ppfh
+operator|=
 name|pfh
 operator|=
 name|NULL
@@ -345,6 +363,74 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Do the same for actual daemon process. */
+if|if
+condition|(
+name|ppidfile
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ppfh
+operator|=
+name|pidfile_open
+argument_list|(
+name|ppidfile
+argument_list|,
+literal|0600
+argument_list|,
+operator|&
+name|otherpid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ppfh
+operator|==
+name|NULL
+condition|)
+block|{
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
+name|pidfile_remove
+argument_list|(
+name|pfh
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|EEXIST
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|3
+argument_list|,
+literal|"process already running, pid: %d"
+argument_list|,
+name|otherpid
+argument_list|)
+expr_stmt|;
+block|}
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"ppidfile ``%s''"
+argument_list|,
+name|ppidfile
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|daemon
@@ -357,11 +443,20 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
-name|NULL
+literal|"daemon"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
+comment|/* Write out parent pidfile if needed. */
+name|pidfile_write
+argument_list|(
+name|ppfh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the pidfile or restart option is specified the daemon 	 * executes the command in a forked process and wait on child 	 * exit to remove the pidfile or restart the command. Normally 	 * we don't want the monitoring daemon to be terminated 	 * leaving the running process and the stale pidfile, so we 	 * catch SIGTERM and forward it to the children expecting to 	 * get SIGCHLD eventually. 	 */
@@ -391,13 +486,16 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"signal"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 comment|/* 		 * Because SIGCHLD is ignored by default, setup dummy handler 		 * for it, so we can mask it. 		 */
 if|if
 condition|(
@@ -410,13 +508,16 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"signal"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 comment|/* 		 * Block interesting signals. 		 */
 name|sigemptyset
 argument_list|(
@@ -456,13 +557,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"sigprocmask"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
+block|}
 comment|/* 		 * Try to protect against pageout kill. Ignore the 		 * error, madvise(2) will fail only if a process does 		 * not have superuser privileges. 		 */
 operator|(
 name|void
@@ -492,18 +596,14 @@ operator|-
 literal|1
 condition|)
 block|{
-name|pidfile_remove
+name|warn
 argument_list|(
-name|pfh
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|1
-argument_list|,
 literal|"fork"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|exit
+goto|;
 block|}
 block|}
 if|if
@@ -621,17 +721,24 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|exit
+label|:
 name|pidfile_remove
 argument_list|(
 name|pfh
 argument_list|)
 expr_stmt|;
-name|exit
+name|pidfile_remove
 argument_list|(
-literal|0
+name|ppfh
 argument_list|)
 expr_stmt|;
-comment|/* Exit status does not matter. */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* If daemon(3) succeeded exit status does not matter. */
 block|}
 end_function
 
@@ -877,8 +984,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: daemon [-cfr] [-p pidfile] [-u user] command "
-literal|"arguments ...\n"
+literal|"usage: daemon [-cfr] [-p child_pidfile] [-P supervisor_pidfile] "
+literal|"[-u user]\n              command arguments ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
