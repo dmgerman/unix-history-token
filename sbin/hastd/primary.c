@@ -489,7 +489,7 @@ name|name
 parameter_list|,
 name|ncomp
 parameter_list|)
-value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list[(ncomp)]);		\ 	TAILQ_INSERT_TAIL(&hio_##name##_list[(ncomp)], (hio),		\ 	    hio_next[(ncomp)]);						\ 	mtx_unlock(&hio_##name##_list_lock[ncomp]);			\ 	if (_wakeup)							\ 		cv_signal(&hio_##name##_list_cond[(ncomp)]);		\ } while (0)
+value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list[(ncomp)]);		\ 	TAILQ_INSERT_TAIL(&hio_##name##_list[(ncomp)], (hio),		\ 	    hio_next[(ncomp)]);						\ 	mtx_unlock(&hio_##name##_list_lock[ncomp]);			\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond[(ncomp)]);		\ } while (0)
 end_define
 
 begin_define
@@ -501,7 +501,7 @@ name|hio
 parameter_list|,
 name|name
 parameter_list|)
-value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_##name##_next);\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_signal(&hio_##name##_list_cond);			\ } while (0)
+value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_##name##_next);\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond);			\ } while (0)
 end_define
 
 begin_define
@@ -963,6 +963,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Expects res->hr_amp locked, returns unlocked. */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -983,6 +987,17 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_diskmap_lock
+argument_list|)
+expr_stmt|;
 name|buf
 operator|=
 name|activemap_bitmap
@@ -993,6 +1008,14 @@ name|hr_amp
 argument_list|,
 operator|&
 name|size
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_lock
 argument_list|)
 expr_stmt|;
 name|PJDLOG_ASSERT
@@ -1014,6 +1037,10 @@ operator|)
 operator|==
 literal|0
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1048,15 +1075,18 @@ operator|->
 name|hr_stat_activemap_write_error
 operator|++
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
 if|if
 condition|(
+name|ret
+operator|==
+literal|0
+operator|&&
 name|res
 operator|->
 name|hr_metaflush
@@ -1111,17 +1141,24 @@ operator|->
 name|hr_stat_activemap_flush_error
 operator|++
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_diskmap_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 block|}
@@ -3535,6 +3572,14 @@ name|map
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now that we merged bitmaps from both nodes, flush it to the 		 * disk before we start to synchronize. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_lock
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5868,6 +5913,8 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5876,6 +5923,7 @@ operator|->
 name|hr_amp_lock
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|BIO_DELETE
@@ -7566,6 +7614,8 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7574,6 +7624,7 @@ operator|->
 name|hr_amp_lock
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|hio
@@ -8696,6 +8747,8 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -8704,6 +8757,7 @@ operator|->
 name|hr_amp_lock
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -9116,7 +9170,7 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
-block|}
+else|else
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -9125,6 +9179,18 @@ operator|->
 name|hr_amp_lock
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_lock
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dorewind
