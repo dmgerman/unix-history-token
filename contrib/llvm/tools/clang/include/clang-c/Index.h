@@ -2860,6 +2860,14 @@ name|CXCallingConv_IntelOclBicc
 init|=
 literal|9
 block|,
+name|CXCallingConv_X86_64Win64
+init|=
+literal|10
+block|,
+name|CXCallingConv_X86_64SysV
+init|=
+literal|11
+block|,
 name|CXCallingConv_Invalid
 init|=
 literal|100
