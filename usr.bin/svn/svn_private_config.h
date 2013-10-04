@@ -522,7 +522,7 @@ begin_define
 define|#
 directive|define
 name|SVN_HAS_ATOMIC_BUILTINS
-value|1
+value|0
 end_define
 
 begin_comment
