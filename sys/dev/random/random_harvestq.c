@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Arthur Mesh  * Copyright (c) 2000-2009 Mark R V Murray  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000-2013 Mark R V Murray  * Copyright (c) 2013 Arthur Mesh  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|RANDOM_FIFO_MAX
-value|256
+value|1024
 end_define
 
 begin_comment
@@ -157,13 +157,6 @@ name|entropyfifo
 name|emptyfifo
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|EMPTYBUFFERS
-value|1024
-end_define
 
 begin_comment
 comment|/* Harvested entropy */
@@ -312,7 +305,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * Deal with events, if any, dropping the mutex as we process 		 * each event.  Then push the events back into the empty 		 * fifo. 		 */
+comment|/* 		 * Deal with events, if any. 		 * Then transfer the used events back into the empty fifo. 		 */
 if|if
 condition|(
 operator|!
@@ -383,6 +376,15 @@ name|local_count
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Do Hardware/fast RNG source processing here. 		 */
+if|#
+directive|if
+literal|0
+block|while (hardware_source) { 			event = hardware_source->read(); 			func(event); 			hardware_source++;
+comment|/* Throttle somehow? */
+block|}
+endif|#
+directive|endif
 comment|/* 		 * If a queue flush was commanded, it has now happened, 		 * and we can mark this by resetting the command. 		 */
 if|if
 condition|(
@@ -479,7 +481,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|EMPTYBUFFERS
+name|RANDOM_FIFO_MAX
 condition|;
 name|i
 operator|++
@@ -746,9 +748,6 @@ parameter_list|,
 name|u_int
 name|bits
 parameter_list|,
-name|u_int
-name|frac
-parameter_list|,
 name|enum
 name|esource
 name|origin
@@ -766,8 +765,8 @@ operator|>=
 name|RANDOM_START
 operator|&&
 name|origin
-operator|<=
-name|RANDOM_PURE
+operator|<
+name|ENTROPYSOURCE
 argument_list|,
 operator|(
 literal|"random_harvest_internal: origin %d invalid\n"
@@ -864,12 +863,6 @@ name|bits
 expr_stmt|;
 name|event
 operator|->
-name|frac
-operator|=
-name|frac
-expr_stmt|;
-name|event
-operator|->
 name|source
 operator|=
 name|origin
@@ -898,7 +891,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|{ 			int i; 			printf("Harvest:%16jX ", event->somecounter); 			for (i = 0; i< event->size; i++) 				printf("%02X", event->entropy[i]); 			for (; i< 16; i++) 				printf("  "); 			printf(" %2d 0x%2X.%03X %02X\n", event->size, event->bits, event->frac, event->source); 			}
+block|{ 			int i; 			printf("Harvest:%16jX ", event->somecounter); 			for (i = 0; i< event->size; i++) 				printf("%02X", event->entropy[i]); 			for (; i< 16; i++) 				printf("  "); 			printf(" %2d %2d %02X\n", event->size, event->bits, event->source); 			}
 endif|#
 directive|endif
 name|STAILQ_INSERT_TAIL

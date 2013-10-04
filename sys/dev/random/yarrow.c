@@ -189,10 +189,6 @@ name|u_int
 name|bits
 decl_stmt|;
 comment|/* estimated bits of entropy */
-name|u_int
-name|frac
-decl_stmt|;
-comment|/* fractional bits of entropy 					   (given as 1024/n) */
 block|}
 name|source
 index|[
@@ -541,36 +537,12 @@ argument_list|)
 expr_stmt|;
 name|source
 operator|->
-name|frac
-operator|+=
-name|event
-operator|->
-name|frac
-expr_stmt|;
-name|source
-operator|->
 name|bits
 operator|+=
 name|event
 operator|->
 name|bits
-operator|+
-operator|(
-name|source
-operator|->
-name|frac
-operator|>>
-literal|12
-operator|)
 expr_stmt|;
-comment|/* bits + frac/0x1000 */
-name|source
-operator|->
-name|frac
-operator|&=
-literal|0xFFF
-expr_stmt|;
-comment|/* Keep the fractional bits */
 comment|/* Count the over-threshold sources in each pool */
 for|for
 control|(
@@ -1359,7 +1331,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 for|for
 control|(
 name|j
@@ -1373,7 +1344,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 name|random_state
 operator|.
 name|pool
@@ -1390,24 +1360,6 @@ name|bits
 operator|=
 literal|0
 expr_stmt|;
-name|random_state
-operator|.
-name|pool
-index|[
-name|i
-index|]
-operator|.
-name|source
-index|[
-name|j
-index|]
-operator|.
-name|frac
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 comment|/* 6. Wipe memory of intermediate values */
 name|memset
 argument_list|(
@@ -1517,6 +1469,22 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+comment|/* Check for final read request */
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+operator|&&
+name|count
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* The reseed task must not be jumped on */
 name|mtx_lock
 argument_list|(
@@ -1774,7 +1742,9 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function

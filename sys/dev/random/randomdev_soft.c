@@ -303,11 +303,6 @@ operator|=
 name|random_yarrow_read
 block|,
 operator|.
-name|write
-operator|=
-name|randomdev_write
-block|,
-operator|.
 name|poll
 operator|=
 name|randomdev_poll
@@ -320,8 +315,10 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|1
-block|, }
+literal|0
+block|,
+comment|/* This will be seeded during entropy processing */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -386,11 +383,6 @@ operator|=
 name|random_fortuna_read
 block|,
 operator|.
-name|write
-operator|=
-name|randomdev_write
-block|,
-operator|.
 name|poll
 operator|=
 name|randomdev_poll
@@ -403,8 +395,10 @@ block|,
 operator|.
 name|seeded
 operator|=
-literal|1
-block|, }
+literal|0
+block|,
+comment|/* This will be excplicitly seeded at startup when secured */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +480,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|sysctl_handle_int
 argument_list|(
 name|oidp
@@ -500,6 +495,7 @@ name|oid_arg2
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -593,7 +589,7 @@ name|random_context
 operator|.
 name|seeded
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -712,7 +708,7 @@ name|harvest
 operator|.
 name|interrupt
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -744,7 +740,7 @@ name|harvest
 operator|.
 name|swi
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -837,89 +833,6 @@ end_function
 
 begin_function
 name|void
-name|randomdev_write
-parameter_list|(
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|u_int
-name|chunk
-decl_stmt|;
-comment|/* 	 * Break the input up into HARVESTSIZE chunks. The writer has too 	 * much control here, so "estimate" the entropy as zero. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-name|i
-operator|+=
-name|HARVESTSIZE
-control|)
-block|{
-name|chunk
-operator|=
-name|HARVESTSIZE
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|+
-name|chunk
-operator|>=
-name|count
-condition|)
-name|chunk
-operator|=
-call|(
-name|u_int
-call|)
-argument_list|(
-name|count
-operator|-
-name|i
-argument_list|)
-expr_stmt|;
-name|random_harvestq_internal
-argument_list|(
-name|get_cyclecount
-argument_list|()
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|buf
-operator|+
-name|i
-argument_list|,
-name|chunk
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|RANDOM_WRITE
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-name|void
 name|randomdev_unblock
 parameter_list|(
 name|void
@@ -933,12 +846,6 @@ operator|.
 name|seeded
 condition|)
 block|{
-name|random_context
-operator|.
-name|seeded
-operator|=
-literal|1
-expr_stmt|;
 name|selwakeuppri
 argument_list|(
 operator|&
@@ -955,7 +862,19 @@ operator|&
 name|random_context
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"random: unblocking device.\n"
+argument_list|)
+expr_stmt|;
+name|random_context
+operator|.
+name|seeded
+operator|=
+literal|1
+expr_stmt|;
 block|}
+comment|/* Do arc4random(9) a favour while we are about it. */
 operator|(
 name|void
 operator|)
@@ -1031,7 +950,9 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|revents
+operator|)
 return|;
 block|}
 end_function
@@ -1082,7 +1003,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Entropy device is blocking.\n"
+literal|"random: blocking on read.\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -1113,7 +1034,9 @@ name|random_reseed_mtx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1154,6 +1077,7 @@ name|defined
 argument_list|(
 name|YARROW_RNG
 argument_list|)
+comment|/* This ultimately calls randomdev_unblock() */
 name|random_yarrow_reseed
 argument_list|()
 expr_stmt|;
@@ -1165,6 +1089,7 @@ name|defined
 argument_list|(
 name|FORTUNA_RNG
 argument_list|)
+comment|/* This ultimately calls randomdev_unblock() */
 name|random_fortuna_reseed
 argument_list|()
 expr_stmt|;
@@ -1180,6 +1105,7 @@ name|randomdev_modevent
 parameter_list|(
 name|module_t
 name|mod
+name|__unused
 parameter_list|,
 name|int
 name|type
@@ -1187,6 +1113,7 @@ parameter_list|,
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 switch|switch

@@ -75,15 +75,13 @@ name|u_int
 name|size
 decl_stmt|,
 name|bits
-decl_stmt|,
-name|frac
 decl_stmt|;
 comment|/* stats about the entropy */
 name|enum
 name|esource
 name|source
 decl_stmt|;
-comment|/* stats about the entropy */
+comment|/* origin of the entropy */
 name|STAILQ_ENTRY
 argument_list|(
 argument|harvest
@@ -115,18 +113,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|randomdev_write
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|randomdev_init_harvester
 parameter_list|(
 name|void
@@ -139,8 +125,6 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -228,7 +212,7 @@ parameter_list|,
 name|max
 parameter_list|)
 define|\
-value|static int								\ random_check_uint_##name(SYSCTL_HANDLER_ARGS)				\ {									\ 	if (oidp->oid_arg1 != NULL) {					\ 		 if (*(u_int *)(oidp->oid_arg1)<= (min))		\ 			*(u_int *)(oidp->oid_arg1) = (min);		\ 		 else if (*(u_int *)(oidp->oid_arg1)> (max))		\ 			*(u_int *)(oidp->oid_arg1) = (max);		\ 	}								\         return sysctl_handle_int(oidp, oidp->oid_arg1, oidp->oid_arg2,	\ 		req);							\ }
+value|static int								\ random_check_uint_##name(SYSCTL_HANDLER_ARGS)				\ {									\ 	if (oidp->oid_arg1 != NULL) {					\ 		 if (*(u_int *)(oidp->oid_arg1)<= (min))		\ 			*(u_int *)(oidp->oid_arg1) = (min);		\ 		 else if (*(u_int *)(oidp->oid_arg1)> (max))		\ 			*(u_int *)(oidp->oid_arg1) = (max);		\ 	}								\         return (sysctl_handle_int(oidp, oidp->oid_arg1, oidp->oid_arg2,	\ 		req));							\ }
 end_define
 
 end_unit

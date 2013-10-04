@@ -3122,8 +3122,6 @@ literal|12
 argument_list|,
 literal|3
 argument_list|,
-literal|0
-argument_list|,
 name|RANDOM_NET_NG
 argument_list|)
 expr_stmt|;

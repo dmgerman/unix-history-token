@@ -63,8 +63,6 @@ name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int
-parameter_list|,
 name|enum
 name|esource
 parameter_list|)

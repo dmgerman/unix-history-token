@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Arthur Mesh<arthurmesh@gmail.com>  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * Copyright (c) 2004 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2013 Arthur Mesh<arthurmesh@gmail.com>  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * Copyright (c) 2013 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -20,13 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -38,31 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/libkern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/selinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
 end_include
 
 begin_include
@@ -80,7 +62,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -342,94 +342,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * In the past, the logic of the random_adaptor selection was inverted, such  * that hardware RNGs would be chosen unless disabled. This routine is here to  * preserve that functionality to avoid folks losing their hardware RNGs by  * upgrading to newer kernel.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|random_adaptor_choose_legacy
-parameter_list|(
-name|struct
-name|random_adaptor
-modifier|*
-modifier|*
-name|adaptor
-parameter_list|)
-block|{
-name|struct
-name|random_adaptor
-modifier|*
-name|tmp
-decl_stmt|;
-name|int
-name|enable
-decl_stmt|;
-comment|/* Then go looking for hardware */
-name|enable
-operator|=
-literal|1
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"hw.nehemiah_rng_enable"
-argument_list|,
-operator|&
-name|enable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|enable
-operator|&&
-operator|(
-name|tmp
-operator|=
-name|random_adaptor_get
-argument_list|(
-literal|"nehemiah"
-argument_list|)
-operator|)
-condition|)
-operator|*
-name|adaptor
-operator|=
-name|tmp
-expr_stmt|;
-name|enable
-operator|=
-literal|1
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"hw.ivy_rng_enable"
-argument_list|,
-operator|&
-name|enable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|enable
-operator|&&
-operator|(
-name|tmp
-operator|=
-name|random_adaptor_get
-argument_list|(
-literal|"rdrand"
-argument_list|)
-operator|)
-condition|)
-operator|*
-name|adaptor
-operator|=
-name|tmp
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Walk a list of registered random(4) adaptors and pick the last non-selected  * one.  *  * If none are selected, use yarrow if available.  */
 end_comment
 
@@ -477,19 +389,6 @@ name|adaptor
 operator|=
 name|NULL
 expr_stmt|;
-name|random_adaptor_choose_legacy
-argument_list|(
-name|adaptor
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|adaptor
-operator|!=
-name|NULL
-condition|)
-return|return;
 if|if
 condition|(
 name|TUNABLE_STR_FETCH
@@ -525,7 +424,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -548,13 +446,13 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s random adaptor is not available, skipping\n"
+literal|"%s random adaptor is not available,"
+literal|" skipping\n"
 argument_list|,
 name|token
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 operator|*
@@ -563,24 +461,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Either no RNGs are prefered via rngs_want tunable, or 		 * no prefered RNGs are registered. 		 * Fallback to Yarrow. 		 */
-operator|*
-name|adaptor
-operator|=
-name|random_adaptor_get
-argument_list|(
-literal|"yarrow"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|adaptor
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 			 * Yarrow doesn't seem to be available. 			 * Fallback to the first thing that's on the list of 			 * available RNGs. 			 */
+comment|/* 		 * Fallback to the first thing that's on the list of 		 * available RNGs. 		 */
 name|sx_slock
 argument_list|(
 operator|&
@@ -614,7 +495,6 @@ operator|&
 name|adaptors_lock
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bootverbose
@@ -701,7 +581,6 @@ operator|&
 name|adaptors
 argument_list|)
 condition|)
-block|{
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -713,7 +592,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|LIST_FOREACH
@@ -840,7 +718,6 @@ argument|&adaptors
 argument_list|,
 argument|entries
 argument_list|)
-block|{
 if|if
 condition|(
 name|rpp
@@ -855,7 +732,6 @@ name|rpp
 operator|->
 name|name
 expr_stmt|;
-block|}
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -873,7 +749,6 @@ name|name
 operator|==
 name|NULL
 condition|)
-block|{
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -885,9 +760,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -902,7 +775,6 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
