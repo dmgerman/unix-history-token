@@ -3849,6 +3849,11 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|TAILQ_INSERT_TAIL
@@ -5095,7 +5100,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 name|icl_pdu_zone
@@ -5120,7 +5125,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 name|refcount_init
