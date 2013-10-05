@@ -1196,8 +1196,8 @@ parameter_list|,
 name|u_long
 name|host_rsp
 parameter_list|,
-name|u_long
-name|ept_pml4
+name|uint64_t
+name|eptp
 parameter_list|,
 name|uint32_t
 name|pinbased_ctls
@@ -1238,8 +1238,6 @@ decl_stmt|,
 name|efer
 decl_stmt|;
 name|uint64_t
-name|eptp
-decl_stmt|,
 name|pat
 decl_stmt|,
 name|fsbase
@@ -1750,13 +1748,6 @@ goto|goto
 name|done
 goto|;
 comment|/* eptp */
-name|eptp
-operator|=
-name|EPTP
-argument_list|(
-name|ept_pml4
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
