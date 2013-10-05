@@ -2294,12 +2294,6 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|kp
-operator|->
-name|ki_loginclass
-operator|!=
-name|NULL
-operator|&&
 name|strcmp
 argument_list|(
 name|kp
