@@ -10614,7 +10614,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cfiscsi_datamove
+name|cfiscsi_datamove_in
 parameter_list|(
 name|union
 name|ctl_io
@@ -10647,16 +10647,6 @@ modifier|*
 name|bhsdi
 decl_stmt|;
 name|struct
-name|iscsi_bhs_r2t
-modifier|*
-name|bhsr2t
-decl_stmt|;
-name|struct
-name|cfiscsi_data_wait
-modifier|*
-name|cdw
-decl_stmt|;
-name|struct
 name|ctl_sg_entry
 name|ctl_sg_entry
 decl_stmt|,
@@ -10681,12 +10671,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|i
-decl_stmt|;
-name|uint32_t
-name|target_transfer_tag
-decl_stmt|;
-name|bool
-name|done
 decl_stmt|;
 name|request
 operator|=
@@ -10815,28 +10799,13 @@ name|scsiio
 operator|.
 name|kern_total_len
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|flags
-operator|&
-name|CTL_FLAG_DATA_MASK
-operator|)
-operator|==
-name|CTL_FLAG_DATA_IN
-condition|)
-block|{
 if|#
 directive|if
 literal|0
-block|if (ctl_sg_count> 1) 			CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
+block|if (ctl_sg_count> 1) 		CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
 endif|#
 directive|endif
-comment|/* 		 * This is the offset within the current SCSI command; 		 * i.e. for the first call of datamove(), it will be 0, 		 * and for subsequent ones it will be the sum of lengths 		 * of previous ones. 		 */
+comment|/* 	 * This is the offset within the current SCSI command; 	 * i.e. for the first call of datamove(), it will be 0, 	 * and for subsequent ones it will be the sum of lengths 	 * of previous ones. 	 */
 name|off
 operator|=
 name|htonl
@@ -11142,7 +11111,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * End of scatter-gather segment; 				 * proceed to the next one... 				 */
+comment|/* 			 * End of scatter-gather segment; 			 * proceed to the next one... 			 */
 if|if
 condition|(
 name|i
@@ -11152,7 +11121,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 					 * ... unless this was the last one. 					 */
+comment|/* 				 * ... unless this was the last one. 				 */
 break|break;
 block|}
 name|i
@@ -11170,7 +11139,7 @@ operator|->
 name|cs_max_data_segment_length
 condition|)
 block|{
-comment|/* 				 * Can't stuff more data into the current PDU; 				 * queue it.  Note that's not enough to check 				 * for kern_data_resid == 0  instead; there 				 * may be several Data-In PDUs for the final 				 * call to cfiscsi_datamove(), and we want 				 * to set the F flag only on the last of them. 				 */
+comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0  instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
 if|if
 condition|(
 name|off
@@ -11315,8 +11284,116 @@ name|io
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cfiscsi_datamove_out
+parameter_list|(
+name|union
+name|ctl_io
+modifier|*
+name|io
+parameter_list|)
 block|{
+name|struct
+name|cfiscsi_session
+modifier|*
+name|cs
+decl_stmt|;
+name|struct
+name|icl_pdu
+modifier|*
+name|request
+decl_stmt|,
+modifier|*
+name|response
+decl_stmt|;
+specifier|const
+name|struct
+name|iscsi_bhs_scsi_command
+modifier|*
+name|bhssc
+decl_stmt|;
+name|struct
+name|iscsi_bhs_r2t
+modifier|*
+name|bhsr2t
+decl_stmt|;
+name|struct
+name|cfiscsi_data_wait
+modifier|*
+name|cdw
+decl_stmt|;
+name|uint32_t
+name|target_transfer_tag
+decl_stmt|;
+name|bool
+name|done
+decl_stmt|;
+name|request
+operator|=
+name|io
+operator|->
+name|io_hdr
+operator|.
+name|ctl_private
+index|[
+name|CTL_PRIV_FRONTEND
+index|]
+operator|.
+name|ptr
+expr_stmt|;
+name|cs
+operator|=
+name|PDU_SESSION
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|bhssc
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|iscsi_bhs_scsi_command
+operator|*
+operator|)
+name|request
+operator|->
+name|ip_bhs
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|bhssc
+operator|->
+name|bhssc_opcode
+operator|&
+operator|~
+name|ISCSI_BHS_OPCODE_IMMEDIATE
+operator|)
+operator|==
+name|ISCSI_BHS_OPCODE_SCSI_COMMAND
+argument_list|,
+operator|(
+literal|"bhssc->bhssc_opcode != ISCSI_BHS_OPCODE_SCSI_COMMAND"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We need to record it so that we can properly report 	 * underflow/underflow. 	 */
+name|PDU_TOTAL_TRANSFER_LEN
+argument_list|(
+name|request
+argument_list|)
+operator|=
+name|io
+operator|->
+name|scsiio
+operator|.
+name|kern_total_len
+expr_stmt|;
 name|CFISCSI_SESSION_LOCK
 argument_list|(
 name|cs
@@ -11341,7 +11418,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|CFISCSI_SESSION_DEBUG(cs, "expecting Data-Out with initiator " 		    "task tag 0x%x, target transfer tag 0x%x", 		    bhssc->bhssc_initiator_task_tag, target_transfer_tag);
+block|CFISCSI_SESSION_DEBUG(cs, "expecting Data-Out with initiator " 	    "task tag 0x%x, target transfer tag 0x%x", 	    bhssc->bhssc_initiator_task_tag, target_transfer_tag);
 endif|#
 directive|endif
 name|cdw
@@ -11453,7 +11530,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (io->scsiio.ext_data_filled != 0) 				CFISCSI_SESSION_DEBUG(cs, "got %zd bytes of immediate data, need %zd", 				    io->scsiio.ext_data_filled, io->scsiio.kern_data_len);
+block|if (io->scsiio.ext_data_filled != 0) 			CFISCSI_SESSION_DEBUG(cs, "got %zd bytes of immediate data, need %zd", 			    io->scsiio.ext_data_filled, io->scsiio.kern_data_len);
 endif|#
 directive|endif
 block|}
@@ -11479,7 +11556,7 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: We should limit the number of outstanding R2T PDUs 		 * 	per task to MaxOutstandingR2T. 		 */
+comment|/* 	 * XXX: We should limit the number of outstanding R2T PDUs 	 * 	per task to MaxOutstandingR2T. 	 */
 name|response
 operator|=
 name|cfiscsi_pdu_new_response
@@ -11563,7 +11640,7 @@ argument_list|(
 name|target_transfer_tag
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Here we assume that cfiscsi_datamove() won't ever 		 *	be running concurrently on several CPUs for a given 		 *	command. 		 */
+comment|/* 	 * XXX: Here we assume that cfiscsi_datamove() won't ever 	 *	be running concurrently on several CPUs for a given 	 *	command. 	 */
 name|bhsr2t
 operator|->
 name|bhsr2t_r2tsn
@@ -11582,7 +11659,7 @@ name|request
 argument_list|)
 operator|++
 expr_stmt|;
-comment|/* 		 * This is the offset within the current SCSI command; 		 * i.e. for the first call of datamove(), it will be 0, 		 * and for subsequent ones it will be the sum of lengths 		 * of previous ones. 		 * 		 * The ext_data_filled is to account for unsolicited 		 * (immediate) data that might have already arrived. 		 */
+comment|/* 	 * This is the offset within the current SCSI command; 	 * i.e. for the first call of datamove(), it will be 0, 	 * and for subsequent ones it will be the sum of lengths 	 * of previous ones. 	 * 	 * The ext_data_filled is to account for unsolicited 	 * (immediate) data that might have already arrived. 	 */
 name|bhsr2t
 operator|->
 name|bhsr2t_buffer_offset
@@ -11602,7 +11679,7 @@ operator|.
 name|ext_data_filled
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This is the total length (sum of S/G lengths) this call 		 * to cfiscsi_datamove() is supposed to handle. 		 * 		 * XXX: Limit it to MaxBurstLength. 		 */
+comment|/* 	 * This is the total length (sum of S/G lengths) this call 	 * to cfiscsi_datamove() is supposed to handle. 	 * 	 * XXX: Limit it to MaxBurstLength. 	 */
 name|bhsr2t
 operator|->
 name|bhsr2t_desired_data_transfer_length
@@ -11628,6 +11705,44 @@ name|response
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cfiscsi_datamove
+parameter_list|(
+name|union
+name|ctl_io
+modifier|*
+name|io
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|io
+operator|->
+name|io_hdr
+operator|.
+name|flags
+operator|&
+name|CTL_FLAG_DATA_MASK
+operator|)
+operator|==
+name|CTL_FLAG_DATA_IN
+condition|)
+name|cfiscsi_datamove_in
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+else|else
+name|cfiscsi_datamove_out
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
