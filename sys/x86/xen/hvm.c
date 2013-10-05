@@ -2890,6 +2890,10 @@ name|cpu_ops
 operator|=
 name|xen_hvm_cpu_ops
 expr_stmt|;
+name|vm_guest
+operator|=
+name|VM_GUEST_XEN
+expr_stmt|;
 break|break;
 case|case
 name|XEN_HVM_INIT_RESUME
