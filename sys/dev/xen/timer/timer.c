@@ -1212,7 +1212,7 @@ name|cpu
 init|=
 name|PCPU_GET
 argument_list|(
-name|acpi_id
+name|vcpu_id
 argument_list|)
 decl_stmt|;
 name|struct
@@ -1357,7 +1357,7 @@ name|cpu
 init|=
 name|PCPU_GET
 argument_list|(
-name|acpi_id
+name|vcpu_id
 argument_list|)
 decl_stmt|;
 name|struct

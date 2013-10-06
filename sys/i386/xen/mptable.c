@@ -269,7 +269,7 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
-name|acpi_id
+name|vcpu_id
 argument_list|,
 literal|0
 argument_list|)

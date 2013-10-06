@@ -2496,7 +2496,7 @@ name|madt_set_ids
 argument_list|,
 name|SI_SUB_CPU
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|madt_set_ids
 argument_list|,

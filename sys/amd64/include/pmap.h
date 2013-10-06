@@ -26,7 +26,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_V
+name|X86_PG_V
 value|0x001
 end_define
 
@@ -37,7 +37,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_RW
+name|X86_PG_RW
 value|0x002
 end_define
 
@@ -48,7 +48,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_U
+name|X86_PG_U
 value|0x004
 end_define
 
@@ -59,7 +59,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_NC_PWT
+name|X86_PG_NC_PWT
 value|0x008
 end_define
 
@@ -70,7 +70,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_NC_PCD
+name|X86_PG_NC_PCD
 value|0x010
 end_define
 
@@ -81,7 +81,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_A
+name|X86_PG_A
 value|0x020
 end_define
 
@@ -92,7 +92,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_M
+name|X86_PG_M
 value|0x040
 end_define
 
@@ -103,7 +103,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_PS
+name|X86_PG_PS
 value|0x080
 end_define
 
@@ -114,7 +114,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_PTE_PAT
+name|X86_PG_PTE_PAT
 value|0x080
 end_define
 
@@ -125,7 +125,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_G
+name|X86_PG_G
 value|0x100
 end_define
 
@@ -136,7 +136,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_AVAIL1
+name|X86_PG_AVAIL1
 value|0x200
 end_define
 
@@ -147,7 +147,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_AVAIL2
+name|X86_PG_AVAIL2
 value|0x400
 end_define
 
@@ -158,7 +158,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_AVAIL3
+name|X86_PG_AVAIL3
 value|0x800
 end_define
 
@@ -169,7 +169,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_PDE_PAT
+name|X86_PG_PDE_PAT
 value|0x1000
 end_define
 
@@ -180,13 +180,259 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_NX
+name|X86_PG_NX
 value|(1ul<<63)
 end_define
 
 begin_comment
 comment|/* No-execute */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|X86_PG_AVAIL
+parameter_list|(
+name|x
+parameter_list|)
+value|(1ul<< (x))
+end_define
+
+begin_comment
+comment|/* Page level cache control fields used to determine the PAT type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|X86_PG_PDE_CACHE
+value|(X86_PG_PDE_PAT | X86_PG_NC_PWT | X86_PG_NC_PCD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|X86_PG_PTE_CACHE
+value|(X86_PG_PTE_PAT | X86_PG_NC_PWT | X86_PG_NC_PCD)
+end_define
+
+begin_comment
+comment|/*  * Intel extended page table (EPT) bit definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_READ
+value|0x001
+end_define
+
+begin_comment
+comment|/* R	Read		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_WRITE
+value|0x002
+end_define
+
+begin_comment
+comment|/* W	Write		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_EXECUTE
+value|0x004
+end_define
+
+begin_comment
+comment|/* X	Execute		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_IGNORE_PAT
+value|0x040
+end_define
+
+begin_comment
+comment|/* IPAT	Ignore PAT	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_PS
+value|0x080
+end_define
+
+begin_comment
+comment|/* PS	Page size	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_A
+value|0x100
+end_define
+
+begin_comment
+comment|/* A	Accessed	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_M
+value|0x200
+end_define
+
+begin_comment
+comment|/* D	Dirty		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_MEMORY_TYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 3)
+end_define
+
+begin_comment
+comment|/* MT Memory Type	*/
+end_comment
+
+begin_comment
+comment|/*  * Define the PG_xx macros in terms of the bits on x86 PTEs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_V
+value|X86_PG_V
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_RW
+value|X86_PG_RW
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_U
+value|X86_PG_U
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_NC_PWT
+value|X86_PG_NC_PWT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_NC_PCD
+value|X86_PG_NC_PCD
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_A
+value|X86_PG_A
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_M
+value|X86_PG_M
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PS
+value|X86_PG_PS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PTE_PAT
+value|X86_PG_PTE_PAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_G
+value|X86_PG_G
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_AVAIL1
+value|X86_PG_AVAIL1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_AVAIL2
+value|X86_PG_AVAIL2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_AVAIL3
+value|X86_PG_AVAIL3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PDE_PAT
+value|X86_PG_PDE_PAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_NX
+value|X86_PG_NX
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PDE_CACHE
+value|X86_PG_PDE_CACHE
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_PTE_CACHE
+value|X86_PG_PTE_CACHE
+end_define
 
 begin_comment
 comment|/* Our various interpretations of the above */
@@ -196,7 +442,7 @@ begin_define
 define|#
 directive|define
 name|PG_W
-value|PG_AVAIL1
+value|X86_PG_AVAIL3
 end_define
 
 begin_comment
@@ -207,7 +453,21 @@ begin_define
 define|#
 directive|define
 name|PG_MANAGED
-value|PG_AVAIL2
+value|X86_PG_AVAIL2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_EMUL_V
+value|X86_PG_AVAIL(52)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPT_PG_EMUL_RW
+value|X86_PG_AVAIL(53)
 end_define
 
 begin_define
@@ -224,46 +484,6 @@ name|PG_PS_FRAME
 value|(0x000fffffffe00000ul)
 end_define
 
-begin_define
-define|#
-directive|define
-name|PG_PROT
-value|(PG_RW|PG_U)
-end_define
-
-begin_comment
-comment|/* all protection bits . */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_N
-value|(PG_NC_PWT|PG_NC_PCD)
-end_define
-
-begin_comment
-comment|/* Non-cacheable */
-end_comment
-
-begin_comment
-comment|/* Page level cache control fields used to determine the PAT type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_PDE_CACHE
-value|(PG_PDE_PAT | PG_NC_PWT | PG_NC_PCD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PG_PTE_CACHE
-value|(PG_PTE_PAT | PG_NC_PWT | PG_NC_PCD)
-end_define
-
 begin_comment
 comment|/*  * Promotion to a 2MB (PDE) page mapping requires that the corresponding 4KB  * (PTE) page mappings have identical settings for the following fields:  */
 end_comment
@@ -272,7 +492,7 @@ begin_define
 define|#
 directive|define
 name|PG_PTE_PROMOTE
-value|(PG_NX | PG_MANAGED | PG_W | PG_G | PG_PTE_PAT | \ 	    PG_M | PG_A | PG_NC_PCD | PG_NC_PWT | PG_U | PG_RW | PG_V)
+value|(PG_NX | PG_MANAGED | PG_W | PG_G | PG_PTE_CACHE | \ 	    PG_M | PG_A | PG_U | PG_RW | PG_V)
 end_define
 
 begin_comment
@@ -333,6 +553,85 @@ end_define
 begin_comment
 comment|/* during an instruction fetch */
 end_comment
+
+begin_comment
+comment|/*   * undef the PG_xx macros that define bits in the regular x86 PTEs that  * have a different position in nested PTEs. This is done when compiling  * code that needs to be aware of the differences between regular x86 and  * nested PTEs.  *  * The appropriate bitmask will be calculated at runtime based on the pmap  * type.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AMD64_NPT_AWARE
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_AVAIL1
+end_undef
+
+begin_comment
+comment|/* X86_PG_AVAIL1 aliases with EPT_PG_M */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PG_G
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_A
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_M
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_PDE_PAT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_PDE_CACHE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_PTE_PAT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_PTE_CACHE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_RW
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|PG_V
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Pte related macros.  This is complicated by having to deal with  * the sign extension of the 48th bit.  */
@@ -891,6 +1190,43 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_PDE_SUPERPAGE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* supports 2MB superpages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_EMULATE_AD_BITS
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* needs A/D bits emulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_SUPPORTS_EXEC_ONLY
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* execute only mappings ok */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -1003,6 +1339,39 @@ name|pmap
 parameter_list|)
 value|mtx_unlock(&(pmap)->pm_mtx)
 end_define
+
+begin_function_decl
+name|int
+name|pmap_pinit_type
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|enum
+name|pmap_type
+name|pm_type
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pmap_emulate_accessed_dirty
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|int
+name|ftype
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1402,6 +1771,27 @@ name|sva
 parameter_list|,
 name|vm_offset_t
 name|eva
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_get_mapping
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|uint64_t
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+modifier|*
+name|num
 parameter_list|)
 function_decl|;
 end_function_decl
