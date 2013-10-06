@@ -45,7 +45,7 @@ name|RANDOM_START
 init|=
 literal|0
 block|,
-name|RANDOM_WRITE
+name|RANDOM_CACHED
 init|=
 literal|0
 block|,
@@ -76,8 +76,6 @@ block|,
 name|RANDOM_PURE_RDRAND
 block|,
 name|RANDOM_PURE_NEHEMIAH
-block|,
-name|RANDOM_PURE
 block|,
 name|ENTROPYSOURCE
 block|}

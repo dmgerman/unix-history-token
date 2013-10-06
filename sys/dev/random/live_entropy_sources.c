@@ -142,12 +142,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|LES_THRESHOLD
-value|10
-end_define
+begin_comment
+comment|/*  * The harvest mutex protects the consistency of the entropy fifos and  * empty fifo and other associated structures.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|live_mtx
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -198,10 +202,10 @@ name|rsource
 operator|=
 name|rsource
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
-name|harvest_mtx
+name|live_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -214,10 +218,10 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
-name|harvest_mtx
+name|live_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -237,6 +241,8 @@ name|struct
 name|live_entropy_sources
 modifier|*
 name|les
+init|=
+name|NULL
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -251,10 +257,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
-name|harvest_mtx
+name|live_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -265,7 +271,6 @@ argument|&sources
 argument_list|,
 argument|entries
 argument_list|)
-block|{
 if|if
 condition|(
 name|les
@@ -282,20 +287,25 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|live_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|les
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|les
 argument_list|,
 name|M_ENTROPY
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|harvest_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -325,10 +335,10 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
-name|harvest_mtx
+name|live_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -411,10 +421,10 @@ condition|)
 break|break;
 block|}
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
-name|harvest_mtx
+name|live_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -460,11 +470,23 @@ argument_list|,
 literal|"List of Active Live Entropy Sources"
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|live_mtx
+argument_list|,
+literal|"live entropy source mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Run through all "live" sources reading entropy for the given  * number of rounds, which should be a multiple of the number  * of entropy accumulation pools in use; 2 for Yarrow and 32  * for Fortuna.  *  * BEWARE!!!  * This function runs inside the RNG thread! Don't do anything silly!  * The harvest_mtx mutex is held; you may count on that.  */
+comment|/*  * Run through all "live" sources reading entropy for the given  * number of rounds, which should be a multiple of the number  * of entropy accumulation pools in use; 2 for Yarrow and 32  * for Fortuna.  *  * BEWARE!!!  * This function runs inside the RNG thread! Don't do anything silly!  * Remember that we are NOT holding harvest_mtx on entry!  */
 end_comment
 
 begin_function
@@ -500,6 +522,12 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|live_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Walk over all of live entropy sources, and feed their output 	 * to the system-wide RNG. 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -606,6 +634,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|live_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -618,7 +652,14 @@ name|void
 modifier|*
 name|unused
 parameter_list|)
-block|{ }
+block|{
+name|mtx_destroy
+argument_list|(
+operator|&
+name|live_mtx
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_expr_stmt

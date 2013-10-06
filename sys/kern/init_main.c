@@ -3821,6 +3821,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|multiuser
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|FIRST_THREAD_IN_PROC

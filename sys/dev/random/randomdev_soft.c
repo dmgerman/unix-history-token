@@ -421,6 +421,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.random.sys.seeded"
+argument_list|,
+operator|&
+name|random_context
+operator|.
+name|seeded
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* List for the dynamic sysctls */
 end_comment

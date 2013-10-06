@@ -40,6 +40,14 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|live_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|live_entropy_source_register
