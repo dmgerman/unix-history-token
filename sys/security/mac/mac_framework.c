@@ -756,6 +756,8 @@ argument_list|,
 literal|"mac_policy_rm"
 argument_list|,
 name|RM_NOWITNESS
+operator||
+name|RM_RECURSE
 argument_list|)
 expr_stmt|;
 name|sx_init_flags
