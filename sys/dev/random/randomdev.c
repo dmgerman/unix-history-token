@@ -146,19 +146,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/random/randomdev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/randomdev_soft.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/random_adaptors.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/random/live_entropy_sources.h>
+file|<dev/random/random_harvestq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/random/randomdev.h>
+file|<dev/random/live_entropy_sources.h>
 end_include
 
 begin_define
@@ -236,6 +248,18 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ENTROPY
+argument_list|,
+literal|"entropy"
+argument_list|,
+literal|"Entropy harvesting buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* For use with make_dev(9)/destroy_dev(9). */
 end_comment
@@ -284,13 +308,6 @@ name|void
 modifier|*
 name|random_buf
 decl_stmt|;
-comment|/* XXX: Harvest some entropy from live entropy sources, if available */
-name|live_entropy_sources_feed
-argument_list|(
-literal|65
-argument_list|)
-expr_stmt|;
-comment|/* 65 is meaningless -- 					  need to decide appropriate value */
 comment|/* Blocking logic */
 if|if
 condition|(
@@ -328,7 +345,7 @@ name|malloc
 argument_list|(
 name|PAGE_SIZE
 argument_list|,
-name|M_TEMP
+name|M_ENTROPY
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -399,7 +416,7 @@ name|free
 argument_list|(
 name|random_buf
 argument_list|,
-name|M_TEMP
+name|M_ENTROPY
 argument_list|)
 expr_stmt|;
 block|}

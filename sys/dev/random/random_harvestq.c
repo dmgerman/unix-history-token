@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -80,13 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/random/randomdev.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/randomdev_soft.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"random_harvestq.h"
+file|<dev/random/random_harvestq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/live_entropy_sources.h>
 end_include
 
 begin_define
@@ -99,18 +117,6 @@ end_define
 begin_comment
 comment|/* How many events to queue up */
 end_comment
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ENTROPY
-argument_list|,
-literal|"entropy"
-argument_list|,
-literal|"Entropy harvesting buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * The harvest mutex protects the consistency of the entropy fifos and  * empty fifo.  */
@@ -167,9 +173,6 @@ specifier|static
 name|struct
 name|entropyfifo
 name|harvestfifo
-index|[
-name|ENTROPYSOURCE
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -221,12 +224,8 @@ decl_stmt|;
 name|int
 name|local_count
 decl_stmt|;
-name|enum
-name|esource
-name|source
-decl_stmt|;
 name|event_proc_f
-name|func
+name|entropy_processor
 init|=
 name|arg
 decl_stmt|;
@@ -256,22 +255,7 @@ literal|0
 condition|;
 control|)
 block|{
-comment|/* Cycle through all the entropy sources */
-for|for
-control|(
-name|source
-operator|=
-name|RANDOM_START
-init|;
-name|source
-operator|<
-name|ENTROPYSOURCE
-condition|;
-name|source
-operator|++
-control|)
-block|{
-comment|/* 			 * Drain entropy source records into a thread-local 			 * queue for processing while not holding the mutex. 			 */
+comment|/* 		 * Grab all the entropy events. 		 * Drain entropy source records into a thread-local 		 * queue for processing while not holding the mutex. 		 */
 name|STAILQ_CONCAT
 argument_list|(
 operator|&
@@ -279,9 +263,6 @@ name|local_queue
 argument_list|,
 operator|&
 name|harvestfifo
-index|[
-name|source
-index|]
 operator|.
 name|head
 argument_list|)
@@ -289,22 +270,15 @@ expr_stmt|;
 name|local_count
 operator|+=
 name|harvestfifo
-index|[
-name|source
-index|]
 operator|.
 name|count
 expr_stmt|;
 name|harvestfifo
-index|[
-name|source
-index|]
 operator|.
 name|count
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* 		 * Deal with events, if any. 		 * Then transfer the used events back into the empty fifo. 		 */
 if|if
 condition|(
@@ -330,7 +304,7 @@ argument|&local_queue
 argument_list|,
 argument|next
 argument_list|)
-name|func
+name|entropy_processor
 argument_list|(
 name|event
 argument_list|)
@@ -376,15 +350,14 @@ name|local_count
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Do Hardware/fast RNG source processing here. 		 */
-if|#
-directive|if
-literal|0
-block|while (hardware_source) { 			event = hardware_source->read(); 			func(event); 			hardware_source++;
-comment|/* Throttle somehow? */
-block|}
-endif|#
-directive|endif
+comment|/* 		 * Do only one round of the hardware sources for now. 		 * Later we'll need to make it rate-adaptive. 		 */
+name|live_entropy_sources_feed
+argument_list|(
+literal|1
+argument_list|,
+name|entropy_processor
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If a queue flush was commanded, it has now happened, 		 * and we can mark this by resetting the command. 		 */
 if|if
 condition|(
@@ -454,11 +427,8 @@ name|harvest
 modifier|*
 name|np
 decl_stmt|;
-name|enum
-name|esource
-name|e
-decl_stmt|;
 comment|/* Initialise the harvest fifos */
+comment|/* Contains the currently unused event structs. */
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -466,12 +436,6 @@ name|emptyfifo
 operator|.
 name|head
 argument_list|)
-expr_stmt|;
-name|emptyfifo
-operator|.
-name|count
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -515,41 +479,27 @@ name|next
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|e
+name|emptyfifo
+operator|.
+name|count
 operator|=
-name|RANDOM_START
-init|;
-name|e
-operator|<
-name|ENTROPYSOURCE
-condition|;
-name|e
-operator|++
-control|)
-block|{
+name|RANDOM_FIFO_MAX
+expr_stmt|;
+comment|/* Will contain the queued-up events. */
 name|STAILQ_INIT
 argument_list|(
 operator|&
 name|harvestfifo
-index|[
-name|e
-index|]
 operator|.
 name|head
 argument_list|)
 expr_stmt|;
 name|harvestfifo
-index|[
-name|e
-index|]
 operator|.
 name|count
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|mtx_init
 argument_list|(
 operator|&
@@ -608,10 +558,6 @@ name|harvest
 modifier|*
 name|np
 decl_stmt|;
-name|enum
-name|esource
-name|e
-decl_stmt|;
 comment|/* Destroy the harvest fifos */
 while|while
 condition|(
@@ -653,20 +599,12 @@ name|M_ENTROPY
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|e
+name|emptyfifo
+operator|.
+name|count
 operator|=
-name|RANDOM_START
-init|;
-name|e
-operator|<
-name|ENTROPYSOURCE
-condition|;
-name|e
-operator|++
-control|)
-block|{
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -674,9 +612,6 @@ name|STAILQ_EMPTY
 argument_list|(
 operator|&
 name|harvestfifo
-index|[
-name|e
-index|]
 operator|.
 name|head
 argument_list|)
@@ -688,9 +623,6 @@ name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|harvestfifo
-index|[
-name|e
-index|]
 operator|.
 name|head
 argument_list|)
@@ -699,9 +631,6 @@ name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
 name|harvestfifo
-index|[
-name|e
-index|]
 operator|.
 name|head
 argument_list|,
@@ -716,7 +645,12 @@ name|M_ENTROPY
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+name|harvestfifo
+operator|.
+name|count
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -727,7 +661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Entropy harvesting routine. This is supposed to be fast; do  * not do anything slow in here!  */
+comment|/*  * Entropy harvesting routine.  * This is supposed to be fast; do not do anything slow in here!  *  * It is also illegal (and morally reprehensible) to insert any  * high-rate data here. "High-rate" is define as a data source  * that will usually cause lots of failures of the "Lockless read"  * check a few lines below. This includes the "always-on" sources  * like the Intel "rdrand" or the VIA Nehamiah "xstore" sources.  */
 end_comment
 
 begin_function
@@ -779,9 +713,6 @@ comment|/* Lockless read to avoid lock operations if fifo is full. */
 if|if
 condition|(
 name|harvestfifo
-index|[
-name|origin
-index|]
 operator|.
 name|count
 operator|>=
@@ -794,13 +725,10 @@ operator|&
 name|harvest_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't make the harvest queues too big - help to prevent low-grade 	 * entropy swamping 	 */
+comment|/* 	 * On't overfill the harvest queue; this could steal all 	 * our memory. 	 */
 if|if
 condition|(
 name|harvestfifo
-index|[
-name|origin
-index|]
 operator|.
 name|count
 operator|<
@@ -835,13 +763,10 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
-name|harvestfifo
-index|[
-name|origin
-index|]
+name|emptyfifo
 operator|.
 name|count
-operator|++
+operator|--
 expr_stmt|;
 name|event
 operator|->
@@ -888,19 +813,10 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|{ 			int i; 			printf("Harvest:%16jX ", event->somecounter); 			for (i = 0; i< event->size; i++) 				printf("%02X", event->entropy[i]); 			for (; i< 16; i++) 				printf("  "); 			printf(" %2d %2d %02X\n", event->size, event->bits, event->source); 			}
-endif|#
-directive|endif
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|harvestfifo
-index|[
-name|origin
-index|]
 operator|.
 name|head
 argument_list|,
@@ -908,6 +824,11 @@ name|event
 argument_list|,
 name|next
 argument_list|)
+expr_stmt|;
+name|harvestfifo
+operator|.
+name|count
+operator|++
 expr_stmt|;
 block|}
 block|}

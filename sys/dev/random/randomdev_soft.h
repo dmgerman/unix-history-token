@@ -44,14 +44,6 @@ begin_comment
 comment|/* max size of each harvested entropy unit */
 end_comment
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ENTROPY
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* These are used to queue harvested packets of entropy. The entropy  * buffer size is pretty arbitrary.  */
 end_comment

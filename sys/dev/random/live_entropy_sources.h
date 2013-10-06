@@ -67,6 +67,8 @@ name|void
 name|live_entropy_sources_feed
 parameter_list|(
 name|int
+parameter_list|,
+name|event_proc_f
 parameter_list|)
 function_decl|;
 end_function_decl

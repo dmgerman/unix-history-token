@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/randomdev.h>
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<dev/random/random_adaptors.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/random_harvestq.h>
 end_include
 
 begin_include
@@ -149,18 +161,6 @@ name|LES_THRESHOLD
 value|10
 end_define
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_LIVE_ENTROPY_SRCS
-argument_list|,
-literal|"live_entropy_sources"
-argument_list|,
-literal|"Live Entropy Sources"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|void
 name|live_entropy_source_register
@@ -199,7 +199,7 @@ expr|struct
 name|live_entropy_sources
 argument_list|)
 argument_list|,
-name|M_LIVE_ENTROPY_SRCS
+name|M_ENTROPY
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -298,7 +298,7 @@ name|free
 argument_list|(
 name|les
 argument_list|,
-name|M_LIVE_ENTROPY_SRCS
+name|M_ENTROPY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -484,7 +484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Run through all "live" sources reading entropy for the given  * number of rounds, which should be a multiple of the number  * of entropy accumulation pools in use; 2 for Yarrow and 32  * for Fortuna.  */
+comment|/*  * Run through all "live" sources reading entropy for the given  * number of rounds, which should be a multiple of the number  * of entropy accumulation pools in use; 2 for Yarrow and 32  * for Fortuna.  *  * BEWARE!!!  * This function runs inside the RNG thread! Don't do anything silly!  */
 end_comment
 
 begin_function
@@ -493,18 +493,27 @@ name|live_entropy_sources_feed
 parameter_list|(
 name|int
 name|rounds
+parameter_list|,
+name|event_proc_f
+name|entropy_processor
 parameter_list|)
 block|{
+specifier|static
 name|struct
-name|live_entropy_sources
-modifier|*
-name|les
+name|harvest
+name|event
 decl_stmt|;
+specifier|static
 name|uint8_t
 name|buf
 index|[
 name|HARVESTSIZE
 index|]
+decl_stmt|;
+name|struct
+name|live_entropy_sources
+modifier|*
+name|les
 decl_stmt|;
 name|int
 name|i
@@ -542,6 +551,7 @@ operator|++
 control|)
 block|{
 comment|/* 			 * This should be quick, since it's a live entropy 			 * source. 			 */
+comment|/* FIXME: Whine loudly if this didn't work. */
 name|n
 operator|=
 name|les
@@ -558,21 +568,66 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: Whine loudly if this didn't work. */
-comment|/* 			 * FIXME: Cannot harvest this stuff into the queue; 			 * the poor thing will choke to death! 			 */
-name|random_harvest
+name|n
+operator|=
+name|MIN
 argument_list|(
-name|buf
-argument_list|,
 name|n
 argument_list|,
-literal|0
-argument_list|,
+name|HARVESTSIZE
+argument_list|)
+expr_stmt|;
+name|event
+operator|.
+name|somecounter
+operator|=
+name|get_cyclecount
+argument_list|()
+expr_stmt|;
+name|event
+operator|.
+name|size
+operator|=
+name|n
+expr_stmt|;
+name|event
+operator|.
+name|bits
+operator|=
+operator|(
+name|n
+operator|*
+literal|8
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+name|event
+operator|.
+name|source
+operator|=
 name|les
 operator|->
 name|rsource
 operator|->
 name|source
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|event
+operator|.
+name|entropy
+argument_list|,
+name|buf
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+comment|/* Do the actual entropy insertion */
+name|entropy_processor
+argument_list|(
+operator|&
+name|event
 argument_list|)
 expr_stmt|;
 block|}

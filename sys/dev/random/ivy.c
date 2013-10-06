@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -74,6 +80,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/random/randomdev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/randomdev_soft.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/random_harvestq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/live_entropy_sources.h>
 end_include
 
@@ -81,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<dev/random/random_adaptors.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/randomdev.h>
 end_include
 
 begin_define

@@ -162,18 +162,6 @@ name|random_adaptor
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_RANDOM_ADAPTORS
-argument_list|,
-literal|"random_adaptors"
-argument_list|,
-literal|"Random adaptors buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|int
 name|random_adaptor_register
@@ -221,7 +209,7 @@ expr|struct
 name|random_adaptors
 argument_list|)
 argument_list|,
-name|M_RANDOM_ADAPTORS
+name|M_ENTROPY
 argument_list|,
 name|M_WAITOK
 argument_list|)

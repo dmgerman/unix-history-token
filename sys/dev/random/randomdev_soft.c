@@ -163,12 +163,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/random_adaptors.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/random/randomdev.h>
 end_include
 
@@ -176,6 +170,18 @@ begin_include
 include|#
 directive|include
 file|<dev/random/randomdev_soft.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/random_harvestq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/random_adaptors.h>
 end_include
 
 begin_if
@@ -217,12 +223,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"random_harvestq.h"
-end_include
 
 begin_function_decl
 specifier|static
