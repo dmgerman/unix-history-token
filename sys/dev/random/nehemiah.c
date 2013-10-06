@@ -213,7 +213,8 @@ directive|ifdef
 name|__GNUCLIKE_ASM
 asm|__asm __volatile(
 literal|"movl	$0,%%edx\n\t"
-literal|"xstore"
+literal|".byte	0x0f, 0xa7, 0xc0"
+comment|/* xstore */
 operator|:
 literal|"=a"
 operator|(
