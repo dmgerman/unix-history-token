@@ -119,7 +119,7 @@ comment|/* How many events to queue up */
 end_comment
 
 begin_comment
-comment|/*  * The harvest mutex protects the consistency of the entropy fifos and  * empty fifo.  */
+comment|/*  * The harvest mutex protects the consistency of the entropy fifos and  * empty fifo and other associated structures.  */
 end_comment
 
 begin_decl_stmt

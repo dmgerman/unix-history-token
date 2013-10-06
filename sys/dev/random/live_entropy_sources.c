@@ -142,18 +142,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|sx
-name|les_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* need a sleepable lock */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -210,10 +198,10 @@ name|rsource
 operator|=
 name|rsource
 expr_stmt|;
-name|sx_xlock
+name|mtx_lock_spin
 argument_list|(
 operator|&
-name|les_lock
+name|harvest_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -226,10 +214,10 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|les_lock
+name|harvest_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -263,10 +251,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|sx_xlock
+name|mtx_lock_spin
 argument_list|(
 operator|&
-name|les_lock
+name|harvest_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -304,10 +292,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|sx_xunlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|les_lock
+name|harvest_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -337,10 +325,10 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|sx_slock
+name|mtx_lock_spin
 argument_list|(
 operator|&
-name|les_lock
+name|harvest_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -423,10 +411,10 @@ condition|)
 break|break;
 block|}
 block|}
-name|sx_sunlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|les_lock
+name|harvest_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -472,19 +460,11 @@ argument_list|,
 literal|"List of Active Live Entropy Sources"
 argument_list|)
 expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|les_lock
-argument_list|,
-literal|"live_entropy_sources"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Run through all "live" sources reading entropy for the given  * number of rounds, which should be a multiple of the number  * of entropy accumulation pools in use; 2 for Yarrow and 32  * for Fortuna.  *  * BEWARE!!!  * This function runs inside the RNG thread! Don't do anything silly!  */
+comment|/*  * Run through all "live" sources reading entropy for the given  * number of rounds, which should be a multiple of the number  * of entropy accumulation pools in use; 2 for Yarrow and 32  * for Fortuna.  *  * BEWARE!!!  * This function runs inside the RNG thread! Don't do anything silly!  * The harvest_mtx mutex is held; you may count on that.  */
 end_comment
 
 begin_function
@@ -520,12 +500,6 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|sx_slock
-argument_list|(
-operator|&
-name|les_lock
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Walk over all of live entropy sources, and feed their output 	 * to the system-wide RNG. 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -632,12 +606,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|sx_sunlock
-argument_list|(
-operator|&
-name|les_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -650,14 +618,7 @@ name|void
 modifier|*
 name|unused
 parameter_list|)
-block|{
-name|sx_destroy
-argument_list|(
-operator|&
-name|les_lock
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_expr_stmt

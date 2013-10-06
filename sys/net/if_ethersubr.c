@@ -3086,7 +3086,7 @@ operator|)
 argument_list|,
 literal|12
 argument_list|,
-literal|3
+literal|2
 argument_list|,
 name|RANDOM_NET_ETHER
 argument_list|)

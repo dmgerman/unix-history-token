@@ -468,81 +468,9 @@ name|src
 decl_stmt|;
 if|#
 directive|if
-literal|1
-comment|/* Do this better with DTrace */
-block|{
-name|int
-name|i
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"Harvest:%16jX "
-argument_list|,
-name|event
-operator|->
-name|somecounter
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
 literal|0
-init|;
-name|i
-operator|<
-name|event
-operator|->
-name|size
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%02X"
-argument_list|,
-name|event
-operator|->
-name|entropy
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-name|i
-operator|<
-literal|16
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"  "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %2d %2d %02X\n"
-argument_list|,
-name|event
-operator|->
-name|size
-argument_list|,
-name|event
-operator|->
-name|bits
-argument_list|,
-name|event
-operator|->
-name|source
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Do this better with DTrace */
+block|{ 		int i;  		printf("Harvest:%16jX ", event->somecounter); 		for (i = 0; i< event->size; i++) 			printf("%02X", event->entropy[i]); 		for (; i< 16; i++) 			printf("  "); 		printf(" %2d %2d %02X\n", event->size, event->bits, event->source); 	}
 endif|#
 directive|endif
 comment|/* Accumulate the event into the appropriate pool */
@@ -1099,6 +1027,12 @@ name|enum
 name|esource
 name|j
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("Yarrow: %s reseed\n", fastslow == FAST ? "fast" : "slow");
+endif|#
+directive|endif
 comment|/* The reseed task must not be jumped on */
 name|mtx_lock
 argument_list|(
