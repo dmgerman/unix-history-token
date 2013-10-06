@@ -2247,6 +2247,9 @@ case|case
 name|LK_UPGRADE
 case|:
 case|case
+name|LK_TRYUPGRADE
+case|:
+case|case
 name|LK_DOWNGRADE
 case|:
 name|_lockmgr_assert
@@ -2973,6 +2976,9 @@ break|break;
 case|case
 name|LK_UPGRADE
 case|:
+case|case
+name|LK_TRYUPGRADE
+case|:
 name|_lockmgr_assert
 argument_list|(
 name|lk
@@ -3066,6 +3072,31 @@ name|TD_SLOCKS_DEC
 argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * In LK_TRYUPGRADE mode, do not drop the lock, 		 * returning EBUSY instead. 		 */
+if|if
+condition|(
+name|op
+operator|==
+name|LK_TRYUPGRADE
+condition|)
+block|{
+name|LOCK_LOG2
+argument_list|(
+name|lk
+argument_list|,
+literal|"%s: %p failed the nowait upgrade"
+argument_list|,
+name|__func__
+argument_list|,
+name|lk
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EBUSY
 expr_stmt|;
 break|break;
 block|}
