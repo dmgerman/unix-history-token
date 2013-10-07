@@ -1440,32 +1440,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|cpu_clflush_line_size
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Called on MOD_LOAD.  Validates and calculates the SGE tunables.  */
 end_comment
