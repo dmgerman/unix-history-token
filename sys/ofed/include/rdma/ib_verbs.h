@@ -2147,6 +2147,7 @@ name|ib_qpg_init_attrib
 name|parent_attrib
 decl_stmt|;
 block|}
+name|pp
 union|;
 name|enum
 name|ib_sig_type
