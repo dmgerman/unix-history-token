@@ -173,6 +173,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|va_copy
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|((dst) = (src))
+end_define
+
+begin_define
+define|#
+directive|define
 name|va_arg
 parameter_list|(
 name|ap
