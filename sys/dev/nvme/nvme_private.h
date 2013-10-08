@@ -918,6 +918,11 @@ name|cdev
 modifier|*
 name|cdev
 decl_stmt|;
+comment|/** bit mask of warning types currently enabled for async events */
+name|union
+name|nvme_critical_warning_state
+name|async_event_config
+decl_stmt|;
 name|uint32_t
 name|num_aers
 decl_stmt|;
