@@ -13622,7 +13622,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"    v_object %p ref %d pages %d\n"
+literal|"    v_object %p ref %d pages %d "
+literal|"cleanbuf %d dirtybuf %d\n"
 argument_list|,
 name|vp
 operator|->
@@ -13639,6 +13640,22 @@ operator|->
 name|v_object
 operator|->
 name|resident_page_count
+argument_list|,
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_dirty
+operator|.
+name|bv_cnt
+argument_list|,
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_clean
+operator|.
+name|bv_cnt
 argument_list|)
 expr_stmt|;
 name|printf
