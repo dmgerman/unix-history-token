@@ -462,7 +462,7 @@ literal|"[-c vcpus][-p pincpu][-m mem]"
 literal|"<vmname>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -A: create an ACPI table\n"
-literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
+literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
@@ -475,8 +475,6 @@ literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
 literal|"       -m: memory size in MB\n"
 argument_list|,
 name|progname
-argument_list|,
-name|DEFAULT_GDB_PORT
 argument_list|)
 expr_stmt|;
 name|exit
@@ -777,30 +775,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|fbsdrun_get_next_cpu
-parameter_list|(
-name|int
-name|curcpu
-parameter_list|)
-block|{
-comment|/* 	 * Get the next available CPU. Assumes they arrive 	 * in ascending order with no gaps. 	 */
-return|return
-operator|(
-operator|(
-name|curcpu
-operator|+
-literal|1
-operator|)
-operator|%
-name|foundcpus
-operator|)
-return|;
 block|}
 end_function
 
@@ -2081,7 +2055,7 @@ argument_list|)
 expr_stmt|;
 name|gdb_port
 operator|=
-name|DEFAULT_GDB_PORT
+literal|0
 expr_stmt|;
 name|guest_ncpus
 operator|=
