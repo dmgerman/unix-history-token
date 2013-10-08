@@ -143,15 +143,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The harvest mutex protects the consistency of the entropy fifos and  * empty fifo and other associated structures.  */
+comment|/*  * The live_lock protects the consistency of the "struct les_head sources"  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
-name|mtx
-name|live_mtx
+name|sx
+name|les_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* need a sleepable lock */
+end_comment
 
 begin_function
 name|void
@@ -202,10 +207,10 @@ name|rsource
 operator|=
 name|rsource
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -218,10 +223,10 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -257,10 +262,10 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|sx_xlock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -289,10 +294,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mtx_unlock
+name|sx_xunlock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -335,10 +340,10 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -421,10 +426,10 @@ condition|)
 break|break;
 block|}
 block|}
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -470,16 +475,12 @@ argument_list|,
 literal|"List of Active Live Entropy Sources"
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|sx_init
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|,
-literal|"live entropy source mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
+literal|"live_entropy_sources"
 argument_list|)
 expr_stmt|;
 block|}
@@ -522,10 +523,10 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-name|mtx_lock
+name|sx_slock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Walk over all of live entropy sources, and feed their output 	 * to the system-wide RNG. 	 */
@@ -634,10 +635,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
+name|sx_sunlock
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -653,10 +654,10 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|mtx_destroy
+name|sx_destroy
 argument_list|(
 operator|&
-name|live_mtx
+name|les_lock
 argument_list|)
 expr_stmt|;
 block|}
