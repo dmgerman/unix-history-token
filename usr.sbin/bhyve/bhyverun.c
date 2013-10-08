@@ -462,7 +462,7 @@ literal|"[-c vcpus][-p pincpu][-m mem]"
 literal|"<vmname>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -A: create an ACPI table\n"
-literal|"       -g: gdb port (default is %d and 0 means don't open)\n"
+literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
@@ -475,8 +475,6 @@ literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
 literal|"       -m: memory size in MB\n"
 argument_list|,
 name|progname
-argument_list|,
-name|DEFAULT_GDB_PORT
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2081,7 +2079,7 @@ argument_list|)
 expr_stmt|;
 name|gdb_port
 operator|=
-name|DEFAULT_GDB_PORT
+literal|0
 expr_stmt|;
 name|guest_ncpus
 operator|=
