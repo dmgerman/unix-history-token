@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000-2013 Mark R V Murray  * Copyright (c) 2013 Arthur Mesh  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000-2013 Mark R V Murray  * Copyright (c) 2013 Arthur Mesh  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
 end_include
 
 begin_include
@@ -232,18 +238,13 @@ init|=
 block|{
 literal|"/entropy"
 block|,
-literal|"/var/db/entropy"
-block|,
-literal|"/boot/entropy"
-block|,
-comment|/* Yeah, Yeah. I know this is loaded by 				 * loader(8), but not always, and it doesn't 				 * hurt to do this again. 				 */
 name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Deal with entropy cached externally if this is present.  */
+comment|/* Deal with entropy cached externally if this is present.  * Lots of policy may eventually arrive in this function.  * Called after / is mounted.  */
 end_comment
 
 begin_function
@@ -269,6 +270,9 @@ name|keyfile
 decl_stmt|,
 modifier|*
 name|data
+decl_stmt|,
+modifier|*
+name|zbuf
 decl_stmt|;
 name|size_t
 name|size
@@ -322,7 +326,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0U
+literal|0
 init|;
 name|i
 operator|<
@@ -343,13 +347,7 @@ name|i
 argument_list|,
 literal|16
 argument_list|,
-operator|(
 literal|16
-operator|*
-literal|8
-operator|)
-operator|/
-literal|4
 argument_list|,
 name|RANDOM_CACHED
 argument_list|)
@@ -376,6 +374,7 @@ literal|"random: no preloaded entropy cache available\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Read and attempt to overwrite the entropy cache files. 	 * If the file exists, can be read and then overwritten,i 	 * then use it. Ignore it otherwise, but print out what is 	 * going on. 	 */
 name|data
 operator|=
 name|malloc
@@ -385,6 +384,16 @@ argument_list|,
 name|M_ENTROPY
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|zbuf
+operator|=
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
+name|zero_region
 argument_list|)
 expr_stmt|;
 for|for
@@ -408,6 +417,8 @@ operator|*
 name|entropy_file
 argument_list|,
 name|data
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -417,11 +428,48 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"random: entropy cache '%s' provides %d bytes\n"
+argument_list|,
+operator|*
+name|entropy_file
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|randomdev_write_file
+argument_list|(
+operator|*
+name|entropy_file
+argument_list|,
+name|zbuf
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"random: entropy cache '%s' contents used and successfully overwritten\n"
+argument_list|,
+operator|*
+name|entropy_file
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|0U
+literal|0
 init|;
 name|i
 operator|<
@@ -442,25 +490,21 @@ name|i
 argument_list|,
 literal|16
 argument_list|,
-operator|(
 literal|16
-operator|*
-literal|8
-operator|)
-operator|/
-literal|4
 argument_list|,
 name|RANDOM_CACHED
 argument_list|)
 expr_stmt|;
+block|}
+else|else
 name|printf
 argument_list|(
-literal|"random: read %d bytes from '%s'\n"
-argument_list|,
-name|PAGE_SIZE
+literal|"random: entropy cache '%s' not overwritten and therefore not used; error = %d\n"
 argument_list|,
 operator|*
 name|entropy_file
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -496,7 +540,7 @@ end_function
 begin_expr_stmt
 name|EVENTHANDLER_DEFINE
 argument_list|(
-name|multiuser
+name|mountroot
 argument_list|,
 name|random_harvestq_cache
 argument_list|,

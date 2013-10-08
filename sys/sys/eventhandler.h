@@ -618,34 +618,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Going multiuser (starting pid 1) event */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|multiuser_handler_t
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_expr_stmt
-name|EVENTHANDLER_DECLARE
-argument_list|(
-name|multiuser
-argument_list|,
-name|multiuser_handler_t
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* File system mount events */
 end_comment
 

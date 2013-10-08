@@ -15,6 +15,8 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -31,6 +33,8 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

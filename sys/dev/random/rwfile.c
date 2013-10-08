@@ -77,6 +77,9 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -176,7 +179,7 @@ name|ni_vp
 argument_list|,
 name|buf
 argument_list|,
-name|PAGE_SIZE
+name|length
 argument_list|,
 literal|0
 argument_list|,
@@ -241,6 +244,9 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -344,7 +350,7 @@ name|ni_vp
 argument_list|,
 name|buf
 argument_list|,
-name|PAGE_SIZE
+name|length
 argument_list|,
 literal|0
 argument_list|,
