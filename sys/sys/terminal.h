@@ -471,6 +471,11 @@ directive|define
 name|TF_CONS
 value|0x4
 comment|/* Console device (needs spinlock). */
+name|struct
+name|consdev
+modifier|*
+name|consdev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -598,6 +603,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|termcn_cnregister
+parameter_list|(
+name|struct
+name|terminal
+modifier|*
+name|tm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Kernel console helper interface. */
 end_comment
@@ -607,7 +624,7 @@ specifier|extern
 specifier|const
 name|struct
 name|consdev_ops
-name|termcn_ops
+name|termcn_cnops
 decl_stmt|;
 end_decl_stmt
 
@@ -623,7 +640,7 @@ parameter_list|,
 name|softc
 parameter_list|)
 define|\
-value|static struct terminal name = {					\ 		.tm_class =&class,					\ 		.tm_softc = softc,					\ 		.tm_flags = TF_CONS,					\ 	};								\ 	CONSOLE_DEVICE(name ## _consdev, termcn_ops,&name)
+value|static struct terminal name = {					\ 		.tm_class =&class,					\ 		.tm_softc = softc,					\ 		.tm_flags = TF_CONS,					\ 	};								\ 	CONSOLE_DEVICE(name ## _consdev, termcn_cnops,&name)
 end_define
 
 begin_endif
