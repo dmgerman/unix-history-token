@@ -248,18 +248,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ENTROPY
-argument_list|,
-literal|"entropy"
-argument_list|,
-literal|"Entropy harvesting buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* For use with make_dev(9)/destroy_dev(9). */
 end_comment

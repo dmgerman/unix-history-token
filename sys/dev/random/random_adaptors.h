@@ -21,6 +21,14 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_ENTROPY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|random_adaptors

@@ -171,7 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This H/W RNG never stores more than 8 bytes in one go */
+comment|/* TODO: now that the Davies-Meyer hash is gone and we only use  * the 'xstore' instruction, do we still need to preserve the  * FPU state with fpu_kern_(enter|leave)() ?  */
 end_comment
 
 begin_decl_stmt
@@ -182,6 +182,10 @@ modifier|*
 name|fpu_ctx_save
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* This H/W source never stores more than 8 bytes in one go */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */

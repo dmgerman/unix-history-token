@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/random/random_adaptors.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/random_harvestq.h>
 end_include
 

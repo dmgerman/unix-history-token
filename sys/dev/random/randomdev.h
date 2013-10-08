@@ -7,14 +7,6 @@ begin_comment
 comment|/* This header contains only those definitions that are global  * and non algorithm-specific for the entropy processor  */
 end_comment
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ENTROPY
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|void

@@ -162,6 +162,18 @@ name|random_adaptor
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ENTROPY
+argument_list|,
+literal|"entropy"
+argument_list|,
+literal|"Entropy harvesting buffers and data structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|random_adaptor_register
@@ -913,7 +925,6 @@ name|random_adaptor
 operator|!=
 name|NULL
 condition|)
-block|{
 call|(
 modifier|*
 name|random_adaptor
@@ -922,13 +933,6 @@ name|reseed
 call|)
 argument_list|()
 expr_stmt|;
-name|random_adaptor
-operator|->
-name|seeded
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|arc4rand
 argument_list|(
 name|NULL
