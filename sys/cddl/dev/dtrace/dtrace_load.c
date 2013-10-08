@@ -98,6 +98,23 @@ comment|/* Hang our hook for exceptions. */
 name|dtrace_invop_init
 argument_list|()
 expr_stmt|;
+name|dtrace_taskq
+operator|=
+name|taskq_create
+argument_list|(
+literal|"dtrace_taskq"
+argument_list|,
+literal|1
+argument_list|,
+name|maxclsyspri
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Register callbacks for linker file load and unload events. */
 name|dtrace_kld_load_tag
 operator|=
