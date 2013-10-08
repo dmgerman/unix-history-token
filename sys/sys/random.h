@@ -61,6 +61,8 @@ name|RANDOM_NET_NG
 block|,
 name|RANDOM_INTERRUPT
 block|,
+name|RANDOM_ATTACH
+block|,
 name|RANDOM_SWI
 block|,
 name|RANDOM_PURE_OCTEON
