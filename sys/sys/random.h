@@ -49,6 +49,8 @@ name|RANDOM_CACHED
 init|=
 literal|0
 block|,
+name|RANDOM_ATTACH
+block|,
 name|RANDOM_KEYBOARD
 block|,
 name|RANDOM_MOUSE
@@ -60,8 +62,6 @@ block|,
 name|RANDOM_NET_NG
 block|,
 name|RANDOM_INTERRUPT
-block|,
-name|RANDOM_ATTACH
 block|,
 name|RANDOM_SWI
 block|,
