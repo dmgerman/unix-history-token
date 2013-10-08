@@ -1123,6 +1123,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+name|CPU_ZERO
+argument_list|(
+operator|&
+name|cpu_suspend_map
+argument_list|)
+expr_stmt|;
+comment|/* silence gcc */
 if|if
 condition|(
 name|smp_started

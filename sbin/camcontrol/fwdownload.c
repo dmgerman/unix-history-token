@@ -985,6 +985,11 @@ name|num_bytes
 operator|=
 name|img_size
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -1321,6 +1326,11 @@ argument_list|(
 literal|"weird disk type '%s'"
 argument_list|,
 name|type
+argument_list|)
+expr_stmt|;
+name|cam_freeccb
+argument_list|(
+name|ccb
 argument_list|)
 expr_stmt|;
 return|return
