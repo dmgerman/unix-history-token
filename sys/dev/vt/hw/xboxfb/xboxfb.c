@@ -167,6 +167,11 @@ operator|.
 name|vd_bitblt
 operator|=
 name|xbox_bitblt
+block|,
+operator|.
+name|vd_priority
+operator|=
+name|VD_PRIORITY_GENERIC
 block|, }
 decl_stmt|;
 end_decl_stmt

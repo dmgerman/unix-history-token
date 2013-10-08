@@ -259,6 +259,11 @@ operator|.
 name|vd_putchar
 operator|=
 name|vga_putchar
+block|,
+operator|.
+name|vd_priority
+operator|=
+name|VD_PRIORITY_GENERIC
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -63,6 +63,12 @@ directive|include
 file|<sys/terminal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -75,6 +81,50 @@ define|#
 directive|define
 name|VT_CONSWINDOW
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SC_DRIVER_NAME
+value|"vt"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|_l
+parameter_list|,
+modifier|...
+parameter_list|)
+value|if (vt_debug> (_l)) printf( __VA_ARGS__ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSIGVALID
+parameter_list|(
+name|sig
+parameter_list|)
+value|((sig)> 0&& (sig)< NSIG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_SYSCTL_INT
+parameter_list|(
+name|_name
+parameter_list|,
+name|_default
+parameter_list|,
+name|_descr
+parameter_list|)
+define|\
+value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RW,&vt_##_name, _default,\ 		_descr);						\ TUNABLE_INT("kern.vt." #_name,&vt_##_name);
 end_define
 
 begin_struct_decl
@@ -196,6 +246,11 @@ directive|define
 name|VDF_DEAD
 value|0x10
 comment|/* Early probing found nothing. */
+define|#
+directive|define
+name|VDF_INITIALIZED
+value|0x20
+comment|/* vtterm_cnprobe already done. */
 name|int
 name|vd_keyboard
 decl_stmt|;
@@ -205,12 +260,6 @@ name|int
 name|vd_unit
 decl_stmt|;
 comment|/* (c) Device unit. */
-comment|/* XXX: HACK */
-name|unsigned
-name|int
-name|vd_scrollpos
-decl_stmt|;
-comment|/* (d) Last scroll position. */
 block|}
 struct|;
 end_struct
@@ -246,7 +295,7 @@ name|vb_lock
 decl_stmt|;
 comment|/* Buffer lock. */
 name|term_pos_t
-name|vb_size
+name|vb_scr_size
 decl_stmt|;
 comment|/* (b) Screen dimensions. */
 name|int
@@ -263,6 +312,31 @@ directive|define
 name|VBF_STATIC
 value|0x2
 comment|/* Buffer is statically allocated. */
+define|#
+directive|define
+name|VBF_MTX_INIT
+value|0x4
+comment|/* Mutex initialized. */
+define|#
+directive|define
+name|VBF_SCROLL
+value|0x8
+comment|/* scroll locked mode. */
+name|int
+name|vb_history_size
+decl_stmt|;
+define|#
+directive|define
+name|VBF_DEFAULT_HISTORY_SIZE
+value|200
+name|int
+name|vb_roffset
+decl_stmt|;
+comment|/* (b) History rows offset. */
+name|int
+name|vb_curroffset
+decl_stmt|;
+comment|/* (b) Saved rows offset. */
 name|term_pos_t
 name|vb_cursor
 decl_stmt|;
@@ -281,6 +355,12 @@ modifier|*
 name|vb_buffer
 decl_stmt|;
 comment|/* (u) Data buffer. */
+name|term_char_t
+modifier|*
+modifier|*
+name|vb_rows
+decl_stmt|;
+comment|/* (u) Array of rows */
 block|}
 struct|;
 end_struct
@@ -306,7 +386,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vtbuf_fill
+name|vtbuf_fill_locked
 parameter_list|(
 name|struct
 name|vt_buf
@@ -358,6 +438,8 @@ parameter_list|,
 specifier|const
 name|term_pos_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -425,6 +507,78 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vtbuf_sethistory_size
+parameter_list|(
+name|struct
+name|vt_buf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VTBUF_SLCK_ENABLE
+parameter_list|(
+name|vb
+parameter_list|)
+value|(vb)->vb_flags |= VBF_SCROLL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTBUF_SLCK_DISABLE
+parameter_list|(
+name|vb
+parameter_list|)
+value|(vb)->vb_flags&= ~VBF_SCROLL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTBUF_MAX_HEIGHT
+parameter_list|(
+name|vb
+parameter_list|)
+define|\
+value|((vb)->vb_history_size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTBUF_GET_ROW
+parameter_list|(
+name|vb
+parameter_list|,
+name|r
+parameter_list|)
+define|\
+value|((vb)->vb_rows[((vb)->vb_roffset + (r)) % VTBUF_MAX_HEIGHT(vb)])
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTBUF_GET_FIELD
+parameter_list|(
+name|vb
+parameter_list|,
+name|r
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|((vb)->vb_rows[((vb)->vb_roffset + (r)) % VTBUF_MAX_HEIGHT(vb)][(c)])
+end_define
+
 begin_define
 define|#
 directive|define
@@ -437,7 +591,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|(vb)->vb_buffer[(r) * (vb)->vb_size.tp_col + (c)]
+value|((vb)->vb_rows[((vb)->vb_curroffset + (r)) % VTBUF_MAX_HEIGHT(vb)][(c)])
 end_define
 
 begin_define
@@ -481,43 +635,12 @@ define|\
 value|((mask)->vbm_col& ((uint64_t)1<< ((col) % 64)))
 end_define
 
-begin_comment
-comment|/*  * Per-window history tracking.  *  * XXX: Unimplemented!  */
-end_comment
-
-begin_struct
-struct|struct
-name|vt_history
-block|{
-name|unsigned
-name|int
-name|vh_offset
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-name|void
-name|vthistory_add
-parameter_list|(
-name|struct
-name|vt_history
-modifier|*
-name|vh
-parameter_list|,
-name|struct
-name|vt_buf
-modifier|*
-name|vb
-parameter_list|,
-specifier|const
-name|term_rect_t
-modifier|*
-name|r
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|VTBUF_SPACE_CHAR
+value|(' ' | TC_WHITE<< 26 | TC_BLACK<< 29)
+end_define
 
 begin_define
 define|#
@@ -541,13 +664,12 @@ value|2
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|vthistory_seek
 parameter_list|(
 name|struct
-name|vt_history
+name|vt_buf
 modifier|*
-name|vh
 parameter_list|,
 name|int
 name|offset
@@ -560,13 +682,27 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vthistory_addlines
+parameter_list|(
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vthistory_getpos
 parameter_list|(
 specifier|const
 name|struct
-name|vt_history
+name|vt_buf
 modifier|*
-name|vh
 parameter_list|,
 name|unsigned
 name|int
@@ -575,21 +711,6 @@ name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|VTHISTORY_FIELD
-parameter_list|(
-name|vh
-parameter_list|,
-name|r
-parameter_list|,
-name|c
-parameter_list|)
-define|\
-value|('?' | (TF_BOLD|TF_REVERSE)<< 22 | TC_GREEN<< 26 | TC_BLACK<< 29)
-end_define
 
 begin_comment
 comment|/*  * Per-window datastructure.  */
@@ -616,11 +737,6 @@ name|vt_buf
 name|vw_buf
 decl_stmt|;
 comment|/* (u) Screen buffer. */
-name|struct
-name|vt_history
-name|vw_history
-decl_stmt|;
-comment|/* (?) History buffer. */
 name|struct
 name|vt_font
 modifier|*
@@ -661,9 +777,90 @@ directive|define
 name|VWF_CONSOLE
 value|0x8
 comment|/* Kernel message console window. */
+define|#
+directive|define
+name|VWF_VTYLOCK
+value|0x10
+comment|/* Prevent window switch. */
+define|#
+directive|define
+name|VWF_SWWAIT_REL
+value|0x10000
+comment|/* Program wait for VT acquire is done. */
+define|#
+directive|define
+name|VWF_SWWAIT_ACQ
+value|0x20000
+comment|/* Program wait for VT release is done. */
+name|pid_t
+name|vw_pid
+decl_stmt|;
+comment|/* Terminal holding process */
+name|struct
+name|proc
+modifier|*
+name|vw_proc
+decl_stmt|;
+name|struct
+name|vt_mode
+name|vw_smode
+decl_stmt|;
+comment|/* switch mode */
+name|struct
+name|callout
+name|vw_proc_dead_timer
+decl_stmt|;
+name|struct
+name|vt_window
+modifier|*
+name|vw_switch_to
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|VT_AUTO
+value|0
+end_define
+
+begin_comment
+comment|/* switching is automatic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_PROCESS
+value|1
+end_define
+
+begin_comment
+comment|/* switching controlled by prog */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_KERNEL
+value|255
+end_define
+
+begin_comment
+comment|/* switching controlled in kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_VT_PROC_MODE
+parameter_list|(
+name|vw
+parameter_list|)
+value|((vw)->vw_smode.mode == VT_PROCESS)
+end_define
 
 begin_comment
 comment|/*  * Per-device driver routines.  *  * vd_bitblt is used when the driver operates in graphics mode, while  * vd_putchar is used when the driver operates in text mode  * (VDF_TEXTMODE).  */
@@ -673,6 +870,19 @@ begin_typedef
 typedef|typedef
 name|int
 name|vd_init_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|vd_postswitch_t
 parameter_list|(
 name|struct
 name|vt_device
@@ -786,6 +996,27 @@ name|vd_putchar_t
 modifier|*
 name|vd_putchar
 decl_stmt|;
+comment|/* Update display setting on vt switch. */
+name|vd_postswitch_t
+modifier|*
+name|vd_postswitch
+decl_stmt|;
+comment|/* Priority to know which one can override */
+name|int
+name|vd_priority
+decl_stmt|;
+define|#
+directive|define
+name|VD_PRIORITY_DUMB
+value|10000
+define|#
+directive|define
+name|VD_PRIORITY_GENERIC
+value|1000
+define|#
+directive|define
+name|VD_PRIORITY_SPECIFIC
+value|100
 block|}
 struct|;
 end_struct
@@ -849,7 +1080,7 @@ parameter_list|,
 name|softc
 parameter_list|)
 define|\
-value|static struct terminal	driver ## _consterm;				\ static struct vt_window	driver ## _conswindow;				\ static struct vt_device	driver ## _consdev = {				\ 	.vd_driver =&driver,						\ 	.vd_softc = (softc),						\ 	.vd_flags = VDF_INVALID,					\ 	.vd_windows = { [VT_CONSWINDOW] =&driver ## _conswindow, },	\ 	.vd_curwindow =&driver ## _conswindow,				\ };									\ static term_char_t	driver ## _constextbuf[(width) * (height)];	\ static struct vt_window	driver ## _conswindow = {			\ 	.vw_number = VT_CONSWINDOW,					\ 	.vw_flags = VWF_CONSOLE,					\ 	.vw_buf = {							\ 		.vb_buffer = driver ## _constextbuf,			\ 		.vb_flags = VBF_STATIC,					\ 		.vb_size = {						\ 			.tp_row = height,				\ 			.tp_col = width,				\ 		},							\ 	},								\ 	.vw_device =&driver ## _consdev,				\ 	.vw_terminal =&driver ## _consterm,				\ 	.vw_kbdmode = K_XLATE,						\ };									\ TERMINAL_DECLARE_EARLY(driver ## _consterm, vt_termclass,		\&driver ## _conswindow);						\ SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY,		\     vt_upgrade,&driver ## _consdev)
+value|static struct terminal	driver ## _consterm;				\ static struct vt_window	driver ## _conswindow;				\ static struct vt_device	driver ## _consdev = {				\ 	.vd_driver =&driver,						\ 	.vd_softc = (softc),						\ 	.vd_flags = VDF_INVALID,					\ 	.vd_windows = { [VT_CONSWINDOW] =&driver ## _conswindow, },	\ 	.vd_curwindow =&driver ## _conswindow,				\ };									\ static term_char_t	driver ## _constextbuf[(width) * 		\ 	    (VBF_DEFAULT_HISTORY_SIZE)];				\ static term_char_t	*driver ## _constextbufrows[			\ 	    VBF_DEFAULT_HISTORY_SIZE];					\ static struct vt_window	driver ## _conswindow = {			\ 	.vw_number = VT_CONSWINDOW,					\ 	.vw_flags = VWF_CONSOLE,					\ 	.vw_buf = {							\ 		.vb_buffer = driver ## _constextbuf,			\ 		.vb_rows = driver ## _constextbufrows,			\ 		.vb_history_size = VBF_DEFAULT_HISTORY_SIZE,		\ 		.vb_curroffset = 0,					\ 		.vb_roffset = 0,					\ 		.vb_flags = VBF_STATIC,					\ 		.vb_scr_size = {					\ 			.tp_row = height,				\ 			.tp_col = width,				\ 		},							\ 	},								\ 	.vw_device =&driver ## _consdev,				\ 	.vw_terminal =&driver ## _consterm,				\ 	.vw_kbdmode = K_XLATE,						\ };									\ TERMINAL_DECLARE_EARLY(driver ## _consterm, vt_termclass,		\&driver ## _conswindow);						\ SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY,		\     vt_upgrade,&driver ## _consdev)
 end_define
 
 begin_comment

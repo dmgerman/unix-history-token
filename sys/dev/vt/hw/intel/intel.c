@@ -171,6 +171,14 @@ operator|.
 name|vd_bitblt
 operator|=
 name|intel_vtbitblt
+block|,
+comment|/* Prefer to use KMS, so GENERIC - 10 */
+operator|.
+name|vd_priority
+operator|=
+name|VD_PRIORITY_GENERIC
+operator|-
+literal|10
 block|, }
 decl_stmt|;
 end_decl_stmt
