@@ -2541,6 +2541,30 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * If the trap was caused by errant bits in the PTE then panic. 	 */
+if|if
+condition|(
+name|frame
+operator|->
+name|tf_err
+operator|&
+name|PGEX_RSV
+condition|)
+block|{
+name|trap_fatal
+argument_list|(
+name|frame
+argument_list|,
+name|eva
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * PGEX_I is defined only if the execute disable bit capability is 	 * supported and enabled. 	 */
 if|if
 condition|(
@@ -2939,7 +2963,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"fault code		= %s %s %s, %s\n"
+literal|"fault code		= %s %s %s%s, %s\n"
 argument_list|,
 name|code
 operator|&
@@ -2964,6 +2988,14 @@ condition|?
 literal|"instruction"
 else|:
 literal|"data"
+argument_list|,
+name|code
+operator|&
+name|PGEX_RSV
+condition|?
+literal|" rsv"
+else|:
+literal|""
 argument_list|,
 name|code
 operator|&

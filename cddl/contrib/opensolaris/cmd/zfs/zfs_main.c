@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libzfs.h>
 end_include
 

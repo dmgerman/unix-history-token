@@ -6200,7 +6200,7 @@ block|{
 name|printk
 argument_list|(
 argument|KERN_WARNING PFX
-literal|"bad log_mtts_per_seg (%d). Using default - %ld\n"
+literal|"bad log_mtts_per_seg (%d). Using default - %d\n"
 argument_list|,
 argument|log_mtts_per_seg
 argument_list|,

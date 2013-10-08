@@ -2303,7 +2303,8 @@ modifier|*
 name|path
 parameter_list|,
 name|cap_rights_t
-name|cap_rights
+modifier|*
+name|cap_rightsp
 parameter_list|)
 block|{
 name|struct
@@ -2394,7 +2395,8 @@ name|entry
 operator|->
 name|fs_cap_rights
 operator|=
-name|cap_rights
+operator|*
+name|cap_rightsp
 expr_stmt|;
 return|return
 operator|(
@@ -4710,6 +4712,7 @@ name|offset
 argument_list|,
 name|path
 argument_list|,
+operator|&
 name|cap_rights
 argument_list|)
 expr_stmt|;

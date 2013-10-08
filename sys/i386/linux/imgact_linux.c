@@ -517,7 +517,9 @@ name|a_data
 operator|+
 name|bss_size
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -802,7 +804,9 @@ name|vmaddr
 argument_list|,
 name|bss_size
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,

@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/random/random_adaptors.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/random/randomdev.h>
 end_include
 
@@ -232,15 +238,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|random_adaptor
-modifier|*
-name|random_adaptor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|eventhandler_tag
 name|attach_tag
 decl_stmt|;
@@ -265,19 +262,6 @@ modifier|*
 name|random_dev
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Used to fake out unused random calls in random_adaptor */
-end_comment
-
-begin_function
-name|void
-name|random_null_func
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
 
 begin_comment
 comment|/* ARGSUSED */
@@ -902,7 +886,7 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|random_ident_hardware
+name|random_adaptor_choose
 argument_list|(
 operator|&
 name|random_adaptor

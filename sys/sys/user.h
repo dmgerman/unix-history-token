@@ -185,6 +185,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/caprights.h>
+end_include
+
 begin_comment
 comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * This struct includes several arrays of spare space, with different arrays  * for different standard C-types.  When adding new variables to this struct,  * the space for byte-aligned data should be taken from the ki_sparestring,  * pointers from ki_spareptrs, word-aligned data from ki_spareints, and  * doubleword-aligned data from ki_sparelongs.  Make sure the space for new  * variables come from the array which matches the size and alignment of  * those variables on ALL hardware platforms, and then adjust the appropriate  * KI_NSPARE_* value(s) to match.  *  * Always verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE on all  * platforms after you have added new variables.  Note that if you change  * the value of KINFO_PROC_SIZE, then many userland programs will stop  * working until they are recompiled!  *  * Once you have added the new field, you will need to add code to initialize  * it in two places: function fill_kinfo_proc in sys/kern/kern_proc.c and  * function kvm_proclist in lib/libkvm/kvm_proc.c .  */
 end_comment
@@ -193,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|8
+value|7
 end_define
 
 begin_define
@@ -704,6 +710,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|int
+name|ki_flag2
+decl_stmt|;
+comment|/* P2_* flags */
 name|int
 name|ki_fibnum
 decl_stmt|;
@@ -1370,7 +1380,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_FILE_SIZE
-value|1392
+value|1424
 end_define
 
 begin_endif
@@ -1573,6 +1583,13 @@ name|cap_rights_t
 name|kf_cap_rights
 decl_stmt|;
 comment|/* Capability rights. */
+name|uint64_t
+name|_kf_cap_spare
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Space for future cap_rights_t. */
 name|int
 name|_kf_ispare
 index|[

@@ -395,6 +395,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|device_t
+name|ntb_get_device
+parameter_list|(
+name|struct
+name|ntb_softc
+modifier|*
+name|ntb
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

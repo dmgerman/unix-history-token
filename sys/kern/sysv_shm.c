@@ -2093,6 +2093,8 @@ name|attach_va
 argument_list|,
 name|size
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|flags
 operator|&

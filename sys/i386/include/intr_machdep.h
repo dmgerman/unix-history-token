@@ -333,6 +333,9 @@ parameter_list|(
 name|struct
 name|pic
 modifier|*
+parameter_list|,
+name|bool
+name|suspend_cancelled
 parameter_list|)
 function_decl|;
 name|int
@@ -707,7 +710,8 @@ begin_function_decl
 name|void
 name|intr_resume
 parameter_list|(
-name|void
+name|bool
+name|suspend_cancelled
 parameter_list|)
 function_decl|;
 end_function_decl

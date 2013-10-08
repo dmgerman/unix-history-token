@@ -719,7 +719,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"empty pin mask"
+literal|"empty pin mask\n"
 argument_list|)
 expr_stmt|;
 return|return

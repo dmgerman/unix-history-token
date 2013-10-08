@@ -304,6 +304,9 @@ name|u_int
 name|blockmask
 decl_stmt|;
 name|u_int
+name|ilmask
+decl_stmt|;
+name|u_int
 name|xauimask
 decl_stmt|;
 name|u_int

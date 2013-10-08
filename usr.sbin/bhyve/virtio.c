@@ -426,13 +426,14 @@ operator|&=
 operator|~
 name|VIRTIO_USE_MSIX
 expr_stmt|;
+comment|/* Only 1 MSI vector for bhyve */
 name|pci_emul_add_msicap
 argument_list|(
 name|vs
 operator|->
 name|vs_pi
 argument_list|,
-name|barnum
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

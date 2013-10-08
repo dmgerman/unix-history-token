@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: opts.h,v 2.12 2003/08/14 14:24:27 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -239,6 +239,20 @@ define|#
 directive|define
 name|OPT_NORESOLVE
 value|0x8000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_DONTOPEN
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_PURGE
+value|0x20000000
 end_define
 
 begin_define

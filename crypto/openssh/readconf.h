@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.93 2013/02/22 04:45:09 dtucker Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.95 2013/05/16 04:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -359,6 +359,9 @@ name|int64_t
 name|rekey_limit
 decl_stmt|;
 name|int
+name|rekey_interval
+decl_stmt|;
+name|int
 name|no_host_authentication_for_localhost
 decl_stmt|;
 name|int
@@ -426,6 +429,11 @@ decl_stmt|;
 name|int
 name|request_tty
 decl_stmt|;
+name|char
+modifier|*
+name|ignored_unknown
+decl_stmt|;
+comment|/* Pattern list of unknown tokens to ignore */
 name|char
 modifier|*
 name|version_addendum

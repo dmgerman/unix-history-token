@@ -65,39 +65,6 @@ name|vm_page
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of sendfile(2) bufs alloced */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufspeak
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Peak of nsfbufsused */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsfbufsused
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of sendfile(2) bufs in use */
-end_comment
-
 begin_struct
 struct|struct
 name|sfstat
@@ -129,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<machine/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -197,35 +170,6 @@ end_endif
 begin_comment
 comment|/* _KERNEL */
 end_comment
-
-begin_function_decl
-name|struct
-name|sf_buf
-modifier|*
-name|sf_buf_alloc
-parameter_list|(
-name|struct
-name|vm_page
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sf_buf_free
-parameter_list|(
-name|struct
-name|sf_buf
-modifier|*
-name|sf
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

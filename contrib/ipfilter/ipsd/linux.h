@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1997-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)linux.h	1.1 8/19/95  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)linux.h	1.1 8/19/95  */
 end_comment
 
 begin_include

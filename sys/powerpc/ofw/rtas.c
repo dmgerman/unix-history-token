@@ -345,9 +345,9 @@ name|rtas_mtx
 argument_list|,
 literal|"RTAS"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* RTAS must be called with everything turned off in MSR */
@@ -775,7 +775,7 @@ argument_list|,
 name|nreturns
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|rtas_mtx
@@ -889,7 +889,7 @@ name|args
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|rtas_mtx

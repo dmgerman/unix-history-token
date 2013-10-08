@@ -1130,7 +1130,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|file
@@ -1154,7 +1155,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|u_char
 modifier|*
@@ -1182,7 +1184,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|file
@@ -1206,7 +1209,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|file
@@ -1351,7 +1355,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|vnode
@@ -1375,7 +1380,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|vnode
@@ -1399,7 +1405,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|need
+modifier|*
+name|needrightsp
 parameter_list|,
 name|struct
 name|filecaps
@@ -1428,7 +1435,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|vnode
@@ -1452,7 +1460,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|vnode
@@ -1476,7 +1485,8 @@ name|int
 name|fd
 parameter_list|,
 name|cap_rights_t
-name|rights
+modifier|*
+name|rightsp
 parameter_list|,
 name|struct
 name|socket

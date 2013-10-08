@@ -1231,10 +1231,31 @@ typedef|;
 endif|#
 directive|endif
 comment|/* Are we big endian? */
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_LITTLE_ENDIAN
 define|#
 directive|define
 name|APR_IS_BIGENDIAN
 value|0
+elif|#
+directive|elif
+name|_BYTE_ORDER
+operator|==
+name|_BIG_ENDIAN
+define|#
+directive|define
+name|APR_IS_BIGENDIAN
+value|1
+else|#
+directive|else
+error|#
+directive|error
+error|Unknown byte order.
+endif|#
+directive|endif
 comment|/* Mechanisms to properly type numeric literals */
 define|#
 directive|define

@@ -25,6 +25,16 @@ begin_comment
 comment|/* struct timeval */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/caprights.h>
+end_include
+
+begin_comment
+comment|/* cap_rights_t */
+end_comment
+
 begin_comment
 comment|/*  * Token type identifiers.  */
 end_comment
@@ -566,6 +576,13 @@ end_define
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AUT_RIGHTS
+value|0x83
+end_define
 
 begin_comment
 comment|/* print values for the arbitrary token */
@@ -1656,6 +1673,18 @@ parameter_list|,
 name|au_tid_addr_t
 modifier|*
 name|tid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|token_t
+modifier|*
+name|au_to_rights
+parameter_list|(
+name|cap_rights_t
+modifier|*
+name|rightsp
 parameter_list|)
 function_decl|;
 end_function_decl

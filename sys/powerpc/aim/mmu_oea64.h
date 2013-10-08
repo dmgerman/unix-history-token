@@ -139,6 +139,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|uint64_t
+name|moea64_large_page_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_int
 name|moea64_pteg_count
 decl_stmt|;

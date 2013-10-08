@@ -130,6 +130,8 @@ name|VENDOR_QUALSTAR
 block|,
 name|VENDOR_QUANTUM
 block|,
+name|VENDOR_SAMSUNG
+block|,
 name|VENDOR_SEAGATE
 block|,
 name|VENDOR_UNKNOWN
@@ -268,6 +270,22 @@ block|,
 literal|0x04
 block|,
 literal|0x05
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|VENDOR_SAMSUNG
+block|,
+literal|"SAMSUNG"
+block|,
+literal|0x8000
+block|,
+literal|0x07
+block|,
+literal|0x07
 block|,
 literal|0
 block|,
@@ -967,6 +985,11 @@ name|num_bytes
 operator|=
 name|img_size
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|buf
@@ -1303,6 +1326,11 @@ argument_list|(
 literal|"weird disk type '%s'"
 argument_list|,
 name|type
+argument_list|)
+expr_stmt|;
+name|cam_freeccb
+argument_list|(
+name|ccb
 argument_list|)
 expr_stmt|;
 return|return

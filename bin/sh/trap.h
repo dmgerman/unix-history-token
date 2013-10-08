@@ -13,6 +13,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
+name|sig_atomic_t
+name|pendingsig_waitcmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|in_dotrap
 decl_stmt|;

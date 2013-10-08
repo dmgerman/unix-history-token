@@ -105,6 +105,11 @@ directive|define
 name|TC_FLAGS_C3STOP
 value|1
 comment|/* Timer dies in C3. */
+define|#
+directive|define
+name|TC_FLAGS_SUSPEND_SAFE
+value|2
+comment|/* 					 * Timer functional across 					 * suspend/resume. 					 */
 name|void
 modifier|*
 name|tc_priv

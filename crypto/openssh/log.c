@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.c,v 1.43 2012/09/06 04:37:39 dtucker Exp $ */
+comment|/* $OpenBSD: log.c,v 1.45 2013/05/16 09:08:41 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -21,6 +21,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -123,6 +129,15 @@ name|int
 name|log_on_stderr
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|log_stderr_fd
+init|=
+name|STDERR_FILENO
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1260,73 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* redirect what would usually get written to stderr to specified file */
+end_comment
+
+begin_function
+name|void
+name|log_redirect_stderr_to
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|logfile
+parameter_list|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|logfile
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_APPEND
+argument_list|,
+literal|0600
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Couldn't open logfile %s: %s\n"
+argument_list|,
+name|logfile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|log_stderr_fd
+operator|=
+name|fd
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1619,9 +1701,12 @@ argument_list|,
 name|fmtbuf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
-name|STDERR_FILENO
+name|log_stderr_fd
 argument_list|,
 name|msgbuf
 argument_list|,

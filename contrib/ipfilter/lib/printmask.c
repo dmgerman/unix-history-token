@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000-2005 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: printmask.c,v 1.5.4.1 2006/06/16 17:21:13 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -17,8 +17,13 @@ begin_function
 name|void
 name|printmask
 parameter_list|(
+name|family
+parameter_list|,
 name|mask
 parameter_list|)
+name|int
+name|family
+decl_stmt|;
 name|u_32_t
 modifier|*
 name|mask
@@ -31,14 +36,14 @@ decl_stmt|;
 name|int
 name|ones
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_INET6
 if|if
 condition|(
-name|use_inet6
+name|family
+operator|==
+name|AF_INET6
 condition|)
-name|printf
+block|{
+name|PRINTF
 argument_list|(
 literal|"/%d"
 argument_list|,
@@ -48,9 +53,8 @@ name|mask
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -74,7 +78,7 @@ operator|=
 operator|*
 name|mask
 expr_stmt|;
-name|printf
+name|PRINTF
 argument_list|(
 literal|"/%s"
 argument_list|,
@@ -86,13 +90,15 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+block|{
+name|PRINTF
 argument_list|(
 literal|"/%d"
 argument_list|,
 name|ones
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

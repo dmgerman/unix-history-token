@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-gss.c,v 1.18 2012/12/02 20:34:09 djm Exp $ */
+comment|/* $OpenBSD: auth2-gss.c,v 1.20 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -281,11 +281,7 @@ block|{
 name|mechs
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|doid
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -390,7 +386,7 @@ operator|!
 name|present
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -437,7 +433,7 @@ operator|&
 name|ctxt
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -480,7 +476,7 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|doid
 argument_list|)
@@ -626,7 +622,7 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|recv_tok
 operator|.
@@ -883,7 +879,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|recv_tok
 operator|.
@@ -944,10 +940,6 @@ name|authctxt
 init|=
 name|ctxt
 decl_stmt|;
-name|Gssctxt
-modifier|*
-name|gssctxt
-decl_stmt|;
 name|int
 name|authenticated
 decl_stmt|;
@@ -972,12 +964,6 @@ name|fatal
 argument_list|(
 literal|"No authentication or GSSAPI context"
 argument_list|)
-expr_stmt|;
-name|gssctxt
-operator|=
-name|authctxt
-operator|->
-name|methoddata
 expr_stmt|;
 comment|/* 	 * We don't need to check the status, because we're only enabled in 	 * the dispatcher once the exchange is complete 	 */
 name|packet_check_eom
@@ -1209,7 +1195,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|mic
 operator|.

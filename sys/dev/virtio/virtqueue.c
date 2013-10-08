@@ -1869,7 +1869,9 @@ case|case
 name|VQ_POSTPONE_SHORT
 case|:
 name|ndesc
-operator|/=
+operator|=
+name|ndesc
+operator|/
 literal|4
 expr_stmt|;
 break|break;
@@ -1877,8 +1879,12 @@ case|case
 name|VQ_POSTPONE_LONG
 case|:
 name|ndesc
-operator|*=
+operator|=
+operator|(
+name|ndesc
+operator|*
 literal|3
+operator|)
 operator|/
 literal|4
 expr_stmt|;

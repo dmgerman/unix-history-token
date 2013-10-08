@@ -564,7 +564,7 @@ name|IB_SA_COMP_MASK
 parameter_list|(
 name|n
 parameter_list|)
-value|((__force ib_sa_comp_mask) cpu_to_be64(1ull<< n))
+value|((__force ib_sa_comp_mask) cpu_to_be64(1ull<< (n)))
 end_define
 
 begin_comment

@@ -1668,6 +1668,10 @@ operator|*
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|(
 name|uint8_t
 operator|*

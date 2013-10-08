@@ -266,7 +266,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Disk thread (the one that do I/O requests) takes requests from this list.  */
+comment|/*  * Disk thread (the one that does I/O requests) takes requests from this list.  */
 end_comment
 
 begin_expr_stmt
@@ -295,7 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * There is one recv list for every component, although local components don't  * use recv lists as local requests are done synchronously.  */
+comment|/*  * Thread that sends requests back to primary takes requests from this list.  */
 end_comment
 
 begin_expr_stmt
@@ -382,7 +382,7 @@ name|name
 parameter_list|,
 name|hio
 parameter_list|)
-value|do {					\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_next);		\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_signal(&hio_##name##_list_cond);			\ } while (0)
+value|do {					\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_next);		\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond);			\ } while (0)
 end_define
 
 begin_define

@@ -1969,6 +1969,12 @@ name|P_INMEM
 expr_stmt|;
 name|p
 operator|->
+name|p_flag2
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
 name|p_state
 operator|=
 name|PRS_NORMAL
@@ -3125,7 +3131,9 @@ name|addr
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+name|VMFS_NO_SPACE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,

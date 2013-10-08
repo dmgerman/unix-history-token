@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-serv.c,v 1.23 2011/08/01 19:18:15 markus Exp $ */
+comment|/* $OpenBSD: gss-serv.c,v 1.24 2013/07/20 01:55:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -130,6 +130,8 @@ block|,
 name|NULL
 block|,
 block|{
+name|NULL
+block|,
 name|NULL
 block|,
 name|NULL

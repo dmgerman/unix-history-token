@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/freebsd32/freebsd32_misc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
@@ -99,7 +93,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|freebsd32_cap_rights_limit
+name|freebsd32_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -107,45 +101,15 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd32_cap_rights_limit_args
+name|freebsd32_cap_enter_args
 modifier|*
 name|uap
 parameter_list|)
 block|{
-name|struct
-name|cap_rights_limit_args
-name|ap
-decl_stmt|;
-name|ap
-operator|.
-name|fd
-operator|=
-name|uap
-operator|->
-name|fd
-expr_stmt|;
-name|ap
-operator|.
-name|rights
-operator|=
-name|PAIR32TO64
-argument_list|(
-name|uint64_t
-argument_list|,
-name|uap
-operator|->
-name|rights
-argument_list|)
-expr_stmt|;
+comment|/* 	 * We do not have an equivalent of capabilities.conf for freebsd32 	 * compatibility, so do not allow capability mode for now. 	 */
 return|return
 operator|(
-name|sys_cap_rights_limit
-argument_list|(
-name|td
-argument_list|,
-operator|&
-name|ap
-argument_list|)
+name|ENOSYS
 operator|)
 return|;
 block|}
@@ -580,7 +544,7 @@ end_comment
 
 begin_function
 name|int
-name|freebsd32_cap_rights_limit
+name|freebsd32_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -588,7 +552,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd32_cap_rights_limit_args
+name|freebsd32_cap_enter_args
 modifier|*
 name|uap
 parameter_list|)

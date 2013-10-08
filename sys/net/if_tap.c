@@ -1144,6 +1144,18 @@ operator|->
 name|tap_rsel
 argument_list|)
 expr_stmt|;
+name|knlist_clear
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|tap_rsel
+operator|.
+name|si_note
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&
@@ -1943,13 +1955,6 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 comment|/* allocate driver storage and create device */
 name|tp
 operator|=

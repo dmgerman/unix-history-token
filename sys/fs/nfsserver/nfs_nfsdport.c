@@ -15084,6 +15084,9 @@ name|struct
 name|nfsd_nfsd_args
 name|nfsdarg
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -15124,9 +15127,6 @@ goto|goto
 name|out
 goto|;
 comment|/* 		 * Since we don't know what rights might be required, 		 * pretend that we need them all. It is better to be too 		 * careful than too reckless. 		 */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|fget
@@ -15137,12 +15137,21 @@ name|sockarg
 operator|.
 name|sock
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_SOCK_SERVER
+argument_list|)
 argument_list|,
 operator|&
 name|fp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)

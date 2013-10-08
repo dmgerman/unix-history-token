@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2002-2005 by Darren Reed.  *   * See the IPFILTER.LICENCE file for details on licencing.    *     * $Id: ntomask.c,v 1.6.2.1 2006/06/16 17:21:07 darrenr Exp $   */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -17,14 +17,14 @@ begin_function
 name|int
 name|ntomask
 parameter_list|(
-name|v
+name|family
 parameter_list|,
 name|nbits
 parameter_list|,
 name|ap
 parameter_list|)
 name|int
-name|v
+name|family
 decl_stmt|,
 name|nbits
 decl_stmt|;
@@ -48,11 +48,11 @@ literal|1
 return|;
 switch|switch
 condition|(
-name|v
+name|family
 condition|)
 block|{
 case|case
-literal|4
+name|AF_INET
 case|:
 if|if
 condition|(
@@ -61,8 +61,8 @@ operator|>
 literal|32
 operator|||
 name|use_inet6
-operator|!=
-literal|0
+operator|==
+literal|1
 condition|)
 return|return
 operator|-
@@ -105,7 +105,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|6
+literal|0
+case|:
+case|case
+name|AF_INET6
 case|:
 if|if
 condition|(
@@ -118,7 +121,8 @@ operator|||
 operator|(
 name|use_inet6
 operator|==
-literal|0
+operator|-
+literal|1
 operator|)
 condition|)
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_common.c,v 1.9 2011/12/07 05:44:38 djm Exp $ */
+comment|/* $OpenBSD: roaming_common.c,v 1.10 2013/07/12 00:19:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1026,7 +1026,7 @@ decl_stmt|;
 name|EVP_MD_CTX
 name|ctx
 decl_stmt|;
-name|char
+name|u_char
 name|hash
 index|[
 name|EVP_MAX_MD_SIZE

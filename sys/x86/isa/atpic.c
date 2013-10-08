@@ -527,6 +527,9 @@ name|struct
 name|pic
 modifier|*
 name|pic
+parameter_list|,
+name|bool
+name|suspend_cancelled
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1277,6 +1280,9 @@ name|struct
 name|pic
 modifier|*
 name|pic
+parameter_list|,
+name|bool
+name|suspend_cancelled
 parameter_list|)
 block|{
 name|struct

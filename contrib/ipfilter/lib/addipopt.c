@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: addipopt.c,v 1.7.4.1 2006/06/16 17:20:56 darrenr Exp $  */
+comment|/*  * Copyright (C) 2012 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -159,6 +159,24 @@ name|lvl
 expr_stmt|;
 break|break;
 case|case
+name|IPOPT_RR
+case|:
+case|case
+name|IPOPT_TS
+case|:
+name|s
+index|[
+name|IPOPT_OLEN
+index|]
+operator|=
+name|IPOPT_MINOFF
+operator|-
+literal|1
+operator|+
+literal|4
+expr_stmt|;
+break|break;
+case|case
 name|IPOPT_LSRR
 case|:
 case|case
@@ -228,31 +246,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-name|op
-operator|+=
-name|io
-operator|->
-name|on_siz
-operator|-
-literal|3
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|&
-literal|3
-condition|)
-block|{
-operator|*
-name|op
-operator|++
-operator|=
-name|IPOPT_NOP
-expr_stmt|;
-name|len
-operator|++
-expr_stmt|;
 block|}
 block|}
 if|if

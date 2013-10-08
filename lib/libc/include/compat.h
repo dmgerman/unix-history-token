@@ -73,19 +73,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|__sym_compat
-argument_list|(
-name|cap_getrights
-argument_list|,
-name|cap_rights_get
-argument_list|,
-name|FBSD_1
-literal|.2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_undef
 undef|#
 directive|undef

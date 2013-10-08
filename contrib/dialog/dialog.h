@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: dialog.h,v 1.260 2013/03/17 15:03:41 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: dialog.h,v 1.267 2013/09/22 19:06:36 tom Exp $  *  *  dialog.h -- common declarations for all dialog modules  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_ifndef
@@ -2272,6 +2272,11 @@ name|int
 name|visit_cols
 decl_stmt|;
 comment|/* option "--visit-items" */
+comment|/* 1.2-20130922 */
+name|bool
+name|finish_string
+decl_stmt|;
+comment|/* caching optimization for gauge */
 block|}
 name|DIALOG_STATE
 typedef|;
@@ -2549,6 +2554,11 @@ name|bool
 name|last_key
 decl_stmt|;
 comment|/* option "--last-key" */
+comment|/* 1.2-20130902 */
+name|bool
+name|help_tags
+decl_stmt|;
+comment|/* option "--help-tags" */
 block|}
 name|DIALOG_VARS
 typedef|;
@@ -4150,6 +4160,35 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
+modifier|*
+name|dlg_reallocate_gauge
+parameter_list|(
+name|void
+modifier|*
+comment|/* objptr */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/* title */
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+comment|/* cprompt */
+parameter_list|,
+name|int
+comment|/* height */
+parameter_list|,
+name|int
+comment|/* width */
+parameter_list|,
+name|int
+comment|/* percent */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|dlg_free_gauge
 parameter_list|(
 name|void
@@ -4281,6 +4320,16 @@ comment|/*limit*/
 parameter_list|,
 name|int
 comment|/*offset*/
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dlg_finish_string
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+comment|/* string */
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -4812,6 +4861,42 @@ comment|/* width */
 parameter_list|,
 name|int
 comment|/* pauseopt */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dlg_add_help_formitem
+parameter_list|(
+name|int
+modifier|*
+comment|/* result */
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+comment|/* tag */
+parameter_list|,
+name|DIALOG_FORMITEM
+modifier|*
+comment|/* item */
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dlg_add_help_listitem
+parameter_list|(
+name|int
+modifier|*
+comment|/* result */
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+comment|/* tag */
+parameter_list|,
+name|DIALOG_LISTITEM
+modifier|*
+comment|/* item */
 parameter_list|)
 function_decl|;
 specifier|extern

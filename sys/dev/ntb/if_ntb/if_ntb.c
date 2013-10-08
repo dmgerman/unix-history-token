@@ -342,7 +342,7 @@ decl_stmt|;
 name|uint8_t
 name|qp_num
 decl_stmt|;
-comment|/* Only 64 QP's are allowed.  0-63 */
+comment|/* Only 64 QPs are allowed.  0-63 */
 name|struct
 name|ntb_rx_info
 modifier|*
@@ -1450,10 +1450,10 @@ end_function
 begin_decl_stmt
 specifier|static
 name|moduledata_t
-name|ntb_transport_mod
+name|if_ntb_mod
 init|=
 block|{
-literal|"ntb_transport"
+literal|"if_ntb"
 block|,
 name|ntb_handle_module_events
 block|,
@@ -1465,9 +1465,9 @@ end_decl_stmt
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-name|ntb_transport
+name|if_ntb
 argument_list|,
-name|ntb_transport_mod
+name|if_ntb_mod
 argument_list|,
 name|SI_SUB_KLD
 argument_list|,
@@ -1479,7 +1479,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ntb_transport
+name|if_ntb
 argument_list|,
 name|ntb_hw
 argument_list|,
@@ -1540,7 +1540,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ntb: Can't find devclass\n"
+literal|"ntb: Cannot find devclass\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1739,15 +1739,14 @@ name|int
 name|ntb_teardown_interface
 parameter_list|()
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
+if|if
+condition|(
 name|net_softc
 operator|.
-name|ifp
-decl_stmt|;
+name|qp
+operator|!=
+name|NULL
+condition|)
 name|ntb_transport_link_down
 argument_list|(
 name|net_softc
@@ -1755,16 +1754,39 @@ operator|.
 name|qp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|net_softc
+operator|.
+name|ifp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ether_ifdetach
 argument_list|(
+name|net_softc
+operator|.
 name|ifp
 argument_list|)
 expr_stmt|;
 name|if_free
 argument_list|(
+name|net_softc
+operator|.
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|net_softc
+operator|.
+name|qp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ntb_transport_free_queue
 argument_list|(
 name|net_softc
@@ -1778,6 +1800,7 @@ operator|&
 name|net_softc
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2065,7 +2088,7 @@ name|CTR1
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"TX: couldn't tx mbuf %p. Returning to snd q"
+literal|"TX: could not tx mbuf %p. Returning to snd q"
 argument_list|,
 name|m_head
 argument_list|)
@@ -2408,6 +2431,21 @@ argument_list|(
 name|ntb
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|ntb
+argument_list|)
+argument_list|,
+literal|"link up\n"
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -2422,6 +2460,7 @@ argument_list|,
 name|nt
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2494,7 +2533,7 @@ operator|->
 name|link_work
 argument_list|)
 expr_stmt|;
-comment|/* verify that all the qp's are freed */
+comment|/* verify that all the qps are freed */
 for|for
 control|(
 name|i
@@ -3462,6 +3501,22 @@ name|NTB_LINK_UP
 expr_stmt|;
 if|if
 condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|qp
+operator|->
+name|ntb
+argument_list|)
+argument_list|,
+literal|"qp client ready\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|qp
 operator|->
 name|transport
@@ -3582,7 +3637,7 @@ name|CTR0
 argument_list|(
 name|KTR_NTB
 argument_list|,
-literal|"TX: couldn't get entry from tx_free_q"
+literal|"TX: could not get entry from tx_free_q"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5030,6 +5085,22 @@ block|{
 case|case
 name|NTB_EVENT_HW_LINK_UP
 case|:
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|nt
+operator|->
+name|ntb
+argument_list|)
+argument_list|,
+literal|"HW link up\n"
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -5048,6 +5119,22 @@ break|break;
 case|case
 name|NTB_EVENT_HW_LINK_DOWN
 case|:
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|nt
+operator|->
+name|ntb
+argument_list|)
+argument_list|,
+literal|"HW link down\n"
+argument_list|)
+expr_stmt|;
 name|ntb_transport_link_cleanup
 argument_list|(
 name|nt
@@ -5405,6 +5492,20 @@ operator|->
 name|transport_link
 operator|=
 name|NTB_LINK_UP
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|ntb
+argument_list|)
+argument_list|,
+literal|"transport link up\n"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -6027,6 +6128,20 @@ operator|->
 name|cb_data
 argument_list|,
 name|NTB_LINK_UP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|ntb_get_device
+argument_list|(
+name|ntb
+argument_list|)
+argument_list|,
+literal|"qp link up\n"
 argument_list|)
 expr_stmt|;
 block|}

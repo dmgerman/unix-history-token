@@ -991,6 +991,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|short
 name|label_type
 decl_stmt|;
@@ -1113,7 +1116,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_MAC_GET
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -2050,6 +2059,9 @@ name|struct
 name|mac
 name|mac
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|char
 modifier|*
 name|buffer
@@ -2158,7 +2170,13 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
 name|CAP_MAC_SET
+argument_list|)
 argument_list|,
 operator|&
 name|fp

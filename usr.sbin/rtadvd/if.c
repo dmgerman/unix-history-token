@@ -1890,6 +1890,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPFNOSUPPORT
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR

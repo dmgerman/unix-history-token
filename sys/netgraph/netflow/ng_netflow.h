@@ -1211,7 +1211,7 @@ comment|/* 	 * Flow entries are allocated in uma(9) zone zone. They are 	 * inde
 define|#
 directive|define
 name|CACHESIZE
-value|(65536*4)
+value|(65536*16)
 define|#
 directive|define
 name|CACHELOWAT

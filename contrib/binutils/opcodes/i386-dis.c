@@ -3565,6 +3565,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PREGRP107
+value|NULL, { { NULL, USE_PREFIX_USER_TABLE }, { NULL, 107 } }
+end_define
+
+begin_define
+define|#
+directive|define
 name|X86_64_0
 value|NULL, { { NULL, X86_64_SPECIAL }, { NULL, 0 } }
 end_define
@@ -21524,6 +21531,43 @@ name|XX
 block|}
 block|}
 block|,   }
+block|,
+comment|/* PREGRP107 */
+block|{
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,
+block|{
+literal|"invpcid"
+block|,
+block|{
+name|Gm
+block|,
+name|Mo
+block|}
+block|}
+block|,
+block|{
+literal|"(bad)"
+block|,
+block|{
+name|XX
+block|}
+block|}
+block|,   }
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -22591,11 +22635,7 @@ name|PREGRP99
 block|}
 block|,
 block|{
-literal|"(bad)"
-block|,
-block|{
-name|XX
-block|}
+name|PREGRP107
 block|}
 block|,
 block|{
@@ -39695,6 +39735,32 @@ name|int
 name|sizeflag
 parameter_list|)
 block|{
+if|if
+condition|(
+name|modrm
+operator|.
+name|mod
+operator|==
+literal|3
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|obuf
+argument_list|,
+literal|"rdrand"
+argument_list|)
+expr_stmt|;
+name|OP_E
+argument_list|(
+name|v_mode
+argument_list|,
+name|sizeflag
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|used_prefixes
 operator||=
 operator|(
@@ -39749,6 +39815,7 @@ argument_list|,
 name|sizeflag
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -28,18 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"daemon/worker.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"daemon/remote.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"services/outside_network.h"
 end_include
 
@@ -161,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|"libunbound/context.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libunbound/worker.h"
 end_include
 
 begin_include

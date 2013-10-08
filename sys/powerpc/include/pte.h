@@ -313,14 +313,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|LPTE_LOCKED
-value|0x0000000000000040ULL
+name|LPTE_SWBITS
+value|0x0000000000000078ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|LPTE_WIRED
+value|0x0000000000000010ULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LPTE_LOCKED
 value|0x0000000000000008ULL
 end_define
 

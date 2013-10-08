@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"util/fptr_wlist.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"util/data/msgreply.h"
 end_include
 
@@ -276,6 +282,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SBRK
+end_ifdef
+
 begin_comment
 comment|/** global debug value to keep track of heap memory allocation */
 end_comment
@@ -288,6 +300,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -723,17 +740,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"configured for %s on %s with options:%s\n"
-argument_list|,
-name|CONFIGURE_TARGET
-argument_list|,
-name|CONFIGURE_DATE
-argument_list|,
-name|CONFIGURE_BUILD_WITH
 argument_list|)
 expr_stmt|;
 name|printf

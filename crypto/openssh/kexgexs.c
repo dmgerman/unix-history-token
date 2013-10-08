@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexs.c,v 1.14 2010/11/10 01:33:07 djm Exp $ */
+comment|/* $OpenBSD: kexgexs.c,v 1.16 2013/07/19 07:37:48 markus Exp $ */
 end_comment
 
 begin_comment
@@ -276,21 +276,6 @@ name|kex
 operator|->
 name|load_host_private_key
 argument_list|(
-name|kex
-operator|->
-name|hostkey_type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|server_host_private
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"Missing private key for hostkey type %d"
-argument_list|,
 name|kex
 operator|->
 name|hostkey_type
@@ -721,7 +706,7 @@ argument_list|,
 name|klen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|kbuf
 argument_list|)
@@ -881,13 +866,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* sign H */
-if|if
-condition|(
-name|PRIVSEP
-argument_list|(
-name|key_sign
+name|kex
+operator|->
+name|sign
 argument_list|(
 name|server_host_private
+argument_list|,
+name|server_host_public
 argument_list|,
 operator|&
 name|signature
@@ -898,14 +883,6 @@ argument_list|,
 name|hash
 argument_list|,
 name|hashlen
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"kexgex_server: key_sign failed"
 argument_list|)
 expr_stmt|;
 comment|/* destroy_sensitive_data(); */
@@ -945,12 +922,12 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|server_host_key_blob
 argument_list|)

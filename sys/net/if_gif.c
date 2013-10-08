@@ -3000,10 +3000,6 @@ name|IFF_UP
 expr_stmt|;
 break|break;
 case|case
-name|SIOCSIFDSTADDR
-case|:
-break|break;
-case|case
 name|SIOCADDMULTI
 case|:
 case|case

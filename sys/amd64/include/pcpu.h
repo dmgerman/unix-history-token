@@ -32,61 +32,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|XENHVM
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NR_VIRQS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NR_VIRQS
-value|24
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NR_IPIS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NR_IPIS
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
@@ -116,13 +61,15 @@ value|\ 	struct user_segment_descriptor	*pc_gs32p;			\
 comment|/* Pointer to the CPU LDT descriptor */
 value|\ 	struct system_segment_descriptor *pc_ldt;			\
 comment|/* Pointer to the CPU TSS descriptor */
-value|\ 	struct system_segment_descriptor *pc_tss;			\ 	uint64_t	pc_pm_save_cnt;					\ 	char		pc_invpcid_descr[16];				\ 	u_int	pc_cmci_mask;
+value|\ 	struct system_segment_descriptor *pc_tss;			\ 	uint64_t	pc_pm_save_cnt;					\ 	u_int	pc_cmci_mask;
 comment|/* MCx banks for CMCI */
 value|\ 	uint64_t pc_dbreg[16];
 comment|/* ddb debugging regs */
 value|\ 	int pc_dbreg_cmd;
 comment|/* ddb debugging reg cmd */
-value|\ 	char	__pad[161]
+value|\ 	u_int	pc_vcpu_id;
+comment|/* Xen vCPU ID */
+value|\ 	char	__pad[157]
 end_define
 
 begin_comment

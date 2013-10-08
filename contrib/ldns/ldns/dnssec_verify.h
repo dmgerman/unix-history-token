@@ -417,30 +417,6 @@ name|time_t
 name|check_time
 parameter_list|)
 function_decl|;
-comment|/**  * Sub function for derive_trust_tree that is used for DNSKEY rrsets  *  * \param[in] new_tree The trust tree that we are building  * \param[in] data_chain The data chain containing the data for the trust tree  * \param[in] cur_rr The currently relevant DNSKEY RR  * \param[in] cur_sig_rr The currently relevant signature  * \param[in] check_time the time for which the validation is performed  */
-name|void
-name|ldns_dnssec_derive_trust_tree_dnskey_rrset_time
-parameter_list|(
-name|ldns_dnssec_trust_tree
-modifier|*
-name|new_tree
-parameter_list|,
-name|ldns_dnssec_data_chain
-modifier|*
-name|data_chain
-parameter_list|,
-name|ldns_rr
-modifier|*
-name|cur_rr
-parameter_list|,
-name|ldns_rr
-modifier|*
-name|cur_sig_rr
-parameter_list|,
-name|time_t
-name|check_time
-parameter_list|)
-function_decl|;
 comment|/**  * Sub function for derive_trust_tree that is used for DS rrsets  *  * \param[in] new_tree The trust tree that we are building  * \param[in] data_chain The data chain containing the data for the trust tree  * \param[in] cur_rr The currently relevant DS RR  */
 name|void
 name|ldns_dnssec_derive_trust_tree_ds_rrset

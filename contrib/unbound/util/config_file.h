@@ -1386,6 +1386,69 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/** lex in file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|ub_c_in
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** lex out file */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|ub_c_out
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** the yacc lex generated parse function */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_c_parse
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** the lexer function */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_c_lex
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** wrap function */
+end_comment
+
+begin_function_decl
+name|int
+name|ub_c_wrap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/** parsing helpers: print error with file and line numbers */
 end_comment
 

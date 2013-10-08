@@ -680,14 +680,14 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* creation time */
+comment|/* last-modified time */
 name|u_int8_t
 name|deMDate
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* creation date */
+comment|/* last-modified date */
 name|u_int8_t
 name|deStartCluster
 index|[

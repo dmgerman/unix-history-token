@@ -17,6 +17,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|proc
 struct_decl|;
 end_struct_decl
@@ -538,6 +544,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pmap_pinit_t
+function_decl|)
+parameter_list|(
+name|struct
+name|pmap
+modifier|*
+name|pmap
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 name|struct
 name|vmspace
@@ -547,6 +569,8 @@ parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_offset_t
+parameter_list|,
+name|pmap_pinit_t
 parameter_list|)
 function_decl|;
 end_function_decl

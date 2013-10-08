@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: buffer.h,v 1.21 2010/08/31 11:54:45 djm Exp $ */
+comment|/* $OpenBSD: buffer.h,v 1.22 2013/07/12 00:19:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -611,7 +611,7 @@ begin_function_decl
 name|int
 name|buffer_get_char_ret
 parameter_list|(
-name|char
+name|u_char
 modifier|*
 parameter_list|,
 name|Buffer

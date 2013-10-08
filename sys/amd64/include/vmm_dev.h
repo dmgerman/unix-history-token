@@ -55,7 +55,9 @@ comment|/* in */
 name|size_t
 name|len
 decl_stmt|;
-comment|/* in */
+name|int
+name|wired
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -359,50 +361,129 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_gpa_pte
+block|{
+name|uint64_t
+name|gpa
+decl_stmt|;
+comment|/* in */
+name|uint64_t
+name|pte
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* out */
+name|int
+name|ptenum
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
+comment|/* general routines */
+name|IOCNUM_ABIVERS
+init|=
+literal|0
+block|,
 name|IOCNUM_RUN
-block|,
-name|IOCNUM_MAP_MEMORY
-block|,
-name|IOCNUM_GET_MEMORY_SEG
-block|,
-name|IOCNUM_SET_REGISTER
-block|,
-name|IOCNUM_GET_REGISTER
-block|,
-name|IOCNUM_SET_SEGMENT_DESCRIPTOR
-block|,
-name|IOCNUM_GET_SEGMENT_DESCRIPTOR
-block|,
-name|IOCNUM_INJECT_EVENT
-block|,
-name|IOCNUM_LAPIC_IRQ
+init|=
+literal|1
 block|,
 name|IOCNUM_SET_CAPABILITY
+init|=
+literal|2
 block|,
 name|IOCNUM_GET_CAPABILITY
+init|=
+literal|3
 block|,
-name|IOCNUM_BIND_PPTDEV
+comment|/* memory apis */
+name|IOCNUM_MAP_MEMORY
+init|=
+literal|10
 block|,
-name|IOCNUM_UNBIND_PPTDEV
+name|IOCNUM_GET_MEMORY_SEG
+init|=
+literal|11
 block|,
-name|IOCNUM_MAP_PPTDEV_MMIO
+name|IOCNUM_GET_GPA_PMAP
+init|=
+literal|12
 block|,
-name|IOCNUM_PPTDEV_MSI
+comment|/* register/state accessors */
+name|IOCNUM_SET_REGISTER
+init|=
+literal|20
 block|,
-name|IOCNUM_PPTDEV_MSIX
+name|IOCNUM_GET_REGISTER
+init|=
+literal|21
+block|,
+name|IOCNUM_SET_SEGMENT_DESCRIPTOR
+init|=
+literal|22
+block|,
+name|IOCNUM_GET_SEGMENT_DESCRIPTOR
+init|=
+literal|23
+block|,
+comment|/* interrupt injection */
+name|IOCNUM_INJECT_EVENT
+init|=
+literal|30
+block|,
+name|IOCNUM_LAPIC_IRQ
+init|=
+literal|31
 block|,
 name|IOCNUM_INJECT_NMI
+init|=
+literal|32
 block|,
+comment|/* PCI pass-thru */
+name|IOCNUM_BIND_PPTDEV
+init|=
+literal|40
+block|,
+name|IOCNUM_UNBIND_PPTDEV
+init|=
+literal|41
+block|,
+name|IOCNUM_MAP_PPTDEV_MMIO
+init|=
+literal|42
+block|,
+name|IOCNUM_PPTDEV_MSI
+init|=
+literal|43
+block|,
+name|IOCNUM_PPTDEV_MSIX
+init|=
+literal|44
+block|,
+comment|/* statistics */
 name|IOCNUM_VM_STATS
+init|=
+literal|50
 block|,
 name|IOCNUM_VM_STAT_DESC
+init|=
+literal|51
 block|,
+comment|/* kernel device state */
 name|IOCNUM_SET_X2APIC_STATE
+init|=
+literal|60
 block|,
 name|IOCNUM_GET_X2APIC_STATE
+init|=
+literal|61
 block|, }
 enum|;
 end_enum
@@ -573,6 +654,14 @@ directive|define
 name|VM_GET_X2APIC_STATE
 define|\
 value|_IOWR('v', IOCNUM_GET_X2APIC_STATE, struct vm_x2apic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_GPA_PMAP
+define|\
+value|_IOWR('v', IOCNUM_GET_GPA_PMAP, struct vm_gpa_pte)
 end_define
 
 begin_endif

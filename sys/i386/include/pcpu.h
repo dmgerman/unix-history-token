@@ -55,61 +55,6 @@ name|defined
 argument_list|(
 name|XEN
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|XENHVM
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NR_VIRQS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NR_VIRQS
-value|24
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NR_IPIS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NR_IPIS
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
 end_if
 
 begin_comment
@@ -151,7 +96,7 @@ name|PCPU_XEN_FIELDS
 define|\
 value|;								\ 	u_int	pc_cr3;
 comment|/* track cr3 for R1/R3*/
-value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	char	__pad[189]
+value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	char	__pad[185]
 end_define
 
 begin_else
@@ -168,7 +113,7 @@ define|#
 directive|define
 name|PCPU_XEN_FIELDS
 define|\
-value|;								\ 	char	__pad[237]
+value|;								\ 	char	__pad[233]
 end_define
 
 begin_endif
@@ -189,8 +134,10 @@ value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	st
 comment|/* ACPI CPU id */
 value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
 comment|/* Flag indicating private tss*/
-value|\ 	u_int	pc_cmci_mask
+value|\ 	u_int	pc_cmci_mask;
 comment|/* MCx banks for CMCI */
+value|\ 	u_int	pc_vcpu_id
+comment|/* Xen vCPU ID */
 value|\ 	PCPU_XEN_FIELDS
 end_define
 

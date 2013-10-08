@@ -1001,7 +1001,7 @@ name|aim
 operator|.
 name|dar
 expr_stmt|;
-comment|/* 				 * Offset the instruction pointer to the instruction 				 * following the one causing the fault. 				 */
+comment|/* 			 * Offset the instruction pointer to the instruction 			 * following the one causing the fault. 			 */
 name|frame
 operator|->
 name|srr0
@@ -1043,7 +1043,7 @@ name|frame
 operator|->
 name|srr0
 expr_stmt|;
-comment|/* 				 * Offset the instruction pointer to the instruction 				 * following the one causing the fault. 				 */
+comment|/* 			 * Offset the instruction pointer to the instruction 			 * following the one causing the fault. 			 */
 name|frame
 operator|->
 name|srr0

@@ -25310,12 +25310,6 @@ operator|.
 name|pr_sctp_cnt
 operator|++
 expr_stmt|;
-name|chk
-operator|->
-name|pr_sctp_on
-operator|=
-literal|1
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&

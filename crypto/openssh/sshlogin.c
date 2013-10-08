@@ -255,7 +255,7 @@ name|time_string
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|time_string
 argument_list|)

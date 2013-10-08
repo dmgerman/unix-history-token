@@ -29,6 +29,12 @@ directive|define
 name|_NETINET_SCTP_AUTH_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_os.h>
+end_include
+
 begin_comment
 comment|/* digest lengths */
 end_comment
@@ -43,13 +49,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_DIGEST_LEN_SHA224
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_AUTH_DIGEST_LEN_SHA256
 value|32
 end_define
@@ -57,22 +56,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_DIGEST_LEN_SHA384
-value|48
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_AUTH_DIGEST_LEN_SHA512
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_AUTH_DIGEST_LEN_MAX
-value|64
+value|SCTP_AUTH_DIGEST_LEN_SHA256
 end_define
 
 begin_comment
@@ -109,23 +94,12 @@ typedef|typedef
 union|union
 name|sctp_hash_context
 block|{
-name|SHA1_CTX
+name|SCTP_SHA1_CTX
 name|sha1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_SHA2
-name|SHA256_CTX
+name|SCTP_SHA256_CTX
 name|sha256
 decl_stmt|;
-name|SHA384_CTX
-name|sha384
-decl_stmt|;
-name|SHA512_CTX
-name|sha512
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|sctp_hash_context_t
 typedef|;

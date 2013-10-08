@@ -63,6 +63,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libunbound/worker.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"services/outside_network.h"
 end_include
 
@@ -88,6 +94,12 @@ begin_include
 include|#
 directive|include
 file|"services/outbound_list.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"util/fptr_wlist.h"
 end_include
 
 begin_include
@@ -5218,6 +5230,19 @@ name|socklen_t
 name|ATTR_UNUSED
 argument_list|(
 name|addrlen
+argument_list|)
+argument_list|,
+name|uint8_t
+operator|*
+name|ATTR_UNUSED
+argument_list|(
+name|zone
+argument_list|)
+argument_list|,
+name|size_t
+name|ATTR_UNUSED
+argument_list|(
+name|zonelen
 argument_list|)
 argument_list|,
 expr|struct

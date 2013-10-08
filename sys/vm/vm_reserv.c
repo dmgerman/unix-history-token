@@ -1937,16 +1937,6 @@ operator|->
 name|object
 operator|==
 name|object
-operator|||
-operator|(
-name|mpred
-operator|->
-name|flags
-operator|&
-name|PG_SLAB
-operator|)
-operator|!=
-literal|0
 argument_list|,
 operator|(
 literal|"vm_reserv_alloc_page: object doesn't contain mpred"

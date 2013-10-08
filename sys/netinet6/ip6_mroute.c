@@ -2232,7 +2232,7 @@ block|{
 name|mifi_t
 name|mifi
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|struct
@@ -2401,7 +2401,7 @@ name|rte
 operator|->
 name|next
 decl_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|rte
 operator|->
@@ -5432,7 +5432,7 @@ modifier|*
 modifier|*
 name|nptr
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|MFC6_LOCK
