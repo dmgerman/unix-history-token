@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdbool.h>
 end_include
 
@@ -103,9 +109,7 @@ name|bool
 name|perthread
 parameter_list|)
 block|{
-name|uint32_t
-name|i
-decl_stmt|,
+name|uint64_t
 name|io_completed
 init|=
 literal|0
@@ -113,6 +117,9 @@ decl_stmt|,
 name|iops
 decl_stmt|,
 name|mbps
+decl_stmt|;
+name|uint32_t
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -162,7 +169,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Threads: %2d Size: %6d %5s Time: %3d IO/s: %7d MB/s: %4d\n"
+literal|"Threads: %2d Size: %6d %5s Time: %3d IO/s: %7ju MB/s: %4ju\n"
 argument_list|,
 name|io_test
 operator|->
@@ -186,8 +193,14 @@ name|io_test
 operator|->
 name|time
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|iops
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|mbps
 argument_list|)
 expr_stmt|;
@@ -212,10 +225,13 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t%3d: %8d IO/s\n"
+literal|"\t%3d: %8ju IO/s\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|io_test
 operator|->
 name|io_completed
