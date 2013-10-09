@@ -5013,7 +5013,15 @@ name|cpi
 operator|->
 name|initiator_id
 operator|=
-literal|255
+name|sassc
+operator|->
+name|sc
+operator|->
+name|facts
+operator|->
+name|MaxTargets
+operator|-
+literal|1
 expr_stmt|;
 name|strncpy
 argument_list|(
