@@ -204,11 +204,7 @@ name|links
 expr_stmt|;
 name|struct
 name|cam_ed_qinfo
-name|alloc_ccb_entry
-decl_stmt|;
-name|struct
-name|cam_ed_qinfo
-name|send_ccb_entry
+name|devq_entry
 decl_stmt|;
 name|struct
 name|cam_et

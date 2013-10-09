@@ -2044,9 +2044,6 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
-index|[
-literal|0
-index|]
 operator|--
 expr_stmt|;
 name|softc
@@ -5329,9 +5326,6 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
-index|[
-literal|0
-index|]
 operator|>
 literal|0
 condition|)
@@ -5342,9 +5336,6 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
-index|[
-literal|0
-index|]
 operator|--
 expr_stmt|;
 name|changer
@@ -5503,9 +5494,6 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
-index|[
-literal|0
-index|]
 operator|++
 expr_stmt|;
 name|softc
