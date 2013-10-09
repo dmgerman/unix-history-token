@@ -1327,14 +1327,14 @@ operator|->
 name|bhs_opcode
 argument_list|)
 expr_stmt|;
-name|cfiscsi_session_terminate
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -2354,14 +2354,14 @@ literal|"unsolicited data with "
 literal|"ImmediateData=No; dropping connection"
 argument_list|)
 expr_stmt|;
-name|cfiscsi_session_terminate
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2392,12 +2392,18 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"can't allocate ctl_io"
+literal|"can't allocate ctl_io; "
+literal|"dropping connection"
 argument_list|)
 expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2672,7 +2678,8 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"ctl_queue() failed; error %d"
+literal|"ctl_queue() failed; error %d; "
+literal|"dropping connection"
 argument_list|,
 name|error
 argument_list|)
@@ -2693,6 +2700,11 @@ expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -2782,12 +2794,18 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"can't allocate ctl_io"
+literal|"can't allocate ctl_io;"
+literal|"dropping connection"
 argument_list|)
 expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3016,9 +3034,22 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; "
+literal|"dropping connection"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3098,7 +3129,8 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"ctl_queue() failed; error %d"
+literal|"ctl_queue() failed; error %d; "
+literal|"dropping connection"
 argument_list|,
 name|error
 argument_list|)
@@ -3119,6 +3151,11 @@ expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -3872,7 +3909,7 @@ argument_list|(
 name|cs
 argument_list|,
 literal|"data transfer tag 0x%x, initiator task tag "
-literal|"0x%x, not found"
+literal|"0x%x, not found; dropping connection"
 argument_list|,
 name|bhsdo
 operator|->
@@ -4061,6 +4098,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_DEBUG
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
@@ -4145,6 +4189,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
@@ -4398,7 +4449,7 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"failed to allocate PDU"
+literal|"failed to allocate memory"
 argument_list|)
 expr_stmt|;
 return|return;
