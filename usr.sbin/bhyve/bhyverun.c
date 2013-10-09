@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libgen.h>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<pthread_np.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -2197,18 +2209,28 @@ break|break;
 case|case
 literal|'m'
 case|:
-name|memsize
+name|error
 operator|=
-name|strtoul
+name|vm_parse_memsize
 argument_list|(
 name|optarg
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
+operator|&
+name|memsize
 argument_list|)
-operator|*
-name|MB
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid memsize '%s'"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
