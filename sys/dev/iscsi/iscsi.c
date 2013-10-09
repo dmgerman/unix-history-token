@@ -4210,12 +4210,9 @@ name|csio
 expr_stmt|;
 if|if
 condition|(
-name|ntohl
-argument_list|(
-name|bhsdi
+name|io
 operator|->
-name|bhsdi_buffer_offset
-argument_list|)
+name|io_received
 operator|+
 name|data_segment_len
 operator|>
@@ -4229,16 +4226,13 @@ argument_list|(
 name|is
 argument_list|,
 literal|"oversize data segment (%zd bytes "
-literal|"at offset %d, buffer is %d)"
+literal|"at offset %zd, buffer is %d)"
 argument_list|,
 name|data_segment_len
 argument_list|,
-name|ntohl
-argument_list|(
-name|bhsdi
+name|io
 operator|->
-name|bhsdi_buffer_offset
-argument_list|)
+name|io_received
 argument_list|,
 name|csio
 operator|->
@@ -4267,12 +4261,9 @@ name|csio
 operator|->
 name|data_ptr
 operator|+
-name|ntohl
-argument_list|(
-name|bhsdi
+name|io
 operator|->
-name|bhsdi_buffer_offset
-argument_list|)
+name|io_received
 argument_list|,
 name|data_segment_len
 argument_list|)
@@ -4596,6 +4587,41 @@ operator|->
 name|bhsr2t_buffer_offset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|off
+operator|>
+name|csio
+operator|->
+name|dxfer_len
+condition|)
+block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"target requested invalid offset "
+literal|"%zd, buffer is is %d; reconnecting"
+argument_list|,
+name|off
+argument_list|,
+name|csio
+operator|->
+name|dxfer_len
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+name|iscsi_session_reconnect
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|total_len
 operator|=
 name|ntohl
@@ -4605,6 +4631,45 @@ operator|->
 name|bhsr2t_desired_data_transfer_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|total_len
+operator|==
+literal|0
+operator|||
+name|total_len
+operator|>
+name|csio
+operator|->
+name|dxfer_len
+condition|)
+block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"target requested invalid length "
+literal|"%zd, buffer is %d; reconnecting"
+argument_list|,
+name|total_len
+argument_list|,
+name|csio
+operator|->
+name|dxfer_len
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+name|iscsi_session_reconnect
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|//ISCSI_SESSION_DEBUG(is, "r2t; off %zd, len %zd", off, total_len);
 for|for
 control|(
@@ -4645,7 +4710,8 @@ name|ISCSI_SESSION_WARN
 argument_list|(
 name|is
 argument_list|,
-literal|"bad off %zd, len %d"
+literal|"target requested invalid "
+literal|"length/offset %zd, buffer is %d; reconnecting"
 argument_list|,
 name|off
 operator|+
@@ -4784,6 +4850,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"failed to allocate memory; "
+literal|"reconnecting"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
