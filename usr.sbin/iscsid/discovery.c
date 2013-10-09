@@ -975,6 +975,11 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+name|pdu_delete
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
 name|request
 operator|=
 name|NULL
