@@ -8490,6 +8490,12 @@ name|vp
 operator|!=
 name|NULL
 operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
+operator|&&
 operator|(
 name|td
 operator|->

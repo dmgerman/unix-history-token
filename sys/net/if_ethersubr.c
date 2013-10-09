@@ -2630,6 +2630,17 @@ operator|~
 name|M_HASFCS
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_HWSTATS
+operator|)
+condition|)
 name|ifp
 operator|->
 name|if_ibytes

@@ -2241,6 +2241,10 @@ operator|->
 name|ic_max_data_segment_length
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 block|}
 name|ic
