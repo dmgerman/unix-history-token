@@ -2016,10 +2016,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXX KDM run this inside a thread, or inside the caller's context?  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2151,7 +2147,6 @@ operator|*
 name|ext_sglist
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX KDM GFP_KERNEL, don't know what the caller's context 		 * is.  Need to figure that out. 		 */
 name|ext_sglist
 operator|=
 operator|(
@@ -2168,26 +2163,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ext_sglist
-operator|==
-name|NULL
-condition|)
-block|{
-name|ctl_set_internal_failure
-argument_list|(
-name|ctsio
-argument_list|,
-comment|/*sks_valid*/
-literal|0
-argument_list|,
-comment|/*retry_count*/
-literal|0
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|ext_sglist_malloced
 operator|=
 literal|1
