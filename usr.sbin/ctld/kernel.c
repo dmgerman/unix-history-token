@@ -471,7 +471,7 @@ operator|)
 name|devlist
 operator|->
 name|level
-operator|>
+operator|>=
 operator|(
 sizeof|sizeof
 argument_list|(
