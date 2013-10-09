@@ -14071,7 +14071,7 @@ name|sc
 argument_list|,
 name|MPS_ERROR
 argument_list|,
-literal|"comand alloc failure in mpssas_action_resetdev\n"
+literal|"command alloc failure in mpssas_action_resetdev\n"
 argument_list|)
 expr_stmt|;
 name|ccb
