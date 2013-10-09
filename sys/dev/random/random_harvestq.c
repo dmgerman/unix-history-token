@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_random.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -236,12 +242,8 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NOTYET
+name|RANDOM_RWFILE
 end_ifdef
-
-begin_comment
-comment|/* This is full of policy stuff, needs further discussion */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -259,6 +261,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Deal with entropy cached externally if this is present.  * Lots of policy may eventually arrive in this function.  * Called after / is mounted.  */
 end_comment
@@ -274,6 +281,21 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
+name|uint8_t
+modifier|*
+name|keyfile
+decl_stmt|,
+modifier|*
+name|data
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|,
+name|i
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RANDOM_RWFILE
 specifier|const
 name|char
 modifier|*
@@ -282,22 +304,13 @@ name|entropy_file
 decl_stmt|;
 name|uint8_t
 modifier|*
-name|keyfile
-decl_stmt|,
-modifier|*
-name|data
-decl_stmt|,
-modifier|*
 name|zbuf
-decl_stmt|;
-name|size_t
-name|size
-decl_stmt|,
-name|i
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Get stuff that may have been preloaded by loader(8) */
 name|keyfile
 operator|=
@@ -390,6 +403,9 @@ literal|"random: no preloaded entropy cache available\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RANDOM_RWFILE
 comment|/* Read and attempt to overwrite the entropy cache files. 	 * If the file exists, can be read and then overwritten, 	 * then use it. Ignore it otherwise, but print out what is 	 * going on. 	 */
 name|data
 operator|=
@@ -550,6 +566,8 @@ argument_list|,
 name|M_ENTROPY
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -566,15 +584,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NOTYET */
-end_comment
 
 begin_function
 specifier|static

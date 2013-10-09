@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_random.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDOM_RWFILE
+end_ifdef
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -402,6 +414,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

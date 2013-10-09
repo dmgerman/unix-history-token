@@ -15,6 +15,12 @@ directive|define
 name|SYS_DEV_RANDOM_RWFILE_H_INCLUDED
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDOM_RWFILE
+end_ifdef
+
 begin_function_decl
 name|int
 name|randomdev_read_file
@@ -50,6 +56,11 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

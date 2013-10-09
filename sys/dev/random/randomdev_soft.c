@@ -15,20 +15,20 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|YARROW_RNG
+name|RANDOM_YARROW
 end_define
 
 begin_elif
@@ -36,19 +36,19 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_elif
 
 begin_error
 error|#
 directive|error
-literal|"Must define either YARROW_RNG or FORTUNA_RNG"
+literal|"Must define either RANDOM_YARROW or RANDOM_FORTUNA"
 end_error
 
 begin_endif
@@ -61,7 +61,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
@@ -215,7 +215,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 end_if
 
@@ -235,7 +235,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
@@ -292,7 +292,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 end_if
 
@@ -372,7 +372,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 end_if
 
@@ -558,7 +558,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 name|random_yarrow_init_alg
 argument_list|(
@@ -572,7 +572,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 name|random_fortuna_init_alg
 argument_list|(
@@ -843,7 +843,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 name|random_yarrow_deinit_alg
 argument_list|()
@@ -854,7 +854,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 name|random_fortuna_deinit_alg
 argument_list|()
@@ -1114,7 +1114,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|YARROW_RNG
+name|RANDOM_YARROW
 argument_list|)
 comment|/* This ultimately calls randomdev_unblock() */
 name|random_yarrow_reseed
@@ -1126,7 +1126,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|FORTUNA_RNG
+name|RANDOM_FORTUNA
 argument_list|)
 comment|/* This ultimately calls randomdev_unblock() */
 name|random_fortuna_reseed
