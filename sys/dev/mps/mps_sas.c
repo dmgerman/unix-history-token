@@ -2025,6 +2025,22 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* No need to be in here if debugging isn't enabled */
+if|if
+condition|(
+operator|(
+name|cm
+operator|->
+name|cm_sc
+operator|->
+name|mps_debug
+operator|&
+name|level
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|sbuf_new
 argument_list|(
 operator|&
