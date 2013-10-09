@@ -98,14 +98,6 @@ name|s3c2410_pclk
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|uart_s3c2410_class
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|uart_cpu_eqres

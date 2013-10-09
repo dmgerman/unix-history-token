@@ -6647,6 +6647,11 @@ modifier|*
 name|inc
 decl_stmt|;
 name|struct
+name|mbuf
+modifier|*
+name|mfree
+decl_stmt|;
+name|struct
 name|tcpopt
 name|to
 decl_stmt|;
@@ -11188,7 +11193,9 @@ name|so_snd
 operator|.
 name|sb_cc
 expr_stmt|;
-name|sbdrop_locked
+name|mfree
+operator|=
+name|sbcut_locked
 argument_list|(
 operator|&
 name|so
@@ -11212,7 +11219,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sbdrop_locked
+name|mfree
+operator|=
+name|sbcut_locked
 argument_list|(
 operator|&
 name|so
@@ -11237,6 +11246,11 @@ comment|/* NB: sowwakeup_locked() does an implicit unlock. */
 name|sowwakeup_locked
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|mfree
 argument_list|)
 expr_stmt|;
 comment|/* Detect una wraparound. */

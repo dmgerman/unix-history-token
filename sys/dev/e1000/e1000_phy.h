@@ -1202,6 +1202,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|s32
+name|e1000_read_phy_reg_mphy
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|address
+parameter_list|,
+name|u32
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_write_phy_reg_mphy
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|address
+parameter_list|,
+name|u32
+name|data
+parameter_list|,
+name|bool
+name|line_override
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|e1000_is_mphy_ready
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1534,7 +1586,7 @@ value|(3<< 10)
 end_define
 
 begin_comment
-comment|/* auto downshift 100/10 */
+comment|/* auto downshift */
 end_comment
 
 begin_define
@@ -1704,6 +1756,61 @@ end_define
 
 begin_comment
 comment|/* Go Link Disconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_DIS_ACCESS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* disable_access bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_ENA_ACCESS
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* enable_access bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_BUSY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* busy bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_ADDRESS_FNC_OVERRIDE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* fnc_override bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_ADDRESS_MASK
+value|0x0000FFFF
+end_define
+
+begin_comment
+comment|/* address mask */
 end_comment
 
 begin_comment
@@ -1967,7 +2074,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* Course - 15:13, Fine - 12:9 */
+comment|/* Course=15:13, Fine=12:9 */
 end_comment
 
 begin_define
@@ -2122,7 +2229,7 @@ value|0x11
 end_define
 
 begin_comment
-comment|/* 100BaseTx PHY Special Control */
+comment|/* 100BaseTx PHY Special Ctrl */
 end_comment
 
 begin_define
@@ -2133,7 +2240,7 @@ value|0x1B
 end_define
 
 begin_comment
-comment|/* PHY Special and LED Control */
+comment|/* PHY Special and LED Ctrl */
 end_comment
 
 begin_define

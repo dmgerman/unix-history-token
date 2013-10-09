@@ -573,7 +573,7 @@ name|l
 index|]
 decl_stmt|;
 name|struct
-name|igb_tx_buffer
+name|igb_tx_buf
 modifier|*
 name|txbuf
 init|=

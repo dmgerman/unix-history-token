@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -191,6 +191,17 @@ value|e1000_ms_hw_default
 end_define
 
 begin_comment
+comment|/* Support AutoMediaDetect for Marvell M88 PHY in i354 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_MEDIA_RESET
+value|(1<< 0)
+end_define
+
+begin_comment
 comment|/*  * Micellaneous constants  */
 end_comment
 
@@ -240,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|IGB_RX_PTHRESH
-value|(hw->mac.type<= e1000_82576 ? 16 : 8)
+value|((hw->mac.type == e1000_i354) ? 12 : \ 					  ((hw->mac.type<= e1000_82576) ? 16 : 8))
 end_define
 
 begin_define
@@ -254,14 +265,14 @@ begin_define
 define|#
 directive|define
 name|IGB_RX_WTHRESH
-value|1
+value|((hw->mac.type == e1000_82576&& \ 					  adapter->msix_mem) ? 1 : 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGB_TX_PTHRESH
-value|8
+value|((hw->mac.type == e1000_i354) ? 20 : 8)
 end_define
 
 begin_define
@@ -329,38 +340,6 @@ define|#
 directive|define
 name|IGB_QUEUE_THRESHOLD
 value|(adapter->num_tx_desc / 8)
-end_define
-
-begin_comment
-comment|/* Queue bit defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_IDLE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_WORKING
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_HUNG
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_DEPLETED
-value|8
 end_define
 
 begin_comment
@@ -575,6 +554,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IGB_TXPBSIZE
+value|20408
+end_define
+
+begin_define
+define|#
+directive|define
 name|IGB_HDR_BUF
 value|128
 end_define
@@ -585,6 +571,17 @@ directive|define
 name|IGB_PKTTYPE_MASK
 value|0x0000FFF0
 end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_DMCTLX_DCFLUSH_DIS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Disable DMA Coalesce Flush */
+end_comment
 
 begin_define
 define|#
@@ -659,6 +656,13 @@ define|#
 directive|define
 name|IGB_LINK_ITR
 value|2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|I210_LINK_DELAY
+value|1000
 end_define
 
 begin_comment
@@ -780,7 +784,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Transmit ring: one per queue  */
+comment|/*  * The transmit ring, one per queue  */
 end_comment
 
 begin_struct
@@ -792,42 +796,77 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-name|u32
-name|me
-decl_stmt|;
 name|struct
 name|mtx
 name|tx_mtx
+decl_stmt|;
+name|u32
+name|me
+decl_stmt|;
+name|int
+name|watchdog_time
+decl_stmt|;
+name|union
+name|e1000_adv_tx_desc
+modifier|*
+name|tx_base
+decl_stmt|;
+name|struct
+name|igb_tx_buf
+modifier|*
+name|tx_buffers
+decl_stmt|;
+name|struct
+name|igb_dma_alloc
+name|txdma
+decl_stmt|;
+specifier|volatile
+name|u16
+name|tx_avail
+decl_stmt|;
+name|u16
+name|next_avail_desc
+decl_stmt|;
+name|u16
+name|next_to_clean
+decl_stmt|;
+name|u16
+name|process_limit
+decl_stmt|;
+name|u16
+name|num_desc
+decl_stmt|;
+enum|enum
+block|{
+name|IGB_QUEUE_IDLE
+init|=
+literal|1
+block|,
+name|IGB_QUEUE_WORKING
+init|=
+literal|2
+block|,
+name|IGB_QUEUE_HUNG
+init|=
+literal|4
+block|,
+name|IGB_QUEUE_DEPLETED
+init|=
+literal|8
+block|, 	}
+name|queue_status
+enum|;
+name|u32
+name|txd_cmd
+decl_stmt|;
+name|bus_dma_tag_t
+name|txtag
 decl_stmt|;
 name|char
 name|mtx_name
 index|[
 literal|16
 index|]
-decl_stmt|;
-name|struct
-name|igb_dma_alloc
-name|txdma
-decl_stmt|;
-name|struct
-name|e1000_tx_desc
-modifier|*
-name|tx_base
-decl_stmt|;
-name|u32
-name|next_avail_desc
-decl_stmt|;
-name|u32
-name|next_to_clean
-decl_stmt|;
-specifier|volatile
-name|u16
-name|tx_avail
-decl_stmt|;
-name|struct
-name|igb_tx_buffer
-modifier|*
-name|tx_buffers
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -843,32 +882,31 @@ name|txq_task
 decl_stmt|;
 endif|#
 directive|endif
-name|bus_dma_tag_t
-name|txtag
-decl_stmt|;
 name|u32
 name|bytes
 decl_stmt|;
+comment|/* used for AIM */
 name|u32
 name|packets
 decl_stmt|;
-name|int
-name|queue_status
+comment|/* Soft Stats */
+name|unsigned
+name|long
+name|tso_tx
 decl_stmt|;
-name|int
-name|watchdog_time
+name|unsigned
+name|long
+name|no_tx_map_avail
 decl_stmt|;
-name|int
-name|tdt
-decl_stmt|;
-name|int
-name|tdh
+name|unsigned
+name|long
+name|no_tx_dma_setup
 decl_stmt|;
 name|u64
 name|no_desc_avail
 decl_stmt|;
 name|u64
-name|tx_packets
+name|total_packets
 decl_stmt|;
 block|}
 struct|;
@@ -1018,30 +1056,18 @@ name|resource
 modifier|*
 name|msix_mem
 decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res
+name|int
+name|memrid
 decl_stmt|;
+comment|/* 	 * Interrupt resources: this set is 	 * either used for legacy, or for Link 	 * when doing MSIX 	 */
 name|void
 modifier|*
 name|tag
 decl_stmt|;
-name|u32
-name|que_mask
-decl_stmt|;
-name|int
-name|linkvec
-decl_stmt|;
-name|int
-name|link_mask
-decl_stmt|;
 name|struct
-name|task
-name|link_task
-decl_stmt|;
-name|int
-name|link_irq
+name|resource
+modifier|*
+name|res
 decl_stmt|;
 name|struct
 name|ifmedia
@@ -1054,15 +1080,8 @@ decl_stmt|;
 name|int
 name|msix
 decl_stmt|;
-comment|/* total vectors allocated */
 name|int
 name|if_flags
-decl_stmt|;
-name|int
-name|max_frame_size
-decl_stmt|;
-name|int
-name|min_frame_size
 decl_stmt|;
 name|int
 name|pause_frames
@@ -1071,31 +1090,17 @@ name|struct
 name|mtx
 name|core_mtx
 decl_stmt|;
-name|int
-name|igb_insert_vlan_header
-decl_stmt|;
-name|u16
-name|num_queues
-decl_stmt|;
-name|u16
-name|vf_ifp
-decl_stmt|;
-comment|/* a VF interface */
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
 decl_stmt|;
-name|u32
+name|u16
 name|num_vlans
 decl_stmt|;
-comment|/* Management and WOL features */
-name|int
-name|wol
-decl_stmt|;
-name|int
-name|has_manage
+name|u16
+name|num_queues
 decl_stmt|;
 comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
 name|u32
@@ -1105,67 +1110,107 @@ name|IGB_VFTA_SIZE
 index|]
 decl_stmt|;
 comment|/* Info about the interface */
-name|u16
+name|u32
+name|optics
+decl_stmt|;
+name|u32
+name|fc
+decl_stmt|;
+comment|/* local flow ctrl setting */
+name|int
+name|advertise
+decl_stmt|;
+comment|/* link speeds */
+name|bool
 name|link_active
 decl_stmt|;
 name|u16
-name|fc
+name|max_frame_size
+decl_stmt|;
+name|u16
+name|num_segs
 decl_stmt|;
 name|u16
 name|link_speed
+decl_stmt|;
+name|bool
+name|link_up
+decl_stmt|;
+name|u32
+name|linkvec
 decl_stmt|;
 name|u16
 name|link_duplex
 decl_stmt|;
 name|u32
-name|smartspeed
-decl_stmt|;
-name|u32
 name|dmac
 decl_stmt|;
 name|int
-name|enable_aim
+name|link_mask
 decl_stmt|;
-comment|/* Interface queues */
+comment|/* Flags */
+name|u32
+name|flags
+decl_stmt|;
+comment|/* Mbuf cluster size */
+name|u32
+name|rx_mbuf_sz
+decl_stmt|;
+comment|/* Support for pluggable optics */
+name|bool
+name|sfp_probe
+decl_stmt|;
+name|struct
+name|task
+name|link_task
+decl_stmt|;
+comment|/* Link tasklet */
+name|struct
+name|task
+name|mod_task
+decl_stmt|;
+comment|/* SFP tasklet */
+name|struct
+name|task
+name|msf_task
+decl_stmt|;
+comment|/* Multispeed Fiber */
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+comment|/* 	** Queues:  	**   This is the irq holder, it has 	**   and RX/TX pair or rings associated 	**   with it. 	*/
 name|struct
 name|igb_queue
 modifier|*
 name|queues
 decl_stmt|;
-comment|/* 	 * Transmit rings 	 */
+comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
 name|tx_ring
 modifier|*
 name|tx_rings
 decl_stmt|;
-name|u16
+name|u32
 name|num_tx_desc
 decl_stmt|;
-comment|/* Multicast array pointer */
-name|u8
-modifier|*
-name|mta
-decl_stmt|;
-comment|/*  	 * Receive rings 	 */
+comment|/* 	 * Receive rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
 name|rx_ring
 modifier|*
 name|rx_rings
 decl_stmt|;
-name|bool
-name|rx_hdr_split
+name|u64
+name|que_mask
 decl_stmt|;
-name|u16
+name|u32
 name|num_rx_desc
 decl_stmt|;
-name|int
-name|rx_process_limit
-decl_stmt|;
-name|u32
-name|rx_mbuf_sz
-decl_stmt|;
-name|u32
-name|rx_mask
+comment|/* Multicast array memory */
+name|u8
+modifier|*
+name|mta
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
@@ -1186,15 +1231,15 @@ name|mbuf_packet_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|no_tx_map_avail
-decl_stmt|;
-name|unsigned
-name|long
 name|no_tx_dma_setup
 decl_stmt|;
 name|unsigned
 name|long
 name|watchdog_events
+decl_stmt|;
+name|unsigned
+name|long
+name|link_irq
 decl_stmt|;
 name|unsigned
 name|long
@@ -1224,35 +1269,31 @@ name|unsigned
 name|long
 name|packet_buf_alloc_tx
 decl_stmt|;
-name|boolean_t
-name|in_detach
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IGB_IEEE1588
-comment|/* IEEE 1588 precision time support */
-name|struct
-name|cyclecounter
-name|cycles
-decl_stmt|;
-name|struct
-name|nettimer
-name|clock
-decl_stmt|;
-name|struct
-name|nettime_compare
-name|compare
-decl_stmt|;
-name|struct
-name|hwtstamp_ctrl
-name|hwtstamp
-decl_stmt|;
-endif|#
-directive|endif
+comment|/* Used in pf and vf */
 name|void
 modifier|*
 name|stats
 decl_stmt|;
+name|int
+name|enable_aim
+decl_stmt|;
+name|int
+name|has_manage
+decl_stmt|;
+name|int
+name|wol
+decl_stmt|;
+name|int
+name|rx_process_limit
+decl_stmt|;
+name|u16
+name|vf_ifp
+decl_stmt|;
+comment|/* a VF interface */
+name|bool
+name|in_detach
+decl_stmt|;
+comment|/* Used only in igb_ioctl */
 block|}
 struct|;
 end_struct
@@ -1293,12 +1334,13 @@ end_typedef
 
 begin_struct
 struct|struct
-name|igb_tx_buffer
+name|igb_tx_buf
 block|{
-name|int
-name|next_eop
+name|union
+name|e1000_adv_tx_desc
+modifier|*
+name|eop
 decl_stmt|;
-comment|/* Index of the desc to watch */
 name|struct
 name|mbuf
 modifier|*
@@ -1307,7 +1349,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
-comment|/* bus_dma map for packet */
 block|}
 struct|;
 end_struct

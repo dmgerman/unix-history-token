@@ -3732,7 +3732,6 @@ name|entry
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|&
 name|entry
 argument_list|)
 argument_list|)
@@ -16383,7 +16382,7 @@ operator|)
 name|islist
 operator|->
 name|level
-operator|>
+operator|>=
 operator|(
 sizeof|sizeof
 argument_list|(
@@ -18626,7 +18625,7 @@ operator|)
 name|devlist
 operator|->
 name|level
-operator|>
+operator|>=
 operator|(
 sizeof|sizeof
 argument_list|(
