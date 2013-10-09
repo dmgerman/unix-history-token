@@ -233,6 +233,16 @@ name|random_kthread_proc
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
+begin_comment
+comment|/* This is full of policy stuff, needs further discussion */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -248,16 +258,6 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTYET
-end_ifdef
-
-begin_comment
-comment|/* This is full of policy stuff, needs further discussion */
-end_comment
 
 begin_comment
 comment|/* Deal with entropy cached externally if this is present.  * Lots of policy may eventually arrive in this function.  * Called after / is mounted.  */
