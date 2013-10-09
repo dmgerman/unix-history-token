@@ -190,6 +190,10 @@ define|#
 directive|define
 name|CAM_DONEQ_INDEX
 value|-3
+define|#
+directive|define
+name|CAM_EXTRAQ_INDEX
+value|INT_MAX
 block|}
 name|cam_pinfo
 typedef|;
