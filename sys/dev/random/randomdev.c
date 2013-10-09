@@ -681,6 +681,14 @@ argument_list|,
 literal|"random"
 argument_list|)
 expr_stmt|;
+name|make_dev_alias
+argument_list|(
+name|random_dev
+argument_list|,
+literal|"urandom"
+argument_list|)
+expr_stmt|;
+comment|/* compatibility */
 comment|/* mark random(4) as initialized, to avoid being called again */
 name|random_inited
 operator|=
