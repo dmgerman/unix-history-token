@@ -1134,7 +1134,7 @@ literal|0
 block|if (expstatsn != cs->cs_statsn) { 		CFISCSI_SESSION_DEBUG(cs, "received PDU with ExpStatSN %d, " 		    "while current StatSN is %d", expstatsn, 		    cs->cs_statsn); 	}
 endif|#
 directive|endif
-comment|/* 	 * The target MUST silently ignore any non-immediate command outside 	 * of this range. 	 * 	 * XXX:	... or non-immediate duplicates within the range. 	 */
+comment|/* 	 * The target MUST silently ignore any non-immediate command outside 	 * of this range. 	 */
 if|if
 condition|(
 name|cmdsn
@@ -3366,12 +3366,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (ctl_sg_count> 1) 		CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -11034,12 +11028,6 @@ name|scsiio
 operator|.
 name|kern_total_len
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (ctl_sg_count> 1) 		CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
-endif|#
-directive|endif
 comment|/* 	 * This is the offset within the current SCSI command; 	 * i.e. for the first call of datamove(), it will be 0, 	 * and for subsequent ones it will be the sum of lengths 	 * of previous ones. 	 */
 name|off
 operator|=
@@ -11050,21 +11038,6 @@ operator|->
 name|scsiio
 operator|.
 name|kern_rel_offset
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|off
-operator|>
-literal|1
-condition|)
-name|CFISCSI_SESSION_DEBUG
-argument_list|(
-name|cs
-argument_list|,
-literal|"off = %zd"
-argument_list|,
-name|off
 argument_list|)
 expr_stmt|;
 name|i
@@ -11491,28 +11464,12 @@ name|bhsdi_flags
 operator||=
 name|BHSDI_FLAGS_F
 expr_stmt|;
-block|}
-else|else
-block|{
-name|CFISCSI_SESSION_DEBUG
-argument_list|(
-name|cs
-argument_list|,
-literal|"not setting the F flag; "
-literal|"have %zd, need %zd"
-argument_list|,
-name|off
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|io
-operator|->
-name|scsiio
-operator|.
-name|kern_total_len
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|} else { 			CFISCSI_SESSION_DEBUG(cs, "not setting the F flag; " 			    "have %zd, need %zd", off, 			    (size_t)io->scsiio.kern_total_len);
+endif|#
+directive|endif
 block|}
 name|KASSERT
 argument_list|(
