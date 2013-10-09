@@ -6100,7 +6100,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		 * The connecter's (client's) credentials are copied from its 		 * process structure at the time of connect() (which is now). 		 */
+comment|/* 		 * The connector's (client's) credentials are copied from its 		 * process structure at the time of connect() (which is now). 		 */
 name|cru2x
 argument_list|(
 name|td

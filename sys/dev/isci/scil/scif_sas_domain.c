@@ -1683,7 +1683,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|// Cycle through the fast list of IO requests.  Terminate each
-comment|// oustanding requests that matches the criteria supplied by the
+comment|// outstanding requests that matches the criteria supplied by the
 comment|// caller.
 while|while
 condition|(
@@ -3179,7 +3179,7 @@ name|SCIC_TRANSPORT_PROTOCOL
 name|protocol
 decl_stmt|;
 comment|// Cycle through the fast list of IO requests.  Terminate each
-comment|// oustanding requests that matches the criteria supplied by the
+comment|// outstanding requests that matches the criteria supplied by the
 comment|// caller.
 while|while
 condition|(

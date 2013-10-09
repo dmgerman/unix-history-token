@@ -4313,8 +4313,8 @@ else|else
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR18xx: illigal value for param1(%d) at "
-literal|"connect/disconect event, host=%d\n"
+literal|"RR18xx: illegal value for param1(%d) at "
+literal|"connect/disconnect event, host=%d\n"
 argument_list|,
 name|param1
 argument_list|,
@@ -4727,7 +4727,7 @@ condition|)
 block|{
 name|MV_ERROR
 argument_list|(
-literal|"RR18xx[%d]: Error in Response Quueues Alignment\n"
+literal|"RR18xx[%d]: Error in Response Queues Alignment\n"
 argument_list|,
 name|pAdapter
 operator|->

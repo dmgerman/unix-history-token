@@ -3596,7 +3596,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Map the new eq to handle all asyncronous events */
+comment|/* Map the new eq to handle all asynchronous events */
 name|err
 operator|=
 name|mlx4_MAP_EQ

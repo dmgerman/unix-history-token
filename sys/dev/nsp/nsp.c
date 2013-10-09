@@ -264,7 +264,7 @@ comment|/***************************************************  * USER SETTINGS  *
 end_comment
 
 begin_comment
-comment|/* DEVICE CONFIGURATION FLAGS (MINOR)  *  * 0x01   DISCONECT OFF  * 0x02   PARITY LINE OFF  * 0x04   IDENTIFY MSG OFF ( = single lun)  * 0x08   SYNC TRANSFER OFF  */
+comment|/* DEVICE CONFIGURATION FLAGS (MINOR)  *  * 0x01   DISCONNECT OFF  * 0x02   PARITY LINE OFF  * 0x04   IDENTIFY MSG OFF ( = single lun)  * 0x08   SYNC TRANSFER OFF  */
 end_comment
 
 begin_comment

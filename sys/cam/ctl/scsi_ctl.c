@@ -8775,7 +8775,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"%ju CCBs oustanding (%ju allocated, %ju "
+literal|"%ju CCBs outstanding (%ju allocated, %ju "
 literal|"freed)\n"
 argument_list|,
 call|(
