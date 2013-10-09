@@ -629,6 +629,8 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|isa
+operator|.
+name|isa_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
