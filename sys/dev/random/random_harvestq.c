@@ -380,7 +380,7 @@ literal|"random: no preloaded entropy cache available\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Read and attempt to overwrite the entropy cache files. 	 * If the file exists, can be read and then overwritten,i 	 * then use it. Ignore it otherwise, but print out what is 	 * going on. 	 */
+comment|/* Read and attempt to overwrite the entropy cache files. 	 * If the file exists, can be read and then overwritten, 	 * then use it. Ignore it otherwise, but print out what is 	 * going on. 	 */
 name|data
 operator|=
 name|malloc
