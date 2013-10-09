@@ -2916,6 +2916,29 @@ directive|define
 name|ITLBNOPFIX
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_MIPS74KC
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HAZARD_DELAY
+value|sll $0,$0,3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITLBNOPFIX
+value|sll $0,$0,3
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2925,14 +2948,14 @@ begin_define
 define|#
 directive|define
 name|ITLBNOPFIX
-value|nop;nop;nop;nop;nop;nop;nop;nop;nop;nop;
+value|nop;nop;nop;nop;nop;nop;nop;nop;nop;sll $0,$0,3;
 end_define
 
 begin_define
 define|#
 directive|define
 name|HAZARD_DELAY
-value|nop;nop;nop;nop;nop;
+value|nop;nop;nop;nop;sll $0,$0,3;
 end_define
 
 begin_endif
