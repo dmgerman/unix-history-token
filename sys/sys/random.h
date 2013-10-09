@@ -79,6 +79,8 @@ name|RANDOM_PURE_RDRAND
 block|,
 name|RANDOM_PURE_NEHEMIAH
 block|,
+name|RANDOM_PURE_RNDTEST
+block|,
 name|ENTROPYSOURCE
 block|}
 enum|;
