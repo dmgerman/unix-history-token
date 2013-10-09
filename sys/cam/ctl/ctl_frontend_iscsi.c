@@ -3161,6 +3161,8 @@ decl_stmt|;
 name|size_t
 name|copy_len
 decl_stmt|,
+name|len
+decl_stmt|,
 name|off
 decl_stmt|,
 name|buffer_offset
@@ -3404,10 +3406,19 @@ name|true
 operator|)
 return|;
 block|}
+comment|/* 	 * This is the offset within the PDU data segment, as opposed 	 * to buffer_offset, which is the offset within the task (SCSI 	 * command). 	 */
 name|off
 operator|=
 literal|0
 expr_stmt|;
+name|len
+operator|=
+name|icl_pdu_data_segment_length
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Iterate over the scatter/gather segments, filling them with data 	 * from the PDU data segment.  Note that this can get called multiple 	 * times for one SCSI command; the cdw structure holds state for the 	 * scatter/gather list. 	 */
 for|for
 control|(
 init|;
@@ -3463,12 +3474,20 @@ operator|.
 name|len
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|off
+operator|<=
+name|len
+argument_list|,
+operator|(
+literal|"len> off"
+operator|)
+argument_list|)
+expr_stmt|;
 name|copy_len
 operator|=
-name|icl_pdu_data_segment_length
-argument_list|(
-name|request
-argument_list|)
+name|len
 operator|-
 name|off
 expr_stmt|;
@@ -3532,6 +3551,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * End of current segment. 			 */
 if|if
 condition|(
 name|cdw
@@ -3542,7 +3562,10 @@ name|ctl_sg_count
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* 				 * Last segment in scatter/gather list. 				 */
 break|break;
+block|}
 name|cdw
 operator|->
 name|cdw_sg_index
@@ -3553,21 +3576,18 @@ if|if
 condition|(
 name|off
 operator|==
-name|icl_pdu_data_segment_length
-argument_list|(
-name|request
-argument_list|)
+name|len
 condition|)
+block|{
+comment|/* 			 * End of PDU payload. 			 */
 break|break;
+block|}
 block|}
 if|if
 condition|(
+name|len
+operator|>
 name|off
-operator|<
-name|icl_pdu_data_segment_length
-argument_list|(
-name|request
-argument_list|)
 condition|)
 block|{
 name|CFISCSI_SESSION_WARN
@@ -11327,7 +11347,7 @@ operator|->
 name|cs_max_data_segment_length
 condition|)
 block|{
-comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0  instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
+comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0 instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
 if|if
 condition|(
 name|off
