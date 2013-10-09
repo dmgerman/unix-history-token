@@ -11531,6 +11531,16 @@ name|m_pc
 operator|=
 name|NULL
 expr_stmt|;
+name|PG_G
+operator|=
+name|PG_A
+operator|=
+name|PG_M
+operator|=
+name|PG_RW
+operator|=
+literal|0
+expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
