@@ -2425,7 +2425,7 @@ condition|(
 operator|(
 name|cpu
 operator|=
-name|cpusetobj_ffs
+name|CPU_FFS
 argument_list|(
 operator|&
 name|cpus

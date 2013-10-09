@@ -254,6 +254,16 @@ parameter_list|)
 value|BIT_COPY_STORE_REL(CPU_SETSIZE, f, t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_FFS
+parameter_list|(
+name|p
+parameter_list|)
+value|BIT_FFS(CPU_SETSIZE, p)
+end_define
+
 begin_comment
 comment|/*  * Valid cpulevel_t values.  */
 end_comment
