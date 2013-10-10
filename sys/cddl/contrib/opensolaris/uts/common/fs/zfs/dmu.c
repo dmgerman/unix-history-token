@@ -3410,6 +3410,23 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+comment|/* 	 * It is important to zero out the maxblkid when freeing the entire 	 * file, so that (a) subsequent calls to dmu_free_long_range_impl() 	 * will take the fast path, and (b) dnode_reallocate() can verify 	 * that the entire file has been freed. 	 */
+if|if
+condition|(
+name|offset
+operator|==
+literal|0
+operator|&&
+name|length
+operator|==
+name|DMU_OBJECT_END
+condition|)
+name|dn
+operator|->
+name|dn_maxblkid
+operator|=
+literal|0
+expr_stmt|;
 name|dnode_rele
 argument_list|(
 name|dn
