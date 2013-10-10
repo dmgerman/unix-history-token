@@ -1254,13 +1254,7 @@ name|current_power_state_index
 operator|)
 condition|)
 return|return;
-name|DRM_LOCK
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
+comment|//DRM_LOCK(rdev->ddev); XXX Recursion, already locked in drm_attach/drm_load -- dumbbell@
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1350,13 +1344,7 @@ operator|.
 name|mclk_lock
 argument_list|)
 expr_stmt|;
-name|DRM_UNLOCK
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
+comment|//DRM_UNLOCK(rdev->ddev); XXX Recursion, already locked in drm_attach/drm_load -- dumbbell@
 return|return;
 block|}
 block|}
@@ -1544,13 +1532,7 @@ operator|.
 name|mclk_lock
 argument_list|)
 expr_stmt|;
-name|DRM_UNLOCK
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
+comment|//DRM_UNLOCK(rdev->ddev); XXX Recursion, already locked in drm_attach/drm_load -- dumbbell@
 block|}
 end_function
 
