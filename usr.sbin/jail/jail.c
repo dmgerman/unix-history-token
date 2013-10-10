@@ -2435,7 +2435,10 @@ operator||
 name|JF_WILD
 operator|)
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|verbose
 operator|>=
 literal|0
@@ -2449,6 +2452,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|failed
+argument_list|(
+name|j
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|jail_remove_done
 goto|;
