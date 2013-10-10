@@ -246,17 +246,46 @@ name|ecore_atomic_t
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bool_true_false_are_defined
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bool
+value|_Bool
+end_define
+
 begin_if
 if|#
 directive|if
-name|__FreeBSD_version
+name|__STDC_VERSION__
 operator|<
-literal|1000002
+literal|199901L
+operator|&&
+name|__GNUC__
+operator|<
+literal|3
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__INTEL_COMPILER
+argument_list|)
 end_if
 
 begin_typedef
 typedef|typedef
-name|int
+name|_Bool
 name|bool
 typedef|;
 end_typedef
@@ -265,6 +294,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__bool_true_false_are_defined$ */
+end_comment
 
 begin_define
 define|#
