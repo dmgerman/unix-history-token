@@ -222,8 +222,13 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
+modifier|*
 name|res
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+comment|/* size of 'res' array */
 name|int
 name|reg
 decl_stmt|;
