@@ -3959,6 +3959,12 @@ name|data
 expr_stmt|;
 name|len
 operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|mh
+argument_list|)
+operator|+
 name|mh
 operator|->
 name|blk_desc_len
@@ -3987,12 +3993,6 @@ operator|(
 name|intptr_t
 operator|)
 name|mh
-operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|mh
-argument_list|)
 operator|+
 name|len
 operator|)
