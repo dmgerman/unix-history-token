@@ -431,12 +431,6 @@ name|height
 operator|--
 control|)
 block|{
-name|line
-operator|+=
-name|VT_XBOX_WIDTH
-operator|*
-literal|4
-expr_stmt|;
 for|for
 control|(
 name|c
@@ -490,6 +484,12 @@ name|bgc
 argument_list|)
 expr_stmt|;
 block|}
+name|line
+operator|+=
+name|VT_XBOX_WIDTH
+operator|*
+literal|4
+expr_stmt|;
 block|}
 block|}
 end_function

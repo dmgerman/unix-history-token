@@ -499,12 +499,6 @@ name|height
 operator|--
 control|)
 block|{
-name|line
-operator|+=
-name|sc
-operator|->
-name|sc_stride
-expr_stmt|;
 for|for
 control|(
 name|c
@@ -608,6 +602,12 @@ comment|/* panic? */
 break|break;
 block|}
 block|}
+name|line
+operator|+=
+name|sc
+operator|->
+name|sc_stride
+expr_stmt|;
 block|}
 block|}
 end_function
