@@ -6914,8 +6914,6 @@ name|guest
 operator|=
 name|VMXNET3_GOS_FREEBSD
 operator||
-name|VMXNET3_GUEST_OS_VERSION
-operator||
 ifdef|#
 directive|ifdef
 name|__LP64__
