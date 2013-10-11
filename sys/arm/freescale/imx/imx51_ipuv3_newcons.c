@@ -1926,6 +1926,7 @@ name|ofs
 operator|)
 operator|=
 name|c
+operator|&
 literal|0xffff
 expr_stmt|;
 break|break;
