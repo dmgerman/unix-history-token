@@ -10647,11 +10647,10 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"SPQE -> %p\n"
+literal|"SPQE -> %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -10666,7 +10665,7 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"FUNC_RDATA -> %p / %p\n"
+literal|"FUNC_RDATA -> %p / %#jx\n"
 argument_list|,
 name|BXE_SP
 argument_list|(
@@ -10676,8 +10675,7 @@ name|func_rdata
 argument_list|)
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|BXE_SP_MAPPING
 argument_list|(
@@ -29087,11 +29085,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics request base address set to %p\n"
+literal|"statistics request base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -29104,11 +29101,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics data base address set to %p\n"
+literal|"statistics data base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
