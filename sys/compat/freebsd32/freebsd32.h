@@ -497,6 +497,9 @@ decl_stmt|;
 name|u_int32_t
 name|st_gen
 decl_stmt|;
+name|int32_t
+name|st_lspare
+decl_stmt|;
 name|struct
 name|timespec32
 name|st_birthtim
