@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__RANDOM_ADAPTORS_H__
+name|SYS_DEV_RANDOM_RANDOM_ADAPTORS_H_INCLUDED
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__RANDOM_ADAPTORS_H__
+name|SYS_DEV_RANDOM_RANDOM_ADAPTORS_H_INCLUDED
 end_define
 
 begin_include
@@ -20,6 +20,14 @@ include|#
 directive|include
 file|<sys/eventhandler.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_ENTROPY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -180,7 +188,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __RANDOM_ADAPTORS_H__ */
+comment|/* SYS_DEV_RANDOM_RANDOM_ADAPTORS_H_INCLUDED */
 end_comment
 
 end_unit
