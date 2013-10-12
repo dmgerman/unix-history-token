@@ -293,6 +293,10 @@ name|kw_spir_kernel
 block|,
 name|kw_spir_func
 block|,
+name|kw_x86_64_sysvcc
+block|,
+name|kw_x86_64_win64cc
+block|,
 comment|// Attributes:
 name|kw_attributes
 block|,
