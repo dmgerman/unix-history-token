@@ -668,9 +668,13 @@ name|activemap
 modifier|*
 name|hr_amp
 decl_stmt|;
-comment|/* Locked used to synchronize access to hr_amp. */
+comment|/* Lock used to synchronize access to hr_amp. */
 name|pthread_mutex_t
 name|hr_amp_lock
+decl_stmt|;
+comment|/* Lock used to synchronize access to hr_amp diskmap. */
+name|pthread_mutex_t
+name|hr_amp_diskmap_lock
 decl_stmt|;
 comment|/* Number of BIO_READ requests. */
 name|uint64_t

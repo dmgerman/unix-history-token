@@ -1764,6 +1764,15 @@ case|:
 case|case
 name|AR71XX_SOC_AR9331
 case|:
+case|case
+name|AR71XX_SOC_AR9341
+case|:
+case|case
+name|AR71XX_SOC_AR9342
+case|:
+case|case
+name|AR71XX_SOC_AR9344
+case|:
 comment|/* Ack/clear the irq on status register for AR724x */
 name|ATH_WRITE_REG
 argument_list|(

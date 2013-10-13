@@ -1969,6 +1969,12 @@ name|P_INMEM
 expr_stmt|;
 name|p
 operator|->
+name|p_flag2
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
 name|p_state
 operator|=
 name|PRS_NORMAL

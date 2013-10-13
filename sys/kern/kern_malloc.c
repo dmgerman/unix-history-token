@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -2895,14 +2889,10 @@ name|mem_size
 decl_stmt|,
 name|tmp
 decl_stmt|;
-comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available. 	 * 	 * Note that the kmem_map is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
+comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available. 	 * 	 * Note that the kmem arena is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
 name|vm_kmem_size
 operator|=
 name|VM_KMEM_SIZE
-operator|+
-name|nmbclusters
-operator|*
-name|PAGE_SIZE
 expr_stmt|;
 name|mem_size
 operator|=

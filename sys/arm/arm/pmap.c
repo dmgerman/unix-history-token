@@ -17369,57 +17369,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pmap_clear_reference:  *  *	Clear the reference bit on the specified physical page.  */
-end_comment
-
-begin_function
-name|void
-name|pmap_clear_reference
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_UNMANAGED
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_clear_reference: page %p is not managed"
-operator|,
-name|m
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|md
-operator|.
-name|pvh_attrs
-operator|&
-name|PVF_REF
-condition|)
-name|pmap_clearbit
-argument_list|(
-name|m
-argument_list|,
-name|PVF_REF
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Clear the write and modified bits in each of the given page's mappings.  */
 end_comment
 

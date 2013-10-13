@@ -154,10 +154,12 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|opt
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val
@@ -172,6 +174,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|opt
@@ -191,6 +194,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -205,6 +209,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|addr
@@ -219,6 +224,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -233,6 +239,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -247,6 +254,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|ta
@@ -261,6 +269,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -275,6 +284,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -369,6 +379,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -395,6 +406,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

@@ -113,6 +113,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_DEVGPIOC
+value|"/dev/gpioc"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_DEVNULL
 value|"/dev/null"
 end_define

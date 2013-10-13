@@ -348,6 +348,11 @@ argument_list|(
 name|gettimeofday
 argument_list|)
 block|,
+name|SC_ALLOW
+argument_list|(
+name|clock_gettime
+argument_list|)
+block|,
 ifdef|#
 directive|ifdef
 name|__NR_time

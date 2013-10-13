@@ -3042,9 +3042,11 @@ name|dmu_tx_count_write
 argument_list|(
 name|txh
 argument_list|,
-name|off
+literal|0
 argument_list|,
-name|len
+name|dn
+operator|->
+name|dn_datablksz
 argument_list|)
 expr_stmt|;
 block|}

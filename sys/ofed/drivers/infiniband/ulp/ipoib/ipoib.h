@@ -360,13 +360,10 @@ literal|4
 operator|*
 literal|1024
 block|,
+comment|//	IPOIB_UD_RX_SG		  = (IPOIB_UD_MAX_MTU / MJUMPAGESIZE),
 name|IPOIB_UD_RX_SG
 init|=
-operator|(
-name|IPOIB_UD_MAX_MTU
-operator|/
-name|MJUMPAGESIZE
-operator|)
+literal|2
 block|,
 name|IPOIB_UD_TX_SG
 init|=

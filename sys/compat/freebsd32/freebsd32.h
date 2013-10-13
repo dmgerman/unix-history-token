@@ -531,6 +531,9 @@ decl_stmt|;
 name|u_int32_t
 name|st_gen
 decl_stmt|;
+name|int32_t
+name|st_lspare
+decl_stmt|;
 name|struct
 name|timespec32
 name|st_birthtim
@@ -1126,6 +1129,9 @@ name|ki_spareints
 index|[
 name|KI_NSPARE_INT
 index|]
+decl_stmt|;
+name|int
+name|ki_flag2
 decl_stmt|;
 name|int
 name|ki_fibnum

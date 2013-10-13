@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { printf("#define %-39s ssh_%s\n", $3, $3) }' | unexpand -a | sort  * $FreeBSD$  */
+comment|/*  * Namespace munging inspired by an equivalent hack in NetBSD's tree: add  * the "ssh_" prefix to every symbol in libssh which doesn't already have  * it.  This prevents collisions between symbols in libssh and symbols in  * other libraries or applications which link with libssh, either directly  * or indirectly (e.g. through PAM loading pam_ssh).  *  * A list of symbols which need munging is obtained as follows:  *  * nm libssh.a | awk '/[0-9a-z] [A-Z] /&& $3 !~ /^ssh_/ { printf("#define %-39s ssh_%s\n", $3, $3) }' | unexpand -a | sort -u  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -958,6 +958,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|cipher_alg_list
+value|ssh_cipher_alg_list
+end_define
+
+begin_define
+define|#
+directive|define
 name|cipher_authlen
 value|ssh_cipher_authlen
 end_define
@@ -1093,13 +1100,6 @@ define|#
 directive|define
 name|cipher_set_keyiv
 value|ssh_cipher_set_keyiv
-end_define
-
-begin_define
-define|#
-directive|define
-name|ciphers
-value|ssh_ciphers
 end_define
 
 begin_define
@@ -1602,6 +1602,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|kex_alg_list
+value|ssh_kex_alg_list
+end_define
+
+begin_define
+define|#
+directive|define
 name|kex_derive_keys
 value|ssh_kex_derive_keys
 end_define
@@ -1618,20 +1625,6 @@ define|#
 directive|define
 name|kex_ecdh_hash
 value|ssh_kex_ecdh_hash
-end_define
-
-begin_define
-define|#
-directive|define
-name|kex_ecdh_name_to_evpmd
-value|ssh_kex_ecdh_name_to_evpmd
-end_define
-
-begin_define
-define|#
-directive|define
-name|kex_ecdh_name_to_nid
-value|ssh_kex_ecdh_name_to_nid
 end_define
 
 begin_define
@@ -1709,6 +1702,13 @@ define|#
 directive|define
 name|key_add_private
 value|ssh_key_add_private
+end_define
+
+begin_define
+define|#
+directive|define
+name|key_alg_list
+value|ssh_key_alg_list
 end_define
 
 begin_define
@@ -2134,6 +2134,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|log_redirect_stderr_to
+value|ssh_log_redirect_stderr_to
+end_define
+
+begin_define
+define|#
+directive|define
 name|logit
 value|ssh_logit
 end_define
@@ -2143,6 +2150,13 @@ define|#
 directive|define
 name|lookup_key_in_hostkeys_by_type
 value|ssh_lookup_key_in_hostkeys_by_type
+end_define
+
+begin_define
+define|#
+directive|define
+name|mac_alg_list
+value|ssh_mac_alg_list
 end_define
 
 begin_define
@@ -2178,13 +2192,6 @@ define|#
 directive|define
 name|mac_valid
 value|ssh_mac_valid
-end_define
-
-begin_define
-define|#
-directive|define
-name|macs
-value|ssh_macs
 end_define
 
 begin_define
@@ -2248,6 +2255,13 @@ define|#
 directive|define
 name|mm_send_fd
 value|ssh_mm_send_fd
+end_define
+
+begin_define
+define|#
+directive|define
+name|monotime
+value|ssh_monotime
 end_define
 
 begin_define
@@ -2444,6 +2458,13 @@ define|#
 directive|define
 name|packet_get_raw
 value|ssh_packet_get_raw
+end_define
+
+begin_define
+define|#
+directive|define
+name|packet_get_rekey_timeout
+value|ssh_packet_get_rekey_timeout
 end_define
 
 begin_define
@@ -2715,8 +2736,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|packet_set_rekey_limit
-value|ssh_packet_set_rekey_limit
+name|packet_set_rekey_limits
+value|ssh_packet_set_rekey_limits
 end_define
 
 begin_define
@@ -3156,15 +3177,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|umac128_new
-value|ssh_umac128_new
+name|umac128_ctx
+value|ssh_umac128_ctx
 end_define
 
 begin_define
 define|#
 directive|define
-name|umac128_update
-value|ssh_umac128_update
+name|umac128_delete
+value|ssh_umac128_delete
 end_define
 
 begin_define
@@ -3177,8 +3198,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|umac128_delete
-value|ssh_umac128_delete
+name|umac128_new
+value|ssh_umac128_new
+end_define
+
+begin_define
+define|#
+directive|define
+name|umac128_update
+value|ssh_umac128_update
 end_define
 
 begin_define
@@ -3305,13 +3333,6 @@ define|#
 directive|define
 name|xcrypt
 value|ssh_xcrypt
-end_define
-
-begin_define
-define|#
-directive|define
-name|xfree
-value|ssh_xfree
 end_define
 
 begin_define

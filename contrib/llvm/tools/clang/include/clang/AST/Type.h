@@ -13372,6 +13372,10 @@ block|,
 name|attr_pnaclcall
 block|,
 name|attr_inteloclbicc
+block|,
+name|attr_ms_abi
+block|,
+name|attr_sysv_abi
 block|}
 block|;
 name|private

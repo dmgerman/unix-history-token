@@ -2953,6 +2953,15 @@ index|]
 expr_stmt|;
 name|pc
 operator|->
+name|pc_vcpu_id
+operator|=
+name|cpu_apic_ids
+index|[
+name|bootAP
+index|]
+expr_stmt|;
+name|pc
+operator|->
 name|pc_prvspace
 operator|=
 name|pc

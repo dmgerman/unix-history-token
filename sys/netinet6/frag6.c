@@ -809,7 +809,7 @@ expr|struct
 name|ip6_frag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX-BZ RFC XXXX (draft-gont-6man-ipv6-atomic-fragments) 	 * Handle "atomic" fragments (offset and m bit set to 0) upfront, 	 * unrelated to any reassembly.  Just skip the fragment header. 	 */
+comment|/* 	 * RFC 6946: Handle "atomic" fragments (offset and m bit set to 0) 	 * upfront, unrelated to any reassembly.  Just skip the fragment header. 	 */
 if|if
 condition|(
 operator|(

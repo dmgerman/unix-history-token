@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -1949,6 +1961,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|ret_lowmem
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|vm_get_memory_seg
@@ -1960,6 +1974,8 @@ operator|*
 name|GB
 argument_list|,
 name|ret_highmem
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2294,18 +2310,30 @@ break|break;
 case|case
 literal|'m'
 case|:
-name|mem_size
+name|error
 operator|=
-name|strtoul
+name|vm_parse_memsize
 argument_list|(
 name|optarg
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
+operator|&
+name|mem_size
 argument_list|)
-operator|*
-name|MB
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Invalid memsize '%s'"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

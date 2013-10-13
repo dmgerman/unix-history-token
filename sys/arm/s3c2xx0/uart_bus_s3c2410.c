@@ -165,14 +165,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_class
-name|uart_s3c2410_class
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern SLIST_HEAD(uart_devinfo_list
 operator|,

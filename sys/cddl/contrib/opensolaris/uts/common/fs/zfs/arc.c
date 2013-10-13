@@ -23185,6 +23185,11 @@ name|vd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vdev_ashift_optimize
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a new l2arc device entry. 	 */
 name|adddev
 operator|=

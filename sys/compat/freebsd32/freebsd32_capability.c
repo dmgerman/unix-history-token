@@ -93,6 +93,30 @@ end_expr_stmt
 
 begin_function
 name|int
+name|freebsd32_cap_enter
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|freebsd32_cap_enter_args
+modifier|*
+name|uap
+parameter_list|)
+block|{
+comment|/* 	 * We do not have an equivalent of capabilities.conf for freebsd32 	 * compatibility, so do not allow capability mode for now. 	 */
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|freebsd32_cap_ioctls_limit
 parameter_list|(
 name|struct
@@ -517,6 +541,29 @@ end_else
 begin_comment
 comment|/* !CAPABILITIES */
 end_comment
+
+begin_function
+name|int
+name|freebsd32_cap_enter
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|freebsd32_cap_enter_args
+modifier|*
+name|uap
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|int

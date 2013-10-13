@@ -309,7 +309,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -793,11 +793,7 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msg
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -811,13 +807,7 @@ name|aix_restoreauthdb
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|authmsg
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|authmsg
 argument_list|)
@@ -1003,7 +993,7 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|msg
 argument_list|)

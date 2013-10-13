@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.57 2012/01/25 19:40:09 markus Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.59 2013/07/12 00:19:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -551,19 +551,26 @@ modifier|...
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(format
-parameter_list|(
-name|printf
-parameter_list|,
-function_decl|1
-operator|,
-function_decl|2
+function_decl|(noreturn
 end_function_decl
 
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+unit|))
+name|__attribute__
+argument_list|(
+operator|(
+name|format
+argument_list|(
+name|printf
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -895,9 +902,20 @@ end_endif
 
 begin_function_decl
 name|void
-name|packet_set_rekey_limit
+name|packet_set_rekey_limits
 parameter_list|(
 name|u_int32_t
+parameter_list|,
+name|time_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|time_t
+name|packet_get_rekey_timeout
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

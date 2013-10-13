@@ -261,7 +261,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * APIs to fetch and decode the instruction from nested page fault handler.  */
+comment|/*  * APIs to fetch and decode the instruction from nested page fault handler.  *  * 'vie' must be initialized before calling 'vmm_fetch_instruction()'  */
 end_comment
 
 begin_function_decl
@@ -285,6 +285,18 @@ parameter_list|,
 name|uint64_t
 name|cr3
 parameter_list|,
+name|struct
+name|vie
+modifier|*
+name|vie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vie_init
+parameter_list|(
 name|struct
 name|vie
 modifier|*

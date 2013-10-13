@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -113,6 +113,8 @@ block|,
 name|SPA_FEATURE_EMPTY_BPOBJ
 block|,
 name|SPA_FEATURE_LZ4_COMPRESS
+block|,
+name|SPA_FEATURE_MULTI_VDEV_CRASH_DUMP
 block|,
 name|SPA_FEATURES
 block|}

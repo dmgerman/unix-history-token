@@ -152,7 +152,7 @@ name|modevent
 argument_list|,
 literal|"int"
 argument_list|,
-literal|"struct mac_policy_conf *mpc"
+literal|"struct mac_policy_conf *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -756,6 +756,8 @@ argument_list|,
 literal|"mac_policy_rm"
 argument_list|,
 name|RM_NOWITNESS
+operator||
+name|RM_RECURSE
 argument_list|)
 expr_stmt|;
 name|sx_init_flags

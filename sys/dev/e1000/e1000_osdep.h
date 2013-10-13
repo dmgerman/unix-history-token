@@ -156,6 +156,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|usec_delay_irq
+parameter_list|(
+name|x
+parameter_list|)
+value|DELAY(x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|msec_delay
 parameter_list|(
 name|x

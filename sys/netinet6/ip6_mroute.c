@@ -2401,7 +2401,7 @@ name|rte
 operator|->
 name|next
 decl_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|rte
 operator|->

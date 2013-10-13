@@ -157,7 +157,7 @@ name|SBMALLOC
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc(size, M_SBUF, M_WAITOK)
+value|malloc(size, M_SBUF, M_WAITOK|M_ZERO)
 end_define
 
 begin_define
@@ -197,7 +197,7 @@ name|SBMALLOC
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc(size)
+value|calloc(1, size)
 end_define
 
 begin_define

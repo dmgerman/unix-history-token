@@ -5458,6 +5458,85 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|int
+name|ib_sa_guid_info_rec_query
+parameter_list|(
+name|struct
+name|ib_sa_client
+modifier|*
+name|client
+parameter_list|,
+name|struct
+name|ib_device
+modifier|*
+name|device
+parameter_list|,
+name|u8
+name|port_num
+parameter_list|,
+name|struct
+name|ib_sa_guidinfo_rec
+modifier|*
+name|rec
+parameter_list|,
+name|ib_sa_comp_mask
+name|comp_mask
+parameter_list|,
+name|u8
+name|method
+parameter_list|,
+name|int
+name|timeout_ms
+parameter_list|,
+name|gfp_t
+name|gfp_mask
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+name|status
+parameter_list|,
+name|struct
+name|ib_sa_guidinfo_rec
+modifier|*
+name|resp
+parameter_list|,
+name|void
+modifier|*
+name|context
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|struct
+name|ib_sa_query
+modifier|*
+modifier|*
+name|sa_query
+parameter_list|)
+block|{
+comment|// stub function -
+comment|// called originally from mad.c under mlx4_ib_init_sriov()
+comment|// which calls mlx4_ib_init_alias_guid_service() in alias_GUID.c
+comment|// which goes down to this function
+name|printk
+argument_list|(
+literal|"ERROR: function should be called only in SRIOV flow!!!"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * ib_sa_informinfo_query - Start an InformInfo registration.  * @client:SA client  * @device:device to send query on  * @port_num: port number to send query on  * @rec:Inform record to send in query  * @timeout_ms:time to wait for response  * @gfp_mask:GFP mask to use for internal allocations  * @callback:function called when notice handler registration completes,  * times out or is canceled  * @context:opaque user context passed to callback  * @sa_query:query context, used to cancel query  *  * This function sends inform info to register with SA to receive  * in-service notice.  * The callback function will be called when the query completes (or  * fails); status is 0 for a successful response, -EINTR if the query  * is canceled, -ETIMEDOUT is the query timed out, or -EIO if an error  * occurred sending the query.  The resp parameter of the callback is  * only valid if status is 0.  *  * If the return value of ib_sa_inform_query() is negative, it is an  * error code.  Otherwise it is a query ID that can be used to cancel  * the query.  */
 end_comment

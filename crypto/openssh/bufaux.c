@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufaux.c,v 1.50 2010/08/31 09:58:37 djm Exp $ */
+comment|/* $OpenBSD: bufaux.c,v 1.52 2013/07/12 00:19:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -586,7 +586,7 @@ argument_list|(
 literal|"buffer_get_string_ret: buffer_get failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|value
 argument_list|)
@@ -753,7 +753,7 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ret
 argument_list|)
@@ -1045,7 +1045,7 @@ begin_function
 name|int
 name|buffer_get_char_ret
 parameter_list|(
-name|char
+name|u_char
 modifier|*
 name|ret
 parameter_list|,
@@ -1098,7 +1098,7 @@ modifier|*
 name|buffer
 parameter_list|)
 block|{
-name|char
+name|u_char
 name|ch
 decl_stmt|;
 if|if
@@ -1120,9 +1120,6 @@ literal|"buffer_get_char: buffer error"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|u_char
-operator|)
 name|ch
 return|;
 block|}

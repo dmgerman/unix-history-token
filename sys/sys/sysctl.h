@@ -1624,7 +1624,7 @@ value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPS
 end_define
 
 begin_comment
-comment|/* Oid for a 64-bin unsigned counter(9).  The pointer must be non NULL. */
+comment|/* Oid for a 64-bit unsigned counter(9).  The pointer must be non NULL. */
 end_comment
 
 begin_define

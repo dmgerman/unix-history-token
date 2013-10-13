@@ -210,6 +210,20 @@ comment|/// Intel_OCL_BI - Calling conventions for Intel OpenCL built-ins
 name|Intel_OCL_BI
 init|=
 literal|77
+block|,
+comment|/// \brief The C convention as specified in the x86-64 supplement to the
+comment|/// System V ABI, used on most non-Windows systems.
+name|X86_64_SysV
+init|=
+literal|78
+block|,
+comment|/// \brief The C convention as implemented on Windows/x86-64. This
+comment|/// convention differs from the more common \c X86_64_SysV convention
+comment|/// in a number of ways, most notably in that XMM registers used to pass
+comment|/// arguments are shadowed by GPRs, and vice versa.
+name|X86_64_Win64
+init|=
+literal|79
 block|}
 enum|;
 block|}

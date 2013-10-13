@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: groupaccess.c,v 1.13 2008/07/04 03:44:59 djm Exp $ */
+comment|/* $OpenBSD: groupaccess.c,v 1.14 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -252,7 +258,7 @@ operator|->
 name|gr_name
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|groups_bygid
 argument_list|)
@@ -461,7 +467,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|xfree
+name|free
 argument_list|(
 name|groups_byname
 index|[
@@ -473,7 +479,7 @@ name|ngroups
 operator|=
 literal|0
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|groups_byname
 argument_list|)

@@ -1178,7 +1178,10 @@ name|mca_resume
 argument_list|()
 expr_stmt|;
 name|intr_resume
-argument_list|()
+argument_list|(
+comment|/*suspend_cancelled*/
+name|false
+argument_list|)
 expr_stmt|;
 name|AcpiSetFirmwareWakingVector
 argument_list|(

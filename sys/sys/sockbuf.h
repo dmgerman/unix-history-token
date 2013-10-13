@@ -783,6 +783,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sbcut_locked
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sbdroprecord
 parameter_list|(

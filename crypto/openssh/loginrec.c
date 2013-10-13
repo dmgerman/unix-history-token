@@ -736,7 +736,7 @@ modifier|*
 name|li
 parameter_list|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|li
 argument_list|)
