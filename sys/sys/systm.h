@@ -256,6 +256,8 @@ block|,
 name|VM_GUEST_VM
 block|,
 name|VM_GUEST_XEN
+block|,
+name|VM_GUEST_HV
 block|}
 enum|;
 end_enum
