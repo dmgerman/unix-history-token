@@ -102,6 +102,9 @@ decl_stmt|;
 name|int
 name|seeded
 decl_stmt|;
+name|unsigned
+name|priority
+decl_stmt|;
 name|random_init_func_t
 modifier|*
 name|init
