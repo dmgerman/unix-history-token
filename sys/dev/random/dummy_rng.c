@@ -303,6 +303,12 @@ operator|=
 literal|0
 block|,
 comment|/* This device can never be seeded */
+operator|.
+name|priority
+operator|=
+literal|1
+block|,
+comment|/* Bottom priority, so goes to last position */
 block|}
 decl_stmt|;
 end_decl_stmt

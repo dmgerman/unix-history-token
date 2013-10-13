@@ -344,6 +344,12 @@ operator|=
 literal|0
 block|,
 comment|/* This will be seeded during entropy processing */
+operator|.
+name|priority
+operator|=
+literal|90
+block|,
+comment|/* High priority, so top of the list. Fortuna may still win. */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -424,6 +430,12 @@ operator|=
 literal|0
 block|,
 comment|/* This will be excplicitly seeded at startup when secured */
+operator|.
+name|priority
+operator|=
+literal|100
+block|,
+comment|/* High priority, so top of the list. Beat Yarrow. */
 block|}
 decl_stmt|;
 end_decl_stmt
