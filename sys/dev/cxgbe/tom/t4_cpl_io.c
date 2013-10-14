@@ -2568,7 +2568,7 @@ argument_list|)
 expr_stmt|;
 name|txwr
 operator|->
-name|tunnel_to_proxy
+name|lsodisable_to_proxy
 operator|=
 name|htobe32
 argument_list|(

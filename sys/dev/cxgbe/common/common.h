@@ -783,7 +783,7 @@ block|{
 name|u32
 name|memtype
 decl_stmt|;
-comment|/* which memory (EDC0, EDC1, MC) */
+comment|/* which memory (FW_MEMTYPE_* ) */
 name|u32
 name|start
 decl_stmt|;
