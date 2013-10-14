@@ -1043,6 +1043,12 @@ literal|1
 decl_stmt|;
 comment|/* Immediately load filtees */
 name|bool
+name|z_interpose
+range|:
+literal|1
+decl_stmt|;
+comment|/* Interpose all objects but main */
+name|bool
 name|z_nodeflib
 range|:
 literal|1
