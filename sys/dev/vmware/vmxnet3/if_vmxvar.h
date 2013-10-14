@@ -879,18 +879,6 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/*  * Convert the FreeBSD version in to something the hypervisor  * understands. This is apparently what VMware's driver reports  * so mimic it even though it probably is not required.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMXNET3_GUEST_OS_VERSION
-define|\
-value|(((__FreeBSD_version / 100000)<< 14)	| \     (((__FreeBSD_version / 1000) % 100)<< 6 )	| \     (((__FreeBSD_version / 100) % 10)<< 30)	| \     ((__FreeBSD_version % 100)<< 22))
-end_define
-
-begin_comment
 comment|/*  * Max descriptors per Tx packet. We must limit the size of the  * any TSO packets based on the number of segments.  */
 end_comment
 

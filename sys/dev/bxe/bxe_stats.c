@@ -1019,6 +1019,20 @@ argument_list|,
 name|stats_comp
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|devinfo
+operator|.
+name|bc_ver
+operator|<=
+literal|0x06001400
+condition|)
+block|{
+comment|/*          * Bootcode v6.0.21 fixed a GRC timeout that occurs when accessing          * BRB registers while the BRB block is in reset. The DMA transfer          * below triggers this issue resulting in the DMAE to stop          * functioning. Skip this initial stats transfer for old bootcode          * versions<= 6.0.20.          */
+return|return;
+block|}
 comment|/* sanity */
 if|if
 condition|(

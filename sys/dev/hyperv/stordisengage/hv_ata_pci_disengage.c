@@ -222,6 +222,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|device_t
+name|parent
+init|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|ata_disk_enable
 decl_stmt|;
@@ -243,66 +251,25 @@ operator|)
 return|;
 if|if
 condition|(
-name|bootverbose
-condition|)
-name|device_printf
+name|device_get_unit
 argument_list|(
-name|dev
-argument_list|,
-literal|"hv_ata_pci_probe dev_class/subslcass = %d, %d\n"
-argument_list|,
-name|pci_get_class
-argument_list|(
-name|dev
+name|parent
 argument_list|)
-argument_list|,
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* is this a storage class device ? */
-if|if
-condition|(
-name|pci_get_class
+operator|!=
+literal|0
+operator|||
+name|device_get_ivars
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
-name|PCIC_STORAGE
+literal|0
 condition|)
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* is this an IDE/ATA type device ? */
-if|if
-condition|(
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|PCIS_STORAGE_IDE
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Hyper-V probe for disabling ATA-PCI, emulated driver\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * On Hyper-V the default is to use the enlightened driver for 	 * IDE disks. However, if the user wishes to use the native 	 * ATA driver, the environment variable 	 * hw_ata.disk_enable must be explicitly set to 1. 	 */
 if|if
 condition|(
@@ -333,15 +300,11 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
+name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Hyper-V ATA storage driver enabled.\n"
+literal|"Hyper-V ATA storage disengage driver"
 argument_list|)
 expr_stmt|;
 return|return
@@ -528,15 +491,11 @@ name|driver_t
 name|hv_ata_pci_disengage_driver
 init|=
 block|{
-literal|"pciata-disable"
+literal|"ata"
 block|,
 name|hv_ata_pci_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ata_pci_controller
-argument_list|)
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -546,7 +505,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|atapci_dis
 argument_list|,
-name|pci
+name|atapci
 argument_list|,
 name|hv_ata_pci_disengage_driver
 argument_list|,

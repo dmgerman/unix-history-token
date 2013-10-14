@@ -1684,6 +1684,12 @@ argument_list|)
 operator|)
 expr_stmt|;
 break|break;
+default|default:
+name|res
+operator|=
+name|ENXIO
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
