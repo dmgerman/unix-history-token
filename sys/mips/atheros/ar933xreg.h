@@ -60,6 +60,104 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR933X_GMAC_BASE
+value|(AR71XX_APB_BASE + 0x00070000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_GMAC_SIZE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_GMAC_REG_ETH_CFG
+value|(AR933X_GMAC_BASE + 0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_RGMII_GE0
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_MII_GE0
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_GMII_GE0
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_MII_GE0_MASTER
+value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_MII_GE0_SLAVE
+value|(1<< 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_MII_GE0_ERR_EN
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_SW_PHY_SWAP
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_SW_PHY_ADDR_SWAP
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_RMII_GE0
+value|(1<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_RMII_GE0_SPD_10
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR933X_ETH_CFG_RMII_GE0_SPD_100
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR933X_WMAC_BASE
 value|(AR71XX_APB_BASE + 0x00100000)
 end_define
