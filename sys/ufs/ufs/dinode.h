@@ -476,7 +476,7 @@ name|u_int32_t
 name|di_flags
 decl_stmt|;
 comment|/* 100: Status flags (chflags). */
-name|int32_t
+name|u_int32_t
 name|di_blocks
 decl_stmt|;
 comment|/* 104: Blocks actually held. */
