@@ -19697,6 +19697,10 @@ operator|(
 name|CpuSSSE3
 operator||
 name|CpuSSE4
+operator||
+name|CpuAES
+operator||
+name|CpuPCLMUL
 operator|)
 operator|)
 operator|!=
@@ -19763,6 +19767,14 @@ operator|.
 name|base_opcode
 operator|==
 literal|0x660f3881
+operator|||
+name|i
+operator|.
+name|tm
+operator|.
+name|base_opcode
+operator|==
+literal|0x660f3882
 condition|)
 block|{
 comment|/* invept and invvpid are 3 byte instructions with a 	     mandatory prefix. */
@@ -19975,6 +19987,10 @@ operator|(
 name|CpuSSSE3
 operator||
 name|CpuSSE4
+operator||
+name|CpuAES
+operator||
+name|CpuPCLMUL
 operator|)
 operator|)
 operator|!=
@@ -20035,6 +20051,14 @@ operator|.
 name|base_opcode
 operator|==
 literal|0x660f3881
+operator|||
+name|i
+operator|.
+name|tm
+operator|.
+name|base_opcode
+operator|==
+literal|0x660f3882
 condition|)
 block|{
 name|p
