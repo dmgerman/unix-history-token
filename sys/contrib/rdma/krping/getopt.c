@@ -20,19 +20,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/ctype.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<linux/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
+file|<linux/string.h>
 end_include
 
 begin_include
@@ -200,8 +200,9 @@ operator|->
 name|val
 return|;
 block|}
-name|printf
+name|printk
 argument_list|(
+name|KERN_INFO
 literal|"%s: the %s option requires "
 literal|"an argument\n"
 argument_list|,
@@ -231,7 +232,7 @@ decl_stmt|;
 operator|*
 name|value
 operator|=
-name|strtoul
+name|simple_strtoul
 argument_list|(
 name|val
 argument_list|,
@@ -254,8 +255,9 @@ operator|->
 name|val
 return|;
 block|}
-name|printf
+name|printk
 argument_list|(
+name|KERN_INFO
 literal|"%s: invalid numeric value "
 literal|"in %s=%s\n"
 argument_list|,
@@ -286,8 +288,9 @@ operator|->
 name|val
 return|;
 block|}
-name|printf
+name|printk
 argument_list|(
+name|KERN_INFO
 literal|"%s: unexpected argument %s to the "
 literal|"%s option\n"
 argument_list|,
@@ -304,8 +307,9 @@ name|EINVAL
 return|;
 block|}
 block|}
-name|printf
+name|printk
 argument_list|(
+name|KERN_INFO
 literal|"%s: Unrecognized option %s\n"
 argument_list|,
 name|caller
