@@ -3345,13 +3345,7 @@ name|len
 expr_stmt|;
 if|if
 condition|(
-name|ia6
-operator|!=
-name|NULL
-operator|&&
 name|free_ia6
-operator|!=
-literal|0
 condition|)
 name|ifa_free
 argument_list|(
@@ -3411,13 +3405,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ia6
-operator|!=
-name|NULL
-operator|&&
 name|free_ia6
-operator|!=
-literal|0
 condition|)
 name|ifa_free
 argument_list|(
