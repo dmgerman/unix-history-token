@@ -200,7 +200,7 @@ name|sc
 operator|->
 name|sc_cmap
 index|[
-name|fg
+name|color
 index|]
 expr_stmt|;
 comment|/* TODO handle difference between depth and bpp. */
@@ -762,7 +762,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|0xff
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|0xff
 argument_list|,
@@ -770,7 +770,7 @@ literal|8
 argument_list|,
 literal|0xff
 argument_list|,
-literal|0
+literal|16
 argument_list|)
 expr_stmt|;
 if|if
