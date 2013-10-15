@@ -2908,7 +2908,7 @@ name|vd
 operator|->
 name|vd_driver
 operator|->
-name|vd_bitblt
+name|vd_bitbltchr
 argument_list|(
 name|vd
 argument_list|,
@@ -3481,7 +3481,7 @@ name|vd
 operator|->
 name|vd_driver
 operator|->
-name|vd_bitblt
+name|vd_bitbltchr
 argument_list|(
 name|vd
 argument_list|,
@@ -7027,7 +7027,7 @@ name|vd
 operator|=
 name|main_vd
 expr_stmt|;
-comment|/* Stop vd_flash periodic task. */
+comment|/* Stop vt_flush periodic task. */
 if|if
 condition|(
 name|vd

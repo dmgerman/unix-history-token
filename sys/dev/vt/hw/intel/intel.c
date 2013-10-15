@@ -150,8 +150,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vd_bitblt_t
-name|intel_vtbitblt
+name|vd_bitbltchr_t
+name|intel_vtbitbltchr
 decl_stmt|;
 end_decl_stmt
 
@@ -168,9 +168,9 @@ operator|=
 name|intel_vtinit
 block|,
 operator|.
-name|vd_bitblt
+name|vd_bitbltchr
 operator|=
-name|intel_vtbitblt
+name|intel_vtbitbltchr
 block|,
 comment|/* Prefer to use KMS, so GENERIC - 10 */
 operator|.
@@ -502,7 +502,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|intel_vtbitblt
+name|intel_vtbitbltchr
 parameter_list|(
 name|struct
 name|vt_device

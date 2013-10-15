@@ -863,7 +863,7 @@ value|((vw)->vw_smode.mode == VT_PROCESS)
 end_define
 
 begin_comment
-comment|/*  * Per-device driver routines.  *  * vd_bitblt is used when the driver operates in graphics mode, while  * vd_putchar is used when the driver operates in text mode  * (VDF_TEXTMODE).  */
+comment|/*  * Per-device driver routines.  *  * vd_bitbltchr is used when the driver operates in graphics mode, while  * vd_putchar is used when the driver operates in text mode  * (VDF_TEXTMODE).  */
 end_comment
 
 begin_typedef
@@ -911,7 +911,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-name|vd_bitblt_t
+name|vd_bitbltchr_t
 parameter_list|(
 name|struct
 name|vt_device
@@ -987,9 +987,9 @@ name|vd_blank_t
 modifier|*
 name|vd_blank
 decl_stmt|;
-name|vd_bitblt_t
+name|vd_bitbltchr_t
 modifier|*
-name|vd_bitblt
+name|vd_bitbltchr
 decl_stmt|;
 comment|/* Text mode operation. */
 name|vd_putchar_t

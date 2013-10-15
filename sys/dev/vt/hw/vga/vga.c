@@ -220,8 +220,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vd_bitblt_t
-name|vga_bitblt
+name|vd_bitbltchr_t
+name|vga_bitbltchr
 decl_stmt|;
 end_decl_stmt
 
@@ -251,9 +251,9 @@ operator|=
 name|vga_blank
 block|,
 operator|.
-name|vd_bitblt
+name|vd_bitbltchr
 operator|=
-name|vga_bitblt
+name|vga_bitbltchr
 block|,
 operator|.
 name|vd_putchar
@@ -679,7 +679,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vga_bitblt
+name|vga_bitbltchr
 parameter_list|(
 name|struct
 name|vt_device

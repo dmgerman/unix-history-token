@@ -140,8 +140,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vd_bitblt_t
-name|xbox_bitblt
+name|vd_bitbltchr_t
+name|xbox_bitbltchr
 decl_stmt|;
 end_decl_stmt
 
@@ -164,9 +164,9 @@ operator|=
 name|xbox_blank
 block|,
 operator|.
-name|vd_bitblt
+name|vd_bitbltchr
 operator|=
-name|xbox_bitblt
+name|xbox_bitbltchr
 block|,
 operator|.
 name|vd_priority
@@ -336,7 +336,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|xbox_bitblt
+name|xbox_bitbltchr
 parameter_list|(
 name|struct
 name|vt_device
