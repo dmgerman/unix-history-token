@@ -525,38 +525,6 @@ define|\
 value|.asciiz str;			\ 	.align	3
 end_define
 
-begin_comment
-comment|/*  * XXX retain dialects XXX  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NON_LEAF
-parameter_list|(
-name|x
-parameter_list|,
-name|fsize
-parameter_list|,
-name|retpc
-parameter_list|)
-value|NESTED(x, fsize, retpc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NNON_LEAF
-parameter_list|(
-name|x
-parameter_list|,
-name|fsize
-parameter_list|,
-name|retpc
-parameter_list|)
-value|NESTED_NOPROFILE(x, fsize, retpc)
-end_define
-
 begin_if
 if|#
 directive|if
