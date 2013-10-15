@@ -200,6 +200,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/vt/colors/vt_termcolors.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/imx/imx51_ccmvar.h>
 end_include
 
@@ -255,6 +261,12 @@ decl_stmt|;
 name|int
 name|sc_height
 decl_stmt|;
+name|uint32_t
+name|sc_cmap
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|bus_space_tag_t
 name|iot
 decl_stmt|;
@@ -301,182 +313,6 @@ name|ipu3sc_softc
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* FIXME: not only 2 bytes color supported */
-end_comment
-
-begin_comment
-unit|static uint16_t colors[16] = { 	0x0000,
-comment|/* black */
-end_comment
-
-begin_comment
-unit|0x001f,
-comment|/* blue */
-end_comment
-
-begin_comment
-unit|0x07e0,
-comment|/* green */
-end_comment
-
-begin_comment
-unit|0x07ff,
-comment|/* cyan */
-end_comment
-
-begin_comment
-unit|0xf800,
-comment|/* red */
-end_comment
-
-begin_comment
-unit|0xf81f,
-comment|/* magenta */
-end_comment
-
-begin_comment
-unit|0x3800,
-comment|/* brown */
-end_comment
-
-begin_comment
-unit|0xc618,
-comment|/* light grey */
-end_comment
-
-begin_comment
-unit|0xc618,
-comment|/* XXX: dark grey */
-end_comment
-
-begin_comment
-unit|0x001f,
-comment|/* XXX: light blue */
-end_comment
-
-begin_comment
-unit|0x07e0,
-comment|/* XXX: light green */
-end_comment
-
-begin_comment
-unit|0x07ff,
-comment|/* XXX: light cyan */
-end_comment
-
-begin_comment
-unit|0xf800,
-comment|/* XXX: light red */
-end_comment
-
-begin_comment
-unit|0xf81f,
-comment|/* XXX: light magenta */
-end_comment
-
-begin_comment
-unit|0xffe0,
-comment|/* yellow */
-end_comment
-
-begin_comment
-unit|0xffff,
-comment|/* white */
-end_comment
-
-begin_comment
-unit|}; static uint32_t colors_24[16] = { 	0x000000,
-comment|/* Black	*/
-end_comment
-
-begin_comment
-unit|0x000080,
-comment|/* Blue	*/
-end_comment
-
-begin_comment
-unit|0x008000,
-comment|/* Green 	*/
-end_comment
-
-begin_comment
-unit|0x008080,
-comment|/* Cyan 	*/
-end_comment
-
-begin_comment
-unit|0x800000,
-comment|/* Red 	*/
-end_comment
-
-begin_comment
-unit|0x800080,
-comment|/* Magenta	*/
-end_comment
-
-begin_comment
-unit|0xcc6600,
-comment|/* brown	*/
-end_comment
-
-begin_comment
-unit|0xC0C0C0,
-comment|/* Silver 	*/
-end_comment
-
-begin_comment
-unit|0x808080,
-comment|/* Gray 	*/
-end_comment
-
-begin_comment
-unit|0x0000FF,
-comment|/* Light Blue 	*/
-end_comment
-
-begin_comment
-unit|0x00FF00,
-comment|/* Light Green */
-end_comment
-
-begin_comment
-unit|0x00FFFF,
-comment|/* Light Cyan 	*/
-end_comment
-
-begin_comment
-unit|0xFF0000,
-comment|/* Light Red 	*/
-end_comment
-
-begin_comment
-unit|0xFF00FF,
-comment|/* Light Magenta */
-end_comment
-
-begin_comment
-unit|0xFFFF00,
-comment|/* Yellow 	*/
-end_comment
-
-begin_comment
-unit|0xFFFFFF,
-comment|/* White 	*/
-end_comment
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|vd_init_t
@@ -520,66 +356,6 @@ name|vd_bitbltchr
 operator|=
 name|vt_imx_bitbltchr
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint32_t
-name|colormap
-index|[]
-init|=
-block|{
-literal|0x00000000
-block|,
-comment|/* Black */
-literal|0x00ff0000
-block|,
-comment|/* Red */
-literal|0x0000ff00
-block|,
-comment|/* Green */
-literal|0x00c0c000
-block|,
-comment|/* Brown */
-literal|0x000000ff
-block|,
-comment|/* Blue */
-literal|0x00c000c0
-block|,
-comment|/* Magenta */
-literal|0x0000c0c0
-block|,
-comment|/* Cyan */
-literal|0x00c0c0c0
-block|,
-comment|/* Light grey */
-literal|0x00808080
-block|,
-comment|/* Dark grey */
-literal|0x00ff8080
-block|,
-comment|/* Light red */
-literal|0x0080ff80
-block|,
-comment|/* Light green */
-literal|0x00ffff80
-block|,
-comment|/* Yellow */
-literal|0x008080ff
-block|,
-comment|/* Light blue */
-literal|0x00ff80ff
-block|,
-comment|/* Light magenta */
-literal|0x0080ffff
-block|,
-comment|/* Light cyan */
-literal|0x00ffffff
-block|,
-comment|/* White */
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1571,6 +1347,36 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+name|vt_generate_vga_palette
+argument_list|(
+name|sc
+operator|->
+name|sc_cmap
+argument_list|,
+name|COLOR_FORMAT_RGB
+argument_list|,
+literal|0xff
+argument_list|,
+literal|16
+argument_list|,
+literal|0xff
+argument_list|,
+literal|8
+argument_list|,
+literal|0xff
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+goto|goto
+name|fail_retarn_dctmpl
+goto|;
 name|vt_allocate
 argument_list|(
 operator|&
@@ -1831,7 +1637,9 @@ name|c
 decl_stmt|;
 name|c
 operator|=
-name|colormap
+name|sc
+operator|->
+name|sc_cmap
 index|[
 name|color
 index|]
@@ -2191,14 +1999,18 @@ name|sc_bpp
 expr_stmt|;
 name|fgc
 operator|=
-name|colormap
+name|sc
+operator|->
+name|sc_cmap
 index|[
 name|fg
 index|]
 expr_stmt|;
 name|bgc
 operator|=
-name|colormap
+name|sc
+operator|->
+name|sc_cmap
 index|[
 name|bg
 index|]
