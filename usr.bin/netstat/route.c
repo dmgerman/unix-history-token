@@ -3373,8 +3373,6 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|,
-name|ntohl
-argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -3388,7 +3386,6 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|)
-argument_list|)
 expr_stmt|;
 else|else
 name|cp
@@ -3401,7 +3398,7 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|,
-literal|0L
+name|INADDR_ANY
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4642,7 +4639,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the name of the network whose address is given.  * The address is assumed to be that of a net or subnet, not a host.  */
+comment|/*  * Return the name of the network whose address is given.  */
 end_comment
 
 begin_function
@@ -4653,7 +4650,7 @@ parameter_list|(
 name|in_addr_t
 name|in
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|mask
 parameter_list|)
 block|{
@@ -4680,6 +4677,11 @@ decl_stmt|;
 name|in_addr_t
 name|i
 decl_stmt|;
+comment|/* It is ok to supply host address. */
+name|in
+operator|&=
+name|mask
+expr_stmt|;
 name|i
 operator|=
 name|ntohl
@@ -4703,7 +4705,10 @@ name|i
 operator|>>
 name|NSHIFT
 argument_list|(
+name|ntohl
+argument_list|(
 name|mask
+argument_list|)
 argument_list|)
 argument_list|,
 name|AF_INET
@@ -4785,7 +4790,10 @@ argument_list|)
 argument_list|,
 name|i
 argument_list|,
+name|ntohl
+argument_list|(
 name|mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

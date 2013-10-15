@@ -225,6 +225,7 @@ operator|=
 literal|"_ifnet"
 block|}
 block|,
+comment|/* XXXGL: can be deleted */
 define|#
 directive|define
 name|N_RTSTAT
@@ -2920,13 +2921,6 @@ name|intpr
 argument_list|(
 name|interval
 argument_list|,
-name|nl
-index|[
-name|N_IFNET
-index|]
-operator|.
-name|n_value
-argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3470,13 +3464,6 @@ condition|)
 name|intpr
 argument_list|(
 name|interval
-argument_list|,
-name|nl
-index|[
-name|N_IFNET
-index|]
-operator|.
-name|n_value
 argument_list|,
 name|tp
 operator|->
