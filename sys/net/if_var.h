@@ -152,6 +152,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -3006,11 +3012,6 @@ name|ifa_netmask
 decl_stmt|;
 comment|/* used to determine subnet */
 name|struct
-name|if_data
-name|if_data
-decl_stmt|;
-comment|/* not all members are meaningful */
-name|struct
 name|ifnet
 modifier|*
 name|ifa_ifp
@@ -3075,6 +3076,18 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
+name|counter_u64_t
+name|ifa_ipackets
+decl_stmt|;
+name|counter_u64_t
+name|ifa_opackets
+decl_stmt|;
+name|counter_u64_t
+name|ifa_ibytes
+decl_stmt|;
+name|counter_u64_t
+name|ifa_obytes
+decl_stmt|;
 block|}
 struct|;
 end_struct
