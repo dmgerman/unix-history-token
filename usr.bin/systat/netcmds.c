@@ -708,15 +708,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|in
 operator|.
 name|s_addr
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 block|{
 name|error
