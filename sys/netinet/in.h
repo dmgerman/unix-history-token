@@ -2095,7 +2095,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_NONE
-value|0xffffffff
+value|(uint32_t)0xffffffff
 end_define
 
 begin_comment
