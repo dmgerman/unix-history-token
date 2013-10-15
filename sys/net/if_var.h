@@ -3084,6 +3084,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -3107,7 +3113,7 @@ comment|/* loopback route to self installed */
 end_comment
 
 begin_comment
-comment|/* for compatibility with other BSDs */
+comment|/* For compatibility with other BSDs. SCTP uses it. */
 end_comment
 
 begin_define
@@ -3116,12 +3122,6 @@ directive|define
 name|ifa_list
 value|ifa_link
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_function_decl
 name|struct
@@ -3166,6 +3166,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  */
