@@ -493,8 +493,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vd_bitblt_t
-name|vt_imx_bitblt
+name|vd_bitbltchr_t
+name|vt_imx_bitbltchr
 decl_stmt|;
 end_decl_stmt
 
@@ -516,9 +516,9 @@ operator|=
 name|vt_imx_blank
 block|,
 operator|.
-name|vd_bitblt
+name|vd_bitbltchr
 operator|=
-name|vt_imx_bitblt
+name|vt_imx_bitbltchr
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2117,7 +2117,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vt_imx_bitblt
+name|vt_imx_bitbltchr
 parameter_list|(
 name|struct
 name|vt_device
