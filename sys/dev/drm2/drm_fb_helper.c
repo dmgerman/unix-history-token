@@ -47,6 +47,12 @@ directive|include
 file|<dev/vt/vt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/vt/colors/vt_termcolors.h>
+end_include
+
 begin_struct
 struct|struct
 name|vt_kms_softc
