@@ -3148,20 +3148,23 @@ value|mtx_unlock(&(ifa)->ifa_mtx)
 end_define
 
 begin_function_decl
-name|void
-name|ifa_free
-parameter_list|(
 name|struct
 name|ifaddr
 modifier|*
-name|ifa
+name|ifa_alloc
+parameter_list|(
+name|size_t
+name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|ifa_init
+name|ifa_free
 parameter_list|(
 name|struct
 name|ifaddr
