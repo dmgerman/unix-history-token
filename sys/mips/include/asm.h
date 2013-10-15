@@ -532,16 +532,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NLEAF
-parameter_list|(
-name|x
-parameter_list|)
-value|LEAF_NOPROFILE(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NON_LEAF
 parameter_list|(
 name|x
