@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -1401,10 +1407,11 @@ name|u_long
 name|base
 parameter_list|)
 block|{
+name|counter_u64_t
+name|c
+decl_stmt|;
 name|uint64_t
 name|r
-decl_stmt|,
-name|c
 decl_stmt|;
 if|if
 condition|(
