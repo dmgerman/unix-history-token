@@ -532,16 +532,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALEAF
-parameter_list|(
-name|x
-parameter_list|)
-value|XLEAF(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NLEAF
 parameter_list|(
 name|x
