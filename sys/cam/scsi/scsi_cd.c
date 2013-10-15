@@ -1933,19 +1933,6 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"lost device, %d refs\n"
-argument_list|,
-name|periph
-operator|->
-name|refcount
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1975,15 +1962,6 @@ operator|)
 name|periph
 operator|->
 name|softc
-expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"removing device entry\n"
-argument_list|)
 expr_stmt|;
 comment|/* 	 * In the queued, non-active case, the device in question 	 * has already been removed from the changer run queue.  Since this 	 * device is active, we need to de-activate it, and schedule 	 * another device to run.  (if there is another one to run) 	 */
 if|if

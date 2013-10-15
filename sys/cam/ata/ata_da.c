@@ -3632,15 +3632,6 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"lost device\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3670,15 +3661,6 @@ operator|)
 name|periph
 operator|->
 name|softc
-expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"removing device entry\n"
-argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
