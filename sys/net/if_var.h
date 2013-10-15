@@ -3075,10 +3075,6 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
-name|struct
-name|mtx
-name|ifa_mtx
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3126,26 +3122,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IFA_LOCK
-parameter_list|(
-name|ifa
-parameter_list|)
-value|mtx_lock(&(ifa)->ifa_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFA_UNLOCK
-parameter_list|(
-name|ifa
-parameter_list|)
-value|mtx_unlock(&(ifa)->ifa_mtx)
-end_define
 
 begin_function_decl
 name|struct
