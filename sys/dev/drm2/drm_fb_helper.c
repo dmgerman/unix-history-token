@@ -98,8 +98,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vd_bitblt_t
-name|vt_kms_bitblt
+name|vd_bitbltchr_t
+name|vt_kms_bitbltchr
 decl_stmt|;
 end_decl_stmt
 
@@ -110,18 +110,17 @@ name|vt_kms_postswitch
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|vt_restore_fbdev_mode
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void vt_restore_fbdev_mode(void *, int);
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -141,9 +140,9 @@ operator|=
 name|vt_kms_blank
 block|,
 operator|.
-name|vd_bitblt
+name|vd_bitbltchr
 operator|=
-name|vt_kms_bitblt
+name|vt_kms_bitbltchr
 block|,
 operator|.
 name|vd_postswitch
@@ -396,7 +395,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|vt_kms_bitblt
+name|vt_kms_bitbltchr
 parameter_list|(
 name|struct
 name|vt_device
@@ -658,20 +657,12 @@ argument_list|,
 name|TC_BLACK
 argument_list|)
 expr_stmt|;
-name|TASK_INIT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fb_mode_task
-argument_list|,
+if|#
+directive|if
 literal|0
-argument_list|,
-name|vt_restore_fbdev_mode
-argument_list|,
-name|vd
-argument_list|)
-expr_stmt|;
+block|TASK_INIT(&sc->fb_mode_task, 0, vt_restore_fbdev_mode, vd);
+endif|#
+directive|endif
 return|return
 operator|(
 name|CN_INTERNAL
@@ -680,57 +671,21 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* Call restore out of vt(9) locks. */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|vt_restore_fbdev_mode
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|int
-name|pending
-parameter_list|)
-block|{
-name|struct
-name|vt_kms_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
-name|vt_device
-modifier|*
-name|vd
-decl_stmt|;
-name|vd
-operator|=
-operator|(
-expr|struct
-name|vt_device
-operator|*
-operator|)
-name|arg
-expr_stmt|;
-name|sc
-operator|=
-name|vd
-operator|->
-name|vd_softc
-expr_stmt|;
-name|drm_fb_helper_restore_fbdev_mode
-argument_list|(
-name|sc
-operator|->
-name|fb_helper
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_endif
+unit|static void vt_restore_fbdev_mode(void *arg, int pending) { 	struct vt_kms_softc *sc; 	struct vt_device *vd;  	vd = (struct vt_device *)arg; 	sc = vd->vd_softc; 	drm_fb_helper_restore_fbdev_mode(sc->fb_helper); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -754,16 +709,21 @@ name|vd
 operator|->
 name|vd_softc
 expr_stmt|;
-name|taskqueue_enqueue_fast
+if|#
+directive|if
+literal|0
+block|taskqueue_enqueue_fast(taskqueue_thread,&sc->fb_mode_task);
+else|#
+directive|else
+name|drm_fb_helper_restore_fbdev_mode
 argument_list|(
-name|taskqueue_thread
-argument_list|,
-operator|&
 name|sc
 operator|->
-name|fb_mode_task
+name|fb_helper
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
