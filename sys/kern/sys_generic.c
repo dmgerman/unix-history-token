@@ -230,7 +230,7 @@ begin_decl_stmt
 name|int
 name|iosize_max_clamp
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
