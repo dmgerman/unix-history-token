@@ -23960,15 +23960,6 @@ name|dest_state
 operator||=
 name|SCTP_ADDR_NO_PMTUD
 expr_stmt|;
-if|if
-condition|(
-name|paddrp
-operator|->
-name|spp_pathmtu
-operator|>
-name|SCTP_DEFAULT_MINSEGMENT
-condition|)
-block|{
 name|net
 operator|->
 name|mtu
@@ -24001,7 +23992,6 @@ operator|->
 name|mtu
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -24812,15 +24802,6 @@ name|dest_state
 operator||=
 name|SCTP_ADDR_NO_PMTUD
 expr_stmt|;
-if|if
-condition|(
-name|paddrp
-operator|->
-name|spp_pathmtu
-operator|>
-name|SCTP_DEFAULT_MINSEGMENT
-condition|)
-block|{
 name|net
 operator|->
 name|mtu
@@ -24853,7 +24834,6 @@ operator|->
 name|mtu
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|sctp_stcb_feature_on
