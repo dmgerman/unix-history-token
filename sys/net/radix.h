@@ -488,6 +488,12 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* empty tree for common case */
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh_masks
+decl_stmt|;
+comment|/* Storage for our masks */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -690,15 +696,6 @@ comment|/* _KERNEL */
 end_comment
 
 begin_function_decl
-name|void
-name|rn_init
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|rn_inithead
 parameter_list|(
@@ -742,6 +739,10 @@ modifier|*
 name|rn_addmask
 argument_list|(
 name|void
+operator|*
+argument_list|,
+expr|struct
+name|radix_node_head
 operator|*
 argument_list|,
 name|int
