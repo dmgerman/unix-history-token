@@ -99,6 +99,10 @@ directive|include
 file|"etherswitch_if.h"
 end_include
 
+begin_comment
+comment|/*  * XXX TODO: teach about the AR933x SoC switch  * XXX TODO: teach about the AR934x SoC switch  * XXX TODO: teach about the AR8327 external switch  */
+end_comment
+
 begin_function
 specifier|static
 name|int
