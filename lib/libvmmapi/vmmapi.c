@@ -1900,6 +1900,12 @@ name|VM_CAP_UNRESTRICTED_GUEST
 block|}
 block|,
 block|{
+literal|"enable_invpcid"
+block|,
+name|VM_CAP_ENABLE_INVPCID
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}

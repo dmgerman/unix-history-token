@@ -1356,6 +1356,8 @@ name|VM_CAP_PAUSE_EXIT
 block|,
 name|VM_CAP_UNRESTRICTED_GUEST
 block|,
+name|VM_CAP_ENABLE_INVPCID
+block|,
 name|VM_CAP_MAX
 block|}
 enum|;

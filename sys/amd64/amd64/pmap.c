@@ -1202,6 +1202,27 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm_pmap
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|invpcid_works
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|invpcid_works
+argument_list|,
+literal|0
+argument_list|,
+literal|"Is the invpcid instruction available ?"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
