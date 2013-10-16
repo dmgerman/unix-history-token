@@ -323,6 +323,9 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
 case|case
 name|EXC_PERF
 case|:
@@ -353,12 +356,6 @@ argument_list|,
 name|framep
 argument_list|)
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HWPMC_HOOKS
 if|if
 condition|(
 name|pmc_hook
@@ -386,12 +383,12 @@ argument_list|,
 name|framep
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|critical_exit
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 comment|/* Re-enable interrupts if applicable. */
 name|ee
