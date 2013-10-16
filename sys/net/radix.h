@@ -319,14 +319,6 @@ name|int
 name|rnh_multipath
 decl_stmt|;
 comment|/* multipath capable ? */
-name|int
-name|rnh_addrsize
-decl_stmt|;
-comment|/* permit, but not require fixed keys */
-name|int
-name|rnh_pktsize
-decl_stmt|;
-comment|/* permit, but not require fixed keys */
 name|struct
 name|radix_node
 modifier|*
@@ -360,60 +352,9 @@ name|radix_node
 modifier|*
 function_decl|(
 modifier|*
-name|rnh_addpkt
-function_decl|)
-comment|/* add based on packet hdr */
-parameter_list|(
-name|void
-modifier|*
-name|v
-parameter_list|,
-name|void
-modifier|*
-name|mask
-parameter_list|,
-name|struct
-name|radix_node_head
-modifier|*
-name|head
-parameter_list|,
-name|struct
-name|radix_node
-name|nodes
-index|[]
-parameter_list|)
-function_decl|;
-name|struct
-name|radix_node
-modifier|*
-function_decl|(
-modifier|*
 name|rnh_deladdr
 function_decl|)
 comment|/* remove based on sockaddr */
-parameter_list|(
-name|void
-modifier|*
-name|v
-parameter_list|,
-name|void
-modifier|*
-name|mask
-parameter_list|,
-name|struct
-name|radix_node_head
-modifier|*
-name|head
-parameter_list|)
-function_decl|;
-name|struct
-name|radix_node
-modifier|*
-function_decl|(
-modifier|*
-name|rnh_delpkt
-function_decl|)
-comment|/* remove based on packet hdr */
 parameter_list|(
 name|void
 modifier|*
@@ -464,25 +405,6 @@ parameter_list|,
 name|void
 modifier|*
 name|mask
-parameter_list|,
-name|struct
-name|radix_node_head
-modifier|*
-name|head
-parameter_list|)
-function_decl|;
-name|struct
-name|radix_node
-modifier|*
-function_decl|(
-modifier|*
-name|rnh_matchpkt
-function_decl|)
-comment|/* locate based on packet hdr */
-parameter_list|(
-name|void
-modifier|*
-name|v
 parameter_list|,
 name|struct
 name|radix_node_head
