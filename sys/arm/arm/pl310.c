@@ -1266,12 +1266,36 @@ name|CTRL_ENABLED
 operator|)
 condition|)
 block|{
+comment|/* invalidate current content */
+name|pl310_write4
+argument_list|(
+name|pl310_softc
+argument_list|,
+name|PL310_INV_WAY
+argument_list|,
+literal|0xffff
+argument_list|)
+expr_stmt|;
+name|pl310_wait_background_op
+argument_list|(
+name|PL310_INV_WAY
+argument_list|,
+literal|0xffff
+argument_list|)
+expr_stmt|;
 comment|/* Enable the L2 cache if disabled */
 name|platform_pl310_write_ctrl
 argument_list|(
 name|sc
 argument_list|,
 name|CTRL_ENABLED
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"L2 Cache enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1368,6 +1392,13 @@ operator||
 name|EVENT_COUNTER_CTRL_C0_RESET
 operator||
 name|EVENT_COUNTER_CTRL_C1_RESET
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"L2 Cache disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
