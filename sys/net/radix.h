@@ -617,7 +617,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|Free
+name|R_Free
 parameter_list|(
 name|p
 parameter_list|)
