@@ -242,13 +242,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TQ_FLAGS_PENDING
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DT_CALLOUT_ARMED
 value|(1<< 0)
 end_define
@@ -1038,13 +1031,6 @@ operator|->
 name|tq_context
 argument_list|)
 expr_stmt|;
-else|else
-name|queue
-operator|->
-name|tq_flags
-operator||=
-name|TQ_FLAGS_PENDING
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1395,20 +1381,15 @@ name|TQ_FLAGS_BLOCKED
 expr_stmt|;
 if|if
 condition|(
-name|queue
-operator|->
-name|tq_flags
+operator|!
+name|STAILQ_EMPTY
+argument_list|(
 operator|&
-name|TQ_FLAGS_PENDING
-condition|)
-block|{
 name|queue
 operator|->
-name|tq_flags
-operator|&=
-operator|~
-name|TQ_FLAGS_PENDING
-expr_stmt|;
+name|tq_queue
+argument_list|)
+condition|)
 name|queue
 operator|->
 name|tq_enqueue
@@ -1418,7 +1399,6 @@ operator|->
 name|tq_context
 argument_list|)
 expr_stmt|;
-block|}
 name|TQ_UNLOCK
 argument_list|(
 name|queue
