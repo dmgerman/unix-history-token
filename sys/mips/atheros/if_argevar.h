@@ -599,6 +599,9 @@ decl_stmt|;
 name|uint32_t
 name|arge_debug
 decl_stmt|;
+name|uint32_t
+name|arge_mdiofreq
+decl_stmt|;
 struct|struct
 block|{
 name|uint32_t
