@@ -325,6 +325,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar934xreg.h>
+end_include
+
+begin_comment
+comment|/* XXX tsk! */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/if_argevar.h>
 end_include
 
@@ -1611,6 +1621,9 @@ block|{
 name|uint32_t
 name|reg
 decl_stmt|;
+name|uint32_t
+name|reset_reg
+decl_stmt|;
 comment|/* Step 1. Soft-reset MAC */
 name|ARGE_SET_BITS
 argument_list|(
@@ -1627,17 +1640,69 @@ literal|20
 argument_list|)
 expr_stmt|;
 comment|/* Step 2. Punt the MAC core from the central reset register */
-name|ar71xx_device_stop
-argument_list|(
+comment|/* 	 * XXX TODO: migrate this (and other) chip specific stuff into 	 * a chipdef method. 	 */
+if|if
+condition|(
 name|sc
 operator|->
 name|arge_mac_unit
 operator|==
 literal|0
-condition|?
+condition|)
+block|{
+name|reset_reg
+operator|=
 name|RST_RESET_GE0_MAC
-else|:
+expr_stmt|;
+block|}
+else|else
+block|{
+name|reset_reg
+operator|=
 name|RST_RESET_GE1_MAC
+expr_stmt|;
+block|}
+comment|/* 	 * AR934x (and later) also needs the MDIO block reset. 	 */
+if|if
+condition|(
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_AR9341
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_AR9342
+operator|||
+name|ar71xx_soc
+operator|==
+name|AR71XX_SOC_AR9344
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|arge_mac_unit
+operator|==
+literal|0
+condition|)
+block|{
+name|reset_reg
+operator||=
+name|AR934X_RESET_GE0_MDIO
+expr_stmt|;
+block|}
+else|else
+block|{
+name|reset_reg
+operator||=
+name|AR934X_RESET_GE1_MDIO
+expr_stmt|;
+block|}
+block|}
+name|ar71xx_device_stop
+argument_list|(
+name|reset_reg
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -1647,15 +1712,7 @@ argument_list|)
 expr_stmt|;
 name|ar71xx_device_start
 argument_list|(
-name|sc
-operator|->
-name|arge_mac_unit
-operator|==
-literal|0
-condition|?
-name|RST_RESET_GE0_MAC
-else|:
-name|RST_RESET_GE1_MAC
+name|reset_reg
 argument_list|)
 expr_stmt|;
 comment|/* Step 3. Reconfigure MAC block */
@@ -1710,6 +1767,50 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Fetch the MDIO bus clock rate.  *  * For now, the default is DIV_28 for everything  * bar AR934x, which will be DIV_42.  *  * It will definitely need updating to take into account  * the MDIO bus core clock rate and the target clock  * rate for the chip.  */
+end_comment
+
+begin_function
+specifier|static
+name|uint32_t
+name|arge_fetch_mdiobus_clock_rate
+parameter_list|(
+name|struct
+name|arge_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|ar71xx_soc
+condition|)
+block|{
+case|case
+name|AR71XX_SOC_AR9341
+case|:
+case|case
+name|AR71XX_SOC_AR9342
+case|:
+case|case
+name|AR71XX_SOC_AR9344
+case|:
+return|return
+operator|(
+name|MAC_MII_CFG_CLOCK_DIV_42
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|MAC_MII_CFG_CLOCK_DIV_28
+operator|)
+return|;
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -1721,7 +1822,18 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Reset MII bus */
+name|uint32_t
+name|mdio_div
+decl_stmt|;
+name|mdio_div
+operator|=
+name|arge_fetch_mdiobus_clock_rate
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX AR934x and later; should we be also resetting the 	 * MDIO block(s) using the reset register block? 	 */
+comment|/* Reset MII bus; program in the default divisor */
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -1729,6 +1841,8 @@ argument_list|,
 name|AR71XX_MAC_MII_CFG
 argument_list|,
 name|MAC_MII_CFG_RESET
+operator||
+name|mdio_div
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -1742,7 +1856,7 @@ name|sc
 argument_list|,
 name|AR71XX_MAC_MII_CFG
 argument_list|,
-name|MAC_MII_CFG_CLOCK_DIV_28
+name|mdio_div
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2990,6 +3104,15 @@ case|:
 case|case
 name|AR71XX_SOC_AR9331
 case|:
+case|case
+name|AR71XX_SOC_AR9341
+case|:
+case|case
+name|AR71XX_SOC_AR9342
+case|:
+case|case
+name|AR71XX_SOC_AR9344
+case|:
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -3009,6 +3132,7 @@ literal|0x015500aa
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* AR71xx, AR913x */
 default|default:
 name|ARGE_WRITE
 argument_list|(
@@ -4476,6 +4600,15 @@ case|:
 case|case
 name|AR71XX_SOC_AR9331
 case|:
+case|case
+name|AR71XX_SOC_AR9341
+case|:
+case|case
+name|AR71XX_SOC_AR9342
+case|:
+case|case
+name|AR71XX_SOC_AR9344
+case|:
 name|fifo_tx
 operator|=
 literal|0x01f00140
@@ -4492,6 +4625,7 @@ operator|=
 literal|0x00780fff
 expr_stmt|;
 break|break;
+comment|/* AR71xx */
 default|default:
 name|fifo_tx
 operator|=
