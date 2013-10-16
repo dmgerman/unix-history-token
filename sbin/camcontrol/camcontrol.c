@@ -13054,7 +13054,7 @@ name|optarg
 argument_list|,
 literal|"master"
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
