@@ -5565,7 +5565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return whether the mbuf chain is correctly aligned  * for the arge TX engine.  *  * The TX engine requires each fragment to be aligned to a  * 4 byte boundary and the size of each fragment except  * the last to be a multiple of 4 bytes.  */
+comment|/*  * Return whether the mbuf chain is correctly aligned  * for the arge TX engine.  *  * The TX engine requires each fragment to be aligned to a  * 4 byte boundary and the size of each fragment except  * the last to be a multiple of 4 bytes.  *  * XXX TODO: I believe this is only a bug on the AR71xx and  * AR913x MACs. The later MACs (AR724x and later) does not  * need this workaround.  */
 end_comment
 
 begin_function
@@ -5712,7 +5712,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fix mbuf chain, all fragments should be 4 bytes aligned and 	 * even 4 bytes 	 */
+comment|/* 	 * Fix mbuf chain, all fragments should be 4 bytes aligned and 	 * even 4 bytes 	 * 	 * XXX TODO: I believe this is only a bug on the AR71xx and 	 * AR913x MACs. The later MACs (AR724x and later) does not 	 * need this workaround. 	 */
 name|m
 operator|=
 operator|*
