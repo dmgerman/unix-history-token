@@ -1080,6 +1080,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_CORTEXA5
+block|,
+name|CPU_CLASS_CORTEXA
+block|,
+literal|"Cortex A5"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_CORTEXA7
 block|,
 name|CPU_CLASS_CORTEXA

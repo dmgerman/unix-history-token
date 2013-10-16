@@ -720,6 +720,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_ID_CORTEXA5
+value|0x410fc050
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_ID_CORTEXA7
 value|0x410fc070
 end_define
