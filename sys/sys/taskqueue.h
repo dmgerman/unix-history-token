@@ -50,6 +50,23 @@ directive|include
 file|<sys/_callout.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -457,6 +474,37 @@ begin_comment
 comment|/*  * Initialise a task structure.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VIMAGE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TASK_INIT
+parameter_list|(
+name|task
+parameter_list|,
+name|priority
+parameter_list|,
+name|func
+parameter_list|,
+name|context
+parameter_list|)
+value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ 	(task)->ta_vnet = curvnet;			\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -472,6 +520,15 @@ name|context
 parameter_list|)
 value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !VIMAGE */
+end_comment
 
 begin_function_decl
 name|void

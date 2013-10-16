@@ -107,6 +107,12 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1523,6 +1529,13 @@ argument_list|(
 name|queue
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|task
+operator|->
+name|ta_vnet
+argument_list|)
+expr_stmt|;
 name|task
 operator|->
 name|ta_func
@@ -1533,6 +1546,9 @@ name|ta_context
 argument_list|,
 name|pending
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|TQ_LOCK
 argument_list|(
