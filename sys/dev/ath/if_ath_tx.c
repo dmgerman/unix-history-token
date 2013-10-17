@@ -11094,6 +11094,7 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_AGGR
+argument_list|,
 literal|"%s: bfs_aggr=%d, bfs_nframes=%d\n"
 argument_list|,
 name|__func__
