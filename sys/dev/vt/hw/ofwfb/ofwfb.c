@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/vt/colors/vt_termcolors.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -112,6 +118,12 @@ name|sc_stride
 decl_stmt|;
 name|bus_space_tag_t
 name|sc_memt
+decl_stmt|;
+name|uint32_t
+name|sc_colormap
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -202,66 +214,6 @@ begin_comment
 comment|/* XXX: hardcoded max size */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|uint32_t
-name|colormap
-index|[]
-init|=
-block|{
-literal|0x00000000
-block|,
-comment|/* Black */
-literal|0x00ff0000
-block|,
-comment|/* Red */
-literal|0x0000ff00
-block|,
-comment|/* Green */
-literal|0x00c0c000
-block|,
-comment|/* Brown */
-literal|0x000000ff
-block|,
-comment|/* Blue */
-literal|0x00c000c0
-block|,
-comment|/* Magenta */
-literal|0x0000c0c0
-block|,
-comment|/* Cyan */
-literal|0x00c0c0c0
-block|,
-comment|/* Light grey */
-literal|0x00808080
-block|,
-comment|/* Dark grey */
-literal|0x00ff8080
-block|,
-comment|/* Light red */
-literal|0x0080ff80
-block|,
-comment|/* Light green */
-literal|0x00ffff80
-block|,
-comment|/* Yellow */
-literal|0x008080ff
-block|,
-comment|/* Light blue */
-literal|0x00ff80ff
-block|,
-comment|/* Light magenta */
-literal|0x0080ffff
-block|,
-comment|/* Light cyan */
-literal|0x00ffffff
-block|,
-comment|/* White */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -341,7 +293,9 @@ literal|32
 case|:
 name|c
 operator|=
-name|colormap
+name|sc
+operator|->
+name|sc_colormap
 index|[
 name|color
 index|]
@@ -453,14 +407,18 @@ literal|0
 decl_stmt|;
 name|fgc
 operator|=
-name|colormap
+name|sc
+operator|->
+name|sc_colormap
 index|[
 name|fg
 index|]
 expr_stmt|;
 name|bgc
 operator|=
-name|colormap
+name|sc
+operator|->
+name|sc_colormap
 index|[
 name|bg
 index|]
@@ -642,6 +600,9 @@ decl_stmt|;
 name|cell_t
 name|retval
 decl_stmt|;
+name|uint32_t
+name|oldpix
+decl_stmt|;
 comment|/* Open display device, thereby initializing it */
 name|memset
 argument_list|(
@@ -676,16 +637,38 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|if
+comment|/* 	 * Set up the color map 	 */
+switch|switch
 condition|(
 name|sc
 operator|->
 name|sc_depth
-operator|==
-literal|8
 condition|)
 block|{
-comment|/* 		 * Install the color map 		 */
+case|case
+literal|8
+case|:
+name|vt_generate_vga_palette
+argument_list|(
+name|sc
+operator|->
+name|sc_colormap
+argument_list|,
+name|COLOR_FORMAT_RGB
+argument_list|,
+literal|255
+argument_list|,
+literal|16
+argument_list|,
+literal|255
+argument_list|,
+literal|8
+argument_list|,
+literal|255
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -715,7 +698,9 @@ name|cell_t
 call|)
 argument_list|(
 operator|(
-name|colormap
+name|sc
+operator|->
+name|sc_colormap
 index|[
 name|i
 index|]
@@ -731,7 +716,9 @@ name|cell_t
 call|)
 argument_list|(
 operator|(
-name|colormap
+name|sc
+operator|->
+name|sc_colormap
 index|[
 name|i
 index|]
@@ -747,7 +734,9 @@ name|cell_t
 call|)
 argument_list|(
 operator|(
-name|colormap
+name|sc
+operator|->
+name|sc_colormap
 index|[
 name|i
 index|]
@@ -768,6 +757,126 @@ name|retval
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|32
+case|:
+comment|/* 		 * We bypass the usual bus_space_() accessors here, mostly 		 * for performance reasons. In particular, we don't want 		 * any barrier operations that may be performed and handle 		 * endianness slightly different. Figure out the host-view 		 * endianness of the frame buffer. 		 */
+name|oldpix
+operator|=
+name|bus_space_read_4
+argument_list|(
+name|sc
+operator|->
+name|sc_memt
+argument_list|,
+name|sc
+operator|->
+name|sc_addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|bus_space_write_4
+argument_list|(
+name|sc
+operator|->
+name|sc_memt
+argument_list|,
+name|sc
+operator|->
+name|sc_addr
+argument_list|,
+literal|0
+argument_list|,
+literal|0xff000000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|(
+name|uint8_t
+operator|*
+operator|)
+operator|(
+name|sc
+operator|->
+name|sc_addr
+operator|)
+operator|==
+literal|0xff
+condition|)
+name|vt_generate_vga_palette
+argument_list|(
+name|sc
+operator|->
+name|sc_colormap
+argument_list|,
+name|COLOR_FORMAT_RGB
+argument_list|,
+literal|255
+argument_list|,
+literal|16
+argument_list|,
+literal|255
+argument_list|,
+literal|8
+argument_list|,
+literal|255
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|vt_generate_vga_palette
+argument_list|(
+name|sc
+operator|->
+name|sc_colormap
+argument_list|,
+name|COLOR_FORMAT_RGB
+argument_list|,
+literal|255
+argument_list|,
+literal|0
+argument_list|,
+literal|255
+argument_list|,
+literal|8
+argument_list|,
+literal|255
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+name|bus_space_write_4
+argument_list|(
+name|sc
+operator|->
+name|sc_memt
+argument_list|,
+name|sc
+operator|->
+name|sc_addr
+argument_list|,
+literal|0
+argument_list|,
+name|oldpix
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"Unknown color space depth %d"
+argument_list|,
+name|sc
+operator|->
+name|sc_depth
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* Clear the screen. */
 name|ofwfb_blank
@@ -1164,7 +1273,7 @@ expr|struct
 name|ofw_pci_register
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Grab the physical address of the framebuffer, and then map it 	 * into our memory space. If the MMU is not yet up, it will be 	 * remapped for us when relocation turns on. 	 * 	 * XXX We assume #address-cells is 1 at this point. 	 */
+comment|/* 	 * Grab the physical address of the framebuffer, and then map it 	 * into our memory space. If the MMU is not yet up, it will be 	 * remapped for us when relocation turns on. 	 */
 if|if
 condition|(
 name|OF_getproplen
@@ -1180,6 +1289,7 @@ name|fb_phys
 argument_list|)
 condition|)
 block|{
+comment|/* XXX We assume #address-cells is 1 at this point. */
 name|OF_getprop
 argument_list|(
 name|node
