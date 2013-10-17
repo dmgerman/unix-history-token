@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20130823
+value|0x20130927
 end_define
 
 begin_include
@@ -277,7 +277,7 @@ parameter_list|(
 name|Prototype
 parameter_list|)
 define|\
-value|static ACPI_INLINE Prototype {}
+value|static ACPI_INLINE Prototype {return;}
 end_define
 
 begin_endif
@@ -482,43 +482,6 @@ name|ACPI_PLD_INFO
 modifier|*
 modifier|*
 name|ReturnBuffer
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * ACPI Memory management  */
-end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|AcpiAllocate
-parameter_list|(
-name|UINT32
-name|Size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|AcpiCallocate
-parameter_list|(
-name|UINT32
-name|Size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiFree
-parameter_list|(
-name|void
-modifier|*
-name|Address
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1653,6 +1616,13 @@ begin_comment
 comment|/*  * Error/Warning output  */
 end_comment
 
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|3
+argument_list|)
+end_macro
+
 begin_function_decl
 name|void
 name|ACPI_INTERNAL_VAR_XFACE
@@ -1673,15 +1643,15 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|3
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|4
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1706,15 +1676,15 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|4
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|3
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1736,15 +1706,15 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|3
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|3
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1766,15 +1736,15 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|3
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|3
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1796,15 +1766,15 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|3
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|3
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1826,15 +1796,8 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/*  * Debug output  */
@@ -1845,6 +1808,13 @@ ifdef|#
 directive|ifdef
 name|ACPI_DEBUG_OUTPUT
 end_ifdef
+
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|6
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1877,15 +1847,15 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|6
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_macro
+name|ACPI_PRINTF_LIKE
+argument_list|(
+literal|6
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -1918,15 +1888,8 @@ name|Format
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|ACPI_PRINTF_LIKE
-parameter_list|(
-function_decl|6
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#

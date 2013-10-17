@@ -110,6 +110,12 @@ begin_comment
 comment|/*  * OSL Initialization and shutdown primitives  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsInitialize
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsInitialize
@@ -118,6 +124,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsTerminate
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -128,9 +145,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * ACPI Table interfaces  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetRootPointer
+end_ifndef
 
 begin_function_decl
 name|ACPI_PHYSICAL_ADDRESS
@@ -140,6 +168,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsPredefinedOverride
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -157,6 +196,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsTableOverride
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsTableOverride
@@ -172,6 +222,17 @@ name|NewTable
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsPhysicalTableOverride
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -192,6 +253,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Spinlock primitives  */
 end_comment
@@ -199,7 +265,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AcpiOsCreateLock
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCreateLock
 end_ifndef
 
 begin_function_decl
@@ -218,6 +284,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsDeleteLock
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsDeleteLock
@@ -228,6 +300,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAcquireLock
+end_ifndef
+
 begin_function_decl
 name|ACPI_CPU_FLAGS
 name|AcpiOsAcquireLock
@@ -237,6 +320,17 @@ name|Handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReleaseLock
+end_ifndef
 
 begin_function_decl
 name|void
@@ -251,9 +345,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Semaphore primitives  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCreateSemaphore
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -272,6 +377,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsDeleteSemaphore
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsDeleteSemaphore
@@ -281,6 +397,17 @@ name|Handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWaitSemaphore
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -298,6 +425,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsSignalSemaphore
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsSignalSemaphore
@@ -310,6 +448,11 @@ name|Units
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mutex primitives. May be configured to use semaphores instead via  * ACPI_MUTEX_TYPE (see platform/acenv.h)  */
@@ -325,6 +468,12 @@ name|ACPI_BINARY_SEMAPHORE
 operator|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCreateMutex
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsCreateMutex
@@ -336,6 +485,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsDeleteMutex
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsDeleteMutex
@@ -345,6 +505,17 @@ name|Handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAcquireMutex
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -358,6 +529,17 @@ name|Timeout
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReleaseMutex
+end_ifndef
 
 begin_function_decl
 name|void
@@ -374,9 +556,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Memory allocation and mapping  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAllocate
+end_ifndef
 
 begin_function_decl
 name|void
@@ -389,6 +582,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAllocateZeroed
+end_ifndef
+
+begin_function_decl
+name|void
+modifier|*
+name|AcpiOsAllocateZeroed
+parameter_list|(
+name|ACPI_SIZE
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsFree
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsFree
@@ -399,6 +625,17 @@ name|Memory
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsMapMemory
+end_ifndef
 
 begin_function_decl
 name|void
@@ -414,6 +651,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsUnmapMemory
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsUnmapMemory
@@ -427,6 +675,17 @@ name|Size
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetPhysicalAddress
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -443,9 +702,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Memory/Object Cache  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCreateCache
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -469,6 +739,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsDeleteCache
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsDeleteCache
@@ -479,6 +760,17 @@ name|Cache
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsPurgeCache
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -491,6 +783,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAcquireObject
+end_ifndef
+
 begin_function_decl
 name|void
 modifier|*
@@ -502,6 +805,17 @@ name|Cache
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReleaseObject
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -518,9 +832,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Interrupt handlers  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsInstallInterruptHandler
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -539,6 +864,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsRemoveInterruptHandler
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsRemoveInterruptHandler
@@ -552,9 +888,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Threads and Scheduling  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetThreadId
+end_ifndef
 
 begin_function_decl
 name|ACPI_THREAD_ID
@@ -564,6 +911,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsExecute
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -582,6 +940,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWaitEventsComplete
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsWaitEventsComplete
@@ -590,6 +959,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsSleep
+end_ifndef
 
 begin_function_decl
 name|void
@@ -601,6 +981,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsStall
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsStall
@@ -611,9 +1002,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Platform and hardware-independent I/O interfaces  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReadPort
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -632,6 +1034,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWritePort
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsWritePort
@@ -648,9 +1061,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Platform and hardware-independent physical memory interfaces  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReadMemory
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -669,6 +1093,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWriteMemory
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsWriteMemory
@@ -685,9 +1120,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Platform and hardware-independent PCI configuration space access  * Note: Can't use "Register" as a parameter, changed to "Reg" --  * certain compilers complain.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReadPciConfiguration
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -710,6 +1156,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWritePciConfiguration
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsWritePciConfiguration
@@ -730,9 +1187,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Miscellaneous  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReadable
+end_ifndef
 
 begin_function_decl
 name|BOOLEAN
@@ -748,6 +1216,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWritable
+end_ifndef
+
 begin_function_decl
 name|BOOLEAN
 name|AcpiOsWritable
@@ -762,6 +1241,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTimer
+end_ifndef
+
 begin_function_decl
 name|UINT64
 name|AcpiOsGetTimer
@@ -770,6 +1260,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsSignal
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -785,9 +1286,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Debug print routines  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsPrintf
+end_ifndef
 
 begin_function_decl
 name|void
@@ -804,6 +1316,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsVprintf
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsVprintf
@@ -819,6 +1342,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsRedirectOutput
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsRedirectOutput
@@ -830,9 +1364,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Debug input  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetLine
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -852,9 +1397,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Obtain ACPI table(s)  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTableByName
+end_ifndef
 
 begin_function_decl
 name|ACPI_STATUS
@@ -879,6 +1435,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTableByIndex
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsGetTableByIndex
@@ -902,6 +1469,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTableByAddress
+end_ifndef
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiOsGetTableByAddress
@@ -917,9 +1495,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Directory manipulation  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsOpenDirectory
+end_ifndef
 
 begin_function_decl
 name|void
@@ -940,6 +1529,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* RequesteFileType values */
 end_comment
@@ -958,6 +1552,12 @@ name|REQUEST_DIR_ONLY
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetNextFilename
+end_ifndef
+
 begin_function_decl
 name|char
 modifier|*
@@ -970,6 +1570,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCloseDirectory
+end_ifndef
+
 begin_function_decl
 name|void
 name|AcpiOsCloseDirectory
@@ -980,6 +1591,11 @@ name|DirHandle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -122,13 +122,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|BOOLEAN
-name|AcpiGbl_DebugTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|AcpiGbl_OutputFile
@@ -254,6 +247,14 @@ end_endif
 begin_comment
 comment|/* ACPI_SINGLE_THREADED */
 end_comment
+
+begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_DebugTimeout
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Nothing to do for windows  *  *****************************************************************************/

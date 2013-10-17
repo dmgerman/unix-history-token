@@ -16,6 +16,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXPORT_ACPI_INTERFACES
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFINE_ACPI_GLOBALS
 end_define
 

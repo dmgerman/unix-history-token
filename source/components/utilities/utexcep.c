@@ -16,6 +16,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXPORT_ACPI_INTERFACES
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_DEFINE_EXCEPTION_TABLE
 end_define
 

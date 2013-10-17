@@ -533,11 +533,38 @@ case|case
 literal|'e'
 case|:
 comment|/* External files for disassembler */
+comment|/* Get entire list of external files */
+name|AcpiGbl_Optind
+operator|--
+expr_stmt|;
+while|while
+condition|(
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+operator|&&
+operator|(
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|)
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiDmAddToExternalFileList
 argument_list|(
-name|AcpiGbl_Optarg
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -552,7 +579,10 @@ name|printf
 argument_list|(
 literal|"Could not add %s to external list\n"
 argument_list|,
-name|AcpiGbl_Optarg
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -561,6 +591,10 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+name|AcpiGbl_Optind
+operator|++
+expr_stmt|;
 block|}
 break|break;
 case|case

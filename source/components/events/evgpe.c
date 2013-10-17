@@ -1110,6 +1110,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_FREE
+argument_list|(
+name|LocalGpeEventInfo
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
@@ -1128,6 +1133,11 @@ operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|LocalGpeEventInfo
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -1161,6 +1171,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_FREE
+argument_list|(
+name|LocalGpeEventInfo
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}

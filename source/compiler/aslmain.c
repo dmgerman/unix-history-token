@@ -52,6 +52,10 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*  * Main routine for the iASL compiler.  *  * Portability note: The compiler depends upon the host for command-line  * wildcard support - it is not implemented locally. For example:  *  * Linux/Unix systems: Shell expands wildcards automatically.  *  * Windows: The setargv.obj module must be linked in to automatically  * expand wildcards.  */
+end_comment
+
+begin_comment
 comment|/* Local prototypes */
 end_comment
 
@@ -373,7 +377,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-d<f1,f2>"
+literal|"-d<f1 f2 ...>"
 argument_list|,
 literal|"Disassemble or decode binary ACPI tables to file (*.dsl)"
 argument_list|)
@@ -387,7 +391,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-da<f1,f2>"
+literal|"-da<f1 f2 ...>"
 argument_list|,
 literal|"Disassemble multiple tables from single namespace"
 argument_list|)
@@ -401,7 +405,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-dc<f1,f2>"
+literal|"-dc<f1 f2 ...>"
 argument_list|,
 literal|"Disassemble AML and immediately compile it"
 argument_list|)
@@ -415,7 +419,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-e<f1,f2>"
+literal|"-e<f1 f2 ...>"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
 argument_list|)
@@ -896,14 +900,12 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AslDoOnePathname
+name|AcpiDmAddToExternalFileList
 argument_list|(
 name|argv
 index|[
 name|Index1
 index|]
-argument_list|,
-name|AcpiDmAddToExternalFileList
 argument_list|)
 expr_stmt|;
 if|if
@@ -935,16 +937,28 @@ name|Index2
 index|]
 condition|)
 block|{
+comment|/*          * If -p not specified, we will use the input filename as the          * output filename prefix          */
+if|if
+condition|(
+name|Gbl_UseDefaultAmlFilename
+condition|)
+block|{
+name|Gbl_OutputFilenamePrefix
+operator|=
+name|argv
+index|[
+name|Index2
+index|]
+expr_stmt|;
+block|}
 name|Status
 operator|=
-name|AslDoOnePathname
+name|AslDoOneFile
 argument_list|(
 name|argv
 index|[
 name|Index2
 index|]
-argument_list|,
-name|AslDoOneFile
 argument_list|)
 expr_stmt|;
 if|if

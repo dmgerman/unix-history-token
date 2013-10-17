@@ -1063,11 +1063,9 @@ operator|!
 name|File
 condition|)
 block|{
-name|AcpiOsPrintf
+name|perror
 argument_list|(
-literal|"Could not open input file %s\n"
-argument_list|,
-name|Filename
+literal|"Could not open input file"
 argument_list|)
 expr_stmt|;
 return|return

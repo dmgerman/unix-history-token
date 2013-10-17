@@ -494,6 +494,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|BOOLEAN
+name|Gbl_IgnoreTranslationEscapes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 modifier|*
 name|Gbl_StructDefs
@@ -671,6 +678,10 @@ name|ACPI_TYPED_IDENTIFIER_TABLE
 modifier|*
 name|SourceStructTable
 decl_stmt|;
+name|ACPI_IDENTIFIER_TABLE
+modifier|*
+name|SourceSpecialMacroTable
+decl_stmt|;
 name|UINT32
 name|SourceFunctions
 decl_stmt|;
@@ -693,6 +704,10 @@ decl_stmt|;
 name|ACPI_TYPED_IDENTIFIER_TABLE
 modifier|*
 name|HeaderStructTable
+decl_stmt|;
+name|ACPI_IDENTIFIER_TABLE
+modifier|*
+name|HeaderSpecialMacroTable
 decl_stmt|;
 name|UINT32
 name|HeaderFunctions
@@ -738,6 +753,13 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_CONVERSION_TABLE
 name|LicenseConversionTable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_CONVERSION_TABLE
+name|IndentConversionTable
 decl_stmt|;
 end_decl_stmt
 
@@ -983,6 +1005,21 @@ parameter_list|,
 name|char
 modifier|*
 name|Filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AsCleanupSpecialMacro
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|,
+name|char
+modifier|*
+name|Keyword
 parameter_list|)
 function_decl|;
 end_function_decl

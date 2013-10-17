@@ -99,7 +99,7 @@ condition|(
 name|Table
 operator|->
 name|Length
-operator|<=
+operator|<
 sizeof|sizeof
 argument_list|(
 name|ACPI_TABLE_HEADER

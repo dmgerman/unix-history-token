@@ -1165,6 +1165,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* Ensure that debug output is now disabled */
+name|AcpiGbl_DbOutputFlags
+operator|=
+name|ACPI_DB_DISABLE_OUTPUT
+expr_stmt|;
 block|}
 end_function
 

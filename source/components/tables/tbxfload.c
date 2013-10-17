@@ -13,6 +13,12 @@ directive|define
 name|__TBXFLOAD_C__
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXPORT_ACPI_INTERFACES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -119,7 +125,7 @@ block|}
 end_function
 
 begin_macro
-name|ACPI_EXPORT_SYMBOL
+name|ACPI_EXPORT_SYMBOL_INIT
 argument_list|(
 argument|AcpiLoadTables
 argument_list|)

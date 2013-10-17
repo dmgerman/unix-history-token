@@ -143,7 +143,7 @@ block|}
 end_function
 
 begin_macro
-name|ACPI_EXPORT_SYMBOL
+name|ACPI_EXPORT_SYMBOL_INIT
 argument_list|(
 argument|AcpiTerminate
 argument_list|)

@@ -927,6 +927,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|AcpiDbGetHistoryByIndex
+parameter_list|(
+name|UINT32
+name|CommanddNum
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * dbinput - user front-end to the AML debugger  */
 end_comment

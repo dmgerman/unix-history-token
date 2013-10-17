@@ -2035,7 +2035,7 @@ block|,
 comment|/* 00000000    "UEFI6..." */
 literal|0x01
 block|,
-literal|0x03
+literal|0x6E
 block|,
 literal|0x20
 block|,
@@ -2049,24 +2049,24 @@ literal|0x65
 block|,
 literal|0x6C
 block|,
-comment|/* 00000008    ".. Intel" */
-literal|0x54
+comment|/* 00000008    ".n Intel" */
+literal|0x20
 block|,
-literal|0x65
+literal|0x20
 block|,
-literal|0x6D
+literal|0x20
 block|,
-literal|0x70
+literal|0x55
 block|,
-literal|0x6C
+literal|0x45
 block|,
-literal|0x61
+literal|0x46
 block|,
-literal|0x74
+literal|0x49
 block|,
-literal|0x65
+literal|0x31
 block|,
-comment|/* 00000010    "Template" */
+comment|/* 00000010    "   UEFI1" */
 literal|0x01
 block|,
 literal|0x00
@@ -2084,23 +2084,23 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x26
+literal|0x23
 block|,
-literal|0x06
+literal|0x08
 block|,
 literal|0x13
 block|,
 literal|0x20
 block|,
-literal|0x00
+literal|0x06
 block|,
-literal|0x01
+literal|0x07
 block|,
-literal|0x02
+literal|0x08
 block|,
-literal|0x03
+literal|0x09
 block|,
-comment|/* 00000020    "&.. ...." */
+comment|/* 00000020    "#.. ...." */
 literal|0x04
 block|,
 literal|0x05
@@ -2149,7 +2149,7 @@ literal|0x46
 block|,
 literal|0x49
 block|,
-literal|0x36
+literal|0xAA
 block|,
 literal|0x00
 block|,
@@ -2157,10 +2157,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "UEFI6..." */
+comment|/* 00000000    "UEFI...." */
 literal|0x01
 block|,
-literal|0xEB
+literal|0xE0
 block|,
 literal|0x20
 block|,
@@ -2175,23 +2175,23 @@ block|,
 literal|0x6C
 block|,
 comment|/* 00000008    ".. Intel" */
-literal|0x54
+literal|0x20
 block|,
-literal|0x65
+literal|0x20
 block|,
-literal|0x6D
+literal|0x20
 block|,
-literal|0x70
+literal|0x55
 block|,
-literal|0x6C
+literal|0x45
 block|,
-literal|0x61
+literal|0x46
 block|,
-literal|0x74
+literal|0x49
 block|,
-literal|0x65
+literal|0x32
 block|,
-comment|/* 00000010    "Template" */
+comment|/* 00000010    "   UEFI2" */
 literal|0x01
 block|,
 literal|0x00
@@ -2209,23 +2209,23 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x26
+literal|0x23
 block|,
-literal|0x06
+literal|0x08
 block|,
 literal|0x13
 block|,
 literal|0x20
 block|,
-literal|0x06
+literal|0x67
 block|,
-literal|0x07
+literal|0x45
 block|,
-literal|0x08
+literal|0x23
 block|,
-literal|0x09
+literal|0x01
 block|,
-comment|/* 00000020    "&.. ...." */
+comment|/* 00000020    "#.. gE#." */
 literal|0x04
 block|,
 literal|0x05
@@ -2254,7 +2254,254 @@ block|,
 literal|0x36
 block|,
 literal|0x00
-comment|/* 00000030    "....6."   */
+block|,
+literal|0x04
+block|,
+literal|0x19
+block|,
+comment|/* 00000030    "....6..." */
+literal|0x00
+block|,
+literal|0x56
+block|,
+literal|0x34
+block|,
+literal|0xF2
+block|,
+literal|0x04
+block|,
+literal|0x03
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+comment|/* 00000038    ".V4....." */
+literal|0x77
+block|,
+literal|0x66
+block|,
+literal|0x55
+block|,
+literal|0x44
+block|,
+literal|0x33
+block|,
+literal|0x22
+block|,
+literal|0x11
+block|,
+literal|0x1E
+block|,
+comment|/* 00000040    "wfUD3".." */
+literal|0x1C
+block|,
+literal|0x1F
+block|,
+literal|0x14
+block|,
+literal|0x10
+block|,
+literal|0x0C
+block|,
+literal|0x08
+block|,
+literal|0x04
+block|,
+literal|0xAB
+block|,
+comment|/* 00000048    "........" */
+literal|0x54
+block|,
+literal|0x68
+block|,
+literal|0x69
+block|,
+literal|0x73
+block|,
+literal|0x20
+block|,
+literal|0x69
+block|,
+literal|0x73
+block|,
+literal|0x20
+block|,
+comment|/* 00000050    "This is " */
+literal|0x61
+block|,
+literal|0x20
+block|,
+literal|0x73
+block|,
+literal|0x74
+block|,
+literal|0x72
+block|,
+literal|0x69
+block|,
+literal|0x6E
+block|,
+literal|0x67
+block|,
+comment|/* 00000058    "a string" */
+literal|0x00
+block|,
+literal|0x5C
+block|,
+literal|0x50
+block|,
+literal|0x43
+block|,
+literal|0x49
+block|,
+literal|0x30
+block|,
+literal|0x5C
+block|,
+literal|0x41
+block|,
+comment|/* 00000060    ".\PCI0\A" */
+literal|0x42
+block|,
+literal|0x43
+block|,
+literal|0x44
+block|,
+literal|0x00
+block|,
+literal|0x36
+block|,
+literal|0x00
+block|,
+literal|0x55
+block|,
+literal|0x00
+block|,
+comment|/* 00000068    "BCD.6.U." */
+literal|0x6E
+block|,
+literal|0x00
+block|,
+literal|0x69
+block|,
+literal|0x00
+block|,
+literal|0x63
+block|,
+literal|0x00
+block|,
+literal|0x6F
+block|,
+literal|0x00
+block|,
+comment|/* 00000070    "n.i.c.o." */
+literal|0x64
+block|,
+literal|0x00
+block|,
+literal|0x65
+block|,
+literal|0x00
+block|,
+literal|0x20
+block|,
+literal|0x00
+block|,
+literal|0x53
+block|,
+literal|0x00
+block|,
+comment|/* 00000078    "d.e. .S." */
+literal|0x74
+block|,
+literal|0x00
+block|,
+literal|0x72
+block|,
+literal|0x00
+block|,
+literal|0x69
+block|,
+literal|0x00
+block|,
+literal|0x6E
+block|,
+literal|0x00
+block|,
+comment|/* 00000080    "t.r.i.n." */
+literal|0x67
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x58
+block|,
+literal|0x5B
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+comment|/* 00000088    "g...X[.." */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x41
+block|,
+literal|0x42
+block|,
+literal|0x43
+block|,
+literal|0x44
+block|,
+comment|/* 00000090    "....ABCD" */
+literal|0x45
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x02
+block|,
+literal|0x03
+block|,
+literal|0x04
+block|,
+literal|0x05
+block|,
+comment|/* 00000098    "E......." */
+literal|0x06
+block|,
+literal|0x07
+block|,
+literal|0x08
+block|,
+literal|0x09
+block|,
+literal|0x0A
+block|,
+literal|0x0B
+block|,
+literal|0x0C
+block|,
+literal|0x0D
+block|,
+comment|/* 000000A0    "........" */
+literal|0x0E
+block|,
+literal|0x0F
+comment|/* 000000A8    ".."       */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2605,8 +2852,18 @@ unit|[004h 0004   4]                 Table Length : 0000004E [008h 0008   1]    
 comment|/* Test multiple UEFI support */
 end_comment
 
+begin_comment
+unit|[0004]                          Signature : "UEFI"    [UEFI Boot Optimization Table] [0004]                       Table Length : 00000036 [0001]                           Revision : 01 [0001]                           Checksum : 9B [0006]                             Oem ID : " Intel" [0008]                       Oem Table ID : "   UEFI1" [0004]                       Oem Revision : 00000001 [0004]                    Asl Compiler ID : "INTL" [0004]              Asl Compiler Revision : 20100528  [0016]                    UUID Identifier : 09080706-0504-0706-0809-0A0B0C0D0E0F [0002]                        Data Offset : 0000   [004]                          Signature : "UEFI"
+comment|/* UEFI Boot Optimization Table */
+end_comment
+
+begin_comment
+unit|[004]                       Table Length : 00000036 [001]                           Revision : 01 [001]                           Checksum : 9B [006]                             Oem ID : " Intel" [008]                       Oem Table ID : "   UEFI2" [004]                       Oem Revision : 00000001 [004]                    Asl Compiler ID : "INTL" [004]              Asl Compiler Revision : 20100528  [016]                    UUID Identifier : 01234567-0504-0706-0809-0A0B0C0D0E0F [002]                        Data Offset : 0000                                     Label : StartRecord                                    UINT8 : 4                                   UINT16 : $EndRecord - $StartRecord
+comment|/* Should be 0x19 */
+end_comment
+
 begin_endif
-unit|[0004]                          Signature : "UEFI"    [UEFI Boot Optimization Table] [0004]                       Table Length : 00000036 [0001]                           Revision : 01 [0001]                           Checksum : 9B [0006]                             Oem ID : " Intel" [0008]                       Oem Table ID : "Template" [0004]                       Oem Revision : 00000001 [0004]                    Asl Compiler ID : "INTL" [0004]              Asl Compiler Revision : 20100528  [0016]                    UUID Identifier : 03020100-0504-0706-0809-0A0B0C0D0E0F [0002]                        Data Offset : 0000   [0004]                          Signature : "UEFI"    [UEFI Boot Optimization Table] [0004]                       Table Length : 00000036 [0001]                           Revision : 01 [0001]                           Checksum : 9B [0006]                             Oem ID : " Intel" [0008]                       Oem Table ID : "Template" [0004]                       Oem Revision : 00000001 [0004]                    Asl Compiler ID : "INTL" [0004]              Asl Compiler Revision : 20100528  [0016]                    UUID Identifier : 09080706-0504-0706-0809-0A0B0C0D0E0F [0002]                        Data Offset : 0000
+unit|UINT24 : 123456 | F00000                                   UINT32 : 01020304                                   UINT56 : 11223344556677                                   UINT64 : 0102030405060708 * 4 - 200 / 100 | F0000                                    Label : EndRecord                                     UINT8 : AB                                   String : "This is a string"                               DevicePath : "\PCI0\ABCD"                                   UINT16 : $StartRecord                                  Unicode : "Unicode String"                                   UINT64 : $EndRecord * 128                                    Buffer : 41 42 43 44 45                                   String : ""                                     GUID : 03020100-0504-0706-0809-0A0B0C0D0E0F
 endif|#
 directive|endif
 end_endif

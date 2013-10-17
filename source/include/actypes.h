@@ -650,8 +650,28 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * All ACPICA functions that are available to the rest of the kernel are  * tagged with this macro which can be defined as appropriate for the host.  */
+comment|/*  * All ACPICA external functions that are available to the rest of the kernel  * are tagged with thes macros which can be defined as appropriate for the host.  *  * Notes:  * ACPI_EXPORT_SYMBOL_INIT is used for initialization and termination  * interfaces that may need special processing.  * ACPI_EXPORT_SYMBOL is used for all other public external functions.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_EXPORT_SYMBOL_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXPORT_SYMBOL_INIT
+parameter_list|(
+name|Symbol
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -694,6 +714,124 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*******************************************************************************  *  * Configuration  *  ******************************************************************************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
+end_ifdef
+
+begin_comment
+comment|/*  * Memory allocation tracking (used by AcpiExec to detect memory leaks)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_PARAMETERS
+value|_COMPONENT, _AcpiModuleName, __LINE__
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtAllocateAndTrack ((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_ZEROED
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtAllocateZeroedAndTrack ((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtFreeAndTrack (a, ACPI_MEM_PARAMETERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_TRACKING
+parameter_list|(
+name|a
+parameter_list|)
+value|a
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Normal memory allocation directly via the OS services layer  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiOsAllocate ((ACPI_SIZE) (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_ZEROED
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiOsAllocateZeroed ((ACPI_SIZE) (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiOsFree (a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_TRACKING
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
+end_comment
 
 begin_comment
 comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
@@ -740,6 +878,13 @@ define|#
 directive|define
 name|ACPI_PM_TIMER_WIDTH
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESET_REGISTER_WIDTH
+value|8
 end_define
 
 begin_comment

@@ -1892,6 +1892,19 @@ argument_list|(
 name|ObjHandle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+comment|/* Ignore bad node during namespace walk */
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 name|Pathname
 operator|=
 name|AcpiNsGetExternalPathname

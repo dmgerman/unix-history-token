@@ -263,20 +263,6 @@ end_typedef
 
 begin_function_decl
 name|ACPI_STATUS
-name|AslDoOnePathname
-parameter_list|(
-name|char
-modifier|*
-name|Pathname
-parameter_list|,
-name|ASL_PATHNAME_CALLBACK
-name|Callback
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AslDoOneFile
 parameter_list|(
 name|char

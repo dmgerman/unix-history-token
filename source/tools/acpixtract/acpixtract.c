@@ -190,6 +190,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|AxIsEmptyLine
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -423,6 +435,56 @@ literal|' '
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AxIsEmptyLine  *  * PARAMETERS:  Buffer              - Line from input file  *  * RETURN:      TRUE if line is empty (zero or more blanks only)  *  * DESCRIPTION: Determine if an input line is empty.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|AxIsEmptyLine
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|)
+block|{
+comment|/* Skip all spaces */
+while|while
+condition|(
+operator|*
+name|Buffer
+operator|==
+literal|' '
+condition|)
+block|{
+name|Buffer
+operator|++
+expr_stmt|;
+block|}
+comment|/* If end-of-line, this line is empty */
+if|if
+condition|(
+operator|*
+name|Buffer
+operator|==
+literal|'\n'
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -852,14 +914,10 @@ block|{
 comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
-operator|(
+name|AxIsEmptyLine
+argument_list|(
 name|InstanceBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|' '
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|InstanceBuffer
@@ -867,7 +925,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'\n'
+literal|' '
 operator|)
 condition|)
 block|{
@@ -1259,14 +1317,10 @@ block|}
 comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
-operator|(
+name|AxIsEmptyLine
+argument_list|(
 name|LineBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|' '
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|LineBuffer
@@ -1274,7 +1328,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'\n'
+literal|' '
 operator|)
 condition|)
 block|{
@@ -1423,14 +1477,10 @@ case|:
 comment|/* Empty line or non-data line terminates the data */
 if|if
 condition|(
-operator|(
+name|AxIsEmptyLine
+argument_list|(
 name|LineBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|'\n'
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|LineBuffer
@@ -1689,7 +1739,7 @@ block|}
 comment|/* Dump the headers for all tables found in the input file */
 name|printf
 argument_list|(
-literal|"\nSignature Length Revision  OemId     OemTableId"
+literal|"\nSignature  Length      Revision   OemId    OemTableId"
 literal|"   OemRevision CompilerId CompilerRevision\n\n"
 argument_list|)
 expr_stmt|;
@@ -1708,14 +1758,10 @@ block|{
 comment|/* Ignore empty lines and lines that start with a space */
 if|if
 condition|(
-operator|(
+name|AxIsEmptyLine
+argument_list|(
 name|LineBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|' '
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|LineBuffer
@@ -1723,7 +1769,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'\n'
+literal|' '
 operator|)
 condition|)
 block|{
@@ -1781,7 +1827,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8.4s                   \"%6.6s\"\n"
+literal|"%7.4s                          \"%6.6s\"\n"
 argument_list|,
 literal|"RSDP"
 argument_list|,
@@ -1816,7 +1862,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8.4s % 7d"
+literal|"%7.4s   0x%8.8X"
 argument_list|,
 name|TableHeader
 operator|->
@@ -1877,7 +1923,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     %2.2X    \"%6.6s\"  \"%8.8s\"    %8.8X    \"%4.4s\"     %8.8X\n"
+literal|"     0x%2.2X    \"%6.6s\"  \"%8.8s\"   0x%8.8X    \"%4.4s\"     0x%8.8X\n"
 argument_list|,
 name|TableHeader
 operator|->

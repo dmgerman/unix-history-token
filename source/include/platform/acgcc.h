@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_GET_FUNCTION_NAME
-value|__FUNCTION__
+value|__func__
 end_define
 
 begin_comment

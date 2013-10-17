@@ -1305,6 +1305,18 @@ operator|)
 return|;
 block|}
 comment|/*          * Check for translation escape string -- means to ignore          * blocks of code while replacing          */
+if|if
+condition|(
+name|Gbl_IgnoreTranslationEscapes
+condition|)
+block|{
+name|SubString2
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|SubString2
 operator|=
 name|strstr
@@ -1314,6 +1326,7 @@ argument_list|,
 name|AS_START_IGNORE
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

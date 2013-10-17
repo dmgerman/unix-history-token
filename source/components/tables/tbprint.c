@@ -238,7 +238,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%4.4s %p %05X"
+literal|"%4.4s %p %06X"
 operator|,
 name|Header
 operator|->
@@ -302,7 +302,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"RSDP %p %05X (v%.2d %6.6s)"
+literal|"RSDP %p %06X (v%.2d %6.6s)"
 operator|,
 name|ACPI_CAST_PTR
 argument_list|(
@@ -367,7 +367,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%4.4s %p %05X (v%.2d %6.6s %8.8s %08X %4.4s %08X)"
+literal|"%4.4s %p %06X (v%.2d %6.6s %8.8s %08X %4.4s %08X)"
 operator|,
 name|LocalHeader
 operator|.

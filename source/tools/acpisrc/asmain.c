@@ -294,6 +294,14 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOLEAN
+name|Gbl_IgnoreTranslationEscapes
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -305,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|AS_SUPPORTED_OPTIONS
-value|"cdhlqsuv^y"
+value|"cdhilqsuv^y"
 end_define
 
 begin_comment
@@ -833,6 +841,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-i"
+argument_list|,
+literal|"Cleanup macro indentation"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-l"
 argument_list|,
 literal|"Generate Linux version of the source"
@@ -1032,6 +1047,29 @@ name|ConversionTable
 operator|=
 operator|&
 name|LicenseConversionTable
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+comment|/* Cleanup wrong indent result */
+name|printf
+argument_list|(
+literal|"Cleaning up macro indentation\n"
+argument_list|)
+expr_stmt|;
+name|ConversionTable
+operator|=
+operator|&
+name|IndentConversionTable
+expr_stmt|;
+name|Gbl_IgnoreLoneLineFeeds
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_IgnoreTranslationEscapes
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case

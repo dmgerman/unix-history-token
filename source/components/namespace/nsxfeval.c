@@ -13,6 +13,12 @@ directive|define
 name|__NSXFEVAL_C__
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXPORT_ACPI_INTERFACES
+end_define
+
 begin_include
 include|#
 directive|include
@@ -259,7 +265,7 @@ condition|(
 name|MustFree
 condition|)
 block|{
-comment|/* Caller used ACPI_ALLOCATE_BUFFER, free the return buffer */
+comment|/*          * Caller used ACPI_ALLOCATE_BUFFER, free the return buffer.          * Note: We use AcpiOsFree here because AcpiOsAllocate was used          * to allocate the buffer. This purposefully bypasses the internal          * allocation tracking mechanism (if it is enabled).          */
 name|AcpiOsFree
 argument_list|(
 name|ReturnBuffer

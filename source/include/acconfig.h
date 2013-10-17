@@ -112,12 +112,23 @@ begin_comment
 comment|/*  * Generate a version of ACPICA that only supports "reduced hardware"  * platforms (as defined in ACPI 5.0). Set to TRUE to generate a specialized  * version of ACPICA that ONLY supports the ACPI 5.0 "reduced hardware"  * model. In other words, no ACPI hardware is supported.  *  * If TRUE, this means no support for the following:  *      PM Event and Control registers  *      SCI interrupt (and handler)  *      Fixed Events  *      General Purpose Events (GPEs)  *      Global Lock  *      ACPI PM timer  *      FACS table (Waking vectors and Global Lock)  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_REDUCED_HARDWARE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ACPI_REDUCED_HARDWARE
 value|FALSE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * Subsystem Constants  *  *****************************************************************************/

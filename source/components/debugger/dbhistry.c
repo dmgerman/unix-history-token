@@ -121,7 +121,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|UINT32
 name|AcpiGbl_NextCmdNum
 init|=
@@ -159,6 +158,14 @@ argument_list|(
 name|CommandLine
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CmdLen
+condition|)
+block|{
+return|return;
+block|}
 if|if
 condition|(
 name|AcpiGbl_HistoryBuffer
@@ -421,12 +428,6 @@ name|CommandNumArg
 parameter_list|)
 block|{
 name|UINT32
-name|i
-decl_stmt|;
-name|UINT16
-name|HistoryIndex
-decl_stmt|;
-name|UINT32
 name|CmdNum
 decl_stmt|;
 if|if
@@ -457,6 +458,36 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|AcpiDbGetHistoryByIndex
+argument_list|(
+name|CmdNum
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetHistoryByIndex  *  * PARAMETERS:  CmdNum              - Index of the desired history entry.  *                                    Values are 0...(AcpiGbl_NextCmdNum - 1)  *  * RETURN:      Pointer to the retrieved command. Null on error.  *  * DESCRIPTION: Get a command from the history buffer  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|AcpiDbGetHistoryByIndex
+parameter_list|(
+name|UINT32
+name|CmdNum
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT16
+name|HistoryIndex
+decl_stmt|;
 comment|/* Search history buffer */
 name|HistoryIndex
 operator|=
@@ -500,6 +531,7 @@ name|Command
 operator|)
 return|;
 block|}
+comment|/* History buffer is circular */
 name|HistoryIndex
 operator|++
 expr_stmt|;

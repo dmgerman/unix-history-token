@@ -1970,13 +1970,37 @@ name|char
 modifier|*
 name|This
 decl_stmt|;
-name|ACPI_STRCPY
+if|if
+condition|(
+name|AcpiUtSafeStrcpy
 argument_list|(
 name|AcpiGbl_DbParsedBuf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|AcpiGbl_DbParsedBuf
+argument_list|)
+argument_list|,
 name|InputBuffer
 argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Buffer overflow while parsing input line (max %u characters)\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|AcpiGbl_DbParsedBuf
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|This
 operator|=
 name|AcpiGbl_DbParsedBuf
@@ -2212,6 +2236,12 @@ name|AE_CTRL_TERMINATE
 operator|)
 return|;
 block|}
+comment|/* Add all commands that come here to the history buffer */
+name|AcpiDbAddToHistory
+argument_list|(
+name|InputBuffer
+argument_list|)
+expr_stmt|;
 name|ParamCount
 operator|=
 name|AcpiDbGetLine
@@ -3279,7 +3309,12 @@ case|:
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unknown Command\n"
+literal|"%s: unknown command\n"
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -3301,12 +3336,6 @@ operator|=
 name|AE_CTRL_TRUE
 expr_stmt|;
 block|}
-comment|/* Add all commands that come here to the history buffer */
-name|AcpiDbAddToHistory
-argument_list|(
-name|InputBuffer
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|Status

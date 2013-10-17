@@ -463,6 +463,12 @@ block|{
 return|return;
 block|}
 block|}
+operator|(
+name|void
+operator|)
+name|AcpiOsTerminate
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0

@@ -3773,7 +3773,7 @@ decl_stmt|;
 name|char
 name|Pathname
 index|[
-literal|128
+name|ACPI_DB_LINE_BUFFER_SIZE
 index|]
 decl_stmt|;
 name|char
@@ -3840,6 +3840,13 @@ block|}
 name|ACPI_INTEGRITY_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_DISABLE_OUTPUT
+value|0x00
+end_define
 
 begin_define
 define|#

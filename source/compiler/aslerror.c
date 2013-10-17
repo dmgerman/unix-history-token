@@ -1400,9 +1400,6 @@ modifier|*
 name|ExtraMessage
 parameter_list|)
 block|{
-name|UINT32
-name|MessageSize
-decl_stmt|;
 name|char
 modifier|*
 name|MessageBuffer
@@ -1429,20 +1426,16 @@ name|ExtraMessage
 condition|)
 block|{
 comment|/* Allocate a buffer for the message and a new error node */
-name|MessageSize
+name|MessageBuffer
 operator|=
+name|UtLocalCalloc
+argument_list|(
 name|strlen
 argument_list|(
 name|ExtraMessage
 argument_list|)
 operator|+
 literal|1
-expr_stmt|;
-name|MessageBuffer
-operator|=
-name|UtLocalCalloc
-argument_list|(
-name|MessageSize
 argument_list|)
 expr_stmt|;
 comment|/* Keep a copy of the extra message */

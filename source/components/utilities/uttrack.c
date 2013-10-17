@@ -233,9 +233,32 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+comment|/* Check for an inadvertent size of zero bytes */
+if|if
+condition|(
+operator|!
+name|Size
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|Module
+operator|,
+name|Line
+operator|,
+literal|"Attempt to allocate zero bytes, allocating 1 byte"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Size
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|Allocation
 operator|=
-name|AcpiUtAllocate
+name|AcpiOsAllocate
 argument_list|(
 name|Size
 operator|+
@@ -243,12 +266,6 @@ sizeof|sizeof
 argument_list|(
 name|ACPI_DEBUG_MEM_HEADER
 argument_list|)
-argument_list|,
-name|Component
-argument_list|,
-name|Module
-argument_list|,
-name|Line
 argument_list|)
 expr_stmt|;
 if|if
@@ -257,6 +274,23 @@ operator|!
 name|Allocation
 condition|)
 block|{
+comment|/* Report allocation error */
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|Module
+operator|,
+name|Line
+operator|,
+literal|"Could not allocate size %u"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|Size
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -388,9 +422,32 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+comment|/* Check for an inadvertent size of zero bytes */
+if|if
+condition|(
+operator|!
+name|Size
+condition|)
+block|{
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|Module
+operator|,
+name|Line
+operator|,
+literal|"Attempt to allocate zero bytes, allocating 1 byte"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Size
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|Allocation
 operator|=
-name|AcpiUtAllocateZeroed
+name|AcpiOsAllocateZeroed
 argument_list|(
 name|Size
 operator|+
@@ -398,12 +455,6 @@ sizeof|sizeof
 argument_list|(
 name|ACPI_DEBUG_MEM_HEADER
 argument_list|)
-argument_list|,
-name|Component
-argument_list|,
-name|Module
-argument_list|,
-name|Line
 argument_list|)
 expr_stmt|;
 if|if
