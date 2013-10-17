@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -4082,6 +4088,10 @@ name|flag
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|endptr
+decl_stmt|;
 name|u_long
 name|noval
 decl_stmt|,
@@ -4213,14 +4223,94 @@ name|locking
 operator|=
 literal|0
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|valp
 operator|=
-name|atoi
+name|strtol
 argument_list|(
+name|value
+argument_list|,
+operator|&
+name|endptr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+literal|0
+operator|&&
+operator|*
+name|endptr
+operator|!=
+literal|'\0'
+condition|)
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%s"
+argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|RTV_EXPIRE
+operator|&&
+operator|(
+name|value
+index|[
+literal|0
+index|]
+operator|==
+literal|'+'
+operator|||
+name|value
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|)
+condition|)
+block|{
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|clock_gettime
+argument_list|(
+name|CLOCK_REALTIME_FAST
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
+operator|*
+name|valp
+operator|+=
+name|ts
+operator|.
+name|tv_sec
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4578,6 +4668,14 @@ case|:
 name|flags
 operator||=
 name|RTF_PROTO2
+expr_stmt|;
+break|break;
+case|case
+name|K_PROTO3
+case|:
+name|flags
+operator||=
+name|RTF_PROTO3
 expr_stmt|;
 break|break;
 case|case
@@ -8900,6 +8998,10 @@ index|[
 name|RTAX_MAX
 index|]
 decl_stmt|;
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -9346,7 +9448,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%c "
+literal|"%8lu%c "
 argument_list|,
 name|rtm
 operator|->
@@ -9362,7 +9464,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%c "
+literal|"%8lu%c "
 argument_list|,
 name|rtm
 operator|->
@@ -9378,7 +9480,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%c "
+literal|"%8lu%c "
 argument_list|,
 name|rtm
 operator|->
@@ -9394,7 +9496,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%c "
+literal|"%8lu%c "
 argument_list|,
 name|msec
 argument_list|(
@@ -9413,7 +9515,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%c "
+literal|"%8lu%c "
 argument_list|,
 name|rtm
 operator|->
@@ -9429,7 +9531,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8ld%c "
+literal|"%8lu%c "
 argument_list|,
 name|rtm
 operator|->
@@ -9450,17 +9552,23 @@ operator|->
 name|rtm_rmx
 operator|.
 name|rmx_expire
-condition|)
-name|rtm
-operator|->
-name|rtm_rmx
-operator|.
-name|rmx_expire
-operator|-=
-name|time
-argument_list|(
+operator|>
 literal|0
+condition|)
+name|clock_gettime
+argument_list|(
+name|CLOCK_REALTIME_FAST
+argument_list|,
+operator|&
+name|ts
 argument_list|)
+expr_stmt|;
+else|else
+name|ts
+operator|.
+name|tv_sec
+operator|=
+literal|0
 expr_stmt|;
 name|printf
 argument_list|(
@@ -9471,6 +9579,10 @@ operator|->
 name|rtm_rmx
 operator|.
 name|rmx_expire
+operator|-
+name|ts
+operator|.
+name|tv_sec
 argument_list|,
 name|lock
 argument_list|(
