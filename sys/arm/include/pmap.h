@@ -2458,7 +2458,7 @@ name|pte
 parameter_list|,
 name|size
 parameter_list|)
-value|cpu_l2_cache_wb_range(pte, size)
+value|cpu_l2cache_wb_range(pte, size)
 end_define
 
 begin_endif
