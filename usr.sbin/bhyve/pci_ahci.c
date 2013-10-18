@@ -8758,7 +8758,7 @@ case|:
 case|case
 name|AHCI_CAP2
 case|:
-name|WPRINTF
+name|DPRINTF
 argument_list|(
 literal|"pci_ahci_host: read only registers 0x%"
 name|PRIx64
