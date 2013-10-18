@@ -325,6 +325,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|virtio_msix
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|foundcpus
 decl_stmt|;
 end_decl_stmt
@@ -469,7 +478,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-aehAHIP][-g<gdb port>][-s<pci>][-S<pci>]"
+literal|"Usage: %s [-aehAHIPW][-g<gdb port>][-s<pci>][-S<pci>]"
 literal|"[-c vcpus][-p pincpu][-m mem]"
 literal|"<vmname>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
@@ -480,6 +489,7 @@ literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -I: present an ioapic to the guest\n"
 literal|"       -P: vmexit from the guest on pause\n"
+literal|"	-W: force virtio to use single-vector MSI\n"
 literal|"	-e: exit on unhandled i/o access\n"
 literal|"       -h: help\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
@@ -569,6 +579,21 @@ block|{
 return|return
 operator|(
 name|guest_vmexit_on_hlt
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|fbsdrun_virtio_msix
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|virtio_msix
 operator|)
 return|;
 block|}
@@ -2094,7 +2119,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehAHIPp:g:c:s:S:m:"
+literal|"abehAHIPWp:g:c:s:S:m:"
 argument_list|)
 operator|)
 operator|!=
@@ -2263,6 +2288,14 @@ case|:
 name|strictio
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'W'
+case|:
+name|virtio_msix
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
