@@ -13059,12 +13059,6 @@ block|{
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-if|if
-condition|(
-name|kernel_vm_end
-operator|!=
-literal|0
-condition|)
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -13079,12 +13073,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|kernel_vm_end
-operator|!=
-literal|0
-condition|)
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
