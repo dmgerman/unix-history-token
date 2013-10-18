@@ -24874,9 +24874,15 @@ operator|->
 name|mac_ver
 operator|==
 literal|0x3070
+operator|&&
+name|sc
+operator|->
+name|mac_rev
+operator|<
+literal|0x0201
 condition|)
 block|{
-comment|/* change voltage from 1.2V to 1.35V for RT3070 */
+comment|/*  		 * Change voltage from 1.2V to 1.35V for RT3070. 		 * The DAC issue (RT3070_LDO_CFG0) has been fixed 		 * in RT3070(F). 		 */
 name|run_read
 argument_list|(
 name|sc
@@ -25202,7 +25208,7 @@ operator|(
 name|bbp4
 operator|&
 operator|~
-literal|0x08
+literal|0x18
 operator|)
 operator||
 literal|0x10
@@ -25326,6 +25332,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|sc
+operator|->
+name|mac_rev
+operator|<
+literal|0x0201
+operator|||
 name|sc
 operator|->
 name|mac_rev
