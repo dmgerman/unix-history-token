@@ -9574,6 +9574,10 @@ name|printf
 argument_list|(
 literal|"%8ld%c\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|rtm
 operator|->
 name|rtm_rmx
@@ -9583,6 +9587,7 @@ operator|-
 name|ts
 operator|.
 name|tv_sec
+argument_list|)
 argument_list|,
 name|lock
 argument_list|(
