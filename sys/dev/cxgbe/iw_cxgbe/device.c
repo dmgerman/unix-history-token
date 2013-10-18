@@ -1613,7 +1613,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|iw_cxgbe
 argument_list|,
-name|t4_nex
+name|t4nex
 argument_list|,
 literal|1
 argument_list|,
