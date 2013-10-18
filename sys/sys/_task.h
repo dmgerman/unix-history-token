@@ -69,17 +69,6 @@ modifier|*
 name|ta_context
 decl_stmt|;
 comment|/* (c) argument for handler */
-ifdef|#
-directive|ifdef
-name|VIMAGE
-name|struct
-name|vnet
-modifier|*
-name|ta_vnet
-decl_stmt|;
-comment|/* (c) vnet context */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
