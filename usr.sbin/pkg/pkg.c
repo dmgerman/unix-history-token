@@ -632,7 +632,7 @@ name|NULL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Bootstrapping pkg please wait\n"
+literal|"Bootstrapping pkg, please wait...\n"
 argument_list|)
 expr_stmt|;
 if|if
