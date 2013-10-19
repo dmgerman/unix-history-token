@@ -516,7 +516,7 @@ name|provider
 operator|->
 name|sectorsize
 argument_list|,
-name|NULL
+literal|"notused"
 argument_list|)
 expr_stmt|;
 block|}
