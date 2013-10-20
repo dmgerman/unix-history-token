@@ -3017,6 +3017,32 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|softdep_process_worklist
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|softdep_waitidle
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|drain_output
 parameter_list|(
@@ -4534,6 +4560,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ufs2_daddr_t
 name|blkcount
 parameter_list|(
@@ -8993,6 +9020,7 @@ comment|/*  * Process that runs once per second to handle items in the backgroun
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|softdep_process_worklist
 parameter_list|(
@@ -10405,6 +10433,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|softdep_waitidle
 parameter_list|(
@@ -30100,6 +30129,7 @@ comment|/*  * Calculate the number of blocks we are going to release where datab
 end_comment
 
 begin_function
+specifier|static
 name|ufs2_daddr_t
 name|blkcount
 parameter_list|(
