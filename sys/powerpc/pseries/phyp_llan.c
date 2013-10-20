@@ -2129,8 +2129,6 @@ operator|.
 name|ds_addr
 expr_stmt|;
 block|}
-name|error
-operator|=
 name|phyp_hcall
 argument_list|(
 name|H_SEND_LOGICAL_LAN
@@ -2172,14 +2170,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (error) 		sc->ifp->if_drv_flags |= IFF_DRV_OACTIVE;
-comment|/* XXX: handle H_BUSY? */
-comment|/* H_SEND_LOGICAL_LAN returning 0 implies completion of the send op */
-endif|#
-directive|endif
+comment|/* 	 * The hypercall returning implies completion -- or that the call will 	 * not complete. In principle, we should try a few times if we get back 	 * H_BUSY based on the continuation token in R4. For now, just drop 	 * the packet in such cases. 	 */
 block|}
 end_function
 
@@ -2350,7 +2341,6 @@ name|sc
 operator|->
 name|tx_dma_map
 argument_list|,
-comment|//xfer->dmamap,
 name|mb_head
 argument_list|,
 name|llan_send_packet
@@ -2371,7 +2361,6 @@ operator|->
 name|tx_dma_map
 argument_list|)
 expr_stmt|;
-comment|// XXX
 name|m_freem
 argument_list|(
 name|mb_head
