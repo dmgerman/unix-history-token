@@ -730,6 +730,9 @@ name|fork_trampoline
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|AIM
 name|pcb
 operator|->
 name|pcb_cpu
@@ -740,6 +743,8 @@ name|usr_vsid
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Setup to release spin count in fork_exit(). */
 name|td2
 operator|->
@@ -765,24 +770,15 @@ begin_comment
 comment|/*  * Intercept the return address from a freshly forked process that has NOT  * been scheduled yet.  *  * This is needed to make kernel threads stay in kernel mode.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|cpu_set_fork_handler
-argument_list|(
-name|td
-argument_list|,
-name|func
-argument_list|,
-name|arg
-argument_list|)
-decl|struct
+parameter_list|(
+name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -792,17 +788,11 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 name|arg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|callframe
@@ -856,21 +846,18 @@ operator|)
 name|arg
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|cpu_exit
 parameter_list|(
-name|td
-parameter_list|)
-specifier|register
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-block|{ }
+parameter_list|)
+block|{  }
 end_function
 
 begin_comment
@@ -1211,7 +1198,7 @@ expr_stmt|;
 name|sf_buf_alloc_want
 operator|--
 expr_stmt|;
-comment|/*                  * If we got a signal, don't risk going back to sleep.                  */
+comment|/* 		 * If we got a signal, don't risk going back to sleep. 		 */
 if|if
 condition|(
 name|error
@@ -1309,7 +1296,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detatch mapped page and release resources back to the system.  *  * Remove a reference from the given sf_buf, adding it to the free  * list when its reference count reaches zero. A freed sf_buf still,  * however, retains its virtual-to-physical mapping until it is  * recycled or reactivated by sf_buf_alloc(9).  */
+comment|/*  * Detach mapped page and release resources back to the system.  *  * Remove a reference from the given sf_buf, adding it to the free  * list when its reference count reaches zero. A freed sf_buf still,  * however, retains its virtual-to-physical mapping until it is  * recycled or reactivated by sf_buf_alloc(9).  */
 end_comment
 
 begin_function
@@ -1415,15 +1402,15 @@ begin_function
 name|int
 name|is_physical_memory
 parameter_list|(
-name|addr
-parameter_list|)
 name|vm_offset_t
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * stuff other tests for known memory-mapped devices (PCI?) 	 * here 	 */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1441,7 +1428,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -1453,7 +1440,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 end_unit
