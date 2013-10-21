@@ -17217,14 +17217,6 @@ name|ptr
 operator|=
 name|mpt
 expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|lun
@@ -24363,7 +24355,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 block|}

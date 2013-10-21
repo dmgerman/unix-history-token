@@ -7010,7 +7010,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|bytes

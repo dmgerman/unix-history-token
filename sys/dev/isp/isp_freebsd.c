@@ -13857,7 +13857,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_DIS_DISCONNECT
 expr_stmt|;
 block|}
@@ -13868,8 +13868,9 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
-literal|0
+operator|&=
+operator|~
+name|CAM_DIS_DISCONNECT
 expr_stmt|;
 block|}
 if|if
@@ -14838,7 +14839,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|atiop
@@ -14856,7 +14857,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|atiop
@@ -14874,7 +14875,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|atiop
@@ -16154,7 +16155,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|atiop
@@ -16172,7 +16173,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|atiop
@@ -16190,7 +16191,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|=
+operator||=
 name|CAM_TAG_ACTION_VALID
 expr_stmt|;
 name|atiop
@@ -30018,14 +30019,6 @@ operator|.
 name|spriv_ptr1
 operator|=
 name|isp
-expr_stmt|;
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|flags
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
