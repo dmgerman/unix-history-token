@@ -4716,6 +4716,9 @@ name|rl_hwrev
 modifier|*
 name|rl_hwrev
 decl_stmt|;
+name|uint32_t
+name|rl_macrev
+decl_stmt|;
 name|int
 name|rl_eecmd_read
 decl_stmt|;

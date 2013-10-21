@@ -6619,6 +6619,14 @@ operator|&
 literal|0x7c800000
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|rl_macrev
+operator|=
+name|hwrev
+operator|&
+literal|0x00700000
+expr_stmt|;
 name|hwrev
 operator|&=
 name|RL_TXCFG_HWREV
@@ -6631,9 +6639,9 @@ name|dev
 argument_list|,
 literal|"MAC rev. 0x%08x\n"
 argument_list|,
-name|hwrev
-operator|&
-literal|0x00700000
+name|sc
+operator|->
+name|rl_macrev
 argument_list|)
 expr_stmt|;
 while|while
@@ -6882,11 +6890,9 @@ name|RL_HWREV_8168C
 case|:
 if|if
 condition|(
-operator|(
-name|hwrev
-operator|&
-literal|0x00700000
-operator|)
+name|sc
+operator|->
+name|rl_macrev
 operator|==
 literal|0x00200000
 condition|)
