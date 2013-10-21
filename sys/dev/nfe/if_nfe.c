@@ -17230,11 +17230,7 @@ operator|<
 name|mib_cnt
 condition|;
 name|i
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
+operator|++
 control|)
 name|NFE_READ
 argument_list|(
@@ -17243,6 +17239,11 @@ argument_list|,
 name|NFE_TX_OCTET
 operator|+
 name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
