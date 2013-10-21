@@ -189,6 +189,10 @@ name|long
 name|ui_ptscnt
 decl_stmt|;
 comment|/* (b) number of pseudo-terminals */
+name|long
+name|ui_kqcnt
+decl_stmt|;
+comment|/* (b) number of kqueues */
 name|uid_t
 name|ui_uid
 decl_stmt|;
@@ -321,6 +325,24 @@ name|struct
 name|timeval
 modifier|*
 name|sp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|chgkqcnt
+parameter_list|(
+name|struct
+name|uidinfo
+modifier|*
+name|uip
+parameter_list|,
+name|int
+name|diff
+parameter_list|,
+name|rlim_t
+name|max
 parameter_list|)
 function_decl|;
 end_function_decl

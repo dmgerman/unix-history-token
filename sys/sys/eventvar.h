@@ -161,6 +161,11 @@ name|struct
 name|task
 name|kq_task
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|kq_cred
+decl_stmt|;
 block|}
 struct|;
 end_struct
