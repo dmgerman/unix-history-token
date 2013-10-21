@@ -435,7 +435,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* 	 * Check the BSP's timebase frequency. Sometimes we can't find the BSP, so fall 	 * back to the first CPU in this case. 	 */
+comment|/* 	 * Check the BSP's timebase frequency. Sometimes we can't find the BSP, 	 * so fall back to the first CPU in this case. 	 */
 if|if
 condition|(
 name|platform_smp_get_bsp
