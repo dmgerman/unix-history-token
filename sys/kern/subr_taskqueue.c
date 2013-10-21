@@ -1128,6 +1128,7 @@ argument_list|(
 name|queue
 argument_list|)
 expr_stmt|;
+comment|/* Return with lock released. */
 return|return
 operator|(
 literal|0
@@ -1168,6 +1169,7 @@ argument_list|,
 name|task
 argument_list|)
 expr_stmt|;
+comment|/* The lock is released inside. */
 return|return
 operator|(
 name|res
@@ -1247,6 +1249,7 @@ operator|->
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* The lock is released inside. */
 block|}
 end_function
 
@@ -1338,6 +1341,7 @@ operator|->
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* The lock is released inside. */
 block|}
 else|else
 block|{
