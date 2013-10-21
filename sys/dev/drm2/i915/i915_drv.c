@@ -3381,7 +3381,7 @@ argument_list|(
 name|dev
 argument_list|,
 operator|(
-name|I915_READ
+name|I915_READ_NOTRACE
 argument_list|(
 name|GEN6_GDRST
 argument_list|)
