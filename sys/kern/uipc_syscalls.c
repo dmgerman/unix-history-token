@@ -10444,9 +10444,16 @@ argument_list|)
 operator|)
 argument_list|,
 operator|(
-literal|"wrong page state m %p"
+literal|"wrong page state m %p off %#jx xfsize %d"
 operator|,
 name|m
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|off
+operator|,
+name|xfsize
 operator|)
 argument_list|)
 expr_stmt|;
