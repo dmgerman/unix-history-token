@@ -75,6 +75,9 @@ name|int
 name|sc_bus
 decl_stmt|;
 name|int
+name|sc_initialized
+decl_stmt|;
+name|int
 name|sc_quirks
 decl_stmt|;
 name|struct
@@ -110,6 +113,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|int
+name|ofw_pci_init
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
