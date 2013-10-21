@@ -104,7 +104,7 @@ decl_stmt|;
 block|}
 name|rlimit_param
 index|[
-literal|13
+literal|14
 index|]
 init|=
 block|{
@@ -185,6 +185,12 @@ literal|"swapuse"
 block|,
 literal|"B  "
 block|}
+block|,
+block|{
+literal|"kqueues"
+block|,
+literal|"   "
+block|}
 block|, }
 struct|;
 end_struct
@@ -194,7 +200,7 @@ if|#
 directive|if
 name|RLIM_NLIMITS
 operator|>
-literal|13
+literal|14
 end_if
 
 begin_error
