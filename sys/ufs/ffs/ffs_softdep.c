@@ -1708,10 +1708,10 @@ modifier|*
 name|devvp
 parameter_list|,
 name|int
-name|softdep_deps
+name|softdep_depcnt
 parameter_list|,
 name|int
-name|softdep_accdeps
+name|softdep_accdepcnt
 parameter_list|,
 name|int
 name|secondary_writes
@@ -1731,12 +1731,12 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|softdep_deps
+name|softdep_depcnt
 operator|,
 operator|(
 name|void
 operator|)
-name|softdep_accdeps
+name|softdep_accdepcnt
 expr_stmt|;
 name|bo
 operator|=
