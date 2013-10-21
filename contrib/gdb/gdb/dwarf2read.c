@@ -7722,6 +7722,9 @@ break|break;
 case|case
 name|DW_TAG_reference_type
 case|:
+case|case
+name|DW_TAG_rvalue_reference_type
+case|:
 name|read_tag_reference_type
 argument_list|(
 name|die
@@ -24518,6 +24521,9 @@ break|break;
 case|case
 name|DW_TAG_reference_type
 case|:
+case|case
+name|DW_TAG_rvalue_reference_type
+case|:
 name|read_tag_reference_type
 argument_list|(
 name|die
@@ -25658,6 +25664,12 @@ name|DW_TAG_reference_type
 case|:
 return|return
 literal|"DW_TAG_reference_type"
+return|;
+case|case
+name|DW_TAG_rvalue_reference_type
+case|:
+return|return
+literal|"DW_TAG_rvalue_reference_type"
 return|;
 case|case
 name|DW_TAG_compile_unit

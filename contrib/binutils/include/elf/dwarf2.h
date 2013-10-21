@@ -578,6 +578,10 @@ name|DW_TAG_shared_type
 init|=
 literal|0x40
 block|,
+name|DW_TAG_rvalue_reference_type
+init|=
+literal|0x42
+block|,
 comment|/* SGI/MIPS Extensions.  */
 name|DW_TAG_MIPS_loop
 init|=
