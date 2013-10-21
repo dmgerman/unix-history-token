@@ -4010,12 +4010,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Don't flush TLB since guest ASID is unchanged. */
+comment|/* 		 * XXX: Using same ASID for all vcpus of a VM will cause TLB 		 * corruption. This can easily be produced by muxing two vcpus 		 * on same core. 		 * For now, flush guest TLB for every vmrun. 		 */
 name|ctrl
 operator|->
 name|tlb_ctrl
 operator|=
-name|VMCB_TLB_FLUSH_NOTHING
+name|VMCB_TLB_FLUSH_GUEST
 expr_stmt|;
 comment|/*  		 * This is the same cpu on which vcpu last ran so don't 		 * need to reload all VMCB state. 		 * ASID is unique for a guest. 		 * IOPM is unchanged. 		 * RVI/EPT is unchanged. 		 * 		 */
 name|ctrl
