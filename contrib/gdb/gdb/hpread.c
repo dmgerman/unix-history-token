@@ -18445,7 +18445,7 @@ case|:
 comment|/* Check the modifiers and then just make a recursive call on        * the "type" pointed to by the modifier DNTT.        *         * pai:: FIXME -- do we ever want to handle "m_duplicate" and        * "m_void" modifiers?  Is static_flag really needed here?        * (m_static used for methods of classes, elsewhere).        */
 name|tmp_type
 operator|=
-name|make_cv_type
+name|make_cvr_type
 argument_list|(
 name|dn_bufp
 operator|->
@@ -18458,6 +18458,8 @@ operator|->
 name|dmodifier
 operator|.
 name|m_volatile
+argument_list|,
+literal|0
 argument_list|,
 name|hpread_type_lookup
 argument_list|(
