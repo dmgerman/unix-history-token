@@ -570,7 +570,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|xpt_create_path_unlocked
+name|xpt_create_path
 argument_list|(
 operator|&
 name|path
@@ -25247,7 +25247,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|xpt_create_path_unlocked
+name|xpt_create_path
 argument_list|(
 operator|&
 name|wpath
@@ -25286,7 +25286,7 @@ return|return;
 block|}
 name|status
 operator|=
-name|xpt_create_path_unlocked
+name|xpt_create_path
 argument_list|(
 operator|&
 name|path

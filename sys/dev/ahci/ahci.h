@@ -2275,6 +2275,18 @@ name|mtx
 name|mtx
 decl_stmt|;
 comment|/* state lock */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|doneq
+expr_stmt|;
+comment|/* queue of completed CCBs */
+name|int
+name|batch
+decl_stmt|;
+comment|/* doneq is in use */
 name|int
 name|devices
 decl_stmt|;
@@ -2581,6 +2593,14 @@ name|int
 name|cccv
 decl_stmt|;
 comment|/* CCC vector */
+name|int
+name|direct
+decl_stmt|;
+comment|/* Direct command completion */
+name|int
+name|msi
+decl_stmt|;
+comment|/* MSI interupts */
 struct|struct
 block|{
 name|void
