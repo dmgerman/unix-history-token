@@ -10840,6 +10840,12 @@ directive|ifdef
 name|DDB
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOFTUPDATES
+end_ifdef
+
 begin_comment
 comment|/* defined in ffs_softdep.c */
 end_comment
@@ -10938,6 +10944,15 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOFTUPDATES */
+end_comment
 
 begin_endif
 endif|#
