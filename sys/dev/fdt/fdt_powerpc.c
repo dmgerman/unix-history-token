@@ -397,6 +397,14 @@ name|node
 argument_list|,
 literal|"chrp,open-pic"
 argument_list|)
+operator|&&
+operator|!
+name|fdt_is_type
+argument_list|(
+name|node
+argument_list|,
+literal|"open-pic"
+argument_list|)
 condition|)
 return|return
 operator|(
