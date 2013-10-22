@@ -208,33 +208,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* TODO: move it out as separate FrameBuffer interface. */
-end_comment
-
-begin_struct
-struct|struct
-name|fb_info
-block|{
-name|vm_offset_t
-name|fb_vbase
-decl_stmt|;
-name|vm_paddr_t
-name|fb_pbase
-decl_stmt|;
-name|size_t
-name|fb_size
-decl_stmt|;
-comment|/* TODO fb_read method. */
-comment|/* TODO fb_write method. */
-comment|/* TODO fb_bitblt method. */
-comment|/* TODO fb_blank method. */
-comment|/* TODO H/W cursor methods. */
-comment|/* TODO H/W mouse cursor methods. */
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|drm_fb_helper
