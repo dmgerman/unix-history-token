@@ -259,6 +259,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ssize_t
+name|OF_getencprop
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|prop
+parameter_list|,
+name|pcell_t
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Same as getprop, but maintains endianness */
+end_comment
+
+begin_function_decl
 name|int
 name|OF_hasprop
 parameter_list|(
