@@ -526,6 +526,27 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|terminal_set_winsize_blank
+parameter_list|(
+name|struct
+name|terminal
+modifier|*
+name|tm
+parameter_list|,
+specifier|const
+name|struct
+name|winsize
+modifier|*
+name|size
+parameter_list|,
+name|int
+name|blank
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|terminal_set_winsize
 parameter_list|(
 name|struct

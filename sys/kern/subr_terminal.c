@@ -650,7 +650,7 @@ end_function
 
 begin_function
 name|void
-name|terminal_set_winsize
+name|terminal_set_winsize_blank
 parameter_list|(
 name|struct
 name|terminal
@@ -662,6 +662,9 @@ name|struct
 name|winsize
 modifier|*
 name|size
+parameter_list|,
+name|int
+name|blank
 parameter_list|)
 block|{
 name|term_rect_t
@@ -731,7 +734,10 @@ argument_list|(
 name|tm
 argument_list|)
 expr_stmt|;
-comment|/* Blank screen. */
+if|if
+condition|(
+name|blank
+condition|)
 name|tm
 operator|->
 name|tm_class
@@ -758,6 +764,34 @@ expr_stmt|;
 name|terminal_sync_ttysize
 argument_list|(
 name|tm
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|terminal_set_winsize
+parameter_list|(
+name|struct
+name|terminal
+modifier|*
+name|tm
+parameter_list|,
+specifier|const
+name|struct
+name|winsize
+modifier|*
+name|size
+parameter_list|)
+block|{
+name|terminal_set_winsize_blank
+argument_list|(
+name|tm
+argument_list|,
+name|size
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
