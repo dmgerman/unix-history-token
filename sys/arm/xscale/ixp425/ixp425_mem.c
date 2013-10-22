@@ -169,7 +169,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"** SDR_CONFIG retuns unknown value, using 32M\n"
+literal|"** SDR_CONFIG returns unknown value, using 32M\n"
 argument_list|)
 expr_stmt|;
 name|size
