@@ -106,6 +106,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fbsdrun_set_capabilities
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|fbsdrun_addcpu
 parameter_list|(
 name|struct
