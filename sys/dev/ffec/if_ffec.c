@@ -3559,6 +3559,8 @@ name|sc
 argument_list|,
 name|FEC_PAUR_REG
 argument_list|)
+operator|&
+name|FEC_PAUR_PADDR2_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -3625,7 +3627,6 @@ name|paur
 operator|>>
 literal|16
 expr_stmt|;
-return|return;
 block|}
 else|else
 block|{
