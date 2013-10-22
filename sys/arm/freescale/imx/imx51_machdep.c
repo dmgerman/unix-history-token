@@ -167,7 +167,19 @@ name|initarm_late_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{  }
+block|{
+name|cpufunc_control
+argument_list|(
+name|CPU_CONTROL_DC_ENABLE
+operator||
+name|CPU_CONTROL_IC_ENABLE
+argument_list|,
+name|CPU_CONTROL_DC_ENABLE
+operator||
+name|CPU_CONTROL_IC_ENABLE
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_define
