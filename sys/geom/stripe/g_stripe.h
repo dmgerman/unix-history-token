@@ -127,6 +127,10 @@ decl_stmt|;
 name|uint32_t
 name|sc_stripebits
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
+decl_stmt|;
 block|}
 struct|;
 end_struct

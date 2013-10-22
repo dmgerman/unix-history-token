@@ -4669,6 +4669,12 @@ argument_list|(
 name|geom
 argument_list|)
 expr_stmt|;
+name|rcp
+operator|->
+name|flags
+operator||=
+name|G_CF_DIRECT_RECEIVE
+expr_stmt|;
 name|g_attach
 argument_list|(
 name|rcp

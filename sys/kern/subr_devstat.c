@@ -465,6 +465,12 @@ condition|)
 block|{
 name|ds
 operator|->
+name|unit_number
+operator|=
+name|unit_number
+expr_stmt|;
+name|ds
+operator|->
 name|id
 operator|=
 name|dev_name
@@ -839,9 +845,10 @@ if|if
 condition|(
 name|ds
 operator|->
-name|id
-operator|==
-name|NULL
+name|unit_number
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|devstat_num_devs

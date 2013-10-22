@@ -1055,6 +1055,14 @@ name|private
 operator|=
 name|sc
 expr_stmt|;
+name|cp
+operator|->
+name|flags
+operator||=
+name|G_CF_DIRECT_SEND
+operator||
+name|G_CF_DIRECT_RECEIVE
+expr_stmt|;
 name|error
 operator|=
 name|g_attach
