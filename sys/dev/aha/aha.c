@@ -5349,6 +5349,7 @@ name|error
 operator|==
 name|CAM_REQ_CMP
 condition|)
+block|{
 name|xpt_async
 argument_list|(
 name|AC_SENT_BDR
@@ -5358,6 +5359,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|xpt_free_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+block|}
 name|ccb_h
 operator|=
 name|LIST_FIRST
