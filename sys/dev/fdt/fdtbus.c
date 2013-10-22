@@ -707,17 +707,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"FDT main bus"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bootverbose
-condition|)
-name|device_quiet
-argument_list|(
-name|dev
+literal|"Flattened Device Tree"
 argument_list|)
 expr_stmt|;
 return|return
@@ -789,9 +779,8 @@ literal|0
 expr_stmt|;
 name|end
 operator|=
-name|FDT_INTR_MAX
-operator|-
-literal|1
+operator|~
+literal|0
 expr_stmt|;
 name|sc
 operator|->
