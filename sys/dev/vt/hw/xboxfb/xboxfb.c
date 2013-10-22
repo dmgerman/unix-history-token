@@ -172,6 +172,8 @@ operator|.
 name|vd_priority
 operator|=
 name|VD_PRIORITY_GENERIC
+operator|+
+literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt

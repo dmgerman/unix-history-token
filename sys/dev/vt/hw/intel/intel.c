@@ -172,12 +172,12 @@ name|vd_bitbltchr
 operator|=
 name|intel_vtbitbltchr
 block|,
-comment|/* Prefer to use KMS, so GENERIC - 10 */
+comment|/* Prefer to use KMS, so GENERIC + 10 */
 operator|.
 name|vd_priority
 operator|=
 name|VD_PRIORITY_GENERIC
-operator|-
+operator|+
 literal|10
 block|, }
 decl_stmt|;
