@@ -14345,13 +14345,18 @@ name|flags
 operator|&
 name|CAM_PERIPH_RUN_TASK
 condition|)
-block|{
 break|break;
-block|}
-name|cam_periph_acquire
-argument_list|(
+name|xpt_lock_buses
+argument_list|()
+expr_stmt|;
 name|periph
-argument_list|)
+operator|->
+name|refcount
+operator|++
+expr_stmt|;
+comment|/* Unconditionally acquire */
+name|xpt_unlock_buses
+argument_list|()
 expr_stmt|;
 name|periph
 operator|->
