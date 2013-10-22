@@ -8454,9 +8454,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 name|struct
 name|ifreq
 modifier|*
@@ -8469,6 +8466,9 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*
