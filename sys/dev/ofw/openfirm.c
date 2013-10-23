@@ -933,7 +933,9 @@ literal|4
 operator|==
 literal|0
 argument_list|,
+operator|(
 literal|"Need a multiple of 4 bytes"
+operator|)
 argument_list|)
 expr_stmt|;
 name|retval
@@ -1291,7 +1293,9 @@ literal|4
 operator|==
 literal|0
 argument_list|,
+operator|(
 literal|"Need a multiple of 4 bytes"
+operator|)
 argument_list|)
 expr_stmt|;
 name|retval
