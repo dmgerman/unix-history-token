@@ -831,6 +831,7 @@ name|mirrors
 operator|!=
 name|NULL
 condition|)
+block|{
 name|strlcpy
 argument_list|(
 name|u
@@ -849,6 +850,15 @@ name|host
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|u
+operator|->
+name|port
+operator|=
+name|current
+operator|->
+name|port
+expr_stmt|;
+block|}
 name|remote
 operator|=
 name|fetchXGet

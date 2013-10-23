@@ -43,6 +43,10 @@ name|unsigned
 name|int
 name|port
 decl_stmt|;
+name|unsigned
+name|int
+name|finalweight
+decl_stmt|;
 name|char
 name|host
 index|[
