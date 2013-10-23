@@ -203,6 +203,32 @@ value|20
 end_define
 
 begin_comment
+comment|/* Capability bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTBLK_F_SEG_MAX
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Maximum request segments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTBLK_F_BLK_SIZE
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* cfg block size valid */
+end_comment
+
+begin_comment
 comment|/*  * Host capabilities  */
 end_comment
 
@@ -211,9 +237,7 @@ define|#
 directive|define
 name|VTBLK_S_HOSTCAPS
 define|\
-value|( 0x00000004 |
-comment|/* host maximum request segments */
-value|\     VIRTIO_RING_F_INDIRECT_DESC )
+value|( VTBLK_F_SEG_MAX  |						    \     VTBLK_F_BLK_SIZE |						    \     VIRTIO_RING_F_INDIRECT_DESC )
 end_define
 
 begin_comment
@@ -1281,8 +1305,9 @@ name|vbc_capacity
 operator|=
 name|size
 operator|/
-name|sectsz
+name|DEV_BSIZE
 expr_stmt|;
+comment|/* 512-byte units */
 name|sc
 operator|->
 name|vbsc_cfg
