@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bsdyml.h>
+file|<yaml.h>
 end_include
 
 begin_include
