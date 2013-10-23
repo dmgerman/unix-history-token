@@ -2331,7 +2331,7 @@ return|;
 comment|/* 	 * Find #interrupt-cells of the interrupt domain. 	 */
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2637,7 +2637,7 @@ name|child
 decl_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
