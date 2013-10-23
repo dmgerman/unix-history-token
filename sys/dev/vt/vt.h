@@ -322,6 +322,11 @@ directive|define
 name|VBF_SCROLL
 value|0x8
 comment|/* scroll locked mode. */
+define|#
+directive|define
+name|VBF_HISTORY_FULL
+value|0x10
+comment|/* All rows filled. */
 name|int
 name|vb_history_size
 decl_stmt|;
