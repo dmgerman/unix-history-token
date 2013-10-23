@@ -307,6 +307,9 @@ decl_stmt|;
 name|kmutex_t
 name|vq_lock
 decl_stmt|;
+name|uint64_t
+name|vq_lastoffset
+decl_stmt|;
 block|}
 struct|;
 comment|/*  * Virtual device descriptor  */
@@ -655,6 +658,19 @@ name|trim_map
 modifier|*
 name|vdev_trimmap
 decl_stmt|;
+comment|/* map on outstanding trims	*/
+name|uint16_t
+name|vdev_rotation_rate
+decl_stmt|;
+comment|/* rotational rate of the media */
+define|#
+directive|define
+name|VDEV_RATE_UNKNOWN
+value|0
+define|#
+directive|define
+name|VDEV_RATE_NON_ROTATING
+value|1
 comment|/* 	 * For DTrace to work in userland (libzpool) context, these fields must 	 * remain at the end of the structure.  DTrace will use the kernel's 	 * CTF definition for 'struct vdev', and since the size of a kmutex_t is 	 * larger in userland, the offsets for the rest of the fields would be 	 * incorrect. 	 */
 name|kmutex_t
 name|vdev_dtl_lock

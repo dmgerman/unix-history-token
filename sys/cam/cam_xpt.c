@@ -24525,6 +24525,14 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Call the peripheral driver's callback */
+name|ccb_h
+operator|->
+name|pinfo
+operator|.
+name|index
+operator|=
+name|CAM_UNQUEUED_INDEX
+expr_stmt|;
 call|(
 modifier|*
 name|ccb_h
@@ -24717,14 +24725,6 @@ name|sim_links
 operator|.
 name|stqe
 argument_list|)
-expr_stmt|;
-name|ccb_h
-operator|->
-name|pinfo
-operator|.
-name|index
-operator|=
-name|CAM_UNQUEUED_INDEX
 expr_stmt|;
 name|xpt_done_process
 argument_list|(

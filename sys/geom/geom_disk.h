@@ -281,6 +281,9 @@ decl_stmt|;
 name|uint16_t
 name|d_hba_subdevice
 decl_stmt|;
+name|uint16_t
+name|d_rotation_rate
+decl_stmt|;
 comment|/* Fields private to the driver */
 name|void
 modifier|*
@@ -471,8 +474,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_04
+value|0x5856105d
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_03
+value|DISK_VERSION_04
 end_define
 
 begin_endif

@@ -120,7 +120,7 @@ value|((PAGE_MASK>> TLBMASK_SHIFT)<< TLBMASK_SHIFT)
 end_define
 
 begin_comment
-comment|/*  * FreeBSD/mips page-table entries take a near-identical format to MIPS TLB  * entries, each consisting of two 32-bit or 64-bit values ("EntryHi" and  * "EntryLo").  MIPS4k and MIPS64 both define certain bits in TLB entries as  * reserved, and these must be zero-filled by software.  We overload these  * bits in PTE entries to hold  PTE_ flags such as RO, W, and MANAGED.  * However, we must mask these out when writing to TLB entries to ensure that  * they do not become visible to hardware -- especially on MIPS64r2 which has  * an extended physical memory space.  *  * When using n64 and n32, shift software-defined bits into the MIPS64r2  * reserved range, which runs from bit 55 ... 63.  In other configurations  * (32-bit MIPS4k and compatible), shift them out to bits 29 ... 31.  *  * NOTE: This means that for 32-bit use of CP0, we aren't able to set the top  * bit of PFN to a non-zero value, as software is using it!  This physical  * memory size limit may not be sufficiently enforced elsewhere.  */
+comment|/*  * PFN for EntryLo register.  Upper bits are 0, which is to say that  * bit 28 is the last hardware bit;  Bits 29 and upwards (EntryLo is  * 64 bit though it can be referred to in 32-bits providing 3 software  * bits safely.  We use it as 64 bits to get many software bits, and  * god knows what else.) are unacknowledged by hardware.  They may be  * written as anything, but otherwise they have as much meaning as  * other 0 fields.  */
 end_comment
 
 begin_if
@@ -145,14 +145,7 @@ begin_define
 define|#
 directive|define
 name|TLBLO_SWBITS_SHIFT
-value|(55)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TLBLO_SWBITS_CLEAR_SHIFT
-value|(9)
+value|(34)
 end_define
 
 begin_define
@@ -439,7 +432,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * VM flags managed in software:  * 	RO:	Read only.  Never set PTE_D on this page, and don't  * 		listen to requests to write to it.  * 	W:	Wired.  ???  *	MANAGED:Managed.  This PTE maps a managed page.  *  * These bits should not be written into the TLB, so must first be masked out  * explicitly in C, or using CLEAR_PTE_SWBITS() in assembly.  */
+comment|/*  * VM flags managed in software:  * 	RO:	Read only.  Never set PTE_D on this page, and don't  * 		listen to requests to write to it.  * 	W:	Wired.  ???  *	MANAGED:Managed.  This PTE maps a managed page.  */
 end_comment
 
 begin_define
@@ -644,11 +637,11 @@ name|CLEAR_PTE_SWBITS
 parameter_list|(
 name|r
 parameter_list|)
-value|LONG_SLL r, TLBLO_SWBITS_CLEAR_SHIFT; LONG_SRL r, TLBLO_SWBITS_CLEAR_SHIFT
+value|sll r, 3; srl r, 3
 end_define
 
 begin_comment
-comment|/* remove swbits */
+comment|/* remove 3 high bits */
 end_comment
 
 begin_endif
