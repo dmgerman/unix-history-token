@@ -11949,6 +11949,8 @@ operator||
 name|IFCAP_VLAN_HWTSO
 operator||
 name|IFCAP_VLAN_MTU
+operator||
+name|IFCAP_HWSTATS
 expr_stmt|;
 name|ifp
 operator|->

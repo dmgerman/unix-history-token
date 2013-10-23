@@ -1172,9 +1172,27 @@ name|sc
 operator|->
 name|sc_rid
 argument_list|,
+ifndef|#
+directive|ifndef
+name|ATSE_CFI_HACK
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|RF_ACTIVE
+operator||
+name|RF_SHAREABLE
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
 if|if
 condition|(
 name|sc
@@ -1188,6 +1206,9 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+end_if
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_tag
@@ -1199,6 +1220,9 @@ operator|->
 name|sc_res
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_handle
@@ -1210,7 +1234,13 @@ operator|->
 name|sc_res
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Get time-out values for erase, write, and buffer write. */
+end_comment
+
+begin_expr_stmt
 name|ttoexp
 operator|=
 name|cfi_read_qry
@@ -1220,6 +1250,9 @@ argument_list|,
 name|CFI_QRY_TTO_ERASE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mtoexp
 operator|=
 name|cfi_read_qry
@@ -1229,6 +1262,9 @@ argument_list|,
 name|CFI_QRY_MTO_ERASE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1248,6 +1284,9 @@ operator|=
 literal|16
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1270,6 +1309,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|mtoexp
@@ -1293,6 +1335,9 @@ operator|=
 literal|4
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1319,6 +1364,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_typical_timeouts
@@ -1334,6 +1382,9 @@ operator|<<
 name|ttoexp
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_max_timeouts
@@ -1354,6 +1405,9 @@ operator|<<
 name|mtoexp
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ttoexp
 operator|=
 name|cfi_read_qry
@@ -1363,6 +1417,9 @@ argument_list|,
 name|CFI_QRY_TTO_WRITE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mtoexp
 operator|=
 name|cfi_read_qry
@@ -1372,6 +1429,9 @@ argument_list|,
 name|CFI_QRY_MTO_WRITE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1391,6 +1451,9 @@ operator|=
 literal|18
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1413,6 +1476,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|mtoexp
@@ -1436,6 +1502,9 @@ operator|=
 literal|4
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1462,6 +1531,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_typical_timeouts
@@ -1477,6 +1549,9 @@ operator|<<
 name|ttoexp
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_max_timeouts
@@ -1497,6 +1572,9 @@ operator|<<
 name|mtoexp
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ttoexp
 operator|=
 name|cfi_read_qry
@@ -1506,6 +1584,9 @@ argument_list|,
 name|CFI_QRY_TTO_BUFWRITE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mtoexp
 operator|=
 name|cfi_read_qry
@@ -1515,7 +1596,13 @@ argument_list|,
 name|CFI_QRY_MTO_BUFWRITE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Don't check for 0, it means not-supported. */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1538,6 +1625,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ttoexp
@@ -1564,6 +1654,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_typical_timeouts
@@ -1584,6 +1677,9 @@ name|CFI_QRY_TTO_BUFWRITE
 argument_list|)
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_max_timeouts
@@ -1609,7 +1705,13 @@ name|CFI_QRY_MTO_BUFWRITE
 argument_list|)
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Get the maximum size of a multibyte program */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|sc
@@ -1652,7 +1754,13 @@ name|sc_maxbuf
 operator|=
 literal|0
 expr_stmt|;
+end_if
+
+begin_comment
 comment|/* Get erase regions. */
+end_comment
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_regions
@@ -1664,6 +1772,9 @@ argument_list|,
 name|CFI_QRY_NREGIONS
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_region
@@ -1687,6 +1798,9 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|r
@@ -1796,7 +1910,13 @@ operator|*
 literal|256
 expr_stmt|;
 block|}
+end_for
+
+begin_comment
 comment|/* Reset the device to a default state. */
+end_comment
+
+begin_expr_stmt
 name|cfi_write
 argument_list|(
 name|sc
@@ -1806,6 +1926,9 @@ argument_list|,
 name|CFI_BCS_CLEAR_STATUS
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|bootverbose
@@ -1876,6 +1999,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_if
+
+begin_expr_stmt
 name|u
 operator|=
 name|device_get_unit
@@ -1883,6 +2009,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_nod
@@ -1907,6 +2036,9 @@ argument_list|,
 name|u
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_nod
@@ -1915,15 +2047,27 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cfi_add_sysctls
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|CFI_SUPPORT_STRATAFLASH
+end_ifdef
+
+begin_comment
 comment|/* 	 * Store the Intel factory PPR in the environment.  In some 	 * cases it is the most unique ID on a board. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|cfi_intel_get_factory_pr
@@ -1999,8 +2143,14 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|device_add_child
 argument_list|(
 name|dev
@@ -2011,21 +2161,26 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|cfi_add_sysctls
 parameter_list|(

@@ -288,18 +288,6 @@ block|}
 enum|;
 end_enum
 
-begin_comment
-comment|/* ib_cm and ib_user_cm modules share /sys/class/infiniband_cm */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|class
-name|cm_class
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

@@ -1533,11 +1533,15 @@ name|RTC_CENTURY
 argument_list|)
 index|]
 operator|=
-name|rtcout
+name|bin2bcd
 argument_list|(
+operator|(
 name|tm
 operator|.
 name|tm_year
+operator|+
+literal|1900
+operator|)
 operator|/
 literal|100
 argument_list|)

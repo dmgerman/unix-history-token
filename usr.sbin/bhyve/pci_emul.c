@@ -4316,7 +4316,7 @@ operator|>=
 name|capoff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Capability ID and Next Capability Pointer are readonly 	 */
+comment|/* 	 * Capability ID and Next Capability Pointer are readonly. 	 * However, some o/s's do 4-byte writes that include these. 	 * For this case, trim the write back to 2 bytes and adjust 	 * the data. 	 */
 if|if
 condition|(
 name|offset
@@ -4329,7 +4329,34 @@ name|capoff
 operator|+
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|offset
+operator|==
+name|capoff
+operator|&&
+name|bytes
+operator|==
+literal|4
+condition|)
+block|{
+name|bytes
+operator|=
+literal|2
+expr_stmt|;
+name|offset
+operator|+=
+literal|2
+expr_stmt|;
+name|val
+operator|>>=
+literal|16
+expr_stmt|;
+block|}
+else|else
 return|return;
+block|}
 switch|switch
 condition|(
 name|capid

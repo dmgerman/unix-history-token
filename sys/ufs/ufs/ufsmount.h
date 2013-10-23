@@ -225,68 +225,12 @@ name|pid_t
 name|um_fsckpid
 decl_stmt|;
 comment|/* PID permitted fsck sysctls */
-name|long
-name|um_numindirdeps
-decl_stmt|;
-comment|/* outstanding indirdeps */
 name|struct
-name|workhead
-name|softdep_workitem_pending
-decl_stmt|;
-comment|/* softdep work queue */
-name|struct
-name|worklist
+name|mount_softdeps
 modifier|*
-name|softdep_worklist_tail
+name|um_softdep
 decl_stmt|;
-comment|/* Tail pointer for above */
-name|struct
-name|workhead
-name|softdep_journal_pending
-decl_stmt|;
-comment|/* journal work queue */
-name|struct
-name|worklist
-modifier|*
-name|softdep_journal_tail
-decl_stmt|;
-comment|/* Tail pointer for above */
-name|struct
-name|jblocks
-modifier|*
-name|softdep_jblocks
-decl_stmt|;
-comment|/* Journal block information */
-name|struct
-name|inodedeplst
-name|softdep_unlinked
-decl_stmt|;
-comment|/* Unlinked inodes */
-name|struct
-name|bmsafemaphd
-name|softdep_dirtycg
-decl_stmt|;
-comment|/* Dirty CGs */
-name|int
-name|softdep_on_journal
-decl_stmt|;
-comment|/* Items on the journal list */
-name|int
-name|softdep_on_worklist
-decl_stmt|;
-comment|/* Items on the worklist */
-name|int
-name|softdep_deps
-decl_stmt|;
-comment|/* Total dependency count */
-name|int
-name|softdep_accdeps
-decl_stmt|;
-comment|/* accumulated dep count */
-name|int
-name|softdep_req
-decl_stmt|;
-comment|/* Wakeup when deps hits 0. */
+comment|/* softdep mgmt structure */
 name|struct
 name|vnode
 modifier|*

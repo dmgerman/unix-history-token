@@ -1707,7 +1707,7 @@ argument_list|)
 expr_stmt|;
 name|vm_max_kernel_address
 operator|=
-literal|0xd0000000
+literal|0xe0000000
 expr_stmt|;
 name|pmap_bootstrap
 argument_list|(

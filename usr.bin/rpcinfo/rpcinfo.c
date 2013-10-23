@@ -2794,8 +2794,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 operator|||
 name|addr
 operator|->
@@ -2803,7 +2802,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 block|{
 if|if

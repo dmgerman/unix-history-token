@@ -1528,8 +1528,7 @@ condition|)
 do|;
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 block|}

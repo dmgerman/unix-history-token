@@ -753,21 +753,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|enc_done
-parameter_list|(
-name|struct
-name|cam_periph
-modifier|*
-parameter_list|,
-name|union
-name|ccb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|enc_error
 parameter_list|(

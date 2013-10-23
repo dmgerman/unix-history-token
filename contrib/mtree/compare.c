@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: compare.c,v 1.55 2012/10/05 00:59:35 christos Exp $	*/
+comment|/*	$NetBSD: compare.c,v 1.56 2013/09/09 23:27:43 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: compare.c,v 1.55 2012/10/05 00:59:35 christos Exp $"
+literal|"$NetBSD: compare.c,v 1.56 2013/09/09 23:27:43 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -649,21 +655,19 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%sdevice (%#llx, %#llx"
+literal|"%sdevice (%#jx, %#jx"
 argument_list|,
 name|tab
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|s
 operator|->
 name|st_rdev
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|p
 operator|->
@@ -1214,21 +1218,19 @@ name|LABEL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ssize (%lld, %lld)\n"
+literal|"%ssize (%ju, %ju)\n"
 argument_list|,
 name|tab
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|s
 operator|->
 name|st_size
 argument_list|,
 operator|(
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|p
 operator|->

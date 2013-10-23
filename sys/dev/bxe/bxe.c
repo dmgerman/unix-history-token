@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.78.17"
+value|"1.78.18"
 end_define
 
 begin_include
@@ -10647,11 +10647,10 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"SPQE -> %p\n"
+literal|"SPQE -> %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -10666,7 +10665,7 @@ name|sc
 argument_list|,
 name|DBG_SP
 argument_list|,
-literal|"FUNC_RDATA -> %p / %p\n"
+literal|"FUNC_RDATA -> %p / %#jx\n"
 argument_list|,
 name|BXE_SP
 argument_list|(
@@ -10676,8 +10675,7 @@ name|func_rdata
 argument_list|)
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|BXE_SP_MAPPING
 argument_list|(
@@ -29087,11 +29085,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics request base address set to %p\n"
+literal|"statistics request base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -29104,11 +29101,10 @@ name|sc
 argument_list|,
 name|DBG_LOAD
 argument_list|,
-literal|"statistics data base address set to %p\n"
+literal|"statistics data base address set to %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|sc
 operator|->
@@ -60869,11 +60865,39 @@ case|case
 name|ELINK_ETH_PHY_SFPP_10G_FIBER
 case|:
 case|case
-name|ELINK_ETH_PHY_SFP_1G_FIBER
-case|:
-case|case
 name|ELINK_ETH_PHY_XFP_FIBER
 case|:
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"Found 10Gb Fiber media.\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|media
+operator|=
+name|IFM_10G_SR
+expr_stmt|;
+break|break;
+case|case
+name|ELINK_ETH_PHY_SFP_1G_FIBER
+case|:
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"Found 1Gb Fiber media.\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|media
+operator|=
+name|IFM_1000_SX
+expr_stmt|;
+break|break;
 case|case
 name|ELINK_ETH_PHY_KR
 case|:
@@ -60914,6 +60938,20 @@ break|break;
 case|case
 name|ELINK_ETH_PHY_BASE_T
 case|:
+if|if
+condition|(
+name|sc
+operator|->
+name|link_params
+operator|.
+name|speed_cap_mask
+index|[
+literal|0
+index|]
+operator|&
+name|PORT_HW_CFG_SPEED_CAPABILITY_D0_10G
+condition|)
+block|{
 name|BLOGI
 argument_list|(
 name|sc
@@ -60927,6 +60965,23 @@ name|media
 operator|=
 name|IFM_10G_T
 expr_stmt|;
+block|}
+else|else
+block|{
+name|BLOGI
+argument_list|(
+name|sc
+argument_list|,
+literal|"Found 1000Base-T media.\n"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|media
+operator|=
+name|IFM_1000_T
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ELINK_ETH_PHY_NOT_PRESENT

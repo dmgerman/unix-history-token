@@ -1083,15 +1083,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"lost device\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1121,15 +1112,6 @@ operator|)
 name|periph
 operator|->
 name|softc
-expr_stmt|;
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"removing device entry\n"
-argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
@@ -1285,10 +1267,6 @@ literal|"pmp"
 argument_list|,
 name|CAM_PERIPH_BIO
 argument_list|,
-name|cgd
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|pmpasync
@@ -1421,6 +1399,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|cam_periph_acquire
+argument_list|(
+name|periph
+argument_list|)
+operator|==
+name|CAM_REQ_CMP
+condition|)
+block|{
+if|if
+condition|(
 name|softc
 operator|->
 name|pm_pid
@@ -1446,11 +1434,6 @@ name|state
 operator|=
 name|PMP_STATE_PRECONFIG
 expr_stmt|;
-name|cam_periph_acquire
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|xpt_schedule
 argument_list|(
 name|periph
@@ -1458,6 +1441,22 @@ argument_list|,
 name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|pmprelease
+argument_list|(
+name|periph
+argument_list|,
+name|softc
+operator|->
+name|found
+argument_list|)
+expr_stmt|;
+name|xpt_release_boot
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 else|else
 name|softc

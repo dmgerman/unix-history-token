@@ -8218,6 +8218,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|scsi_print_inquiry_short
+parameter_list|(
+name|struct
+name|scsi_inquiry_data
+modifier|*
+name|inq_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|scsi_calc_syncsrate
 parameter_list|(

@@ -11550,6 +11550,16 @@ operator|*
 operator|)
 name|va
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+name|PAGE_SIZE
+condition|)
+name|size
+operator|=
+name|PAGE_SIZE
+expr_stmt|;
 do|do
 block|{
 name|sz

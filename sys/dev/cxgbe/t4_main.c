@@ -1632,6 +1632,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|fwmtype_to_hwmtype
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|validate_mt_off_len
 parameter_list|(
 name|struct
@@ -5663,7 +5673,7 @@ begin_define
 define|#
 directive|define
 name|T4_CAP
-value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | \     IFCAP_VLAN_HWCSUM | IFCAP_TSO | IFCAP_JUMBO_MTU | IFCAP_LRO | \     IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE | IFCAP_HWCSUM_IPV6)
+value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | \     IFCAP_VLAN_HWCSUM | IFCAP_TSO | IFCAP_JUMBO_MTU | IFCAP_LRO | \     IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE | IFCAP_HWCSUM_IPV6 | IFCAP_HWSTATS)
 end_define
 
 begin_define
@@ -8771,6 +8781,66 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|fwmtype_to_hwmtype
+parameter_list|(
+name|int
+name|mtype
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|mtype
+condition|)
+block|{
+case|case
+name|FW_MEMTYPE_EDC0
+case|:
+return|return
+operator|(
+name|MEM_EDC0
+operator|)
+return|;
+case|case
+name|FW_MEMTYPE_EDC1
+case|:
+return|return
+operator|(
+name|MEM_EDC1
+operator|)
+return|;
+case|case
+name|FW_MEMTYPE_EXTMEM
+case|:
+return|return
+operator|(
+name|MEM_MC0
+operator|)
+return|;
+case|case
+name|FW_MEMTYPE_EXTMEM1
+case|:
+return|return
+operator|(
+name|MEM_MC1
+operator|)
+return|;
+default|default:
+name|panic
+argument_list|(
+literal|"%s: cannot translate fw mtype %d."
+argument_list|,
+name|__func__
+argument_list|,
+name|mtype
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * Verify that the memory range specified by the memtype/offset/len pair is  * valid and lies entirely within the memtype specified.  The global address of  * the start of the range is returned in addr.  */
 end_comment
@@ -8839,7 +8909,10 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|fwmtype_to_hwmtype
+argument_list|(
 name|mtype
+argument_list|)
 condition|)
 block|{
 case|case
@@ -12378,7 +12451,7 @@ name|use_config_on_flash
 label|:
 name|mtype
 operator|=
-name|FW_MEMTYPE_CF_FLASH
+name|FW_MEMTYPE_FLASH
 expr_stmt|;
 name|moff
 operator|=
@@ -28829,6 +28902,8 @@ decl_stmt|,
 name|first
 init|=
 literal|0
+decl_stmt|,
+name|m
 decl_stmt|;
 name|struct
 name|sbuf
@@ -28853,7 +28928,7 @@ name|dparams
 operator|->
 name|memtype
 operator|=
-literal|0
+name|FW_MEMTYPE_EDC0
 expr_stmt|;
 name|dparams
 operator|->
@@ -28904,6 +28979,15 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|m
+operator|=
+name|fwmtype_to_hwmtype
+argument_list|(
+name|dparams
+operator|->
+name|memtype
+argument_list|)
+expr_stmt|;
 name|rc
 operator|=
 operator|-
@@ -28911,9 +28995,7 @@ name|t4_mem_read
 argument_list|(
 name|sc
 argument_list|,
-name|dparams
-operator|->
-name|memtype
+name|m
 argument_list|,
 name|dparams
 operator|->

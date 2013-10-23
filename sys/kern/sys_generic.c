@@ -230,7 +230,7 @@ begin_decl_stmt
 name|int
 name|iosize_max_clamp
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,35 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Clamp max i/o size to INT_MAX"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|devfs_iosize_max_clamp
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|devfs_iosize_max_clamp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|devfs_iosize_max_clamp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Clamp max i/o size to INT_MAX for devices"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

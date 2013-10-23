@@ -265,6 +265,13 @@ name|PROCBASED2_PAUSE_LOOP_EXITING
 value|(1<< 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROCBASED2_ENABLE_INVPCID
+value|(1<< 12)
+end_define
+
 begin_comment
 comment|/* VM Exit Controls */
 end_comment

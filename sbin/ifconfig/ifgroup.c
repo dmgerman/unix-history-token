@@ -222,6 +222,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|EEXIST
 condition|)
 name|err
 argument_list|(
@@ -354,6 +358,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 name|err
 argument_list|(

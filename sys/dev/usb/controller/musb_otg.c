@@ -7046,7 +7046,7 @@ name|length
 expr_stmt|;
 block|}
 comment|/* Max packet size */
-name|MUSB2_WRITE_1
+name|MUSB2_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -7054,7 +7054,7 @@ name|MUSB2_REG_TXMAXP
 argument_list|,
 name|td
 operator|->
-name|max_packet
+name|reg_max_packet
 argument_list|)
 expr_stmt|;
 comment|/* write command */
@@ -7310,6 +7310,24 @@ name|hport
 argument_list|)
 expr_stmt|;
 comment|/* RX NAK timeout */
+if|if
+condition|(
+name|td
+operator|->
+name|transfer_type
+operator|&
+name|MUSB2_MASK_TI_PROTO_ISOC
+condition|)
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_RXNAKLIMIT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|MUSB2_WRITE_1
 argument_list|(
 name|sc
@@ -7332,7 +7350,7 @@ name|transfer_type
 argument_list|)
 expr_stmt|;
 comment|/* Max packet size */
-name|MUSB2_WRITE_1
+name|MUSB2_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -7340,7 +7358,7 @@ name|MUSB2_REG_RXMAXP
 argument_list|,
 name|td
 operator|->
-name|max_packet
+name|reg_max_packet
 argument_list|)
 expr_stmt|;
 comment|/* Data Toggle */
@@ -8731,6 +8749,24 @@ name|hport
 argument_list|)
 expr_stmt|;
 comment|/* TX NAK timeout */
+if|if
+condition|(
+name|td
+operator|->
+name|transfer_type
+operator|&
+name|MUSB2_MASK_TI_PROTO_ISOC
+condition|)
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_TXNAKLIMIT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|MUSB2_WRITE_1
 argument_list|(
 name|sc
@@ -8753,7 +8789,7 @@ name|transfer_type
 argument_list|)
 expr_stmt|;
 comment|/* Max packet size */
-name|MUSB2_WRITE_1
+name|MUSB2_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -8761,7 +8797,7 @@ name|MUSB2_REG_TXMAXP
 argument_list|,
 name|td
 operator|->
-name|max_packet
+name|reg_max_packet
 argument_list|)
 expr_stmt|;
 if|if
@@ -10115,18 +10151,6 @@ operator|->
 name|udev
 argument_list|)
 expr_stmt|;
-name|xfer_type
-operator|=
-name|xfer
-operator|->
-name|endpoint
-operator|->
-name|edesc
-operator|->
-name|bmAttributes
-operator|&
-name|UE_XFERTYPE
-expr_stmt|;
 switch|switch
 condition|(
 name|speed
@@ -10247,14 +10271,6 @@ name|ep_no
 expr_stmt|;
 name|td
 operator|->
-name|max_packet
-operator|=
-name|xfer
-operator|->
-name|max_packet_size
-expr_stmt|;
-name|td
-operator|->
 name|toggle
 operator|=
 name|xfer
@@ -10360,6 +10376,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|tx
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|x
@@ -10369,10 +10389,6 @@ operator|->
 name|nframes
 condition|)
 block|{
-name|tx
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|xfer
@@ -10615,6 +10631,26 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
+condition|)
+block|{
+comment|/* isochronous data transfer */
+comment|/* don't force short */
+name|temp
+operator|.
+name|short_pkt
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* regular data transfer */
 name|temp
 operator|.
@@ -10626,12 +10662,13 @@ operator|->
 name|flags
 operator|.
 name|force_short_xfer
-operator|)
 condition|?
 literal|0
 else|:
 literal|1
+operator|)
 expr_stmt|;
+block|}
 block|}
 name|musbotg_setup_standard_chain_sub
 argument_list|(
@@ -13062,6 +13099,31 @@ block|{
 if|if
 condition|(
 name|temp
+operator|==
+literal|1
+condition|)
+block|{
+name|frx
+operator|=
+literal|12
+expr_stmt|;
+comment|/* 4K */
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_RXFIFOSZ
+argument_list|,
+name|MUSB2_VAL_FIFOSZ_4096
+operator||
+name|MUSB2_MASK_FIFODB
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|temp
 operator|<
 literal|8
 condition|)
@@ -13131,6 +13193,31 @@ name|ntx
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|temp
+operator|==
+literal|1
+condition|)
+block|{
+name|ftx
+operator|=
+literal|12
+expr_stmt|;
+comment|/* 4K */
+name|MUSB2_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|MUSB2_REG_TXFIFOSZ
+argument_list|,
+name|MUSB2_VAL_FIFOSZ_4096
+operator||
+name|MUSB2_MASK_FIFODB
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|temp
@@ -16296,7 +16383,7 @@ name|parm
 operator|->
 name|hc_max_frame_size
 operator|=
-literal|0x400
+literal|0xc00
 expr_stmt|;
 if|if
 condition|(
@@ -16576,6 +16663,26 @@ operator|=
 name|xfer
 operator|->
 name|max_frame_size
+expr_stmt|;
+name|td
+operator|->
+name|reg_max_packet
+operator|=
+name|xfer
+operator|->
+name|max_packet_size
+operator||
+operator|(
+operator|(
+name|xfer
+operator|->
+name|max_packet_count
+operator|-
+literal|1
+operator|)
+operator|<<
+literal|11
+operator|)
 expr_stmt|;
 name|td
 operator|->

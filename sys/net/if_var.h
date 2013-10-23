@@ -152,6 +152,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -2964,6 +2970,20 @@ begin_comment
 comment|/*  * The ifaddr structure contains information about one address  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an address is set, and are linked  * together so all addresses for an interface can be located.  *  * NOTE: a 'struct ifaddr' is always at the beginning of a larger  * chunk of malloc'ed memory, where we store the three addresses  * (ifa_addr, ifa_dstaddr and ifa_netmask) referenced here.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_IFADDR
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
 name|ifaddr
@@ -2991,11 +3011,6 @@ modifier|*
 name|ifa_netmask
 decl_stmt|;
 comment|/* used to determine subnet */
-name|struct
-name|if_data
-name|if_data
-decl_stmt|;
-comment|/* not all members are meaningful */
 name|struct
 name|ifnet
 modifier|*
@@ -3061,13 +3076,32 @@ name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
-name|struct
-name|mtx
-name|ifa_mtx
+name|counter_u64_t
+name|ifa_ipackets
+decl_stmt|;
+name|counter_u64_t
+name|ifa_opackets
+decl_stmt|;
+name|counter_u64_t
+name|ifa_ibytes
+decl_stmt|;
+name|counter_u64_t
+name|ifa_obytes
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -3092,7 +3126,7 @@ comment|/* loopback route to self installed */
 end_comment
 
 begin_comment
-comment|/* for compatibility with other BSDs */
+comment|/* For compatibility with other BSDs. SCTP uses it. */
 end_comment
 
 begin_define
@@ -3102,47 +3136,24 @@ name|ifa_list
 value|ifa_link
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IFA_LOCK
-parameter_list|(
-name|ifa
-parameter_list|)
-value|mtx_lock(&(ifa)->ifa_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFA_UNLOCK
-parameter_list|(
-name|ifa
-parameter_list|)
-value|mtx_unlock(&(ifa)->ifa_mtx)
-end_define
-
 begin_function_decl
-name|void
-name|ifa_free
-parameter_list|(
 name|struct
 name|ifaddr
 modifier|*
-name|ifa
+name|ifa_alloc
+parameter_list|(
+name|size_t
+name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|ifa_init
+name|ifa_free
 parameter_list|(
 name|struct
 name|ifaddr
@@ -3168,6 +3179,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  */

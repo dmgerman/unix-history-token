@@ -131,7 +131,7 @@ decl_stmt|;
 name|uint32_t
 name|time
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|io_completed
 decl_stmt|;
 block|}
@@ -170,7 +170,7 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|io_completed
 index|[
 name|NVME_TEST_MAX_THREADS
@@ -269,14 +269,14 @@ name|timeval
 name|t
 decl_stmt|;
 name|uint64_t
+name|io_completed
+init|=
+literal|0
+decl_stmt|,
 name|offset
 decl_stmt|;
 name|uint32_t
 name|idx
-decl_stmt|,
-name|io_completed
-init|=
-literal|0
 decl_stmt|;
 if|#
 directive|if

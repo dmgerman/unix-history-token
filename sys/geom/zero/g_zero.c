@@ -422,6 +422,14 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|flags
+operator||=
+name|G_PF_DIRECT_SEND
+operator||
+name|G_PF_DIRECT_RECEIVE
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cam/ctl/ctl_error.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/ctl/ctl_frontend.h>
 end_include
 
@@ -1128,7 +1134,7 @@ literal|0
 block|if (expstatsn != cs->cs_statsn) { 		CFISCSI_SESSION_DEBUG(cs, "received PDU with ExpStatSN %d, " 		    "while current StatSN is %d", expstatsn, 		    cs->cs_statsn); 	}
 endif|#
 directive|endif
-comment|/* 	 * The target MUST silently ignore any non-immediate command outside 	 * of this range. 	 * 	 * XXX:	... or non-immediate duplicates within the range. 	 */
+comment|/* 	 * The target MUST silently ignore any non-immediate command outside 	 * of this range. 	 */
 if|if
 condition|(
 name|cmdsn
@@ -1321,14 +1327,14 @@ operator|->
 name|bhs_opcode
 argument_list|)
 expr_stmt|;
-name|cfiscsi_session_terminate
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -2003,6 +2009,18 @@ name|icl_pdu
 modifier|*
 name|response
 decl_stmt|;
+name|void
+modifier|*
+name|data
+init|=
+name|NULL
+decl_stmt|;
+name|size_t
+name|datasize
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|cs
 operator|=
 name|PDU_SESSION
@@ -2038,6 +2056,72 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|datasize
+operator|=
+name|icl_pdu_data_segment_length
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|datasize
+operator|>
+literal|0
+condition|)
+block|{
+name|data
+operator|=
+name|malloc
+argument_list|(
+name|datasize
+argument_list|,
+name|M_CFISCSI
+argument_list|,
+name|M_NOWAIT
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|data
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; "
+literal|"dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|icl_pdu_get_data
+argument_list|(
+name|request
+argument_list|,
+literal|0
+argument_list|,
+name|data
+argument_list|,
+name|datasize
+argument_list|)
+expr_stmt|;
+block|}
 name|response
 operator|=
 name|cfiscsi_pdu_new_response
@@ -2054,9 +2138,29 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; "
+literal|"droppping connection"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|,
+name|M_CFISCSI
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2098,13 +2202,73 @@ name|bhsni_target_transfer_tag
 operator|=
 literal|0xffffffff
 expr_stmt|;
-if|#
-directive|if
+if|if
+condition|(
+name|datasize
+operator|>
 literal|0
-comment|/* XXX */
-block|response->ip_data_len = request->ip_data_len; 	response->ip_data_mbuf = request->ip_data_mbuf; 	request->ip_data_len = 0; 	request->ip_data_mbuf = NULL;
-endif|#
-directive|endif
+condition|)
+block|{
+name|error
+operator|=
+name|icl_pdu_append_data
+argument_list|(
+name|response
+argument_list|,
+name|data
+argument_list|,
+name|datasize
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; "
+literal|"dropping connection"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|,
+name|M_CFISCSI
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|free
+argument_list|(
+name|data
+argument_list|,
+name|M_CFISCSI
+argument_list|)
+expr_stmt|;
+block|}
 name|icl_pdu_free
 argument_list|(
 name|request
@@ -2190,14 +2354,14 @@ literal|"unsolicited data with "
 literal|"ImmediateData=No; dropping connection"
 argument_list|)
 expr_stmt|;
-name|cfiscsi_session_terminate
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2228,12 +2392,18 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"can't allocate ctl_io"
+literal|"can't allocate ctl_io; "
+literal|"dropping connection"
 argument_list|)
 expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2508,7 +2678,8 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"ctl_queue() failed; error %d"
+literal|"ctl_queue() failed; error %d; "
+literal|"dropping connection"
 argument_list|,
 name|error
 argument_list|)
@@ -2529,6 +2700,11 @@ expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -2618,12 +2794,18 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"can't allocate ctl_io"
+literal|"can't allocate ctl_io;"
+literal|"dropping connection"
 argument_list|)
 expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2852,9 +3034,22 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; "
+literal|"dropping connection"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2934,7 +3129,8 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"ctl_queue() failed; error %d"
+literal|"ctl_queue() failed; error %d; "
+literal|"dropping connection"
 argument_list|,
 name|error
 argument_list|)
@@ -2955,6 +3151,11 @@ expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
 argument_list|)
 expr_stmt|;
 block|}
@@ -2996,6 +3197,8 @@ name|ctl_sglist
 decl_stmt|;
 name|size_t
 name|copy_len
+decl_stmt|,
+name|len
 decl_stmt|,
 name|off
 decl_stmt|,
@@ -3163,12 +3366,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (ctl_sg_count> 1) 		CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -3240,10 +3437,19 @@ name|true
 operator|)
 return|;
 block|}
+comment|/* 	 * This is the offset within the PDU data segment, as opposed 	 * to buffer_offset, which is the offset within the task (SCSI 	 * command). 	 */
 name|off
 operator|=
 literal|0
 expr_stmt|;
+name|len
+operator|=
+name|icl_pdu_data_segment_length
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Iterate over the scatter/gather segments, filling them with data 	 * from the PDU data segment.  Note that this can get called multiple 	 * times for one SCSI command; the cdw structure holds state for the 	 * scatter/gather list. 	 */
 for|for
 control|(
 init|;
@@ -3299,12 +3505,20 @@ operator|.
 name|len
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|off
+operator|<=
+name|len
+argument_list|,
+operator|(
+literal|"len> off"
+operator|)
+argument_list|)
+expr_stmt|;
 name|copy_len
 operator|=
-name|icl_pdu_data_segment_length
-argument_list|(
-name|request
-argument_list|)
+name|len
 operator|-
 name|off
 expr_stmt|;
@@ -3368,6 +3582,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * End of current segment. 			 */
 if|if
 condition|(
 name|cdw
@@ -3378,7 +3593,10 @@ name|ctl_sg_count
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* 				 * Last segment in scatter/gather list. 				 */
 break|break;
+block|}
 name|cdw
 operator|->
 name|cdw_sg_index
@@ -3389,21 +3607,18 @@ if|if
 condition|(
 name|off
 operator|==
-name|icl_pdu_data_segment_length
-argument_list|(
-name|request
-argument_list|)
+name|len
 condition|)
+block|{
+comment|/* 			 * End of PDU payload. 			 */
 break|break;
+block|}
 block|}
 if|if
 condition|(
+name|len
+operator|>
 name|off
-operator|<
-name|icl_pdu_data_segment_length
-argument_list|(
-name|request
-argument_list|)
 condition|)
 block|{
 name|CFISCSI_SESSION_WARN
@@ -3688,7 +3903,7 @@ argument_list|(
 name|cs
 argument_list|,
 literal|"data transfer tag 0x%x, initiator task tag "
-literal|"0x%x, not found"
+literal|"0x%x, not found; dropping connection"
 argument_list|,
 name|bhsdo
 operator|->
@@ -3877,6 +4092,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_DEBUG
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
@@ -3961,6 +4183,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
 name|icl_pdu_free
 argument_list|(
 name|request
@@ -4214,7 +4443,7 @@ name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
 argument_list|,
-literal|"failed to allocate PDU"
+literal|"failed to allocate memory"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10799,12 +11028,6 @@ name|scsiio
 operator|.
 name|kern_total_len
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (ctl_sg_count> 1) 		CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
-endif|#
-directive|endif
 comment|/* 	 * This is the offset within the current SCSI command; 	 * i.e. for the first call of datamove(), it will be 0, 	 * and for subsequent ones it will be the sum of lengths 	 * of previous ones. 	 */
 name|off
 operator|=
@@ -10815,21 +11038,6 @@ operator|->
 name|scsiio
 operator|.
 name|kern_rel_offset
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|off
-operator|>
-literal|1
-condition|)
-name|CFISCSI_SESSION_DEBUG
-argument_list|(
-name|cs
-argument_list|,
-literal|"off = %zd"
-argument_list|,
-name|off
 argument_list|)
 expr_stmt|;
 name|i
@@ -10900,9 +11108,21 @@ literal|"failed to "
 literal|"allocate memory; dropping connection"
 argument_list|)
 expr_stmt|;
-name|icl_pdu_free
+name|ctl_set_busy
 argument_list|(
-name|request
+operator|&
+name|io
+operator|->
+name|scsiio
+argument_list|)
+expr_stmt|;
+name|io
+operator|->
+name|scsiio
+operator|.
+name|be_move_done
+argument_list|(
+name|io
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -11069,12 +11289,24 @@ argument_list|)
 expr_stmt|;
 name|icl_pdu_free
 argument_list|(
-name|request
+name|response
 argument_list|)
 expr_stmt|;
-name|icl_pdu_free
+name|ctl_set_busy
 argument_list|(
-name|response
+operator|&
+name|io
+operator|->
+name|scsiio
+argument_list|)
+expr_stmt|;
+name|io
+operator|->
+name|scsiio
+operator|.
+name|be_move_done
+argument_list|(
+name|io
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -11139,7 +11371,7 @@ operator|->
 name|cs_max_data_segment_length
 condition|)
 block|{
-comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0  instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
+comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0 instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
 if|if
 condition|(
 name|off
@@ -11232,28 +11464,12 @@ name|bhsdi_flags
 operator||=
 name|BHSDI_FLAGS_F
 expr_stmt|;
-block|}
-else|else
-block|{
-name|CFISCSI_SESSION_DEBUG
-argument_list|(
-name|cs
-argument_list|,
-literal|"not setting the F flag; "
-literal|"have %zd, need %zd"
-argument_list|,
-name|off
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|io
-operator|->
-name|scsiio
-operator|.
-name|kern_total_len
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|} else { 			CFISCSI_SESSION_DEBUG(cs, "not setting the F flag; " 			    "have %zd, need %zd", off, 			    (size_t)io->scsiio.kern_total_len);
+endif|#
+directive|endif
 block|}
 name|KASSERT
 argument_list|(
@@ -11447,9 +11663,21 @@ literal|"failed to "
 literal|"allocate memory; dropping connection"
 argument_list|)
 expr_stmt|;
-name|icl_pdu_free
+name|ctl_set_busy
 argument_list|(
-name|request
+operator|&
+name|io
+operator|->
+name|scsiio
+argument_list|)
+expr_stmt|;
+name|io
+operator|->
+name|scsiio
+operator|.
+name|be_move_done
+argument_list|(
+name|io
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -11457,6 +11685,7 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|cdw
 operator|->
@@ -11581,9 +11810,21 @@ literal|"failed to "
 literal|"allocate memory; dropping connection"
 argument_list|)
 expr_stmt|;
-name|icl_pdu_free
+name|ctl_set_busy
 argument_list|(
-name|request
+operator|&
+name|io
+operator|->
+name|scsiio
+argument_list|)
+expr_stmt|;
+name|io
+operator|->
+name|scsiio
+operator|.
+name|be_move_done
+argument_list|(
+name|io
 argument_list|)
 expr_stmt|;
 name|cfiscsi_session_terminate
@@ -11591,6 +11832,7 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|bhsr2t
 operator|=

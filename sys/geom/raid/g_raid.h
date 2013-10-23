@@ -1525,6 +1525,9 @@ decl_stmt|;
 name|int
 name|trc_priority
 decl_stmt|;
+name|int
+name|trc_accept_unmapped
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|g_raid_tr_class

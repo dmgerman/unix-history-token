@@ -6,6 +6,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -204,6 +218,8 @@ operator|->
 name|monitor_group
 index|]
 operator|.
+name|u
+operator|.
 name|pending
 argument_list|)
 expr_stmt|;
@@ -363,6 +379,14 @@ name|recv_ring_buffer_size
 operator|)
 operator|>>
 name|PAGE_SHIFT
+expr_stmt|;
+name|new_channel
+operator|->
+name|ring_buffer_size
+operator|=
+name|send_ring_buffer_size
+operator|+
+name|recv_ring_buffer_size
 expr_stmt|;
 name|hv_vmbus_ring_buffer_init
 argument_list|(
@@ -2147,7 +2171,7 @@ name|ring_buffer_pages
 argument_list|,
 name|channel
 operator|->
-name|ring_buffer_page_count
+name|ring_buffer_size
 argument_list|,
 name|M_DEVBUF
 argument_list|)

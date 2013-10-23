@@ -664,6 +664,10 @@ name|root_hold_token
 modifier|*
 name|sc_rootmount
 decl_stmt|;
+name|struct
+name|mtx
+name|sc_done_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct

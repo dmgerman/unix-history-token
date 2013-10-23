@@ -88,6 +88,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_parse_memsize
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|optarg
+parameter_list|,
+name|size_t
+modifier|*
+name|memsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_get_memory_seg
 parameter_list|(
 name|struct

@@ -667,7 +667,9 @@ parameter_list|)
 block|{
 name|int
 name|indx
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|long
 name|size
 decl_stmt|;
 comment|/* Initialise the decrementer-based clock. */
@@ -685,7 +687,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"real memory  = %ld (%ld MB)\n"
+literal|"real memory  = %lu (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -751,7 +753,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08x - 0x%08x, %d bytes (%ld pages)\n"
+literal|"0x%08x - 0x%08x, %lu bytes (%lu pages)\n"
 argument_list|,
 name|phys_avail
 index|[
@@ -784,7 +786,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avail memory = %ld (%ld MB)\n"
+literal|"avail memory = %lu (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(

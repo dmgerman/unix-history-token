@@ -1418,7 +1418,7 @@ name|NULL
 condition|)
 name|base_node_dealloc
 argument_list|(
-name|prev
+name|xprev
 argument_list|)
 expr_stmt|;
 block|}

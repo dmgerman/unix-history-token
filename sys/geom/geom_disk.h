@@ -293,13 +293,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|DISKFLAG_NEEDSGIANT
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
 name|DISKFLAG_OPEN
 value|0x2
 end_define
@@ -323,6 +316,13 @@ define|#
 directive|define
 name|DISKFLAG_UNMAPPED_BIO
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_DIRECT_COMPLETION
+value|0x20
 end_define
 
 begin_function_decl

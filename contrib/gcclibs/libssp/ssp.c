@@ -468,6 +468,8 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg3
 argument_list|)
 expr_stmt|;

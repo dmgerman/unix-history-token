@@ -337,7 +337,15 @@ literal|" kB\n"
 block|,
 literal|1024
 block|}
+block|,
+block|{
+literal|"  kqueues%-4s          %8s"
+block|,
+literal|"\n"
+block|,
+literal|1
 block|}
+block|,       }
 block|}
 block|,
 block|{
@@ -457,7 +465,15 @@ literal|";\n"
 block|,
 literal|1024
 block|}
+block|,
+block|{
+literal|"ulimit%s -k %s"
+block|,
+literal|";\n"
+block|,
+literal|1
 block|}
+block|,       }
 block|}
 block|,
 block|{
@@ -577,7 +593,15 @@ literal|";\n"
 block|,
 literal|1024
 block|}
+block|,
+block|{
+literal|"limit%s kqueues %s"
+block|,
+literal|";\n"
+block|,
+literal|1
 block|}
+block|,       }
 block|}
 block|,
 block|{
@@ -817,7 +841,15 @@ literal|";\n"
 block|,
 literal|1024
 block|}
+block|,
+block|{
+literal|"limit%s kqueues %s"
+block|,
+literal|";\n"
+block|,
+literal|1
 block|}
+block|,       }
 block|}
 block|,
 block|{
@@ -1310,7 +1342,13 @@ literal|"swapuse"
 block|,
 name|login_getcapsize
 block|}
+block|,
+block|{
+literal|"kqueues"
+block|,
+name|login_getcapnum
 block|}
+block|, }
 struct|;
 end_struct
 
@@ -3689,6 +3727,9 @@ name|RLIMIT_NOFILE
 case|:
 case|case
 name|RLIMIT_NPTS
+case|:
+case|case
+name|RLIMIT_KQUEUES
 case|:
 name|res
 operator|=

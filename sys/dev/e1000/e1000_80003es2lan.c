@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*$FreeBSD$*/
 end_comment
 
 begin_comment
-comment|/*  * 80003ES2LAN Gigabit Ethernet Controller (Copper)  * 80003ES2LAN Gigabit Ethernet Controller (Serdes)  */
+comment|/* 80003ES2LAN Gigabit Ethernet Controller (Copper)  * 80003ES2LAN Gigabit Ethernet Controller (Serdes)  */
 end_comment
 
 begin_include
@@ -16,45 +16,6 @@ include|#
 directive|include
 file|"e1000_api.h"
 end_include
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_phy_params_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_nvm_params_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_init_mac_params_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -381,19 +342,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|s32
-name|e1000_copper_link_setup_gg82563_80003es2lan
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|e1000_initialize_hw_bits_80003es2lan
 parameter_list|(
@@ -448,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * A table for the GG82563 cable length where the range is defined  * with a lower bound at "index" and the upper bound at  * "index + 5".  */
+comment|/* A table for the GG82563 cable length where the range is defined  * with a lower bound at "index" and the upper bound at  * "index + 5".  */
 end_comment
 
 begin_decl_stmt
@@ -519,8 +467,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -544,9 +490,9 @@ name|type
 operator|=
 name|e1000_phy_none
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|E1000_SUCCESS
+return|;
 block|}
 else|else
 block|{
@@ -720,18 +666,10 @@ name|id
 operator|!=
 name|GG82563_E_PHY_ID
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|out
-label|:
+return|;
 return|return
 name|ret_val
 return|;
@@ -880,7 +818,7 @@ operator|>>
 name|E1000_EECD_SIZE_EX_SHIFT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Added to a constant, "size" becomes the left-shift value 	 * for setting word_size. 	 */
+comment|/* Added to a constant, "size" becomes the left-shift value 	 * for setting word_size. 	 */
 name|size
 operator|+=
 name|NVM_WORD_SIZE_BASE_SHIFT
@@ -1093,6 +1031,8 @@ name|mac
 operator|->
 name|arc_subsystem_valid
 operator|=
+operator|!
+operator|!
 operator|(
 name|E1000_READ_REG
 argument_list|(
@@ -1103,10 +1043,6 @@ argument_list|)
 operator|&
 name|E1000_FWSM_MODE_MASK
 operator|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
 expr_stmt|;
 comment|/* Adaptive IFS not supported */
 name|mac
@@ -1540,9 +1476,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|e1000_acquire_nvm_generic
@@ -1561,8 +1497,6 @@ argument_list|,
 name|E1000_SWFW_EEP_SM
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -1638,15 +1572,11 @@ operator|<<
 literal|16
 decl_stmt|;
 name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
-name|s32
 name|i
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|s32
 name|timeout
 init|=
 literal|50
@@ -1670,16 +1600,10 @@ argument_list|(
 name|hw
 argument_list|)
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_SWFW_SYNC
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+return|;
 name|swfw_sync
 operator|=
 name|E1000_READ_REG
@@ -1703,7 +1627,7 @@ operator|)
 operator|)
 condition|)
 break|break;
-comment|/* 		 * Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) 		 */
+comment|/* Firmware currently using resource (fwmask) 		 * or other software thread using resource (swmask) 		 */
 name|e1000_put_hw_semaphore_generic
 argument_list|(
 name|hw
@@ -1730,14 +1654,10 @@ argument_list|(
 literal|"Driver can't access resource, SW_FW_SYNC timeout.\n"
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_SWFW_SYNC
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 block|}
 name|swfw_sync
 operator||=
@@ -1757,10 +1677,8 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -1880,9 +1798,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* Select Configuration Page */
 if|if
 condition|(
@@ -1902,7 +1820,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
+comment|/* Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
 name|page_select
 operator|=
 name|GG82563_PHY_PAGE_SELECT_ALT
@@ -1943,9 +1861,9 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 if|if
 condition|(
@@ -1956,11 +1874,9 @@ operator|.
 name|_80003es2lan
 operator|.
 name|mdic_wa_enable
-operator|==
-name|TRUE
 condition|)
 block|{
-comment|/* 		 * The "ready" bit in the MDIC register may be incorrectly set 		 * before the device has completed the "Page Select" MDI 		 * transaction.  So we wait 200us after each MDI command... 		 */
+comment|/* The "ready" bit in the MDIC register may be incorrectly set 		 * before the device has completed the "Page Select" MDI 		 * transaction.  So we wait 200us after each MDI command... 		 */
 name|usec_delay
 argument_list|(
 literal|200
@@ -1993,19 +1909,15 @@ operator|!=
 name|temp
 condition|)
 block|{
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_PHY
-expr_stmt|;
 name|e1000_release_phy_80003es2lan
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|-
+name|E1000_ERR_PHY
+return|;
 block|}
 name|usec_delay
 argument_list|(
@@ -2052,8 +1964,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -2106,9 +2016,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* Select Configuration Page */
 if|if
 condition|(
@@ -2128,7 +2038,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
+comment|/* Use Alternative Page Select register to access 		 * registers 30 and 31 		 */
 name|page_select
 operator|=
 name|GG82563_PHY_PAGE_SELECT_ALT
@@ -2169,9 +2079,9 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 if|if
 condition|(
@@ -2182,11 +2092,9 @@ operator|.
 name|_80003es2lan
 operator|.
 name|mdic_wa_enable
-operator|==
-name|TRUE
 condition|)
 block|{
-comment|/* 		 * The "ready" bit in the MDIC register may be incorrectly set 		 * before the device has completed the "Page Select" MDI 		 * transaction.  So we wait 200us after each MDI command... 		 */
+comment|/* The "ready" bit in the MDIC register may be incorrectly set 		 * before the device has completed the "Page Select" MDI 		 * transaction.  So we wait 200us after each MDI command... 		 */
 name|usec_delay
 argument_list|(
 literal|200
@@ -2219,19 +2127,15 @@ operator|!=
 name|temp
 condition|)
 block|{
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_PHY
-expr_stmt|;
 name|e1000_release_phy_80003es2lan
 argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|-
+name|E1000_ERR_PHY
+return|;
 block|}
 name|usec_delay
 argument_list|(
@@ -2278,8 +2182,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -2351,11 +2253,6 @@ name|timeout
 init|=
 name|PHY_CFG_TIMEOUT
 decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|u32
 name|mask
 init|=
@@ -2417,19 +2314,13 @@ argument_list|(
 literal|"MNG configuration cycle has not completed.\n"
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_RESET
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|;
 block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -2451,8 +2342,6 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|phy_data
@@ -2478,10 +2367,10 @@ operator|.
 name|read_reg
 operator|)
 condition|)
-goto|goto
-name|out
-goto|;
-comment|/* 	 * Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
+return|return
+name|E1000_SUCCESS
+return|;
+comment|/* Clear Auto-Crossover to force MDI manually.  M88E1000 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
 name|ret_val
 operator|=
 name|hw
@@ -2504,9 +2393,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|phy_data
 operator|&=
 operator|~
@@ -2533,9 +2422,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|DEBUGOUT1
 argument_list|(
 literal|"GG82563 PSCR: %X\n"
@@ -2565,9 +2454,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|e1000_phy_force_speed_duplex_setup
 argument_list|(
 name|hw
@@ -2602,9 +2491,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|usec_delay
 argument_list|(
 literal|1
@@ -2642,16 +2531,16 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 if|if
 condition|(
 operator|!
 name|link
 condition|)
 block|{
-comment|/* 			 * We didn't get link. 			 * Reset the DSP and cross our fingers. 			 */
+comment|/* We didn't get link. 			 * Reset the DSP and cross our fingers. 			 */
 name|ret_val
 operator|=
 name|e1000_phy_reset_dsp_generic
@@ -2663,9 +2552,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 comment|/* Try once more */
 name|ret_val
@@ -2686,9 +2575,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 name|ret_val
 operator|=
@@ -2712,10 +2601,10 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-comment|/* 	 * Resetting the phy means we need to verify the TX_CLK corresponds 	 * to the link speed.  10Mbps -> 2.5MHz, else 25MHz. 	 */
+return|return
+name|ret_val
+return|;
+comment|/* Resetting the phy means we need to verify the TX_CLK corresponds 	 * to the link speed.  10Mbps -> 2.5MHz, else 25MHz. 	 */
 name|phy_data
 operator|&=
 operator|~
@@ -2740,7 +2629,7 @@ name|phy_data
 operator||=
 name|GG82563_MSCR_TX_CLK_100MBPS_25
 expr_stmt|;
-comment|/* 	 * In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
+comment|/* In addition, we must re-enable CRS on Tx for both half and full 	 * duplex. 	 */
 name|phy_data
 operator||=
 name|GG82563_MSCR_ASSERT_CRS_ON_TX
@@ -2762,8 +2651,6 @@ argument_list|,
 name|phy_data
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -2797,8 +2684,6 @@ name|phy
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|phy_data
@@ -2823,9 +2708,9 @@ operator|.
 name|read_reg
 operator|)
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|E1000_SUCCESS
+return|;
 name|ret_val
 operator|=
 name|hw
@@ -2848,9 +2733,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|index
 operator|=
 name|phy_data
@@ -2865,16 +2750,10 @@ name|GG82563_CABLE_LENGTH_TABLE_SIZE
 operator|-
 literal|5
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 operator|-
 name|E1000_ERR_PHY
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+return|;
 name|phy
 operator|->
 name|min_cable_length
@@ -2911,10 +2790,8 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|out
-label|:
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -3025,12 +2902,15 @@ decl_stmt|;
 name|s32
 name|ret_val
 decl_stmt|;
+name|u16
+name|kum_reg_data
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_reset_hw_80003es2lan"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
+comment|/* Prevent the PCI-E bus from sticking if there is no TLP connection 	 * on the last TLP read/write transaction when MAC is reset. 	 */
 name|ret_val
 operator|=
 name|e1000_disable_pcie_master_generic
@@ -3105,6 +2985,13 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+return|return
+name|ret_val
+return|;
 name|DEBUGOUT
 argument_list|(
 literal|"Issuing a global reset to MAC\n"
@@ -3126,6 +3013,30 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* Disable IBIST slave mode (far-end loopback) */
+name|e1000_read_kmrn_reg_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_INBAND_PARAM
+argument_list|,
+operator|&
+name|kum_reg_data
+argument_list|)
+expr_stmt|;
+name|kum_reg_data
+operator||=
+name|E1000_KMRNCTRLSTA_IBIST_DISABLE
+expr_stmt|;
+name|e1000_write_kmrn_reg_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_INBAND_PARAM
+argument_list|,
+name|kum_reg_data
+argument_list|)
+expr_stmt|;
 name|ret_val
 operator|=
 name|e1000_get_auto_rd_done_generic
@@ -3138,9 +3049,9 @@ condition|(
 name|ret_val
 condition|)
 comment|/* We don't want to continue accessing MAC registers. */
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* Clear any pending interrupt events. */
 name|E1000_WRITE_REG
 argument_list|(
@@ -3158,17 +3069,11 @@ argument_list|,
 name|E1000_ICR
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 name|e1000_check_alt_mac_addr_generic
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function
@@ -3232,6 +3137,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* An error is not fatal and we should not stop init due to this */
 if|if
 condition|(
 name|ret_val
@@ -3241,7 +3147,6 @@ argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
-comment|/* This is not fatal and we should not stop init due to this */
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
 argument_list|(
@@ -3311,6 +3216,13 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret_val
+condition|)
+return|return
+name|ret_val
+return|;
 comment|/* Disable IBIST slave mode (far-end loopback) */
 name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
@@ -3351,6 +3263,7 @@ expr_stmt|;
 name|reg_data
 operator|=
 operator|(
+operator|(
 name|reg_data
 operator|&
 operator|~
@@ -3360,6 +3273,7 @@ operator||
 name|E1000_TXDCTL_FULL_TX_DESC_WB
 operator||
 name|E1000_TXDCTL_COUNT_DESC
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -3389,6 +3303,7 @@ expr_stmt|;
 name|reg_data
 operator|=
 operator|(
+operator|(
 name|reg_data
 operator|&
 operator|~
@@ -3398,6 +3313,7 @@ operator||
 name|E1000_TXDCTL_FULL_TX_DESC_WB
 operator||
 name|E1000_TXDCTL_COUNT_DESC
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -3569,7 +3485,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
+comment|/* Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_80003es2lan
 argument_list|(
 name|hw
@@ -3778,6 +3694,33 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+comment|/* Disable IPv6 extension header parsing because some malformed 	 * IPv6 headers can hang the Rx. 	 */
+name|reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RFCTL
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|E1000_RFCTL_IPV6_EX_DIS
+operator||
+name|E1000_RFCTL_NEW_IPV6_EXT_DIS
+operator|)
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_RFCTL
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -3811,7 +3754,7 @@ name|s32
 name|ret_val
 decl_stmt|;
 name|u32
-name|ctrl_ext
+name|reg
 decl_stmt|;
 name|u16
 name|data
@@ -3843,9 +3786,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator||=
 name|GG82563_MSCR_ASSERT_CRS_ON_TX
@@ -3876,10 +3819,10 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-comment|/* 	 * Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
+return|return
+name|ret_val
+return|;
+comment|/* Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
 name|ret_val
 operator|=
 name|hw
@@ -3902,9 +3845,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator|&=
 operator|~
@@ -3943,7 +3886,7 @@ name|GG82563_PSCR_CROSSOVER_MODE_AUTO
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
+comment|/* Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
 name|data
 operator|&=
 operator|~
@@ -3980,9 +3923,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* SW Reset the PHY so all changes take effect */
 name|ret_val
 operator|=
@@ -4007,38 +3950,52 @@ argument_list|(
 literal|"Error Resetting the PHY\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
 comment|/* Bypass Rx and Tx FIFO's */
+name|reg
+operator|=
+name|E1000_KMRNCTRLSTA_OFFSET_FIFO_CTRL
+expr_stmt|;
+name|data
+operator|=
+operator|(
+name|E1000_KMRNCTRLSTA_FIFO_CTRL_RX_BYPASS
+operator||
+name|E1000_KMRNCTRLSTA_FIFO_CTRL_TX_BYPASS
+operator|)
+expr_stmt|;
 name|ret_val
 operator|=
 name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_KMRNCTRLSTA_OFFSET_FIFO_CTRL
+name|reg
 argument_list|,
-name|E1000_KMRNCTRLSTA_FIFO_CTRL_RX_BYPASS
-operator||
-name|E1000_KMRNCTRLSTA_FIFO_CTRL_TX_BYPASS
+name|data
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
+name|reg
+operator|=
+name|E1000_KMRNCTRLSTA_OFFSET_MAC2PHY_OPMODE
+expr_stmt|;
 name|ret_val
 operator|=
 name|e1000_read_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_KMRNCTRLSTA_OFFSET_MAC2PHY_OPMODE
+name|reg
 argument_list|,
 operator|&
 name|data
@@ -4048,9 +4005,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator||=
 name|E1000_KMRNCTRLSTA_OPMODE_E_IDLE
@@ -4061,7 +4018,7 @@ name|e1000_write_kmrn_reg_80003es2lan
 argument_list|(
 name|hw
 argument_list|,
-name|E1000_KMRNCTRLSTA_OFFSET_MAC2PHY_OPMODE
+name|reg
 argument_list|,
 name|data
 argument_list|)
@@ -4070,9 +4027,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|hw
@@ -4095,9 +4052,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator|&=
 operator|~
@@ -4124,10 +4081,10 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-name|ctrl_ext
+return|return
+name|ret_val
+return|;
+name|reg
 operator|=
 name|E1000_READ_REG
 argument_list|(
@@ -4136,12 +4093,10 @@ argument_list|,
 name|E1000_CTRL_EXT
 argument_list|)
 expr_stmt|;
-name|ctrl_ext
+name|reg
 operator|&=
 operator|~
-operator|(
 name|E1000_CTRL_EXT_LINK_MODE_MASK
-operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -4149,7 +4104,7 @@ name|hw
 argument_list|,
 name|E1000_CTRL_EXT
 argument_list|,
-name|ctrl_ext
+name|reg
 argument_list|)
 expr_stmt|;
 name|ret_val
@@ -4174,14 +4129,13 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-comment|/* 	 * Do not init these registers when the HW is in IAMT mode, since the 	 * firmware will have already initialized them.  We only initialize 	 * them if the HW is not in IAMT mode. 	 */
+return|return
+name|ret_val
+return|;
+comment|/* Do not init these registers when the HW is in IAMT mode, since the 	 * firmware will have already initialized them.  We only initialize 	 * them if the HW is not in IAMT mode. 	 */
 if|if
 condition|(
 operator|!
-operator|(
 name|hw
 operator|->
 name|mac
@@ -4192,7 +4146,6 @@ name|check_mng_mode
 argument_list|(
 name|hw
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* Enable Electrical Idle on the PHY */
@@ -4221,9 +4174,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|hw
@@ -4246,9 +4199,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator|&=
 operator|~
@@ -4275,11 +4228,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 block|}
-comment|/* 	 * Workaround: Disable padding in Kumeran interface in the MAC 	 * and in the PHY to avoid CRC errors. 	 */
+comment|/* Workaround: Disable padding in Kumeran interface in the MAC 	 * and in the PHY to avoid CRC errors. 	 */
 name|ret_val
 operator|=
 name|hw
@@ -4302,9 +4255,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|data
 operator||=
 name|GG82563_ICR_DIS_PADDING
@@ -4330,13 +4283,11 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
-name|out
-label|:
 return|return
 name|ret_val
+return|;
+return|return
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -4401,7 +4352,7 @@ argument_list|,
 name|ctrl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the mac to wait the maximum time between each 	 * iteration and increase the max iterations when 	 * polling the phy; this fixes erroneous timeouts at 10Mbps. 	 */
+comment|/* Set the mac to wait the maximum time between each 	 * iteration and increase the max iterations when 	 * polling the phy; this fixes erroneous timeouts at 10Mbps. 	 */
 name|ret_val
 operator|=
 name|e1000_write_kmrn_reg_80003es2lan
@@ -4422,9 +4373,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|e1000_read_kmrn_reg_80003es2lan
@@ -4446,9 +4397,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|reg_data
 operator||=
 literal|0x3F
@@ -4473,9 +4424,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|e1000_read_kmrn_reg_80003es2lan
@@ -4492,9 +4443,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|reg_data
 operator||=
 name|E1000_KMRNCTRLSTA_INB_CTRL_DIS_PADDING
@@ -4514,9 +4465,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|e1000_copper_link_setup_gg82563_80003es2lan
@@ -4528,20 +4479,14 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
 name|ret_val
-operator|=
+return|;
+return|return
 name|e1000_setup_copper_link_generic
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function
@@ -4605,9 +4550,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 if|if
 condition|(
 name|speed
@@ -4632,8 +4577,6 @@ name|duplex
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -4660,8 +4603,6 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u32
 name|tipg
@@ -4700,9 +4641,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* Configure Transmit Inter-Packet Gap */
 name|tipg
 operator|=
@@ -4755,9 +4696,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|hw
@@ -4780,9 +4721,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|i
 operator|++
 expr_stmt|;
@@ -4818,8 +4759,7 @@ operator|&=
 operator|~
 name|GG82563_KMCR_PASS_FALSE_CARRIER
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 name|hw
 operator|->
 name|phy
@@ -4834,11 +4774,6 @@ name|GG82563_PHY_KMRN_MODE_CTRL
 argument_list|,
 name|reg_data
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function
@@ -4860,8 +4795,6 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|u16
 name|reg_data
@@ -4900,9 +4833,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 comment|/* Configure Transmit Inter-Packet Gap */
 name|tipg
 operator|=
@@ -4955,9 +4888,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|ret_val
 operator|=
 name|hw
@@ -4980,9 +4913,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|i
 operator|++
 expr_stmt|;
@@ -5007,8 +4940,7 @@ operator|&=
 operator|~
 name|GG82563_KMCR_PASS_FALSE_CARRIER
 expr_stmt|;
-name|ret_val
-operator|=
+return|return
 name|hw
 operator|->
 name|phy
@@ -5023,11 +4955,6 @@ name|GG82563_PHY_KMRN_MODE_CTRL
 argument_list|,
 name|reg_data
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function
@@ -5059,8 +4986,6 @@ name|kmrnctrlsta
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -5078,9 +5003,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|kmrnctrlsta
 operator|=
 operator|(
@@ -5136,8 +5061,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -5170,8 +5093,6 @@ name|kmrnctrlsta
 decl_stmt|;
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -5189,9 +5110,9 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|ret_val
+return|;
 name|kmrnctrlsta
 operator|=
 operator|(
@@ -5230,8 +5151,6 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
 name|ret_val
 return|;
@@ -5255,15 +5174,13 @@ parameter_list|)
 block|{
 name|s32
 name|ret_val
-init|=
-name|E1000_SUCCESS
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_read_mac_addr_80003es2lan"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there's an alternate MAC address place it in RAR0 	 * so that it will override the Si installed default perm 	 * address. 	 */
+comment|/* If there's an alternate MAC address place it in RAR0 	 * so that it will override the Si installed default perm 	 * address. 	 */
 name|ret_val
 operator|=
 name|e1000_check_alt_mac_addr_generic
@@ -5275,20 +5192,14 @@ if|if
 condition|(
 name|ret_val
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
 name|ret_val
-operator|=
+return|;
+return|return
 name|e1000_read_mac_addr_generic
 argument_list|(
 name|hw
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-return|return
-name|ret_val
 return|;
 block|}
 end_function

@@ -1156,7 +1156,7 @@ name|SYSINIT
 argument_list|(
 name|device_poll
 argument_list|,
-name|SI_SUB_CLOCKS
+name|SI_SUB_SOFTINTR
 argument_list|,
 name|SI_ORDER_MIDDLE
 argument_list|,

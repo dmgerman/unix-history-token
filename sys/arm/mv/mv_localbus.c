@@ -1899,10 +1899,6 @@ expr_stmt|;
 if|if
 condition|(
 name|bank
-operator|<
-literal|0
-operator|||
-name|bank
 operator|>
 name|MV_LOCALBUS_MAX_BANKS
 condition|)

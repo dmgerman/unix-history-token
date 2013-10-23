@@ -1555,7 +1555,10 @@ name|fi
 decl_stmt|;
 name|u_short
 name|slen
+init|=
+literal|0
 decl_stmt|;
+comment|/* silence gcc */
 name|nat_t
 modifier|*
 name|nat2
