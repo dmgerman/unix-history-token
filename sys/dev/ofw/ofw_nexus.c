@@ -2275,7 +2275,7 @@ name|iparent
 operator|=
 literal|0
 expr_stmt|;
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2290,7 +2290,7 @@ name|iparent
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OF_searchprop
+name|OF_searchencprop
 argument_list|(
 name|iparent
 argument_list|,
