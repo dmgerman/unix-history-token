@@ -749,6 +749,13 @@ name|RUN_DEV
 argument_list|(
 name|BELKIN
 argument_list|,
+name|F6D4050V2
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
+name|BELKIN
+argument_list|,
 name|RT2870_1
 argument_list|)
 block|,
