@@ -75,17 +75,8 @@ name|void
 modifier|*
 name|cookie
 parameter_list|,
-name|struct
-name|bus_space_tag
-modifier|*
-name|ptag
-parameter_list|,
 name|int
 name|type
-parameter_list|,
-name|void
-modifier|*
-name|barrier
 parameter_list|)
 function_decl|;
 end_function_decl
