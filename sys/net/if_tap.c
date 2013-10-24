@@ -1083,7 +1083,7 @@ literal|0600
 argument_list|,
 literal|"%s%d"
 argument_list|,
-name|tapname
+name|vmnetname
 argument_list|,
 name|unit
 argument_list|)
