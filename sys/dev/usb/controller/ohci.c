@@ -9750,6 +9750,12 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+name|v
+operator|&=
+operator|~
+name|UPS_PORT_MODE_DEVICE
+expr_stmt|;
+comment|/* force host mode */
 name|USETW
 argument_list|(
 name|sc
@@ -10836,20 +10842,6 @@ operator|->
 name|sc_addr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|udev
-operator|->
-name|flags
-operator|.
-name|usb_mode
-operator|!=
-name|USB_MODE_HOST
-condition|)
-block|{
-comment|/* not supported */
-return|return;
-block|}
 if|if
 condition|(
 name|udev

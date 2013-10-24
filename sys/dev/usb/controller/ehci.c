@@ -16461,20 +16461,6 @@ if|if
 condition|(
 name|udev
 operator|->
-name|flags
-operator|.
-name|usb_mode
-operator|!=
-name|USB_MODE_HOST
-condition|)
-block|{
-comment|/* not supported */
-return|return;
-block|}
-if|if
-condition|(
-name|udev
-operator|->
 name|device_index
 operator|!=
 name|sc

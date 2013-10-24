@@ -8885,20 +8885,6 @@ if|if
 condition|(
 name|udev
 operator|->
-name|flags
-operator|.
-name|usb_mode
-operator|!=
-name|USB_MODE_DEVICE
-condition|)
-block|{
-comment|/* not supported */
-return|return;
-block|}
-if|if
-condition|(
-name|udev
-operator|->
 name|speed
 operator|!=
 name|USB_SPEED_FULL

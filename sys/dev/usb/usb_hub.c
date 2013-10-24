@@ -1971,6 +1971,28 @@ block|}
 comment|/* 	 * Figure out the device mode 	 * 	 * NOTE: This part is currently FreeBSD specific. 	 */
 if|if
 condition|(
+name|udev
+operator|->
+name|parent_hub
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* inherit mode from the parent HUB */
+name|mode
+operator|=
+name|udev
+operator|->
+name|parent_hub
+operator|->
+name|flags
+operator|.
+name|usb_mode
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|sc
 operator|->
 name|sc_st

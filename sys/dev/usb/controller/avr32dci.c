@@ -7875,20 +7875,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|udev
-operator|->
-name|flags
-operator|.
-name|usb_mode
-operator|!=
-name|USB_MODE_DEVICE
-condition|)
-block|{
-comment|/* not supported */
-return|return;
-block|}
-if|if
-condition|(
 operator|(
 name|udev
 operator|->
