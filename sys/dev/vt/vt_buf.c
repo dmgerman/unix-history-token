@@ -113,6 +113,8 @@ name|whence
 parameter_list|)
 block|{
 name|int
+name|diff
+decl_stmt|,
 name|top
 decl_stmt|,
 name|bottom
@@ -154,7 +156,7 @@ name|vb_curroffset
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0xffff
 operator|)
 return|;
 block|}
@@ -223,6 +225,10 @@ case|:
 name|roffset
 operator|=
 name|offset
+operator|+
+name|vb
+operator|->
+name|vb_history_size
 expr_stmt|;
 break|break;
 case|case
@@ -242,6 +248,10 @@ operator|=
 name|vb
 operator|->
 name|vb_curroffset
+operator|+
+name|vb
+operator|->
+name|vb_history_size
 expr_stmt|;
 break|break;
 block|}
@@ -284,18 +294,26 @@ operator|!=
 name|roffset
 condition|)
 block|{
+name|diff
+operator|=
+name|vb
+operator|->
+name|vb_roffset
+operator|-
+name|roffset
+expr_stmt|;
 name|vb
 operator|->
 name|vb_roffset
 operator|=
 name|roffset
 expr_stmt|;
+comment|/* 		 * Offset changed, please update Nth lines on sceen. 		 * +N - Nth lines at top; 		 * -N - Nth lines at bottom. 		 */
 return|return
 operator|(
-literal|1
+name|diff
 operator|)
 return|;
-comment|/* Offset changed, please update sceen. */
 block|}
 return|return
 operator|(
