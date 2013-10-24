@@ -1838,14 +1838,14 @@ name|uint16_t
 name|max_frame_size
 decl_stmt|;
 comment|/* packet_size * mult */
+name|uint16_t
+name|reg_max_packet
+decl_stmt|;
 name|uint8_t
 name|ep_no
 decl_stmt|;
 name|uint8_t
 name|transfer_type
-decl_stmt|;
-name|uint8_t
-name|max_packet
 decl_stmt|;
 name|uint8_t
 name|error
