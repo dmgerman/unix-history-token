@@ -4728,8 +4728,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
-operator|&&
 name|path
 operator|->
 name|device
