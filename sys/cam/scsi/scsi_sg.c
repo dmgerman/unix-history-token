@@ -843,21 +843,6 @@ name|periph
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX Return all queued I/O with ENXIO. 	 * XXX Handle any transactions queued to the card 	 *     with XPT_ABORT_CCB. 	 */
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"lost device\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -887,19 +872,6 @@ operator|)
 name|periph
 operator|->
 name|softc
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|xpt_print
-argument_list|(
-name|periph
-operator|->
-name|path
-argument_list|,
-literal|"removing device entry\n"
-argument_list|)
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
