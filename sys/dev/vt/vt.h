@@ -757,6 +757,11 @@ name|int
 name|vw_kbdmode
 decl_stmt|;
 comment|/* (?) Keyboard mode. */
+name|char
+modifier|*
+name|vw_kbdsq
+decl_stmt|;
+comment|/* Escape sequence queue*/
 name|unsigned
 name|int
 name|vw_flags
