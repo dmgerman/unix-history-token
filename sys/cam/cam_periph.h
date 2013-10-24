@@ -338,6 +338,10 @@ define|#
 directive|define
 name|CAM_PERIPH_FREE
 value|0x80
+define|#
+directive|define
+name|CAM_PERIPH_ANNOUNCED
+value|0x100
 name|u_int32_t
 name|immediate_priority
 decl_stmt|;
