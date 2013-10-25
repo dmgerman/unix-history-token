@@ -5239,8 +5239,6 @@ name|srr1
 operator|=
 name|PSL_SF
 operator||
-name|PSL_MBO
-operator||
 name|PSL_USERSET
 operator||
 name|PSL_FE_DFLT
