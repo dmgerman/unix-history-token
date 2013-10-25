@@ -69,6 +69,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ofw_compat_data
+block|{
+specifier|const
+name|char
+modifier|*
+name|ocd_str
+decl_stmt|;
+name|uintptr_t
+name|ocd_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Generic implementation of ofw_bus_if.m methods and helper routines */
 end_comment
@@ -264,6 +280,27 @@ name|device_t
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*   * Helper routine to search a list of compat properties.  The table is  * terminated by an entry with a NULL compat-string pointer; a pointer to that  * table entry is returned if none of the compat strings match for the device,  * giving you control over the not-found value.  Will not return NULL unless the  * provided table pointer is NULL.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|struct
+name|ofw_compat_data
+modifier|*
+name|ofw_bus_search_compatible
+parameter_list|(
+name|device_t
+parameter_list|,
+specifier|const
+name|struct
+name|ofw_compat_data
 modifier|*
 parameter_list|)
 function_decl|;
