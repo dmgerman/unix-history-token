@@ -980,6 +980,14 @@ name|origin_head
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|void
+modifier|*
+name|owner
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 name|void
@@ -1122,6 +1130,10 @@ specifier|const
 name|char
 modifier|*
 name|fsname
+parameter_list|,
+name|void
+modifier|*
+name|owner
 parameter_list|)
 function_decl|;
 ifdef|#
