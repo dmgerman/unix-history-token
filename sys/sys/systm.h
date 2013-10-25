@@ -518,11 +518,25 @@ name|iosize_max_clamp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|devfs_iosize_max_clamp
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|IOSIZE_MAX
 value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVFS_IOSIZE_MAX
+value|(devfs_iosize_max_clamp ? INT_MAX : SSIZE_MAX)
 end_define
 
 begin_comment
