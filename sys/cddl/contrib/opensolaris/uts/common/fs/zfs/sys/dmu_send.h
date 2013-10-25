@@ -226,6 +226,10 @@ decl_stmt|;
 name|uint64_t
 name|drc_newsnapobj
 decl_stmt|;
+name|void
+modifier|*
+name|drc_owner
+decl_stmt|;
 block|}
 name|dmu_recv_cookie_t
 typedef|;
@@ -309,6 +313,10 @@ argument_list|(
 name|dmu_recv_cookie_t
 operator|*
 name|drc
+argument_list|,
+name|void
+operator|*
+name|owner
 argument_list|)
 argument_list|;
 end_decl_stmt
