@@ -110,6 +110,16 @@ name|P_OSREL_MAP_ANON
 value|800104
 end_define
 
+begin_define
+define|#
+directive|define
+name|P_OSREL_MAJOR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) / 100000)
+end_define
+
 begin_endif
 endif|#
 directive|endif
