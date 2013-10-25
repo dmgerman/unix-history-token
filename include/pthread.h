@@ -690,7 +690,7 @@ parameter_list|(
 name|execute
 parameter_list|)
 define|\
-value|}							\ 			__pthread_cleanup_pop_imp(execute);			\ 		}
+value|(void)0;					\ 			}							\ 			__pthread_cleanup_pop_imp(execute);			\ 		}
 end_define
 
 begin_function_decl
