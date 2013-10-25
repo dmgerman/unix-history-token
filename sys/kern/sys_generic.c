@@ -255,6 +255,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|devfs_iosize_max_clamp
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|devfs_iosize_max_clamp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|devfs_iosize_max_clamp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Clamp max i/o size to INT_MAX for devices"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Assert that the return value of read(2) and write(2) syscalls fits  * into a register.  If not, an architecture will need to provide the  * usermode wrappers to reconstruct the result.  */
 end_comment
