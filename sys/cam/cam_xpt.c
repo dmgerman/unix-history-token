@@ -24836,14 +24836,6 @@ operator|->
 name|cam_doneq_mtx
 argument_list|)
 expr_stmt|;
-name|ccb_h
-operator|->
-name|pinfo
-operator|.
-name|index
-operator|=
-name|CAM_UNQUEUED_INDEX
-expr_stmt|;
 name|xpt_done_process
 argument_list|(
 name|ccb_h

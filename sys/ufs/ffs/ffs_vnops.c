@@ -2160,7 +2160,7 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * If we are NOT allowed to cluster, then 			 * if we appear to be acting sequentially, 			 * fire off a request for a readahead 			 * as well as a read. Note that the 4th and 5th 			 * arguments point to arrays of the size specified in 			 * the 6th argument. 			 */
-name|int
+name|u_int
 name|nextsize
 init|=
 name|blksize
@@ -3999,7 +3999,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * If we have a second block, then 			 * fire off a request for a readahead 			 * as well as a read. Note that the 4th and 5th 			 * arguments point to arrays of the size specified in 			 * the 6th argument. 			 */
-name|int
+name|u_int
 name|nextsize
 init|=
 name|sblksize
@@ -5197,9 +5197,10 @@ name|struct
 name|iovec
 name|liovec
 decl_stmt|;
-name|int
+name|u_int
 name|easize
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|u_char

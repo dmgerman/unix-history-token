@@ -329,7 +329,7 @@ literal|1
 condition|)
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|chosen
 argument_list|,
@@ -1285,19 +1285,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|elsz
-operator|%
-literal|4
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"Need a multiple of 4 bytes"
-operator|)
-argument_list|)
-expr_stmt|;
 name|retval
 operator|=
 name|OF_getprop_alloc
@@ -1317,10 +1304,19 @@ name|retval
 operator|==
 operator|-
 literal|1
+operator|||
+name|retval
+operator|*
+name|elsz
+operator|%
+literal|4
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
-name|retval
+operator|-
+literal|1
 operator|)
 return|;
 name|cell
@@ -1728,7 +1724,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -1746,7 +1742,7 @@ operator|==
 operator|-
 literal|1
 operator|&&
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,
@@ -1764,7 +1760,7 @@ operator|==
 operator|-
 literal|1
 operator|&&
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|child
 argument_list|,

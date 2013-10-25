@@ -2307,8 +2307,6 @@ name|i
 decl_stmt|,
 name|intr_num
 decl_stmt|,
-name|irq
-decl_stmt|,
 name|rv
 decl_stmt|;
 if|if
@@ -2331,7 +2329,7 @@ return|;
 comment|/* 	 * Find #interrupt-cells of the interrupt domain. 	 */
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -2557,15 +2555,6 @@ name|pol
 operator|=
 name|pol
 expr_stmt|;
-name|irq
-operator|=
-name|FDT_MAP_IRQ
-argument_list|(
-name|iph
-argument_list|,
-name|interrupt
-argument_list|)
-expr_stmt|;
 name|resource_list_add
 argument_list|(
 name|rl
@@ -2574,9 +2563,9 @@ name|SYS_RES_IRQ
 argument_list|,
 name|i
 argument_list|,
-name|irq
+name|interrupt
 argument_list|,
-name|irq
+name|interrupt
 argument_list|,
 literal|1
 argument_list|)
@@ -2637,7 +2626,7 @@ name|child
 decl_stmt|;
 if|if
 condition|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,

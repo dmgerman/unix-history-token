@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -478,9 +484,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-aehAHIPW][-g<gdb port>][-s<pci>][-S<pci>]"
-literal|"[-c vcpus][-p pincpu][-m mem]"
-literal|"<vmname>\n"
+literal|"Usage: %s [-aehAHIPW] [-g<gdb port>] [-s<pci>] [-S<pci>]\n"
+literal|"       %*s [-c vcpus] [-p pincpu] [-m mem]<vmname>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port\n"
@@ -489,14 +494,24 @@ literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -I: present an ioapic to the guest\n"
 literal|"       -P: vmexit from the guest on pause\n"
-literal|"	-W: force virtio to use single-vector MSI\n"
-literal|"	-e: exit on unhandled i/o access\n"
+literal|"       -W: force virtio to use single-vector MSI\n"
+literal|"       -e: exit on unhandled I/O access\n"
 literal|"       -h: help\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
 literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
 literal|"       -m: memory size in MB\n"
 argument_list|,
 name|progname
+argument_list|,
+operator|(
+name|int
+operator|)
+name|strlen
+argument_list|(
+name|progname
+argument_list|)
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|exit

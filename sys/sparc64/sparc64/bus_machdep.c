@@ -157,24 +157,6 @@ directive|include
 file|<machine/tlb.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|nexus_bus_barrier
-parameter_list|(
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* ASIs for bus access */
 end_comment
@@ -2523,21 +2505,9 @@ name|NULL
 expr_stmt|;
 name|ptag
 operator|->
-name|bst_parent
-operator|=
-name|NULL
-expr_stmt|;
-name|ptag
-operator|->
 name|bst_type
 operator|=
 name|space
-expr_stmt|;
-name|ptag
-operator|->
-name|bst_bus_barrier
-operator|=
-name|nexus_bus_barrier
 expr_stmt|;
 return|return
 operator|(
@@ -2548,7 +2518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a bus tag.  */
+comment|/*  * Allocate a bus tag  */
 end_comment
 
 begin_function
@@ -2559,17 +2529,8 @@ name|void
 modifier|*
 name|cookie
 parameter_list|,
-name|struct
-name|bus_space_tag
-modifier|*
-name|ptag
-parameter_list|,
 name|int
 name|type
-parameter_list|,
-name|void
-modifier|*
-name|barrier
 parameter_list|)
 block|{
 name|bus_space_tag_t
@@ -2609,88 +2570,15 @@ name|cookie
 expr_stmt|;
 name|bt
 operator|->
-name|bst_parent
-operator|=
-name|ptag
-expr_stmt|;
-name|bt
-operator|->
 name|bst_type
 operator|=
 name|type
-expr_stmt|;
-name|bt
-operator|->
-name|bst_bus_barrier
-operator|=
-name|barrier
 expr_stmt|;
 return|return
 operator|(
 name|bt
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Base bus space handlers.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|nexus_bus_barrier
-parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
-parameter_list|,
-name|bus_size_t
-name|offset
-parameter_list|,
-name|bus_size_t
-name|size
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-block|{
-comment|/* 	 * We have lots of alternatives depending on whether we're 	 * synchronizing loads with loads, loads with stores, stores 	 * with loads, or stores with stores.  The only ones that seem 	 * generic are #Sync and #MemIssue.  I'll use #Sync for safety. 	 */
-switch|switch
-condition|(
-name|flags
-condition|)
-block|{
-case|case
-name|BUS_SPACE_BARRIER_READ
-operator||
-name|BUS_SPACE_BARRIER_WRITE
-case|:
-case|case
-name|BUS_SPACE_BARRIER_READ
-case|:
-case|case
-name|BUS_SPACE_BARRIER_WRITE
-case|:
-name|membar
-argument_list|(
-name|Sync
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"%s: unknown flags"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
 block|}
 end_function
 
@@ -2703,15 +2591,8 @@ block|{
 name|NULL
 block|,
 comment|/* cookie */
-name|NULL
-block|,
-comment|/* parent bus tag */
 name|NEXUS_BUS_SPACE
-block|,
 comment|/* type */
-name|nexus_bus_barrier
-block|,
-comment|/* bus_space_barrier */
 block|}
 decl_stmt|;
 end_decl_stmt

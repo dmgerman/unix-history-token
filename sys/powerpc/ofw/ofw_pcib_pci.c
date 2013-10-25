@@ -605,8 +605,10 @@ block|{
 comment|/* 			 * If we've found a mapping, return it and don't map 			 * it again on higher levels - that causes problems 			 * in some cases, and never seems to be required. 			 */
 return|return
 operator|(
-name|MAP_IRQ
+name|ofw_bus_map_intr
 argument_list|(
+name|dev
+argument_list|,
 name|iparent
 argument_list|,
 name|mintr

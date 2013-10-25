@@ -4312,16 +4312,7 @@ name|sparc64_alloc_bus_tag
 argument_list|(
 name|r
 argument_list|,
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|sc_sysio_res
-argument_list|)
-argument_list|,
 name|SBUS_BUS_SPACE
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if

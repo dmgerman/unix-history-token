@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -2263,10 +2269,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-m mem-size][-d<disk-path>] [-h<host-path>] "
-literal|"[-e<name=value>]<vmname>\n"
+literal|"usage: %s [-m mem-size] [-d<disk-path>] [-h<host-path>]\n"
+literal|"       %*s [-e<name=value>]<vmname>\n"
 argument_list|,
 name|progname
+argument_list|,
+operator|(
+name|int
+operator|)
+name|strlen
+argument_list|(
+name|progname
+argument_list|)
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2326,10 +2342,13 @@ name|disk_image
 decl_stmt|;
 name|progname
 operator|=
+name|basename
+argument_list|(
 name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 name|mem_size
 operator|=

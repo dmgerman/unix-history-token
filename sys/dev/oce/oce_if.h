@@ -259,11 +259,15 @@ directive|include
 file|"oce_hw.h"
 end_include
 
+begin_comment
+comment|/* OCE device driver module component revision informaiton */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|COMPONENT_REVISION
-value|"4.6.95.0"
+value|"10.0.664.0"
 end_define
 
 begin_comment
@@ -643,6 +647,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCE_MAX_TSO_SIZE
+value|(65535 - ETHER_HDR_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCE_MAX_RX_SIZE
 value|4096
 end_define
@@ -736,7 +747,7 @@ begin_define
 define|#
 directive|define
 name|OCE_CAPAB_FLAGS
-value|(MBX_RX_IFACE_FLAGS_BROADCAST    | \ 					MBX_RX_IFACE_FLAGS_UNTAGGED      | \ 					MBX_RX_IFACE_FLAGS_PROMISCUOUS      | \ 					MBX_RX_IFACE_FLAGS_MCAST_PROMISCUOUS   | \ 					MBX_RX_IFACE_FLAGS_RSS | \ 					MBX_RX_IFACE_FLAGS_PASS_L3L4_ERR)
+value|(MBX_RX_IFACE_FLAGS_BROADCAST    | \ 					MBX_RX_IFACE_FLAGS_UNTAGGED      | \ 					MBX_RX_IFACE_FLAGS_PROMISCUOUS      | \ 					MBX_RX_IFACE_FLAGS_VLAN_PROMISCUOUS |	\ 					MBX_RX_IFACE_FLAGS_MCAST_PROMISCUOUS   | \ 					MBX_RX_IFACE_FLAGS_RSS | \ 					MBX_RX_IFACE_FLAGS_PASS_L3L4_ERR)
 end_define
 
 begin_comment
@@ -3268,7 +3279,7 @@ decl_stmt|;
 name|uint32_t
 name|flow_control
 decl_stmt|;
-name|uint32_t
+name|uint8_t
 name|promisc
 decl_stmt|;
 name|struct
@@ -3309,6 +3320,9 @@ decl_stmt|;
 name|int8_t
 name|be3_native
 decl_stmt|;
+name|uint8_t
+name|hw_error
+decl_stmt|;
 name|uint16_t
 name|qnq_debug_event
 decl_stmt|;
@@ -3317,6 +3331,9 @@ name|qnqid
 decl_stmt|;
 name|uint16_t
 name|pvid
+decl_stmt|;
+name|uint16_t
+name|max_vlans
 decl_stmt|;
 block|}
 name|OCE_SOFTC
@@ -4127,7 +4144,7 @@ parameter_list|(
 name|POCE_SOFTC
 name|sc
 parameter_list|,
-name|uint32_t
+name|uint8_t
 name|enable
 parameter_list|)
 function_decl|;
