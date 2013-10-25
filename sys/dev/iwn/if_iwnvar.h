@@ -869,6 +869,10 @@ define|#
 directive|define
 name|IWN_FLAG_PAN_SUPPORT
 value|(1<< 9)
+define|#
+directive|define
+name|IWN_FLAG_BTCOEX
+value|(1<< 10)
 name|uint8_t
 name|hw_type
 decl_stmt|;

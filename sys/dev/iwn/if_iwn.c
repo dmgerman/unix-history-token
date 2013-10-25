@@ -4839,6 +4839,13 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_ABC
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -5083,6 +5090,13 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_AB
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 break|break;
 case|case
 name|IWN_HW_REV_TYPE_5150
@@ -5099,6 +5113,13 @@ operator|->
 name|fwname
 operator|=
 literal|"iwn5150fw"
+expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
 expr_stmt|;
 break|break;
 case|case
@@ -5120,6 +5141,13 @@ name|fwname
 operator|=
 literal|"iwn5000fw"
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 break|break;
 case|case
 name|IWN_HW_REV_TYPE_1000
@@ -5136,6 +5164,13 @@ operator|->
 name|fwname
 operator|=
 literal|"iwn1000fw"
+expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
 expr_stmt|;
 break|break;
 case|case
@@ -5154,6 +5189,22 @@ name|fwname
 operator|=
 literal|"iwn6000fw"
 expr_stmt|;
+comment|/* 		 * Disable btcoex for 6200. 		 * XXX TODO: disable for 6205; no btcoex as well 		 * (6230/6235 - enable bluetooth) 		 */
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0x422c
+condition|)
+block|{
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pid
@@ -5215,6 +5266,13 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_AB
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 break|break;
 case|case
 name|IWN_HW_REV_TYPE_6005
@@ -5251,12 +5309,15 @@ name|IWN_FLAG_ADV_BTCOEX
 expr_stmt|;
 block|}
 else|else
+block|{
 name|sc
 operator|->
 name|fwname
 operator|=
 literal|"iwn6000g2afw"
 expr_stmt|;
+comment|/* 			 * 6250 - disable bluetooth coexistence. 			 */
+block|}
 break|break;
 default|default:
 name|device_printf
@@ -5287,6 +5348,51 @@ return|return
 name|ENOTSUP
 return|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_BTCOEX
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"enable basic bluetooth coexistence\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_ADV_BTCOEX
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"enable advanced bluetooth coexistence\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"disable bluetooth coexistence\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -30502,6 +30608,10 @@ return|;
 block|}
 block|}
 comment|/* Configure bluetooth coexistence. */
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -30517,7 +30627,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_BTCOEX
+condition|)
 name|error
 operator|=
 name|iwn_send_btcoex
