@@ -5881,10 +5881,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -8486,10 +8482,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
