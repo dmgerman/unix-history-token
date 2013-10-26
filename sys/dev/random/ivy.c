@@ -184,16 +184,14 @@ asm|__asm __volatile(
 ifdef|#
 directive|ifdef
 name|__amd64__
-literal|".byte\t0x48,0x0f,0xc7,0xf0\n\t"
-comment|/* rdrand %rax */
+literal|"rdrand\t%%rax\n\t"
 literal|"jnc\t1f\n\t"
 literal|"movq\t%%rax,%1\n\t"
 literal|"movl\t$8,%%eax\n"
 else|#
 directive|else
 comment|/* i386 */
-literal|".byte\t0x0f,0xc7,0xf0\n\t"
-comment|/* rdrand %eax */
+literal|"rdrand\t%%eax\n\t"
 literal|"jnc\t1f\n\t"
 literal|"movl\t%%eax,%1\n\t"
 literal|"movl\t$4,%%eax\n"
