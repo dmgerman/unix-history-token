@@ -63,6 +63,20 @@ name|pkg_config_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CONFFILE_PKG
+init|=
+literal|0
+block|,
+name|CONFFILE_REPO
+block|, }
+name|pkg_conf_file_t
+typedef|;
+end_typedef
+
 begin_function_decl
 name|int
 name|config_init
