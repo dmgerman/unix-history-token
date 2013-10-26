@@ -2214,11 +2214,13 @@ name|bp
 operator|=
 name|BIO_new_mem_buf
 argument_list|(
-operator|(
+name|__DECONST
+argument_list|(
 name|void
 operator|*
-operator|)
+argument_list|,
 name|cert
+argument_list|)
 argument_list|,
 name|certlen
 argument_list|)
@@ -2634,6 +2636,10 @@ decl_stmt|;
 name|ssize_t
 name|linelen
 decl_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 name|my_fd
 operator|=
 operator|-
