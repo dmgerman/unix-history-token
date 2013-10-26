@@ -552,6 +552,11 @@ name|ENXIO
 operator|)
 return|;
 comment|/* 	 * Retrieve /chosen/std{in,out}. 	 */
+name|node
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -562,15 +567,11 @@ argument_list|(
 literal|"/chosen"
 argument_list|)
 operator|)
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+block|{
 for|for
 control|(
 name|name
@@ -603,13 +604,35 @@ literal|0
 condition|)
 break|break;
 block|}
+block|}
 if|if
 condition|(
+name|chosen
+operator|==
+operator|-
+literal|1
+operator|||
 operator|*
 name|name
 operator|==
 name|NULL
 condition|)
+name|node
+operator|=
+name|OF_finddevice
+argument_list|(
+literal|"serial0"
+argument_list|)
+expr_stmt|;
+comment|/* Last ditch */
+if|if
+condition|(
+name|node
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* Can't find anything */
 return|return
 operator|(
 name|ENXIO
