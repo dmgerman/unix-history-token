@@ -2317,7 +2317,8 @@ name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"Unable to open configuration file %s"
+literal|"Unable to open configuration "
+literal|"file %s"
 argument_list|,
 name|confpath
 argument_list|)
@@ -2375,7 +2376,8 @@ name|YAML_MAPPING_NODE
 condition|)
 name|warnx
 argument_list|(
-literal|"Invalid configuration format, ignoring the configuration file"
+literal|"Invalid configuration format, ignoring the "
+literal|"configuration file"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2392,7 +2394,8 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Invalid configuration format, ignoring the configuration file"
+literal|"Invalid configuration format, ignoring the "
+literal|"configuration file"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2446,7 +2449,8 @@ name|errx
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"Failed to determine the system ABI"
+literal|"Failed to determine the system "
+literal|"ABI"
 argument_list|)
 expr_stmt|;
 name|c

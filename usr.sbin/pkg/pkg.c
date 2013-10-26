@@ -1217,14 +1217,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"A pre-built version of pkg could not be found for your system.\n"
+literal|"A pre-built version of pkg could not be found for "
+literal|"your system.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Consider changing PACKAGESITE or installing it from ports: 'ports-mgmt/pkg'.\n"
+literal|"Consider changing PACKAGESITE or installing it from "
+literal|"ports: 'ports-mgmt/pkg'.\n"
 argument_list|)
 expr_stmt|;
 name|cleanup
