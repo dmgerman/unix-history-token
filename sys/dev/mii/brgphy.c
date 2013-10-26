@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -1408,22 +1414,6 @@ break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* If the interface is not up, don't do anything. */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-break|break;
 comment|/* Todo: Why is this here?  Is it really needed? */
 name|PHY_RESET
 argument_list|(
@@ -1490,26 +1480,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* Bail if the interface isn't up. */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Bail if autoneg isn't in process. */
 if|if
 condition|(
