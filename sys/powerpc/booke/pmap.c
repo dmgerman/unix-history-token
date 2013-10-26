@@ -667,6 +667,15 @@ name|tlb1_idx
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vm_offset_t
+name|tlb1_map_base
+init|=
+name|VM_MAX_KERNEL_ADDRESS
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|tlbtid_t
@@ -11926,6 +11935,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We leave a hole for device direct mapping between the maximum user 	 * address (0x8000000) and the minimum KVA address (0xc0000000). If 	 * devices are in there, just map them 1:1. If not, map them to the 	 * device mapping area about VM_MAX_KERNEL_ADDRESS. These mapped 	 * addresses should be pulled from an allocator, but since we do not 	 * ever free TLB1 entries, it is safe just to increment a counter. 	 * Note that there isn't a lot of address space here (128 MB) and it 	 * is not at all difficult to imagine running out, since that is a 4:1 	 * compression from the 0xc0000000 - 0xf0000000 address space that gets 	 * mapped there. 	 */
 if|if
 condition|(
 name|pa
@@ -11953,8 +11963,11 @@ expr_stmt|;
 else|else
 name|va
 operator|=
-name|kva_alloc
+name|atomic_fetchadd_int
 argument_list|(
+operator|&
+name|tlb1_map_base
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -13498,7 +13511,7 @@ operator|-
 name|base
 operator|)
 expr_stmt|;
-name|debugf
+name|printf
 argument_list|(
 literal|"mapped size 0x%08x (wasted space 0x%08x)\n"
 argument_list|,
@@ -13793,12 +13806,6 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-specifier|static
-name|vm_offset_t
-name|early_io_map_base
-init|=
-name|VM_MAX_KERNEL_ADDRESS
-decl_stmt|;
 name|vm_paddr_t
 name|pa_base
 decl_stmt|;
@@ -13928,7 +13935,7 @@ argument_list|)
 expr_stmt|;
 name|va
 operator|=
-name|early_io_map_base
+name|tlb1_map_base
 operator|+
 operator|(
 name|pa
@@ -13954,7 +13961,7 @@ operator|)
 expr_stmt|;
 name|tlb1_set_entry
 argument_list|(
-name|early_io_map_base
+name|tlb1_map_base
 argument_list|,
 name|pa_base
 argument_list|,
@@ -13971,7 +13978,7 @@ name|pa_base
 operator|+=
 name|sz
 expr_stmt|;
-name|early_io_map_base
+name|tlb1_map_base
 operator|+=
 name|sz
 expr_stmt|;
