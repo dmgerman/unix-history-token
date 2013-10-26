@@ -2608,12 +2608,25 @@ name|SR_VSID_MASK
 operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+name|vm_offset_t
+name|pmap_early_io_map
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+block|{
+return|return
+operator|(
+name|pa
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
