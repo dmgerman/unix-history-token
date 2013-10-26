@@ -697,10 +697,6 @@ operator|!=
 literal|'\0'
 operator|||
 name|i
-operator|<
-literal|0
-operator|||
-name|i
 operator|>=
 name|NG_ONE2MANY_MAX_LINKS
 condition|)
