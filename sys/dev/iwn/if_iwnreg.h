@@ -5002,6 +5002,17 @@ begin_comment
 comment|/* waiting to see traffic */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IWN_TX_FAIL_STA_INVALID
+value|0x8b
+end_define
+
+begin_comment
+comment|/* XXX STA invalid (???) */
+end_comment
+
 begin_struct
 struct|struct
 name|iwn4965_tx_stat
