@@ -99,9 +99,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_comment
-comment|/* for IFF_* flags		*/
-end_comment
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
 
 begin_include
 include|#
