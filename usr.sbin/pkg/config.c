@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Baptiste Daroussin<bapt@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2013 Baptiste Daroussin<bapt@FreeBSD.org>  * Copyright (c) 2013 Bryan Drewery<bdrewery@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -241,7 +241,39 @@ name|NULL
 block|,
 name|false
 block|, 	}
-block|}
+block|,
+index|[
+name|SIGNATURE_TYPE
+index|]
+operator|=
+block|{
+name|PKG_CONFIG_STRING
+block|,
+literal|"SIGNATURE_TYPE"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|false
+block|, 	}
+block|,
+index|[
+name|FINGERPRINTS
+index|]
+operator|=
+block|{
+name|PKG_CONFIG_STRING
+block|,
+literal|"FINGERPRINTS"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|false
+block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2138,6 +2170,56 @@ argument_list|(
 name|buf
 argument_list|,
 literal|"MIRROR_TYPE"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|key
+operator|->
+name|data
+operator|.
+name|scalar
+operator|.
+name|value
+argument_list|,
+literal|"signature_type"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sbuf_cpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"SIGNATURE_TYPE"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|key
+operator|->
+name|data
+operator|.
+name|scalar
+operator|.
+name|value
+argument_list|,
+literal|"fingerprints"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sbuf_cpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"FINGERPRINTS"
 argument_list|)
 expr_stmt|;
 else|else

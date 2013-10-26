@@ -43,6 +43,10 @@ name|MIRROR_TYPE
 block|,
 name|ASSUME_ALWAYS_YES
 block|,
+name|SIGNATURE_TYPE
+block|,
+name|FINGERPRINTS
+block|,
 name|CONFIG_SIZE
 block|}
 name|pkg_config_key
