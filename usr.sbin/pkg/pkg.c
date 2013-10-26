@@ -636,11 +636,6 @@ name|mirrors
 operator|=
 name|NULL
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Bootstrapping pkg, please wait...\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|config_string
@@ -691,6 +686,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|printf
+argument_list|(
+literal|"Bootstrapping pkg from %s, please wait...\n"
+argument_list|,
+name|packagesite
+argument_list|)
+expr_stmt|;
 comment|/* Support pkg+http:// for PACKAGESITE which is the new format 	   in 1.2 to avoid confusion on why http://pkg.FreeBSD.org has 	   no A record. */
 if|if
 condition|(
