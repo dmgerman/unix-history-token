@@ -660,7 +660,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|255
 argument_list|,
@@ -668,7 +668,7 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|)
 expr_stmt|;
 for|for
