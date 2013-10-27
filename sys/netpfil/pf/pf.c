@@ -11379,9 +11379,14 @@ expr_stmt|;
 operator|*
 name|icmpid
 operator|=
-literal|0
+name|pd
+operator|->
+name|hdr
+operator|.
+name|icmp
+operator|->
+name|icmp_id
 expr_stmt|;
-comment|/* Time is not a secret. */
 break|break;
 case|case
 name|ICMP_IREQ
@@ -11402,9 +11407,14 @@ expr_stmt|;
 operator|*
 name|icmpid
 operator|=
-literal|0
+name|pd
+operator|->
+name|hdr
+operator|.
+name|icmp
+operator|->
+name|icmp_id
 expr_stmt|;
-comment|/* Nothing sane to match on! */
 break|break;
 case|case
 name|ICMP_MASKREQ
@@ -11425,9 +11435,14 @@ expr_stmt|;
 operator|*
 name|icmpid
 operator|=
-literal|0
+name|pd
+operator|->
+name|hdr
+operator|.
+name|icmp
+operator|->
+name|icmp_id
 expr_stmt|;
-comment|/* Nothing sane to match on! */
 break|break;
 case|case
 name|ICMP_IPV6_WHEREAREYOU
