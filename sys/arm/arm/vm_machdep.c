@@ -1367,7 +1367,8 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|trapframe_t
+name|struct
+name|trapframe
 modifier|*
 name|frame
 decl_stmt|;
