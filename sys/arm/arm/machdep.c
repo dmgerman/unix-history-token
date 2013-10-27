@@ -276,6 +276,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
