@@ -85,12 +85,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
-end_include
-
 begin_comment
 comment|/* Proto types for all the bus_space structure functions */
 end_comment
