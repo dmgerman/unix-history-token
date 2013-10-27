@@ -39,6 +39,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Driver callbacks for media status and change requests.  */
 end_comment
