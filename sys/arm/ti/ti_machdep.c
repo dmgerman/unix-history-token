@@ -114,8 +114,6 @@ expr_stmt|;
 return|return
 operator|(
 name|DEVMAP_BOOTSTRAP_MAP_START
-operator|-
-name|ARM_NOCACHE_KVA_SIZE
 operator|)
 return|;
 block|}
