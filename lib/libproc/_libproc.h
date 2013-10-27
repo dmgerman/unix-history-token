@@ -108,6 +108,16 @@ parameter_list|)
 value|warn(__VA_ARGS__)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DPRINTFX
+parameter_list|(
+modifier|...
+parameter_list|)
+value|warnx(__VA_ARGS__)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -117,6 +127,15 @@ begin_define
 define|#
 directive|define
 name|DPRINTF
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFX
 parameter_list|(
 modifier|...
 parameter_list|)
