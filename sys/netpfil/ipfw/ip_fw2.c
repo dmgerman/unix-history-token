@@ -211,12 +211,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pf_mtag.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/pfil.h>
 end_include
 
@@ -224,6 +218,12 @@ begin_include
 include|#
 directive|include
 file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/pf/pf_mtag.h>
 end_include
 
 begin_include

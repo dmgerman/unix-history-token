@@ -158,19 +158,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pf.h>
+file|<netpfil/pf/pf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/pf_altq.h>
+file|<netpfil/pf/pf_altq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/pf_mtag.h>
+file|<netpfil/pf/pf_mtag.h>
 end_include
 
 begin_include
