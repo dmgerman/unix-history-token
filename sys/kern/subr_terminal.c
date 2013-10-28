@@ -716,6 +716,24 @@ argument_list|(
 name|tm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|blank
+operator|==
+literal|0
+condition|)
+comment|/* 		 * Assigned directly, to avoid terminal reset in the 		 * teken_set_winsize. 		 */
+name|tm
+operator|->
+name|tm_emulator
+operator|.
+name|t_winsize
+operator|=
+name|r
+operator|.
+name|tr_end
+expr_stmt|;
+else|else
 name|teken_set_winsize
 argument_list|(
 operator|&
@@ -737,6 +755,8 @@ expr_stmt|;
 if|if
 condition|(
 name|blank
+operator|!=
+literal|0
 condition|)
 name|tm
 operator|->
