@@ -19,33 +19,15 @@ begin_comment
 comment|/*  * Structures defining a network interface, providing a packet  * transport mechanism (ala level 0 of the PUP protocols).  *  * Each interface accepts output datagrams of a specified maximum  * length, and provides higher level routines with input datagrams  * received from its medium.  *  * Output occurs when the routine if_output is called, with three parameters:  *	(*ifp->if_output)(ifp, m, dst, rt)  * Here m is the mbuf chain to be sent and dst is the destination address.  * The output routine encapsulates the supplied datagram if necessary,  * and then transmits it on its medium.  *  * On input, each interface unwraps the data received by it, and either  * places it on the input queue of an internetwork datagram routine  * and posts the associated software interrupt, or passes the datagram to a raw  * packet input routine.  *  * Routines exist for locating interfaces by their addresses  * or for locating an interface on a certain network, as well as more general  * routing and gateway routines maintaining information used to locate  * interfaces.  These routines live in the files if.c and route.c  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_comment
-comment|/*  * Forward structure declarations for function prototypes [sic].  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_struct_decl
 struct_decl|struct
 name|rtentry
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* ifa_rtrequest */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -53,15 +35,13 @@ name|rt_addrinfo
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|socket
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/* ifa_rtrequest */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|ether_header
+name|socket
 struct_decl|;
 end_struct_decl
 
@@ -89,26 +69,15 @@ name|route
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* if_output */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|vnet
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_comment
-comment|/* get TAILQ macros */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -122,11 +91,9 @@ directive|include
 file|<sys/mbuf.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
+begin_comment
+comment|/* ifqueue only? */
+end_comment
 
 begin_include
 include|#
@@ -172,7 +139,7 @@ file|<sys/mutex.h>
 end_include
 
 begin_comment
-comment|/* XXX */
+comment|/* struct ifqueue */
 end_comment
 
 begin_include
@@ -198,18 +165,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/event.h>
+file|<sys/_task.h>
 end_include
 
 begin_comment
-comment|/* XXX */
+comment|/* if_link_task */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/_task.h>
-end_include
 
 begin_define
 define|#
@@ -757,17 +718,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|void
-name|if_init_f_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_comment
 comment|/*  * XXX These aliases are terribly dangerous because they could apply  * to anything.  */
 end_comment
@@ -1300,6 +1250,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_EVENTHANDLER_H
+end_ifdef
+
 begin_comment
 comment|/* interface link layer address change event */
 end_comment
@@ -1462,6 +1418,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_EVENTHANDLER_H */
+end_comment
+
 begin_comment
 comment|/*  * interface groups  */
 end_comment
@@ -1537,6 +1502,12 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_EVENTHANDLER_H
+end_ifdef
 
 begin_comment
 comment|/* group attach event */
@@ -1633,6 +1604,15 @@ name|group_change_event_handler_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYS_EVENTHANDLER_H */
+end_comment
 
 begin_define
 define|#
