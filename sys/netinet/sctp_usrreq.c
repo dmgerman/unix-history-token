@@ -16078,7 +16078,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sctp_paddrparams
+name|sctp_udpencaps
 argument_list|)
 expr_stmt|;
 block|}
