@@ -430,13 +430,13 @@ name|info
 operator|->
 name|build_date
 operator|=
-name|__DATE__
+name|NULL
 expr_stmt|;
 name|info
 operator|->
 name|build_time
 operator|=
-name|__TIME__
+name|NULL
 expr_stmt|;
 name|info
 operator|->
