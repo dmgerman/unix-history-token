@@ -2105,15 +2105,9 @@ argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
 operator|||
-name|defined
-argument_list|(
-name|ARM_ARCH_7
-argument_list|)
+name|ARM_ARCH_6
 operator|||
-name|defined
-argument_list|(
 name|ARM_ARCH_7A
-argument_list|)
 end_elif
 
 begin_define
