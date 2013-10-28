@@ -3659,6 +3659,9 @@ operator|.
 name|e2d_namlen
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EXT2FS_HTREE
 if|if
 condition|(
 name|ext2_htree_has_idx
@@ -3757,6 +3760,9 @@ argument_list|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* EXT2FS_HTREE */
 if|if
 condition|(
 name|dp
