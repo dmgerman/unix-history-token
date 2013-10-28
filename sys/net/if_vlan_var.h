@@ -382,7 +382,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYS_EVENTHANDLER_H
+name|_SYS_EVENTHANDLER_H_
 end_ifdef
 
 begin_comment
@@ -455,7 +455,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SYS_EVENTHANDLER_H */
+comment|/* _SYS_EVENTHANDLER_H_ */
 end_comment
 
 begin_endif
