@@ -16468,6 +16468,10 @@ directive|ifdef
 name|SCTP_DONT_DO_PRIVADDR_SCOPE
 name|stcb
 operator|->
+name|asoc
+operator|.
+name|scope
+operator|.
 name|ipv4_local_scope
 operator|=
 literal|1
