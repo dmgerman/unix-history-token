@@ -3278,14 +3278,6 @@ define|\
 value|static struct vfsconf fsname ## _vfsconf = {		\ 		.vfc_version = VFS_VERSION,			\ 		.vfc_name = #fsname,				\ 		.vfc_vfsops =&vfsops,				\ 		.vfc_typenum = -1,				\ 		.vfc_flags = flags,				\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|mountrootfsname
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * exported vnode operations  */
 end_comment
