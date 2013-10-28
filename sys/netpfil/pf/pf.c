@@ -28214,7 +28214,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pf_status
+name|V_pf_status
 operator|.
 name|debug
 operator|>=
@@ -28442,6 +28442,18 @@ break|break;
 endif|#
 directive|endif
 comment|/* INET6 */
+default|default:
+name|panic
+argument_list|(
+literal|"%s: proto %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|pd
+operator|->
+name|proto
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
