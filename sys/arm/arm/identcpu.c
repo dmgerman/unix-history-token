@@ -1451,26 +1451,6 @@ name|generic_steppings
 block|}
 block|,
 block|{
-name|CPU_ID_MV88SV581X_V6
-block|,
-name|CPU_CLASS_MARVELL
-block|,
-literal|"Sheeva 88SV581x"
-block|,
-name|generic_steppings
-block|}
-block|,
-block|{
-name|CPU_ID_ARM_88SV581X_V6
-block|,
-name|CPU_CLASS_MARVELL
-block|,
-literal|"Sheeva 88SV581x"
-block|,
-name|generic_steppings
-block|}
-block|,
-block|{
 name|CPU_ID_MV88SV581X_V7
 block|,
 name|CPU_CLASS_MARVELL
@@ -1486,26 +1466,6 @@ block|,
 name|CPU_CLASS_MARVELL
 block|,
 literal|"Sheeva 88SV581x"
-block|,
-name|generic_steppings
-block|}
-block|,
-block|{
-name|CPU_ID_MV88SV584X_V6
-block|,
-name|CPU_CLASS_MARVELL
-block|,
-literal|"Sheeva 88SV584x"
-block|,
-name|generic_steppings
-block|}
-block|,
-block|{
-name|CPU_ID_ARM_88SV584X_V6
-block|,
-name|CPU_CLASS_MARVELL
-block|,
-literal|"Sheeva 88SV584x"
 block|,
 name|generic_steppings
 block|}
