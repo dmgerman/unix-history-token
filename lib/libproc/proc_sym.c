@@ -2331,17 +2331,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DPRINTFX
-argument_list|(
-literal|"ERROR: elf_getdata() failed: %s"
-argument_list|,
-name|elf_errmsg
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 literal|0
