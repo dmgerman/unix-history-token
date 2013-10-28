@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -44,7 +44,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
