@@ -9118,6 +9118,9 @@ name|ret
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|sun
 if|if
 condition|(
 operator|!
@@ -9183,6 +9186,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 name|VERIFY
 argument_list|(
 name|zfsvfs_teardown
