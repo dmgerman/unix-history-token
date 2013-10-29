@@ -11555,7 +11555,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Malformed reloc detected for section %s"
+literal|"%B: Malformed reloc detected for section %s"
 argument_list|)
 argument_list|,
 name|abfd
