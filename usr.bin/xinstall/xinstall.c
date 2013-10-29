@@ -5149,6 +5149,7 @@ modifier|*
 name|dresp
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -5239,6 +5240,7 @@ condition|(
 name|p
 operator|==
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -5272,6 +5274,7 @@ condition|(
 name|q
 operator|==
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -5343,6 +5346,7 @@ operator|!
 name|done_compare
 condition|)
 block|{
+name|unsigned
 name|char
 name|buf1
 index|[
@@ -5903,10 +5907,13 @@ decl_stmt|;
 name|int
 name|serrno
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 name|buf
 index|[
 name|MAXBSIZE
@@ -6027,6 +6034,7 @@ argument_list|)
 operator|)
 operator|!=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
