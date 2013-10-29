@@ -492,13 +492,11 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-block|{
 name|DPRINTF
 argument_list|(
 literal|"waitpid"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|-

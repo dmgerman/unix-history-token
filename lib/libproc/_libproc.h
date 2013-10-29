@@ -130,6 +130,7 @@ name|DPRINTF
 parameter_list|(
 modifier|...
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_define
@@ -139,6 +140,7 @@ name|DPRINTFX
 parameter_list|(
 modifier|...
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_endif
