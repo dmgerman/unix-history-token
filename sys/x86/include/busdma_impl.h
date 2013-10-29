@@ -398,20 +398,6 @@ end_struct
 
 begin_function_decl
 name|void
-name|busdma_lock_mutex
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|bus_dma_lock_op_t
-name|op
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|bus_dma_dflt_lock
 parameter_list|(
 name|void
