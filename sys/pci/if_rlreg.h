@@ -1247,6 +1247,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_HWREV_8168EP
+value|0x50000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_HWREV_8168GU
 value|0x50800000
 end_define
