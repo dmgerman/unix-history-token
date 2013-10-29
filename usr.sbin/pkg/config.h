@@ -22,6 +22,13 @@ name|_LOCALBASE
 value|"/usr/local"
 end_define
 
+begin_define
+define|#
+directive|define
+name|URL_SCHEME_PREFIX
+value|"pkg+"
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum

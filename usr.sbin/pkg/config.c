@@ -186,6 +186,7 @@ name|PKG_CONFIG_STRING
 block|,
 literal|"PACKAGESITE"
 block|,
+name|URL_SCHEME_PREFIX
 literal|"http://pkg.FreeBSD.org/${ABI}/latest"
 block|,
 name|NULL
