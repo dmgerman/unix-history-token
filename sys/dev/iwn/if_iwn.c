@@ -12866,12 +12866,9 @@ expr_stmt|;
 comment|/* 	 * If it's an MCS rate, let's set the plcp correctly 	 * and set the relevant flags based on the node config. 	 */
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_HT
-argument_list|(
-name|ni
-operator|->
-name|ni_chan
-argument_list|)
+name|rate
+operator|&
+name|IEEE80211_RATE_MCS
 condition|)
 block|{
 comment|/* 		 * Set the initial PLCP value to be between 0->31 for 		 * MCS 0 -> MCS 31, then set the "I'm an MCS rate!" 		 * flag. 		 */
