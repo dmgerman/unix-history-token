@@ -256,14 +256,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Use a constant timer of 50 Hz to redraw the screen.  *  * XXX: In theory we should only fire up the timer when there is really  * activity. Unfortunately we cannot always start timers. We really  * don't want to process kernel messages synchronously, because it  * really slows down the system.  */
+comment|/*  * Use a constant timer of 25 Hz to redraw the screen.  *  * XXX: In theory we should only fire up the timer when there is really  * activity. Unfortunately we cannot always start timers. We really  * don't want to process kernel messages synchronously, because it  * really slows down the system.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VT_TIMERFREQ
-value|50
+value|25
 end_define
 
 begin_comment
