@@ -1792,12 +1792,9 @@ argument_list|,
 literal|"XLP PCI bus"
 argument_list|)
 expr_stmt|;
-name|xlp_pcib_init_resources
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -2514,6 +2511,9 @@ name|node
 decl_stmt|,
 name|link
 decl_stmt|;
+name|xlp_pcib_init_resources
+argument_list|()
+expr_stmt|;
 comment|/* enable hardware swap on all nodes/links */
 for|for
 control|(
