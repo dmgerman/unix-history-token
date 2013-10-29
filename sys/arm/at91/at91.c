@@ -606,7 +606,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_NO_WILDCARD
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
