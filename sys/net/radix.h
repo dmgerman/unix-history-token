@@ -576,6 +576,12 @@ decl_stmt|;
 comment|/* locks entire radix tree */
 endif|#
 directive|endif
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh_masks
+decl_stmt|;
+comment|/* Storage for our masks */
 block|}
 struct|;
 end_struct
@@ -820,6 +826,21 @@ modifier|*
 name|rn_addmask
 argument_list|(
 name|void
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|int
+argument_list|)
+decl_stmt|,
+modifier|*
+name|rn_addmask_r
+argument_list|(
+name|void
+operator|*
+argument_list|,
+expr|struct
+name|radix_node_head
 operator|*
 argument_list|,
 name|int
