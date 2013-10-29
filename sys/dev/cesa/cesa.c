@@ -4883,6 +4883,37 @@ operator|=
 name|dev
 expr_stmt|;
 comment|/* Check if CESA peripheral device has power turned on */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOC_MV_KIRKWOOD
+argument_list|)
+if|if
+condition|(
+name|soc_power_ctrl_get
+argument_list|(
+name|CPU_PM_CTRL_CRYPTO
+argument_list|)
+operator|==
+name|CPU_PM_CTRL_CRYPTO
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"not powered on\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|soc_power_ctrl_get
@@ -4906,6 +4937,8 @@ name|ENXIO
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|soc_id
 argument_list|(
 operator|&
