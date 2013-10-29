@@ -2721,7 +2721,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  *	- there is no delayed ack timer in progress and  *	- our last ack wasn't a 0-sized window.  We never want to delay  *	  the ack that opens up a 0-sized window and  *		- delayed acks are enabled or  *		- this is a half-synchronized T/TCP connection.  */
+comment|/*  * Indicate whether this ack should be delayed.  We can delay the ack if  *	- there is no delayed ack timer in progress and  *	- our last ack wasn't a 0-sized window.  We never want to delay  *	  the ack that opens up a 0-sized window and  *		- delayed acks are enabled or  *		- this is a half-synchronized T/TCP connection.  *	- the segment size is not larger than the MSS and LRO wasn't used  *	  for this segment.  */
 end_comment
 
 begin_define
@@ -2730,9 +2730,11 @@ directive|define
 name|DELAY_ACK
 parameter_list|(
 name|tp
+parameter_list|,
+name|tlen
 parameter_list|)
 define|\
-value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!tcp_timer_active(tp, TT_DELACK)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tlen<= tp->t_maxopd)&&					\ 	    (V_tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_comment
@@ -8236,6 +8238,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 condition|)
 block|{
@@ -8588,6 +8592,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 operator|&&
 name|tlen
@@ -11961,6 +11967,8 @@ condition|(
 name|DELAY_ACK
 argument_list|(
 name|tp
+argument_list|,
+name|tlen
 argument_list|)
 condition|)
 name|tp
