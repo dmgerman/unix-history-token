@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: skeleton.c,v 1.32 2013/03/04 23:19:39 tom Exp $ */
+comment|/* $Id: skeleton.c,v 1.33 2013/09/25 22:44:22 tom Exp $ */
 end_comment
 
 begin_include
@@ -246,9 +246,9 @@ literal|"#define YYSTACKSIZE YYMAXDEPTH"
 block|,
 literal|"#else"
 block|,
-literal|"#define YYSTACKSIZE 500"
+literal|"#define YYSTACKSIZE 10000"
 block|,
-literal|"#define YYMAXDEPTH  500"
+literal|"#define YYMAXDEPTH  10000"
 block|,
 literal|"#endif"
 block|,
@@ -256,7 +256,7 @@ literal|"#endif"
 block|,
 literal|""
 block|,
-literal|"#define YYINITSTACKSIZE 500"
+literal|"#define YYINITSTACKSIZE 200"
 block|,
 literal|""
 block|,
