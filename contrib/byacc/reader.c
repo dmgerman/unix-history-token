@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reader.c,v 1.36 2012/05/26 16:05:41 tom Exp $ */
+comment|/* $Id: reader.c,v 1.37 2013/09/25 23:46:18 tom Exp $ */
 end_comment
 
 begin_include
@@ -2818,7 +2818,7 @@ expr_stmt|;
 while|while
 condition|(
 name|i
-operator|>=
+operator|>
 literal|0
 operator|&&
 name|isspace
@@ -2929,7 +2929,7 @@ block|}
 while|while
 condition|(
 name|i
-operator|>=
+operator|>
 literal|0
 operator|&&
 operator|(
