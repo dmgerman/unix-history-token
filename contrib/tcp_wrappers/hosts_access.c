@@ -1185,7 +1185,7 @@ modifier|*
 name|path
 decl_stmt|;
 name|struct
-name|hosts_info
+name|host_info
 modifier|*
 name|host
 decl_stmt|;
