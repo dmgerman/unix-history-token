@@ -2968,6 +2968,13 @@ name|NT_FREEBSD_NOINIT_TAG
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_ARCH_TAG
+value|3
+end_define
+
 begin_comment
 comment|/* These three macros disassemble and assemble a symbol table st_info field,    which contains the symbol binding and symbol type.  The STB_ and STT_    defines identify the binding and type.  */
 end_comment

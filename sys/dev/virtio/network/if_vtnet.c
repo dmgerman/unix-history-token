@@ -8281,7 +8281,11 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* VTNET_RXQ_UNLOCK(rxq); */
+name|VTNET_RXQ_UNLOCK
+argument_list|(
+name|rxq
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -8294,7 +8298,11 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* VTNET_RXQ_LOCK(rxq); */
+name|VTNET_RXQ_LOCK
+argument_list|(
+name|rxq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8630,6 +8638,20 @@ argument_list|,
 name|hdr
 argument_list|)
 expr_stmt|;
+comment|/* Must recheck after dropping the Rx lock. */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 if|if
 condition|(

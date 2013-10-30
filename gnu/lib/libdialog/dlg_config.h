@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|DIALOG_PATCHDATE
-value|20130523
+value|20130923
 end_define
 
 begin_define

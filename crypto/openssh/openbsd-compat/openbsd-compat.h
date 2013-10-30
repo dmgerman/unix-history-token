@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.55 2013/02/15 01:20:42 dtucker Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.58 2013/06/05 22:30:21 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -551,6 +551,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SCAN_SCALED
+end_ifndef
+
+begin_function_decl
+name|int
+name|scan_scaled
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|long
+name|long
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -785,6 +810,12 @@ name|opts
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/getopt.h"
+end_include
 
 begin_endif
 endif|#
@@ -1199,6 +1230,33 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* multibyte character support */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MBLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|mblen
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|1
+end_define
 
 begin_endif
 endif|#

@@ -2435,9 +2435,25 @@ name|is
 operator|->
 name|is_conn
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|==
+name|NULL
+condition|)
+block|{
+name|ISCSI_SESSION_WARN
+argument_list|(
+name|is
+argument_list|,
+literal|"failed to allocate PDU"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bhsno
 operator|=
 operator|(
@@ -9590,7 +9606,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -9630,34 +9646,6 @@ argument_list|(
 literal|"failed to create device node, error %d"
 argument_list|,
 name|error
-argument_list|)
-expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_lock
-argument_list|)
-expr_stmt|;
-name|cv_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_cv
-argument_list|)
-expr_stmt|;
-name|uma_zdestroy
-argument_list|(
-name|iscsi_outstanding_zone
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_ISCSI
 argument_list|)
 expr_stmt|;
 return|return
@@ -9706,7 +9694,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * XXX: kldunload hangs on "devdrn". 	 */
 name|struct
 name|iscsi_session
 modifier|*
@@ -9715,6 +9702,15 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_cdev
+operator|!=
+name|NULL
+condition|)
+block|{
 name|ISCSI_DEBUG
 argument_list|(
 literal|"removing device node"
@@ -9732,6 +9728,15 @@ argument_list|(
 literal|"device node removed"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_shutdown_eh
+operator|!=
+name|NULL
+condition|)
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
 name|shutdown_post_sync

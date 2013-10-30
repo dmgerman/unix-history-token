@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.171 2013/03/07 09:06:13 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.172 2013/06/01 21:18:48 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -902,28 +902,6 @@ define|#
 directive|define
 name|MAP_FAILED
 value|((void *)-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* *-*-nto-qnx doesn't define this constant in the system headers */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISSING_NFDBITS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NFDBITS
-value|(8 * sizeof(unsigned long))
 end_define
 
 begin_endif
@@ -1948,14 +1926,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* *-*-nto-qnx does not define this type in the system headers */
+comment|/* bits needed for select that may not be in the system headers */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISSING_FD_MASK
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_FD_MASK
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -1965,6 +1943,61 @@ name|int
 name|fd_mask
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_NFDBITS
+argument_list|)
+operator|&&
+name|HAVE_DECL_NFDBITS
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFDBITS
+value|(8 * sizeof(unsigned long))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_DECL_HOWMANY
+argument_list|)
+operator|&&
+name|HAVE_DECL_HOWMANY
+operator|==
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|howmany
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(((x)+((y)-1))/(y))
+end_define
 
 begin_endif
 endif|#
@@ -2580,33 +2613,6 @@ name|__nonnull__
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* *-*-nto-qnx doesn't define this macro in the system headers */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MISSING_HOWMANY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|howmany
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)+((y)-1))/(y))
 end_define
 
 begin_endif

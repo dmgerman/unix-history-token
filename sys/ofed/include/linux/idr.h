@@ -70,6 +70,27 @@ name|MAX_LEVEL
 value|(MAX_ID_SHIFT + IDR_BITS - 1) / IDR_BITS
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_IDR_SHIFT
+value|(sizeof(int)*8 - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_IDR_BIT
+value|(1U<< MAX_IDR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_IDR_MASK
+value|(MAX_IDR_BIT - 1)
+end_define
+
 begin_struct
 struct|struct
 name|idr_layer

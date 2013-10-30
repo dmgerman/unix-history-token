@@ -13679,6 +13679,11 @@ name|queues
 operator|=
 name|maxqueues
 expr_stmt|;
+comment|/* reflect correct sysctl value */
+name|igb_num_queues
+operator|=
+name|queues
+expr_stmt|;
 comment|/* 	** One vector (RX/TX pair) per queue 	** plus an additional for Link interrupt 	*/
 name|want
 operator|=

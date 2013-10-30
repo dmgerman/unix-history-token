@@ -806,6 +806,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|sysfs_attr_init
+parameter_list|(
+name|attr
+parameter_list|)
+value|do {} while(0)
+end_define
+
 begin_endif
 endif|#
 directive|endif

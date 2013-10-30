@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -254,6 +268,18 @@ name|hyper_v_detected
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * When Xen is detected and native Xen PV support is enabled, 	 * ignore Xen's HyperV emulation. 	 */
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_XEN
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|do_cpuid
 argument_list|(
 literal|1

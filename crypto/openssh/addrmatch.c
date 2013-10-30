@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: addrmatch.c,v 1.6 2012/06/21 00:16:07 dtucker Exp $ */
+comment|/*	$OpenBSD: addrmatch.c,v 1.7 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1994,7 +1994,7 @@ name|foundit
 goto|;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|o
 argument_list|)
@@ -2299,7 +2299,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|xfree
+name|free
 argument_list|(
 name|o
 argument_list|)

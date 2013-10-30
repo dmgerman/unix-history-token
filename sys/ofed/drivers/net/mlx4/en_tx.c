@@ -525,6 +525,8 @@ operator|&
 name|ring
 operator|->
 name|qpn
+argument_list|,
+name|MLX4_RESERVE_BF_QP
 argument_list|)
 expr_stmt|;
 if|if
@@ -601,6 +603,8 @@ operator|&
 name|ring
 operator|->
 name|bf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

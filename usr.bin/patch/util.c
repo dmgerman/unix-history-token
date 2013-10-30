@@ -1852,7 +1852,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"patch 2.0-12u9 FreeBSD\n"
+literal|"patch 2.0-12u10 FreeBSD\n"
 argument_list|)
 expr_stmt|;
 name|my_exit

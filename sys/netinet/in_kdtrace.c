@@ -166,7 +166,7 @@ literal|"tcpsinfo_t *"
 argument_list|,
 literal|"struct tcphdr *"
 argument_list|,
-literal|"tcpinfo_t *"
+literal|"tcpinfoh_t *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -234,7 +234,7 @@ literal|"tcpsinfo_t *"
 argument_list|,
 literal|"struct tcphdr *"
 argument_list|,
-literal|"tcpinfo_t *"
+literal|"tcpinfoh_t *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -268,7 +268,7 @@ literal|"tcpsinfo_t *"
 argument_list|,
 literal|"struct tcphdr *"
 argument_list|,
-literal|"tcpinfo_t *"
+literal|"tcpinfoh_t *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -334,7 +334,7 @@ literal|"tcpsinfo_t *"
 argument_list|,
 literal|"struct tcphdr *"
 argument_list|,
-literal|"tcpinfo_t *"
+literal|"tcpinfoh_t *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

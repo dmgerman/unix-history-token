@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.96 2013/01/04 19:26:38 jmc Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.97 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1319,7 +1319,7 @@ operator|.
 name|fd
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|handles
 index|[
@@ -1358,7 +1358,7 @@ operator|.
 name|dirp
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|handles
 index|[
@@ -1578,7 +1578,7 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|handle
 argument_list|)
@@ -1989,7 +1989,7 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|string
 argument_list|)
@@ -2748,7 +2748,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -3266,7 +3266,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)
@@ -3414,7 +3414,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -3964,7 +3964,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -4499,7 +4499,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|path
 argument_list|)
@@ -4805,7 +4805,7 @@ name|i
 operator|++
 control|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|stats
 index|[
@@ -4815,7 +4815,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|stats
 index|[
@@ -4837,7 +4837,7 @@ name|SSH2_FX_EOF
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|stats
 argument_list|)
@@ -4936,7 +4936,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -5066,7 +5066,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -5161,7 +5161,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|name
 argument_list|)
@@ -5212,7 +5212,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|path
 argument_list|)
@@ -5296,7 +5296,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|path
 argument_list|)
@@ -5586,12 +5586,12 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|oldpath
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|newpath
 argument_list|)
@@ -5723,7 +5723,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|path
 argument_list|)
@@ -5833,12 +5833,12 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|oldpath
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|newpath
 argument_list|)
@@ -5940,12 +5940,12 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|oldpath
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|newpath
 argument_list|)
@@ -6022,7 +6022,7 @@ operator|&
 name|st
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|path
 argument_list|)
@@ -6218,12 +6218,12 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|oldpath
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|newpath
 argument_list|)
@@ -6334,7 +6334,7 @@ name|SSH2_FX_OP_UNSUPPORTED
 argument_list|)
 expr_stmt|;
 comment|/* MUST */
-name|xfree
+name|free
 argument_list|(
 name|request
 argument_list|)

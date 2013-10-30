@@ -422,6 +422,12 @@ comment|// __attribute__((thiscall))
 name|CC_X86Pascal
 block|,
 comment|// __attribute__((pascal))
+name|CC_X86_64Win64
+block|,
+comment|// __attribute__((ms_abi))
+name|CC_X86_64SysV
+block|,
+comment|// __attribute__((sysv_abi))
 name|CC_AAPCS
 block|,
 comment|// __attribute__((pcs("aapcs")))

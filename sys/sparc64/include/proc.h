@@ -86,6 +86,28 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_comment
+comment|/* Get the current kernel thread stack usage. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_USAGE
+parameter_list|(
+name|total
+parameter_list|,
+name|used
+parameter_list|)
+value|do {				\ 	struct thread *td = curthread;					\ 	(total) = td->td_kstack_pages * PAGE_SIZE - sizeof(struct pcb);	\ 	(used) = (char *)td->td_kstack +				\ 	    td->td_kstack_pages * PAGE_SIZE -				\ 	    (char *)&td;						\ } while (0)
+end_define
+
 begin_struct
 struct|struct
 name|syscall_args

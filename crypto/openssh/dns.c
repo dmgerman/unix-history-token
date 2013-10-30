@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.28 2012/05/23 03:28:28 djm Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.29 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -935,7 +935,7 @@ name|hostkey_digest_type
 operator|=
 name|dnskey_digest_type
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|hostkey_digest
 argument_list|)
@@ -1013,13 +1013,13 @@ operator||=
 name|DNS_VERIFY_MATCH
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|dnskey_digest
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|hostkey_digest
 argument_list|)
@@ -1230,7 +1230,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|rdata_digest
 argument_list|)

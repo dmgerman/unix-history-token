@@ -41664,6 +41664,15 @@ argument_list|(
 literal|"NT_FREEBSD_NOINIT_TAG"
 argument_list|)
 return|;
+case|case
+name|NT_FREEBSD_ARCH_TAG
+case|:
+return|return
+name|_
+argument_list|(
+literal|"NT_FREEBSD_ARCH_TAG"
+argument_list|)
+return|;
 default|default:
 break|break;
 block|}

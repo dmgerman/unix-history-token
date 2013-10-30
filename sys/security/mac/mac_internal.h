@@ -257,7 +257,7 @@ parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_err,	\ 	    mac-grant-err, "int", arg0, arg1);				\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_ok,	\ 	    mac-grant-ok, "INT", arg0, arg1);
+value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_err,	\ 	    mac-grant-err, "int", arg0, arg1);				\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_ok,	\ 	    mac-grant-ok, "int", arg0, arg1);
 end_define
 
 begin_define

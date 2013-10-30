@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.75 2013/01/08 18:49:04 markus Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.76 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1326,6 +1326,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRUCT_PASSWD_PW_GECOS
 name|pw
 operator|->
 name|pw_gecos
@@ -1338,9 +1341,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
-name|HAVE_PW_CLASS_IN_PASSWD
+name|HAVE_STRUCT_PASSWD_PW_CLASS
 name|pw
 operator|->
 name|pw_class
@@ -1446,7 +1451,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|newopts
 argument_list|)
@@ -1550,7 +1555,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|banner
 argument_list|)
@@ -1998,7 +2003,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -2184,7 +2189,7 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -3254,7 +3259,7 @@ argument_list|,
 name|keylen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|key
 argument_list|)
@@ -3379,7 +3384,7 @@ argument_list|,
 name|bloblen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -3415,7 +3420,7 @@ argument_list|,
 name|bloblen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -3563,7 +3568,7 @@ argument_list|,
 name|plen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -3603,7 +3608,7 @@ argument_list|,
 name|plen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -3975,7 +3980,7 @@ name|namebuflen
 argument_list|)
 expr_stmt|;
 comment|/* Possible truncation */
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -3993,7 +3998,7 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -4311,7 +4316,7 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -5593,7 +5598,7 @@ argument_list|,
 name|SKEY_PROMPT
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|challenge
 argument_list|)
@@ -5969,7 +5974,7 @@ name|rkey
 operator|=
 name|key
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -6089,7 +6094,7 @@ argument_list|,
 name|blen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -6242,7 +6247,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)

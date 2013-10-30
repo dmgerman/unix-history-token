@@ -386,11 +386,11 @@ function_decl|[IB_USER_VERBS_CMD_CREATE_XRC_SRQ]
 init|=
 name|ib_uverbs_create_xrc_srq
 operator|,
-function_decl|[IB_USER_VERBS_CMD_OPEN_XRC_DOMAIN]
+function_decl|[IB_USER_VERBS_CMD_OPEN_XRCD]
 init|=
 name|ib_uverbs_open_xrc_domain
 operator|,
-function_decl|[IB_USER_VERBS_CMD_CLOSE_XRC_DOMAIN]
+function_decl|[IB_USER_VERBS_CMD_CLOSE_XRCD]
 init|=
 name|ib_uverbs_close_xrc_domain
 operator|,
@@ -1149,7 +1149,7 @@ argument|uobj
 argument_list|,
 argument|tmp
 argument_list|,
-argument|&context->xrc_domain_list
+argument|&context->xrcd_list
 argument_list|,
 argument|list
 argument_list|)
@@ -3018,12 +3018,6 @@ name|EINVAL
 return|;
 if|if
 condition|(
-name|hdr
-operator|.
-name|command
-operator|<
-literal|0
-operator|||
 name|hdr
 operator|.
 name|command

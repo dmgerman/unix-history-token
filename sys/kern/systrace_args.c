@@ -1066,7 +1066,7 @@ name|p
 operator|->
 name|from
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|5
@@ -1079,7 +1079,7 @@ name|p
 operator|->
 name|fromlenaddr
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -1121,7 +1121,7 @@ name|p
 operator|->
 name|name
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -1134,7 +1134,7 @@ name|p
 operator|->
 name|anamelen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -1176,7 +1176,7 @@ name|p
 operator|->
 name|asa
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -1189,7 +1189,7 @@ name|p
 operator|->
 name|alen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -1231,7 +1231,7 @@ name|p
 operator|->
 name|asa
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -1244,7 +1244,7 @@ name|p
 operator|->
 name|alen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 operator|*
 name|n_args
 operator|=
@@ -18350,7 +18350,7 @@ name|p
 operator|->
 name|name
 expr_stmt|;
-comment|/* struct sockaddr *__restrict */
+comment|/* struct sockaddr * */
 name|uarg
 index|[
 literal|2
@@ -18363,7 +18363,7 @@ name|p
 operator|->
 name|anamelen
 expr_stmt|;
-comment|/* __socklen_t *__restrict */
+comment|/* __socklen_t * */
 name|iarg
 index|[
 literal|3
@@ -18452,6 +18452,68 @@ operator|*
 name|n_args
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* procctl */
+case|case
+literal|544
+case|:
+block|{
+name|struct
+name|procctl_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|iarg
+index|[
+literal|0
+index|]
+operator|=
+name|p
+operator|->
+name|idtype
+expr_stmt|;
+comment|/* idtype_t */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|id
+expr_stmt|;
+comment|/* id_t */
+name|iarg
+index|[
+literal|2
+index|]
+operator|=
+name|p
+operator|->
+name|com
+expr_stmt|;
+comment|/* int */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|data
+expr_stmt|;
+comment|/* void * */
+operator|*
+name|n_args
+operator|=
+literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -19217,7 +19279,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -19225,7 +19287,7 @@ literal|5
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19255,7 +19317,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -19263,7 +19325,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19293,7 +19355,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -19301,7 +19363,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -19331,7 +19393,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -19339,7 +19401,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 default|default:
@@ -31541,7 +31603,7 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"struct sockaddr *__restrict"
+literal|"struct sockaddr *"
 expr_stmt|;
 break|break;
 case|case
@@ -31549,7 +31611,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"__socklen_t *__restrict"
+literal|"__socklen_t *"
 expr_stmt|;
 break|break;
 case|case
@@ -31610,6 +31672,52 @@ case|:
 name|p
 operator|=
 literal|"struct aiocb *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* procctl */
+case|case
+literal|544
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"idtype_t"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"id_t"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"void *"
 expr_stmt|;
 break|break;
 default|default:
@@ -38884,6 +38992,25 @@ break|break;
 comment|/* aio_mlock */
 case|case
 literal|543
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
+comment|/* procctl */
+case|case
+literal|544
 case|:
 if|if
 condition|(

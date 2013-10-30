@@ -374,8 +374,6 @@ name|i
 decl_stmt|,
 name|ret
 decl_stmt|,
-name|cnt
-decl_stmt|,
 modifier|*
 name|aa
 decl_stmt|;
@@ -391,11 +389,6 @@ name|at
 decl_stmt|;
 name|size_t
 name|len
-init|=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
 decl_stmt|;
 comment|/* validate the address count and list */
 if|if
@@ -463,13 +456,16 @@ literal|1
 operator|)
 return|;
 block|}
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
 name|at
 operator|=
 name|addrs
-expr_stmt|;
-name|cnt
-operator|=
-literal|0
 expr_stmt|;
 name|cpto
 operator|=
@@ -799,6 +795,11 @@ operator|)
 name|buf
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ret

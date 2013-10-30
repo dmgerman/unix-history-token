@@ -155,6 +155,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ofw_quiesce
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Must be called before VM is up! */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

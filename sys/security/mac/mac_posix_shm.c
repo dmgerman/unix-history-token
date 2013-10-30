@@ -405,7 +405,7 @@ literal|"struct ucred *"
 argument_list|,
 literal|"struct shmfd *"
 argument_list|,
-literal|"accmode_t accmode"
+literal|"accmode_t"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

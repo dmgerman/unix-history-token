@@ -256,6 +256,13 @@ name|g_shutdown
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|g_notaste
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* geom_ctl.c */
 end_comment

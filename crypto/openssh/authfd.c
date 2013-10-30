@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.86 2011/07/06 18:09:21 tedu Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.87 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -748,7 +748,7 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|auth
 argument_list|)
@@ -1300,7 +1300,7 @@ argument_list|,
 name|blen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -1721,7 +1721,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -2788,7 +2788,7 @@ argument_list|,
 name|blen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)

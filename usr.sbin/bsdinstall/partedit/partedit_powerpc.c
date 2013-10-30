@@ -224,6 +224,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|part_type
@@ -232,6 +233,16 @@ literal|"MBR"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|part_type
+argument_list|,
+literal|"BSD"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 return|return
 operator|(

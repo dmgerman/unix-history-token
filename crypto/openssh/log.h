@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.h,v 1.19 2012/09/06 04:37:39 dtucker Exp $ */
+comment|/* $OpenBSD: log.h,v 1.20 2013/04/07 02:10:33 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -143,6 +143,17 @@ name|int
 name|log_is_on_stderr
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|log_redirect_stderr_to
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

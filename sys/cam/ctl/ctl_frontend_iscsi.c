@@ -752,7 +752,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|bool
 name|cfiscsi_pdu_update_cmdsn
 parameter_list|(
 specifier|const
@@ -1025,7 +1025,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|cfiscsi_pdu_update_cmdsn
 parameter_list|(
 specifier|const
@@ -1081,7 +1081,11 @@ operator|)
 operator|==
 name|ISCSI_BHS_OPCODE_SCSI_DATA_OUT
 condition|)
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 comment|/* 	 * We're only using fields common for all the request 	 * (initiator -> target) PDUs. 	 */
 name|bhssc
 operator|=
@@ -1124,16 +1128,29 @@ literal|0
 block|if (expstatsn != cs->cs_statsn) { 		CFISCSI_SESSION_DEBUG(cs, "received PDU with ExpStatSN %d, " 		    "while current StatSN is %d", expstatsn, 		    cs->cs_statsn); 	}
 endif|#
 directive|endif
-comment|/* 	 * XXX: The target MUST silently ignore any non-immediate command 	 *	outside of this range or non-immediate duplicates within 	 *	the range. 	 */
+comment|/* 	 * The target MUST silently ignore any non-immediate command outside 	 * of this range. 	 * 	 * XXX:	... or non-immediate duplicates within the range. 	 */
 if|if
 condition|(
 name|cmdsn
-operator|!=
+operator|<
 name|cs
 operator|->
 name|cs_cmdsn
+operator|||
+name|cmdsn
+operator|>
+name|cs
+operator|->
+name|cs_cmdsn
+operator|+
+name|maxcmdsn_delta
 condition|)
 block|{
+name|CFISCSI_SESSION_UNLOCK
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
 name|CFISCSI_SESSION_WARN
 argument_list|(
 name|cs
@@ -1148,22 +1165,12 @@ operator|->
 name|cs_cmdsn
 argument_list|)
 expr_stmt|;
-name|cs
-operator|->
-name|cs_cmdsn
-operator|=
-name|cmdsn
-operator|+
-literal|1
-expr_stmt|;
-name|CFISCSI_SESSION_UNLOCK
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
-comment|/* 	 * XXX: The CmdSN of the rejected command PDU (if it is a non-immediate 	 *	command) MUST NOT be considered received by the target 	 *	(i.e., a command sequence gap must be assumed for the CmdSN) 	 */
 if|if
 condition|(
 operator|(
@@ -1188,6 +1195,11 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 end_function
 
@@ -1207,6 +1219,9 @@ name|cfiscsi_session
 modifier|*
 name|cs
 decl_stmt|;
+name|bool
+name|ignore
+decl_stmt|;
 name|cs
 operator|=
 name|PDU_SESSION
@@ -1214,11 +1229,25 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+name|ignore
+operator|=
 name|cfiscsi_pdu_update_cmdsn
 argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ignore
+condition|)
+block|{
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Handle the PDU; this includes e.g. receiving the remaining 	 * part of PDU and submitting the SCSI command to CTL 	 * or queueing a reply.  The handling routine is responsible 	 * for freeing the PDU when it's no longer needed. 	 */
 switch|switch
 condition|(
@@ -4171,9 +4200,25 @@ name|cs
 operator|->
 name|cs_conn
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to allocate PDU"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bhsni
 operator|=
 operator|(
@@ -5794,7 +5839,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
-name|UMA_ZONE_NOFREE
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -10569,7 +10614,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cfiscsi_datamove
+name|cfiscsi_datamove_in
 parameter_list|(
 name|union
 name|ctl_io
@@ -10602,16 +10647,6 @@ modifier|*
 name|bhsdi
 decl_stmt|;
 name|struct
-name|iscsi_bhs_r2t
-modifier|*
-name|bhsr2t
-decl_stmt|;
-name|struct
-name|cfiscsi_data_wait
-modifier|*
-name|cdw
-decl_stmt|;
-name|struct
 name|ctl_sg_entry
 name|ctl_sg_entry
 decl_stmt|,
@@ -10633,13 +10668,9 @@ decl_stmt|;
 name|int
 name|ctl_sg_count
 decl_stmt|,
+name|error
+decl_stmt|,
 name|i
-decl_stmt|;
-name|uint32_t
-name|target_transfer_tag
-decl_stmt|;
-name|bool
-name|done
 decl_stmt|;
 name|request
 operator|=
@@ -10768,28 +10799,13 @@ name|scsiio
 operator|.
 name|kern_total_len
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|flags
-operator|&
-name|CTL_FLAG_DATA_MASK
-operator|)
-operator|==
-name|CTL_FLAG_DATA_IN
-condition|)
-block|{
 if|#
 directive|if
 literal|0
-block|if (ctl_sg_count> 1) 			CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
+block|if (ctl_sg_count> 1) 		CFISCSI_SESSION_DEBUG(cs, "ctl_sg_count = %d", ctl_sg_count);
 endif|#
 directive|endif
-comment|/* 		 * This is the offset within the current SCSI command; 		 * i.e. for the first call of datamove(), it will be 0, 		 * and for subsequent ones it will be the sum of lengths 		 * of previous ones. 		 */
+comment|/* 	 * This is the offset within the current SCSI command; 	 * i.e. for the first call of datamove(), it will be 0, 	 * and for subsequent ones it will be the sum of lengths 	 * of previous ones. 	 */
 name|off
 operator|=
 name|htonl
@@ -10866,9 +10882,36 @@ name|cfiscsi_pdu_new_response
 argument_list|(
 name|request
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|response
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to "
+literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bhsdi
 operator|=
 operator|(
@@ -10996,6 +11039,8 @@ literal|"copy_len> len"
 operator|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|icl_pdu_append_data
 argument_list|(
 name|response
@@ -11004,9 +11049,41 @@ name|addr
 argument_list|,
 name|copy_len
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to "
+literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|addr
 operator|+=
 name|copy_len
@@ -11034,7 +11111,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * End of scatter-gather segment; 				 * proceed to the next one... 				 */
+comment|/* 			 * End of scatter-gather segment; 			 * proceed to the next one... 			 */
 if|if
 condition|(
 name|i
@@ -11044,7 +11121,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 					 * ... unless this was the last one. 					 */
+comment|/* 				 * ... unless this was the last one. 				 */
 break|break;
 block|}
 name|i
@@ -11062,7 +11139,7 @@ operator|->
 name|cs_max_data_segment_length
 condition|)
 block|{
-comment|/* 				 * Can't stuff more data into the current PDU; 				 * queue it.  Note that's not enough to check 				 * for kern_data_resid == 0  instead; there 				 * may be several Data-In PDUs for the final 				 * call to cfiscsi_datamove(), and we want 				 * to set the F flag only on the last of them. 				 */
+comment|/* 			 * Can't stuff more data into the current PDU; 			 * queue it.  Note that's not enough to check 			 * for kern_data_resid == 0  instead; there 			 * may be several Data-In PDUs for the final 			 * call to cfiscsi_datamove(), and we want 			 * to set the F flag only on the last of them. 			 */
 if|if
 condition|(
 name|off
@@ -11207,8 +11284,116 @@ name|io
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cfiscsi_datamove_out
+parameter_list|(
+name|union
+name|ctl_io
+modifier|*
+name|io
+parameter_list|)
 block|{
+name|struct
+name|cfiscsi_session
+modifier|*
+name|cs
+decl_stmt|;
+name|struct
+name|icl_pdu
+modifier|*
+name|request
+decl_stmt|,
+modifier|*
+name|response
+decl_stmt|;
+specifier|const
+name|struct
+name|iscsi_bhs_scsi_command
+modifier|*
+name|bhssc
+decl_stmt|;
+name|struct
+name|iscsi_bhs_r2t
+modifier|*
+name|bhsr2t
+decl_stmt|;
+name|struct
+name|cfiscsi_data_wait
+modifier|*
+name|cdw
+decl_stmt|;
+name|uint32_t
+name|target_transfer_tag
+decl_stmt|;
+name|bool
+name|done
+decl_stmt|;
+name|request
+operator|=
+name|io
+operator|->
+name|io_hdr
+operator|.
+name|ctl_private
+index|[
+name|CTL_PRIV_FRONTEND
+index|]
+operator|.
+name|ptr
+expr_stmt|;
+name|cs
+operator|=
+name|PDU_SESSION
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|bhssc
+operator|=
+operator|(
+specifier|const
+expr|struct
+name|iscsi_bhs_scsi_command
+operator|*
+operator|)
+name|request
+operator|->
+name|ip_bhs
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|bhssc
+operator|->
+name|bhssc_opcode
+operator|&
+operator|~
+name|ISCSI_BHS_OPCODE_IMMEDIATE
+operator|)
+operator|==
+name|ISCSI_BHS_OPCODE_SCSI_COMMAND
+argument_list|,
+operator|(
+literal|"bhssc->bhssc_opcode != ISCSI_BHS_OPCODE_SCSI_COMMAND"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We need to record it so that we can properly report 	 * underflow/underflow. 	 */
+name|PDU_TOTAL_TRANSFER_LEN
+argument_list|(
+name|request
+argument_list|)
+operator|=
+name|io
+operator|->
+name|scsiio
+operator|.
+name|kern_total_len
+expr_stmt|;
 name|CFISCSI_SESSION_LOCK
 argument_list|(
 name|cs
@@ -11233,7 +11418,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|CFISCSI_SESSION_DEBUG(cs, "expecting Data-Out with initiator " 		    "task tag 0x%x, target transfer tag 0x%x", 		    bhssc->bhssc_initiator_task_tag, target_transfer_tag);
+block|CFISCSI_SESSION_DEBUG(cs, "expecting Data-Out with initiator " 	    "task tag 0x%x, target transfer tag 0x%x", 	    bhssc->bhssc_initiator_task_tag, target_transfer_tag);
 endif|#
 directive|endif
 name|cdw
@@ -11242,11 +11427,37 @@ name|uma_zalloc
 argument_list|(
 name|cfiscsi_data_wait_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cdw
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to "
+literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+block|}
 name|cdw
 operator|->
 name|cdw_ctl_io
@@ -11319,7 +11530,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (io->scsiio.ext_data_filled != 0) 				CFISCSI_SESSION_DEBUG(cs, "got %zd bytes of immediate data, need %zd", 				    io->scsiio.ext_data_filled, io->scsiio.kern_data_len);
+block|if (io->scsiio.ext_data_filled != 0) 			CFISCSI_SESSION_DEBUG(cs, "got %zd bytes of immediate data, need %zd", 			    io->scsiio.ext_data_filled, io->scsiio.kern_data_len);
 endif|#
 directive|endif
 block|}
@@ -11345,16 +11556,42 @@ argument_list|(
 name|cs
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: We should limit the number of outstanding R2T PDUs 		 * 	per task to MaxOutstandingR2T. 		 */
+comment|/* 	 * XXX: We should limit the number of outstanding R2T PDUs 	 * 	per task to MaxOutstandingR2T. 	 */
 name|response
 operator|=
 name|cfiscsi_pdu_new_response
 argument_list|(
 name|request
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|response
+operator|==
+name|NULL
+condition|)
+block|{
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"failed to "
+literal|"allocate memory; dropping connection"
+argument_list|)
+expr_stmt|;
+name|icl_pdu_free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+name|cfiscsi_session_terminate
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
+block|}
 name|bhsr2t
 operator|=
 operator|(
@@ -11403,7 +11640,7 @@ argument_list|(
 name|target_transfer_tag
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Here we assume that cfiscsi_datamove() won't ever 		 *	be running concurrently on several CPUs for a given 		 *	command. 		 */
+comment|/* 	 * XXX: Here we assume that cfiscsi_datamove() won't ever 	 *	be running concurrently on several CPUs for a given 	 *	command. 	 */
 name|bhsr2t
 operator|->
 name|bhsr2t_r2tsn
@@ -11422,7 +11659,7 @@ name|request
 argument_list|)
 operator|++
 expr_stmt|;
-comment|/* 		 * This is the offset within the current SCSI command; 		 * i.e. for the first call of datamove(), it will be 0, 		 * and for subsequent ones it will be the sum of lengths 		 * of previous ones. 		 * 		 * The ext_data_filled is to account for unsolicited 		 * (immediate) data that might have already arrived. 		 */
+comment|/* 	 * This is the offset within the current SCSI command; 	 * i.e. for the first call of datamove(), it will be 0, 	 * and for subsequent ones it will be the sum of lengths 	 * of previous ones. 	 * 	 * The ext_data_filled is to account for unsolicited 	 * (immediate) data that might have already arrived. 	 */
 name|bhsr2t
 operator|->
 name|bhsr2t_buffer_offset
@@ -11442,7 +11679,7 @@ operator|.
 name|ext_data_filled
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This is the total length (sum of S/G lengths) this call 		 * to cfiscsi_datamove() is supposed to handle. 		 * 		 * XXX: Limit it to MaxBurstLength. 		 */
+comment|/* 	 * This is the total length (sum of S/G lengths) this call 	 * to cfiscsi_datamove() is supposed to handle. 	 * 	 * XXX: Limit it to MaxBurstLength. 	 */
 name|bhsr2t
 operator|->
 name|bhsr2t_desired_data_transfer_length
@@ -11468,6 +11705,44 @@ name|response
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cfiscsi_datamove
+parameter_list|(
+name|union
+name|ctl_io
+modifier|*
+name|io
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|io
+operator|->
+name|io_hdr
+operator|.
+name|flags
+operator|&
+name|CTL_FLAG_DATA_MASK
+operator|)
+operator|==
+name|CTL_FLAG_DATA_IN
+condition|)
+name|cfiscsi_datamove_in
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+else|else
+name|cfiscsi_datamove_out
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

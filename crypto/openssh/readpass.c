@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readpass.c,v 1.48 2010/12/15 00:49:27 djm Exp $ */
+comment|/* $OpenBSD: readpass.c,v 1.49 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -927,7 +927,7 @@ name|allowed
 operator|=
 literal|1
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)

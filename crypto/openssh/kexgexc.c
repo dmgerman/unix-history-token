@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexgexc.c,v 1.12 2010/11/10 01:33:07 djm Exp $ */
+comment|/* $OpenBSD: kexgexc.c,v 1.13 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -716,7 +716,7 @@ argument_list|,
 name|klen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|kbuf
 argument_list|)
@@ -820,7 +820,7 @@ argument_list|(
 name|dh
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|server_host_key_blob
 argument_list|)
@@ -857,7 +857,7 @@ argument_list|(
 name|server_host_key
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)

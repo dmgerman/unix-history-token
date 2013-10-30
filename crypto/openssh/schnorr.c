@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: schnorr.c,v 1.5 2010/12/03 23:49:26 djm Exp $ */
+comment|/* $OpenBSD: schnorr.c,v 1.7 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -434,7 +434,7 @@ argument_list|,
 name|digest_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|digest
 argument_list|)
@@ -2396,6 +2396,9 @@ decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|out
 operator|=
 name|NULL
@@ -2407,6 +2410,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|vasprintf
 argument_list|(
 operator|&
@@ -2424,6 +2429,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+operator|||
 name|out
 operator|==
 name|NULL
@@ -2521,6 +2531,9 @@ decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|out
 operator|=
 name|NULL
@@ -2532,6 +2545,8 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|vasprintf
 argument_list|(
 operator|&
@@ -2549,6 +2564,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+operator|||
 name|out
 operator|==
 name|NULL
@@ -2873,7 +2893,7 @@ name|grp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|grp
 argument_list|)
@@ -3122,7 +3142,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sig
 argument_list|)

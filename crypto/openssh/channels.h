@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.111 2012/04/11 13:16:19 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.113 2013/06/07 15:37:52 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -202,8 +202,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CHANNEL_MAX_TYPE
+name|SSH_CHANNEL_ABANDONED
 value|17
+end_define
+
+begin_comment
+comment|/* Abandoned session, eg mux */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_MAX_TYPE
+value|18
 end_define
 
 begin_define
@@ -472,10 +483,15 @@ name|int
 name|isatty
 decl_stmt|;
 comment|/* rfd is a tty */
+ifdef|#
+directive|ifdef
+name|_AIX
 name|int
 name|wfd_isatty
 decl_stmt|;
 comment|/* wfd is a tty */
+endif|#
+directive|endif
 name|int
 name|client_tty
 decl_stmt|;
@@ -491,7 +507,7 @@ comment|/* Pause IO until deadline (time_t) */
 name|int
 name|delayed
 decl_stmt|;
-comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler.  				 * this way post-select handlers are not 				 * accidenly called if a FD gets reused */
+comment|/* post-select handlers for newly created 				 * channels are delayed until the first call 				 * to a matching pre-select handler.  				 * this way post-select handlers are not 				 * accidentally called if a FD gets reused */
 name|Buffer
 name|input
 decl_stmt|;

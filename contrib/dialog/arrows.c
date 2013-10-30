@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: arrows.c,v 1.50 2013/05/24 00:05:21 tom Exp $  *  *  arrows.c -- draw arrows to indicate end-of-range for lists  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: arrows.c,v 1.51 2013/09/02 15:10:09 tom Exp $  *  *  arrows.c -- draw arrows to indicate end-of-range for lists  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -292,6 +292,15 @@ name|help_line
 operator|!=
 literal|0
 operator|&&
+name|dialog_vars
+operator|.
+name|help_line
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|bottom
 operator|=
@@ -311,12 +320,10 @@ name|attr
 init|=
 name|A_NORMAL
 decl_stmt|;
-specifier|const
 name|int
-modifier|*
 name|cols
 init|=
-name|dlg_index_columns
+name|dlg_count_columns
 argument_list|(
 name|dialog_vars
 operator|.
@@ -422,9 +429,6 @@ operator|.
 name|help_line
 argument_list|,
 name|cols
-index|[
-name|limit
-index|]
 argument_list|,
 operator|&
 name|attr

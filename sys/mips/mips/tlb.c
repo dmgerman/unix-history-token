@@ -131,6 +131,9 @@ decl_stmt|;
 name|register_t
 name|entrylo1
 decl_stmt|;
+name|register_t
+name|pagemask
+decl_stmt|;
 block|}
 name|entry
 index|[
@@ -990,6 +993,21 @@ index|[
 name|i
 index|]
 operator|.
+name|pagemask
+operator|=
+name|mips_rd_pagemask
+argument_list|()
+expr_stmt|;
+name|tlb_state
+index|[
+name|cpu
+index|]
+operator|.
+name|entry
+index|[
+name|i
+index|]
+operator|.
 name|entrylo0
 operator|=
 name|mips_rd_entrylo0
@@ -1222,6 +1240,8 @@ decl_stmt|,
 name|elo0
 decl_stmt|,
 name|elo1
+decl_stmt|,
+name|epagemask
 decl_stmt|;
 name|unsigned
 name|i
@@ -1415,6 +1435,20 @@ index|]
 operator|.
 name|entrylo1
 expr_stmt|;
+name|epagemask
+operator|=
+name|tlb_state
+index|[
+name|cpu
+index|]
+operator|.
+name|entry
+index|[
+name|i
+index|]
+operator|.
+name|pagemask
+expr_stmt|;
 if|if
 condition|(
 name|elo0
@@ -1428,7 +1462,7 @@ condition|)
 continue|continue;
 name|db_printf
 argument_list|(
-literal|"#%u\t=> %jx\n"
+literal|"#%u\t=> %jx (pagemask %jx)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1436,6 +1470,11 @@ operator|(
 name|intmax_t
 operator|)
 name|ehi
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|epagemask
 argument_list|)
 expr_stmt|;
 name|db_printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.36 2011/02/16 00:31:14 djm Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.37 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -282,7 +282,7 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -332,7 +332,7 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -362,7 +362,7 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -436,12 +436,12 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pkalg
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|pkblob
 argument_list|)
@@ -515,7 +515,7 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -547,7 +547,7 @@ condition|)
 name|fail
 operator|++
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -1146,7 +1146,7 @@ argument_list|(
 literal|"not a valid request"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|host
 argument_list|)
@@ -1233,7 +1233,7 @@ argument_list|(
 literal|"key_sign failed"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)

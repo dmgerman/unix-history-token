@@ -7085,6 +7085,14 @@ goto|goto
 name|unregister
 goto|;
 block|}
+name|callout_handle_init
+argument_list|(
+operator|&
+name|pmap
+operator|->
+name|timeout_ch
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* setup PRD Tables */
 name|KdPrint
@@ -13563,10 +13571,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ccb
+name|pmap
 operator|->
-name|ccb_h
-operator|.
 name|timeout_ch
 operator|=
 name|timeout
@@ -14833,10 +14839,8 @@ name|caddr_t
 operator|)
 name|ccb
 argument_list|,
-name|ccb
+name|pmap
 operator|->
-name|ccb_h
-operator|.
 name|timeout_ch
 argument_list|)
 expr_stmt|;

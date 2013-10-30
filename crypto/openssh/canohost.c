@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.66 2010/01/13 01:20:20 dtucker Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.67 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Return the canonical name of the host at the other end of the socket. The  * caller should free the returned string with xfree.  */
+comment|/*  * Return the canonical name of the host at the other end of the socket. The  * caller should free the returned string.  */
 end_comment
 
 begin_function
@@ -1448,14 +1448,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|canonical_host_ip
-operator|!=
-name|NULL
-condition|)
-block|{
-name|xfree
+name|free
 argument_list|(
 name|canonical_host_ip
 argument_list|)
@@ -1464,7 +1457,6 @@ name|canonical_host_ip
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|cached_port
 operator|=
 operator|-

@@ -3710,6 +3710,8 @@ operator|&
 name|rss_map
 operator|->
 name|base_qpn
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3817,6 +3819,8 @@ operator|&
 name|priv
 operator|->
 name|base_qpn
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sandbox-systrace.c,v 1.6 2012/06/30 14:35:09 markus Exp $ */
+comment|/* $OpenBSD: sandbox-systrace.c,v 1.7 2013/06/01 13:15:52 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -198,6 +198,12 @@ block|}
 block|,
 block|{
 name|SYS_gettimeofday
+block|,
+name|SYSTR_POLICY_PERMIT
+block|}
+block|,
+block|{
+name|SYS_clock_gettime
 block|,
 name|SYSTR_POLICY_PERMIT
 block|}

@@ -754,6 +754,14 @@ name|MFI_DCMD_CTRL_FLUSHCACHE
 init|=
 literal|0x01101000
 block|,
+name|MFI_DCMD_CTRL_GET_PROPS
+init|=
+literal|0x01020100
+block|,
+name|MFI_DCMD_CTRL_SET_PROPS
+init|=
+literal|0x01020200
+block|,
 name|MFI_DCMD_CTRL_SHUTDOWN
 init|=
 literal|0x01050000

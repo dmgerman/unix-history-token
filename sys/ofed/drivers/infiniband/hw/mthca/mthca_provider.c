@@ -5536,6 +5536,9 @@ name|struct
 name|ib_udata
 modifier|*
 name|udata
+parameter_list|,
+name|int
+name|mr_id
 parameter_list|)
 block|{
 name|struct
@@ -7787,6 +7790,8 @@ operator|&
 name|dev
 operator|->
 name|ib_dev
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

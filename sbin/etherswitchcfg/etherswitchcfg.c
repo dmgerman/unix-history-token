@@ -1463,7 +1463,7 @@ operator|<
 literal|0
 operator|||
 name|v
-operator|>=
+operator|>
 name|IEEE802DOT1Q_VID_MAX
 condition|)
 name|errx
@@ -3578,6 +3578,8 @@ operator|.
 name|info
 operator|.
 name|es_nports
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|newmode

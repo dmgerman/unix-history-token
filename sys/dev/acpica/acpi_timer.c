@@ -794,6 +794,12 @@ name|tc_frequency
 operator|=
 name|acpi_timer_frequency
 expr_stmt|;
+name|acpi_timer_timecounter
+operator|.
+name|tc_flags
+operator|=
+name|TC_FLAGS_SUSPEND_SAFE
+expr_stmt|;
 if|if
 condition|(
 name|testenv
@@ -1198,6 +1204,22 @@ name|acpi_timer_eh
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|timecounter
+operator|->
+name|tc_flags
+operator|&
+name|TC_FLAGS_SUSPEND_SAFE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * If we are using a suspend safe timecounter, don't 		 * save/restore it across suspend/resume. 		 */
+return|return;
 block|}
 name|KASSERT
 argument_list|(

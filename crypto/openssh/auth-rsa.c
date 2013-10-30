@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.81 2012/10/30 21:29:54 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.85 2013/07/12 00:19:58 djm Exp $ */
 end_comment
 
 begin_comment
@@ -675,6 +675,9 @@ name|rkey
 parameter_list|)
 block|{
 name|char
+modifier|*
+name|fp
+decl_stmt|,
 name|line
 index|[
 name|SSH_MAX_PUBKEY_BYTES
@@ -684,8 +687,7 @@ name|int
 name|allowed
 init|=
 literal|0
-decl_stmt|;
-name|u_int
+decl_stmt|,
 name|bits
 decl_stmt|;
 name|FILE
@@ -963,9 +965,6 @@ literal|0
 operator|||
 name|bits
 operator|!=
-operator|(
-name|u_int
-operator|)
 name|keybits
 condition|)
 name|logit
@@ -987,6 +986,38 @@ name|n
 argument_list|)
 argument_list|,
 name|bits
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"matching key found: file %s, line %lu %s %s"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
+argument_list|,
+name|key_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 comment|/* Never accept a revoked key */
@@ -1161,7 +1192,7 @@ argument_list|,
 name|rkey
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|file
 argument_list|)
@@ -1196,10 +1227,6 @@ block|{
 name|Key
 modifier|*
 name|key
-decl_stmt|;
-name|char
-modifier|*
-name|fp
 decl_stmt|;
 name|struct
 name|passwd
@@ -1281,37 +1308,13 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Correct response.  The client has been successfully 	 * authenticated. Note that we have not yet processed the 	 * options; this will be reset if the options cause the 	 * authentication to be rejected. 	 */
-name|fp
-operator|=
-name|key_fingerprint
+name|pubkey_auth_info
 argument_list|(
+name|authctxt
+argument_list|,
 name|key
 argument_list|,
-name|SSH_FP_MD5
-argument_list|,
-name|SSH_FP_HEX
-argument_list|)
-expr_stmt|;
-name|verbose
-argument_list|(
-literal|"Found matching %s key: %s"
-argument_list|,
-name|key_type
-argument_list|(
-name|key
-argument_list|)
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|key_free
-argument_list|(
-name|key
+name|NULL
 argument_list|)
 expr_stmt|;
 name|packet_send_debug

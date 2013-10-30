@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: uuencode.c,v 1.26 2010/08/31 11:54:45 djm Exp $ */
+comment|/* $OpenBSD: uuencode.c,v 1.27 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -187,7 +193,7 @@ argument_list|,
 name|targsize
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|encoded
 argument_list|)
@@ -321,7 +327,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buf
 argument_list|)

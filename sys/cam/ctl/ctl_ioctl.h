@@ -1360,6 +1360,12 @@ decl_stmt|;
 name|uint32_t
 name|immediate_data
 decl_stmt|;
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1381,6 +1387,12 @@ name|uint32_t
 name|fill_len
 decl_stmt|;
 comment|/* passed to userland */
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1411,6 +1423,12 @@ name|int
 name|all
 decl_stmt|;
 comment|/* passed to kernel */
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1441,6 +1459,12 @@ name|int
 name|all
 decl_stmt|;
 comment|/* passed to kernel */
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1475,6 +1499,12 @@ decl_stmt|;
 name|socklen_t
 name|addrlen
 decl_stmt|;
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1485,6 +1515,12 @@ name|ctl_iscsi_accept_params
 block|{
 name|int
 name|connection_id
+decl_stmt|;
+name|int
+name|spare
+index|[
+literal|4
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1515,6 +1551,12 @@ name|void
 modifier|*
 name|data_segment
 decl_stmt|;
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1544,6 +1586,12 @@ name|void
 modifier|*
 name|data_segment
 decl_stmt|;
+name|int
+name|spare
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1554,6 +1602,12 @@ name|ctl_iscsi_close_params
 block|{
 name|int
 name|connection_id
+decl_stmt|;
+name|int
+name|spare
+index|[
+literal|4
+index|]
 decl_stmt|;
 block|}
 struct|;

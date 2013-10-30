@@ -435,6 +435,34 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|alloc_pages_node
+parameter_list|(
+name|node
+parameter_list|,
+name|mask
+parameter_list|,
+name|order
+parameter_list|)
+value|alloc_pages(mask, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmalloc_node
+parameter_list|(
+name|chunk
+parameter_list|,
+name|mask
+parameter_list|,
+name|node
+parameter_list|)
+value|kmalloc(chunk, mask)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.17 2012/03/08 23:25:18 djm Exp $ */
+comment|/* $Id: port-linux.c,v 1.18 2013/06/01 22:07:32 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -328,24 +328,12 @@ block|}
 ifdef|#
 directive|ifdef
 name|HAVE_GETSEUSERBYNAME
-if|if
-condition|(
-name|sename
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|sename
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lvl
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|lvl
 argument_list|)
@@ -913,12 +901,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|oldctx
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|newctx
 argument_list|)

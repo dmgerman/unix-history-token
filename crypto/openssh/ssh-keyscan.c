@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.86 2012/04/11 13:34:17 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.87 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1254,7 +1254,7 @@ name|nonfatal_fatal
 operator|=
 literal|0
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|c
 operator|->
@@ -1656,7 +1656,7 @@ operator|!
 name|name
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|namebase
 argument_list|)
@@ -1907,7 +1907,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fdcon
 index|[
@@ -1917,7 +1917,7 @@ operator|.
 name|c_namebase
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|fdcon
 index|[
@@ -1938,7 +1938,7 @@ name|c_status
 operator|==
 name|CS_KEYS
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|fdcon
 index|[
@@ -3073,12 +3073,12 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|e
 argument_list|)

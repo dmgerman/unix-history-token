@@ -95,7 +95,7 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
-name|int
+name|uintptr_t
 name|how
 parameter_list|)
 function_decl|;
@@ -118,7 +118,7 @@ modifier|*
 name|owner
 parameter_list|)
 function_decl|;
-name|int
+name|uintptr_t
 function_decl|(
 modifier|*
 name|lc_unlock

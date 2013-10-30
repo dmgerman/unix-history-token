@@ -238,6 +238,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|module_param_array
+parameter_list|(
+name|var
+parameter_list|,
+name|type
+parameter_list|,
+name|addr_argc
+parameter_list|,
+name|mode
+parameter_list|)
+define|\
+value|module_param_named(var, var, type, mode)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MODULE_PARM_DESC
 parameter_list|(
 name|name

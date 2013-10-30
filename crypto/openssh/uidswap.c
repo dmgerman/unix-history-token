@@ -354,13 +354,7 @@ block|}
 else|else
 block|{
 comment|/* saved_egroupslen == 0 */
-if|if
-condition|(
-name|saved_egroups
-operator|!=
-name|NULL
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|saved_egroups
 argument_list|)
@@ -475,11 +469,7 @@ block|}
 else|else
 block|{
 comment|/* user_groupslen == 0 */
-if|if
-condition|(
-name|user_groups
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|user_groups
 argument_list|)

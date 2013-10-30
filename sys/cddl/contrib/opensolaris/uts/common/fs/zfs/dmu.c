@@ -11,6 +11,10 @@ begin_comment
 comment|/* Copyright (c) 2013 by Saso Kiselkov. All rights reserved. */
 end_comment
 
+begin_comment
+comment|/* Copyright (c) 2013, Joyent, Inc. All rights reserved. */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -7921,7 +7925,7 @@ name|ZIO_COMPRESS_OFF
 expr_stmt|;
 name|checksum
 operator|=
-name|ZIO_CHECKSUM_OFF
+name|ZIO_CHECKSUM_NOPARITY
 expr_stmt|;
 block|}
 else|else

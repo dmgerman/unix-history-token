@@ -1632,6 +1632,25 @@ begin_comment
 comment|/* ** TUNEABLE PARAMETERS: */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ix
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"IXGBE driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ** AIM: Adaptive Interrupt Moderation ** which means that the interrupt rate ** is varied over time based on the ** traffic for that interrupt vector */
 end_comment
@@ -1652,6 +1671,27 @@ literal|"hw.ixgbe.enable_aim"
 argument_list|,
 operator|&
 name|ixgbe_enable_aim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_aim
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ixgbe_enable_aim
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable adaptive interrupt moderation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1680,6 +1720,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_interrupt_rate
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_max_interrupt_rate
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum interrupts per second"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* How many packets rxeof tries to clean at a time */
 end_comment
@@ -1704,6 +1765,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rx_process_limit
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_rx_process_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of received packets to process at a time,"
+literal|"-1 means unlimited"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* How many packets txeof tries to clean at a time */
 end_comment
@@ -1724,6 +1807,28 @@ literal|"hw.ixgbe.tx_process_limit"
 argument_list|,
 operator|&
 name|ixgbe_tx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tx_process_limit
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_tx_process_limit
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum number of sent packets to process at a time,"
+literal|"-1 means unlimited"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1765,6 +1870,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_msix
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_enable_msix
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable MSI-X interrupts"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Number of Queues, can be set to 0,  * it then autoconfigures based on the  * number of cpus with a max of 8. This  * can be overriden manually here.  */
 end_comment
@@ -1785,6 +1911,27 @@ literal|"hw.ixgbe.num_queues"
 argument_list|,
 operator|&
 name|ixgbe_num_queues
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|num_queues
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_num_queues
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of queues to configure, 0 indicates autoconfigure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1813,6 +1960,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|txd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_txd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of receive descriptors per queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Number of RX descriptors per ring */
 end_comment
@@ -1833,6 +2001,27 @@ literal|"hw.ixgbe.rxd"
 argument_list|,
 operator|&
 name|ixgbe_rxd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ix
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|rxd
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ixgbe_rxd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of receive descriptors per queue"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10887,6 +11076,11 @@ condition|)
 name|queues
 operator|=
 literal|8
+expr_stmt|;
+comment|/* reflect correct sysctl value */
+name|ixgbe_num_queues
+operator|=
+name|queues
 expr_stmt|;
 comment|/* 	** Want one vector (RX/TX pair) per queue 	** plus an additional for Link. 	*/
 name|want

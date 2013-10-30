@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexecdhc.c,v 1.2 2010/09/22 05:01:29 djm Exp $ */
+comment|/* $OpenBSD: kexecdhc.c,v 1.4 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -160,36 +160,6 @@ name|sbloblen
 decl_stmt|,
 name|hashlen
 decl_stmt|;
-name|int
-name|curve_nid
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|curve_nid
-operator|=
-name|kex_ecdh_name_to_nid
-argument_list|(
-name|kex
-operator|->
-name|name
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: unsupported ECDH curve \"%s\""
-argument_list|,
-name|__func__
-argument_list|,
-name|kex
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -197,7 +167,9 @@ name|client_key
 operator|=
 name|EC_KEY_new_by_curve_name
 argument_list|(
-name|curve_nid
+name|kex
+operator|->
+name|ec_nid
 argument_list|)
 operator|)
 operator|==
@@ -542,7 +514,7 @@ argument_list|,
 name|klen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|kbuf
 argument_list|)
@@ -616,7 +588,7 @@ operator|&
 name|hashlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|server_host_key_blob
 argument_list|)
@@ -658,7 +630,7 @@ argument_list|(
 name|server_host_key
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)

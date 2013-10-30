@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mlx4.h"
 end_include
 
@@ -74,7 +80,8 @@ name|MODULE_PARM_DESC
 argument_list|(
 name|internal_err_reset
 argument_list|,
-literal|"Reset device on internal errors if non-zero (default 1)"
+literal|"Reset device on internal errors if non-zero"
+literal|" (default 1, in SRIOV mode default is 0)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,6 +204,35 @@ name|map
 argument_list|)
 condition|)
 block|{
+comment|/* If the device is off-line, we cannot try to recover it */
+if|if
+condition|(
+name|pci_channel_offline
+argument_list|(
+name|dev
+operator|->
+name|pdev
+argument_list|)
+condition|)
+name|mod_timer
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|catas_err
+operator|.
+name|timer
+argument_list|,
+name|round_jiffies
+argument_list|(
+name|jiffies
+operator|+
+name|MLX4_CATAS_POLL_INTERVAL
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|dump_err_buf
 argument_list|(
 name|dev
@@ -249,6 +285,7 @@ operator|&
 name|catas_work
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -304,16 +341,6 @@ expr_stmt|;
 name|int
 name|ret
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|mutex_trylock
-argument_list|(
-operator|&
-name|drv_mutex
-argument_list|)
-condition|)
-return|return;
 name|spin_lock_irq
 argument_list|(
 operator|&
@@ -357,6 +384,15 @@ name|dev
 operator|.
 name|pdev
 decl_stmt|;
+comment|/* If the device is off-line, we cannot reset it */
+if|if
+condition|(
+name|pci_channel_offline
+argument_list|(
+name|pdev
+argument_list|)
+condition|)
+continue|continue;
 name|ret
 operator|=
 name|mlx4_restart_one
@@ -373,9 +409,8 @@ if|if
 condition|(
 name|ret
 condition|)
-name|printk
+name|pr_err
 argument_list|(
-name|KERN_ERR
 literal|"mlx4 %s: Reset failed (%d)\n"
 argument_list|,
 name|pci_name
@@ -404,12 +439,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mutex_unlock
-argument_list|(
-operator|&
-name|drv_mutex
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -433,10 +462,21 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|unsigned
-name|long
+name|phys_addr_t
 name|addr
 decl_stmt|;
+comment|/*If we are in SRIOV the default of the module param must be 0*/
+if|if
+condition|(
+name|mlx4_is_mfunc
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+name|internal_err_reset
+operator|=
+literal|0
+expr_stmt|;
 name|INIT_LIST_HEAD
 argument_list|(
 operator|&
@@ -519,8 +559,13 @@ name|mlx4_warn
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to map internal error buffer at 0x%lx\n"
+literal|"Failed to map internal error buffer at 0x%llx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|addr
 argument_list|)
 expr_stmt|;

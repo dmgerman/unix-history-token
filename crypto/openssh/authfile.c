@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.c,v 1.95 2013/01/08 18:49:04 markus Exp $ */
+comment|/* $OpenBSD: authfile.c,v 1.97 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -239,6 +239,7 @@ decl_stmt|;
 name|CipherContext
 name|ciphercontext
 decl_stmt|;
+specifier|const
 name|Cipher
 modifier|*
 name|cipher
@@ -1994,6 +1995,7 @@ decl_stmt|;
 name|CipherContext
 name|ciphercontext
 decl_stmt|;
+specifier|const
 name|Cipher
 modifier|*
 name|cipher
@@ -2458,8 +2460,10 @@ label|:
 if|if
 condition|(
 name|commentp
+operator|!=
+name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 operator|*
 name|commentp
@@ -4143,7 +4147,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|xfree
+name|free
 argument_list|(
 name|file
 argument_list|)
@@ -4152,7 +4156,7 @@ return|return
 name|pub
 return|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|file
 argument_list|)

@@ -106,13 +106,6 @@ name|DEVMAP_BOOTSTRAP_MAP_START
 value|0xF0000000
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|unmapped_buf_allowed
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|vm_offset_t
 name|initarm_lastaddr
@@ -145,13 +138,7 @@ name|initarm_late_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-comment|/* XXX: PR arm/180080 */
-name|unmapped_buf_allowed
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_define

@@ -521,7 +521,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * XXX the program that runs the VM can be stopped and 		 * restarted at any time. This means that state that was 		 * created by the guest is destroyed between invocations 		 * of the program. 		 * 		 * If the counter's initial value is not programmed we 		 * assume a value that would be set to generate 'guest_hz' 		 * interrupts per second. 		 */
+comment|/* 		 * XXX the program that runs the VM can be stopped and 		 * restarted at any time. This means that state that was 		 * created by the guest is destroyed between invocations 		 * of the program. 		 * 		 * If the counter's initial value is not programmed we 		 * assume a value that would be set to generate 100 		 * interrupts per second. 		 */
 name|c
 operator|->
 name|initial
@@ -530,7 +530,7 @@ name|TIMER_DIV
 argument_list|(
 name|PIT_8254_FREQ
 argument_list|,
-name|guest_hz
+literal|100
 argument_list|)
 expr_stmt|;
 name|gettimeofday

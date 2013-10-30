@@ -742,6 +742,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Some systems (e.g. QEMU) need Open Firmware to stand down */
+name|ofw_quiesce
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1897,17 +1901,11 @@ name|sbintime_t
 name|sbt
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|NOTYET
-comment|/* Causes hangs on QEMU */
 name|phyp_hcall
 argument_list|(
 name|H_CEDE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

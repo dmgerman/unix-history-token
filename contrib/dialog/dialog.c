@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: dialog.c,v 1.230 2013/03/15 09:07:30 tom Exp $  *  *  cdialog - Display simple dialog boxes from shell scripts  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  * $Id: dialog.c,v 1.231 2013/09/02 17:20:09 tom Exp $  *  *  cdialog - Display simple dialog boxes from shell scripts  *  *  Copyright 2000-2012,2013	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -141,6 +141,8 @@ block|,
 name|o_help_line
 block|,
 name|o_help_status
+block|,
+name|o_help_tags
 block|,
 name|o_icon
 block|,
@@ -752,6 +754,16 @@ block|{
 literal|"help-status"
 block|,
 name|o_help_status
+block|,
+literal|1
+block|,
+literal|""
+block|}
+block|,
+block|{
+literal|"help-tags"
+block|,
+name|o_help_tags
 block|,
 literal|1
 block|,
@@ -7245,6 +7257,16 @@ case|:
 name|dialog_vars
 operator|.
 name|help_status
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+name|o_help_tags
+case|:
+name|dialog_vars
+operator|.
+name|help_tags
 operator|=
 name|TRUE
 expr_stmt|;

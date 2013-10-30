@@ -1959,6 +1959,22 @@ block|}
 union|;
 end_union
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|xhci_port_route_t
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|xhci_softc
@@ -1983,6 +1999,10 @@ decl_stmt|;
 name|struct
 name|usb_callout
 name|sc_callout
+decl_stmt|;
+name|xhci_port_route_t
+modifier|*
+name|sc_port_route
 decl_stmt|;
 name|union
 name|xhci_hub_desc
@@ -2151,15 +2171,6 @@ end_define
 begin_comment
 comment|/* prototypes */
 end_comment
-
-begin_function_decl
-name|uint32_t
-name|xhci_get_port_route
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|uint8_t

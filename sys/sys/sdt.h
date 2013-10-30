@@ -1011,7 +1011,7 @@ parameter_list|,
 name|xtype
 parameter_list|)
 define|\
-value|static struct sdt_argtype sdt_##prov##_##mod##_##func##_##name##num[1]	\ 	    = { { num, type, xtype, { NULL, NULL },				\ 	    sdt_##prov##_##mod##_##func##_##name }				\ 	};									\ 	DATA_SET(sdt_argtypes_set, sdt_##prov##_##mod##_##func##_##name##num);
+value|static struct sdt_argtype sdta_##prov##_##mod##_##func##_##name##num[1]	\ 	    = { { num, type, xtype, { NULL, NULL },				\ 	    sdt_##prov##_##mod##_##func##_##name }				\ 	};									\ 	DATA_SET(sdt_argtypes_set, sdta_##prov##_##mod##_##func##_##name##num);
 end_define
 
 begin_define

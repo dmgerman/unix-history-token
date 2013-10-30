@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: progressmeter.c,v 1.37 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: progressmeter.c,v 1.39 2013/06/02 13:33:05 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -647,10 +647,8 @@ name|counter
 expr_stmt|;
 name|now
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 expr_stmt|;
 name|bytes_left
 operator|=
@@ -1208,10 +1206,8 @@ name|start
 operator|=
 name|last_update
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
+name|monotime
+argument_list|()
 expr_stmt|;
 name|file
 operator|=

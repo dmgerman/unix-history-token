@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.164 2012/12/07 01:51:35 dtucker Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.168 2013/07/12 00:19:59 djm Exp $ */
 end_comment
 
 begin_comment
@@ -726,6 +726,9 @@ operator|!=
 operator|-
 literal|1
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|notify_pipe
@@ -1218,7 +1221,7 @@ name|u_int
 modifier|*
 name|nallocp
 parameter_list|,
-name|u_int
+name|u_int64_t
 name|max_time_milliseconds
 parameter_list|)
 block|{
@@ -2466,7 +2469,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Have displayed waiting close message. */
-name|u_int
+name|u_int64_t
 name|max_time_milliseconds
 decl_stmt|;
 name|u_int
@@ -2859,7 +2862,7 @@ name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cp
 argument_list|)
@@ -2975,20 +2978,12 @@ name|writeset
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|readset
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|readset
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|writeset
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|writeset
 argument_list|)
@@ -3390,8 +3385,14 @@ init|=
 literal|0
 decl_stmt|,
 name|max_fd
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|nalloc
+init|=
+literal|0
+decl_stmt|;
+name|u_int64_t
+name|rekey_timeout_ms
 init|=
 literal|0
 decl_stmt|;
@@ -3509,6 +3510,31 @@ condition|)
 name|channel_output_poll
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|rekey_interval
+operator|>
+literal|0
+operator|&&
+name|compat20
+operator|&&
+operator|!
+name|rekeying
+condition|)
+name|rekey_timeout_ms
+operator|=
+name|packet_get_rekey_timeout
+argument_list|()
+operator|*
+literal|1000
+expr_stmt|;
+else|else
+name|rekey_timeout_ms
+operator|=
+literal|0
+expr_stmt|;
 name|wait_until_can_do_something
 argument_list|(
 operator|&
@@ -3523,7 +3549,7 @@ argument_list|,
 operator|&
 name|nalloc
 argument_list|,
-literal|0
+name|rekey_timeout_ms
 argument_list|)
 expr_stmt|;
 if|if
@@ -3607,20 +3633,12 @@ block|}
 name|collect_children
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|readset
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|readset
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|writeset
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|writeset
 argument_list|)
@@ -3735,7 +3753,7 @@ argument_list|,
 name|data_len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)
@@ -3962,12 +3980,12 @@ name|target_port
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|originator
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|target
 argument_list|)
@@ -4600,7 +4618,7 @@ name|packet_send
 argument_list|()
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|ctype
 argument_list|)
@@ -4808,7 +4826,7 @@ name|gateway_ports
 argument_list|)
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|listen_address
 argument_list|)
@@ -4869,7 +4887,7 @@ argument_list|,
 name|cancel_port
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|cancel_address
 argument_list|)
@@ -4931,7 +4949,7 @@ name|packet_write_wait
 argument_list|()
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|rtype
 argument_list|)
@@ -5103,7 +5121,7 @@ name|packet_send
 argument_list|()
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|rtype
 argument_list|)

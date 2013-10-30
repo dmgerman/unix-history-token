@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-client.c,v 1.3 2012/01/16 20:34:09 miod Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-client.c,v 1.4 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -564,7 +564,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)
@@ -630,7 +630,7 @@ operator|=
 name|slen
 expr_stmt|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|signature
 argument_list|)
@@ -1074,7 +1074,7 @@ operator|&
 name|blen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buffer_get_string
 argument_list|(
@@ -1111,7 +1111,7 @@ index|]
 operator|=
 name|k
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|blob
 argument_list|)

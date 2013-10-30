@@ -1740,217 +1740,6 @@ argument|fetch_and_xor
 argument_list|,
 literal|"eor"
 argument_list|)
-else|#
-directive|else
-comment|/* __ARM_ARCH_5__ */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-ifdef|#
-directive|ifdef
-name|SMP
-error|#
-directive|error
-literal|"On SMP systems we should have proper atomic operations."
-endif|#
-directive|endif
-comment|/*  * On uniprocessor systems, we can perform the atomic operations by  * disabling interrupts.  */
-define|#
-directive|define
-name|EMIT_VAL_COMPARE_AND_SWAP_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|)
-define|\
-value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uintN_t ret;							\ 									\ 	WITHOUT_INTERRUPTS({						\ 		ret = *mem;						\ 		if (*mem == expected)					\ 			*mem = desired;					\ 	});								\ 	return (ret);							\ }
-define|#
-directive|define
-name|EMIT_FETCH_AND_OP_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|,
-name|name
-parameter_list|,
-name|op
-parameter_list|)
-define|\
-value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uintN_t ret;							\ 									\ 	WITHOUT_INTERRUPTS({						\ 		ret = *mem;						\ 		*mem op val;						\ 	});								\ 	return (ret);							\ }
-define|#
-directive|define
-name|EMIT_ALL_OPS_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|)
-define|\
-value|EMIT_VAL_COMPARE_AND_SWAP_N(N, uintN_t)					\ EMIT_FETCH_AND_OP_N(N, uintN_t, lock_test_and_set, =)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_add, +=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_and,&=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_or, |=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_sub, -=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_xor, ^=)
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|1
-argument_list|,
-argument|uint8_t
-argument_list|)
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|2
-argument_list|,
-argument|uint16_t
-argument_list|)
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|4
-argument_list|,
-argument|uint32_t
-argument_list|)
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|8
-argument_list|,
-argument|uint64_t
-argument_list|)
-undef|#
-directive|undef
-name|EMIT_ALL_OPS_N
-else|#
-directive|else
-comment|/* !_KERNEL */
-comment|/*  * For userspace on uniprocessor systems, we can implement the atomic  * operations by using a Restartable Atomic Sequence. This makes the  * kernel restart the code from the beginning when interrupted.  */
-define|#
-directive|define
-name|EMIT_LOCK_TEST_AND_SET_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|,
-name|ldr
-parameter_list|,
-name|str
-parameter_list|)
-define|\
-value|uintN_t									\ __sync_lock_test_and_set_##N##_c(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
-comment|/* Set up Restartable Atomic Sequence. */
-value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
-comment|/* Load old value. */
-value|\ 		"\t"str" %3, %1\n"
-comment|/* Store new value. */
-value|\ 									\
-comment|/* Tear down Restartable Atomic Sequence. */
-value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%5]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%5, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (val), "m" (*mem), "r" (ras_start));		\ 	return (old);							\ }
-define|#
-directive|define
-name|EMIT_VAL_COMPARE_AND_SWAP_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|,
-name|ldr
-parameter_list|,
-name|streq
-parameter_list|)
-define|\
-value|uintN_t									\ __sync_val_compare_and_swap_##N##_c(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
-comment|/* Set up Restartable Atomic Sequence. */
-value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%6]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%6, #4]\n"				\ 									\ 		"\t"ldr" %0, %5\n"
-comment|/* Load old value. */
-value|\ 		"\tcmp   %0, %3\n"
-comment|/* Compare to expected value. */
-value|\ 		"\t"streq" %4, %1\n"
-comment|/* Store new value. */
-value|\ 									\
-comment|/* Tear down Restartable Atomic Sequence. */
-value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%6]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%6, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (expected), "r" (desired), "m" (*mem),		\ 		  "r" (ras_start));					\ 	return (old);							\ }
-define|#
-directive|define
-name|EMIT_FETCH_AND_OP_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|,
-name|ldr
-parameter_list|,
-name|str
-parameter_list|,
-name|name
-parameter_list|,
-name|op
-parameter_list|)
-define|\
-value|uintN_t									\ __sync_##name##_##N##_c(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
-comment|/* Set up Restartable Atomic Sequence. */
-value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
-comment|/* Load old value. */
-value|\ 		"\t"op"  %2, %0, %3\n"
-comment|/* Calculate new value. */
-value|\ 		"\t"str" %2, %1\n"
-comment|/* Store new value. */
-value|\ 									\
-comment|/* Tear down Restartable Atomic Sequence. */
-value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%5]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%5, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (val), "m" (*mem), "r" (ras_start));		\ 	return (old);							\ }
-define|#
-directive|define
-name|EMIT_ALL_OPS_N
-parameter_list|(
-name|N
-parameter_list|,
-name|uintN_t
-parameter_list|,
-name|ldr
-parameter_list|,
-name|str
-parameter_list|,
-name|streq
-parameter_list|)
-define|\
-value|EMIT_LOCK_TEST_AND_SET_N(N, uintN_t, ldr, str)				\ EMIT_VAL_COMPARE_AND_SWAP_N(N, uintN_t, ldr, streq)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_add, "add")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_and, "and")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_or, "orr")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_sub, "sub")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_xor, "eor")
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|1
-argument_list|,
-argument|uint8_t
-argument_list|,
-literal|"ldrb"
-argument_list|,
-literal|"strb"
-argument_list|,
-literal|"streqb"
-argument_list|)
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|2
-argument_list|,
-argument|uint16_t
-argument_list|,
-literal|"ldrh"
-argument_list|,
-literal|"strh"
-argument_list|,
-literal|"streqh"
-argument_list|)
-name|EMIT_ALL_OPS_N
-argument_list|(
-literal|4
-argument_list|,
-argument|uint32_t
-argument_list|,
-literal|"ldr"
-argument_list|,
-literal|"str"
-argument_list|,
-literal|"streq"
-argument_list|)
-endif|#
-directive|endif
-comment|/* _KERNEL */
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|__clang__
@@ -2162,6 +1951,522 @@ name|__sync_fetch_and_xor_4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __ARM_ARCH_5__ */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"On SMP systems we should have proper atomic operations."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * On uniprocessor systems, we can perform the atomic operations by  * disabling interrupts.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMIT_VAL_COMPARE_AND_SWAP_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_val_compare_and_swap_##N(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uintN_t ret;							\ 									\ 	WITHOUT_INTERRUPTS({						\ 		ret = *mem;						\ 		if (*mem == expected)					\ 			*mem = desired;					\ 	});								\ 	return (ret);							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMIT_FETCH_AND_OP_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
+name|name
+parameter_list|,
+name|op
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_##name##_##N(uintN_t *mem, uintN_t val)				\ {									\ 	uintN_t ret;							\ 									\ 	WITHOUT_INTERRUPTS({						\ 		ret = *mem;						\ 		*mem op val;						\ 	});								\ 	return (ret);							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMIT_ALL_OPS_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|)
+define|\
+value|EMIT_VAL_COMPARE_AND_SWAP_N(N, uintN_t)					\ EMIT_FETCH_AND_OP_N(N, uintN_t, lock_test_and_set, =)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_add, +=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_and,&=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_or, |=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_sub, -=)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, fetch_and_xor, ^=)
+end_define
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|4
+argument_list|,
+argument|uint32_t
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|8
+argument_list|,
+argument|uint64_t
+argument_list|)
+end_macro
+
+begin_undef
+undef|#
+directive|undef
+name|EMIT_ALL_OPS_N
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * For userspace on uniprocessor systems, we can implement the atomic  * operations by using a Restartable Atomic Sequence. This makes the  * kernel restart the code from the beginning when interrupted.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMIT_LOCK_TEST_AND_SET_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
+name|ldr
+parameter_list|,
+name|str
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_lock_test_and_set_##N##_c(uintN_t *mem, uintN_t val)			\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+comment|/* Set up Restartable Atomic Sequence. */
+value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
+comment|/* Load old value. */
+value|\ 		"\t"str" %3, %1\n"
+comment|/* Store new value. */
+value|\ 									\
+comment|/* Tear down Restartable Atomic Sequence. */
+value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%5]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%5, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (val), "m" (*mem), "r" (ras_start));		\ 	return (old);							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMIT_VAL_COMPARE_AND_SWAP_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
+name|ldr
+parameter_list|,
+name|streq
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_val_compare_and_swap_##N##_c(uintN_t *mem, uintN_t expected,		\     uintN_t desired)							\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+comment|/* Set up Restartable Atomic Sequence. */
+value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%6]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%6, #4]\n"				\ 									\ 		"\t"ldr" %0, %5\n"
+comment|/* Load old value. */
+value|\ 		"\tcmp   %0, %3\n"
+comment|/* Compare to expected value. */
+value|\ 		"\t"streq" %4, %1\n"
+comment|/* Store new value. */
+value|\ 									\
+comment|/* Tear down Restartable Atomic Sequence. */
+value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%6]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%6, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (expected), "r" (desired), "m" (*mem),		\ 		  "r" (ras_start));					\ 	return (old);							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMIT_FETCH_AND_OP_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
+name|ldr
+parameter_list|,
+name|str
+parameter_list|,
+name|name
+parameter_list|,
+name|op
+parameter_list|)
+define|\
+value|uintN_t									\ __sync_##name##_##N##_c(uintN_t *mem, uintN_t val)				\ {									\ 	uint32_t old, temp, ras_start;					\ 									\ 	ras_start = ARM_RAS_START;					\ 	__asm volatile (						\
+comment|/* Set up Restartable Atomic Sequence. */
+value|\ 		"1:"							\ 		"\tadr   %2, 1b\n"					\ 		"\tstr   %2, [%5]\n"					\ 		"\tadr   %2, 2f\n"					\ 		"\tstr   %2, [%5, #4]\n"				\ 									\ 		"\t"ldr" %0, %4\n"
+comment|/* Load old value. */
+value|\ 		"\t"op"  %2, %0, %3\n"
+comment|/* Calculate new value. */
+value|\ 		"\t"str" %2, %1\n"
+comment|/* Store new value. */
+value|\ 									\
+comment|/* Tear down Restartable Atomic Sequence. */
+value|\ 		"2:"							\ 		"\tmov   %2, #0x00000000\n"				\ 		"\tstr   %2, [%5]\n"					\ 		"\tmov   %2, #0xffffffff\n"				\ 		"\tstr   %2, [%5, #4]\n"				\ 		: "=&r" (old), "=m" (*mem), "=&r" (temp)		\ 		: "r" (val), "m" (*mem), "r" (ras_start));		\ 	return (old);							\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMIT_ALL_OPS_N
+parameter_list|(
+name|N
+parameter_list|,
+name|uintN_t
+parameter_list|,
+name|ldr
+parameter_list|,
+name|str
+parameter_list|,
+name|streq
+parameter_list|)
+define|\
+value|EMIT_LOCK_TEST_AND_SET_N(N, uintN_t, ldr, str)				\ EMIT_VAL_COMPARE_AND_SWAP_N(N, uintN_t, ldr, streq)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_add, "add")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_and, "and")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_or, "orr")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_sub, "sub")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_xor, "eor")
+end_define
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
+literal|"ldrb"
+argument_list|,
+literal|"strb"
+argument_list|,
+literal|"streqb"
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+literal|"ldrh"
+argument_list|,
+literal|"strh"
+argument_list|,
+literal|"streqh"
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|4
+argument_list|,
+argument|uint32_t
+argument_list|,
+literal|"ldr"
+argument_list|,
+literal|"str"
+argument_list|,
+literal|"streq"
+argument_list|)
+end_macro
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__clang__
+end_ifndef
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_lock_test_and_set_1_c
+argument_list|,
+name|__sync_lock_test_and_set_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_lock_test_and_set_2_c
+argument_list|,
+name|__sync_lock_test_and_set_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_lock_test_and_set_4_c
+argument_list|,
+name|__sync_lock_test_and_set_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_val_compare_and_swap_1_c
+argument_list|,
+name|__sync_val_compare_and_swap_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_val_compare_and_swap_2_c
+argument_list|,
+name|__sync_val_compare_and_swap_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_val_compare_and_swap_4_c
+argument_list|,
+name|__sync_val_compare_and_swap_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_add_1_c
+argument_list|,
+name|__sync_fetch_and_add_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_add_2_c
+argument_list|,
+name|__sync_fetch_and_add_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_add_4_c
+argument_list|,
+name|__sync_fetch_and_add_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_and_1_c
+argument_list|,
+name|__sync_fetch_and_and_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_and_2_c
+argument_list|,
+name|__sync_fetch_and_and_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_and_4_c
+argument_list|,
+name|__sync_fetch_and_and_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_sub_1_c
+argument_list|,
+name|__sync_fetch_and_sub_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_sub_2_c
+argument_list|,
+name|__sync_fetch_and_sub_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_sub_4_c
+argument_list|,
+name|__sync_fetch_and_sub_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_or_1_c
+argument_list|,
+name|__sync_fetch_and_or_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_or_2_c
+argument_list|,
+name|__sync_fetch_and_or_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_or_4_c
+argument_list|,
+name|__sync_fetch_and_or_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_xor_1_c
+argument_list|,
+name|__sync_fetch_and_xor_1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_xor_2_c
+argument_list|,
+name|__sync_fetch_and_xor_2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sync_fetch_and_xor_4_c
+argument_list|,
+name|__sync_fetch_and_xor_4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: buffer.c,v 1.32 2010/02/09 03:56:28 djm Exp $ */
+comment|/* $OpenBSD: buffer.c,v 1.33 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -180,7 +180,7 @@ name|alloc
 operator|=
 literal|0
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|buffer
 operator|->

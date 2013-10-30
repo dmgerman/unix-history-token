@@ -2286,11 +2286,14 @@ modifier|*
 name|p_sigacts
 decl_stmt|;
 comment|/* (x) Signal actions, state (CPU). */
-comment|/* 	 * The following don't make too much sense. 	 * See the td_ or ke_ versions of the same flags. 	 */
 name|int
 name|p_flag
 decl_stmt|;
 comment|/* (c) P_* flags. */
+name|int
+name|p_flag2
+decl_stmt|;
+comment|/* (c) P2_* flags. */
 enum|enum
 block|{
 name|PRS_NEW
@@ -3143,6 +3146,21 @@ name|p
 parameter_list|)
 value|((p)->p_flag& P_WKILLED)
 end_define
+
+begin_comment
+comment|/* These flags are kept in p_flag2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2_INHERIT_PROTECTED
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* New children get P_PROTECTED. */
+end_comment
 
 begin_comment
 comment|/*  * These were process status values (p_stat), now they are only used in  * legacy conversion code.  */

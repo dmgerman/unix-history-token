@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_mm.c,v 1.16 2009/06/22 05:39:28 dtucker Exp $ */
+comment|/* $OpenBSD: monitor_mm.c,v 1.17 2013/05/17 00:13:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -510,7 +516,7 @@ name|mmalloc
 operator|==
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|mms
 argument_list|)
@@ -624,7 +630,7 @@ name|mmalloc
 operator|==
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|mm
 argument_list|)
@@ -875,7 +881,7 @@ name|mmalloc
 operator|==
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|mms
 argument_list|)
@@ -1218,7 +1224,7 @@ name|mmalloc
 operator|==
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|mms
 argument_list|)
@@ -1339,7 +1345,7 @@ name|mmalloc
 operator|==
 name|NULL
 condition|)
-name|xfree
+name|free
 argument_list|(
 name|mms
 argument_list|)

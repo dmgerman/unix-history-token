@@ -351,7 +351,7 @@ expr_stmt|;
 comment|/* Docs say to wait one second before accessing device */
 name|msleep
 argument_list|(
-literal|1000
+literal|2000
 argument_list|)
 expr_stmt|;
 name|end

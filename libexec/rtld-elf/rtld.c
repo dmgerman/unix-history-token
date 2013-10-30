@@ -6219,30 +6219,20 @@ break|break;
 case|case
 name|DT_MIPS_RLD_MAP
 case|:
-ifdef|#
-directive|ifdef
-name|notyet
-if|if
-condition|(
-operator|!
-name|early
-condition|)
-name|dbg
-argument_list|(
-literal|"Filling in DT_DEBUG entry"
-argument_list|)
-expr_stmt|;
+operator|*
 operator|(
 operator|(
-name|Elf_Dyn
+name|Elf_Addr
 operator|*
 operator|)
+operator|(
 name|dynp
-operator|)
 operator|->
 name|d_un
 operator|.
 name|d_ptr
+operator|)
+operator|)
 operator|=
 operator|(
 name|Elf_Addr
@@ -6250,8 +6240,6 @@ operator|)
 operator|&
 name|r_debug
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 endif|#
 directive|endif
@@ -13179,6 +13167,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Iterate over a search path, translate each element, and invoke the  * callback on the result.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -13198,16 +13190,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|COMPAT_32BIT
 specifier|const
 name|char
 modifier|*
 name|trans
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|path
@@ -13252,9 +13239,6 @@ argument_list|,
 literal|":;"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_32BIT
 name|trans
 operator|=
 name|lm_findn
@@ -13285,8 +13269,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|res
 operator|=
 name|callback

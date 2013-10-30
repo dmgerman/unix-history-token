@@ -1302,8 +1302,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|kva_free
+name|kmem_free
 argument_list|(
+name|kernel_arena
+argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -1525,7 +1527,7 @@ break|break;
 case|case
 name|ERESTART
 case|:
-comment|/* 		 * Reconstruct pc, we know that 'syscall' is 2 bytes, 		 * lcall $X,y is 7 bytes, int 0x80 is 2 bytes. 		 * We saved this in tf_err. 		 * %r10 (which was holding the value of %rcx) is restored 		 * for the next iteration. 		 * %r10 restore is only required for freebsd/amd64 processes, 		 * but shall be innocent for any ia32 ABI. 		 */
+comment|/* 		 * Reconstruct pc, we know that 'syscall' is 2 bytes, 		 * lcall $X,y is 7 bytes, int 0x80 is 2 bytes. 		 * We saved this in tf_err. 		 * %r10 (which was holding the value of %rcx) is restored 		 * for the next iteration. 		 * %r10 restore is only required for freebsd/amd64 processes, 		 * but shall be innocent for any ia32 ABI. 		 * 		 * Require full context restore to get the arguments 		 * in the registers reloaded at return to usermode. 		 */
 name|td
 operator|->
 name|td_frame
@@ -1549,6 +1551,15 @@ operator|->
 name|td_frame
 operator|->
 name|tf_rcx
+expr_stmt|;
+name|set_pcb_flags
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

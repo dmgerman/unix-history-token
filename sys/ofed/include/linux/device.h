@@ -1796,6 +1796,25 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|dev_to_node
+parameter_list|(
+name|struct
+name|device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

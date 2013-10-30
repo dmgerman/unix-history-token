@@ -388,6 +388,20 @@ name|ccb_flags
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CAM_EXTLUN_VALID
+init|=
+literal|0x00000001
+block|,
+comment|/* 64bit lun field is valid      */
+block|}
+name|ccb_xflags
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* XPT Opcodes for xpt_action */
 end_comment
@@ -807,6 +821,9 @@ comment|/* Serial AT Attachment */
 name|XPORT_ISCSI
 block|,
 comment|/* iSCSI */
+name|XPORT_SRP
+block|,
+comment|/* SCSI RDMA Protocol */
 block|}
 name|cam_xport
 typedef|;
@@ -980,6 +997,26 @@ name|ccb_spriv_area
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|struct
+name|timeval
+modifier|*
+name|etime
+decl_stmt|;
+name|uintptr_t
+name|sim_data
+decl_stmt|;
+name|uintptr_t
+name|periph_data
+decl_stmt|;
+block|}
+name|ccb_qos_area
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ccb_hdr
@@ -1045,25 +1082,36 @@ name|lun_id_t
 name|target_lun
 decl_stmt|;
 comment|/* Target LUN number */
+name|lun64_id_t
+name|ext_lun
+decl_stmt|;
+comment|/* 64bit extended/multi-level LUNs */
 name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* ccb_flags */
+name|u_int32_t
+name|xflags
+decl_stmt|;
+comment|/* Extended flags */
 name|ccb_ppriv_area
 name|periph_priv
 decl_stmt|;
 name|ccb_spriv_area
 name|sim_priv
 decl_stmt|;
+name|ccb_qos_area
+name|qos
+decl_stmt|;
 name|u_int32_t
 name|timeout
 decl_stmt|;
-comment|/* Timeout value */
-comment|/* 	 * Deprecated, only for use by non-MPSAFE SIMs.  All others must 	 * allocate and initialize their own callout storage. 	 */
+comment|/* Hard timeout value in mseconds */
 name|struct
-name|callout_handle
-name|timeout_ch
+name|timeval
+name|softtimeout
 decl_stmt|;
+comment|/* Soft timeout value in sec + usec */
 block|}
 struct|;
 end_struct
@@ -1767,7 +1815,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x17
+value|0x18
 end_define
 
 begin_comment
@@ -1864,6 +1912,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|PIM_EXTLUNS
+init|=
+literal|0x100
+block|,
+comment|/* 64bit extended LUNs supported */
 name|PIM_SCANHILO
 init|=
 literal|0x80
@@ -1981,11 +2034,11 @@ name|u_int8_t
 name|hba_inquiry
 decl_stmt|;
 comment|/* Mimic of INQ byte 7 for the HBA */
-name|u_int8_t
+name|u_int16_t
 name|target_sprt
 decl_stmt|;
 comment|/* Flags for target mode support */
-name|u_int8_t
+name|u_int32_t
 name|hba_misc
 decl_stmt|;
 comment|/* Misc HBA features */
@@ -4227,6 +4280,14 @@ name|csio
 operator|->
 name|ccb_h
 operator|.
+name|xflags
+operator|=
+literal|0
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
 name|retry_count
 operator|=
 name|retries
@@ -4350,6 +4411,14 @@ operator|.
 name|flags
 operator|=
 name|flags
+expr_stmt|;
+name|csio
+operator|->
+name|ccb_h
+operator|.
+name|xflags
+operator|=
+literal|0
 expr_stmt|;
 name|csio
 operator|->

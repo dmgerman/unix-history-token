@@ -562,9 +562,9 @@ name|linux_setregid16
 argument_list|,
 name|entry
 argument_list|,
-literal|"l_git16_t"
+literal|"l_gid16_t"
 argument_list|,
-literal|"l_git16_t"
+literal|"l_gid16_t"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -19243,25 +19243,7 @@ name|strcmp
 argument_list|(
 name|type
 argument_list|,
-name|VDEV_TYPE_RAIDZ
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|type
-argument_list|,
 name|VDEV_TYPE_FILE
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|type
-argument_list|,
-name|VDEV_TYPE_LOG
 argument_list|)
 operator|==
 literal|0
@@ -19380,7 +19362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * check if this zvol is allowable for use as a dump device; zero if  * it is,> 0 if it isn't,< 0 if it isn't a zvol  */
+comment|/*  * Check if this zvol is allowable for use as a dump device; zero if  * it is,> 0 if it isn't,< 0 if it isn't a zvol.  *  * Allowable storage configurations include mirrors, all raidz variants, and  * pools with log, cache, and spare devices.  Pools which are backed by files or  * have missing/hole vdevs are not suitable.  */
 end_comment
 
 begin_function
@@ -19750,43 +19732,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|toplevels
-operator|!=
-literal|1
-condition|)
-block|{
-name|zfs_error_aux
-argument_list|(
-name|hdl
-argument_list|,
-name|dgettext
-argument_list|(
-name|TEXT_DOMAIN
-argument_list|,
-literal|"'%s' has multiple top level vdevs"
-argument_list|)
-argument_list|,
-name|poolname
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|zfs_error
-argument_list|(
-name|hdl
-argument_list|,
-name|EZFS_DEVOVERFLOW
-argument_list|,
-name|errbuf
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|!

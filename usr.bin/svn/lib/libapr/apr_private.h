@@ -281,12 +281,33 @@ begin_comment
 comment|/* Define if compiler provides atomic builtins */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_ATOMIC_BUILTINS
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if BONE_VERSION is defined in sys/socket.h */

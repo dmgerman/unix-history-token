@@ -159,7 +159,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX unsupported on AMD */
-block|{ MSR_IA32_MISC_ENABLE, VMM_MSR_F_EMULATE | VMM_MSR_F_READONLY },
+block|{ MSR_IA32_PLATFORM_ID, VMM_MSR_F_EMULATE | VMM_MSR_F_READONLY }, 	{ MSR_IA32_MISC_ENABLE, VMM_MSR_F_EMULATE | VMM_MSR_F_READONLY },
 endif|#
 directive|endif
 block|}
@@ -428,7 +428,7 @@ literal|0
 comment|/* XXX unsupported on AMD */
 block|case MSR_IA32_MISC_ENABLE: 			misc = rdmsr(MSR_IA32_MISC_ENABLE);
 comment|/* 			 * Set mandatory bits 			 *  11:   branch trace disabled 			 *  12:   PEBS unavailable 			 * Clear unsupported features 			 *  16:   SpeedStep enable 			 *  18:   enable MONITOR FSM                          */
-block|misc |= (1<< 12) | (1<< 11); 			misc&= ~((1<< 18) | (1<< 16)); 			guest_msrs[i] = misc;                         break;
+block|misc |= (1<< 12) | (1<< 11); 			misc&= ~((1<< 18) | (1<< 16)); 			guest_msrs[i] = misc; 			break; 		case MSR_IA32_PLATFORM_ID: 			guest_msrs[i] = 0; 			break;
 endif|#
 directive|endif
 default|default:

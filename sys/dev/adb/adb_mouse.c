@@ -2079,6 +2079,12 @@ operator|==
 name|sc
 operator|->
 name|last_buttons
+operator|&&
+name|sc
+operator|->
+name|packet_read_len
+operator|==
+literal|0
 condition|)
 block|{
 name|selrecord

@@ -593,6 +593,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|dma_map
 decl_stmt|;
+name|struct
+name|callout_handle
+name|timeout_ch
+decl_stmt|;
 name|SCAT_GATH
 name|psg
 index|[

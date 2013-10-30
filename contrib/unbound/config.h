@@ -26,40 +26,7 @@ begin_define
 define|#
 directive|define
 name|CONFIGFILE
-value|"/etc/unbound/unbound.conf"
-end_define
-
-begin_comment
-comment|/* configure flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONFIGURE_BUILD_WITH
-value|" '--prefix=' '--exec-prefix=/usr' '--with-conf-file=/etc/unbound/unbound.conf' '--with-run-dir=/var/unbound' '--with-username=unbound'"
-end_define
-
-begin_comment
-comment|/* configure date */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONFIGURE_DATE
-value|"Sun Sep 15 15:38:41 CEST 2013"
-end_define
-
-begin_comment
-comment|/* configure target system */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONFIGURE_TARGET
-value|"x86_64-unknown-freebsd10.0"
+value|"/var/unbound/unbound.conf"
 end_define
 
 begin_comment
@@ -810,9 +777,12 @@ begin_comment
 comment|/* Define to 1 if you have the `sbrk' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SBRK */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SBRK
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `sendmsg' function. */

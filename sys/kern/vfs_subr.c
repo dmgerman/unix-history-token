@@ -9436,10 +9436,24 @@ argument_list|)
 operator|!=
 name|LK_EXCLUSIVE
 condition|)
+block|{
 name|error
 operator|=
-name|EBUSY
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_TRYUPGRADE
+operator||
+name|LK_INTERLOCK
+argument_list|)
 expr_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 if|if
@@ -12782,7 +12796,8 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"    v_object %p ref %d pages %d\n"
+literal|"    v_object %p ref %d pages %d "
+literal|"cleanbuf %d dirtybuf %d\n"
 argument_list|,
 name|vp
 operator|->
@@ -12799,6 +12814,22 @@ operator|->
 name|v_object
 operator|->
 name|resident_page_count
+argument_list|,
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_dirty
+operator|.
+name|bv_cnt
+argument_list|,
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_clean
+operator|.
+name|bv_cnt
 argument_list|)
 expr_stmt|;
 name|printf
@@ -19707,6 +19738,11 @@ name|vpi_selinfo
 operator|.
 name|si_note
 expr_stmt|;
+name|vhold
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|knlist_add
 argument_list|(
 name|knl
@@ -19780,6 +19816,11 @@ argument_list|,
 name|kn
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 block|}

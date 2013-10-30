@@ -2565,9 +2565,28 @@ argument_list|(
 name|nsegs
 operator|==
 literal|1
+operator|||
+name|nsegs
+operator|==
+literal|0
 argument_list|,
 operator|(
-literal|"invalid number of DMA segments"
+literal|"ps3cdrom_transfer: invalid number of DMA segments %d"
+operator|,
+name|nsegs
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"ps3cdrom_transfer: DMA error %d"
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2694,6 +2713,17 @@ block|{
 case|case
 name|READ_10
 case|:
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"ps3cdrom_transfer: no data to read"
+operator|)
+argument_list|)
+expr_stmt|;
 name|start_sector
 operator|=
 operator|(
@@ -2790,6 +2820,17 @@ break|break;
 case|case
 name|WRITE_10
 case|:
+name|KASSERT
+argument_list|(
+name|nsegs
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"ps3cdrom_transfer: no data to write"
+operator|)
+argument_list|)
+expr_stmt|;
 name|start_sector
 operator|=
 operator|(
@@ -3011,6 +3052,14 @@ name|atapi_cmd
 operator|.
 name|arglen
 operator|=
+operator|(
+name|nsegs
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
 name|segs
 index|[
 literal|0
@@ -3028,6 +3077,14 @@ name|atapi_cmd
 operator|.
 name|buf
 operator|=
+operator|(
+name|nsegs
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
 name|segs
 index|[
 literal|0

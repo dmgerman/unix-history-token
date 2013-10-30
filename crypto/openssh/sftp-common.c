@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-common.c,v 1.23 2010/01/15 09:24:23 markus Exp $ */
+comment|/* $OpenBSD: sftp-common.c,v 1.24 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -587,12 +587,12 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|data
 argument_list|)
@@ -877,6 +877,7 @@ operator|->
 name|st_mtime
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|user

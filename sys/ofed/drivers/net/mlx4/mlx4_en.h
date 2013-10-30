@@ -2831,29 +2831,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|mlx4_SET_MCAST_FLTR
-parameter_list|(
-name|struct
-name|mlx4_dev
-modifier|*
-name|dev
-parameter_list|,
-name|u8
-name|port
-parameter_list|,
-name|u64
-name|mac
-parameter_list|,
-name|u64
-name|clear
-parameter_list|,
-name|u8
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|//int mlx4_SET_MCAST_FLTR(struct mlx4_dev *dev, u8 port, u64 mac, u64 clear, u8 mode);
+end_comment
 
 begin_function_decl
 name|int
@@ -2874,56 +2854,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|mlx4_SET_PORT_general
-parameter_list|(
-name|struct
-name|mlx4_dev
-modifier|*
-name|dev
-parameter_list|,
-name|u8
-name|port
-parameter_list|,
-name|int
-name|mtu
-parameter_list|,
-name|u8
-name|pptx
-parameter_list|,
-name|u8
-name|pfctx
-parameter_list|,
-name|u8
-name|pprx
-parameter_list|,
-name|u8
-name|pfcrx
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|//int mlx4_SET_PORT_general(struct mlx4_dev *dev, u8 port, int mtu,
+end_comment
 
-begin_function_decl
-name|int
-name|mlx4_SET_PORT_qpn_calc
-parameter_list|(
-name|struct
-name|mlx4_dev
-modifier|*
-name|dev
-parameter_list|,
-name|u8
-name|port
-parameter_list|,
-name|u32
-name|base_qpn
-parameter_list|,
-name|u8
-name|promisc
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|//			  u8 pptx, u8 pfctx, u8 pprx, u8 pfcrx);
+end_comment
+
+begin_comment
+comment|//int mlx4_SET_PORT_qpn_calc(struct mlx4_dev *dev, u8 port, u32 base_qpn,
+end_comment
+
+begin_comment
+comment|//			   u8 promisc);
+end_comment
 
 begin_function_decl
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: roaming_client.c,v 1.4 2011/12/07 05:44:38 djm Exp $ */
+comment|/* $OpenBSD: roaming_client.c,v 1.5 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -821,7 +821,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|str
 argument_list|)
@@ -841,7 +841,7 @@ operator|++
 control|)
 block|{
 comment|/* kex algorithm taken care of so start with i=1 and not 0 */
-name|xfree
+name|free
 argument_list|(
 name|packet_get_string
 argument_list|(
@@ -997,11 +997,7 @@ literal|0
 return|;
 name|fail
 label|:
-if|if
-condition|(
-name|kexlist
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|kexlist
 argument_list|)

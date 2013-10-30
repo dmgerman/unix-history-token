@@ -332,7 +332,7 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
-name|int
+name|uintptr_t
 name|how
 parameter_list|)
 function_decl|;
@@ -371,7 +371,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|int
+name|uintptr_t
 name|unlock_rw
 parameter_list|(
 name|struct
@@ -563,7 +563,7 @@ name|lock_object
 modifier|*
 name|lock
 parameter_list|,
-name|int
+name|uintptr_t
 name|how
 parameter_list|)
 block|{
@@ -585,13 +585,13 @@ if|if
 condition|(
 name|how
 condition|)
-name|rw_wlock
+name|rw_rlock
 argument_list|(
 name|rw
 argument_list|)
 expr_stmt|;
 else|else
-name|rw_rlock
+name|rw_wlock
 argument_list|(
 name|rw
 argument_list|)
@@ -600,7 +600,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|uintptr_t
 name|unlock_rw
 parameter_list|(
 name|struct
@@ -648,7 +648,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -661,7 +661,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}

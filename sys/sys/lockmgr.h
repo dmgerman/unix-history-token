@@ -905,6 +905,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LK_TRYUPGRADE
+value|0x800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|LK_TOTAL_MASK
 value|(LK_INIT_MASK | LK_EATTR_MASK | LK_TYPE_MASK)
 end_define

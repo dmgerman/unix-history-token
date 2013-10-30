@@ -816,6 +816,16 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|argc
+operator|!=
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|rtn
 operator|=
 name|delete
@@ -826,6 +836,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|F_FILESET

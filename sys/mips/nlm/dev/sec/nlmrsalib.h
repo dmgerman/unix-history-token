@@ -40,18 +40,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUM_RSAECC_VC
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
 name|RSA_ERROR
 parameter_list|(
-name|__msg0
+name|msg0
 parameter_list|)
-value|((__msg0>> 53)& 0x1f)
+value|(((msg0)>> 53)& 0x1f)
 end_define
 
 begin_struct
@@ -137,6 +130,34 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|nlm_xlprsaecc_msgring_handler
+parameter_list|(
+name|int
+name|vc
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|int
+name|code
+parameter_list|,
+name|int
+name|src_id
+parameter_list|,
+name|struct
+name|nlm_fmn_msg
+modifier|*
+name|msg
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

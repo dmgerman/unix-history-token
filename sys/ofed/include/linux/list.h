@@ -354,6 +354,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|list_first_entry
+parameter_list|(
+name|ptr
+parameter_list|,
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+define|\
+value|list_entry((ptr)->next, type, member)
+end_define
+
+begin_define
+define|#
+directive|define
 name|list_for_each
 parameter_list|(
 name|p

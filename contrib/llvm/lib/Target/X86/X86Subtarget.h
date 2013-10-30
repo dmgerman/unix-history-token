@@ -1288,6 +1288,32 @@ operator|::
 name|StubPIC
 return|;
 block|}
+name|bool
+name|isCallingConvWin64
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|(
+name|isTargetWin64
+argument_list|()
+operator|&&
+name|CC
+operator|!=
+name|CallingConv
+operator|::
+name|X86_64_SysV
+operator|)
+operator|||
+name|CC
+operator|==
+name|CallingConv
+operator|::
+name|X86_64_Win64
+return|;
+block|}
 comment|/// ClassifyGlobalReference - Classify a global variable reference for the
 comment|/// current subtarget according to how we should reference it in a non-pcrel
 comment|/// context.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.30 2012/08/17 00:45:45 dtucker Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.31 2013/06/02 23:36:29 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -365,18 +365,6 @@ name|void
 name|mux_tty_alloc_failed
 parameter_list|(
 name|Channel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mux_master_session_cleanup_cb
-parameter_list|(
-name|int
-parameter_list|,
-name|void
 modifier|*
 parameter_list|)
 function_decl|;

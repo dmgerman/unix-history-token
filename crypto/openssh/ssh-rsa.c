@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-rsa.c,v 1.45 2010/08/31 09:58:37 djm Exp $ */
+comment|/* $OpenBSD: ssh-rsa.c,v 1.46 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -354,7 +354,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sig
 argument_list|)
@@ -425,7 +425,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sig
 argument_list|)
@@ -524,7 +524,7 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sig
 argument_list|)
@@ -728,7 +728,7 @@ operator|&
 name|b
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|ktype
 argument_list|)
@@ -738,7 +738,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|xfree
+name|free
 argument_list|(
 name|ktype
 argument_list|)
@@ -782,7 +782,7 @@ argument_list|,
 name|rlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sigblob
 argument_list|)
@@ -818,7 +818,7 @@ argument_list|,
 name|modlen
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sigblob
 argument_list|)
@@ -921,7 +921,7 @@ argument_list|,
 name|nid
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sigblob
 argument_list|)
@@ -1000,7 +1000,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|xfree
+name|free
 argument_list|(
 name|sigblob
 argument_list|)
@@ -1434,11 +1434,7 @@ literal|1
 expr_stmt|;
 name|done
 label|:
-if|if
-condition|(
-name|decrypted
-condition|)
-name|xfree
+name|free
 argument_list|(
 name|decrypted
 argument_list|)

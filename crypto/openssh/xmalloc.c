@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: xmalloc.c,v 1.27 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: xmalloc.c,v 1.28 2013/05/17 00:13:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -280,34 +280,6 @@ expr_stmt|;
 return|return
 name|new_ptr
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|xfree
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ptr
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"xfree: NULL pointer given as argument"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
