@@ -385,6 +385,32 @@ value|2048
 end_define
 
 begin_comment
+comment|/* definition to be used from workarounds.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGROUP
+end_ifdef
+
+begin_function_decl
+name|int
+name|yp_get_default_domain
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* hosts_access - host access control facility */
 end_comment
 
