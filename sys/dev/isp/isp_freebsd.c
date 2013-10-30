@@ -8405,12 +8405,15 @@ name|isp
 argument_list|,
 name|ISP_LOGTINFO
 argument_list|,
-literal|"%s: bus %d lun %u luns_enabled %d"
+literal|"%s: bus %d lun %jx luns_enabled %d"
 argument_list|,
 name|__func__
 argument_list|,
 name|bus
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|,
 name|luns_already_enabled
@@ -8570,10 +8573,13 @@ name|ISP_LOGCONFIG
 operator||
 name|ISP_LOGTINFO
 argument_list|,
-literal|"bus %d lun %u now enabled for target mode"
+literal|"bus %d lun %jx now enabled for target mode"
 argument_list|,
 name|bus
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -14280,7 +14286,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"%s: [0x%x] no state pointer for lun %d or wildcard"
+literal|"%s: [0x%x] no state pointer for lun %jx or wildcard"
 argument_list|,
 name|__func__
 argument_list|,
@@ -14288,6 +14294,9 @@ name|aep
 operator|->
 name|at_rxid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -14986,7 +14995,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"ATIO2[0x%x] CDB=0x%x lun %d datalen %u"
+literal|"ATIO2[0x%x] CDB=0x%x lun %jx datalen %u"
 argument_list|,
 name|aep
 operator|->
@@ -14996,6 +15005,9 @@ name|atp
 operator|->
 name|cdb0
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|,
 name|atp
@@ -20445,7 +20457,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"%s: no state pointer found for chan %d lun 0x%x"
+literal|"%s: no state pointer found for chan %d lun %#jx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20453,6 +20465,9 @@ name|notify
 operator|->
 name|nt_channel
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -20489,7 +20504,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"%s: out of immediate notify structures for chan %d lun 0x%x"
+literal|"%s: out of immediate notify structures for chan %d lun %#jx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20497,6 +20512,9 @@ name|notify
 operator|->
 name|nt_channel
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -20655,7 +20673,7 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"%s: unknown TMF code 0x%x for chan %d lun 0x%x"
+literal|"%s: unknown TMF code 0x%x for chan %d lun %#jx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20667,6 +20685,9 @@ name|notify
 operator|->
 name|nt_channel
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -31116,12 +31137,15 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"SET (%d.%d.%d) to flags %x off %x per %x"
+literal|"SET (%d.%d.%jx) to flags %x off %x per %x"
 argument_list|,
 name|bus
 argument_list|,
 name|tgt
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cts
 operator|->
 name|ccb_h
@@ -31728,7 +31752,7 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"GET %s (%d.%d.%d) to flags %x off %x per %x"
+literal|"GET %s (%d.%d.%jx) to flags %x off %x per %x"
 argument_list|,
 name|IS_CURRENT_SETTINGS
 argument_list|(
@@ -31743,6 +31767,9 @@ name|bus
 argument_list|,
 name|tgt
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cts
 operator|->
 name|ccb_h

@@ -198,7 +198,7 @@ name|debug
 argument_list|(
 literal|3
 argument_list|,
-literal|"sid=%d target=%d lun=%d"
+literal|"sid=%d target=%d lun=%jx"
 argument_list|,
 name|sp
 operator|->
@@ -210,6 +210,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -891,7 +894,7 @@ name|sdebug
 argument_list|(
 literal|4
 argument_list|,
-literal|"func_code=0x%x flags=0x%x status=0x%x target=%d lun=%d retry_count=%d timeout=%d"
+literal|"func_code=0x%x flags=0x%x status=0x%x target=%d lun=%jx retry_count=%d timeout=%d"
 argument_list|,
 name|ccb_h
 operator|->
@@ -915,6 +918,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -1115,7 +1121,7 @@ name|debug
 argument_list|(
 literal|4
 argument_list|,
-literal|"sid=%d target=%d lun=%d XPT_CALC_GEOMETRY vsize=%jd bsize=%d"
+literal|"sid=%d target=%d lun=%jx XPT_CALC_GEOMETRY vsize=%jd bsize=%d"
 argument_list|,
 name|sp
 operator|->
@@ -1127,6 +1133,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
