@@ -1464,6 +1464,20 @@ name|sigmode
 index|[
 name|signo
 index|]
+operator|==
+literal|0
+condition|)
+name|setsignal
+argument_list|(
+name|signo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigmode
+index|[
+name|signo
+index|]
 operator|!=
 name|S_IGN
 operator|&&
@@ -1482,14 +1496,14 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-block|}
 name|sigmode
 index|[
 name|signo
 index|]
 operator|=
-name|S_HARD_IGN
+name|S_IGN
 expr_stmt|;
+block|}
 block|}
 end_function
 
