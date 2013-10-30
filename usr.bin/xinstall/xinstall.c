@@ -226,32 +226,6 @@ directive|include
 file|"mtree.h"
 end_include
 
-begin_comment
-comment|/* Bootstrap aid - this doesn't exist in most older releases */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAP_FAILED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAP_FAILED
-value|((void *)-1)
-end_define
-
-begin_comment
-comment|/* from<sys/mman.h> */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -628,7 +602,6 @@ name|DIGEST_CTX
 modifier|*
 parameter_list|,
 specifier|const
-name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -2150,7 +2123,6 @@ modifier|*
 name|c
 parameter_list|,
 specifier|const
-name|unsigned
 name|char
 modifier|*
 name|data
@@ -5149,7 +5121,6 @@ modifier|*
 name|dresp
 parameter_list|)
 block|{
-name|unsigned
 name|char
 modifier|*
 name|p
@@ -5239,11 +5210,6 @@ if|if
 condition|(
 name|p
 operator|==
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|MAP_FAILED
 condition|)
 goto|goto
@@ -5273,11 +5239,6 @@ if|if
 condition|(
 name|q
 operator|==
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|MAP_FAILED
 condition|)
 block|{
@@ -5346,7 +5307,6 @@ operator|!
 name|done_compare
 condition|)
 block|{
-name|unsigned
 name|char
 name|buf1
 index|[
@@ -5907,12 +5867,10 @@ decl_stmt|;
 name|int
 name|serrno
 decl_stmt|;
-name|unsigned
 name|char
 modifier|*
 name|p
 decl_stmt|;
-name|unsigned
 name|char
 name|buf
 index|[
@@ -6033,11 +5991,6 @@ literal|0
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|MAP_FAILED
 condition|)
 block|{
