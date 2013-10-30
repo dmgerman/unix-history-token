@@ -353,7 +353,7 @@ name|pi_slot
 decl_stmt|,
 name|pi_func
 decl_stmt|;
-name|uint8_t
+name|int8_t
 name|pi_lintr_pin
 decl_stmt|;
 name|char

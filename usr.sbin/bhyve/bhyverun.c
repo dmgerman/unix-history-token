@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -140,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"legacy_irq.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mem.h"
 end_include
 
@@ -159,6 +171,12 @@ begin_include
 include|#
 directive|include
 file|"pci_emul.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pci_lpc.h"
 end_include
 
 begin_include
@@ -478,9 +496,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-aehAHIPW][-g<gdb port>][-s<pci>][-S<pci>]"
-literal|"[-c vcpus][-p pincpu][-m mem]"
-literal|"<vmname>\n"
+literal|"Usage: %s [-aehAHIPW] [-g<gdb port>] [-s<pci>] [-S<pci>]\n"
+literal|"       %*s [-c vcpus] [-p pincpu] [-m mem] [-l<lpc>]<vm>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port\n"
@@ -489,14 +506,25 @@ literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -I: present an ioapic to the guest\n"
 literal|"       -P: vmexit from the guest on pause\n"
-literal|"	-W: force virtio to use single-vector MSI\n"
-literal|"	-e: exit on unhandled i/o access\n"
+literal|"       -W: force virtio to use single-vector MSI\n"
+literal|"       -e: exit on unhandled I/O access\n"
 literal|"       -h: help\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
 literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
+literal|"       -l: LPC device configuration\n"
 literal|"       -m: memory size in MB\n"
 argument_list|,
 name|progname
+argument_list|,
+operator|(
+name|int
+operator|)
+name|strlen
+argument_list|(
+name|progname
+argument_list|)
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2328,7 +2356,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehAHIPWp:g:c:s:S:m:"
+literal|"abehAHIPWp:g:c:s:S:m:l:"
 argument_list|)
 operator|)
 operator|!=
@@ -2397,6 +2425,31 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|lpc_device_parse
+argument_list|(
+name|optarg
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid lpc device "
+literal|"configuration '%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'s'
@@ -2647,6 +2700,9 @@ name|init_mem
 argument_list|()
 expr_stmt|;
 name|init_inout
+argument_list|()
+expr_stmt|;
+name|legacy_irq_init
 argument_list|()
 expr_stmt|;
 name|rtc_init
