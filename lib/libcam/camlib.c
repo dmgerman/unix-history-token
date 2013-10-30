@@ -1354,7 +1354,7 @@ argument_list|,
 name|CAM_ERRBUF_SIZE
 argument_list|,
 literal|"%s: CDM reported more than one"
-literal|" passthrough device at %d:%d:%d!!\n"
+literal|" passthrough device at %d:%d:%jx!!\n"
 argument_list|,
 name|func_name
 argument_list|,
@@ -1362,6 +1362,9 @@ name|path_id
 argument_list|,
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|target_lun
 argument_list|)
 expr_stmt|;
@@ -1387,7 +1390,7 @@ argument_list|,
 name|CAM_ERRBUF_SIZE
 argument_list|,
 literal|"%s: no passthrough device found at"
-literal|" %d:%d:%d"
+literal|" %d:%d:%jx"
 argument_list|,
 name|func_name
 argument_list|,
@@ -1395,6 +1398,9 @@ name|path_id
 argument_list|,
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|target_lun
 argument_list|)
 expr_stmt|;
@@ -2831,7 +2837,7 @@ name|str
 argument_list|,
 name|len
 argument_list|,
-literal|"(%s%d:%s%d:%d:%d:%d): "
+literal|"(%s%d:%s%d:%d:%d:%jx): "
 argument_list|,
 operator|(
 name|dev
@@ -2883,6 +2889,9 @@ name|dev
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dev
 operator|->
 name|target_lun
