@@ -2184,6 +2184,7 @@ name|table
 parameter_list|,
 name|name
 parameter_list|)
+specifier|const
 name|CODE
 modifier|*
 name|table
@@ -2193,9 +2194,16 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+specifier|const
 name|CODE
 modifier|*
 name|t
+decl_stmt|;
+name|int
+name|ret
+init|=
+operator|-
+literal|1
 decl_stmt|;
 for|for
 control|(
@@ -2221,13 +2229,22 @@ argument_list|,
 name|name
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+name|ret
+operator|=
 name|t
 operator|->
 name|c_val
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
 name|tcpd_jump
 argument_list|(
 literal|"bad syslog facility or severity: \"%s\""
@@ -2235,7 +2252,11 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
