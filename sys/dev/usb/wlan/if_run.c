@@ -1933,8 +1933,7 @@ parameter_list|,
 name|usb_error_t
 name|error
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|index
 parameter_list|)
 function_decl|;
@@ -3252,8 +3251,7 @@ name|struct
 name|run_softc
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15949,8 +15947,7 @@ parameter_list|,
 name|usb_error_t
 name|error
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|index
 parameter_list|)
 block|{
@@ -20447,7 +20444,7 @@ name|run_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint32_t
+name|u_int
 name|chan
 parameter_list|)
 block|{
@@ -20814,7 +20811,7 @@ name|run_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint32_t
+name|u_int
 name|chan
 parameter_list|)
 block|{
@@ -22246,7 +22243,7 @@ name|sc_ifp
 operator|->
 name|if_l2com
 decl_stmt|;
-name|uint32_t
+name|u_int
 name|chan
 decl_stmt|,
 name|group
@@ -24406,7 +24403,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|u_int
 name|chan
 init|=
 name|ieee80211_chan2ieee
@@ -28190,8 +28187,7 @@ name|run_softc
 modifier|*
 name|sc
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|ms
 parameter_list|)
 block|{
