@@ -587,7 +587,7 @@ literal|1
 block|}
 block|,
 block|{
-literal|"limit%s swapuse %s"
+literal|"limit%s swapsize %s"
 block|,
 literal|";\n"
 block|,
@@ -835,7 +835,7 @@ literal|1
 block|}
 block|,
 block|{
-literal|"limit%s swapuse %s"
+literal|"limit%s swapsize %s"
 block|,
 literal|";\n"
 block|,
