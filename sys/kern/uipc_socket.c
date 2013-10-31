@@ -1922,6 +1922,26 @@ name|int
 name|connstatus
 parameter_list|)
 block|{
+specifier|static
+name|struct
+name|timeval
+name|lastover
+decl_stmt|;
+specifier|static
+name|struct
+name|timeval
+name|overinterval
+init|=
+block|{
+literal|60
+block|,
+literal|0
+block|}
+decl_stmt|;
+specifier|static
+name|int
+name|overcount
+decl_stmt|;
 name|struct
 name|socket
 modifier|*
@@ -1971,12 +1991,28 @@ condition|)
 block|{
 endif|#
 directive|endif
+name|overcount
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ratecheck
+argument_list|(
+operator|&
+name|lastover
+argument_list|,
+operator|&
+name|overinterval
+argument_list|)
+condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
 literal|"%s: pcb %p: Listen queue overflow: "
-literal|"%i already in queue awaiting acceptance\n"
+literal|"%i already in queue awaiting acceptance "
+literal|"(%d occurrences)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1987,8 +2023,15 @@ argument_list|,
 name|head
 operator|->
 name|so_qlen
+argument_list|,
+name|overcount
 argument_list|)
 expr_stmt|;
+name|overcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|NULL
