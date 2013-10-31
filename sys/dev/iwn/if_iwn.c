@@ -23838,6 +23838,9 @@ name|rate
 decl_stmt|,
 name|txrate
 decl_stmt|;
+name|int
+name|is_11n
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -23912,7 +23915,7 @@ literal|4000
 argument_list|)
 expr_stmt|;
 comment|/* 4ms */
-comment|/* Start at highest available bit-rate. */
+comment|/* 	 * Are we using 11n rates? Ensure the channel is 	 * 11n _and_ we have some 11n rates, or don't 	 * try. 	 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT
@@ -23921,6 +23924,28 @@ name|ni
 operator|->
 name|ni_chan
 argument_list|)
+operator|&&
+name|ni
+operator|->
+name|ni_htrates
+operator|.
+name|rs_nrates
+operator|>
+literal|0
+condition|)
+name|is_11n
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|is_11n
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Start at highest available bit-rate. */
+if|if
+condition|(
+name|is_11n
 condition|)
 name|txrate
 operator|=
@@ -23960,12 +23985,7 @@ name|plcp
 decl_stmt|;
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_HT
-argument_list|(
-name|ni
-operator|->
-name|ni_chan
-argument_list|)
+name|is_11n
 condition|)
 name|rate
 operator|=
