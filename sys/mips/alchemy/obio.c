@@ -524,7 +524,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|BUS_PROBE_NO_WILDCARD
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
