@@ -56,70 +56,60 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * SoC identity.  */
+comment|/* From here down, routines are implemented in imxNN_machdep.c. */
+end_comment
+
+begin_comment
+comment|/*  * SoC identity.  * According to the documentation, there is such a thing as an i.MX6 Dual  * (non-lite flavor).  However, Freescale doesn't seem to have assigned it a  * number in their code for determining the SoC type in u-boot.  *  * To-do: put silicon revision numbers into the low-order bits somewhere.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IMXSOC_51
-value|0x05000100
+value|0x51000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMXSOC_53
-value|0x05000300
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMXSOC_6S
-value|0x06000010
+value|0x53000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMXSOC_6SL
-value|0x06000011
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMXSOC_6D
-value|0x06000020
+value|0x60000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMXSOC_6DL
-value|0x06000021
+value|0x61000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMXSOC_6S
+value|0x62000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMXSOC_6Q
-value|0x06000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMXSOC_6QL
-value|0x06000041
+value|0x63000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMXSOC_FAMSHIFT
-value|24
+value|28
 end_define
 
 begin_function_decl
@@ -139,10 +129,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* From here down, routines are implemented in imxNN_machdep.c. */
-end_comment
 
 begin_function_decl
 name|void
