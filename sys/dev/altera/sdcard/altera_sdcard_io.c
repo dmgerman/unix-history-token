@@ -1370,7 +1370,6 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 		 * This attempt experienced an error; possibly retry. 		 */
 name|sc
 operator|->
 name|as_retriesleft
@@ -1381,37 +1380,19 @@ condition|(
 name|sc
 operator|->
 name|as_retriesleft
-operator|!=
+operator|==
 literal|0
+operator|||
+name|bootverbose
 condition|)
-block|{
-name|sc
-operator|->
-name|as_flags
-operator||=
-name|ALTERA_SDCARD_FLAG_IOERROR
-expr_stmt|;
-name|altera_sdcard_io_start_internal
-argument_list|(
-name|sc
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|as_dev
 argument_list|,
-literal|"%s: %s operation block %ju length "
-literal|"%ju failed; asr 0x%08x (rr1: 0x%04x)\n"
+literal|"%s: %s operation block %ju "
+literal|"length %ju failed; asr 0x%08x (rr1: 0x%04x)%s\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1446,8 +1427,47 @@ argument_list|,
 name|asr
 argument_list|,
 name|rr1
+argument_list|,
+name|sc
+operator|->
+name|as_retriesleft
+operator|!=
+literal|0
+condition|?
+literal|" retrying"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
+comment|/* 		 * This attempt experienced an error; possibly retry. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|as_retriesleft
+operator|!=
+literal|0
+condition|)
+block|{
+name|sc
+operator|->
+name|as_flags
+operator||=
+name|ALTERA_SDCARD_FLAG_IOERROR
+expr_stmt|;
+name|altera_sdcard_io_start_internal
+argument_list|(
+name|sc
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|as_flags
