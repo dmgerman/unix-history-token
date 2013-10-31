@@ -1360,7 +1360,7 @@ begin_define
 define|#
 directive|define
 name|RCS_STRING
-value|"tfdscmlunbvpw"
+value|"tfdscmlunbvpwk"
 end_define
 
 begin_function_decl
@@ -1682,7 +1682,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":EeC:U:BSHP:ab:c:d:f:l:m:n:s:t:u:v:p:w:"
+literal|":EeC:U:BSHP:ab:c:d:f:l:m:n:s:t:u:v:p:w:k:"
 argument_list|)
 operator|)
 operator|!=
@@ -3192,7 +3192,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: limits [-C class|-P pid|-U user] [-eaSHBE] "
-literal|"[-bcdflmnstuvpw [val]] [[name=val ...] cmd]\n"
+literal|"[-bcdflmnstuvpwk [val]] [[name=val ...] cmd]\n"
 argument_list|)
 expr_stmt|;
 name|exit
