@@ -1148,6 +1148,11 @@ argument_list|,
 name|GPT_IR_OF2
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -1172,7 +1177,6 @@ operator|)
 operator|>>
 literal|32
 expr_stmt|;
-comment|/* 		 * TODO: setupt second compare reg with time which will save 		 * us in case correct one lost, f.e. if period to short and 		 * setup done later than counter reach target value. 		 */
 comment|/* Do not disturb, otherwise event will be lost */
 name|spinlock_enter
 argument_list|()
@@ -1357,11 +1361,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-comment|/* Sometime we not get staus bit when interrupt arrive.  Cache? */
-while|while
-condition|(
-operator|!
-operator|(
 name|status
 operator|=
 name|READ4
@@ -1370,9 +1369,18 @@ name|sc
 argument_list|,
 name|IMX_GPT_SR
 argument_list|)
-operator|)
-condition|)
-empty_stmt|;
+expr_stmt|;
+comment|/* 	* Clear interrupt status before invoking event callbacks.  The callback 	* often sets up a new one-shot timer event and if the interval is short 	* enough it can fire before we get out of this function.  If we cleared 	* at the bottom we'd miss the interrupt and hang until the clock wraps. 	*/
+name|WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_SR
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+comment|/* Handle one-shot timer events. */
 if|if
 condition|(
 name|status
@@ -1409,6 +1417,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Handle periodic timer events. */
 if|if
 condition|(
 name|status
@@ -1424,7 +1433,6 @@ name|et
 operator|.
 name|et_active
 condition|)
-block|{
 name|sc
 operator|->
 name|et
@@ -1443,7 +1451,14 @@ operator|.
 name|et_arg
 argument_list|)
 expr_stmt|;
-comment|/* Set expected value */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_period
+operator|!=
+literal|0
+condition|)
 name|WRITE4
 argument_list|(
 name|sc
@@ -1463,17 +1478,6 @@ name|sc_period
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* ACK */
-name|WRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|IMX_GPT_SR
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FILTER_HANDLED
