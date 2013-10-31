@@ -722,16 +722,18 @@ name|blank
 operator|==
 literal|0
 condition|)
-comment|/* 		 * Assigned directly, to avoid terminal reset in the 		 * teken_set_winsize. 		 */
+name|teken_set_winsize_noreset
+argument_list|(
+operator|&
 name|tm
 operator|->
 name|tm_emulator
-operator|.
-name|t_winsize
-operator|=
+argument_list|,
+operator|&
 name|r
 operator|.
 name|tr_end
+argument_list|)
 expr_stmt|;
 else|else
 name|teken_set_winsize
