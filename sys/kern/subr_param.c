@@ -1416,7 +1416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sysctl stringiying handler for kern.vm_guest.  */
+comment|/*  * Sysctl stringifying handler for kern.vm_guest.  */
 end_comment
 
 begin_function
