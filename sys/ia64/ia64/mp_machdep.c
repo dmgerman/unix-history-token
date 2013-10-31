@@ -992,6 +992,9 @@ name|idlethread
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pmap_invalidate_all
+argument_list|()
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
