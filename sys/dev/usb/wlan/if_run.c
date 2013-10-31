@@ -15696,6 +15696,11 @@ argument_list|,
 name|dmalen
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* don't free source buffer */
 break|break;
 block|}
 comment|/* copy aggregated frames to another mbuf */
@@ -15806,6 +15811,12 @@ operator|+
 literal|8
 expr_stmt|;
 block|}
+comment|/* make sure we free the source buffer, if any */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|RUN_LOCK
 argument_list|(
 name|sc
