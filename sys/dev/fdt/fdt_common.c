@@ -175,6 +175,18 @@ name|fdt_immr_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|fdt_ic_list
+name|fdt_ic_list_head
+init|=
+name|SLIST_HEAD_INITIALIZER
+argument_list|(
+name|fdt_ic_list_head
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|fdt_get_range
