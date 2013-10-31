@@ -504,7 +504,6 @@ literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -p: pin vcpu 'n' to host cpu 'pincpu + n'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
-literal|"       -I: present an ioapic to the guest\n"
 literal|"       -P: vmexit from the guest on pause\n"
 literal|"       -W: force virtio to use single-vector MSI\n"
 literal|"       -e: exit on unhandled I/O access\n"
@@ -2295,8 +2294,6 @@ name|gdb_port
 decl_stmt|,
 name|err
 decl_stmt|,
-name|ioapic
-decl_stmt|,
 name|bvmcons
 decl_stmt|;
 name|int
@@ -2334,10 +2331,6 @@ expr_stmt|;
 name|guest_ncpus
 operator|=
 literal|1
-expr_stmt|;
-name|ioapic
-operator|=
-literal|0
 expr_stmt|;
 name|memsize
 operator|=
@@ -2531,10 +2524,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-name|ioapic
-operator|=
-literal|1
-expr_stmt|;
+comment|/* 			 * The "-I" option was used to add an ioapic to the 			 * virtual machine. 			 * 			 * An ioapic is now provided unconditionally for each 			 * virtual machine and this option is now deprecated. 			 */
 break|break;
 case|case
 literal|'P'
@@ -2725,10 +2715,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ioapic
-condition|)
 name|ioapic_init
 argument_list|(
 literal|0
@@ -2779,8 +2765,6 @@ argument_list|(
 name|ctx
 argument_list|,
 name|guest_ncpus
-argument_list|,
-name|ioapic
 argument_list|)
 expr_stmt|;
 if|if
@@ -2795,8 +2779,6 @@ argument_list|(
 name|ctx
 argument_list|,
 name|guest_ncpus
-argument_list|,
-name|ioapic
 argument_list|)
 expr_stmt|;
 name|assert
