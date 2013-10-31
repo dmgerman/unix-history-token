@@ -1273,13 +1273,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|gic_c_write_4
-argument_list|(
-name|GICC_EOIR
-argument_list|,
-name|active_irq
-argument_list|)
-expr_stmt|;
 return|return
 name|active_irq
 return|;
@@ -1314,6 +1307,13 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|gic_c_write_4
+argument_list|(
+name|GICC_EOIR
+argument_list|,
+name|nb
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1325,13 +1325,6 @@ name|uintptr_t
 name|nb
 parameter_list|)
 block|{
-name|gic_c_write_4
-argument_list|(
-name|GICC_EOIR
-argument_list|,
-name|nb
-argument_list|)
-expr_stmt|;
 name|gic_d_write_4
 argument_list|(
 name|GICD_ISENABLER
