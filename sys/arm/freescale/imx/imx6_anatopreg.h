@@ -667,6 +667,28 @@ name|IMX6_ANALOG_DIGPROG
 value|0x260
 end_define
 
+begin_define
+define|#
+directive|define
+name|IMX6_ANALOG_DIGPROG_SL
+value|0x280
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6_ANALOG_DIGPROG_SOCTYPE_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6_ANALOG_DIGPROG_SOCTYPE_MASK
+define|\
+value|(0xff<< IMX6_ANALOG_DIGPROG_SOCTYPE_SHIFT)
+end_define
+
 begin_endif
 endif|#
 directive|endif
