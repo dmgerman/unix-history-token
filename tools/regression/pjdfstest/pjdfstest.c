@@ -319,8 +319,13 @@ name|ACTION_PATHCONF
 block|,
 name|ACTION_FPATHCONF
 block|,
+ifdef|#
+directive|ifdef
+name|HAS_LPATHCONF
 name|ACTION_LPATHCONF
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAS_FREEBSD_ACL
@@ -1096,6 +1101,9 @@ name|TYPE_NONE
 block|}
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HAS_LPATHCONF
 block|{
 literal|"lpathconf"
 block|,
@@ -1110,6 +1118,8 @@ name|TYPE_NONE
 block|}
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAS_FREEBSD_ACL
@@ -5280,9 +5290,14 @@ case|:
 case|case
 name|ACTION_FPATHCONF
 case|:
+ifdef|#
+directive|ifdef
+name|HAS_LPATHCONF
 case|case
 name|ACTION_LPATHCONF
 case|:
+endif|#
+directive|endif
 block|{
 name|long
 name|lrval
@@ -5368,6 +5383,9 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|HAS_LPATHCONF
 case|case
 name|ACTION_LPATHCONF
 case|:
@@ -5384,6 +5402,8 @@ name|name
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|abort
 argument_list|()
