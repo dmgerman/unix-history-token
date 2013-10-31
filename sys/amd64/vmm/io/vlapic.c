@@ -111,7 +111,7 @@ parameter_list|,
 name|format
 parameter_list|)
 define|\
-value|VMM_CTR0((vlapic)->vm, (vlapic)->vcpuid, format)
+value|VCPU_CTR0((vlapic)->vm, (vlapic)->vcpuid, format)
 end_define
 
 begin_define
@@ -126,7 +126,7 @@ parameter_list|,
 name|p1
 parameter_list|)
 define|\
-value|VMM_CTR1((vlapic)->vm, (vlapic)->vcpuid, format, p1)
+value|VCPU_CTR1((vlapic)->vm, (vlapic)->vcpuid, format, p1)
 end_define
 
 begin_define
