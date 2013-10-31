@@ -3554,6 +3554,14 @@ goto|goto
 name|close
 goto|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Merge local and remote bitmaps. 		 */
 name|activemap_merge
 argument_list|(
@@ -3572,14 +3580,6 @@ name|map
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now that we merged bitmaps from both nodes, flush it to the 		 * disk before we start to synchronize. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|res
-operator|->
-name|hr_amp_lock
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
