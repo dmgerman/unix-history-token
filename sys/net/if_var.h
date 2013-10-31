@@ -271,29 +271,14 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Structure defining a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  */
+comment|/*  * Structure defining a network interface.  *  * Size ILP32:  592 (approx)  *	 LP64: 1048 (approx)  */
 end_comment
 
 begin_struct
 struct|struct
 name|ifnet
 block|{
-name|void
-modifier|*
-name|if_softc
-decl_stmt|;
-comment|/* pointer to driver state */
-name|void
-modifier|*
-name|if_l2com
-decl_stmt|;
-comment|/* pointer to protocol bits */
-name|struct
-name|vnet
-modifier|*
-name|if_vnet
-decl_stmt|;
-comment|/* pointer to network stack instance */
+comment|/* General book keeping of interface lists. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ifnet
@@ -301,13 +286,42 @@ argument_list|)
 name|if_link
 expr_stmt|;
 comment|/* all struct ifnets are chained */
-name|char
-name|if_xname
-index|[
-name|IFNAMSIZ
-index|]
+name|LIST_ENTRY
+argument_list|(
+argument|ifnet
+argument_list|)
+name|if_clones
+expr_stmt|;
+comment|/* interfaces of a cloner */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ifg_list
+argument_list|)
+name|if_groups
+expr_stmt|;
+comment|/* linked list of groups per if */
+comment|/* protected by if_addr_lock */
+name|u_char
+name|if_alloctype
 decl_stmt|;
-comment|/* external name (name + unit) */
+comment|/* if_type at time of allocation */
+comment|/* Driver and protocol specific information that remains stable. */
+name|void
+modifier|*
+name|if_softc
+decl_stmt|;
+comment|/* pointer to driver state */
+name|void
+modifier|*
+name|if_llsoftc
+decl_stmt|;
+comment|/* link layer softc */
+name|void
+modifier|*
+name|if_l2com
+decl_stmt|;
+comment|/* pointer to protocol bits */
 specifier|const
 name|char
 modifier|*
@@ -318,32 +332,6 @@ name|int
 name|if_dunit
 decl_stmt|;
 comment|/* unit or IF_DUNIT_NONE */
-name|u_int
-name|if_refcount
-decl_stmt|;
-comment|/* reference count */
-name|struct
-name|ifaddrhead
-name|if_addrhead
-decl_stmt|;
-comment|/* linked list of addresses per if */
-comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use if_addr or ifaddr_byindex() instead. 		 */
-name|int
-name|if_pcount
-decl_stmt|;
-comment|/* number of promiscuous listeners */
-name|struct
-name|carp_if
-modifier|*
-name|if_carp
-decl_stmt|;
-comment|/* carp interface structure */
-name|struct
-name|bpf_if
-modifier|*
-name|if_bpf
-decl_stmt|;
-comment|/* packet filter structure */
 name|u_short
 name|if_index
 decl_stmt|;
@@ -352,12 +340,19 @@ name|short
 name|if_index_reserved
 decl_stmt|;
 comment|/* spare space to grow if_index */
-name|struct
-name|ifvlantrunk
-modifier|*
-name|if_vlantrunk
+name|char
+name|if_xname
+index|[
+name|IFNAMSIZ
+index|]
 decl_stmt|;
-comment|/* pointer to 802.1q data */
+comment|/* external name (name + unit) */
+name|char
+modifier|*
+name|if_description
+decl_stmt|;
+comment|/* interface description */
+comment|/* Variable fields that are touched by the stack and drivers. */
 name|int
 name|if_flags
 decl_stmt|;
@@ -379,10 +374,41 @@ name|size_t
 name|if_linkmiblen
 decl_stmt|;
 comment|/* length of above data */
+name|int
+name|if_drv_flags
+decl_stmt|;
+comment|/* driver-managed status flags */
+name|u_int
+name|if_refcount
+decl_stmt|;
+comment|/* reference count */
+name|struct
+name|ifaltq
+name|if_snd
+decl_stmt|;
+comment|/* output queue (includes altq) */
 name|struct
 name|if_data
 name|if_data
 decl_stmt|;
+comment|/* type information and statistics */
+name|struct
+name|task
+name|if_linktask
+decl_stmt|;
+comment|/* task for link change events */
+comment|/* Addresses of different protocol families assigned to this if. */
+name|struct
+name|rwlock
+name|if_addr_lock
+decl_stmt|;
+comment|/* lock to protect address lists */
+comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use if_addr or ifaddr_byindex() instead. 		 */
+name|struct
+name|ifaddrhead
+name|if_addrhead
+decl_stmt|;
+comment|/* linked list of addresses per if */
 name|struct
 name|ifmultihead
 name|if_multiaddrs
@@ -392,7 +418,93 @@ name|int
 name|if_amcount
 decl_stmt|;
 comment|/* number of all-multicast requests */
-comment|/* procedure handles */
+name|struct
+name|ifaddr
+modifier|*
+name|if_addr
+decl_stmt|;
+comment|/* pointer to link-level address */
+specifier|const
+name|u_int8_t
+modifier|*
+name|if_broadcastaddr
+decl_stmt|;
+comment|/* linklevel broadcast bytestring */
+name|struct
+name|rwlock
+name|if_afdata_lock
+decl_stmt|;
+name|void
+modifier|*
+name|if_afdata
+index|[
+name|AF_MAX
+index|]
+decl_stmt|;
+name|int
+name|if_afdata_initialized
+decl_stmt|;
+comment|/* Additional features hung off the interface. */
+name|u_int
+name|if_fib
+decl_stmt|;
+comment|/* interface FIB */
+name|struct
+name|vnet
+modifier|*
+name|if_vnet
+decl_stmt|;
+comment|/* pointer to network stack instance */
+name|struct
+name|vnet
+modifier|*
+name|if_home_vnet
+decl_stmt|;
+comment|/* where this ifnet originates from */
+name|struct
+name|ifvlantrunk
+modifier|*
+name|if_vlantrunk
+decl_stmt|;
+comment|/* pointer to 802.1q data */
+name|struct
+name|bpf_if
+modifier|*
+name|if_bpf
+decl_stmt|;
+comment|/* packet filter structure */
+name|int
+name|if_pcount
+decl_stmt|;
+comment|/* number of promiscuous listeners */
+name|void
+modifier|*
+name|if_bridge
+decl_stmt|;
+comment|/* bridge glue */
+name|void
+modifier|*
+name|if_lagg
+decl_stmt|;
+comment|/* lagg glue */
+name|void
+modifier|*
+name|if_pf_kif
+decl_stmt|;
+comment|/* pf glue */
+name|struct
+name|carp_if
+modifier|*
+name|if_carp
+decl_stmt|;
+comment|/* carp interface structure */
+name|struct
+name|label
+modifier|*
+name|if_label
+decl_stmt|;
+comment|/* interface MAC label */
+comment|/* Various procedures of the layer2 encapsulation and drivers. */
 name|int
 function_decl|(
 modifier|*
@@ -541,119 +653,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|struct
-name|vnet
-modifier|*
-name|if_home_vnet
-decl_stmt|;
-comment|/* where this ifnet originates from */
-name|struct
-name|ifaddr
-modifier|*
-name|if_addr
-decl_stmt|;
-comment|/* pointer to link-level address */
-name|void
-modifier|*
-name|if_llsoftc
-decl_stmt|;
-comment|/* link layer softc */
-name|int
-name|if_drv_flags
-decl_stmt|;
-comment|/* driver-managed status flags */
-name|struct
-name|ifaltq
-name|if_snd
-decl_stmt|;
-comment|/* output queue (includes altq) */
-specifier|const
-name|u_int8_t
-modifier|*
-name|if_broadcastaddr
-decl_stmt|;
-comment|/* linklevel broadcast bytestring */
-name|void
-modifier|*
-name|if_bridge
-decl_stmt|;
-comment|/* bridge glue */
-name|struct
-name|label
-modifier|*
-name|if_label
-decl_stmt|;
-comment|/* interface MAC label */
-comment|/* these are only used by IPv6 */
-name|void
-modifier|*
-name|if_unused
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|void
-modifier|*
-name|if_afdata
-index|[
-name|AF_MAX
-index|]
-decl_stmt|;
-name|int
-name|if_afdata_initialized
-decl_stmt|;
-name|struct
-name|rwlock
-name|if_afdata_lock
-decl_stmt|;
-name|struct
-name|task
-name|if_linktask
-decl_stmt|;
-comment|/* task for link change events */
-name|struct
-name|rwlock
-name|if_addr_lock
-decl_stmt|;
-comment|/* lock to protect address lists */
-name|LIST_ENTRY
-argument_list|(
-argument|ifnet
-argument_list|)
-name|if_clones
-expr_stmt|;
-comment|/* interfaces of a cloner */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ifg_list
-argument_list|)
-name|if_groups
-expr_stmt|;
-comment|/* linked list of groups per if */
-comment|/* protected by if_addr_lock */
-name|void
-modifier|*
-name|if_pf_kif
-decl_stmt|;
-name|void
-modifier|*
-name|if_lagg
-decl_stmt|;
-comment|/* lagg glue */
-name|char
-modifier|*
-name|if_description
-decl_stmt|;
-comment|/* interface description */
-name|u_int
-name|if_fib
-decl_stmt|;
-comment|/* interface FIB */
-name|u_char
-name|if_alloctype
-decl_stmt|;
-comment|/* if_type at time of allocation */
+comment|/* Stuff that's only temporary and doesn't belong here. */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
@@ -669,6 +669,13 @@ name|int
 name|if_ispare
 index|[
 literal|4
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|if_unused
+index|[
+literal|2
 index|]
 decl_stmt|;
 name|void
