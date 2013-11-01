@@ -10657,12 +10657,6 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
-operator||
-operator|(
-name|NETMAP_LOCKED_ENTER
-operator||
-name|NETMAP_LOCKED_EXIT
-operator|)
 argument_list|,
 operator|&
 name|rx_npkts
@@ -11723,12 +11717,6 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|0
-operator||
-operator|(
-name|NETMAP_LOCKED_ENTER
-operator||
-name|NETMAP_LOCKED_EXIT
-operator|)
 argument_list|)
 condition|)
 return|return;

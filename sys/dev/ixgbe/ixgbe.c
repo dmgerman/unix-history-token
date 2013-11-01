@@ -16312,7 +16312,7 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* 		 * In netmap mode, all the work is done in the context 		 * of the client thread. Interrupt handlers only wake up 		 * clients, which may be sleeping on individual rings 		 * or on a global resource for all rings. 		 * To implement tx interrupt mitigation, we wake up the client 		 * thread roughly every half ring, even if the NIC interrupts 		 * more frequently. This is implemented as follows: 		 * - ixgbe_txsync() sets kring->nr_kflags with the index of 		 *   the slot that should wake up the thread (nkr_num_slots 		 *   means the user thread should not be woken up); 		 * - the driver ignores tx interrupts unless netmap_mitigate=0 		 *   or the slot has the DD bit set. 		 * 		 * When the driver has separate locks, we need to 		 * release and re-acquire txlock to avoid deadlocks. 		 * XXX see if we can find a better way. 		 */
+comment|/* 		 * In netmap mode, all the work is done in the context 		 * of the client thread. Interrupt handlers only wake up 		 * clients, which may be sleeping on individual rings 		 * or on a global resource for all rings. 		 * To implement tx interrupt mitigation, we wake up the client 		 * thread roughly every half ring, even if the NIC interrupts 		 * more frequently. This is implemented as follows: 		 * - ixgbe_txsync() sets kring->nr_kflags with the index of 		 *   the slot that should wake up the thread (nkr_num_slots 		 *   means the user thread should not be woken up); 		 * - the driver ignores tx interrupts unless netmap_mitigate=0 		 *   or the slot has the DD bit set. 		 */
 if|if
 condition|(
 operator|!
@@ -16349,12 +16349,6 @@ argument_list|,
 name|txr
 operator|->
 name|me
-operator||
-operator|(
-name|NETMAP_LOCKED_ENTER
-operator||
-name|NETMAP_LOCKED_EXIT
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -19743,18 +19737,23 @@ argument_list|,
 name|rxr
 operator|->
 name|me
-operator||
-name|NETMAP_LOCKED_ENTER
 argument_list|,
 operator|&
 name|processed
 argument_list|)
 condition|)
+block|{
+name|IXGBE_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */

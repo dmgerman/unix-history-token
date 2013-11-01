@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011-2013 Matteo Landi, Luigi Rizzo. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  *  * Definitions of constants and the structures used by the netmap  * framework, for the part visible to both kernel and userspace.  * Detailed info on netmap is available with "man netmap" or at  *   *	http://info.iet.unipi.it/~luigi/netmap/  */
+comment|/*  * $FreeBSD$  *  * Definitions of constants and the structures used by the netmap  * framework, for the part visible to both kernel and userspace.  * Detailed info on netmap is available with "man netmap" or at  *   *	http://info.iet.unipi.it/~luigi/netmap/  *  * This API is also used to communicate with the VALE software switch  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,11 @@ name|_NET_NETMAP_H_
 end_define
 
 begin_comment
-comment|/*  * --- Netmap data structures ---  *  * The data structures used by netmap are shown below. Those in  * capital letters are in an mmapp()ed area shared with userspace,  * while others are private to the kernel.  * Shared structures do not contain pointers but only memory  * offsets, so that addressing is portable between kernel and userspace.    softc +----------------+ | standard fields| | if_pspare[0] ----------+ +----------------+       |                          | +----------------+<------+ |(netmap_adapter)| |                |                             netmap_kring | tx_rings *--------------------------------->+---------------+ |                |       netmap_kring         | ring    *---------. | rx_rings *--------->+---------------+       | nr_hwcur      |   | +----------------+    | ring    *--------.    | nr_hwavail    |   V                       | nr_hwcur      |  |    | selinfo       |   |                       | nr_hwavail    |  |    +---------------+   .                       | selinfo       |  |    |     ...       |   .                       +---------------+  |    |(ntx+1 entries)|                       |    ....       |  |    |               |                       |(nrx+1 entries)|  |    +---------------+                       |               |  |    KERNEL             +---------------+  |                                          |   ====================================================================                                          |    USERSPACE                             |      NETMAP_RING                                          +---->+-------------+                                              / | cur         |    NETMAP_IF  (nifp, one per file desc.)    /  | avail       |     +---------------+                      /   | buf_ofs     |     | ni_tx_rings   |                     /    +=============+     | ni_rx_rings   |                    /     | buf_idx     | slot[0]     |               |                   /      | len, flags  |     |               |                  /       +-------------+     +===============+                 /        | buf_idx     | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | len, flags  |     | txring_ofs[1] |                          +-------------+   (num_rings+1 entries)                     (nr_num_slots entries)     | txring_ofs[n] |                          | buf_idx     | slot[n-1]     +---------------+                          | len, flags  |     | rxring_ofs[0] |                          +-------------+     | rxring_ofs[1] |   (num_rings+1 entries)     | txring_ofs[n] |     +---------------+   * The private descriptor ('softc' or 'adapter') of each interface  * is extended with a "struct netmap_adapter" containing netmap-related  * info (see description in dev/netmap/netmap_kernel.h.  * Among other things, tx_rings and rx_rings point to the arrays of  * "struct netmap_kring" which in turn reache the various  * "struct netmap_ring", shared with userspace.   * The NETMAP_RING is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer, its length and some flags.  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index*NETMAP_BUF_SIZE  * In the kernel, buffers do not necessarily need to be contiguous,  * and the virtual and physical addresses are derived through  * a lookup table.  *  * struct netmap_slot:  *  * buf_idx	is the index of the buffer associated to the slot.  * len		is the length of the payload  * NS_BUF_CHANGED	must be set whenever userspace wants  *		to change buf_idx (it might be necessary to  *		reprogram the NIC slot)  * NS_REPORT	must be set if we want the NIC to generate an interrupt  *		when this slot is used. Leaving it to 0 improves  *		performance.  * NS_FORWARD	if set on a receive ring, and the device is in  *		transparent mode, buffers released with the flag set  *		will be forwarded to the 'other' side (host stack  *		or NIC, respectively) on the next select() or ioctl()  *  *		The following will be supported from NETMAP_API = 5  * NS_NO_LEARN	on a VALE switch, do not 'learn' the source port for  *		this packet.  * NS_INDIRECT	the netmap buffer contains a 64-bit pointer to  *		the actual userspace buffer. This may be useful  *		to reduce copies in a VM environment.  * NS_MOREFRAG	Part of a multi-segment frame. The last (or only)  *		segment must not have this flag.  * NS_PORT_MASK	the high 8 bits of the flag, if not zero, indicate the  *		destination port for the VALE switch, overriding  *		the lookup table.  */
+comment|/*  * --- Netmap data structures ---  *  * The userspace data structures used by netmap are shown below.  * They are allocated by the kernel and mmap()ed by userspace threads.  * Pointers are implemented as memory offsets or indexes,  * so that they can be easily dereferenced in kernel and userspace.     KERNEL (opaque, obviously)    ====================================================================                                          |    USERSPACE                             |      struct netmap_ring                                          +---->+--------------+                                              / | cur          |    struct netmap_if (nifp, 1 per fd)        /  | avail        |     +---------------+                      /   | buf_ofs      |     | ni_tx_rings   |                     /    +==============+     | ni_rx_rings   |                    /     | buf_idx, len | slot[0]     |               |                   /      | flags, ptr   |     |               |                  /       +--------------+     +===============+                 /        | buf_idx, len | slot[1]     | txring_ofs[0] | (rel.to nifp)--'         | flags, ptr   |     | txring_ofs[1] |                          +--------------+   (ni_tx_rings+1 entries)                     (num_slots entries)     | txring_ofs[t] |                          | buf_idx, len | slot[n-1]     +---------------+                          | flags, ptr   |     | rxring_ofs[0] |                          +--------------+     | rxring_ofs[1] |   (ni_rx_rings+1 entries)     | rxring_ofs[r] |     +---------------+   * For each "interface" (NIC, host stack, VALE switch port) attached to a  * file descriptor, the mmap()ed region contains a (logically readonly)  * struct netmap_if pointing to struct netmap_ring's.  * There is one netmap_ring per physical NIC ring, plus one tx/rx ring  * pair attached to the host stack (this pair is unused for VALE ports).  *  * All physical/host stack ports share the same memory region,  * so that zero-copy can be implemented between them.  * VALE switch ports instead have separate memory regions.  *  * The netmap_ring is the userspace-visible replica of the NIC ring.  * Each slot has the index of a buffer (MTU-sized and residing in the  * mmapped region), its length and some flags. An extra 64-bit pointer  * is provided for user-supplied buffers in the tx path.  *  * In user space, the buffer address is computed as  *	(char *)ring + buf_ofs + index*NETMAP_BUF_SIZE  */
+end_comment
+
+begin_comment
+comment|/*  * struct netmap_slot is a buffer descriptor  *  * buf_idx	the index of the buffer associated to the slot.  * len		the length of the payload  * flags	control operation on the slot, as defined below  *  * NS_BUF_CHANGED	must be set whenever userspace wants  *		to change buf_idx (it might be necessary to  *		reprogram the NIC)  *  * NS_REPORT	must be set if we want the NIC to generate an interrupt  *		when this slot is used. Leaving it to 0 improves  *		performance.  *  * NS_FORWARD	if set on a receive ring, and the device is in  *		transparent mode, buffers released with the flag set  *		will be forwarded to the 'other' side (host stack  *		or NIC, respectively) on the next select() or ioctl()  *  * NS_NO_LEARN	on a VALE switch, do not 'learn' the source port for  *		this packet.  *  * NS_INDIRECT	(tx rings only) data is in a userspace buffer pointed  *		by the ptr field in the slot.  *  * NS_MOREFRAG	Part of a multi-segment frame. The last (or only)  *		segment must not have this flag.  *		Only supported on VALE ports.  *  * NS_PORT_MASK	the high 8 bits of the flag, if not zero, indicate the  *		destination port for the VALE switch, overriding  *		the lookup table.  */
 end_comment
 
 begin_struct
@@ -34,7 +38,7 @@ comment|/* buffer index */
 name|uint16_t
 name|len
 decl_stmt|;
-comment|/* packet length, to be copied to/from the hw ring */
+comment|/* packet length */
 name|uint16_t
 name|flags
 decl_stmt|;
@@ -43,7 +47,7 @@ define|#
 directive|define
 name|NS_BUF_CHANGED
 value|0x0001
-comment|/* must resync the map, buffer changed */
+comment|/* buf_idx changed */
 define|#
 directive|define
 name|NS_REPORT
@@ -74,19 +78,31 @@ define|#
 directive|define
 name|NS_PORT_MASK
 value|(0xff<< NS_PORT_SHIFT)
+comment|/* 				 * in rx rings, the high 8 bits 				 *  are the number of fragments. 				 */
+define|#
+directive|define
+name|NS_RFRAGS
+parameter_list|(
+name|_slot
+parameter_list|)
+value|( ((_slot)->flags>> 8)& 0xff)
+name|uint64_t
+name|ptr
+decl_stmt|;
+comment|/* pointer for indirect buffers */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Netmap representation of a TX or RX ring (also known as "queue").  * This is a queue implemented as a fixed-size circular array.  * At the software level, two fields are important: avail and cur.  *  * In TX rings:  *	avail	indicates the number of slots available for transmission.  *		It is updated by the kernel after every netmap system call.  *		It MUST BE decremented by the application when it appends a  *		packet.  *	cur	indicates the slot to use for the next packet  *		to send (i.e. the "tail" of the queue).  *		It MUST BE incremented by the application before  *		netmap system calls to reflect the number of newly  *		sent packets.  *		It is checked by the kernel on netmap system calls  *		(normally unmodified by the kernel unless invalid).  *  *   The kernel side of netmap uses two additional fields in its own  *   private ring structure, netmap_kring:  *	nr_hwcur is a copy of nr_cur on an NIOCTXSYNC.  *	nr_hwavail is the number of slots known as available by the  *		hardware. It is updated on an INTR (inc by the  *		number of packets sent) and on a NIOCTXSYNC  *		(decrease by nr_cur - nr_hwcur)  *		A special case, nr_hwavail is -1 if the transmit  *		side is idle (no pending transmits).  *  * In RX rings:  *	avail	is the number of packets available (possibly 0).  *		It MUST BE decremented by the application when it consumes  *		a packet, and it is updated to nr_hwavail on a NIOCRXSYNC  *	cur	indicates the first slot that contains a packet not  *		processed yet (the "head" of the queue).  *		It MUST BE incremented by the software when it consumes  *		a packet.  *	reserved	indicates the number of buffers before 'cur'  *		that the application has still in use. Normally 0,  *		it MUST BE incremented by the application when it  *		does not return the buffer immediately, and decremented  *		when the buffer is finally freed.  *  *   The kernel side of netmap uses two additional fields in the kring:  *	nr_hwcur is a copy of nr_cur on an NIOCRXSYNC  *	nr_hwavail is the number of packets available. It is updated  *		on INTR (inc by the number of new packets arrived)  *		and on NIOCRXSYNC (decreased by nr_cur - nr_hwcur).  *  * DATA OWNERSHIP/LOCKING:  *	The netmap_ring is owned by the user program and it is only  *	accessed or modified in the upper half of the kernel during  *	a system call.  *  *	The netmap_kring is only modified by the upper half of the kernel.  *  * FLAGS  *	NR_TIMESTAMP	updates the 'ts' field on each syscall. This is  *			a global timestamp for all packets.  *	NR_RX_TSTMP	if set, the last 64 byte in each buffer will  *			contain a timestamp for the frame supplied by  *			the hardware (if supported)  *	NR_FORWARD	if set, the NS_FORWARD flag in each slot of the  *			RX ring is checked, and if set the packet is  *			passed to the other side (host stack or device,  *			respectively). This permits bpf-like behaviour  *			or transparency for selected packets.  */
+comment|/*  * struct netmap_ring  *  * Netmap representation of a TX or RX ring (also known as "queue").  * This is a queue implemented as a fixed-size circular array.  * At the software level, two fields are important: avail and cur.  *  * In TX rings:  *  *	avail	tells how many slots are available for transmission.  *		It is updated by the kernel in each netmap system call.  *		It MUST BE decremented by the user when it  *		adds a new packet to send.  *  *	cur	indicates the slot to use for the next packet  *		to send (i.e. the "tail" of the queue).  *		It MUST BE incremented by the user before  *		netmap system calls to reflect the number of newly  *		sent packets.  *		It is checked by the kernel on netmap system calls  *		(normally unmodified by the kernel unless invalid).  *  * In RX rings:  *  *	avail	is the number of packets available (possibly 0).  *		It is updated by the kernel in each netmap system call.  *		It MUST BE decremented by the user when it  *		consumes a packet.  *  *	cur	indicates the first slot that contains a packet not  *		yet processed (the "head" of the queue).  *		It MUST BE incremented by the user when it consumes  *		a packet.  *  *	reserved	indicates the number of buffers before 'cur'  *		that the user has not released yet. Normally 0,  *		it MUST BE incremented by the user when it  *		does not return the buffer immediately, and decremented  *		when the buffer is finally freed.  *  *  * DATA OWNERSHIP/LOCKING:  *	The netmap_ring, all slots, and buffers in the range  *	[reserved-cur , cur+avail[ are owned by the user program,  *	and the kernel only touches them in the same thread context  *	during a system call.  *	Other buffers are reserved for use by the NIC's DMA engines.  *  * FLAGS  *	NR_TIMESTAMP	updates the 'ts' field on each syscall. This is  *			a global timestamp for all packets.  *	NR_RX_TSTMP	if set, the last 64 byte in each buffer will  *			contain a timestamp for the frame supplied by  *			the hardware (if supported)  *	NR_FORWARD	if set, the NS_FORWARD flag in each slot of the  *			RX ring is checked, and if set the packet is  *			passed to the other side (host stack or device,  *			respectively). This permits bpf-like behaviour  *			or transparency for selected packets.  */
 end_comment
 
 begin_struct
 struct|struct
 name|netmap_ring
 block|{
-comment|/* 	 * nr_buf_base_ofs is meant to be used through macros. 	 * It contains the offset of the buffer region from this 	 * descriptor. 	 */
+comment|/* 	 * buf_ofs is meant to be used through macros. 	 * It contains the offset of the buffer region from this 	 * descriptor. 	 */
 specifier|const
 name|ssize_t
 name|buf_ofs
@@ -149,7 +165,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Netmap representation of an interface and its queue(s).  * There is one netmap_if for each file descriptor on which we want  * to select/poll.  We assume that on each interface has the same number  * of receive and transmit queues.  * select/poll operates on one or all pairs depending on the value of  * nmr_queueid passed on the ioctl.  */
+comment|/*  * Netmap representation of an interface and its queue(s).  * This is initialized by the kernel when binding a file  * descriptor to a port, and should be considered as readonly  * by user programs. The kernel never uses it.  *  * There is one netmap_if for each file descriptor on which we want  * to select/poll.  * select/poll operates on one or all pairs depending on the value of  * nmr_queueid passed on the ioctl.  */
 end_comment
 
 begin_struct
@@ -164,21 +180,31 @@ index|]
 decl_stmt|;
 comment|/* name of the interface. */
 specifier|const
-name|u_int
+name|uint32_t
 name|ni_version
 decl_stmt|;
 comment|/* API version, currently unused */
 specifier|const
-name|u_int
+name|uint32_t
+name|ni_flags
+decl_stmt|;
+comment|/* properties */
+define|#
+directive|define
+name|NI_PRIV_MEM
+value|0x1
+comment|/* private memory region */
+specifier|const
+name|uint32_t
 name|ni_rx_rings
 decl_stmt|;
 comment|/* number of rx rings */
 specifier|const
-name|u_int
+name|uint32_t
 name|ni_tx_rings
 decl_stmt|;
-comment|/* if zero, same as ni_rx_rings */
-comment|/* 	 * The following array contains the offset of each netmap ring 	 * from this structure. The first ni_tx_queues+1 entries refer 	 * to the tx rings, the next ni_rx_queues+1 refer to the rx rings 	 * (the last entry in each block refers to the host stack rings). 	 * The area is filled up by the kernel on NIOCREG, 	 * and then only read by userspace code. 	 */
+comment|/* number of tx rings */
+comment|/* 	 * The following array contains the offset of each netmap ring 	 * from this structure. The first ni_tx_rings+1 entries refer 	 * to the tx rings, the next ni_rx_rings+1 refer to the rx rings 	 * (the last entry in each block refers to the host stack rings). 	 * The area is filled up by the kernel on NIOCREGIF, 	 * and then only read by userspace code. 	 */
 specifier|const
 name|ssize_t
 name|ring_ofs
@@ -197,7 +223,7 @@ name|NIOCREGIF
 end_ifndef
 
 begin_comment
-comment|/*  * ioctl names and related fields  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *  * NIOCREGIF takes an interface name within a struct ifreq,  *	and activates netmap mode on the interface (if possible).  *  *	For vale ports, starting with NETMAP_API = 5,  *	nr_tx_rings and nr_rx_rings specify how many software rings  *	are created (0 means 1).  *  *	NIOCREGIF is also used to attach a NIC to a VALE switch.  *	In this case the name is vale*:ifname, and "nr_cmd"  *	is set to 'NETMAP_BDG_ATTACH' or 'NETMAP_BDG_DETACH'.  *	nr_ringid specifies which rings should be attached, 0 means all,  *	NETMAP_HW_RING + n means only the n-th ring.  *	The process can terminate after the interface has been attached.  *  * NIOCUNREGIF unregisters the interface associated to the fd.  *	this is deprecated and will go away.  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid  *  * NETMAP_API is the API version.  */
+comment|/*  * ioctl names and related fields  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *	The info returned is only advisory and may change before  *	the interface is bound to a file descriptor.  *  * NIOCREGIF takes an interface name within a struct ifreq,  *	and activates netmap mode on the interface (if possible).  *  *   nr_name	is the name of the interface  *  *   nr_tx_slots, nr_tx_slots, nr_tx_rings, nr_rx_rings  *	indicate the configuration of the port on return.  *  *	On input, non-zero values for nr_tx_rings, nr_tx_slots and the  *	rx counterparts may be used to reconfigure the port according  *	to the requested values, but this is not guaranteed.  *	The actual values are returned on completion of the ioctl().  *  *   nr_ringid  *	indicates how rings should be bound to the file descriptors.  *	The default (0) means all physical rings of a NIC are bound.  *	NETMAP_HW_RING plus a ring number lets you bind just  *	a single ring pair.  *	NETMAP_SW_RING binds only the host tx/rx rings  *	NETMAP_NO_TX_POLL prevents select()/poll() from pushing  *	out packets on the tx ring unless POLLOUT is specified.  *  *	NETMAP_PRIV_MEM is a return value used to indicate that  *	this ring is in a private memory region hence buffer  *	swapping cannot be used  *	  *   nr_cmd	is used to configure NICs attached to a VALE switch,  *	or to dump the configuration of a VALE switch.  *	  *	nr_cmd = NETMAP_BDG_ATTACH and nr_name = vale*:ifname  *	attaches the NIC to the switch, with nr_ringid specifying  *	which rings to use  *  *	nr_cmd = NETMAP_BDG_DETACH and nr_name = vale*:ifname  *	disconnects a previously attached NIC  *  *	nr_cmd = NETMAP_BDG_LIST is used to list the configuration  *	of VALE switches, with additional arguments.  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid  *  * NETMAP_API is the API version.  */
 end_comment
 
 begin_comment
@@ -221,7 +247,7 @@ comment|/* API version */
 define|#
 directive|define
 name|NETMAP_API
-value|4
+value|5
 comment|/* current version */
 name|uint32_t
 name|nr_offset
@@ -251,6 +277,11 @@ name|uint16_t
 name|nr_ringid
 decl_stmt|;
 comment|/* ring(s) we care about */
+define|#
+directive|define
+name|NETMAP_PRIV_MEM
+value|0x8000
+comment|/* rings use private memory */
 define|#
 directive|define
 name|NETMAP_HW_RING
@@ -349,7 +380,7 @@ value|_IO('i', 147)
 end_define
 
 begin_comment
-comment|/* interface unregister */
+comment|/* deprecated. Was interface unregister */
 end_comment
 
 begin_define

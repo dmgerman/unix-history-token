@@ -734,6 +734,60 @@ begin_comment
 comment|/* UDP port for the protocol */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NIC_PARAVIRT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|E1000_PARA_SUBDEV
+value|0x1101
+end_define
+
+begin_comment
+comment|/* special id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CSBAL
+value|0x02830
+end_define
+
+begin_comment
+comment|/* csb phys. addr. low */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CSBAH
+value|0x02834
+end_define
+
+begin_comment
+comment|/* csb phys. addr. hi */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/paravirt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NIC_PARAVIRT */
+end_comment
+
 begin_comment
 comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
 end_comment
@@ -1179,6 +1233,75 @@ decl_stmt|;
 name|boolean_t
 name|in_detach
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NIC_SEND_COMBINING
+comment|/* 0 = idle; 1xxxx int-pending; 3xxxx int + d pending + tdt */
+define|#
+directive|define
+name|MIT_PENDING_INT
+value|0x10000
+comment|/* pending interrupt */
+define|#
+directive|define
+name|MIT_PENDING_TDT
+value|0x30000
+comment|/* both intr and tdt write are pending */
+name|uint32_t
+name|shadow_tdt
+decl_stmt|;
+name|uint32_t
+name|sc_enable
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NIC_SEND_COMBINING */
+ifdef|#
+directive|ifdef
+name|BATCH_DISPATCH
+name|uint32_t
+name|batch_enable
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* BATCH_DISPATCH */
+ifdef|#
+directive|ifdef
+name|NIC_PARAVIRT
+name|struct
+name|em_dma_alloc
+name|csb_mem
+decl_stmt|;
+comment|/* phys address */
+name|struct
+name|paravirt_csb
+modifier|*
+name|csb
+decl_stmt|;
+comment|/* virtual addr */
+name|uint32_t
+name|rx_retries
+decl_stmt|;
+comment|/* optimize rx loop */
+name|uint32_t
+name|tdt_csb_count
+decl_stmt|;
+comment|// XXX stat
+name|uint32_t
+name|tdt_reg_count
+decl_stmt|;
+comment|// XXX stat
+name|uint32_t
+name|tdt_int_count
+decl_stmt|;
+comment|// XXX stat
+name|uint32_t
+name|guest_need_kick_count
+decl_stmt|;
+comment|// XXX stat
+endif|#
+directive|endif
+comment|/* NIC_PARAVIRT */
 name|struct
 name|e1000_hw_stats
 name|stats
