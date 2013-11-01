@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * Copyright (c) 2012 Konstantin Belousov<kib@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2013 The FreeBSD Foundation  * Copyright (c) 2013 David E. O'Brien<obrien@NUXI.org>  * Copyright (c) 2012 Konstantin Belousov<kib@FreeBSD.org>  * All rights reserved.  *  * Portions of this software were developed by Konstantin Belousov  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -158,52 +158,57 @@ specifier|inline
 name|int
 name|ivy_rng_store
 parameter_list|(
-name|uint64_t
+name|long
 modifier|*
-name|tmp
+name|buf
 parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
 name|__GNUCLIKE_ASM
-name|uint32_t
-name|count
+name|long
+name|tmp
 decl_stmt|;
+name|int
+name|retry
+decl_stmt|;
+name|retry
+operator|=
+name|RETRY_COUNT
+expr_stmt|;
 asm|__asm __volatile(
-ifdef|#
-directive|ifdef
-name|__amd64__
-literal|"rdrand\t%%rax\n\t"
-literal|"jnc\t1f\n\t"
-literal|"movq\t%%rax,%1\n\t"
-literal|"movl\t$8,%%eax\n"
-else|#
-directive|else
-comment|/* i386 */
-literal|"rdrand\t%%eax\n\t"
-literal|"jnc\t1f\n\t"
-literal|"movl\t%%eax,%1\n\t"
-literal|"movl\t$4,%%eax\n"
-endif|#
-directive|endif
-literal|"1:\n"
-comment|/* %eax is cleared by processor on failure */
+literal|"1:\n\t"
+literal|"rdrand	%2\n\t"
+comment|/* read randomness into tmp */
+literal|"jb		2f\n\t"
+comment|/* CF is set on success, exit retry loop */
+literal|"dec	%0\n\t"
+comment|/* otherwise, retry-- */
+literal|"jne	1b\n\t"
+comment|/* and loop if retries are not exhausted */
+literal|"jmp	3f\n"
+comment|/* failure, retry is 0, used as return value */
+literal|"2:\n\t"
+literal|"mov	%2,%1\n\t"
+comment|/* *buf = tmp */
+literal|"3:"
 operator|:
-literal|"=a"
+literal|"+q"
 operator|(
-name|count
+name|retry
 operator|)
 operator|,
-literal|"=g"
+literal|"=m"
 operator|(
 operator|*
+name|buf
+operator|)
+operator|,
+literal|"=q"
+operator|(
 name|tmp
 operator|)
 operator|:
-literal|"a"
-operator|(
-literal|0
-operator|)
 operator|:
 literal|"cc"
 block|)
@@ -213,7 +218,7 @@ end_function
 begin_return
 return|return
 operator|(
-name|count
+name|retry
 operator|)
 return|;
 end_return
@@ -253,26 +258,37 @@ name|int
 name|c
 parameter_list|)
 block|{
-name|uint8_t
+name|long
 modifier|*
 name|b
 decl_stmt|;
 name|int
 name|count
-decl_stmt|,
-name|ret
-decl_stmt|,
-name|retry
 decl_stmt|;
-name|uint64_t
-name|tmp
-decl_stmt|;
-name|b
-operator|=
-name|buf
+name|KASSERT
+argument_list|(
+name|c
+operator|%
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"partial read %d"
+operator|,
+name|c
+operator|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|b
+operator|=
+name|buf
+operator|,
 name|count
 operator|=
 name|c
@@ -283,70 +299,25 @@ literal|0
 condition|;
 name|count
 operator|-=
-name|ret
-control|)
-block|{
-for|for
-control|(
-name|retry
-operator|=
-literal|0
-init|;
-name|retry
-operator|<
-name|RETRY_COUNT
-condition|;
-name|retry
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|,
+name|b
 operator|++
 control|)
 block|{
-name|ret
-operator|=
+if|if
+condition|(
 name|ivy_rng_store
 argument_list|(
-operator|&
-name|tmp
+name|b
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|ret
 operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|ret
-operator|>
-name|count
-condition|)
-name|ret
-operator|=
-name|count
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|b
-argument_list|,
-operator|&
-name|tmp
-argument_list|,
-name|ret
-argument_list|)
-expr_stmt|;
-name|b
-operator|+=
-name|ret
-expr_stmt|;
 block|}
 return|return
 operator|(
