@@ -1737,6 +1737,256 @@ value|0x78
 end_define
 
 begin_comment
+comment|/* Queued Invalidation Descriptors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_SZ_SHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* Shift for descriptor count 					   to ring offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_SZ
+value|(1<< DMAR_IQ_DESCR_SZ_SHIFT)
+end_define
+
+begin_comment
+comment|/* Descriptor size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_INV
+value|0x1
+end_define
+
+begin_comment
+comment|/* Context-cache Invalidate 					   Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_GLOB
+value|(0x1<< 4)
+end_define
+
+begin_comment
+comment|/* Granularity: Global */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_DOM
+value|(0x2<< 4)
+end_define
+
+begin_comment
+comment|/* Granularity: Domain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_DEV
+value|(0x3<< 4)
+end_define
+
+begin_comment
+comment|/* Granularity: Device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_DID
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint32_t)(x))<< 16)
+end_define
+
+begin_comment
+comment|/* Domain Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_SRC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)(x))<< 32)
+end_define
+
+begin_comment
+comment|/* Source Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_CTX_FM
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)(x))<< 48)
+end_define
+
+begin_comment
+comment|/* Function Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_INV
+value|0x2
+end_define
+
+begin_comment
+comment|/* IOTLB Invalidate Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_GLOB
+value|(0x1<< 4)
+end_define
+
+begin_comment
+comment|/* Granularity: Global */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_DOM
+value|(0x2<< 4)
+end_define
+
+begin_comment
+comment|/* Granularity: Domain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_PAGE
+value|(0x3<< 4)
+end_define
+
+begin_comment
+comment|/* Granularity: Page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_DW
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Drain Writes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_DR
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* Drain Reads */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_IOTLB_DID
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint32_t)(x))<< 16)
+end_define
+
+begin_comment
+comment|/* Domain Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_WAIT_ID
+value|0x5
+end_define
+
+begin_comment
+comment|/* Invalidation Wait Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_WAIT_IF
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Interrupt Flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_WAIT_SW
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Status Write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_WAIT_FN
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Fence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_WAIT_SD
+parameter_list|(
+name|x
+parameter_list|)
+value|(((uint64_t)(x))<< 32)
+end_define
+
+begin_comment
+comment|/* Status Data */
+end_comment
+
+begin_comment
 comment|/* Invalidation Queue Head register */
 end_comment
 
@@ -1746,6 +1996,17 @@ directive|define
 name|DMAR_IQH_REG
 value|0x80
 end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQH_MASK
+value|0x7fff0
+end_define
+
+begin_comment
+comment|/* Next cmd index mask */
+end_comment
 
 begin_comment
 comment|/* Invalidation Queue Tail register */
@@ -1758,6 +2019,13 @@ name|DMAR_IQT_REG
 value|0x88
 end_define
 
+begin_define
+define|#
+directive|define
+name|DMAR_IQT_MASK
+value|0x7fff0
+end_define
+
 begin_comment
 comment|/* Invalidation Queue Address register */
 end_comment
@@ -1767,6 +2035,46 @@ define|#
 directive|define
 name|DMAR_IQA_REG
 value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQA_IQA_MASK
+value|0xfffffffffffff000
+end_define
+
+begin_comment
+comment|/* Invalidation Queue 						      Base Address mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQA_QS_MASK
+value|0x7
+end_define
+
+begin_comment
+comment|/* Queue Size in pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQA_QS_MAX
+value|0x7
+end_define
+
+begin_comment
+comment|/* Max Queue size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQA_QS_DEF
+value|3
 end_define
 
 begin_comment
