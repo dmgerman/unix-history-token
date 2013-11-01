@@ -869,6 +869,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bus_dma_tag_t
+name|pci_get_dma_tag
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/** Restore the config register state.  The state must be previously  * saved with pci_cfg_save.  However, the pci bus driver takes care of  * that.  This function will also return the device to PCI_POWERSTATE_D0  * if it is currently in a lower power mode.  */
 end_comment
