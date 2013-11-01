@@ -701,7 +701,7 @@ name|AF_INET
 end_ifdef
 
 begin_comment
-comment|/*  * called by in_ifscrub to remove entry from the table when  * the interface goes away  */
+comment|/*  * called by in_scrubprefix() to remove entry from the table when  * the interface goes away  */
 end_comment
 
 begin_function

@@ -3185,13 +3185,9 @@ expr_stmt|;
 name|IN_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
-comment|/* 				 * in_ifscrub kills the interface route. 				 */
-name|in_ifscrub
+comment|/* 				 * in_scrubprefix() kills the interface route. 				 */
+name|in_scrubprefix
 argument_list|(
-name|ia
-operator|->
-name|ia_ifp
-argument_list|,
 name|ia
 argument_list|,
 literal|0

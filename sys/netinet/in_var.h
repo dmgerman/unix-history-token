@@ -1618,23 +1618,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|in_ifscrub
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|in_ifaddr
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|mbuf
 modifier|*

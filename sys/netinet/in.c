@@ -2152,10 +2152,8 @@ name|sin_len
 condition|)
 block|{
 comment|/* 			 * QL: XXX 			 * Need to scrub the prefix here in case 			 * the issued command is SIOCAIFADDR with 			 * the same address, but with a different 			 * prefix length. And if the prefix length 			 * is the same as before, then the call is 			 * un-necessarily executed here. 			 */
-name|in_ifscrub
+name|in_scrubprefix
 argument_list|(
-name|ifp
-argument_list|,
 name|ia
 argument_list|,
 name|LLE_STATIC
@@ -2218,10 +2216,8 @@ name|AF_INET
 operator|)
 condition|)
 block|{
-name|in_ifscrub
+name|in_scrubprefix
 argument_list|(
-name|ifp
-argument_list|,
 name|ia
 argument_list|,
 name|LLE_STATIC
@@ -2378,11 +2374,9 @@ goto|;
 case|case
 name|SIOCDIFADDR
 case|:
-comment|/* 		 * in_ifscrub kills the interface route. 		 */
-name|in_ifscrub
+comment|/* 		 * in_scrubprefix() kills the interface route. 		 */
+name|in_scrubprefix
 argument_list|(
-name|ifp
-argument_list|,
 name|ia
 argument_list|,
 name|LLE_STATIC
@@ -3528,38 +3522,6 @@ name|EOPNOTSUPP
 operator|)
 return|;
 comment|/*just for safety*/
-block|}
-end_function
-
-begin_comment
-comment|/*  * Delete any existing route for an interface.  */
-end_comment
-
-begin_function
-name|void
-name|in_ifscrub
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-parameter_list|,
-name|u_int
-name|flags
-parameter_list|)
-block|{
-name|in_scrubprefix
-argument_list|(
-name|ia
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
