@@ -215,6 +215,45 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Table of supported FDT compat strings.  *  * Note that "ti,mmchs" is our own invention, and should be phased out in favor  * of the documented names.  *  * Note that vendor Beaglebone dtsi files use "ti,omap3-hsmmc" for the am335x.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"ti,omap3-hsmmc"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"ti,omap4-hsmmc"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"ti,mmchs"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * The MMCHS hardware has a few control and status registers at the beginning of  * the device's memory map, followed by the standard sdhci register block.  * Different SoCs have the register blocks at different offsets from the  * beginning of the device.  Define some constants to map out the registers we  * access, and the various per-SoC offsets.  The SDHCI_REG_OFFSET is how far  * beyond the MMCHS block the SDHCI block is found; it's the same on all SoCs.  */
 end_comment
 
@@ -286,6 +325,34 @@ define|#
 directive|define
 name|MMCHS_CON_DVAL_8_4MS
 value|(3<< 9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SD_CAPA
+value|0x240
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SD_CAPA_VS18
+value|(1<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SD_CAPA_VS30
+value|(1<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMCHS_SD_CAPA_VS33
+value|(1<< 24)
 end_define
 
 begin_function
@@ -1377,6 +1444,9 @@ decl_stmt|;
 name|clk_ident_t
 name|clk
 decl_stmt|;
+name|uint32_t
+name|regval
+decl_stmt|;
 name|unsigned
 name|long
 name|timeout
@@ -1540,6 +1610,61 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * The attach() routine has examined fdt data and set flags in 	 * slot.host.caps to reflect what voltages we can handle.  Set those 	 * values in the CAPA register.  The manual says that these values can 	 * only be set once, "before initialization" whatever that means, and 	 * that they survive a reset.  So maybe doing this will be a no-op if 	 * u-boot has already initialized the hardware. 	 */
+name|regval
+operator|=
+name|ti_mmchs_read_4
+argument_list|(
+name|sc
+argument_list|,
+name|MMCHS_SD_CAPA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|slot
+operator|.
+name|host
+operator|.
+name|caps
+operator|&
+name|MMC_OCR_LOW_VOLTAGE
+condition|)
+name|regval
+operator||=
+name|MMCHS_SD_CAPA_VS18
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|slot
+operator|.
+name|host
+operator|.
+name|caps
+operator|&
+operator|(
+name|MMC_OCR_290_300
+operator||
+name|MMC_OCR_300_310
+operator|)
+condition|)
+name|regval
+operator||=
+name|MMCHS_SD_CAPA_VS30
+expr_stmt|;
+name|ti_mmchs_write_4
+argument_list|(
+name|sc
+argument_list|,
+name|MMCHS_SD_CAPA
+argument_list|,
+name|regval
+argument_list|)
+expr_stmt|;
 comment|/* Set initial host configuration (1-bit, std speed, pwr off). */
 name|ti_sdhci_write_1
 argument_list|(
@@ -1612,7 +1737,7 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/* 	 * Get the MMCHS device id from FDT.  If it's not there use the newbus 	 * unit number (which will work as long as the devices are in order and 	 * none are skipped in the fdt). 	 */
+comment|/* 	 * Get the MMCHS device id from FDT.  If it's not there use the newbus 	 * unit number (which will work as long as the devices are in order and 	 * none are skipped in the fdt).  Note that this is a property we made 	 * up and added in freebsd, it doesn't exist in the published bindings. 	 */
 name|node
 operator|=
 name|ofw_bus_get_node
@@ -1674,7 +1799,47 @@ argument_list|(
 name|prop
 argument_list|)
 expr_stmt|;
-comment|/* See if we've got a GPIO-based write detect pin. */
+comment|/* 	 * The hardware can inherently do dual-voltage (1p8v, 3p0v) on the first 	 * device, and only 1p8v on other devices unless an external transceiver 	 * is used.  The only way we could know about a transceiver is fdt data. 	 * Note that we have to do this before calling ti_sdhci_hw_init() so 	 * that it can set the right values in the CAPA register, which can only 	 * be done once and never reset. 	 */
+name|sc
+operator|->
+name|slot
+operator|.
+name|host
+operator|.
+name|host_ocr
+operator||=
+name|MMC_OCR_LOW_VOLTAGE
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mmchs_device_id
+operator|==
+literal|0
+operator|||
+name|OF_hasprop
+argument_list|(
+name|node
+argument_list|,
+literal|"ti,dual-volt"
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|slot
+operator|.
+name|host
+operator|.
+name|host_ocr
+operator||=
+name|MMC_OCR_290_300
+operator||
+name|MMC_OCR_300_310
+expr_stmt|;
+block|}
+comment|/* 	 * See if we've got a GPIO-based write detect pin.  This is not the 	 * standard documented property for this, we added it in freebsd. 	 */
 if|if
 condition|(
 operator|(
@@ -1766,7 +1931,7 @@ name|GPIO_PIN_INPUT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set the offset from the device's memory start to the MMCHS registers. 	 * 	 * XXX A better way to handle this would be to have separate memory 	 * resources for the sdhci registers and the mmchs registers.  That 	 * requires changing everyone's DTS files. 	 */
+comment|/* 	 * Set the offset from the device's memory start to the MMCHS registers. 	 */
 if|if
 condition|(
 name|ti_chip
@@ -1998,7 +2163,7 @@ name|quirks
 operator||=
 name|SDHCI_QUIRK_BROKEN_DMA
 expr_stmt|;
-comment|/* Set up the hardware and go. */
+comment|/* 	 *  Set up the hardware and go.  Note that this sets many of the 	 *  slot.host.* fields, so we have to do this before overriding any of 	 *  those values based on fdt data, below. 	 */
 name|sdhci_init_slot
 argument_list|(
 name|dev
@@ -2011,7 +2176,68 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The SDHCI controller doesn't realize it, but we support 8-bit even 	 * though we're not a v3.0 controller.  Advertise the ability. 	 */
+comment|/* 	 * The SDHCI controller doesn't realize it, but we can support 8-bit 	 * even though we're not a v3.0 controller.  If there's an fdt bus-width 	 * property, honor it. 	 */
+if|if
+condition|(
+name|OF_getencprop
+argument_list|(
+name|node
+argument_list|,
+literal|"bus-width"
+argument_list|,
+operator|&
+name|prop
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|prop
+argument_list|)
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|sc
+operator|->
+name|slot
+operator|.
+name|host
+operator|.
+name|caps
+operator|&=
+operator|~
+operator|(
+name|MMC_CAP_4_BIT_DATA
+operator||
+name|MMC_CAP_8_BIT_DATA
+operator|)
+expr_stmt|;
+switch|switch
+condition|(
+name|prop
+condition|)
+block|{
+case|case
+literal|1
+case|:
+break|break;
+case|case
+literal|4
+case|:
+name|sc
+operator|->
+name|slot
+operator|.
+name|host
+operator|.
+name|caps
+operator||=
+name|MMC_CAP_4_BIT_DATA
+expr_stmt|;
+break|break;
+case|case
+literal|8
+case|:
 name|sc
 operator|->
 name|slot
@@ -2022,6 +2248,19 @@ name|caps
 operator||=
 name|MMC_CAP_8_BIT_DATA
 expr_stmt|;
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Bad bus-width value %u\n"
+argument_list|,
+name|prop
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|bus_generic_probe
 argument_list|(
 name|dev
@@ -2123,21 +2362,18 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,mmchs"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|!=
+literal|0
 condition|)
 block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|device_set_desc
 argument_list|(
 name|dev
@@ -2148,6 +2384,12 @@ expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|ENXIO
 operator|)
 return|;
 block|}
