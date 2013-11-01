@@ -10239,7 +10239,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|cam_periph_release
+name|cam_periph_release_locked
 argument_list|(
 name|periph
 argument_list|)
