@@ -2223,9 +2223,14 @@ block|}
 block|}
 name|bcopy
 argument_list|(
+name|mtod
+argument_list|(
 name|m
-operator|->
-name|m_data
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|)
 argument_list|,
 name|sockp
 operator|->
