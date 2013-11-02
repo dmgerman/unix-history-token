@@ -10869,6 +10869,9 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|nifp
 operator|->
@@ -13767,6 +13770,9 @@ condition|?
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|slot
 operator|->
