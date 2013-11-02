@@ -738,6 +738,13 @@ argument_list|)
 block|,
 name|URTWN_DEV
 argument_list|(
+name|REALTEK
+argument_list|,
+name|RTL8188CU_0
+argument_list|)
+block|,
+name|URTWN_DEV
+argument_list|(
 name|SITECOMEU
 argument_list|,
 name|RTL8188CU_1
