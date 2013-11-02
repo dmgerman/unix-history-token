@@ -2260,8 +2260,8 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
+begin_function_decl
+specifier|extern
 name|struct
 name|fb_info
 modifier|*
@@ -2270,23 +2270,8 @@ parameter_list|(
 name|device_t
 name|kdev
 parameter_list|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* XXX */
-block|struct drm_device *dev; 	struct radeon_mode_info *mode_info; 	struct radeon_fbdev *rfbdev; 	struct radeon_device *rdev; 	struct fb_info *info;   	dev = device_get_softc(kdev); 	rdev = dev->dev_private; 	mode_info =&rdev->mode_info; 	rfbdev = mode_info->rfbdev; 	info = rfbdev->helper.fbdev; 	return (info);
-else|#
-directive|else
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-endif|#
-directive|endif
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
