@@ -14790,7 +14790,7 @@ name|adapter
 operator|->
 name|rxtag
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 operator|&
 name|adapter
@@ -14851,7 +14851,7 @@ name|adapter
 operator|->
 name|rxtag
 argument_list|,
-name|BUS_DMA_NOWAIT
+literal|0
 argument_list|,
 operator|&
 name|rx_buffer
