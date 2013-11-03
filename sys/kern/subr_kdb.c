@@ -2110,6 +2110,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"KDB: reentering\n"
+argument_list|)
+expr_stmt|;
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|kdb_jmpbufp
