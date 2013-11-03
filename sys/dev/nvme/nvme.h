@@ -1892,7 +1892,7 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|io_completed
 index|[
 name|NVME_TEST_MAX_THREADS
