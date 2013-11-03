@@ -3284,7 +3284,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EMFILE
+name|ENOMEM
 operator|)
 return|;
 block|}
