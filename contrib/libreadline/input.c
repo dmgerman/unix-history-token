@@ -635,8 +635,6 @@ condition|)
 name|pop_index
 operator|=
 name|ibuffer_len
-operator|-
-literal|1
 expr_stmt|;
 name|ibuffer
 index|[
