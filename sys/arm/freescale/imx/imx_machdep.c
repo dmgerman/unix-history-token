@@ -398,6 +398,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This code which manipulates the watchdog hardware is here to implement  * cpu_reset() because the watchdog is the only way for software to reset the  * chip.  Why here and not in imx_wdog.c?  Because there's no requirement that  * the watchdog driver be compiled in, but it's nice to be able to reboot even  * if it's not.  */
+end_comment
+
 begin_function
 name|void
 name|imx_wdog_cpu_reset
@@ -406,18 +410,18 @@ name|vm_offset_t
 name|wdcr_physaddr
 parameter_list|)
 block|{
-comment|/* 	 * This code which manipulates the watchdog hardware is here to 	 * implement cpu_reset() because the watchdog is the only way for 	 * software to reset the chip.  Why here and not in imx_wdog.c?  Because 	 * there's no requirement that the watchdog driver be compiled in, but 	 * it's nice to be able to reboot even if it's not. 	 */
-specifier|volatile
-name|uint16_t
-modifier|*
-name|pcr
-decl_stmt|;
 specifier|const
 name|struct
 name|pmap_devmap
 modifier|*
 name|pd
 decl_stmt|;
+specifier|volatile
+name|uint16_t
+modifier|*
+name|pcr
+decl_stmt|;
+comment|/* 	 * The deceptively simple write of WDOG_CR_WDE enables the watchdog, 	 * sets the timeout to its minimum value (half a second), and also 	 * clears the SRS bit which results in the SFTW (software-requested 	 * reset) bit being set in the watchdog status register after the reset. 	 * This is how software can distinguish a reset from a wdog timeout. 	 */
 if|if
 condition|(
 operator|(
@@ -462,17 +466,17 @@ name|pd_pa
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 		 * This deceptively simple write enables the watchdog, sets the timeout 		 * to its minimum value (half a second), and also clears the SRS bit 		 * which results in the SFTW (software-requested reset) bit being set in 		 * the watchdog status register after the reset. This is how software 		 * can distinguish a requested reset from a wdog timeout. 		 */
 operator|*
 name|pcr
 operator|=
 name|WDOG_CR_WDE
 expr_stmt|;
 block|}
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 continue|continue;
 block|}
 end_function
