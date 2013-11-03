@@ -411,36 +411,6 @@ block|{
 if|if
 condition|(
 name|argc
-operator|>=
-literal|2
-operator|&&
-name|strcmp
-argument_list|(
-name|getprogname
-argument_list|()
-argument_list|,
-literal|"utxrm"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* For compatibility. */
-return|return
-operator|(
-name|rm
-argument_list|(
-operator|&
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-name|argc
 operator|==
 literal|2
 operator|&&
@@ -529,7 +499,6 @@ argument_list|,
 literal|"usage: utx boot\n"
 literal|"       utx shutdown\n"
 literal|"       utx rm identifier ...\n"
-literal|"       utxrm identifier ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
