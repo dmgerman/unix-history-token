@@ -739,6 +739,9 @@ index|[
 name|NVME_MAX_CONSUMERS
 index|]
 decl_stmt|;
+name|uint32_t
+name|stripesize
+decl_stmt|;
 name|struct
 name|mtx
 name|lock

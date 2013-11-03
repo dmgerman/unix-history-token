@@ -1373,7 +1373,7 @@ index|]
 decl_stmt|;
 comment|/* bytes 3072-4095: vendor specific */
 name|uint8_t
-name|reserved7
+name|vs
 index|[
 literal|1024
 index|]
