@@ -9310,12 +9310,6 @@ operator|->
 name|timeout
 operator|>=
 name|PFTM_MAX
-operator|&&
-name|sp
-operator|->
-name|timeout
-operator|!=
-name|PFTM_UNTIL_PACKET
 condition|)
 block|{
 name|error

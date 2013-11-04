@@ -259,8 +259,6 @@ block|,
 name|PFTM_PURGE
 block|,
 name|PFTM_UNLINKED
-block|,
-name|PFTM_UNTIL_PACKET
 block|}
 enum|;
 end_enum
