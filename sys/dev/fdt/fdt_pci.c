@@ -1488,7 +1488,7 @@ name|phandle_t
 name|node
 parameter_list|,
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|devmap
 parameter_list|,

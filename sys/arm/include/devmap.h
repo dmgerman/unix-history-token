@@ -16,6 +16,75 @@ name|_MACHINE_DEVMAP_H_
 end_define
 
 begin_comment
+comment|/*  * This structure is used by MD code to describe static mappings of devices  * which are established as part of bringing up the MMU early in the boot.  */
+end_comment
+
+begin_struct
+struct|struct
+name|arm_devmap_entry
+block|{
+name|vm_offset_t
+name|pd_va
+decl_stmt|;
+comment|/* virtual address */
+name|vm_paddr_t
+name|pd_pa
+decl_stmt|;
+comment|/* physical address */
+name|vm_size_t
+name|pd_size
+decl_stmt|;
+comment|/* size of region */
+name|vm_prot_t
+name|pd_prot
+decl_stmt|;
+comment|/* protection code */
+name|int
+name|pd_cache
+decl_stmt|;
+comment|/* cache attributes */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Register a platform-local table to be bootstrapped by the generic  * initarm() in arm/machdep.c.  This is used by newer code that allocates and  * fills in its own local table but does not have its own initarm() routine.  */
+end_comment
+
+begin_function_decl
+name|void
+name|arm_devmap_register_table
+parameter_list|(
+specifier|const
+name|struct
+name|arm_devmap_entry
+modifier|*
+name|_table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Directly process a table; called from initarm() of older platforms that don't  * use the generic initarm() in arm/machdep.c.  If the table pointer is NULL,  * this will use the table installed previously by arm_devmap_register_table().  */
+end_comment
+
+begin_function_decl
+name|void
+name|arm_devmap_bootstrap
+parameter_list|(
+name|vm_offset_t
+name|_l1pt
+parameter_list|,
+specifier|const
+name|struct
+name|arm_devmap_entry
+modifier|*
+name|_table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Routines to translate between virtual and physical addresses within a region  * that is static-mapped by the devmap code.  If the given address range isn't  * static-mapped, then ptov returns NULL and vtop returns DEVMAP_PADDR_NOTFOUND.  * The latter implies that you can't vtop just the last byte of physical address  * space.  This is not as limiting as it might sound, because even if a device  * occupies the end of the physical address space, you're only prevented from  * doing vtop for that single byte.  If you vtop a size bigger than 1 it works.  */
 end_comment
 

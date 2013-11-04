@@ -292,20 +292,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Needs to be initialised by platform_devmap_init */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_bootstrap_table
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Setup standard arrays */
 end_comment
 

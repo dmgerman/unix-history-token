@@ -667,15 +667,6 @@ name|kernelstack
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_bootstrap_table
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -6639,11 +6630,11 @@ operator|=
 name|platform_devmap_init
 argument_list|()
 expr_stmt|;
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|pmap_devmap_bootstrap_table
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cpu_domains

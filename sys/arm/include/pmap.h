@@ -3216,52 +3216,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * This structure is used by machine-dependent code to describe  * static mappings of devices, created at bootstrap time.  */
-end_comment
-
-begin_struct
-struct|struct
-name|pmap_devmap
-block|{
-name|vm_offset_t
-name|pd_va
-decl_stmt|;
-comment|/* virtual address */
-name|vm_paddr_t
-name|pd_pa
-decl_stmt|;
-comment|/* physical address */
-name|vm_size_t
-name|pd_size
-decl_stmt|;
-comment|/* size of region */
-name|vm_prot_t
-name|pd_prot
-decl_stmt|;
-comment|/* protection code */
-name|int
-name|pd_cache
-decl_stmt|;
-comment|/* cache attributes */
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-name|void
-name|pmap_devmap_bootstrap
-parameter_list|(
-name|vm_offset_t
-parameter_list|,
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define

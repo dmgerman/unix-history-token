@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -451,7 +457,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|ixp425_devmap
 index|[]
 init|=
@@ -576,7 +582,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|ixp435_devmap
 index|[]
 init|=
@@ -1549,7 +1555,7 @@ condition|(
 name|cpu_is_ixp43x
 argument_list|()
 condition|)
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
@@ -1557,7 +1563,7 @@ name|ixp435_devmap
 argument_list|)
 expr_stmt|;
 else|else
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,

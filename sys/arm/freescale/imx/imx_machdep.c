@@ -105,7 +105,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|devmap_entries
 index|[
 name|IMX_MAX_DEVMAP_ENTRIES
@@ -141,7 +141,7 @@ name|sz
 parameter_list|)
 block|{
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|m
 decl_stmt|;
@@ -273,9 +273,10 @@ comment|/* 	 * Normally initarm() calls platform_devmap_init() much later in the
 name|imx_devmap_init
 argument_list|()
 expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
+name|arm_devmap_register_table
+argument_list|(
 name|devmap_entries
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -322,7 +323,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|m
 decl_stmt|;

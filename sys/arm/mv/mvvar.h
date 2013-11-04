@@ -123,16 +123,6 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|pmap_devmap
-name|pmap_devmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
 name|gpio_config
 name|mv_gpio_config
 index|[]

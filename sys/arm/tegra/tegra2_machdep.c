@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
@@ -221,7 +227,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|fdt_devmap
 index|[
 name|FDT_DEVMAP_MAX
@@ -309,13 +315,14 @@ expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
-name|pmap_devmap_bootstrap_table
-operator|=
+name|arm_devmap_register_table
+argument_list|(
 operator|&
 name|fdt_devmap
 index|[
 literal|0
 index|]
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -61,39 +61,80 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|devmap_table
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Map all of the static regions in the devmap table, and remember  * the devmap table so other parts of the kernel can do lookups later.  */
+comment|/*  * Register the given table as the one to use in arm_devmap_bootstrap().  */
 end_comment
 
 begin_function
 name|void
-name|pmap_devmap_bootstrap
+name|arm_devmap_register_table
+parameter_list|(
+specifier|const
+name|struct
+name|arm_devmap_entry
+modifier|*
+name|table
+parameter_list|)
+block|{
+name|devmap_table
+operator|=
+name|table
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Map all of the static regions in the devmap table, and remember the devmap  * table so the mapdev, ptov, and vtop functions can do lookups later.  *  * If a non-NULL table pointer is given it is used unconditionally, otherwise  * the previously-registered table is used.  This smooths transition from legacy  * code that fills in a local table then calls this function passing that table,  * and newer code that uses arm_devmap_register_table() in platform-specific  * code, then lets the common initarm() call this function with a NULL pointer.  */
+end_comment
+
+begin_function
+name|void
+name|arm_devmap_bootstrap
 parameter_list|(
 name|vm_offset_t
 name|l1pt
 parameter_list|,
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|table
 parameter_list|)
 block|{
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
+comment|/* 	 * If given a table pointer, use it, else ensure a table was previously 	 * registered.  This happens early in boot, and there's a good chance 	 * the panic message won't be seen, but there's not much we can do. 	 */
+if|if
+condition|(
+name|table
+operator|!=
+name|NULL
+condition|)
 name|devmap_table
 operator|=
 name|table
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|devmap_table
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"arm_devmap_bootstrap: No devmap table registered."
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -158,7 +199,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
@@ -257,7 +298,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
