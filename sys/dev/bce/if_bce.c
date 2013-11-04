@@ -22888,6 +22888,13 @@ expr_stmt|;
 name|bce_reset_exit
 label|:
 comment|/* Restore EMAC Mode bits needed to keep ASF/IPMI running. */
+if|if
+condition|(
+name|reset_code
+operator|==
+name|BCE_DRV_MSG_CODE_RESET
+condition|)
+block|{
 name|val
 operator|=
 name|REG_RD
@@ -22917,6 +22924,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 name|DBEXIT
 argument_list|(
 name|BCE_VERBOSE_RESET
