@@ -2299,7 +2299,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bdg_netmap_attach
 parameter_list|(
 name|struct
@@ -7767,6 +7767,9 @@ name|struct
 name|netmap_adapter
 name|tmp_na
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|nmr
@@ -7947,12 +7950,37 @@ operator|=
 name|iter
 expr_stmt|;
 comment|/* bdg_netmap_attach creates a struct netmap_adapter */
+name|error
+operator|=
 name|bdg_netmap_attach
 argument_list|(
 operator|&
 name|tmp_na
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"error %d"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|iter
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
 name|cand2
 operator|=
 operator|-
@@ -17836,7 +17864,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bdg_netmap_attach
 parameter_list|(
 name|struct
@@ -17960,6 +17988,7 @@ operator|.
 name|num_rx_desc
 argument_list|)
 expr_stmt|;
+return|return
 name|netmap_attach
 argument_list|(
 operator|&
@@ -17969,7 +17998,7 @@ name|na
 operator|.
 name|num_tx_rings
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
