@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -69,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/machdep.h>
 end_include
 
 begin_include
@@ -89,13 +89,68 @@ directive|include
 file|<arm/freescale/imx/imx_machdep.h>
 end_include
 
-begin_comment
-comment|/*  * Set up static device mappings.  Note that for imx this is called from  * initarm_lastaddr() so that it can return the lowest address used for static  * device mapping, maximizing kva space.  *  * This attempts to cover the most-used devices with 1MB section mappings, which  * is good for performance (uses fewer TLB entries for device access).  *  * ARMMP covers the interrupt controller, MPCore timers, global timer, and the  * L2 cache controller.  Most of the 1MB range is unused reserved space.  *  * AIPS1/AIPS2 cover most of the on-chip devices such as uart, spi, i2c, etc.  *  * Notably not mapped right now are HDMI, GPU, and other devices below ARMMP in  * the memory map.  When we get support for graphics it might make sense to  * static map some of that area.  Be careful with other things in that area such  * as OCRAM that probably shouldn't be mapped as PTE_DEVICE memory.  */
-end_comment
+begin_function
+name|vm_offset_t
+name|initarm_lastaddr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|arm_devmap_lastaddr
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|void
-name|imx_devmap_init
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* XXX - Get rid of this stuff soon. */
+name|boothowto
+operator||=
+name|RB_VERBOSE
+operator||
+name|RB_MULTIPLE
+expr_stmt|;
+name|bootverbose
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initarm_gpio_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+name|void
+name|initarm_late_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{  }
+end_function
+
+begin_comment
+comment|/*  * Set up static device mappings.  *  * This attempts to cover the most-used devices with 1MB section mappings, which  * is good for performance (uses fewer TLB entries for device access).  *  * ARMMP covers the interrupt controller, MPCore timers, global timer, and the  * L2 cache controller.  Most of the 1MB range is unused reserved space.  *  * AIPS1/AIPS2 cover most of the on-chip devices such as uart, spi, i2c, etc.  *  * Notably not mapped right now are HDMI, GPU, and other devices below ARMMP in  * the memory map.  When we get support for graphics it might make sense to  * static map some of that area.  Be careful with other things in that area such  * as OCRAM that probably shouldn't be mapped as PTE_DEVICE memory.  */
+end_comment
+
+begin_function
+name|int
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -136,27 +191,32 @@ name|IMX6_AIPS2_SIZE
 init|=
 literal|0x00100000
 decl_stmt|;
-name|imx_devmap_addentry
+name|arm_devmap_add_entry
 argument_list|(
 name|IMX6_ARMMP_PHYS
 argument_list|,
 name|IMX6_ARMMP_SIZE
 argument_list|)
 expr_stmt|;
-name|imx_devmap_addentry
+name|arm_devmap_add_entry
 argument_list|(
 name|IMX6_AIPS1_PHYS
 argument_list|,
 name|IMX6_AIPS1_SIZE
 argument_list|)
 expr_stmt|;
-name|imx_devmap_addentry
+name|arm_devmap_add_entry
 argument_list|(
 name|IMX6_AIPS2_PHYS
 argument_list|,
 name|IMX6_AIPS2_SIZE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
