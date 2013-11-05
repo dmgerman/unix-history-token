@@ -304,15 +304,8 @@ begin_comment
 comment|/* (i) is a point-to-point link */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFF_SMART
-value|0x20
-end_define
-
 begin_comment
-comment|/* (i) interface manages own routes */
+comment|/*			0x20		   was IFF_SMART */
 end_comment
 
 begin_define
@@ -540,7 +533,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
 end_define
 
 begin_comment

@@ -9888,18 +9888,6 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-name|IFF_SMART
-condition|)
-block|{
-comment|/* Smart drivers twiddle their own routes */
-block|}
-elseif|else
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
 name|IFF_UP
 operator|&&
 operator|(
