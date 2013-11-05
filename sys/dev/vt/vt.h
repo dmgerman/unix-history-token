@@ -333,7 +333,7 @@ decl_stmt|;
 define|#
 directive|define
 name|VBF_DEFAULT_HISTORY_SIZE
-value|200
+value|500
 name|int
 name|vb_roffset
 decl_stmt|;
