@@ -993,15 +993,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|remote
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|fetchfail
-goto|;
 while|while
 condition|(
 name|done
