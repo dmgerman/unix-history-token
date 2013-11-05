@@ -442,7 +442,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|lbc
 argument_list|,
-name|fdtbus
+name|nexus
 argument_list|,
 name|lbc_driver
 argument_list|,
