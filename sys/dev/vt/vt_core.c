@@ -3645,6 +3645,12 @@ name|vd_flags
 operator|&
 name|VDF_TEXTMODE
 operator|)
+operator|&&
+operator|(
+name|boothowto
+operator|&
+name|RB_MUTE
+operator|)
 condition|)
 block|{
 name|top
