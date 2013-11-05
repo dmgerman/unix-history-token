@@ -633,6 +633,10 @@ name|b
 operator|=
 literal|0
 init|;
+name|pending
+operator|!=
+literal|0
+operator|&&
 name|b
 operator|<
 literal|32

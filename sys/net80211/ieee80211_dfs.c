@@ -119,7 +119,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include

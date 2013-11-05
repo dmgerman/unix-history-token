@@ -276,6 +276,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
@@ -295,12 +307,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
 end_include
 
 begin_include
@@ -658,15 +664,6 @@ specifier|static
 name|struct
 name|pv_addr
 name|kernelstack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|struct
-name|pmap_devmap
-modifier|*
-name|pmap_devmap_bootstrap_table
 decl_stmt|;
 end_decl_stmt
 
@@ -6134,9 +6131,7 @@ operator|=
 name|curr
 expr_stmt|;
 comment|/* Platform-specific initialisation */
-name|vm_max_kernel_address
-operator|=
-name|initarm_lastaddr
+name|initarm_early_init
 argument_list|()
 expr_stmt|;
 name|pcpu0_init
@@ -6627,18 +6622,23 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-comment|/* Map pmap_devmap[] entries */
+comment|/* Establish static device mappings. */
 name|err_devmap
 operator|=
-name|platform_devmap_init
+name|initarm_devmap_init
 argument_list|()
 expr_stmt|;
-name|pmap_devmap_bootstrap
+name|arm_devmap_bootstrap
 argument_list|(
 name|l1pagetable
 argument_list|,
-name|pmap_devmap_bootstrap_table
+name|NULL
 argument_list|)
+expr_stmt|;
+name|vm_max_kernel_address
+operator|=
+name|initarm_lastaddr
+argument_list|()
 expr_stmt|;
 name|cpu_domains
 argument_list|(

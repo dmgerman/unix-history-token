@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mii/mii.h>
 end_include
 
@@ -505,7 +511,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}

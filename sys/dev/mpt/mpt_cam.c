@@ -10340,10 +10340,13 @@ name|mpt_prtc
 argument_list|(
 name|mpt
 argument_list|,
-literal|"tgt %u lun %u req %p:%u\n"
+literal|"tgt %u lun %jx req %p:%u\n"
 argument_list|,
 name|tgt
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -14023,10 +14026,13 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"CCB (%p): lun %u flags %x status %x\n"
+literal|"CCB (%p): lun %jx flags %x status %x\n"
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -17299,10 +17305,13 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG1
 argument_list|,
-literal|"Put FREE ATIO %p lun %d\n"
+literal|"Put FREE ATIO %p lun %jx\n"
 argument_list|,
 name|ccb
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -17342,8 +17351,11 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG1
 argument_list|,
-literal|"Put FREE INOT lun %d\n"
+literal|"Put FREE INOT lun %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -23049,10 +23061,13 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG1
 argument_list|,
-literal|"Get FREE INOT %p lun %d\n"
+literal|"Get FREE INOT %p lun %jx\n"
 argument_list|,
 name|inot
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inot
 operator|->
 name|ccb_h
@@ -24050,13 +24065,16 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG
 argument_list|,
-literal|"CMD 0x%x to unmanaged lun %u\n"
+literal|"CMD 0x%x to unmanaged lun %jx\n"
 argument_list|,
 name|cdbp
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|)
 expr_stmt|;
@@ -24186,8 +24204,11 @@ name|mpt
 argument_list|,
 name|MPT_PRT_WARN
 argument_list|,
-literal|"no ATIOs for lun %u- sending back %s\n"
+literal|"no ATIOs for lun %jx- sending back %s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|lun
 argument_list|,
 name|mpt
@@ -24238,10 +24259,13 @@ name|mpt
 argument_list|,
 name|MPT_PRT_DEBUG1
 argument_list|,
-literal|"Get FREE ATIO %p lun %d\n"
+literal|"Get FREE ATIO %p lun %jx\n"
 argument_list|,
 name|atiop
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|atiop
 operator|->
 name|ccb_h
@@ -24375,10 +24399,13 @@ name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"START_CCB %p for lun %u CDB=<"
+literal|"START_CCB %p for lun %jx CDB=<"
 argument_list|,
 name|atiop
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|atiop
 operator|->
 name|ccb_h

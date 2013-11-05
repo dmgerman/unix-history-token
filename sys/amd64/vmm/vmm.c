@@ -170,12 +170,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -3960,13 +3954,14 @@ argument_list|,
 name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
-name|VMM_CTR3
+name|VCPU_CTR3
 argument_list|(
 name|vm
 argument_list|,
 name|vcpuid
 argument_list|,
-literal|"vm_handle_paging rv = %d, gpa = %#lx, ftype = %d"
+literal|"vm_handle_paging rv = %d, gpa = %#lx, "
+literal|"ftype = %d"
 argument_list|,
 name|rv
 argument_list|,

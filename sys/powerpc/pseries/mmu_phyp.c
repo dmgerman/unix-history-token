@@ -803,7 +803,7 @@ name|shift
 expr_stmt|;
 name|moea64_large_page_size
 operator|=
-literal|1
+literal|1ULL
 operator|<<
 name|shift
 expr_stmt|;

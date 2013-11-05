@@ -212,6 +212,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_EVENTHANDLER_H_
+end_ifdef
+
 begin_comment
 comment|/* Interface clone event. */
 end_comment
@@ -243,6 +249,11 @@ name|if_clone_event_handler_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The below interfaces used only by net/if.c. */

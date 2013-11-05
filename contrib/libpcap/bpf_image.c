@@ -169,6 +169,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
+specifier|const
 name|struct
 name|bpf_insn
 modifier|*

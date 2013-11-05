@@ -1701,15 +1701,15 @@ begin_function_decl
 name|int
 name|prison_check_ip4
 parameter_list|(
+specifier|const
 name|struct
 name|ucred
 modifier|*
-name|cred
 parameter_list|,
+specifier|const
 name|struct
 name|in_addr
 modifier|*
-name|ia
 parameter_list|)
 function_decl|;
 end_function_decl

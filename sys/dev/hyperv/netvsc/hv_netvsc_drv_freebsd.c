@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_types.h>
 end_include
 
@@ -133,12 +139,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_vlan_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
 end_include
 
 begin_include
@@ -2041,10 +2041,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-name|sc
-operator|->
-name|hn_ifp
 decl_stmt|;
 name|int
 name|size
@@ -2066,6 +2062,12 @@ operator|)
 return|;
 comment|/* TODO: KYS how can this be! */
 block|}
+name|ifp
+operator|=
+name|sc
+operator|->
+name|hn_ifp
+expr_stmt|;
 name|ifp
 operator|=
 name|sc

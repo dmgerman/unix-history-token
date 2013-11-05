@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -728,6 +734,13 @@ argument_list|(
 name|REALTEK
 argument_list|,
 name|RTL8192CU
+argument_list|)
+block|,
+name|URTWN_DEV
+argument_list|(
+name|REALTEK
+argument_list|,
+name|RTL8188CU_0
 argument_list|)
 block|,
 name|URTWN_DEV

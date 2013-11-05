@@ -3818,9 +3818,6 @@ name|ctx
 parameter_list|,
 name|int
 name|ncpu
-parameter_list|,
-name|int
-name|ioapic
 parameter_list|)
 block|{
 name|int
@@ -3837,25 +3834,6 @@ name|basl_ncpu
 operator|=
 name|ncpu
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ioapic
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ACPI tables require an ioapic\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 comment|/* 	 * For debug, allow the user to have iasl compiler output sent 	 * to stdout rather than /dev/null 	 */
 if|if
 condition|(

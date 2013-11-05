@@ -1128,6 +1128,9 @@ block|,
 literal|0
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PF
 block|{
 operator|-
 literal|1
@@ -1149,6 +1152,8 @@ block|,
 literal|0
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1

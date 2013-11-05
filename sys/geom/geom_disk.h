@@ -296,6 +296,17 @@ end_struct
 begin_define
 define|#
 directive|define
+name|DISKFLAG_RESERVED
+value|0x1
+end_define
+
+begin_comment
+comment|/* Was NEEDSGIANT */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DISKFLAG_OPEN
 value|0x2
 end_define

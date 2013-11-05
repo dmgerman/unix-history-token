@@ -1823,7 +1823,7 @@ name|XS_LUN
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(ccb)->ccb_h.target_lun
+value|(uint32_t)((ccb)->ccb_h.target_lun)
 end_define
 
 begin_define

@@ -278,6 +278,7 @@ begin_function
 name|void
 name|random_harvest
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|entropy

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/snc/dp83932reg.h>
 end_include
 

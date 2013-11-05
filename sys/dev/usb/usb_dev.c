@@ -4820,7 +4820,7 @@ name|udev
 operator|->
 name|re_enumerate_wait
 operator|!=
-literal|0
+name|USB_RE_ENUM_DONE
 condition|)
 block|{
 name|usb_unref_device

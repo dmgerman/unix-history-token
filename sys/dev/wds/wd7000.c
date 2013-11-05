@@ -5232,7 +5232,7 @@ expr_stmt|;
 name|DBG
 argument_list|(
 name|DBX
-literal|"wds%d: cmd TARG=%d LUN=%d\n"
+literal|"wds%d: cmd TARG=%d LUN=%jx\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -5240,6 +5240,9 @@ name|ccb_h
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb_h
 operator|->
 name|target_lun

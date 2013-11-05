@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -153,6 +165,18 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
 end_include
 
 begin_include
@@ -9286,12 +9310,6 @@ operator|->
 name|timeout
 operator|>=
 name|PFTM_MAX
-operator|&&
-name|sp
-operator|->
-name|timeout
-operator|!=
-name|PFTM_UNTIL_PACKET
 condition|)
 block|{
 name|error

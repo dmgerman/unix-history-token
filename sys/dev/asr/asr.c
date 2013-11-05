@@ -12626,7 +12626,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"asr%d WARNING: scsi_cmd(%x) already done on b%dt%du%d\n"
+literal|"asr%d WARNING: scsi_cmd(%x) already done on b%dt%d "
+literal|"LUN %jx\n"
 argument_list|,
 name|cam_sim_unit
 argument_list|(
@@ -12662,6 +12663,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h

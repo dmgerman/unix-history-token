@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -4839,6 +4845,13 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_ABC
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -5083,6 +5096,13 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_AB
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 break|break;
 case|case
 name|IWN_HW_REV_TYPE_5150
@@ -5099,6 +5119,13 @@ operator|->
 name|fwname
 operator|=
 literal|"iwn5150fw"
+expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
 expr_stmt|;
 break|break;
 case|case
@@ -5120,6 +5147,13 @@ name|fwname
 operator|=
 literal|"iwn5000fw"
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 break|break;
 case|case
 name|IWN_HW_REV_TYPE_1000
@@ -5136,6 +5170,13 @@ operator|->
 name|fwname
 operator|=
 literal|"iwn1000fw"
+expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
 expr_stmt|;
 break|break;
 case|case
@@ -5154,6 +5195,22 @@ name|fwname
 operator|=
 literal|"iwn6000fw"
 expr_stmt|;
+comment|/* 		 * Disable btcoex for 6200. 		 * XXX TODO: disable for 6205; no btcoex as well 		 * (6230/6235 - enable bluetooth) 		 */
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0x422c
+condition|)
+block|{
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pid
@@ -5215,6 +5272,13 @@ name|rxchainmask
 operator|=
 name|IWN_ANT_AB
 expr_stmt|;
+comment|/* Enable normal btcoex */
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|IWN_FLAG_BTCOEX
+expr_stmt|;
 break|break;
 case|case
 name|IWN_HW_REV_TYPE_6005
@@ -5251,12 +5315,15 @@ name|IWN_FLAG_ADV_BTCOEX
 expr_stmt|;
 block|}
 else|else
+block|{
 name|sc
 operator|->
 name|fwname
 operator|=
 literal|"iwn6000g2afw"
 expr_stmt|;
+comment|/* 			 * 6250 - disable bluetooth coexistence. 			 */
+block|}
 break|break;
 default|default:
 name|device_printf
@@ -5287,6 +5354,51 @@ return|return
 name|ENOTSUP
 return|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_BTCOEX
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"enable basic bluetooth coexistence\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_ADV_BTCOEX
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"enable advanced bluetooth coexistence\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"disable bluetooth coexistence\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -12754,12 +12866,9 @@ expr_stmt|;
 comment|/* 	 * If it's an MCS rate, let's set the plcp correctly 	 * and set the relevant flags based on the node config. 	 */
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_HT
-argument_list|(
-name|ni
-operator|->
-name|ni_chan
-argument_list|)
+name|rate
+operator|&
+name|IEEE80211_RATE_MCS
 condition|)
 block|{
 comment|/* 		 * Set the initial PLCP value to be between 0->31 for 		 * MCS 0 -> MCS 31, then set the "I'm an MCS rate!" 		 * flag. 		 */
@@ -19534,6 +19643,116 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Check whether OFDM 11g protection will be enabled for the given rate.  *  * The original driver code only enabled protection for OFDM rates.  * It didn't check to see whether it was operating in 11a or 11bg mode.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|iwn_check_rate_needs_protection
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
+name|uint8_t
+name|rate
+parameter_list|)
+block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
+comment|/* 	 * Not in 2GHz mode? Then there's no need to enable OFDM 	 * 11bg protection. 	 */
+if|if
+condition|(
+operator|!
+name|IEEE80211_IS_CHAN_2GHZ
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * 11bg protection not enabled? Then don't use it. 	 */
+if|if
+condition|(
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_USEPROT
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * If it's an 11n rate, then for now we enable 	 * protection. 	 */
+if|if
+condition|(
+name|rate
+operator|&
+name|IEEE80211_RATE_MCS
+condition|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+comment|/* 	 * Do a rate table lookup.  If the PHY is CCK, 	 * don't do protection. 	 */
+if|if
+condition|(
+name|ieee80211_rate2phytype
+argument_list|(
+name|ic
+operator|->
+name|ic_rt
+argument_list|,
+name|rate
+argument_list|)
+operator|==
+name|IEEE80211_T_CCK
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * Yup, enable protection. 	 */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -19662,10 +19881,6 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|tid
-decl_stmt|,
-name|ridx
-decl_stmt|,
-name|txant
 decl_stmt|,
 name|type
 decl_stmt|;
@@ -19978,19 +20193,6 @@ operator|->
 name|ni_txrate
 expr_stmt|;
 block|}
-name|ridx
-operator|=
-name|ieee80211_legacy_rate_lookup
-argument_list|(
-name|ic
-operator|->
-name|ic_rt
-argument_list|,
-name|rate
-operator|&
-name|IEEE80211_RATE_VAL
-argument_list|)
-expr_stmt|;
 comment|/* Encrypt the frame if need be. */
 if|if
 condition|(
@@ -20271,17 +20473,14 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|ic
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_USEPROT
-operator|)
-operator|&&
-name|ridx
-operator|>=
-name|IWN_RIDX_OFDM6
+name|iwn_check_rate_needs_protection
+argument_list|(
+name|sc
+argument_list|,
+name|vap
+argument_list|,
+name|rate
+argument_list|)
 condition|)
 block|{
 if|if
@@ -20310,6 +20509,7 @@ operator||=
 name|IWN_TX_NEED_RTS
 expr_stmt|;
 block|}
+comment|/* XXX HT protection? */
 if|if
 condition|(
 name|flags
@@ -20529,69 +20729,29 @@ argument_list|,
 name|rate
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tx
-operator|->
-name|id
-operator|==
-name|sc
-operator|->
-name|broadcast_id
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+block|if (tx->id == sc->broadcast_id) {
 comment|/* Group or management frame. */
+block|tx->linkq = 0;
+comment|/* XXX Alternate between antenna A and B? */
+block|txant = IWN_LSB(sc->txchainmask); 		tx->rate |= htole32(IWN_RFLAG_ANT(txant)); 	} else {
+comment|/* 		 * XXX This is no longer true.  ni_rates may actually 		 * XXX need to be ni_htrates (for 11n rates) and thus 		 * XXX ridx is totally bogus here. 		 * 		 * XXX So, break this out into a function and look up 		 * XXX the correct place to start the MRR table rate 		 * XXX attempt. 		 */
+block|tx->linkq = ni->ni_rates.rs_nrates - ridx - 1; 		flags |= IWN_TX_LINKQ;
+comment|/* enable MRR */
+block|}
+else|#
+directive|else
 name|tx
 operator|->
 name|linkq
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX Alternate between antenna A and B? */
-name|txant
-operator|=
-name|IWN_LSB
-argument_list|(
-name|sc
-operator|->
-name|txchainmask
-argument_list|)
-expr_stmt|;
-name|tx
-operator|->
-name|rate
-operator||=
-name|htole32
-argument_list|(
-name|IWN_RFLAG_ANT
-argument_list|(
-name|txant
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|tx
-operator|->
-name|linkq
-operator|=
-name|ni
-operator|->
-name|ni_rates
-operator|.
-name|rs_nrates
-operator|-
-name|ridx
-operator|-
-literal|1
-expr_stmt|;
-name|flags
-operator||=
-name|IWN_TX_LINKQ
-expr_stmt|;
-comment|/* enable MRR */
-block|}
+comment|/* Don't enable MRR for now */
+endif|#
+directive|endif
 comment|/* Set physical address of "scratch area". */
 name|tx
 operator|->
@@ -21181,15 +21341,7 @@ name|sc
 operator|->
 name|ops
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
+comment|//	struct ifnet *ifp = sc->sc_ifp;
 name|struct
 name|ieee80211vap
 modifier|*
@@ -21199,15 +21351,7 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-init|=
-name|ifp
-operator|->
-name|if_l2com
-decl_stmt|;
+comment|//	struct ieee80211com *ic = ifp->if_l2com;
 name|struct
 name|iwn_tx_cmd
 modifier|*
@@ -21276,11 +21420,7 @@ decl_stmt|,
 name|rate
 decl_stmt|;
 name|uint8_t
-name|ridx
-decl_stmt|,
 name|type
-decl_stmt|,
-name|txant
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -21369,47 +21509,13 @@ operator|->
 name|cur
 index|]
 expr_stmt|;
-comment|/* Choose a TX rate index. */
+comment|/* Choose a TX rate. */
 name|rate
 operator|=
 name|params
 operator|->
 name|ibp_rate0
 expr_stmt|;
-name|ridx
-operator|=
-name|ieee80211_legacy_rate_lookup
-argument_list|(
-name|ic
-operator|->
-name|ic_rt
-argument_list|,
-name|rate
-operator|&
-name|IEEE80211_RATE_VAL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ridx
-operator|==
-operator|(
-name|uint8_t
-operator|)
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* XXX fall back to mcast/mgmt rate? */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
 name|totlen
 operator|=
 name|m
@@ -21756,39 +21862,17 @@ argument_list|(
 name|IWN_LIFETIME_INFINITE
 argument_list|)
 expr_stmt|;
-comment|/* XXX should just use  iwn_rate_to_plcp() */
 name|tx
 operator|->
 name|rate
 operator|=
-name|htole32
+name|iwn_rate_to_plcp
 argument_list|(
-name|rate2plcp
-argument_list|(
-name|rate
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ridx
-operator|<
-name|IWN_RIDX_OFDM6
-operator|&&
-name|IEEE80211_IS_CHAN_2GHZ
-argument_list|(
+name|sc
+argument_list|,
 name|ni
-operator|->
-name|ni_chan
-argument_list|)
-condition|)
-name|tx
-operator|->
+argument_list|,
 name|rate
-operator||=
-name|htole32
-argument_list|(
-name|IWN_RFLAG_CCK
 argument_list|)
 expr_stmt|;
 comment|/* Group or management frame. */
@@ -21797,27 +21881,6 @@ operator|->
 name|linkq
 operator|=
 literal|0
-expr_stmt|;
-name|txant
-operator|=
-name|IWN_LSB
-argument_list|(
-name|sc
-operator|->
-name|txchainmask
-argument_list|)
-expr_stmt|;
-name|tx
-operator|->
-name|rate
-operator||=
-name|htole32
-argument_list|(
-name|IWN_RFLAG_ANT
-argument_list|(
-name|txant
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* Set physical address of "scratch area". */
 name|tx
@@ -23775,6 +23838,9 @@ name|rate
 decl_stmt|,
 name|txrate
 decl_stmt|;
+name|int
+name|is_11n
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -23849,7 +23915,7 @@ literal|4000
 argument_list|)
 expr_stmt|;
 comment|/* 4ms */
-comment|/* Start at highest available bit-rate. */
+comment|/* 	 * Are we using 11n rates? Ensure the channel is 	 * 11n _and_ we have some 11n rates, or don't 	 * try. 	 */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_HT
@@ -23858,6 +23924,28 @@ name|ni
 operator|->
 name|ni_chan
 argument_list|)
+operator|&&
+name|ni
+operator|->
+name|ni_htrates
+operator|.
+name|rs_nrates
+operator|>
+literal|0
+condition|)
+name|is_11n
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|is_11n
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Start at highest available bit-rate. */
+if|if
+condition|(
+name|is_11n
 condition|)
 name|txrate
 operator|=
@@ -23897,12 +23985,7 @@ name|plcp
 decl_stmt|;
 if|if
 condition|(
-name|IEEE80211_IS_CHAN_HT
-argument_list|(
-name|ni
-operator|->
-name|ni_chan
-argument_list|)
+name|is_11n
 condition|)
 name|rate
 operator|=
@@ -30548,6 +30631,10 @@ return|;
 block|}
 block|}
 comment|/* Configure bluetooth coexistence. */
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -30563,7 +30650,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|IWN_FLAG_BTCOEX
+condition|)
 name|error
 operator|=
 name|iwn_send_btcoex

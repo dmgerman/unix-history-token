@@ -797,6 +797,18 @@ name|uint8_t
 name|re_enumerate_wait
 decl_stmt|;
 comment|/* set if re-enum. is in progress */
+define|#
+directive|define
+name|USB_RE_ENUM_DONE
+value|0
+define|#
+directive|define
+name|USB_RE_ENUM_START
+value|1
+define|#
+directive|define
+name|USB_RE_ENUM_PWR_OFF
+value|2
 name|uint8_t
 name|ifaces_max
 decl_stmt|;

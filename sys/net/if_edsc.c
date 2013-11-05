@@ -107,6 +107,12 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
 begin_comment
 comment|/* basic part of ifnet(9) */
 end_comment

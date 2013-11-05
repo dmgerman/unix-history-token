@@ -963,6 +963,9 @@ case|:
 case|case
 name|MV_DEV_MV78100_Z0
 case|:
+case|case
+name|MV_DEV_MV78460
+case|:
 name|sc
 operator|->
 name|sc_version

@@ -42,7 +42,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -85,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include

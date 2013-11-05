@@ -291,6 +291,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|size_t
+name|hio_free_list_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 name|hio_free_list_lock
 decl_stmt|;
@@ -320,6 +327,14 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|size_t
+modifier|*
+name|hio_send_list_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 modifier|*
 name|hio_send_list_lock
@@ -333,6 +348,20 @@ modifier|*
 name|hio_send_list_cond
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|hio_send_local_list_size
+value|hio_send_list_size[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|hio_send_remote_list_size
+value|hio_send_list_size[1]
+end_define
 
 begin_comment
 comment|/*  * There is one recv list for every component, although local components don't  * use recv lists as local requests are done synchronously.  */
@@ -351,6 +380,14 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|size_t
+modifier|*
+name|hio_recv_list_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|pthread_mutex_t
 modifier|*
 name|hio_recv_list_lock
@@ -364,6 +401,13 @@ modifier|*
 name|hio_recv_list_cond
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|hio_recv_remote_list_size
+value|hio_recv_list_size[1]
+end_define
 
 begin_comment
 comment|/*  * Request is placed on done list by the slowest component (the one that  * decreased hio_countdown from 1 to 0).  */
@@ -379,6 +423,13 @@ argument_list|)
 name|hio_done_list
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|hio_done_list_size
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -488,7 +539,7 @@ name|name
 parameter_list|,
 name|ncomp
 parameter_list|)
-value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list[(ncomp)]);		\ 	TAILQ_INSERT_TAIL(&hio_##name##_list[(ncomp)], (hio),		\ 	    hio_next[(ncomp)]);						\ 	mtx_unlock(&hio_##name##_list_lock[ncomp]);			\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond[(ncomp)]);		\ } while (0)
+value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list[(ncomp)]);		\ 	TAILQ_INSERT_TAIL(&hio_##name##_list[(ncomp)], (hio),		\ 	    hio_next[(ncomp)]);						\ 	hio_##name##_list_size[(ncomp)]++;				\ 	mtx_unlock(&hio_##name##_list_lock[ncomp]);			\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond[(ncomp)]);		\ } while (0)
 end_define
 
 begin_define
@@ -500,7 +551,7 @@ name|hio
 parameter_list|,
 name|name
 parameter_list|)
-value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_##name##_next);\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond);			\ } while (0)
+value|do {				\ 	bool _wakeup;							\ 									\ 	mtx_lock(&hio_##name##_list_lock);				\ 	_wakeup = TAILQ_EMPTY(&hio_##name##_list);			\ 	TAILQ_INSERT_TAIL(&hio_##name##_list, (hio), hio_##name##_next);\ 	hio_##name##_list_size++;					\ 	mtx_unlock(&hio_##name##_list_lock);				\ 	if (_wakeup)							\ 		cv_broadcast(&hio_##name##_list_cond);			\ } while (0)
 end_define
 
 begin_define
@@ -516,7 +567,7 @@ name|ncomp
 parameter_list|,
 name|timeout
 parameter_list|)
-value|do {			\ 	bool _last;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_last = false;							\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list[(ncomp)])) == NULL&& !_last) { \ 		cv_timedwait(&hio_##name##_list_cond[(ncomp)],		\&hio_##name##_list_lock[(ncomp)], (timeout));	\ 		if ((timeout) != 0)					\ 			_last = true;					\ 	}								\ 	if (hio != NULL) {						\ 		TAILQ_REMOVE(&hio_##name##_list[(ncomp)], (hio),	\ 		    hio_next[(ncomp)]);					\ 	}								\ 	mtx_unlock(&hio_##name##_list_lock[(ncomp)]);			\ } while (0)
+value|do {			\ 	bool _last;							\ 									\ 	mtx_lock(&hio_##name##_list_lock[(ncomp)]);			\ 	_last = false;							\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list[(ncomp)])) == NULL&& !_last) { \ 		cv_timedwait(&hio_##name##_list_cond[(ncomp)],		\&hio_##name##_list_lock[(ncomp)], (timeout));	\ 		if ((timeout) != 0)					\ 			_last = true;					\ 	}								\ 	if (hio != NULL) {						\ 		PJDLOG_ASSERT(hio_##name##_list_size[(ncomp)] != 0);	\ 		hio_##name##_list_size[(ncomp)]--;			\ 		TAILQ_REMOVE(&hio_##name##_list[(ncomp)], (hio),	\ 		    hio_next[(ncomp)]);					\ 	}								\ 	mtx_unlock(&hio_##name##_list_lock[(ncomp)]);			\ } while (0)
 end_define
 
 begin_define
@@ -528,7 +579,7 @@ name|hio
 parameter_list|,
 name|name
 parameter_list|)
-value|do {					\ 	mtx_lock(&hio_##name##_list_lock);				\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list)) == NULL) {	\ 		cv_wait(&hio_##name##_list_cond,			\&hio_##name##_list_lock);				\ 	}								\ 	TAILQ_REMOVE(&hio_##name##_list, (hio), hio_##name##_next);	\ 	mtx_unlock(&hio_##name##_list_lock);				\ } while (0)
+value|do {					\ 	mtx_lock(&hio_##name##_list_lock);				\ 	while (((hio) = TAILQ_FIRST(&hio_##name##_list)) == NULL) {	\ 		cv_wait(&hio_##name##_list_cond,			\&hio_##name##_list_lock);				\ 	}								\ 	PJDLOG_ASSERT(hio_##name##_list_size != 0);			\ 	hio_##name##_list_size--;					\ 	TAILQ_REMOVE(&hio_##name##_list, (hio), hio_##name##_next);	\ 	mtx_unlock(&hio_##name##_list_lock);				\ } while (0)
 end_define
 
 begin_define
@@ -730,6 +781,80 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|output_status_aux
+parameter_list|(
+name|struct
+name|nv
+modifier|*
+name|nvout
+parameter_list|)
+block|{
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_free_list_size
+argument_list|,
+literal|"idle_queue_size"
+argument_list|)
+expr_stmt|;
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_send_local_list_size
+argument_list|,
+literal|"local_queue_size"
+argument_list|)
+expr_stmt|;
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_send_remote_list_size
+argument_list|,
+literal|"send_queue_size"
+argument_list|)
+expr_stmt|;
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_recv_remote_list_size
+argument_list|,
+literal|"recv_queue_size"
+argument_list|)
+expr_stmt|;
+name|nv_add_uint64
+argument_list|(
+name|nvout
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|hio_done_list_size
+argument_list|,
+literal|"done_queue_size"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1261,6 +1386,46 @@ name|ncomps
 argument_list|)
 expr_stmt|;
 block|}
+name|hio_send_list_size
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hio_send_list_size
+index|[
+literal|0
+index|]
+argument_list|)
+operator|*
+name|ncomps
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hio_send_list_size
+operator|==
+name|NULL
+condition|)
+block|{
+name|primary_exitx
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|,
+literal|"Unable to allocate %zu bytes of memory for send list counters."
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hio_send_list_size
+index|[
+literal|0
+index|]
+argument_list|)
+operator|*
+name|ncomps
+argument_list|)
+expr_stmt|;
+block|}
 name|hio_send_list_lock
 operator|=
 name|malloc
@@ -1372,6 +1537,46 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|hio_recv_list
+index|[
+literal|0
+index|]
+argument_list|)
+operator|*
+name|ncomps
+argument_list|)
+expr_stmt|;
+block|}
+name|hio_recv_list_size
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|hio_recv_list_size
+index|[
+literal|0
+index|]
+argument_list|)
+operator|*
+name|ncomps
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hio_recv_list_size
+operator|==
+name|NULL
+condition|)
+block|{
+name|primary_exitx
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|,
+literal|"Unable to allocate %zu bytes of memory for recv list counters."
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hio_recv_list_size
 index|[
 literal|0
 index|]
@@ -1501,7 +1706,7 @@ name|ncomps
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize lists, their locks and theirs condition variables. 	 */
+comment|/* 	 * Initialize lists, their counters, locks and condition variables. 	 */
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1543,6 +1748,13 @@ name|ii
 index|]
 argument_list|)
 expr_stmt|;
+name|hio_send_list_size
+index|[
+name|ii
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1569,6 +1781,13 @@ index|[
 name|ii
 index|]
 argument_list|)
+expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ii
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|mtx_init
 argument_list|(
@@ -1840,6 +2059,9 @@ name|hio
 argument_list|,
 name|hio_free_next
 argument_list|)
+expr_stmt|;
+name|hio_free_list_size
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -3557,6 +3779,14 @@ goto|goto
 name|close
 goto|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|res
+operator|->
+name|hr_amp_lock
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Merge local and remote bitmaps. 		 */
 name|activemap_merge
 argument_list|(
@@ -3575,14 +3805,6 @@ name|map
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now that we merged bitmaps from both nodes, flush it to the 		 * disk before we start to synchronize. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|res
-operator|->
-name|hr_amp_lock
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4378,6 +4600,12 @@ block|}
 name|gres
 operator|=
 name|res
+expr_stmt|;
+name|res
+operator|->
+name|output_status_aux
+operator|=
+name|output_status_aux
 expr_stmt|;
 name|mode
 operator|=
@@ -7376,6 +7604,12 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ncomp
+index|]
+operator|++
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7492,6 +7726,12 @@ index|[
 name|ncomp
 index|]
 argument_list|)
+expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ncomp
+index|]
+operator|--
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -7893,6 +8133,12 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ncomp
+index|]
+operator|--
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -8037,6 +8283,12 @@ index|[
 name|ncomp
 index|]
 argument_list|)
+expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ncomp
+index|]
+operator|--
 expr_stmt|;
 break|break;
 block|}
@@ -8412,6 +8664,12 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ncomp
+index|]
+operator|++
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -8469,6 +8727,12 @@ index|[
 name|ncomp
 index|]
 argument_list|)
+expr_stmt|;
+name|hio_recv_list_size
+index|[
+name|ncomp
+index|]
+operator|++
 expr_stmt|;
 name|mtx_unlock
 argument_list|(

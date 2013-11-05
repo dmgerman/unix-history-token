@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/devmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/intr.h>
 end_include
 
@@ -143,7 +149,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 name|at91_devmap
 index|[]
 decl_stmt|;
@@ -604,13 +610,9 @@ argument_list|,
 literal|"AT91 device bus"
 argument_list|)
 expr_stmt|;
-name|arm_post_filter
-operator|=
-name|at91_eoi
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
@@ -738,13 +740,17 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|struct
-name|pmap_devmap
+name|arm_devmap_entry
 modifier|*
 name|pdevmap
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|arm_post_filter
+operator|=
+name|at91_eoi
+expr_stmt|;
 name|at91_softc
 operator|=
 name|sc

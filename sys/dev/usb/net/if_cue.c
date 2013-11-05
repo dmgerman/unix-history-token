@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -131,6 +137,18 @@ begin_include
 include|#
 directive|include
 file|<sys/priv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include

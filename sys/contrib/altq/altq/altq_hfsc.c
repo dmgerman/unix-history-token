@@ -165,13 +165,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/pfvar.h>
+file|<netpfil/pf/pf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/pf/pf_altq.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/pf/pf_mtag.h>
 end_include
 
 begin_include

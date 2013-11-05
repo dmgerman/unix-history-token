@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -78,6 +84,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -119,25 +131,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
+file|<net/if_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<net/if_media.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -1389,7 +1395,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}

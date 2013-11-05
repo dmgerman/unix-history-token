@@ -140,6 +140,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_function_decl
 specifier|extern
 name|char
@@ -377,6 +383,32 @@ directive|define
 name|BUFLEN
 value|2048
 end_define
+
+begin_comment
+comment|/* definition to be used from workarounds.c */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGROUP
+end_ifdef
+
+begin_function_decl
+name|int
+name|yp_get_default_domain
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* hosts_access - host access control facility */
@@ -1179,7 +1211,7 @@ modifier|*
 name|path
 decl_stmt|;
 name|struct
-name|hosts_info
+name|host_info
 modifier|*
 name|host
 decl_stmt|;

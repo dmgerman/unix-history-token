@@ -26,6 +26,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common.h"
 end_include
 

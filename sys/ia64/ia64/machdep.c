@@ -3121,7 +3121,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|PAGE_SHIFT
+name|LOG2_ID_PAGE_SIZE
 operator|<<
 literal|2
 operator|)
@@ -3141,7 +3141,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|PAGE_SHIFT
+name|LOG2_ID_PAGE_SIZE
 operator|<<
 literal|2
 operator|)

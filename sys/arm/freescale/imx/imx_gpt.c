@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/frame.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/intr.h>
 end_include
 
@@ -356,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_FREQUENCY
-value|1000000
+value|10000000
 end_define
 
 begin_comment
@@ -404,6 +398,59 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"fsl,imx6q-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"fsl,imx53-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"fsl,imx51-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"fsl,imx31-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"fsl,imx27-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"fsl,imx25-gpt"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -415,27 +462,18 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"fsl,imx51-gpt"
+name|compat_data
 argument_list|)
-operator|&&
-operator|!
-name|ofw_bus_is_compatible
-argument_list|(
-name|dev
-argument_list|,
-literal|"fsl,imx53-gpt"
-argument_list|)
+operator|->
+name|ocd_data
+operator|!=
+literal|0
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+block|{
 name|device_set_desc
 argument_list|(
 name|dev
@@ -446,6 +484,12 @@ expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -544,22 +588,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For now, just automatically choose a good clock for the hardware 	 * we're running on.  Eventually we could allow selection from the fdt; 	 * the code in this driver will cope with any clock frequency. 	 */
-if|if
-condition|(
-name|ofw_bus_is_compatible
-argument_list|(
-name|dev
-argument_list|,
-literal|"fsl,imx6-gpt"
-argument_list|)
-condition|)
-name|sc
-operator|->
-name|sc_clksrc
-operator|=
-name|GPT_CR_CLKSRC_24M
-expr_stmt|;
-else|else
 name|sc
 operator|->
 name|sc_clksrc
@@ -1120,6 +1148,11 @@ argument_list|,
 name|GPT_IR_OF2
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -1144,7 +1177,6 @@ operator|)
 operator|>>
 literal|32
 expr_stmt|;
-comment|/* 		 * TODO: setupt second compare reg with time which will save 		 * us in case correct one lost, f.e. if period to short and 		 * setup done later than counter reach target value. 		 */
 comment|/* Do not disturb, otherwise event will be lost */
 name|spinlock_enter
 argument_list|()
@@ -1329,11 +1361,6 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
-comment|/* Sometime we not get staus bit when interrupt arrive.  Cache? */
-while|while
-condition|(
-operator|!
-operator|(
 name|status
 operator|=
 name|READ4
@@ -1342,9 +1369,18 @@ name|sc
 argument_list|,
 name|IMX_GPT_SR
 argument_list|)
-operator|)
-condition|)
-empty_stmt|;
+expr_stmt|;
+comment|/* 	* Clear interrupt status before invoking event callbacks.  The callback 	* often sets up a new one-shot timer event and if the interval is short 	* enough it can fire before we get out of this function.  If we cleared 	* at the bottom we'd miss the interrupt and hang until the clock wraps. 	*/
+name|WRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|IMX_GPT_SR
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+comment|/* Handle one-shot timer events. */
 if|if
 condition|(
 name|status
@@ -1381,6 +1417,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Handle periodic timer events. */
 if|if
 condition|(
 name|status
@@ -1396,7 +1433,6 @@ name|et
 operator|.
 name|et_active
 condition|)
-block|{
 name|sc
 operator|->
 name|et
@@ -1415,7 +1451,14 @@ operator|.
 name|et_arg
 argument_list|)
 expr_stmt|;
-comment|/* Set expected value */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_period
+operator|!=
+literal|0
+condition|)
 name|WRITE4
 argument_list|(
 name|sc
@@ -1435,17 +1478,6 @@ name|sc_period
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* ACK */
-name|WRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|IMX_GPT_SR
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FILTER_HANDLED

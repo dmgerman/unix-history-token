@@ -9431,7 +9431,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%s:%d:%d:%d: Attached to scbus%d\n"
+literal|"%s:%d:%d: Attached to scbus%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -9447,8 +9447,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_unit
-argument_list|,
-name|CAM_LUN_WILDCARD
 argument_list|,
 name|cam_sim_path
 argument_list|(
@@ -9672,7 +9670,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_SCSI_IO: "
+literal|"%d:%d:%jx:XPT_SCSI_IO: "
 literal|"cmd: 0x%02x, flags: 0x%02x, "
 literal|"%db cmd/%db data/%db sense\n"
 argument_list|,
@@ -9689,6 +9687,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -9742,7 +9743,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_SCSI_IO: "
+literal|"%d:%d:%jx:XPT_SCSI_IO: "
 literal|"I/O in progress, deferring\n"
 argument_list|,
 name|cam_sim_path
@@ -9758,6 +9759,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -10345,7 +10349,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_PATH_INQ:.\n"
+literal|"%d:%d:%jx:XPT_PATH_INQ:.\n"
 argument_list|,
 name|sc
 condition|?
@@ -10365,6 +10369,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -10613,7 +10620,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_RESET_DEV:.\n"
+literal|"%d:%d:%jx:XPT_RESET_DEV:.\n"
 argument_list|,
 name|cam_sim_path
 argument_list|(
@@ -10628,6 +10635,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -10675,7 +10685,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_GET_TRAN_SETTINGS:.\n"
+literal|"%d:%d:%jx:XPT_GET_TRAN_SETTINGS:.\n"
 argument_list|,
 name|cam_sim_path
 argument_list|(
@@ -10690,6 +10700,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -10754,7 +10767,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_SET_TRAN_SETTINGS:.\n"
+literal|"%d:%d:%jx:XPT_SET_TRAN_SETTINGS:.\n"
 argument_list|,
 name|cam_sim_path
 argument_list|(
@@ -10769,6 +10782,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -10823,7 +10839,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:XPT_NOOP:.\n"
+literal|"%d:%d:%jx:XPT_NOOP:.\n"
 argument_list|,
 name|sc
 condition|?
@@ -10843,6 +10859,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h
@@ -10872,7 +10891,7 @@ name|sc
 argument_list|,
 name|UDMASS_SCSI
 argument_list|,
-literal|"%d:%d:%d:func_code 0x%04x: "
+literal|"%d:%d:%jx:func_code 0x%04x: "
 literal|"Not implemented\n"
 argument_list|,
 name|sc
@@ -10893,6 +10912,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb
 operator|->
 name|ccb_h

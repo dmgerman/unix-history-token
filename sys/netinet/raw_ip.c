@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -3179,13 +3185,9 @@ expr_stmt|;
 name|IN_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
-comment|/* 				 * in_ifscrub kills the interface route. 				 */
-name|in_ifscrub
+comment|/* 				 * in_scrubprefix() kills the interface route. 				 */
+name|in_scrubprefix
 argument_list|(
-name|ia
-operator|->
-name|ia_ifp
-argument_list|,
 name|ia
 argument_list|,
 literal|0
@@ -3330,19 +3332,6 @@ argument_list|,
 name|sa
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-name|ia
-operator|->
-name|ia_flags
-operator|&=
-operator|~
-name|IFA_RTSELF
-expr_stmt|;
 name|err
 operator|=
 name|rtinit
@@ -3382,18 +3371,6 @@ name|ia
 argument_list|,
 name|sa
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-name|ia
-operator|->
-name|ia_flags
-operator||=
-name|IFA_RTSELF
 expr_stmt|;
 name|ifa_free
 argument_list|(

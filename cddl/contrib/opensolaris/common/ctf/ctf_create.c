@@ -152,6 +152,10 @@ name|cts
 operator|.
 name|cts_data
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|hdr
 expr_stmt|;

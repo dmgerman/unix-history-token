@@ -113,18 +113,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pfvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_pfsync.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -151,6 +139,29 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/pfvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_pfsync.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -281,6 +292,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PF
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -670,6 +687,15 @@ directive|undef
 name|p
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PF */
+end_comment
 
 begin_comment
 comment|/*  * Display a formatted value, or a '-' in the same space.  */

@@ -4587,7 +4587,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d srb='%p' aborted\n"
+literal|"arcmsr%d: scsi id=%d lun=%jx srb='%p' aborted\n"
 argument_list|,
 name|acb
 operator|->
@@ -4601,6 +4601,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|srb
 operator|->
 name|pccb
@@ -12982,7 +12985,7 @@ name|ARCMSR_SRB_ABORTED
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"arcmsr%d:scsi id=%d lun=%d abort srb '%p'"
+literal|"arcmsr%d:scsi id=%d lun=%jx abort srb '%p'"
 literal|"outstanding command \n"
 argument_list|,
 name|acb
@@ -12995,6 +12998,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|abortccb
 operator|->
 name|ccb_h
@@ -15108,7 +15114,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d srb='%p'"
+literal|"arcmsr%d: scsi id=%d lun=%jx srb='%p'"
 literal|"poll command abort successfully \n"
 argument_list|,
 name|acb
@@ -15123,6 +15129,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|srb
 operator|->
 name|pccb
@@ -15435,7 +15444,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d srb='%p'"
+literal|"arcmsr%d: scsi id=%d lun=%jx srb='%p'"
 literal|"poll command abort successfully \n"
 argument_list|,
 name|acb
@@ -15450,6 +15459,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|srb
 operator|->
 name|pccb
@@ -15733,7 +15745,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d srb='%p'poll command abort successfully \n"
+literal|"arcmsr%d: scsi id=%d lun=%jx srb='%p'poll command abort successfully \n"
 argument_list|,
 name|acb
 operator|->
@@ -15747,6 +15759,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|srb
 operator|->
 name|pccb
@@ -16087,7 +16102,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"arcmsr%d: scsi id=%d lun=%d srb='%p'poll command abort successfully \n"
+literal|"arcmsr%d: scsi id=%d lun=%jx srb='%p'poll command abort successfully \n"
 argument_list|,
 name|acb
 operator|->
@@ -16101,6 +16116,9 @@ name|ccb_h
 operator|.
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|srb
 operator|->
 name|pccb

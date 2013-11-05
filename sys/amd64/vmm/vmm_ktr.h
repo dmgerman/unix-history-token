@@ -37,7 +37,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMM_CTR0
+name|VCPU_CTR0
 parameter_list|(
 name|vm
 parameter_list|,
@@ -52,7 +52,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMM_CTR1
+name|VCPU_CTR1
 parameter_list|(
 name|vm
 parameter_list|,
@@ -69,7 +69,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMM_CTR2
+name|VCPU_CTR2
 parameter_list|(
 name|vm
 parameter_list|,
@@ -88,7 +88,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMM_CTR3
+name|VCPU_CTR3
 parameter_list|(
 name|vm
 parameter_list|,
@@ -104,6 +104,70 @@ name|p3
 parameter_list|)
 define|\
 value|CTR6(KTR_VMM, "vm %s-%d(%d): " format, vm_name((vm)), (vcpuid), curcpu, \ 			(p1), (p2), (p3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CTR0
+parameter_list|(
+name|vm
+parameter_list|,
+name|format
+parameter_list|)
+define|\
+value|CTR2(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CTR1
+parameter_list|(
+name|vm
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|)
+define|\
+value|CTR3(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu, (p1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CTR2
+parameter_list|(
+name|vm
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|)
+define|\
+value|CTR4(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu, (p1), (p2))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_CTR3
+parameter_list|(
+name|vm
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|)
+define|\
+value|CTR5(KTR_VMM, "vm %s(%d): " format, vm_name((vm)), curcpu, (p1), (p2), (p3))
 end_define
 
 begin_endif

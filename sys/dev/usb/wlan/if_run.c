@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_arp.h>
 end_include
 
@@ -1927,8 +1933,7 @@ parameter_list|,
 name|usb_error_t
 name|error
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|index
 parameter_list|)
 function_decl|;
@@ -3246,8 +3251,7 @@ name|struct
 name|run_softc
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15692,6 +15696,11 @@ argument_list|,
 name|dmalen
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* don't free source buffer */
 break|break;
 block|}
 comment|/* copy aggregated frames to another mbuf */
@@ -15802,6 +15811,12 @@ operator|+
 literal|8
 expr_stmt|;
 block|}
+comment|/* make sure we free the source buffer, if any */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|RUN_LOCK
 argument_list|(
 name|sc
@@ -15943,8 +15958,7 @@ parameter_list|,
 name|usb_error_t
 name|error
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|index
 parameter_list|)
 block|{
@@ -20441,7 +20455,7 @@ name|run_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint32_t
+name|u_int
 name|chan
 parameter_list|)
 block|{
@@ -20808,7 +20822,7 @@ name|run_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint32_t
+name|u_int
 name|chan
 parameter_list|)
 block|{
@@ -22240,7 +22254,7 @@ name|sc_ifp
 operator|->
 name|if_l2com
 decl_stmt|;
-name|uint32_t
+name|u_int
 name|chan
 decl_stmt|,
 name|group
@@ -24400,7 +24414,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|u_int
 name|chan
 init|=
 name|ieee80211_chan2ieee
@@ -26136,15 +26150,16 @@ operator|==
 literal|0x3071
 condition|)
 block|{
-comment|/* enable DC filter */
 if|if
 condition|(
 name|sc
 operator|->
 name|mac_rev
 operator|>=
-literal|0x0201
+literal|0x0211
 condition|)
+block|{
+comment|/* enable DC filter */
 name|run_bbp_write
 argument_list|(
 name|sc
@@ -26154,6 +26169,30 @@ argument_list|,
 literal|0xc0
 argument_list|)
 expr_stmt|;
+comment|/* improve power consumption */
+name|run_bbp_read
+argument_list|(
+name|sc
+argument_list|,
+literal|31
+argument_list|,
+operator|&
+name|bbp
+argument_list|)
+expr_stmt|;
+name|run_bbp_write
+argument_list|(
+name|sc
+argument_list|,
+literal|31
+argument_list|,
+name|bbp
+operator|&
+operator|~
+literal|0x03
+argument_list|)
+expr_stmt|;
+block|}
 name|run_bbp_read
 argument_list|(
 name|sc
@@ -26200,39 +26239,6 @@ argument_list|,
 name|bbp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|mac_rev
-operator|>=
-literal|0x0211
-condition|)
-block|{
-comment|/* improve power consumption */
-name|run_bbp_read
-argument_list|(
-name|sc
-argument_list|,
-literal|31
-argument_list|,
-operator|&
-name|bbp
-argument_list|)
-expr_stmt|;
-name|run_bbp_write
-argument_list|(
-name|sc
-argument_list|,
-literal|31
-argument_list|,
-name|bbp
-operator|&
-operator|~
-literal|0x03
-argument_list|)
-expr_stmt|;
-block|}
 name|run_write
 argument_list|(
 name|sc
@@ -28192,8 +28198,7 @@ name|run_softc
 modifier|*
 name|sc
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|ms
 parameter_list|)
 block|{

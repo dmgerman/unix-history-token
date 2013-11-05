@@ -15,12 +15,6 @@ directive|define
 name|_VLAPIC_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|"vdev.h"
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|vm
@@ -585,17 +579,15 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vlapic_op_mem_write
+name|vlapic_write
 parameter_list|(
-name|void
+name|struct
+name|vlapic
 modifier|*
-name|dev
+name|vlapic
 parameter_list|,
 name|uint64_t
-name|gpa
-parameter_list|,
-name|opsize_t
-name|size
+name|offset
 parameter_list|,
 name|uint64_t
 name|data
@@ -605,17 +597,15 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vlapic_op_mem_read
+name|vlapic_read
 parameter_list|(
-name|void
+name|struct
+name|vlapic
 modifier|*
-name|dev
+name|vlapic
 parameter_list|,
 name|uint64_t
-name|gpa
-parameter_list|,
-name|opsize_t
-name|size
+name|offset
 parameter_list|,
 name|uint64_t
 modifier|*

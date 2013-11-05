@@ -129,6 +129,56 @@ comment|/* =====================================================================
 end_comment
 
 begin_comment
+comment|/*  * --------------------------------------------------------------------------  * Device ID for 2x00 series  * --------------------------------------------------------------------------  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_DID_2x00_1
+value|0x0890
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_DID_2x00_2
+value|0x0891
+end_define
+
+begin_comment
+comment|/* SubDevice ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_2x00_1
+value|0x4022
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_2x00_2
+value|0x4222
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_2x00_3
+value|0x4422
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_2x00_4
+value|0x4822
+end_define
+
+begin_comment
 comment|/*  * --------------------------------------------------------------------------  * Device ID for 2x30 series  * --------------------------------------------------------------------------  */
 end_comment
 

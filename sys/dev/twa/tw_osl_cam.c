@@ -629,7 +629,7 @@ literal|3
 argument_list|,
 name|sc
 argument_list|,
-literal|"Invalid target. PTL = %x %x %x"
+literal|"Invalid target. PTL = %x %x %jx"
 argument_list|,
 name|ccb_h
 operator|->
@@ -639,6 +639,9 @@ name|ccb_h
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb_h
 operator|->
 name|target_lun
@@ -676,7 +679,7 @@ literal|3
 argument_list|,
 name|sc
 argument_list|,
-literal|"Invalid lun. PTL = %x %x %x"
+literal|"Invalid lun. PTL = %x %x %jx"
 argument_list|,
 name|ccb_h
 operator|->
@@ -686,6 +689,9 @@ name|ccb_h
 operator|->
 name|target_id
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ccb_h
 operator|->
 name|target_lun
