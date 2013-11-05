@@ -67,34 +67,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|vd_init_t
-name|vt_fb_init
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vd_blank_t
-name|vt_fb_blank
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vd_bitbltchr_t
-name|vt_fb_bitbltchr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vd_postswitch_t
-name|vt_fb_postswitch
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|vt_driver
 name|vt_fb_driver
@@ -131,7 +103,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|void
 name|vt_fb_blank
 parameter_list|(
@@ -391,7 +362,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vt_fb_bitbltchr
 parameter_list|(
@@ -693,7 +663,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vt_fb_postswitch
 parameter_list|(
@@ -867,7 +836,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|vt_fb_init
 parameter_list|(
