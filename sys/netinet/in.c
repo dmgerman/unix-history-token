@@ -3969,8 +3969,6 @@ return|;
 comment|/* 	 * add a loopback route to self 	 */
 if|if
 condition|(
-name|V_useloopback
-operator|&&
 operator|!
 name|vhid
 operator|&&

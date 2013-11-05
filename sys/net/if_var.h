@@ -2093,16 +2093,6 @@ begin_comment
 comment|/* first loopback interface */
 end_comment
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|useloopback
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -2129,13 +2119,6 @@ define|#
 directive|define
 name|V_loif
 value|VNET(loif)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_useloopback
-value|VNET(useloopback)
 end_define
 
 begin_function_decl

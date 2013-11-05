@@ -1930,7 +1930,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * If ifp is provided, check for equality with rtentry. 	 * We should use rt->rt_ifa->ifa_ifp, instead of rt->rt_ifp, 	 * in order to pass packets injected back by if_simloop(): 	 * if useloopback == 1 routing entry (via lo0) for our own address 	 * may exist, so we need to handle routing assymetry. 	 */
+comment|/* 	 * If ifp is provided, check for equality with rtentry. 	 * We should use rt->rt_ifa->ifa_ifp, instead of rt->rt_ifp, 	 * in order to pass packets injected back by if_simloop(): 	 * routing entry (via lo0) for our own address 	 * may exist, so we need to handle routing assymetry. 	 */
 if|if
 condition|(
 name|ifp

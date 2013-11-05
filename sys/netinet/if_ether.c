@@ -305,22 +305,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|useloopback
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* use loopback interface for 					 * local traffic */
-end_comment
-
-begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
 argument_list|(
@@ -488,30 +472,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ARP resolution attempts before returning error"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_link_ether_inet
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|useloopback
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|useloopback
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Use the loopback interface for local traffic"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
