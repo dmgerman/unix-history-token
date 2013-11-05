@@ -137,8 +137,6 @@ name|pd
 decl_stmt|;
 name|vm_offset_t
 name|lowaddr
-init|=
-name|ARM_VECTORS_HIGH
 decl_stmt|;
 if|if
 condition|(
@@ -161,6 +159,10 @@ name|panic
 argument_list|(
 literal|"arm_devmap_lastaddr(): No devmap table registered."
 argument_list|)
+expr_stmt|;
+name|lowaddr
+operator|=
+name|ARM_VECTORS_HIGH
 expr_stmt|;
 for|for
 control|(
@@ -242,7 +244,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"AKVA_DEVMAP_MAX_ENTRIES is too small!\n"
+literal|"AKVA_DEVMAP_MAX_ENTRIES is too small"
 argument_list|)
 expr_stmt|;
 if|if
@@ -408,7 +410,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"arm_devmap_bootstrap(): No devmap table registered."
+literal|"arm_devmap_bootstrap(): No devmap table registered"
 argument_list|)
 expr_stmt|;
 for|for
