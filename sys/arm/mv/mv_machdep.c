@@ -807,6 +807,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+return|return
+operator|(
+name|fdt_immr_va
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 if|if
 condition|(
 name|fdt_immr_addr
@@ -821,12 +836,6 @@ condition|(
 literal|1
 condition|)
 empty_stmt|;
-comment|/* Platform-specific initialisation */
-return|return
-operator|(
-name|fdt_immr_va
-operator|)
-return|;
 block|}
 end_function
 
@@ -1212,7 +1221,7 @@ end_comment
 
 begin_function
 name|int
-name|platform_devmap_init
+name|initarm_devmap_init
 parameter_list|(
 name|void
 parameter_list|)

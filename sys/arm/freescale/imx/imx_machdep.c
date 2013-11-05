@@ -258,6 +258,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+return|return
+operator|(
+name|devmap_vaddr
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initarm_early_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 comment|/* XXX - Get rid of this stuff soon. */
 name|boothowto
 operator||=
@@ -269,7 +284,16 @@ name|bootverbose
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Normally initarm() calls platform_devmap_init() much later in the 	 * init process to set up static device mappings.  To calculate the 	 * highest available kva address we have to do that setup first.  It 	 * maps downwards from ARM_VECTORS_HIGH and the last usable kva address 	 * is the point right before the virtual address of the first static 	 * mapping.  So go set up the static mapping table now, then we can 	 * return the lowest static devmap vaddr as the end of usable kva. 	 */
+block|}
+end_function
+
+begin_function
+name|int
+name|initarm_devmap_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|imx_devmap_init
 argument_list|()
 expr_stmt|;
@@ -278,22 +302,6 @@ argument_list|(
 name|devmap_entries
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|devmap_vaddr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|platform_devmap_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* On imx this work is done during initarm_lastaddr(). */
 return|return
 operator|(
 literal|0
