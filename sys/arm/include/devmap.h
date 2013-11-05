@@ -48,6 +48,36 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Returns the lowest KVA address used in any entry in the registered devmap  * table.  This works with whatever table is registered, including the internal  * table used by arm_devmap_add_entry() if that routinue was used. Platforms can  * implement initarm_lastaddr() by calling this if static device mappings are  * their only use of high KVA space.  */
+end_comment
+
+begin_function_decl
+name|vm_offset_t
+name|arm_devmap_lastaddr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Routine to automatically allocate KVA (from the top of the address space  * downwards) and make static device mapping entries in an internal table.  The  * internal table is automatically registered on the first call to this.  */
+end_comment
+
+begin_function_decl
+name|void
+name|arm_devmap_add_entry
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|vm_size_t
+name|sz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Register a platform-local table to be bootstrapped by the generic  * initarm() in arm/machdep.c.  This is used by newer code that allocates and  * fills in its own local table but does not have its own initarm() routine.  */
 end_comment
 
@@ -65,7 +95,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Directly process a table; called from initarm() of older platforms that don't  * use the generic initarm() in arm/machdep.c.  If the table pointer is NULL,  * this will use the table installed previously by arm_devmap_register_table().  */
+comment|/*  * Establish mappings for all the entries in the table.  This is called  * automatically from the common initarm() in arm/machdep.c, and also from the  * custom initarm() routines in older code.  If the table pointer is NULL, this  * will use the table installed previously by arm_devmap_register_table().  */
 end_comment
 
 begin_function_decl
