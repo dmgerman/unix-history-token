@@ -1502,36 +1502,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Compat with pre-10.x */
-end_comment
-
-begin_struct
-struct|struct
-name|oifaliasreq
-block|{
-name|char
-name|ifra_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|struct
-name|sockaddr
-name|ifra_addr
-decl_stmt|;
-name|struct
-name|sockaddr
-name|ifra_broadaddr
-decl_stmt|;
-name|struct
-name|sockaddr
-name|ifra_mask
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|ifmediareq

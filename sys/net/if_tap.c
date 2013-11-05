@@ -4022,12 +4022,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OSIOCGIFADDR
-case|:
-comment|/* get MAC address of the remote side */
-case|case
 name|SIOCGIFADDR
 case|:
+comment|/* get MAC address of the remote side */
 name|mtx_lock
 argument_list|(
 operator|&
