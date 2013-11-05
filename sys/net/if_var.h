@@ -2525,6 +2525,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ifa_switch_loopback_route
+parameter_list|(
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|ifaddr
 modifier|*
