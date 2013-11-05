@@ -11401,7 +11401,9 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|,
-name|check_all
+name|check_all_tx
+decl_stmt|,
+name|check_all_rx
 decl_stmt|,
 name|want_tx
 decl_stmt|,
@@ -11731,7 +11733,7 @@ name|want_rx
 expr_stmt|;
 block|}
 comment|/* 	 * check_all is set if the card has more than one queue AND 	 * the client is polling all of them. If true, we sleep on 	 * the "global" selinfo, otherwise we sleep on individual selinfo 	 * (FreeBSD only allows two selinfo's per file descriptor). 	 * The interrupt routine in the driver wake one or the other 	 * (or both) depending on which clients are active. 	 * 	 * rxsync() is only called if we run out of buffers on a POLLIN. 	 * txsync() is called if we run out of buffers on POLLOUT, or 	 * there are pending packets to send. The latter can be disabled 	 * passing NETMAP_NO_TX_POLL in the NIOCREG call. 	 */
-name|check_all
+name|check_all_tx
 operator|=
 operator|(
 name|priv
@@ -11745,7 +11747,19 @@ operator|(
 name|lim_tx
 operator|>
 literal|1
-operator|||
+operator|)
+expr_stmt|;
+name|check_all_rx
+operator|=
+operator|(
+name|priv
+operator|->
+name|np_qlast
+operator|==
+name|NETMAP_HW_RING
+operator|)
+operator|&&
+operator|(
 name|lim_rx
 operator|>
 literal|1
@@ -12042,7 +12056,7 @@ name|selrecord
 argument_list|(
 name|td
 argument_list|,
-name|check_all
+name|check_all_tx
 condition|?
 operator|&
 name|na
@@ -12250,7 +12264,7 @@ name|selrecord
 argument_list|(
 name|td
 argument_list|,
-name|check_all
+name|check_all_rx
 condition|?
 operator|&
 name|na
