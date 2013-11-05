@@ -568,7 +568,7 @@ expr_stmt|;
 name|ifc
 operator|->
 name|ifc_req
-operator|.
+operator|->
 name|ifr_addr
 operator|.
 name|sa_family
@@ -576,7 +576,7 @@ operator|=
 name|sc
 operator|.
 name|svr4_ifc_req
-operator|.
+operator|->
 name|svr4_ifr_addr
 operator|.
 name|sa_family
@@ -584,7 +584,7 @@ expr_stmt|;
 name|ifc
 operator|->
 name|ifc_req
-operator|.
+operator|->
 name|ifr_addr
 operator|.
 name|sa_len
@@ -612,12 +612,11 @@ name|td_ucred
 argument_list|,
 name|td
 argument_list|)
-block|)
-empty_stmt|;
+expr_stmt|;
 name|sc
 operator|.
 name|svr4_ifc_req
-operator|.
+operator|->
 name|svr4_ifr_addr
 operator|.
 name|sa_family
@@ -625,7 +624,7 @@ operator|=
 name|ifc
 operator|->
 name|ifc_req
-operator|.
+operator|->
 name|ifr_addr
 operator|.
 name|sa_family
@@ -665,8 +664,8 @@ literal|0
 return|;
 comment|/* ENOSYS really */
 block|}
+block|}
 end_function
 
-unit|}
 end_unit
 
