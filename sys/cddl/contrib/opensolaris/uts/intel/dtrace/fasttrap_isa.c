@@ -5889,11 +5889,6 @@ name|ret
 operator|=
 name|fasttrap_sulword
 argument_list|(
-operator|&
-name|rp
-operator|->
-name|r_rbp
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -5901,6 +5896,10 @@ operator|)
 name|rp
 operator|->
 name|r_rsp
+argument_list|,
+name|rp
+operator|->
+name|r_rbp
 argument_list|)
 expr_stmt|;
 block|}
@@ -5924,11 +5923,6 @@ name|ret
 operator|=
 name|fasttrap_suword32
 argument_list|(
-operator|&
-name|rp
-operator|->
-name|r_rbp
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -5936,6 +5930,10 @@ operator|)
 name|rp
 operator|->
 name|r_rsp
+argument_list|,
+name|rp
+operator|->
+name|r_rbp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6309,7 +6307,6 @@ operator|*
 operator|)
 name|addr
 argument_list|,
-operator|&
 name|pcps
 argument_list|)
 expr_stmt|;
@@ -6355,7 +6352,6 @@ operator|*
 operator|)
 name|addr
 argument_list|,
-operator|&
 name|pcps
 argument_list|)
 expr_stmt|;
