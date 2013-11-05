@@ -2250,6 +2250,9 @@ name|struct
 name|nvme_completion_poll_status
 name|status
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 name|ns
 operator|->
 name|ctrlr
@@ -2517,6 +2520,24 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Namespace IDs start at 1, so we need to subtract 1 to create a 	 *  correct unit number. 	 */
+name|unit
+operator|=
+name|device_get_unit
+argument_list|(
+name|ctrlr
+operator|->
+name|dev
+argument_list|)
+operator|*
+name|NVME_MAX_NAMESPACES
+operator|+
+name|ns
+operator|->
+name|id
+operator|-
+literal|1
+expr_stmt|;
 comment|/*  * MAKEDEV_ETERNAL was added in r210923, for cdevs that will never  *  be destroyed.  This avoids refcounting on the cdev object.  *  That should be OK case here, as long as we're not supporting PCIe  *  surprise removal nor namespace deletion.  */
 ifdef|#
 directive|ifdef
@@ -2532,7 +2553,7 @@ argument_list|,
 operator|&
 name|nvme_ns_cdevsw
 argument_list|,
-literal|0
+name|unit
 argument_list|,
 name|NULL
 argument_list|,
@@ -2569,7 +2590,7 @@ argument_list|,
 operator|&
 name|nvme_ns_cdevsw
 argument_list|,
-literal|0
+name|unit
 argument_list|,
 name|NULL
 argument_list|,
