@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/vt/vt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/vt/hw/fb/vt_fb.h>
 end_include
 
@@ -920,7 +926,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|fb_probe
 parameter_list|(
