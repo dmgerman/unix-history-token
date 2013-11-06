@@ -457,12 +457,6 @@ operator|*
 name|sin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|which
-operator|!=
-name|MASK
-condition|)
 name|sin
 operator|->
 name|sin_family
@@ -583,6 +577,12 @@ name|errstr
 argument_list|)
 expr_stmt|;
 block|}
+name|min
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
 name|min
 operator|->
 name|sin_len
