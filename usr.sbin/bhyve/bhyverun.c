@@ -672,9 +672,7 @@ argument_list|(
 name|tname
 argument_list|)
 argument_list|,
-literal|"%s vcpu %d"
-argument_list|,
-name|vmname
+literal|"vcpu %d"
 argument_list|,
 name|vcpu
 argument_list|)
@@ -2789,6 +2787,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Change the proc title to include the VM name. 	 */
+name|setproctitle
+argument_list|(
+literal|"%s"
+argument_list|,
+name|vmname
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Add CPU 0 	 */
 name|fbsdrun_addcpu
 argument_list|(
