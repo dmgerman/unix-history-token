@@ -6095,16 +6095,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|run_read
-argument_list|(
-name|sc
-argument_list|,
-name|RT2860_ASIC_VER_ID
-argument_list|,
-operator|&
-name|tmp
-argument_list|)
-expr_stmt|;
 comment|/* write microcode image */
 name|run_write_region_1
 argument_list|(
