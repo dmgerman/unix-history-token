@@ -2630,6 +2630,7 @@ modifier|*
 name|addr
 init|=
 operator|(
+specifier|const
 expr|struct
 name|sockaddr_in
 operator|*
