@@ -748,6 +748,30 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
+block|}
+name|CPU_FOREACH
+argument_list|(
+argument|i
+argument_list|)
+block|{
+comment|/* Bind to each cpu. */
+name|thread_lock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|sched_bind
+argument_list|(
+name|curthread
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* wait loop (100*100 usec is enough ?) */
 for|for
 control|(
@@ -763,6 +787,7 @@ name|j
 operator|++
 control|)
 block|{
+comment|/* get the result. not assure msr=id */
 name|msr
 operator|=
 name|rdmsr
@@ -785,14 +810,6 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* get the result. not assure msr=id */
-name|msr
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_AMD_10H_11H_STATUS
-argument_list|)
-expr_stmt|;
 name|HWPSTATE_DEBUG
 argument_list|(
 name|dev
