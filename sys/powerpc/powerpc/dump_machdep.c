@@ -1256,13 +1256,9 @@ expr_stmt|;
 comment|/* Dump leader */
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|&
 name|kdh
@@ -1369,13 +1365,9 @@ goto|;
 comment|/* Dump trailer */
 name|error
 operator|=
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 operator|&
 name|kdh
@@ -1398,13 +1390,9 @@ goto|goto
 name|fail
 goto|;
 comment|/* Signal completion, signoff and exit stage left. */
-name|di
-operator|->
-name|dumper
+name|dump_write
 argument_list|(
 name|di
-operator|->
-name|priv
 argument_list|,
 name|NULL
 argument_list|,
@@ -1443,6 +1431,18 @@ condition|)
 name|printf
 argument_list|(
 literal|"\nDump aborted\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+name|ENOSPC
+condition|)
+name|printf
+argument_list|(
+literal|"\nDump failed. Partition too small.\n"
 argument_list|)
 expr_stmt|;
 else|else
