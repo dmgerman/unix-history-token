@@ -5668,7 +5668,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|PCI_BARMAX
 condition|;
 name|i
