@@ -194,6 +194,7 @@ name|false
 return|;
 block|}
 comment|// Test operator
+name|explicit
 name|operator
 name|bool
 argument_list|()

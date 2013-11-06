@@ -993,6 +993,19 @@ operator|>
 name|m_offset
 expr_stmt|;
 comment|///< Offset into section if \a m_section_wp is valid...
+comment|//------------------------------------------------------------------
+comment|// Returns true if the m_section_wp once had a reference to a valid
+comment|// section shared pointer, but no longer does. This can happen if
+comment|// we have an address from a module that gets unloaded and deleted.
+comment|// This function should only be called if GetSection() returns an
+comment|// empty shared pointer and you want to know if this address used to
+comment|// have a valid section.
+comment|//------------------------------------------------------------------
+name|bool
+name|SectionWasDeleted
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|//----------------------------------------------------------------------

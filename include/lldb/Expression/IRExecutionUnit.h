@@ -657,6 +657,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|llvm::StringRef SectionName
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -687,6 +689,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|llvm::StringRef SectionName
 argument_list|,
 argument|bool IsReadOnly
 argument_list|)
@@ -836,6 +840,30 @@ name|m_default_mm_ap
 operator|->
 name|GetNumStubSlabs
 argument_list|()
+return|;
+block|}
+name|virtual
+name|void
+name|registerEHFrames
+argument_list|(
+argument|uint8_t *Addr
+argument_list|,
+argument|uint64_t LoadAddr
+argument_list|,
+argument|size_t Size
+argument_list|)
+block|{
+return|return
+name|m_default_mm_ap
+operator|->
+name|registerEHFrames
+argument_list|(
+name|Addr
+argument_list|,
+name|LoadAddr
+argument_list|,
+name|Size
+argument_list|)
 return|;
 block|}
 comment|//------------------------------------------------------------------

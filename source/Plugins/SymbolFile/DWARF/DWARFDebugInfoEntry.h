@@ -744,7 +744,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_info_data
 argument_list|,
@@ -1021,7 +1021,7 @@ name|attr
 argument_list|,
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|data
 argument_list|,
@@ -1278,7 +1278,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_info_data
 argument_list|,

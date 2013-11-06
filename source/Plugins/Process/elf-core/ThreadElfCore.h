@@ -109,6 +109,24 @@ name|ELFLINUXPRPSINFO64_SIZE
 value|(132)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|si_signo
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|si_code
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|si_errno
+end_undef
+
 begin_struct
 struct|struct
 name|ELFLinuxPrStatus

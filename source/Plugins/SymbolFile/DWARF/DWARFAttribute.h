@@ -172,7 +172,6 @@ name|form
 argument_list|)
 decl|const
 block|{
-specifier|register
 name|uint32_t
 name|attr_form
 init|=

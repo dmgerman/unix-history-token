@@ -53,12 +53,6 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_comment
 comment|// C++ Includes
 end_comment
@@ -223,13 +217,11 @@ argument_list|)
 expr_stmt|;
 name|m_type
 operator|.
-name|m_typeimpl_sp
-operator|=
-name|lldb
-operator|::
-name|TypeImplSP
+name|m_type_pair
+operator|.
+name|SetType
 argument_list|(
-argument|new TypeImpl(type)
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -272,13 +264,11 @@ argument_list|)
 expr_stmt|;
 name|m_type
 operator|.
-name|m_typeimpl_sp
-operator|=
-name|lldb
-operator|::
-name|TypeImplSP
+name|m_type_pair
+operator|.
+name|SetType
 argument_list|(
-argument|new TypeImpl(type)
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -320,20 +310,16 @@ if|if
 condition|(
 name|m_type
 operator|.
-name|m_typeimpl_sp
-operator|&&
-name|m_type
+name|m_type_pair
 operator|.
-name|m_typeimpl_sp
-operator|->
 name|IsValid
 argument_list|()
 condition|)
 return|return
 name|m_type
 operator|.
-name|m_typeimpl_sp
-operator|->
+name|m_type_pair
+operator|.
 name|GetTypeSP
 argument_list|()
 return|;
@@ -355,20 +341,16 @@ if|if
 condition|(
 name|m_type
 operator|.
-name|m_typeimpl_sp
-operator|&&
-name|m_type
+name|m_type_pair
 operator|.
-name|m_typeimpl_sp
-operator|->
 name|IsValid
 argument_list|()
 condition|)
 return|return
 name|m_type
 operator|.
-name|m_typeimpl_sp
-operator|->
+name|m_type_pair
+operator|.
 name|GetClangASTType
 argument_list|()
 return|;
@@ -406,11 +388,7 @@ comment|// this works better than TypeAndOrName because the latter only wraps a 
 end_comment
 
 begin_comment
-comment|// whereas TypeImplSP can also be backed by a ClangASTType which is more commonly
-end_comment
-
-begin_comment
-comment|// used in LLDB. moreover, TypeImplSP is also what is currently backing SBType
+comment|// whereas TypePair can also be backed by a ClangASTType
 end_comment
 
 begin_struct
@@ -422,11 +400,9 @@ operator|::
 name|string
 name|m_type_name
 expr_stmt|;
-name|lldb
-operator|::
-name|TypeImplSP
-name|m_typeimpl_sp
-expr_stmt|;
+name|TypePair
+name|m_type_pair
+decl_stmt|;
 block|}
 struct|;
 end_struct

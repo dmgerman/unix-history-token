@@ -127,6 +127,8 @@ name|eArchTypeMachO
 block|,
 name|eArchTypeELF
 block|,
+name|eArchTypeCOFF
+block|,
 name|kNumArchTypes
 block|}
 name|ArchitectureType
@@ -383,6 +385,14 @@ block|,
 name|eFormatCategoryItemRegexSynth
 init|=
 literal|0x0020
+block|,
+name|eFormatCategoryItemValue
+init|=
+literal|0x0040
+block|,
+name|eFormatCategoryItemRegexValue
+init|=
+literal|0x0080
 block|}
 name|FormatCategoryItem
 typedef|;
@@ -456,6 +466,22 @@ name|eScriptedCommandSynchronicityCurrentValue
 comment|// use whatever the current synchronicity is
 block|}
 name|ScriptedCommandSynchronicity
+typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Verbosity mode of "po" output
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|LanguageRuntimeDescriptionDisplayVerbosity
+block|{
+name|eLanguageRuntimeDescriptionDisplayVerbosityCompact
+block|,
+comment|// only print the description string, if any
+name|eLanguageRuntimeDescriptionDisplayVerbosityFull
+block|,
+comment|// print the full-blown output
+block|}
+name|LanguageRuntimeDescriptionDisplayVerbosity
 typedef|;
 comment|//----------------------------------------------------------------------
 comment|// Loading modules from memory

@@ -933,6 +933,13 @@ name|GetAddressByteSize
 argument_list|()
 specifier|const
 expr_stmt|;
+name|lldb
+operator|::
+name|ByteOrder
+name|GetByteOrder
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Returns a pointer to the target object.
 comment|///

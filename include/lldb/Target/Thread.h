@@ -834,6 +834,17 @@ name|NULL
 return|;
 block|}
 name|virtual
+name|lldb
+operator|::
+name|queue_id_t
+name|GetQueueID
+argument_list|()
+block|{
+return|return
+name|LLDB_INVALID_QUEUE_ID
+return|;
+block|}
+name|virtual
 specifier|const
 name|char
 modifier|*
@@ -943,6 +954,29 @@ name|bool
 name|broadcast
 operator|=
 name|false
+argument_list|)
+decl_stmt|;
+name|Error
+name|JumpToLine
+argument_list|(
+specifier|const
+name|FileSpec
+operator|&
+name|file
+argument_list|,
+name|uint32_t
+name|line
+argument_list|,
+name|bool
+name|can_leave_function
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|warnings
+operator|=
+name|NULL
 argument_list|)
 decl_stmt|;
 name|virtual
@@ -1147,6 +1181,42 @@ name|uint32_t
 name|frame_idx
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Retrieves the per-thread data area.
+comment|/// Most OSs maintain a per-thread pointer (e.g. the FS register on
+comment|/// x64), which we return the value of here.
+comment|///
+comment|/// @return
+comment|///     LLDB_INVALID_ADDRESS if not supported, otherwise the thread
+comment|///     pointer value.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetThreadPointer
+argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Retrieves the per-module TLS block for a thread.
+comment|///
+comment|/// @param[in] module
+comment|///     The module to query TLS data for.
+comment|///
+comment|/// @return
+comment|///     If the thread has TLS data allocated for the
+comment|///     module, the address of the TLS block. Otherwise
+comment|///     LLDB_INVALID_ADDRESS is returned.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetThreadLocalData
+argument_list|(
+argument|const lldb::ModuleSP module
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Thread Plan Providers:
 comment|// This section provides the basic thread plans that the Process control

@@ -323,6 +323,7 @@ name|PythonString
 name|Str
 parameter_list|()
 function_decl|;
+name|explicit
 name|operator
 name|bool
 argument_list|()

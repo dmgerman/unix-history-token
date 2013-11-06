@@ -58,6 +58,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Config.h"
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|termios
@@ -292,6 +298,9 @@ name|int
 name|m_tflags
 decl_stmt|;
 comment|///< Cached tflags information.
+ifdef|#
+directive|ifdef
+name|LLDB_CONFIG_TERMIOS_SUPPORTED
 name|std
 operator|::
 name|unique_ptr
@@ -302,6 +311,8 @@ operator|>
 name|m_termios_ap
 expr_stmt|;
 comment|///< Cached terminal state information.
+endif|#
+directive|endif
 name|lldb
 operator|::
 name|pid_t

@@ -222,7 +222,19 @@ argument_list|)
 block|;
 name|uint16_t
 name|LaunchGDBserverAndGetPort
-argument_list|()
+argument_list|(
+name|lldb
+operator|::
+name|pid_t
+operator|&
+name|pid
+argument_list|)
+block|;
+name|bool
+name|KillSpawnedProcess
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Sends a GDB remote protocol 'A' packet that delivers program
@@ -454,6 +466,10 @@ operator|&
 name|GetHostArchitecture
 argument_list|()
 block|;
+name|uint32_t
+name|GetHostDefaultPacketTimeout
+argument_list|()
+block|;
 specifier|const
 name|lldb_private
 operator|::
@@ -466,6 +482,12 @@ name|bool
 name|GetVContSupported
 argument_list|(
 argument|char flavor
+argument_list|)
+block|;
+name|bool
+name|GetpPacketSupported
+argument_list|(
+argument|lldb::tid_t tid
 argument_list|)
 block|;
 name|bool
@@ -761,6 +783,158 @@ return|return
 name|m_interrupt_sent
 return|;
 block|}
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|OpenFile
+argument_list|(
+argument|const lldb_private::FileSpec& file_spec
+argument_list|,
+argument|uint32_t flags
+argument_list|,
+argument|mode_t mode
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|CloseFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|user_id_t
+name|GetFileSize
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+name|virtual
+name|uint32_t
+name|GetFilePermissions
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|,
+name|lldb_private
+operator|::
+name|Error
+operator|&
+name|error
+argument_list|)
+block|;
+name|virtual
+name|uint64_t
+name|ReadFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|void *dst
+argument_list|,
+argument|uint64_t dst_len
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|uint64_t
+name|WriteFile
+argument_list|(
+argument|lldb::user_id_t fd
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|const void* src
+argument_list|,
+argument|uint64_t src_len
+argument_list|,
+argument|lldb_private::Error&error
+argument_list|)
+block|;
+name|virtual
+name|uint32_t
+name|MakeDirectory
+argument_list|(
+argument|const std::string&path
+argument_list|,
+argument|mode_t mode
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|GetFileExists
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|RunShellCommand
+argument_list|(
+argument|const char *command
+argument_list|,
+comment|// Shouldn't be NULL
+argument|const char *working_dir
+argument_list|,
+comment|// Pass NULL to use the current working directory
+argument|int *status_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the process exit status
+argument|int *signo_ptr
+argument_list|,
+comment|// Pass NULL if you don't want the signal that caused the process to exit
+argument|std::string *command_output
+argument_list|,
+comment|// Pass NULL if you don't want the command output
+argument|uint32_t timeout_sec
+argument_list|)
+block|;
+comment|// Timeout in seconds to wait for shell program to finish
+name|virtual
+name|bool
+name|CalculateMD5
+argument_list|(
+specifier|const
+name|lldb_private
+operator|::
+name|FileSpec
+operator|&
+name|file_spec
+argument_list|,
+name|uint64_t
+operator|&
+name|high
+argument_list|,
+name|uint64_t
+operator|&
+name|low
+argument_list|)
+block|;
 name|std
 operator|::
 name|string
@@ -874,6 +1048,11 @@ operator|::
 name|LazyBool
 name|m_prepare_for_reg_writing_reply
 block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_p
+block|;
 name|bool
 name|m_supports_qProcessInfoPID
 operator|:
@@ -912,6 +1091,14 @@ operator|:
 literal|1
 block|,
 name|m_supports_z4
+operator|:
+literal|1
+block|,
+name|m_supports_QEnvironment
+operator|:
+literal|1
+block|,
+name|m_supports_QEnvironmentHexEncoded
 operator|:
 literal|1
 block|;
@@ -1008,6 +1195,9 @@ name|std
 operator|::
 name|string
 name|m_hostname
+block|;
+name|uint32_t
+name|m_default_packet_timeout
 block|;
 name|bool
 name|DecodeProcessInfoResponse

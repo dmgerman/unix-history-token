@@ -59,7 +59,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<mach/mach.h>
+file|<mach/port.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mach/kern_return.h>
 end_include
 
 begin_comment

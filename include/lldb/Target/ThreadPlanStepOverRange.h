@@ -152,6 +152,15 @@ block|;
 name|private
 operator|:
 name|bool
+name|IsEquivalentContext
+argument_list|(
+specifier|const
+name|SymbolContext
+operator|&
+name|context
+argument_list|)
+block|;
+name|bool
 name|m_first_resume
 block|;
 name|DISALLOW_COPY_AND_ASSIGN

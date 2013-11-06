@@ -104,7 +104,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|mac_info_data
 argument_list|,

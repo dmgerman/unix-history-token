@@ -570,10 +570,6 @@ name|BreakpointLocationList
 decl_stmt|;
 name|friend
 name|class
-name|CommandObjectBreakpointCommandAdd
-decl_stmt|;
-name|friend
-name|class
 name|Process
 decl_stmt|;
 comment|//------------------------------------------------------------------
@@ -636,9 +632,9 @@ argument|Breakpoint&owner
 argument_list|,
 argument|const Address&addr
 argument_list|,
-argument|lldb::tid_t tid = LLDB_INVALID_THREAD_ID
+argument|lldb::tid_t tid
 argument_list|,
-argument|bool hardware = false
+argument|bool hardware
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
