@@ -1311,6 +1311,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|offset
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* No properties */
+if|if
+condition|(
 name|previous
 operator|!=
 name|NULL
