@@ -12347,8 +12347,6 @@ name|flags
 operator|&=
 operator|~
 operator|(
-name|IFF_SMART
-operator||
 name|IFF_DRV_OACTIVE
 operator||
 name|IFF_SIMPLEX

@@ -9464,7 +9464,7 @@ name|atapi
 operator|=
 name|atapi
 expr_stmt|;
-comment|/* 	 * Attempt to open the backing image. Use the PCI 	 * slot/func/ahci_port for the identifier string 	 * since that uniquely identifies a storage device. 	 */
+comment|/* 	 * Attempt to open the backing image. Use the PCI 	 * slot/func for the identifier string. 	 */
 name|snprintf
 argument_list|(
 name|bident
@@ -9474,7 +9474,7 @@ argument_list|(
 name|bident
 argument_list|)
 argument_list|,
-literal|"%d:%d:%d"
+literal|"%d:%d"
 argument_list|,
 name|pi
 operator|->
@@ -9483,8 +9483,6 @@ argument_list|,
 name|pi
 operator|->
 name|pi_func
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|bctxt
