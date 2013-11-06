@@ -320,8 +320,15 @@ begin_comment
 comment|/* delete IF addr */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OSIOCAIFADDR
+value|_IOW('i', 26, struct oifaliasreq)
+end_define
+
 begin_comment
-comment|/*	OSIOCAIFADDR	 _IOW('i', 26, struct oifaliasreq) FreeBSD 9.x */
+comment|/* FreeBSD 9.x */
 end_comment
 
 begin_define

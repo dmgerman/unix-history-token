@@ -258,6 +258,8 @@ specifier|static
 name|int
 name|in_aifaddr_ioctl
 parameter_list|(
+name|u_long
+parameter_list|,
 name|caddr_t
 parameter_list|,
 name|struct
@@ -1153,6 +1155,10 @@ name|error
 operator|)
 return|;
 case|case
+name|OSIOCAIFADDR
+case|:
+comment|/* 9.x compat */
+case|case
 name|SIOCAIFADDR
 case|:
 name|sx_xlock
@@ -1165,6 +1171,8 @@ name|error
 operator|=
 name|in_aifaddr_ioctl
 argument_list|(
+name|cmd
+argument_list|,
 name|data
 argument_list|,
 name|ifp
@@ -1472,6 +1480,9 @@ specifier|static
 name|int
 name|in_aifaddr_ioctl
 parameter_list|(
+name|u_long
+name|cmd
+parameter_list|,
 name|caddr_t
 name|data
 parameter_list|,
@@ -1547,9 +1558,17 @@ specifier|const
 name|int
 name|vhid
 init|=
+operator|(
+name|cmd
+operator|==
+name|SIOCAIFADDR
+operator|)
+condition|?
 name|ifra
 operator|->
 name|ifra_vhid
+else|:
+literal|0
 decl_stmt|;
 name|struct
 name|ifaddr
