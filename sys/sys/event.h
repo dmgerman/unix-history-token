@@ -296,6 +296,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EV_DROP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* note should be dropped */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EV_FLAG1
 value|0x2000
 end_define
