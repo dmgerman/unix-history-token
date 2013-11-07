@@ -455,6 +455,8 @@ decl_stmt|,
 name|resid
 decl_stmt|,
 name|sz
+decl_stmt|,
+name|maxsz
 decl_stmt|;
 name|int
 name|c
@@ -487,6 +489,17 @@ name|md
 operator|->
 name|md_size
 expr_stmt|;
+name|maxsz
+operator|=
+name|min
+argument_list|(
+name|DFLTPHYS
+argument_list|,
+name|di
+operator|->
+name|maxiosize
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"  chunk %d: %lu bytes "
@@ -506,15 +519,12 @@ condition|)
 block|{
 name|sz
 operator|=
-operator|(
+name|min
+argument_list|(
 name|resid
-operator|>
-name|DFLTPHYS
-operator|)
-condition|?
-name|DFLTPHYS
-else|:
-name|resid
+argument_list|,
+name|maxsz
+argument_list|)
 expr_stmt|;
 name|va
 operator|=
