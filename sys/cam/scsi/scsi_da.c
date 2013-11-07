@@ -13700,7 +13700,7 @@ name|CAM_REQ_CMP
 condition|)
 block|{
 comment|/* 			 * Disable queue sorting for non-rotational media 			 * by default. 			 */
-name|u_int
+name|u_int16_t
 name|old_rate
 init|=
 name|softc
