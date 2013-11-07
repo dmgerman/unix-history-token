@@ -11498,6 +11498,7 @@ expr_stmt|;
 comment|/* will it fit in current chunk? */
 if|if
 condition|(
+operator|(
 name|SCTP_BUF_LEN
 argument_list|(
 name|m_asconf
@@ -11510,6 +11511,18 @@ operator|->
 name|asoc
 operator|.
 name|smallest_mtu
+operator|)
+operator|||
+operator|(
+name|SCTP_BUF_LEN
+argument_list|(
+name|m_asconf
+argument_list|)
+operator|+
+name|p_length
+operator|>
+name|MCLBYTES
+operator|)
 condition|)
 block|{
 comment|/* won't fit, so we're done with this chunk */
