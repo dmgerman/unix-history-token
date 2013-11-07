@@ -147,6 +147,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vt_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vt_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -182,6 +200,12 @@ modifier|*
 name|vd_curwindow
 decl_stmt|;
 comment|/* (d) Current window. */
+name|struct
+name|vt_window
+modifier|*
+name|vd_savedwindow
+decl_stmt|;
+comment|/* (?) Saved for suspend. */
 specifier|const
 name|struct
 name|vt_driver

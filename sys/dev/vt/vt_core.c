@@ -7268,5 +7268,63 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|vt_suspend
+parameter_list|()
+block|{
+comment|/* Save current window. */
+name|main_vd
+operator|->
+name|vd_savedwindow
+operator|=
+name|main_vd
+operator|->
+name|vd_curwindow
+expr_stmt|;
+comment|/* Ask holding process to free window and switch to console window */
+name|vt_proc_window_switch
+argument_list|(
+name|main_vd
+operator|->
+name|vd_windows
+index|[
+name|VT_CONSWINDOW
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vt_resume
+parameter_list|()
+block|{
+comment|/* Switch back to saved window */
+if|if
+condition|(
+name|main_vd
+operator|->
+name|vd_savedwindow
+operator|!=
+name|NULL
+condition|)
+name|vt_proc_window_switch
+argument_list|(
+name|main_vd
+operator|->
+name|vd_savedwindow
+argument_list|)
+expr_stmt|;
+name|main_vd
+operator|->
+name|vd_savedwindow
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

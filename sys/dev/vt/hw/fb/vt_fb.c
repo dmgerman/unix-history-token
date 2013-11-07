@@ -962,5 +962,31 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|vt_fb_resume
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vt_resume
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vt_fb_suspend
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vt_suspend
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
