@@ -1883,6 +1883,9 @@ decl_stmt|;
 name|spinlock_t
 name|stats_lock
 decl_stmt|;
+name|spinlock_t
+name|ioctl_lock
+decl_stmt|;
 name|unsigned
 name|long
 name|last_moder_packets
