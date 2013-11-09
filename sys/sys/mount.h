@@ -1561,6 +1561,12 @@ begin_comment
 comment|/* Don't send KNOTEs from VOP hooks */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_function
 specifier|static
 specifier|inline
@@ -1624,6 +1630,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Sysctl CTL_VFS definitions.  *  * Second level identifier specifies which filesystem. Second level  * identifier VFS_VFSCONF returns information about all filesystems.  * Second level identifier VFS_GENERIC is non-terminal.  */
