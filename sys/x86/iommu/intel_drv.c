@@ -5567,6 +5567,13 @@ name|db_read_token
 argument_list|()
 expr_stmt|;
 block|}
+else|else
+block|{
+name|show_mappings
+operator|=
+name|false
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|t
