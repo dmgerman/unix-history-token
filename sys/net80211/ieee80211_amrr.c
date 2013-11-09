@@ -963,7 +963,10 @@ name|amrr_node_is_11n
 argument_list|(
 name|ni
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|rs
 operator|->
@@ -980,6 +983,7 @@ operator|<
 literal|4
 condition|)
 break|break;
+block|}
 elseif|else
 if|if
 condition|(
@@ -999,6 +1003,7 @@ operator|<=
 literal|72
 condition|)
 break|break;
+block|}
 name|rate
 operator|=
 name|rs
@@ -1012,7 +1017,6 @@ index|]
 operator|&
 name|IEEE80211_RATE_VAL
 expr_stmt|;
-block|}
 comment|/* if the rate is an 11n rate, ensure the MCS bit is set */
 if|if
 condition|(
