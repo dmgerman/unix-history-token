@@ -519,6 +519,13 @@ name|NAND_MAN_STMICRO
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|NAND_MAN_MICRON
+value|0x2c
+end_define
+
 begin_struct
 struct|struct
 name|nand_id
