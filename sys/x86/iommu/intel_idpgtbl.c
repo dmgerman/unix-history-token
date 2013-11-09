@@ -694,6 +694,11 @@ name|leaf
 decl_stmt|,
 name|i
 decl_stmt|;
+name|leaf
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
 comment|/* 	 * First, determine where to stop the paging structures. 	 */
 for|for
 control|(
@@ -3158,6 +3163,11 @@ name|flags
 operator|)
 argument_list|)
 expr_stmt|;
+name|pg_sz
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
 name|base1
 operator|=
 name|base
