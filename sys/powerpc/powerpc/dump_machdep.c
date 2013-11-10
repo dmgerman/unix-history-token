@@ -713,7 +713,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|Elf32_Phdr
+name|Elf_Phdr
 name|phdr
 decl_stmt|;
 name|int
@@ -955,7 +955,7 @@ modifier|*
 name|di
 parameter_list|)
 block|{
-name|Elf32_Ehdr
+name|Elf_Ehdr
 name|ehdr
 decl_stmt|;
 name|uint32_t
@@ -1024,7 +1024,7 @@ index|[
 name|EI_CLASS
 index|]
 operator|=
-name|ELFCLASS32
+name|ELF_TARG_CLASS
 expr_stmt|;
 if|#
 directive|if
@@ -1082,8 +1082,9 @@ name|ehdr
 operator|.
 name|e_machine
 operator|=
-name|EM_PPC
+name|ELF_ARCH
 expr_stmt|;
+comment|/* Defined in powerpc/include/elf.h */
 name|ehdr
 operator|.
 name|e_phoff
@@ -1108,7 +1109,7 @@ name|e_phentsize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|Elf32_Phdr
+name|Elf_Phdr
 argument_list|)
 expr_stmt|;
 name|ehdr
@@ -1117,7 +1118,7 @@ name|e_shentsize
 operator|=
 sizeof|sizeof
 argument_list|(
-name|Elf32_Shdr
+name|Elf_Shdr
 argument_list|)
 expr_stmt|;
 comment|/* Calculate dump size. */
