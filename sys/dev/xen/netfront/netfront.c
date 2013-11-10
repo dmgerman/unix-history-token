@@ -8530,7 +8530,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|70000
+literal|700000
 operator|&&
 operator|(
 name|defined
