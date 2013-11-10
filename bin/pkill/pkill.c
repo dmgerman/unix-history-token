@@ -1387,6 +1387,27 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use KERN_PROC_PROC instead of KERN_PROC_ALL, since we 	 * just want processes and not individual kernel threads. 	 */
+if|if
+condition|(
+name|pidfromfile
+operator|>=
+literal|0
+condition|)
+name|plist
+operator|=
+name|kvm_getprocs
+argument_list|(
+name|kd
+argument_list|,
+name|KERN_PROC_PID
+argument_list|,
+name|pidfromfile
+argument_list|,
+operator|&
+name|nproc
+argument_list|)
+expr_stmt|;
+else|else
 name|plist
 operator|=
 name|kvm_getprocs
