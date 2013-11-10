@@ -2858,20 +2858,32 @@ name|cmd
 operator|==
 name|TYPECMD_SMALLV
 condition|)
+block|{
 name|out1fmt
 argument_list|(
-literal|"alias %s='%s'\n"
+literal|"alias %s="
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|out1qstr
+argument_list|(
 name|ap
 operator|->
 name|val
 argument_list|)
 expr_stmt|;
+name|outcslow
+argument_list|(
+literal|'\n'
+argument_list|,
+name|out1
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|out1fmt
 argument_list|(
