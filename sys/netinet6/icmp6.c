@@ -5298,6 +5298,15 @@ argument_list|)
 expr_stmt|;
 name|inc
 operator|.
+name|inc_fibnum
+operator|=
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|inc
+operator|.
 name|inc_flags
 operator||=
 name|INC_ISIPV6
