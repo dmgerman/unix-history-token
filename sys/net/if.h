@@ -1776,46 +1776,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Structure for SIOC[AGD]LIFADDR  */
-end_comment
-
-begin_struct
-struct|struct
-name|if_laddrreq
-block|{
-name|char
-name|iflr_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-name|u_int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|IFLR_PREFIX
-value|0x8000
-comment|/* in: prefix given  out: kernel fills id */
-name|u_int
-name|prefixlen
-decl_stmt|;
-comment|/* in/out */
-name|struct
-name|sockaddr_storage
-name|addr
-decl_stmt|;
-comment|/* in/out */
-name|struct
-name|sockaddr_storage
-name|dstaddr
-decl_stmt|;
-comment|/* out */
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif

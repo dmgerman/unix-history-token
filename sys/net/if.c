@@ -10868,9 +10868,6 @@ case|:
 endif|#
 directive|endif
 case|case
-name|SIOCSLIFPHYADDR
-case|:
-case|case
 name|SIOCSIFMEDIA
 case|:
 case|case
@@ -10964,9 +10961,6 @@ name|SIOCGIFPSRCADDR
 case|:
 case|case
 name|SIOCGIFPDSTADDR
-case|:
-case|case
-name|SIOCGLIFPHYADDR
 case|:
 case|case
 name|SIOCGIFMEDIA
