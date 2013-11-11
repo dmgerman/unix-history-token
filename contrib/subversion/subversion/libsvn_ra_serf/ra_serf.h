@@ -150,11 +150,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((void)(x))
-comment|/** Our User-Agent string. */
-define|#
-directive|define
-name|USER_AGENT
-value|"SVN/" SVN_VER_NUMBER " (" SVN_BUILD_TARGET ")" \                    " serf/" \                    APR_STRINGIFY(SERF_MAJOR_VERSION) "." \                    APR_STRINGIFY(SERF_MINOR_VERSION) "." \                    APR_STRINGIFY(SERF_PATCH_VERSION)
 comment|/** Wait duration (in microseconds) used in calls to serf_context_run() */
 define|#
 directive|define
@@ -1211,21 +1206,6 @@ name|svn_ra_serf__pending_t
 modifier|*
 name|pending
 decl_stmt|;
-comment|/* Response restart support */
-specifier|const
-name|void
-modifier|*
-name|headers_baton
-decl_stmt|;
-comment|/* Last pointer to headers */
-name|apr_off_t
-name|skip_size
-decl_stmt|;
-comment|/* Number of bytes to skip */
-name|apr_off_t
-name|read_size
-decl_stmt|;
-comment|/* Number of bytes read from response */
 block|}
 struct|;
 comment|/* v2 of the XML parsing functions  */

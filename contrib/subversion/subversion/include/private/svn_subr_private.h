@@ -27,6 +27,12 @@ directive|include
 file|"svn_io.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"svn_version.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -426,6 +432,42 @@ name|int
 name|patch
 parameter_list|)
 function_decl|;
+comment|/** Like svn_ver_check_list(), but with a @a comparator parameter.  * Private backport of svn_ver_check_list2() from trunk.  */
+name|svn_error_t
+modifier|*
+name|svn_ver__check_list2
+parameter_list|(
+specifier|const
+name|svn_version_t
+modifier|*
+name|my_version
+parameter_list|,
+specifier|const
+name|svn_version_checklist_t
+modifier|*
+name|checklist
+parameter_list|,
+name|svn_boolean_t
+function_decl|(
+modifier|*
+name|comparator
+function_decl|)
+parameter_list|(
+specifier|const
+name|svn_version_t
+modifier|*
+parameter_list|,
+specifier|const
+name|svn_version_t
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+comment|/** To minimize merge churn in callers, alias the trunk name privately. */
+define|#
+directive|define
+name|svn_ver_check_list2
+value|svn_ver__check_list2
 comment|/** @} */
 ifdef|#
 directive|ifdef

@@ -1139,6 +1139,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Unbreak the move from LOCAL_RELPATH on op-depth in WCROOT, by making    the destination a normal copy */
+end_comment
+
 begin_function_decl
 name|svn_error_t
 modifier|*
@@ -1152,6 +1156,9 @@ specifier|const
 name|char
 modifier|*
 name|local_relpath
+parameter_list|,
+name|int
+name|op_depth
 parameter_list|,
 name|apr_pool_t
 modifier|*

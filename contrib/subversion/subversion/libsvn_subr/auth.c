@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"auth.h"
 end_include
 
@@ -1721,12 +1727,14 @@ name|NULL
 expr_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 name|svn_subr_version
 argument_list|()
 argument_list|,
 name|check_list
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 argument_list|)
 expr_stmt|;
