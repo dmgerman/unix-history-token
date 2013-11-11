@@ -10249,6 +10249,8 @@ init|;
 name|i
 operator|<
 name|IWN_NBANDS
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
