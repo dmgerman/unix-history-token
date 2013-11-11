@@ -202,6 +202,13 @@ name|ofw_real_mode
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|apple_hacks
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|ofwcall
@@ -243,6 +250,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|apple_hacks
+condition|)
+return|return;
 comment|/* 	 * Assume that interrupt are disabled at this point, or 	 * SPRG1-3 could be trashed 	 */
 asm|__asm __volatile("mfsprg0 %0\n\t"
 literal|"mtsprg0 %1\n\t"
@@ -299,6 +312,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|apple_hacks
+condition|)
+return|return;
 comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * registers used in the early portion of trap handling when 	 * interrupts are disabled. 	 * 	 * PCPU data cannot be used until this routine is called ! 	 */
 asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
 block|}
@@ -653,7 +672,7 @@ name|size_cells
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * On Apple hardware, address_cells is always 1 for "available", 	 * even when it is explicitly set to 2. Then all memory above 4 GB 	 * should be added by hand to the available list. Detect Apple hardware 	 * by seeing if ofw_real_mode is set -- only Apple seems to use 	 * virtual-mode OF. 	 */
+comment|/* 	 * On Apple hardware, address_cells is always 1 for "available", 	 * even when it is explicitly set to 2. All memory above 4 GB 	 * also needs to be added by hand to the available list. 	 */
 if|if
 condition|(
 name|strcmp
@@ -665,16 +684,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-operator|!
-name|ofw_real_mode
-condition|)
-name|apple_hack_mode
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|apple_hack_mode
+name|apple_hacks
 condition|)
 name|address_cells
 operator|=
@@ -928,7 +938,16 @@ directive|ifdef
 name|__powerpc64__
 if|if
 condition|(
-name|apple_hack_mode
+name|strcmp
+argument_list|(
+name|prop
+argument_list|,
+literal|"available"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|apple_hacks
 condition|)
 block|{
 comment|/* Add in regions above 4 GB to the available list */
@@ -2060,6 +2079,23 @@ name|fdt
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Apple firmware has some bugs. Check for a "mac-io" alias. */
+name|apple_hacks
+operator|=
+operator|(
+name|OF_finddevice
+argument_list|(
+literal|"mac-io"
+argument_list|)
+operator|!=
+operator|-
+literal|1
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|status
