@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.76 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.77 2013/11/06 16:52:11 markus Exp $ */
 end_comment
 
 begin_comment
@@ -2331,8 +2331,10 @@ argument_list|)
 expr_stmt|;
 name|newkey
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
