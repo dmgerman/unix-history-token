@@ -171,6 +171,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|apple_hacks
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
+
+begin_decl_stmt
 specifier|extern
 name|register_t
 name|ofmsr
@@ -199,13 +212,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ofw_real_mode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|apple_hacks
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +328,11 @@ comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * r
 asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Memory region utilities: determine if two regions overlap,  * and merge two overlapping regions into one  */
@@ -1907,6 +1918,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
+
 begin_function
 name|void
 name|OF_initial_setup
@@ -2513,6 +2530,15 @@ empty_stmt|;
 comment|/* just in case */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AIM */
+end_comment
 
 begin_function
 name|void
