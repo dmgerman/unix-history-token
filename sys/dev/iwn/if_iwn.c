@@ -20171,6 +20171,21 @@ name|tp
 operator|->
 name|ucastrate
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
+condition|)
+name|rate
+operator|=
+name|tp
+operator|->
+name|mgmtrate
+expr_stmt|;
 else|else
 block|{
 comment|/* XXX pass pktlen */
