@@ -449,6 +449,14 @@ name|vt_font_default
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mouse_cursor
+name|vt_default_mouse_pointer
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
