@@ -367,6 +367,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|suspendswitch
+argument_list|,
+literal|1
+argument_list|,
+literal|"Switch to VT0 before suspend"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -7927,6 +7939,13 @@ name|void
 name|vt_suspend
 parameter_list|()
 block|{
+if|if
+condition|(
+name|vt_suspendswitch
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* Save current window. */
 name|main_vd
 operator|->
@@ -7955,6 +7974,13 @@ name|void
 name|vt_resume
 parameter_list|()
 block|{
+if|if
+condition|(
+name|vt_suspendswitch
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* Switch back to saved window */
 if|if
 condition|(
