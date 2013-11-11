@@ -17598,7 +17598,7 @@ name|desc
 operator|->
 name|qid
 operator|&
-literal|0x80
+name|IWN_UNSOLICITED_RX_NOTIF
 operator|)
 condition|)
 comment|/* Reply to a command. */
