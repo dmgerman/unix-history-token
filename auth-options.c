@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.59 2013/07/12 00:19:58 djm Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.61 2013/11/08 00:39:14 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1172,8 +1172,10 @@ operator|++
 expr_stmt|;
 name|new_envstring
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gss-genr.c,v 1.21 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: gss-genr.c,v 1.22 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -203,8 +203,10 @@ name|ctx
 operator|->
 name|oid
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|gss_OID_desc
