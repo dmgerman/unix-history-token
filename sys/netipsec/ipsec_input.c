@@ -2883,6 +2883,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Save protocol */
+name|prot
+operator|=
+literal|0
+expr_stmt|;
 name|m_copydata
 argument_list|(
 name|m
