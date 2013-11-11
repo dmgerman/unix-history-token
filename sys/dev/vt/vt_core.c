@@ -5980,7 +5980,8 @@ name|DPRINTF
 argument_list|(
 literal|20
 argument_list|,
-literal|"kbdd_ioctl(KDSKBMODE) return %d\n"
+literal|"kbdd_ioctl(KDSKBMODE) "
+literal|"return %d\n"
 argument_list|,
 name|error
 argument_list|)
