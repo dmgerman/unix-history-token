@@ -242,7 +242,7 @@ comment|/* Running as virtual machine guest? */
 end_comment
 
 begin_comment
-comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  */
+comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  * Keep in sync with vm_guest_sysctl_names[].  */
 end_comment
 
 begin_enum
