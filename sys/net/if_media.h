@@ -594,6 +594,10 @@ comment|/* 10GBase-T - RJ45 */
 end_comment
 
 begin_comment
+comment|/*  * Please update ieee8023ad_lacp.c:lacp_compose_key()  * after adding new Ethernet media types.  */
+end_comment
+
+begin_comment
 comment|/* note 31 is the max! */
 end_comment
 
