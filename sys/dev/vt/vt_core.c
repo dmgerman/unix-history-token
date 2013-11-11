@@ -3119,6 +3119,10 @@ name|vd
 argument_list|,
 name|src
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
 name|top
 argument_list|,
 name|left
@@ -3220,6 +3224,8 @@ modifier|*
 name|r
 decl_stmt|;
 name|int
+name|bpl
+decl_stmt|,
 name|h
 decl_stmt|,
 name|w
@@ -3470,6 +3476,19 @@ operator|=
 operator|&
 name|vt_default_mouse_pointer
 expr_stmt|;
+name|bpl
+operator|=
+operator|(
+name|m
+operator|->
+name|w
+operator|+
+literal|7
+operator|)
+operator|>>
+literal|3
+expr_stmt|;
+comment|/* Bytes per sorce line. */
 name|w
 operator|=
 name|m
@@ -3573,6 +3592,12 @@ argument_list|,
 name|m
 operator|->
 name|map
+argument_list|,
+name|m
+operator|->
+name|mask
+argument_list|,
+name|bpl
 argument_list|,
 name|vd
 operator|->
@@ -3863,6 +3888,10 @@ argument_list|(
 name|vd
 argument_list|,
 name|vt_logo_image
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|top
 argument_list|,

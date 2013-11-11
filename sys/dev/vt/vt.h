@@ -1204,6 +1204,14 @@ name|uint8_t
 modifier|*
 name|src
 parameter_list|,
+specifier|const
+name|uint8_t
+modifier|*
+name|mask
+parameter_list|,
+name|int
+name|bpl
+parameter_list|,
 name|vt_axis_t
 name|top
 parameter_list|,
