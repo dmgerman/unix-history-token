@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"private/svn_subr_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../libsvn_fs/fs-loader.h"
 end_include
 
@@ -1688,12 +1694,14 @@ argument_list|)
 return|;
 name|SVN_ERR
 argument_list|(
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 name|fs_version
 argument_list|()
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 argument_list|)
 expr_stmt|;

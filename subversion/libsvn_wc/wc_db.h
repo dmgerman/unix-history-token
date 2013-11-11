@@ -5465,7 +5465,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/* Like svn_wc__db_resolve_delete_raise_moved_away this should be    combined. */
+comment|/* Like svn_wc__db_resolve_delete_raise_moved_away this should be    combined.        ### LOCAL_ABSPATH specifies the move origin, but the move origin    ### is not necessary unique enough. This function needs an op_root_abspath    ### argument to differentiate between different origins.     ### See move_tests.py: move_many_update_delete for an example case.    */
 name|svn_error_t
 modifier|*
 name|svn_wc__db_resolve_break_moved_away

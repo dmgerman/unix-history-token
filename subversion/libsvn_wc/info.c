@@ -2235,7 +2235,7 @@ name|db
 argument_list|,
 name|svn_dirent_dirname
 argument_list|(
-name|local_abspath
+name|this_abspath
 argument_list|,
 name|iterpool
 argument_list|)

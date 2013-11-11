@@ -9069,7 +9069,7 @@ name|apr_pool_t
 modifier|*
 name|iterpool
 decl_stmt|;
-comment|/*        * When deleting a conflicted node, moves of any moved-outside children        * of the node must be broken. Else, the destination will still be marked        * moved-here after the move source disappears from the working copy.        *        * ### FIXME: It would be nicer to have the conflict resolver        * break the move instead. It might also be a good idea to        * flag a tree conflict on each moved-away child. But doing so        * might introduce actual-only nodes without direct parents,        * and we're not yet sure if other existing code is prepared        * to handle such nodes. To be revisited post-1.8.        */
+comment|/*        * When deleting a conflicted node, moves of any moved-outside children        * of the node must be broken. Else, the destination will still be marked        * moved-here after the move source disappears from the working copy.        *        * ### FIXME: It would be nicer to have the conflict resolver        * break the move instead. It might also be a good idea to        * flag a tree conflict on each moved-away child. But doing so        * might introduce actual-only nodes without direct parents,        * and we're not yet sure if other existing code is prepared        * to handle such nodes. To be revisited post-1.8.        *        * ### In case of a conflict we are most likely creating WORKING nodes        *     describing a copy of what was in BASE. The move information        *     should be updated to describe a move from the WORKING layer.        *     When stored that way the resolver of the tree conflict still has        *     the knowledge of what was moved.        */
 name|SVN_ERR
 argument_list|(
 name|svn_sqlite__get_statement
@@ -26223,6 +26223,8 @@ name|wcroot
 argument_list|,
 name|local_relpath
 argument_list|,
+name|op_depth
+argument_list|,
 name|scratch_pool
 argument_list|)
 argument_list|)
@@ -27011,6 +27013,16 @@ argument_list|,
 name|NULL
 argument_list|)
 decl_stmt|;
+name|int
+name|move_op_depth
+init|=
+name|svn_sqlite__column_int
+argument_list|(
+name|stmt
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
 name|svn_error_t
 modifier|*
 name|err
@@ -27022,6 +27034,8 @@ argument_list|(
 name|wcroot
 argument_list|,
 name|move_src_relpath
+argument_list|,
+name|move_op_depth
 argument_list|,
 name|scratch_pool
 argument_list|)

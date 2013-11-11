@@ -123,6 +123,12 @@ directive|include
 file|"private/svn_cmdline_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"private/svn_subr_private.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4849,12 +4855,14 @@ name|my_version
 argument_list|)
 expr_stmt|;
 return|return
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 operator|&
 name|my_version
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 return|;
 block|}
