@@ -818,6 +818,8 @@ literal|"generic"
 block|,
 literal|"xen"
 block|,
+literal|"hv"
+block|,
 name|NULL
 block|}
 decl_stmt|;
