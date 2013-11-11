@@ -10060,7 +10060,9 @@ literal|0
 init|;
 name|i
 operator|<
-literal|7
+name|IWN_NBANDS
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -10658,7 +10660,9 @@ literal|0
 init|;
 name|i
 operator|<
-literal|7
+name|IWN_NBANDS
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
