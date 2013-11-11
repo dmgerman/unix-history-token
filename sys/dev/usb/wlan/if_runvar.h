@@ -520,7 +520,7 @@ decl_stmt|;
 name|uint16_t
 name|mac_rev
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|rf_rev
 decl_stmt|;
 name|uint8_t
