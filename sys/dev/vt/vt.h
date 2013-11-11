@@ -882,7 +882,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|((vb)->vb_flags& VBF_CURSOR&& \ 	(vb)->vb_cursor.tp_row == (r)&& (vb)->vb_cursor.tp_col == (c))
+value|vtbuf_iscursor((vb), (r), (c))
 end_define
 
 begin_define
