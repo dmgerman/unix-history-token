@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mouse.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/terminal.h>
 end_include
 
@@ -330,6 +336,30 @@ modifier|*
 name|vd_softc
 decl_stmt|;
 comment|/* (u) Driver data. */
+name|uint16_t
+name|vd_mx
+decl_stmt|;
+comment|/* (?) Mouse X. */
+name|uint16_t
+name|vd_my
+decl_stmt|;
+comment|/* (?) Mouse Y. */
+name|vt_axis_t
+name|vd_mdirtyx
+decl_stmt|;
+comment|/* (?) Screen width. */
+name|vt_axis_t
+name|vd_mdirtyy
+decl_stmt|;
+comment|/* (?) Screen height. */
+name|uint32_t
+name|vd_mstate
+decl_stmt|;
+comment|/* (?) Mouse state. */
+name|term_pos_t
+name|vd_offset
+decl_stmt|;
+comment|/* (?) Pixel offset. */
 name|vt_axis_t
 name|vd_width
 decl_stmt|;
@@ -387,6 +417,11 @@ directive|define
 name|VDF_INITIALIZED
 value|0x20
 comment|/* vtterm_cnprobe already done. */
+define|#
+directive|define
+name|VDF_MOUSECURSOR
+value|0x40
+comment|/* Mouse cursor visible. */
 name|int
 name|vd_keyboard
 decl_stmt|;
