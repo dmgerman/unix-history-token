@@ -24,6 +24,10 @@ decl_stmt|;
 name|uint32_t
 name|scl
 decl_stmt|;
+name|unsigned
+name|long
+name|start
+decl_stmt|;
 block|}
 name|bcm_bsc_pins
 index|[]
@@ -33,15 +37,19 @@ block|{
 literal|0
 block|,
 literal|1
+block|,
+literal|0x20205000
 block|}
 block|,
-comment|/* BSC0 GPIO pins. */
+comment|/* BSC0 GPIO pins and base address. */
 block|{
 literal|2
 block|,
 literal|3
+block|,
+literal|0x20804000
 block|}
-comment|/* BSC1 GPIO pins. */
+comment|/* BSC1 GPIO pins and base address. */
 block|}
 struct|;
 end_struct
