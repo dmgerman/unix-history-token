@@ -921,7 +921,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -1047,6 +1047,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get parent's pins and mark them as unmapped 	 */
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|bus_enumerate_hinted_children
 argument_list|(
 name|dev
