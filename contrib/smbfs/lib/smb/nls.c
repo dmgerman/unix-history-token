@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iconv.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -83,6 +77,23 @@ directive|include
 file|<netsmb/smb_lib.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<iconv.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|u_char
 name|nls_lower
@@ -101,6 +112,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|iconv_t
@@ -109,6 +126,11 @@ decl_stmt|,
 name|nls_toloc
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -204,12 +226,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|APPLE
-return|return
-name|ENOENT
-return|;
-else|#
-directive|else
+name|HAVE_ICONV
 name|iconv_t
 name|icd
 decl_stmt|;
@@ -308,6 +325,11 @@ name|icd
 expr_stmt|;
 return|return
 literal|0
+return|;
+else|#
+directive|else
+return|return
+name|ENOENT
 return|;
 endif|#
 directive|endif
@@ -329,6 +351,9 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
 name|char
 modifier|*
 name|p
@@ -427,6 +452,18 @@ expr_stmt|;
 return|return
 name|dst
 return|;
+else|#
+directive|else
+return|return
+name|strcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -445,6 +482,9 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
 name|char
 modifier|*
 name|p
@@ -543,6 +583,18 @@ expr_stmt|;
 return|return
 name|dst
 return|;
+else|#
+directive|else
+return|return
+name|strcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -564,6 +616,9 @@ name|int
 name|size
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
 name|char
 modifier|*
 name|p
@@ -672,6 +727,20 @@ block|}
 return|return
 name|dst
 return|;
+else|#
+directive|else
+return|return
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|size
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -693,6 +762,9 @@ name|int
 name|size
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_ICONV
 name|char
 modifier|*
 name|p
@@ -801,6 +873,20 @@ block|}
 return|return
 name|dst
 return|;
+else|#
+directive|else
+return|return
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|size
+argument_list|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
