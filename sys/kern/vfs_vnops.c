@@ -4305,8 +4305,6 @@ modifier|*
 name|prev_td_ma
 decl_stmt|;
 name|int
-name|cnt
-decl_stmt|,
 name|error
 decl_stmt|,
 name|save
@@ -4319,6 +4317,9 @@ name|vm_offset_t
 name|addr
 decl_stmt|,
 name|end
+decl_stmt|;
+name|vm_size_t
+name|cnt
 decl_stmt|;
 name|vm_prot_t
 name|prot
