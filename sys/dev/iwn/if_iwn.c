@@ -23962,7 +23962,9 @@ name|linkq
 operator|.
 name|antmsk_2stream
 operator|=
-name|IWN_ANT_AB
+name|sc
+operator|->
+name|txchainmask
 expr_stmt|;
 name|linkq
 operator|.
