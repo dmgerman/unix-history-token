@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<machine/_inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
@@ -1041,7 +1047,9 @@ name|kptr
 expr_stmt|;
 name|DRM_INFO
 argument_list|(
-literal|"fb mappable at 0x%lX\n"
+literal|"fb mappable at 0x%"
+name|PRIXPTR
+literal|"\n"
 argument_list|,
 name|info
 operator|->
