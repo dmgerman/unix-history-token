@@ -987,12 +987,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Increase to get number of pins 	 */
-name|sc
-operator|->
-name|sc_npins
-operator|++
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -1005,6 +999,12 @@ operator|(
 literal|"GPIO device with no pins"
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Increase to get number of pins 	 */
+name|sc
+operator|->
+name|sc_npins
+operator|++
 expr_stmt|;
 name|sc
 operator|->
