@@ -825,6 +825,21 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|nitems
+argument_list|(
+name|vm_guest_sysctl_names
+argument_list|)
+operator|-
+literal|1
+operator|==
+name|VM_LAST
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
