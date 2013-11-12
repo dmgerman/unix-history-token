@@ -172,6 +172,15 @@ name|listener
 argument_list|)
 block|;
 name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|DoDetach
+argument_list|(
+argument|bool keep_stopped
+argument_list|)
+block|;
+name|virtual
 name|bool
 name|UpdateThreadList
 argument_list|(

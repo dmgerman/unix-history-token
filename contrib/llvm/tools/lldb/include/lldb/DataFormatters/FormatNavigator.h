@@ -266,6 +266,9 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|bool
+operator|)
 name|type
 operator|==
 name|false

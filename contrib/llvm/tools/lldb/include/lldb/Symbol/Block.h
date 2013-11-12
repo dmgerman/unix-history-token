@@ -85,6 +85,12 @@ directive|include
 file|"lldb/Symbol/SymbolContext.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Symbol/ClangASTType.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private

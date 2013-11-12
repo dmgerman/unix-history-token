@@ -95,6 +95,12 @@ directive|include
 file|"lldb/DataFormatters/TypeCategoryMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atomic>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -109,21 +115,6 @@ range|:
 name|public
 name|IFormatChangeListener
 block|{
-typedef|typedef
-name|FormatNavigator
-operator|<
-name|ConstString
-operator|,
-name|TypeFormatImpl
-operator|>
-name|ValueNavigator
-expr_stmt|;
-typedef|typedef
-name|ValueNavigator
-operator|::
-name|MapType
-name|ValueMap
-expr_stmt|;
 typedef|typedef
 name|FormatMap
 operator|<
@@ -152,15 +143,6 @@ expr_stmt|;
 name|FormatManager
 argument_list|()
 expr_stmt|;
-name|ValueNavigator
-modifier|&
-name|GetValueNavigator
-parameter_list|()
-block|{
-return|return
-name|m_value_nav
-return|;
-block|}
 name|NamedSummariesMap
 modifier|&
 name|GetNamedSummaryNavigator
@@ -391,6 +373,17 @@ end_expr_stmt
 begin_expr_stmt
 name|lldb
 operator|::
+name|TypeFormatImplSP
+name|GetFormatForType
+argument_list|(
+argument|lldb::TypeNameSpecifierImplSP type_sp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
 name|TypeSummaryImplSP
 name|GetSummaryForType
 argument_list|(
@@ -453,6 +446,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|TypeFormatImplSP
+name|GetFormat
+argument_list|(
+argument|ValueObject& valobj
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|lldb
@@ -647,19 +653,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// this returns true if the ValueObjectPrinter is *highly encouraged*
+end_comment
+
+begin_comment
+comment|// to actually represent this ValueObject in one-liner format
+end_comment
+
+begin_comment
+comment|// If this object has a summary formatter, however, we should not
+end_comment
+
+begin_comment
+comment|// try and do one-lining, just let the summary do the right thing
+end_comment
+
+begin_function_decl
+name|bool
+name|ShouldPrintAsOneLiner
+parameter_list|(
+name|ValueObject
+modifier|&
+name|valobj
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|Changed
 parameter_list|()
 block|{
-name|__sync_add_and_fetch
-argument_list|(
-operator|&
+operator|++
 name|m_last_revision
-argument_list|,
-operator|+
-literal|1
-argument_list|)
 expr_stmt|;
 name|m_format_cache
 operator|.
@@ -693,22 +720,21 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|ValueNavigator
-name|m_value_nav
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|NamedSummariesMap
 name|m_named_summaries_map
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
+name|std
+operator|::
+name|atomic
+operator|<
 name|uint32_t
+operator|>
 name|m_last_revision
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|TypeCategoryMap

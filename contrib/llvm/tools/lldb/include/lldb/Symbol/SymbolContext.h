@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Symbol/ClangASTType.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Symbol/LineEntry.h"
 end_include
 

@@ -181,6 +181,33 @@ block|}
 struct|;
 name|public
 label|:
+comment|// Various metadata supplied by the inferior's threading library to describe
+comment|// the per-thread state.
+struct|struct
+name|ThreadInfo
+block|{
+name|bool
+name|valid
+decl_stmt|;
+comment|// whether we read valid metadata
+name|uint32_t
+name|dtv_offset
+decl_stmt|;
+comment|// offset of DTV pointer within pthread
+name|uint32_t
+name|dtv_slot_size
+decl_stmt|;
+comment|// size of one DTV slot
+name|uint32_t
+name|modid_offset
+decl_stmt|;
+comment|// offset of module ID within link_map
+name|uint32_t
+name|tls_offset
+decl_stmt|;
+comment|// offset of TLS pointer within DTV slot
+block|}
+struct|;
 name|DYLDRendezvous
 argument_list|(
 name|lldb_private
@@ -296,6 +323,13 @@ operator|.
 name|ldbase
 return|;
 block|}
+comment|/// @returns the thread layout metadata from the inferiors thread library.
+specifier|const
+name|ThreadInfo
+modifier|&
+name|GetThreadInfo
+parameter_list|()
+function_decl|;
 comment|/// @returns true if modules have been loaded into the inferior since the
 comment|/// last call to Resolve().
 name|bool
@@ -358,6 +392,12 @@ comment|/// actually lives in the inferiors memory.
 struct|struct
 name|SOEntry
 block|{
+name|lldb
+operator|::
+name|addr_t
+name|link_addr
+expr_stmt|;
+comment|///< Address of this link_map.
 name|lldb
 operator|::
 name|addr_t
@@ -425,6 +465,10 @@ name|void
 name|clear
 parameter_list|()
 block|{
+name|link_addr
+operator|=
+literal|0
+expr_stmt|;
 name|base_addr
 operator|=
 literal|0
@@ -590,20 +634,38 @@ comment|/// Resolve().
 name|SOEntryList
 name|m_removed_soentries
 decl_stmt|;
-comment|/// Reads @p size bytes from the inferiors address space starting at @p
-comment|/// addr.
+comment|/// Threading metadata read from the inferior.
+name|ThreadInfo
+name|m_thread_info
+decl_stmt|;
+comment|/// Reads an unsigned integer of @p size bytes from the inferior's address
+comment|/// space starting at @p addr.
 comment|///
 comment|/// @returns addr + size if the read was successful and false otherwise.
 name|lldb
 operator|::
 name|addr_t
-name|ReadMemory
+name|ReadWord
 argument_list|(
 argument|lldb::addr_t addr
 argument_list|,
-argument|void *dst
+argument|uint64_t *dst
 argument_list|,
 argument|size_t size
+argument_list|)
+expr_stmt|;
+comment|/// Reads an address from the inferior's address space starting at @p addr.
+comment|///
+comment|/// @returns addr + target address size if the read was successful and
+comment|/// 0 otherwise.
+name|lldb
+operator|::
+name|addr_t
+name|ReadPointer
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|,
+argument|lldb::addr_t *dst
 argument_list|)
 expr_stmt|;
 comment|/// Reads a null-terminated C string from the memory location starting at @p
@@ -652,6 +714,32 @@ parameter_list|(
 name|SOEntryList
 modifier|&
 name|entry_list
+parameter_list|)
+function_decl|;
+enum|enum
+name|PThreadField
+block|{
+name|eSize
+block|,
+name|eNElem
+block|,
+name|eOffset
+block|}
+enum|;
+name|bool
+name|FindMetadata
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|PThreadField
+name|field
+parameter_list|,
+name|uint32_t
+modifier|&
+name|value
 parameter_list|)
 function_decl|;
 block|}

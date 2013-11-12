@@ -966,11 +966,6 @@ name|ClangASTType
 name|m_function_return_type
 block|;
 comment|///< The opaque clang qual type for the function return type.
-name|ClangASTContext
-operator|*
-name|m_clang_ast_context
-block|;
-comment|///< This is the clang_ast_context that we're getting types from the and value, and the function return the function pointer is NULL.
 name|std
 operator|::
 name|string
@@ -1000,6 +995,15 @@ operator|>
 name|m_wrapper_args_addrs
 block|;
 comment|///< The addresses of the arguments to the wrapper function.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ASTStructExtractor
+operator|>
+name|m_struct_extractor
+block|;
+comment|///< The class that generates the argument struct below.
 name|bool
 name|m_struct_valid
 block|;

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-public.h"
 end_include
 
@@ -167,6 +173,7 @@ comment|/// @return
 comment|///     /b True this object contains a valid namespace decl, \b
 comment|///     false otherwise.
 comment|//------------------------------------------------------------------
+name|explicit
 name|operator
 name|bool
 argument_list|()
