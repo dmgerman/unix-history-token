@@ -315,7 +315,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"    create<type> [-v]<drive>[,<drive>[,...]] [<drive>[,<drive>[,...]]\n"
+literal|"    create<type> [-v] [-s stripe_size]<drive>[,<drive>[,...]] [<drive>[,<drive>[,...]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
