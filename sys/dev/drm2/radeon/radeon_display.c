@@ -1854,24 +1854,14 @@ operator|->
 name|event_list
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DUMBBELL_WIP
-name|wake_up_interruptible
+name|drm_event_wakeup
 argument_list|(
 operator|&
 name|e
 operator|->
 name|base
-operator|.
-name|file_priv
-operator|->
-name|event_wait
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DUMBBELL_WIP */
 block|}
 name|DRM_SPINUNLOCK_IRQRESTORE
 argument_list|(
