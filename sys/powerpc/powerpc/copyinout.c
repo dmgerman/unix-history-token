@@ -698,8 +698,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EFAULT
 operator|)
 return|;
 block|}
@@ -869,8 +868,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EFAULT
 operator|)
 return|;
 block|}
