@@ -5200,6 +5200,11 @@ operator|!=
 name|IB_LINK_LAYER_INFINIBAND
 condition|)
 continue|continue;
+name|ipoib_stop
+argument_list|(
+name|priv
+argument_list|)
+expr_stmt|;
 name|ib_unregister_event_handler
 argument_list|(
 operator|&
