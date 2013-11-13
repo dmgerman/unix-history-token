@@ -3329,16 +3329,6 @@ operator|~
 name|VDF_INVALID
 expr_stmt|;
 block|}
-comment|/* No mouse for DDB. */
-if|if
-condition|(
-name|kdb_active
-operator|||
-name|panicstr
-operator|!=
-name|NULL
-condition|)
-return|return;
 comment|/* Mark last mouse position as dirty to erase. */
 name|vtbuf_mouse_cursor_position
 argument_list|(
@@ -3466,6 +3456,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* No mouse for DDB. */
+if|if
+condition|(
+name|kdb_active
+operator|||
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
