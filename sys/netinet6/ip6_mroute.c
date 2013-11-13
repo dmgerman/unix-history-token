@@ -2214,7 +2214,7 @@ block|{
 name|mifi_t
 name|mifi
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|struct
@@ -5414,7 +5414,7 @@ modifier|*
 modifier|*
 name|nptr
 decl_stmt|;
-name|int
+name|u_long
 name|i
 decl_stmt|;
 name|MFC6_LOCK
