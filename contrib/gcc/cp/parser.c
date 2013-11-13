@@ -3964,13 +3964,21 @@ typedef|typedef
 struct|struct
 name|cp_parser_expression_stack_entry
 block|{
+comment|/* Left hand side of the binary operation we are currently      parsing.  */
 name|tree
 name|lhs
 decl_stmt|;
+comment|/* Original tree code for left hand side, if it was a binary      expression itself (used for -Wparentheses).  */
+name|enum
+name|tree_code
+name|lhs_type
+decl_stmt|;
+comment|/* Tree code for the binary operation we are parsing.  */
 name|enum
 name|tree_code
 name|tree_type
 decl_stmt|;
+comment|/* Precedence of the binary operation we are parsing.  */
 name|int
 name|prec
 decl_stmt|;
@@ -5004,6 +5012,9 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|bool
+parameter_list|,
+name|bool
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5066,6 +5077,9 @@ name|tree
 name|cp_parser_selection_statement
 parameter_list|(
 name|cp_parser
+modifier|*
+parameter_list|,
+name|bool
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5132,6 +5146,9 @@ name|tree
 name|cp_parser_implicitly_scoped_statement
 parameter_list|(
 name|cp_parser
+modifier|*
+parameter_list|,
+name|bool
 modifier|*
 parameter_list|)
 function_decl|;
@@ -17771,6 +17788,10 @@ decl_stmt|;
 name|enum
 name|tree_code
 name|tree_type
+decl_stmt|,
+name|lhs_type
+decl_stmt|,
+name|rhs_type
 decl_stmt|;
 name|enum
 name|cp_parser_prec
@@ -17797,6 +17818,10 @@ name|false
 argument_list|,
 name|cast_p
 argument_list|)
+expr_stmt|;
+name|lhs_type
+operator|=
+name|ERROR_MARK
 expr_stmt|;
 for|for
 control|(
@@ -17870,6 +17895,10 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+name|rhs_type
+operator|=
+name|ERROR_MARK
+expr_stmt|;
 comment|/* Get another operator token.  Look up its precedence to avoid 	 building a useless (immediately popped) stack entry for common 	 cases such as 3 + 4 + 5 or 3 * 4 + 5.  */
 name|token
 operator|=
@@ -17914,11 +17943,21 @@ operator|=
 name|lhs
 expr_stmt|;
 name|sp
+operator|->
+name|lhs_type
+operator|=
+name|lhs_type
+expr_stmt|;
+name|sp
 operator|++
 expr_stmt|;
 name|lhs
 operator|=
 name|rhs
+expr_stmt|;
+name|lhs_type
+operator|=
+name|rhs_type
 expr_stmt|;
 name|prec
 operator|=
@@ -17953,11 +17992,21 @@ name|rhs
 operator|=
 name|lhs
 expr_stmt|;
+name|rhs_type
+operator|=
+name|lhs_type
+expr_stmt|;
 name|lhs
 operator|=
 name|sp
 operator|->
 name|lhs
+expr_stmt|;
+name|lhs_type
+operator|=
+name|sp
+operator|->
+name|lhs_type
 expr_stmt|;
 block|}
 name|overloaded_p
@@ -17972,11 +18021,19 @@ name|tree_type
 argument_list|,
 name|lhs
 argument_list|,
+name|lhs_type
+argument_list|,
 name|rhs
+argument_list|,
+name|rhs_type
 argument_list|,
 operator|&
 name|overloaded_p
 argument_list|)
+expr_stmt|;
+name|lhs_type
+operator|=
+name|tree_type
 expr_stmt|;
 comment|/* If the binary operator required the use of an overloaded operator, 	 then this expression cannot be an integral constant-expression. 	 An overloaded operator can be used even if both operands are 	 otherwise permissible in an integral constant-expression if at 	 least one of the operands is of enumeration type.  */
 if|if
@@ -18897,7 +18954,7 @@ comment|/* Statements [gram.stmt.stmt]  */
 end_comment
 
 begin_comment
-comment|/* Parse a statement.     statement:      labeled-statement      expression-statement      compound-statement      selection-statement      iteration-statement      jump-statement      declaration-statement      try-block    IN_COMPOUND is true when the statement is nested inside a   cp_parser_compound_statement; this matters for certain pragmas.  */
+comment|/* Parse a statement.     statement:      labeled-statement      expression-statement      compound-statement      selection-statement      iteration-statement      jump-statement      declaration-statement      try-block    IN_COMPOUND is true when the statement is nested inside a   cp_parser_compound_statement; this matters for certain pragmas.    If IF_P is not NULL, *IF_P is set to indicate whether the statement   is a (possibly labeled) if statement which is not enclosed in braces   and has an else clause.  This is used to implement -Wparentheses.  */
 end_comment
 
 begin_function
@@ -18914,6 +18971,10 @@ name|in_statement_expr
 parameter_list|,
 name|bool
 name|in_compound
+parameter_list|,
+name|bool
+modifier|*
+name|if_p
 parameter_list|)
 block|{
 name|tree
@@ -18928,6 +18989,17 @@ name|statement_location
 decl_stmt|;
 name|restart
 label|:
+if|if
+condition|(
+name|if_p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|if_p
+operator|=
+name|false
+expr_stmt|;
 comment|/* There is no statement yet.  */
 name|statement
 operator|=
@@ -18999,6 +19071,8 @@ operator|=
 name|cp_parser_selection_statement
 argument_list|(
 name|parser
+argument_list|,
+name|if_p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -19731,6 +19805,8 @@ argument_list|,
 name|in_statement_expr
 argument_list|,
 name|true
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -19738,7 +19814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a selection-statement.     selection-statement:      if ( condition ) statement      if ( condition ) statement else statement      switch ( condition ) statement     Returns the new IF_STMT or SWITCH_STMT.  */
+comment|/* Parse a selection-statement.     selection-statement:      if ( condition ) statement      if ( condition ) statement else statement      switch ( condition ) statement     Returns the new IF_STMT or SWITCH_STMT.     If IF_P is not NULL, *IF_P is set to indicate whether the statement    is a (possibly labeled) if statement which is not enclosed in    braces and has an else clause.  This is used to implement    -Wparentheses.  */
 end_comment
 
 begin_function
@@ -19749,6 +19825,10 @@ parameter_list|(
 name|cp_parser
 modifier|*
 name|parser
+parameter_list|,
+name|bool
+modifier|*
+name|if_p
 parameter_list|)
 block|{
 name|cp_token
@@ -19759,6 +19839,17 @@ name|enum
 name|rid
 name|keyword
 decl_stmt|;
+if|if
+condition|(
+name|if_p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|if_p
+operator|=
+name|false
+expr_stmt|;
 comment|/* Peek at the next token.  */
 name|token
 operator|=
@@ -19877,6 +19968,9 @@ operator|==
 name|RID_IF
 condition|)
 block|{
+name|bool
+name|nested_if
+decl_stmt|;
 comment|/* Add the condition.  */
 name|finish_if_stmt_cond
 argument_list|(
@@ -19889,6 +19983,9 @@ comment|/* Parse the then-clause.  */
 name|cp_parser_implicitly_scoped_statement
 argument_list|(
 name|parser
+argument_list|,
+operator|&
+name|nested_if
 argument_list|)
 expr_stmt|;
 name|finish_then_clause
@@ -19926,11 +20023,48 @@ comment|/* Parse the else-clause.  */
 name|cp_parser_implicitly_scoped_statement
 argument_list|(
 name|parser
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|finish_else_clause
 argument_list|(
 name|statement
+argument_list|)
+expr_stmt|;
+comment|/* If we are currently parsing a then-clause, then 		   IF_P will not be NULL.  We set it to true to 		   indicate that this if statement has an else clause. 		   This may trigger the Wparentheses warning below 		   when we get back up to the parent if statement.  */
+if|if
+condition|(
+name|if_p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|if_p
+operator|=
+name|true
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* This if statement does not have an else clause.  If 		   NESTED_IF is true, then the then-clause is an if 		   statement which does have an else clause.  We warn 		   about the potential ambiguity.  */
+if|if
+condition|(
+name|nested_if
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wparentheses
+argument_list|,
+operator|(
+literal|"%Hsuggest explicit braces "
+literal|"to avoid ambiguous %<else%>"
+operator|)
+argument_list|,
+name|EXPR_LOCUS
+argument_list|(
+name|statement
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -19986,6 +20120,8 @@ expr_stmt|;
 name|cp_parser_implicitly_scoped_statement
 argument_list|(
 name|parser
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|parser
@@ -20440,6 +20576,8 @@ expr_stmt|;
 name|cp_parser_implicitly_scoped_statement
 argument_list|(
 name|parser
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|parser
@@ -21119,7 +21257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Some dependent statements (like `if (cond) statement'), are    implicitly in their own scope.  In other words, if the statement is    a single statement (as opposed to a compound-statement), it is    none-the-less treated as if it were enclosed in braces.  Any    declarations appearing in the dependent statement are out of scope    after control passes that point.  This function parses a statement,    but ensures that is in its own scope, even if it is not a    compound-statement.     Returns the new statement.  */
+comment|/* Some dependent statements (like `if (cond) statement'), are    implicitly in their own scope.  In other words, if the statement is    a single statement (as opposed to a compound-statement), it is    none-the-less treated as if it were enclosed in braces.  Any    declarations appearing in the dependent statement are out of scope    after control passes that point.  This function parses a statement,    but ensures that is in its own scope, even if it is not a    compound-statement.     If IF_P is not NULL, *IF_P is set to indicate whether the statement    is a (possibly labeled) if statement which is not enclosed in    braces and has an else clause.  This is used to implement    -Wparentheses.     Returns the new statement.  */
 end_comment
 
 begin_function
@@ -21130,11 +21268,26 @@ parameter_list|(
 name|cp_parser
 modifier|*
 name|parser
+parameter_list|,
+name|bool
+modifier|*
+name|if_p
 parameter_list|)
 block|{
 name|tree
 name|statement
 decl_stmt|;
+if|if
+condition|(
+name|if_p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|if_p
+operator|=
+name|false
+expr_stmt|;
 comment|/* Mark if () ; with a special NOP_EXPR.  */
 if|if
 condition|(
@@ -21207,6 +21360,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|false
+argument_list|,
+name|if_p
 argument_list|)
 expr_stmt|;
 comment|/* Finish the dummy compound-statement.  */
@@ -21256,6 +21411,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|false
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -53602,6 +53759,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|false
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cp_parser_end_omp_structured_block
@@ -54468,6 +54627,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|false
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|body
@@ -54762,6 +54923,8 @@ argument_list|,
 name|NULL_TREE
 argument_list|,
 name|false
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tok

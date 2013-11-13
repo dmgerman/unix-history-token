@@ -18294,7 +18294,13 @@ name|tree_code
 parameter_list|,
 name|tree
 parameter_list|,
+name|enum
+name|tree_code
+parameter_list|,
 name|tree
+parameter_list|,
+name|enum
+name|tree_code
 parameter_list|,
 name|bool
 modifier|*
