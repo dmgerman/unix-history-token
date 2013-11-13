@@ -1692,6 +1692,10 @@ operator|=
 operator|*
 name|segp
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|idx
 operator|=
 literal|0

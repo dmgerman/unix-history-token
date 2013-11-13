@@ -1224,6 +1224,13 @@ name|IWN_GP_DRIVER_REG_BIT_RADIO_IQ_INVERT
 value|(1<< 7)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_NONE
+value|0
+end_define
+
 begin_comment
 comment|/* Possible flags for register IWN_UCODE_GP1_CLR. */
 end_comment
@@ -4527,6 +4534,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Define maximal number of calib result send to runtime firmware  * PS: TEMP_OFFSET count for 2 (std and v2)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN5000_PHY_CALIB_MAX_RESULT
+value|8
+end_define
+
+begin_comment
 comment|/* Structures for command IWN_CMD_PHY_CALIB. */
 end_comment
 
@@ -6696,6 +6714,33 @@ name|IWN5000_EEPROM_BAND6
 block|,
 name|IWN5000_EEPROM_NO_HT40
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint32_t
+name|iwn2030_regulatory_bands
+index|[
+name|IWN_NBANDS
+index|]
+init|=
+block|{
+name|IWN5000_EEPROM_BAND1
+block|,
+name|IWN5000_EEPROM_BAND2
+block|,
+name|IWN5000_EEPROM_BAND3
+block|,
+name|IWN5000_EEPROM_BAND4
+block|,
+name|IWN5000_EEPROM_BAND5
+block|,
+name|IWN6000_EEPROM_BAND6
+block|,
+name|IWN5000_EEPROM_BAND7
+block|}
 decl_stmt|;
 end_decl_stmt
 

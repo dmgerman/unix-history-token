@@ -3831,6 +3831,19 @@ argument_list|(
 name|di
 argument_list|)
 return|;
+comment|/* APPLE LOCAL begin mainline 2007-05-09 5173149 */
+block|\
+case|case
+literal|'L'
+case|:
+return|return
+name|d_unqualified_name
+argument_list|(
+name|di
+argument_list|)
+return|;
+comment|/* APPLE LOCAL end mainline 2007-05-09 5173149 */
+block|\
 case|case
 literal|'S'
 case|:
@@ -4191,11 +4204,19 @@ operator|||
 name|peek
 operator|==
 literal|'C'
+comment|/* APPLE LOCAL begin mainline 2007-05-09 5173149 */
+expr|\
 operator|||
 name|peek
 operator|==
 literal|'D'
+operator|||
+name|peek
+operator|==
+literal|'L'
 condition|)
+comment|/* APPLE LOCAL end mainline 2007-05-09 5173149 */
+then|\
 name|dc
 operator|=
 name|d_unqualified_name
@@ -4333,7 +4354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<unqualified-name> ::=<operator-name>                       ::=<ctor-dtor-name>                       ::=<source-name> */
+comment|/*<unqualified-name> ::=<operator-name>                       ::=<ctor-dtor-name>                       ::=<source-name>  APPLE LOCAL begin mainline 2007-05-09 5173149 		      ::=<local-source-name><local-source-name>	::= L<source-name><discriminator>  APPLE LOCAL end mainline 2007-05-09 5173149 */
 end_comment
 
 begin_function
@@ -4445,6 +4466,61 @@ argument_list|(
 name|di
 argument_list|)
 return|;
+comment|/* APPLE LOCAL begin mainline 2007-05-09 5173149 */
+if|\
+elseif|else
+if|if
+condition|(
+name|peek
+operator|==
+literal|'L'
+condition|)
+block|{
+name|struct
+name|demangle_component
+modifier|*
+name|ret
+decl_stmt|;
+name|d_advance
+argument_list|(
+name|di
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|d_source_name
+argument_list|(
+name|di
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+operator|!
+name|d_discriminator
+argument_list|(
+name|di
+argument_list|)
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|ret
+return|;
+block|}
+comment|/* APPLE LOCAL end mainline 2007-05-09 5173149 */
+if|\
 else|else
 return|return
 name|NULL

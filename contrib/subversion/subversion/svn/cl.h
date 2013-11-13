@@ -869,7 +869,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Print STATUS for PATH to stdout for human consumption.  Prints in    abbreviated format by default, or DETAILED format if flag is set.     When SUPPRESS_EXTERNALS_PLACEHOLDERS is set, avoid printing    externals placeholder lines ("X lines").     When DETAILED is set, use SHOW_LAST_COMMITTED to toggle display of    the last-committed-revision and last-committed-author.     If SKIP_UNRECOGNIZED is TRUE, this function will not print out    unversioned items found in the working copy.     When DETAILED is set, and REPOS_LOCKS is set, treat missing repository locks    as broken WC locks.     Increment *TEXT_CONFLICTS, *PROP_CONFLICTS, or *TREE_CONFLICTS if    a conflict was encountered.     Use CWD_ABSPATH -- the absolute path of the current working    directory -- to shorten PATH into something relative to that    directory as necessary. */
+comment|/* Print STATUS for PATH to stdout for human consumption.  Prints in    abbreviated format by default, or DETAILED format if flag is set.     When SUPPRESS_EXTERNALS_PLACEHOLDERS is set, avoid printing    externals placeholder lines ("X lines").     When DETAILED is set, use SHOW_LAST_COMMITTED to toggle display of    the last-committed-revision and last-committed-author.     If SKIP_UNRECOGNIZED is TRUE, this function will not print out    unversioned items found in the working copy.     When DETAILED is set, and REPOS_LOCKS is set, treat missing repository locks    as broken WC locks.     Increment *TEXT_CONFLICTS, *PROP_CONFLICTS, or *TREE_CONFLICTS if    a conflict was encountered.     Use TARGET_ABSPATH and TARGET_PATH to shorten PATH into something    relative to the target as necessary. */
 name|svn_error_t
 modifier|*
 name|svn_cl__print_status
@@ -877,7 +877,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|cwd_abspath
+name|target_abspath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|target_path
 parameter_list|,
 specifier|const
 name|char
@@ -928,7 +933,7 @@ modifier|*
 name|pool
 parameter_list|)
 function_decl|;
-comment|/* Print STATUS for PATH in XML to stdout.  Use POOL for temporary    allocations.     Use CWD_ABSPATH -- the absolute path of the current working    directory -- to shorten PATH into something relative to that    directory as necessary.  */
+comment|/* Print STATUS for PATH in XML to stdout.  Use POOL for temporary    allocations.     Use TARGET_ABSPATH and TARGET_PATH to shorten PATH into something    relative to the target as necessary.  */
 name|svn_error_t
 modifier|*
 name|svn_cl__print_status_xml
@@ -936,7 +941,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|cwd_abspath
+name|target_abspath
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|target_path
 parameter_list|,
 specifier|const
 name|char

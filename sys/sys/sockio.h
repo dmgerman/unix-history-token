@@ -320,41 +320,27 @@ begin_comment
 comment|/* delete IF addr */
 end_comment
 
-begin_comment
-comment|/*	OSIOCAIFADDR	 _IOW('i', 26, struct oifaliasreq) FreeBSD 9.x */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SIOCALIFADDR
-value|_IOW('i', 27, struct if_laddrreq)
+name|OSIOCAIFADDR
+value|_IOW('i', 26, struct oifaliasreq)
 end_define
 
 begin_comment
-comment|/* add IF addr */
+comment|/* FreeBSD 9.x */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCGLIFADDR
-value|_IOWR('i', 28, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* get IF addr */
+comment|/*	SIOCALIFADDR	 _IOW('i', 27, struct if_laddrreq) KAME */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCDLIFADDR
-value|_IOW('i', 29, struct if_laddrreq)
-end_define
+begin_comment
+comment|/*	SIOCGLIFADDR	_IOWR('i', 28, struct if_laddrreq) KAME */
+end_comment
 
 begin_comment
-comment|/* delete IF addr */
+comment|/*	SIOCDLIFADDR	 _IOW('i', 29, struct if_laddrreq) KAME */
 end_comment
 
 begin_define
@@ -632,26 +618,12 @@ begin_comment
 comment|/* delete gif addrs */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCSLIFPHYADDR
-value|_IOW('i', 74, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* set gif addrs */
+comment|/*	SIOCSLIFPHYADDR	 _IOW('i', 74, struct if_laddrreq) KAME */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCGLIFPHYADDR
-value|_IOWR('i', 75, struct if_laddrreq)
-end_define
-
 begin_comment
-comment|/* get gif addrs */
+comment|/*	SIOCGLIFPHYADDR	_IOWR('i', 75, struct if_laddrreq) KAME */
 end_comment
 
 begin_define

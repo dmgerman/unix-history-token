@@ -131,7 +131,6 @@ operator|>
 name|EnumerationMap
 expr_stmt|;
 typedef|typedef
-name|typename
 name|EnumerationMap
 operator|::
 name|Entry

@@ -55,7 +55,19 @@ end_if
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -156,6 +168,14 @@ operator|)
 comment|// Can create file only if it doesn't already exist
 block|}
 enum|;
+specifier|static
+name|mode_t
+name|ConvertOpenOptionsForPOSIXOpen
+parameter_list|(
+name|uint32_t
+name|open_options
+parameter_list|)
+function_decl|;
 enum|enum
 name|Permissions
 block|{
@@ -164,7 +184,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|0
+literal|8
 operator|)
 block|,
 name|ePermissionsUserWrite
@@ -172,7 +192,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|1
+literal|7
 operator|)
 block|,
 name|ePermissionsUserExecute
@@ -180,7 +200,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|2
+literal|6
 operator|)
 block|,
 name|ePermissionsGroupRead
@@ -188,7 +208,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|3
+literal|5
 operator|)
 block|,
 name|ePermissionsGroupWrite
@@ -204,7 +224,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|5
+literal|3
 operator|)
 block|,
 name|ePermissionsWorldRead
@@ -212,7 +232,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|6
+literal|2
 operator|)
 block|,
 name|ePermissionsWorldWrite
@@ -220,7 +240,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|7
+literal|1
 operator|)
 block|,
 name|ePermissionsWorldExecute
@@ -228,7 +248,7 @@ init|=
 operator|(
 literal|1u
 operator|<<
-literal|8
+literal|0
 operator|)
 block|,
 name|ePermissionsUserRW
@@ -480,6 +500,33 @@ comment|//------------------------------------------------------------------
 name|File
 argument_list|(
 argument|const char *path
+argument_list|,
+argument|uint32_t options
+argument_list|,
+argument|uint32_t permissions = ePermissionsDefault
+argument_list|)
+empty_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Constructor with FileSpec.
+comment|///
+comment|/// Takes a FileSpec pointing to a file which can be just a filename, or a full
+comment|/// path. If \a path is not NULL or empty, this function will call
+comment|/// File::Open (const char *path, uint32_t options, uint32_t permissions).
+comment|///
+comment|/// @param[in] path
+comment|///     The FileSpec for this file.
+comment|///
+comment|/// @param[in] options
+comment|///     Options to use when opening (see File::OpenOptions)
+comment|///
+comment|/// @param[in] permissions
+comment|///     Options to use when opening (see File::Permissions)
+comment|///
+comment|/// @see File::Open (const char *path, uint32_t options, uint32_t permissions)
+comment|//------------------------------------------------------------------
+name|File
+argument_list|(
+argument|const FileSpec& filespec
 argument_list|,
 argument|uint32_t options
 argument_list|,
@@ -1003,6 +1050,36 @@ comment|//------------------------------------------------------------------
 name|Error
 name|Sync
 parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get the permissions for a this file.
+comment|///
+comment|/// @return
+comment|///     Bits logical OR'ed together from the permission bits defined
+comment|///     in lldb_private::File::Permissions.
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetPermissions
+argument_list|(
+name|Error
+operator|&
+name|error
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|static
+name|uint32_t
+name|GetPermissions
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Output printf formatted output to the stream.

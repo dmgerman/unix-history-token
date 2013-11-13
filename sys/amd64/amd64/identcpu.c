@@ -1167,7 +1167,8 @@ literal|"\020LWP"
 comment|/* Lightweight Profiling */
 literal|"\021FMA4"
 comment|/* 4-operand FMA instructions */
-literal|"\022<b17>"
+literal|"\022TCE"
+comment|/* Translation Cache Extension */
 literal|"\023<b18>"
 literal|"\024NodeId"
 comment|/* NodeId MSR support */
@@ -1176,12 +1177,17 @@ literal|"\026TBM"
 comment|/* Trailing Bit Manipulation */
 literal|"\027Topology"
 comment|/* Topology Extensions */
-literal|"\030<b23>"
-literal|"\031<b24>"
+literal|"\030PCXC"
+comment|/* Core perf count */
+literal|"\031PNXC"
+comment|/* NB perf count */
 literal|"\032<b25>"
-literal|"\033<b26>"
-literal|"\034<b27>"
-literal|"\035<b28>"
+literal|"\033DBE"
+comment|/* Data Breakpoint extension */
+literal|"\034PTSC"
+comment|/* Performance TSC */
+literal|"\035PL2I"
+comment|/* L2I perf count */
 literal|"\036<b29>"
 literal|"\037<b30>"
 literal|"\040<b31>"

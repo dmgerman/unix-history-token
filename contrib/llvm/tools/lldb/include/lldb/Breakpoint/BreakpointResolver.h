@@ -279,6 +279,23 @@ return|;
 block|}
 name|protected
 operator|:
+comment|//------------------------------------------------------------------
+comment|/// SetSCMatchesByLine - Takes a symbol context list of matches which supposedly represent the same file and
+comment|/// line number in a CU, and find the nearest actual line number that matches, and then filter down the
+comment|/// matching addresses to unique entries, and skip the prologue if asked to do so, and then set
+comment|/// breakpoint locations in this breakpoint for all the resultant addresses.
+name|void
+name|SetSCMatchesByLine
+argument_list|(
+argument|SearchFilter&filter
+argument_list|,
+argument|SymbolContextList&sc_list
+argument_list|,
+argument|bool skip_prologue
+argument_list|,
+argument|const char *log_ident
+argument_list|)
+block|;
 name|Breakpoint
 operator|*
 name|m_breakpoint

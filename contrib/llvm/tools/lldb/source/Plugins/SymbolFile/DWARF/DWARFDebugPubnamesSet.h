@@ -67,6 +67,11 @@ directive|if
 name|__cplusplus
 operator|>=
 literal|201103L
+operator|||
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
 end_if
 
 begin_include
@@ -315,7 +320,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_pubnames_data
 argument_list|,
@@ -460,6 +465,11 @@ directive|if
 name|__cplusplus
 operator|>=
 literal|201103L
+operator|||
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
 end_if
 
 begin_typedef

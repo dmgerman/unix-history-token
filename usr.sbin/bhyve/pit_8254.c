@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ioapic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mevent.h"
 end_include
 
@@ -344,22 +338,22 @@ expr_stmt|;
 name|pit_mev_count
 operator|++
 expr_stmt|;
-name|ioapic_assert_pin
+name|vm_ioapic_assert_irq
 argument_list|(
 name|c
 operator|->
 name|ctx
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
-name|ioapic_deassert_pin
+name|vm_ioapic_deassert_irq
 argument_list|(
 name|c
 operator|->
 name|ctx
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Delete the timer for one-shots 	 */

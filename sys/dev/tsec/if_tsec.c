@@ -765,6 +765,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|tsec_phy_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|tsec_attach
@@ -803,6 +810,28 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* Initialize global (because potentially shared) MII lock */
+if|if
+condition|(
+operator|!
+name|mtx_initialized
+argument_list|(
+operator|&
+name|tsec_phy_mtx
+argument_list|)
+condition|)
+name|mtx_init
+argument_list|(
+operator|&
+name|tsec_phy_mtx
+argument_list|,
+literal|"tsec mii"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Reset all TSEC counters */
 name|TSEC_TX_RX_COUNTERS_INIT
 argument_list|(
@@ -1999,12 +2028,15 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* Step 6: Reset the management interface */
-name|TSEC_WRITE
+name|TSEC_PHY_LOCK
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
+argument_list|)
+expr_stmt|;
+comment|/* Step 6: Reset the management interface */
+name|TSEC_PHY_WRITE
+argument_list|(
+name|sc
 argument_list|,
 name|TSEC_REG_MIIMCFG
 argument_list|,
@@ -2012,11 +2044,9 @@ name|TSEC_MIIMCFG_RESETMGMT
 argument_list|)
 expr_stmt|;
 comment|/* Step 7: Setup the MII Mgmt clock speed */
-name|TSEC_WRITE
+name|TSEC_PHY_WRITE
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCFG
 argument_list|,
@@ -2034,11 +2064,9 @@ operator|--
 name|timeout
 operator|&&
 operator|(
-name|TSEC_READ
+name|TSEC_PHY_READ
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMIND
 argument_list|)
@@ -2067,6 +2095,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|TSEC_PHY_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Step 9: Setup the MII Mgmt */
 name|mii_mediachg
 argument_list|(
@@ -6942,6 +6975,9 @@ decl_stmt|;
 name|uint32_t
 name|timeout
 decl_stmt|;
+name|int
+name|rv
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -6949,11 +6985,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|TSEC_WRITE
+name|TSEC_PHY_LOCK
+argument_list|()
+expr_stmt|;
+name|TSEC_PHY_WRITE
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMADD
 argument_list|,
@@ -6966,22 +7003,18 @@ operator||
 name|reg
 argument_list|)
 expr_stmt|;
-name|TSEC_WRITE
+name|TSEC_PHY_WRITE
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCOM
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|TSEC_WRITE
+name|TSEC_PHY_WRITE
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCOM
 argument_list|,
@@ -6997,11 +7030,9 @@ condition|(
 operator|--
 name|timeout
 operator|&&
-name|TSEC_READ
+name|TSEC_PHY_READ
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMIND
 argument_list|)
@@ -7030,16 +7061,21 @@ argument_list|,
 literal|"Timeout while reading from PHY!\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|TSEC_READ
+name|rv
+operator|=
+name|TSEC_PHY_READ
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMSTAT
 argument_list|)
+expr_stmt|;
+name|TSEC_PHY_UNLOCK
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|rv
 operator|)
 return|;
 block|}
@@ -7077,11 +7113,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|TSEC_WRITE
+name|TSEC_PHY_LOCK
+argument_list|()
+expr_stmt|;
+name|TSEC_PHY_WRITE
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMADD
 argument_list|,
@@ -7094,11 +7131,9 @@ operator||
 name|reg
 argument_list|)
 expr_stmt|;
-name|TSEC_WRITE
+name|TSEC_PHY_WRITE
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMCON
 argument_list|,
@@ -7118,8 +7153,6 @@ operator|(
 name|TSEC_READ
 argument_list|(
 name|sc
-operator|->
-name|phy_sc
 argument_list|,
 name|TSEC_REG_MIIMIND
 argument_list|)
@@ -7131,6 +7164,9 @@ name|DELAY
 argument_list|(
 name|TSEC_READ_DELAY
 argument_list|)
+expr_stmt|;
+name|TSEC_PHY_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

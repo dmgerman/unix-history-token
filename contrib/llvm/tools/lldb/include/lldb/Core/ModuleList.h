@@ -856,6 +856,67 @@ name|new_spec
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Find addresses by file/line
+comment|///
+comment|/// @param[in] target_sp
+comment|///     The target the addresses are desired for.
+comment|///
+comment|/// @param[in] file
+comment|///     Source file to locate.
+comment|///
+comment|/// @param[in] line
+comment|///     Source line to locate.
+comment|///
+comment|/// @param[in] function
+comment|///     Optional filter function. Addresses within this function will be
+comment|///     added to the 'local' list. All others will be added to the 'extern' list.
+comment|///
+comment|/// @param[out] output_local
+comment|///     All matching addresses within 'function'
+comment|///
+comment|/// @param[out] output_extern
+comment|///     All matching addresses not within 'function'
+name|void
+name|FindAddressesForLine
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|TargetSP
+name|target_sp
+argument_list|,
+specifier|const
+name|FileSpec
+operator|&
+name|file
+argument_list|,
+name|uint32_t
+name|line
+argument_list|,
+name|Function
+operator|*
+name|function
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|Address
+operator|>
+operator|&
+name|output_local
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|Address
+operator|>
+operator|&
+name|output_extern
+argument_list|)
+decl_stmt|;
 name|bool
 name|Remove
 argument_list|(

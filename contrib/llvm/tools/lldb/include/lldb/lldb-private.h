@@ -52,6 +52,23 @@ name|__cplusplus
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"lldb/Host/windows/win32.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

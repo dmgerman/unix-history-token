@@ -921,7 +921,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -987,12 +987,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Increase to get number of pins 	 */
-name|sc
-operator|->
-name|sc_npins
-operator|++
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -1005,6 +999,12 @@ operator|(
 literal|"GPIO device with no pins"
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Increase to get number of pins 	 */
+name|sc
+operator|->
+name|sc_npins
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -1047,6 +1047,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get parent's pins and mark them as unmapped 	 */
+name|bus_generic_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|bus_enumerate_hinted_children
 argument_list|(
 name|dev

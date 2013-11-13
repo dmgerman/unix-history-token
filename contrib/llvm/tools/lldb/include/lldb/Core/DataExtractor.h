@@ -754,6 +754,35 @@ name|ptr
 return|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Copy \a length bytes from \a *offset, without swapping bytes.
+comment|///
+comment|/// @param[in] offset
+comment|///     The offset into this data from which to start copying
+comment|///
+comment|/// @param[in] length
+comment|///     The length of the data to copy from this object
+comment|///
+comment|/// @param[out] dst
+comment|///     The buffer to place the output data.
+comment|///
+comment|/// @return
+comment|///     Returns the number of bytes that were copied, or zero if
+comment|///     anything goes wrong.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|offset_t
+name|CopyData
+argument_list|(
+argument|lldb::offset_t offset
+argument_list|,
+argument|lldb::offset_t length
+argument_list|,
+argument|void *dst
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
 comment|/// Copy \a dst_len bytes from \a *offset_ptr and ensure the copied
 comment|/// data is treated as a value that can be swapped to match the
 comment|/// specified byte order.

@@ -20,7 +20,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_CITRUS_CSMAPPER_H
+name|_CITRUS_CSMAPPER_H_
 end_define
 
 begin_define

@@ -204,7 +204,7 @@ argument_list|)
 expr_stmt|;
 specifier|static
 name|bool
-name|SupportsEmulatingIntructionsOfTypeStatic
+name|SupportsEmulatingInstructionsOfTypeStatic
 parameter_list|(
 name|InstructionType
 name|inst_type
@@ -338,14 +338,14 @@ comment|//    {
 comment|//    }
 name|virtual
 name|bool
-name|SupportsEmulatingIntructionsOfType
+name|SupportsEmulatingInstructionsOfType
 parameter_list|(
 name|InstructionType
 name|inst_type
 parameter_list|)
 block|{
 return|return
-name|SupportsEmulatingIntructionsOfTypeStatic
+name|SupportsEmulatingInstructionsOfTypeStatic
 argument_list|(
 name|inst_type
 argument_list|)

@@ -1461,6 +1461,7 @@ name|svn_io_dirent2_t
 modifier|*
 name|dirent
 decl_stmt|;
+comment|/* Verify truename to mimic status for iota/IOTA difference on Windows */
 name|SVN_ERR
 argument_list|(
 name|svn_io_stat_dirent2
@@ -1470,7 +1471,7 @@ name|dirent
 argument_list|,
 name|local_abspath
 argument_list|,
-name|FALSE
+name|TRUE
 comment|/* verify truename */
 argument_list|,
 name|TRUE
@@ -1482,8 +1483,16 @@ name|scratch_pool
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If a file does not exist on disk (missing/obstructed) then we          can't provide a text diff */
 if|if
 condition|(
+name|dirent
+operator|->
+name|kind
+operator|!=
+name|svn_node_file
+operator|||
+operator|(
 name|dirent
 operator|->
 name|kind
@@ -1501,6 +1510,7 @@ operator|->
 name|mtime
 operator|==
 name|recorded_time
+operator|)
 condition|)
 block|{
 name|files_same

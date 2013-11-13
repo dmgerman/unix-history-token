@@ -182,6 +182,25 @@ name|virtual
 name|lldb_private
 operator|::
 name|Error
+name|RunShellCommand
+argument_list|(
+argument|const char *command
+argument_list|,
+argument|const char *working_dir
+argument_list|,
+argument|int *status_ptr
+argument_list|,
+argument|int *signo_ptr
+argument_list|,
+argument|std::string *command_output
+argument_list|,
+argument|uint32_t timeout_sec
+argument_list|)
+block|;
+name|virtual
+name|lldb_private
+operator|::
+name|Error
 name|ResolveExecutable
 argument_list|(
 specifier|const

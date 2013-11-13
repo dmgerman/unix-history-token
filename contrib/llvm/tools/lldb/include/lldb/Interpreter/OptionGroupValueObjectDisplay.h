@@ -173,12 +173,10 @@ operator|==
 name|true
 return|;
 block|}
-name|ValueObject
-operator|::
 name|DumpValueObjectOptions
 name|GetAsDumpOptions
 argument_list|(
-argument|bool objc_is_compact = false
+argument|LanguageRuntimeDescriptionDisplayVerbosity lang_descr_verbosity = eLanguageRuntimeDescriptionDisplayVerbosityFull
 argument_list|,
 argument|lldb::Format format = lldb::eFormatDefault
 argument_list|,

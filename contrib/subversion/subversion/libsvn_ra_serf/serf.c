@@ -168,6 +168,14 @@ define|\
 value|N_("Module for accessing a repository via WebDAV protocol using serf.")
 end_define
 
+begin_define
+define|#
+directive|define
+name|RA_SERF_DESCRIPTION_VER
+define|\
+value|N_("Module for accessing a repository via WebDAV protocol using serf.\n" \        "  - using serf %d.%d.%d")
+end_define
+
 begin_comment
 comment|/* Implements svn_ra__vtable_t.get_description(). */
 end_comment
@@ -179,13 +187,45 @@ name|char
 modifier|*
 name|ra_serf_get_description
 parameter_list|(
-name|void
+name|apr_pool_t
+modifier|*
+name|pool
 parameter_list|)
 block|{
+name|int
+name|major
+decl_stmt|,
+name|minor
+decl_stmt|,
+name|patch
+decl_stmt|;
+name|serf_lib_version
+argument_list|(
+operator|&
+name|major
+argument_list|,
+operator|&
+name|minor
+argument_list|,
+operator|&
+name|patch
+argument_list|)
+expr_stmt|;
 return|return
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
 name|_
 argument_list|(
-name|RA_SERF_DESCRIPTION
+name|RA_SERF_DESCRIPTION_VER
+argument_list|)
+argument_list|,
+name|major
+argument_list|,
+name|minor
+argument_list|,
+name|patch
 argument_list|)
 return|;
 block|}
@@ -1571,6 +1611,62 @@ block|}
 end_function
 
 begin_comment
+comment|/** Our User-Agent string. */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|get_user_agent_string
+parameter_list|(
+name|apr_pool_t
+modifier|*
+name|pool
+parameter_list|)
+block|{
+name|int
+name|major
+decl_stmt|,
+name|minor
+decl_stmt|,
+name|patch
+decl_stmt|;
+name|serf_lib_version
+argument_list|(
+operator|&
+name|major
+argument_list|,
+operator|&
+name|minor
+argument_list|,
+operator|&
+name|patch
+argument_list|)
+expr_stmt|;
+return|return
+name|apr_psprintf
+argument_list|(
+name|pool
+argument_list|,
+literal|"SVN/%s (%s) serf/%d.%d.%d"
+argument_list|,
+name|SVN_VER_NUMBER
+argument_list|,
+name|SVN_BUILD_TARGET
+argument_list|,
+name|major
+argument_list|,
+name|minor
+argument_list|,
+name|patch
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Implements svn_ra__vtable_t.open_session(). */
 end_comment
 
@@ -2005,7 +2101,10 @@ name|apr_pstrcat
 argument_list|(
 name|pool
 argument_list|,
-name|USER_AGENT
+name|get_user_agent_string
+argument_list|(
+name|pool
+argument_list|)
 argument_list|,
 literal|" "
 argument_list|,
@@ -2023,7 +2122,10 @@ name|serf_sess
 operator|->
 name|useragent
 operator|=
-name|USER_AGENT
+name|get_user_agent_string
+argument_list|(
+name|pool
+argument_list|)
 expr_stmt|;
 comment|/* go ahead and tell serf about the connection. */
 name|status
@@ -4966,12 +5068,14 @@ name|serf_patch
 decl_stmt|;
 name|SVN_ERR
 argument_list|(
-name|svn_ver_check_list
+name|svn_ver_check_list2
 argument_list|(
 name|ra_serf_version
 argument_list|()
 argument_list|,
 name|checklist
+argument_list|,
+name|svn_ver_equal
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -12736,7 +12736,7 @@ name|IFCAP_NETMAP
 operator|)
 condition|)
 block|{
-name|D
+name|ND
 argument_list|(
 literal|"interface not in netmap mode"
 argument_list|)

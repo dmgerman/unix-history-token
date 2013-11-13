@@ -309,29 +309,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* virtual sizes (bytes) for various kernel submaps */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_KMEM_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_KMEM_SIZE
-value|(12 * 1024 * 1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * How many physical pages per KVA page allocated.  * min(max(VM_KMEM_SIZE, Physical memory/VM_KMEM_SIZE_SCALE), VM_KMEM_SIZE_MAX)  * is the total KVA space allocated for kmem_map.  */
+comment|/*  * How many physical pages per kmem arena virtual page.  */
 end_comment
 
 begin_ifndef
@@ -353,7 +331,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Ceiling on the amount of kmem_map KVA space: 40% of the entire KVA space.  */
+comment|/*  * Optional floor (in bytes) on the size of the kmem arena.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MIN
+value|(12 * 1024 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Optional ceiling (in bytes) on the size of the kmem arena: 40% of the  * kernel map.  */
 end_comment
 
 begin_ifndef

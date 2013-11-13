@@ -328,13 +328,6 @@ name|xctrl_crash
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|xctrl_shutdown_handler_t
-name|xctrl_halt
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*-------------------------- Private Data Structures -------------------------*/
 end_comment
@@ -400,7 +393,7 @@ block|,
 block|{
 literal|"halt"
 block|,
-name|xctrl_halt
+name|xctrl_poweroff
 block|}
 block|, }
 decl_stmt|;
@@ -1300,20 +1293,6 @@ block|{
 name|panic
 argument_list|(
 literal|"Xen directed crash"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|xctrl_halt
-parameter_list|()
-block|{
-name|shutdown_nice
-argument_list|(
-name|RB_HALT
 argument_list|)
 expr_stmt|;
 block|}

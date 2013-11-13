@@ -755,7 +755,7 @@ operator|=
 operator|(
 literal|5
 operator|*
-name|hz
+name|SBT_1S
 operator|)
 expr_stmt|;
 name|so
@@ -767,7 +767,7 @@ operator|=
 operator|(
 literal|5
 operator|*
-name|hz
+name|SBT_1S
 operator|)
 expr_stmt|;
 name|error

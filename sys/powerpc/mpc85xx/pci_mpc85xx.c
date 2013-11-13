@@ -822,6 +822,13 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
+literal|"fsl,mpc8540-pcie"
+argument_list|)
+operator|||
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
 literal|"fsl,mpc8548-pcie"
 argument_list|)
 operator|)

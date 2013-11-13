@@ -5700,7 +5700,9 @@ argument_list|,
 name|vtable
 operator|->
 name|get_description
-argument_list|()
+argument_list|(
+name|iterpool
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|svn_stringbuf_appendcstr

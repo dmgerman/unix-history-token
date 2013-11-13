@@ -4806,6 +4806,7 @@ block|}
 name|ptr
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4820,6 +4821,7 @@ expr_stmt|;
 name|ptrend
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4847,6 +4849,7 @@ break|break;
 name|devscope
 operator|=
 operator|(
+specifier|const
 name|ACPI_DMAR_DEVICE_SCOPE
 operator|*
 operator|)
@@ -4901,6 +4904,7 @@ operator|/
 literal|2
 argument_list|,
 operator|(
+specifier|const
 name|ACPI_DMAR_PCI_PATH
 operator|*
 operator|)
@@ -4938,6 +4942,7 @@ operator|->
 name|Bus
 argument_list|,
 operator|(
+specifier|const
 name|ACPI_DMAR_PCI_PATH
 operator|*
 operator|)
@@ -5560,6 +5565,13 @@ name|t
 operator|=
 name|db_read_token
 argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|show_mappings
+operator|=
+name|false
 expr_stmt|;
 block|}
 if|if

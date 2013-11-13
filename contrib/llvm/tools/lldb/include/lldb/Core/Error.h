@@ -52,36 +52,22 @@ name|__cplusplus
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__APPLE__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
-file|<mach/mach.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<cstdarg>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdio>
 end_include
 
 begin_include
@@ -172,9 +158,26 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|err_str
+name|format
+parameter_list|,
+modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+block|)
+decl_stmt|)
+block|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|Error
 argument_list|(
 specifier|const
@@ -183,15 +186,45 @@ operator|&
 name|rhs
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Assignment operator.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @param[in] err
+end_comment
+
+begin_comment
 comment|///     An error code.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @return
+end_comment
+
+begin_comment
 comment|///     A const reference to this object.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|Error
 modifier|&
@@ -204,17 +237,53 @@ operator|&
 name|rhs
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Assignment operator from a kern_return_t.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Sets the type to \c MachKernel and the error code to \a err.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @param[in] err
+end_comment
+
+begin_comment
 comment|///     A mach error code.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @return
+end_comment
+
+begin_comment
 comment|///     A const reference to this object.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|Error
 modifier|&
@@ -225,24 +294,72 @@ name|uint32_t
 name|err
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 operator|~
 name|Error
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Get the error string associated with the current error.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|/// Gets the error value as a NULL terminated C string. The error
+end_comment
+
+begin_comment
 comment|/// string will be fetched and cached on demand. The error string
+end_comment
+
+begin_comment
 comment|/// will be retrieved from a callback that is appropriate for the
+end_comment
+
+begin_comment
 comment|/// type of the error and will be cached until the error value is
+end_comment
+
+begin_comment
 comment|/// changed or cleared.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @return
+end_comment
+
+begin_comment
 comment|///     The error as a NULL terminated C string value if the error
+end_comment
+
+begin_comment
 comment|///     is valid and is able to be converted to a string value,
+end_comment
+
+begin_comment
 comment|///     NULL otherwise.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
@@ -257,45 +374,132 @@ literal|"unknown error"
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Clear the object state.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Reverts the state of this object to contain a generic success
+end_comment
+
+begin_comment
 comment|/// value and frees any cached error string value.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_function_decl
 name|void
 name|Clear
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Test for error condition.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @return
+end_comment
+
+begin_comment
 comment|///     \b true if this object contains an error, \b false
+end_comment
+
+begin_comment
 comment|///     otherwise.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
 name|bool
 name|Fail
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Access the error value.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @return
+end_comment
+
+begin_comment
 comment|///     The error value.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
 name|ValueType
 name|GetError
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Access the error type.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @return
+end_comment
+
+begin_comment
 comment|///     The error type enumeration value.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_expr_stmt
 name|lldb
 operator|::
 name|ErrorType
@@ -303,24 +507,81 @@ name|GetType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Log an error to Log().
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Log the error given a formatted string \a format. If the this
+end_comment
+
+begin_comment
 comment|/// object contains an error code, update the error string to
+end_comment
+
+begin_comment
 comment|/// contain the prefix "error: ", followed by the formatted string,
+end_comment
+
+begin_comment
 comment|/// followed by the error value and any string that describes the
+end_comment
+
+begin_comment
 comment|/// error value. This allows more context to be given to an error
+end_comment
+
+begin_comment
 comment|/// string that remains cached in this object. Logging always occurs
+end_comment
+
+begin_comment
 comment|/// even when the error code contains a non-error value.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @param[in] format
+end_comment
+
+begin_comment
 comment|///     A printf style format string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @param[in] ...
+end_comment
+
+begin_comment
 comment|///     Variable arguments that are needed for the printf style
+end_comment
+
+begin_comment
 comment|///     format string \a format.
+end_comment
+
+begin_comment
 comment|//------------------------------------------------------------------
+end_comment
+
+begin_function_decl
 name|void
 name|PutToLog
 parameter_list|(
@@ -344,11 +605,12 @@ parameter_list|,
 function_decl|3
 operator|,
 function_decl|4
-block|)
-decl_stmt|)
-block|)
-decl_stmt|;
-end_decl_stmt
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|//------------------------------------------------------------------

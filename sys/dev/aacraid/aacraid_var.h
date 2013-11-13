@@ -97,14 +97,14 @@ begin_define
 define|#
 directive|define
 name|AAC_DRIVER_MINOR_VERSION
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|AAC_DRIVER_BUGFIX_LEVEL
-value|1
+value|5
 end_define
 
 begin_define
@@ -383,14 +383,25 @@ value|(3 * 60)
 end_define
 
 begin_comment
-comment|/*  * Timeout for immediate commands.  */
+comment|/*  * We wait this many seconds for the adapter to come ready    * after flash update  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AAC_IMMEDIATE_TIMEOUT
-value|30
+name|AAC_FWUPD_TIMEOUT
+value|(5 * 60)
+end_define
+
+begin_comment
+comment|/*  * Timeout for sync. commands.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_SYNC_TIMEOUT
+value|180
 end_define
 
 begin_comment
@@ -405,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|AAC_CMD_TIMEOUT
-value|120
+value|180
 end_define
 
 begin_comment
@@ -896,7 +907,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|aif_set_interrupts
+name|aif_access_devreg
 function_decl|)
 parameter_list|(
 name|struct
@@ -1052,21 +1063,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_MASK_INTERRUPTS
+name|AAC_ACCESS_DEVREG
 parameter_list|(
 name|sc
+parameter_list|,
+name|mode
 parameter_list|)
-value|((sc)->aac_if.aif_set_interrupts((sc), \ 					0))
-end_define
-
-begin_define
-define|#
-directive|define
-name|AAC_UNMASK_INTERRUPTS
-parameter_list|(
-name|sc
-parameter_list|)
-value|((sc)->aac_if.aif_set_interrupts((sc), \ 					1))
+value|((sc)->aac_if.aif_access_devreg((sc), \ 					mode))
 end_define
 
 begin_define
@@ -1289,6 +1292,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* MSIX context */
+end_comment
+
+begin_struct
+struct|struct
+name|aac_msix_ctx
+block|{
+name|int
+name|vector_no
+decl_stmt|;
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Per-controller structure.  */
 end_comment
 
@@ -1339,16 +1362,33 @@ name|struct
 name|resource
 modifier|*
 name|aac_irq
+index|[
+name|AAC_MAX_MSIX
+index|]
 decl_stmt|;
 comment|/* interrupt */
 name|int
 name|aac_irq_rid
+index|[
+name|AAC_MAX_MSIX
+index|]
 decl_stmt|;
 name|void
 modifier|*
 name|aac_intr
+index|[
+name|AAC_MAX_MSIX
+index|]
 decl_stmt|;
 comment|/* interrupt handle */
+name|struct
+name|aac_msix_ctx
+name|aac_msix
+index|[
+name|AAC_MAX_MSIX
+index|]
+decl_stmt|;
+comment|/* context */
 name|eventhandler_tag
 name|eh
 decl_stmt|;
@@ -1433,6 +1473,18 @@ name|aac_common_busaddr
 decl_stmt|;
 name|u_int32_t
 name|aac_host_rrq_idx
+index|[
+name|AAC_MAX_MSIX
+index|]
+decl_stmt|;
+name|u_int32_t
+name|aac_rrq_outstanding
+index|[
+name|AAC_MAX_MSIX
+index|]
+decl_stmt|;
+name|u_int32_t
+name|aac_fibs_pushed_no
 decl_stmt|;
 name|struct
 name|aac_interface
@@ -1752,6 +1804,18 @@ name|u_int32_t
 name|aac_max_aif
 decl_stmt|;
 comment|/* max. AIF count */
+name|u_int32_t
+name|aac_max_msix
+decl_stmt|;
+comment|/* max. MSI-X vectors */
+name|u_int32_t
+name|aac_vector_cap
+decl_stmt|;
+comment|/* MSI-X vector capab.*/
+name|int
+name|msi_enabled
+decl_stmt|;
+comment|/* MSI/MSI-X enabled */
 define|#
 directive|define
 name|AAC_CAM_TARGET_WILDCARD
@@ -2083,10 +2147,6 @@ name|cmp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* #define AACRAID_DEBUG */
-end_comment
 
 begin_ifdef
 ifdef|#

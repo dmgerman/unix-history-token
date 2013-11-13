@@ -886,15 +886,13 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|device_printf
+name|device_print_prettyname
 argument_list|(
 name|ctx
 operator|->
 name|ctx_tag
 operator|.
 name|owner
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 block|}

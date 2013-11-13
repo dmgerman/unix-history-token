@@ -12562,7 +12562,7 @@ expr_stmt|;
 comment|/* ### Issue #3014: Return a specific error for broken pipes,    * ### with a single element in the error chain. */
 if|if
 condition|(
-name|APR_STATUS_IS_EPIPE
+name|SVN__APR_STATUS_IS_EPIPE
 argument_list|(
 name|status
 argument_list|)

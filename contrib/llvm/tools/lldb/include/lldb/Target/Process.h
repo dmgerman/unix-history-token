@@ -43,6 +43,12 @@ directive|define
 name|liblldb_Process_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Config.h"
+end_include
+
 begin_comment
 comment|// C Includes
 end_comment
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<spawn.h>
 end_include
 
 begin_comment
@@ -668,6 +668,18 @@ return|return
 name|m_arch
 return|;
 block|}
+name|void
+name|SetArchitecture
+parameter_list|(
+name|ArchSpec
+name|arch
+parameter_list|)
+block|{
+name|m_arch
+operator|=
+name|arch
+expr_stmt|;
+block|}
 name|lldb
 operator|::
 name|pid_t
@@ -1246,11 +1258,14 @@ argument_list|,
 argument|bool write
 argument_list|)
 block|;
+ifndef|#
+directive|ifndef
+name|LLDB_DISABLE_POSIX
 specifier|static
 name|bool
 name|AddPosixSpawnFileAction
 argument_list|(
-name|posix_spawn_file_actions_t
+name|void
 operator|*
 name|file_actions
 argument_list|,
@@ -1268,6 +1283,8 @@ operator|&
 name|error
 argument_list|)
 block|;
+endif|#
+directive|endif
 name|int
 name|GetFD
 argument_list|()
@@ -2312,6 +2329,9 @@ name|will_debug
 parameter_list|,
 name|bool
 name|first_arg_is_full_shell_command
+parameter_list|,
+name|int32_t
+name|num_resumes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4023,15 +4043,7 @@ decl_stmt|;
 comment|// For WaitForStateChangeEventsPrivate
 name|friend
 name|class
-name|CommandObjectProcessLaunch
-decl_stmt|;
-name|friend
-name|class
 name|ProcessEventData
-decl_stmt|;
-name|friend
-name|class
-name|CommandObjectBreakpointCommand
 decl_stmt|;
 name|friend
 name|class
@@ -4880,6 +4892,19 @@ name|virtual
 name|DynamicLoader
 modifier|*
 name|GetDynamicLoader
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Get the system runtime plug-in for this process.
+comment|///
+comment|/// @return
+comment|///   Returns a pointer to the SystemRuntime plugin for this Process
+comment|///   if one is available.  Else returns NULL.
+comment|//------------------------------------------------------------------
+name|virtual
+name|SystemRuntime
+modifier|*
+name|GetSystemRuntime
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
@@ -7610,23 +7635,19 @@ operator|&
 name|event_sp
 argument_list|)
 expr_stmt|;
+comment|// Returns the process state when it is stopped. If specified, event_sp_ptr
+comment|// is set to the event which triggered the stop. If wait_always = false,
+comment|// and the process is already stopped, this function returns immediately.
 name|lldb
 operator|::
 name|StateType
 name|WaitForProcessToStop
 argument_list|(
-specifier|const
-name|TimeValue
-operator|*
-name|timeout
+argument|const TimeValue *timeout
 argument_list|,
-name|lldb
-operator|::
-name|EventSP
-operator|*
-name|event_sp_ptr
-operator|=
-name|NULL
+argument|lldb::EventSP *event_sp_ptr = NULL
+argument_list|,
+argument|bool wait_always = true
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -8473,6 +8494,14 @@ name|OperatingSystem
 operator|>
 name|m_os_ap
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SystemRuntime
+operator|>
+name|m_system_runtime_ap
+expr_stmt|;
 name|UnixSignals
 name|m_unix_signals
 decl_stmt|;
@@ -8661,20 +8690,22 @@ name|ResumePrivateStateThread
 parameter_list|()
 function_decl|;
 specifier|static
-name|void
-modifier|*
+name|lldb
+operator|::
+name|thread_result_t
 name|PrivateStateThread
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|arg
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|thread_result_t
 name|RunPrivateStateThread
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 name|void
 name|HandlePrivateEvent
 argument_list|(

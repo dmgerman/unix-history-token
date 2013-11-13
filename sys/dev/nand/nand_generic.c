@@ -1657,8 +1657,41 @@ name|onfi_params
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|params
+operator|->
+name|signature
+argument_list|,
+literal|"ONFI"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|params
+operator|->
+name|signature
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|chip
+operator|->
+name|dev
+argument_list|,
+literal|"Error: bad signature\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* TODO */
-comment|/* Check for signature */
 comment|/* Check CRC */
 comment|/* Use redundant page if necessary */
 return|return

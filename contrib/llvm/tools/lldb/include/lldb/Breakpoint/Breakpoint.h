@@ -1004,6 +1004,15 @@ name|break_id_t
 name|bp_loc_id
 argument_list|)
 decl_stmt|;
+name|bool
+name|IsHardware
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_hardware
+return|;
+block|}
 name|protected
 label|:
 name|friend
@@ -1022,23 +1031,15 @@ comment|//------------------------------------------------------------------
 comment|// This is the generic constructor
 name|Breakpoint
 argument_list|(
-name|Target
-operator|&
-name|target
+argument|Target&target
 argument_list|,
-name|lldb
-operator|::
-name|SearchFilterSP
-operator|&
-name|filter_sp
+argument|lldb::SearchFilterSP&filter_sp
 argument_list|,
-name|lldb
-operator|::
-name|BreakpointResolverSP
-operator|&
-name|resolver_sp
+argument|lldb::BreakpointResolverSP&resolver_sp
+argument_list|,
+argument|bool hardware
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|friend
 name|class
 name|BreakpointLocation
@@ -1063,6 +1064,10 @@ comment|//------------------------------------------------------------------
 name|bool
 name|m_being_created
 decl_stmt|;
+name|bool
+name|m_hardware
+decl_stmt|;
+comment|// If this breakpoint is required to use a hardware breakpoint
 name|Target
 modifier|&
 name|m_target

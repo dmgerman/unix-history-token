@@ -3949,7 +3949,7 @@ name|vm_page_t
 modifier|*
 name|mp
 decl_stmt|;
-name|int
+name|vm_size_t
 name|count
 decl_stmt|;
 name|boolean_t

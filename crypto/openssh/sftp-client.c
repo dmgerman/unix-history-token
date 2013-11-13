@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.101 2013/07/25 00:56:51 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.108 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2475,8 +2475,10 @@ expr_stmt|;
 operator|*
 name|dir
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2847,8 +2849,10 @@ index|[
 name|ents
 index|]
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2980,8 +2984,10 @@ expr_stmt|;
 operator|*
 name|dir
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -5725,8 +5731,10 @@ argument_list|)
 expr_stmt|;
 name|req
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -7729,8 +7737,10 @@ condition|)
 block|{
 name|ack
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*

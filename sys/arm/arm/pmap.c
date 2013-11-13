@@ -8729,20 +8729,6 @@ name|RW_RECURSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reserve some special page table entries/VA space for temporary 	 * mapping of pages. 	 */
-define|#
-directive|define
-name|SYSMAP
-parameter_list|(
-name|c
-parameter_list|,
-name|p
-parameter_list|,
-name|v
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|v = (c)va; va += ((n)*PAGE_SIZE); p = pte; pte += (n);
 name|pmap_alloc_specials
 argument_list|(
 operator|&

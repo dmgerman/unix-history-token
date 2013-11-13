@@ -22,7 +22,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"%Z% Copyright (c) 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n\ %Z% Copyright (c) 1992, 1993, 1994, 1995, 1996\n\ 	Keith Bostic.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n\ @(#) Copyright (c) 1992, 1993, 1994, 1995, 1996\n\ 	Keith Bostic.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 

@@ -467,10 +467,10 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* XXX better status? */
+comment|/* 		 * We queued it fine, so tell the upper layer 		 * that we consumed it. 		 */
 return|return
 operator|(
-name|ENOBUFS
+literal|0
 operator|)
 return|;
 block|}
@@ -527,7 +527,7 @@ expr_stmt|;
 comment|/* XXX better status? */
 return|return
 operator|(
-name|ENOBUFS
+literal|0
 operator|)
 return|;
 block|}

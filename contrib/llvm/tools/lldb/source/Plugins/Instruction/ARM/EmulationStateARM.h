@@ -311,7 +311,7 @@ literal|17
 index|]
 decl_stmt|;
 struct|struct
-name|sd_regs
+name|_sd_regs
 block|{
 union|union
 block|{

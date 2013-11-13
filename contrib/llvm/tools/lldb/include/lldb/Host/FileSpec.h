@@ -314,6 +314,7 @@ comment|/// @return
 comment|///     A pointer to this object if either the directory or filename
 comment|///     is valid, NULL otherwise.
 comment|//------------------------------------------------------------------
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -972,6 +973,41 @@ name|size_t
 name|dst_len
 parameter_list|)
 function_decl|;
+name|FileSpec
+name|CopyByAppendingPathComponent
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|new_path
+argument_list|)
+decl|const
+decl_stmt|;
+name|FileSpec
+name|CopyByRemovingLastPathComponent
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|AppendPathComponent
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|new_path
+parameter_list|)
+function_decl|;
+name|void
+name|RemoveLastPathComponent
+parameter_list|()
+function_decl|;
+specifier|const
+name|char
+operator|*
+name|GetLastPathComponent
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Resolves the user name at the beginning of \a src_path, and writes the output
 comment|/// to \a dst_path.  Note, \a src_path can contain other path components after the

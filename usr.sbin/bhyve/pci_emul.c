@@ -119,12 +119,6 @@ directive|include
 file|"pci_emul.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ioapic.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -5175,7 +5169,7 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
-name|ioapic_assert_pin
+name|vm_ioapic_assert_irq
 argument_list|(
 name|pi
 operator|->
@@ -5208,7 +5202,7 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
-name|ioapic_deassert_pin
+name|vm_ioapic_deassert_irq
 argument_list|(
 name|pi
 operator|->
@@ -5668,7 +5662,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|PCI_BARMAX
 condition|;
 name|i

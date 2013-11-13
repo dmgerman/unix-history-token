@@ -1883,9 +1883,15 @@ decl_stmt|;
 name|spinlock_t
 name|stats_lock
 decl_stmt|;
+name|spinlock_t
+name|ioctl_lock
+decl_stmt|;
 name|unsigned
 name|long
 name|last_moder_packets
+index|[
+name|MAX_RX_RINGS
+index|]
 decl_stmt|;
 name|unsigned
 name|long
@@ -1894,6 +1900,9 @@ decl_stmt|;
 name|unsigned
 name|long
 name|last_moder_bytes
+index|[
+name|MAX_RX_RINGS
+index|]
 decl_stmt|;
 name|unsigned
 name|long
@@ -1901,6 +1910,9 @@ name|last_moder_jiffies
 decl_stmt|;
 name|int
 name|last_moder_time
+index|[
+name|MAX_RX_RINGS
+index|]
 decl_stmt|;
 name|u16
 name|rx_usecs

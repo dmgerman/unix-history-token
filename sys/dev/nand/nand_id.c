@@ -181,6 +181,26 @@ literal|0x40
 block|,
 literal|0
 block|}
+block|,
+block|{
+block|{
+name|NAND_MAN_MICRON
+block|,
+literal|0xcc
+block|}
+block|,
+literal|"Micron NAND 512MiB 3,3V 16-bit"
+block|,
+literal|0x200
+block|,
+literal|2048
+block|,
+literal|64
+block|,
+literal|0x40
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -1057,7 +1057,7 @@ name|struct
 name|iwn_calib_info
 name|calibcmd
 index|[
-literal|5
+name|IWN5000_PHY_CALIB_MAX_RESULT
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1319,7 +1319,8 @@ comment|/* 	 * The current power save level, this may differ from the 	 * config
 name|int
 name|current_pwrsave_level
 decl_stmt|;
-comment|/* For specifique params */
+comment|/* For specific params */
+specifier|const
 name|struct
 name|iwn_base_params
 modifier|*

@@ -53,6 +53,12 @@ begin_comment
 comment|// for NULL
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"DWARFDataExtractor.h"
+end_include
+
 begin_decl_stmt
 name|class
 name|DWARFCompileUnit
@@ -174,7 +180,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|*
 name|debug_str_data
 argument_list|,
@@ -191,7 +197,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|data
 argument_list|,
@@ -351,7 +357,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|*
 name|debug_str_data_ptr
 argument_list|)
@@ -363,7 +369,7 @@ argument_list|(
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_info_data
 argument_list|,
@@ -391,7 +397,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|&
 name|debug_info_data
 argument_list|,
@@ -407,7 +413,7 @@ operator|*
 name|cu
 argument_list|)
 decl_stmt|;
-comment|//  static bool         TransferValue(dw_form_t form, const lldb_private::DataExtractor& debug_info_data, lldb::offset_t *offset_ptr, const DWARFCompileUnit* cu, BinaryStreamBuf& out_buff);
+comment|//  static bool         TransferValue(dw_form_t form, const lldb_private::DWARFDataExtractor& debug_info_data, lldb::offset_t *offset_ptr, const DWARFCompileUnit* cu, BinaryStreamBuf& out_buff);
 comment|//  static bool         TransferValue(const DWARFFormValue& formValue, const DWARFCompileUnit* cu, BinaryStreamBuf& out_buff);
 comment|//  static bool         PutUnsigned(dw_form_t form, dw_offset_t offset, uint64_t value, BinaryStreamBuf& out_buff, const DWARFCompileUnit* cu, bool fixup_cu_relative_refs);
 specifier|static
@@ -465,7 +471,7 @@ argument_list|,
 specifier|const
 name|lldb_private
 operator|::
-name|DataExtractor
+name|DWARFDataExtractor
 operator|*
 name|debug_str_data_ptr
 argument_list|)

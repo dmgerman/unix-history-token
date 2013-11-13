@@ -422,8 +422,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TSEC_REG_MIIMCFG
+name|TSEC_REG_MIIBASE
 value|0x520
+end_define
+
+begin_comment
+comment|/* MII Management base, rest offsets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSEC_REG_MIIMCFG
+value|0x0
 end_define
 
 begin_comment
@@ -434,7 +445,7 @@ begin_define
 define|#
 directive|define
 name|TSEC_REG_MIIMCOM
-value|0x524
+value|0x4
 end_define
 
 begin_comment
@@ -445,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|TSEC_REG_MIIMADD
-value|0x528
+value|0x8
 end_define
 
 begin_comment
@@ -456,7 +467,7 @@ begin_define
 define|#
 directive|define
 name|TSEC_REG_MIIMCON
-value|0x52c
+value|0xc
 end_define
 
 begin_comment
@@ -467,7 +478,7 @@ begin_define
 define|#
 directive|define
 name|TSEC_REG_MIIMSTAT
-value|0x530
+value|0x10
 end_define
 
 begin_comment
@@ -478,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|TSEC_REG_MIIMIND
-value|0x534
+value|0x14
 end_define
 
 begin_comment
