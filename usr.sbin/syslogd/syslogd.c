@@ -6703,10 +6703,16 @@ case|case
 name|ENETDOWN
 case|:
 case|case
+name|ENETUNREACH
+case|:
+case|case
 name|EHOSTUNREACH
 case|:
 case|case
 name|EHOSTDOWN
+case|:
+case|case
+name|EADDRNOTAVAIL
 case|:
 break|break;
 comment|/* case EBADF: */
@@ -6720,7 +6726,9 @@ comment|/* case ECONNREFUSED: */
 default|default:
 name|dprintf
 argument_list|(
-literal|"removing entry\n"
+literal|"removing entry: errno=%d\n"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|f
