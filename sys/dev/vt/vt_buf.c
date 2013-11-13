@@ -3502,6 +3502,16 @@ name|c
 index|]
 expr_stmt|;
 block|}
+comment|/* Add new line for all rows, but not for last one. */
+if|if
+condition|(
+name|r
+operator|!=
+name|e
+operator|.
+name|tp_row
+condition|)
+block|{
 name|buf
 index|[
 name|i
@@ -3518,6 +3528,7 @@ index|]
 operator|=
 literal|'\n'
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
