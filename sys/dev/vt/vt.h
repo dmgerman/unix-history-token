@@ -324,6 +324,12 @@ modifier|*
 name|vd_savedwindow
 decl_stmt|;
 comment|/* (?) Saved for suspend. */
+name|struct
+name|vt_window
+modifier|*
+name|vd_markedwin
+decl_stmt|;
+comment|/* (?) Copy/paste buf owner. */
 specifier|const
 name|struct
 name|vt_driver
@@ -693,6 +699,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vtbuf_scroll_mode
+parameter_list|(
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+name|int
+name|yes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vtbuf_undirty
 parameter_list|(
 name|struct
@@ -723,7 +744,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vtbuf_set_mark
 parameter_list|(
 name|struct
@@ -760,6 +781,44 @@ name|col
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|vtbuf_get_marked_len
+parameter_list|(
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vtbuf_extract_marked
+parameter_list|(
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+name|term_char_t
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|sz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VTB_MARK_NONE
+value|0
+end_define
 
 begin_define
 define|#
@@ -803,7 +862,7 @@ name|VTBUF_SLCK_ENABLE
 parameter_list|(
 name|vb
 parameter_list|)
-value|(vb)->vb_flags |= VBF_SCROLL
+value|vtbuf_scroll_mode((vb), 1)
 end_define
 
 begin_define
@@ -813,7 +872,7 @@ name|VTBUF_SLCK_DISABLE
 parameter_list|(
 name|vb
 parameter_list|)
-value|(vb)->vb_flags&= ~VBF_SCROLL
+value|vtbuf_scroll_mode((vb), 0)
 end_define
 
 begin_define
@@ -1405,7 +1464,7 @@ parameter_list|,
 name|softc
 parameter_list|)
 define|\
-value|static struct terminal	driver ## _consterm;				\ static struct vt_window	driver ## _conswindow;				\ static struct vt_device	driver ## _consdev = {				\ 	.vd_driver =&driver,						\ 	.vd_softc = (softc),						\ 	.vd_flags = VDF_INVALID,					\ 	.vd_windows = { [VT_CONSWINDOW] =&driver ## _conswindow, },	\ 	.vd_curwindow =&driver ## _conswindow,				\ };									\ static term_char_t	driver ## _constextbuf[(width) * 		\ 	    (VBF_DEFAULT_HISTORY_SIZE)];				\ static term_char_t	*driver ## _constextbufrows[			\ 	    VBF_DEFAULT_HISTORY_SIZE];					\ static struct vt_window	driver ## _conswindow = {			\ 	.vw_number = VT_CONSWINDOW,					\ 	.vw_flags = VWF_CONSOLE,					\ 	.vw_buf = {							\ 		.vb_buffer = driver ## _constextbuf,			\ 		.vb_rows = driver ## _constextbufrows,			\ 		.vb_history_size = VBF_DEFAULT_HISTORY_SIZE,		\ 		.vb_curroffset = 0,					\ 		.vb_roffset = 0,					\ 		.vb_flags = VBF_STATIC,					\ 		.vb_mark_start = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_mark_end = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_scr_size = {					\ 			.tp_row = height,				\ 			.tp_col = width,				\ 		},							\ 	},								\ 	.vw_device =&driver ## _consdev,				\ 	.vw_terminal =&driver ## _consterm,				\ 	.vw_kbdmode = K_XLATE,						\ };									\ TERMINAL_DECLARE_EARLY(driver ## _consterm, vt_termclass,		\&driver ## _conswindow);						\ SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY,		\     vt_upgrade,&driver ## _consdev)
+value|static struct terminal	driver ## _consterm;				\ static struct vt_window	driver ## _conswindow;				\ static struct vt_device	driver ## _consdev = {				\ 	.vd_driver =&driver,						\ 	.vd_softc = (softc),						\ 	.vd_flags = VDF_INVALID,					\ 	.vd_windows = { [VT_CONSWINDOW] =&driver ## _conswindow, },	\ 	.vd_curwindow =&driver ## _conswindow,				\ 	.vd_markedwin = NULL,						\ };									\ static term_char_t	driver ## _constextbuf[(width) * 		\ 	    (VBF_DEFAULT_HISTORY_SIZE)];				\ static term_char_t	*driver ## _constextbufrows[			\ 	    VBF_DEFAULT_HISTORY_SIZE];					\ static struct vt_window	driver ## _conswindow = {			\ 	.vw_number = VT_CONSWINDOW,					\ 	.vw_flags = VWF_CONSOLE,					\ 	.vw_buf = {							\ 		.vb_buffer = driver ## _constextbuf,			\ 		.vb_rows = driver ## _constextbufrows,			\ 		.vb_history_size = VBF_DEFAULT_HISTORY_SIZE,		\ 		.vb_curroffset = 0,					\ 		.vb_roffset = 0,					\ 		.vb_flags = VBF_STATIC,					\ 		.vb_mark_start = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_mark_end = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_scr_size = {					\ 			.tp_row = height,				\ 			.tp_col = width,				\ 		},							\ 	},								\ 	.vw_device =&driver ## _consdev,				\ 	.vw_terminal =&driver ## _consterm,				\ 	.vw_kbdmode = K_XLATE,						\ };									\ TERMINAL_DECLARE_EARLY(driver ## _consterm, vt_termclass,		\&driver ## _conswindow);						\ SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY,		\     vt_upgrade,&driver ## _consdev)
 end_define
 
 begin_comment
