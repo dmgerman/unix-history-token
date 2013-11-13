@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/pmap.h>
+file|<machine/armreg.h>
 end_include
 
 begin_include
@@ -89,13 +89,6 @@ directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEVMAP_BOOTSTRAP_MAP_START
-value|0xF0000000
-end_define
-
 begin_function
 name|vm_offset_t
 name|initarm_lastaddr
@@ -105,7 +98,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|DEVMAP_BOOTSTRAP_MAP_START
+name|arm_devmap_lastaddr
+argument_list|()
 operator|)
 return|;
 block|}
@@ -126,7 +120,7 @@ name|initarm_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -135,48 +129,8 @@ name|initarm_late_init
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{  }
 end_function
-
-begin_define
-define|#
-directive|define
-name|FDT_DEVMAP_MAX
-value|(1 + 2 + 1 + 1)
-end_define
-
-begin_comment
-comment|/* FIXME */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|arm_devmap_entry
-name|fdt_devmap
-index|[
-name|FDT_DEVMAP_MAX
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Construct pmap_devmap[] with DT-derived config data.  */
-end_comment
 
 begin_function
 name|int
@@ -185,70 +139,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_va
-operator|=
-literal|0xf2C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_pa
-operator|=
-literal|0x12C00000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_size
-operator|=
-literal|0x100000
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_prot
-operator|=
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-expr_stmt|;
-name|fdt_devmap
-index|[
-name|i
-index|]
-operator|.
-name|pd_cache
-operator|=
-name|PTE_NOCACHE
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-name|arm_devmap_register_table
+comment|/* UART */
+name|arm_devmap_add_entry
 argument_list|(
-operator|&
-name|fdt_devmap
-index|[
-literal|0
-index|]
+literal|0x12C00000
+argument_list|,
+literal|0x100000
 argument_list|)
 expr_stmt|;
 return|return
