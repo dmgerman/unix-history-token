@@ -4241,7 +4241,7 @@ name|sc
 operator|->
 name|ntxchains
 expr_stmt|;
-comment|/* 		 * The NICs we currently support cap out at 2x2 support 		 * separate from the chains being used. 		 * 		 * This is a total hack to work around that until some 		 * per-device method is implemented to return the 		 * actual stream support. 		 */
+comment|/* 		 * The NICs we currently support cap out at 2x2 support 		 * separate from the chains being used. 		 * 		 * This is a total hack to work around that until some 		 * per-device method is implemented to return the 		 * actual stream support. 		 * 		 * XXX Note: the 5350 is a 3x3 device; so we shouldn't 		 * cap this!  But, anything that touches rates in the 		 * driver needs to be audited first before 3x3 is enabled. 		 */
 if|if
 condition|(
 name|ic
