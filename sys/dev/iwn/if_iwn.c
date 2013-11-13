@@ -25543,11 +25543,59 @@ name|antmsk_1stream
 operator|=
 name|txant
 expr_stmt|;
+comment|/* 	 * The '2 stream' setup is a bit .. odd. 	 * 	 * For NICs that support only 1 antenna, default to IWN_ANT_AB or 	 * the firmware panics (eg Intel 5100.) 	 * 	 * For NICs that support two antennas, we use ANT_AB. 	 * 	 * For NICs that support three antennas, we use the two that 	 * wasn't the default one. 	 * 	 * XXX TODO: if bluetooth (full concurrent) is enabled, restrict 	 * this to only one antenna. 	 */
+comment|/* So - if there's no secondary antenna, assume IWN_ANT_AB */
+comment|/* Default - transmit on the other antennas */
+name|linkq
+operator|.
+name|antmsk_2stream
+operator|=
+operator|(
+name|sc
+operator|->
+name|txchainmask
+operator|&
+operator|~
+name|IWN_LSB
+argument_list|(
+name|sc
+operator|->
+name|txchainmask
+argument_list|)
+operator|)
+expr_stmt|;
+comment|/* Now, if it's zero, set it to IWN_ANT_AB, so to not panic firmware */
+if|if
+condition|(
+name|linkq
+operator|.
+name|antmsk_2stream
+operator|==
+literal|0
+condition|)
 name|linkq
 operator|.
 name|antmsk_2stream
 operator|=
 name|IWN_ANT_AB
+expr_stmt|;
+comment|/* 	 * If the NIC is a two-stream TX NIC, configure the TX mask to 	 * the default chainmask 	 */
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|ntxchains
+operator|==
+literal|2
+condition|)
+name|linkq
+operator|.
+name|antmsk_2stream
+operator|=
+name|sc
+operator|->
+name|txchainmask
 expr_stmt|;
 name|linkq
 operator|.
@@ -25572,6 +25620,29 @@ literal|4000
 argument_list|)
 expr_stmt|;
 comment|/* 4ms */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: 1stream antenna=0x%02x, 2stream antenna=0x%02x, ntxstreams=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|linkq
+operator|.
+name|antmsk_1stream
+argument_list|,
+name|linkq
+operator|.
+name|antmsk_2stream
+argument_list|,
+name|sc
+operator|->
+name|ntxchains
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Are we using 11n rates? Ensure the channel is 	 * 11n _and_ we have some 11n rates, or don't 	 * try. 	 */
 if|if
 condition|(
