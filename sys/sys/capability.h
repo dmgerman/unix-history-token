@@ -1018,7 +1018,8 @@ value|__cap_rights_set((rights), __VA_ARGS__, 0ULL)
 end_define
 
 begin_function_decl
-name|void
+name|cap_rights_t
+modifier|*
 name|__cap_rights_set
 parameter_list|(
 name|cap_rights_t
@@ -1044,7 +1045,8 @@ value|__cap_rights_clear((rights), __VA_ARGS__, 0ULL)
 end_define
 
 begin_function_decl
-name|void
+name|cap_rights_t
+modifier|*
 name|__cap_rights_clear
 parameter_list|(
 name|cap_rights_t
