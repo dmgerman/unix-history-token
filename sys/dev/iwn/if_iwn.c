@@ -33447,6 +33447,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* min # of packets */
+comment|/* 	 * Max needs to be greater than active and passive and quiet! 	 * It's also in microseconds! 	 */
+name|hdr
+operator|->
+name|max_svc
+operator|=
+name|htole32
+argument_list|(
+literal|250
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
 comment|/* Select antennas for scanning. */
 name|rxchain
 operator|=
