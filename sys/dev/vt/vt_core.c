@@ -5495,7 +5495,7 @@ name|vw
 operator|->
 name|vw_buf
 argument_list|,
-name|VTB_MARK_END
+name|VTB_MARK_MOVE
 argument_list|,
 name|vd
 operator|->
@@ -5742,7 +5742,7 @@ operator|)
 condition|)
 name|mark
 operator|=
-name|VTB_MARK_END
+name|VTB_MARK_EXTEND
 expr_stmt|;
 else|else
 name|mark

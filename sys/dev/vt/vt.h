@@ -531,6 +531,10 @@ name|term_pos_t
 name|vb_mark_end
 decl_stmt|;
 comment|/* (b) Copy region end. */
+name|int
+name|vb_mark_last
+decl_stmt|;
+comment|/* Last mouse event. */
 name|term_rect_t
 name|vb_dirtyrect
 decl_stmt|;
@@ -853,6 +857,13 @@ define|#
 directive|define
 name|VTB_MARK_EXTEND
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTB_MARK_MOVE
+value|6
 end_define
 
 begin_define

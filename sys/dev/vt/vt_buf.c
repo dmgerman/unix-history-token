@@ -3560,6 +3560,24 @@ block|{
 case|case
 name|VTB_MARK_END
 case|:
+comment|/* B1 UP */
+if|if
+condition|(
+name|vb
+operator|->
+name|vb_mark_last
+operator|!=
+name|VTB_MARK_MOVE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* FALLTHROUGH */
+case|case
+name|VTB_MARK_MOVE
+case|:
 case|case
 name|VTB_MARK_EXTEND
 case|:
@@ -3743,6 +3761,13 @@ break|break;
 case|case
 name|VTB_MARK_NONE
 case|:
+name|vb
+operator|->
+name|vb_mark_last
+operator|=
+name|type
+expr_stmt|;
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* panic? */
 return|return
@@ -3751,6 +3776,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|vb
+operator|->
+name|vb_mark_last
+operator|=
+name|type
+expr_stmt|;
 comment|/* Draw new marked region. */
 name|vtbuf_flush_mark
 argument_list|(
