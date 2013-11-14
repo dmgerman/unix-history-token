@@ -3743,7 +3743,6 @@ break|break;
 case|case
 name|VTB_MARK_NONE
 case|:
-break|break;
 default|default:
 comment|/* panic? */
 return|return
@@ -3752,13 +3751,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|type
-operator|!=
-name|VTB_MARK_NONE
-condition|)
-block|{
 comment|/* Draw new marked region. */
 name|vtbuf_flush_mark
 argument_list|(
@@ -3768,12 +3760,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
