@@ -12052,11 +12052,11 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
-name|pte
+name|lpte
 operator|.
 name|pte_hi
 operator|&
-name|PTE_VALID
+name|LPTE_VALID
 operator|)
 condition|)
 break|break;
@@ -12124,11 +12124,11 @@ name|pvo
 operator|->
 name|pvo_pte
 operator|.
-name|pte
+name|lpte
 operator|.
 name|pte_hi
 operator|&
-name|PTE_VALID
+name|LPTE_VALID
 operator|)
 condition|)
 break|break;
