@@ -15,7 +15,7 @@ value|0x589cfc
 end_define
 
 begin_comment
-comment|/*   * OUIs are most often used to uniquely identify network interfaces  * and occupy the first 3 bytes of both destination and source MAC  * addresses.  The following allocations exist so that various  * software systems associated with FreeBSD can have unique IDs in the  * absence of hardware.  The use of OUIs for this purpose is not fully  * fleshed out but is now in common use in virtualization technology.  *   * Allocations from this range are expected to be made using COMMON  * SENSE by developers.  Do NOT take a large range just because  * they're currently wide open.  Take the smallest useful range for  * your system.  We have (2^24 - 2) available addresses (see Reserved  * Values below) but that is far from infinite.  *  * In the event of a conflict arbitration of allocation in this file  * is subject to core@ approval  *   * Applications are differentiated based on the high order bit(s) of  * the remaining three bytes.  Our first allocation has all 0s, the  * next allocation has the highest bit set.  Allocating in this way  * gives us 254 allocations of 64K addresses.  Address blocks can be  * concatenated if necessary.  *  * Reserved Values: 0x000000 and 0xffffff are reserved and MUST NOT BE  * allocated for any reason.  */
+comment|/*   * OUIs are most often used to uniquely identify network interfaces  * and occupy the first 3 bytes of both destination and source MAC  * addresses.  The following allocations exist so that various  * software systems associated with FreeBSD can have unique IDs in the  * absence of hardware.  The use of OUIs for this purpose is not fully  * fleshed out but is now in common use in virtualization technology.  *   * Allocations from this range are expected to be made using COMMON  * SENSE by developers.  Do NOT take a large range just because  * they're currently wide open.  Take the smallest useful range for  * your system.  We have (2^24 - 2) available addresses (see Reserved  * Values below) but that is far from infinite.  *  * In the event of a conflict arbitration of allocation in this file  * is subject to core@ approval.  *   * Applications are differentiated based on the high order bit(s) of  * the remaining three bytes.  Our first allocation has all 0s, the  * next allocation has the highest bit set.  Allocating in this way  * gives us 254 allocations of 64K addresses.  Address blocks can be  * concatenated if necessary.  *  * Reserved Values: 0x000000 and 0xffffff are reserved and MUST NOT BE  * allocated for any reason.  */
 end_comment
 
 begin_comment
@@ -26,14 +26,14 @@ begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_LOW
-value|((OUI_FREEBSD<< 3) + 0x000001)
+value|(((uint64_t)OUI_FREEBSD<< 24) | 0x000001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_HIGH
-value|((OUI_FREEBSD<< 3) + 0x00ffff)
+value|(((uint64_t)OUI_FREEBSD<< 24) | 0x00ffff)
 end_define
 
 end_unit
