@@ -26,14 +26,14 @@ begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_LOW
-value|OUI_FREEBSD + 0x000001
+value|((OUI_FREEBSD<< 3) + 0x000001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_HIGH
-value|OUI_FREEBSD + 0x00ffff
+value|((OUI_FREEBSD<< 3) + 0x00ffff)
 end_define
 
 end_unit
