@@ -1167,7 +1167,7 @@ name|IN_CAPABILITY_MODE
 parameter_list|(
 name|td
 parameter_list|)
-value|((td->td_ucred->cr_flags& CRED_FLAG_CAPMODE) != 0)
+value|(((td)->td_ucred->cr_flags& CRED_FLAG_CAPMODE) != 0)
 end_define
 
 begin_struct_decl
@@ -1348,6 +1348,7 @@ name|fd
 parameter_list|,
 name|rights
 parameter_list|)
+define|\
 value|__cap_rights_get(CAP_RIGHTS_VERSION, (fd), (rights))
 end_define
 
@@ -1363,7 +1364,7 @@ name|fd
 parameter_list|,
 name|cap_rights_t
 modifier|*
-name|rightsp
+name|rights
 parameter_list|)
 function_decl|;
 end_function_decl
