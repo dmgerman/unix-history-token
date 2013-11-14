@@ -1771,10 +1771,6 @@ argument_list|(
 expr|struct
 name|mbx_common_read_write_flashrom
 argument_list|)
-operator|+
-literal|32
-operator|*
-literal|1024
 argument_list|,
 operator|&
 name|dma_mem
