@@ -557,102 +557,6 @@ value|(CAP_LOOKUP | 0x0000000010000000ULL)
 end_define
 
 begin_comment
-comment|/* Extended attributes. */
-end_comment
-
-begin_comment
-comment|/* Allows for extattr_delete_fd(2). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_EXTATTR_DELETE
-value|CAPRIGHT(0, 0x0000000020000000ULL)
-end_define
-
-begin_comment
-comment|/* Allows for extattr_get_fd(2). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_EXTATTR_GET
-value|CAPRIGHT(0, 0x0000000040000000ULL)
-end_define
-
-begin_comment
-comment|/* Allows for extattr_list_fd(2). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_EXTATTR_LIST
-value|CAPRIGHT(0, 0x0000000080000000ULL)
-end_define
-
-begin_comment
-comment|/* Allows for extattr_set_fd(2). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_EXTATTR_SET
-value|CAPRIGHT(0, 0x0000000100000000ULL)
-end_define
-
-begin_comment
-comment|/* Access Control Lists. */
-end_comment
-
-begin_comment
-comment|/* Allows for acl_valid_fd_np(3). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_ACL_CHECK
-value|CAPRIGHT(0, 0x0000000200000000ULL)
-end_define
-
-begin_comment
-comment|/* Allows for acl_delete_fd_np(3). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_ACL_DELETE
-value|CAPRIGHT(0, 0x0000000400000000ULL)
-end_define
-
-begin_comment
-comment|/* Allows for acl_get_fd(3) and acl_get_fd_np(3). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_ACL_GET
-value|CAPRIGHT(0, 0x0000000800000000ULL)
-end_define
-
-begin_comment
-comment|/* Allows for acl_set_fd(3) and acl_set_fd_np(3). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CAP_ACL_SET
-value|CAPRIGHT(0, 0x0000001000000000ULL)
-end_define
-
-begin_comment
 comment|/* Socket operations. */
 end_comment
 
@@ -664,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ACCEPT
-value|CAPRIGHT(0, 0x0000002000000000ULL)
+value|CAPRIGHT(0, 0x0000000020000000ULL)
 end_define
 
 begin_comment
@@ -675,7 +579,7 @@ begin_define
 define|#
 directive|define
 name|CAP_BIND
-value|CAPRIGHT(0, 0x0000004000000000ULL)
+value|CAPRIGHT(0, 0x0000000040000000ULL)
 end_define
 
 begin_comment
@@ -686,7 +590,7 @@ begin_define
 define|#
 directive|define
 name|CAP_CONNECT
-value|CAPRIGHT(0, 0x0000008000000000ULL)
+value|CAPRIGHT(0, 0x0000000080000000ULL)
 end_define
 
 begin_comment
@@ -697,7 +601,7 @@ begin_define
 define|#
 directive|define
 name|CAP_GETPEERNAME
-value|CAPRIGHT(0, 0x0000010000000000ULL)
+value|CAPRIGHT(0, 0x0000000100000000ULL)
 end_define
 
 begin_comment
@@ -708,7 +612,7 @@ begin_define
 define|#
 directive|define
 name|CAP_GETSOCKNAME
-value|CAPRIGHT(0, 0x0000020000000000ULL)
+value|CAPRIGHT(0, 0x0000000200000000ULL)
 end_define
 
 begin_comment
@@ -719,7 +623,7 @@ begin_define
 define|#
 directive|define
 name|CAP_GETSOCKOPT
-value|CAPRIGHT(0, 0x0000040000000000ULL)
+value|CAPRIGHT(0, 0x0000000400000000ULL)
 end_define
 
 begin_comment
@@ -730,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|CAP_LISTEN
-value|CAPRIGHT(0, 0x0000080000000000ULL)
+value|CAPRIGHT(0, 0x0000000800000000ULL)
 end_define
 
 begin_comment
@@ -741,7 +645,7 @@ begin_define
 define|#
 directive|define
 name|CAP_PEELOFF
-value|CAPRIGHT(0, 0x0000100000000000ULL)
+value|CAPRIGHT(0, 0x0000001000000000ULL)
 end_define
 
 begin_define
@@ -766,7 +670,7 @@ begin_define
 define|#
 directive|define
 name|CAP_SETSOCKOPT
-value|CAPRIGHT(0, 0x0000200000000000ULL)
+value|CAPRIGHT(0, 0x0000002000000000ULL)
 end_define
 
 begin_comment
@@ -777,7 +681,29 @@ begin_define
 define|#
 directive|define
 name|CAP_SHUTDOWN
-value|CAPRIGHT(0, 0x0000400000000000ULL)
+value|CAPRIGHT(0, 0x0000004000000000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for bindat(2) on a directory descriptor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_BINDAT
+value|(CAP_LOOKUP | 0x0000008000000000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for connectat(2) on a directory descriptor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_CONNECTAT
+value|(CAP_LOOKUP | 0x0000010000000000ULL)
 end_define
 
 begin_define
@@ -804,7 +730,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ALL0
-value|CAPRIGHT(0, 0x00007FFFFFFFFFFFULL)
+value|CAPRIGHT(0, 0x0000007FFFFFFFFFULL)
 end_define
 
 begin_comment
@@ -814,8 +740,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED0_48
-value|CAPRIGHT(0, 0x0000800000000000ULL)
+name|CAP_UNUSED0_40
+value|CAPRIGHT(0, 0x0000008000000000ULL)
 end_define
 
 begin_comment
@@ -962,29 +888,99 @@ value|CAPRIGHT(1, 0x0000000000000800ULL)
 end_define
 
 begin_comment
-comment|/*  * Rights that allow to use bindat(2) and connectat(2) syscalls on a  * directory descriptor.  */
+comment|/* Extended attributes. */
 end_comment
 
 begin_comment
-comment|/* Allows for bindat(2) on a directory descriptor. */
+comment|/* Allows for extattr_delete_fd(2). */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_BINDAT
+name|CAP_EXTATTR_DELETE
 value|CAPRIGHT(1, 0x0000000000001000ULL)
 end_define
 
 begin_comment
-comment|/* Allows for connectat(2) on a directory descriptor. */
+comment|/* Allows for extattr_get_fd(2). */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_CONNECTAT
+name|CAP_EXTATTR_GET
 value|CAPRIGHT(1, 0x0000000000002000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for extattr_list_fd(2). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_EXTATTR_LIST
+value|CAPRIGHT(1, 0x0000000000004000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for extattr_set_fd(2). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_EXTATTR_SET
+value|CAPRIGHT(1, 0x0000000000008000ULL)
+end_define
+
+begin_comment
+comment|/* Access Control Lists. */
+end_comment
+
+begin_comment
+comment|/* Allows for acl_valid_fd_np(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_ACL_CHECK
+value|CAPRIGHT(1, 0x0000000000010000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for acl_delete_fd_np(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_ACL_DELETE
+value|CAPRIGHT(1, 0x0000000000020000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for acl_get_fd(3) and acl_get_fd_np(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_ACL_GET
+value|CAPRIGHT(1, 0x0000000000040000ULL)
+end_define
+
+begin_comment
+comment|/* Allows for acl_set_fd(3) and acl_set_fd_np(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_ACL_SET
+value|CAPRIGHT(1, 0x0000000000080000ULL)
 end_define
 
 begin_comment
@@ -995,7 +991,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ALL1
-value|CAPRIGHT(1, 0x0000000000003FFFULL)
+value|CAPRIGHT(1, 0x00000000000FFFFFULL)
 end_define
 
 begin_comment
@@ -1005,8 +1001,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED1_15
-value|CAPRIGHT(1, 0x0000000000004000ULL)
+name|CAP_UNUSED1_21
+value|CAPRIGHT(1, 0x0000000000100000ULL)
 end_define
 
 begin_comment
