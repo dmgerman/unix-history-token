@@ -3795,7 +3795,7 @@ name|uint16_t
 name|len
 decl_stmt|;
 name|uint8_t
-name|reserved1
+name|scan_flags
 decl_stmt|;
 name|uint8_t
 name|nchan
