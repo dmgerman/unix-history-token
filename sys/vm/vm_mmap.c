@@ -3507,6 +3507,9 @@ operator|<
 name|vecindex
 condition|)
 block|{
+operator|++
+name|lastvecindex
+expr_stmt|;
 name|error
 operator|=
 name|subyte
@@ -3531,9 +3534,6 @@ goto|goto
 name|done2
 goto|;
 block|}
-operator|++
-name|lastvecindex
-expr_stmt|;
 block|}
 comment|/* 			 * Pass the page information to the user 			 */
 name|error
@@ -3614,6 +3614,9 @@ operator|<
 name|vecindex
 condition|)
 block|{
+operator|++
+name|lastvecindex
+expr_stmt|;
 name|error
 operator|=
 name|subyte
@@ -3638,9 +3641,6 @@ goto|goto
 name|done2
 goto|;
 block|}
-operator|++
-name|lastvecindex
-expr_stmt|;
 block|}
 comment|/* 	 * If the map has changed, due to the subyte, the previous 	 * output may be invalid. 	 */
 name|vm_map_lock_read
