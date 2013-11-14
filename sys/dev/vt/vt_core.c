@@ -5595,7 +5595,7 @@ name|VT_MOUSE_PASTEBUTTON
 case|:
 switch|switch
 condition|(
-name|event
+name|cnt
 condition|)
 block|{
 case|case
@@ -5722,7 +5722,7 @@ name|VT_MOUSE_EXTENDBUTTON
 case|:
 switch|switch
 condition|(
-name|event
+name|cnt
 condition|)
 block|{
 case|case
