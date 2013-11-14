@@ -2037,7 +2037,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mutual secret :   %s\n"
+literal|"Mutual secret:    %s\n"
 argument_list|,
 name|conf
 operator|->
