@@ -1396,9 +1396,6 @@ name|struct
 name|pf_addr
 name|init_addr
 decl_stmt|;
-name|uint16_t
-name|cut
-decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -1445,7 +1442,10 @@ if|if
 condition|(
 name|dport
 operator|!=
+name|htons
+argument_list|(
 name|ICMP_ECHO
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1471,7 +1471,10 @@ if|if
 condition|(
 name|dport
 operator|!=
-name|ICMP_ECHO
+name|htons
+argument_list|(
+name|ICMP6_ECHO_REQUEST
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1489,13 +1492,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* Don't try to modify non-echo ICMP */
 block|}
 name|bzero
 argument_list|(
@@ -1685,6 +1681,8 @@ else|else
 block|{
 name|uint16_t
 name|tmp
+decl_stmt|,
+name|cut
 decl_stmt|;
 if|if
 condition|(
@@ -1709,11 +1707,8 @@ block|}
 comment|/* low< high */
 name|cut
 operator|=
-name|htonl
-argument_list|(
 name|arc4random
 argument_list|()
-argument_list|)
 operator|%
 operator|(
 literal|1
