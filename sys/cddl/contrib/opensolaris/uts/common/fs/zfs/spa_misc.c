@@ -6550,6 +6550,9 @@ expr_stmt|;
 name|zio_init
 argument_list|()
 expr_stmt|;
+name|lz4_init
+argument_list|()
+expr_stmt|;
 name|dmu_init
 argument_list|()
 expr_stmt|;
@@ -6611,6 +6614,9 @@ name|zil_fini
 argument_list|()
 expr_stmt|;
 name|dmu_fini
+argument_list|()
+expr_stmt|;
+name|lz4_fini
 argument_list|()
 expr_stmt|;
 name|zio_fini
