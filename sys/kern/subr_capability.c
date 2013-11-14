@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Note that this file is compiled into the kernel and into libc.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
