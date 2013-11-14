@@ -487,7 +487,7 @@ begin_define
 define|#
 directive|define
 name|CAP_LINKAT
-value|CAPRIGHT(0, 0x0000000000400000ULL)
+value|(CAP_LOOKUP | 0x0000000000400000ULL)
 end_define
 
 begin_comment
@@ -498,7 +498,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MKDIRAT
-value|CAPRIGHT(0, 0x0000000000800000ULL)
+value|(CAP_LOOKUP | 0x0000000000800000ULL)
 end_define
 
 begin_comment
@@ -509,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MKFIFOAT
-value|CAPRIGHT(0, 0x0000000001000000ULL)
+value|(CAP_LOOKUP | 0x0000000001000000ULL)
 end_define
 
 begin_comment
@@ -520,7 +520,7 @@ begin_define
 define|#
 directive|define
 name|CAP_MKNODAT
-value|CAPRIGHT(0, 0x0000000002000000ULL)
+value|(CAP_LOOKUP | 0x0000000002000000ULL)
 end_define
 
 begin_comment
@@ -531,7 +531,7 @@ begin_define
 define|#
 directive|define
 name|CAP_RENAMEAT
-value|CAPRIGHT(0, 0x0000000004000000ULL)
+value|(CAP_LOOKUP | 0x0000000004000000ULL)
 end_define
 
 begin_comment
@@ -542,7 +542,7 @@ begin_define
 define|#
 directive|define
 name|CAP_SYMLINKAT
-value|CAPRIGHT(0, 0x0000000008000000ULL)
+value|(CAP_LOOKUP | 0x0000000008000000ULL)
 end_define
 
 begin_comment
@@ -553,7 +553,7 @@ begin_define
 define|#
 directive|define
 name|CAP_UNLINKAT
-value|CAPRIGHT(0, 0x0000000010000000ULL)
+value|(CAP_LOOKUP | 0x0000000010000000ULL)
 end_define
 
 begin_comment
