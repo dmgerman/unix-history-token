@@ -1096,7 +1096,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|cap_rights_t
+modifier|*
 name|cap_rights_merge
 parameter_list|(
 name|cap_rights_t
@@ -1112,7 +1113,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|cap_rights_t
+modifier|*
 name|cap_rights_remove
 parameter_list|(
 name|cap_rights_t

@@ -860,7 +860,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|cap_rights_t
+modifier|*
 name|__cap_rights_set
 parameter_list|(
 name|cap_rights_t
@@ -902,11 +903,17 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rights
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|cap_rights_t
+modifier|*
 name|__cap_rights_clear
 parameter_list|(
 name|cap_rights_t
@@ -948,6 +955,11 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rights
+operator|)
+return|;
 block|}
 end_function
 
@@ -1162,7 +1174,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|cap_rights_t
+modifier|*
 name|cap_rights_merge
 parameter_list|(
 name|cap_rights_t
@@ -1291,11 +1304,17 @@ name|dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|dst
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|cap_rights_t
+modifier|*
 name|cap_rights_remove
 parameter_list|(
 name|cap_rights_t
@@ -1431,6 +1450,11 @@ name|dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|dst
+operator|)
+return|;
 block|}
 end_function
 
