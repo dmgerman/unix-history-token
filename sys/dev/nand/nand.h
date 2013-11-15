@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -922,7 +928,7 @@ decl_stmt|;
 name|uint8_t
 name|vendor_spec
 index|[
-literal|8
+literal|88
 index|]
 decl_stmt|;
 name|uint16_t
@@ -937,6 +943,20 @@ operator|)
 argument_list|)
 struct|;
 end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|onfi_params
+argument_list|)
+operator|==
+literal|256
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
