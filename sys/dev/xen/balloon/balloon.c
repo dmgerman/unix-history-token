@@ -114,21 +114,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Convert from KB (as fetched from xenstore) to number of PAGES */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KB_TO_PAGE_SHIFT
+value|(PAGE_SHIFT - 10)
+end_define
+
 begin_decl_stmt
 name|struct
 name|mtx
 name|balloon_mutex
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Protects atomic reservation decrease/increase against concurrent increases.  * Also protects non-atomic updates of current_pages and driver_pages, and  * balloon lists.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|balloon_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -152,16 +152,6 @@ operator|)
 expr|]
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|ARRAY_SIZE
-parameter_list|(
-name|A
-parameter_list|)
-value|(sizeof(A) / sizeof(A[0]))
-end_define
 
 begin_struct
 struct|struct
@@ -461,7 +451,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|balloon_append
 parameter_list|(
 name|vm_page_t
@@ -473,6 +463,14 @@ name|balloon_entry
 modifier|*
 name|entry
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|balloon_mutex
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|entry
 operator|=
 name|malloc
@@ -485,9 +483,19 @@ argument_list|)
 argument_list|,
 name|M_BALLOON
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|entry
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|entry
 operator|->
 name|page
@@ -509,6 +517,11 @@ operator|.
 name|balloon_low
 operator|++
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -532,6 +545,14 @@ name|balloon_entry
 modifier|*
 name|entry
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|balloon_mutex
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|STAILQ_EMPTY
@@ -541,7 +562,9 @@ name|ballooned_pages
 argument_list|)
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|entry
 operator|=
@@ -578,7 +601,9 @@ name|balloon_low
 operator|--
 expr_stmt|;
 return|return
+operator|(
 name|page
+operator|)
 return|;
 block|}
 end_function
@@ -640,7 +665,9 @@ operator|.
 name|balloon_high
 expr_stmt|;
 return|return
+operator|(
 name|target
+operator|)
 return|;
 block|}
 end_function
@@ -660,7 +687,7 @@ name|XENHVM
 define|#
 directive|define
 name|max_pfn
-value|physmem
+value|realmem
 else|#
 directive|else
 define|#
@@ -685,7 +712,7 @@ parameter_list|(
 name|mb
 parameter_list|)
 value|((mb)<< (20 - PAGE_SHIFT))
-comment|/* Simple continuous piecewiese linear function: 	 *  max MiB -> min MiB	gradient 	 *       0	   0 	 *      16	  16 	 *      32	  24 	 *     128	  72	(1/2) 	 *     512 	 168	(1/4) 	 *    2048	 360	(1/8) 	 *    8192	 552	(1/32) 	 *   32768	1320 	 *  131072	4392 	 */
+comment|/* 	 * Simple continuous piecewiese linear function: 	 *  max MiB -> min MiB	gradient 	 *       0	   0 	 *      16	  16 	 *      32	  24 	 *     128	  72	(1/2) 	 *     512 	 168	(1/4) 	 *    2048	 360	(1/8) 	 *    8192	 552	(1/32) 	 *   32768	1320 	 *  131072	4392 	 */
 if|if
 condition|(
 name|max_pfn
@@ -771,23 +798,20 @@ expr_stmt|;
 undef|#
 directive|undef
 name|MB2PAGES
+undef|#
+directive|undef
+name|max_pfn
 comment|/* Don't enforce growth */
 return|return
+operator|(
 name|min
 argument_list|(
 name|min_pages
 argument_list|,
 name|curr_pages
 argument_list|)
+operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|CONFIG_XEN
-undef|#
-directive|undef
-name|max_pfn
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -839,26 +863,28 @@ operator|=
 name|DOMID_SELF
 block|}
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|balloon_mutex
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nr_pages
 operator|>
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|frame_list
 argument_list|)
 condition|)
 name|nr_pages
 operator|=
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|frame_list
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|balloon_lock
 argument_list|)
 expr_stmt|;
 for|for
@@ -1088,19 +1114,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-ifndef|#
-directive|ifndef
-name|XENHVM
-comment|/* Link back into the page tables if not highmem. */
-block|if (pfn< max_low_pfn) { 			int ret; 			ret = HYPERVISOR_update_va_mapping( 				(unsigned long)__va(pfn<< PAGE_SHIFT), 				pfn_pte_ma(frame_list[i], PAGE_KERNEL), 				0); 			PASSING(ret == 0, 			    ("HYPERVISOR_update_va_mapping failed")); 		}
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* Relinquish the page back to the allocator. */
 name|vm_page_unwire
 argument_list|(
 name|page
@@ -1120,17 +1133,12 @@ name|current_pages
 operator|+=
 name|nr_pages
 expr_stmt|;
-comment|//totalram_pages = bs.current_pages;
 name|out
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|balloon_lock
-argument_list|)
-expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1183,18 +1191,26 @@ operator|=
 name|DOMID_SELF
 block|}
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|balloon_mutex
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nr_pages
 operator|>
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|frame_list
 argument_list|)
 condition|)
 name|nr_pages
 operator|=
-name|ARRAY_SIZE
+name|nitems
 argument_list|(
 name|frame_list
 argument_list|)
@@ -1268,90 +1284,6 @@ argument_list|(
 name|pfn
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!PageHighMem(page)) { 			v = phys_to_virt(pfn<< PAGE_SHIFT); 			scrub_pages(v, 1);
-ifdef|#
-directive|ifdef
-name|CONFIG_XEN
-block|ret = HYPERVISOR_update_va_mapping( 				(unsigned long)v, __pte_ma(0), 0); 			BUG_ON(ret);
-endif|#
-directive|endif
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CONFIG_XEN_SCRUB_PAGES
-else|else
-block|{
-name|v
-operator|=
-name|kmap
-argument_list|(
-name|page
-argument_list|)
-expr_stmt|;
-name|scrub_pages
-argument_list|(
-name|v
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|kunmap
-argument_list|(
-name|page
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-block|}
-ifdef|#
-directive|ifdef
-name|CONFIG_XEN
-comment|/* Ensure that ballooned highmem pages don't have kmaps. */
-name|kmap_flush_unused
-argument_list|()
-expr_stmt|;
-name|flush_tlb_all
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|mtx_lock
-argument_list|(
-operator|&
-name|balloon_lock
-argument_list|)
-expr_stmt|;
-comment|/* No more mappings: invalidate P2M and add to balloon. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nr_pages
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|pfn
-operator|=
-name|MFNTOPFN
-argument_list|(
-name|frame_list
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 name|set_phys_to_machine
 argument_list|(
 name|pfn
@@ -1359,16 +1291,38 @@ argument_list|,
 name|INVALID_P2M_ENTRY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|balloon_append
 argument_list|(
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|pfn
-operator|<<
-name|PAGE_SHIFT
+name|page
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|vm_page_unwire
+argument_list|(
+name|page
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+name|vm_page_free
+argument_list|(
+name|page
+argument_list|)
+expr_stmt|;
+name|nr_pages
+operator|=
+name|i
+expr_stmt|;
+name|need_sleep
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|set_xen_guest_handle
 argument_list|(
@@ -1411,13 +1365,6 @@ operator|.
 name|current_pages
 operator|-=
 name|nr_pages
-expr_stmt|;
-comment|//totalram_pages = bs.current_pages;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|balloon_lock
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1682,16 +1629,12 @@ block|{
 comment|/* This is ok (for domain0 at least) - so just return */
 return|return;
 block|}
-comment|/* The given memory/target value is in KiB, so it needs converting to 	   pages.  PAGE_SHIFT converts bytes to pages, hence PAGE_SHIFT - 10. 	*/
+comment|/* 	 * The given memory/target value is in KiB, so it needs converting to 	 * pages.  PAGE_SHIFT converts bytes to pages, hence PAGE_SHIFT - 10. 	 */
 name|set_new_target
 argument_list|(
 name|new_target
 operator|>>
-operator|(
-name|PAGE_SHIFT
-operator|-
-literal|10
-operator|)
+name|KB_TO_PAGE_SHIFT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1789,18 +1732,6 @@ return|return;
 name|mtx_init
 argument_list|(
 operator|&
-name|balloon_lock
-argument_list|,
-literal|"balloon_lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|balloon_mutex
 argument_list|,
 literal|"balloon_mutex"
@@ -1832,7 +1763,7 @@ name|bs
 operator|.
 name|current_pages
 operator|=
-name|physmem
+name|realmem
 expr_stmt|;
 endif|#
 directive|endif
@@ -1971,7 +1902,7 @@ block|{
 name|mtx_lock
 argument_list|(
 operator|&
-name|balloon_lock
+name|balloon_mutex
 argument_list|)
 expr_stmt|;
 name|bs
@@ -1983,35 +1914,11 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|balloon_lock
+name|balloon_mutex
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int dealloc_pte_fn( 	pte_t *pte, struct page *pte_page, unsigned long addr, void *data) { 	unsigned long mfn = pte_mfn(*pte); 	int ret; 	struct xen_memory_reservation reservation = { 		.extent_start =&mfn, 		.nr_extents   = 1, 		.extent_order = 0, 		.domid        = DOMID_SELF 	}; 	set_pte_at(&init_mm, addr, pte, __pte_ma(0)); 	set_phys_to_machine(__pa(addr)>> PAGE_SHIFT, INVALID_P2M_ENTRY); 	ret = HYPERVISOR_memory_op(XENMEM_decrease_reservation,&reservation); 	KASSERT(ret == 1, ("HYPERVISOR_memory_op failed")); 	return 0; }
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|vm_page_t balloon_alloc_empty_page_range(unsigned long nr_pages) { 	vm_page_t pages; 	int i, rc; 	unsigned long *mfn_list; 	struct xen_memory_reservation reservation = { 		.address_bits = 0, 		.extent_order = 0, 		.domid        = DOMID_SELF 	};  	pages = vm_page_alloc_contig(nr_pages, 0, -1, 4, 4) 	if (pages == NULL) 		return NULL; 	 	mfn_list = malloc(nr_pages*sizeof(unsigned long), M_DEVBUF, M_WAITOK); 	 	for (i = 0; i< nr_pages; i++) { 		mfn_list[i] = PFNTOMFN(VM_PAGE_TO_PHYS(pages[i])>> PAGE_SHIFT); 		PFNTOMFN(i) = INVALID_P2M_ENTRY; 		reservation.extent_start = mfn_list; 		reservation.nr_extents = nr_pages; 		rc = HYPERVISOR_memory_op(XENMEM_decrease_reservation,&reservation); 		KASSERT(rc == nr_pages, ("HYPERVISOR_memory_op failed")); 	}  	current_pages -= nr_pages;  	wakeup(balloon_process);  	return pages; }  void  balloon_dealloc_empty_page_range(vm_page_t page, unsigned long nr_pages) { 	unsigned long i;  	for (i = 0; i< nr_pages; i++) 		balloon_append(page + i);  	wakeup(balloon_process); }
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
