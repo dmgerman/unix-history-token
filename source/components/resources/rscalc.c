@@ -251,7 +251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetAmlLength  *  * PARAMETERS:  Resource            - Pointer to the resource linked list  *              SizeNeeded          - Where the required size is returned  *  * RETURN:      Status  *  * DESCRIPTION: Takes a linked list of internal resource descriptors and  *              calculates the size buffer needed to hold the corresponding  *              external resource byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetAmlLength  *  * PARAMETERS:  Resource            - Pointer to the resource linked list  *              ResourceListSize    - Size of the resource linked list  *              SizeNeeded          - Where the required size is returned  *  * RETURN:      Status  *  * DESCRIPTION: Takes a linked list of internal resource descriptors and  *              calculates the size buffer needed to hold the corresponding  *              external resource byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,6 +263,9 @@ modifier|*
 name|Resource
 parameter_list|,
 name|ACPI_SIZE
+name|ResourceListSize
+parameter_list|,
+name|ACPI_SIZE
 modifier|*
 name|SizeNeeded
 parameter_list|)
@@ -271,6 +274,10 @@ name|ACPI_SIZE
 name|AmlSizeNeeded
 init|=
 literal|0
+decl_stmt|;
+name|ACPI_RESOURCE
+modifier|*
+name|ResourceEnd
 decl_stmt|;
 name|ACPI_RS_LENGTH
 name|TotalSize
@@ -281,9 +288,22 @@ name|RsGetAmlLength
 argument_list|)
 expr_stmt|;
 comment|/* Traverse entire list of internal resource descriptors */
+name|ResourceEnd
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_RESOURCE
+argument_list|,
+name|Resource
+argument_list|,
+name|ResourceListSize
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|Resource
+operator|<
+name|ResourceEnd
 condition|)
 block|{
 comment|/* Validate the descriptor type */

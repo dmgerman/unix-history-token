@@ -2359,6 +2359,33 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
+comment|/*              * Add this symbol as an external declaration, except if the              * parent is a CondRefOf operator. For this operator, we do not              * need an external, nor do we want one, since this can cause              * disassembly problems if the symbol is actually a control              * method.              */
+if|if
+condition|(
+operator|!
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_COND_REF_OF_OP
+operator|)
+operator|)
+condition|)
+block|{
 name|AcpiDmAddToExternalList
 argument_list|(
 name|Op
@@ -2373,13 +2400,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*              * We could install this into the namespace, but we catch duplicate              * externals when they are added to the list.              */
-if|#
-directive|if
-literal|0
-block|Status = AcpiNsLookup (WalkState->ScopeInfo, Path, ACPI_TYPE_ANY,                        ACPI_IMODE_LOAD_PASS1, ACPI_NS_DONT_OPEN_SCOPE,                        WalkState,&Node);
-endif|#
-directive|endif
+block|}
 block|}
 block|}
 comment|/*      * Found the node in external table, add it to external list      * Node->OwnerId == 0 indicates built-in ACPI Names, _OS_ etc      */

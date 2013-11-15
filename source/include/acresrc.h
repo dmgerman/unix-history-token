@@ -424,9 +424,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsCreateAmlResources
 parameter_list|(
-name|ACPI_RESOURCE
+name|ACPI_BUFFER
 modifier|*
-name|LinkedListBuffer
+name|ResourceList
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -575,7 +575,10 @@ name|AcpiRsGetAmlLength
 parameter_list|(
 name|ACPI_RESOURCE
 modifier|*
-name|LinkedListBuffer
+name|ResourceList
+parameter_list|,
+name|ACPI_SIZE
+name|ResourceListSize
 parameter_list|,
 name|ACPI_SIZE
 modifier|*

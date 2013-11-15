@@ -201,7 +201,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<termio.h>
+file|<termios.h>
 end_include
 
 begin_decl_stmt

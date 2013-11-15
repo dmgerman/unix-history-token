@@ -1080,16 +1080,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateAmlResources  *  * PARAMETERS:  LinkedListBuffer        - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the linked list of device resources and  *              creates a bytestream to be used as input for the  *              _SRS control method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateAmlResources  *  * PARAMETERS:  ResourceList            - Pointer to the resource list buffer  *              OutputBuffer            - Where the AML buffer is returned  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Converts a list of device resources to an AML bytestream  *              to be used as input for the _SRS control method.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsCreateAmlResources
 parameter_list|(
-name|ACPI_RESOURCE
+name|ACPI_BUFFER
 modifier|*
-name|LinkedListBuffer
+name|ResourceList
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1109,23 +1109,32 @@ argument_list|(
 name|RsCreateAmlResources
 argument_list|)
 expr_stmt|;
+comment|/* Params already validated, no need to re-validate here */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"LinkedListBuffer = %p\n"
+literal|"ResourceList Buffer = %p\n"
 operator|,
-name|LinkedListBuffer
+name|ResourceList
+operator|->
+name|Pointer
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Params already validated, so we don't re-validate here      *      * Pass the LinkedListBuffer into a module that calculates      * the buffer size needed for the byte stream.      */
+comment|/* Get the buffer size needed for the AML byte stream */
 name|Status
 operator|=
 name|AcpiRsGetAmlLength
 argument_list|(
-name|LinkedListBuffer
+name|ResourceList
+operator|->
+name|Pointer
+argument_list|,
+name|ResourceList
+operator|->
+name|Length
 argument_list|,
 operator|&
 name|AmlSizeNeeded
@@ -1193,7 +1202,9 @@ name|Status
 operator|=
 name|AcpiRsConvertResourcesToAml
 argument_list|(
-name|LinkedListBuffer
+name|ResourceList
+operator|->
+name|Pointer
 argument_list|,
 name|AmlSizeNeeded
 argument_list|,

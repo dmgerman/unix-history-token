@@ -81,13 +81,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<asm/div64.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<asm/acpi.h>
+file|<linux/math64.h>
 end_include
 
 begin_include
@@ -102,10 +96,27 @@ directive|include
 file|<linux/spinlock_types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EXPORT_ACPI_INTERFACES
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<asm/current.h>
+file|<linux/export.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<asm/acpi.h>
 end_include
 
 begin_comment
@@ -212,9 +223,9 @@ define|#
 directive|define
 name|ACPI_CAST_PTHREAD_T
 parameter_list|(
-name|pthread
+name|Pthread
 parameter_list|)
-value|((ACPI_THREAD_ID) (pthread))
+value|((ACPI_THREAD_ID) (Pthread))
 end_define
 
 begin_if
@@ -336,11 +347,19 @@ directive|ifdef
 name|__KERNEL__
 end_ifdef
 
+begin_comment
+comment|/*  * FIXME: Inclusion of actypes.h  * Linux kernel need this before defining inline OSL interfaces as  * actypes.h need to be included to find ACPICA type definitions.  * Since from ACPICA's perspective, the actypes.h should be included after  * acenv.h (aclinux.h), this leads to a inclusion mis-ordering issue.  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<acpi/actypes.h>
 end_include
+
+begin_comment
+comment|/*  * Overrides for in-kernel ACPICA  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -355,12 +374,11 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsInitialize
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsInitialize
 end_define
 
 begin_function_decl
 name|ACPI_STATUS
-name|__exit
 name|AcpiOsTerminate
 parameter_list|(
 name|void
@@ -371,22 +389,12 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsTerminate
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsTerminate
 end_define
 
 begin_comment
 comment|/*  * Memory allocation/deallocation  */
 end_comment
-
-begin_comment
-comment|/* Use native linux version of acpi_os_allocate_zeroed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USE_NATIVE_ALLOCATE_ZEROED
-end_define
 
 begin_comment
 comment|/*  * The irqs_disabled() check is for resume from RAM.  * Interrupts are off during resume, just like they are for boot.  * However, boot has  (system_state != SYSTEM_RUNNING)  * to quiet __might_sleep() in kmalloc() and resume does not.  */
@@ -422,8 +430,12 @@ end_function
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsAllocate
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAllocate
 end_define
+
+begin_comment
+comment|/* Use native linux version of AcpiOsAllocateZeroed */
+end_comment
 
 begin_function
 specifier|static
@@ -455,7 +467,13 @@ end_function
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsAllocateZeroed
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAllocateZeroed
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_NATIVE_ALLOCATE_ZEROED
 end_define
 
 begin_function
@@ -480,7 +498,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsFree
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsFree
 end_define
 
 begin_function
@@ -514,12 +532,8 @@ end_function
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsAcquireObject
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAcquireObject
 end_define
-
-begin_comment
-comment|/*  * Overrides for in-kernel ACPICA  */
-end_comment
 
 begin_function
 specifier|static
@@ -546,7 +560,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsGetThreadId
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetThreadId
 end_define
 
 begin_ifndef
@@ -585,13 +599,13 @@ parameter_list|(
 name|__Handle
 parameter_list|)
 define|\
-value|({ \     spinlock_t *Lock = ACPI_ALLOCATE(sizeof(*Lock)); \     if (Lock) { \         *(__Handle) = Lock; \         spin_lock_init(*(__Handle)); \     } \     Lock ? AE_OK : AE_NO_MEMORY; \ })
+value|({ \         spinlock_t *Lock = ACPI_ALLOCATE(sizeof(*Lock)); \         if (Lock) { \             *(__Handle) = Lock; \             spin_lock_init(*(__Handle)); \         } \         Lock ? AE_OK : AE_NO_MEMORY; \     })
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsCreateLock
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCreateLock
 end_define
 
 begin_function_decl
@@ -612,7 +626,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsMapMemory
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsMapMemory
 end_define
 
 begin_function_decl
@@ -633,97 +647,129 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsUnmapMemory
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsUnmapMemory
 end_define
 
 begin_comment
-comment|/* OSL interfaces used by debugger/disassembler */
+comment|/*  * OSL interfaces used by debugger/disassembler  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsReadable
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReadable
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsWritable
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWritable
 end_define
 
 begin_comment
-comment|/* OSL interfaces used by utilities */
+comment|/*  * OSL interfaces used by utilities  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsRedirectOutput
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsRedirectOutput
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsGetLine
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetLine
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsGetTableByName
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTableByName
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsGetTableByIndex
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTableByIndex
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsGetTableByAddress
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetTableByAddress
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsOpenDirectory
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsOpenDirectory
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsGetNextFilename
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsGetNextFilename
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_USE_NATIVE_DECLARED_AcpiOsCloseDirectory
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCloseDirectory
 end_define
 
 begin_comment
-comment|/* OSL interfaces added by Linux */
+comment|/*  * OSL interfaces added by Linux  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EXPORT_ACPI_INTERFACES
-end_ifdef
+begin_function_decl
+name|void
+name|EarlyAcpiOsUnmapMemory
+parameter_list|(
+name|void
+name|__iomem
+modifier|*
+name|Virt
+parameter_list|,
+name|ACPI_SIZE
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<linux/export.h>
-end_include
+begin_function_decl
+name|void
+name|AcpiOsGpeCount
+parameter_list|(
+name|UINT32
+name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|void
+name|AcpiOsFixedEventCount
+parameter_list|(
+name|UINT32
+name|FixedEventNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiOsHotplugExecute
+parameter_list|(
+name|ACPI_OSD_EXEC_CALLBACK
+name|Function
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

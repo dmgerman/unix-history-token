@@ -1874,9 +1874,8 @@ name|Status
 operator|=
 name|AcpiRsCreateAmlResources
 argument_list|(
+operator|&
 name|ResourceBuffer
-operator|.
-name|Pointer
 argument_list|,
 operator|&
 name|NewAml
@@ -2547,9 +2546,11 @@ goto|;
 block|}
 name|EndCrs
 label|:
-name|ACPI_FREE_BUFFER
+name|ACPI_FREE
 argument_list|(
 name|ReturnBuffer
+operator|.
+name|Pointer
 argument_list|)
 expr_stmt|;
 block|}

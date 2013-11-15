@@ -173,6 +173,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|NextDesc
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 name|NsDeleteNode
@@ -184,14 +188,14 @@ argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-comment|/*      * Delete an attached data object if present (an object that was created      * and attached via AcpiAttachData). Note: After any normal object is      * detached above, the only possible remaining object is a data object.      */
+comment|/*      * Delete an attached data object list if present (objects that were      * attached via AcpiAttachData). Note: After any normal object is      * detached above, the only possible remaining object(s) are data      * objects, in a linked list.      */
 name|ObjDesc
 operator|=
 name|Node
 operator|->
 name|Object
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|ObjDesc
 operator|&&
@@ -232,11 +236,33 @@ name|Pointer
 argument_list|)
 expr_stmt|;
 block|}
+name|NextDesc
+operator|=
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|NextObject
+expr_stmt|;
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
+name|ObjDesc
+operator|=
+name|NextDesc
+expr_stmt|;
+block|}
+comment|/* Special case for the statically allocated root node */
+if|if
+condition|(
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+condition|)
+block|{
+return|return;
 block|}
 comment|/* Now we can delete the node */
 operator|(

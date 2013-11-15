@@ -1414,8 +1414,6 @@ operator|=
 name|AcpiRsCreateAmlResources
 argument_list|(
 name|InBuffer
-operator|->
-name|Pointer
 argument_list|,
 operator|&
 name|Buffer

@@ -13,6 +13,12 @@ directive|define
 name|__UTXFACE_C__
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXPORT_ACPI_INTERFACES
+end_define
+
 begin_include
 include|#
 directive|include

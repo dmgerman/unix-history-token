@@ -337,6 +337,10 @@ name|AcpiGbl_PrevThreadId
 operator|=
 name|ThreadId
 expr_stmt|;
+name|AcpiGbl_NestingLevel
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/*      * Display the module name, current line number, thread ID (if requested),      * current procedure nesting level, and the current procedure name      */
 name|AcpiOsPrintf
@@ -348,6 +352,10 @@ argument_list|,
 name|LineNumber
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_EXEC_APP
+comment|/*      * For AcpiExec only, emit the thread ID and nesting level.      * Note: nesting level is really only useful during a single-thread      * execution. Otherwise, multiple threads will keep resetting the      * level.      */
 if|if
 condition|(
 name|ACPI_LV_THREADS
@@ -368,9 +376,16 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%02ld] %-22.22s: "
+literal|"[%02ld] "
 argument_list|,
 name|AcpiGbl_NestingLevel
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|AcpiOsPrintf
+argument_list|(
+literal|"%-22.22s: "
 argument_list|,
 name|AcpiUtTrimFunctionName
 argument_list|(
@@ -819,9 +834,15 @@ name|AcpiGbl_FnExitStr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|AcpiGbl_NestingLevel
+condition|)
+block|{
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -928,9 +949,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|AcpiGbl_NestingLevel
+condition|)
+block|{
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1003,9 +1030,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|AcpiGbl_NestingLevel
+condition|)
+block|{
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1076,9 +1109,15 @@ name|Ptr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|AcpiGbl_NestingLevel
+condition|)
+block|{
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
+block|}
 block|}
 end_function
 
