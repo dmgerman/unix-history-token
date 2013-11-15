@@ -546,7 +546,7 @@ modifier|*
 name|chip
 parameter_list|,
 name|struct
-name|onfi_params
+name|onfi_chip_params
 modifier|*
 name|params
 parameter_list|)
