@@ -796,15 +796,21 @@ block|}
 block|,
 comment|/* Event monitoring and posting. */
 block|{
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 block|,
-literal|"po"
+literal|"ev"
 block|}
 block|,
 block|{
-name|CAP_POST_EVENT
+name|CAP_KQUEUE_EVENT
 block|,
-literal|"ev"
+literal|"ke"
+block|}
+block|,
+block|{
+name|CAP_KQUEUE_CHANGE
+block|,
+literal|"kc"
 block|}
 block|,
 comment|/* Strange and powerful rights that should not be given lightly. */

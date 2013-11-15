@@ -811,20 +811,24 @@ value|CAPRIGHT(1, 0x0000000000000010ULL)
 end_define
 
 begin_comment
-comment|/* kqueue events. */
+comment|/* Allows select(2) and poll(2) on descriptor. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 value|CAPRIGHT(1, 0x0000000000000020ULL)
 end_define
+
+begin_comment
+comment|/* Allows for kevent(2) on kqueue descriptor with eventlist != NULL. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CAP_POST_EVENT
+name|CAP_KQUEUE_EVENT
 value|CAPRIGHT(1, 0x0000000000000040ULL)
 end_define
 
@@ -984,6 +988,24 @@ value|CAPRIGHT(1, 0x0000000000080000ULL)
 end_define
 
 begin_comment
+comment|/* Allows for kevent(2) on kqueue descriptor with changelist != NULL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_KQUEUE_CHANGE
+value|CAPRIGHT(1, 0x0000000000100000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAP_KQUEUE
+value|(CAP_KQUEUE_EVENT | CAP_KQUEUE_CHANGE)
+end_define
+
+begin_comment
 comment|/* All used bits for index 1. */
 end_comment
 
@@ -991,7 +1013,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ALL1
-value|CAPRIGHT(1, 0x00000000000FFFFFULL)
+value|CAPRIGHT(1, 0x00000000001FFFFFULL)
 end_define
 
 begin_comment
@@ -1001,8 +1023,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CAP_UNUSED1_21
-value|CAPRIGHT(1, 0x0000000000100000ULL)
+name|CAP_UNUSED1_22
+value|CAPRIGHT(1, 0x0000000000200000ULL)
 end_define
 
 begin_comment
@@ -1014,6 +1036,17 @@ define|#
 directive|define
 name|CAP_UNUSED1_57
 value|CAPRIGHT(1, 0x0100000000000000ULL)
+end_define
+
+begin_comment
+comment|/* Backward compatibility. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_POLL_EVENT
+value|CAP_EVENT
 end_define
 
 begin_define
