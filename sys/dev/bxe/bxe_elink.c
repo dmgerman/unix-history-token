@@ -3609,6 +3609,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MDIO_WC_REG_RXB_ANA_RX_CONTROL_PCI
+value|0x80fa
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDIO_WC_REG_XGXSBLK2_UNICORE_MODE_10G
 value|0x8104
 end_define
@@ -22536,6 +22543,54 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Enable Auto-Detect to support 1G over CL37 as well */
+name|elink_cl45_write
+argument_list|(
+name|sc
+argument_list|,
+name|phy
+argument_list|,
+name|MDIO_WC_DEVAD
+argument_list|,
+name|MDIO_WC_REG_SERDESDIGITAL_CONTROL1000X1
+argument_list|,
+literal|0x10
+argument_list|)
+expr_stmt|;
+comment|/* Force cl48 sync_status LOW to avoid getting stuck in CL73 		 * parallel-detect loop when CL73 and CL37 are enabled. 		 */
+name|CL22_WR_OVER_CL45
+argument_list|(
+name|sc
+argument_list|,
+name|phy
+argument_list|,
+name|MDIO_REG_BANK_AER_BLOCK
+argument_list|,
+name|MDIO_AER_BLOCK_AER_REG
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|elink_cl45_write
+argument_list|(
+name|sc
+argument_list|,
+name|phy
+argument_list|,
+name|MDIO_WC_DEVAD
+argument_list|,
+name|MDIO_WC_REG_RXB_ANA_RX_CONTROL_PCI
+argument_list|,
+literal|0x0800
+argument_list|)
+expr_stmt|;
+name|elink_set_aer_mmd
+argument_list|(
+name|params
+argument_list|,
+name|phy
+argument_list|)
+expr_stmt|;
 name|elink_disable_kr2
 argument_list|(
 name|params
@@ -41465,7 +41520,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+operator|*
+name|edc_mode
+operator|=
+name|ELINK_EDC_MODE_PASSIVE_DAC
+expr_stmt|;
+comment|/* Even in case PASSIVE_DAC indication is not set, 			 * treat it as a passive DAC cable, since some cables 			 * don't have this indication. 			 */
 if|if
 condition|(
 name|copper_module_type
@@ -41480,26 +41542,17 @@ argument_list|,
 literal|"Passive Copper cable detected\n"
 argument_list|)
 expr_stmt|;
-operator|*
-name|edc_mode
-operator|=
-name|ELINK_EDC_MODE_PASSIVE_DAC
-expr_stmt|;
 block|}
 else|else
 block|{
-name|ELINK_DEBUG_P1
+name|ELINK_DEBUG_P0
 argument_list|(
 name|sc
 argument_list|,
-literal|"Unknown copper-cable-type 0x%x !!!\n"
-argument_list|,
-name|copper_module_type
+literal|"Unknown copper-cable-type\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|ELINK_STATUS_ERROR
-return|;
+block|}
 block|}
 break|break;
 block|}
@@ -66827,6 +66880,22 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+comment|/* Do not touch the link in case physical link down */
+if|if
+condition|(
+operator|(
+name|vars
+operator|->
+name|phy_flags
+operator|&
+name|PHY_PHYSICAL_LINK_FLAG
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
 comment|/* a. Update shmem->link_status accordingly 	 * b. Update elink_vars->link_up 	 */
 if|if
 condition|(

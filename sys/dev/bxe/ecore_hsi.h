@@ -3271,6 +3271,18 @@ define|#
 directive|define
 name|PORT_FEATURE_MBA_VLAN_EN
 value|0x00010000
+define|#
+directive|define
+name|PORT_FEATUTE_BOFM_CFGD_EN
+value|0x00020000
+define|#
+directive|define
+name|PORT_FEATURE_BOFM_CFGD_FTGT
+value|0x00040000
+define|#
+directive|define
+name|PORT_FEATURE_BOFM_CFGD_VEN
+value|0x00080000
 name|uint32_t
 name|Reserved1
 decl_stmt|;
@@ -3418,11 +3430,11 @@ name|PORT_FEATURE_LINK_SPEED_AUTO
 value|0x00000000
 define|#
 directive|define
-name|PORT_FEATURE_LINK_SPEED_10M_FULL
+name|PORT_FEATURE_LINK_SPEED_10M_HALF
 value|0x00010000
 define|#
 directive|define
-name|PORT_FEATURE_LINK_SPEED_10M_HALF
+name|PORT_FEATURE_LINK_SPEED_10M_FULL
 value|0x00020000
 define|#
 directive|define
@@ -5144,6 +5156,10 @@ define|#
 directive|define
 name|DRV_MSG_CODE_USR_BLK_IMAGE_REQ
 value|0x00000001
+define|#
+directive|define
+name|DRV_MSG_CODE_ISCSI_PERS_IMAGE_REQ
+value|0x00000002
 name|uint32_t
 name|fw_mb_header
 decl_stmt|;
@@ -7778,6 +7794,10 @@ define|#
 directive|define
 name|LINK_ATTR_SYNC_KR2_ENABLE
 value|(1<<0)
+name|uint32_t
+name|ibft_host_addr_hi
+decl_stmt|;
+comment|/* Initialize by uEFI ROM */
 block|}
 struct|;
 end_struct

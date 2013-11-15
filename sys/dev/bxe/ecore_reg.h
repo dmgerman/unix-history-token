@@ -16091,6 +16091,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MDIO_WC_REG_RXB_ANA_RX_CONTROL_PCI
+value|0x80fa
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDIO_WC_REG_XGXSBLK2_UNICORE_MODE_10G
 value|0x8104
 end_define
