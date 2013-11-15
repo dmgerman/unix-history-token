@@ -995,9 +995,6 @@ begin_struct
 struct|struct
 name|onfi_chip_params
 block|{
-name|uint8_t
-name|luns
-decl_stmt|;
 name|uint32_t
 name|blocks_per_lun
 decl_stmt|;
@@ -1027,6 +1024,9 @@ name|features
 decl_stmt|;
 name|uint8_t
 name|address_cycles
+decl_stmt|;
+name|uint8_t
+name|luns
 decl_stmt|;
 block|}
 struct|;
