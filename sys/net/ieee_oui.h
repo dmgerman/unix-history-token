@@ -10,8 +10,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OUI_FREEBSD_BASE
+value|0x589cfc000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|OUI_FREEBSD
-value|0x589cfc
+parameter_list|(
+name|nic
+parameter_list|)
+value|(OUI_FREEBSD_BASE | (nic))
 end_define
 
 begin_comment
@@ -26,14 +36,14 @@ begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_LOW
-value|(((uint64_t)OUI_FREEBSD<< 24) | 0x000001)
+value|OUI_FREEBSD(0x000001)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_HIGH
-value|(((uint64_t)OUI_FREEBSD<< 24) | 0x00ffff)
+value|OUI_FREEBSD(0x00ffff)
 end_define
 
 end_unit
