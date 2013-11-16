@@ -1046,6 +1046,14 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_COLETOCRK_LPC
+block|,
+literal|"Intel Coleto Creek watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
