@@ -481,7 +481,7 @@ block|,
 operator|.
 name|bt_mode
 operator|=
-name|IWN_BT_ADVANCED
+name|IWN_BT_NONE
 block|, }
 decl_stmt|;
 end_decl_stmt
