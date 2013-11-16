@@ -14517,6 +14517,159 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Print warning about variable length array if necessary.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|warn_variable_length_array
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|tree
+name|size
+parameter_list|)
+block|{
+name|int
+name|ped
+init|=
+operator|!
+name|flag_isoc99
+operator|&&
+name|pedantic
+operator|&&
+name|warn_vla
+operator|!=
+literal|0
+decl_stmt|;
+name|int
+name|const_size
+init|=
+name|TREE_CONSTANT
+argument_list|(
+name|size
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|ped
+condition|)
+block|{
+if|if
+condition|(
+name|const_size
+condition|)
+block|{
+if|if
+condition|(
+name|name
+condition|)
+name|pedwarn
+argument_list|(
+literal|"ISO C90 forbids array %qs whose size "
+literal|"can%'t be evaluated"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|pedwarn
+argument_list|(
+literal|"ISO C90 forbids array whose size "
+literal|"can%'t be evaluated"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|name
+condition|)
+name|pedwarn
+argument_list|(
+literal|"ISO C90 forbids variable length array %qs"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|pedwarn
+argument_list|(
+literal|"ISO C90 forbids variable length array"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|warn_vla
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|const_size
+condition|)
+block|{
+if|if
+condition|(
+name|name
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"the size of array %qs can"
+literal|"%'t be evaluated"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"the size of array can %'t be evaluated"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|name
+condition|)
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"variable length array %qs is used"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|warning
+argument_list|(
+name|OPT_Wvla
+argument_list|,
+literal|"variable length array is used"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/* Given declspecs and a declarator,    determine the name and type of the object declared    and construct a ..._DECL node for it.    (In one case we can return a ..._TYPE node instead.     For invalid input we sometimes return 0.)     DECLSPECS is a c_declspecs structure for the declaration specifiers.     DECL_CONTEXT says which syntactic context this declaration is in:      NORMAL for most contexts.  Make a VAR_DECL or FUNCTION_DECL or TYPE_DECL.      FUNCDEF for a function definition.  Like NORMAL but a few different       error messages in each case.  Return value may be zero meaning       this definition is too screwy to try to parse.      PARM for a parameter declaration (either within a function prototype       or before a function body).  Make a PARM_DECL, or return void_type_node.      TYPENAME if for a typename (in a cast or sizeof).       Don't make a DECL node; just return the ..._TYPE node.      FIELD for a struct or union field; make a FIELD_DECL.    INITIALIZED is true if the decl has an initializer.    WIDTH is non-NULL for bit-fields, and is a pointer to an INTEGER_CST node    representing the width of the bit-field.     In the TYPENAME case, DECLARATOR is really an absolute declarator.    It may also be so in the PARM case, for a prototype where the    argument type is specified but not the name.     This function is where the complicated C meanings of `static'    and `extern' are interpreted.  */
 end_comment
 
@@ -15834,38 +15987,13 @@ name|size_varies
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|flag_isoc99
-operator|&&
-name|pedantic
-condition|)
-block|{
-if|if
-condition|(
-name|TREE_CONSTANT
+name|warn_variable_length_array
 argument_list|(
+name|orig_name
+argument_list|,
 name|size
 argument_list|)
-condition|)
-name|pedwarn
-argument_list|(
-literal|"ISO C90 forbids array %qs whose size "
-literal|"can%'t be evaluated"
-argument_list|,
-name|name
-argument_list|)
 expr_stmt|;
-else|else
-name|pedwarn
-argument_list|(
-literal|"ISO C90 forbids variable-size array %qs"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|warn_variable_decl
