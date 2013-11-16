@@ -3704,7 +3704,7 @@ name|defined
 argument_list|(
 name|SCHED_ULE
 argument_list|)
-comment|/* 	 * Don't do any accounting for the disabled HTT cores, since it 	 * will provide misleading numbers for the userland. 	 * 	 * No locking is necessary here, since even if we loose the race 	 * when hlt_cpus_mask changes it is not a big deal, really. 	 * 	 * Don't do that for ULE, since ULE doesn't consider hlt_cpus_mask 	 * and unlike other schedulers it actually schedules threads to 	 * those CPUs. 	 */
+comment|/* 	 * Don't do any accounting for the disabled HTT cores, since it 	 * will provide misleading numbers for the userland. 	 * 	 * No locking is necessary here, since even if we lose the race 	 * when hlt_cpus_mask changes it is not a big deal, really. 	 * 	 * Don't do that for ULE, since ULE doesn't consider hlt_cpus_mask 	 * and unlike other schedulers it actually schedules threads to 	 * those CPUs. 	 */
 if|if
 condition|(
 name|CPU_ISSET

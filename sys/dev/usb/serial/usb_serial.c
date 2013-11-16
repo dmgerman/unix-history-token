@@ -4136,7 +4136,7 @@ name|sc_pls_clr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* ensure that we don't loose any levels */
+comment|/* ensure that we don't lose any levels */
 if|if
 condition|(
 name|notch_bits

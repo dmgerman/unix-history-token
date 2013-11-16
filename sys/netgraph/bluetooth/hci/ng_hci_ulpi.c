@@ -1449,7 +1449,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: %s - Inavalid connection state=%d\n"
+literal|"%s: %s - Invalid connection state=%d\n"
 argument_list|,
 name|__func__
 argument_list|,

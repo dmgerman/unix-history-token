@@ -2382,7 +2382,7 @@ name|ostat1
 argument_list|)
 expr_stmt|;
 comment|/* if nothing showed up there is no need to get any further */
-comment|/* XXX SOS is that too strong?, we just might loose devices here */
+comment|/* XXX SOS is that too strong?, we just might lose devices here */
 name|ch
 operator|->
 name|devices
