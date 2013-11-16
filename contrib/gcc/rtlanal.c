@@ -3077,9 +3077,14 @@ argument_list|)
 operator|<
 name|FIRST_PSEUDO_REGISTER
 operator|&&
-name|TEST_HARD_REG_BIT
+name|overlaps_hard_reg_set_p
 argument_list|(
 name|regs_invalidated_by_call
+argument_list|,
+name|GET_MODE
+argument_list|(
+name|reg
+argument_list|)
 argument_list|,
 name|REGNO
 argument_list|(
