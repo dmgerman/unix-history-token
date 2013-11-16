@@ -6833,6 +6833,32 @@ block|}
 end_function
 
 begin_comment
+comment|/* Nonzero iff type T is a class template implicit specialization.  */
+end_comment
+
+begin_function
+name|bool
+name|class_tmpl_impl_spec_p
+parameter_list|(
+name|tree
+name|t
+parameter_list|)
+block|{
+return|return
+name|CLASS_TYPE_P
+argument_list|(
+name|t
+argument_list|)
+operator|&&
+name|CLASSTYPE_TEMPLATE_INSTANTIATION
+argument_list|(
+name|t
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Returns 1 iff zero initialization of type T means actually storing    zeros in it.  */
 end_comment
 

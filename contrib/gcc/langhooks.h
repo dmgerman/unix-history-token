@@ -411,6 +411,16 @@ parameter_list|,
 name|tree
 parameter_list|)
 function_decl|;
+comment|/* True if the type is an instantiation of a generic type,      e.g. C++ template implicit specializations.  */
+name|bool
+function_decl|(
+modifier|*
+name|generic_p
+function_decl|)
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
 comment|/* Given a type, apply default promotions to unnamed function      arguments and return the new type.  Return the same type if no      change.  Required by any language that supports variadic      arguments.  The default hook dies.  */
 name|tree
 function_decl|(
