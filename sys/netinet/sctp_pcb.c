@@ -26518,6 +26518,12 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|SCTP_ITERATOR_LOCK_INIT
+argument_list|()
+expr_stmt|;
+name|SCTP_IPI_ITERATOR_WQ_INIT
+argument_list|()
+expr_stmt|;
 name|sctp_startup_iterator
 argument_list|()
 expr_stmt|;
@@ -26615,8 +26621,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Free BSD the it thread never exits but we do clean up. The only 	 * way freebsd reaches here if we have VRF's but we still add the 	 * ifdef to make it compile on old versions. 	 */
-block|{
 name|struct
 name|sctp_iterator
 modifier|*
@@ -26625,6 +26629,7 @@ decl_stmt|,
 modifier|*
 name|nit
 decl_stmt|;
+comment|/* 	 * In FreeBSD the iterator thread never exits but we do clean up. 	 * The only way FreeBSD reaches here is if we have VRF's but we 	 * still add the ifdef to make it compile on old versions. 	 */
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 argument_list|()
 expr_stmt|;
@@ -26731,7 +26736,6 @@ block|}
 name|SCTP_ITERATOR_UNLOCK
 argument_list|()
 expr_stmt|;
-block|}
 name|SCTP_OS_TIMER_STOP
 argument_list|(
 operator|&
