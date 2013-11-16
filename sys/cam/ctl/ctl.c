@@ -5397,6 +5397,14 @@ name|othersc_pool
 operator|=
 name|other_pool
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|)
+expr_stmt|;
 name|ctl_pool_acquire
 argument_list|(
 name|internal_pool
@@ -5410,6 +5418,14 @@ expr_stmt|;
 name|ctl_pool_acquire
 argument_list|(
 name|other_pool
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We used to allocate a processor LUN here.  The new scheme is to 	 * just let the user allocate LUNs as he sees fit. 	 */
@@ -5455,6 +5471,14 @@ argument_list|(
 literal|"error creating CTL work thread!\n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|)
+expr_stmt|;
 name|ctl_free_lun
 argument_list|(
 name|lun
@@ -5479,6 +5503,14 @@ argument_list|(
 name|softc
 argument_list|,
 name|other_pool
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -6530,7 +6562,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove an initiator by port number and initiator ID.  * Returns 0 for success, 1 for failure.  * Assumes the caller does NOT hold the CTL lock.  */
+comment|/*  * Remove an initiator by port number and initiator ID.  * Returns 0 for success, 1 for failure.  */
 end_comment
 
 begin_function
@@ -6552,6 +6584,16 @@ decl_stmt|;
 name|softc
 operator|=
 name|control_softc
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6646,7 +6688,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add an initiator to the initiator map.  * Returns 0 for success, 1 for failure.  * Assumes the caller does NOT hold the CTL lock.  */
+comment|/*  * Add an initiator to the initiator map.  * Returns 0 for success, 1 for failure.  */
 end_comment
 
 begin_function
@@ -6674,6 +6716,16 @@ decl_stmt|;
 name|softc
 operator|=
 name|control_softc
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
 expr_stmt|;
 name|retval
 operator|=
@@ -9119,7 +9171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Must be called with the ctl_lock held.  * Returns 0 for success, errno for failure.  */
+comment|/*  * Returns 0 for success, errno for failure.  */
 end_comment
 
 begin_function
@@ -9158,6 +9210,16 @@ decl_stmt|;
 name|retval
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -15197,10 +15259,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Caller must hold ctl_softc->ctl_lock.  */
-end_comment
-
 begin_function
 name|int
 name|ctl_pool_acquire
@@ -15211,6 +15269,16 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pool
@@ -15250,10 +15318,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Caller must hold ctl_softc->ctl_lock.  */
-end_comment
-
 begin_function
 name|int
 name|ctl_pool_invalidate
@@ -15264,6 +15328,16 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pool
@@ -15290,10 +15364,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Caller must hold ctl_softc->ctl_lock.  */
-end_comment
-
 begin_function
 name|int
 name|ctl_pool_release
@@ -15304,6 +15374,16 @@ modifier|*
 name|pool
 parameter_list|)
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pool
@@ -15354,10 +15434,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Must be called with ctl_softc->ctl_lock held.  */
-end_comment
-
 begin_function
 name|void
 name|ctl_pool_free
@@ -15381,6 +15457,16 @@ decl_stmt|,
 modifier|*
 name|next_io
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ctl_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cur_io
@@ -18760,7 +18846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete a LUN.  * Assumptions:  * - caller holds ctl_softc->ctl_lock.  * - LUN has already been marked invalid and any pending I/O has been taken  *   care of.  */
+comment|/*  * Delete a LUN.  * Assumptions:  * - LUN has already been marked invalid and any pending I/O has been taken  *   care of.  */
 end_comment
 
 begin_function
@@ -18806,6 +18892,16 @@ operator|=
 name|lun
 operator|->
 name|ctl_softc
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|STAILQ_REMOVE
 argument_list|(
@@ -41482,7 +41578,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for blockage or overlaps against the OOA (Order Of Arrival) queue.  * Assumptions:  * - caller holds ctl_lock  * - pending_io is generally either incoming, or on the blocked queue  * - starting I/O is the I/O we want to start the check with.  */
+comment|/*  * Check for blockage or overlaps against the OOA (Order Of Arrival) queue.  * Assumptions:  * - pending_io is generally either incoming, or on the blocked queue  * - starting I/O is the I/O we want to start the check with.  */
 end_comment
 
 begin_function
@@ -41514,6 +41610,16 @@ decl_stmt|;
 name|ctl_action
 name|action
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Run back along the OOA queue, starting with the current 	 * blocked I/O and going through every I/O before it on the 	 * queue.  If starting_io is NULL, we'll just end up returning 	 * CTL_ACTION_PASS. 	 */
 for|for
 control|(
@@ -41607,7 +41713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assumptions:  * - An I/O has just completed, and has been removed from the per-LUN OOA  *   queue, so some items on the blocked queue may now be unblocked.  * - The caller holds ctl_softc->ctl_lock  */
+comment|/*  * Assumptions:  * - An I/O has just completed, and has been removed from the per-LUN OOA  *   queue, so some items on the blocked queue may now be unblocked.  */
 end_comment
 
 begin_function
@@ -41629,6 +41735,16 @@ decl_stmt|,
 modifier|*
 name|next_blocked
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Run forward from the head of the blocked queue, checking each 	 * entry against the I/Os prior to it on the OOA queue to see if 	 * there is still any blockage. 	 * 	 * We cannot use the TAILQ_FOREACH() macro, because it can't deal 	 * with our removing a variable on it while it is traversing the 	 * list. 	 */
 for|for
 control|(
@@ -45353,7 +45469,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assumptions:  caller holds ctl_softc->ctl_lock  *  * This routine cannot block!  It must be callable from an interrupt  * handler as well as from the work thread.  */
+comment|/*  * This routine cannot block!  It must be callable from an interrupt  * handler as well as from the work thread.  */
 end_comment
 
 begin_function
@@ -45375,6 +45491,16 @@ decl_stmt|,
 modifier|*
 name|next_io
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ctl_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|CTL_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -46558,10 +46684,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Called with the CTL lock held.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -46586,6 +46708,16 @@ decl_stmt|,
 modifier|*
 name|desc2
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH_SAFE
 argument_list|(
 argument|desc
@@ -46835,10 +46967,6 @@ begin_comment
 comment|/* CTL_IO_DELAY */
 end_comment
 
-begin_comment
-comment|/*  * Assumption:  caller does NOT hold ctl_lock  */
-end_comment
-
 begin_function
 name|void
 name|ctl_datamove
@@ -46861,6 +46989,16 @@ modifier|*
 name|io
 parameter_list|)
 function_decl|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|control_softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|CTL_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -50049,7 +50187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process a datamove request from the other controller.  This is used for  * XFER mode only, not SER_ONLY mode.  For writes, we DMA into local memory  * first.  Once that is complete, the data gets DMAed into the remote  * controller's memory.  For reads, we DMA from the remote controller's  * memory into our memory first, and then move it out to the FETD.  *  * Should be called without the ctl_lock held.  */
+comment|/*  * Process a datamove request from the other controller.  This is used for  * XFER mode only, not SER_ONLY mode.  For writes, we DMA into local memory  * first.  Once that is complete, the data gets DMAed into the remote  * controller's memory.  For reads, we DMA from the remote controller's  * memory into our memory first, and then move it out to the FETD.  */
 end_comment
 
 begin_function
@@ -50071,6 +50209,16 @@ decl_stmt|;
 name|softc
 operator|=
 name|control_softc
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|ctl_lock
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Note that we look for an aborted I/O here, but don't do some of 	 * the other checks that ctl_datamove() normally does.  We don't 	 * need to run the task queue, because this I/O is on the ISC 	 * queue, which is executed by the work thread after the task queue. 	 * We don't need to run the datamove delay code, since that should 	 * have been done if need be on the other controller. 	 */
 name|mtx_lock
