@@ -70,11 +70,16 @@ define|#
 directive|define
 name|PCB_FPU
 value|1
-comment|/* Process had FPU initialized */
+comment|/* Process uses FPU */
+define|#
+directive|define
+name|PCB_FPREGS
+value|2
+comment|/* Process had FPU registers initialized */
 define|#
 directive|define
 name|PCB_VEC
-value|2
+value|4
 comment|/* Process had Altivec initialized */
 struct|struct
 name|fpu
