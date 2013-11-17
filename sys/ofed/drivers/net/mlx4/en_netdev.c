@@ -3161,13 +3161,17 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|<
+literal|0
 condition|)
 block|{
 name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"Failed setting port mac\n"
+literal|"Failed setting port mac err=%d\n"
+argument_list|,
+name|err
 argument_list|)
 expr_stmt|;
 goto|goto
