@@ -119,6 +119,13 @@ name|field
 decl_stmt|;
 if|if
 condition|(
+name|arg
+operator|!=
+name|priv
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|vid
 operator|==
@@ -259,6 +266,13 @@ decl_stmt|;
 name|u8
 name|field
 decl_stmt|;
+if|if
+condition|(
+name|arg
+operator|!=
+name|priv
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
