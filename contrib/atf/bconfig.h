@@ -85,9 +85,12 @@ begin_comment
 comment|/* Define to 1 if getopt has optreset */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_OPTRESET */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_OPTRESET
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `putenv' function. */
@@ -273,14 +276,6 @@ value|".libs/"
 end_define
 
 begin_comment
-comment|/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-end_comment
-
-begin_comment
-comment|/* #undef NO_MINUS_C_MINUS_O */
-end_comment
-
-begin_comment
 comment|/* Name of package */
 end_comment
 
@@ -332,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Automated Testing Framework 0.16"
+value|"Automated Testing Framework 0.18"
 end_define
 
 begin_comment
@@ -365,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.16"
+value|"0.18"
 end_define
 
 begin_comment
@@ -387,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.16"
+value|"0.18"
 end_define
 
 end_unit
