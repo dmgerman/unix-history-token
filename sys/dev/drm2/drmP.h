@@ -4451,6 +4451,14 @@ name|drm_timestamp_precision
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|drm_timestamp_monotonic
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Device setup support (drm_drv.c) */
 end_comment
