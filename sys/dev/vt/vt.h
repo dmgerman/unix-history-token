@@ -1158,6 +1158,11 @@ value|0x10
 comment|/* Prevent window switch. */
 define|#
 directive|define
+name|VWF_MOUSE_HIDE
+value|0x20
+comment|/* Disable mouse events processing. */
+define|#
+directive|define
 name|VWF_SWWAIT_REL
 value|0x10000
 comment|/* Program wait for VT acquire is done. */
@@ -1689,6 +1694,30 @@ name|cnt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|vt_mouse_state
+parameter_list|(
+name|int
+name|show
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VT_MOUSE_SHOW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_MOUSE_HIDE
+value|0
+end_define
 
 begin_endif
 endif|#
