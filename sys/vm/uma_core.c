@@ -5027,7 +5027,9 @@ operator|<=
 name|uma_max_ipers
 argument_list|,
 operator|(
-literal|"keg_small_init: keg->uk_ipers too high(%d) increase max_ipers"
+literal|"%s: keg->uk_ipers too high(%d) increase max_ipers"
+operator|,
+name|__func__
 operator|,
 name|keg
 operator|->
