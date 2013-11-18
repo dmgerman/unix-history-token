@@ -3364,7 +3364,30 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-comment|/* 	 * We will rely on rcvif being set properly in the deferred context, 	 * so assert it is correct here. 	 */
+name|struct
+name|mbuf
+modifier|*
+name|mn
+decl_stmt|;
+comment|/* 	 * The drivers are allowed to pass in a chain of packets linked with 	 * m_nextpkt. We split them up into separate packets here and pass 	 * them up. This allows the drivers to amortize the receive lock. 	 */
+while|while
+condition|(
+name|m
+condition|)
+block|{
+name|mn
+operator|=
+name|m
+operator|->
+name|m_nextpkt
+expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 		 * We will rely on rcvif being set properly in the deferred context, 		 * so assert it is correct here. 		 */
 name|KASSERT
 argument_list|(
 name|m
@@ -3389,6 +3412,11 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|=
+name|mn
+expr_stmt|;
+block|}
 block|}
 end_function
 
