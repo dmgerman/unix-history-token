@@ -6853,7 +6853,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Calculated uma_max_ipers_slab (for OFFPAGE) is %d\n"
+literal|"Calculated uma_max_ipers_ref (for OFFPAGE) is %d\n"
 argument_list|,
 name|uma_max_ipers_ref
 argument_list|)
