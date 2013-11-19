@@ -2331,8 +2331,10 @@ argument_list|)
 expr_stmt|;
 name|newkey
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
