@@ -12148,15 +12148,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|prot
-operator|&
-operator|(
-name|VM_PROT_ALL
-operator|)
-condition|)
-block|{
-if|if
-condition|(
 operator|(
 name|m
 operator|->
@@ -12167,6 +12158,16 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|prot
+operator|&
+operator|(
+name|VM_PROT_ALL
+operator|)
+condition|)
+block|{
 name|vm_page_aflag_set
 argument_list|(
 name|m
@@ -12177,12 +12178,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Need to do page referenced emulation. 			 */
+comment|/* 				 * Need to do page referenced emulation. 				 */
 name|npte
 operator|&=
 operator|~
 name|L2_S_REF
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -12191,24 +12193,6 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* 			 * Enable write permission if the access type 			 * indicates write intention. Emulate modified 			 * bit otherwise. 			 */
-if|if
-condition|(
-operator|(
-name|access
-operator|&
-name|VM_PROT_WRITE
-operator|)
-operator|!=
-literal|0
-condition|)
-name|npte
-operator|&=
-operator|~
-operator|(
-name|L2_APX
-operator|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -12222,14 +12206,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_aflag_set
-argument_list|(
-name|m
-argument_list|,
-name|PGA_WRITEABLE
-argument_list|)
-expr_stmt|;
-comment|/* 				 * The access type and permissions indicate  				 * that the page will be written as soon as 				 * returned from fault service. 				 * Mark it dirty from the outset. 				 */
+comment|/* 				 * Enable write permission if the access type 				 * indicates write intention. Emulate modified 				 * bit otherwise. 				 */
 if|if
 condition|(
 operator|(
@@ -12240,12 +12217,37 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|npte
+operator|&=
+operator|~
+operator|(
+name|L2_APX
+operator|)
+expr_stmt|;
+name|vm_page_aflag_set
+argument_list|(
+name|m
+argument_list|,
+name|PGA_WRITEABLE
+argument_list|)
+expr_stmt|;
+comment|/* 					 * The access type and permissions 					 * indicate that the page will be 					 * written as soon as returned from 					 * fault service. 					 * Mark it dirty from the outset. 					 */
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+name|npte
+operator|&=
+operator|~
+operator|(
+name|L2_APX
+operator|)
+expr_stmt|;
 block|}
 if|if
 condition|(
