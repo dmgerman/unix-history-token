@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: schnorr.c,v 1.7 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: schnorr.c,v 1.8 2013/11/08 00:39:15 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2722,8 +2722,10 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|xmalloc
+name|xcalloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
