@@ -10635,6 +10635,9 @@ name|uma_bucket_t
 name|bucket
 decl_stmt|;
 name|int
+name|lockfail
+decl_stmt|;
+name|int
 name|cpu
 decl_stmt|;
 ifdef|#
@@ -10938,11 +10941,31 @@ condition|)
 goto|goto
 name|zfree_item
 goto|;
+name|lockfail
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ZONE_TRYLOCK
+argument_list|(
+name|zone
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Record contention to size the buckets. */
 name|ZONE_LOCK
 argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
+name|lockfail
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -11082,7 +11105,22 @@ comment|/* We are no longer associated with this CPU. */
 name|critical_exit
 argument_list|()
 expr_stmt|;
-comment|/* And the zone.. */
+comment|/* 	 * We bump the uz count when the cache size is insufficient to 	 * handle the working set. 	 */
+if|if
+condition|(
+name|lockfail
+operator|&&
+name|zone
+operator|->
+name|uz_count
+operator|<
+name|BUCKET_MAX
+condition|)
+name|zone
+operator|->
+name|uz_count
+operator|++
+expr_stmt|;
 name|ZONE_UNLOCK
 argument_list|(
 name|zone
