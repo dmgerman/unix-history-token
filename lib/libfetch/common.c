@@ -3763,7 +3763,14 @@ name|conn
 operator|->
 name|ssl
 argument_list|,
+name|__DECONST
+argument_list|(
+expr|struct
+name|url
+operator|*
+argument_list|,
 name|URL
+argument_list|)
 operator|->
 name|host
 argument_list|)
