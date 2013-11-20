@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1601,7 +1601,12 @@ comment|/* Rename with vnode as target dir */
 name|VE_MOUNTEDOVER
 init|=
 literal|8
+block|,
 comment|/* File or Filesystem got mounted over vnode */
+name|VE_TRUNCATE
+init|=
+literal|9
+comment|/* Truncate */
 block|}
 name|vnevent_t
 typedef|;
@@ -4686,6 +4691,16 @@ parameter_list|)
 function_decl|;
 name|void
 name|vnevent_mountedover
+parameter_list|(
+name|vnode_t
+modifier|*
+parameter_list|,
+name|caller_context_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|vnevent_truncate
 parameter_list|(
 name|vnode_t
 modifier|*

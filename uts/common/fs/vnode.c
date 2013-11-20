@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 1988, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -10260,6 +10260,53 @@ argument_list|(
 name|vp
 argument_list|,
 name|VE_MOUNTEDOVER
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|ct
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vnevent_truncate
+parameter_list|(
+name|vnode_t
+modifier|*
+name|vp
+parameter_list|,
+name|caller_context_t
+modifier|*
+name|ct
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vp
+operator|==
+name|NULL
+operator|||
+name|vp
+operator|->
+name|v_femhead
+operator|==
+name|NULL
+condition|)
+block|{
+return|return;
+block|}
+operator|(
+name|void
+operator|)
+name|VOP_VNEVENT
+argument_list|(
+name|vp
+argument_list|,
+name|VE_TRUNCATE
 argument_list|,
 name|NULL
 argument_list|,
