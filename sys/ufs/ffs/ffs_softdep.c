@@ -6250,6 +6250,7 @@ argument_list|,
 name|jsegdep
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|wk
