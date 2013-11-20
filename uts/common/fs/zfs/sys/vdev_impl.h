@@ -414,13 +414,6 @@ name|uint64_t
 name|vdev_children
 decl_stmt|;
 comment|/* number of children		*/
-name|space_map_t
-name|vdev_dtl
-index|[
-name|DTL_TYPES
-index|]
-decl_stmt|;
-comment|/* in-core dirty time logs	*/
 name|vdev_stat_t
 name|vdev_stat
 decl_stmt|;
@@ -490,10 +483,6 @@ name|boolean_t
 name|vdev_probe_wanted
 decl_stmt|;
 comment|/* async probe wanted?	*/
-name|uint64_t
-name|vdev_removing
-decl_stmt|;
-comment|/* device is being removed?	*/
 name|list_node_t
 name|vdev_config_dirty_node
 decl_stmt|;
@@ -511,22 +500,39 @@ name|vdev_islog
 decl_stmt|;
 comment|/* is an intent log device	*/
 name|uint64_t
+name|vdev_removing
+decl_stmt|;
+comment|/* device is being removed?	*/
+name|boolean_t
 name|vdev_ishole
 decl_stmt|;
 comment|/* is a hole in the namespace 	*/
 comment|/* 	 * Leaf vdev state. 	 */
-name|uint64_t
-name|vdev_psize
+name|range_tree_t
+modifier|*
+name|vdev_dtl
+index|[
+name|DTL_TYPES
+index|]
 decl_stmt|;
-comment|/* physical device capacity	*/
-name|space_map_obj_t
-name|vdev_dtl_smo
+comment|/* dirty time logs	*/
+name|space_map_t
+modifier|*
+name|vdev_dtl_sm
 decl_stmt|;
-comment|/* dirty time log space map obj	*/
+comment|/* dirty time log space map	*/
 name|txg_node_t
 name|vdev_dtl_node
 decl_stmt|;
 comment|/* per-txg dirty DTL linkage	*/
+name|uint64_t
+name|vdev_dtl_object
+decl_stmt|;
+comment|/* DTL object			*/
+name|uint64_t
+name|vdev_psize
+decl_stmt|;
+comment|/* physical device capacity	*/
 name|uint64_t
 name|vdev_wholedisk
 decl_stmt|;
@@ -583,10 +589,6 @@ name|uint64_t
 name|vdev_unspare
 decl_stmt|;
 comment|/* unspare when resilvering done */
-name|hrtime_t
-name|vdev_last_try
-decl_stmt|;
-comment|/* last reopen time		*/
 name|boolean_t
 name|vdev_nowritecache
 decl_stmt|;
@@ -607,27 +609,27 @@ name|boolean_t
 name|vdev_delayed_close
 decl_stmt|;
 comment|/* delayed device close?	*/
-name|uint8_t
+name|boolean_t
 name|vdev_tmpoffline
 decl_stmt|;
 comment|/* device taken offline temporarily? */
-name|uint8_t
+name|boolean_t
 name|vdev_detached
 decl_stmt|;
 comment|/* device detached?		*/
-name|uint8_t
+name|boolean_t
 name|vdev_cant_read
 decl_stmt|;
 comment|/* vdev is failing all reads	*/
-name|uint8_t
+name|boolean_t
 name|vdev_cant_write
 decl_stmt|;
 comment|/* vdev is failing all writes	*/
-name|uint64_t
+name|boolean_t
 name|vdev_isspare
 decl_stmt|;
 comment|/* was a hot spare		*/
-name|uint64_t
+name|boolean_t
 name|vdev_isl2cache
 decl_stmt|;
 comment|/* was a l2cache device		*/
@@ -991,6 +993,15 @@ name|vd
 parameter_list|)
 function_decl|;
 specifier|extern
+name|int
+name|vdev_dtl_load
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|vdev_sync
 parameter_list|(
@@ -1028,6 +1039,21 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|vdev_dirty_leaves
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|uint64_t
 name|txg

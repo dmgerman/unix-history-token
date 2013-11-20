@@ -7432,8 +7432,6 @@ if|if
 condition|(
 name|dn
 operator|->
-name|dn_phys
-operator|->
 name|dn_maxblkid
 operator|!=
 literal|0

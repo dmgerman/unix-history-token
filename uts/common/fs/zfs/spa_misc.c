@@ -1317,6 +1317,29 @@ name|spa
 init|=
 name|arg
 decl_stmt|;
+comment|/* 	 * Disable the deadman timer if the pool is suspended. 	 */
+if|if
+condition|(
+name|spa_suspended
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+block|{
+name|VERIFY
+argument_list|(
+name|cyclic_reprogram
+argument_list|(
+name|spa
+operator|->
+name|spa_deadman_cycid
+argument_list|,
+name|CY_INFINITY
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|zfs_dbgmsg
 argument_list|(
 literal|"slow spa_sync: started %llu seconds ago, calls %llu"
@@ -3766,11 +3789,9 @@ name|vdev_detached
 operator|||
 name|vd
 operator|->
-name|vdev_dtl_smo
-operator|.
-name|smo_object
+name|vdev_dtl_sm
 operator|==
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|spa_config_enter
@@ -6361,7 +6382,7 @@ expr_stmt|;
 name|unique_init
 argument_list|()
 expr_stmt|;
-name|space_map_init
+name|range_tree_init
 argument_list|()
 expr_stmt|;
 name|zio_init
@@ -6419,7 +6440,7 @@ expr_stmt|;
 name|zio_fini
 argument_list|()
 expr_stmt|;
-name|space_map_fini
+name|range_tree_fini
 argument_list|()
 expr_stmt|;
 name|unique_fini
