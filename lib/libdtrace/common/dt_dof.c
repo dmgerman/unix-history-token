@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2775,7 +2775,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|dof_add_provider
 parameter_list|(
 name|dt_dof_t
@@ -2825,8 +2825,14 @@ name|pv_flags
 operator|&
 name|DT_PROVIDER_IMPL
 condition|)
-return|return;
-comment|/* ignore providers that are exported by dtrace(7D) */
+block|{
+comment|/* 		 * ignore providers that are exported by dtrace(7D) 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|nxr
 operator|=
 name|dt_popcb
@@ -2989,6 +2995,28 @@ argument_list|,
 name|ddo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dt_buf_len
+argument_list|(
+operator|&
+name|ddo
+operator|->
+name|ddo_probes
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|dt_set_errno
+argument_list|(
+name|dtp
+argument_list|,
+name|EDT_NOPROBES
+argument_list|)
+operator|)
+return|;
 name|dofpv
 operator|.
 name|dofpv_probes
@@ -3499,6 +3527,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -4737,13 +4770,24 @@ argument_list|(
 name|pvp
 argument_list|)
 control|)
+block|{
+if|if
+condition|(
 name|dof_add_provider
 argument_list|(
 name|ddo
 argument_list|,
 name|pvp
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 block|}
 comment|/* 	 * If we're not stripping unloadable sections, generate compiler 	 * comments and any other unloadable miscellany. 	 */
 if|if
