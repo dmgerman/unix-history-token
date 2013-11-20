@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -904,11 +904,11 @@ if|if
 condition|(
 name|rw
 operator|==
-name|RW_READER
+name|RW_WRITER
 condition|)
 name|VERIFY
 argument_list|(
-name|rw_rdlock
+name|rw_wrlock
 argument_list|(
 operator|&
 name|rwlp
@@ -922,7 +922,7 @@ expr_stmt|;
 else|else
 name|VERIFY
 argument_list|(
-name|rw_wrlock
+name|rw_rdlock
 argument_list|(
 operator|&
 name|rwlp
@@ -1038,11 +1038,11 @@ if|if
 condition|(
 name|rw
 operator|==
-name|RW_READER
+name|RW_WRITER
 condition|)
 name|rv
 operator|=
-name|rw_tryrdlock
+name|rw_trywrlock
 argument_list|(
 operator|&
 name|rwlp
@@ -1053,7 +1053,7 @@ expr_stmt|;
 else|else
 name|rv
 operator|=
-name|rw_trywrlock
+name|rw_tryrdlock
 argument_list|(
 operator|&
 name|rwlp
