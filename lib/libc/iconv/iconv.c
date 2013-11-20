@@ -107,6 +107,12 @@ directive|include
 file|"citrus_iconv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"iconv-internal.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -117,39 +123,10 @@ parameter_list|)
 value|(!(_h_) || (_h_) == (iconv_t)-1)
 end_define
 
-begin_decl_stmt
-name|int
-name|_iconv_version
-init|=
-name|_ICONV_VERSION
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|iconv_t
-name|_iconv_open
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|out
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|in
-parameter_list|,
-name|struct
-name|_citrus_iconv
-modifier|*
-name|prealloc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
+specifier|static
 name|iconv_t
-name|_iconv_open
+name|__bsd___iconv_open
 parameter_list|(
 specifier|const
 name|char
@@ -324,7 +301,7 @@ end_function
 
 begin_function
 name|iconv_t
-name|iconv_open
+name|__bsd_iconv_open
 parameter_list|(
 specifier|const
 name|char
@@ -339,7 +316,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|_iconv_open
+name|__bsd___iconv_open
 argument_list|(
 name|out
 argument_list|,
@@ -354,7 +331,7 @@ end_function
 
 begin_function
 name|int
-name|iconv_open_into
+name|__bsd_iconv_open_into
 parameter_list|(
 specifier|const
 name|char
@@ -388,7 +365,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|_iconv_open
+name|__bsd___iconv_open
 argument_list|(
 name|out
 argument_list|,
@@ -415,7 +392,7 @@ end_function
 
 begin_function
 name|int
-name|iconv_close
+name|__bsd_iconv_close
 parameter_list|(
 name|iconv_t
 name|handle
@@ -464,7 +441,7 @@ end_function
 
 begin_function
 name|size_t
-name|iconv
+name|__bsd_iconv
 parameter_list|(
 name|iconv_t
 name|handle
@@ -574,7 +551,7 @@ end_function
 
 begin_function
 name|size_t
-name|__iconv
+name|__bsd___iconv
 parameter_list|(
 name|iconv_t
 name|handle
@@ -700,7 +677,7 @@ end_function
 
 begin_function
 name|int
-name|__iconv_get_list
+name|__bsd___iconv_get_list
 parameter_list|(
 name|char
 modifier|*
@@ -756,7 +733,7 @@ end_function
 
 begin_function
 name|void
-name|__iconv_free_list
+name|__bsd___iconv_free_list
 parameter_list|(
 name|char
 modifier|*
@@ -836,7 +813,7 @@ end_function
 
 begin_function
 name|void
-name|iconvlist
+name|__bsd_iconvlist
 parameter_list|(
 name|int
 function_decl|(
@@ -903,7 +880,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|__iconv_get_list
+name|__bsd___iconv_get_list
 argument_list|(
 operator|&
 name|list
@@ -1011,7 +988,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|__iconv_free_list
+name|__bsd___iconv_free_list
 argument_list|(
 name|list
 argument_list|,
@@ -1117,7 +1094,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|__iconv_free_list
+name|__bsd___iconv_free_list
 argument_list|(
 name|list
 argument_list|,
@@ -1196,7 +1173,7 @@ name|names
 argument_list|)
 expr_stmt|;
 block|}
-name|__iconv_free_list
+name|__bsd___iconv_free_list
 argument_list|(
 name|list
 argument_list|,
@@ -1211,7 +1188,7 @@ name|__inline
 specifier|const
 name|char
 modifier|*
-name|iconv_canonicalize
+name|__bsd_iconv_canonicalize
 parameter_list|(
 specifier|const
 name|char
@@ -1232,7 +1209,7 @@ end_function
 
 begin_function
 name|int
-name|iconvctl
+name|__bsd_iconvctl
 parameter_list|(
 name|iconv_t
 name|cd
@@ -1525,7 +1502,7 @@ end_function
 
 begin_function
 name|void
-name|iconv_set_relocation_prefix
+name|__bsd_iconv_set_relocation_prefix
 parameter_list|(
 specifier|const
 name|char

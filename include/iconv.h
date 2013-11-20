@@ -240,24 +240,6 @@ begin_comment
 comment|/*  * GNU interfaces for iconv  */
 end_comment
 
-begin_comment
-comment|/* We have iconvctl() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ICONV_VERSION
-value|0x0108
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|_iconv_version
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -299,12 +281,10 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|orig_prefix
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|curr_prefix
 parameter_list|)
 function_decl|;
 end_function_decl
