@@ -885,11 +885,7 @@ name|dp
 operator|->
 name|dp_spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_ASYNC_DESTROY
-index|]
 argument_list|)
 condition|)
 block|{
@@ -936,11 +932,7 @@ name|dp
 operator|->
 name|dp_spa
 argument_list|,
-operator|&
-name|spa_feature_table
-index|[
 name|SPA_FEATURE_EMPTY_BPOBJ
-index|]
 argument_list|)
 condition|)
 block|{
