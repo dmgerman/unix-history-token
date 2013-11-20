@@ -2659,9 +2659,10 @@ name|opt_v
 init|=
 literal|0
 decl_stmt|;
-name|char
+name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|p
 decl_stmt|,

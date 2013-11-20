@@ -9093,7 +9093,7 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|int
@@ -16442,7 +16442,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 name|nvlist_t
