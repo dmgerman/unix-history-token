@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -238,6 +238,14 @@ specifier|static
 name|void
 name|fatal
 parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -249,6 +257,35 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+if|if
+condition|(
+name|spa
+operator|!=
+name|NULL
+condition|)
+block|{
+name|spa_close
+argument_list|(
+name|spa
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spa_export
+argument_list|(
+name|g_pool
+argument_list|,
+name|NULL
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|va_start
 argument_list|(
 name|ap
@@ -578,8 +615,14 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"cannot import '%s': pool is active; run "
-literal|"\"zpool export %s\" first\n"
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
+literal|"cannot import '%s': pool is "
+literal|"active; run "
+literal|"\"zpool export %s\" "
+literal|"first\n"
 argument_list|,
 name|g_pool
 argument_list|,
@@ -590,7 +633,12 @@ block|}
 block|}
 name|fatal
 argument_list|(
-literal|"cannot import '%s': no such pool available\n"
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
+literal|"cannot import '%s': no such pool "
+literal|"available\n"
 argument_list|,
 name|g_pool
 argument_list|)
@@ -704,6 +752,10 @@ name|error
 condition|)
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"can't import '%s': %s"
 argument_list|,
 name|name
@@ -777,6 +829,11 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+operator|*
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"cannot open '%s': %s"
 argument_list|,
 name|target
@@ -800,6 +857,11 @@ condition|)
 block|{
 name|fatal
 argument_list|(
+operator|*
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"'%s' has version %d, features not enabled"
 argument_list|,
 name|target
@@ -1450,6 +1512,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"invalid feature guid: %s"
 argument_list|,
 name|feature
@@ -1490,6 +1556,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"'%s' is a real feature, will not enable"
 argument_list|)
 expr_stmt|;
@@ -1512,6 +1582,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"feature already enabled: %s"
 argument_list|,
 name|feature
@@ -1851,6 +1925,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"invalid feature guid: %s"
 argument_list|,
 name|feature
@@ -1891,7 +1969,12 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"'%s' is a real feature, will not change refcount"
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
+literal|"'%s' is a real feature, will not change "
+literal|"refcount"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1949,6 +2032,10 @@ else|else
 block|{
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"feature is not enabled: %s"
 argument_list|,
 name|feature
@@ -1972,6 +2059,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"feature refcount already 0: %s"
 argument_list|,
 name|feature
@@ -2376,7 +2467,7 @@ name|NULL
 argument_list|,
 name|B_TRUE
 argument_list|,
-name|B_TRUE
+name|B_FALSE
 argument_list|)
 operator|!=
 literal|0
@@ -2384,6 +2475,10 @@ condition|)
 block|{
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"pool export failed; "
 literal|"changes may not be committed to disk\n"
 argument_list|)
