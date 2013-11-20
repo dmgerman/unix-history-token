@@ -1980,6 +1980,7 @@ argument_list|(
 name|uint16_t
 argument_list|)
 case|:
+comment|/* LINTED - alignment */
 name|value
 operator|=
 operator|*
@@ -1996,6 +1997,7 @@ argument_list|(
 name|int32_t
 argument_list|)
 case|:
+comment|/* LINTED - alignment */
 name|value
 operator|=
 operator|*
