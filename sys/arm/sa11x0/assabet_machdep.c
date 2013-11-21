@@ -1496,6 +1496,11 @@ argument_list|,
 name|ARM_VEC_ALL
 argument_list|)
 expr_stmt|;
+name|cpu_setup
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
 name|pmap_curmaxkvaddr
 operator|=
 name|freemempos
