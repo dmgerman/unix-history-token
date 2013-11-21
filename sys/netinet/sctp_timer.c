@@ -2598,7 +2598,7 @@ block|{
 comment|/* Strange case our list got out of order? */
 name|SCTP_PRINTF
 argument_list|(
-literal|"Our list is out of order? last_acked:%x chk:%x"
+literal|"Our list is out of order? last_acked:%x chk:%x\n"
 argument_list|,
 operator|(
 name|unsigned

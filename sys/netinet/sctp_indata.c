@@ -9301,12 +9301,6 @@ argument_list|(
 name|sctps_recvexpressm
 argument_list|)
 expr_stmt|;
-name|control
-operator|->
-name|sinfo_tsn
-operator|=
-name|tsn
-expr_stmt|;
 name|asoc
 operator|->
 name|tsn_last_delivered
