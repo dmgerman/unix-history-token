@@ -6846,18 +6846,10 @@ argument_list|(
 name|physmem_tunable
 argument_list|)
 expr_stmt|;
-comment|/* 	 * By default enable the memory test on real hardware, and disable 	 * it if we appear to be running in a VM.  This avoids touching all 	 * pages unnecessarily, which doesn't matter on real hardware but is 	 * bad for shared VM hosts.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
+comment|/* 	 * The boot memory test is disabled by default, as it takes a 	 * significant amount of time on large-memory systems, and is 	 * unfriendly to virtual machines as it unnecessarily touches all 	 * pages. 	 * 	 * A general name is used as the code may be extended to support 	 * additional tests beyond the current "page present" test. 	 */
 name|memtest
 operator|=
-operator|(
-name|vm_guest
-operator|>
-name|VM_GUEST_NO
-operator|)
-condition|?
 literal|0
-else|:
-literal|1
 expr_stmt|;
 name|TUNABLE_ULONG_FETCH
 argument_list|(
