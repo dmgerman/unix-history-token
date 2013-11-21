@@ -262,6 +262,9 @@ name|OTI_abs
 block|,
 name|OTI_absv
 block|,
+comment|/* Byteswap */
+name|OTI_bswap
+block|,
 comment|/* Bitwise not */
 name|OTI_one_cmpl
 block|,
@@ -755,6 +758,13 @@ define|#
 directive|define
 name|one_cmpl_optab
 value|(optab_table[OTI_one_cmpl])
+end_define
+
+begin_define
+define|#
+directive|define
+name|bswap_optab
+value|(optab_table[OTI_bswap])
 end_define
 
 begin_define

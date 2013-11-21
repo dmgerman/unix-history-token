@@ -1916,7 +1916,7 @@ name|dup
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Look for everything that looks if it were produced by      get_file_function_name_long and zero out the second part      that may result from flag_random_seed.  This is not critical      as the checksums are used only for sanity checking.  */
+comment|/* Look for everything that looks if it were produced by      get_file_function_name and zero out the second part      that may result from flag_random_seed.  This is not critical      as the checksums are used only for sanity checking.  */
 for|for
 control|(
 name|i

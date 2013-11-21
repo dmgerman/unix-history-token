@@ -10680,6 +10680,10 @@ name|TI_UINTDI_TYPE
 block|,
 name|TI_UINTTI_TYPE
 block|,
+name|TI_UINT32_TYPE
+block|,
+name|TI_UINT64_TYPE
+block|,
 name|TI_INTEGER_ZERO
 block|,
 name|TI_INTEGER_ONE
@@ -10862,6 +10866,20 @@ define|#
 directive|define
 name|unsigned_intTI_type_node
 value|global_trees[TI_UINTTI_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|uint32_type_node
+value|global_trees[TI_UINT32_TYPE]
+end_define
+
+begin_define
+define|#
+directive|define
+name|uint64_type_node
+value|global_trees[TI_UINT64_TYPE]
 end_define
 
 begin_define
@@ -14722,7 +14740,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|tree
-name|get_file_function_name_long
+name|get_file_function_name
 parameter_list|(
 specifier|const
 name|char
@@ -17600,20 +17618,6 @@ name|void
 name|sort_case_labels
 parameter_list|(
 name|tree
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* If KIND=='I', return a suitable global initializer (constructor) name.    If KIND=='D', return a suitable global clean-up (destructor) name.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|tree
-name|get_file_function_name
-parameter_list|(
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

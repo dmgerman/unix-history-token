@@ -6047,7 +6047,7 @@ argument_list|)
 expr_stmt|;
 name|name
 operator|=
-name|get_file_function_name_long
+name|get_file_function_name
 argument_list|(
 name|which_buf
 argument_list|)
