@@ -1009,9 +1009,14 @@ name|nandbus
 decl_stmt|;
 name|size_t
 name|bufsize
+init|=
+literal|0
 decl_stmt|,
 name|len
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|size_t
 name|raw_size
 decl_stmt|;
 name|off_t
