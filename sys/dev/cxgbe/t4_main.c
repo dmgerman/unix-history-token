@@ -21685,8 +21685,9 @@ literal|"\20\1PPP\2QFC\3DCBX"
 block|,
 comment|/* caps[0] linkcaps */
 literal|"\20\1NIC\2VM\3IDS\4UM\5UM_ISGL"
-block|,
 comment|/* caps[1] niccaps */
+literal|"\6HASHFILTER\7ETHOFLD"
+block|,
 literal|"\20\1TOE"
 block|,
 comment|/* caps[2] toecaps */
@@ -21700,6 +21701,7 @@ literal|"\5INITIATOR_SSNOFLD\6TARGET_SSNOFLD"
 block|,
 literal|"\20\1INITIATOR\2TARGET\3CTRL_OFLD"
 comment|/* caps[5] fcoecaps */
+literal|"\4PO_INITIAOR\5PO_TARGET"
 block|}
 decl_stmt|;
 specifier|static
