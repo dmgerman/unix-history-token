@@ -8031,7 +8031,7 @@ condition|(
 name|cur
 operator|->
 name|states
-operator|<=
+operator|==
 literal|0
 operator|&&
 name|cur
@@ -8164,7 +8164,7 @@ operator|->
 name|src_node
 operator|->
 name|states
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
@@ -8232,7 +8232,7 @@ operator|->
 name|nat_src_node
 operator|->
 name|states
-operator|<=
+operator|==
 literal|0
 condition|)
 block|{
