@@ -45,22 +45,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/endian.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1501,9 +1490,6 @@ argument_list|,
 literal|"pf already enabled"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 elseif|else
 if|if
 condition|(
@@ -1518,8 +1504,6 @@ argument_list|,
 literal|"pfil registeration failed"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|err
 argument_list|(
@@ -13385,11 +13369,6 @@ name|NULL
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
