@@ -289,6 +289,9 @@ decl_stmt|,
 modifier|*
 name|tail
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 block|}
 struct|;
 end_struct
