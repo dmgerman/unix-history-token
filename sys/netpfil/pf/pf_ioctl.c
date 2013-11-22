@@ -16663,7 +16663,7 @@ operator|=
 name|V_pf_srchash
 init|;
 name|i
-operator|<
+operator|<=
 name|V_pf_srchashmask
 condition|;
 name|i
@@ -16735,7 +16735,7 @@ operator|=
 name|V_pf_srchash
 init|;
 name|i
-operator|<
+operator|<=
 name|V_pf_srchashmask
 condition|;
 name|i
@@ -18443,7 +18443,7 @@ operator|=
 name|V_pf_srchash
 init|;
 name|i
-operator|<
+operator|<=
 name|V_pf_srchashmask
 condition|;
 name|i
