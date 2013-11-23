@@ -447,6 +447,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_ioapic_pulse_irq
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_inject_nmi
 parameter_list|(
 name|struct

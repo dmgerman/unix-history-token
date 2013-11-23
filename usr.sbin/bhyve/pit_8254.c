@@ -338,16 +338,7 @@ expr_stmt|;
 name|pit_mev_count
 operator|++
 expr_stmt|;
-name|vm_ioapic_assert_irq
-argument_list|(
-name|c
-operator|->
-name|ctx
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|vm_ioapic_deassert_irq
+name|vm_ioapic_pulse_irq
 argument_list|(
 name|c
 operator|->

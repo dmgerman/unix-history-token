@@ -465,6 +465,10 @@ name|IOCNUM_IOAPIC_DEASSERT_IRQ
 init|=
 literal|34
 block|,
+name|IOCNUM_IOAPIC_PULSE_IRQ
+init|=
+literal|35
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -593,6 +597,14 @@ directive|define
 name|VM_IOAPIC_DEASSERT_IRQ
 define|\
 value|_IOW('v', IOCNUM_IOAPIC_DEASSERT_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_PULSE_IRQ
+define|\
+value|_IOW('v', IOCNUM_IOAPIC_PULSE_IRQ, struct vm_ioapic_irq)
 end_define
 
 begin_define

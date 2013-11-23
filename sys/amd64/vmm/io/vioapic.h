@@ -99,6 +99,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vioapic_pulse_irq
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vioapic_mmio_write
 parameter_list|(
 name|void

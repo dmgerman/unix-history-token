@@ -5169,6 +5169,21 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pi
+operator|->
+name|pi_lintr_state
+operator|==
+literal|0
+condition|)
+block|{
+name|pi
+operator|->
+name|pi_lintr_state
+operator|=
+literal|1
+expr_stmt|;
 name|vm_ioapic_assert_irq
 argument_list|(
 name|pi
@@ -5180,6 +5195,7 @@ operator|->
 name|pi_lintr_pin
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5202,6 +5218,21 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pi
+operator|->
+name|pi_lintr_state
+operator|==
+literal|1
+condition|)
+block|{
+name|pi
+operator|->
+name|pi_lintr_state
+operator|=
+literal|0
+expr_stmt|;
 name|vm_ioapic_deassert_irq
 argument_list|(
 name|pi
@@ -5213,6 +5244,7 @@ operator|->
 name|pi_lintr_pin
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
