@@ -168,6 +168,16 @@ begin_comment
 comment|/* Must be called before VM is up! */
 end_comment
 
+begin_function_decl
+name|void
+name|ofw_save_trap_vec
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
