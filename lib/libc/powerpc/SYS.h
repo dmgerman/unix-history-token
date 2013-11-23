@@ -23,7 +23,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 	li	0,(__CONCAT(SYS_, name));			\ 	sc
+value|.text;							\ 	.align 2;						\ 	li	0,(SYS_##name);					\ 	sc
 end_define
 
 begin_define
@@ -34,7 +34,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(CNAME(HIDENAME(cerror)));		\ ENTRY(__CONCAT(__sys_, name));				\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), name);		\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), __CONCAT(_, name));\ 	_SYSCALL(name);						\ 	bso	2b
+value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(CNAME(HIDENAME(cerror)));		\ ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bso	2b
 end_define
 
 begin_define
@@ -45,7 +45,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_, name));				\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), __CONCAT(_, name));\ 	_SYSCALL(name);						\ 	bnslr;							\ 	b	PIC_PLT(CNAME(HIDENAME(cerror)))
+value|.text;							\ 	.align 2;						\ ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bnslr;							\ 	b	PIC_PLT(CNAME(HIDENAME(cerror)))
 end_define
 
 begin_define
@@ -56,7 +56,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(CNAME(HIDENAME(cerror)));		\ ENTRY(__CONCAT(__sys_, name));				\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), name);		\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), __CONCAT(_, name));\ 	_SYSCALL(name);						\ 	bnslr;							\ 	b	PIC_PLT(CNAME(HIDENAME(cerror)))
+value|.text;							\ 	.align 2;						\ 2:	b	PIC_PLT(CNAME(HIDENAME(cerror)));		\ ENTRY(__sys_##name);						\ 	WEAK_REFERENCE(__sys_##name, name);			\ 	WEAK_REFERENCE(__sys_##name, _##name);			\ 	_SYSCALL(name);						\ 	bnslr;							\ 	b	PIC_PLT(CNAME(HIDENAME(cerror)))
 end_define
 
 end_unit
