@@ -3070,6 +3070,20 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/* In tree-ssa-alias-warnings.c  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|strict_aliasing_warning_backend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* In tree-ssa.c  */
 end_comment
 

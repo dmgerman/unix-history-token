@@ -804,6 +804,10 @@ comment|/* True means error callback should be used for diagnostics.  */
 name|bool
 name|client_diagnostic
 decl_stmt|;
+comment|/* True disables tokenization outside of preprocessing directives. */
+name|bool
+name|directives_only
+decl_stmt|;
 block|}
 struct|;
 comment|/* Callback for header lookup for HEADER, which is the name of a    source file.  It is used as a method of last resort to find headers    that are not otherwise found during the normal include processing.    The return value is the malloced name of a header to try and open,    if any, or NULL otherwise.  This callback is called only if the    header is otherwise unfound.  */
@@ -1623,6 +1627,21 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set up built-ins with special behavior.  Use cpp_init_builtins()    instead unless your know what you are doing.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|cpp_init_special_builtins
+parameter_list|(
+name|cpp_reader
 modifier|*
 parameter_list|)
 function_decl|;
