@@ -1588,7 +1588,7 @@ name|vw
 argument_list|,
 literal|0
 argument_list|,
-name|VHS_END
+name|VHS_SET
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1661,7 +1661,7 @@ name|vw
 argument_list|,
 literal|0
 argument_list|,
-name|VHS_SET
+name|VHS_END
 argument_list|)
 expr_stmt|;
 break|break;
