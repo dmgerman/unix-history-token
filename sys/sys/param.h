@@ -970,6 +970,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|rounddown2
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((x)&(~((y)-1)))
+end_define
+
+begin_comment
+comment|/* if y is power of two */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|roundup
 parameter_list|(
 name|x
