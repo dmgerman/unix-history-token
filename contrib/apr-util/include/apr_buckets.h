@@ -466,7 +466,7 @@ parameter_list|(
 name|b
 parameter_list|)
 value|APR_RING_LAST(&(b)->list)
-comment|/**  * Insert a list of buckets at the front of a brigade  * @param b The brigade to add to  * @param e The first bucket in a list of buckets to insert  */
+comment|/**  * Insert a single bucket at the front of a brigade  * @param b The brigade to add to  * @param e The bucket to insert  */
 define|#
 directive|define
 name|APR_BRIGADE_INSERT_HEAD
@@ -476,7 +476,7 @@ parameter_list|,
 name|e
 parameter_list|)
 value|do {				\ 	apr_bucket *ap__b = (e);                                        \ 	APR_RING_INSERT_HEAD(&(b)->list, ap__b, apr_bucket, link);	\         APR_BRIGADE_CHECK_CONSISTENCY((b));				\     } while (0)
-comment|/**  * Insert a list of buckets at the end of a brigade  * @param b The brigade to add to  * @param e The first bucket in a list of buckets to insert  */
+comment|/**  * Insert a single bucket at the end of a brigade  * @param b The brigade to add to  * @param e The bucket to insert  */
 define|#
 directive|define
 name|APR_BRIGADE_INSERT_TAIL
@@ -506,7 +506,7 @@ parameter_list|,
 name|b
 parameter_list|)
 value|do {					\         APR_RING_PREPEND(&(a)->list,&(b)->list, apr_bucket, link);	\         APR_BRIGADE_CHECK_CONSISTENCY((a));				\     } while (0)
-comment|/**  * Insert a list of buckets before a specified bucket  * @param a The bucket to insert before  * @param b The buckets to insert  */
+comment|/**  * Insert a single bucket before a specified bucket  * @param a The bucket to insert before  * @param b The bucket to insert  */
 define|#
 directive|define
 name|APR_BUCKET_INSERT_BEFORE
@@ -516,7 +516,7 @@ parameter_list|,
 name|b
 parameter_list|)
 value|do {				\ 	apr_bucket *ap__a = (a), *ap__b = (b);				\ 	APR_RING_INSERT_BEFORE(ap__a, ap__b, link);			\         APR_BUCKET_CHECK_CONSISTENCY(ap__a);				\     } while (0)
-comment|/**  * Insert a list of buckets after a specified bucket  * @param a The bucket to insert after  * @param b The buckets to insert  */
+comment|/**  * Insert a single bucket after a specified bucket  * @param a The bucket to insert after  * @param b The bucket to insert  */
 define|#
 directive|define
 name|APR_BUCKET_INSERT_AFTER

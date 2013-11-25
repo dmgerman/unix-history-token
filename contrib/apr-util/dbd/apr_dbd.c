@@ -350,9 +350,16 @@ for|for
 control|(
 name|parent
 operator|=
+name|apr_pool_parent_get
+argument_list|(
 name|pool
+argument_list|)
 init|;
 name|parent
+operator|&&
+name|parent
+operator|!=
+name|pool
 condition|;
 name|parent
 operator|=
@@ -673,6 +680,11 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|apr_snprintf
 argument_list|(
 name|modname
@@ -814,7 +826,7 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-comment|/* not builtin and !APR_HAS_DSO => not implemented */
+comment|/* not builtin and !APU_DSO_BUILD => not implemented */
 name|rv
 operator|=
 name|APR_ENOTIMPL
