@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -14418,6 +14418,17 @@ name|devw
 init|=
 name|B_FALSE
 decl_stmt|;
+name|enum
+name|zio_compress
+name|b_compress
+init|=
+name|ZIO_COMPRESS_OFF
+decl_stmt|;
+name|uint64_t
+name|b_asize
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|hdr
@@ -14823,11 +14834,6 @@ name|ARC_IO_IN_PROGRESS
 expr_stmt|;
 if|if
 condition|(
-name|HDR_L2CACHE
-argument_list|(
-name|hdr
-argument_list|)
-operator|&&
 name|hdr
 operator|->
 name|b_l2hdr
@@ -14866,6 +14872,22 @@ operator|->
 name|b_l2hdr
 operator|->
 name|b_daddr
+expr_stmt|;
+name|b_compress
+operator|=
+name|hdr
+operator|->
+name|b_l2hdr
+operator|->
+name|b_compress
+expr_stmt|;
+name|b_asize
+operator|=
+name|hdr
+operator|->
+name|b_l2hdr
+operator|->
+name|b_asize
 expr_stmt|;
 comment|/* 			 * Lock out device removal. 			 */
 if|if
@@ -15095,10 +15117,6 @@ name|cb
 operator|->
 name|l2rcb_compress
 operator|=
-name|hdr
-operator|->
-name|b_l2hdr
-operator|->
 name|b_compress
 expr_stmt|;
 name|ASSERT
@@ -15121,10 +15139,6 @@ expr_stmt|;
 comment|/* 				 * l2arc read.  The SCL_L2ARC lock will be 				 * released by l2arc_read_done(). 				 * Issue a null zio if the underlying buffer 				 * was squashed to zero size by compression. 				 */
 if|if
 condition|(
-name|hdr
-operator|->
-name|b_l2hdr
-operator|->
 name|b_compress
 operator|==
 name|ZIO_COMPRESS_EMPTY
@@ -15168,10 +15182,6 @@ name|vd
 argument_list|,
 name|addr
 argument_list|,
-name|hdr
-operator|->
-name|b_l2hdr
-operator|->
 name|b_asize
 argument_list|,
 name|buf
@@ -15219,10 +15229,6 @@ name|ARCSTAT_INCR
 argument_list|(
 name|arcstat_l2_read_bytes
 argument_list|,
-name|hdr
-operator|->
-name|b_l2hdr
-operator|->
 name|b_asize
 argument_list|)
 expr_stmt|;
