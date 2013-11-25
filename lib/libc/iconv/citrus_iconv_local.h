@@ -282,6 +282,9 @@ name|iconv_hooks
 modifier|*
 name|ci_hooks
 decl_stmt|;
+name|bool
+name|ci_ilseq_invalid
+decl_stmt|;
 block|}
 struct|;
 end_struct
