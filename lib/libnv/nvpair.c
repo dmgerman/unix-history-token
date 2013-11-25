@@ -3188,16 +3188,9 @@ name|tmp
 operator|==
 name|NULL
 condition|)
-block|{
-name|free
-argument_list|(
-name|nvp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|failed
 goto|;
-block|}
 name|nvp
 operator|=
 name|tmp
