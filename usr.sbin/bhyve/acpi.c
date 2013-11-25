@@ -972,7 +972,7 @@ name|fp
 argument_list|,
 literal|"[0001]\t\tI/O Apic ID : %02x\n"
 argument_list|,
-name|basl_ncpu
+literal|0
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
