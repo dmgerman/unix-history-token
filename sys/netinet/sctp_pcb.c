@@ -26535,12 +26535,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Only initialize non-VNET global mutexes for the 	 * default instance. 	 */
+if|if
+condition|(
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+block|{
 name|SCTP_ITERATOR_LOCK_INIT
 argument_list|()
 expr_stmt|;
 name|SCTP_IPI_ITERATOR_WQ_INIT
 argument_list|()
 expr_stmt|;
+block|}
 name|sctp_startup_iterator
 argument_list|()
 expr_stmt|;
