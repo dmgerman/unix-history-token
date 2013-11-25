@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmm_dev.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_lapic.h"
 end_include
 
@@ -152,7 +158,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmm_dev.h>
+file|"io/vhpet.h"
 end_include
 
 begin_struct
@@ -1738,6 +1744,22 @@ expr_stmt|;
 name|error
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+name|VM_GET_HPET_CAPABILITIES
+case|:
+name|error
+operator|=
+name|vhpet_getcap
+argument_list|(
+operator|(
+expr|struct
+name|vm_hpet_cap
+operator|*
+operator|)
+name|data
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

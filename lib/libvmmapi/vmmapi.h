@@ -770,6 +770,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vm_get_hpet_capabilities
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|uint32_t
+modifier|*
+name|capabilities
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Reset vcpu register state */
 end_comment

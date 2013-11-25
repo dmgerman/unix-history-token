@@ -6,34 +6,34 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_VIOAPIC_H_
+name|_VHPET_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_VIOAPIC_H_
+name|_VHPET_H_
 end_define
 
 begin_define
 define|#
 directive|define
-name|VIOAPIC_BASE
-value|0xFEC00000
+name|VHPET_BASE
+value|0xfed00000
 end_define
 
 begin_define
 define|#
 directive|define
-name|VIOAPIC_SIZE
-value|4096
+name|VHPET_SIZE
+value|1024
 end_define
 
 begin_function_decl
 name|struct
-name|vioapic
+name|vhpet
 modifier|*
-name|vioapic_init
+name|vhpet_init
 parameter_list|(
 name|struct
 name|vm
@@ -45,64 +45,19 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vioapic_cleanup
+name|vhpet_cleanup
 parameter_list|(
 name|struct
-name|vioapic
+name|vhpet
 modifier|*
-name|vioapic
+name|vhpet
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|vioapic_assert_irq
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vioapic_deassert_irq
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vioapic_pulse_irq
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vioapic_mmio_write
+name|vhpet_mmio_write
 parameter_list|(
 name|void
 modifier|*
@@ -115,7 +70,7 @@ name|uint64_t
 name|gpa
 parameter_list|,
 name|uint64_t
-name|wval
+name|val
 parameter_list|,
 name|int
 name|size
@@ -129,7 +84,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vioapic_mmio_read
+name|vhpet_mmio_read
 parameter_list|(
 name|void
 modifier|*
@@ -143,7 +98,7 @@ name|gpa
 parameter_list|,
 name|uint64_t
 modifier|*
-name|rval
+name|val
 parameter_list|,
 name|int
 name|size
@@ -151,6 +106,18 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vhpet_getcap
+parameter_list|(
+name|struct
+name|vm_hpet_cap
+modifier|*
+name|cap
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -159,6 +126,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _VHPET_H_ */
+end_comment
 
 end_unit
 

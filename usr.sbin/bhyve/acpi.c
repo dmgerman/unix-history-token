@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012 NetApp, Inc.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf0400    (36 bytes fixed)  *     RSDT  ->   0xf0440    (36 bytes + 4*N table addrs, 2 used)  *     XSDT  ->   0xf0480    (36 bytes + 8*N table addrs, 2 used)  *       MADT  ->   0xf0500  (depends on #CPUs)  *       FADT  ->   0xf0600  (268 bytes)  *         FACS  ->   0xf0780 (64 bytes)  *         DSDT  ->   0xf0800 (variable - can go up to 0x100000)  */
+comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf0400    (36 bytes fixed)  *     RSDT  ->   0xf0440    (36 bytes + 4*N table addrs, 2 used)  *     XSDT  ->   0xf0480    (36 bytes + 8*N table addrs, 2 used)  *       MADT  ->   0xf0500  (depends on #CPUs)  *       FADT  ->   0xf0600  (268 bytes)  *       HPET  ->   0xf0740  (56 bytes)  *         FACS  ->   0xf0780 (64 bytes)  *         DSDT  ->   0xf0800 (variable - can go up to 0x100000)  */
 end_comment
 
 begin_include
@@ -72,6 +72,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vmmapi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bhyverun.h"
 end_include
 
@@ -118,6 +130,13 @@ define|#
 directive|define
 name|FADT_OFFSET
 value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPET_OFFSET
+value|0x340
 end_define
 
 begin_define
@@ -189,6 +208,13 @@ name|uint32_t
 name|basl_acpi_base
 init|=
 name|BHYVE_ACPI_BASE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|hpet_capabilities
 decl_stmt|;
 end_decl_stmt
 
@@ -497,7 +523,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Add in pointers to the MADT and FADT */
+comment|/* Add in pointers to the MADT, FADT and HPET */
 name|EFPRINTF
 argument_list|(
 name|fp
@@ -518,6 +544,17 @@ argument_list|,
 name|basl_acpi_base
 operator|+
 name|FADT_OFFSET
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tACPI Table Address 2 : %08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|HPET_OFFSET
 argument_list|)
 expr_stmt|;
 name|EFFLUSH
@@ -649,7 +686,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Add in pointers to the MADT and FADT */
+comment|/* Add in pointers to the MADT, FADT and HPET */
 name|EFPRINTF
 argument_list|(
 name|fp
@@ -670,6 +707,17 @@ argument_list|,
 name|basl_acpi_base
 operator|+
 name|FADT_OFFSET
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tACPI Table Address 2 : 00000000%08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|HPET_OFFSET
 argument_list|)
 expr_stmt|;
 name|EFFLUSH
@@ -2284,6 +2332,235 @@ end_function
 begin_function
 specifier|static
 name|int
+name|basl_fwrite_hpet
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|int
+name|err
+decl_stmt|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|" * bhyve HPET template\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tSignature : \"HPET\"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tTable Length : 00000000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tRevision : 01\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tChecksum : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0006]\t\tOem ID : \"BHYVE \"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0008]\t\tOem Table ID : \"BVHPET  \"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tOem Revision : 00000001\n"
+argument_list|)
+expr_stmt|;
+comment|/* iasl will fill in the compiler ID/revision fields */
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tAsl Compiler ID : \"xxxx\"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tAsl Compiler Revision : 00000000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tTimer Block ID : %08X\n"
+argument_list|,
+name|hpet_capabilities
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0012]\t\tTimer Block Register : [Generic Address Structure]\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tSpace ID : 00 [SystemMemory]\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tBit Width : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tBit Offset : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tEncoded Access Width : 00 [Undefined/Legacy]\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0008]\t\tAddress : 00000000FED00000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tHPET Number : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0002]\t\tMinimum Clock Ticks : 0000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tFlags (decoded below) : 00000001\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\t4K Page Protect : 1\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\t64K Page Protect : 0\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|EFFLUSH
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|err_exit
+label|:
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|basl_fwrite_facs
 parameter_list|(
 name|FILE
@@ -2806,6 +3083,112 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"      OperationRegion (P40C, PCI_Config, 0x60, 0x04)\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"    }\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"    Device (HPET)\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"    {\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      Name (_HID, EISAID(\"PNP0103\"))\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      Name (_UID, 0)\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      Name (_CRS, ResourceTemplate ()\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      {\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"        DWordMemory (ResourceConsumer, PosDecode, "
+literal|"MinFixed, MaxFixed, NonCacheable, ReadWrite,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"            0x00000000,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"            0xFED00000,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"            0xFED003FF,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"            0x00000000,\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"            0x00000400\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"            )\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"      })\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -3852,6 +4235,12 @@ name|FADT_OFFSET
 block|}
 block|,
 block|{
+name|basl_fwrite_hpet
+block|,
+name|HPET_OFFSET
+block|}
+block|,
+block|{
 name|basl_fwrite_facs
 block|,
 name|FACS_OFFSET
@@ -3889,14 +4278,31 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 name|basl_ncpu
 operator|=
 name|ncpu
 expr_stmt|;
+name|err
+operator|=
+name|vm_get_hpet_capabilities
+argument_list|(
+name|ctx
+argument_list|,
+operator|&
+name|hpet_capabilities
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 comment|/* 	 * For debug, allow the user to have iasl compiler output sent 	 * to stdout rather than /dev/null 	 */
 if|if
 condition|(

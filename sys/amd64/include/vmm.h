@@ -60,6 +60,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|vhpet
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vioapic
 struct_decl|;
 end_struct_decl
@@ -883,6 +889,20 @@ name|struct
 name|vioapic
 modifier|*
 name|vm_ioapic
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|vhpet
+modifier|*
+name|vm_hpet
 parameter_list|(
 name|struct
 name|vm

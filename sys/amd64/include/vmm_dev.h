@@ -394,6 +394,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_hpet_cap
+block|{
+name|uint32_t
+name|capabilities
+decl_stmt|;
+comment|/* lower 32 bits of HPET capabilities */
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -507,6 +519,10 @@ block|,
 name|IOCNUM_GET_X2APIC_STATE
 init|=
 literal|61
+block|,
+name|IOCNUM_GET_HPET_CAPABILITIES
+init|=
+literal|62
 block|, }
 enum|;
 end_enum
@@ -701,6 +717,14 @@ directive|define
 name|VM_GET_X2APIC_STATE
 define|\
 value|_IOWR('v', IOCNUM_GET_X2APIC_STATE, struct vm_x2apic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_HPET_CAPABILITIES
+define|\
+value|_IOR('v', IOCNUM_GET_HPET_CAPABILITIES, struct vm_hpet_cap)
 end_define
 
 begin_define
