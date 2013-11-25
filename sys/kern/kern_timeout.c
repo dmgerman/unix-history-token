@@ -23,12 +23,6 @@ directive|include
 file|"opt_callout_profiling.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_kdtrace.h"
-end_include
-
 begin_if
 if|#
 directive|if

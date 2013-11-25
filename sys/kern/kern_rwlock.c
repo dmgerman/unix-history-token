@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_no_adaptive_rwlocks.h"
 end_include
 
@@ -1528,21 +1522,6 @@ argument_list|,
 name|file
 argument_list|,
 name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|rw_recursed
-argument_list|(
-name|rw
-argument_list|)
-condition|)
-name|LOCKSTAT_PROFILE_RELEASE_LOCK
-argument_list|(
-name|LS_RW_WUNLOCK_RELEASE
-argument_list|,
-name|rw
 argument_list|)
 expr_stmt|;
 name|__rw_wunlock

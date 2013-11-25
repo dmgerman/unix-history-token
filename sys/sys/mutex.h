@@ -956,7 +956,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if (!_mtx_release_lock((mp), _tid))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
+value|do {			\ 	uintptr_t _tid = (uintptr_t)(tid);				\ 									\ 	if ((mp)->mtx_recurse == 0)					\ 		 LOCKSTAT_PROFILE_RELEASE_LOCK(LS_MTX_UNLOCK_RELEASE,	\ 		    (mp));						\ 	if (!_mtx_release_lock((mp), _tid))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_comment

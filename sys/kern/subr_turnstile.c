@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_turnstile_profiling.h"
 end_include
 

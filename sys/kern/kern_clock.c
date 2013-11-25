@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_kdtrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ntp.h"
 end_include
 
