@@ -14838,8 +14838,6 @@ name|flags
 decl_stmt|;
 name|uint16_t
 name|len
-decl_stmt|,
-name|phy
 decl_stmt|;
 name|uint8_t
 name|ant
@@ -15232,6 +15230,9 @@ operator|&
 name|sc
 operator|->
 name|sc_rxtap
+decl_stmt|;
+name|uint16_t
+name|phy
 decl_stmt|;
 name|tap
 operator|->
