@@ -1197,6 +1197,26 @@ end_struct
 
 begin_struct
 struct|struct
+name|kinfo_sigtramp32
+block|{
+name|uint32_t
+name|ksigtramp_start
+decl_stmt|;
+name|uint32_t
+name|ksigtramp_end
+decl_stmt|;
+name|uint32_t
+name|ksigtramp_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|kld32_file_stat_1
 block|{
 name|int
