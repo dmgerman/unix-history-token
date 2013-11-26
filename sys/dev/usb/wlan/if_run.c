@@ -6375,6 +6375,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_reset
 parameter_list|(
@@ -8558,6 +8559,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_read_eeprom
 parameter_list|(
