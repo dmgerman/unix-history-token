@@ -903,7 +903,7 @@ parameter_list|(
 name|_db
 parameter_list|)
 define|\
-value|((_db)->db_objset->os_compress != ZIO_COMPRESS_OFF)
+value|((_db)->db_objset->os_compress != ZIO_COMPRESS_OFF ||		\ 	(dbuf_is_metadata(_db)&& zfs_mdcomp_disable == B_FALSE))
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
