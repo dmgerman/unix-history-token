@@ -127,6 +127,9 @@ directive|include
 file|<pthread.h>
 include|#
 directive|include
+file|<sched.h>
+include|#
+directive|include
 file|<sys/debug.h>
 include|#
 directive|include
@@ -586,6 +589,13 @@ define|#
 directive|define
 name|curthread
 value|((void *)(uintptr_t)thr_self())
+define|#
+directive|define
+name|kpreempt
+parameter_list|(
+name|x
+parameter_list|)
+value|sched_yield()
 typedef|typedef
 name|struct
 name|kthread

@@ -1280,7 +1280,7 @@ name|VCBS
 argument_list|,
 name|ZIO_TYPE_READ
 argument_list|,
-name|ZIO_PRIORITY_CACHE_FILL
+name|ZIO_PRIORITY_NOW
 argument_list|,
 name|ZIO_FLAG_DONT_CACHE
 argument_list|,
