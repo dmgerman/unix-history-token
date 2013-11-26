@@ -18708,7 +18708,7 @@ name|decl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* An in-class declaration of a static data member should be 	 external; it is only a declaration, and not a definition.  */
+comment|/* An in-class declaration of a static data member should be 	 external; it is only a declaration, and not a definition. */
 if|if
 condition|(
 name|init
