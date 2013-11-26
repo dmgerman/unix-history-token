@@ -145,38 +145,6 @@ parameter_list|)
 value|do {	\ 	if (dtrace_nfscl_accesscache_load_done_probe != NULL)		\ 		(dtrace_nfscl_accesscache_load_done_probe)(		\ 		    nfscl_accesscache_load_done_id, (vp), (uid),	\ 		    (rmode), (error));					\ } while (0)
 end_define
 
-begin_comment
-comment|/*  * Definitions for NFS attribute cache probes.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|nfscl_attrcache_flush_done_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|nfscl_attrcache_get_hit_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|nfscl_attrcache_get_miss_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|nfscl_attrcache_load_done_id
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
