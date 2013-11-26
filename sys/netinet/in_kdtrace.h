@@ -152,7 +152,7 @@ name|SDT_PROBE_DECLARE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|accept_established
+name|accept__established
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -162,7 +162,7 @@ name|SDT_PROBE_DECLARE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|accept_refused
+name|accept__refused
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -172,7 +172,7 @@ name|SDT_PROBE_DECLARE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|connect_established
+name|connect__established
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -182,7 +182,7 @@ name|SDT_PROBE_DECLARE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|connect_refused
+name|connect__refused
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -192,7 +192,7 @@ name|SDT_PROBE_DECLARE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|connect_request
+name|connect__request
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -222,7 +222,7 @@ name|SDT_PROBE_DECLARE
 argument_list|(
 name|tcp
 argument_list|, , ,
-name|state_change
+name|state__change
 argument_list|)
 expr_stmt|;
 end_expr_stmt

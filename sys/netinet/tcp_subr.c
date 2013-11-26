@@ -3373,7 +3373,7 @@ name|TH_RST
 condition|)
 name|TCP_PROBE5
 argument_list|(
-name|accept_refused
+name|accept__refused
 argument_list|,
 name|NULL
 argument_list|,
@@ -11589,7 +11589,7 @@ name|newstate
 expr_stmt|;
 name|TCP_PROBE6
 argument_list|(
-name|state_change
+name|state__change
 argument_list|,
 name|NULL
 argument_list|,

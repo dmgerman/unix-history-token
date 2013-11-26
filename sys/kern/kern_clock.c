@@ -345,8 +345,6 @@ name|sched
 argument_list|, , ,
 name|tick
 argument_list|,
-name|tick
-argument_list|,
 literal|"struct thread *"
 argument_list|,
 literal|"struct proc *"

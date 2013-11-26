@@ -460,8 +460,6 @@ name|vnet_alloc
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;
@@ -475,8 +473,6 @@ argument_list|,
 name|functions
 argument_list|,
 name|vnet_alloc
-argument_list|,
-name|alloc
 argument_list|,
 name|alloc
 argument_list|,
@@ -495,8 +491,6 @@ argument_list|,
 argument|functions
 argument_list|,
 argument|vnet_alloc
-argument_list|,
-argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -521,8 +515,6 @@ name|vnet_destroy
 argument_list|,
 name|entry
 argument_list|,
-name|entry
-argument_list|,
 literal|"int"
 argument_list|,
 literal|"struct vnet *"
@@ -530,26 +522,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SDT_PROBE_DEFINE1
 argument_list|(
-argument|vnet
+name|vnet
 argument_list|,
-argument|functions
+name|functions
 argument_list|,
-argument|vnet_destroy
+name|vnet_destroy
 argument_list|,
-argument|return
-argument_list|,
-argument|entry
+name|entry
 argument_list|,
 literal|"int"
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#

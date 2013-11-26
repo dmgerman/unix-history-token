@@ -5197,8 +5197,6 @@ name|xbb_dispatch_dev
 argument_list|,
 name|flush
 argument_list|,
-name|flush
-argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;
@@ -5212,8 +5210,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|xbb_dispatch_dev
-argument_list|,
-name|read
 argument_list|,
 name|read
 argument_list|,
@@ -5234,8 +5230,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|xbb_dispatch_dev
-argument_list|,
-name|write
 argument_list|,
 name|write
 argument_list|,
@@ -6034,8 +6028,6 @@ name|xbb_dispatch_file
 argument_list|,
 name|flush
 argument_list|,
-name|flush
-argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;
@@ -6049,8 +6041,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|xbb_dispatch_file
-argument_list|,
-name|read
 argument_list|,
 name|read
 argument_list|,
@@ -6071,8 +6061,6 @@ argument_list|,
 name|kernel
 argument_list|,
 name|xbb_dispatch_file
-argument_list|,
-name|write
 argument_list|,
 name|write
 argument_list|,
