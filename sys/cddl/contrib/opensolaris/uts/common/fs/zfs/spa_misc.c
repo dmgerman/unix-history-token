@@ -319,7 +319,7 @@ name|zfs_flags
 argument_list|,
 literal|0
 argument_list|,
-literal|"Try to recover from otherwise-fatal errors."
+literal|"ZFS debug flags."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
