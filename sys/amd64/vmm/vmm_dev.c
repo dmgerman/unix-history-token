@@ -1271,7 +1271,7 @@ name|data
 expr_stmt|;
 name|error
 operator|=
-name|lapic_set_intr
+name|lapic_intr_edge
 argument_list|(
 name|sc
 operator|->

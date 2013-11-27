@@ -950,7 +950,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Always a single IOAPIC entry, with ID ncpu+1 */
+comment|/* Always a single IOAPIC entry, with ID 0 */
 name|EFPRINTF
 argument_list|(
 name|fp

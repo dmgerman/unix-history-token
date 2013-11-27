@@ -181,6 +181,27 @@ define|\
 value|CTR4(KTR_VMM, "vm %s: " format, vm_name((vm)), (p1), (p2), (p3))
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_CTR4
+parameter_list|(
+name|vm
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|)
+define|\
+value|CTR5(KTR_VMM, "vm %s: " format, vm_name((vm)), (p1), (p2), (p3), (p4))
+end_define
+
 begin_endif
 endif|#
 directive|endif

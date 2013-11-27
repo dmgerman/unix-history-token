@@ -652,6 +652,9 @@ name|vlapic
 parameter_list|,
 name|int
 name|vector
+parameter_list|,
+name|bool
+name|level
 parameter_list|)
 function_decl|;
 end_function_decl

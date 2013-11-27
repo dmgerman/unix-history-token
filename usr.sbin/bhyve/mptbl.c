@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|MPEII_MAX_IRQ
-value|16
+value|24
 end_define
 
 begin_comment
