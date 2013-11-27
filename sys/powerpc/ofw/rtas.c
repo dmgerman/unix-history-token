@@ -715,6 +715,9 @@ name|argsptr
 decl_stmt|;
 name|faultbuf
 name|env
+decl_stmt|,
+modifier|*
+name|oldfaultbuf
 decl_stmt|;
 name|va_list
 name|ap
@@ -839,6 +842,14 @@ argument_list|)
 expr_stmt|;
 comment|/* Get rid of any stale machine checks that have been waiting.  */
 asm|__asm __volatile ("sync; isync");
+name|oldfaultbuf
+operator|=
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_onfault
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -873,7 +884,7 @@ name|td_pcb
 operator|->
 name|pcb_onfault
 operator|=
-literal|0
+name|oldfaultbuf
 expr_stmt|;
 asm|__asm __volatile ("sync");
 name|rtas_real_unmap
