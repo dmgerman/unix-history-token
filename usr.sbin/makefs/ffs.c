@@ -1749,6 +1749,54 @@ name|avgfpdir
 operator|=
 name|AFPDIR
 expr_stmt|;
+if|if
+condition|(
+name|roundup
+argument_list|(
+name|fsopts
+operator|->
+name|minsize
+argument_list|,
+name|ffs_opts
+operator|->
+name|bsize
+argument_list|)
+operator|>
+name|fsopts
+operator|->
+name|maxsize
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"`%s' minsize of %lld rounded up to ffs bsize of %d "
+literal|"exceeds maxsize %lld.  Lower bsize, or round the minimum "
+literal|"and maximum sizes to bsize."
+argument_list|,
+name|dir
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|fsopts
+operator|->
+name|minsize
+argument_list|,
+name|ffs_opts
+operator|->
+name|bsize
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|fsopts
+operator|->
+name|maxsize
+argument_list|)
+expr_stmt|;
 comment|/* calculate size of tree */
 name|ffs_size_dir
 argument_list|(
