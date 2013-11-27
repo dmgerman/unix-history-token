@@ -522,21 +522,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_macro
 name|SDT_PROBE_DEFINE1
 argument_list|(
-name|vnet
+argument|vnet
 argument_list|,
-name|functions
+argument|functions
 argument_list|,
-name|vnet_destroy
+argument|vnet_destroy
 argument_list|,
-name|entry
+argument|return
 argument_list|,
 literal|"int"
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_ifdef
 ifdef|#
