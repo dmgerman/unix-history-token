@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|VM_USERCHANGE
-value|(PSL_USERCHANGE | PSL_RF)
+value|(PSL_USERCHANGE)
 end_define
 
 begin_define
