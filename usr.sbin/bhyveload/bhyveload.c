@@ -179,8 +179,6 @@ specifier|static
 name|char
 modifier|*
 name|host_base
-init|=
-literal|"/"
 decl_stmt|;
 end_decl_stmt
 
