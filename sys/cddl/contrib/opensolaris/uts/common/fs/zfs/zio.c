@@ -4244,7 +4244,7 @@ name|flags
 argument_list|,
 name|vd
 argument_list|,
-literal|0
+name|offset
 argument_list|,
 name|NULL
 argument_list|,
