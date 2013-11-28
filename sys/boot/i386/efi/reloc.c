@@ -176,10 +176,10 @@ name|d_tag
 condition|)
 block|{
 case|case
-name|DT_RELA
+name|DT_REL
 case|:
 case|case
-name|DT_REL
+name|DT_RELA
 case|:
 name|rel
 operator|=
