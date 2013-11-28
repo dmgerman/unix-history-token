@@ -2743,7 +2743,7 @@ name|cmd
 operator|->
 name|arg1
 operator|>=
-name|IPFW_TABLES_MAX
+name|V_fw_tables_max
 condition|)
 block|{
 name|printf

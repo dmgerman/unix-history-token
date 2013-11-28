@@ -535,6 +535,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|ipfw_get_tables_max
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|in6_addr
