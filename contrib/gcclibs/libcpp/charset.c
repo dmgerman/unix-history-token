@@ -7047,6 +7047,12 @@ if|if
 condition|(
 name|to
 operator|.
+name|len
+operator|>
+literal|0
+operator|&&
+name|to
+operator|.
 name|text
 index|[
 name|to
