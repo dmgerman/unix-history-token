@@ -21312,25 +21312,12 @@ name|cmp_rate
 operator||=
 name|IEEE80211_RATE_MCS
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|IWN_DEBUG_XMIT
-argument_list|,
-literal|"%s: idx %d: nr=%d, rate=0x%02x, rateentry=0x%02x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|i
-argument_list|,
-name|nr
-argument_list|,
-name|rate
-argument_list|,
-name|cmp_rate
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|DPRINTF(sc, IWN_DEBUG_XMIT, "%s: idx %d: nr=%d, rate=0x%02x, rateentry=0x%02x\n", 		    __func__, 		    i, 		    nr, 		    rate, 		    cmp_rate);
+endif|#
+directive|endif
 if|if
 condition|(
 name|cmp_rate
