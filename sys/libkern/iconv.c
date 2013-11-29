@@ -499,7 +499,7 @@ condition|)
 block|{
 name|ICDEBUG
 argument_list|(
-literal|"converter have %d referenses left\n"
+literal|"converter have %d references left\n"
 argument_list|,
 name|dcp
 operator|->
