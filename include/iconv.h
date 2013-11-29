@@ -342,6 +342,20 @@ name|ICONV_SET_FALLBACKS
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|ICONV_GET_ILSEQ_INVALID
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICONV_SET_ILSEQ_INVALID
+value|129
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
