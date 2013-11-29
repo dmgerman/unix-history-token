@@ -12206,6 +12206,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_aflag_set
+argument_list|(
+name|m
+argument_list|,
+name|PGA_WRITEABLE
+argument_list|)
+expr_stmt|;
 comment|/* 				 * Enable write permission if the access type 				 * indicates write intention. Emulate modified 				 * bit otherwise. 				 */
 if|if
 condition|(
@@ -12224,13 +12231,6 @@ operator|~
 operator|(
 name|L2_APX
 operator|)
-expr_stmt|;
-name|vm_page_aflag_set
-argument_list|(
-name|m
-argument_list|,
-name|PGA_WRITEABLE
-argument_list|)
 expr_stmt|;
 comment|/* 					 * The access type and permissions 					 * indicate that the page will be 					 * written as soon as returned from 					 * fault service. 					 * Mark it dirty from the outset. 					 */
 name|vm_page_dirty
