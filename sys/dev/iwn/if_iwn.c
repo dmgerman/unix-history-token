@@ -40913,7 +40913,7 @@ name|IWN_FW_TLV_PHY_CALIB
 case|:
 name|tmp
 operator|=
-name|htole32
+name|le32toh
 argument_list|(
 operator|*
 name|ptr
