@@ -45,7 +45,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	scopy(from, to)		Copy a string.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
+comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
 end_comment
 
 begin_include
@@ -93,10 +93,6 @@ end_comment
 
 begin_comment
 comment|/*  * equal - #defined in mystring.h  */
-end_comment
-
-begin_comment
-comment|/*  * scopy - #defined in mystring.h  */
 end_comment
 
 begin_comment
