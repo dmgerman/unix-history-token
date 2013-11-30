@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_procdesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -8953,9 +8947,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|PROCDESC
 name|struct
 name|proc
 modifier|*
@@ -9075,15 +9066,6 @@ operator|(
 name|error
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

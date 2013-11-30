@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_procdesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -440,9 +434,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|PROCDESC
 name|int
 name|error
 decl_stmt|,
@@ -529,15 +520,6 @@ operator|(
 name|error
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2784,9 +2766,6 @@ name|vm_ssize
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PROCDESC
 comment|/* 	 * Associate the process descriptor with the process before anything 	 * can happen that might cause that process to need the descriptor. 	 * However, don't do this until after fork(2) can no longer fail. 	 */
 if|if
 condition|(
@@ -2801,8 +2780,6 @@ argument_list|,
 name|pdflags
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -3139,9 +3116,6 @@ name|struct
 name|timeval
 name|lastfail
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 name|struct
 name|file
 modifier|*
@@ -3149,8 +3123,6 @@ name|fp_procdesc
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Check for the undefined or unimplemented flags. */
 if|if
 condition|(
@@ -3252,9 +3224,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 if|if
 condition|(
 operator|(
@@ -3295,8 +3264,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|p1
 operator|=
 name|td
@@ -3331,9 +3298,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|PROCDESC
 comment|/* 	 * If required, create a process descriptor in the parent first; we 	 * will abandon it if something goes wrong. We don't finit() until 	 * later. 	 */
 if|if
 condition|(
@@ -3368,8 +3332,6 @@ name|error
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
 name|mem_charged
 operator|=
 literal|0
@@ -3769,9 +3731,6 @@ name|procp
 operator|=
 name|newproc
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 if|if
 condition|(
 name|flags
@@ -3796,8 +3755,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|racct_proc_fork_done
 argument_list|(
 name|newproc
@@ -3890,9 +3847,6 @@ argument_list|,
 name|newproc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROCDESC
 if|if
 condition|(
 operator|(
@@ -3932,8 +3886,6 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|pause
 argument_list|(
 literal|"fork"

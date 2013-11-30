@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_procdesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -140,12 +134,6 @@ include|#
 directive|include
 file|<vm/uma.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PROCDESC
-end_ifdef
 
 begin_expr_stmt
 name|FEATURE
@@ -1933,47 +1921,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !PROCDESC */
-end_comment
-
-begin_function
-name|int
-name|sys_pdgetpid
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|pdgetpid_args
-modifier|*
-name|uap
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PROCDESC */
-end_comment
 
 end_unit
 
