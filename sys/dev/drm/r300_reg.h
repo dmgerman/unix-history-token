@@ -5510,7 +5510,7 @@ begin_define
 define|#
 directive|define
 name|R300_FPI0_INSERT_NOP
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -5820,7 +5820,7 @@ begin_define
 define|#
 directive|define
 name|R300_FPI2_UNKNOWN_31
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_comment
@@ -6961,7 +6961,7 @@ begin_define
 define|#
 directive|define
 name|R300_ZB_ZCACHE_CTLSTAT_ZC_BUSY_BUSY
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

@@ -471,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|AR934X_RESET_HOST
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

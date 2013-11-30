@@ -1258,7 +1258,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_BUSIRMC
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1412,7 +1412,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_SID_ERR
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

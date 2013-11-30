@@ -375,7 +375,7 @@ begin_define
 define|#
 directive|define
 name|PLL3_PFD4_EN
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

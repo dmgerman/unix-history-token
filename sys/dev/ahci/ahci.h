@@ -1987,7 +1987,7 @@ value|(AHCI_PRD_MASK + 1)
 define|#
 directive|define
 name|AHCI_PRD_IPC
-value|(1<< 31)
+value|(1U<< 31)
 block|}
 name|__packed
 struct|;

@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|IMX6_ANALOG_CCM_PLL_USB_LOCK
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

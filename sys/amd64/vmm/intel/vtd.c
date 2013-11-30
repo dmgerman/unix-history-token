@@ -223,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|VTD_GCR_TE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|VTD_GSR_TES
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define

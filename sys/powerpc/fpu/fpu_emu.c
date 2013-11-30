@@ -2298,7 +2298,7 @@ operator|*
 name|a
 operator|^=
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -2617,7 +2617,7 @@ operator|*
 name|a
 operator||=
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)
@@ -2683,7 +2683,7 @@ name|a
 operator|&=
 operator|~
 operator|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator|)

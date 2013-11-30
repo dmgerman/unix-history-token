@@ -781,7 +781,7 @@ begin_define
 define|#
 directive|define
 name|PLL_SW_UPDATE
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1030,7 +1030,7 @@ begin_define
 define|#
 directive|define
 name|RST_WDOG_LAST
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1569,7 +1569,7 @@ begin_define
 define|#
 directive|define
 name|MAC_CFG1_SOFT_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
@@ -1772,7 +1772,7 @@ begin_define
 define|#
 directive|define
 name|MAC_MII_CFG_RESET
-value|(1<< 31)
+value|(1U<< 31)
 end_define
 
 begin_define
