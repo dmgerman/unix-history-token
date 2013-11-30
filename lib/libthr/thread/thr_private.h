@@ -1294,6 +1294,10 @@ name|struct
 name|sigaction
 name|deferred_sigact
 decl_stmt|;
+comment|/* deferred signal delivery is performed, do not reenter. */
+name|int
+name|deferred_run
+decl_stmt|;
 comment|/* Force new thread to exit. */
 name|int
 name|force_exit
