@@ -433,6 +433,12 @@ index|[
 name|bg
 index|]
 expr_stmt|;
+name|b
+operator|=
+name|m
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Don't try to put off screen pixels */
 if|if
 condition|(
@@ -443,9 +449,9 @@ operator|+
 name|width
 operator|)
 operator|>
-name|info
+name|vd
 operator|->
-name|fb_width
+name|vd_width
 operator|)
 operator|||
 operator|(
@@ -455,9 +461,9 @@ operator|+
 name|height
 operator|)
 operator|>
-name|info
+name|vd
 operator|->
-name|fb_height
+name|vd_height
 operator|)
 condition|)
 return|return;
