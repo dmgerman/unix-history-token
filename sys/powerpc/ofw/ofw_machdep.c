@@ -1296,6 +1296,18 @@ operator|(
 literal|0
 operator|)
 return|;
+name|printf
+argument_list|(
+literal|"Logical Memory Block size: %d MB\n"
+argument_list|,
+name|lmb_size
+index|[
+literal|1
+index|]
+operator|>>
+literal|20
+argument_list|)
+expr_stmt|;
 comment|/* Parse the /ibm,dynamic-memory. 	   The first position gives the # of entries. The next two words  	   reflect the address of the memory block. The next four words are 	   the DRC index, reserved, list index and flags. 	   (see PAPR C.6.6.2 ibm,dynamic-reconfiguration-memory) 	    	    #el  Addr   DRC-idx  res   list-idx  flags 	   ------------------------------------------------- 	   | 4 |   8   |   4   |   4   |   4   |   4   |.... 	   ------------------------------------------------- 	*/
 name|len
 operator|=
