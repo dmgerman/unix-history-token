@@ -81,9 +81,12 @@ begin_comment
 comment|/* Define to 1 if you have the `atan2l' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ATAN2L */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_ATAN2L
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `atanf' function. */
@@ -346,9 +349,12 @@ begin_comment
 comment|/* Define to 1 if you have the `fmodl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FMODL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FMODL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fpclass' function. */
@@ -455,9 +461,12 @@ begin_comment
 comment|/* Define to 1 if you have the `hypotl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HYPOTL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HYPOTL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `iconv' function. */
@@ -984,9 +993,12 @@ begin_comment
 comment|/* Define to 1 if you have the `sqrtl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SQRTL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SQRTL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<stdbool.h> header file. */
@@ -1018,6 +1030,25 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if strerror_l is available in<string.h>. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRERROR_L */
+end_comment
+
+begin_comment
+comment|/* Define if strerror_r is available in<string.h>. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRERROR_R
 value|1
 end_define
 
@@ -1064,6 +1095,14 @@ directive|define
 name|HAVE_STRTOLD
 value|1
 end_define
+
+begin_comment
+comment|/* Define if strxfrm_l is available in<string.h>. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STRXFRM_L */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/filio.h> header file. */
