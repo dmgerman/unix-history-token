@@ -469,6 +469,12 @@ index|[
 name|bg
 index|]
 expr_stmt|;
+name|b
+operator|=
+name|m
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|bpl

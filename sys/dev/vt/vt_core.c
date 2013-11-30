@@ -5500,6 +5500,10 @@ name|vw
 operator|->
 name|vw_font
 expr_stmt|;
+name|mark
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|vw
