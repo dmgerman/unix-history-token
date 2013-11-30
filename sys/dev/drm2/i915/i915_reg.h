@@ -21290,14 +21290,14 @@ begin_define
 define|#
 directive|define
 name|PANEL_PORT_SELECT_DPC
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PANEL_PORT_SELECT_DPD
-value|(3<< 30)
+value|(3U<< 30)
 end_define
 
 begin_define

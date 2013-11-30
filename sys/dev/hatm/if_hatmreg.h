@@ -1515,7 +1515,7 @@ begin_define
 define|#
 directive|define
 name|HE_REGM_CON_MBOX
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define

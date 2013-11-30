@@ -3772,14 +3772,14 @@ begin_define
 define|#
 directive|define
 name|RADEON_DST_TILE_MICRO
-value|(2<< 30)
+value|(2U<< 30)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RADEON_DST_TILE_BOTH
-value|(3<< 30)
+value|(3U<< 30)
 end_define
 
 begin_define

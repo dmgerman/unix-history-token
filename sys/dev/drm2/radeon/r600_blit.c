@@ -1031,7 +1031,7 @@ name|__BIG_ENDIAN
 name|sq_vtx_constant_word2
 operator||=
 operator|(
-literal|2
+literal|2U
 operator|<<
 literal|30
 operator|)
