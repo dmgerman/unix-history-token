@@ -11202,10 +11202,14 @@ name|j
 operator|.
 name|ip4s
 operator|=
+name|htonl
+argument_list|(
 name|j32_v0
 operator|.
 name|ip_number
+argument_list|)
 expr_stmt|;
+comment|/* jail_v0 is host order */
 break|break;
 block|}
 case|case
