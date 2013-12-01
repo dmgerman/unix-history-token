@@ -314,6 +314,96 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Saved SPRG0-3 from OpenFirmware. Will be restored prior to the callback.  */
+end_comment
+
+begin_decl_stmt
+name|register_t
+name|ofw_sprg0_save
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ofw_sprg_prepare
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ofw_real_mode
+condition|)
+return|return;
+comment|/* 	 * Assume that interrupt are disabled at this point, or 	 * SPRG1-3 could be trashed 	 */
+asm|__asm __volatile("mfsprg0 %0\n\t"
+literal|"mtsprg0 %1\n\t"
+literal|"mtsprg1 %2\n\t"
+literal|"mtsprg2 %3\n\t"
+literal|"mtsprg3 %4\n\t"
+operator|:
+literal|"=&r"
+operator|(
+name|ofw_sprg0_save
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|2
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|3
+index|]
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|ofmsr
+index|[
+literal|4
+index|]
+operator|)
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|ofw_sprg_restore
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ofw_real_mode
+condition|)
+return|return;
+comment|/* 	 * Note that SPRG1-3 contents are irrelevant. They are scratch 	 * registers used in the early portion of trap handling when 	 * interrupts are disabled. 	 * 	 * PCPU data cannot be used until this routine is called ! 	 */
+asm|__asm __volatile("mtsprg0 %0" :: "r"(ofw_sprg0_save));
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -1157,10 +1247,13 @@ decl_stmt|;
 name|register_t
 name|oldmsr
 decl_stmt|;
-comment|/* 	 * Turn off exceptions - we really don't want to end up 	 * anywhere in the kernel while in OF state. 	 */
+comment|/* 	 * Turn off exceptions - we really don't want to end up 	 * anywhere unexpected with PCPU set to something strange 	 * or the stack pointer wrong. 	 */
 name|oldmsr
 operator|=
 name|intr_disable
+argument_list|()
+expr_stmt|;
+name|ofw_sprg_prepare
 argument_list|()
 expr_stmt|;
 comment|/* Save trap vectors */
@@ -1239,6 +1332,12 @@ name|ofw_restore_trap_vec
 argument_list|(
 name|save_trap_of
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ofw_sprg_restore
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
