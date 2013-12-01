@@ -18973,6 +18973,11 @@ name|int
 name|kflags
 parameter_list|,
 name|struct
+name|sendfile_sync
+modifier|*
+name|sfs
+parameter_list|,
+name|struct
 name|thread
 modifier|*
 name|td
@@ -19152,6 +19157,11 @@ name|flags
 parameter_list|,
 name|int
 name|kflags
+parameter_list|,
+name|struct
+name|sendfile_sync
+modifier|*
+name|sfs
 parameter_list|,
 name|struct
 name|thread
