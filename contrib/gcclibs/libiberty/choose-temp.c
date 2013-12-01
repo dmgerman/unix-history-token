@@ -162,14 +162,9 @@ argument_list|,
 name|TEMP_FILE
 argument_list|)
 expr_stmt|;
-name|mktemp
-argument_list|(
-name|temp_filename
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|strlen
+name|mktemp
 argument_list|(
 name|temp_filename
 argument_list|)
