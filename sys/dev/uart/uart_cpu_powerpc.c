@@ -338,7 +338,7 @@ name|field
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* This property might be a phandle or might be a path. Hooray. */
+comment|/* This property might be either a ihandle or path. Hooray. */
 name|output
 operator|=
 operator|-
@@ -379,7 +379,7 @@ literal|4
 condition|)
 name|output
 operator|=
-name|OF_xref_phandle
+name|OF_instance_to_package
 argument_list|(
 name|field
 operator|.
