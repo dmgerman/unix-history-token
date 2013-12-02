@@ -488,18 +488,78 @@ literal|1
 expr_stmt|;
 name|memcpy
 argument_list|(
-argument|phys
+name|phys
 argument_list|,
-argument|avail
+name|avail_regions
 argument_list|,
 literal|2
-argument|*sizeof(*avail); 	*physsz = *availsz =
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|avail_regions
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|physsz
+operator|=
+operator|*
+name|availsz
+operator|=
 literal|2
-argument|; }  static u_long wii_timebase_freq(platform_t plat, struct cpuref *cpuref) {
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|u_long
+name|wii_timebase_freq
+parameter_list|(
+name|platform_t
+name|plat
+parameter_list|,
+name|struct
+name|cpuref
+modifier|*
+name|cpuref
+parameter_list|)
+block|{
 comment|/* Bus Frequency (243MHz) / 4 */
-argument|return (
+return|return
+operator|(
 literal|60750000
-argument|); }  static void wii_reset(platform_t plat __unused) {  	wiibus_reset_system(); }  static void wii_cpu_idle(sbintime_t sbt) { }
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|wii_reset
+parameter_list|(
+name|platform_t
+name|plat
+name|__unused
+parameter_list|)
+block|{
+name|wiibus_reset_system
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|wii_cpu_idle
+parameter_list|(
+name|sbintime_t
+name|sbt
+parameter_list|)
+block|{ }
 end_function
 
 end_unit
