@@ -3911,10 +3911,14 @@ name|IWN_SCAN_MAXSZ
 value|(MCLBYTES - 4)
 end_define
 
+begin_comment
+comment|/*  * For active scan, listen ACTIVE_DWELL_TIME (msec) on each channel after  * sending probe req.  This should be set long enough to hear probe responses  * from more than one AP.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_TIME_24
+name|IWN_ACTIVE_DWELL_TIME_2GHZ
 value|(30)
 end_define
 
@@ -3925,28 +3929,32 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_TIME_52
+name|IWN_ACTIVE_DWELL_TIME_5GHZ
 value|(20)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_FACTOR_24
+name|IWN_ACTIVE_DWELL_FACTOR_2GHZ
 value|(3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IWN_ACTIVE_DWELL_FACTOR_52
+name|IWN_ACTIVE_DWELL_FACTOR_5GHZ
 value|(2)
 end_define
+
+begin_comment
+comment|/*  * For passive scan, listen PASSIVE_DWELL_TIME (msec) on each channel.  * Must be set longer than active dwell time.  * For the most reliable scan, set> AP beacon interval (typically 100msec).  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IWN_PASSIVE_DWELL_TIME_24
+name|IWN_PASSIVE_DWELL_TIME_2GHZ
 value|(20)
 end_define
 
@@ -3957,7 +3965,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWN_PASSIVE_DWELL_TIME_52
+name|IWN_PASSIVE_DWELL_TIME_5GHZ
 value|(10)
 end_define
 
@@ -3980,6 +3988,38 @@ define|#
 directive|define
 name|IWN_SCAN_CHAN_TIMEOUT
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_MAX_SCAN_CHANNEL
+value|50
+end_define
+
+begin_comment
+comment|/*  * If active scanning is requested but a certain channel is  * marked passive, we can do active scanning if we detect  * transmissions.  *  * There is an issue with some firmware versions that triggers  * a sysassert on a "good CRC threshold" of zero (== disabled),  * on a radar channel even though this means that we should NOT  * send probes.  *  * The "good CRC threshold" is the number of frames that we  * need to receive during our dwell time on a channel before  * sending out probes -- setting this to a huge value will  * mean we never reach it, but at the same time work around  * the aforementioned issue. Thus use IWL_GOOD_CRC_TH_NEVER  * here instead of IWL_GOOD_CRC_TH_DISABLED.  *  * This was fixed in later versions along with some other  * scan changes, and the threshold behaves as a flag in those  * versions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_GOOD_CRC_TH_DISABLED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GOOD_CRC_TH_DEFAULT
+value|htole16(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GOOD_CRC_TH_NEVER
+value|htole16(0xffff)
 end_define
 
 begin_comment

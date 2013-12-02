@@ -1198,6 +1198,10 @@ decl_stmt|;
 name|int
 name|sc_scan_timer
 decl_stmt|;
+comment|/* Are we doing a scan? */
+name|int
+name|sc_is_scanning
+decl_stmt|;
 name|struct
 name|ieee80211_tx_ampdu
 modifier|*
