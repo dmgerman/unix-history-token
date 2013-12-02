@@ -6322,8 +6322,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Freed UMA keg was not empty (%d items). "
+literal|"Freed UMA keg (%s) was not empty (%d items). "
 literal|" Lost %d pages of memory.\n"
+argument_list|,
+name|keg
+operator|->
+name|uk_name
+condition|?
+name|keg
+operator|->
+name|uk_name
+else|:
+literal|""
 argument_list|,
 name|keg
 operator|->
