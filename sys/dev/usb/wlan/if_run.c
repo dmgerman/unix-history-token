@@ -18131,7 +18131,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|rt2860_rxwi
+name|rt2860_txwi
 argument_list|)
 argument_list|)
 argument_list|,
@@ -18529,7 +18529,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|rt2860_rxwi
+name|rt2860_txwi
 argument_list|)
 argument_list|)
 argument_list|,
