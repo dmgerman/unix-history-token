@@ -3532,6 +3532,32 @@ operator|->
 name|base
 expr_stmt|;
 block|}
+comment|/* We assume that the current token is somewhere in the current 	 run.  */
+if|if
+condition|(
+name|pfile
+operator|->
+name|cur_token
+operator|<
+name|pfile
+operator|->
+name|cur_run
+operator|->
+name|base
+operator|||
+name|pfile
+operator|->
+name|cur_token
+operator|>=
+name|pfile
+operator|->
+name|cur_run
+operator|->
+name|limit
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pfile
@@ -3826,7 +3852,7 @@ operator|->
 name|from_stage3
 condition|)
 block|{
-comment|/* Only warn once.  */
+comment|/* Clip to buffer size.  */
 name|buffer
 operator|->
 name|next_line
@@ -3834,30 +3860,6 @@ operator|=
 name|buffer
 operator|->
 name|rlimit
-expr_stmt|;
-name|cpp_error_with_line
-argument_list|(
-name|pfile
-argument_list|,
-name|CPP_DL_PEDWARN
-argument_list|,
-name|pfile
-operator|->
-name|line_table
-operator|->
-name|highest_line
-argument_list|,
-name|CPP_BUF_COLUMN
-argument_list|(
-name|buffer
-argument_list|,
-name|buffer
-operator|->
-name|cur
-argument_list|)
-argument_list|,
-literal|"no newline at end of file"
-argument_list|)
 expr_stmt|;
 block|}
 name|return_at_eof
