@@ -18949,9 +18949,15 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RECV
 argument_list|,
-literal|"%s: qid %x idx %d flags %x type %d(%s) len %d\n"
+literal|"%s: cur=%d; qid %x idx %d flags %x type %d(%s) len %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|sc
+operator|->
+name|rxq
+operator|.
+name|cur
 argument_list|,
 name|desc
 operator|->
