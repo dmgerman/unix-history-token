@@ -606,7 +606,7 @@ name|size
 argument_list|,
 name|superpage_align
 condition|?
-name|VMFS_ALIGNED_SPACE
+name|VMFS_SUPER_SPACE
 else|:
 name|VMFS_ANY_SPACE
 argument_list|,

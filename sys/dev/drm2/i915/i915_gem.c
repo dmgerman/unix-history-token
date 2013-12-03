@@ -6444,7 +6444,7 @@ name|args
 operator|->
 name|size
 argument_list|,
-name|VMFS_ANY_SPACE
+name|VMFS_OPTIMAL_SPACE
 argument_list|,
 name|VM_PROT_READ
 operator||
