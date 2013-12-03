@@ -356,7 +356,7 @@ argument_list|(
 name|service
 operator|->
 name|s_magic
-operator|=
+operator|==
 name|SERVICE_MAGIC
 argument_list|)
 expr_stmt|;
@@ -434,7 +434,7 @@ argument_list|(
 name|service
 operator|->
 name|s_magic
-operator|=
+operator|==
 name|SERVICE_MAGIC
 argument_list|)
 expr_stmt|;
@@ -624,7 +624,7 @@ argument_list|(
 name|service
 operator|->
 name|s_magic
-operator|=
+operator|==
 name|SERVICE_MAGIC
 argument_list|)
 expr_stmt|;
@@ -816,7 +816,7 @@ argument_list|(
 name|service
 operator|->
 name|s_magic
-operator|=
+operator|==
 name|SERVICE_MAGIC
 argument_list|)
 expr_stmt|;
