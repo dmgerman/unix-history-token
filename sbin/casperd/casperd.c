@@ -842,6 +842,10 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
+name|cookie
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
