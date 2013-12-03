@@ -268,6 +268,8 @@ block|,
 name|eExecutionHitBreakpoint
 block|,
 name|eExecutionTimedOut
+block|,
+name|eExecutionStoppedForDebug
 block|}
 name|ExecutionResults
 typedef|;

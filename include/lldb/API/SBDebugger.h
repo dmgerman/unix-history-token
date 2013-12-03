@@ -46,13 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/API/SBDefines.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"lldb/API/SBPlatform.h"
 end_include
 
 begin_decl_stmt
@@ -428,6 +434,22 @@ modifier|&
 name|target
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|SBPlatform
+name|GetSelectedPlatform
+argument_list|()
+expr_stmt|;
+name|void
+name|SetSelectedPlatform
+argument_list|(
+name|lldb
+operator|::
+name|SBPlatform
+operator|&
+name|platform
+argument_list|)
+decl_stmt|;
 name|lldb
 operator|::
 name|SBSourceManager

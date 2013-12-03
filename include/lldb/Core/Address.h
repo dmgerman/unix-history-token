@@ -971,6 +971,18 @@ name|line_entry
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|// Returns true if the section should be valid, but isn't because
+comment|// the shared pointer to the section can't be reconstructed from
+comment|// a weak pointer that contains a valid weak reference to a section.
+comment|// Returns false if the section weak pointer has no reference to
+comment|// a section, or if the section is still valid
+comment|//------------------------------------------------------------------
+name|bool
+name|SectionWasDeleted
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -1002,7 +1014,7 @@ comment|// empty shared pointer and you want to know if this address used to
 comment|// have a valid section.
 comment|//------------------------------------------------------------------
 name|bool
-name|SectionWasDeleted
+name|SectionWasDeletedPrivate
 argument_list|()
 specifier|const
 expr_stmt|;

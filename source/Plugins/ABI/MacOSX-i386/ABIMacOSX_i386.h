@@ -110,17 +110,7 @@ argument|lldb::addr_t func_addr
 argument_list|,
 argument|lldb::addr_t return_addr
 argument_list|,
-argument|lldb::addr_t *arg1_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg2_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg3_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg4_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg5_ptr = NULL
-argument_list|,
-argument|lldb::addr_t *arg6_ptr = NULL
+argument|llvm::ArrayRef<lldb::addr_t> args
 argument_list|)
 specifier|const
 block|;
