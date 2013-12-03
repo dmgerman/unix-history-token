@@ -1544,9 +1544,6 @@ decl_stmt|;
 name|int
 name|fault_type
 decl_stmt|;
-name|int
-name|protection
-decl_stmt|;
 block|}
 name|paging
 struct|;
