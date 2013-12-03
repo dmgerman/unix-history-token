@@ -2704,6 +2704,17 @@ begin_comment
 comment|/* osreldate for process binary */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_SIGTRAMP
+value|41
+end_define
+
+begin_comment
+comment|/* signal trampoline location */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
