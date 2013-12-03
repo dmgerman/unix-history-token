@@ -226,10 +226,6 @@ block|;
 comment|//--------------------------------------------------------------------------
 comment|// These methods form a specialized interface to POSIX threads.
 comment|//
-name|bool
-name|Resume
-argument_list|()
-block|;
 name|void
 name|Notify
 argument_list|(
