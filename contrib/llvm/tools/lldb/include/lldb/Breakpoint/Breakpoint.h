@@ -573,6 +573,30 @@ argument|size_t index
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Removes all invalid breakpoint locations.
+comment|///
+comment|/// Removes all breakpoint locations with architectures that aren't
+comment|/// compatible with \a arch. Also remove any breakpoint locations
+comment|/// with whose locations have address where the section has been
+comment|/// deleted (module and object files no longer exist).
+comment|///
+comment|/// This is typically used after the process calls exec, or anytime
+comment|/// the architecture of the target changes.
+comment|///
+comment|/// @param[in] arch
+comment|///     If valid, check the module in each breakpoint to make sure
+comment|///     they are compatible, otherwise, ignore architecture.
+comment|//------------------------------------------------------------------
+name|void
+name|RemoveInvalidLocations
+parameter_list|(
+specifier|const
+name|ArchSpec
+modifier|&
+name|arch
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|// The next section deals with various breakpoint options.
 comment|//------------------------------------------------------------------
 comment|//------------------------------------------------------------------

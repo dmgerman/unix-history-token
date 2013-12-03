@@ -350,7 +350,7 @@ name|gcc_dwarf_rcx_x86_64
 argument_list|,
 name|gcc_dwarf_rcx_x86_64
 argument_list|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG4
 argument_list|,
 name|gdb_rcx_x86_64
 argument_list|)
@@ -365,7 +365,7 @@ name|gcc_dwarf_rdx_x86_64
 argument_list|,
 name|gcc_dwarf_rdx_x86_64
 argument_list|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG3
 argument_list|,
 name|gdb_rdx_x86_64
 argument_list|)
@@ -380,7 +380,7 @@ name|gcc_dwarf_rdi_x86_64
 argument_list|,
 name|gcc_dwarf_rdi_x86_64
 argument_list|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG1
 argument_list|,
 name|gdb_rdi_x86_64
 argument_list|)
@@ -395,7 +395,7 @@ name|gcc_dwarf_rsi_x86_64
 argument_list|,
 name|gcc_dwarf_rsi_x86_64
 argument_list|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG2
 argument_list|,
 name|gdb_rsi_x86_64
 argument_list|)
@@ -440,7 +440,7 @@ name|gcc_dwarf_r8_x86_64
 argument_list|,
 name|gcc_dwarf_r8_x86_64
 argument_list|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG5
 argument_list|,
 name|gdb_r8_x86_64
 argument_list|)
@@ -455,7 +455,7 @@ name|gcc_dwarf_r9_x86_64
 argument_list|,
 name|gcc_dwarf_r9_x86_64
 argument_list|,
-name|LLDB_INVALID_REGNUM
+name|LLDB_REGNUM_GENERIC_ARG6
 argument_list|,
 name|gdb_r9_x86_64
 argument_list|)

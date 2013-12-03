@@ -120,7 +120,6 @@ argument_list|(
 argument|bool is_platform
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|GDBRemoteCommunicationClient
 argument_list|()
@@ -175,12 +174,17 @@ argument_list|,
 argument|StringExtractorGDBRemote&response
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|GetThreadSuffixSupported
 argument_list|()
 block|;
-name|void
+comment|// This packet is usually sent first and the boolean return value
+comment|// indicates if the packet was send and any response was received
+comment|// even in the response is UNIMPLEMENTED. If the packet failed to
+comment|// get a response, then false is returned. This quickly tells us
+comment|// if we were able to connect and communicte with the remote GDB
+comment|// server
+name|bool
 name|QueryNoAckModeSupported
 argument_list|()
 block|;
@@ -253,11 +257,12 @@ comment|//------------------------------------------------------------------
 name|int
 name|SendArgumentsPacket
 argument_list|(
-name|char
 specifier|const
-operator|*
-name|argv
-index|[]
+name|lldb_private
+operator|::
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -373,7 +378,10 @@ argument_list|)
 block|;
 comment|//------------------------------------------------------------------
 comment|/// Sets the working directory to \a path for a process that will
-comment|/// be launched with the 'A' packet.
+comment|/// be launched with the 'A' packet for non platform based
+comment|/// connections. If this packet is sent to a GDB server that
+comment|/// implements the platform, it will change the current working
+comment|/// directory for the platform process.
 comment|///
 comment|/// @param[in] path
 comment|///     The path to a directory to use when launching our processs
@@ -388,6 +396,26 @@ name|char
 specifier|const
 operator|*
 name|path
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Gets the current working directory of a remote platform GDB
+comment|/// server.
+comment|///
+comment|/// @param[out] cwd
+comment|///     The current working directory on the remote platform.
+comment|///
+comment|/// @return
+comment|///     Boolean for success
+comment|//------------------------------------------------------------------
+name|bool
+name|GetWorkingDir
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|cwd
 argument_list|)
 block|;
 name|lldb
@@ -783,7 +811,6 @@ return|return
 name|m_interrupt_sent
 return|;
 block|}
-name|virtual
 name|lldb
 operator|::
 name|user_id_t
@@ -798,7 +825,6 @@ argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|CloseFile
 argument_list|(
@@ -807,7 +833,6 @@ argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
 block|;
-name|virtual
 name|lldb
 operator|::
 name|user_id_t
@@ -821,25 +846,31 @@ operator|&
 name|file_spec
 argument_list|)
 block|;
-name|virtual
-name|uint32_t
-name|GetFilePermissions
-argument_list|(
-specifier|const
-name|lldb_private
-operator|::
-name|FileSpec
-operator|&
-name|file_spec
-argument_list|,
 name|lldb_private
 operator|::
 name|Error
+name|GetFilePermissions
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|,
+name|uint32_t
 operator|&
-name|error
+name|file_permissions
 argument_list|)
 block|;
-name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|SetFilePermissions
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t file_permissions
+argument_list|)
+block|;
 name|uint64_t
 name|ReadFile
 argument_list|(
@@ -854,7 +885,6 @@ argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
 block|;
-name|virtual
 name|uint64_t
 name|WriteFile
 argument_list|(
@@ -869,16 +899,43 @@ argument_list|,
 argument|lldb_private::Error&error
 argument_list|)
 block|;
-name|virtual
-name|uint32_t
-name|MakeDirectory
+name|lldb_private
+operator|::
+name|Error
+name|CreateSymlink
 argument_list|(
-argument|const std::string&path
+specifier|const
+name|char
+operator|*
+name|src
 argument_list|,
-argument|mode_t mode
+specifier|const
+name|char
+operator|*
+name|dst
 argument_list|)
 block|;
-name|virtual
+name|lldb_private
+operator|::
+name|Error
+name|Unlink
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|)
+block|;
+name|lldb_private
+operator|::
+name|Error
+name|MakeDirectory
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t mode
+argument_list|)
+block|;
 name|bool
 name|GetFileExists
 argument_list|(
@@ -890,7 +947,6 @@ operator|&
 name|file_spec
 argument_list|)
 block|;
-name|virtual
 name|lldb_private
 operator|::
 name|Error
@@ -915,7 +971,6 @@ argument|uint32_t timeout_sec
 argument_list|)
 block|;
 comment|// Timeout in seconds to wait for shell program to finish
-name|virtual
 name|bool
 name|CalculateMD5
 argument_list|(
@@ -947,6 +1002,40 @@ argument_list|,
 name|StringExtractorGDBRemote
 operator|&
 name|inputStringExtractor
+argument_list|)
+block|;
+name|bool
+name|ReadRegister
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|,
+argument|uint32_t reg_num
+argument_list|,
+argument|StringExtractorGDBRemote&response
+argument_list|)
+block|;
+name|bool
+name|ReadAllRegisters
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|,
+argument|StringExtractorGDBRemote&response
+argument_list|)
+block|;
+name|bool
+name|SaveRegisterState
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|,
+argument|uint32_t&save_id
+argument_list|)
+block|;
+name|bool
+name|RestoreRegisterState
+argument_list|(
+argument|lldb::tid_t tid
+argument_list|,
+argument|uint32_t save_id
 argument_list|)
 block|;
 name|protected
@@ -1052,6 +1141,11 @@ name|lldb_private
 operator|::
 name|LazyBool
 name|m_supports_p
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_QSaveRegisterState
 block|;
 name|bool
 name|m_supports_qProcessInfoPID

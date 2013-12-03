@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Target/RegisterCheckpoint.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/StackFrameList.h"
 end_include
 
@@ -379,164 +385,6 @@ name|ThreadEventData
 argument_list|)
 block|;     }
 decl_stmt|;
-comment|// TODO: You shouldn't just checkpoint the register state alone, so this should get
-comment|// moved to protected.  To do that ThreadStateCheckpoint needs to be returned as a token...
-name|class
-name|RegisterCheckpoint
-block|{
-name|public
-label|:
-name|RegisterCheckpoint
-argument_list|()
-operator|:
-name|m_stack_id
-argument_list|()
-operator|,
-name|m_data_sp
-argument_list|()
-block|{         }
-name|RegisterCheckpoint
-argument_list|(
-specifier|const
-name|StackID
-operator|&
-name|stack_id
-argument_list|)
-operator|:
-name|m_stack_id
-argument_list|(
-name|stack_id
-argument_list|)
-operator|,
-name|m_data_sp
-argument_list|()
-block|{         }
-operator|~
-name|RegisterCheckpoint
-argument_list|()
-block|{         }
-specifier|const
-name|RegisterCheckpoint
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|RegisterCheckpoint
-operator|&
-name|rhs
-operator|)
-block|{
-if|if
-condition|(
-name|this
-operator|!=
-operator|&
-name|rhs
-condition|)
-block|{
-name|this
-operator|->
-name|m_stack_id
-operator|=
-name|rhs
-operator|.
-name|m_stack_id
-expr_stmt|;
-name|this
-operator|->
-name|m_data_sp
-operator|=
-name|rhs
-operator|.
-name|m_data_sp
-expr_stmt|;
-block|}
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|RegisterCheckpoint
-argument_list|(
-specifier|const
-name|RegisterCheckpoint
-operator|&
-name|rhs
-argument_list|)
-operator|:
-name|m_stack_id
-argument_list|(
-name|rhs
-operator|.
-name|m_stack_id
-argument_list|)
-operator|,
-name|m_data_sp
-argument_list|(
-argument|rhs.m_data_sp
-argument_list|)
-block|{         }
-specifier|const
-name|StackID
-operator|&
-name|GetStackID
-argument_list|()
-block|{
-return|return
-name|m_stack_id
-return|;
-block|}
-name|void
-name|SetStackID
-parameter_list|(
-specifier|const
-name|StackID
-modifier|&
-name|stack_id
-parameter_list|)
-block|{
-name|m_stack_id
-operator|=
-name|stack_id
-expr_stmt|;
-block|}
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|GetData
-argument_list|()
-block|{
-return|return
-name|m_data_sp
-return|;
-block|}
-specifier|const
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|GetData
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_data_sp
-return|;
-block|}
-name|protected
-label|:
-name|StackID
-name|m_stack_id
-decl_stmt|;
-name|lldb
-operator|::
-name|DataBufferSP
-name|m_data_sp
-expr_stmt|;
-block|}
-empty_stmt|;
 struct|struct
 name|ThreadStateCheckpoint
 block|{
@@ -550,9 +398,11 @@ name|StopInfoSP
 name|stop_info_sp
 expr_stmt|;
 comment|// You have to restore the stop info or you might continue with the wrong signals.
-name|RegisterCheckpoint
-name|register_backup
-decl_stmt|;
+name|lldb
+operator|::
+name|RegisterCheckpointSP
+name|register_backup_sp
+expr_stmt|;
 comment|// You need to restore the registers, of course...
 name|uint32_t
 name|current_inlined_depth
@@ -834,6 +684,16 @@ name|NULL
 return|;
 block|}
 name|virtual
+name|void
+name|SetName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{     }
+name|virtual
 name|lldb
 operator|::
 name|queue_id_t
@@ -845,6 +705,16 @@ name|LLDB_INVALID_QUEUE_ID
 return|;
 block|}
 name|virtual
+name|void
+name|SetQueueID
+argument_list|(
+name|lldb
+operator|::
+name|queue_id_t
+name|new_val
+argument_list|)
+block|{     }
+name|virtual
 specifier|const
 name|char
 modifier|*
@@ -855,6 +725,16 @@ return|return
 name|NULL
 return|;
 block|}
+name|virtual
+name|void
+name|SetQueueName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{     }
 name|virtual
 name|uint32_t
 name|GetStackFrameCount
@@ -1264,27 +1144,6 @@ argument|bool abort_other_plans
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Queues the plan used to step over a breakpoint at the current PC of \a thread.
-comment|/// The default version returned by Process handles trap based breakpoints, and
-comment|/// will disable the breakpoint, single step over it, then re-enable it.
-comment|///
-comment|/// @param[in] abort_other_plans
-comment|///    \b true if we discard the currently queued plans and replace them with this one.
-comment|///    Otherwise this plan will go on the end of the plan stack.
-comment|///
-comment|/// @return
-comment|///     A shared pointer to the newly queued thread plan, or NULL if the plan could not be queued.
-comment|//------------------------------------------------------------------
-name|virtual
-name|lldb
-operator|::
-name|ThreadPlanSP
-name|QueueThreadPlanForStepOverBreakpointPlan
-argument_list|(
-argument|bool abort_other_plans
-argument_list|)
-expr_stmt|;
-comment|//------------------------------------------------------------------
 comment|/// Queues the plan used to step one instruction from the current PC of \a thread.
 comment|///
 comment|/// @param[in] step_over
@@ -1537,25 +1396,6 @@ argument_list|,
 argument|uint32_t frame_idx
 argument_list|)
 expr_stmt|;
-name|virtual
-name|lldb
-operator|::
-name|ThreadPlanSP
-name|QueueThreadPlanForCallFunction
-argument_list|(
-argument|bool abort_other_plans
-argument_list|,
-argument|Address& function
-argument_list|,
-argument|lldb::addr_t arg
-argument_list|,
-argument|bool stop_other_threads
-argument_list|,
-argument|bool unwind_on_error = false
-argument_list|,
-argument|bool ignore_breakpoints = true
-argument_list|)
-expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Thread Plan accessors:
 comment|//------------------------------------------------------------------
@@ -1803,6 +1643,28 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
+comment|// Get the originating thread's index ID.
+comment|// In the case of an "extended" thread -- a thread which represents
+comment|// the stack that enqueued/spawned work that is currently executing --
+comment|// we need to provide the IndexID of the thread that actually did
+comment|// this work.  We don't want to just masquerade as that thread's IndexID
+comment|// by using it in our own IndexID because that way leads to madness -
+comment|// but the driver program which is iterating over extended threads
+comment|// may ask for the OriginatingThreadID to display that information
+comment|// to the user.
+comment|// Normal threads will return the same thing as GetIndexID();
+comment|//------------------------------------------------------------------
+name|virtual
+name|uint32_t
+name|GetExtendedBacktraceOriginatingIndexID
+parameter_list|()
+block|{
+return|return
+name|GetIndexID
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|// The API ID is often the same as the Thread::GetID(), but not in
 comment|// all cases. Thread::GetID() is the user visible thread ID that
 comment|// clients would want to see. The API thread ID is the thread ID
@@ -2002,6 +1864,41 @@ name|Vote
 name|vote
 parameter_list|)
 function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Sets the extended backtrace token for this thread
+comment|///
+comment|/// Some Thread subclasses may maintain a token to help with providing
+comment|/// an extended backtrace.  The SystemRuntime plugin will set/request this.
+comment|///
+comment|/// @param [in] token
+comment|//----------------------------------------------------------------------
+name|virtual
+name|void
+name|SetExtendedBacktraceToken
+parameter_list|(
+name|uint64_t
+name|token
+parameter_list|)
+block|{ }
+comment|//----------------------------------------------------------------------
+comment|/// Gets the extended backtrace token for this thread
+comment|///
+comment|/// Some Thread subclasses may maintain a token to help with providing
+comment|/// an extended backtrace.  The SystemRuntime plugin will set/request this.
+comment|///
+comment|/// @return
+comment|///     The token needed by the SystemRuntime to create an extended backtrace.
+comment|///     LLDB_INVALID_ADDRESS is returned if no token is available.
+comment|//----------------------------------------------------------------------
+name|virtual
+name|uint64_t
+name|GetExtendedBacktraceToken
+parameter_list|()
+block|{
+return|return
+name|LLDB_INVALID_ADDRESS
+return|;
+block|}
 name|protected
 label|:
 name|friend
@@ -2074,35 +1971,6 @@ operator|>
 name|plan_stack
 expr_stmt|;
 name|virtual
-name|bool
-name|SaveFrameZeroState
-parameter_list|(
-name|RegisterCheckpoint
-modifier|&
-name|checkpoint
-parameter_list|)
-function_decl|;
-name|virtual
-name|bool
-name|RestoreSaveFrameZero
-parameter_list|(
-specifier|const
-name|RegisterCheckpoint
-modifier|&
-name|checkpoint
-parameter_list|)
-function_decl|;
-comment|// register_data_sp must be a DataSP passed to ReadAllRegisterValues.
-name|bool
-name|ResetFrameZeroRegisters
-argument_list|(
-name|lldb
-operator|::
-name|DataBufferSP
-name|register_data_sp
-argument_list|)
-decl_stmt|;
-name|virtual
 name|lldb_private
 operator|::
 name|Unwind
@@ -2136,22 +2004,6 @@ name|StackFrameListSP
 name|GetStackFrameList
 argument_list|()
 expr_stmt|;
-struct|struct
-name|ThreadState
-block|{
-name|uint32_t
-name|orig_stop_id
-decl_stmt|;
-name|lldb
-operator|::
-name|StopInfoSP
-name|stop_info_sp
-expr_stmt|;
-name|RegisterCheckpoint
-name|register_backup
-decl_stmt|;
-block|}
-struct|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from Process can see and modify these
 comment|//------------------------------------------------------------------
