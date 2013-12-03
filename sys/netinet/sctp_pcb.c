@@ -26535,12 +26535,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|SCTP_ITERATOR_LOCK_INIT
-argument_list|()
-expr_stmt|;
-name|SCTP_IPI_ITERATOR_WQ_INIT
-argument_list|()
-expr_stmt|;
 name|sctp_startup_iterator
 argument_list|()
 expr_stmt|;
