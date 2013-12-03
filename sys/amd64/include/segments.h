@@ -182,15 +182,13 @@ begin_struct
 struct|struct
 name|region_descriptor
 block|{
-name|unsigned
-name|long
+name|uint64_t
 name|rd_limit
 range|:
 literal|16
 decl_stmt|;
 comment|/* segment extent */
-name|unsigned
-name|long
+name|uint64_t
 name|rd_base
 range|:
 literal|64
