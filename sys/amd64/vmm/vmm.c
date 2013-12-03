@@ -4869,7 +4869,7 @@ name|nmi_pending
 operator|=
 literal|1
 expr_stmt|;
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 argument_list|(
 name|vm
 argument_list|,
@@ -5855,9 +5855,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function is called to ensure that a vcpu "sees" a pending event  * as soon as possible:  * - If the vcpu thread is sleeping then it is woken up.  * - If the vcpu is running on a different host_cpu then an IPI will be directed  *   to the host_cpu to cause the vcpu to trap into the hypervisor.  */
+end_comment
+
 begin_function
 name|void
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 parameter_list|(
 name|struct
 name|vm

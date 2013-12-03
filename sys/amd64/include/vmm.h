@@ -1194,7 +1194,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 parameter_list|(
 name|struct
 name|vm
@@ -1202,7 +1202,7 @@ modifier|*
 name|vm
 parameter_list|,
 name|int
-name|vcpu
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl

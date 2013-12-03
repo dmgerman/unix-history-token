@@ -221,7 +221,7 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-name|vm_interrupt_hostcpu
+name|vcpu_notify_event
 argument_list|(
 name|vm
 argument_list|,
