@@ -1422,7 +1422,7 @@ name|_kern
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|supported_abis
+name|supported_archs
 argument_list|,
 name|CTLFLAG_RD
 operator||
@@ -1437,7 +1437,7 @@ name|MACHINE_ARCH32
 argument_list|,
 literal|0
 argument_list|,
-literal|"List of supported ABIs"
+literal|"Supported architectures for binaries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1452,7 +1452,7 @@ name|MACHINE_ARCH
 operator|,
 literal|0
 operator|,
-literal|"List of supported ABIs"
+literal|"Supported architectures for binaries"
 end_expr_stmt
 
 begin_empty_stmt
