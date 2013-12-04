@@ -3341,10 +3341,10 @@ decl_stmt|;
 name|uint16_t
 name|qnqid
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|pvid
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|max_vlans
 decl_stmt|;
 block|}
@@ -4566,6 +4566,9 @@ name|oce_get_profile_config
 parameter_list|(
 name|POCE_SOFTC
 name|sc
+parameter_list|,
+name|uint32_t
+name|max_rss
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4804,6 +4807,19 @@ define|#
 directive|define
 name|OCE_NO_LOOPBACK
 value|0xff
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|IFM_40G_SR4
+end_undef
+
+begin_define
+define|#
+directive|define
+name|IFM_40G_SR4
+value|28
 end_define
 
 begin_define
