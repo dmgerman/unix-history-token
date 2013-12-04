@@ -240,6 +240,7 @@ name|int
 name|kt_i
 decl_stmt|;
 block|}
+decl|const
 name|keywords
 index|[]
 init|=
@@ -10062,6 +10063,7 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|keytab
 modifier|*
