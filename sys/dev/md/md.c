@@ -6961,7 +6961,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Range check.  Disallow negative sizes or any size less then the 	 * size of a page.  Then round to a page. 	 */
+comment|/* 	 * Range check.  Disallow negative sizes and sizes not being 	 * multiple of page size. 	 */
 if|if
 condition|(
 name|sc
@@ -7173,7 +7173,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-comment|/* 	 * Range check.  Disallow negative sizes or any size less then the 	 * size of a page.  Then round to a page. 	 */
+comment|/* 	 * Range check.  Disallow negative sizes and sizes not being 	 * multiple of page size. 	 */
 if|if
 condition|(
 name|sc
