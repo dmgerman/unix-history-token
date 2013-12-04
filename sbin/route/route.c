@@ -2704,7 +2704,8 @@ name|int
 name|first
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|int
 name|n
 decl_stmt|;
 if|if
