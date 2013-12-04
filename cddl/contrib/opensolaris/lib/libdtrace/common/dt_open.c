@@ -3712,15 +3712,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"uaddr"
@@ -3745,11 +3736,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3776,15 +3762,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"ufunc"
@@ -3809,11 +3786,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3840,15 +3812,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"umod"
@@ -3873,11 +3836,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3954,15 +3912,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"usym"
@@ -3987,11 +3936,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
