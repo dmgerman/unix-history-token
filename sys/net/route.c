@@ -1089,6 +1089,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|V_rt_tables
+argument_list|,
+name|M_RTABLE
+argument_list|)
+expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|V_rtzone
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
