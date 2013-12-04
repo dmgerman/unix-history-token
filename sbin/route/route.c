@@ -389,6 +389,13 @@ name|domain_initialized
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|rtm_seq
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -8013,10 +8020,6 @@ name|int
 name|fib
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|seq
-decl_stmt|;
 name|int
 name|rlen
 decl_stmt|;
@@ -8167,7 +8170,7 @@ operator|.
 name|rtm_seq
 operator|=
 operator|++
-name|seq
+name|rtm_seq
 expr_stmt|;
 name|rtm
 operator|.
@@ -8371,7 +8374,7 @@ name|rtm
 operator|.
 name|rtm_seq
 operator|!=
-name|seq
+name|rtm_seq
 operator|||
 name|rtm
 operator|.
