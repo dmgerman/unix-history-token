@@ -20950,7 +20950,7 @@ expr_stmt|;
 name|r4
 operator||=
 operator|(
-name|txpow1
+name|txpow2
 operator|<<
 literal|7
 operator|)
